@@ -2,253 +2,77 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2172C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2545EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F8192074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:21:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L4x7nj1u"
+	by mail.kernel.org (Postfix) with ESMTP id 0745B2078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:22:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598282522;
+	bh=dTNJ6f4sFfr0WRo993QckaVjaB2TOj8/mYY4GuOEL2w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XJC+grB4YDZfhqrIzysIfmEwfrDDOtQS/bmVhE/t9VbbJV8oLtOWXRJUKKkuhQkWP
+	 S2f9Ws2dGgblSk/zaz9H5MqLH5EpOh/urCvakfQwDxoUOfEZGysyCtYEEKwyyfk5Un
+	 Cl8dw9HsRaskL6SL/E7RuUNYZFyyU+OepSC6aTow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgHXPVi (ORCPT
+        id S1725973AbgHXPV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:21:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727823AbgHXPRg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:17:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C01EDC061798;
-        Mon, 24 Aug 2020 08:17:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=J5sJnI72bBCHI4QXotnHD2dCMjWGHzbD2S9EGp70gwQ=; b=L4x7nj1ugmStyNhAJUaMfBbrIu
-        SsxvIfUclsXrsKt4SXVFbCC+ZXKe0Udd141G3gDrNZ1Oi1iWKZAVVY3RJvEhj+LpfE4/EMbwwT8Z2
-        f3Hg8p+3zJ70El/d0gDFlNf4O53JsmyRkFGFlOAgEc2MdI2e6pl2ZyoBN/0aPL00x7dswxKexzt/r
-        dW8EEz98V2/ez2p4ogbEjXOOOxYwuhOuQ0YNpgz6HrORokH/MLaDjrnA4OaduBgtcN+Pee3Chnkkj
-        Fc91HeFXf1HEp4HRhZMXckQEAsAKLmXfMLpcI2nrqKpToVpKC5tdHw6RCXvQczzTQeoDOyesqxVQa
-        XSuenlpA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAEDZ-0004Dm-5b; Mon, 24 Aug 2020 15:17:05 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 09/11] iomap: Support THPs in write paths
-Date:   Mon, 24 Aug 2020 16:16:58 +0100
-Message-Id: <20200824151700.16097-10-willy@infradead.org>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20200824151700.16097-1-willy@infradead.org>
-References: <20200824151700.16097-1-willy@infradead.org>
+        Mon, 24 Aug 2020 11:21:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46104 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727079AbgHXPTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 11:19:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBEBE206B5;
+        Mon, 24 Aug 2020 15:19:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598282357;
+        bh=dTNJ6f4sFfr0WRo993QckaVjaB2TOj8/mYY4GuOEL2w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=avluCVyerL/x7VoZPTTQeSselXZiLn+S3dHGpKj+Y1MaZQaucpsKbgtoTrAggRGBz
+         SflAewOZ+p95msqK6r6lax6ZmNeiTFSnsANxr1fi2g3VcQC34S767R9B1YhE4QhE6s
+         sF1enDSjACba8vQ5LGsPxxWQQ4qRqHApz49tCCHI=
+Date:   Mon, 24 Aug 2020 17:19:33 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, maz@kernel.org,
+        suzuki.poulose@arm.com, james.morse@arm.com, pbonzini@redhat.com,
+        kernel-team@android.com, stable@vger.kernel.org
+Subject: Re: [PATCH stable-5.8.y backport 1/2] KVM: Pass MMU notifier range
+ flags to kvm_unmap_hva_range()
+Message-ID: <20200824151933.GB435319@kroah.com>
+References: <20200824113048.24960-1-will@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824113048.24960-1-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use thp_size() instead of PAGE_SIZE and offset_in_thp() instead of
-offset_in_page().  Also simplify the logic in iomap_do_writepage() for
-determining end of file.
+On Mon, Aug 24, 2020 at 12:30:47PM +0100, Will Deacon wrote:
+> commit fdfe7cbd58806522e799e2a50a15aee7f2cbb7b6 upstream.
+> 
+> The 'flags' field of 'struct mmu_notifier_range' is used to indicate
+> whether invalidate_range_{start,end}() are permitted to block. In the
+> case of kvm_mmu_notifier_invalidate_range_start(), this field is not
+> forwarded on to the architecture-specific implementation of
+> kvm_unmap_hva_range() and therefore the backend cannot sensibly decide
+> whether or not to block.
+> 
+> Add an extra 'flags' parameter to kvm_unmap_hva_range() so that
+> architectures are aware as to whether or not they are permitted to block.
+> 
+> Cc: <stable@vger.kernel.org> # v5.8 only
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/iomap/buffered-io.c | 54 ++++++++++++++++++++++++------------------
- 1 file changed, 31 insertions(+), 23 deletions(-)
+This matched the 5.8 patch I had already, but I took it just to be safe,
+thanks :)
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index f43a15aaa381..52d371c59758 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -452,7 +452,7 @@ iomap_is_partially_uptodate(struct page *page, unsigned long from,
- 	unsigned i;
- 
- 	/* Limit range to one page */
--	len = min_t(unsigned, PAGE_SIZE - from, count);
-+	len = min_t(unsigned, thp_size(page) - from, count);
- 
- 	/* First and last blocks in range within page */
- 	first = from >> inode->i_blkbits;
-@@ -649,8 +649,8 @@ static ssize_t iomap_write_begin(struct inode *inode, loff_t pos, loff_t len,
- 	else if (iomap->flags & IOMAP_F_BUFFER_HEAD)
- 		status = __block_write_begin_int(page, pos, len, NULL, srcmap);
- 	else
--		status = __iomap_write_begin(inode, pos, len, flags, page,
--				srcmap);
-+		status = __iomap_write_begin(inode, pos, len, flags,
-+				thp_head(page), srcmap);
- 
- 	if (status < 0)
- 		goto out_unlock;
-@@ -675,6 +675,7 @@ iomap_set_page_dirty(struct page *page)
- 	struct address_space *mapping = page_mapping(page);
- 	int newly_dirty;
- 
-+	VM_BUG_ON_PGFLAGS(PageTail(page), page);
- 	if (unlikely(!mapping))
- 		return !TestSetPageDirty(page);
- 
-@@ -697,7 +698,9 @@ EXPORT_SYMBOL_GPL(iomap_set_page_dirty);
- static size_t __iomap_write_end(struct inode *inode, loff_t pos, size_t len,
- 		size_t copied, struct page *page)
- {
--	flush_dcache_page(page);
-+	size_t offset = offset_in_thp(page, pos);
-+
-+	flush_dcache_page(page + offset / PAGE_SIZE);
- 
- 	/*
- 	 * The blocks that were entirely written will now be uptodate, so we
-@@ -712,7 +715,7 @@ static size_t __iomap_write_end(struct inode *inode, loff_t pos, size_t len,
- 	 */
- 	if (unlikely(copied < len && !PageUptodate(page)))
- 		return 0;
--	iomap_set_range_uptodate(page, offset_in_page(pos), len);
-+	iomap_set_range_uptodate(page, offset, len);
- 	iomap_set_page_dirty(page);
- 	return copied;
- }
-@@ -749,7 +752,8 @@ static size_t iomap_write_end(struct inode *inode, loff_t pos, size_t len,
- 		ret = block_write_end(NULL, inode->i_mapping, pos, len, copied,
- 				page, NULL);
- 	} else {
--		ret = __iomap_write_end(inode, pos, len, copied, page);
-+		ret = __iomap_write_end(inode, pos, len, copied,
-+				thp_head(page));
- 	}
- 
- 	/*
-@@ -788,6 +792,10 @@ iomap_write_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 		unsigned long bytes;	/* Bytes to write to page */
- 		size_t copied;		/* Bytes copied from user */
- 
-+		/*
-+		 * XXX: We don't know what size page we'll find in the
-+		 * page cache, so only copy up to a regular page boundary.
-+		 */
- 		offset = offset_in_page(pos);
- 		bytes = min_t(unsigned long, PAGE_SIZE - offset,
- 						iov_iter_count(i));
-@@ -818,7 +826,7 @@ iomap_write_actor(struct inode *inode, loff_t pos, loff_t length, void *data,
- 		offset = offset_in_thp(page, pos);
- 
- 		if (mapping_writably_mapped(inode->i_mapping))
--			flush_dcache_page(page);
-+			flush_dcache_page(page + offset / PAGE_SIZE);
- 
- 		copied = iov_iter_copy_from_user_atomic(page, i, offset, bytes);
- 
-@@ -1110,7 +1118,7 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
- 			next = bio->bi_private;
- 
- 		/* walk each page on bio, ending page IO on them */
--		bio_for_each_segment_all(bv, bio, iter_all)
-+		bio_for_each_thp_segment_all(bv, bio, iter_all)
- 			iomap_finish_page_writeback(inode, bv->bv_page, error,
- 					bv->bv_len);
- 		bio_put(bio);
-@@ -1317,7 +1325,7 @@ iomap_add_to_ioend(struct inode *inode, loff_t offset, struct page *page,
- {
- 	sector_t sector = iomap_sector(&wpc->iomap, offset);
- 	unsigned len = i_blocksize(inode);
--	unsigned poff = offset & (PAGE_SIZE - 1);
-+	unsigned poff = offset_in_thp(page, offset);
- 	bool merged, same_page = false;
- 
- 	if (!wpc->ioend || !iomap_can_add_to_ioend(wpc, offset, sector)) {
-@@ -1367,8 +1375,9 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
- 	struct iomap_page *iop = iomap_page_create(inode, page);
- 	struct iomap_ioend *ioend, *next;
- 	unsigned len = i_blocksize(inode);
--	u64 file_offset; /* file offset of page */
-+	loff_t pos;
- 	int error = 0, count = 0, i;
-+	int nr_blocks = i_blocks_per_page(inode, page);
- 	LIST_HEAD(submit_list);
- 
- 	WARN_ON_ONCE(iop && atomic_read(&iop->write_count) != 0);
-@@ -1378,20 +1387,20 @@ iomap_writepage_map(struct iomap_writepage_ctx *wpc,
- 	 * end of the current map or find the current map invalid, grab a new
- 	 * one.
- 	 */
--	for (i = 0, file_offset = page_offset(page);
--	     i < (PAGE_SIZE >> inode->i_blkbits) && file_offset < end_offset;
--	     i++, file_offset += len) {
-+	for (i = 0, pos = page_offset(page);
-+	     i < nr_blocks && pos < end_offset;
-+	     i++, pos += len) {
- 		if (iop && !test_bit(i, iop->uptodate))
- 			continue;
- 
--		error = wpc->ops->map_blocks(wpc, inode, file_offset);
-+		error = wpc->ops->map_blocks(wpc, inode, pos);
- 		if (error)
- 			break;
- 		if (WARN_ON_ONCE(wpc->iomap.type == IOMAP_INLINE))
- 			continue;
- 		if (wpc->iomap.type == IOMAP_HOLE)
- 			continue;
--		iomap_add_to_ioend(inode, file_offset, page, iop, wpc, wbc,
-+		iomap_add_to_ioend(inode, pos, page, iop, wpc, wbc,
- 				 &submit_list);
- 		count++;
- 	}
-@@ -1473,11 +1482,11 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
- {
- 	struct iomap_writepage_ctx *wpc = data;
- 	struct inode *inode = page->mapping->host;
--	pgoff_t end_index;
- 	u64 end_offset;
- 	loff_t offset;
- 
--	trace_iomap_writepage(inode, page_offset(page), PAGE_SIZE);
-+	VM_BUG_ON_PGFLAGS(PageTail(page), page);
-+	trace_iomap_writepage(inode, page_offset(page), thp_size(page));
- 
- 	/*
- 	 * Refuse to write the page out if we are called from reclaim context.
-@@ -1514,10 +1523,8 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
- 	 * ---------------------------------^------------------|
- 	 */
- 	offset = i_size_read(inode);
--	end_index = offset >> PAGE_SHIFT;
--	if (page->index < end_index)
--		end_offset = (loff_t)(page->index + 1) << PAGE_SHIFT;
--	else {
-+	end_offset = page_offset(page) + thp_size(page);
-+	if (end_offset > offset) {
- 		/*
- 		 * Check whether the page to write out is beyond or straddles
- 		 * i_size or not.
-@@ -1529,7 +1536,8 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
- 		 * |				    |      Straddles     |
- 		 * ---------------------------------^-----------|--------|
- 		 */
--		unsigned offset_into_page = offset & (PAGE_SIZE - 1);
-+		unsigned offset_into_page = offset_in_thp(page, offset);
-+		pgoff_t end_index = offset >> PAGE_SHIFT;
- 
- 		/*
- 		 * Skip the page if it is fully outside i_size, e.g. due to a
-@@ -1560,7 +1568,7 @@ iomap_do_writepage(struct page *page, struct writeback_control *wbc, void *data)
- 		 * memory is zeroed when mapped, and writes to that region are
- 		 * not written out to the file."
- 		 */
--		zero_user_segment(page, offset_into_page, PAGE_SIZE);
-+		zero_user_segment(page, offset_into_page, thp_size(page));
- 
- 		/* Adjust the end_offset to the end of file */
- 		end_offset = offset;
--- 
-2.28.0
-
+greg k-h
