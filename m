@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14626C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B119EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E90BB206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96179206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbgHXI5E (ORCPT
+        id S1730622AbgHXI5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:57:04 -0400
-Received: from 8bytes.org ([81.169.241.247]:37840 "EHLO theia.8bytes.org"
+        Mon, 24 Aug 2020 04:57:02 -0400
+Received: from 8bytes.org ([81.169.241.247]:37444 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730480AbgHXI4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:11 -0400
+        id S1728681AbgHXI4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:56:06 -0400
 Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 8845BF84;
-        Mon, 24 Aug 2020 10:56:07 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 0C98FF13;
+        Mon, 24 Aug 2020 10:56:03 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 37/76] x86/head/64: Move early exception dispatch to C code
-Date:   Mon, 24 Aug 2020 10:54:32 +0200
-Message-Id: <20200824085511.7553-38-joro@8bytes.org>
+Subject: [PATCH v6 31/76] x86/head/64: Setup MSR_GS_BASE before calling into C code
+Date:   Mon, 24 Aug 2020 10:54:26 +0200
+Message-Id: <20200824085511.7553-32-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
 References: <20200824085511.7553-1-joro@8bytes.org>
@@ -60,142 +60,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Move the assembly coded dispatch between page-faults and all other
-exceptions to C code to make it easier to maintain and extend.
-
-Also change the return-type of early_make_pgtable() to bool and make it
-static.
+When stack-protector is enabled a valid GS_BASE is needed before
+calling any C code function, because the stack canary is loaded from
+per-cpu data.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-37-joro@8bytes.org
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20200724160336.5435-31-joro@8bytes.org
 ---
- arch/x86/include/asm/pgtable.h |  2 +-
- arch/x86/include/asm/setup.h   |  4 +++-
- arch/x86/kernel/head64.c       | 19 +++++++++++++++----
- arch/x86/kernel/head_64.S      | 11 +----------
- 4 files changed, 20 insertions(+), 16 deletions(-)
+ arch/x86/kernel/head64.c  | 7 +++++++
+ arch/x86/kernel/head_64.S | 8 ++++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 5e0dcc20614d..a02c67291cfc 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -28,7 +28,7 @@
- #include <asm-generic/pgtable_uffd.h>
- 
- extern pgd_t early_top_pgt[PTRS_PER_PGD];
--int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
-+bool __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
- 
- void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm);
- void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
-diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
-index 5c09f50ecf1c..cafae86813ae 100644
---- a/arch/x86/include/asm/setup.h
-+++ b/arch/x86/include/asm/setup.h
-@@ -39,6 +39,8 @@ void vsmp_init(void);
- static inline void vsmp_init(void) { }
- #endif
- 
-+struct pt_regs;
-+
- void setup_bios_corruption_check(void);
- void early_platform_quirks(void);
- 
-@@ -49,9 +51,9 @@ extern void i386_reserve_resources(void);
- extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp);
- extern unsigned long __startup_secondary_64(void);
- extern void startup_64_setup_env(unsigned long physbase);
--extern int early_make_pgtable(unsigned long address);
- extern void early_idt_setup_early_handler(unsigned long physaddr);
- extern void early_load_idt(void);
-+extern void __init do_early_exception(struct pt_regs *regs, int trapnr);
- 
- #ifdef CONFIG_X86_INTEL_MID
- extern void x86_intel_mid_early_setup(void);
 diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 096b09d06d1c..41514ec1e6f0 100644
+index 8c82be44be94..b0ab5627900b 100644
 --- a/arch/x86/kernel/head64.c
 +++ b/arch/x86/kernel/head64.c
-@@ -37,6 +37,8 @@
+@@ -36,6 +36,7 @@
+ #include <asm/microcode.h>
  #include <asm/kasan.h>
  #include <asm/fixmap.h>
- #include <asm/realmode.h>
-+#include <asm/extable.h>
-+#include <asm/trapnr.h>
++#include <asm/realmode.h>
  
  /*
   * Manage page tables very early on.
-@@ -314,7 +316,7 @@ static void __init reset_early_page_tables(void)
- }
- 
- /* Create a new PMD entry */
--int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
-+bool __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
+@@ -513,6 +514,8 @@ void __init x86_64_start_reservations(char *real_mode_data)
+  */
+ void __head startup_64_setup_env(unsigned long physbase)
  {
- 	unsigned long physaddr = address - __PAGE_OFFSET;
- 	pgdval_t pgd, *pgd_p;
-@@ -324,7 +326,7 @@ int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
- 
- 	/* Invalid address or early pgt is done ?  */
- 	if (physaddr >= MAXMEM || read_cr3_pa() != __pa_nodebug(early_top_pgt))
--		return -1;
-+		return false;
- 
- again:
- 	pgd_p = &early_top_pgt[pgd_index(address)].pgd;
-@@ -381,10 +383,10 @@ int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
- 	}
- 	pmd_p[pmd_index(address)] = pmd;
- 
--	return 0;
-+	return true;
- }
- 
--int __init early_make_pgtable(unsigned long address)
-+static bool __init early_make_pgtable(unsigned long address)
- {
- 	unsigned long physaddr = address - __PAGE_OFFSET;
- 	pmdval_t pmd;
-@@ -394,6 +396,15 @@ int __init early_make_pgtable(unsigned long address)
- 	return __early_make_pgtable(address, pmd);
- }
- 
-+void __init do_early_exception(struct pt_regs *regs, int trapnr)
-+{
-+	if (trapnr == X86_TRAP_PF &&
-+	    early_make_pgtable(native_read_cr2()))
-+		return;
++	unsigned long gsbase;
 +
-+	early_fixup_exception(regs, trapnr);
-+}
+ 	/* Load GDT */
+ 	startup_gdt_descr.address = (unsigned long)fixup_pointer(startup_gdt, physbase);
+ 	native_load_gdt(&startup_gdt_descr);
+@@ -521,4 +524,8 @@ void __head startup_64_setup_env(unsigned long physbase)
+ 	asm volatile("movl %%eax, %%ds\n"
+ 		     "movl %%eax, %%ss\n"
+ 		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
 +
- /* Don't add a printk in there. printk relies on the PDA which is not initialized 
-    yet. */
- static void __init clear_bss(void)
++	/* Setup GS_BASE - needed for stack protector */
++	gsbase = (unsigned long)fixup_pointer((void *)initial_gs, physbase);
++	__wrmsr(MSR_GS_BASE, (u32)gsbase, (u32)(gsbase >> 32));
+ }
 diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 28de83fecda3..08412f308de3 100644
+index 2b2e91627221..800053219054 100644
 --- a/arch/x86/kernel/head_64.S
 +++ b/arch/x86/kernel/head_64.S
-@@ -349,18 +349,9 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
- 	pushq %r15				/* pt_regs->r15 */
- 	UNWIND_HINT_REGS
+@@ -78,6 +78,14 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	call	startup_64_setup_env
+ 	popq	%rsi
  
--	cmpq $14,%rsi		/* Page fault? */
--	jnz 10f
--	GET_CR2_INTO(%rdi)	/* can clobber %rax if pv */
--	call early_make_pgtable
--	andl %eax,%eax
--	jz 20f			/* All good */
--
--10:
- 	movq %rsp,%rdi		/* RDI = pt_regs; RSI is already trapnr */
--	call early_fixup_exception
-+	call do_early_exception
- 
--20:
- 	decl early_recursion_flag(%rip)
- 	jmp restore_regs_and_return_to_kernel
- SYM_CODE_END(early_idt_handler_common)
++	/*
++	 * Setup %gs here already to make stack-protector work - it needs to be
++	 * setup again after the switch to kernel addresses. The address read
++	 * from initial_gs is a kernel address, so it needs to be adjusted first
++	 * for the identity mapping.
++	 */
++	movl	$MSR_GS_BASE,%ecx
++
+ 	/* Now switch to __KERNEL_CS so IRET works reliably */
+ 	pushq	$__KERNEL_CS
+ 	leaq	.Lon_kernel_cs(%rip), %rax
 -- 
 2.28.0
 
