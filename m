@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B5BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E730720639
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C56E320639
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263190;
-	bh=1wL/Z6LurwxbTSysMOzB72LpziDJn+ht/d2FVBvJ8u8=;
+	s=default; t=1598263194;
+	bh=q7ovJEESpMS9fL3yuRScjYX4gV5PCOccEWwYhFe/NaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wz5Piy8su3agxeAkGNske4qJowKg/iV7a4u8EJ8moulMbRuRZ83k58mI71nPX8E6+
-	 bBMjvh2UsaZdYNmsNMLumd9NFtl54Xmdyz0rwGT+seRKlMIJ3NqYUcGMQMzkT2ASJq
-	 o5KuNTVjf48TxUWPYgiL8RUL8y6YaRErw9TG+ZXo=
+	b=oAXgOoEFRPNipOnmLuIkub0BJ7UANy9dmMhez2Q09PIm5oVEc4As5oQLGB8M8NjAO
+	 qcWzCjpda17mXQvhP85PCqt/JUKvry0mFOwi+EIAEuegZGnY2KKtj90h3mDImJUrPU
+	 0VbIc5Nn5ks+ErLKvAPfeZw4+A3X1MWE/ZsFZkAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgHXIdJ (ORCPT
+        id S1728604AbgHXJ7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:33:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40336 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:59:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726875AbgHXIdD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:33:03 -0400
+        id S1726878AbgHXIdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:33:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B7DE2075B;
-        Mon, 24 Aug 2020 08:33:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98762207DF;
+        Mon, 24 Aug 2020 08:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257982;
-        bh=1wL/Z6LurwxbTSysMOzB72LpziDJn+ht/d2FVBvJ8u8=;
+        s=default; t=1598257977;
+        bh=q7ovJEESpMS9fL3yuRScjYX4gV5PCOccEWwYhFe/NaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eYLVJ30aRY0cuPVQ8fxhkNpUcCkQnmL++ZdwEZVrVUo8kiZDNefUZM8bcWXX+mjqw
-         SYzo7lQxrA+XXGF+wpcNmyPvJW9w4SbT2LU2/1m1TKoSGLzq/BMUuIUfPoAnNnIF6c
-         yHMVFq2dSD0blBOftH3gXhqkTTfhkC6S5ZQPUeM8=
+        b=GxYL6tfwb6wR7q0HU8MBmJlLJbWHvgUNzkgIS9gA/tkF84Ps8sm1YSWo8mQH5y79U
+         BjAT1h9IrgkIi8U8iHo3nwSiVamwXs2SgN4TZXgprhiXc1VFaioO8JuTAQqA76pQlr
+         PINBfrpgTajQJh8whsIN6EFbuFsWJhJWPGTTk+YE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pierre Morel <pmorel@linux.ibm.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>
-Subject: [PATCH 5.8 031/148] s390/pci: fix zpci_bus_link_virtfn()
-Date:   Mon, 24 Aug 2020 10:28:49 +0200
-Message-Id: <20200824082415.448863145@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.8 029/148] KVM: Pass MMU notifier range flags to kvm_unmap_hva_range()
+Date:   Mon, 24 Aug 2020 10:28:47 +0200
+Message-Id: <20200824082415.348353053@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -60,94 +62,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Schnelle <schnelle@linux.ibm.com>
+From: Will Deacon <will@kernel.org>
 
-commit 3cddb79afc60bcdb5fd9dd7a1c64a8d03bdd460f upstream.
+commit fdfe7cbd58806522e799e2a50a15aee7f2cbb7b6 upstream.
 
-We were missing the pci_dev_put() for candidate PFs.  Furhtermore in
-discussion with upstream it turns out that somewhat counterintuitively
-some common code, in particular the vfio-pci driver, assumes that
-pdev->is_virtfn always implies that pdev->physfn is set, i.e. that VFs
-are always linked.
-While POWER does seem to set pdev->is_virtfn even for unlinked functions
-(see comments in arch/powerpc/kernel/eeh.c:eeh_debugfs_break_device())
-for now just be safe and only set pdev->is_virtfn on linking.
-Also make sure that we only search for parent PFs if the zbus is
-multifunction and we thus know the devfn values supplied by firmware
-come from the RID.
+The 'flags' field of 'struct mmu_notifier_range' is used to indicate
+whether invalidate_range_{start,end}() are permitted to block. In the
+case of kvm_mmu_notifier_invalidate_range_start(), this field is not
+forwarded on to the architecture-specific implementation of
+kvm_unmap_hva_range() and therefore the backend cannot sensibly decide
+whether or not to block.
 
-Fixes: e5794cf1a270 ("s390/pci: create links between PFs and VFs")
-Cc: <stable@vger.kernel.org> # 5.8
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Add an extra 'flags' parameter to kvm_unmap_hva_range() so that
+architectures are aware as to whether or not they are permitted to block.
+
+Cc: <stable@vger.kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Message-Id: <20200811102725.7121-2-will@kernel.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/pci/pci_bus.c |   25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+ arch/arm64/include/asm/kvm_host.h   |    2 +-
+ arch/arm64/kvm/mmu.c                |    2 +-
+ arch/mips/include/asm/kvm_host.h    |    2 +-
+ arch/mips/kvm/mmu.c                 |    3 ++-
+ arch/powerpc/include/asm/kvm_host.h |    3 ++-
+ arch/powerpc/kvm/book3s.c           |    3 ++-
+ arch/powerpc/kvm/e500_mmu_host.c    |    3 ++-
+ arch/x86/include/asm/kvm_host.h     |    3 ++-
+ arch/x86/kvm/mmu/mmu.c              |    3 ++-
+ virt/kvm/kvm_main.c                 |    3 ++-
+ 10 files changed, 17 insertions(+), 10 deletions(-)
 
---- a/arch/s390/pci/pci_bus.c
-+++ b/arch/s390/pci/pci_bus.c
-@@ -132,13 +132,14 @@ static int zpci_bus_link_virtfn(struct p
- {
- 	int rc;
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -443,7 +443,7 @@ int __kvm_arm_vcpu_set_events(struct kvm
  
--	virtfn->physfn = pci_dev_get(pdev);
- 	rc = pci_iov_sysfs_link(pdev, virtfn, vfid);
--	if (rc) {
--		pci_dev_put(pdev);
--		virtfn->physfn = NULL;
-+	if (rc)
- 		return rc;
--	}
-+
-+	virtfn->is_virtfn = 1;
-+	virtfn->multifunction = 0;
-+	virtfn->physfn = pci_dev_get(pdev);
-+
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+ int kvm_unmap_hva_range(struct kvm *kvm,
+-			unsigned long start, unsigned long end);
++			unsigned long start, unsigned long end, unsigned flags);
+ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -2203,7 +2203,7 @@ static int kvm_unmap_hva_handler(struct
+ }
+ 
+ int kvm_unmap_hva_range(struct kvm *kvm,
+-			unsigned long start, unsigned long end)
++			unsigned long start, unsigned long end, unsigned flags)
+ {
+ 	if (!kvm->arch.pgd)
+ 		return 0;
+--- a/arch/mips/include/asm/kvm_host.h
++++ b/arch/mips/include/asm/kvm_host.h
+@@ -981,7 +981,7 @@ enum kvm_mips_fault_result kvm_trap_emul
+ 
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+ int kvm_unmap_hva_range(struct kvm *kvm,
+-			unsigned long start, unsigned long end);
++			unsigned long start, unsigned long end, unsigned flags);
+ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+--- a/arch/mips/kvm/mmu.c
++++ b/arch/mips/kvm/mmu.c
+@@ -518,7 +518,8 @@ static int kvm_unmap_hva_handler(struct
+ 	return 1;
+ }
+ 
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
+ {
+ 	handle_hva_to_gpa(kvm, start, end, &kvm_unmap_hva_handler, NULL);
+ 
+--- a/arch/powerpc/include/asm/kvm_host.h
++++ b/arch/powerpc/include/asm/kvm_host.h
+@@ -58,7 +58,8 @@
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+ 
+ extern int kvm_unmap_hva_range(struct kvm *kvm,
+-			       unsigned long start, unsigned long end);
++			       unsigned long start, unsigned long end,
++			       unsigned flags);
+ extern int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ extern int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+ extern int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -834,7 +834,8 @@ void kvmppc_core_commit_memory_region(st
+ 	kvm->arch.kvm_ops->commit_memory_region(kvm, mem, old, new, change);
+ }
+ 
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
+ {
+ 	return kvm->arch.kvm_ops->unmap_hva_range(kvm, start, end);
+ }
+--- a/arch/powerpc/kvm/e500_mmu_host.c
++++ b/arch/powerpc/kvm/e500_mmu_host.c
+@@ -734,7 +734,8 @@ static int kvm_unmap_hva(struct kvm *kvm
  	return 0;
  }
  
-@@ -151,9 +152,9 @@ static int zpci_bus_setup_virtfn(struct
- 	int vfid = vfn - 1; /* Linux' vfid's start at 0 vfn at 1*/
- 	int rc = 0;
- 
--	virtfn->is_virtfn = 1;
--	virtfn->multifunction = 0;
--	WARN_ON(vfid < 0);
-+	if (!zbus->multifunction)
-+		return 0;
-+
- 	/* If the parent PF for the given VF is also configured in the
- 	 * instance, it must be on the same zbus.
- 	 * We can then identify the parent PF by checking what
-@@ -165,11 +166,17 @@ static int zpci_bus_setup_virtfn(struct
- 		zdev = zbus->function[i];
- 		if (zdev && zdev->is_physfn) {
- 			pdev = pci_get_slot(zbus->bus, zdev->devfn);
-+			if (!pdev)
-+				continue;
- 			cand_devfn = pci_iov_virtfn_devfn(pdev, vfid);
- 			if (cand_devfn == virtfn->devfn) {
- 				rc = zpci_bus_link_virtfn(pdev, virtfn, vfid);
-+				/* balance pci_get_slot() */
-+				pci_dev_put(pdev);
- 				break;
- 			}
-+			/* balance pci_get_slot() */
-+			pci_dev_put(pdev);
- 		}
- 	}
- 	return rc;
-@@ -178,8 +185,6 @@ static int zpci_bus_setup_virtfn(struct
- static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
- 		struct pci_dev *virtfn, int vfn)
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
  {
--	virtfn->is_virtfn = 1;
--	virtfn->multifunction = 0;
- 	return 0;
+ 	/* kvm_unmap_hva flushes everything anyways */
+ 	kvm_unmap_hva(kvm, start);
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1641,7 +1641,8 @@ asmlinkage void kvm_spurious_fault(void)
+ 	_ASM_EXTABLE(666b, 667b)
+ 
+ #define KVM_ARCH_WANT_MMU_NOTIFIER
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end);
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags);
+ int kvm_age_hva(struct kvm *kvm, unsigned long start, unsigned long end);
+ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva);
+ int kvm_set_spte_hva(struct kvm *kvm, unsigned long hva, pte_t pte);
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1971,7 +1971,8 @@ static int kvm_handle_hva(struct kvm *kv
+ 	return kvm_handle_hva_range(kvm, hva, hva + 1, data, handler);
  }
- #endif
+ 
+-int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end)
++int kvm_unmap_hva_range(struct kvm *kvm, unsigned long start, unsigned long end,
++			unsigned flags)
+ {
+ 	return kvm_handle_hva_range(kvm, start, end, 0, kvm_unmap_rmapp);
+ }
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -427,7 +427,8 @@ static int kvm_mmu_notifier_invalidate_r
+ 	 * count is also read inside the mmu_lock critical section.
+ 	 */
+ 	kvm->mmu_notifier_count++;
+-	need_tlb_flush = kvm_unmap_hva_range(kvm, range->start, range->end);
++	need_tlb_flush = kvm_unmap_hva_range(kvm, range->start, range->end,
++					     range->flags);
+ 	need_tlb_flush |= kvm->tlbs_dirty;
+ 	/* we've to flush the tlb before the pages can be freed */
+ 	if (need_tlb_flush)
 
 
