@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FB1C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B88BC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 619F1206F7
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C6E3206F7
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:38:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uvA44k96"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hTNISxl/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbgHXAba (ORCPT
+        id S1727077AbgHXAiT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 20:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44280 "EHLO
+        Sun, 23 Aug 2020 20:38:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgHXAb3 (ORCPT
+        with ESMTP id S1726765AbgHXAiQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 20:31:29 -0400
+        Sun, 23 Aug 2020 20:38:16 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96D5C061573;
-        Sun, 23 Aug 2020 17:31:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97542C061573;
+        Sun, 23 Aug 2020 17:38:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
         MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
         Content-Description:In-Reply-To:References;
-        bh=iM0SYJEwCSfM/KX5jOc8DR6fgqQxcRAOf/ZjYNYJiLg=; b=uvA44k96e2xJrd+e1flZL8Yw8F
-        Bv6IOBb6LU0hfu4SDw3Quxz6eddj8qf2YVsGrV4WxnE3cvxXWh5Tc6u8DCAB7sj+NQyYrfMxyRKYN
-        pnkQIRkhxiQIzNLbou0rvV4RG8jpjdefb3a9iDfY0quCuZDelXA5B+4t0/DFE72LTeZwSZgOadZ0q
-        u1FkTLW9FiLgfbSeA8Deb1VlcdMxXsP/mucUw9kVwPk9ZZaqJpcIbu+3sF3hdMOJJmpO65bfNQIgn
-        oJP8bIWd20jzznmBh3XWU10IsOOzT17KVn5CMpJqmk7KD7OFABKVpjHDH+qtjb5nMJUd2S7DEnMSl
-        LMpmhnag==;
+        bh=e4c87ctQhlZQXOpEqjOjyddKq7CyiWwdiKzpIL2sS/o=; b=hTNISxl/LEjiFoNBMo6kVNkVCW
+        Oi/Gxu6c8Wyda7/8NY+9479motELpRBzQcPU7kuRvc167St3VJjRjBbVdhV2zkLGPXb7ITwATsEy3
+        fwGXcGV0R6egcJQjcZ3Jlzwi0opY5bhDf2JIlqLX+UVDLtshNFGphiIX4qUplaoFWJLDyFsXMX+Jz
+        N2V/BTYOJP/5c3XIGBsSp/sERGRENLwS3zMrJKuWmb2worpJgOMWKEJv2JHoLEv76RLz9uG0BxTNz
+        ETSZCXLNZoQVCKwNXNAgp8hSXJylBFKTrzgd7BFV4w/6SVDRTQt8vq7YWl8y6I0hN1i5MGQPjCqG5
+        fpJA2jWg==;
 Received: from [2601:1c0:6280:3f0::19c2]
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kA0OM-0003lt-Dd; Mon, 24 Aug 2020 00:31:18 +0000
+        id 1kA0V4-000412-Js; Mon, 24 Aug 2020 00:38:14 +0000
 To:     LKML <linux-kernel@vger.kernel.org>,
         "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] Documentation/powerpc: fix malformed table in syscall64-abi
-Message-ID: <e06de4d3-a36f-2745-9775-467e125436cc@infradead.org>
-Date:   Sun, 23 Aug 2020 17:31:16 -0700
+Subject: [PATCH] Documentation: submit-checklist: add Documentation clean
+ builds
+Message-ID: <e38b108c-afec-fd0e-ad09-b4dd5da59fd1@infradead.org>
+Date:   Sun, 23 Aug 2020 17:38:12 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
@@ -60,56 +61,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Fix malformed table warning in powerpc/syscall64-abi.rst by making
-two tables and moving the headings.
+Add to Documentation/process/submit-checklist.rst that patch
+submitters should run "make htmldocs" and verify that any
+Documentation/ changes (patches) are clean (no new warnings/errors).
 
-Documentation/powerpc/syscall64-abi.rst:53: WARNING: Malformed table.
-Text in column margin in table line 2.
-
-=========== ============= ========================================
---- For the sc instruction, differences with the ELF ABI ---
-r0          Volatile      (System call number.)
-r3          Volatile      (Parameter 1, and return value.)
-r4-r8       Volatile      (Parameters 2-6.)
-cr0         Volatile      (cr0.SO is the return error condition.)
-cr1, cr5-7  Nonvolatile
-lr          Nonvolatile
-
---- For the scv 0 instruction, differences with the ELF ABI ---
-r0          Volatile      (System call number.)
-r3          Volatile      (Parameter 1, and return value.)
-r4-r8       Volatile      (Parameters 2-6.)
-=========== ============= ========================================
-
-Fixes: 7fa95f9adaee ("powerpc/64s: system call support for scv/rfscv instructions")
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
 ---
- Documentation/powerpc/syscall64-abi.rst |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/process/submit-checklist.rst |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- lnx-59-rc2.orig/Documentation/powerpc/syscall64-abi.rst
-+++ lnx-59-rc2/Documentation/powerpc/syscall64-abi.rst
-@@ -49,16 +49,18 @@ Register preservation rules
- Register preservation rules match the ELF ABI calling sequence with the
- following differences:
+--- linux-next-20200821.orig/Documentation/process/submit-checklist.rst
++++ linux-next-20200821/Documentation/process/submit-checklist.rst
+@@ -24,6 +24,10 @@ and elsewhere regarding submitting Linux
  
--=========== ============= ========================================
- --- For the sc instruction, differences with the ELF ABI ---
-+=========== ============= ========================================
- r0          Volatile      (System call number.)
- r3          Volatile      (Parameter 1, and return value.)
- r4-r8       Volatile      (Parameters 2-6.)
- cr0         Volatile      (cr0.SO is the return error condition.)
- cr1, cr5-7  Nonvolatile
- lr          Nonvolatile
-+=========== ============= ========================================
+   c) Builds successfully when using ``O=builddir``
  
- --- For the scv 0 instruction, differences with the ELF ABI ---
-+=========== ============= ========================================
- r0          Volatile      (System call number.)
- r3          Volatile      (Parameter 1, and return value.)
- r4-r8       Volatile      (Parameters 2-6.)
-
++  d) Any Documentation/ changes build successfully without warnings/errors.
++     Use ``make htmldocs`` or ``make pdfdocs`` to check the build and
++     fix any issues.
++
+ 3) Builds on multiple CPU architectures by using local cross-compile tools
+    or some other build farm.
+ 
 
