@@ -2,127 +2,131 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B386DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55832C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91D252075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:33:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QtU30oRE"
+	by mail.kernel.org (Postfix) with ESMTP id 2E7302075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbgHXHdi (ORCPT
+        id S1726156AbgHXHgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 03:33:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgHXHdf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 03:33:35 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7421BC061575
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 00:33:35 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id p17so1935233wrj.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 00:33:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=9b6JStI+Pc7Gan44H9Zai7qTn63i//epl6t/+SyCbvI=;
-        b=QtU30oREihjyaqVpYIPlh7uBHK/+lhu3kH4oL78qeud837ZI7zpawFKbrvXu6gEeF7
-         lirP1Q5eX5PgM10QHCj806++kYW29bWS1XHPniLoLJmno35vPnyrxiKHV7p3aodMTbfn
-         Y04755PuaOjBiEiyjPx6oxKlWUTs8W/nrEsTE3D3EiVIAnqck+zGCO2Kq8GPGxqS88WV
-         f4gu+gKuQuMYYK3aNi2V+GEfSaNUiYjGZVV3Uw2wOTjSE1MiKI50ALupBV4fO60Qx61C
-         dqwaeZn9bWLrQ8yqRwpZvWKQJqdQJBPxLU4x9pO0dXGyofFd0dRNrP7PqtDNr3k7hB5u
-         E43g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=9b6JStI+Pc7Gan44H9Zai7qTn63i//epl6t/+SyCbvI=;
-        b=F2J1+drLIz1pNF1M5SfRl+7OQMSwyLhf994pc6rmb9K5ThACQ3EQOBo0YA42b7JF4u
-         yzttSVAoYbDUuqZMLk9HCQUZO80G/CjgZDHs/bV+KVq7jLaRoFBv7/ClJh3NURkMudgP
-         1gIgk84kTqv2ZhV7g4UbEam8wvaRJd2+gOKkQL9B1/2Z9GNYZZXACOSM93npNwVXYMbV
-         LCIF730MMMqkzaqdFbqr0/MLMWB4EIcgX/L7x7gzN10tVfrpxuH2aiRcH/lunlxP+wco
-         PESsetTUY5FpjNSfMpNcj84yI/wTg9TctF3Kc5dt5uy4z2n0lBON1SUCuieh6y0YxPIh
-         pCLA==
-X-Gm-Message-State: AOAM533vYjh/ecEIIpOyWu53b520ceGbUHtf8v8EjSOipHXosqNSHn+o
-        Tk62/YmeQqyQWbHDfD1/pEsIkA==
-X-Google-Smtp-Source: ABdhPJyrXOh+fiqV7Y/t9Tokf2adkKintBDcUuhkhcJ9lId4930V3lXNU3Dgrt+bFOeg/VRmD57z0w==
-X-Received: by 2002:adf:9ec1:: with SMTP id b1mr4456180wrf.171.1598254413967;
-        Mon, 24 Aug 2020 00:33:33 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id t14sm21197697wrv.14.2020.08.24.00.33.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 00:33:33 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 08:33:31 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/6] mfd: Add driver for Embedded Controller found on
- Acer Iconia Tab A500
-Message-ID: <20200824073331.GG3248864@dell>
-References: <20200823140846.19299-1-digetx@gmail.com>
- <20200823140846.19299-2-digetx@gmail.com>
- <20200823181653.GC209852@demiurge.local>
- <82abab10-9af6-a9c4-b241-d5a3af5b588d@gmail.com>
+        Mon, 24 Aug 2020 03:36:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46456 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725730AbgHXHgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 03:36:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B65ACAF38;
+        Mon, 24 Aug 2020 07:37:08 +0000 (UTC)
+Subject: Re: [PATCH 2/3] block: fix locking for struct block_device size
+ updates
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Justin Sanders <justin@coraid.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Xianting Tian <xianting_tian@126.com>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org
+References: <20200823091043.2600261-1-hch@lst.de>
+ <20200823091043.2600261-3-hch@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ mQINBE6KyREBEACwRN6XKClPtxPiABx5GW+Yr1snfhjzExxkTYaINHsWHlsLg13kiemsS6o7
+ qrc+XP8FmhcnCOts9e2jxZxtmpB652lxRB9jZE40mcSLvYLM7S6aH0WXKn8bOqpqOGJiY2bc
+ 6qz6rJuqkOx3YNuUgiAxjuoYauEl8dg4bzex3KGkGRuxzRlC8APjHlwmsr+ETxOLBfUoRNuE
+ b4nUtaseMPkNDwM4L9+n9cxpGbdwX0XwKFhlQMbG3rWA3YqQYWj1erKIPpgpfM64hwsdk9zZ
+ QO1krgfULH4poPQFpl2+yVeEMXtsSou915jn/51rBelXeLq+cjuK5+B/JZUXPnNDoxOG3j3V
+ VSZxkxLJ8RO1YamqZZbVP6jhDQ/bLcAI3EfjVbxhw9KWrh8MxTcmyJPn3QMMEp3wpVX9nSOQ
+ tzG72Up/Py67VQe0x8fqmu7R4MmddSbyqgHrab/Nu+ak6g2RRn3QHXAQ7PQUq55BDtj85hd9
+ W2iBiROhkZ/R+Q14cJkWhzaThN1sZ1zsfBNW0Im8OVn/J8bQUaS0a/NhpXJWv6J1ttkX3S0c
+ QUratRfX4D1viAwNgoS0Joq7xIQD+CfJTax7pPn9rT////hSqJYUoMXkEz5IcO+hptCH1HF3
+ qz77aA5njEBQrDRlslUBkCZ5P+QvZgJDy0C3xRGdg6ZVXEXJOQARAQABtCpIYW5uZXMgUmVp
+ bmVja2UgKFN1U0UgTGFicykgPGhhcmVAc3VzZS5kZT6JAkEEEwECACsCGwMFCRLMAwAGCwkI
+ BwMCBhUIAgkKCwQWAgMBAh4BAheABQJOisquAhkBAAoJEGz4yi9OyKjPOHoQAJLeLvr6JNHx
+ GPcHXaJLHQiinz2QP0/wtsT8+hE26dLzxb7hgxLafj9XlAXOG3FhGd+ySlQ5wSbbjdxNjgsq
+ FIjqQ88/Lk1NfnqG5aUTPmhEF+PzkPogEV7Pm5Q17ap22VK623MPaltEba+ly6/pGOODbKBH
+ ak3gqa7Gro5YCQzNU0QVtMpWyeGF7xQK76DY/atvAtuVPBJHER+RPIF7iv5J3/GFIfdrM+wS
+ BubFVDOibgM7UBnpa7aohZ9RgPkzJpzECsbmbttxYaiv8+EOwark4VjvOne8dRaj50qeyJH6
+ HLpBXZDJH5ZcYJPMgunghSqghgfuUsd5fHmjFr3hDb5EoqAfgiRMSDom7wLZ9TGtT6viDldv
+ hfWaIOD5UhpNYxfNgH6Y102gtMmN4o2P6g3UbZK1diH13s9DA5vI2mO2krGz2c5BOBmcctE5
+ iS+JWiCizOqia5Op+B/tUNye/YIXSC4oMR++Fgt30OEafB8twxydMAE3HmY+foawCpGq06yM
+ vAguLzvm7f6wAPesDAO9vxRNC5y7JeN4Kytl561ciTICmBR80Pdgs/Obj2DwM6dvHquQbQrU
+ Op4XtD3eGUW4qgD99DrMXqCcSXX/uay9kOG+fQBfK39jkPKZEuEV2QdpE4Pry36SUGfohSNq
+ xXW+bMc6P+irTT39VWFUJMcSuQINBE6KyREBEACvEJggkGC42huFAqJcOcLqnjK83t4TVwEn
+ JRisbY/VdeZIHTGtcGLqsALDzk+bEAcZapguzfp7cySzvuR6Hyq7hKEjEHAZmI/3IDc9nbdh
+ EgdCiFatah0XZ/p4vp7KAelYqbv8YF/ORLylAdLh9rzLR6yHFqVaR4WL4pl4kEWwFhNSHLxe
+ 55G56/dxBuoj4RrFoX3ynerXfbp4dH2KArPc0NfoamqebuGNfEQmDbtnCGE5zKcR0zvmXsRp
+ qU7+caufueZyLwjTU+y5p34U4PlOO2Q7/bdaPEdXfpgvSpWk1o3H36LvkPV/PGGDCLzaNn04
+ BdiiiPEHwoIjCXOAcR+4+eqM4TSwVpTn6SNgbHLjAhCwCDyggK+3qEGJph+WNtNU7uFfscSP
+ k4jqlxc8P+hn9IqaMWaeX9nBEaiKffR7OKjMdtFFnBRSXiW/kOKuuRdeDjL5gWJjY+IpdafP
+ KhjvUFtfSwGdrDUh3SvB5knSixE3qbxbhbNxmqDVzyzMwunFANujyyVizS31DnWC6tKzANkC
+ k15CyeFC6sFFu+WpRxvC6fzQTLI5CRGAB6FAxz8Hu5rpNNZHsbYs9Vfr/BJuSUfRI/12eOCL
+ IvxRPpmMOlcI4WDW3EDkzqNAXn5Onx/b0rFGFpM4GmSPriEJdBb4M4pSD6fN6Y/Jrng/Bdwk
+ SQARAQABiQIlBBgBAgAPBQJOiskRAhsMBQkSzAMAAAoJEGz4yi9OyKjPgEwQAIP/gy/Xqc1q
+ OpzfFScswk3CEoZWSqHxn/fZasa4IzkwhTUmukuIvRew+BzwvrTxhHcz9qQ8hX7iDPTZBcUt
+ ovWPxz+3XfbGqE+q0JunlIsP4N+K/I10nyoGdoFpMFMfDnAiMUiUatHRf9Wsif/nT6oRiPNJ
+ T0EbbeSyIYe+ZOMFfZBVGPqBCbe8YMI+JiZeez8L9JtegxQ6O3EMQ//1eoPJ5mv5lWXLFQfx
+ f4rAcKseM8DE6xs1+1AIsSIG6H+EE3tVm+GdCkBaVAZo2VMVapx9k8RMSlW7vlGEQsHtI0FT
+ c1XNOCGjaP4ITYUiOpfkh+N0nUZVRTxWnJqVPGZ2Nt7xCk7eoJWTSMWmodFlsKSgfblXVfdM
+ 9qoNScM3u0b9iYYuw/ijZ7VtYXFuQdh0XMM/V6zFrLnnhNmg0pnK6hO1LUgZlrxHwLZk5X8F
+ uD/0MCbPmsYUMHPuJd5dSLUFTlejVXIbKTSAMd0tDSP5Ms8Ds84z5eHreiy1ijatqRFWFJRp
+ ZtWlhGRERnDH17PUXDglsOA08HCls0PHx8itYsjYCAyETlxlLApXWdVl9YVwbQpQ+i693t/Y
+ PGu8jotn0++P19d3JwXW8t6TVvBIQ1dRZHx1IxGLMn+CkDJMOmHAUMWTAXX2rf5tUjas8/v2
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <73653f9e-2d39-48fb-9842-3a1851fb5bed@suse.de>
+Date:   Mon, 24 Aug 2020 09:36:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
+In-Reply-To: <20200823091043.2600261-3-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <82abab10-9af6-a9c4-b241-d5a3af5b588d@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 23 Aug 2020, Dmitry Osipenko wrote:
-
-> 23.08.2020 21:16, Lubomir Rintel пишет:
-> > Hello,
-> ...
-> >> +config MFD_ACER_A500_EC
-> >> +	tristate "Embedded Controller driver for Acer Iconia Tab A500"
-> >> +	depends on (I2C_TEGRA && ARCH_TEGRA_2x_SOC) || COMPILE_TEST
-> > 
-> > This seems to also depend on I2C and OF. Perhaps I2C_TEGRA and
-> > ARCH_TEGRA_2x_SOC imply that, but it could lead to build failures with
-> > COMPILE_TEST=y. 
+On 8/23/20 11:10 AM, Christoph Hellwig wrote:
+> Two different callers use two different mutexes for updating the
+> block device size, which obviously doesn't help to actually protect
+> against concurrent updates from the different callers.  In addition
+> one of the locks, bd_mutex is rather prone to deadlocks with other
+> parts of the block stack that use it for high level synchronization.
 > 
-> Hello, Lubomir! You're right about the I2C because it could be compiled
-> as a loadable module, good catch! The OF seems should fine as-is.
+> Switch to using a new spinlock protecting just the size updates, as
+> that is all we need, and make sure everyone does the update through
+> the proper helper.
 > 
-> ...
-> >> +static struct a500_ec *a500_ec_scratch;
-> > 
-> > If this is only used for power_off, please rename it. I've been told to
-> > do so in my driver: https://lore.kernel.org/lkml/20200519104933.GX271301@dell/
+> This fixes a bug reported with the nvme revalidating disks during a
+> hot removal operation, which can currently deadlock on bd_mutex.
 > 
-> I don't mind to rename the variable, but not sure whether it will be a
-> worthwhile change since _scratch is also a common naming scheme among
-> MFD drivers. Please see max77620_scratch for example, which I added
-> about a year ago.
+> Reported-by: Xianting Tian <xianting_tian@126.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  block/partitions/core.c         |  4 ++--
+>  drivers/block/aoe/aoecmd.c      |  4 +---
+>  drivers/md/dm.c                 | 15 ++-------------
+>  drivers/s390/block/dasd_ioctl.c |  9 ++-------
+>  fs/block_dev.c                  | 25 ++++++++++++++-----------
+>  include/linux/blk_types.h       |  1 +
+>  6 files changed, 22 insertions(+), 36 deletions(-)
+> Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-If something is used once, it does not make it 'common'.
+Cheers,
 
-Not sure how this slipped my notice before, but I don't like it.
-
-Ensure any global struct used for power_off only includes items
-required for this purpose.  It's unfortunate this API requires a
-global variable at all.
-
+Hannes
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Dr. Hannes Reinecke		           Kernel Storage Architect
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Felix Imendörffer
