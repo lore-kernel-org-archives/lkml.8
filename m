@@ -2,114 +2,150 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD34CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1E32072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zb6H8ukR"
+	by mail.kernel.org (Postfix) with ESMTP id 799B9206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598261432;
+	bh=Ugp5lYXLez/YXQk+NIdZCZFpUpaFzz9EnvVK/Mz/9/o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LKgsMcAk5aFc9qtLbqasipD7G22otBdAjSoZPl9DBzNllV1wXubR2wF0dZt58BONc
+	 FTL06Cfrucg82sWig32L9W9uqfCz0w4wZzCE311qJ8vFlulZ+5M+AOBgT1M8BC9hwh
+	 8M1zhhsIpH65XpbnKNaHf46SmU3U7jxHvZeUcsSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729116AbgHXJaU (ORCPT
+        id S1729856AbgHXIuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:30:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728402AbgHXJaO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:30:14 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF407C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 02:30:14 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k13so3925054plk.13
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 02:30:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pK5bVNvEUkGmkHt7h+22p1PRjllmkBfGKoPd86o06Lw=;
-        b=zb6H8ukRfhieLWr3DBnUXOTmg55+e5EVKeqsfa2altwwB4K1VmjB+xm8dp0KBc1B0F
-         KH/tRUbVH5H9kDw1etY4+d/Urtgr+0Uix5vBzCbL7jtkQ1eORBWByV8kv2G/GTNO34Vt
-         mSH6FAZHzaRAefjA6cu7fJfPaD6DxdXrTBmzBKhB6v3cEnUrPrwh8faxFALumEMVOqJA
-         CTTMXQeHQ8MSlQBI1kcnwyGWnp1vQ2Y8z7P0NgI/6mlqv0ZgTeOsB4RhP2gBC/WJvl+H
-         E/7v/z49lP1blJipG/yCn02u9NiwT7GRfdVRKXa+EBMMQvQmxFyFlkyzbmIzDvLjy4lx
-         1+hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pK5bVNvEUkGmkHt7h+22p1PRjllmkBfGKoPd86o06Lw=;
-        b=Pmq0VVtptpwC9ipMhier8jxEbC1PKVWAR5llIINKwM2bFUgXNk94BPA/nWj0/9uLD6
-         IFzJyWLKhqwKSdnYWxXJqd+BIvHTbDRXD5Tv6gjH5VccdpW7UAkGstSrII1+VXzUlfgG
-         AhM8yNci2wT/HxIr1Ne2MIPqtCpkflwqYrSVHrGrc1IoMJ6KKcT+M0nPuYkOiIvelBmk
-         k0Rwz/fC7OOWrvSIaovz8wskXeDC/PCkVFLfSXVJO8hTFNKzslVyFaQHjRnh4gDQ2BLh
-         tVb2UHC9CmxEF4OyQmeljaopywPGi/bvwJxC3+Dm92PTwlTwsoNEe0oa2lNYHdxNsUr2
-         e/OA==
-X-Gm-Message-State: AOAM530DqHt5tZsM5OFnoq8dgfDHo6027vroeXm+KZumEFJtpsUXQE7p
-        WNxEKZZqMILC+p7R9t4ymxhY8w==
-X-Google-Smtp-Source: ABdhPJwzqLJz/+aP8JzlsLfMYGqG9zUEjWrPHt0rxu0+/5xAZOVgSxNCJ+v8x4WUX1WjzQRFq4pUgA==
-X-Received: by 2002:a17:90a:448e:: with SMTP id t14mr3829392pjg.59.1598261414267;
-        Mon, 24 Aug 2020 02:30:14 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id y3sm9647312pjg.8.2020.08.24.02.30.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 02:30:13 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     stable@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH - for v5.7 stable] opp: Put opp table in dev_pm_opp_set_rate() for empty tables
-Date:   Mon, 24 Aug 2020 15:00:03 +0530
-Message-Id: <e7e9f887328c06800a79f3b48feb623fd15aa3d5.1598261323.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
+        Mon, 24 Aug 2020 04:50:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729855AbgHXIum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:50:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B768F207DF;
+        Mon, 24 Aug 2020 08:50:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259042;
+        bh=Ugp5lYXLez/YXQk+NIdZCZFpUpaFzz9EnvVK/Mz/9/o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AyddoIxEJHOhFdya1lMxLOjwWiMd7yj0WMoXfAXYRmDijGp6BrwSGrPdKYK+ti2sH
+         GlMq4s/tgAHC1QN59pUS8njKaYyfOqT3VTm3Beqhu53/mkLLYOX1re9t9AcrUbVNJP
+         VMFIXoewdgUnXAbtHFln/7ZhxqdVNU+kGR9eB9ww=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sarah Newman <srn@prgmr.com>, Juergen Gross <jgross@suse.com>,
+        Chris Brannon <cmb@prgmr.com>
+Subject: [PATCH 4.4 32/33] xen: dont reschedule in preemption off sections
+Date:   Mon, 24 Aug 2020 10:31:28 +0200
+Message-Id: <20200824082348.141846246@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
+References: <20200824082346.498653578@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Juergen Gross <jgross@suse.com>
 
-commit 8979ef70850eb469e1094279259d1ef393ffe85f upstream.
+For support of long running hypercalls xen_maybe_preempt_hcall() is
+calling cond_resched() in case a hypercall marked as preemptible has
+been interrupted.
 
-We get the opp_table pointer at the top of the function and so we should
-put the pointer at the end of the function like all other exit paths
-from this function do.
+Normally this is no problem, as only hypercalls done via some ioctl()s
+are marked to be preemptible. In rare cases when during such a
+preemptible hypercall an interrupt occurs and any softirq action is
+started from irq_exit(), a further hypercall issued by the softirq
+handler will be regarded to be preemptible, too. This might lead to
+rescheduling in spite of the softirq handler potentially having set
+preempt_disable(), leading to splats like:
 
-Cc: v5.7+ <stable@vger.kernel.org> # v5.7+
-Fixes: aca48b61f963 ("opp: Manage empty OPP tables with clk handle")
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-[ Viresh: Split the patch into two ]
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-[ Viresh: Update the code for v5.7-stable ]
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+BUG: sleeping function called from invalid context at drivers/xen/preempt.c:37
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 20775, name: xl
+INFO: lockdep is turned off.
+CPU: 1 PID: 20775 Comm: xl Tainted: G D W 5.4.46-1_prgmr_debug.el7.x86_64 #1
+Call Trace:
+<IRQ>
+dump_stack+0x8f/0xd0
+___might_sleep.cold.76+0xb2/0x103
+xen_maybe_preempt_hcall+0x48/0x70
+xen_do_hypervisor_callback+0x37/0x40
+RIP: e030:xen_hypercall_xen_version+0xa/0x20
+Code: ...
+RSP: e02b:ffffc900400dcc30 EFLAGS: 00000246
+RAX: 000000000004000d RBX: 0000000000000200 RCX: ffffffff8100122a
+RDX: ffff88812e788000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffffff83ee3ad0 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000246 R12: ffff8881824aa0b0
+R13: 0000000865496000 R14: 0000000865496000 R15: ffff88815d040000
+? xen_hypercall_xen_version+0xa/0x20
+? xen_force_evtchn_callback+0x9/0x10
+? check_events+0x12/0x20
+? xen_restore_fl_direct+0x1f/0x20
+? _raw_spin_unlock_irqrestore+0x53/0x60
+? debug_dma_sync_single_for_cpu+0x91/0xc0
+? _raw_spin_unlock_irqrestore+0x53/0x60
+? xen_swiotlb_sync_single_for_cpu+0x3d/0x140
+? mlx4_en_process_rx_cq+0x6b6/0x1110 [mlx4_en]
+? mlx4_en_poll_rx_cq+0x64/0x100 [mlx4_en]
+? net_rx_action+0x151/0x4a0
+? __do_softirq+0xed/0x55b
+? irq_exit+0xea/0x100
+? xen_evtchn_do_upcall+0x2c/0x40
+? xen_do_hypervisor_callback+0x29/0x40
+</IRQ>
+? xen_hypercall_domctl+0xa/0x20
+? xen_hypercall_domctl+0x8/0x20
+? privcmd_ioctl+0x221/0x990 [xen_privcmd]
+? do_vfs_ioctl+0xa5/0x6f0
+? ksys_ioctl+0x60/0x90
+? trace_hardirqs_off_thunk+0x1a/0x20
+? __x64_sys_ioctl+0x16/0x20
+? do_syscall_64+0x62/0x250
+? entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fix that by testing preempt_count() before calling cond_resched().
+
+In kernel 5.8 this can't happen any more due to the entry code rework
+(more than 100 patches, so not a candidate for backporting).
+
+The issue was introduced in kernel 4.3, so this patch should go into
+all stable kernels in [4.3 ... 5.7].
+
+Reported-by: Sarah Newman <srn@prgmr.com>
+Fixes: 0fa2f5cb2b0ecd8 ("sched/preempt, xen: Use need_resched() instead of should_resched()")
+Cc: Sarah Newman <srn@prgmr.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Tested-by: Chris Brannon <cmb@prgmr.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/opp/core.c | 2 +-
+ drivers/xen/preempt.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index bb7060d52eec..c94e725e6522 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -820,7 +820,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 		if (opp_table->required_opp_tables) {
- 			ret = _set_required_opps(dev, opp_table, NULL);
- 		} else if (!_get_opp_count(opp_table)) {
--			return 0;
-+			ret = 0;
- 		} else {
- 			dev_err(dev, "target frequency can't be 0\n");
- 			ret = -EINVAL;
--- 
-2.25.0.rc1.19.g042ed3e048af
+--- a/drivers/xen/preempt.c
++++ b/drivers/xen/preempt.c
+@@ -31,7 +31,7 @@ EXPORT_SYMBOL_GPL(xen_in_preemptible_hca
+ asmlinkage __visible void xen_maybe_preempt_hcall(void)
+ {
+ 	if (unlikely(__this_cpu_read(xen_in_preemptible_hcall)
+-		     && need_resched())) {
++		     && need_resched() && !preempt_count())) {
+ 		/*
+ 		 * Clear flag as we may be rescheduled on a different
+ 		 * cpu.
+
 
