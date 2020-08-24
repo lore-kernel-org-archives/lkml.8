@@ -2,91 +2,127 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C106C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DD7C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0C5720706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:14:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mCD4PIpX"
+	by mail.kernel.org (Postfix) with ESMTP id DE84420656
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598310926;
+	bh=LTsMw4RZHo2hmb+5m1s9lfr4T+sF+iX0ufWBuE3KLyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZA5CEIxWrhVuJJMUkIYP2Z4NtNw0mcT/FefP7bQLul+gJb0Zyqiqcbr1vvi+JpPAi
+	 rUQnqvQGJUT+9FDVilzU1gT7qt4nWSd28uFICNGaUQVXM2kRQgjocR8mQO/j3juNJ4
+	 Ypdp26+HeXlh7r6NO/fLgHDB6BZuIGQ7CUPX6NWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgHXXN6 (ORCPT
+        id S1728150AbgHXXPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:13:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXXNy (ORCPT
+        Mon, 24 Aug 2020 19:15:25 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40622 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXXPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 19:13:54 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3445C061574;
-        Mon, 24 Aug 2020 16:13:53 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bb7Gg2h2xz9sTY;
-        Tue, 25 Aug 2020 09:13:47 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598310827;
-        bh=ifLv7ja+Aq93zBsZtMzOydHNKEXb+JJjJEis39Q4jYo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mCD4PIpX4zZq+gaAhPhPdYefg9QrDDZithjdHOx1m394E+QvfA3YEs0kv9hA1kgvG
-         oYBZSqnk/SrVsQQLAW4AkhjE4hfLciRq2+qul2KbKNAX6A00i1czOXeQz/tRnEUt2W
-         ku7iHEkWeZbXNvTcQgj3u1nyA6KrYRU5nqdzT2C6KHBMrSdkwHDuw9mmN9zOljCk9s
-         cgSvLFisOthKTRX4b9Km7t3kyFMrVmCAOKGTw8rAPlRV+4sglhYFY2c1tYWUW4VoUq
-         kfp5x8vqJTMX5EAP6dcHQW084CWPjYd0aWpdZw8cKjNKQAPFD1kO0/iTcTYlzKmigy
-         KQQNn4U81FOqg==
-Date:   Tue, 25 Aug 2020 09:13:46 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the jc_docs tree
-Message-ID: <20200825091346.63395129@canb.auug.org.au>
+        Mon, 24 Aug 2020 19:15:23 -0400
+Received: by mail-io1-f66.google.com with SMTP id q132so107838iod.7;
+        Mon, 24 Aug 2020 16:15:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=glE9MJLwvJksS6Kq8WSkXlWHv26cBEY9xO46r0OVXSU=;
+        b=Snifu9Q4V00yZgnz+O+oBIwsk8zNp/jBywO1B5XMHY4Lamv9KfIZ+7WCQBPCf72TYj
+         bkj7eDmhPR4fVgPuYvonWbbPu9rCsr+srkOhvIGqSwoU7Spz3N+27juQCF24blaJwNz8
+         jH0MrymzkJ6COKS4mNdHl1BFFhrI7JzfVaaRsoeylIAhZPB7JMP1Vu7vy2fvIwDsPrJR
+         gUakRkmzN/7eWjz3sEfMpSEEQ42hbOxtXJKItzcDQCCfQdxd0vXwppvkv4Vjz+y/LnoI
+         yIlg8R6MPSVKZ8zXgj3UPRKoEHh3vFiovoXllqHuEvKGDkpNa/J0Sdy0SJ+K7/Jzj32D
+         F0Pg==
+X-Gm-Message-State: AOAM532+Mjf2SRjKEcyYWXHrr9GW5yA39QcnOcgzoibHu2TDP11gjVEa
+        89r1ZN5F+xUXgjTow6cfGw==
+X-Google-Smtp-Source: ABdhPJyi8756H2KScziyvfj8N3dhCo662Valtwe3X4z9g1X/I/OGyZyNv2EQX/btFiKGf0FNeNSZVg==
+X-Received: by 2002:a6b:bfc1:: with SMTP id p184mr6858446iof.193.1598310922357;
+        Mon, 24 Aug 2020 16:15:22 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id a71sm8392575ill.19.2020.08.24.16.15.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 16:15:21 -0700 (PDT)
+Received: (nullmailer pid 3515104 invoked by uid 1000);
+        Mon, 24 Aug 2020 23:15:19 -0000
+Date:   Mon, 24 Aug 2020 17:15:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>
+Cc:     f.fainelli@gmail.com, tsbogend@alpha.franken.de,
+        jonas.gorski@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/14] mips: bmips: include dt-bindings headers
+Message-ID: <20200824231519.GA3507085@bogus>
+References: <20200812063129.361862-1-noltari@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/oAGNZb0hMR77VSkbTB.0tLa";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200812063129.361862-1-noltari@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/oAGNZb0hMR77VSkbTB.0tLa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Aug 12, 2020 at 08:31:15AM +0200, Álvaro Fernández Rojas wrote:
+> Allow including dt-bindings header files and use them for bcm63xx.
+> 
+> Álvaro Fernández Rojas (14):
+>   mips: dts: brcm: allow including header files
+>   mips: bmips: add BCM3368 irq definitions
+>   mips: bmips: add BCM6318 irq definitions
+>   mips: bmips: add BCM6328 irq definitions
+>   mips: bmips: add BCM6358 irq definitions
+>   mips: bmips: add BCM6362 irq definitions
+>   mips: bmips: add BCM6368 irq definitions
+>   mips: bmips: add BCM63268 irq definitions
+>   mips: bmips: bcm3368: include and use dt-bindings
+>   mips: bmips: bcm6328: include and use dt-bindings
+>   mips: bmips: bcm6358: include and use dt-bindings
+>   mips: bmips: bcm6362: include and use dt-bindings
+>   mips: bmips: bcm6368: include and use dt-bindings
+>   mips: bmips: bcm63268: include and use dt-bindings
+> 
+>  .../boot/dts/brcm/bcm3368-netgear-cvg834g.dts |  2 +-
+>  arch/mips/boot/dts/brcm/bcm3368.dtsi          |  8 +-
+>  .../dts/brcm/bcm63268-comtrend-vr-3032u.dts   |  2 +-
+>  arch/mips/boot/dts/brcm/bcm63268.dtsi         | 12 ++-
+>  arch/mips/boot/dts/brcm/bcm6328.dtsi          | 12 ++-
+>  .../dts/brcm/bcm6358-neufbox4-sercomm.dts     |  2 +-
+>  arch/mips/boot/dts/brcm/bcm6358.dtsi          | 12 ++-
+>  .../dts/brcm/bcm6362-neufbox6-sercomm.dts     |  2 +-
+>  arch/mips/boot/dts/brcm/bcm6362.dtsi          | 12 ++-
+>  arch/mips/boot/dts/brcm/bcm6368.dtsi          | 12 ++-
+>  arch/mips/boot/dts/brcm/bcm93384wvg.dts       |  2 +-
+>  arch/mips/boot/dts/brcm/bcm93384wvg_viper.dts |  2 +-
+>  arch/mips/boot/dts/brcm/bcm96368mvwg.dts      |  2 +-
+>  arch/mips/boot/dts/brcm/bcm97125cbmb.dts      |  2 +-
+>  arch/mips/boot/dts/brcm/bcm97346dbsmb.dts     |  4 +-
+>  arch/mips/boot/dts/brcm/bcm97358svmb.dts      |  4 +-
+>  arch/mips/boot/dts/brcm/bcm97360svmb.dts      |  2 +-
+>  arch/mips/boot/dts/brcm/bcm97362svmb.dts      |  4 +-
+>  arch/mips/boot/dts/brcm/bcm97420c.dts         |  2 +-
+>  arch/mips/boot/dts/brcm/bcm97425svmb.dts      |  4 +-
+>  arch/mips/boot/dts/brcm/bcm97435svmb.dts      |  4 +-
+>  arch/mips/boot/dts/brcm/bcm9ejtagprb.dts      |  2 +-
+>  .../bcm3368-interrupt-controller.h            | 19 ++++
+>  .../bcm6318-interrupt-controller.h            | 84 ++++++++++++++++++
+>  .../bcm63268-interrupt-controller.h           | 86 +++++++++++++++++++
+>  .../bcm6328-interrupt-controller.h            | 68 +++++++++++++++
+>  .../bcm6358-interrupt-controller.h            | 38 ++++++++
+>  .../bcm6362-interrupt-controller.h            | 71 +++++++++++++++
+>  .../bcm6368-interrupt-controller.h            | 71 +++++++++++++++
 
-Hi all,
+You'll notice that there are essentially no other headers with 
+SoC interrupt numbers. That's because we don't do defines for them. It's 
+pointless obfuscation.
 
-Commit
-
-  09824ed3a906 ("Documentation/locking/locktypes: fix local_locks documenta=
-tion")
-
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/oAGNZb0hMR77VSkbTB.0tLa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9ESaoACgkQAVBC80lX
-0GxEsAf+MQfnJcAXHj137awYvrci3XJ0bhuzX+i1khD2yXdZpgCin8AWEZbeYcT7
-5fQpzPBaRj5bv9cO7uOTpmR4f4br3kVvh5fLZVPjRLBEtAciZn3hDSJbZ76+gw4P
-2dnZM28DT5kDh8Ro1ZkdpjdomMTDq3210P6wzB965B7QI6LA+sGcRn774hCdUOop
-/0NdMZ8W/bvWS9Qq1OvMzxbQLO8Zc0O9OMmlIzETjm6HtpgCqWOfOjzEEatEb6uh
-AU9sqjwhm8g1yoLKmvDYz8qmE+ElWbSqiM3QsWGDgYWsPDJP6IQkqnDjhj5XySIH
-jEHT3Fgn7A0K281aA5E0RXYxY2zKBA==
-=yN7E
------END PGP SIGNATURE-----
-
---Sig_/oAGNZb0hMR77VSkbTB.0tLa--
+Rob
