@@ -2,56 +2,52 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72614C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78755C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41E12204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4157E2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258768;
-	bh=6dKXPbkOsXvYAwvbYQTU8pkwY4FYFgSClqrMNdZdVw8=;
+	s=default; t=1598258778;
+	bh=EPajKXHFjc0YAhYJMrssrhINBvBrhqjSvgk0uwagryY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gy1J+JQ+50QHTvvNw+qc5xs+mgE9HfAmEcqIej3u451knXRS9gwPNDX8Fyjk71wkh
-	 TKHE86RuweuQgI4W/fTH9VeUmeoZFekySYL2zkg6vHRRcq5zARcaBgMQDsS5d/d24E
-	 /p9Qi28HqCqbsLvXuiXbgCqhcRKIlvykk6geqNSg=
+	b=vDgS2Ngw0UfY2rYKl2nClclTYOMiR10QxZJugvWIIjsWxlABW5I4lTmsLEFTQvz5P
+	 eCJ1zGzGL6FqSgLGjq0dWuOdXLsbnGPjRhN7/BmaC45qUr06stVamfw2nutM3vUKgj
+	 BNFFPeT19cTzlXcPGMJJSY1T3+CY5s1dMTBAh8Sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbgHXIqH (ORCPT
+        id S1729331AbgHXIqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:46:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43828 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:46:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728882AbgHXIqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:46:03 -0400
+        id S1729291AbgHXIqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:46:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1895B206F0;
-        Mon, 24 Aug 2020 08:46:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87D7C2075B;
+        Mon, 24 Aug 2020 08:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258762;
-        bh=6dKXPbkOsXvYAwvbYQTU8pkwY4FYFgSClqrMNdZdVw8=;
+        s=default; t=1598258773;
+        bh=EPajKXHFjc0YAhYJMrssrhINBvBrhqjSvgk0uwagryY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GvF1ygbGhlnF9CEMFBkufVmGiJU/gNLQLta4+1ILmEYNauYKwubLCu4Guq9a/oaPa
-         2rn/LVXGOYF1BCM4jR0ZqqCTTF3Bz3reIXsoRzSY69S0CjP3wlaFtPZBG19EvidBeX
-         qekCvWgHtY9bIkcD902nCk5B+qtYomptdYlPpEOI=
+        b=UzoAU6G7IULXgo+nkkgW1GfV1IoLSW4+WmBcNEQYatFcAfJW/SDm3MZb3afyhn6Yj
+         +Pa76/ABJQUSh3XfiViM72HwaP9rE7v/1/Zsvu3FOfu2WDXbdAlqdHaNUMfiOBe9LH
+         pToxbUdUKkIvBrjZs2WrYGh67SP3IvsSgoE2UiUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Xu Yu <xuyu@linux.alibaba.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Yang Shi <shy828301@gmail.com>
-Subject: [PATCH 5.4 035/107] mm/memory.c: skip spurious TLB flush for retried page fault
-Date:   Mon, 24 Aug 2020 10:30:01 +0200
-Message-Id: <20200824082406.860641951@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 010/107] drm/vgem: Replace opencoded version of drm_gem_dumb_map_offset()
+Date:   Mon, 24 Aug 2020 10:29:36 +0200
+Message-Id: <20200824082405.565795154@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -64,52 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <shy828301@gmail.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit b7333b58f358f38d90d78e00c1ee5dec82df10ad upstream.
+[ Upstream commit 119c53d2d4044c59c450c4f5a568d80b9d861856 ]
 
-Recently we found regression when running will_it_scale/page_fault3 test
-on ARM64.  Over 70% down for the multi processes cases and over 20% down
-for the multi threads cases.  It turns out the regression is caused by
-commit 89b15332af7c ("mm: drop mmap_sem before calling
-balance_dirty_pages() in write fault").
+drm_gem_dumb_map_offset() now exists and does everything
+vgem_gem_dump_map does and *ought* to do.
 
-The test mmaps a memory size file then write to the mapping, this would
-make all memory dirty and trigger dirty pages throttle, that upstream
-commit would release mmap_sem then retry the page fault.  The retried
-page fault would see correct PTEs installed then just fall through to
-spurious TLB flush.  The regression is caused by the excessive spurious
-TLB flush.  It is fine on x86 since x86's spurious TLB flush is no-op.
+In particular, vgem_gem_dumb_map() was trying to reject mmapping an
+imported dmabuf by checking the existence of obj->filp. Unfortunately,
+we always allocated an obj->filp, even if unused for an imported dmabuf.
+Instead, the drm_gem_dumb_map_offset(), since commit 90378e589192
+("drm/gem: drm_gem_dumb_map_offset(): reject dma-buf"), uses the
+obj->import_attach to reject such invalid mmaps.
 
-We could just skip the spurious TLB flush to mitigate the regression.
+This prevents vgem from allowing userspace mmapping the dumb handle and
+attempting to incorrectly fault in remote pages belonging to another
+device, where there may not even be a struct page.
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: Xu Yu <xuyu@linux.alibaba.com>
-Debugged-by: Xu Yu <xuyu@linux.alibaba.com>
-Tested-by: Xu Yu <xuyu@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Yang Shi <shy828301@gmail.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+v2: Use the default drm_gem_dumb_map_offset() callback
 
+Fixes: af33a9190d02 ("drm/vgem: Enable dmabuf import interfaces")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: <stable@vger.kernel.org> # v4.13+
+Link: https://patchwork.freedesktop.org/patch/msgid/20200708154911.21236-1-chris@chris-wilson.co.uk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/vgem/vgem_drv.c | 27 ---------------------------
+ 1 file changed, 27 deletions(-)
 
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -3886,6 +3886,9 @@ static vm_fault_t handle_pte_fault(struc
- 				vmf->flags & FAULT_FLAG_WRITE)) {
- 		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
- 	} else {
-+		/* Skip spurious TLB flush for retried page fault */
-+		if (vmf->flags & FAULT_FLAG_TRIED)
-+			goto unlock;
- 		/*
- 		 * This is needed only for protection faults but the arch code
- 		 * is not yet telling us if this is a protection fault or not.
+diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
+index 909eba43664a2..204d1df5a21d1 100644
+--- a/drivers/gpu/drm/vgem/vgem_drv.c
++++ b/drivers/gpu/drm/vgem/vgem_drv.c
+@@ -229,32 +229,6 @@ static int vgem_gem_dumb_create(struct drm_file *file, struct drm_device *dev,
+ 	return 0;
+ }
+ 
+-static int vgem_gem_dumb_map(struct drm_file *file, struct drm_device *dev,
+-			     uint32_t handle, uint64_t *offset)
+-{
+-	struct drm_gem_object *obj;
+-	int ret;
+-
+-	obj = drm_gem_object_lookup(file, handle);
+-	if (!obj)
+-		return -ENOENT;
+-
+-	if (!obj->filp) {
+-		ret = -EINVAL;
+-		goto unref;
+-	}
+-
+-	ret = drm_gem_create_mmap_offset(obj);
+-	if (ret)
+-		goto unref;
+-
+-	*offset = drm_vma_node_offset_addr(&obj->vma_node);
+-unref:
+-	drm_gem_object_put_unlocked(obj);
+-
+-	return ret;
+-}
+-
+ static struct drm_ioctl_desc vgem_ioctls[] = {
+ 	DRM_IOCTL_DEF_DRV(VGEM_FENCE_ATTACH, vgem_fence_attach_ioctl, DRM_RENDER_ALLOW),
+ 	DRM_IOCTL_DEF_DRV(VGEM_FENCE_SIGNAL, vgem_fence_signal_ioctl, DRM_RENDER_ALLOW),
+@@ -448,7 +422,6 @@ static struct drm_driver vgem_driver = {
+ 	.fops				= &vgem_driver_fops,
+ 
+ 	.dumb_create			= vgem_gem_dumb_create,
+-	.dumb_map_offset		= vgem_gem_dumb_map,
+ 
+ 	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+ 	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+-- 
+2.25.1
+
 
 
