@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F52C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6C6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D87B206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD432071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262423;
-	bh=P7b8TdtssGQHKnTBQceAxyIf20el3pcU+twLqNA708M=;
+	s=default; t=1598262426;
+	bh=Use45e60GxbYf6qvO5LgdZ7qaYCmDh68vpXb2tHKKr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJ8+POUw5KyCTQpQJrNHKDqyH7H57N67s0svyfuliic1iw5ZNKccOfKyVzfgmKey+
-	 fGcNn+jGLsv2ZklFPl8OTifk7II03Tw+wZm5+yfw9uWLKAEnf47PP0719InoNFh/4u
-	 BuB3SpRzcoJW1SFUvbI3tq1pR6rny/tWXYgMqmSs=
+	b=Pkk/1kOcVLEDgJrVxLcoNfoyk2UnTMlDrO+XmH1qEMfija9Gjaffk9ChArzuvqqfO
+	 +Gw/f+rIA3FXTNUjU5+FecLsdMia48ZChlU9Wcvt5WDqiWX1ZNUSzCkWKQ8YINi9/4
+	 PHpTTsEA2hLfdYyZnKaEsVG8b48Td91/+TWhTng0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbgHXIlk (ORCPT
+        id S1729072AbgHXJrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:41:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59792 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:47:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728497AbgHXIl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:41:29 -0400
+        id S1728855AbgHXIlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:41:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80FA92075B;
-        Mon, 24 Aug 2020 08:41:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D61F2087D;
+        Mon, 24 Aug 2020 08:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258489;
-        bh=P7b8TdtssGQHKnTBQceAxyIf20el3pcU+twLqNA708M=;
+        s=default; t=1598258497;
+        bh=Use45e60GxbYf6qvO5LgdZ7qaYCmDh68vpXb2tHKKr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dMlBaFm5oxI68SKxGdzsBBvhUTHrh66WQMZgXQlGih9EBLtAb9rhEWTCMa3JmFSfC
-         btXBcmvleWNTLA/6Bbi97H+ocH1iVUl0PyfUci+k1ZIVR5vXkhXwy4xZk/fD56ZpHJ
-         r47H9jxwOdg74oVT0pIZBraBdJaxt6Yo6V9rTok4=
+        b=1G58sqK0OHHi9xoPjCdRQn1n4SzgbF9eCfMmBD04rXbRNheWNzfUTjOu43iCZqO1D
+         MpGOQde+rPtXpMXJ3lxnz9gvymDsba4Yl+e/FC6Pra7UTFJ8IOyWfLl3TnueG7PstJ
+         5BMnFkC6yMV28pStRCjYwp2zhPXWgxd2Rrx6G7KY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Suryaputra <ssuryaextr@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 063/124] netfilter: nf_tables: nft_exthdr: the presence return value should be little-endian
-Date:   Mon, 24 Aug 2020 10:29:57 +0200
-Message-Id: <20200824082412.517851225@linuxfoundation.org>
+Subject: [PATCH 5.7 038/124] f2fs: fix to check page dirty status before writeback
+Date:   Mon, 24 Aug 2020 10:29:32 +0200
+Message-Id: <20200824082411.290496938@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -60,64 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Suryaputra <ssuryaextr@gmail.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit b428336676dbca363262cc134b6218205df4f530 ]
+[ Upstream commit eb1353cfa9c1e9415b03dc117f8399969fa02102 ]
 
-On big-endian machine, the returned register data when the exthdr is
-present is not being compared correctly because little-endian is
-assumed. The function nft_cmp_fast_mask(), called by nft_cmp_fast_eval()
-and nft_cmp_fast_init(), calls cpu_to_le32().
+In f2fs_write_raw_pages(), we need to check page dirty status before
+writeback, because there could be a racer (e.g. reclaimer) helps
+writebacking the dirty page.
 
-The following dump also shows that little endian is assumed:
-
-$ nft --debug=netlink add rule ip recordroute forward ip option rr exists counter
-ip
-  [ exthdr load ipv4 1b @ 7 + 0 present => reg 1 ]
-  [ cmp eq reg 1 0x01000000 ]
-  [ counter pkts 0 bytes 0 ]
-
-Lastly, debug print in nft_cmp_fast_init() and nft_cmp_fast_eval() when
-RR option exists in the packet shows that the comparison fails because
-the assumption:
-
-nft_cmp_fast_init:189 priv->sreg=4 desc.len=8 mask=0xff000000 data.data[0]=0x10003e0
-nft_cmp_fast_eval:57 regs->data[priv->sreg=4]=0x1 mask=0xff000000 priv->data=0x1000000
-
-v2: use nft_reg_store8() instead (Florian Westphal). Also to avoid the
-    warnings reported by kernel test robot.
-
-Fixes: dbb5281a1f84 ("netfilter: nf_tables: add support for matching IPv4 options")
-Fixes: c078ca3b0c5b ("netfilter: nft_exthdr: Add support for existence check")
-Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_exthdr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/compress.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/netfilter/nft_exthdr.c b/net/netfilter/nft_exthdr.c
-index 07782836fad6e..3c48cdc8935df 100644
---- a/net/netfilter/nft_exthdr.c
-+++ b/net/netfilter/nft_exthdr.c
-@@ -44,7 +44,7 @@ static void nft_exthdr_ipv6_eval(const struct nft_expr *expr,
- 
- 	err = ipv6_find_hdr(pkt->skb, &offset, priv->type, NULL, NULL);
- 	if (priv->flags & NFT_EXTHDR_F_PRESENT) {
--		*dest = (err >= 0);
-+		nft_reg_store8(dest, err >= 0);
- 		return;
- 	} else if (err < 0) {
- 		goto err;
-@@ -141,7 +141,7 @@ static void nft_exthdr_ipv4_eval(const struct nft_expr *expr,
- 
- 	err = ipv4_find_option(nft_net(pkt), skb, &offset, priv->type);
- 	if (priv->flags & NFT_EXTHDR_F_PRESENT) {
--		*dest = (err >= 0);
-+		nft_reg_store8(dest, err >= 0);
- 		return;
- 	} else if (err < 0) {
- 		goto err;
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 527d50edcb956..b397121dfa107 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1207,6 +1207,12 @@ retry_write:
+ 				congestion_wait(BLK_RW_ASYNC,
+ 						DEFAULT_IO_TIMEOUT);
+ 				lock_page(cc->rpages[i]);
++
++				if (!PageDirty(cc->rpages[i])) {
++					unlock_page(cc->rpages[i]);
++					continue;
++				}
++
+ 				clear_page_dirty_for_io(cc->rpages[i]);
+ 				goto retry_write;
+ 			}
 -- 
 2.25.1
 
