@@ -2,162 +2,144 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA71C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B42C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB0182074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:05:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aRAELLIL"
+	by mail.kernel.org (Postfix) with ESMTP id 60B0C206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598288747;
+	bh=HN0Isawz2NHgv2bRUqMMnRrlv95OYOY7kAoBjuMpvrc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YuVFcqD2Xp0Ir2k3Nx6Q4nL9ot1sFoGT8OxOza9Te8RDavzp31/1IwTA7oCIWcfdU
+	 A+pUsQ+OgHPxTEq9Rjd1szX5+RJ+lfvqz1KiSblHMVSsXpTg4UQ6Z2rZZ2KQwNXMpV
+	 2Vc88tcJg2GHw/98VzUdnDO02QaFhbcjmRJuTR08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgHXRFf (ORCPT
+        id S1727034AbgHXRFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:05:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58166 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726650AbgHXRE4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:04:56 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B4B3C061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:04:55 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id b16so9449147ioj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fgZwZCIujuxzzLKMoK4XwDwGpdA2x4tRAfT7RbGfEyE=;
-        b=aRAELLILR7Gs8V4eWNB5DkiYJqrocT3AqS8Ka1bV4Lunz/lpBe3Q/4QBC2lSVFQoOF
-         5gT0i3tjDPI/8YDJDT1Tnd/Jqq3UuVfHh7a0GpqfoATt3p6OKIzOb68H9KfZ3dSBcWLj
-         YL17yEVwNe2Ewm76W1ny8icHTAXNFuYgOHh1LMrlKaF767Xpxro52LA+Ag2/fSL/fkI3
-         JBKkduITmseGjItU/x66Re4EF06ascn5lIVigOIH5ftzgNKeRmWO/2UnVVY3nTQ9ZQoZ
-         aGh5T093QSyYTiTVk+xC7rWQ54FtV3MZo1Gw173JUG8s34BT3HMgAeCkirvYvnMme0VX
-         JWlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fgZwZCIujuxzzLKMoK4XwDwGpdA2x4tRAfT7RbGfEyE=;
-        b=FhGMNhZ42BYo92JfV0aglTKQpCCouIb/9S9FhIq7iQNWIlF3fU6PQfKe6kGfPSjh/X
-         nybe8g3uMLP8kFFHR5UMsUbyqVYma9XUsr+dVJcCH1zn7FeBv+iThxxeGcK7ZTIwv4q2
-         1mpSO2XjA+6QJogv0olsrgPLdX43DBxOuuqSV9lcVD0+8jOI/2T1IafTrEbb5z4oA3oY
-         NLQQeT/Qnxd+xVBdWO3tv1ndNkU/xWS3H1+JBDuECU3zghPaVmKWsxgY+3nXuN7FprDL
-         pRE5WmTzmy3imnbNO26DxbAhs8unMb425FdgCFa7ZYfSGu2CLr8mVAOFfATr/bEsrUJj
-         3Xyg==
-X-Gm-Message-State: AOAM533/8qQegWpN6cGe3oBEaqZQtm4Y+bQKPAyxOlciidWPA6qJyw60
-        bhAOC3ITbauhVx3yGk/bRnerdwbI1R87jqU+OSFYVQ==
-X-Google-Smtp-Source: ABdhPJzyv5i/pTPasEP6mPwaAemka1mfGrbTgakxsiJNgGVH64HPjPguQKB4K7RAeE/vYSrfjmU1nVmoS7ByFsfu7+M=
-X-Received: by 2002:a6b:9256:: with SMTP id u83mr5748173iod.194.1598288694363;
- Mon, 24 Aug 2020 10:04:54 -0700 (PDT)
+        Mon, 24 Aug 2020 13:05:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728454AbgHXQic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:38:32 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CC1D22C9F;
+        Mon, 24 Aug 2020 16:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598287089;
+        bh=HN0Isawz2NHgv2bRUqMMnRrlv95OYOY7kAoBjuMpvrc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NLMP+F5IxWtiTJkVCOOoLPQNAt327QpHY3Xtf+ihePgZXhUXmaRPGHJOjt1PcF4WL
+         bK1VmJ5486ZrIZgGaH9Uc57No/V90GtJoiK9tjJK6PDf6IQDsgHWvEDBSsJTawjN+3
+         BWMrxKOrWx06SFAFM+t+ZoIY1bIQBs00877EKEjw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alain Volmat <alain.volmat@st.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 13/38] spi: stm32: always perform registers configuration prior to transfer
+Date:   Mon, 24 Aug 2020 12:37:25 -0400
+Message-Id: <20200824163751.606577-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163751.606577-1-sashal@kernel.org>
+References: <20200824163751.606577-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200820164753.3256899-1-jackmanb@chromium.org>
- <42fb4180-772c-5579-ef3e-b4003e2b784b@schaufler-ca.com> <CA+i-1C09YZ8aCr6p5NOA2e3Ji5TKwdET=qAy=M328NK--L=0RA@mail.gmail.com>
- <66a35f25-53be-17c3-8ab3-7cb32b0bc77a@schaufler-ca.com>
-In-Reply-To: <66a35f25-53be-17c3-8ab3-7cb32b0bc77a@schaufler-ca.com>
-From:   Brendan Jackman <jackmanb@google.com>
-Date:   Mon, 24 Aug 2020 19:04:43 +0200
-Message-ID: <CA+i-1C1GwgYJAfaUofzv47nyryQ15znE6OLWhAN-gsscm6mMoA@mail.gmail.com>
-Subject: Re: [RFC] security: replace indirect calls with static calls
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     Brendan Jackman <jackmanb@chromium.org>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Paul Renauld <renauld@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        rafael.j.wysocki@intel.com, Kees Cook <keescook@chromium.org>,
-        thgarnie@chromium.org, KP Singh <kpsingh@google.com>,
-        paul.renauld.epfl@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 at 18:43, Casey Schaufler <casey@schaufler-ca.com> wrote:
->
-> On 8/24/2020 8:20 AM, Brendan Jackman wrote:
-> > On Fri, 21 Aug 2020 at 00:46, Casey Schaufler <casey@schaufler-ca.com> wrote:
-> >> On 8/20/2020 9:47 AM, Brendan Jackman wrote:
-> > [...]
-> >> What does NOP really look like?
-> > The NOP is the same as a regular function call but the CALL
-> > instruction is replaced with a NOP instruction. The code that sets up
-> > the call parameters is unchanged, and so is the code that expects to
-> > get the return value in eax or whatever.
->
-> Right. Are you saying that NOP is in-line assembler in your switch?
+From: Alain Volmat <alain.volmat@st.com>
 
-That's right - although it's behind the static_call API that the patch
-depends on ([5] in the original mail).
+[ Upstream commit 60ccb3515fc61a0124c70aa37317f75b67560024 ]
 
-> > That means we cannot actually
-> > call the static_calls for NULL slots, we'd get undefined behaviour
-> > (except for void hooks) - this is what Peter is talking about in the
-> > sibling thread.
->
-> Referring to the "sibling thread" is kinda confusing, and
-> assumes everyone is one all the right mailing lists, and knows
-> which other thread you're talking about.
+SPI registers content may have been lost upon suspend/resume sequence.
+So, always compute and apply the necessary configuration in
+stm32_spi_transfer_one_setup routine.
 
-Sure, sorry - here's the Lore link for future reference:
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Link: https://lore.kernel.org/r/1597043558-29668-6-git-send-email-alain.volmat@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-stm32.c | 42 +++++++++++++++++------------------------
+ 1 file changed, 17 insertions(+), 25 deletions(-)
 
-https://lore.kernel.org/lkml/20200820164753.3256899-1-jackmanb@chromium.org/T/#m5a6fb3f10141049ce43e18a41f154796090ae1d5
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 54fc14e08cee9..b0a8e36ac49db 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -1589,41 +1589,33 @@ static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
+ 	unsigned long flags;
+ 	unsigned int comm_type;
+ 	int nb_words, ret = 0;
++	int mbr;
+ 
+ 	spin_lock_irqsave(&spi->lock, flags);
+ 
+ 	spi->cur_xferlen = transfer->len;
+ 
+-	if (spi->cur_bpw != transfer->bits_per_word) {
+-		spi->cur_bpw = transfer->bits_per_word;
+-		spi->cfg->set_bpw(spi);
+-	}
+-
+-	if (spi->cur_speed != transfer->speed_hz) {
+-		int mbr;
+-
+-		/* Update spi->cur_speed with real clock speed */
+-		mbr = stm32_spi_prepare_mbr(spi, transfer->speed_hz,
+-					    spi->cfg->baud_rate_div_min,
+-					    spi->cfg->baud_rate_div_max);
+-		if (mbr < 0) {
+-			ret = mbr;
+-			goto out;
+-		}
++	spi->cur_bpw = transfer->bits_per_word;
++	spi->cfg->set_bpw(spi);
+ 
+-		transfer->speed_hz = spi->cur_speed;
+-		stm32_spi_set_mbr(spi, mbr);
++	/* Update spi->cur_speed with real clock speed */
++	mbr = stm32_spi_prepare_mbr(spi, transfer->speed_hz,
++				    spi->cfg->baud_rate_div_min,
++				    spi->cfg->baud_rate_div_max);
++	if (mbr < 0) {
++		ret = mbr;
++		goto out;
+ 	}
+ 
+-	comm_type = stm32_spi_communication_type(spi_dev, transfer);
+-	if (spi->cur_comm != comm_type) {
+-		ret = spi->cfg->set_mode(spi, comm_type);
++	transfer->speed_hz = spi->cur_speed;
++	stm32_spi_set_mbr(spi, mbr);
+ 
+-		if (ret < 0)
+-			goto out;
++	comm_type = stm32_spi_communication_type(spi_dev, transfer);
++	ret = spi->cfg->set_mode(spi, comm_type);
++	if (ret < 0)
++		goto out;
+ 
+-		spi->cur_comm = comm_type;
+-	}
++	spi->cur_comm = comm_type;
+ 
+ 	if (spi->cfg->set_data_idleness)
+ 		spi->cfg->set_data_idleness(spi, transfer->len);
+-- 
+2.25.1
 
-> >
-> > For this reason, there are _no gaps_ in the callback table. For a
-> > given LSM hook, all the slots after base_slot_idx are filled,
->
-> Why go to all the trouble of maintaining the base_slot_idx
-> if NOP is so cheap? Why not fill all unused slots with NOP?
-> Worst case would be a hook with no users, in which case you
-> have 11 NOPS in the void hook case and 11 "if (ret != DEFAULT_RET)"
-> and 11 NOPS in the int case. No switch magic required. Even
-> better, in the int case you have two calls/slot, the first is the
-> module supplied function (or NOP) and the second is
->         int isit(int ret) { return (ret != DEFAULT_RET) ? ret : 0; }
-> (or NOP).
->
-> The no security module case degenerates to 22 NOP instructions
-> and no if checks of any sort. I'm not the performance guy, but
-> that seems better than maintaining and checking base_slot_idx
-> to me.
-
-The switch trick is not really motivated by performance.
-
-I think all the focus on the NOPs themselves is a bit misleading here
-- we _can't_ execute the NOPs for the int hooks, because there are
-instructions after them that expect a function to have just returned a
-value, which NOP doesn't do. When there is a NOP in the slot instead
-of a CALL, it would appear to "return" whatever value is leftover in
-the return register. At the C level, this is why the static_call API
-doesn't allow static_call_cond to return a value (which is what PeterZ
-is referring to in the thread I linked above).
-
-So, we could drop the switch trick for void hooks and just use
-static_call_cond, but this doesn't work for int hooks. IMO that
-variation between the two hook types would just add confusion.
-
-> >>> +#define __UNROLL_MACRO_LOOP_20(MACRO, ...) \
-> >>> + __UNROLL_MACRO_LOOP_19(MACRO, __VA_ARGS__) \
-> >>> + MACRO(19, __VA_ARGS__)
-> >>> +
-> >> Where does "20" come from? Why are you unrolling beyond 11?
-> > It's just an arbitrary limit on the unrolling macro implementation, we
-> > aren't actually unrolling beyond 11 where the macro is used (N is set
-> > to 11).
->
-> I'm not a fan of including macros you can't use, especially
-> when they're just obvious variants of other macros.
-
-Not sure what you mean here - is there already a macro that does what
-UNROLL_MACRO_LOOP does?
