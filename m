@@ -2,349 +2,144 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A86CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AD4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8511D2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4262074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:13:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TjgdgI31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726337AbgHXNM5 (ORCPT
+        id S1726578AbgHXNNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:12:57 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:58344 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725926AbgHXNMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:12:51 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kACH0-0006B8-5Q; Mon, 24 Aug 2020 23:12:31 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 24 Aug 2020 23:12:30 +1000
-Date:   Mon, 24 Aug 2020 23:12:30 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Keerthy <j-keerthy@ti.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH] crypto: sa2ul - Reduce stack usage
-Message-ID: <20200824131230.GA4813@gondor.apana.org.au>
-References: <202008161440.gqdm1lpp%lkp@intel.com>
+        Mon, 24 Aug 2020 09:13:24 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42605 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726483AbgHXNNR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 09:13:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598274794;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=M3sp5HeiSrgOhqJfi4HssybU/jSQO1GIn85W057WAgg=;
+        b=TjgdgI31/QVn3pF2ZP+iFvzYG0rr4gMhwLkOQPEYUvskH+sQqDUTvk6wo9xWr9pLXZP6fh
+        DrOTpx4xNy99O2jkkU1NFu1B9Xc76rAzA7n6YEunOui20xqr110C0MbvX4k1pbBkyJxCyW
+        vMUoWzZQblYrSYVg3JHUC1hxNiTZvSM=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-252-pb3U3_R-Nv6JfZZd8nqdhg-1; Mon, 24 Aug 2020 09:13:12 -0400
+X-MC-Unique: pb3U3_R-Nv6JfZZd8nqdhg-1
+Received: by mail-qt1-f197.google.com with SMTP id f11so2197732qtj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 06:13:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=M3sp5HeiSrgOhqJfi4HssybU/jSQO1GIn85W057WAgg=;
+        b=ZKOEsJqbj9gFwoNtQCENQzeHTNvSBbiYikpyXDhXwVmhI/Vhe7Vor44DPY1lJpWrMs
+         f7wUvDU+pa4cUxmyL6vs1LNwW5tuZJO2vOpPJZbQh0IILOzQUjJcqSPOkNcdsiLDU2UA
+         /f2H8ilcQak/nwsV724Ixm871FpBPOdtzFGtO8VBARMs6vyAMEo16z+i/uiJos1obDQp
+         E+cDvusLpHk6gb0SMlKWUUkHh5Lu7HWITl1AQwaO4zpMdRvLAMktIefEKOSvKBo77Cz8
+         TlVCzczxGeyJlhr9Nu3OtQgQInxZtGq4kXG64mhZcwDI/3MKh/mPYsWuqT5N0RgRWTsw
+         mkow==
+X-Gm-Message-State: AOAM532d/UBFQU16/99M8A+FlEiyu2DyxZkbcuN2sjE1+O2A0/PkPOsW
+        cy/lUaW+DSOJoeUoQwtIP58FA0uRNIt53I4VgBLJBXovqwGFJtu9M9xBH/rG0+uzWXVflkMkBP8
+        TbXRHVs+0VAnZnCPyUlv7d21l
+X-Received: by 2002:ad4:4cc3:: with SMTP id i3mr4785572qvz.17.1598274791876;
+        Mon, 24 Aug 2020 06:13:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwSPtSwrwYTNDJdpHYixdyM9NxjZZRNyv5Uo1DAak/YtpD6YHO0BZWLW524k0+CXgmnBGugKw==
+X-Received: by 2002:ad4:4cc3:: with SMTP id i3mr4785551qvz.17.1598274791593;
+        Mon, 24 Aug 2020 06:13:11 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id p34sm11806050qte.79.2020.08.24.06.13.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 06:13:11 -0700 (PDT)
+Subject: Re: [PATCH] usb: storage: initialize variable
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        usb-storage@lists.one-eyed-alien.net, linux-kernel@vger.kernel.org
+References: <20200822211839.5117-1-trix@redhat.com>
+ <20200823004903.GB292576@rowland.harvard.edu>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <34834bbc-12e5-3fe1-7bb3-7a4c03acb03f@redhat.com>
+Date:   Mon, 24 Aug 2020 06:13:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202008161440.gqdm1lpp%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200823004903.GB292576@rowland.harvard.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 02:56:43PM +0800, kernel test robot wrote:
+
+On 8/22/20 5:49 PM, Alan Stern wrote:
+> On Sat, Aug 22, 2020 at 02:18:39PM -0700, trix@redhat.com wrote:
+>> From: Tom Rix <trix@redhat.com>
+>>
+>> clang static analysis reports this representative problem
+>>
+>> transport.c:495:15: warning: Assigned value is garbage or
+>>   undefined
+>>         length_left -= partial;
+>>                    ^  ~~~~~~~
+>> partial is set only when usb_stor_bulk_transfer_sglist()
+>> is successful.
+>>
+>> So initialize to partial to 0.
+>>
+>> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+>> Signed-off-by: Tom Rix <trix@redhat.com>
+>> ---
+>>  drivers/usb/storage/transport.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/usb/storage/transport.c b/drivers/usb/storage/transport.c
+>> index 238a8088e17f..ce920851b1f2 100644
+>> --- a/drivers/usb/storage/transport.c
+>> +++ b/drivers/usb/storage/transport.c
+>> @@ -461,7 +461,7 @@ static int usb_stor_bulk_transfer_sglist(struct us_data *us, unsigned int pipe,
+>>  int usb_stor_bulk_srb(struct us_data* us, unsigned int pipe,
+>>  		      struct scsi_cmnd* srb)
+>>  {
+>> -	unsigned int partial;
+>> +	unsigned int partial = 0;
+>>  	int result = usb_stor_bulk_transfer_sglist(us, pipe, scsi_sglist(srb),
+>>  				      scsi_sg_count(srb), scsi_bufflen(srb),
+>>  				      &partial);
+>> @@ -484,7 +484,7 @@ int usb_stor_bulk_transfer_sg(struct us_data* us, unsigned int pipe,
+>>  		void *buf, unsigned int length_left, int use_sg, int *residual)
+>>  {
+>>  	int result;
+>> -	unsigned int partial;
+>> +	unsigned int partial = 0;
+>>  
+>>  	/* are we scatter-gathering? */
+>>  	if (use_sg) {
+> Yes, this is a bug.  But the right way to fix it is to change 
+> usb_stor_bulk_transfer_sglist(): Make it store 0 to *act_len at the 
+> start.
 >
->    drivers/crypto/sa2ul.c: In function 'sa_prepare_iopads':
-> >> drivers/crypto/sa2ul.c:432:1: warning: the frame size of 1076 bytes is larger than 1024 bytes [-Wframe-larger-than=]
+> That way you change only one localized piece of code, instead of 
+> changing multiple callers and leaving a possibility of more errors being 
+> added in the future.
 
-This patch tries to reduce the stack frame size in sa2ul.
+I'll respin the patch.
 
----8<---
-This patch reduces the stack usage in sa2ul:
+It will exchange the compile time initialization fix for a run time if-check fix.
 
-1. Move the exported sha state into sa_prepare_iopads so that it
-can occupy the same space as the k_pad buffer.
+> Alan Stern
+>
 
-2. Use one buffer for ipad/opad in sa_prepare_iopads.
-
-3. Remove ipad/opad buffer from sa_set_sc_auth.
-
-4. Use async skcipher fallback and remove on-stack request from
-sa_cipher_run.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: d2c8ac187fc9 ("crypto: sa2ul - Add AEAD algorithm support")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/drivers/crypto/sa2ul.c b/drivers/crypto/sa2ul.c
-index 5bc099052bd2..66629cad9531 100644
---- a/drivers/crypto/sa2ul.c
-+++ b/drivers/crypto/sa2ul.c
-@@ -9,8 +9,10 @@
-  *		Tero Kristo
-  */
- #include <linux/clk.h>
-+#include <linux/dma-mapping.h>
- #include <linux/dmaengine.h>
- #include <linux/dmapool.h>
-+#include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-@@ -356,42 +358,45 @@ static void sa_swiz_128(u8 *in, u16 len)
- }
- 
- /* Prepare the ipad and opad from key as per SHA algorithm step 1*/
--static void prepare_kiopad(u8 *k_ipad, u8 *k_opad, const u8 *key, u16 key_sz)
-+static void prepare_kipad(u8 *k_ipad, const u8 *key, u16 key_sz)
- {
- 	int i;
- 
--	for (i = 0; i < key_sz; i++) {
-+	for (i = 0; i < key_sz; i++)
- 		k_ipad[i] = key[i] ^ 0x36;
--		k_opad[i] = key[i] ^ 0x5c;
--	}
- 
- 	/* Instead of XOR with 0 */
--	for (; i < SHA1_BLOCK_SIZE; i++) {
-+	for (; i < SHA1_BLOCK_SIZE; i++)
- 		k_ipad[i] = 0x36;
-+}
-+
-+static void prepare_kopad(u8 *k_opad, const u8 *key, u16 key_sz)
-+{
-+	int i;
-+
-+	for (i = 0; i < key_sz; i++)
-+		k_opad[i] = key[i] ^ 0x5c;
-+
-+	/* Instead of XOR with 0 */
-+	for (; i < SHA1_BLOCK_SIZE; i++)
- 		k_opad[i] = 0x5c;
--	}
- }
- 
--static void sa_export_shash(struct shash_desc *hash, int block_size,
-+static void sa_export_shash(void *state, struct shash_desc *hash,
- 			    int digest_size, __be32 *out)
- {
--	union {
--		struct sha1_state sha1;
--		struct sha256_state sha256;
--		struct sha512_state sha512;
--	} sha;
--	void *state;
-+	struct sha1_state *sha1;
-+	struct sha256_state *sha256;
- 	u32 *result;
--	int i;
- 
- 	switch (digest_size) {
- 	case SHA1_DIGEST_SIZE:
--		state = &sha.sha1;
--		result = sha.sha1.state;
-+		sha1 = state;
-+		result = sha1->state;
- 		break;
- 	case SHA256_DIGEST_SIZE:
--		state = &sha.sha256;
--		result = sha.sha256.state;
-+		sha256 = state;
-+		result = sha256->state;
- 		break;
- 	default:
- 		dev_err(sa_k3_dev, "%s: bad digest_size=%d\n", __func__,
-@@ -401,8 +406,7 @@ static void sa_export_shash(struct shash_desc *hash, int block_size,
- 
- 	crypto_shash_export(hash, state);
- 
--	for (i = 0; i < digest_size >> 2; i++)
--		out[i] = cpu_to_be32(result[i]);
-+	cpu_to_be32_array(out, result, digest_size / 4);
- }
- 
- static void sa_prepare_iopads(struct algo_data *data, const u8 *key,
-@@ -411,24 +415,28 @@ static void sa_prepare_iopads(struct algo_data *data, const u8 *key,
- 	SHASH_DESC_ON_STACK(shash, data->ctx->shash);
- 	int block_size = crypto_shash_blocksize(data->ctx->shash);
- 	int digest_size = crypto_shash_digestsize(data->ctx->shash);
--	u8 k_ipad[SHA1_BLOCK_SIZE];
--	u8 k_opad[SHA1_BLOCK_SIZE];
-+	union {
-+		struct sha1_state sha1;
-+		struct sha256_state sha256;
-+		u8 k_pad[SHA1_BLOCK_SIZE];
-+	} sha;
- 
- 	shash->tfm = data->ctx->shash;
- 
--	prepare_kiopad(k_ipad, k_opad, key, key_sz);
--
--	memzero_explicit(ipad, block_size);
--	memzero_explicit(opad, block_size);
-+	prepare_kipad(sha.k_pad, key, key_sz);
- 
- 	crypto_shash_init(shash);
--	crypto_shash_update(shash, k_ipad, block_size);
--	sa_export_shash(shash, block_size, digest_size, ipad);
-+	crypto_shash_update(shash, sha.k_pad, block_size);
-+	sa_export_shash(&sha, shash, digest_size, ipad);
-+
-+	prepare_kopad(sha.k_pad, key, key_sz);
- 
- 	crypto_shash_init(shash);
--	crypto_shash_update(shash, k_opad, block_size);
-+	crypto_shash_update(shash, sha.k_pad, block_size);
- 
--	sa_export_shash(shash, block_size, digest_size, opad);
-+	sa_export_shash(&sha, shash, digest_size, opad);
-+
-+	memzero_explicit(&sha, sizeof(sha));
- }
- 
- /* Derive the inverse key used in AES-CBC decryption operation */
-@@ -501,7 +509,8 @@ static int sa_set_sc_enc(struct algo_data *ad, const u8 *key, u16 key_sz,
- static void sa_set_sc_auth(struct algo_data *ad, const u8 *key, u16 key_sz,
- 			   u8 *sc_buf)
- {
--	__be32 ipad[64], opad[64];
-+	__be32 *ipad = (void *)(sc_buf + 32);
-+	__be32 *opad = (void *)(sc_buf + 64);
- 
- 	/* Set Authentication mode selector to hash processing */
- 	sc_buf[0] = SA_HASH_PROCESSING;
-@@ -510,14 +519,9 @@ static void sa_set_sc_auth(struct algo_data *ad, const u8 *key, u16 key_sz,
- 	sc_buf[1] |= ad->auth_ctrl;
- 
- 	/* Copy the keys or ipad/opad */
--	if (ad->keyed_mac) {
-+	if (ad->keyed_mac)
- 		ad->prep_iopad(ad, key, key_sz, ipad, opad);
--
--		/* Copy ipad to AuthKey */
--		memcpy(&sc_buf[32], ipad, ad->hash_size);
--		/* Copy opad to Aux-1 */
--		memcpy(&sc_buf[64], opad, ad->hash_size);
--	} else {
-+	else {
- 		/* basic hash */
- 		sc_buf[1] |= SA_BASIC_HASH;
- 	}
-@@ -814,7 +818,7 @@ static void sa_cipher_cra_exit(struct crypto_skcipher *tfm)
- 	sa_free_ctx_info(&ctx->enc, data);
- 	sa_free_ctx_info(&ctx->dec, data);
- 
--	crypto_free_sync_skcipher(ctx->fallback.skcipher);
-+	crypto_free_skcipher(ctx->fallback.skcipher);
- }
- 
- static int sa_cipher_cra_init(struct crypto_skcipher *tfm)
-@@ -822,6 +826,7 @@ static int sa_cipher_cra_init(struct crypto_skcipher *tfm)
- 	struct sa_tfm_ctx *ctx = crypto_skcipher_ctx(tfm);
- 	struct sa_crypto_data *data = dev_get_drvdata(sa_k3_dev);
- 	const char *name = crypto_tfm_alg_name(&tfm->base);
-+	struct crypto_skcipher *child;
- 	int ret;
- 
- 	memzero_explicit(ctx, sizeof(*ctx));
-@@ -836,14 +841,17 @@ static int sa_cipher_cra_init(struct crypto_skcipher *tfm)
- 		return ret;
- 	}
- 
--	ctx->fallback.skcipher =
--		crypto_alloc_sync_skcipher(name, 0, CRYPTO_ALG_NEED_FALLBACK);
-+	child = crypto_alloc_skcipher(name, 0, CRYPTO_ALG_NEED_FALLBACK);
- 
--	if (IS_ERR(ctx->fallback.skcipher)) {
-+	if (IS_ERR(child)) {
- 		dev_err(sa_k3_dev, "Error allocating fallback algo %s\n", name);
--		return PTR_ERR(ctx->fallback.skcipher);
-+		return PTR_ERR(child);
- 	}
- 
-+	ctx->fallback.skcipher = child;
-+	crypto_skcipher_set_reqsize(tfm, crypto_skcipher_reqsize(child) +
-+					 sizeof(struct skcipher_request));
-+
- 	dev_dbg(sa_k3_dev, "%s(0x%p) sc-ids(0x%x(0x%pad), 0x%x(0x%pad))\n",
- 		__func__, tfm, ctx->enc.sc_id, &ctx->enc.sc_phys,
- 		ctx->dec.sc_id, &ctx->dec.sc_phys);
-@@ -854,6 +862,7 @@ static int sa_cipher_setkey(struct crypto_skcipher *tfm, const u8 *key,
- 			    unsigned int keylen, struct algo_data *ad)
- {
- 	struct sa_tfm_ctx *ctx = crypto_skcipher_ctx(tfm);
-+	struct crypto_skcipher *child = ctx->fallback.skcipher;
- 	int cmdl_len;
- 	struct sa_cmdl_cfg cfg;
- 	int ret;
-@@ -869,12 +878,10 @@ static int sa_cipher_setkey(struct crypto_skcipher *tfm, const u8 *key,
- 	cfg.enc_eng_id = ad->enc_eng.eng_id;
- 	cfg.iv_size = crypto_skcipher_ivsize(tfm);
- 
--	crypto_sync_skcipher_clear_flags(ctx->fallback.skcipher,
-+	crypto_skcipher_clear_flags(child, CRYPTO_TFM_REQ_MASK);
-+	crypto_skcipher_set_flags(child, tfm->base.crt_flags &
- 					 CRYPTO_TFM_REQ_MASK);
--	crypto_sync_skcipher_set_flags(ctx->fallback.skcipher,
--				       tfm->base.crt_flags &
--				       CRYPTO_TFM_REQ_MASK);
--	ret = crypto_sync_skcipher_setkey(ctx->fallback.skcipher, key, keylen);
-+	ret = crypto_skcipher_setkey(child, key, keylen);
- 	if (ret)
- 		return ret;
- 
-@@ -1234,7 +1241,6 @@ static int sa_cipher_run(struct skcipher_request *req, u8 *iv, int enc)
- 	    crypto_skcipher_ctx(crypto_skcipher_reqtfm(req));
- 	struct crypto_alg *alg = req->base.tfm->__crt_alg;
- 	struct sa_req sa_req = { 0 };
--	int ret;
- 
- 	if (!req->cryptlen)
- 		return 0;
-@@ -1246,20 +1252,18 @@ static int sa_cipher_run(struct skcipher_request *req, u8 *iv, int enc)
- 	if (req->cryptlen > SA_MAX_DATA_SZ ||
- 	    (req->cryptlen >= SA_UNSAFE_DATA_SZ_MIN &&
- 	     req->cryptlen <= SA_UNSAFE_DATA_SZ_MAX)) {
--		SYNC_SKCIPHER_REQUEST_ON_STACK(subreq, ctx->fallback.skcipher);
-+		struct skcipher_request *subreq = skcipher_request_ctx(req);
- 
--		skcipher_request_set_sync_tfm(subreq, ctx->fallback.skcipher);
-+		skcipher_request_set_tfm(subreq, ctx->fallback.skcipher);
- 		skcipher_request_set_callback(subreq, req->base.flags,
--					      NULL, NULL);
-+					      req->base.complete,
-+					      req->base.data);
- 		skcipher_request_set_crypt(subreq, req->src, req->dst,
- 					   req->cryptlen, req->iv);
- 		if (enc)
--			ret = crypto_skcipher_encrypt(subreq);
-+			return crypto_skcipher_encrypt(subreq);
- 		else
--			ret = crypto_skcipher_decrypt(subreq);
--
--		skcipher_request_zero(subreq);
--		return ret;
-+			return crypto_skcipher_decrypt(subreq);
- 	}
- 
- 	sa_req.size = req->cryptlen;
-diff --git a/drivers/crypto/sa2ul.h b/drivers/crypto/sa2ul.h
-index 7f7e3fe60d11..bb40df3876e5 100644
---- a/drivers/crypto/sa2ul.h
-+++ b/drivers/crypto/sa2ul.h
-@@ -12,10 +12,8 @@
- #ifndef _K3_SA2UL_
- #define _K3_SA2UL_
- 
--#include <linux/interrupt.h>
--#include <linux/skbuff.h>
--#include <linux/hw_random.h>
- #include <crypto/aes.h>
-+#include <crypto/sha.h>
- 
- #define SA_ENGINE_ENABLE_CONTROL	0x1000
- 
-@@ -311,7 +309,7 @@ struct sa_tfm_ctx {
- 	struct crypto_shash	*shash;
- 	/* for fallback */
- 	union {
--		struct crypto_sync_skcipher	*skcipher;
-+		struct crypto_skcipher		*skcipher;
- 		struct crypto_ahash		*ahash;
- 		struct crypto_aead		*aead;
- 	} fallback;
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
