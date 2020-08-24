@@ -2,119 +2,108 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7568C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A18FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEC922074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8083E20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:23:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVxFQX8h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="divqktAM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbgHXKRL (ORCPT
+        id S1726449AbgHXKXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:17:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50556 "EHLO
+        Mon, 24 Aug 2020 06:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgHXKRE (ORCPT
+        with ESMTP id S1725906AbgHXKXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:17:04 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766D3C061573;
-        Mon, 24 Aug 2020 03:17:03 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id y2so8986403ljc.1;
-        Mon, 24 Aug 2020 03:17:03 -0700 (PDT)
+        Mon, 24 Aug 2020 06:23:32 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED14EC061573;
+        Mon, 24 Aug 2020 03:23:31 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t4so6777286iln.1;
+        Mon, 24 Aug 2020 03:23:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EO6NpAg0w4GDPViUfV2sBM0Yy3icsdCv6CnK4KTImqc=;
-        b=NVxFQX8hvxJpgbMYgWDP8ljVHy+fJWPMXrej1XIN0mQJrxqZqZ7rZ7q5Jr3ijgyGlf
-         T3OdrM5cuz0hbZsZDGoiDq6Qac6igGMQUNV8ExM7LTC0YIBGX9lNSqiEeB8rxnqeUu2W
-         /m2pfPwGkZ/XhhspBiEDuDE82+a5usjw734uegAh6VfTqoirraDGyDeuPQRyHEI8vdqs
-         Gq/wyUmgCK6/o0p8Z+REYA4rkSupFZ8tMdvOe5iyVLRkONnmKN11ajMV3MQLSiewiWwt
-         7Rx4vkTe3vIO/BL5NR7FylxG9n/shFmmXbMS19pVax/PyPZHWUY5v1v57bfQIZBn2+M5
-         EjEw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=eppDuuHLOI5VOLJzJCYhod9oPaidx9gSqKiUktHmrVk=;
+        b=divqktAMZuFes1GiD35GYGhb7swEwaEccNiOc16b+dfhMMtZk7qRb38um1oHlkUk6k
+         hEnYJUqQAomg3alD+ahSw12f7Mt8GwJFsBkbdRi0cUO4OqWe69Sl4VroXvy326Dez5d4
+         I+gtIuakWu5UqP5K/czMywaWPccRkG3or7Y08cIDE3+3gNnVEC9bnPYA2n5hd3A1APg8
+         X5S97/uPTQwwllp5uQtkKwPyyHGnhRCQd3VUCDaGEPuRyngxmAwwVbsmEWhnjRBkVCT6
+         8qoitN/CE3xF45hXm3Bi/hCiK9XZTFaCqQfTxGkuCtFbt1voD1bkIwARiqQAA72Osw3D
+         bhCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EO6NpAg0w4GDPViUfV2sBM0Yy3icsdCv6CnK4KTImqc=;
-        b=Ptnh0JCIMkprXszF2tofnoE7WrYg//iRatLCSPwaMgPHv9nAftKbcKjAn5MGwGggxc
-         J1BIKzXOGBHT1/EEjqE2sOPwTLu0reEjZNTzHHR0HAcwscEikmtvDMfLEmlYFhGtUZWt
-         m2dGHxYvbJUVQ1aMOYO3p4LEYYYeA6N2u+NJsyn6M/D+JKD12QRIpj7KsaoHMzSPbhCr
-         cRd3IJsMsbNpgmGaVLLQQfOCCFHXNUIuS5f/76XPh29bL5ZlHz25s3NdDUvMMyAlXR9s
-         37ug/CZYQEerG7u09gGM+q085p2e8Wy86NwL4sPBFAq+ZJs3w3lw+bMxRZ7NF+xQQMQq
-         w9BQ==
-X-Gm-Message-State: AOAM533RpymZKFV7KXN2SF17hMf8AI23Noqj7+GDiqUcxnvONOaf3goI
-        a65dU8vxx0BpphHL2ak6NX7BrNcpAjA=
-X-Google-Smtp-Source: ABdhPJy/u/4LLu9r4mhcxwDPpCC7JjeLfk00HvQSpyKtVoG0ldd1sVtB6GCZfVC6S4L1b5e/fmkjSg==
-X-Received: by 2002:a2e:b708:: with SMTP id j8mr2411912ljo.375.1598264217513;
-        Mon, 24 Aug 2020 03:16:57 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id t18sm2111855ljc.126.2020.08.24.03.16.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 03:16:56 -0700 (PDT)
-Subject: Re: [PATCH v1 3/6] leds: Add driver for Acer Iconia Tab A500
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200823140846.19299-1-digetx@gmail.com>
- <20200823140846.19299-4-digetx@gmail.com>
- <20200823223434.cjxo762ehxgo4caz@duo.ucw.cz>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c7d37174-1dcd-206d-01ac-eb95aa0b5dc8@gmail.com>
-Date:   Mon, 24 Aug 2020 13:16:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=eppDuuHLOI5VOLJzJCYhod9oPaidx9gSqKiUktHmrVk=;
+        b=UQrF/v08KlIs95gN0SsqA8qx1QPbVB+mctjg4Ev4xWBG/gU0cx+mgRzYaCSvhxgqTX
+         kwIhziA3yBKzAOd5hbnTKG/PmCs/xdsnNTW2eb4k0isQ7SEu/96q6r4C7RWyheuOPL3g
+         XaQQdjpUj3KDhK4F8qZD4BiQZeOmRB+DPMhmC4jGwfAErQplyLs2g2c6DwHs+YMwSjhq
+         c/hwo8IxAbuJd5MjKUVU69hGQgTNzF7frAeYJk+TPndNE9UgB+O/cffeSs9672CFw1Io
+         Hxbr5xpJ1q8jIlBB+faLJLi0TCA9bwY1iQPS87cVx9BxHd8+sjShk4WIi1jBLkQiCYLl
+         OWww==
+X-Gm-Message-State: AOAM530993Hl/IahVbvcLZvNfZrlwIpys8ekfX7LWAhmkeOEzjSc8wsD
+        sTuFNZdzPQqpk8peqeWJsrWpE+LcJJLcwbMMAQ8=
+X-Google-Smtp-Source: ABdhPJzL/ijd0HW2Tt67za2CHZb0C24HeAy7TSZp5sLVUDfU1OLJSD+689YumyA/furfpuHuExsiBEngYTystKWMXFM=
+X-Received: by 2002:a92:5f06:: with SMTP id t6mr4125876ilb.212.1598264611324;
+ Mon, 24 Aug 2020 03:23:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200823223434.cjxo762ehxgo4caz@duo.ucw.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1597910022-22617-2-git-send-email-gene.chen.richtek@gmail.com> <20200820114524.GC5854@sirena.org.uk>
+In-Reply-To: <20200820114524.GC5854@sirena.org.uk>
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+Date:   Mon, 24 Aug 2020 18:23:19 +0800
+Message-ID: <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] regulator: mt6360: Add support for MT6360 regulator
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Gene Chen <gene_chen@richtek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.08.2020 01:34, Pavel Machek пишет:
-> On Sun 2020-08-23 17:08:43, Dmitry Osipenko wrote:
->> Acer Iconia Tab A500 is an Android tablet device which has two LEDs
->> embedded into the Power Button. Orange LED indicates "battery charging"
->> status and white LED indicates "wake-up/charge-done" status. The new LED
->> driver provides control over both LEDs to userspace.
-> 
-> Hmm. If the ENE controller is similar to other devices, should it also
-> share LED driver?
-> 
-> And I guess the cdev names should be different based on info above (I
-> gave you wrong suggestions before)... and they probably should be
-> parsed from the device tree.
+Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8820=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:45=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Thu, Aug 20, 2020 at 03:53:41PM +0800, Gene Chen wrote:
+>
+> > +     mrd->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
+> > +     if (!mrd->regmap) {
+> > +             dev_err(&pdev->dev, "Failed to get parent regmap\n");
+> > +             return -ENODEV;
+> > +     }
+>
+> > +static const struct of_device_id __maybe_unused mt6360_regulator_of_id=
+[] =3D {
+> > +     { .compatible =3D "mediatek,mt6360-regulator", },
+> > +     {},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, mt6360_regulator_of_id);
+>
+> This device only exists in the context of a single parent device, there
+> should be no need for a compatible string here - this is just a detail
+> of how Linux does things.  The MFD should just instntiate the platform
+> device.
 
-The ENE controller hardware is the same on all devices that use it, but
-firmware isn't the same and apparently every vendor invents its own
-thing in regards to the firmware because firmware features and interface
-varies vastly from device to device. Hence, unfortunately, usually there
-is very little compatibility even if devices come form the same vendor
+Trying to autoload module without of_id_table will cause run-time error:
+ueventd: LoadWithAliases was unable to load
+of:NregulatorT(null)Cmediatek,mt6360-regulator
 
-AFAIK, the ENE controller provides some compatibility on x86 machines
-via ACPI EC standard, but this doesn't apply to the ARM devices.
-
-I know that Acer A200 should be able to re-use the A500 EC driver as-is,
-but A200 is pretty much the same device as A500, so it's not surprising.
-IIRC, A200 model only misses back camera in comparison to A500. Hence
-there shouldn't be a need to parse the names from a device-tree, but
-I'll try to double-check it to be sure.
-
-Thanks!
+https://lore.kernel.org/patchwork/patch/726691/
+According to this patch, autoload can't load module which doesn't
+include add id_table or of_id_table in module.alias
+So I need keep of_if_table for auto load success
