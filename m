@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414ABC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C81C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7632071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E49206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262609;
-	bh=23ucjoFeJ1M8m1lUFCqnbYUhv+4g9L4TflRGrF9xXrw=;
+	s=default; t=1598262630;
+	bh=+enRfgXiI/OaQokOgb8ZaIHeS5lhV4M56TfBP9Oz3s8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eiZaTrz5XbgiHheVGRjoCDxw2ImbxdZhb/uI4eHD+3rY9jW2Q04MQRJBzifZeYe9H
-	 dpmGpgAaDR+cLiaFlRyofAsJbPavkM64O6jc/OJuGT1L//a+rWjVOV4lmC4cc3yvOW
-	 YL5Z85R9XnLm1htQv3ZKE6dkc0688ypICkrhbsw8=
+	b=ULjRJHeIZEPkS3pFk+6N/LPpcm7sz0Iiw6i1rXgleqs/kMxAlLLnrfHi5z/V3MZGF
+	 vB180RHkZWwnDQ6veuIsX10vuBmBh+TggkbO3GKa52sMD/xDrDHqROM8YIGZ3HOFr/
+	 +BPXv3CPN8PKVkUkT9LmUzbB9hL9xU/Fmx7cH01E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgHXJuH (ORCPT
+        id S1729176AbgHXJu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:50:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54658 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:50:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728601AbgHXIjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:39:08 -0400
+        id S1728150AbgHXIjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:39:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F137E20FC3;
-        Mon, 24 Aug 2020 08:39:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C18620FC3;
+        Mon, 24 Aug 2020 08:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258348;
-        bh=23ucjoFeJ1M8m1lUFCqnbYUhv+4g9L4TflRGrF9xXrw=;
+        s=default; t=1598258342;
+        bh=+enRfgXiI/OaQokOgb8ZaIHeS5lhV4M56TfBP9Oz3s8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WzibhZpazSEOB7eIS1aiNeuSllsA0kA5mlB9aTsb5NW7l17sDFq5vk9fGOyi/8qKZ
-         ZLHhQKkAqMVDYnoZkZdjAhupRr6XBQIVmpyM34RvlKEbb8sK4efhFxt7g/V2p7JaOV
-         u5UXG16ZFKgxx4fQ2ZDFFsltbv2m7UE9b8vw6Tqw=
+        b=ILRap5rVP9ooojLLIW9NSe6Q8+V8cBmZKwVDCqFUDUOHtrjmlKeYWViwBqZB4uvts
+         yxmwzO0HSunb8PpKNJQSSjeqPLYbHwvnoOyUpp2GIiPf1vJryPFutZ3TCG+SBF5ukA
+         yffr0hdd31DanxGpjYnNWpTJMqG9He3+kAAIWNbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, stable@kernel.org,
-        Filipe Manana <fdmanana@gmail.com>, Jan Kara <jack@suse.cz>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.7 017/124] ext4: do not block RWF_NOWAIT dio write on unallocated space
-Date:   Mon, 24 Aug 2020 10:29:11 +0200
-Message-Id: <20200824082410.264793677@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Charan Teja Reddy <charante@codeaurora.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Vinayak Menon <vinmenon@codeaurora.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 015/124] mm, page_alloc: fix core hung in free_pcppages_bulk()
+Date:   Mon, 24 Aug 2020 10:29:09 +0200
+Message-Id: <20200824082410.161378037@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,41 +66,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Charan Teja Reddy <charante@codeaurora.org>
 
-commit 0b3171b6d195637f84ddf8b59bae818ea20bc8ac upstream.
+commit 88e8ac11d2ea3acc003cf01bb5a38c8aa76c3cfd upstream.
 
-Since commit 378f32bab371 ("ext4: introduce direct I/O write using iomap
-infrastructure") we don't properly bail out of RWF_NOWAIT direct IO
-write if underlying blocks are not allocated. Also
-ext4_dio_write_checks() does not honor RWF_NOWAIT when re-acquiring
-i_rwsem. Fix both issues.
+The following race is observed with the repeated online, offline and a
+delay between two successive online of memory blocks of movable zone.
 
-Fixes: 378f32bab371 ("ext4: introduce direct I/O write using iomap infrastructure")
-Cc: stable@kernel.org
-Reported-by: Filipe Manana <fdmanana@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200708153516.9507-1-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+P1						P2
+
+Online the first memory block in
+the movable zone. The pcp struct
+values are initialized to default
+values,i.e., pcp->high = 0 &
+pcp->batch = 1.
+
+					Allocate the pages from the
+					movable zone.
+
+Try to Online the second memory
+block in the movable zone thus it
+entered the online_pages() but yet
+to call zone_pcp_update().
+					This process is entered into
+					the exit path thus it tries
+					to release the order-0 pages
+					to pcp lists through
+					free_unref_page_commit().
+					As pcp->high = 0, pcp->count = 1
+					proceed to call the function
+					free_pcppages_bulk().
+Update the pcp values thus the
+new pcp values are like, say,
+pcp->high = 378, pcp->batch = 63.
+					Read the pcp's batch value using
+					READ_ONCE() and pass the same to
+					free_pcppages_bulk(), pcp values
+					passed here are, batch = 63,
+					count = 1.
+
+					Since num of pages in the pcp
+					lists are less than ->batch,
+					then it will stuck in
+					while(list_empty(list)) loop
+					with interrupts disabled thus
+					a core hung.
+
+Avoid this by ensuring free_pcppages_bulk() is called with proper count of
+pcp list pages.
+
+The mentioned race is some what easily reproducible without [1] because
+pcp's are not updated for the first memory block online and thus there is
+a enough race window for P2 between alloc+free and pcp struct values
+update through onlining of second memory block.
+
+With [1], the race still exists but it is very narrow as we update the pcp
+struct values for the first memory block online itself.
+
+This is not limited to the movable zone, it could also happen in cases
+with the normal zone (e.g., hotplug to a node that only has DMA memory, or
+no other memory yet).
+
+[1]: https://patchwork.kernel.org/patch/11696389/
+
+Fixes: 5f8dcc21211a ("page-allocator: split per-cpu list into one-list-per-migrate-type")
+Signed-off-by: Charan Teja Reddy <charante@codeaurora.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: David Hildenbrand <david@redhat.com>
+Acked-by: David Rientjes <rientjes@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Vinayak Menon <vinmenon@codeaurora.org>
+Cc: <stable@vger.kernel.org> [2.6+]
+Link: http://lkml.kernel.org/r/1597150703-19003-1-git-send-email-charante@codeaurora.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext4/file.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ mm/page_alloc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/fs/ext4/file.c
-+++ b/fs/ext4/file.c
-@@ -428,6 +428,10 @@ restart:
- 	 */
- 	if (*ilock_shared && (!IS_NOSEC(inode) || *extend ||
- 	     !ext4_overwrite_io(inode, offset, count))) {
-+		if (iocb->ki_flags & IOCB_NOWAIT) {
-+			ret = -EAGAIN;
-+			goto out;
-+		}
- 		inode_unlock_shared(inode);
- 		*ilock_shared = false;
- 		inode_lock(inode);
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1308,6 +1308,11 @@ static void free_pcppages_bulk(struct zo
+ 	struct page *page, *tmp;
+ 	LIST_HEAD(head);
+ 
++	/*
++	 * Ensure proper count is passed which otherwise would stuck in the
++	 * below while (list_empty(list)) loop.
++	 */
++	count = min(pcp->count, count);
+ 	while (count) {
+ 		struct list_head *list;
+ 
 
 
