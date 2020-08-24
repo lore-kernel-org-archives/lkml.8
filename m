@@ -2,120 +2,214 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D5DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E735C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAA82074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:06:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598285178;
-	bh=03hAu4nRPFwVwIO4v5NWL3jE+EDhR0ft7Y0oPd1gP0w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kWaHXHs3ad8KPpNtrXPwd/pwCjmJe9anEHQ6nE2av8YSet/ujX5iyhNttnW3XyJ6m
-	 hEbRhSz3cNXc5nWjrEmBWUqQsm8C2C+Qk861PmujQ76bIbI/gfil3B19OWmlJITge4
-	 QLvvuzAS7SpCggOpvInQx9zAbpT0ZQM68q7mPgOI=
+	by mail.kernel.org (Postfix) with ESMTP id 51D472072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgHXQGR (ORCPT
+        id S1726413AbgHXQJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:06:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47756 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:09:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58126 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbgHXQGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:06:12 -0400
-Received: from coco.lan (unknown [95.90.213.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D10B92072D;
-        Mon, 24 Aug 2020 16:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598285171;
-        bh=03hAu4nRPFwVwIO4v5NWL3jE+EDhR0ft7Y0oPd1gP0w=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=y7swRGyvuvKiCu9/nrs1SXr8C+kHHYOQrQUSAJjGAjyfAkO2vlAob2lP+2GvOiVv3
-         Pt1iO8jmNElYCkalrWgU0wwBm1cz8FdwsHljARxYM9slVfU3ws0JegC3Brl+1hW/zf
-         NjcQkkkNKRa79YYaPTJPVie4PrwlTYTaf84FyRb4=
-Date:   Mon, 24 Aug 2020 18:06:01 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
-        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-Message-ID: <20200824180601.192adc3b@coco.lan>
-In-Reply-To: <20200821155650.GB300361@ravnborg.org>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
-        <20200819152120.GA106437@ravnborg.org>
-        <20200819174027.70b39ee9@coco.lan>
-        <20200819173558.GA3733@ravnborg.org>
-        <20200821164158.22777f95@coco.lan>
-        <20200821155650.GB300361@ravnborg.org>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1725780AbgHXQJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:09:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B895FB737;
+        Mon, 24 Aug 2020 16:09:44 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 54FB51E1316; Mon, 24 Aug 2020 18:09:14 +0200 (CEST)
+Date:   Mon, 24 Aug 2020 18:09:14 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, Jan Kara <jack@suse.cz>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] mm: Add an 'end' parameter to pagevec_lookup_entries
+Message-ID: <20200824160914.GI24877@quack2.suse.cz>
+References: <20200819150555.31669-1-willy@infradead.org>
+ <20200819150555.31669-5-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819150555.31669-5-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 21 Aug 2020 17:56:50 +0200
-Sam Ravnborg <sam@ravnborg.org> escreveu:
-
-> Hi Mauro.
+On Wed 19-08-20 16:05:52, Matthew Wilcox (Oracle) wrote:
+> Simplifies the callers and uses the existing functionality of
+> find_get_entries().
 > 
-> On Fri, Aug 21, 2020 at 04:41:58PM +0200, Mauro Carvalho Chehab wrote:
-> > Another quick question:
-> > 
-> > Em Wed, 19 Aug 2020 19:35:58 +0200
-> > Sam Ravnborg <sam@ravnborg.org> escreveu:
-> >   
-> > > > +#define DSS_REDUCE(x)	((x) > 0 ? ((x) - 1) : (x))    
-> > > Use generic macros for this?  
-> > 
-> > Do you know a generic macro similar to this? Or do you mean adding
-> > it to include/kernel.h?  
-> 
-> It looked like something there should be a macro for.
-> But I do not know one.
-> 
-> And no, do not try to go the kernel.h route on this.
-> At least not until you see more than one user.
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Yeah, adding this to kernel.h just for a single usage is overkill. I would
-be expecting that a non-underflow decrement logic is something that 
-would be used on other places at the Kernel, but identifying this
-pattern would require some time. Maybe Kernel janitors could write some
-coccinelle script to replace similar patterns like that into some
-macro in the future.
+The patch looks good to me. You can add:
 
-Thanks,
-Mauro
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  include/linux/pagevec.h |  5 ++---
+>  mm/swap.c               |  8 ++++----
+>  mm/truncate.c           | 36 ++++++++----------------------------
+>  3 files changed, 14 insertions(+), 35 deletions(-)
+> 
+> diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
+> index 081d934eda64..4b245592262c 100644
+> --- a/include/linux/pagevec.h
+> +++ b/include/linux/pagevec.h
+> @@ -26,9 +26,8 @@ struct pagevec {
+>  void __pagevec_release(struct pagevec *pvec);
+>  void __pagevec_lru_add(struct pagevec *pvec);
+>  unsigned pagevec_lookup_entries(struct pagevec *pvec,
+> -				struct address_space *mapping,
+> -				pgoff_t start, unsigned nr_entries,
+> -				pgoff_t *indices);
+> +		struct address_space *mapping, pgoff_t start, pgoff_t end,
+> +		unsigned nr_entries, pgoff_t *indices);
+>  void pagevec_remove_exceptionals(struct pagevec *pvec);
+>  unsigned pagevec_lookup_range(struct pagevec *pvec,
+>  			      struct address_space *mapping,
+> diff --git a/mm/swap.c b/mm/swap.c
+> index fcf6ccb94b09..b6e56a84b466 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -1036,6 +1036,7 @@ void __pagevec_lru_add(struct pagevec *pvec)
+>   * @pvec:	Where the resulting entries are placed
+>   * @mapping:	The address_space to search
+>   * @start:	The starting entry index
+> + * @end:	The highest index to return (inclusive).
+>   * @nr_entries:	The maximum number of pages
+>   * @indices:	The cache indices corresponding to the entries in @pvec
+>   *
+> @@ -1056,11 +1057,10 @@ void __pagevec_lru_add(struct pagevec *pvec)
+>   * found.
+>   */
+>  unsigned pagevec_lookup_entries(struct pagevec *pvec,
+> -				struct address_space *mapping,
+> -				pgoff_t start, unsigned nr_entries,
+> -				pgoff_t *indices)
+> +		struct address_space *mapping, pgoff_t start, pgoff_t end,
+> +		unsigned nr_entries, pgoff_t *indices)
+>  {
+> -	pvec->nr = find_get_entries(mapping, start, ULONG_MAX, nr_entries,
+> +	pvec->nr = find_get_entries(mapping, start, end, nr_entries,
+>  				    pvec->pages, indices);
+>  	return pagevec_count(pvec);
+>  }
+> diff --git a/mm/truncate.c b/mm/truncate.c
+> index dd9ebc1da356..9c617291fb1e 100644
+> --- a/mm/truncate.c
+> +++ b/mm/truncate.c
+> @@ -326,9 +326,8 @@ void truncate_inode_pages_range(struct address_space *mapping,
+>  
+>  	pagevec_init(&pvec);
+>  	index = start;
+> -	while (index < end && pagevec_lookup_entries(&pvec, mapping, index,
+> -			min(end - index, (pgoff_t)PAGEVEC_SIZE),
+> -			indices)) {
+> +	while (pagevec_lookup_entries(&pvec, mapping, index, end - 1,
+> +			PAGEVEC_SIZE, indices)) {
+>  		/*
+>  		 * Pagevec array has exceptional entries and we may also fail
+>  		 * to lock some pages. So we store pages that can be deleted
+> @@ -342,8 +341,6 @@ void truncate_inode_pages_range(struct address_space *mapping,
+>  
+>  			/* We rely upon deletion not changing page->index */
+>  			index = indices[i];
+> -			if (index >= end)
+> -				break;
+>  
+>  			if (xa_is_value(page))
+>  				continue;
+> @@ -413,8 +410,8 @@ void truncate_inode_pages_range(struct address_space *mapping,
+>  	index = start;
+>  	for ( ; ; ) {
+>  		cond_resched();
+> -		if (!pagevec_lookup_entries(&pvec, mapping, index,
+> -			min(end - index, (pgoff_t)PAGEVEC_SIZE), indices)) {
+> +		if (!pagevec_lookup_entries(&pvec, mapping, index, end - 1,
+> +				PAGEVEC_SIZE, indices)) {
+>  			/* If all gone from start onwards, we're done */
+>  			if (index == start)
+>  				break;
+> @@ -422,23 +419,12 @@ void truncate_inode_pages_range(struct address_space *mapping,
+>  			index = start;
+>  			continue;
+>  		}
+> -		if (index == start && indices[0] >= end) {
+> -			/* All gone out of hole to be punched, we're done */
+> -			pagevec_remove_exceptionals(&pvec);
+> -			pagevec_release(&pvec);
+> -			break;
+> -		}
+>  
+>  		for (i = 0; i < pagevec_count(&pvec); i++) {
+>  			struct page *page = pvec.pages[i];
+>  
+>  			/* We rely upon deletion not changing page->index */
+>  			index = indices[i];
+> -			if (index >= end) {
+> -				/* Restart punch to make sure all gone */
+> -				index = start - 1;
+> -				break;
+> -			}
+>  
+>  			if (xa_is_value(page))
+>  				continue;
+> @@ -554,16 +540,13 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
+>  	int i;
+>  
+>  	pagevec_init(&pvec);
+> -	while (index <= end && pagevec_lookup_entries(&pvec, mapping, index,
+> -			min(end - index, (pgoff_t)PAGEVEC_SIZE - 1) + 1,
+> -			indices)) {
+> +	while (pagevec_lookup_entries(&pvec, mapping, index, end,
+> +			PAGEVEC_SIZE, indices)) {
+>  		for (i = 0; i < pagevec_count(&pvec); i++) {
+>  			struct page *page = pvec.pages[i];
+>  
+>  			/* We rely upon deletion not changing page->index */
+>  			index = indices[i];
+> -			if (index > end)
+> -				break;
+>  
+>  			if (xa_is_value(page)) {
+>  				invalidate_exceptional_entry(mapping, index,
+> @@ -697,16 +680,13 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
+>  
+>  	pagevec_init(&pvec);
+>  	index = start;
+> -	while (index <= end && pagevec_lookup_entries(&pvec, mapping, index,
+> -			min(end - index, (pgoff_t)PAGEVEC_SIZE - 1) + 1,
+> -			indices)) {
+> +	while (pagevec_lookup_entries(&pvec, mapping, index, end,
+> +			PAGEVEC_SIZE, indices)) {
+>  		for (i = 0; i < pagevec_count(&pvec); i++) {
+>  			struct page *page = pvec.pages[i];
+>  
+>  			/* We rely upon deletion not changing page->index */
+>  			index = indices[i];
+> -			if (index > end)
+> -				break;
+>  
+>  			if (xa_is_value(page)) {
+>  				if (!invalidate_exceptional_entry2(mapping,
+> -- 
+> 2.28.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
