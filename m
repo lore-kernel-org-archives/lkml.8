@@ -2,129 +2,138 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C65EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF99F20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2CF1206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 00:24:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKWtTmtv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mb7bMxo7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgHXATk (ORCPT
+        id S1727021AbgHXAYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 20:19:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726737AbgHXATh (ORCPT
+        Sun, 23 Aug 2020 20:24:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43622 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726737AbgHXAYR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 20:19:37 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8908C061573;
-        Sun, 23 Aug 2020 17:19:36 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id l84so6763681oig.10;
-        Sun, 23 Aug 2020 17:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kych+ri3hUY6V/ktyGfK/OBC9jYv1spc+PwgnTtgYJs=;
-        b=oKWtTmtvR3+JNfRTZ/NJ3WAiLq5+qs73iozDtHuHc8/yLQQiEyJigMRt6SwykEZFvD
-         NZt4k3Po/L/F+na04A3jEldSNpzPZOKkdCvscA9uxTl6g18gNDIhtN7RP4r3g90Vjp8b
-         /DawnsBI5sZN1Iint5sDigc2l6ld/B9znyUXrRBJzFWhaOHdXKx3ERXxrHT+m5U4oc4/
-         eRycZ83QLeh+LVP0fdCMIXxTRTH+hg6F1/iz+QUvDUy/QdXj1MupHx2z5gjX/U3CzJ8m
-         kw76vuvPFmAXWdN9uUdhv8cgJ6dds3rnLiMqnjyltscGVhrp9QB4MLIiu4C5iGECVar9
-         vMAw==
+        Sun, 23 Aug 2020 20:24:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598228656;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PCADZNh/J/32boJoS2MavSc2bQ2MKxckveY0wBleR1o=;
+        b=Mb7bMxo7xVUrj1AGEI9d4aJ0bvBxIfIF0Zqs2UXiWroShWGyz4NzLqOmkLeFbrWhwdRxX2
+        dAaayhfbwy469aVbRT6zuiEreo49Rx3GKBLh8k3/KxLRqD0uD4sz94tvt9Lil6NUpLzpr9
+        j/IC9OWL97fwuiH6x1ULPez1YFedDls=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-74-1hBX7jA1N3GJXvpHjPzsmQ-1; Sun, 23 Aug 2020 20:24:14 -0400
+X-MC-Unique: 1hBX7jA1N3GJXvpHjPzsmQ-1
+Received: by mail-qv1-f70.google.com with SMTP id q4so5235221qvu.6
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 17:24:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kych+ri3hUY6V/ktyGfK/OBC9jYv1spc+PwgnTtgYJs=;
-        b=OVWHR6OalV3PKeAPc0BO1PJaXEcAsWLlPVJsw48uPXJ84yGsAJKkrdhSo2NT4wJd1+
-         i+dwb+XaRt5BzbXj/oUS2Mm7tYs+J7TojSQstpLHMU0YAlA9h+h75+Txm45CieL6BzN9
-         QK2vNQiysAAJiAIfBiJ7eaiCvJ2Bke2hJq6mwXkBds5mMniWLtO0XG8iqflkXv6KaPpI
-         kFM8T1unDgTgr1lEo8BghHtJqVTdivQIW8DCkHqe78LSEMNTZPCxy+7xjyo/jgRmjRg3
-         +UstqBpfPL3Z8I02eXrL+bsASilgm6ziY1ECWsnO2uxGR8VPLHb0kWMBr4zUInL8I4D5
-         aJwA==
-X-Gm-Message-State: AOAM5338eOZ7qilRMtUr/Bl1CVHMvzenJCyjcwOFxKAmj3+JbO7SXQun
-        PW/g4o+CUNW3G9szLDXbRbRoYA68RxvUfkFO6nI=
-X-Google-Smtp-Source: ABdhPJyRqehejgcdV4LAMYuEp3Qxjp6LydJCIVtzvs6xO8SgWZnqfueRlM1p8xrFco0peS1l3QqjCrpT2lM4uiEy0ZY=
-X-Received: by 2002:a05:6808:b:: with SMTP id u11mr1788658oic.33.1598228375958;
- Sun, 23 Aug 2020 17:19:35 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PCADZNh/J/32boJoS2MavSc2bQ2MKxckveY0wBleR1o=;
+        b=YE4lYr7UvTM7PZI3TW5gbp5iShupyik0YLPPENFfNBxGyodfKUWxTDFUC7RY/9IvEw
+         b+qDLXr09xcgI3BmxKbOEncHWmKjqdpw9zoK1pNdo4MRDPGOVHM7rQa/Vg2ObPnwzook
+         yx6Ro2evzIGyAuVtrP6aUuaEujglTPsQWgVwdfIdQneQRuf2pzva7O8nFijzegyJ5f+m
+         DMNCy1SuH1CxzNveOnNMn2mP1m/Du2CD6DUNtuGm+yJxKFd93jmwf7K+QzMqc2cHmq01
+         SClT/cec2j2viQtvbzJ6PS+T1uhmshf53yCRJ0AUBmZ1bdHybyeBdFxkppYhXtvJBhxe
+         7J9A==
+X-Gm-Message-State: AOAM533q2kYNFgHIGplLTjPw9bBP2wt5Xgj5TM05+ZL7XsbR9BLtTlAf
+        CEuXLfGfxNO6As/buNBW+6OmiRDixjJt4Bl6Cz9lRr5wwPreNUUZXjrBBQ51Cen81fatfrR6jKU
+        5uJsulWQlH7VQVEZeF1QicpkJ
+X-Received: by 2002:a37:6193:: with SMTP id v141mr2721369qkb.94.1598228654215;
+        Sun, 23 Aug 2020 17:24:14 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzkcTolph1Y5YpkQJT+t0zUoDh4CQuIN98lIrZp0YWFuOexKcrn7yV6gBF7cIru30yYY3y13A==
+X-Received: by 2002:a37:6193:: with SMTP id v141mr2721350qkb.94.1598228653981;
+        Sun, 23 Aug 2020 17:24:13 -0700 (PDT)
+Received: from xz-x1 (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
+        by smtp.gmail.com with ESMTPSA id a15sm6827522qkc.29.2020.08.23.17.24.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Aug 2020 17:24:13 -0700 (PDT)
+Date:   Sun, 23 Aug 2020 20:24:11 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Maya B . Gokhale" <gokhale2@llnl.gov>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Marty Mcfadden <mcfadden8@llnl.gov>,
+        Kirill Shutemov <kirill@shutemov.name>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Jan Kara <jack@suse.cz>, Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 4/4] mm: Add PGREUSE counter
+Message-ID: <20200824002411.GB6231@xz-x1>
+References: <20200821234958.7896-1-peterx@redhat.com>
+ <20200821234958.7896-5-peterx@redhat.com>
+ <CAHk-=wgchPHqevEZ1radW1vLHKGGSaq_SCVHKgxHmQt70OSSfg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1598001454-11709-1-git-send-email-wanpengli@tencent.com> <20200822040114.GF4769@sjchrist-ice>
-In-Reply-To: <20200822040114.GF4769@sjchrist-ice>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 24 Aug 2020 08:19:25 +0800
-Message-ID: <CANRm+Cxf9g7gvW1N7W0conMO4z-LUVuFiZ-ui37m1dtOwzzA1Q@mail.gmail.com>
-Subject: Re: [PATCH] KVM: LAPIC: Don't kick vCPU which is injecting
- already-expired timer
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgchPHqevEZ1radW1vLHKGGSaq_SCVHKgxHmQt70OSSfg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 22 Aug 2020 at 12:01, Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Fri, Aug 21, 2020 at 05:17:34PM +0800, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
+On Sat, Aug 22, 2020 at 09:14:53AM -0700, Linus Torvalds wrote:
+> On Fri, Aug 21, 2020 at 4:50 PM Peter Xu <peterx@redhat.com> wrote:
 > >
-> > The kick after setting KVM_REQ_PENDING_TIMER is used to handle the timer
-> > fires on a different pCPU which vCPU is running on, we don't need this
-> > kick when injecting already-expired timer, this kick is expensive since
-> > memory barrier, rcu, preemption disable/enable operations. This patch
-> > reduces the overhead by don't kick vCPU which is injecting already-expired
-> > timer.
->
-> This should also call out the VMX preemption timer case, which also passes
-> from_timer_fn=false but doesn't need a kick because kvm_lapic_expired_hv_timer()
-> is called from the target vCPU.
->
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> >  arch/x86/kvm/lapic.c | 2 +-
-> >  arch/x86/kvm/x86.c   | 5 +++--
-> >  arch/x86/kvm/x86.h   | 2 +-
-> >  3 files changed, 5 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > index 248095a..5b5ae66 100644
-> > --- a/arch/x86/kvm/lapic.c
-> > +++ b/arch/x86/kvm/lapic.c
-> > @@ -1642,7 +1642,7 @@ static void apic_timer_expired(struct kvm_lapic *apic, bool from_timer_fn)
-> >       }
-> >
-> >       atomic_inc(&apic->lapic_timer.pending);
-> > -     kvm_set_pending_timer(vcpu);
-> > +     kvm_set_pending_timer(vcpu, from_timer_fn);
->
-> My vote would be to open code kvm_set_pending_timer() here and drop the
-> helper, i.e.
->
->         kvm_make_request(KVM_REQ_PENDING_TIMER, vcpu);
->         if (from_timer_fn)
->                 kvm_vcpu_kick(vcpu);
->
-> with that and an updated changelog:
+> > This accounts for wp_page_reuse() case, where we reused a page for COW.
+> 
+> If we do this, wouldn't it make more sense to also count the COW case
+> to see how they match up?
 
-Agreed.
+Is wp_page_reuse() only used in cow?
 
->
-> Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+I saw that the callers of wp_page_reuse() are:
 
-Thanks.
-    Wanpeng
+        (1) finish_mkwrite_fault
+        (2) wp_pfn_shared
+        (3) wp_page_shared
+        (4) do_wp_page
+
+Since (1) is only called by either (2) or (3), while (2) and (3) apply only to
+shared memories, so I'm kind of sure the statistic is done via the changed path
+in do_wp_page() that is touched in patch 1 (my program was using private
+anonymous pages).  Maybe I missed something, though..
+
+> 
+> Right now we count faults and major faults. So as a result you can can
+> calculate minor faults trivially.
+> 
+> But if you count page reuse, you can't calculate any stats on it,
+> because most of the minor faults will presumably be for new pages
+> (either zero or cached file mappings).
+> 
+> So the "pgreuse" seems to be a counter without any context to it.
+> 
+> IOW, I get the feeling that either we should do this properly (and
+> maybe count "dirty faults" and "access" faults, at which point the
+> reuse case becomes a subcase of the dirty ones) or we shouldn't do it
+> at all. Creating a counter without any way to sanely compare it to
+> anything seems a bit pointless.
+
+Yeah I haven't thought deep about this statistic, imho it would be something
+nice to have (besides helping me to verify the tests) so I still posted it
+instead of keeping it in the local repo.  If this statistic is not liked by
+anyone, then we can definitely drop it.
+
+Thanks,
+
+-- 
+Peter Xu
+
