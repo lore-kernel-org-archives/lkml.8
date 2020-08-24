@@ -2,54 +2,58 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50334C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEA5F206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB17206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261596;
-	bh=BYU4VwRM5xFvzKpaDfvkbDeIvtDQMxsMNHx+jb8xCq8=;
+	s=default; t=1598261612;
+	bh=f75tl17vxQarEIOmbQCAPyjN44tFzQmDBYKWO4ULK34=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ABGZenAg//2ZhH4ue4BiUWc/8uVXZAJODsnUnNWxgH5PJTreJ+co8Lp1VqfevR0vU
-	 B/98TAMr2kbEYDyxlHW7Zqck45kA/uAB5Yq2HW5XvBrn49mkaaIT2bwKQ7dH8yzyiK
-	 N4yRAKPn7m3mgT2Xrnwc8DZlcCTDqFAzBHzlADmQ=
+	b=YfW8nFt4Kr5YjYfGPHG1e9jHWrAi1pZwuc29srEJ/f9SGwJ1Q0JvTx1iylb89jb5M
+	 sYvC2+QNf/mqFL+mrDkBRKisJnkjk4gUWpxg+Sfn/h4eeDJnjnbrxKkyzM8GaCpy/M
+	 ThDuDm8+k0xSmU+YaWk90f9LwCpuNcSJ9jmosKp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbgHXItr (ORCPT
+        id S1729449AbgHXJdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:49:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52184 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:33:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729748AbgHXIth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:49:37 -0400
+        id S1728661AbgHXItr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:49:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F4422072D;
-        Mon, 24 Aug 2020 08:49:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 425C02075B;
+        Mon, 24 Aug 2020 08:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258976;
-        bh=BYU4VwRM5xFvzKpaDfvkbDeIvtDQMxsMNHx+jb8xCq8=;
+        s=default; t=1598258986;
+        bh=f75tl17vxQarEIOmbQCAPyjN44tFzQmDBYKWO4ULK34=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z5uxX6Nv8PNIQ/Oz0d4rXsDWfu+u3d89hZL1i02PZxYcmrT5dw/Ph/27o2hT65bIO
-         PT36/V8XvUxgJQoJpQS3jvH7myrzAXwYJ6sMPj1JhiJaAduaKUGl6Ww94rB6bBh+r4
-         cWcB4C1qyDZ/xBn/LawZWbsPs2GOQ00Th+zJp/Po=
+        b=cw6H7NrDuXldc+a4TguUiUtyEP5UBwc3MCf9gpfiikW8O/Q7PzdWb7H4V1x41ugvD
+         u9z3ZaLwbwPkuB58ch/pawMYK1l2cCZ0zreqBZWr/84EPymeZmOfKO+/yvHzWDpz9O
+         CpvgHXJwhaQR8JsSwsaqOUUnAin6oWUy1L7IhCjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sarah Newman <srn@prgmr.com>, Juergen Gross <jgross@suse.com>,
-        Chris Brannon <cmb@prgmr.com>
-Subject: [PATCH 5.4 107/107] xen: dont reschedule in preemption off sections
-Date:   Mon, 24 Aug 2020 10:31:13 +0200
-Message-Id: <20200824082410.383029726@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 03/33] net/compat: Add missing sock updates for SCM_RIGHTS
+Date:   Mon, 24 Aug 2020 10:30:59 +0200
+Message-Id: <20200824082346.694200004@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
-References: <20200824082405.020301642@linuxfoundation.org>
+In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
+References: <20200824082346.498653578@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,93 +63,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Kees Cook <keescook@chromium.org>
 
-For support of long running hypercalls xen_maybe_preempt_hcall() is
-calling cond_resched() in case a hypercall marked as preemptible has
-been interrupted.
+[ Upstream commit d9539752d23283db4692384a634034f451261e29 ]
 
-Normally this is no problem, as only hypercalls done via some ioctl()s
-are marked to be preemptible. In rare cases when during such a
-preemptible hypercall an interrupt occurs and any softirq action is
-started from irq_exit(), a further hypercall issued by the softirq
-handler will be regarded to be preemptible, too. This might lead to
-rescheduling in spite of the softirq handler potentially having set
-preempt_disable(), leading to splats like:
+Add missed sock updates to compat path via a new helper, which will be
+used more in coming patches. (The net/core/scm.c code is left as-is here
+to assist with -stable backports for the compat path.)
 
-BUG: sleeping function called from invalid context at drivers/xen/preempt.c:37
-in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 20775, name: xl
-INFO: lockdep is turned off.
-CPU: 1 PID: 20775 Comm: xl Tainted: G D W 5.4.46-1_prgmr_debug.el7.x86_64 #1
-Call Trace:
-<IRQ>
-dump_stack+0x8f/0xd0
-___might_sleep.cold.76+0xb2/0x103
-xen_maybe_preempt_hcall+0x48/0x70
-xen_do_hypervisor_callback+0x37/0x40
-RIP: e030:xen_hypercall_xen_version+0xa/0x20
-Code: ...
-RSP: e02b:ffffc900400dcc30 EFLAGS: 00000246
-RAX: 000000000004000d RBX: 0000000000000200 RCX: ffffffff8100122a
-RDX: ffff88812e788000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffffff83ee3ad0 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000246 R12: ffff8881824aa0b0
-R13: 0000000865496000 R14: 0000000865496000 R15: ffff88815d040000
-? xen_hypercall_xen_version+0xa/0x20
-? xen_force_evtchn_callback+0x9/0x10
-? check_events+0x12/0x20
-? xen_restore_fl_direct+0x1f/0x20
-? _raw_spin_unlock_irqrestore+0x53/0x60
-? debug_dma_sync_single_for_cpu+0x91/0xc0
-? _raw_spin_unlock_irqrestore+0x53/0x60
-? xen_swiotlb_sync_single_for_cpu+0x3d/0x140
-? mlx4_en_process_rx_cq+0x6b6/0x1110 [mlx4_en]
-? mlx4_en_poll_rx_cq+0x64/0x100 [mlx4_en]
-? net_rx_action+0x151/0x4a0
-? __do_softirq+0xed/0x55b
-? irq_exit+0xea/0x100
-? xen_evtchn_do_upcall+0x2c/0x40
-? xen_do_hypervisor_callback+0x29/0x40
-</IRQ>
-? xen_hypercall_domctl+0xa/0x20
-? xen_hypercall_domctl+0x8/0x20
-? privcmd_ioctl+0x221/0x990 [xen_privcmd]
-? do_vfs_ioctl+0xa5/0x6f0
-? ksys_ioctl+0x60/0x90
-? trace_hardirqs_off_thunk+0x1a/0x20
-? __x64_sys_ioctl+0x16/0x20
-? do_syscall_64+0x62/0x250
-? entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fix that by testing preempt_count() before calling cond_resched().
-
-In kernel 5.8 this can't happen any more due to the entry code rework
-(more than 100 patches, so not a candidate for backporting).
-
-The issue was introduced in kernel 4.3, so this patch should go into
-all stable kernels in [4.3 ... 5.7].
-
-Reported-by: Sarah Newman <srn@prgmr.com>
-Fixes: 0fa2f5cb2b0ecd8 ("sched/preempt, xen: Use need_resched() instead of should_resched()")
-Cc: Sarah Newman <srn@prgmr.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Sargun Dhillon <sargun@sargun.me>
+Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Tested-by: Chris Brannon <cmb@prgmr.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
+Fixes: d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/preempt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/sock.h |  4 ++++
+ net/compat.c       |  1 +
+ net/core/sock.c    | 21 +++++++++++++++++++++
+ 3 files changed, 26 insertions(+)
 
---- a/drivers/xen/preempt.c
-+++ b/drivers/xen/preempt.c
-@@ -27,7 +27,7 @@ EXPORT_SYMBOL_GPL(xen_in_preemptible_hca
- asmlinkage __visible void xen_maybe_preempt_hcall(void)
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 426a57874964c..31198b32d9122 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -779,6 +779,8 @@ static inline int sk_memalloc_socks(void)
  {
- 	if (unlikely(__this_cpu_read(xen_in_preemptible_hcall)
--		     && need_resched())) {
-+		     && need_resched() && !preempt_count())) {
- 		/*
- 		 * Clear flag as we may be rescheduled on a different
- 		 * cpu.
+ 	return static_key_false(&memalloc_socks);
+ }
++
++void __receive_sock(struct file *file);
+ #else
+ 
+ static inline int sk_memalloc_socks(void)
+@@ -786,6 +788,8 @@ static inline int sk_memalloc_socks(void)
+ 	return 0;
+ }
+ 
++static inline void __receive_sock(struct file *file)
++{ }
+ #endif
+ 
+ static inline gfp_t sk_gfp_atomic(const struct sock *sk, gfp_t gfp_mask)
+diff --git a/net/compat.c b/net/compat.c
+index d676840104556..20c5e5f215f23 100644
+--- a/net/compat.c
++++ b/net/compat.c
+@@ -284,6 +284,7 @@ void scm_detach_fds_compat(struct msghdr *kmsg, struct scm_cookie *scm)
+ 			break;
+ 		}
+ 		/* Bump the usage count and install the file. */
++		__receive_sock(fp[i]);
+ 		fd_install(new_fd, get_file(fp[i]));
+ 	}
+ 
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 120d5058d81ae..82f9a7dbea6fe 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2275,6 +2275,27 @@ int sock_no_mmap(struct file *file, struct socket *sock, struct vm_area_struct *
+ }
+ EXPORT_SYMBOL(sock_no_mmap);
+ 
++/*
++ * When a file is received (via SCM_RIGHTS, etc), we must bump the
++ * various sock-based usage counts.
++ */
++void __receive_sock(struct file *file)
++{
++	struct socket *sock;
++	int error;
++
++	/*
++	 * The resulting value of "error" is ignored here since we only
++	 * need to take action when the file is a socket and testing
++	 * "sock" for NULL is sufficient.
++	 */
++	sock = sock_from_file(file, &error);
++	if (sock) {
++		sock_update_netprioidx(sock->sk);
++		sock_update_classid(sock->sk);
++	}
++}
++
+ ssize_t sock_no_sendpage(struct socket *sock, struct page *page, int offset, size_t size, int flags)
+ {
+ 	ssize_t res;
+-- 
+2.25.1
+
 
 
