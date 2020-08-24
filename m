@@ -2,55 +2,53 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC959C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F210FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5ECB2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30662067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287443;
-	bh=y1xrZB73UBLkKpH9sshs4QQ2EYIUcbA/kyqtn27aCng=;
+	s=default; t=1598287451;
+	bh=neGmwzlCamATZeQiJC6qSuGBzd1P7ABgTPsKgPYr8ng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OS4KxxVtnPGuaZX8dNsBNs4vvzmcBxs52WO+SwLgu/rqlgJl2I5oAiEpYvTSRG1FF
-	 7GQsVPIeJjsSf9z8ysGZM1mNzggVr0o5z+UGkrAiAkQf8ju8zmqeGyh4CFTv2TK0Dh
-	 6qCB7Q7dgsl3kPf73UqmZN7FLUYNg7EY52eCG3EM=
+	b=UXY8kHbsjCRe31O8bPWVXYMkZW94ZC/e+umCDGL4CcjBru77sCphjv3WPF0rkt/I+
+	 JK1vHfCf3Tp2sBabHYdXu2fQ4RvTaEdWRX3BQyjNKeTu51JPoceLHXnjgd8vyOteIf
+	 npm2WZ5riIYTLKsO/6duB1aOZfMJlqE3c5ycmYkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbgHXQoB (ORCPT
+        id S1728521AbgHXQoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:44:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47588 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:44:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728597AbgHXQjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:39:37 -0400
+        id S1728600AbgHXQjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:39:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8639922D07;
-        Mon, 24 Aug 2020 16:39:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA67B22D08;
+        Mon, 24 Aug 2020 16:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287170;
-        bh=y1xrZB73UBLkKpH9sshs4QQ2EYIUcbA/kyqtn27aCng=;
+        s=default; t=1598287174;
+        bh=neGmwzlCamATZeQiJC6qSuGBzd1P7ABgTPsKgPYr8ng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kGMbmlONW7yRvcLW1FMbB8Nl+AqXLmgyDPSX9j06xaUQEfjZhTb//FIj3KGcqARdT
-         3Vu+JByCfvO2fEGUt3E/njKBWSajaNRC4jg6Y2wm5jKZenZZRqGJ+7jBL/M+xEZ6qL
-         sTdJ6R2hYnJy0xwfypzpof6HFBAXsansQt7jl1ns=
+        b=V0wdVZENy0QGDK4+igMoN5vdcDKgRCvz9qa5HSD7iVKmYUnHtibkBWOyMI2NR2az2
+         FobyfMGCNPJXwOtGcUjsg18UjetJpXYqxPsLfQrnPmmLWq5KSooU3On/4cNqYO1lbZ
+         1G4B9xgnUiDE1uQayw16WRJ2avEk1iHY4qIaDK9k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 4.14 11/11] powerpc/perf: Fix soft lockups due to missed interrupt accounting
-Date:   Mon, 24 Aug 2020 12:39:14 -0400
-Message-Id: <20200824163914.607152-11-sashal@kernel.org>
+Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 2/8] jbd2: abort journal if free a async write error metadata buffer
+Date:   Mon, 24 Aug 2020 12:39:25 -0400
+Message-Id: <20200824163931.607291-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163914.607152-1-sashal@kernel.org>
-References: <20200824163914.607152-1-sashal@kernel.org>
+In-Reply-To: <20200824163931.607291-1-sashal@kernel.org>
+References: <20200824163931.607291-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,52 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+From: "zhangyi (F)" <yi.zhang@huawei.com>
 
-[ Upstream commit 17899eaf88d689529b866371344c8f269ba79b5f ]
+[ Upstream commit c044f3d8360d2ecf831ba2cc9f08cf9fb2c699fb ]
 
-Performance monitor interrupt handler checks if any counter has
-overflown and calls record_and_restart() in core-book3s which invokes
-perf_event_overflow() to record the sample information. Apart from
-creating sample, perf_event_overflow() also does the interrupt and
-period checks via perf_event_account_interrupt().
+If we free a metadata buffer which has been failed to async write out
+in the background, the jbd2 checkpoint procedure will not detect this
+failure in jbd2_log_do_checkpoint(), so it may lead to filesystem
+inconsistency after cleanup journal tail. This patch abort the journal
+if free a buffer has write_io_error flag to prevent potential further
+inconsistency.
 
-Currently we record information only if the SIAR (Sampled Instruction
-Address Register) valid bit is set (using siar_valid() check) and
-hence the interrupt check.
-
-But it is possible that we do sampling for some events that are not
-generating valid SIAR, and hence there is no chance to disable the
-event if interrupts are more than max_samples_per_tick. This leads to
-soft lockup.
-
-Fix this by adding perf_event_account_interrupt() in the invalid SIAR
-code path for a sampling event. ie if SIAR is invalid, just do
-interrupt check and don't record the sample information.
-
-Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1596717992-7321-1-git-send-email-atrajeev@linux.vnet.ibm.com
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Link: https://lore.kernel.org/r/20200620025427.1756360-5-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/core-book3s.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/jbd2/transaction.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index 3188040022c4f..78f75e48dfe7f 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -2096,6 +2096,10 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 1478512ecab3e..cfbf5474bccab 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1990,6 +1990,7 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ {
+ 	struct buffer_head *head;
+ 	struct buffer_head *bh;
++	bool has_write_io_error = false;
+ 	int ret = 0;
  
- 		if (perf_event_overflow(event, &data, regs))
- 			power_pmu_stop(event, 0);
-+	} else if (period) {
-+		/* Account for interrupt in case of invalid SIAR */
-+		if (perf_event_account_interrupt(event))
-+			power_pmu_stop(event, 0);
- 	}
+ 	J_ASSERT(PageLocked(page));
+@@ -2014,11 +2015,26 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ 		jbd_unlock_bh_state(bh);
+ 		if (buffer_jbd(bh))
+ 			goto busy;
++
++		/*
++		 * If we free a metadata buffer which has been failed to
++		 * write out, the jbd2 checkpoint procedure will not detect
++		 * this failure and may lead to filesystem inconsistency
++		 * after cleanup journal tail.
++		 */
++		if (buffer_write_io_error(bh)) {
++			pr_err("JBD2: Error while async write back metadata bh %llu.",
++			       (unsigned long long)bh->b_blocknr);
++			has_write_io_error = true;
++		}
+ 	} while ((bh = bh->b_this_page) != head);
+ 
+ 	ret = try_to_free_buffers(page);
+ 
+ busy:
++	if (has_write_io_error)
++		jbd2_journal_abort(journal, -EIO);
++
+ 	return ret;
  }
  
 -- 
