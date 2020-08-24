@@ -2,307 +2,312 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED45CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC5A20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C47652071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="S8fEnJ4y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbgHXJl5 (ORCPT
+        id S1729627AbgHXJmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:41:57 -0400
-Received: from labrats.qualcomm.com ([199.106.110.90]:22594 "EHLO
-        labrats.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728017AbgHXJlf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:41:35 -0400
-IronPort-SDR: o9UFXlsJgV6bSrcISw5zUVCOnSyVftiIKGn/qPTB3oYlVSbrPiFvJiBU7nmpSjI5lHAnIU/wtH
- /++MtkqKPVg66K8/y51OQKa217hf6G39oXXcJtEG1aTU65pPlreHjwdFUCvlUiPpF2YRaG+YSz
- Jkj8ldJJNJJ8LRkzKTtZVQG379jE8nF2xyPS42SGkzh3+gnzv2kPiJ5Fsa7APAmuVwQc3JR74x
- r2s/C2iBaUKsfy6G/rcQr3rPx97pm5I1VX4JDZF9LJR6wn5EdKnmM9/8lP1zR1VTam3cQ/0h1X
- 2rs=
-X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
-   d="scan'208";a="29106529"
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by labrats.qualcomm.com with ESMTP; 24 Aug 2020 02:39:30 -0700
-Received: from wsp769891wss.qualcomm.com (HELO stor-presley.qualcomm.com) ([192.168.140.85])
-  by ironmsg05-sd.qualcomm.com with ESMTP; 24 Aug 2020 02:39:29 -0700
-Received: by stor-presley.qualcomm.com (Postfix, from userid 359480)
-        id A16B62121E; Mon, 24 Aug 2020 02:39:29 -0700 (PDT)
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Satya Tangirala <satyat@google.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v1 2/2] scsi: ufs: Handle LINERESET indication in err handler
-Date:   Mon, 24 Aug 2020 02:39:11 -0700
-Message-Id: <1598261952-29209-3-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598261952-29209-1-git-send-email-cang@codeaurora.org>
-References: <1598261952-29209-1-git-send-email-cang@codeaurora.org>
+        Mon, 24 Aug 2020 05:42:13 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:18790 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729441AbgHXJlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:41:40 -0400
+IronPort-SDR: 43iumKkGatQ9DSLXCWrjGnJtzNUYK+FXkBrKXwFAaOxtP7FxXFlyAEIhAy4kAAz1oM7Tj5eNPp
+ 11xuxhkJ0qzITd+5/3Yiqds27cacwJsrtozeP1iGr2oOcArmJxuSwuO6BO+cGTfIsiVii/b5XZ
+ ty9amjmCagnruSu+zaUOlsTWWHpSErJt96NNVfOvG6Qf62o34/P4KiNXFNzqWchTJ0cm0FZnh6
+ 53rMJ1RymJDEo88urogW+9mH6h4ffgWFv+BvbRSJQobWV1WK78WaLnD4cHldK0V3mp1yCsHk/o
+ HCU=
+X-IronPort-AV: E=Sophos;i="5.76,348,1592863200"; 
+   d="scan'208";a="13570930"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 24 Aug 2020 11:41:37 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Mon, 24 Aug 2020 11:41:37 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Mon, 24 Aug 2020 11:41:37 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1598262097; x=1629798097;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=GybxSl2AJ1rlYcmMGQnA8jxjW1BooVuZAWjnxmbzF1s=;
+  b=S8fEnJ4yIQWO5X4mw6ZG93cFqR8bDK+cvy8z3Aaw7Pu8GAZCtyCOArNn
+   VrALdmM9ZYnbcrR+xpwQj57m48p3HSHCX1cndiJkj7kRJ6d2Y9BqPN2wx
+   TkZIZ34DzIwPRiVFdb1aA+oX1O+9JnNOf0KPJQ6xbzl95HVxhZxV+6SUY
+   exSkgMUpK/TUDtSnS4uO3J+HVDweHUWYoT5fjorkrrU2FNy8p8okN+ikw
+   6M+wJRFfK8va+nniQ7lOGlEEuiEFmxJ1O8acVhT+sXL3ovn2HQ1pXtUYU
+   PsIE1KUQ3TnioVdSMjcAfYbirJEQPOZX5CH470UdlLW6wtkN7MgBgOG0w
+   g==;
+IronPort-SDR: WdBU2jvens77plO1dgYp+YibVFj75kUA4ViV6s6aaZLOc1uSJ8g3JRAWwipqstCtB94qc5ewv2
+ 8+DkB4B5eNnEGR7SVJe+p8SE8PjBDyKvuAAMp1qUhSFlCQyqlRU+2YHlrUymRQqRfC2Z1787gf
+ iZiWZu1wQ47ozLw050Gr6C9lxqW4xaN0DtgEJuDcCBui1yixbk0IeuQEBvxDx9U1NTgP2i4BKp
+ Fh/VEisI8hCbSQYTsVRsiMtmpNtanX5tmxfnzGGtz2/nI1N4pQCmZE1hykNlko+Fk5n+6lRV+b
+ qrs=
+X-IronPort-AV: E=Sophos;i="5.76,348,1592863200"; 
+   d="scan'208";a="13570929"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 24 Aug 2020 11:41:37 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id BE31E280065;
+        Mon, 24 Aug 2020 11:41:37 +0200 (CEST)
+Message-ID: <8ee3e4d5843e2dc28c845388620d7ac34d64058b.camel@ew.tq-group.com>
+Subject: Re: (EXT) Re: [PATCH mmc-next v2] mmc: allow setting slot index via
+ device tree alias
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 24 Aug 2020 11:41:37 +0200
+In-Reply-To: <CAPDyKFp1uwkmFVWXbCG32bRtu2kkUq_Vog646c=evmTixW6adA@mail.gmail.com>
+References: <20200820075949.19133-1-matthias.schiffer@ew.tq-group.com>
+         <CAPDyKFp1uwkmFVWXbCG32bRtu2kkUq_Vog646c=evmTixW6adA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PA Layer issues a LINERESET to the PHY at the recovery step in the Power
-Mode change operation. If it happens during auto or mannual hibern8 enter,
-even if hibern8 enter succeeds, UFS power mode shall be set to PWM-G1 mode
-and kept in that mode after exit from hibern8, leading to bad performance.
-Handle the LINERESET in the eh_work by restoring power mode to HS mode
-after all pending reqs and tasks are cleared from doorbell.
+On Fri, 2020-08-21 at 13:39 +0200, Ulf Hansson wrote:
+> On Thu, 20 Aug 2020 at 09:59, Matthias Schiffer
+> <matthias.schiffer@ew.tq-group.com> wrote:
+> > 
+> > As with GPIO, UART and others, allow specifying the device index
+> > via the
+> > aliases node in the device tree.
+> > 
+> > On embedded devices, there is often a combination of removable
+> > (e.g.
+> > SD card) and non-removable MMC devices (e.g. eMMC).
+> > Therefore the index might change depending on
+> > 
+> > * host of removable device
+> > * removable card present or not
+> > 
+> > This makes it difficult to hardcode the root device, if it is on
+> > the
+> > non-removable device. E.g. if SD card is present eMMC will be
+> > mmcblk1,
+> > if SD card is not present at boot, eMMC will be mmcblk0.
+> 
+> Can you please add some information why Part-UUID/labels don't work
+> well to solve this problem on some embedded systems?
+> 
+> I think that deserves to be in the changelog, after all the long
+> discussions we had in the history around this.
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 111 ++++++++++++++++++++++++++++++++++++++++------
- drivers/scsi/ufs/ufshcd.h |   2 +
- drivers/scsi/ufs/unipro.h |   3 ++
- 3 files changed, 102 insertions(+), 14 deletions(-)
+Makes sense. I'll wait for your review before I send a v3 with an
+updated description.
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 000895f..8cc127d 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -143,6 +143,7 @@ enum {
- 	UFSHCD_UIC_NL_ERROR = (1 << 3), /* Network layer error */
- 	UFSHCD_UIC_TL_ERROR = (1 << 4), /* Transport Layer error */
- 	UFSHCD_UIC_DME_ERROR = (1 << 5), /* DME error */
-+	UFSHCD_UIC_PA_GENERIC_ERROR = (1 << 6), /* Generic PA error */
- };
- 
- #define ufshcd_set_eh_in_progress(h) \
-@@ -4066,7 +4067,8 @@ static int ufshcd_change_power_mode(struct ufs_hba *hba,
- 	int ret;
- 
- 	/* if already configured to the requested pwr_mode */
--	if (pwr_mode->gear_rx == hba->pwr_info.gear_rx &&
-+	if (!hba->force_pmc &&
-+	    pwr_mode->gear_rx == hba->pwr_info.gear_rx &&
- 	    pwr_mode->gear_tx == hba->pwr_info.gear_tx &&
- 	    pwr_mode->lane_rx == hba->pwr_info.lane_rx &&
- 	    pwr_mode->lane_tx == hba->pwr_info.lane_tx &&
-@@ -4494,6 +4496,8 @@ static int ufshcd_link_startup(struct ufs_hba *hba)
- 	if (ret)
- 		goto out;
- 
-+	/* Clear UECPA once due to LINERESET has happened during LINK_STARTUP */
-+	ufshcd_readl(hba, REG_UIC_ERROR_CODE_PHY_ADAPTER_LAYER);
- 	ret = ufshcd_make_hba_operational(hba);
- out:
- 	if (ret) {
-@@ -5650,6 +5654,22 @@ static inline void ufshcd_recover_pm_error(struct ufs_hba *hba)
- }
- #endif
- 
-+static bool ufshcd_is_pwr_mode_restore_needed(struct ufs_hba *hba)
-+{
-+	struct ufs_pa_layer_attr *pwr_info = &hba->pwr_info;
-+	u32 mode;
-+
-+	ufshcd_dme_get(hba, UIC_ARG_MIB(PA_PWRMODE), &mode);
-+
-+	if (pwr_info->pwr_rx != ((mode >> PWRMODE_RX_OFFSET) & PWRMODE_MASK))
-+		return true;
-+
-+	if (pwr_info->pwr_tx != (mode & PWRMODE_MASK))
-+		return true;
-+
-+	return false;
-+}
-+
- /**
-  * ufshcd_err_handler - handle UFS errors that require s/w attention
-  * @work: pointer to work structure
-@@ -5660,9 +5680,9 @@ static void ufshcd_err_handler(struct work_struct *work)
- 	unsigned long flags;
- 	bool err_xfer = false;
- 	bool err_tm = false;
--	int err = 0;
-+	int err = 0, pmc_err;
- 	int tag;
--	bool needs_reset = false;
-+	bool needs_reset = false, needs_restore = false;
- 
- 	hba = container_of(work, struct ufs_hba, eh_work);
- 
-@@ -5710,8 +5730,9 @@ static void ufshcd_err_handler(struct work_struct *work)
- 				    UFSHCD_UIC_DL_TCx_REPLAY_ERROR))))
- 		needs_reset = true;
- 
--	if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR |
--			      UFSHCD_UIC_HIBERN8_MASK)) {
-+	if ((hba->saved_err & (INT_FATAL_ERRORS | UFSHCD_UIC_HIBERN8_MASK)) ||
-+	    (hba->saved_uic_err &&
-+	     (hba->saved_uic_err != UFSHCD_UIC_PA_GENERIC_ERROR))) {
- 		bool pr_prdt = !!(hba->saved_err & SYSTEM_BUS_FATAL_ERROR);
- 
- 		spin_unlock_irqrestore(hba->host->host_lock, flags);
-@@ -5729,8 +5750,25 @@ static void ufshcd_err_handler(struct work_struct *work)
- 	 * host reset and restore
- 	 */
- 	if (needs_reset)
--		goto skip_pending_xfer_clear;
-+		goto do_reset;
- 
-+	/*
-+	 * If LINERESET was caught, UFS might have been put to PWM mode,
-+	 * check if power mode restore is needed.
-+	 */
-+	if (hba->saved_uic_err & UFSHCD_UIC_PA_GENERIC_ERROR) {
-+		hba->saved_uic_err &= ~UFSHCD_UIC_PA_GENERIC_ERROR;
-+		if (!hba->saved_uic_err)
-+			hba->saved_err &= ~UIC_ERROR;
-+		spin_unlock_irqrestore(hba->host->host_lock, flags);
-+		if (ufshcd_is_pwr_mode_restore_needed(hba))
-+			needs_restore = true;
-+		spin_lock_irqsave(hba->host->host_lock, flags);
-+		if (!hba->saved_err && !needs_restore)
-+			goto skip_err_handling;
-+	}
-+
-+	hba->silence_err_logs = true;
- 	/* release lock as clear command might sleep */
- 	spin_unlock_irqrestore(hba->host->host_lock, flags);
- 	/* Clear pending transfer requests */
-@@ -5754,11 +5792,38 @@ static void ufshcd_err_handler(struct work_struct *work)
- 
- 	/* Complete the requests that are cleared by s/w */
- 	ufshcd_complete_requests(hba);
-+	hba->silence_err_logs = false;
- 
--	if (err_xfer || err_tm)
-+	if (err_xfer || err_tm) {
- 		needs_reset = true;
-+		goto do_reset;
-+	}
- 
--skip_pending_xfer_clear:
-+	/*
-+	 * After all reqs and tasks are cleared from doorbell,
-+	 * now it is safe to retore power mode.
-+	 */
-+	if (needs_restore) {
-+		spin_unlock_irqrestore(hba->host->host_lock, flags);
-+		/*
-+		 * Hold the scaling lock just in case dev cmds
-+		 * are sent via bsg and/or sysfs.
-+		 */
-+		down_write(&hba->clk_scaling_lock);
-+		hba->force_pmc = true;
-+		pmc_err = ufshcd_config_pwr_mode(hba, &(hba->pwr_info));
-+		if (pmc_err) {
-+			needs_reset = true;
-+			dev_err(hba->dev, "%s: Failed to restore power mode, err = %d\n",
-+					__func__, pmc_err);
-+		}
-+		hba->force_pmc = false;
-+		ufshcd_print_pwr_info(hba);
-+		up_write(&hba->clk_scaling_lock);
-+		spin_lock_irqsave(hba->host->host_lock, flags);
-+	}
-+
-+do_reset:
- 	/* Fatal errors need reset */
- 	if (needs_reset) {
- 		unsigned long max_doorbells = (1UL << hba->nutrs) - 1;
-@@ -5814,17 +5879,33 @@ static irqreturn_t ufshcd_update_uic_error(struct ufs_hba *hba)
- 	u32 reg;
- 	irqreturn_t retval = IRQ_NONE;
- 
--	/* PHY layer lane error */
-+	/* PHY layer error */
- 	reg = ufshcd_readl(hba, REG_UIC_ERROR_CODE_PHY_ADAPTER_LAYER);
--	/* Ignore LINERESET indication, as this is not an error */
- 	if ((reg & UIC_PHY_ADAPTER_LAYER_ERROR) &&
--	    (reg & UIC_PHY_ADAPTER_LAYER_LANE_ERR_MASK)) {
-+	    (reg & UIC_PHY_ADAPTER_LAYER_ERROR_CODE_MASK)) {
-+		ufshcd_update_reg_hist(&hba->ufs_stats.pa_err, reg);
- 		/*
- 		 * To know whether this error is fatal or not, DB timeout
- 		 * must be checked but this error is handled separately.
- 		 */
--		dev_dbg(hba->dev, "%s: UIC Lane error reported\n", __func__);
--		ufshcd_update_reg_hist(&hba->ufs_stats.pa_err, reg);
-+		if (reg & UIC_PHY_ADAPTER_LAYER_LANE_ERR_MASK)
-+			dev_dbg(hba->dev, "%s: UIC Lane error reported\n",
-+					__func__);
-+
-+		/* Got a LINERESET indication. */
-+		if (reg & UIC_PHY_ADAPTER_LAYER_GENERIC_ERROR) {
-+			struct uic_command *cmd = NULL;
-+
-+			hba->uic_error |= UFSHCD_UIC_PA_GENERIC_ERROR;
-+			if (hba->uic_async_done && hba->active_uic_cmd)
-+				cmd = hba->active_uic_cmd;
-+			/*
-+			 * Ignore the LINERESET during power mode change
-+			 * operation via DME_SET command.
-+			 */
-+			if (cmd && (cmd->command == UIC_CMD_DME_SET))
-+				hba->uic_error &= ~UFSHCD_UIC_PA_GENERIC_ERROR;
-+		}
- 		retval |= IRQ_HANDLED;
- 	}
- 
-@@ -5941,7 +6022,9 @@ static irqreturn_t ufshcd_check_errors(struct ufs_hba *hba)
- 		hba->saved_uic_err |= hba->uic_error;
- 
- 		/* dump controller state before resetting */
--		if (hba->saved_err & (INT_FATAL_ERRORS | UIC_ERROR)) {
-+		if ((hba->saved_err & (INT_FATAL_ERRORS)) ||
-+		    (hba->saved_uic_err &&
-+		     (hba->saved_uic_err != UFSHCD_UIC_PA_GENERIC_ERROR))) {
- 			dev_err(hba->dev, "%s: saved_err 0x%x saved_uic_err 0x%x\n",
- 					__func__, hba->saved_err,
- 					hba->saved_uic_err);
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 618b253..8817103 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -629,6 +629,7 @@ struct ufs_hba_variant_params {
-  * @saved_err: sticky error mask
-  * @saved_uic_err: sticky UIC error mask
-  * @force_reset: flag to force eh_work perform a full reset
-+ * @force_pmc: flag to force a power mode change
-  * @silence_err_logs: flag to silence error logs
-  * @dev_cmd: ufs device management command information
-  * @last_dme_cmd_tstamp: time stamp of the last completed DME command
-@@ -728,6 +729,7 @@ struct ufs_hba {
- 	u32 saved_uic_err;
- 	struct ufs_stats ufs_stats;
- 	bool force_reset;
-+	bool force_pmc;
- 	bool silence_err_logs;
- 
- 	/* Device management request data */
-diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h
-index 4ee6478..f6b52ce 100644
---- a/drivers/scsi/ufs/unipro.h
-+++ b/drivers/scsi/ufs/unipro.h
-@@ -205,6 +205,9 @@ enum {
- 	UNCHANGED	= 7,
- };
- 
-+#define PWRMODE_MASK		0xF
-+#define PWRMODE_RX_OFFSET	4
-+
- /* PA TX/RX Frequency Series */
- enum {
- 	PA_HS_MODE_A	= 1,
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Matthias
+
+
+> 
+> I will continue to review the code in a separate email, in a while.
+> 
+> Kind regards
+> Uffe
+> 
+> > 
+> > All indices defined in the aliases node will be reserved for use by
+> > the
+> > respective MMC device, moving the indices of devices that don't
+> > have an
+> > alias up into the non-reserved range. If the aliases node is not
+> > found,
+> > the driver will act as before.
+> > 
+> > This is a rebased and slightly cleaned up version of
+> > https://www.spinics.net/lists/linux-mmc/msg26588.html .
+> > 
+> > Based-on-patch-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > Link: https://lkml.org/lkml/2020/8/5/194
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
+> > >
+> > ---
+> > 
+> > v2: fix missing symbols for modular mmcblock
+> > 
+> >  drivers/mmc/core/block.c | 13 +++++++++++--
+> >  drivers/mmc/core/core.c  | 40
+> > ++++++++++++++++++++++++++++++++++++++++
+> >  drivers/mmc/core/core.h  |  3 +++
+> >  drivers/mmc/core/host.c  | 15 +++++++++++++--
+> >  4 files changed, 67 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
+> > index 7896952de1ac..4620afaf0e50 100644
+> > --- a/drivers/mmc/core/block.c
+> > +++ b/drivers/mmc/core/block.c
+> > @@ -38,6 +38,7 @@
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/idr.h>
+> >  #include <linux/debugfs.h>
+> > +#include <linux/of.h>
+> > 
+> >  #include <linux/mmc/ioctl.h>
+> >  #include <linux/mmc/card.h>
+> > @@ -2260,9 +2261,17 @@ static struct mmc_blk_data
+> > *mmc_blk_alloc_req(struct mmc_card *card,
+> >                                               int area_type)
+> >  {
+> >         struct mmc_blk_data *md;
+> > -       int devidx, ret;
+> > +       int rsvidx, devidx = -1, ret;
+> > +
+> > +       rsvidx = mmc_get_reserved_index(card->host);
+> > +       if (rsvidx >= 0)
+> > +               devidx = ida_simple_get(&mmc_blk_ida, rsvidx,
+> > rsvidx + 1,
+> > +                                       GFP_KERNEL);
+> > +       if (devidx < 0)
+> > +               devidx = ida_simple_get(&mmc_blk_ida,
+> > +                                       mmc_first_nonreserved_index
+> > (),
+> > +                                       max_devices, GFP_KERNEL);
+> 
+> 
+> 
+> > 
+> > -       devidx = ida_simple_get(&mmc_blk_ida, 0, max_devices,
+> > GFP_KERNEL);
+> >         if (devidx < 0) {
+> >                 /*
+> >                  * We get -ENOSPC because there are no more any
+> > available
+> > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> > index 8ccae6452b9c..5bce281a5faa 100644
+> > --- a/drivers/mmc/core/core.c
+> > +++ b/drivers/mmc/core/core.c
+> > @@ -2419,10 +2419,50 @@ void mmc_unregister_pm_notifier(struct
+> > mmc_host *host)
+> >  }
+> >  #endif
+> > 
+> > +static int mmc_max_reserved_idx = -1;
+> > +
+> > +/**
+> > + * mmc_first_nonreserved_index() - get the first index that is not
+> > reserved
+> > + */
+> > +int mmc_first_nonreserved_index(void)
+> > +{
+> > +       return mmc_max_reserved_idx + 1;
+> > +}
+> > +EXPORT_SYMBOL(mmc_first_nonreserved_index);
+> > +
+> > +/**
+> > + * mmc_get_reserved_index() - get the index reserved for this MMC
+> > host
+> > + *
+> > + * Returns:
+> > + *   The index reserved for this host on success,
+> > + *   negative error if no index is reserved for this host
+> > + */
+> > +int mmc_get_reserved_index(struct mmc_host *host)
+> > +{
+> > +       return of_alias_get_id(host->parent->of_node, "mmc");
+> > +}
+> > +EXPORT_SYMBOL(mmc_get_reserved_index);
+> > +
+> > +static void __init mmc_of_reserve_idx(void)
+> > +{
+> > +       int max;
+> > +
+> > +       max = of_alias_get_highest_id("mmc");
+> > +       if (max < 0)
+> > +               return;
+> > +
+> > +       mmc_max_reserved_idx = max;
+> > +
+> > +       pr_debug("MMC: reserving %d slots for OF aliases\n",
+> > +                mmc_max_reserved_idx + 1);
+> > +}
+> > +
+> >  static int __init mmc_init(void)
+> >  {
+> >         int ret;
+> > 
+> > +       mmc_of_reserve_idx();
+> > +
+> >         ret = mmc_register_bus();
+> >         if (ret)
+> >                 return ret;
+> > diff --git a/drivers/mmc/core/core.h b/drivers/mmc/core/core.h
+> > index 575ac0257af2..6aef6cf4e90f 100644
+> > --- a/drivers/mmc/core/core.h
+> > +++ b/drivers/mmc/core/core.h
+> > @@ -79,6 +79,9 @@ int mmc_attach_mmc(struct mmc_host *host);
+> >  int mmc_attach_sd(struct mmc_host *host);
+> >  int mmc_attach_sdio(struct mmc_host *host);
+> > 
+> > +int mmc_first_nonreserved_index(void);
+> > +int mmc_get_reserved_index(struct mmc_host *host);
+> > +
+> >  /* Module parameters */
+> >  extern bool use_spi_crc;
+> > 
+> > diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> > index ce43f7573d80..386e15afde83 100644
+> > --- a/drivers/mmc/core/host.c
+> > +++ b/drivers/mmc/core/host.c
+> > @@ -387,6 +387,7 @@ struct mmc_host *mmc_alloc_host(int extra,
+> > struct device *dev)
+> >  {
+> >         int err;
+> >         struct mmc_host *host;
+> > +       int alias_id, min_idx, max_idx;
+> > 
+> >         host = kzalloc(sizeof(struct mmc_host) + extra,
+> > GFP_KERNEL);
+> >         if (!host)
+> > @@ -395,7 +396,18 @@ struct mmc_host *mmc_alloc_host(int extra,
+> > struct device *dev)
+> >         /* scanning will be enabled when we're ready */
+> >         host->rescan_disable = 1;
+> > 
+> > -       err = ida_simple_get(&mmc_host_ida, 0, 0, GFP_KERNEL);
+> > +       host->parent = dev;
+> > +
+> > +       alias_id = mmc_get_reserved_index(host);
+> > +       if (alias_id >= 0) {
+> > +               min_idx = alias_id;
+> > +               max_idx = alias_id + 1;
+> > +       } else {
+> > +               min_idx = mmc_first_nonreserved_index();
+> > +               max_idx = 0;
+> > +       }
+> > +
+> > +       err = ida_simple_get(&mmc_host_ida, min_idx, max_idx,
+> > GFP_KERNEL);
+> >         if (err < 0) {
+> >                 kfree(host);
+> >                 return NULL;
+> > @@ -406,7 +418,6 @@ struct mmc_host *mmc_alloc_host(int extra,
+> > struct device *dev)
+> >         dev_set_name(&host->class_dev, "mmc%d", host->index);
+> >         host->ws = wakeup_source_register(NULL, dev_name(&host-
+> > >class_dev));
+> > 
+> > -       host->parent = dev;
+> >         host->class_dev.parent = dev;
+> >         host->class_dev.class = &mmc_host_class;
+> >         device_initialize(&host->class_dev);
+> > --
+> > 2.17.1
+> > 
 
