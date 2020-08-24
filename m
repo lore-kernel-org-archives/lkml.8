@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF36FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 148FC204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACCCB2087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259508;
-	bh=jY0VWFT/oJIHwgbQvttXBniFS0HUikgNTBGZJXm1KJo=;
+	s=default; t=1598259512;
+	bh=t60HpLwE+ABxU3kRI1QY62eWALzA2Y88UuNatmqx9pc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kVlX3zHCdKRyyPw2630yb5CrE7AjGAb3YYAWZqPoLlgZ2nIjsko1xKnCF20JUG+d2
-	 Rlxyv86/XCp9F4stHheMeT0MUzZB8Jgyrovo4D18ZL9FvtpkGAxu3jtLsDe9Nb+klK
-	 Em7z2/ERwvAlfDIeJeLC6jpV9WruHezAf2WwgNIM=
+	b=WrNNLO7ygIsfbxbyLvDD16sA8lz+3dcq/TQ/s3mlp0S7Q3Ld8SaZ0Kc2RdFU9LvBR
+	 7IgciaazQERP9ga7n6W6+yAvxPOxJm8VQ4TXMNxA73AFWcHozlHbTctzAMYRJCH7xO
+	 olTifo9Rgf32o6Pyyp0igPNEYtAYtnwP/Ojkk4Wc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbgHXI61 (ORCPT
+        id S1730733AbgHXI60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:58:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46376 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730765AbgHXI6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:58:16 -0400
+        id S1730756AbgHXI6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:58:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 268C82072D;
-        Mon, 24 Aug 2020 08:58:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1C0B204FD;
+        Mon, 24 Aug 2020 08:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259495;
-        bh=jY0VWFT/oJIHwgbQvttXBniFS0HUikgNTBGZJXm1KJo=;
+        s=default; t=1598259493;
+        bh=t60HpLwE+ABxU3kRI1QY62eWALzA2Y88UuNatmqx9pc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e1qPV06IaPMNonerf9PnC9I69utAECcXCIIO5t8lyE431vKOJgBmK2ktYArbi/Nh7
-         9YLT1TaBK4PcPLcY5V9/NcG7BvXLS9uhhzZF5wmMBP/9NTSzhrPBBWrQDh5/NVwJ+G
-         i68ewYstDW7qsyVbO7yDffURK88uHXLnUlHwakow=
+        b=vDeMf7DEbRH8FHyShWYBuL0splf67xxQ/AKVPX7ZLsvEOGLxFcZrOf0vLPrcse8Zx
+         whIJlocXLFQnPLsUlIT9lZjNrlWNsirFA8KluuZmzRiVkiqmxb/s9oCk0QHN1XZAdS
+         JwCse5VemYpBPLVSVBHdT3e9OiExabO/1uftbZio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 50/71] ASoC: intel: Fix memleak in sst_media_open
-Date:   Mon, 24 Aug 2020 10:31:41 +0200
-Message-Id: <20200824082358.412380968@linuxfoundation.org>
+Subject: [PATCH 4.19 59/71] afs: Fix NULL deref in afs_dynroot_depopulate()
+Date:   Mon, 24 Aug 2020 10:31:50 +0200
+Message-Id: <20200824082358.868712543@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -61,48 +62,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 062fa09f44f4fb3776a23184d5d296b0c8872eb9 ]
+[ Upstream commit 5e0b17b026eb7c6de9baa9b0d45a51b05f05abe1 ]
 
-When power_up_sst() fails, stream needs to be freed
-just like when try_module_get() fails. However, current
-code is returning directly and ends up leaking memory.
+If an error occurs during the construction of an afs superblock, it's
+possible that an error occurs after a superblock is created, but before
+we've created the root dentry.  If the superblock has a dynamic root
+(ie.  what's normally mounted on /afs), the afs_kill_super() will call
+afs_dynroot_depopulate() to unpin any created dentries - but this will
+oops if the root hasn't been created yet.
 
-Fixes: 0121327c1a68b ("ASoC: Intel: mfld-pcm: add control for powering up/down dsp")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200813084112.26205-1-dinghao.liu@zju.edu.cn
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix this by skipping that bit of code if there is no root dentry.
+
+This leads to an oops looking like:
+
+	general protection fault, ...
+	KASAN: null-ptr-deref in range [0x0000000000000068-0x000000000000006f]
+	...
+	RIP: 0010:afs_dynroot_depopulate+0x25f/0x529 fs/afs/dynroot.c:385
+	...
+	Call Trace:
+	 afs_kill_super+0x13b/0x180 fs/afs/super.c:535
+	 deactivate_locked_super+0x94/0x160 fs/super.c:335
+	 afs_get_tree+0x1124/0x1460 fs/afs/super.c:598
+	 vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+	 do_new_mount fs/namespace.c:2875 [inline]
+	 path_mount+0x1387/0x2070 fs/namespace.c:3192
+	 do_mount fs/namespace.c:3205 [inline]
+	 __do_sys_mount fs/namespace.c:3413 [inline]
+	 __se_sys_mount fs/namespace.c:3390 [inline]
+	 __x64_sys_mount+0x27f/0x300 fs/namespace.c:3390
+	 do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+which is oopsing on this line:
+
+	inode_lock(root->d_inode);
+
+presumably because sb->s_root was NULL.
+
+Fixes: 0da0b7fd73e4 ("afs: Display manually added cells in dynamic root mount")
+Reported-by: syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/atom/sst-mfld-platform-pcm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/afs/dynroot.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/sound/soc/intel/atom/sst-mfld-platform-pcm.c b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-index 6868e71e3a3f0..0572c3c964506 100644
---- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-+++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-@@ -339,7 +339,7 @@ static int sst_media_open(struct snd_pcm_substream *substream,
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index 069273a2483f9..fc6c42eeb659c 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -299,15 +299,17 @@ void afs_dynroot_depopulate(struct super_block *sb)
+ 		net->dynroot_sb = NULL;
+ 	mutex_unlock(&net->proc_cells_lock);
  
- 	ret_val = power_up_sst(stream);
- 	if (ret_val < 0)
--		return ret_val;
-+		goto out_power_up;
+-	inode_lock(root->d_inode);
+-
+-	/* Remove all the pins for dirs created for manually added cells */
+-	list_for_each_entry_safe(subdir, tmp, &root->d_subdirs, d_child) {
+-		if (subdir->d_fsdata) {
+-			subdir->d_fsdata = NULL;
+-			dput(subdir);
++	if (root) {
++		inode_lock(root->d_inode);
++
++		/* Remove all the pins for dirs created for manually added cells */
++		list_for_each_entry_safe(subdir, tmp, &root->d_subdirs, d_child) {
++			if (subdir->d_fsdata) {
++				subdir->d_fsdata = NULL;
++				dput(subdir);
++			}
+ 		}
+-	}
  
- 	/* Make sure, that the period size is always even */
- 	snd_pcm_hw_constraint_step(substream->runtime, 0,
-@@ -348,8 +348,9 @@ static int sst_media_open(struct snd_pcm_substream *substream,
- 	return snd_pcm_hw_constraint_integer(runtime,
- 			 SNDRV_PCM_HW_PARAM_PERIODS);
- out_ops:
--	kfree(stream);
- 	mutex_unlock(&sst_lock);
-+out_power_up:
-+	kfree(stream);
- 	return ret_val;
+-	inode_unlock(root->d_inode);
++		inode_unlock(root->d_inode);
++	}
  }
- 
 -- 
 2.25.1
 
