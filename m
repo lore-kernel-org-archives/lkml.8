@@ -2,127 +2,102 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510BBC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C77C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 360BE2078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F04720768
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 02:05:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o9NsVDnZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgHXCBn convert rfc822-to-8bit (ORCPT
+        id S1727944AbgHXCFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 22:01:43 -0400
-Received: from mgw-01.mpynet.fi ([82.197.21.90]:40154 "EHLO mgw-01.mpynet.fi"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727914AbgHXCBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 22:01:43 -0400
-X-Greylist: delayed 1031 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Aug 2020 22:01:41 EDT
-Received: from pps.filterd (mgw-01.mpynet.fi [127.0.0.1])
-        by mgw-01.mpynet.fi (8.16.0.42/8.16.0.42) with SMTP id 07O1Y27U013400;
-        Mon, 24 Aug 2020 04:44:08 +0300
-Received: from ex13.tuxera.com (ex13.tuxera.com [178.16.184.72])
-        by mgw-01.mpynet.fi with ESMTP id 3342qur0yw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 04:44:08 +0300
-Received: from tuxera-exch.ad.tuxera.com (10.20.48.11) by
- tuxera-exch.ad.tuxera.com (10.20.48.11) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 24 Aug 2020 04:44:07 +0300
-Received: from tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789]) by
- tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789%12]) with mapi id
- 15.00.1497.006; Mon, 24 Aug 2020 04:44:07 +0300
-From:   Anton Altaparmakov <anton@tuxera.com>
-To:     Rustam Kovhaev <rkovhaev@gmail.com>
-CC:     "linux-ntfs-dev@lists.sourceforge.net" 
-        <linux-ntfs-dev@lists.sourceforge.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] ntfs: add check for mft record size in superblock
-Thread-Topic: [PATCH] ntfs: add check for mft record size in superblock
-Thread-Index: AQHWeWEcxiS4EJ2kEU6+ZB9zUJco96lGSw4A
-Date:   Mon, 24 Aug 2020 01:44:06 +0000
-Message-ID: <F206DE99-102C-475D-9129-5B9ACBAED8E6@tuxera.com>
-References: <20200823152147.55766-1-rkovhaev@gmail.com>
-In-Reply-To: <20200823152147.55766-1-rkovhaev@gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [109.145.212.211]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B6F2F1A9B99CD045AD3A609E096CD389@ex13.tuxera.com>
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-24_01:2020-08-21,2020-08-24 signatures=0
-X-Proofpoint-Spam-Details: rule=mpy_notspam policy=mpy score=0 mlxlogscore=999 adultscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240003
+        Sun, 23 Aug 2020 22:05:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58616 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726852AbgHXCFl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 22:05:41 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3DCCC061573
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 19:05:40 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id h5so988737plt.6
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 19:05:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=WogHqAqohDBHZ8SUM7HEIVaDNX8B2UknmY2OcVCsXPE=;
+        b=o9NsVDnZyYih3aUpV2+sdu1OBb4z5PNnzSEDumKLwQwCcv6LBTju/dLmzHGF7fQjbn
+         uBOlztxu3XhGZRLwTmK7ujQglCUpIBEslwjYyD19exZLl55IFOk7fmTite4bh4hIhYA1
+         N84Yr6yy+PvNyAvX5eNh5JI+ZcgaC3isPhn+XtDL5Ege27AbhcJgCFlcFpG5qNIt1wkP
+         CKhAQmBbrRR4d5GQ9isIcDTAovrkd8uf4Cx1g2xlEtnFfaKzlxquLhdvfZA68U2dHcZW
+         ejPW3N1LItW6EajHqVweQEqQjSqdc3pPM5YkdykZ8ezaycfhcNENvRmp0vbxk+sWk+02
+         yGqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=WogHqAqohDBHZ8SUM7HEIVaDNX8B2UknmY2OcVCsXPE=;
+        b=EW6F8Sg+tlhEVaNRtEXevh6miy6Rv625D2g92fz6z3Z3qUz5eET5pD8idTv0OYuDsw
+         YkKMrkCpfD7rCi5qnVq7xFkvS4z1pu1rJKmJGNJOt97FnEcsUDvRjwrp3+C7Lj0Ndn2s
+         zA+UyHVuWapZp+tkpydR9GNJboiVHoTIePI2zXvuRD8QmU1VdAJAvgwTJPOC/CWaoajt
+         pGv2lqtSLImdHeYsj0h/dRX/Us/ZMqjSxTs8BpbyeAX4aFQwks6Is5k6Ab5dsE7aDOf9
+         3CPjemvID5xBI2r6RNDgyVU+lnzSM+2N8K9/cpdrQzaOfaI3lVrt7xp/z/g09sGHKb6y
+         Ut8g==
+X-Gm-Message-State: AOAM530iKC5NQ+wvGqMuTckyuY5CodXhuq2VHy8GbFytcsm45jK6I1p3
+        +QfvZOPofd7ir5vGQNMqm6Q=
+X-Google-Smtp-Source: ABdhPJzZgzY6R3x2cwUI4pX/w0pWVj0snEF3TYtFBvqQrRj/8pzlkrNuSBm4bVElg6O310tiiGHl+A==
+X-Received: by 2002:a17:90b:1216:: with SMTP id gl22mr2772437pjb.98.1598234740105;
+        Sun, 23 Aug 2020 19:05:40 -0700 (PDT)
+Received: from localhost.localdomain ([2402:7500:578:1a23:7d27:569f:8e65:12c9])
+        by smtp.gmail.com with ESMTPSA id p5sm3580854pgm.66.2020.08.23.19.05.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 23 Aug 2020 19:05:39 -0700 (PDT)
+From:   cy_huang <u0084500@gmail.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org
+Cc:     cy_huang@richtek.com, gene_chen@richtek.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] regulator: rt4801: Fix W=1 build warning when CONFIG_OF=n
+Date:   Mon, 24 Aug 2020 10:05:13 +0800
+Message-Id: <1598234713-8532-1-git-send-email-u0084500@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rustam,
+From: ChiYuan Huang <cy_huang@richtek.com>
 
-Thank you for the patch but it introduces an endianness bug - you have to us le32_to_cpu(m->bytes_allocated) both when doing the comparison and then printing the message.
+Fix below warning when CONFIG_OF=n:
 
-Also, please drop the square brackets.  Wherever the driver prints such things it never uses brackets around the numbers and it would be better to have this consistent throughout.
+drivers/regulator/rt4801-regulator.c:206:34: warning: unused variable 'rt4801_of_id' [-Wunused-const-variable]
+  206 | static const struct of_device_id rt4801_of_id[] = {
+      |                                  ^~~~~~~~~~~~
 
-Can you please resend with the above issues addressed?  You can then also add to the commit message:
+Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
+Reported-by: kernel test robot <lkp@intel.com>
+---
+ drivers/regulator/rt4801-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	Acked-by: Anton Altaparmakov <anton@tuxera.com>
-
-Thanks!
-
-Best regards,
-
-	Anton
-
-> On 23 Aug 2020, at 16:21, Rustam Kovhaev <rkovhaev@gmail.com> wrote:
-> 
-> number of bytes allocated for mft record should be equal to the mft
-> record size stored in ntfs superblock
-> as reported by syzbot, userspace might trigger out-of-bounds read by
-> dereferencing ctx->attr in ntfs_attr_find()
-> 
-> Reported-and-tested-by: syzbot+aed06913f36eff9b544e@syzkaller.appspotmail.com
-> Link: https://syzkaller.appspot.com/bug?extid=aed06913f36eff9b544e
-> Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
-> ---
-> fs/ntfs/inode.c | 6 ++++++
-> 1 file changed, 6 insertions(+)
-> 
-> diff --git a/fs/ntfs/inode.c b/fs/ntfs/inode.c
-> index 9bb9f0952b18..6407af7c2e4f 100644
-> --- a/fs/ntfs/inode.c
-> +++ b/fs/ntfs/inode.c
-> @@ -1810,6 +1810,12 @@ int ntfs_read_inode_mount(struct inode *vi)
-> 		brelse(bh);
-> 	}
-> 
-> +	if (m->bytes_allocated != vol->mft_record_size) {
-> +		ntfs_error(sb, "Incorrect mft record size [%u] in superblock, should be [%u].",
-> +				m->bytes_allocated, vol->mft_record_size);
-> +		goto err_out;
-> +	}
-> +
-> 	/* Apply the mst fixups. */
-> 	if (post_read_mst_fixup((NTFS_RECORD*)m, vol->mft_record_size)) {
-> 		/* FIXME: Try to use the $MFTMirr now. */
-> -- 
-> 2.28.0
-> 
-
-
+diff --git a/drivers/regulator/rt4801-regulator.c b/drivers/regulator/rt4801-regulator.c
+index 0ddc670..2055a9c 100644
+--- a/drivers/regulator/rt4801-regulator.c
++++ b/drivers/regulator/rt4801-regulator.c
+@@ -203,7 +203,7 @@ static int rt4801_probe(struct i2c_client *i2c)
+ 	return 0;
+ }
+ 
+-static const struct of_device_id rt4801_of_id[] = {
++static const struct of_device_id __maybe_unused rt4801_of_id[] = {
+ 	{ .compatible = "richtek,rt4801", },
+ 	{ },
+ };
 -- 
-Anton Altaparmakov <anton at tuxera.com> (replace at with @)
-Lead in File System Development, Tuxera Inc., http://www.tuxera.com/
-Linux NTFS maintainer
+2.7.4
 
