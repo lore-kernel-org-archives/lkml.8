@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5ACDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E246FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0B4207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2ABA2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263009;
-	bh=1KZTkyyQvb4ak/RXe1qfPICijwZ/tYPNPs68qQFUQUg=;
+	s=default; t=1598263013;
+	bh=JibyKW7nZFIfL4HPjzevLQW3i52HwUo/nRmn8F5hksw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MtVbMN1diMyFhZ7KhwYiqjH/Ujwnrjdh4Jla2UkuGFYxSj9tg1uK0KEHjuwkmv3Pn
-	 6Ctv6suzwq6uCYGmcXUfLQZjpNvJj2khSF/5UWZD1vsZsWJ2TEL71wQkHU+MqvQGYu
-	 g1DzRTFLn4rkjC/u+c4CUIJ4bDeK4MvXV84babIM=
+	b=sZPNldSydb5+db4eVnOrijAPzSBguI9RJ2ZQnJFVL3Vufds7mejwsH5ViJCTlBf8J
+	 AUDN+1TachZXabkh2Cb1be6hTE3DH1SC+NJNfloOKvIwP4zm4Bbz6V7bjyLxC7xqEy
+	 aS3oj2Ee9mMfwr1GqnU5kmrp0C9kz+YDsMmPkIOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728097AbgHXIfZ (ORCPT
+        id S1726461AbgHXJ4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45458 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbgHXIfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:35:11 -0400
+        id S1725780AbgHXIfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:35:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67176207D3;
-        Mon, 24 Aug 2020 08:35:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80E8A221E2;
+        Mon, 24 Aug 2020 08:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258111;
-        bh=1KZTkyyQvb4ak/RXe1qfPICijwZ/tYPNPs68qQFUQUg=;
+        s=default; t=1598258124;
+        bh=JibyKW7nZFIfL4HPjzevLQW3i52HwUo/nRmn8F5hksw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uv0X2y9J4UBwgd7rl0Vc5+ZplUgvIGXPPdpJnVZxagHzypzuQYDzTR25nQzDzxF9r
-         gO8uxD1+D1je9nWxwmhqg3RHl9VMrYLA51faQa8M1HX6JTI9DbHYktfDjOb47LuACZ
-         nXF1UqGD/sEmLQBdv0534KJkAU2BtVZ1f1OKAqi0=
+        b=rQWa05sQwlTWDIQOH9LRW8c8SUVLKMK1zai2WBhVhY6tnybHo4OOp363VVwmEWjCU
+         TZBt+cpnU6oeMrKiP4Lul4xdfaNHnJamdgmzzgEODlK9UwR9ZSDY/xgST9+SAqWWRO
+         ErRVHwOQ65HdrxI+QnnuteUYh8PQuGOzP0KIRSBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Martin KaFai Lau <kafai@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 078/148] ASoC: q6afe-dai: mark all widgets registers as SND_SOC_NOPM
-Date:   Mon, 24 Aug 2020 10:29:36 +0200
-Message-Id: <20200824082417.812359407@linuxfoundation.org>
+Subject: [PATCH 5.8 082/148] bpf: sock_ops sk access may stomp registers when dst_reg = src_reg
+Date:   Mon, 24 Aug 2020 10:29:40 +0200
+Message-Id: <20200824082417.989393028@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -61,347 +62,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit 56235e4bc5ae58cb8fcd9314dba4e9ab077ddda8 ]
+[ Upstream commit 84f44df664e9f0e261157e16ee1acd77cc1bb78d ]
 
-Looks like the q6afe-dai dapm widget registers are set as "0",
-which is a not correct.
+Similar to patch ("bpf: sock_ops ctx access may stomp registers") if the
+src_reg = dst_reg when reading the sk field of a sock_ops struct we
+generate xlated code,
 
-As this registers will be read by ASoC core during startup
-which will throw up errors, Fix this by making the registers
-as SND_SOC_NOPM as these should be never used.
+  53: (61) r9 = *(u32 *)(r9 +28)
+  54: (15) if r9 == 0x0 goto pc+3
+  56: (79) r9 = *(u64 *)(r9 +0)
 
-With recent changes to ASoC core, every register read/write
-failures are reported very verbosely. Prior to this fails to reads
-are totally ignored, so we never saw any error messages.
+This stomps on the r9 reg to do the sk_fullsock check and then when
+reading the skops->sk field instead of the sk pointer we get the
+sk_fullsock. To fix use similar pattern noted in the previous fix
+and use the temp field to save/restore a register used to do
+sk_fullsock check.
 
-Fixes: 24c4cbcfac09 ("ASoC: qdsp6: q6afe: Add q6afe dai driver")
-Reported-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200811120205.21805-1-srinivas.kandagatla@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+After the fix the generated xlated code reads,
+
+  52: (7b) *(u64 *)(r9 +32) = r8
+  53: (61) r8 = *(u32 *)(r9 +28)
+  54: (15) if r9 == 0x0 goto pc+3
+  55: (79) r8 = *(u64 *)(r9 +32)
+  56: (79) r9 = *(u64 *)(r9 +0)
+  57: (05) goto pc+1
+  58: (79) r8 = *(u64 *)(r9 +32)
+
+Here r9 register was in-use so r8 is chosen as the temporary register.
+In line 52 r8 is saved in temp variable and at line 54 restored in case
+fullsock != 0. Finally we handle fullsock == 0 case by restoring at
+line 58.
+
+This adds a new macro SOCK_OPS_GET_SK it is almost possible to merge
+this with SOCK_OPS_GET_FIELD, but I found the extra branch logic a
+bit more confusing than just adding a new macro despite a bit of
+duplicating code.
+
+Fixes: 1314ef561102e ("bpf: export bpf_sock for BPF_PROG_TYPE_SOCK_OPS prog type")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/159718349653.4728.6559437186853473612.stgit@john-Precision-5820-Tower
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/qcom/qdsp6/q6afe-dai.c | 210 +++++++++++++++----------------
- 1 file changed, 105 insertions(+), 105 deletions(-)
+ net/core/filter.c | 49 ++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 38 insertions(+), 11 deletions(-)
 
-diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
-index 2a5302f1db98a..0168af8492727 100644
---- a/sound/soc/qcom/qdsp6/q6afe-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
-@@ -1150,206 +1150,206 @@ static int q6afe_of_xlate_dai_name(struct snd_soc_component *component,
- }
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 09286a1f7457d..a69e79327c29e 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -8290,6 +8290,43 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
+ 		}							      \
+ 	} while (0)
  
- static const struct snd_soc_dapm_widget q6afe_dai_widgets[] = {
--	SND_SOC_DAPM_AIF_IN("HDMI_RX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_IN("SLIMBUS_0_RX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_IN("SLIMBUS_1_RX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_IN("SLIMBUS_2_RX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_IN("SLIMBUS_3_RX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_IN("SLIMBUS_4_RX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_IN("SLIMBUS_5_RX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_IN("SLIMBUS_6_RX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_OUT("SLIMBUS_0_TX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_OUT("SLIMBUS_1_TX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_OUT("SLIMBUS_2_TX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_OUT("SLIMBUS_3_TX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_OUT("SLIMBUS_4_TX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_OUT("SLIMBUS_5_TX", NULL, 0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_OUT("SLIMBUS_6_TX", NULL, 0, 0, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("HDMI_RX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("SLIMBUS_0_RX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("SLIMBUS_1_RX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("SLIMBUS_2_RX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("SLIMBUS_3_RX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("SLIMBUS_4_RX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("SLIMBUS_5_RX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_IN("SLIMBUS_6_RX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SLIMBUS_0_TX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SLIMBUS_1_TX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SLIMBUS_2_TX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SLIMBUS_3_TX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SLIMBUS_4_TX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SLIMBUS_5_TX", NULL, 0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("SLIMBUS_6_TX", NULL, 0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUAT_MI2S_RX", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUAT_MI2S_TX", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("TERT_MI2S_RX", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("TERT_MI2S_TX", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("SEC_MI2S_RX", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("SEC_MI2S_TX", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("SEC_MI2S_RX_SD1",
- 			"Secondary MI2S Playback SD1",
--			0, 0, 0, 0),
-+			0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("PRI_MI2S_RX", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("PRI_MI2S_TX", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
++#define SOCK_OPS_GET_SK()							      \
++	do {								      \
++		int fullsock_reg = si->dst_reg, reg = BPF_REG_9, jmp = 1;     \
++		if (si->dst_reg == reg || si->src_reg == reg)		      \
++			reg--;						      \
++		if (si->dst_reg == reg || si->src_reg == reg)		      \
++			reg--;						      \
++		if (si->dst_reg == si->src_reg) {			      \
++			*insn++ = BPF_STX_MEM(BPF_DW, si->src_reg, reg,	      \
++					  offsetof(struct bpf_sock_ops_kern,  \
++					  temp));			      \
++			fullsock_reg = reg;				      \
++			jmp += 2;					      \
++		}							      \
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
++						struct bpf_sock_ops_kern,     \
++						is_fullsock),		      \
++				      fullsock_reg, si->src_reg,	      \
++				      offsetof(struct bpf_sock_ops_kern,      \
++					       is_fullsock));		      \
++		*insn++ = BPF_JMP_IMM(BPF_JEQ, fullsock_reg, 0, jmp);	      \
++		if (si->dst_reg == si->src_reg)				      \
++			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
++				      offsetof(struct bpf_sock_ops_kern,      \
++				      temp));				      \
++		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
++						struct bpf_sock_ops_kern, sk),\
++				      si->dst_reg, si->src_reg,		      \
++				      offsetof(struct bpf_sock_ops_kern, sk));\
++		if (si->dst_reg == si->src_reg)	{			      \
++			*insn++ = BPF_JMP_A(1);				      \
++			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
++				      offsetof(struct bpf_sock_ops_kern,      \
++				      temp));				      \
++		}							      \
++	} while (0)
++
+ #define SOCK_OPS_GET_TCP_SOCK_FIELD(FIELD) \
+ 		SOCK_OPS_GET_FIELD(FIELD, FIELD, struct tcp_sock)
  
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_0", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_1", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_2", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_3", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_4", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_5", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_6", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("PRIMARY_TDM_RX_7", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("PRIMARY_TDM_TX_0", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("PRIMARY_TDM_TX_1", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("PRIMARY_TDM_TX_2", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("PRIMARY_TDM_TX_3", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("PRIMARY_TDM_TX_4", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("PRIMARY_TDM_TX_5", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("PRIMARY_TDM_TX_6", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("PRIMARY_TDM_TX_7", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 
- 	SND_SOC_DAPM_AIF_IN("SEC_TDM_RX_0", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("SEC_TDM_RX_1", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("SEC_TDM_RX_2", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("SEC_TDM_RX_3", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("SEC_TDM_RX_4", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("SEC_TDM_RX_5", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("SEC_TDM_RX_6", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("SEC_TDM_RX_7", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("SEC_TDM_TX_0", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("SEC_TDM_TX_1", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("SEC_TDM_TX_2", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("SEC_TDM_TX_3", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("SEC_TDM_TX_4", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("SEC_TDM_TX_5", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("SEC_TDM_TX_6", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("SEC_TDM_TX_7", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 
- 	SND_SOC_DAPM_AIF_IN("TERT_TDM_RX_0", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("TERT_TDM_RX_1", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("TERT_TDM_RX_2", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("TERT_TDM_RX_3", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("TERT_TDM_RX_4", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("TERT_TDM_RX_5", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("TERT_TDM_RX_6", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("TERT_TDM_RX_7", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("TERT_TDM_TX_0", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("TERT_TDM_TX_1", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("TERT_TDM_TX_2", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("TERT_TDM_TX_3", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("TERT_TDM_TX_4", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("TERT_TDM_TX_5", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("TERT_TDM_TX_6", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("TERT_TDM_TX_7", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 
- 	SND_SOC_DAPM_AIF_IN("QUAT_TDM_RX_0", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUAT_TDM_RX_1", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUAT_TDM_RX_2", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUAT_TDM_RX_3", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUAT_TDM_RX_4", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUAT_TDM_RX_5", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUAT_TDM_RX_6", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUAT_TDM_RX_7", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUAT_TDM_TX_0", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUAT_TDM_TX_1", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUAT_TDM_TX_2", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUAT_TDM_TX_3", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUAT_TDM_TX_4", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUAT_TDM_TX_5", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUAT_TDM_TX_6", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUAT_TDM_TX_7", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 
- 	SND_SOC_DAPM_AIF_IN("QUIN_TDM_RX_0", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUIN_TDM_RX_1", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUIN_TDM_RX_2", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUIN_TDM_RX_3", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUIN_TDM_RX_4", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUIN_TDM_RX_5", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUIN_TDM_RX_6", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_IN("QUIN_TDM_RX_7", NULL,
--			     0, 0, 0, 0),
-+			     0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUIN_TDM_TX_0", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUIN_TDM_TX_1", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUIN_TDM_TX_2", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUIN_TDM_TX_3", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUIN_TDM_TX_4", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUIN_TDM_TX_5", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUIN_TDM_TX_6", NULL,
--						0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
- 	SND_SOC_DAPM_AIF_OUT("QUIN_TDM_TX_7", NULL,
--						0, 0, 0, 0),
--	SND_SOC_DAPM_AIF_OUT("DISPLAY_PORT_RX", "NULL", 0, 0, 0, 0),
-+						0, SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT("DISPLAY_PORT_RX", "NULL", 0, SND_SOC_NOPM, 0, 0),
- };
- 
- static const struct snd_soc_component_driver q6afe_dai_component = {
+@@ -8574,17 +8611,7 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
+ 		SOCK_OPS_GET_TCP_SOCK_FIELD(bytes_acked);
+ 		break;
+ 	case offsetof(struct bpf_sock_ops, sk):
+-		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+-						struct bpf_sock_ops_kern,
+-						is_fullsock),
+-				      si->dst_reg, si->src_reg,
+-				      offsetof(struct bpf_sock_ops_kern,
+-					       is_fullsock));
+-		*insn++ = BPF_JMP_IMM(BPF_JEQ, si->dst_reg, 0, 1);
+-		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
+-						struct bpf_sock_ops_kern, sk),
+-				      si->dst_reg, si->src_reg,
+-				      offsetof(struct bpf_sock_ops_kern, sk));
++		SOCK_OPS_GET_SK();
+ 		break;
+ 	}
+ 	return insn - insn_buf;
 -- 
 2.25.1
 
