@@ -2,109 +2,100 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61E8C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9970EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFB302075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e+FZ645c";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LeesnAIK"
+	by mail.kernel.org (Postfix) with ESMTP id 6C8F7206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598262538;
+	bh=bN7dJrzpgTx4kNBALgXdM5o7wtL1Q+rEH6arvcnTpUo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cVdmvHt7FqC2LykS872euz+v1HrJ+ytwJvu9R1U0YIVFA4qLpyzTdmg/w4c0lSlmq
+	 Y77V+B21+uZia/8V7yYpMlxRDd++GUEUmS2eoNWESyqyBSaNZzaO44alGPQQaDHchQ
+	 pSKgt25MOjlOhsKqLBurDCf32VJNilvbzSsXi/YQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgHXJsp (ORCPT
+        id S1729148AbgHXJsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:48:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35066 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728763AbgHXIkl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:40:41 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4E49C061573;
-        Mon, 24 Aug 2020 01:40:40 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 08:40:30 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598258431;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oi/gwlF9UK0Dj6KRXzgzltwh1bdA+sQUViRUrZHY+us=;
-        b=e+FZ645cd6LWZaO7VwD/zzo7QB6pxc2qPdp59/DCjgQbWRy01pZhvh6HRG26aXG8wA0y1Y
-        dh4UzG9XZB/bfbPpNpos0BW0yt70tpew2rRK7goJrJKV/hUuj1JxkCENj0HTqNVib0c4Au
-        qW6MjqHX4Dm6jtFhgkEwKDLpPRMjVoPsv1Xpx9iObrfaBdOMpYuqQouUqWgrgVuaJ6zCS1
-        Gpg8F5Jhc3h4nhC9ShjlkihdgGpPuO7dTrCVlXraf0w2b9UZHALom3+bCs4Yhxiv6l5Rg8
-        jUkd43dsXtKdhuX2a4cXYiaCnGfSjoEABMZF7v5hfntidl179bFhJS7RjLB/ZQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598258431;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oi/gwlF9UK0Dj6KRXzgzltwh1bdA+sQUViRUrZHY+us=;
-        b=LeesnAIKOWqiZTpc1slbnxt20lb2DgEyxCGdI7DlF6wLeYyoebq8gowR8XUeF/crZggwoT
-        4TIT3dkWg0XgyWCg==
-From:   "tip-bot2 for Borislav Petkov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fsgsbase] x86/entry/64: Correct the comment over
- SAVE_AND_SET_GSBASE
-Cc:     Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200821090710.GE12181@zn.tnic>
-References: <20200821090710.GE12181@zn.tnic>
+        Mon, 24 Aug 2020 05:48:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728756AbgHXIkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:40:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 340C02074D;
+        Mon, 24 Aug 2020 08:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598258432;
+        bh=bN7dJrzpgTx4kNBALgXdM5o7wtL1Q+rEH6arvcnTpUo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sd2ITVHT85dr+LKkJsbd/o5SL0Ow8NG/rRJoNpDgHKn68uBIKWZ0UvgLGRDP8T2Pf
+         FsA7NmrTWRXA93VauOx5W+dIf5WeY4cOwKAS44TmZ4OLX2RhvLTrHrLGERHT1qllja
+         /y7AA8bIGlVvTQokbRqtGn8D4ezb9qypX+gFgeLU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Felix Kuehling <Felix.Kuehling@amd.com>,
+        Laurent Morichetti <laurent.morichetti@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 046/124] drm/ttm: fix offset in VMAs with a pg_offs in ttm_bo_vm_access
+Date:   Mon, 24 Aug 2020 10:29:40 +0200
+Message-Id: <20200824082411.690630357@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
+References: <20200824082409.368269240@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Message-ID: <159825843012.389.11997668879998573740.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/fsgsbase branch of tip:
+From: Felix Kuehling <Felix.Kuehling@amd.com>
 
-Commit-ID:     0b2c605fa4ee3117c00b97b7af67791576b28f88
-Gitweb:        https://git.kernel.org/tip/0b2c605fa4ee3117c00b97b7af67791576b28f88
-Author:        Borislav Petkov <bp@suse.de>
-AuthorDate:    Thu, 20 Aug 2020 11:10:15 +02:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 24 Aug 2020 10:23:40 +02:00
+[ Upstream commit c0001213d195d1bac83e0744c06ff06dd5a8ba53 ]
 
-x86/entry/64: Correct the comment over SAVE_AND_SET_GSBASE
+VMAs with a pg_offs that's offset from the start of the vma_node need
+to adjust the offset within the BO accordingly. This matches the
+offset calculation in ttm_bo_vm_fault_reserved.
 
-Add the proper explanation why an LFENCE is not needed in the FSGSBASE
-case.
-
-Fixes: c82965f9e530 ("x86/entry/64: Handle FSGSBASE enabled paranoid entry/exit")
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200821090710.GE12181@zn.tnic
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Tested-by: Laurent Morichetti <laurent.morichetti@amd.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/patch/381169/
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/entry/entry_64.S | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/ttm/ttm_bo_vm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 70dea93..bf78de4 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -840,8 +840,9 @@ SYM_CODE_START_LOCAL(paranoid_entry)
- 	 * retrieve and set the current CPUs kernel GSBASE. The stored value
- 	 * has to be restored in paranoid_exit unconditionally.
- 	 *
--	 * The MSR write ensures that no subsequent load is based on a
--	 * mispredicted GSBASE. No extra FENCE required.
-+	 * The unconditional write to GS base below ensures that no subsequent
-+	 * loads based on a mispredicted GS base can happen, therefore no LFENCE
-+	 * is needed here.
- 	 */
- 	SAVE_AND_SET_GSBASE scratch_reg=%rax save_reg=%rbx
- 	ret
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+index 72100b84c7a90..b08fdfa4291b2 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+@@ -505,8 +505,10 @@ static int ttm_bo_vm_access_kmap(struct ttm_buffer_object *bo,
+ int ttm_bo_vm_access(struct vm_area_struct *vma, unsigned long addr,
+ 		     void *buf, int len, int write)
+ {
+-	unsigned long offset = (addr) - vma->vm_start;
+ 	struct ttm_buffer_object *bo = vma->vm_private_data;
++	unsigned long offset = (addr) - vma->vm_start +
++		((vma->vm_pgoff - drm_vma_node_start(&bo->base.vma_node))
++		 << PAGE_SHIFT);
+ 	int ret;
+ 
+ 	if (len < 1 || (offset + len) >> PAGE_SHIFT > bo->num_pages)
+-- 
+2.25.1
+
+
+
