@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BA0C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91763C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E28C2310D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6410022D08
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287060;
-	bh=hw7FTUSXhDZbMZBtjwl2xsNh6Azl3v030xZeS/4xO5I=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BiVHrtLPmZvzxUZDm1zad+JBOwuc3Tn62j+slwjQ+gxCYdJgNNBgnRplSld2Ya/vT
-	 gaL1a29b/m624GPCFhMJn2Xya0zmiDEbxObogUUb8eYoWXRRzV1ebtdDZytsnfpmW0
-	 H9BPYU1mkR486OvoqjZIN+pcGN9ds45328Xa5psA=
+	s=default; t=1598287105;
+	bh=m6gVk/EC6o00WgijoMdmia05PkUmTo2EqoFZ42ly1nQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pdWFc5LmRAwMmzixX9bTbVcCV94vjpcT/Hl90j9IRT5NXfjPx65Rh7nboSmMz6Dut
+	 r3c9S8Y09OtG0pEli4UK+/fCvjCWVjb5M+AgWexlY9V0wpA4mK0QH09bdktDP/ILgF
+	 hfmB1qjbp5tM0eFb8p5Tf8Zxt4i48SI/CUeHXKtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgHXQhj (ORCPT
+        id S1728414AbgHXQiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38846 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgHXQfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:35:06 -0400
+        id S1728139AbgHXQfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:35:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 565F42067C;
-        Mon, 24 Aug 2020 16:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63B1322C9E;
+        Mon, 24 Aug 2020 16:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286906;
-        bh=hw7FTUSXhDZbMZBtjwl2xsNh6Azl3v030xZeS/4xO5I=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ukXoyUnBMMnRvB9lWekaJK+0fskIndrukJJPQMVstWYpGpnCe56y3BtBKQf5ihttg
-         EDDFUNfU5CAes5GJjZWZOYrmCbMa+XZS59ZO+bopq+pBy7E1pzHvtWeLrlJKXTtWCJ
-         pCDipM9TiXycMupO2qwoF1KWnkFnVz/ucHTRuKKE=
+        s=default; t=1598286915;
+        bh=m6gVk/EC6o00WgijoMdmia05PkUmTo2EqoFZ42ly1nQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DuT+mLNDLAFppYWxGQIrU0hew0mBWs+YiRt3LUC2MDP0touF2wC3M7DMU8RXWHxku
+         oVOTq3qStuxgQluoZEQpiXQ+sTWtMqVpdbFZU3xfFwqY3b7blxD39e3NMrTHQeR4hY
+         rZa/KyE7cHycM16/WjHqdJh0WRhXORPN2dAMxoP4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tobias Schramm <t.schramm@manjaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-spi@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 01/63] spi: stm32: clear only asserted irq flags on interrupt
-Date:   Mon, 24 Aug 2020 12:34:01 -0400
-Message-Id: <20200824163504.605538-1-sashal@kernel.org>
+Cc:     "zhangyi (F)" <yi.zhang@huawei.com>, Theodore Ts'o <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 08/63] jbd2: abort journal if free a async write error metadata buffer
+Date:   Mon, 24 Aug 2020 12:34:08 -0400
+Message-Id: <20200824163504.605538-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
+References: <20200824163504.605538-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,36 +58,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobias Schramm <t.schramm@manjaro.org>
+From: "zhangyi (F)" <yi.zhang@huawei.com>
 
-[ Upstream commit ae1ba50f1e706dfd7ce402ac52c1f1f10becad68 ]
+[ Upstream commit c044f3d8360d2ecf831ba2cc9f08cf9fb2c699fb ]
 
-Previously the stm32h7 interrupt thread cleared all non-masked interrupts.
-If an interrupt was to occur during the handling of another interrupt its
-flag would be unset, resulting in a lost interrupt.
-This patches fixes the issue by clearing only the currently set interrupt
-flags.
+If we free a metadata buffer which has been failed to async write out
+in the background, the jbd2 checkpoint procedure will not detect this
+failure in jbd2_log_do_checkpoint(), so it may lead to filesystem
+inconsistency after cleanup journal tail. This patch abort the journal
+if free a buffer has write_io_error flag to prevent potential further
+inconsistency.
 
-Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
-Link: https://lore.kernel.org/r/20200804195136.1485392-1-t.schramm@manjaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Link: https://lore.kernel.org/r/20200620025427.1756360-5-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-stm32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jbd2/transaction.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 4c643dfc7fbbc..4a21feae0103d 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -966,7 +966,7 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
- 			stm32h7_spi_read_rxfifo(spi, false);
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index e65e0aca28261..6250c9faa4cbe 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -2120,6 +2120,7 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ {
+ 	struct buffer_head *head;
+ 	struct buffer_head *bh;
++	bool has_write_io_error = false;
+ 	int ret = 0;
  
--	writel_relaxed(mask, spi->base + STM32H7_SPI_IFCR);
-+	writel_relaxed(sr & mask, spi->base + STM32H7_SPI_IFCR);
+ 	J_ASSERT(PageLocked(page));
+@@ -2144,11 +2145,26 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ 		jbd2_journal_put_journal_head(jh);
+ 		if (buffer_jbd(bh))
+ 			goto busy;
++
++		/*
++		 * If we free a metadata buffer which has been failed to
++		 * write out, the jbd2 checkpoint procedure will not detect
++		 * this failure and may lead to filesystem inconsistency
++		 * after cleanup journal tail.
++		 */
++		if (buffer_write_io_error(bh)) {
++			pr_err("JBD2: Error while async write back metadata bh %llu.",
++			       (unsigned long long)bh->b_blocknr);
++			has_write_io_error = true;
++		}
+ 	} while ((bh = bh->b_this_page) != head);
  
- 	spin_unlock_irqrestore(&spi->lock, flags);
+ 	ret = try_to_free_buffers(page);
+ 
+ busy:
++	if (has_write_io_error)
++		jbd2_journal_abort(journal, -EIO);
++
+ 	return ret;
+ }
  
 -- 
 2.25.1
