@@ -2,165 +2,163 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BED7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F113C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:43:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C7F120866
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D5320738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lxFPqYpj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZOiYUyUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbgHXQnM (ORCPT
+        id S1728406AbgHXQnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:43:12 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14725 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728529AbgHXQm2 (ORCPT
+        Mon, 24 Aug 2020 12:43:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728648AbgHXQm4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:42:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f43edb60000>; Mon, 24 Aug 2020 09:41:26 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 24 Aug 2020 09:42:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 24 Aug 2020 09:42:27 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Aug
- 2020 16:42:27 +0000
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.108)
- by HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 24 Aug 2020 16:42:27 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZtGXZ08oUdzKecLG3FPmhbscWQP8pmS6UkCuU50qqXIxAWqe+d3jui0LhVHOAi1QwCgt9FEiBzWPc+yc9+Y50aNGXsjTTWEZVeybWBlqomngMYj6XHKW3aC6SWwoNvQyBY6OO1FVoP87tR3OaysBO+3MBKfjmF4Px3WLPcrqcO19dWRX+rr8IbcrCdWp0cfDUgJvgFxtjwdclQd0UQ9h/b7Unp2a38DcGip/UHtip3D14xMRxzZegY8Kg941B+3s9n5JdpEf/ScvMV/xHcKXMYH9Ow+XuZur9Po0n5RFnHdlg5s6YF1vg4HfX4MmoQX1krdCPvhZr+W9b1Y5QJNbJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DHfrGGKyG5ax9nzo/OPklR0sC6C4nw9YAKL8qVYkR30=;
- b=WYosFNRXWyRyI32Rk0oCF8zr2odb3GJhh3fCVZBHw6RqePYTvnnDKG6DcKZo5xkR0T1+/xgMh/xP8gWMbq5mrC3xjcDzQ3H5hWEasZo6wHPycBh8/lqpNgH8e7CNzOUvtHXVzPpkw7Ji11WAwtwfyWId3q1gRHxEPBOaVpfoq2jdg8SW5Z5B09PUOGdwKc2D5py7LAcuJ4dkrmtQIISXN1RWYijM0nE1KKKIyXMzqSX2fMcFTg70T0vPDXY23vs5cjFZNUw7NARBVF4eFlQMKrQb8ZxiJY1tmnDwLRfXsxgesrKNt+MczesQy6SH3ujkcK5SSk3keqL2TC+GpDX27Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4266.namprd12.prod.outlook.com (2603:10b6:5:21a::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Mon, 24 Aug
- 2020 16:42:26 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3305.026; Mon, 24 Aug 2020
- 16:42:26 +0000
-Date:   Mon, 24 Aug 2020 13:42:24 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Suraj Upadhyay <usuraj35@gmail.com>
-CC:     <dledford@redhat.com>, <linux-rdma@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH 0/4] Infiniband Subsystem: Remove pci-dma-compat wrapper
- APIs.
-Message-ID: <20200824164224.GA3180344@nvidia.com>
-References: <cover.1596957073.git.usuraj35@gmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1596957073.git.usuraj35@gmail.com>
-X-ClientProxiedBy: MN2PR03CA0020.namprd03.prod.outlook.com
- (2603:10b6:208:23a::25) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Mon, 24 Aug 2020 12:42:56 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 204CCC061573;
+        Mon, 24 Aug 2020 09:42:56 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t11so4500153plr.5;
+        Mon, 24 Aug 2020 09:42:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=w41OmkoPspYNv6XjOAw8ahtDnY6c9BDmvOxAxpZTttk=;
+        b=ZOiYUyUZBx+y2twZVDLNRNj7XcDKPZeSrlH1pKR2XVXQPyltnrUiF5XIL2Pi3UOJE0
+         QESR928QCAsMbVv7IvrTsNl9dzQkt7ttEVo22hbkdd8dUrifgdVOREvnTvtePmoSa168
+         LUMoDzFfey129AAzeHQzzhMcEFJEBuPwK0iIGyg5eV7eeKQsyzjJYoSHqPx+kktCO0WP
+         gucacHnk+svFErQYZFyKb3ISKViLF8l6FlE982tB0lCYr6KbI36mn3lZKElTno2t7VnW
+         88Qp4uOlQ1ROHrTxVoECzjBJHSxrk7CtSabgsYgfuVEBBLi35E8V9OKPG1xS/gAt6i3x
+         vcgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=w41OmkoPspYNv6XjOAw8ahtDnY6c9BDmvOxAxpZTttk=;
+        b=XWjF0UWuEodlXjHNgp8i//apwu5KIYoieQSC4toxkMu09gFzWdCQnk3rS7/xvpeNtD
+         st+6SV3Z1J2s+bRDB4RQQbJIHEb7VVgJ0VYZJuxeTpRHHmgBKfeqEkT1xU96ZGk6ccyv
+         Dk3w1Ez/sKQjAoPebUPk3ekkwdbf3CiHE6iFUd4M88Dtxy2ywb4mURuPKPSYLRtLuBNC
+         FPtjfd43LhwlLAdd07FHAmmdkevC7pom7i3JkTfxVFsecOj9SpGIxlAK5/pcnicV8FWy
+         Jnra4iO/MrFRGiQqrzopEhPbqxhgXWx9axkA9dnAdkVXwmO1gWw2lQo35G9qwdQTzm59
+         bgJQ==
+X-Gm-Message-State: AOAM532xbyb0CjwGzPbVqBnXExJ6zXrEpBj5In+HIk6sk0oV9TD5yPAy
+        UQgr2Blrw3iSF/zN7FltwEo=
+X-Google-Smtp-Source: ABdhPJxoYGplA4PD2xcotuP1hn0qFIYRCnXteeEmPRirh/XXpaV6W9tmtVZLocyIxdzG6AVoTaXu5g==
+X-Received: by 2002:a17:90a:850b:: with SMTP id l11mr142577pjn.15.1598287375409;
+        Mon, 24 Aug 2020 09:42:55 -0700 (PDT)
+Received: from [10.67.51.206] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 2sm72768pjg.32.2020.08.24.09.42.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 09:42:54 -0700 (PDT)
+Subject: Re: [PATCH stable v4.9 v2] arm64: entry: Place an SB sequence
+ following an ERET instruction
+To:     Will Deacon <will@kernel.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL VIRTUAL MACHINE FOR ARM64 (KVM/arm64)" 
+        <kvmarm@lists.cs.columbia.edu>
+References: <20200709195034.15185-1-f.fainelli@gmail.com>
+ <20200720130411.GB494210@kroah.com>
+ <df1de420-ac59-3647-3b81-a0c163783225@gmail.com>
+ <9c29080e-8b3a-571c-3296-e0487fa473fa@gmail.com>
+ <20200807131429.GB664450@kroah.com> <20200821160316.GE21517@willie-the-truck>
+ <7480435b-355d-b9f7-3a42-b72a9c4b6f63@gmail.com>
+ <20200824163208.GA25316@willie-the-truck>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <f47841b0-bbbf-f03a-dfd1-88e92f4db7c6@gmail.com>
+Date:   Mon, 24 Aug 2020 09:42:53 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.1.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by MN2PR03CA0020.namprd03.prod.outlook.com (2603:10b6:208:23a::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Mon, 24 Aug 2020 16:42:25 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kAFY8-00DLNV-EL; Mon, 24 Aug 2020 13:42:24 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d058fa5b-89a3-4ce5-112e-08d8484caec2
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4266:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4266FBA2A7A3B1F322030282C2560@DM6PR12MB4266.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2331;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VEOLvRUmrGWSQpsnoYRSV1+CD0i8wiMzf8G6yGjRoCSNbpaiJlLTgC1Of9dDsL4yPS1zmTJCdSRB8MMJzK7veM0cjlHAJlfAAYl2TGF49LIHL0Fw5DWODOWbpIdKPYCLolqa4DXEMBAsFCTgduW3vjXXY4ttQiqGHDkQEQ7uNxtk8onKlVQefmafbeNftaisDZQ7Cu3EILOKvPU+6YTND1Q34QY0XxbHG/v6A5FIe27XHPEpbu03BJRXMGXwg8uvTkrfwiaCM2DtGyzVK7Z2zIpuDNhu+ghRVK8hxmWIlUwTwC6QhHWuDICsca1Ezaih
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(39860400002)(346002)(366004)(136003)(86362001)(9746002)(478600001)(2906002)(316002)(66556008)(66476007)(2616005)(66946007)(9786002)(4326008)(83380400001)(6916009)(426003)(26005)(1076003)(5660300002)(36756003)(8936002)(8676002)(186003)(33656002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: mteEi6aVTD0Z6jEZ/ciM06y8HwN/2K21UVdE4owAV5r1GM6ajfadlro4KtSKqISz7blaaPAiByVlMa+qu7Xo6Qt1RsncIpD+IILHyyMlOKkb8Xi+T3segxl/K7mHc/elPldesAP9WJzMJyTMh9HWcGWMm1pMM39+lmxiHOVsKuCtzGaDTLqOeMhVWzv8GORTGcCSh/yOCKTSpbpQQPTs4XueMS0mIWdZY+dRtZ9Fqwms5M0fs7mafZDsP6dK9pI0yLmMEAXhAx1giH6CcvDhxuFtjIZlZL8In2008rOusBHBwPBDLddVAq8Hw4rp5RQ+x4mzhB3K98i7UY6lRlKCK7e5fTLro97NtRMZGjV3Z5k0fxWNrRVH6rOJWS1TILuaBD6XqL0F8KDiwjOAiLEcxTgUQwzOMrq2j0o2D3CCMXPgx1MGltfAgPsWmZXDdhptAKUfJdm7XdH9UIP+bQSkMoDx8ZPDnqIxGN/iYb45WtdY81tBBJL05/BjhqRhbFD1+tw9iFuleEciNL6slMpARTN1hS9c//sqmjSNhNSn57/obxOSpiz+eBGNyKI4/LAGcfatm/0wmIXFtBbG0TBG6lrv5L+fVz/6SqO4x0KkqAyVDV0szW0AhzslrJ9mhmwRbPo4We8VfsPjH7xz1v1dLg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: d058fa5b-89a3-4ce5-112e-08d8484caec2
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2020 16:42:26.1712
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +K8F77UBhZm0eohceQIcBoMoDBbzGcrpvD/5/WOdl5ufkGCgzIZU7xO7ZgOPGjc6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4266
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598287286; bh=DHfrGGKyG5ax9nzo/OPklR0sC6C4nw9YAKL8qVYkR30=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
-         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=lxFPqYpjIMtoEAUYcY6UqaeQMbjgSpMa2YiNiwFxquxRvXkMSTHv1HlQSh8c9ASK6
-         hGPMKUfgLhB+qKx4X7zahrgfCFIVuWptv9U5876tV5tzhhZD89j8b3GnFd9BzyvI+3
-         NxOAfZy32Q8C9eY5x8w2VwpHYlTteRGW7rESjpgrh3h52hRT4kjuFeihCSw3JNXTHb
-         L/01PGmaKdXLIAYGaC86FKifuY//TQLkKxoy9AQX1TYLlby8Pvei0ZOFOZNvRfU+4o
-         llg3UUvvwp2QAjI7u33XrJzPJJGHZcVMBdUqc04tY3zbsTlqj0xgOpsCBPX5nWp7c6
-         nvLErkLbYHouA==
+In-Reply-To: <20200824163208.GA25316@willie-the-truck>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 09, 2020 at 12:54:28PM +0530, Suraj Upadhyay wrote:
-> Hii Developers,
-> 
-> 	This patch series will replace all the legacy pci-dma-compat wrappers
-> with the dma-mapping APIs directly in the INFINIBAND Subsystem.
-> 
-> This task is done through a coccinelle script which is described in each commit
-> message.
-> 
-> The changes are compile tested.
-> 
-> Thanks,
-> 
-> Suraj Upadhyay.
-> 
-> Suraj Upadhyay (4):
->   IB/hfi1: Remove pci-dma-compat wrapper APIs
->   IB/mthca: Remove pci-dma-compat wrapper APIs
->   RDMA/qib: Remove pci-dma-compat wrapper APIs
->   RDMA/pvrdma: Remove pci-dma-compat wrapper APIs
 
-Aside from Joe's notes it doesn't apply either:
 
- Applying: RDMA/efa : Remove pci-dma-compat wrapper APIs
- Using index info to reconstruct a base tree...
- error: patch failed: drivers/infiniband/hw/efa/efa_main.c:405
- error: drivers/infiniband/hw/efa/efa_main.c: patch does not apply
- error: Did you hand edit your patch?
- It does not apply to blobs recorded in its index.
+On 8/24/2020 9:32 AM, Will Deacon wrote:
+> Hi Florian,
+> 
+> On Fri, Aug 21, 2020 at 10:16:23AM -0700, Florian Fainelli wrote:
+>> On 8/21/20 9:03 AM, Will Deacon wrote:
+>>> On Fri, Aug 07, 2020 at 03:14:29PM +0200, Greg KH wrote:
+>>>> On Thu, Aug 06, 2020 at 01:00:54PM -0700, Florian Fainelli wrote:
+>>>>> Greg, did you have a chance to queue those changes for 4.9, 4.14 and 4.19?
+>>>>>
+>>>>> https://lore.kernel.org/linux-arm-kernel/20200720182538.13304-1-f.fainelli@gmail.com/
+>>>>> https://lore.kernel.org/linux-arm-kernel/20200720182937.14099-1-f.fainelli@gmail.com/
+>>>>> https://lore.kernel.org/linux-arm-kernel/20200709195034.15185-1-f.fainelli@gmail.com/
+>>>>
+>>>> Nope, I was waiting for Will's "ack" for these.
+>>>
+>>> This patch doesn't even build for me (the 'sb' macro is not defined in 4.9),
+>>> and I really wonder why we bother backporting it at all. Nobody's ever shown
+>>> it to be a problem in practice, and it's clear that this is just being
+>>> submitted to tick a box rather than anything else (otherwise it would build,
+>>> right?).
+>>
+>> Doh, I completely missed submitting the patch this depended on that's
+>> why I did not notice the build failure locally, sorry about that, what a
+>> shame.
+>>
+>> Would not be the same "tick a box" argument be used against your
+>> original submission then? Sure, I have not been able to demonstrate in
+>> real life this was a problem, however the same can be said about a lot
+>> security related fixes.
+> 
+> Sort of, although I wrote the original patch because it was dead easy to do
+> and saved having to think too much about the problem, whereas the complexity
+> of backporting largerly diminishes that imo.
+> 
+>> What if it becomes exploitable in the future, would not it be nice to
+>> have it in a 6 year LTS kernel?
+> 
+> Even if people are stuck on an old LTS, they should still be taking the
+> regular updates for it, and we would obviously need to backport the fix if
+> it turned out to be exploitable (and hey, we could even test it then!).
+> 
+>>> So I'm not going to Ack any of them. As with a lot of this side-channel
+>>> stuff the cure is far worse than the disease.
+>> Assuming that my v3 does build correctly, which it will, would you be
+>> keen on changing your position?
+> 
+> Note that I'm not trying to block this patch from going in, I'm just saying
+> that I'm not supportive of it. Perhaps somebody from Arm can review it if
+> they think it's worth the effort.
 
-Try to avoid hand editing patches..
+How about I submit the actual full series (two patches) and we take the 
+discussion from there?
 
-Please resend
-
-Jason
+Thanks for responding!
+-- 
+Florian
