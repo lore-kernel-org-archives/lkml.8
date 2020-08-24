@@ -2,55 +2,52 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA75C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0FD206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22825206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598288883;
-	bh=CtpDcw7Xz3xGfoI5xMxPaRSRG9egXstILFOZLWd7Px8=;
+	s=default; t=1598288894;
+	bh=t2rYq555VG2h90OuaEmTBvSy5ygxioClCV/tR2R/EnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JQZnTuAMuc/EEUKP6Mu0XULMee5d98B2oOsmU/vwZaWt5TTojmtUCm4Pi87OaVKoA
-	 rAiFGYBMeTxpnlPrJfxNw3Zt+M4YitlYjjDqxg8nHuSlRcVSQYS/dcS7eWwDR0tZ3C
-	 y35OVekH43sL8pWMk41WNxVfg7KALkYdogXRqw9o=
+	b=vCWjRFDS2aS9okUq3b3tzT6Xsv4JgVjvBKzOVO3XccSBhtsteh4AWoPnp+HZvWxc0
+	 4EQV9MxthqpzF2wslJfqAdHPBbpK9Cq5ifHwhjyYmQ6cRUQb9zAjDK1T21so5S6l9G
+	 wF1b6o6YkSY6+KSgAz9ckfRge6SqfILY+vbjIKuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgHXRIA (ORCPT
+        id S1726737AbgHXRIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:08:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40164 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:08:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbgHXQiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:38:25 -0400
+        id S1728435AbgHXQiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:38:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21CB522D07;
-        Mon, 24 Aug 2020 16:37:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3F8A23118;
+        Mon, 24 Aug 2020 16:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287068;
-        bh=CtpDcw7Xz3xGfoI5xMxPaRSRG9egXstILFOZLWd7Px8=;
+        s=default; t=1598287063;
+        bh=t2rYq555VG2h90OuaEmTBvSy5ygxioClCV/tR2R/EnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O94k4w113bpqJkz4b054qDkoy2Wv2O/L9nPg9x6AMbmlsnxbr1rzdQ5c5pglscwed
-         sdTH4DVeMU54VDZ/+qveJH1jMx8hT0tJ5ICZ48T27fF8wJV4lgfTYdEnQ09qs0F4hX
-         uwQNKPLEUgRdoQOQ1M5HK7opEbgD5a/NVuiL2lXo=
+        b=EKmUS+vzRWA0jKTXRqEdtpAhBKriopjFqYa1K3WkoM22MlyO1DDdC5e/6zrreYkT2
+         JhuuMA6I2amk3i+huhUvLVV1nR5P/MMNMHqiaSJYAFrTjJYA3RLjuOhjmoGTnVSaFz
+         aZCmbOgRKdN8TQsdTy8sry0gvXhSaklELCRodH3o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 53/54] arm64: Move handling of erratum 1418040 into C code
-Date:   Mon, 24 Aug 2020 12:36:32 -0400
-Message-Id: <20200824163634.606093-53-sashal@kernel.org>
+Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.7 50/54] powerpc/perf: Fix soft lockups due to missed interrupt accounting
+Date:   Mon, 24 Aug 2020 12:36:29 -0400
+Message-Id: <20200824163634.606093-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -63,82 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-[ Upstream commit d49f7d7376d0c0daf8680984a37bd07581ac7d38 ]
+[ Upstream commit 17899eaf88d689529b866371344c8f269ba79b5f ]
 
-Instead of dealing with erratum 1418040 on each entry and exit,
-let's move the handling to __switch_to() instead, which has
-several advantages:
+Performance monitor interrupt handler checks if any counter has
+overflown and calls record_and_restart() in core-book3s which invokes
+perf_event_overflow() to record the sample information. Apart from
+creating sample, perf_event_overflow() also does the interrupt and
+period checks via perf_event_account_interrupt().
 
-- It can be applied when it matters (switching between 32 and 64
-  bit tasks).
-- It is written in C (yay!)
-- It can rely on static keys rather than alternatives
+Currently we record information only if the SIAR (Sampled Instruction
+Address Register) valid bit is set (using siar_valid() check) and
+hence the interrupt check.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Acked-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20200731173824.107480-2-maz@kernel.org
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+But it is possible that we do sampling for some events that are not
+generating valid SIAR, and hence there is no chance to disable the
+event if interrupts are more than max_samples_per_tick. This leads to
+soft lockup.
+
+Fix this by adding perf_event_account_interrupt() in the invalid SIAR
+code path for a sampling event. ie if SIAR is invalid, just do
+interrupt check and don't record the sample information.
+
+Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1596717992-7321-1-git-send-email-atrajeev@linux.vnet.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/process.c | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ arch/powerpc/perf/core-book3s.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 56be4cbf771f6..a81c9ca17b871 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -500,6 +500,39 @@ static void entry_task_switch(struct task_struct *next)
- 	__this_cpu_write(__entry_task, next);
+diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
+index 3dcfecf858f36..5216c5a7f46da 100644
+--- a/arch/powerpc/perf/core-book3s.c
++++ b/arch/powerpc/perf/core-book3s.c
+@@ -2099,6 +2099,10 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
+ 
+ 		if (perf_event_overflow(event, &data, regs))
+ 			power_pmu_stop(event, 0);
++	} else if (period) {
++		/* Account for interrupt in case of invalid SIAR */
++		if (perf_event_account_interrupt(event))
++			power_pmu_stop(event, 0);
+ 	}
  }
  
-+/*
-+ * ARM erratum 1418040 handling, affecting the 32bit view of CNTVCT.
-+ * Assuming the virtual counter is enabled at the beginning of times:
-+ *
-+ * - disable access when switching from a 64bit task to a 32bit task
-+ * - enable access when switching from a 32bit task to a 64bit task
-+ */
-+static void erratum_1418040_thread_switch(struct task_struct *prev,
-+					  struct task_struct *next)
-+{
-+	bool prev32, next32;
-+	u64 val;
-+
-+	if (!(IS_ENABLED(CONFIG_ARM64_ERRATUM_1418040) &&
-+	      cpus_have_const_cap(ARM64_WORKAROUND_1418040)))
-+		return;
-+
-+	prev32 = is_compat_thread(task_thread_info(prev));
-+	next32 = is_compat_thread(task_thread_info(next));
-+
-+	if (prev32 == next32)
-+		return;
-+
-+	val = read_sysreg(cntkctl_el1);
-+
-+	if (!next32)
-+		val |= ARCH_TIMER_USR_VCT_ACCESS_EN;
-+	else
-+		val &= ~ARCH_TIMER_USR_VCT_ACCESS_EN;
-+
-+	write_sysreg(val, cntkctl_el1);
-+}
-+
- /*
-  * Thread switching.
-  */
-@@ -515,6 +548,7 @@ __notrace_funcgraph struct task_struct *__switch_to(struct task_struct *prev,
- 	entry_task_switch(next);
- 	uao_thread_switch(next);
- 	ssbs_thread_switch(next);
-+	erratum_1418040_thread_switch(prev, next);
- 
- 	/*
- 	 * Complete any pending TLB or cache maintenance on this CPU in case
 -- 
 2.25.1
 
