@@ -2,150 +2,117 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A04EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE26920706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:33:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=trendmicro.com header.i=@trendmicro.com header.b="THxbsg3b"
+	by mail.kernel.org (Postfix) with ESMTP id DD66C20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgHXMdY (ORCPT
+        id S1726243AbgHXMl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:33:24 -0400
-Received: from sjdcvmout02.udc.trendmicro.com ([66.180.82.11]:55434 "EHLO
-        sjdcvmout02.udc.trendmicro.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726119AbgHXMdS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:33:18 -0400
-X-Greylist: delayed 1805 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Aug 2020 08:33:18 EDT
-Received: from sjdcvmout02.udc.trendmicro.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6509364199;
-        Mon, 24 Aug 2020 05:03:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=trendmicro.com;
-        s=tmoutbound; t=1598270592;
-        bh=R9IScWyNs4lPY4Z8ddlg61zAztZ+6/6ZpKkRLqtxyXM=; h=From:To:Date;
-        b=THxbsg3b1/F0BjucccZIQ84GnzQwrbsiSaiyO2YAD7leDrjdAamJ8vhahx056phm1
-         aF6IRGhf4SuLEEZRRzABmjptPh8P3Pg69J2ZG/b6KW/m6By49AXKI7rt34NjC5qo1q
-         MvbvjD640LCK+ZRqyA+Ic2stM+wZbAPL7cbWmz+k=
-Received: from sjdcvmout02.udc.trendmicro.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56C4C64195;
-        Mon, 24 Aug 2020 05:03:01 -0700 (PDT)
-Received: from SJDC-EXNABU01.us.trendnet.org (unknown [10.45.175.97])
-        by sjdcvmout02.udc.trendmicro.com (Postfix) with ESMTPS;
-        Mon, 24 Aug 2020 05:03:01 -0700 (PDT)
-Received: from ADC-EXAPAC11.tw.trendnet.org (10.28.2.228) by
- SJDC-EXNABU01.us.trendnet.org (10.45.175.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1979.3; Mon, 24 Aug 2020 05:03:00 -0700
-Received: from ADC-EXAPAC11.tw.trendnet.org (10.28.2.228) by
- ADC-EXAPAC11.tw.trendnet.org (10.28.2.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1979.3; Mon, 24 Aug 2020 12:02:58 +0000
-Received: from ADC-EXAPAC11.tw.trendnet.org ([fe80::e9de:ebb1:bcf0:5913]) by
- ADC-EXAPAC11.tw.trendnet.org ([fe80::e9de:ebb1:bcf0:5913%18]) with mapi id
- 15.01.1979.003; Mon, 24 Aug 2020 12:02:58 +0000
-From:   "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: x86/kprobes: kretprobe fails to triggered if kprobe at function entry
- is not optimized (trigger by int3 breakpoint)
-Thread-Topic: x86/kprobes: kretprobe fails to triggered if kprobe at function
- entry is not optimized (trigger by int3 breakpoint)
-Thread-Index: AdZ5/y9ucVi7Kf0NSwa8vnc6Q/ol0w==
-Date:   Mon, 24 Aug 2020 12:02:58 +0000
-Message-ID: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.28.4.6]
-X-TM-AS-Product-Ver: IMSVA-9.1.0.1960-8.6.0.1013-25622.007
-X-TM-AS-Result: No--18.667-5.0-31-10
-X-TMASE-MatchedRID: eC/X7EZaaiDK0Nzuhn6kKIlSWYvdSPSYN5dqZcIK7Vjg91xayX4L88ij
-        F4UeOUZTuLbD9VM61s9EFcYZxWcTrqK/Gf0Lby3YAoNa2r+Edw04eGohd7gjNgd2elVmK++cCJ0
-        g0s0TVzMmSkTqvL07q4tf4U6NBdD36PfSBINxuyESEYfcJF0pRT4H4hoqLeJJkY8eITaSJPhuNR
-        GoPKGTofoN8+l3dEUSbe9EjMnITTu2eGGESuJjB0hwlOfYeSqxjZAiVOzXtXMcNByoSo036YR4R
-        LK5G1ihwqWABcHTG0Dz3VBAZIuFAjWYHgPBpNXWJNzc11O35nrLRD51bz5RZBtVRURjpT+vffsK
-        pZh0PPcZ1Cg3RHnUdjtCUTQMBxXLeJcau6RQVFEDWfzDlgii++RswBJPCCuIpdltGKiWi0VrUzp
-        lS40g+eILL7qwzFI4jko/E9gxKEYoxElBqT5s9k2rn9j60W9bUb4EdIZGxuDFA/NpkBJRLa6S3t
-        quNZSWoAVqb/W4frzle28aUBqR0dnvO7Z5jadZLIrMljt3adsyMSm+IFrbLo5B87s1dZQE6uIqc
-        KPp5BNVgyF0BGNPATKHYLsR4q0LQ6tklRJO9igWeMpVNhsMwMRB0bsfrpPI6T/LTDsmJmg=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--18.667400-10.000000
-X-TMASE-Version: IMSVA-9.1.0.1960-8.6.1013-25622.007
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 24 Aug 2020 08:41:58 -0400
+Received: from mga17.intel.com ([192.55.52.151]:23096 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbgHXMl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 08:41:56 -0400
+IronPort-SDR: J6Fz7NX5z3v9XBB3cVNLbP3myR7L4pBHGsafVr/kT+4QWDN9iz6t0PPzyxipn/wKF4iiZe6O8E
+ VWluGljMGrKw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="135952775"
+X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
+   d="scan'208";a="135952775"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 05:41:55 -0700
+IronPort-SDR: nHxh7m7iG/L4ELDnjySrE9FkOh8ejEXHx7CCTm18bB1uWzWQyE57N3Nfldf30Gp9NLo2MuJLvu
+ J4r3IvzJavhw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,348,1592895600"; 
+   d="scan'208";a="331007620"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Aug 2020 05:41:47 -0700
+Subject: Re: [PATCH 2/2] perf intel-pt: Fix corrupt data after perf inject
+ from
+To:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Al Grant <al.grant@arm.com>
+References: <20200819084751.17686-1-leo.yan@linaro.org>
+ <20200819084751.17686-2-leo.yan@linaro.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <b957484e-19f0-4a7c-c67e-38f9d81fa879@intel.com>
+Date:   Mon, 24 Aug 2020 15:41:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 61E137EF05805AC6F955E339B3D411C9C9E2BDDB4DFA5D89F2D9ACA97CEAEACF2000:8
-X-TM-AS-GCONF: 00
-X-imss-scan-details: No--18.667-5.0-31-10
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-12:0,22:0,33:0,34:0-0
+In-Reply-To: <20200819084751.17686-2-leo.yan@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greetings!
+On 19/08/20 11:47 am, Leo Yan wrote:
+> From: Al Grant <al.grant@arm.com>
+> 
+> Commit 42bbabed09ce ("perf tools: Add hw_idx in struct branch_stack")
+> changed the format of branch stacks in perf samples. When samples use
+> this new format, a flag must be set in the corresponding event.
+> Synthesized branch stacks generated from Intel PT were using the new
+> format, but not setting the event attribute, leading to consumers
+> seeing corrupt data. This patch fixes the issue by setting the event
+> attribute to indicate use of the new format.
+> 
+> Fixes: 42bbabed09ce ("perf tools: Add hw_idx in struct branch_stack")
+> Signed-off-by: Al Grant <al.grant@arm.com>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-Starting from kernel 5.8 (x86_64), kretprobe handler will always missed if =
-corresponding kprobe on function entry is not optimized (using break point =
-instead).
-Step to reproduce this:
-1) Build the kretprobe example module (CONFIG_SAMPLE_KRETPROBES=3Dm)
-2) Disable jump optimization (`sysctl debug.kprobes-optimization=3D0` or re=
-gister any kprobe.post_handler at same location)
-3) Insert the kretprobe_example module
-4) Launch some process to trigger _do_fork
-5) Remove kretprobe_example module
-6) dmesg shows that all probing instances are missed
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Example output:
-# sysctl debug.kprobes-optimization=3D0
-debug.kprobes-optimization =3D 0
-# insmod samples/kprobes/kretprobe_example.ko
-# ls > /dev/null
-# rmmod kretprobe_example
-# dmesg
-[48555.067295] Planted return probe at _do_fork: 0000000038ae0211
-[48560.229459] kretprobe at 0000000038ae0211 unregistered
-[48560.229460] Missed probing 3 instances of _do_fork
+> ---
+>  tools/perf/util/intel-pt.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index 2a8d245351e7..0af4e81c46e2 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -3017,8 +3017,15 @@ static int intel_pt_synth_events(struct intel_pt *pt,
+>  
+>  	if (pt->synth_opts.callchain)
+>  		attr.sample_type |= PERF_SAMPLE_CALLCHAIN;
+> -	if (pt->synth_opts.last_branch)
+> +	if (pt->synth_opts.last_branch) {
+>  		attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+> +		/*
+> +		 * We don't use the hardware index, but the sample generation
+> +		 * code uses the new format branch_stack with this field,
+> +		 * so the event attributes must indicate that it's present.
+> +		 */
+> +		attr.branch_sample_type |= PERF_SAMPLE_BRANCH_HW_INDEX;
+> +	}
+>  
+>  	if (pt->synth_opts.instructions) {
+>  		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+> 
 
-After bisecting, I found this behavior seems to introduce by this commit: (=
-5.8-rc1)
-0d00449c7a28a1514595630735df383dec606812 x86: Replace ist_enter() with nmi_=
-enter()
-This make kprobe_int3_handler() effectively running as NMI context, which p=
-re_handler_kretprobe() explicitly checked to prevent recursion.
-
-(in_nmi() check appears from v3.17)
-f96f56780ca584930bb3a2769d73fd9a101bcbbe kprobes: Skip kretprobe hit in NMI=
- context to avoid deadlock
-
-To make kretprobe work again with int3 breakpoint, I think we can replace t=
-he in_nmi() check with in_nmi() =3D=3D (1 << NMI_SHIFT) at kprobe_int3_hand=
-ler() and skip kretprobe if nested NMI.
-Did a quick test on 5.9-rc2 and it seems to be working.
-I'm not sure if it is the best way to do since it may also require change t=
-o other architecture as well, any thought?
-
-
-TREND MICRO EMAIL NOTICE
-
-The information contained in this email and any attachments is confidential=
- and may be subject to copyright or other intellectual property protection.=
- If you are not the intended recipient, you are not authorized to use or di=
-sclose this information, and we request that you notify us by reply mail or=
- telephone and delete the original message from your mail system.
-
-For details about what personal information we collect and why, please see =
-our Privacy Notice on our website at: Read privacy policy<http://www.trendm=
-icro.com/privacy>
