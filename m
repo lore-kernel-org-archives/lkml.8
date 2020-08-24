@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29347C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF6E2206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A9AF204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258917;
-	bh=riN4z/mrdo2qC42KeSPF/qU3Hm3H0TkNahjQu/VUgaU=;
+	s=default; t=1598258922;
+	bh=JWJlvUsK6gkl2cRksfkM0gxOVpkwCKdmM0aaXQwlZik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JHXL4PTCcjdejTWpzT5AlF0YNEoJcJgk6PjI3j+aSzNyn2YsR6TjzDIkASlyqW2xt
-	 N1a+J3B0nXTxgEMgWKK89lOo/omKpVAPO87LWhRhK2ce96ajeTqZqJPGW4FPz86/B7
-	 9sfe3d3sme5xX1MeK3uZEjHKSVRatlYWwMh+7jKA=
+	b=Cec2MkNri+FMmD6xE3md/LdeX+jmruRwtWH1JD/0kAEdD4spnpQrtUWZVkPTq0oRF
+	 7mf6XVkwH0mf31gvzbEQuhz+kEiAdWdf8Hf6bGQLmlp79ZPdFiBoHfJC/Dw61gJ9qZ
+	 3NESeUOI94lOD89RP1liKahMv00wUTlrZxcjjijA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbgHXIsf (ORCPT
+        id S1729579AbgHXIsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49036 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:48:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729103AbgHXIsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:48:12 -0400
+        id S1729517AbgHXIsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:48:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6382A206F0;
-        Mon, 24 Aug 2020 08:48:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB671204FD;
+        Mon, 24 Aug 2020 08:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258891;
-        bh=riN4z/mrdo2qC42KeSPF/qU3Hm3H0TkNahjQu/VUgaU=;
+        s=default; t=1598258894;
+        bh=JWJlvUsK6gkl2cRksfkM0gxOVpkwCKdmM0aaXQwlZik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YYIOwxs7+suwmTbpilYtysyiGgE9R+qipgiW1p0tdoET8OdiAdGzzZI7M6eja692M
-         N62T9a/WI7Fk1k9SsRB/DZNgw8sLJvW0+SQAGJJcX6yRzYTP4YCNpAaM+VTaSph8Us
-         YpFV0ZEaOvqwl/t2xL0sa9pUamFdmKBb+YjZJqJk=
+        b=Loz61TVh/rUgxrAEQiu7LYVjAlcacezBPlKehi7d+JDHweTqelVPQBgQwMCCPF4lc
+         I21YFksyLcg2cH2yvikHjl08hmoMlC4+C+G9gHcNTra4cc2dr+0twpHme6WAaNZuwP
+         1Hdn8it2oPB/dyboU8ilJP3toLjjkzsO8W+n9hsw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Claudio Imbrenda <imbrenda@linux.ibm.com>,
         Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 082/107] s390/runtime_instrumentation: fix storage key handling
-Date:   Mon, 24 Aug 2020 10:30:48 +0200
-Message-Id: <20200824082409.180331733@linuxfoundation.org>
+Subject: [PATCH 5.4 083/107] s390/ptrace: fix storage key handling
+Date:   Mon, 24 Aug 2020 10:30:49 +0200
+Message-Id: <20200824082409.228245728@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -62,36 +62,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Heiko Carstens <hca@linux.ibm.com>
 
-[ Upstream commit 9eaba29c7985236e16468f4e6a49cc18cf01443e ]
+[ Upstream commit fd78c59446b8d050ecf3e0897c5a486c7de7c595 ]
 
 The key member of the runtime instrumentation control block contains
 only the access key, not the complete storage key. Therefore the value
-must be shifted by four bits.
+must be shifted by four bits. Since existing user space does not
+necessarily query and set the access key correctly, just ignore the
+user space provided key and use the correct one.
 Note: this is only relevant for debugging purposes in case somebody
 compiles a kernel with a default storage access key set to a value not
 equal to zero.
 
-Fixes: e4b8b3f33fca ("s390: add support for runtime instrumentation")
+Fixes: 262832bc5acd ("s390/ptrace: add runtime instrumention register get/set")
 Reported-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/runtime_instr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/kernel/ptrace.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/runtime_instr.c b/arch/s390/kernel/runtime_instr.c
-index 125c7f6e87150..1788a5454b6fc 100644
---- a/arch/s390/kernel/runtime_instr.c
-+++ b/arch/s390/kernel/runtime_instr.c
-@@ -57,7 +57,7 @@ static void init_runtime_instr_cb(struct runtime_instr_cb *cb)
- 	cb->k = 1;
- 	cb->ps = 1;
- 	cb->pc = 1;
--	cb->key = PAGE_DEFAULT_KEY;
-+	cb->key = PAGE_DEFAULT_KEY >> 4;
- 	cb->v = 1;
- }
- 
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index 5aa786063eb3e..c6aef2ecf2890 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -1283,7 +1283,6 @@ static bool is_ri_cb_valid(struct runtime_instr_cb *cb)
+ 		cb->pc == 1 &&
+ 		cb->qc == 0 &&
+ 		cb->reserved2 == 0 &&
+-		cb->key == PAGE_DEFAULT_KEY &&
+ 		cb->reserved3 == 0 &&
+ 		cb->reserved4 == 0 &&
+ 		cb->reserved5 == 0 &&
+@@ -1347,7 +1346,11 @@ static int s390_runtime_instr_set(struct task_struct *target,
+ 		kfree(data);
+ 		return -EINVAL;
+ 	}
+-
++	/*
++	 * Override access key in any case, since user space should
++	 * not be able to set it, nor should it care about it.
++	 */
++	ri_cb.key = PAGE_DEFAULT_KEY >> 4;
+ 	preempt_disable();
+ 	if (!target->thread.ri_cb)
+ 		target->thread.ri_cb = data;
 -- 
 2.25.1
 
