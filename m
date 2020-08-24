@@ -2,125 +2,98 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B119EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE866C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96179206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 909E8206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598259674;
+	bh=nG/68UkyJbPFo39KSSnnMAkMSDLG37DYiU7yZfHaGPg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WVH1jKSUEDS/FmYaafeL8c2vyLcNuPEXr6G0ZFwUA0BRhkDVGaCfKqF3zsaDa+s6w
+	 fSMg8U7yxguQ0svSkvUvk/OrpaxzPSe41MTzVZjgceipSVFghfzqqUc4sMBTt9dXEe
+	 06h08ndr1OThjE+5zB3OCefdxTzNp9HnVeO+Kl0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbgHXI5C (ORCPT
+        id S1730017AbgHXJBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:57:02 -0400
-Received: from 8bytes.org ([81.169.241.247]:37444 "EHLO theia.8bytes.org"
+        Mon, 24 Aug 2020 05:01:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728681AbgHXI4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:06 -0400
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1728959AbgHXI5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:04 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 0C98FF13;
-        Mon, 24 Aug 2020 10:56:03 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 31/76] x86/head/64: Setup MSR_GS_BASE before calling into C code
-Date:   Mon, 24 Aug 2020 10:54:26 +0200
-Message-Id: <20200824085511.7553-32-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 17B252072D;
+        Mon, 24 Aug 2020 08:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259423;
+        bh=nG/68UkyJbPFo39KSSnnMAkMSDLG37DYiU7yZfHaGPg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TiSM+Z01rB3nqIepwNUGllhhDcCNhwQ4RW74dz5B1ZMkYjXpysBKBfQQuMm4tIjvg
+         qrMlleKoPA6ZpOa3eHKxm6IZjKOPbTFF75lkl5EgmwV/zB5NNfkHTj7hWtnGx+hI55
+         yE+WrDb0910pMsV4am/kRL2XnpbuIsUqV6TfhrQg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 24/71] rtc: goldfish: Enable interrupt in set_alarm() when necessary
+Date:   Mon, 24 Aug 2020 10:31:15 +0200
+Message-Id: <20200824082357.095355850@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Huacai Chen <chenhc@lemote.com>
 
-When stack-protector is enabled a valid GS_BASE is needed before
-calling any C code function, because the stack canary is loaded from
-per-cpu data.
+[ Upstream commit 22f8d5a1bf230cf8567a4121fc3789babb46336d ]
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200724160336.5435-31-joro@8bytes.org
+When use goldfish rtc, the "hwclock" command fails with "select() to
+/dev/rtc to wait for clock tick timed out". This is because "hwclock"
+need the set_alarm() hook to enable interrupt when alrm->enabled is
+true. This operation is missing in goldfish rtc (but other rtc drivers,
+such as cmos rtc, enable interrupt here), so add it.
+
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/1592654683-31314-1-git-send-email-chenhc@lemote.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/head64.c  | 7 +++++++
- arch/x86/kernel/head_64.S | 8 ++++++++
- 2 files changed, 15 insertions(+)
+ drivers/rtc/rtc-goldfish.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 8c82be44be94..b0ab5627900b 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -36,6 +36,7 @@
- #include <asm/microcode.h>
- #include <asm/kasan.h>
- #include <asm/fixmap.h>
-+#include <asm/realmode.h>
- 
- /*
-  * Manage page tables very early on.
-@@ -513,6 +514,8 @@ void __init x86_64_start_reservations(char *real_mode_data)
-  */
- void __head startup_64_setup_env(unsigned long physbase)
- {
-+	unsigned long gsbase;
-+
- 	/* Load GDT */
- 	startup_gdt_descr.address = (unsigned long)fixup_pointer(startup_gdt, physbase);
- 	native_load_gdt(&startup_gdt_descr);
-@@ -521,4 +524,8 @@ void __head startup_64_setup_env(unsigned long physbase)
- 	asm volatile("movl %%eax, %%ds\n"
- 		     "movl %%eax, %%ss\n"
- 		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
-+
-+	/* Setup GS_BASE - needed for stack protector */
-+	gsbase = (unsigned long)fixup_pointer((void *)initial_gs, physbase);
-+	__wrmsr(MSR_GS_BASE, (u32)gsbase, (u32)(gsbase >> 32));
- }
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 2b2e91627221..800053219054 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -78,6 +78,14 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	call	startup_64_setup_env
- 	popq	%rsi
- 
-+	/*
-+	 * Setup %gs here already to make stack-protector work - it needs to be
-+	 * setup again after the switch to kernel addresses. The address read
-+	 * from initial_gs is a kernel address, so it needs to be adjusted first
-+	 * for the identity mapping.
-+	 */
-+	movl	$MSR_GS_BASE,%ecx
-+
- 	/* Now switch to __KERNEL_CS so IRET works reliably */
- 	pushq	$__KERNEL_CS
- 	leaq	.Lon_kernel_cs(%rip), %rax
+diff --git a/drivers/rtc/rtc-goldfish.c b/drivers/rtc/rtc-goldfish.c
+index a1c44d0c85578..30cbe22c57a8e 100644
+--- a/drivers/rtc/rtc-goldfish.c
++++ b/drivers/rtc/rtc-goldfish.c
+@@ -87,6 +87,7 @@ static int goldfish_rtc_set_alarm(struct device *dev,
+ 		rtc_alarm64 = rtc_alarm * NSEC_PER_SEC;
+ 		writel((rtc_alarm64 >> 32), base + TIMER_ALARM_HIGH);
+ 		writel(rtc_alarm64, base + TIMER_ALARM_LOW);
++		writel(1, base + TIMER_IRQ_ENABLED);
+ 	} else {
+ 		/*
+ 		 * if this function was called with enabled=0
 -- 
-2.28.0
+2.25.1
+
+
 
