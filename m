@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CA4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 990C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 531BE2078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A95206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289107;
-	bh=dzdvycN+vMiUHofR3jvJMXhONIaGcrfVUdqphJBV+ck=;
+	s=default; t=1598289115;
+	bh=Y+dzBIhGF+kbEmw58dJ4IZaOWYovq8f4Yu+nhkSCnkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xSYOSMmI0fP9uDMmDetEqjOZKE0zkfgW2v2BfMZNTfVHZuc7WlJjELJSEsugdNPbM
-	 UGbnWAXQnKmmqiiQSdOaAoSqOasXgrOTWibDTjalsPuKam5hsydqeeeGL8dl+K1Pxf
-	 mXUuD3/ubVbOMizQTBukZb3kl2jEBygmXgkVXIDQ=
+	b=xsEggam6YrUdRlixj3bqNIa84TNIaOogtfkwco4mgojgkhTJrv5TsYQXx+Sd2Gf2R
+	 uq4PzEsnnonjyo94DyDnZAqRAaAvo/m45J83c2eGwBUCPlToxq35oIHxvnwMtQ3Lyd
+	 pBx2fegXODeB2gEkzg2jYRvDN4jblC6/Yd7HLnrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgHXQhy (ORCPT
+        id S1728420AbgHXRLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:37:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39210 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:11:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728114AbgHXQfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:35:17 -0400
+        id S1728392AbgHXQhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:37:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70D08207CD;
-        Mon, 24 Aug 2020 16:35:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 735F022D70;
+        Mon, 24 Aug 2020 16:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598286911;
-        bh=dzdvycN+vMiUHofR3jvJMXhONIaGcrfVUdqphJBV+ck=;
+        s=default; t=1598287030;
+        bh=Y+dzBIhGF+kbEmw58dJ4IZaOWYovq8f4Yu+nhkSCnkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SdkG+sUDQCwz9jH9NB45+btThmJHi+0ec+QixnGB9HtQQsAB7winb8X0iShy62z/j
-         qqeHzqgv2CdaeVURzOG3m1idjLkpIVB2OtB7wyP5qau81qw5gXbSIXvTWKMscGVvX3
-         s7XwgKf/c4qyR+BtLdGp5cNaJ5bCO9pfqGxv2b00=
+        b=ov6q7qK3VBYSw1I08FHAy5RhExDJDcFUz0SVjqJdKN46zKfS0bDZ3pr9iGXX2x/Uz
+         szUYn1aNRK1iVzS4WTsk97pIzopuNOqpUHMOR5Pdh2MjhailubQE+bwyop4CqqoApR
+         4S/JTsPkA9dH719zfKcFcBYrsvopDntHVuNtYL1s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Zhuravlev <azhuravlev@whamcloud.com>,
-        Andreas Dilger <adilger@whamcloud.com>,
-        Artem Blagodarenko <artem.blagodarenko@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-ext4@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 05/63] ext4: skip non-loaded groups at cr=0/1 when scanning for good groups
-Date:   Mon, 24 Aug 2020 12:34:05 -0400
-Message-Id: <20200824163504.605538-5-sashal@kernel.org>
+Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 26/54] can: j1939: transport: j1939_xtp_rx_dat_one(): compare own packets to detect corruptions
+Date:   Mon, 24 Aug 2020 12:36:05 -0400
+Message-Id: <20200824163634.606093-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
-References: <20200824163504.605538-1-sashal@kernel.org>
+In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
+References: <20200824163634.606093-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,74 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Zhuravlev <azhuravlev@whamcloud.com>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit c1d2c7d47e15482bb23cda83a5021e60f624a09c ]
+[ Upstream commit e052d0540298bfe0f6cbbecdc7e2ea9b859575b2 ]
 
-cr=0 is supposed to be an optimization to save CPU cycles, but if
-buddy data (in memory) is not initialized then all this makes no sense
-as we have to do sync IO taking a lot of cycles.  Also, at cr=0
-mballoc doesn't choose any available chunk.  cr=1 also skips groups
-using heuristic based on avg. fragment size.  It's more useful to skip
-such groups and switch to cr=2 where groups will be scanned for
-available chunks.  However, we always read the first block group in a
-flex_bg so metadata blocks will get read into the first flex_bg if
-possible.
+Since the stack relays on receiving own packets, it was overwriting own
+transmit buffer from received packets.
 
-Using sparse image and dm-slow virtual device of 120TB was
-simulated, then the image was formatted and filled using debugfs to
-mark ~85% of available space as busy.  mount process w/o the patch
-couldn't complete in half an hour (according to vmstat it would take
-~10-11 hours).  With the patch applied mount took ~20 seconds.
+At least theoretically, the received echo buffer can be corrupt or
+changed and the session partner can request to resend previous data. In
+this case we will re-send bad data.
 
-Lustre-bug-id: https://jira.whamcloud.com/browse/LU-12988
-Signed-off-by: Alex Zhuravlev <azhuravlev@whamcloud.com>
-Reviewed-by: Andreas Dilger <adilger@whamcloud.com>
-Reviewed-by: Artem Blagodarenko <artem.blagodarenko@gmail.com>
+With this patch we will stop to overwrite own TX buffer and use it for
+sanity checking.
+
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Link: https://lore.kernel.org/r/20200807105200.26441-6-o.rempel@pengutronix.de
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/mballoc.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ net/can/j1939/transport.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index c0a331e2feb02..9ed108b5bd7fd 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -2177,6 +2177,7 @@ static int ext4_mb_good_group_nolock(struct ext4_allocation_context *ac,
- {
- 	struct ext4_group_info *grp = ext4_get_group_info(ac->ac_sb, group);
- 	struct super_block *sb = ac->ac_sb;
-+	struct ext4_sb_info *sbi = EXT4_SB(sb);
- 	bool should_lock = ac->ac_flags & EXT4_MB_STRICT_CHECK;
- 	ext4_grpblk_t free;
- 	int ret = 0;
-@@ -2195,7 +2196,25 @@ static int ext4_mb_good_group_nolock(struct ext4_allocation_context *ac,
- 
- 	/* We only do this if the grp has never been initialized */
- 	if (unlikely(EXT4_MB_GRP_NEED_INIT(grp))) {
--		ret = ext4_mb_init_group(ac->ac_sb, group, GFP_NOFS);
-+		struct ext4_group_desc *gdp =
-+			ext4_get_group_desc(sb, group, NULL);
-+		int ret;
-+
-+		/* cr=0/1 is a very optimistic search to find large
-+		 * good chunks almost for free.  If buddy data is not
-+		 * ready, then this optimization makes no sense.  But
-+		 * we never skip the first block group in a flex_bg,
-+		 * since this gets used for metadata block allocation,
-+		 * and we want to make sure we locate metadata blocks
-+		 * in the first block group in the flex_bg if possible.
-+		 */
-+		if (cr < 2 &&
-+		    (!sbi->s_log_groups_per_flex ||
-+		     ((group & ((1 << sbi->s_log_groups_per_flex) - 1)) != 0)) &&
-+		    !(ext4_has_group_desc_csum(sb) &&
-+		      (gdp->bg_flags & cpu_to_le16(EXT4_BG_BLOCK_UNINIT))))
-+			return 0;
-+		ret = ext4_mb_init_group(sb, group, GFP_NOFS);
- 		if (ret)
- 			return ret;
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index 9f99af5b0b11e..3e9c377b0dcce 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -1769,7 +1769,20 @@ static void j1939_xtp_rx_dat_one(struct j1939_session *session,
  	}
+ 
+ 	tpdat = se_skb->data;
+-	memcpy(&tpdat[offset], &dat[1], nbytes);
++	if (!session->transmission) {
++		memcpy(&tpdat[offset], &dat[1], nbytes);
++	} else {
++		int err;
++
++		err = memcmp(&tpdat[offset], &dat[1], nbytes);
++		if (err)
++			netdev_err_once(priv->ndev,
++					"%s: 0x%p: Data of RX-looped back packet (%*ph) doesn't match TX data (%*ph)!\n",
++					__func__, session,
++					nbytes, &dat[1],
++					nbytes, &tpdat[offset]);
++	}
++
+ 	if (packet == session->pkt.rx)
+ 		session->pkt.rx++;
+ 
 -- 
 2.25.1
 
