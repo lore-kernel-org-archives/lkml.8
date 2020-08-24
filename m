@@ -2,193 +2,166 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D808CC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB03C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A97E92074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD3872074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXXQnvZp"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="iVS8/GaD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgHXSgp (ORCPT
+        id S1726964AbgHXSgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:36:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44224 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgHXSga (ORCPT
+        Mon, 24 Aug 2020 14:36:51 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3053 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbgHXSgn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:36:30 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC465C061573;
-        Mon, 24 Aug 2020 11:36:29 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d19so4970625pgl.10;
-        Mon, 24 Aug 2020 11:36:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3q7TgN3lxewyLqAIBfP9LryeeItLVKAQXHJvLwyIaWM=;
-        b=DXXQnvZpQdBxWWuTfbWVY5FLOwytb0aSgYz9mPH9jwhVJ/ogBB2JP13Gr4jK7HM73T
-         pc/bkX58u16w83O633eIk/waD+bT8E/aoCcgOOg01+1vouzqLJH0+zGQjpzQJFyg0FZM
-         mauzJky23s4DKNw2+aNYSjn1sV7zZZvHGKo4/0BHmr5FKsNRLRZXrAxTyrW6tvy3xhDC
-         /27GPtZ1Tm5+yzrDJZcaCnxIN0oRlJybvVM6DWCbdS2+r7BgXNLnHHCtzQ1epJHThmTq
-         nuiTZWKKuwFHf58c5DAoL1PXrjj4dXftqHFIRq8jatyM8kSLLpJJ4ZP+WD0NdXeYZWYa
-         7m1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=3q7TgN3lxewyLqAIBfP9LryeeItLVKAQXHJvLwyIaWM=;
-        b=H46rtuU/8qmPWTXcVQgZaWHLWvju3V+uO7LRrDpWpdtshqKDIvicPTkb77+D076M1m
-         hGbIXRm7qyO7Hqvn1u04AWH2dCweMhU13YKPUckktuTCiDjhIW2CUVuTVUlBdi5QZOWI
-         qv3w0RXFQMWBJ4cNdm7Hv7paSJw9z6QhWQLcfzohmzppzHV/ffzO8UA33DPwi7PSXsYf
-         k6um9vGekupd09EG8GOYBwFfpneubA1M2DDhRIxeZ30vXamH32nHNEZF20G5UUFKWl/h
-         neTO80IBbYy0oe3lG8gvWKR85LX7Fokw4W1R7/les18JRQQ23lDbuNMvJbvlz9KQgBXv
-         09fA==
-X-Gm-Message-State: AOAM532pM1W/GYEZwroIsB0OBqQI82NKtiTxMoFfsTCMdVKagJtQewFW
-        ubLo1fFeDvn2lirIAE1KfW8=
-X-Google-Smtp-Source: ABdhPJySaZYGlENv2qyFf9K7SCA9acModoq5qtLXOSnFpr5ZYYJUffRqri+Bu8C1bsjf+rWbXYMz0A==
-X-Received: by 2002:a17:902:8690:: with SMTP id g16mr2883173plo.257.1598294189292;
-        Mon, 24 Aug 2020 11:36:29 -0700 (PDT)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id u191sm10235065pgu.56.2020.08.24.11.36.27
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 11:36:28 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>, stable@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andrew Jones <drjones@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL VIRTUAL MACHINE FOR ARM64 (KVM/arm64)" 
-        <kvmarm@lists.cs.columbia.edu>
-Subject: [PATCH stable 4.9 v3 2/2] arm64: entry: Place an SB sequence following an ERET instruction
-Date:   Mon, 24 Aug 2020 11:36:22 -0700
-Message-Id: <1598294182-34012-3-git-send-email-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598294182-34012-1-git-send-email-f.fainelli@gmail.com>
-References: <1598294182-34012-1-git-send-email-f.fainelli@gmail.com>
+        Mon, 24 Aug 2020 14:36:43 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4408ad0000>; Mon, 24 Aug 2020 11:36:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 24 Aug 2020 11:36:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 24 Aug 2020 11:36:43 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 24 Aug
+ 2020 18:36:43 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 24 Aug 2020 18:36:43 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.58.8]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f4408ba0007>; Mon, 24 Aug 2020 11:36:42 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     <jens.wiklander@linaro.org>
+List-Id: <soc.lore.kernel.org>
+CC:     <arm@kernel.org>, <jhubbard@nvidia.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <olof@lixom.net>, <soc@kernel.org>,
+        <tee-dev@lists.linaro.org>, Sumit Semwal <sumit.semwal@linaro.org>,
+        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linaro-mm-sig@lists.linaro.org>
+Subject: [PATCH v2] tee: convert convert get_user_pages() --> pin_user_pages()
+Date:   Mon, 24 Aug 2020 11:36:41 -0700
+Message-ID: <20200824183641.632126-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <CAHUa44FrxidzSUOM_JchOTa5pF6P+j8uZJA5DpKfGLWaS6tCcw@mail.gmail.com>
+References: <CAHUa44FrxidzSUOM_JchOTa5pF6P+j8uZJA5DpKfGLWaS6tCcw@mail.gmail.com>
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598294189; bh=z82gApoeMO2LnErU5mpg0j+Kb/ttabmSFcmdgse888w=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=iVS8/GaDU9zmT9vo7ZZLTFMXFYqgCxX40+piNePuEsBesRbJOWSE/xX0l4lnN63zP
+         rNulwOpHj0jxO0UYPRpWWnbbpBRRtjZ7Ad2Pr0Lr6Td2u5c4uA8uU/k3j/5ATc7Ldl
+         ja2qEbIIh2G8Y00MsTl++oOV4QF+2L8NxS/wYDSAu2cOMojYwGP7fRx8PV1S+PPhJf
+         eMwcpYjy4wLfip8pV0ZTrqAxTpQUf9P82fZY4js6G6bozNcuy7tmm5Q/Qm/FKQkGgz
+         bn8l+gIiliISNvEyIeLS1tvUTztwBZWDlm9e7/nwvteVcBcutQNfuKhQ6LX2q0j+XR
+         LrbSFl0y4fPnQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+This code was using get_user_pages*(), in a "Case 2" scenario
+(DMA/RDMA), using the categorization from [1]. That means that it's
+time to convert the get_user_pages*() + put_page() calls to
+pin_user_pages*() + unpin_user_pages() calls.
 
-commit 679db70801da9fda91d26caf13bf5b5ccc74e8e8 upstream
+There is some helpful background in [2]: basically, this is a small
+part of fixing a long-standing disconnect between pinning pages, and
+file systems' use of those pages.
 
-Some CPUs can speculate past an ERET instruction and potentially perform
-speculative accesses to memory before processing the exception return.
-Since the register state is often controlled by a lower privilege level
-at the point of an ERET, this could potentially be used as part of a
-side-channel attack.
+[1] Documentation/core-api/pin_user_pages.rst
 
-This patch emits an SB sequence after each ERET so that speculation is
-held up on exception return.
+[2] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
 
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-[florian: Adjust hyp-entry.S to account for the label
- added change to hyp/entry.S]
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: tee-dev@lists.linaro.org
+Cc: linux-media@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linaro-mm-sig@lists.linaro.org
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- arch/arm64/kernel/entry.S      | 2 ++
- arch/arm64/kvm/hyp/entry.S     | 2 ++
- arch/arm64/kvm/hyp/hyp-entry.S | 4 ++++
- 3 files changed, 8 insertions(+)
 
-diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
-index ca978d7d98eb..3408c782702c 100644
---- a/arch/arm64/kernel/entry.S
-+++ b/arch/arm64/kernel/entry.S
-@@ -255,6 +255,7 @@ alternative_insn eret, nop, ARM64_UNMAP_KERNEL_AT_EL0
- 	.else
- 	eret
- 	.endif
-+	sb
- 	.endm
- 
- 	.macro	get_thread_info, rd
-@@ -945,6 +946,7 @@ __ni_sys_trace:
- 	mrs	x30, far_el1
- 	.endif
- 	eret
-+	sb
- 	.endm
- 
- 	.align	11
-diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
-index a360ac6e89e9..93704e6894d2 100644
---- a/arch/arm64/kvm/hyp/entry.S
-+++ b/arch/arm64/kvm/hyp/entry.S
-@@ -83,6 +83,7 @@ ENTRY(__guest_enter)
- 
- 	// Do not touch any register after this!
- 	eret
-+	sb
- ENDPROC(__guest_enter)
- 
- ENTRY(__guest_exit)
-@@ -195,4 +196,5 @@ alternative_endif
- 	ldp	x0, x1, [sp], #16
- 
- 	eret
-+	sb
- ENDPROC(__fpsimd_guest_restore)
-diff --git a/arch/arm64/kvm/hyp/hyp-entry.S b/arch/arm64/kvm/hyp/hyp-entry.S
-index bf4988f9dae8..3675e7f0ab72 100644
---- a/arch/arm64/kvm/hyp/hyp-entry.S
-+++ b/arch/arm64/kvm/hyp/hyp-entry.S
-@@ -97,6 +97,7 @@ el1_sync:				// Guest trapped into EL2
- 	do_el2_call
- 
- 2:	eret
-+	sb
- 
- el1_hvc_guest:
- 	/*
-@@ -147,6 +148,7 @@ wa_epilogue:
- 	mov	x0, xzr
- 	add	sp, sp, #16
- 	eret
-+	sb
- 
- el1_trap:
- 	get_vcpu_ptr	x1, x0
-@@ -198,6 +200,7 @@ el2_error:
- 	b.ne	__hyp_panic
- 	mov	x0, #(1 << ARM_EXIT_WITH_SERROR_BIT)
- 	eret
-+	sb
- 
- ENTRY(__hyp_do_panic)
- 	mov	lr, #(PSR_F_BIT | PSR_I_BIT | PSR_A_BIT | PSR_D_BIT |\
-@@ -206,6 +209,7 @@ ENTRY(__hyp_do_panic)
- 	ldr	lr, =panic
- 	msr	elr_el2, lr
- 	eret
-+	sb
- ENDPROC(__hyp_do_panic)
- 
- ENTRY(__hyp_panic)
--- 
-2.7.4
+OK, this should be indentical to v1 [1], but now rebased against
+Linux 5.9-rc2.
+
+As before, I've compile-tested it again with a cross compiler, but that's
+the only testing I'm set up for with CONFIG_TEE.
+
+[1] https://lore.kernel.org/r/20200519051850.2845561-1-jhubbard@nvidia.com
+
+thanks,
+John Hubbard
+NVIDIA
+
+ drivers/tee/tee_shm.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
+index 827ac3d0fea9..3c29e6c3ebe8 100644
+--- a/drivers/tee/tee_shm.c
++++ b/drivers/tee/tee_shm.c
+@@ -32,16 +32,13 @@ static void tee_shm_release(struct tee_shm *shm)
+=20
+ 		poolm->ops->free(poolm, shm);
+ 	} else if (shm->flags & TEE_SHM_REGISTER) {
+-		size_t n;
+ 		int rc =3D teedev->desc->ops->shm_unregister(shm->ctx, shm);
+=20
+ 		if (rc)
+ 			dev_err(teedev->dev.parent,
+ 				"unregister shm %p failed: %d", shm, rc);
+=20
+-		for (n =3D 0; n < shm->num_pages; n++)
+-			put_page(shm->pages[n]);
+-
++		unpin_user_pages(shm->pages, shm->num_pages);
+ 		kfree(shm->pages);
+ 	}
+=20
+@@ -228,7 +225,7 @@ struct tee_shm *tee_shm_register(struct tee_context *ct=
+x, unsigned long addr,
+ 	}
+=20
+ 	if (flags & TEE_SHM_USER_MAPPED) {
+-		rc =3D get_user_pages_fast(start, num_pages, FOLL_WRITE,
++		rc =3D pin_user_pages_fast(start, num_pages, FOLL_WRITE,
+ 					 shm->pages);
+ 	} else {
+ 		struct kvec *kiov;
+@@ -292,16 +289,13 @@ struct tee_shm *tee_shm_register(struct tee_context *=
+ctx, unsigned long addr,
+ 	return shm;
+ err:
+ 	if (shm) {
+-		size_t n;
+-
+ 		if (shm->id >=3D 0) {
+ 			mutex_lock(&teedev->mutex);
+ 			idr_remove(&teedev->idr, shm->id);
+ 			mutex_unlock(&teedev->mutex);
+ 		}
+ 		if (shm->pages) {
+-			for (n =3D 0; n < shm->num_pages; n++)
+-				put_page(shm->pages[n]);
++			unpin_user_pages(shm->pages, shm->num_pages);
+ 			kfree(shm->pages);
+ 		}
+ 	}
+--=20
+2.28.0
 
