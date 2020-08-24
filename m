@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7041C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD463C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B04FC2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86B51207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259456;
-	bh=MUfmXe8Eq8zaIzW6yi47MEM48fwEIH2DgIVAT67gkcM=;
+	s=default; t=1598259461;
+	bh=Fmer4JONF1vdMTy9+CTlWBs9jVPnJ4KL6nwQ+2jWvb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m34C9OntGMhM4uViGm2GiZFrO9QFL1Po9usuLpvKAYUoThGkLFtorYJdSzStQNPQK
-	 KVZUoTb7DLjUbr6ZtErPglznJbGVRaQF1mzbXk3AnNa4PPSsrIQ+bUqH6Tb5I+I+33
-	 cZ2kcpuDC81sziCOIz/uajGrgbm619kL49HxlYik=
+	b=YZ8AWH8XwW+4tfMOsxLz4OYPhzXIV7jSRyUxFMsOuyY++c5zbDoVIrn4yCs8Oy3Qc
+	 9YOIkdPIXuSxBvssX9fIYODAYprBeLE29pXETBYD7V0bERid+i6wbIoAZLX8hXUBzk
+	 7n0z1tv75xgATxsV7KbU2okL1SbeuOnN3m3KyyFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbgHXI5f (ORCPT
+        id S1730702AbgHXI5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:57:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43374 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:57:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730614AbgHXI47 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:59 -0400
+        id S1730653AbgHXI5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B2242072D;
-        Mon, 24 Aug 2020 08:56:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D18C2072D;
+        Mon, 24 Aug 2020 08:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259418;
-        bh=MUfmXe8Eq8zaIzW6yi47MEM48fwEIH2DgIVAT67gkcM=;
+        s=default; t=1598259437;
+        bh=Fmer4JONF1vdMTy9+CTlWBs9jVPnJ4KL6nwQ+2jWvb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCkrotGLlYlCZ6beLhaa3UXar8GJrijrGASjrniSS7fJt4M68MNclugi3n/owb3Lz
-         wYkpKhMDRaCzxGOqRhgARolmydE9v++32Y0NhkRUJmIcId/ZW4MjIheb7l1XzJG4If
-         VVvQpCJGTtBCcjPoEbkIEg+ufa7DEvh1Qs+z5oD8=
+        b=J5+joPyy9XzmLkzD/eXC3EseBO49ehf4QTivPj7qMn8O5MshAKkfnRSi8nOyInqsZ
+         89L52csVvIrzPERZo0MC1yv3iUE0c3H6t+pg+iLxB9SemwIck2OxVVxD7lTVslAOGH
+         pn57bT+Fo5WSjlstSp1hgwWnXTdb3M4sAmIJ0VIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, JiangYu <lnsyyj@hotmail.com>,
-        Daniel Meyerholt <dxm523@gmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Zhiyi Guo <zhguo@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 22/71] scsi: target: tcmu: Fix crash in tcmu_flush_dcache_range on ARM
-Date:   Mon, 24 Aug 2020 10:31:13 +0200
-Message-Id: <20200824082356.994960635@linuxfoundation.org>
+Subject: [PATCH 4.19 51/71] vfio/type1: Add proper error unwind for vfio_iommu_replay()
+Date:   Mon, 24 Aug 2020 10:31:42 +0200
+Message-Id: <20200824082358.455519947@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -63,92 +61,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit 3145550a7f8b08356c8ff29feaa6c56aca12901d ]
+[ Upstream commit aae7a75a821a793ed6b8ad502a5890fb8e8f172d ]
 
-This patch fixes the following crash (see
-https://bugzilla.kernel.org/show_bug.cgi?id=208045)
+The vfio_iommu_replay() function does not currently unwind on error,
+yet it does pin pages, perform IOMMU mapping, and modify the vfio_dma
+structure to indicate IOMMU mapping.  The IOMMU mappings are torn down
+when the domain is destroyed, but the other actions go on to cause
+trouble later.  For example, the iommu->domain_list can be empty if we
+only have a non-IOMMU backed mdev attached.  We don't currently check
+if the list is empty before getting the first entry in the list, which
+leads to a bogus domain pointer.  If a vfio_dma entry is erroneously
+marked as iommu_mapped, we'll attempt to use that bogus pointer to
+retrieve the existing physical page addresses.
 
- Process iscsi_trx (pid: 7496, stack limit = 0x0000000010dd111a)
- CPU: 0 PID: 7496 Comm: iscsi_trx Not tainted 4.19.118-0419118-generic
-        #202004230533
- Hardware name: Greatwall QingTian DF720/F601, BIOS 601FBE20 Sep 26 2019
- pstate: 80400005 (Nzcv daif +PAN -UAO)
- pc : flush_dcache_page+0x18/0x40
- lr : is_ring_space_avail+0x68/0x2f8 [target_core_user]
- sp : ffff000015123a80
- x29: ffff000015123a80 x28: 0000000000000000
- x27: 0000000000001000 x26: ffff000023ea5000
- x25: ffffcfa25bbe08b8 x24: 0000000000000078
- x23: ffff7e0000000000 x22: ffff000023ea5001
- x21: ffffcfa24b79c000 x20: 0000000000000fff
- x19: ffff7e00008fa940 x18: 0000000000000000
- x17: 0000000000000000 x16: ffff2d047e709138
- x15: 0000000000000000 x14: 0000000000000000
- x13: 0000000000000000 x12: ffff2d047fbd0a40
- x11: 0000000000000000 x10: 0000000000000030
- x9 : 0000000000000000 x8 : ffffc9a254820a00
- x7 : 00000000000013b0 x6 : 000000000000003f
- x5 : 0000000000000040 x4 : ffffcfa25bbe08e8
- x3 : 0000000000001000 x2 : 0000000000000078
- x1 : ffffcfa25bbe08b8 x0 : ffff2d040bc88a18
- Call trace:
-  flush_dcache_page+0x18/0x40
-  is_ring_space_avail+0x68/0x2f8 [target_core_user]
-  queue_cmd_ring+0x1f8/0x680 [target_core_user]
-  tcmu_queue_cmd+0xe4/0x158 [target_core_user]
-  __target_execute_cmd+0x30/0xf0 [target_core_mod]
-  target_execute_cmd+0x294/0x390 [target_core_mod]
-  transport_generic_new_cmd+0x1e8/0x358 [target_core_mod]
-  transport_handle_cdb_direct+0x50/0xb0 [target_core_mod]
-  iscsit_execute_cmd+0x2b4/0x350 [iscsi_target_mod]
-  iscsit_sequence_cmd+0xd8/0x1d8 [iscsi_target_mod]
-  iscsit_process_scsi_cmd+0xac/0xf8 [iscsi_target_mod]
-  iscsit_get_rx_pdu+0x404/0xd00 [iscsi_target_mod]
-  iscsi_target_rx_thread+0xb8/0x130 [iscsi_target_mod]
-  kthread+0x130/0x138
-  ret_from_fork+0x10/0x18
- Code: f9000bf3 aa0003f3 aa1e03e0 d503201f (f9400260)
- ---[ end trace 1e451c73f4266776 ]---
+This is the scenario that uncovered this issue, attempting to hot-add
+a vfio-pci device to a container with an existing mdev device and DMA
+mappings, one of which could not be pinned, causing a failure adding
+the new group to the existing container and setting the conditions
+for a subsequent attempt to explode.
 
-The solution is based on patch:
+To resolve this, we can first check if the domain_list is empty so
+that we can reject replay of a bogus domain, should we ever encounter
+this inconsistent state again in the future.  The real fix though is
+to add the necessary unwind support, which means cleaning up the
+current pinning if an IOMMU mapping fails, then walking back through
+the r-b tree of DMA entries, reading from the IOMMU which ranges are
+mapped, and unmapping and unpinning those ranges.  To be able to do
+this, we also defer marking the DMA entry as IOMMU mapped until all
+entries are processed, in order to allow the unwind to know the
+disposition of each entry.
 
-  "scsi: target: tcmu: Optimize use of flush_dcache_page"
-
-which restricts the use of tcmu_flush_dcache_range() to addresses from
-vmalloc'ed areas only.
-
-This patch now replaces the virt_to_page() call in
-tcmu_flush_dcache_range() - which is wrong for vmalloced addrs - by
-vmalloc_to_page().
-
-The patch was tested on ARM with kernel 4.19.118 and 5.7.2
-
-Link: https://lore.kernel.org/r/20200618131632.32748-3-bstroesser@ts.fujitsu.com
-Tested-by: JiangYu <lnsyyj@hotmail.com>
-Tested-by: Daniel Meyerholt <dxm523@gmail.com>
-Acked-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: a54eb55045ae ("vfio iommu type1: Add support for mediated devices")
+Reported-by: Zhiyi Guo <zhguo@redhat.com>
+Tested-by: Zhiyi Guo <zhguo@redhat.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_user.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/vfio_iommu_type1.c | 71 ++++++++++++++++++++++++++++++---
+ 1 file changed, 66 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index 8da89925a874d..9c05e820857aa 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -612,7 +612,7 @@ static inline void tcmu_flush_dcache_range(void *vaddr, size_t size)
- 	size = round_up(size+offset, PAGE_SIZE);
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 6dbdadb936a89..52083b710b87e 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -1193,13 +1193,16 @@ static int vfio_bus_type(struct device *dev, void *data)
+ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 			     struct vfio_domain *domain)
+ {
+-	struct vfio_domain *d;
++	struct vfio_domain *d = NULL;
+ 	struct rb_node *n;
+ 	unsigned long limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
+ 	int ret;
  
- 	while (size) {
--		flush_dcache_page(virt_to_page(start));
-+		flush_dcache_page(vmalloc_to_page(start));
- 		start += PAGE_SIZE;
- 		size -= PAGE_SIZE;
+ 	/* Arbitrarily pick the first domain in the list for lookups */
+-	d = list_first_entry(&iommu->domain_list, struct vfio_domain, next);
++	if (!list_empty(&iommu->domain_list))
++		d = list_first_entry(&iommu->domain_list,
++				     struct vfio_domain, next);
++
+ 	n = rb_first(&iommu->dma_list);
+ 
+ 	for (; n; n = rb_next(n)) {
+@@ -1217,6 +1220,11 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 				phys_addr_t p;
+ 				dma_addr_t i;
+ 
++				if (WARN_ON(!d)) { /* mapped w/o a domain?! */
++					ret = -EINVAL;
++					goto unwind;
++				}
++
+ 				phys = iommu_iova_to_phys(d->domain, iova);
+ 
+ 				if (WARN_ON(!phys)) {
+@@ -1246,7 +1254,7 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 				if (npage <= 0) {
+ 					WARN_ON(!npage);
+ 					ret = (int)npage;
+-					return ret;
++					goto unwind;
+ 				}
+ 
+ 				phys = pfn << PAGE_SHIFT;
+@@ -1255,14 +1263,67 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 
+ 			ret = iommu_map(domain->domain, iova, phys,
+ 					size, dma->prot | domain->prot);
+-			if (ret)
+-				return ret;
++			if (ret) {
++				if (!dma->iommu_mapped)
++					vfio_unpin_pages_remote(dma, iova,
++							phys >> PAGE_SHIFT,
++							size >> PAGE_SHIFT,
++							true);
++				goto unwind;
++			}
+ 
+ 			iova += size;
+ 		}
++	}
++
++	/* All dmas are now mapped, defer to second tree walk for unwind */
++	for (n = rb_first(&iommu->dma_list); n; n = rb_next(n)) {
++		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
++
+ 		dma->iommu_mapped = true;
  	}
++
+ 	return 0;
++
++unwind:
++	for (; n; n = rb_prev(n)) {
++		struct vfio_dma *dma = rb_entry(n, struct vfio_dma, node);
++		dma_addr_t iova;
++
++		if (dma->iommu_mapped) {
++			iommu_unmap(domain->domain, dma->iova, dma->size);
++			continue;
++		}
++
++		iova = dma->iova;
++		while (iova < dma->iova + dma->size) {
++			phys_addr_t phys, p;
++			size_t size;
++			dma_addr_t i;
++
++			phys = iommu_iova_to_phys(domain->domain, iova);
++			if (!phys) {
++				iova += PAGE_SIZE;
++				continue;
++			}
++
++			size = PAGE_SIZE;
++			p = phys + size;
++			i = iova + size;
++			while (i < dma->iova + dma->size &&
++			       p == iommu_iova_to_phys(domain->domain, i)) {
++				size += PAGE_SIZE;
++				p += PAGE_SIZE;
++				i += PAGE_SIZE;
++			}
++
++			iommu_unmap(domain->domain, iova, size);
++			vfio_unpin_pages_remote(dma, iova, phys >> PAGE_SHIFT,
++						size >> PAGE_SHIFT, true);
++		}
++	}
++
++	return ret;
+ }
+ 
+ /*
 -- 
 2.25.1
 
