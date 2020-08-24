@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77D6C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BE5C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8842821741
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB67F207DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259386;
-	bh=2sFzfDN1X4rft1xo87I6/mJAix3xrEMTqSG8tIKT3is=;
+	s=default; t=1598259391;
+	bh=cl6pCi7Kvd90yBpkRdLa9gsjAZiENQRRie7QpCBE7YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BJdh0eSrps+54S2oHPbsNfZ1D8eKiTnEx9HZwj5b868YRI/7weVqG45p93OA6HyG+
-	 VqTHJP5K+sPTnIK1hLUT9Vgcy+z6ggX7fswfAYrKwhYnpVDRFfb+D5DL60g1S1/h4a
-	 U/MtmgiA0WLhoFrQgUdzbaTYhIoU30mJEV84m89E=
+	b=uzuKn8+6R62hxtzFxW1v/an1Lta3fBezSV3eIjXvs2PfSy9/pusBjZ6qXEaJ7mk6T
+	 /mcSyrJwKPEPoSur3GkIZ4ePXgiGiYtDYrca7vhfEjONCw45OWyB8+8FbKa8XQ+YZU
+	 EUoA3jVMYV/UFmHlKzy9rHCZPWHid6Qp4Yme15SA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbgHXI4W (ORCPT
+        id S1728595AbgHXI4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:56:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38130 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:56:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729753AbgHXIzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:42 -0400
+        id S1730384AbgHXIzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:55:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFB4A2072D;
-        Mon, 24 Aug 2020 08:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6F092072D;
+        Mon, 24 Aug 2020 08:55:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259342;
-        bh=2sFzfDN1X4rft1xo87I6/mJAix3xrEMTqSG8tIKT3is=;
+        s=default; t=1598259355;
+        bh=cl6pCi7Kvd90yBpkRdLa9gsjAZiENQRRie7QpCBE7YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FTs/sfWQD16nTQS5cIoMWbHW3yhJgsiPWIVC+HtlFfNyjLXMhRTfivVF+xS+b5JYh
-         tx+CeuIiLI4ObHRPsZ5mYiuHdWgcOuOItYtTD6Uos5CKf8XMdZXx1mOgD81pAKRJxh
-         0rI+iz8i6QUOdOvBZI6G7zgW213irj8V77CwbZkM=
+        b=Xh8XuGP57K4Mg2HgrTMcJKvk+s83mwmjvyBkdVfCuHshYAUBX+DWj1Lz+kzp8Bt2E
+         V15a5c8gemmXGw/BU32RsO+mgCtTHiUD6yUZ66iO6ORIGfwMg/SjpukP/yYVXwgaLU
+         1KJD8c4HfG6mV5bgXRMl1+WQ4pK+K+sfGrGfG9B4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 07/71] btrfs: Move free_pages_out label in inline extent handling branch in compress_file_range
-Date:   Mon, 24 Aug 2020 10:30:58 +0200
-Message-Id: <20200824082356.249587938@linuxfoundation.org>
+Subject: [PATCH 4.19 28/71] svcrdma: Fix another Receive buffer leak
+Date:   Mon, 24 Aug 2020 10:31:19 +0200
+Message-Id: <20200824082357.297263167@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -60,56 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit cecc8d9038d164eda61fbcd72520975a554ea63e ]
+[ Upstream commit 64d26422516b2e347b32e6d9b1d40b3c19a62aae ]
 
-This label is only executed if compress_file_range fails to create an
-inline extent. So move its code in the semantically related inline
-extent handling branch. No functional changes.
+During a connection tear down, the Receive queue is flushed before
+the device resources are freed. Typically, all the Receives flush
+with IB_WR_FLUSH_ERR.
 
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+However, any pending successful Receives flush with IB_WR_SUCCESS,
+and the server automatically posts a fresh Receive to replace the
+completing one. This happens even after the connection has closed
+and the RQ is drained. Receives that are posted after the RQ is
+drained appear never to complete, causing a Receive resource leak.
+The leaked Receive buffer is left DMA-mapped.
+
+To prevent these late-posted recv_ctxt's from leaking, block new
+Receive posting after XPT_CLOSE is set.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 1656ef0e959f0..8507192cd6449 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -628,7 +628,14 @@ cont:
- 						     PAGE_SET_WRITEBACK |
- 						     page_error_op |
- 						     PAGE_END_WRITEBACK);
--			goto free_pages_out;
-+
-+			for (i = 0; i < nr_pages; i++) {
-+				WARN_ON(pages[i]->mapping);
-+				put_page(pages[i]);
-+			}
-+			kfree(pages);
-+
-+			return;
- 		}
- 	}
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+index 16c8174658fd1..252495ff9010d 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+@@ -268,6 +268,8 @@ static int svc_rdma_post_recv(struct svcxprt_rdma *rdma)
+ {
+ 	struct svc_rdma_recv_ctxt *ctxt;
  
-@@ -706,13 +713,6 @@ cleanup_and_bail_uncompressed:
- 	*num_added += 1;
- 
- 	return;
--
--free_pages_out:
--	for (i = 0; i < nr_pages; i++) {
--		WARN_ON(pages[i]->mapping);
--		put_page(pages[i]);
--	}
--	kfree(pages);
- }
- 
- static void free_async_extent_pages(struct async_extent *async_extent)
++	if (test_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags))
++		return 0;
+ 	ctxt = svc_rdma_recv_ctxt_get(rdma);
+ 	if (!ctxt)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
