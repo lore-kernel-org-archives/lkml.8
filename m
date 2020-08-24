@@ -2,67 +2,67 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2981FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F1DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB38B206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02E4206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:39:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="ts/mtuAS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="CoV/L53m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgHXTix (ORCPT
+        id S1727093AbgHXTjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:38:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54052 "EHLO
+        Mon, 24 Aug 2020 15:39:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726051AbgHXTiw (ORCPT
+        with ESMTP id S1726051AbgHXTi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:38:52 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D319AC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 12:38:51 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id y9so11786177ybp.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 12:38:51 -0700 (PDT)
+        Mon, 24 Aug 2020 15:38:58 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42752C061575
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 12:38:58 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id l67so11754841ybb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 12:38:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=+KNWHt39BeaES4QJyf9uwQ75hxAZKSv16U3yHjZ94QQ=;
-        b=ts/mtuAS4Phe5b60Tpb1gUcpi29I2K7oDx3gEEnmURzdhuDVWCXjJ0h7YWE967bLO/
-         Hkfb+Ki7yjB9Bvm3hYWb4zAG9oiE0Mg9LZyvwG0TU0zSQ60meMrjmDtsiuXadgoVMh5G
-         JVf2M1EdFf5Hp6unvbJjKAjaAclEwkL/gEPN7yzmzdxeDZ30IOWw+EpbwfLCaxXW/ADB
-         T/iUjvbkeI3GgS7/kLogGtm1gc8T4XOxxiCTxk+dYekA8li4PsJrHC1JHfXDQIbwu/aK
-         UpiZGUyubukLJOSYl+hf+DaNlbXRHuj/pFIJmPR1qhnYiMus3wFswSmi94r8S6FvHSQA
-         Milg==
+        bh=g4pL4sVyrmOHm7d8P2FtckN7sUsE1ULTw8xRTNRh+SI=;
+        b=CoV/L53mwlQU4CmFv+qyfNTZJqXqwvTa0hKuq5T9gfLT05XMqzwM+AiGNQ2LPdOOSL
+         djCoEUi6/nIJ0xI0ldNXvhw+jSelLMQA/N+/QLUdCIQ/mBxOdJMO0OEaFHoV9JNOfvJ8
+         zOVbX7q4qMmz9OdrnQRYYpapzeAuvgHYeRNvbT0hi4hpqV6k86Yw8EeAqDsKEy8cDOIz
+         p86j1+a8DcwbanlYBPSIKF+JcVwH4PJGPLhCef6gKKTawRbAq8YsOWovfsUD2apLiVly
+         wxVsvt3Fn9tOgClVYY+Iet4yYT5mCmB2KtcU9xd0PliAWN0Ji5wZRmuVIhF1c0MBAtC4
+         +k8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=+KNWHt39BeaES4QJyf9uwQ75hxAZKSv16U3yHjZ94QQ=;
-        b=IAZsLdAh71SX0AgRxt9J0i5bouc+mBbUvGUFIEoyIkSE3U+Y6dK8VZAzHs/qm4063J
-         zB9kbvJpUbdMDmJ1MCvEdyj37ScRvS4NBzZGx0cITNzkRrHAPtMnd8UuiULIxN5NQwP/
-         gTu7Xk2DGIIexhzIxc+FkmMgEwrKV42Ns2wuRBRrYWevf2KsXW+xOczeOEaOI0s0Crjd
-         Xm/6uCvAQnPvb4TjAUHdPhFysCNyDQaf/pCUNeRmzW2eMzZGw4UqUUo9tz4BBk+ofA+e
-         1P8zu9d6bpBFI7L3H3GFQUEpA8dmtPCIjN96sgWX6Q+PsUQp00NpF0+BNHcj5OMONc+a
-         tAWQ==
-X-Gm-Message-State: AOAM531dPDa90VytGxUk0VfkBkNnnEEIby/CoHva8Ae2z8+S+EIiwPxv
-        wU004qXW9efXrNkhUcJ3Hdzj5WkoJq+8nMMd9w0=
-X-Google-Smtp-Source: ABdhPJwwO6KvWceO9mUaGNjmT3o+ZQhDwcijuVSccgzCtjjoBlYTOXwFt3vh+n5qXPL7gzVZOdKzC9Ay5dhwedc/Yss=
+        bh=g4pL4sVyrmOHm7d8P2FtckN7sUsE1ULTw8xRTNRh+SI=;
+        b=ELXHuSfN9M5fKwwpnFRdx4XnSG0KwUcnMA5QlwfxJZ6NEvZD05lJCqLj6Y+Sy9CC4R
+         7KZK7Nj8FuzbNdJ2OX+20NFg/UAKsp9S4wiT0yC8PKhf9mwXvSUH/VMGcfjJi0W2MnzZ
+         dTjfcya96QPdqcCIz4bOMDPkhZ8WRZMJbGUzPUHEScQlSUcs7hVn/2rbVR3QBy2AS1Su
+         RMHLVwEHQ+X7ALxmWZS7su3HYaXrGFKc4hEhDe7vIXVaoqaHKi0Z6mFz+47cBLJRNj8n
+         Wnym1R6rtxzWVRBf+EZJQBNavdXYIl6KVjZMwLv8WDMLBYKWdMie+EMTNUhMZHoHhI8w
+         ZOmA==
+X-Gm-Message-State: AOAM531yf0v3aOhtMh5BK6uA3Usm5Pv20TFXFUnkyUXcWB4bR+fNmgaC
+        AgtPGhdnREI2xz8gjxrzNmhkBX1BP1hrb09zIbA=
+X-Google-Smtp-Source: ABdhPJz54Qy8rUAZu+NRaiGqe2/DL4+O296F7M9YhQOXOdT7uRz6rqiIoIKEPsVPlHFnFppwvghUIOpqviAIabHIkcA=
 X-Received: from willmcvicker.c.googlers.com ([fda3:e722:ac3:10:24:72f4:c0a8:2dd0])
- (user=willmcvicker job=sendgmr) by 2002:a25:25cc:: with SMTP id
- l195mr9819663ybl.383.1598297931004; Mon, 24 Aug 2020 12:38:51 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 19:38:31 +0000
-In-Reply-To: <20200804113711.GA20988@salvia>
-Message-Id: <20200824193832.853621-1-willmcvicker@google.com>
+ (user=willmcvicker job=sendgmr) by 2002:a25:37ca:: with SMTP id
+ e193mr10506255yba.387.1598297937465; Mon, 24 Aug 2020 12:38:57 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 19:38:32 +0000
+In-Reply-To: <20200824193832.853621-1-willmcvicker@google.com>
+Message-Id: <20200824193832.853621-2-willmcvicker@google.com>
 Mime-Version: 1.0
-References: <20200804113711.GA20988@salvia>
+References: <20200804113711.GA20988@salvia> <20200824193832.853621-1-willmcvicker@google.com>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH v3 0/1] netfilter: nat: add a range check for l3/l4 protonum
+Subject: [PATCH v3 1/1] netfilter: nat: add a range check for l3/l4 protonum
 From:   Will McVicker <willmcvicker@google.com>
 To:     stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
@@ -79,24 +79,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pablo,
+The indexes to the nf_nat_l[34]protos arrays come from userspace. So
+check the tuple's family, e.g. l3num, when creating the conntrack in
+order to prevent an OOB memory access during setup.  Here is an example
+kernel panic on 4.14.180 when userspace passes in an index greater than
+NFPROTO_NUMPROTO.
 
-> This patch is much smaller and if you confirm this is address the
-> issue, then this is awesome.
+Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+Modules linked in:...
+Process poc (pid: 5614, stack limit = 0x00000000a3933121)
+CPU: 4 PID: 5614 Comm: poc Tainted: G S      W  O    4.14.180-g051355490483
+Hardware name: Qualcomm Technologies, Inc. SM8150 V2 PM8150 Google Inc. MSM
+task: 000000002a3dfffe task.stack: 00000000a3933121
+pc : __cfi_check_fail+0x1c/0x24
+lr : __cfi_check_fail+0x1c/0x24
+...
+Call trace:
+__cfi_check_fail+0x1c/0x24
+name_to_dev_t+0x0/0x468
+nfnetlink_parse_nat_setup+0x234/0x258
+ctnetlink_parse_nat_setup+0x4c/0x228
+ctnetlink_new_conntrack+0x590/0xc40
+nfnetlink_rcv_msg+0x31c/0x4d4
+netlink_rcv_skb+0x100/0x184
+nfnetlink_rcv+0xf4/0x180
+netlink_unicast+0x360/0x770
+netlink_sendmsg+0x5a0/0x6a4
+___sys_sendmsg+0x314/0x46c
+SyS_sendmsg+0xb4/0x108
+el0_svc_naked+0x34/0x38
 
-Yes, I can confirm the updated patch does fix the kernel panic. I have retested
-on the Pixel 4 XL with version 4.14.180. Please see the updated patchset v3.
-
-Thanks,
-Will
-
-
-Will McVicker (1):
-  netfilter: nat: add a range check for l3/l4 protonum
-
+Fixes: c1d10adb4a521 ("[NETFILTER]: Add ctnetlink port for nf_conntrack")
+Signed-off-by: Will McVicker <willmcvicker@google.com>
+---
  net/netfilter/nf_conntrack_netlink.c | 2 ++
  1 file changed, 2 insertions(+)
 
+diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+index 31fa94064a62..0b89609a6e9d 100644
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -1129,6 +1129,8 @@ ctnetlink_parse_tuple(const struct nlattr * const cda[],
+ 	if (!tb[CTA_TUPLE_IP])
+ 		return -EINVAL;
+ 
++	if (l3num != NFPROTO_IPV4 && l3num != NFPROTO_IPV6)
++		return -EOPNOTSUPP;
+ 	tuple->src.l3num = l3num;
+ 
+ 	err = ctnetlink_parse_tuple_ip(tb[CTA_TUPLE_IP], tuple);
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
