@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2913C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D516C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA7182075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637F72074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:43:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RH9L9oVy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="om7r+X0e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgHXSnV (ORCPT
+        id S1727903AbgHXSnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:43:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45334 "EHLO
+        Mon, 24 Aug 2020 14:43:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727925AbgHXSnP (ORCPT
+        with ESMTP id S1727124AbgHXSm7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:43:15 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58BF6C061573;
-        Mon, 24 Aug 2020 11:43:15 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id nv17so4766908pjb.3;
-        Mon, 24 Aug 2020 11:43:15 -0700 (PDT)
+        Mon, 24 Aug 2020 14:42:59 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0927DC061573;
+        Mon, 24 Aug 2020 11:42:59 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q1so4665069pjd.1;
+        Mon, 24 Aug 2020 11:42:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=AC5ImHpMp+jWX/ACOy7SaY7mRdOd/yQkd8IlsbOtJsk=;
-        b=RH9L9oVy2h913LfHW6P+XO6u/MxMzMTUUsKJBGwDeDZ9Uoa57fZQ79YUlceINIegKm
-         cJ7uxcs8YDHSJGwqtSFLLOWy2gX+azFPc1o1cC/2qICmgIWp7bV7WLvZbEkdUhduGh9i
-         JMUtHVmr44iTsqMBUpv22v4RVQpvoDYnFFmbLWceeO1FOEML4ttF+kMzKQ/ob4Tzi6aV
-         fBCFbZT254UHAzBt1wdSzepOSQDg49je32TL2yCKf3ypfg6T6r7XY85LlHW7auDAoxH0
-         VL4vS0bYuIm+n0VP/BBp9plgvmYcYWOph1jUZEqfcTQDqOEXU/51yNd01ojYzNfbH8dS
-         JHeA==
+        bh=dDODSeOGT6GDQZmHB0/qjAVOZRvYu5agnXzxXU9gFlM=;
+        b=om7r+X0ea/tQnu31rzb519sNTs4LtrAmIhiV7wf5flokkJtN+J6QAQVFgctLl5wTbm
+         DuuJ6/3p2FduFIjqbYSCxtyLVIFvUR1yM9m6BB962QJKO39+uuj0XIT281QcjlxY54eA
+         Sk+0sxTtSMN9sFfvDHe43HXkpmiGrSvToUE3Yrm1WpkUzmzb9Fgj5YxNNAWrcizGo1mg
+         xP57eHVuCehFEOKFFqNMug3Koca+CzwybqkKcERV3jibjzrQf2HX/GivWIbkBHbPcFhg
+         6W1P1IXUM+x+vh7HCzxWXIFQZ9M7TjQh46cmuW8EEZOSvMzfVWkR0n+sPmihk9cLbrjw
+         rIzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AC5ImHpMp+jWX/ACOy7SaY7mRdOd/yQkd8IlsbOtJsk=;
-        b=iHmpcLXDr3RSUw5Bn+6ktZCgE7s89JwDi1/X445sIISwabcQ2oTyct+MrJ1y2Og+Zp
-         i+mJOIQ/Sg0I3xOJHgXUCrujt9PRUXCObYD4F68vkbesToxT5dHdUVLohKQheQlFg2TC
-         7/7DfHYR7Oa04027z5HLDVc91vBpP4OWDPzLYGxFjFltx/6nV9Vm0V+ntU0adPLVnZof
-         CFicKzIBn3A1OwkF9LmZ9VTX/zNQ2j5dUaV7cGfwUzkyt37vPKtf7ikoGL29LmIBvwKv
-         6QFmsAjXtlFdqb39GzfrJiVqy61EbGCq5RNYUcnVg/50vOqRVSaf03nJ1QRli31zel4W
-         MW5w==
-X-Gm-Message-State: AOAM5335ZNyzagLBylDMotKRn/Q2+dcFu6J4vKYmZ7zIMWOwtR53tFo3
-        IheS+MAnXiJO5pW8h72boeE=
-X-Google-Smtp-Source: ABdhPJx44Gr61vM4CtpKXIdAOMWPg+XX5qMK442F+uOYSHCSUwT2vUJvhYx/tuN9h9j1jJ6/5O8fSQ==
-X-Received: by 2002:a17:90b:4c03:: with SMTP id na3mr509206pjb.29.1598294593422;
-        Mon, 24 Aug 2020 11:43:13 -0700 (PDT)
+        bh=dDODSeOGT6GDQZmHB0/qjAVOZRvYu5agnXzxXU9gFlM=;
+        b=YT+0W2U0jNryxETYEbMXNLbssdFCv8zzqPhdjiaUvyhiD+PjKJIWsxmLWAVLSNmtkd
+         K0twwqTZnRpkTjpEOlEFF203HsXNfYwHA5oQJui9HLAWxH0lVCuCruykt3lUUw1zRfNg
+         6DMkjwQZ4n0tHzXWl0H3Lzf6C9W0Y7xPZN0XnzrLcmtiytbO86aWXPhSegkaLHGkRydG
+         M3nbxoc+/sy19nxkR0u9zb6Cw4U/h5Z4NIESWzlcl/CbCdtxeaIJkrWm7wr++py2uT+I
+         b7ozBBuYtRPICNUOMqmMtSKPLGQND5xuRPOV2AwQ+R3o0XbH6iqCqPMvAfj17LLAYICk
+         h5rw==
+X-Gm-Message-State: AOAM533/S1VdsjP3z/cRDrETVEv0xcQ7Jkg1PnM7t6EBmTZNYmMEhRdf
+        AoInLwIwUS27S7wrl3nDVuE=
+X-Google-Smtp-Source: ABdhPJx8zFd3GDs18fP+mD6zW22tzPTmnTSDH2zGF9RvLsiminQJYv8Atnh6MZ1AfajXY+2F0ByfHg==
+X-Received: by 2002:a17:90a:8d0b:: with SMTP id c11mr511436pjo.196.1598294578535;
+        Mon, 24 Aug 2020 11:42:58 -0700 (PDT)
 Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id r186sm13557644pfr.162.2020.08.24.11.43.11
+        by smtp.gmail.com with ESMTPSA id n24sm6351096pgk.59.2020.08.24.11.42.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 11:43:12 -0700 (PDT)
+        Mon, 24 Aug 2020 11:42:57 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org
 Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
@@ -82,11 +82,13 @@ Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
         linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 20/20] drm/msm: show process names in gem_describe
-Date:   Mon, 24 Aug 2020 11:37:54 -0700
-Message-Id: <20200824183825.1778810-21-robdclark@gmail.com>
+Subject: [PATCH 16/20] drm/msm/a6xx: Add support for per-instance pagetables
+Date:   Mon, 24 Aug 2020 11:37:50 -0700
+Message-Id: <20200824183825.1778810-17-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200824183825.1778810-1-robdclark@gmail.com>
 References: <20200824183825.1778810-1-robdclark@gmail.com>
@@ -97,143 +99,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Jordan Crouse <jcrouse@codeaurora.org>
 
-In $debugfs/gem we already show any vma(s) associated with an object.
-Also show process names if the vma's address space is a per-process
-address space.
+Add support for using per-instance pagetables if all the dependencies are
+available.
 
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+Reviewed-by: Akhil P Oommen <akhilpo@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/gpu/drm/msm/msm_drv.c     |  2 +-
- drivers/gpu/drm/msm/msm_gem.c     | 25 +++++++++++++++++++++----
- drivers/gpu/drm/msm/msm_gem.h     |  5 +++++
- drivers/gpu/drm/msm/msm_gem_vma.c |  1 +
- drivers/gpu/drm/msm/msm_gpu.c     |  8 +++++---
- drivers/gpu/drm/msm/msm_gpu.h     |  2 +-
- 6 files changed, 34 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 63 +++++++++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.h |  1 +
+ drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
+ 3 files changed, 65 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 7e963f707852..7143756b7e83 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -597,7 +597,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
- 	kref_init(&ctx->ref);
- 	msm_submitqueue_init(dev, ctx);
- 
--	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu);
-+	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu, current);
- 	file->driver_priv = ctx;
- 
- 	return 0;
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index 3cb7aeb93fd3..76a6c5271e57 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -842,11 +842,28 @@ void msm_gem_describe(struct drm_gem_object *obj, struct seq_file *m)
- 
- 		seq_puts(m, "      vmas:");
- 
--		list_for_each_entry(vma, &msm_obj->vmas, list)
--			seq_printf(m, " [%s: %08llx,%s,inuse=%d]",
--				vma->aspace != NULL ? vma->aspace->name : NULL,
--				vma->iova, vma->mapped ? "mapped" : "unmapped",
-+		list_for_each_entry(vma, &msm_obj->vmas, list) {
-+			const char *name, *comm;
-+			if (vma->aspace) {
-+				struct msm_gem_address_space *aspace = vma->aspace;
-+				struct task_struct *task =
-+					get_pid_task(aspace->pid, PIDTYPE_PID);
-+				if (task) {
-+					comm = kstrdup(task->comm, GFP_KERNEL);
-+				} else {
-+					comm = NULL;
-+				}
-+				name = aspace->name;
-+			} else {
-+				name = comm = NULL;
-+			}
-+			seq_printf(m, " [%s%s%s: aspace=%p, %08llx,%s,inuse=%d]",
-+				name, comm ? ":" : "", comm ? comm : "",
-+				vma->aspace, vma->iova,
-+				vma->mapped ? "mapped" : "unmapped",
- 				vma->inuse);
-+			kfree(comm);
-+		}
- 
- 		seq_puts(m, "\n");
- 	}
-diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-index 9c573c4269cb..7b1c7a5f8eef 100644
---- a/drivers/gpu/drm/msm/msm_gem.h
-+++ b/drivers/gpu/drm/msm/msm_gem.h
-@@ -24,6 +24,11 @@ struct msm_gem_address_space {
- 	spinlock_t lock; /* Protects drm_mm node allocation/removal */
- 	struct msm_mmu *mmu;
- 	struct kref kref;
-+
-+	/* For address spaces associated with a specific process, this
-+	 * will be non-NULL:
-+	 */
-+	struct pid *pid;
- };
- 
- struct msm_gem_vma {
-diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
-index 29cc1305cf37..80a8a266d68f 100644
---- a/drivers/gpu/drm/msm/msm_gem_vma.c
-+++ b/drivers/gpu/drm/msm/msm_gem_vma.c
-@@ -17,6 +17,7 @@ msm_gem_address_space_destroy(struct kref *kref)
- 	drm_mm_takedown(&aspace->mm);
- 	if (aspace->mmu)
- 		aspace->mmu->funcs->destroy(aspace->mmu);
-+	put_pid(aspace->pid);
- 	kfree(aspace);
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index 5eabb0109577..d7ad6c78d787 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -81,6 +81,49 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
+ 	OUT_RING(ring, upper_32_bits(iova));
  }
  
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index 951850804d77..ac8961187a73 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -825,10 +825,9 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
- 
- /* Return a new address space for a msm_drm_private instance */
- struct msm_gem_address_space *
--msm_gpu_create_private_address_space(struct msm_gpu *gpu)
-+msm_gpu_create_private_address_space(struct msm_gpu *gpu, struct task_struct *task)
++static void a6xx_set_pagetable(struct a6xx_gpu *a6xx_gpu,
++		struct msm_ringbuffer *ring, struct msm_file_private *ctx)
++{
++	phys_addr_t ttbr;
++	u32 asid;
++	u64 memptr = rbmemptr(ring, ttbr0);
++
++	if (ctx == a6xx_gpu->cur_ctx)
++		return;
++
++	if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
++		return;
++
++	/* Execute the table update */
++	OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
++	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_0_TTBR0_LO(lower_32_bits(ttbr)));
++
++	OUT_RING(ring,
++		CP_SMMU_TABLE_UPDATE_1_TTBR0_HI(upper_32_bits(ttbr)) |
++		CP_SMMU_TABLE_UPDATE_1_ASID(asid));
++	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_2_CONTEXTIDR(0));
++	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_3_CONTEXTBANK(0));
++
++	/*
++	 * Write the new TTBR0 to the memstore. This is good for debugging.
++	 */
++	OUT_PKT7(ring, CP_MEM_WRITE, 4);
++	OUT_RING(ring, CP_MEM_WRITE_0_ADDR_LO(lower_32_bits(memptr)));
++	OUT_RING(ring, CP_MEM_WRITE_1_ADDR_HI(upper_32_bits(memptr)));
++	OUT_RING(ring, lower_32_bits(ttbr));
++	OUT_RING(ring, (asid << 16) | upper_32_bits(ttbr));
++
++	/*
++	 * And finally, trigger a uche flush to be sure there isn't anything
++	 * lingering in that part of the GPU
++	 */
++
++	OUT_PKT7(ring, CP_EVENT_WRITE, 1);
++	OUT_RING(ring, 0x31);
++
++	a6xx_gpu->cur_ctx = ctx;
++}
++
+ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
  {
- 	struct msm_gem_address_space *aspace = NULL;
--
- 	if (!gpu)
- 		return NULL;
+ 	unsigned int index = submit->seqno % MSM_GPU_SUBMIT_STATS_COUNT;
+@@ -90,6 +133,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+ 	struct msm_ringbuffer *ring = submit->ring;
+ 	unsigned int i;
  
-@@ -836,8 +835,11 @@ msm_gpu_create_private_address_space(struct msm_gpu *gpu)
- 	 * If the target doesn't support private address spaces then return
- 	 * the global one
- 	 */
--	if (gpu->funcs->create_private_address_space)
-+	if (gpu->funcs->create_private_address_space) {
- 		aspace = gpu->funcs->create_private_address_space(gpu);
-+		if (!IS_ERR(aspace))
-+			aspace->pid = get_pid(task_pid(task));
-+	}
++	a6xx_set_pagetable(a6xx_gpu, ring, submit->queue->ctx);
++
+ 	get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
+ 		rbmemptr_stats(ring, index, cpcycles_start));
  
- 	if (IS_ERR_OR_NULL(aspace))
- 		aspace = msm_gem_address_space_get(gpu->aspace);
-diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-index 4052a18e18c2..59f26bd0fe42 100644
---- a/drivers/gpu/drm/msm/msm_gpu.h
-+++ b/drivers/gpu/drm/msm/msm_gpu.h
-@@ -298,7 +298,7 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
- 		const char *name, struct msm_gpu_config *config);
+@@ -696,6 +741,8 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
+ 	/* Always come up on rb 0 */
+ 	a6xx_gpu->cur_ring = gpu->rb[0];
  
- struct msm_gem_address_space *
--msm_gpu_create_private_address_space(struct msm_gpu *gpu);
-+msm_gpu_create_private_address_space(struct msm_gpu *gpu, struct task_struct *task);
++	a6xx_gpu->cur_ctx = NULL;
++
+ 	/* Enable the SQE_to start the CP engine */
+ 	gpu_write(gpu, REG_A6XX_CP_SQE_CNTL, 1);
  
- void msm_gpu_cleanup(struct msm_gpu *gpu);
+@@ -1008,6 +1055,21 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
+ 	return (unsigned long)busy_time;
+ }
  
++static struct msm_gem_address_space *
++a6xx_create_private_address_space(struct msm_gpu *gpu)
++{
++	struct msm_gem_address_space *aspace = NULL;
++	struct msm_mmu *mmu;
++
++	mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
++
++	if (!IS_ERR(mmu))
++		aspace = msm_gem_address_space_create(mmu,
++			"gpu", 0x100000000ULL, 0x1ffffffffULL);
++
++	return aspace;
++}
++
+ static const struct adreno_gpu_funcs funcs = {
+ 	.base = {
+ 		.get_param = adreno_get_param,
+@@ -1031,6 +1093,7 @@ static const struct adreno_gpu_funcs funcs = {
+ 		.gpu_state_put = a6xx_gpu_state_put,
+ #endif
+ 		.create_address_space = adreno_iommu_create_address_space,
++		.create_private_address_space = a6xx_create_private_address_space,
+ 	},
+ 	.get_timestamp = a6xx_get_timestamp,
+ };
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+index 03ba60d5b07f..da22d7549d9b 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
+@@ -19,6 +19,7 @@ struct a6xx_gpu {
+ 	uint64_t sqe_iova;
+ 
+ 	struct msm_ringbuffer *cur_ring;
++	struct msm_file_private *cur_ctx;
+ 
+ 	struct a6xx_gmu gmu;
+ };
+diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
+index 7764373d0ed2..0987d6bf848c 100644
+--- a/drivers/gpu/drm/msm/msm_ringbuffer.h
++++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
+@@ -31,6 +31,7 @@ struct msm_rbmemptrs {
+ 	volatile uint32_t fence;
+ 
+ 	volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
++	volatile u64 ttbr0;
+ };
+ 
+ struct msm_ringbuffer {
 -- 
 2.26.2
 
