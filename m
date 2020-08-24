@@ -2,53 +2,51 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DEAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B567C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C6382072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8F9208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:57:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259472;
-	bh=JqRHT0KFFS2P9nKBaQiu5twB3tuiPvQp/NoeBcvYKjc=;
+	s=default; t=1598259477;
+	bh=ImpPFBJmwyJzt8S4M4/A8Dv82hlFhhtkULjLLR2O+Yw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tu4OxADXjDLa6VyyhnlFcz/MUUwrZgR1pJGH78MC9KdjqqX9l+i1w6+11h6T7dmAt
-	 KveBdrvHmn++61Mq8FBf95uQQ2FifB8bh89rVG12wo2fMqOcO7CDuMlYPe2IQQmgAQ
-	 5BZPFDzniZEpTZe9iLhDu2l6jTLHaiHsPBAmc7nU=
+	b=KJAB1WEPXxxaS458LViLNnIxOVQS0q4IbfUyaNYyhShNwX7/cjlSXsH7SXevGu9Qy
+	 TSJbTfAAk/XXh7KwJ3el0U3HvAQ+DHke64hYhqyk6k9eSZjCZWZuvsNmPSHfUmsCwZ
+	 MSvta5dzTO/JjxtMzai+/qoC0iEIALm4gOHHVPek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730714AbgHXI5v (ORCPT
+        id S1730629AbgHXI5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44430 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:57:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730675AbgHXI50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:57:26 -0400
+        id S1730691AbgHXI5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 581F7207D3;
-        Mon, 24 Aug 2020 08:57:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE81E207D3;
+        Mon, 24 Aug 2020 08:57:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259445;
-        bh=JqRHT0KFFS2P9nKBaQiu5twB3tuiPvQp/NoeBcvYKjc=;
+        s=default; t=1598259456;
+        bh=ImpPFBJmwyJzt8S4M4/A8Dv82hlFhhtkULjLLR2O+Yw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqF/f8y3VYGTlLWwWB6+hqBLZ8H+S4fK8TA9fZYxc1LTYmWaCwkPgstAy70NTm8ZQ
-         ZXN9R0fksloxGfwqmCEkj1a3sj0a74PGah6zYwMgSoYfpWHjjdbnA0jVEZ9ZNb1prs
-         yQVoZ+jaE8P6D4tUlli9p4lv3Dxgddz9Zhj9UUQQ=
+        b=1gkpNZSLa9hzjiHEoPh+z5PZyGc0kUdNwn9R/tJx8UXlklP8QP/Msr03HeD2lN5po
+         SgiXP7ReIMjMhm8gpK43O8uVID67dzOhCOWmcb2sl2RyTekw7EHz86Cj7/BGRNEAao
+         4/jkW9j4IHMfQhXRSvyTV9nYMblJdauMhQUofEGs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 62/71] net: gemini: Fix missing free_netdev() in error path of gemini_ethernet_port_probe()
-Date:   Mon, 24 Aug 2020 10:31:53 +0200
-Message-Id: <20200824082359.038754959@linuxfoundation.org>
+        Li Heng <liheng40@huawei.com>, Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 4.19 66/71] efi: add missed destroy_workqueue when efisubsys_init fails
+Date:   Mon, 24 Aug 2020 10:31:57 +0200
+Message-Id: <20200824082359.257365792@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -61,53 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Li Heng <liheng40@huawei.com>
 
-[ Upstream commit cf96d977381d4a23957bade2ddf1c420b74a26b6 ]
+commit 98086df8b70c06234a8f4290c46064e44dafa0ed upstream.
 
-Replace alloc_etherdev_mq with devm_alloc_etherdev_mqs. In this way,
-when probe fails, netdev can be freed automatically.
+destroy_workqueue() should be called to destroy efi_rts_wq
+when efisubsys_init() init resources fails.
 
-Fixes: 4d5ae32f5e1e ("net: ethernet: Add a driver for Gemini gigabit ethernet")
+Cc: <stable@vger.kernel.org>
 Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/cortina/gemini.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Signed-off-by: Li Heng <liheng40@huawei.com>
+Link: https://lore.kernel.org/r/1595229738-10087-1-git-send-email-liheng40@huawei.com
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-diff --git a/drivers/net/ethernet/cortina/gemini.c b/drivers/net/ethernet/cortina/gemini.c
-index f402af39da42a..16de0fa92ab74 100644
---- a/drivers/net/ethernet/cortina/gemini.c
-+++ b/drivers/net/ethernet/cortina/gemini.c
-@@ -2392,7 +2392,7 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
- 
- 	dev_info(dev, "probe %s ID %d\n", dev_name(dev), id);
- 
--	netdev = alloc_etherdev_mq(sizeof(*port), TX_QUEUE_NUM);
-+	netdev = devm_alloc_etherdev_mqs(dev, sizeof(*port), TX_QUEUE_NUM, TX_QUEUE_NUM);
- 	if (!netdev) {
- 		dev_err(dev, "Can't allocate ethernet device #%d\n", id);
+---
+ drivers/firmware/efi/efi.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -359,6 +359,7 @@ static int __init efisubsys_init(void)
+ 	efi_kobj = kobject_create_and_add("efi", firmware_kobj);
+ 	if (!efi_kobj) {
+ 		pr_err("efi: Firmware registration failed.\n");
++		destroy_workqueue(efi_rts_wq);
  		return -ENOMEM;
-@@ -2526,7 +2526,6 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
  	}
  
- 	port->netdev = NULL;
--	free_netdev(netdev);
- 	return ret;
+@@ -395,6 +396,7 @@ err_unregister:
+ 	generic_ops_unregister();
+ err_put:
+ 	kobject_put(efi_kobj);
++	destroy_workqueue(efi_rts_wq);
+ 	return error;
  }
  
-@@ -2535,7 +2534,6 @@ static int gemini_ethernet_port_remove(struct platform_device *pdev)
- 	struct gemini_ethernet_port *port = platform_get_drvdata(pdev);
- 
- 	gemini_port_remove(port);
--	free_netdev(port->netdev);
- 	return 0;
- }
- 
--- 
-2.25.1
-
 
 
