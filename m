@@ -2,285 +2,261 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54628C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65381C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 04:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21B2620FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:47:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="zPIe8c56"
+	by mail.kernel.org (Postfix) with ESMTP id 41308206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 04:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgHXDrA (ORCPT
+        id S1725998AbgHXEFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 23:47:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbgHXDrA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 23:47:00 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F7D7C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 20:47:00 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m8so4120645pfh.3
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Aug 2020 20:47:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=s4KE1DUaLsKR6pb4d4I07z6htZG+9g3iihL+N9DQx4I=;
-        b=zPIe8c565BaJjzswYFntlgaX8CXo0dY0xJduBABHS2+urlGEo80QF6QbZeM/WgRcDY
-         9ZJdkiV6tZSsxxpZUVHIBZuqJWa7tvFNVurQgwKQWkun1nTcGElokB5tPWpoQPaSWt7K
-         nRZJHhS2VU8+/WhP/GonoXVAZvT2EmGdvH7BEfK0bfrJWKnttda4gjgY3JN5wKXd0PPS
-         19qDEJ4ZYodzvpvsZ1oe3JsPWpeMXqK1NBuuLNG5VSS/FRU0z2uBAxCw60YMJOZBkCmX
-         R9MOjlpqxNxoJVuPUH5WGjqelRmEEnkwXnkxVszf86ngoc9b7zMfHC/M707wFTKhS9m8
-         lHkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=s4KE1DUaLsKR6pb4d4I07z6htZG+9g3iihL+N9DQx4I=;
-        b=uZgKxHW5bCq0ousXRyjzHsDr1p7wCL3NrS8QKrWwir5r+1V59Yw9OFGWe/yN20tA3Y
-         5lXtaBQghpvuHIK8IKocU5yXc+KEPy2+4Byz7Aed8LoVeKC1Q8TyeGVZJenq9k8q2G2L
-         4Qf4/OMsNt4EhfTC+HUa2CCtimNsTYnX0oRVJLJQnCdH54aYBxF3HWv5d9UAaUcg/SkI
-         bQRx6WTzeN0HGWAKO4VhqwqBnHER/sxOHBvIIv7X5TCKFBaI+KjbDlW27pmtgbyRHvF9
-         oG110cMrpngAWMMsJSJAia5tvq7MXMf6gYSlClDK41q2SY6tm4dfwaGF+bp0qvC345w7
-         OYAA==
-X-Gm-Message-State: AOAM530rYTU8C6wZn3E+ZiTXHdCVkPXzxZ7SJgC7D2zQ3ZVJLOnmhOMU
-        nIe9cUNszgbPNCdfhcTaCkwR2mySMjKmFg==
-X-Google-Smtp-Source: ABdhPJyjXPJwUTuZ+05iHZjw4nBxeHUbutrYZJqkuJcWDyzq39a/wxmy/LYIFN1WoNBQHsi4qyFxMw==
-X-Received: by 2002:a65:480a:: with SMTP id h10mr2236864pgs.304.1598240819389;
-        Sun, 23 Aug 2020 20:46:59 -0700 (PDT)
-Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
-        by smtp.gmail.com with ESMTPSA id g5sm8220286pjx.53.2020.08.23.20.46.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Aug 2020 20:46:58 -0700 (PDT)
-Subject: Re: [PATCH v1 06/10] powerpc/pseries/iommu: Add ddw_list_add() helper
-To:     Leonardo Bras <leobras.c@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Joel Stanley <joel@jms.id.au>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
-        David Dai <zdai@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20200817234033.442511-1-leobras.c@gmail.com>
- <20200817234033.442511-7-leobras.c@gmail.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <af4246bb-9357-098e-f167-8f30c6b893f2@ozlabs.ru>
-Date:   Mon, 24 Aug 2020 13:46:52 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200817234033.442511-7-leobras.c@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 24 Aug 2020 00:05:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:51878 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725271AbgHXEFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 00:05:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64F111063;
+        Sun, 23 Aug 2020 21:05:18 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.67.29])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6BBF53F66B;
+        Sun, 23 Aug 2020 21:05:15 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH V2] arm64/hotplug: Improve memory offline event notifier
+Date:   Mon, 24 Aug 2020 09:34:29 +0530
+Message-Id: <1598241869-28416-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This brings about three different changes to the sole memory event notifier
+for arm64 platform and improves it's robustness while also enhancing debug
+capabilities during potential memory offlining error conditions.
 
+This moves the memory notifier registration bit earlier in the boot process
+from device_initcall() to setup_arch() which will help in guarding against
+potential early boot memory offline requests.
 
-On 18/08/2020 09:40, Leonardo Bras wrote:
-> There are two functions adding DDW to the direct_window_list in a
-> similar way, so create a ddw_list_add() to avoid duplicity and
-> simplify those functions.
-> 
-> Also, on enable_ddw(), add list_del() on out_free_window to allow
-> removing the window from list if any error occurs.
-> 
-> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
-> ---
->  arch/powerpc/platforms/pseries/iommu.c | 42 ++++++++++++++++----------
->  1 file changed, 26 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> index 39617ce0ec83..fcdefcc0f365 100644
-> --- a/arch/powerpc/platforms/pseries/iommu.c
-> +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -872,6 +872,24 @@ static u64 find_existing_ddw(struct device_node *pdn)
->  	return dma_addr;
->  }
->  
-> +static struct direct_window *ddw_list_add(struct device_node *pdn,
-> +					  const struct dynamic_dma_window_prop *dma64)
-> +{
-> +	struct direct_window *window;
-> +
-> +	window = kzalloc(sizeof(*window), GFP_KERNEL);
-> +	if (!window)
-> +		return NULL;
-> +
-> +	window->device = pdn;
-> +	window->prop = dma64;
-> +	spin_lock(&direct_window_list_lock);
-> +	list_add(&window->list, &direct_window_list);
-> +	spin_unlock(&direct_window_list_lock);
-> +
-> +	return window;
-> +}
-> +
->  static int find_existing_ddw_windows(void)
->  {
->  	int len;
-> @@ -887,18 +905,11 @@ static int find_existing_ddw_windows(void)
->  		if (!direct64)
->  			continue;
->  
-> -		window = kzalloc(sizeof(*window), GFP_KERNEL);
-> -		if (!window || len < sizeof(struct dynamic_dma_window_prop)) {
-> +		window = ddw_list_add(pdn, direct64);
-> +		if (!window || len < sizeof(*direct64)) {
+This enables MEM_OFFLINE memory event handling. It will help intercept any
+possible error condition such as if boot memory some how still got offlined
+even after an expilicit notifier failure, potentially by a future change in
+generic hotplug framework. This would help detect such scenarious and help
+debug further.
 
+It also adds a validation function which scans entire boot memory and makes
+sure that early memory sections are online. This check is essential for the
+memory notifier to work properly as it cannot prevent boot memory offlining
+if they are not online to begin with. But this additional sanity check is
+enabled only with DEBUG_VM.
 
-Since you are touching this code, it looks like the "len <
-sizeof(*direct64)" part should go above to "if (!direct64)".
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Steve Capper <steve.capper@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+This applies on 5.9-rc2
 
+Changes in V2:
 
+- Dropped all generic changes wrt MEM_CANCEL_OFFLINE reasons enumeration
+- Dropped all related (processing MEM_CANCEL_OFFLINE reasons) changes on arm64
+- Added validate_boot_mem_online_state() that gets called with early_initcall()
+- Added CONFIG_MEMORY_HOTREMOVE check before registering memory notifier
+- Moved notifier registration i.e memory_hotremove_notifier into setup_arch()
 
->  			kfree(window);
->  			remove_ddw(pdn, true);
-> -			continue;
->  		}
-> -
-> -		window->device = pdn;
-> -		window->prop = direct64;
-> -		spin_lock(&direct_window_list_lock);
-> -		list_add(&window->list, &direct_window_list);
-> -		spin_unlock(&direct_window_list_lock);
->  	}
->  
->  	return 0;
-> @@ -1261,7 +1272,8 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->  	dev_dbg(&dev->dev, "created tce table LIOBN 0x%x for %pOF\n",
->  		  create.liobn, dn);
->  
-> -	window = kzalloc(sizeof(*window), GFP_KERNEL);
-> +	/* Add new window to existing DDW list */
+Changes in V1: (https://patchwork.kernel.org/project/linux-mm/list/?series=271237)
 
-The comment seems to duplicate what the ddw_list_add name already suggests.
+ arch/arm64/include/asm/mmu.h |   8 +++
+ arch/arm64/kernel/setup.c    |   8 +++
+ arch/arm64/mm/mmu.c          | 108 ++++++++++++++++++++++++++++++++---
+ 3 files changed, 116 insertions(+), 8 deletions(-)
 
-
-> +	window = ddw_list_add(pdn, ddwprop);
->  	if (!window)
->  		goto out_clear_window;
->  
-> @@ -1280,16 +1292,14 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->  		goto out_free_window;
->  	}
->  
-> -	window->device = pdn;
-> -	window->prop = ddwprop;
-> -	spin_lock(&direct_window_list_lock);
-> -	list_add(&window->list, &direct_window_list);
-> -	spin_unlock(&direct_window_list_lock);
-
-I'd leave these 3 lines here and in find_existing_ddw_windows() (which
-would make  ddw_list_add -> ddw_prop_alloc). In general you want to have
-less stuff to do on the failure path. kmalloc may fail and needs kfree
-but you can safely delay list_add (which cannot fail) and avoid having
-the lock help twice in the same function (one of them is hidden inside
-ddw_list_add).
-
-Not sure if this change is really needed after all. Thanks,
-
-> -
->  	dma_addr = be64_to_cpu(ddwprop->dma_base);
->  	goto out_unlock;
->  
->  out_free_window:
-> +	spin_lock(&direct_window_list_lock);
-> +	list_del(&window->list);
-> +	spin_unlock(&direct_window_list_lock);
-> +
->  	kfree(window);
->  
->  out_clear_window:
-> 
-
+diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+index a7a5ecaa2e83..b7e99b528766 100644
+--- a/arch/arm64/include/asm/mmu.h
++++ b/arch/arm64/include/asm/mmu.h
+@@ -73,6 +73,14 @@ static inline struct bp_hardening_data *arm64_get_bp_hardening_data(void)
+ static inline void arm64_apply_bp_hardening(void)	{ }
+ #endif	/* CONFIG_HARDEN_BRANCH_PREDICTOR */
+ 
++#ifdef CONFIG_MEMORY_HOTPLUG
++extern void memory_hotremove_notifier(void);
++#else
++static inline void memory_hotremove_notifier(void)
++{
++}
++#endif /* CONFIG_MEMORY_HOTPLUG */
++
+ extern void arm64_memblock_init(void);
+ extern void paging_init(void);
+ extern void bootmem_init(void);
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 77c4c9bad1b8..44406c9f8d83 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -376,6 +376,14 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+ 			"This indicates a broken bootloader or old kernel\n",
+ 			boot_args[1], boot_args[2], boot_args[3]);
+ 	}
++
++	/*
++	 * Register the memory notifier which will prevent boot
++	 * memory offlining requests - early enough. But there
++	 * should not be any actual offlinig request till memory
++	 * block devices are initialized with memory_dev_init().
++	 */
++	memory_hotremove_notifier();
+ }
+ 
+ static inline bool cpu_can_disable(unsigned int cpu)
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 75df62fea1b6..8cdb0b02089f 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -1482,13 +1482,40 @@ static int prevent_bootmem_remove_notifier(struct notifier_block *nb,
+ 	unsigned long end_pfn = arg->start_pfn + arg->nr_pages;
+ 	unsigned long pfn = arg->start_pfn;
+ 
+-	if (action != MEM_GOING_OFFLINE)
++	if ((action != MEM_GOING_OFFLINE) && (action != MEM_OFFLINE))
+ 		return NOTIFY_OK;
+ 
+-	for (; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
+-		ms = __pfn_to_section(pfn);
+-		if (early_section(ms))
+-			return NOTIFY_BAD;
++	if (action == MEM_GOING_OFFLINE) {
++		for (; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
++			ms = __pfn_to_section(pfn);
++			if (early_section(ms)) {
++				pr_warn("Boot memory offlining attempted\n");
++				return NOTIFY_BAD;
++			}
++		}
++	} else if (action == MEM_OFFLINE) {
++		for (; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
++			ms = __pfn_to_section(pfn);
++			if (early_section(ms)) {
++
++				/*
++				 * This should have never happened. Boot memory
++				 * offlining should have been prevented by this
++				 * very notifier. Probably some memory removal
++				 * procedure might have changed which would then
++				 * require further debug.
++				 */
++				pr_err("Boot memory offlined\n");
++
++				/*
++				 * Core memory hotplug does not process a return
++				 * code from the notifier for MEM_OFFLINE event.
++				 * Error condition has been reported. Report as
++				 * ignored.
++				 */
++				return NOTIFY_DONE;
++			}
++		}
+ 	}
+ 	return NOTIFY_OK;
+ }
+@@ -1497,9 +1524,74 @@ static struct notifier_block prevent_bootmem_remove_nb = {
+ 	.notifier_call = prevent_bootmem_remove_notifier,
+ };
+ 
+-static int __init prevent_bootmem_remove_init(void)
++void memory_hotremove_notifier(void)
+ {
+-	return register_memory_notifier(&prevent_bootmem_remove_nb);
++	int rc;
++
++	if (!IS_ENABLED(CONFIG_MEMORY_HOTREMOVE))
++		return;
++
++	rc = register_memory_notifier(&prevent_bootmem_remove_nb);
++	if (!rc)
++		return;
++
++	pr_err("Notifier registration failed - boot memory can be removed\n");
++}
++
++/*
++ * This ensures that boot memory sections on the plaltform are online
++ * during early boot. They could not be prevented from being offlined
++ * if for some reason they are not brought online to begin with. This
++ * help validate the basic assumption on which the above memory event
++ * notifier works to prevent boot memory offlining and it's possible
++ * removal.
++ */
++static int __init validate_bootmem_online_state(void)
++{
++	struct memblock_region *mblk;
++	struct mem_section *ms;
++	unsigned long pfn, end_pfn, start, end;
++
++	/*
++	 * Scanning across all memblock might be expensive
++	 * on some big memory systems. Hence enable this
++	 * validation only with DEBUG_VM.
++	 */
++	if (!IS_ENABLED(CONFIG_MEMORY_HOTREMOVE) ||
++			!IS_ENABLED(CONFIG_DEBUG_VM))
++		return 0;
++
++	for_each_memblock(memory, mblk) {
++		pfn = PHYS_PFN(mblk->base);
++		end_pfn = PHYS_PFN(mblk->base + mblk->size);
++
++		for (; pfn < end_pfn; pfn += PAGES_PER_SECTION) {
++			ms = __pfn_to_section(pfn);
++
++			/*
++			 * All memory ranges in the system at this point
++			 * should have been marked early sections.
++			 */
++			WARN_ON(!early_section(ms));
++
++			/*
++			 * Memory notifier mechanism here to prevent boot
++			 * memory offlining depends on the fact that each
++			 * early section memory on the system is intially
++			 * online. Otherwise a given memory section which
++			 * is already offline will be overlooked and can
++			 * be removed completely. Call out such sections.
++			 */
++			if (!online_section(ms)) {
++				start = PFN_PHYS(pfn);
++				end = start + (1UL << PA_SECTION_SHIFT);
++
++				pr_err("Memory range [%lx %lx] is offline\n", start, end);
++				pr_err("Memory range [%lx %lx] can be removed\n", start, end);
++			}
++		}
++	}
++	return 0;
+ }
+-device_initcall(prevent_bootmem_remove_init);
++early_initcall(validate_bootmem_online_state);
+ #endif
 -- 
-Alexey
+2.20.1
+
