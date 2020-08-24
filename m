@@ -2,98 +2,152 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 750E420578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:28:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598308131;
-	bh=gcW+yfbhgX4NS9XnVJYQ9I7cW3LxR8VEV7fmGz4Hal4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t7UwfTMme6AtPnTJM3y3RX+r6pebBi4DrXigQSZNXCKMKfKiAONirmGBchGDqqL3Q
-	 M3P/IX9dCCcwl+i2j1Iz38GKCxvo1I0gIATcF5lkXbtgxwz1k/Qsbtxis8G6443nms
-	 FSSKrkbWl1zOtX8DfU04hgrxnYu6t3Fat0VuTOfs=
+	by mail.kernel.org (Postfix) with ESMTP id 27B5120578
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l+ltexb5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgHXW2u (ORCPT
+        id S1728071AbgHXW3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:28:50 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46109 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHXW2u (ORCPT
+        Mon, 24 Aug 2020 18:29:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726303AbgHXW3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 18:28:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id d18so1133583iop.13;
-        Mon, 24 Aug 2020 15:28:49 -0700 (PDT)
+        Mon, 24 Aug 2020 18:29:08 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4BCC061574;
+        Mon, 24 Aug 2020 15:29:08 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id e14so6054127ybf.4;
+        Mon, 24 Aug 2020 15:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3qOJ3NzWfJ9sWmSZflRe5Z/SiLVOjHtScl8TXItrV3A=;
+        b=l+ltexb5PPukV4iJ9LAIkMPnqWOS/KfO3eQhMs5uqymC9AarAqrzL4DZ55+LKrNKSz
+         91zotAMJ+IBsnRBYfMbQH0xs+OdbmoP1up23cYmATdKMc/zXwQSpUTTHABL/n3opXon+
+         HE/Fq/cAu5BJU4ImGNv+HhWYQNgGH+PP9yH2BMw349IfG6r3haeeQANG55nAS4FG/HeO
+         NaxgdyRtxv6hwQUz9Sr8jRak8zKTXBwlzmdT/1qpVEczfvPzB09TFH4x2FhExHHvpZLE
+         e/ucPg/YKPJOPgfgV3cqPS7dPwu7mJ7VD1kWkeGncoG7+i/tF0ozMTgIkVhXZBG13v2C
+         Zh3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pPxV5Cdh+vs/BDetb3c1wYzRLunbynyApl0aftF7yTk=;
-        b=aBTvafkrvUtup4FPY5T21hSf1RjfDlUnqYTO5bIkAJpiKfvD8ybnwOs+1Gg+ytAgx9
-         kWJykqyFJ7RsJ7Y9Ld4hg9gK5PrPjVTEdIiUoxnqie1xW3m+8kDCHYmkmoTluoIeMwuY
-         H2pOGcnVn5LvDCDGxi3PhD2sNCYTSrJtKMDsv8J1YnVkrTB64xm1HOuFYv3Cigf970Z5
-         yCgkYrbWs1pEZh2luZYhoWclaZ2Bex4igZHeOOl8vLKsCf29BmDlcWLd0cn3GdKZEy7x
-         4mSGiYsVMOOGOXGAEZNL+hadlfGEgB52uwHqxB8gD6t20l2CHFKJrM+KA1434qE8UcDH
-         I6qw==
-X-Gm-Message-State: AOAM532rxOmzdtY6XwqIVLVvbNH+FQCJBc9I9VE0j1Z9WfjctGJcO/Sb
-        t0QdayeoMj0mkFa5BJzAnQ==
-X-Google-Smtp-Source: ABdhPJymXDmIiE0KeFE1pYhiN37UtMRKvGl8wKiFSycay7/S1rGGpnJMml5yA214piCa5OfrkmhSMQ==
-X-Received: by 2002:a6b:681a:: with SMTP id d26mr6640267ioc.70.1598308129193;
-        Mon, 24 Aug 2020 15:28:49 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id n5sm8009267ilj.43.2020.08.24.15.28.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:28:48 -0700 (PDT)
-Received: (nullmailer pid 3434133 invoked by uid 1000);
-        Mon, 24 Aug 2020 22:28:45 -0000
-Date:   Mon, 24 Aug 2020 16:28:45 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Chris Ruehl <chris.ruehl@gtsys.com.hk>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>, linux-iio@vger.kernel.org,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH] iio/dac: convert ltc2632.txt to lltc,ltc2632.yaml
-Message-ID: <20200824222845.GA3434080@bogus>
-References: <20200810033806.15503-1-chris.ruehl@gtsys.com.hk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3qOJ3NzWfJ9sWmSZflRe5Z/SiLVOjHtScl8TXItrV3A=;
+        b=JJ+CgDgaPRrfgnfEwBzZNcR9wy7LO4EmEAH6i5LQi0RkBxDhKgUWfCZw0vY46SA8ow
+         d2JyQJ0ybyJhv4SpBTpwm1b0KY3DUtEPpbEhqdw1blOaoovTtenvuh5CGJaNpIHxczJl
+         uGSAVq15M7TF2JRqLch7T2vWB4VtnLvxKQia/wU12B4QpaN6GXJqmOHeJmHBkEmBJ+Vd
+         MJjM5GGAICP2jzos/nafmh53V+j34V46pE8nmgb20CZMad4h9ebNgBUBlXVtS21WIX+U
+         tiJdEKgCmtUQFQ4eCFw1UCXSGgwa5rMZiL8q1W+8MRV8FBcyvqSCGosz3Z8VXzl4yo4D
+         X5MA==
+X-Gm-Message-State: AOAM5329UvBjDctHJtrARSdMDUwapGSHOHItSRlKIMuKMyxmpF5mV9UM
+        jUu3FmmYK4f59LLcw0vzkYTvA9MPQRVSEwRxx+g=
+X-Google-Smtp-Source: ABdhPJwYgl3FJMdku6i+4HiglRO8zsQRW9BAP3I/BEAqKMIf1RRP+xNfrrsy4rPjxTHUVwO6XaFN+jSnZyngLiRiyAU=
+X-Received: by 2002:a25:8447:: with SMTP id r7mr9673141ybm.147.1598308147950;
+ Mon, 24 Aug 2020 15:29:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810033806.15503-1-chris.ruehl@gtsys.com.hk>
+References: <20200824183253.826343-1-lyude@redhat.com> <20200824183253.826343-2-lyude@redhat.com>
+In-Reply-To: <20200824183253.826343-2-lyude@redhat.com>
+From:   Ben Skeggs <skeggsb@gmail.com>
+Date:   Tue, 25 Aug 2020 08:28:56 +1000
+Message-ID: <CACAvsv6hymdcGkEcigL3fWACZ_1POpB+aefq9d9ChnYv_dHnVg@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH 1/2] drm/nouveau/kms/nv50-: Program notifier
+ offset before requesting disp caps
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     ML nouveau <nouveau@lists.freedesktop.org>,
+        Sasha Levin <sashal@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <dri-devel@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Aug 2020 11:37:52 +0800, Chris Ruehl wrote:
-> Conversion of the ltc2632 to yaml format and name the file to
-> 'lltc,ltc2632.yaml'.
-> 
-> Signed-off-by: Chris Ruehl <chris.ruehl@gtsys.com.hk>
-> ---
-> v6:
-> Remove tab and drop unused label
-> Related patches already in linux-next.
-> [PATCH v5 1/3] iio: documentation ltc2632_chip_info add num_channels
-> linux-next commit: 6f1c9e0da9aae51177457731357ae8a2c8af27cd
-> PATCH v5 2/3] iio: DAC extension for ltc2634-12/10/8
-> linux-next commit: aefa5bc87c808dd08db2fc79ebdbf19ed4af7be2
-> 
->  .../bindings/iio/dac/lltc,ltc2632.yaml        | 77 +++++++++++++++++++
->  .../devicetree/bindings/iio/dac/ltc2632.txt   | 49 ------------
->  2 files changed, 77 insertions(+), 49 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc2632.yaml
->  delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc2632.txt
-> 
+On Tue, 25 Aug 2020 at 04:33, Lyude Paul <lyude@redhat.com> wrote:
+>
+> Not entirely sure why this never came up when I originally tested this
+> (maybe some BIOSes already have this setup?) but the ->caps_init vfunc
+> appears to cause the display engine to throw an exception on driver
+> init, at least on my ThinkPad P72:
+>
+> nouveau 0000:01:00.0: disp: chid 0 mthd 008c data 00000000 0000508c 0000102b
+>
+> This is magic nvidia speak for "You need to have the DMA notifier offset
+> programmed before you can call NV507D_GET_CAPABILITIES." So, let's fix
+> this by doing that, and also perform an update afterwards to prevent
+> racing with the GPU when reading capabilities.
+>
+> Changes since v1:
+> * Don't just program the DMA notifier offset, make sure to actually
+>   perform an update
+I'm not sure there's a need to send an Update() method here, I believe
+GetCapabilities() is an action method on its own right?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Ben.
+
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Fixes: 4a2cb4181b07 ("drm/nouveau/kms/nv50-: Probe SOR and PIOR caps for DP interlacing support")
+> Cc: <stable@vger.kernel.org> # v5.8+
+> ---
+>  drivers/gpu/drm/nouveau/dispnv50/core507d.c | 25 ++++++++++++++++-----
+>  1 file changed, 19 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/nouveau/dispnv50/core507d.c b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+> index e341f572c2696..5e86feec3b720 100644
+> --- a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+> +++ b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+> @@ -65,13 +65,26 @@ core507d_ntfy_init(struct nouveau_bo *bo, u32 offset)
+>  int
+>  core507d_caps_init(struct nouveau_drm *drm, struct nv50_disp *disp)
+>  {
+> -       u32 *push = evo_wait(&disp->core->chan, 2);
+> +       struct nv50_core *core = disp->core;
+> +       u32 interlock[NV50_DISP_INTERLOCK__SIZE] = {0};
+> +       u32 *push;
+>
+> -       if (push) {
+> -               evo_mthd(push, 0x008c, 1);
+> -               evo_data(push, 0x0);
+> -               evo_kick(push, &disp->core->chan);
+> -       }
+> +       core->func->ntfy_init(disp->sync, NV50_DISP_CORE_NTFY);
+> +
+> +       push = evo_wait(&core->chan, 4);
+> +       if (!push)
+> +               return 0;
+> +
+> +       evo_mthd(push, 0x0084, 1);
+> +       evo_data(push, 0x80000000 | NV50_DISP_CORE_NTFY);
+> +       evo_mthd(push, 0x008c, 1);
+> +       evo_data(push, 0x0);
+> +       evo_kick(push, &core->chan);
+> +
+> +       core->func->update(core, interlock, false);
+> +       if (core->func->ntfy_wait_done(disp->sync, NV50_DISP_CORE_NTFY,
+> +                                      core->chan.base.device))
+> +               NV_ERROR(drm, "core notifier timeout\n");
+>
+>         return 0;
+>  }
+> --
+> 2.26.2
+>
+> _______________________________________________
+> Nouveau mailing list
+> Nouveau@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/nouveau
