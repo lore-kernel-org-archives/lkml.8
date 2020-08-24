@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9970EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5273C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C8F7206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA34206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262538;
-	bh=bN7dJrzpgTx4kNBALgXdM5o7wtL1Q+rEH6arvcnTpUo=;
+	s=default; t=1598262548;
+	bh=P0+JSimvkNQ7Y26+AEJz4m0Ifkt1Pu0jAmcjm3+4N+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cVdmvHt7FqC2LykS872euz+v1HrJ+ytwJvu9R1U0YIVFA4qLpyzTdmg/w4c0lSlmq
-	 Y77V+B21+uZia/8V7yYpMlxRDd++GUEUmS2eoNWESyqyBSaNZzaO44alGPQQaDHchQ
-	 pSKgt25MOjlOhsKqLBurDCf32VJNilvbzSsXi/YQ=
+	b=0bF9UN7ei/xzwcPNH0mWHLO54e4lusABfnPK0Zoo+S+dY3BZF1UmQ+7owPITrPVbG
+	 3Dw+9IVs0Fg90aUkLv5bZ60xPtv7OQC5Iy1r6rp5+c0bveZJybnvXfP6Fgz04zn9MV
+	 o2GZr6AjhvmZcNE+zvgNg+WeHH96G2GspwTl2HXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729148AbgHXJsy (ORCPT
+        id S1729374AbgHXJtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:48:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57602 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728756AbgHXIkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:40:33 -0400
+        id S1728754AbgHXIka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:40:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 340C02074D;
-        Mon, 24 Aug 2020 08:40:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD15A2075B;
+        Mon, 24 Aug 2020 08:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258432;
-        bh=bN7dJrzpgTx4kNBALgXdM5o7wtL1Q+rEH6arvcnTpUo=;
+        s=default; t=1598258430;
+        bh=P0+JSimvkNQ7Y26+AEJz4m0Ifkt1Pu0jAmcjm3+4N+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sd2ITVHT85dr+LKkJsbd/o5SL0Ow8NG/rRJoNpDgHKn68uBIKWZ0UvgLGRDP8T2Pf
-         FsA7NmrTWRXA93VauOx5W+dIf5WeY4cOwKAS44TmZ4OLX2RhvLTrHrLGERHT1qllja
-         /y7AA8bIGlVvTQokbRqtGn8D4ezb9qypX+gFgeLU=
+        b=xbVbMZHpLZ0ikYXPt/xNGxwhovvErsf+tOqduOiUJNBosmkZd63L3efkvwkIsi8cC
+         L2FWgZVM7aPfHgFREA1Hta2CUf1ajTD+3ZXk/YgcPL+ocTUtpa7yyVm86USfeSQmEm
+         /Mbd90bQjMZhq7GtZk7SagExAHLjZe+52/MbtDQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Kuehling <Felix.Kuehling@amd.com>,
-        Laurent Morichetti <laurent.morichetti@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 046/124] drm/ttm: fix offset in VMAs with a pg_offs in ttm_bo_vm_access
-Date:   Mon, 24 Aug 2020 10:29:40 +0200
-Message-Id: <20200824082411.690630357@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 045/124] xfs: fix inode quota reservation checks
+Date:   Mon, 24 Aug 2020 10:29:39 +0200
+Message-Id: <20200824082411.641977731@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,39 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Kuehling <Felix.Kuehling@amd.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit c0001213d195d1bac83e0744c06ff06dd5a8ba53 ]
+[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
 
-VMAs with a pg_offs that's offset from the start of the vma_node need
-to adjust the offset within the BO accordingly. This matches the
-offset calculation in ttm_bo_vm_fault_reserved.
+xfs_trans_dqresv is the function that we use to make reservations
+against resource quotas.  Each resource contains two counters: the
+q_core counter, which tracks resources allocated on disk; and the dquot
+reservation counter, which tracks how much of that resource has either
+been allocated or reserved by threads that are working on metadata
+updates.
 
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Tested-by: Laurent Morichetti <laurent.morichetti@amd.com>
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/381169/
+For disk blocks, we compare the proposed reservation counter against the
+hard and soft limits to decide if we're going to fail the operation.
+However, for inodes we inexplicably compare against the q_core counter,
+not the incore reservation count.
+
+Since the q_core counter is always lower than the reservation count and
+we unlock the dquot between reservation and transaction commit, this
+means that multiple threads can reserve the last inode count before we
+hit the hard limit, and when they commit, we'll be well over the hard
+limit.
+
+Fix this by checking against the incore inode reservation counter, since
+we would appear to maintain that correctly (and that's what we report in
+GETQUOTA).
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ttm/ttm_bo_vm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_trans_dquot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-index 72100b84c7a90..b08fdfa4291b2 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -505,8 +505,10 @@ static int ttm_bo_vm_access_kmap(struct ttm_buffer_object *bo,
- int ttm_bo_vm_access(struct vm_area_struct *vma, unsigned long addr,
- 		     void *buf, int len, int write)
- {
--	unsigned long offset = (addr) - vma->vm_start;
- 	struct ttm_buffer_object *bo = vma->vm_private_data;
-+	unsigned long offset = (addr) - vma->vm_start +
-+		((vma->vm_pgoff - drm_vma_node_start(&bo->base.vma_node))
-+		 << PAGE_SHIFT);
- 	int ret;
- 
- 	if (len < 1 || (offset + len) >> PAGE_SHIFT > bo->num_pages)
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index d1b9869bc5fa6..af3636a99bf60 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -647,7 +647,7 @@ xfs_trans_dqresv(
+ 			}
+ 		}
+ 		if (ninos > 0) {
+-			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
++			total_count = dqp->q_res_icount + ninos;
+ 			timer = be32_to_cpu(dqp->q_core.d_itimer);
+ 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
+ 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
 -- 
 2.25.1
 
