@@ -2,187 +2,121 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04964C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D98962071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598284714;
-	bh=86Avd4opOrUks/5SRb16D3b8qLpba8ehRas5ZrwOoiM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WbmsSSXBH5ulWhr3aaSYWNCQEF4H7nR4lcoqS/pLRT6tZUDOefe3RuKzYRC9Vqvr3
-	 JQ1sYOkcMLPcV6RMzizgpYk/awIYV7bBnSETFgAfXCIM5PyAqXTzXjeM/jmo+VYRJI
-	 xtyqHjjuZLszlb6JQTSi5Uu+ibNR6rnjTG9+nTTo=
+	by mail.kernel.org (Postfix) with ESMTP id 17D2E2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:58:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="frrID6iX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727814AbgHXP6d (ORCPT
+        id S1727073AbgHXP64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:58:33 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:18750 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgHXP6T (ORCPT
+        Mon, 24 Aug 2020 11:58:56 -0400
+Received: from esa1.hc3370-68.iphmx.com ([216.71.145.142]:27649 "EHLO
+        esa1.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726374AbgHXP6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:58:19 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 07OFw0El032105;
-        Tue, 25 Aug 2020 00:58:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 07OFw0El032105
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598284681;
-        bh=Ya6WAqf3qWKePGzzyVqFBPTs2/RY7mac2cuoBTwLsr4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JWHS6WXDmrw1vNT2G4VzLtt+Na8Tg2XMpgeYm9VLI3FJfR9IP8FndgFwq2FRnM7Bz
-         kyPYcY6gSOtRgXSWPWHCmfNWhqWwPmSVFQRPvLCGPTcsTo/NzBwjiJYaJfD12ggNrW
-         Az0S8QOtELjrtdxcEdh7/k/70nFIAlzqyQJuZfaj9KXaBVCvjPAB3ehoAhjVOw5uY3
-         UEBgyv2aPuGkglK8p6UAOyaH6UuzpJAWfaBnfQPrCSVIO4mIT9laXqFeBUDnjx73ec
-         ZUpQcqu7WOo8vi2K5cLq2hm2lfa4NYi2B8FITZJUb1bAuw202x/h3QZyn6/0QKthUh
-         DV34FACYcKDbQ==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id v138so4709413vsv.7;
-        Mon, 24 Aug 2020 08:58:01 -0700 (PDT)
-X-Gm-Message-State: AOAM530tx6OYvxVIpjVSFCkO9wqf1BJGdZWqvni6rdI/kI6q/MgwMgxz
-        SGrglZdr4zFIVHgr4b1XVXFCgHZIPs0snEDzLro=
-X-Google-Smtp-Source: ABdhPJwNecrtonMTPU19gIF2qOZvAfWCEiNQd7E8DRXm1BWKDtvyST/xDu2rw/4uiWmT/mhA4SrVgth1MCdLNKTsK4Y=
-X-Received: by 2002:a05:6102:7ac:: with SMTP id x12mr2940671vsg.181.1598284680097;
- Mon, 24 Aug 2020 08:58:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
- <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
- <20200818202407.GA3143683@rani.riverdale.lan> <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
- <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com> <20200818214146.GA3196105@rani.riverdale.lan>
-In-Reply-To: <20200818214146.GA3196105@rani.riverdale.lan>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 25 Aug 2020 00:57:22 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQmWBPV4nZ0xPdSHEt=DipHmR40co827voGOFN=2j47BQ@mail.gmail.com>
-Message-ID: <CAK7LNAQmWBPV4nZ0xPdSHEt=DipHmR40co827voGOFN=2j47BQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Mon, 24 Aug 2020 11:58:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1598284729;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=ekSyY2qHZjohrMi/ErCReXQ4Ow5pgNEtu5DGbXh0X+s=;
+  b=frrID6iXFQpHp7PXW3sowgD0vlpKJolLSrLsD4XVLrLQcvO6ADmKeYt+
+   Por/tPTf7nOCxMd01Lih62rfxxtcAZ9O8u88XPnQtKjRRkKf8jtbMGRAZ
+   qcJOUGiIWepyF1FK9d+Kux3nXg5FXvTAub1AWt7xbawUA6c8ID+HCzSpX
+   0=;
+Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: tHj33tqIHgCXymvnOYLLEBfAQj7VddiLPac4gs7q7F0Pli/isHdjb++5CEbv083JhpFtexRV4n
+ dbvqUX+YX1R0i35X6ayU1ebc1sYOOc5AfG52Prmcq4M+G/ZL5GBR/pGQeWxbgMja/Tsux774oe
+ fGrc6tE2HrNa5BhyOqhRzJ8/p8VbX6sbI2ErSqmq+jtezTHvZ7R5gidPPmSqBFqdxmKnq1ff4p
+ Bx/a5uSP0jIV4ioFBhDwlRF7XzTMIeBU5UIITmdyfUKWSXm1YOg5YFsdXbo7Cb48kUcC1fjRu8
+ +yE=
+X-SBRS: 2.7
+X-MesageID: 25501271
+X-Ironport-Server: esa1.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,349,1592884800"; 
+   d="scan'208";a="25501271"
+Subject: Re: [PATCH] x86/entry: Fix AC assertion
+To:     <peterz@infradead.org>
+CC:     <x86@kernel.org>, Juergen Gross <jgross@suse.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Andy Lutomirski <luto@kernel.org>
+References: <20200824101428.GS1362448@hirez.programming.kicks-ass.net>
+ <d2b0c6a5-19d8-f868-e092-e5c197ab0d0e@citrix.com>
+ <20200824152135.GV1362448@hirez.programming.kicks-ass.net>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <a79f11e4-2b9f-ea8d-a032-dee84a500f73@citrix.com>
+Date:   Mon, 24 Aug 2020 16:58:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200824152135.GV1362448@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 6:41 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On 24/08/2020 16:21, peterz@infradead.org wrote:
+> On Mon, Aug 24, 2020 at 03:22:06PM +0100, Andrew Cooper wrote:
+>> On 24/08/2020 11:14, peterz@infradead.org wrote:
+>>> The WARN added in commit 3c73b81a9164 ("x86/entry, selftests: Further
+>>> improve user entry sanity checks") unconditionally triggers on my IVB
+>>> machine because it does not support SMAP.
+>>>
+>>> For !SMAP hardware we patch out CLAC/STAC instructions and thus if
+>>> userspace sets AC, we'll still have it set after entry.
+>> Technically, you don't patch in, rather than patch out.
+> True.
 >
-> On Tue, Aug 18, 2020 at 01:58:51PM -0700, Nick Desaulniers wrote:
-> > On Tue, Aug 18, 2020 at 1:27 PM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > On Tue, Aug 18, 2020 at 1:24 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > > >
-> > > > On Tue, Aug 18, 2020 at 12:13:22PM -0700, Linus Torvalds wrote:
-> > > > > On Tue, Aug 18, 2020 at 12:03 PM H. Peter Anvin <hpa@zytor.com> wrote:
-> > > > > >
-> > > > > > I'm not saying "change the semantics", nor am I saying that playing
-> > > > > > whack-a-mole *for a limited time* is unreasonable. But I would like to go back
-> > > > > > to the compiler authors and get them to implement such a #pragma: "this
-> > > > > > freestanding implementation *does* support *this specific library function*,
-> > > > > > and you are free to call it."
-> > > > >
-> > > > > I'd much rather just see the library functions as builtins that always
-> > > > > do the right thing (with the fallback being "just call the standard
-> > > > > function").
-> > > > >
-> > > > > IOW, there's nothing wrong with -ffreestanding if you then also have
-> > > > > __builtin_memcpy() etc, and they do the sane compiler optimizations
-> > > > > for memcpy().
-> > > > >
-> > > > > What we want to avoid is the compiler making *assumptions* based on
-> > > > > standard names, because we may implement some of those things
-> > > > > differently.
-> > > > >
-> > > >
-> > > > -ffreestanding as it stands today does have __builtin_memcpy and
-> > > > friends. But you need to then use #define memcpy __builtin_memcpy etc,
-> > > > which is messy and also doesn't fully express what you want. #pragma, or
-> > > > even just allowing -fbuiltin-foo options would be useful.
-> >
-> > I do really like the idea of -fbuiltin-foo.  For example, you'd specify:
-> >
-> > -ffreestanding -fbuiltin-bcmp
-> >
-> > as an example. `-ffreestanding` would opt you out of ALL libcall
-> > optimizations, `-fbuiltin-bcmp` would then opt you back in to
-> > transforms that produce bcmp.  That way you're informing the compiler
-> > more precisely about the environment you'd be targeting.  It feels
-> > symmetric to existing `-fno-` flags (clang makes -f vs -fno- pretty
-> > easy when there is such symmetry).  And it's already convention that
-> > if you specify multiple conflicting compiler flags, then the latter
-> > one specified "wins."  In that sense, turning back on specific
-> > libcalls after disabling the rest looks more ergonomic to me.
-> >
-> > Maybe Eli or David have thoughts on why that may or may not be as
-> > ergonomic or possible to implement as I imagine?
-> >
+>>> Fixes: 3c73b81a9164 ("x86/entry, selftests: Further improve user entry sanity checks")
+>>> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>> Acked-by: Andy Lutomirski <luto@kernel.org>
+>>> ---
+>>>  arch/x86/include/asm/entry-common.h |   11 +++++++++--
+>>>  1 file changed, 9 insertions(+), 2 deletions(-)
+>>>
+>>> --- a/arch/x86/include/asm/entry-common.h
+>>> +++ b/arch/x86/include/asm/entry-common.h
+>>> @@ -18,8 +18,15 @@ static __always_inline void arch_check_u
+>>>  		 * state, not the interrupt state as imagined by Xen.
+>>>  		 */
+>>>  		unsigned long flags = native_save_fl();
+>>> -		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
+>>> -				      X86_EFLAGS_NT));
+>>> +		unsigned long mask = X86_EFLAGS_DF | X86_EFLAGS_NT;
+>>> +
+>>> +		/*
+>>> +		 * For !SMAP hardware we patch out CLAC on entry.
+>>> +		 */
+>>> +		if (boot_cpu_has(X86_FEATURE_SMAP))
+>>> +			mask |= X86_EFLAGS_AC;
+>> The Xen PV ABI clears AC on entry for 64bit guests, because Linux is
+>> actually running in Ring 3, and therefore susceptible to #AC's which
+>> wouldn't occur natively.
+> So do you then want it to be something like:
 >
-> Note that -fno-builtin-foo seems to mean slightly different things in
-> clang and gcc. From experimentation, clang will neither optimize a call
-> to foo, nor perform an optimization that introduces a call to foo. gcc
-> will avoid optimizing calls to foo, but it can still generate new calls
-> to foo while optimizing something else. Which means that
-> -fno-builtin-{bcmp,stpcpy} only solves things for clang, not gcc. It's
-> just that gcc doesn't seem to have implemented those optimizations.
+> 	if (boot_cpu_has(X86_FEATURE_SMAP) ||
+> 	    (IS_ENABLED(CONFIG_64_BIT) && boot_cpu_has(X86_FEATURE_XENPV)))
+>
+> ? Or are you fine with the proposed?
 
+Dealers choice, but this option would be slightly better overall.
 
-To prevent transformation from foo() into bar(),
-there are two ways in Clang to do that;
--fno-builtin-foo, and -fno-builtin-bar.
-There is only one in GCC; -fno-buitin-foo.
+(Are there any other cases where Linux will be running in Ring 3?  I
+haven't been paying attention to recent changes in PVOps.)
 
-Is this correct?
-
-
-
-I just played the optimization
-from printf("helloworld\n") to puts("helloworld").
-
-https://godbolt.org/z/5s4ded
-
-
--fno-builtin-puts cannot prevent clang
-from emitting puts.
-Is it because clang does not support
--fno-builtin-puts?
-
-It is not clear to find out
-which -fno-builtin-* is supported
-because compilation succeeds anyway...
-
-
---
-Best Regards
-Masahiro Yamada
+~Andrew
