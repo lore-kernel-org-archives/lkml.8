@@ -2,129 +2,98 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BCAC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:11:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BEAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 704262075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:11:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA912071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:14:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iZtbAURe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gh2Aew0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgHXKLJ (ORCPT
+        id S1726075AbgHXKOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:11:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49632 "EHLO
+        Mon, 24 Aug 2020 06:14:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbgHXKLI (ORCPT
+        with ESMTP id S1725906AbgHXKOi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:11:08 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F806C061573;
-        Mon, 24 Aug 2020 03:11:07 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id c8so4152847lfh.9;
-        Mon, 24 Aug 2020 03:11:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eCM1MY9fL6XG/g9S5/R519/+dhVf/rR5iiVNVW9wNCM=;
-        b=iZtbAURe/TcGpxgHsdxjWk+OBcVapW76EJhdem0MYolKHHUTpp7lpODnmH7+Vbf34w
-         1OiD6R7tRTqvOZiScHDAcYR2tKiLLBO2KJ9ykXgEresO+HNuDPGDBhxwao7N//UWo1cV
-         7nelPhDcGThb5Lh0+z6m1BFSPFrFCFPFJk0a45oCQoiTHZw5JTpih6g+K/Yp2zLwFVjh
-         SZkf04JtwtIYCBa27oO3lZXiDWLLFjruvNIIN+6ov/w2gWAbfTL7Tv4nINtax5mo+N7L
-         045CsgP4gdbbr/fCE2mQvngCsiAolJo9DmJZyhPtBBAFB9n2h2nlk3bZuDhV7d29r/G9
-         8WfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eCM1MY9fL6XG/g9S5/R519/+dhVf/rR5iiVNVW9wNCM=;
-        b=oixOVDFp+YXA7WIV9XHFoXWiZOJV6Fq/Q+LjpaSRyRAqG9u92k9ZkHCGFpeRrvHaa1
-         XdIgK4VIYB+TyKdx7UWXyqmm2TuDDcYH8f/mBfHFlyFw29OIGLqcgxTPvjKgtiFqFVg5
-         EQ4W20V4w1Gu8OjOa0Xc8VUxawjCDQyj4ZfQ3ac5AInHV/Qa7LCcJttG/vhJkkwXjEIu
-         9jU+WFGfyKoYUvas5etDH7qJ+ptXgk8fYQcFb4OenOcBUKIZbKiR1PdBjwPJ5EmIW2kj
-         +Wx0Q2b7doZoEr8Q4TtPnBv0tUqBsb7ri6LBHYGm4Gee/onBvA0IGs1scx1+WFsbZGF0
-         IDYg==
-X-Gm-Message-State: AOAM5316GIGXCizt76gYA8TqV+31hqb4+IH2b1ClEa1MmIINVpjwy2xs
-        q1oatYQgPUxlZDGxnMZNMdOc2Bsjkew=
-X-Google-Smtp-Source: ABdhPJxvtbBhDZM+Ig1AWobTyAP+bnsWRaGngsk0KGvGCf5SE5DqpM2UiJhgMN4XuNz5SFNsE1yirg==
-X-Received: by 2002:a19:2202:: with SMTP id i2mr2316168lfi.35.1598263865536;
-        Mon, 24 Aug 2020 03:11:05 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id t19sm2079121ljc.137.2020.08.24.03.11.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 03:11:05 -0700 (PDT)
-Subject: Re: [PATCH v1 3/6] leds: Add driver for Acer Iconia Tab A500
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Dan Murphy <dmurphy@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200823140846.19299-1-digetx@gmail.com>
- <20200823140846.19299-4-digetx@gmail.com>
- <20200823223037.5fkeg5ai6hry3axj@duo.ucw.cz>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <eb2da40a-9dbb-0a18-4dbc-3eb93bd2968c@gmail.com>
-Date:   Mon, 24 Aug 2020 13:11:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 24 Aug 2020 06:14:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B61AC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 03:14:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=GB9GfMVc5/rXiLAjmmHZ5veM/LFcowYM33cdlsmV/p0=; b=Gh2Aew0daIZO235XO0H01dAXs4
+        +QXV4xWAgRc3J6asiUl7l/ZUQoXzV877XKa16hY9E5OBAZhZzv89rqC+No5G57Xla/g/8ywRWI7VL
+        sKaoW1d21z0HMJuEu/E13/L9I9LZec+2QZ/+69bPpNMSbyWMcttby6uVUcmZ57PLgRtRmbcl0ieeB
+        5EaKdHDS41ynIFXAEamOzrMbBXlAAbJ+DjZlVLAhc4ysMEm6LGoOiFvKy3KD9zq7vc1WPqzcKgl8u
+        6gqFwKG2rlwqlJdiftZIxWTw0UsI3yhlmNc9z12tSSYaqQgXY491d+xb1ZKfNTmrJjXA1WpFY8ivp
+        BKLV5Qgw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kA9Ul-0004OO-Cn; Mon, 24 Aug 2020 10:14:31 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D877B30280E;
+        Mon, 24 Aug 2020 12:14:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B2A622BEC4859; Mon, 24 Aug 2020 12:14:28 +0200 (CEST)
+Date:   Mon, 24 Aug 2020 12:14:28 +0200
+From:   peterz@infradead.org
+To:     x86@kernel.org
+Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        Juergen Gross <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH] x86/entry: Fix AC assertion
+Message-ID: <20200824101428.GS1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200823223037.5fkeg5ai6hry3axj@duo.ucw.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.08.2020 01:30, Pavel Machek пишет:
-> Hi!
 
-Hello, Pavel! Thank you very much for the review! I'll take into account
-yours comments in the v2!
+The WARN added in commit 3c73b81a9164 ("x86/entry, selftests: Further
+improve user entry sanity checks") unconditionally triggers on my IVB
+machine because it does not support SMAP.
 
->> Acer Iconia Tab A500 is an Android tablet device which has two LEDs
->> embedded into the Power Button. Orange LED indicates "battery charging"
->> status and white LED indicates "wake-up/charge-done" status. The new LED
->> driver provides control over both LEDs to userspace.
-> 
->> @@ -0,0 +1,121 @@
->> +// SPDX-License-Identifier: GPL-2.0+
-> 
-> Nice.
-> 
->> + * Copyright 2020 GRATE-driver project.
-> 
-> Probably untrue.
-> 
-> 
->> +	white_led->cdev.name = "power-button-white";
-> 
-> "white:power"
-> 
->> +	white_led->cdev.max_brightness = LED_ON;
-> 
-> = 1. (And you'll need other adjustments over the code).
-> 
->> +	orange_led->cdev.name = "power-button-orange";
-> 
-> "orange:power" -- or what is this LED usually used for?
-> 
->> +MODULE_LICENSE("GPL v2");
-> 
-> Should be "GPL"?
+For !SMAP hardware we patch out CLAC/STAC instructions and thus if
+userspace sets AC, we'll still have it set after entry.
 
-Yes, apparently it should be "GPL". I'll try to double-check it for the v2.
+Fixes: 3c73b81a9164 ("x86/entry, selftests: Further improve user entry sanity checks")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+---
+ arch/x86/include/asm/entry-common.h |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Thanks!
+--- a/arch/x86/include/asm/entry-common.h
++++ b/arch/x86/include/asm/entry-common.h
+@@ -18,8 +18,15 @@ static __always_inline void arch_check_u
+ 		 * state, not the interrupt state as imagined by Xen.
+ 		 */
+ 		unsigned long flags = native_save_fl();
+-		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
+-				      X86_EFLAGS_NT));
++		unsigned long mask = X86_EFLAGS_DF | X86_EFLAGS_NT;
++
++		/*
++		 * For !SMAP hardware we patch out CLAC on entry.
++		 */
++		if (boot_cpu_has(X86_FEATURE_SMAP))
++			mask |= X86_EFLAGS_AC;
++
++		WARN_ON_ONCE(flags & mask);
+ 
+ 		/* We think we came from user mode. Make sure pt_regs agrees. */
+ 		WARN_ON_ONCE(!user_mode(regs));
