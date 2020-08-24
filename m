@@ -2,241 +2,155 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A65C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1862C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A06A206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 856FD206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:14:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ja5bDYhr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b30ORC/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725947AbgHXOJk (ORCPT
+        id S1726356AbgHXOOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 10:09:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58890 "EHLO
+        Mon, 24 Aug 2020 10:14:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgHXOJW (ORCPT
+        with ESMTP id S1725780AbgHXOOl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 10:09:22 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF198C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 07:09:21 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id s2so8773247ioo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 07:09:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bA1BV2aseyQF/WzkRQXsks8mi0w91MOj30YomTdhB24=;
-        b=ja5bDYhrwnRbhqtcV0+hArCGMnGdzSqsZnKyGRT5k1UJ6WElf/GjM4OZXfddKwvvzm
-         aWNZ6AFUkq8/LzdiwGSPGOjVfTOb4+3TJ7ET1YyZp1Zdnod24BL/Sra3SQj1gqE4cvlb
-         7QU0pJv/WCuTKoWLToLBqK3d9nWpz/R1RPA7yiC6ko5eWBRA/SLEIuIekew8dqUHOfEs
-         /GbP79fBHvXldRjOSv36xwdhJF2LjlICsaoDuvKZSilgvgGVmo6nMlfSK2tr98QDU6z7
-         ccrR0wUHcnJB0uD8sb4A5AUXB02vie0m06hkYEraoVRGjxgJ31pfijIQ25dwc6Ox/eH7
-         9GnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bA1BV2aseyQF/WzkRQXsks8mi0w91MOj30YomTdhB24=;
-        b=aODSOo2PYn2JAnPhTTjnECZX5p6fMhsM+PF7ZtZMul5EcerA07+ArnWxrpwzWhtXaR
-         WIv1i9XdRy9ueaCxsnhthD8h7DK6Ja67HmzRzdoAKsJaRoBYtptoWuSFEZlHQS8Z6sjY
-         00MVykQjc7EERt9qTBjPfqCS/Uop4OPYl4qgNejI3b0sxBgbomGBRx7adf4IF3jZZ9ZA
-         Vjxjm1TbrzWWgcBE02qDUkLncS5+IC9FM9bxUQedDdy/IKJd0YteQEqZej1vvfc+4IGo
-         nWX2SZgR1/FsYSefoIyXSDX38mqEhAD5ows3vhc5J/0ye6SAnRtM+QLQ2JADlHgaAqJU
-         sEyA==
-X-Gm-Message-State: AOAM532lCCIozhmJdV1X44ZIs6KphKZOsBhT6TzRQbjABNdg6VPZbY3B
-        2/gZR+ngSJX7IL46CyJ8AQ32D31vxLc+ez+zTt1+Pg==
-X-Google-Smtp-Source: ABdhPJwjelAWzcEn7VzNUk7+Vkp9BFR/nJBH2gLe74ADI/3bVYbtSMs4/T4jOU84m5eRayVGvqGd5Ele60w9x5+iCr0=
-X-Received: by 2002:a02:a403:: with SMTP id c3mr5678171jal.102.1598278161040;
- Mon, 24 Aug 2020 07:09:21 -0700 (PDT)
+        Mon, 24 Aug 2020 10:14:41 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65116C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 07:14:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=n1MFUZtSNnD68NOJIn4Ii8T2Lxsm8QPQOoQduHaUuow=; b=b30ORC/V2ydNehF8gl2ylP9w7G
+        R5+Tgaxjr/f79pUpDvYCFZNUeG4zZUeNcI0hpjLA/DSb+tND0Cvd8gRNvDdRtjbigOkrPdDsznHJq
+        rIkIdc6HwyDhjlFlkmtWYYuSj8mGTTnX6DQLrSZIFoOV0m2AY/wD+ijpe2XwrDwhzfKXR6bczxdOU
+        f/aCTOEizppqBZs0aS8nlgYBBa9dpSvP6bz/nvuLGfbVbeiWqQ48heLLkwJO2yRJqqPiuRPQO6GkD
+        SeSwBTPbeIv5/bcJ0cWYMNqyWO3JxmL2CT9hEeFksuiMHHJFdIo64Qp5fuBsxDXzCbUYNrA1v9gO2
+        +Kuirwnw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kADF3-0000Md-5b; Mon, 24 Aug 2020 14:14:33 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CCB7D980DF9; Mon, 24 Aug 2020 16:14:29 +0200 (CEST)
+Date:   Mon, 24 Aug 2020 16:14:29 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function
+ entry is not optimized (trigger by int3 breakpoint)
+Message-ID: <20200824141429.GA3982@worktop.programming.kicks-ass.net>
+References: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
 MIME-Version: 1.0
-References: <20200820164753.3256899-1-jackmanb@chromium.org> <202008201435.97CF8296@keescook>
-In-Reply-To: <202008201435.97CF8296@keescook>
-From:   Brendan Jackman <jackmanb@google.com>
-Date:   Mon, 24 Aug 2020 16:09:09 +0200
-Message-ID: <CA+i-1C0XEuWWRm5nMPWCzEPUao7rp5346Eotpt1A_S3Za3Wysw@mail.gmail.com>
-Subject: Re: [RFC] security: replace indirect calls with static calls
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Brendan Jackman <jackmanb@chromium.org>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Paul Renauld <renauld@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, pjt@google.com,
-        Jann Horn <jannh@google.com>, peterz@infradead.org,
-        rafael.j.wysocki@intel.com, thgarnie@chromium.org,
-        KP Singh <kpsingh@google.com>, paul.renauld.epfl@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 23:46, Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Aug 20, 2020 at 06:47:53PM +0200, Brendan Jackman wrote:
-> > From: Paul Renauld <renauld@google.com>
-> >
-> > LSMs have high overhead due to indirect function calls through
-> > retpolines. This RPC proposes to replace these with static calls [1]
->
-> typo: RFC
+On Mon, Aug 24, 2020 at 12:02:58PM +0000, Eddy_Wu@trendmicro.com wrote:
+> After bisecting, I found this behavior seems to introduce by this
+> commit: (5.8-rc1) 0d00449c7a28a1514595630735df383dec606812 x86:
+> Replace ist_enter() with nmi_enter() This make kprobe_int3_handler()
+> effectively running as NMI context, which pre_handler_kretprobe()
+> explicitly checked to prevent recursion.
+> 
+> (in_nmi() check appears from v3.17)
+> f96f56780ca584930bb3a2769d73fd9a101bcbbe kprobes: Skip kretprobe hit
+> in NMI context to avoid deadlock
+> 
+> To make kretprobe work again with int3 breakpoint, I think we can
+> replace the in_nmi() check with in_nmi() == (1 << NMI_SHIFT) at
+> kprobe_int3_handler() and skip kretprobe if nested NMI.  Did a quick
+> test on 5.9-rc2 and it seems to be working.  I'm not sure if it is the
+> best way to do since it may also require change to other architecture
+> as well, any thought?
 
-Oops, thanks - I also meant to have the [RFC] subject prefix.
+Masami, would it be possible to have a kretprobe specific recursion
+count here?
 
->
-> > instead.
->
-> Yay! :)
->
-> > [...]
-> > This overhead prevents the adoption of bpf LSM on performance critical
-> > systems, and also, in general, slows down all LSMs.
->
-> I'd be curious to see other workloads too. (Your measurements are a bit
-> synthetic, mostly showing "worst case": one short syscall in a tight
-> loop. I'm curious how much performance gain can be had -- we should
-> still do it, it'll be a direct performance improvement, but I'm curious
-> about "real world" impact too.)
->
+I did the below, but i'm not at all sure that isn't horrible broken. I
+can't really find many rp->lock sites and this might break things by
+limiting contention.
 
-Sounds good - I'll gather some more data and get back.
+---
 
-(I would also reiterate what KP said in response
-to James: the "worst case" relative indirect call overhead (i.e. the case
-where the hook callback does minimal work) is exactly the case we care
-about here. If the callback is doing enough work that the indirect call overhead
-becomes negligible, that callback is probably anyway too heavyweight for the
-use cases that motivated this work).
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 9be1bff4f586..0bff314cc800 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -153,6 +153,7 @@ struct kretprobe {
+ 	size_t data_size;
+ 	struct hlist_head free_instances;
+ 	raw_spinlock_t lock;
++	atomic_t recursion;
+ };
+ 
+ struct kretprobe_instance {
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 287b263c9cb9..27fd096bcb9a 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1934,22 +1934,17 @@ unsigned long __weak arch_deref_entry_point(void *entry)
+ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+ {
+ 	struct kretprobe *rp = container_of(p, struct kretprobe, kp);
+-	unsigned long hash, flags = 0;
+ 	struct kretprobe_instance *ri;
+-
+-	/*
+-	 * To avoid deadlocks, prohibit return probing in NMI contexts,
+-	 * just skip the probe and increase the (inexact) 'nmissed'
+-	 * statistical counter, so that the user is informed that
+-	 * something happened:
+-	 */
+-	if (unlikely(in_nmi())) {
+-		rp->nmissed++;
+-		return 0;
+-	}
++	unsigned long hash, flags;
++	int rec;
+ 
+ 	/* TODO: consider to only swap the RA after the last pre_handler fired */
+ 	hash = hash_ptr(current, KPROBE_HASH_BITS);
++	rec = atomic_fetch_inc_acquire(&rp->recursion);
++	if (rec) {
++		rp->nmissed++;
++		goto out;
++	}
+ 	raw_spin_lock_irqsave(&rp->lock, flags);
+ 	if (!hlist_empty(&rp->free_instances)) {
+ 		ri = hlist_entry(rp->free_instances.first,
+@@ -1964,7 +1959,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+ 			raw_spin_lock_irqsave(&rp->lock, flags);
+ 			hlist_add_head(&ri->hlist, &rp->free_instances);
+ 			raw_spin_unlock_irqrestore(&rp->lock, flags);
+-			return 0;
++			goto out;
+ 		}
+ 
+ 		arch_prepare_kretprobe(ri, regs);
+@@ -1978,6 +1973,8 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+ 		rp->nmissed++;
+ 		raw_spin_unlock_irqrestore(&rp->lock, flags);
+ 	}
++out:
++	atomic_dec(&rp->recursion);
+ 	return 0;
+ }
+ NOKPROBE_SYMBOL(pre_handler_kretprobe);
 
-> > [...]
-> > Previously, the code for this hook would have looked like this:
-> >
-> >       ret = DEFAULT_RET;
-> >
-> >         for each cb in [A, B, C]:
-> >                 ret = cb(args); <--- costly indirect call here
-> >                 if ret != 0:
-> >                         break;
-> >
-> >         return ret;
-> >
-> > Static calls are defined at build time and are initially empty (NOP
-> > instructions). When the LSMs are initialized, the slots are filled as
-> > follows:
-> >
-> >  slot idx     content
-> >            |-----------|
-> >     0      |           |
-> >            |-----------|
-> >     1      |           |
-> >            |-----------|
-> >     2      |   call A  | <-- base_slot_idx = 2
-> >            |-----------|
-> >     3      |   call B  |
-> >            |-----------|
-> >     4      |   call C  |
-> >            |-----------|
-> >
-> > The generated code will unroll the foreach loop to have a static call for
-> > each possible LSM:
-> >
-> >         ret = DEFAULT_RET;
-> >         switch(base_slot_idx):
-> >
-> >                 case 0:
-> >                         NOP
-> >                         if ret != 0:
-> >                                 break;
-> >                         // fallthrough
-> >                 case 1:
-> >                         NOP
-> >                         if ret != 0:
-> >                                 break;
-> >                         // fallthrough
-> >                 case 2:
-> >                         ret = A(args); <--- direct call, no retpoline
-> >                         if ret != 0:
-> >                                 break;
-> >                         // fallthrough
-> >                 case 3:
-> >                         ret = B(args); <--- direct call, no retpoline
-> >                         if ret != 0:
-> >                                 break;
-> >                         // fallthrough
-> >
-> >                 [...]
-> >
-> >                 default:
-> >                         break;
-> >
-> >         return ret;
-> >
-> > A similar logic is applied for void hooks.
-> >
-> > Why this trick with a switch statement? The table of static call is defined
-> > at compile time. The number of hook callbacks that will be defined is
-> > unknown at that time, and the table cannot be resized at runtime.  Static
-> > calls do not define a conditional execution for a non-void function, so the
-> > executed slots must be non-empty.  With this use of the table and the
-> > switch, it is possible to jump directly to the first used slot and execute
-> > all of the slots after. This essentially makes the entry point of the table
-> > dynamic. Instead, it would also be possible to start from 0 and break after
-> > the final populated slot, but that would require an additional conditional
-> > after each slot.
->
-> Instead of just "NOP", having the static branches perform a jump would
-> solve this pretty cleanly, yes? Something like:
->
->         ret = DEFAULT_RET;
->
->         ret = A(args); <--- direct call, no retpoline
->         if ret != 0:
->                 goto out;
->
->         ret = B(args); <--- direct call, no retpoline
->         if ret != 0:
->                 goto out;
->
->         goto out;
->         if ret != 0:
->                 goto out;
->
-> out:
->         return ret;
-
-Hmm yeah that's a cool idea. This would either need to be implemented
-with custom
-code-modification logic for the LSM hooks, or we'd need to think of a
-way to express it
-in a sensible addition to the static_call API. I do wonder if the
-latter could take
-the form of a generic system for arrays of static calls.
-
-It would also need to handle the fact that IIUC at the moment the last
-static_call may be a tail
-call, so we'd be patching an existing jump into a jump to a different
-target, I don't know if we
-can do that atomically.
-
-More research required on my side here, on both points.
-
- > [...]
-> > Signed-off-by: Paul Renauld <renauld@google.com>
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > Signed-off-by: Brendan Jackman <jackmanb@google.com>
->
-> This implies a maintainership chain, with Paul as the sole author. If
-> you mean all of you worked on the patch, include Co-developed-by: as
-> needed[1].
-
-Yep, this is intentional - Paul is the sole author so far (I suppose
-KP's sign-off
-is not technically required since he's also at the Google).
