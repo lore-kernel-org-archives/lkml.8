@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90932C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FEFC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 685F7207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B15207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262366;
-	bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
+	s=default; t=1598262377;
+	bh=9HAS2loCHxQ24PIAcghVs2Z0hXa2Wx19xvuumM0vtFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q0qGFjpfJ6Z9gHzPa58XpWHemiBBirrcsi5tEZnrX9fPhrR/z81SbEAsiATsDYpRr
-	 pa9GkHRJ3bMx+4Bu436v6KIg7v4/Ebepx8Exjv9eXtkXQCSYRvmyApay9vMm/kxrLj
-	 AU9dD8dNVGx3SapKyu3rMtw11nR/WjYZRlK0TCm8=
+	b=TF7fbsDjpkVbM4guFY0hfpYqIM2iLNHlNsMqbg9Cr33X8nyhIvBQynUm0gjHVAiCq
+	 cmdvyjl7y9ui8DUoLKbSB7zBCe+KxXjl7shVtye49SMCx6/ckhqE0Qi1I2Bg34HYQ/
+	 txhZvPCZGLf7VI1H/t35jgiiw4evyRI03IndW0Zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgHXIm1 (ORCPT
+        id S1729217AbgHXJqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:42:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33664 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728914AbgHXImI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:42:08 -0400
+        id S1728944AbgHXImZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:42:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3983F2075B;
-        Mon, 24 Aug 2020 08:42:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 784BF2075B;
+        Mon, 24 Aug 2020 08:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258527;
-        bh=Szw6jA3d8Pxqmf1JA6WaAVW8AEfSzqqzAAso5Yu42xk=;
+        s=default; t=1598258545;
+        bh=9HAS2loCHxQ24PIAcghVs2Z0hXa2Wx19xvuumM0vtFI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f1k0pKAwTmBVhyKzAfI54FKQUbhwoDnDSuj2db0fedpjuu7zccOCJzoFybDEufzl3
-         XKBMvegUTLnHUetBuZ1Go3mSgZZpapVak/Umi6OpX2NELMJqZyO/EZrU7nZdJFKojo
-         Cwe3MLjAz6CPmLr9A2yhlmOhISxrQ2C19fQQg0FE=
+        b=gTWTq7V9SlXGmnoi1/4GDGzxvNIFACaEWJbyJtIRVv8W5l/6xy3QqdpAui8HAhb9V
+         LEZG5kCuNorXazsa2FVx/H7opZQRUJyb8ZSwqHpcwJNvAmNfO5HgKBq3sV6JECleCY
+         v39Q7SSCj9+lZUovxYblJ4qUbfWu3D4XncbcYHtU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zhang Changzhong <zhangchangzhong@huawei.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
+        stable@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 078/124] can: j1939: fix support for multipacket broadcast message
-Date:   Mon, 24 Aug 2020 10:30:12 +0200
-Message-Id: <20200824082413.247087210@linuxfoundation.org>
+Subject: [PATCH 5.7 066/124] ASoC: q6routing: add dummy register read/write function
+Date:   Mon, 24 Aug 2020 10:30:00 +0200
+Message-Id: <20200824082412.663970116@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -62,79 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Changzhong <zhangchangzhong@huawei.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit f4fd77fd87e9b214c26bb2ebd4f90055eaea5ade ]
+[ Upstream commit 796a58fe2b8c9b6668db00d92512ec84be663027 ]
 
-Currently j1939_tp_im_involved_anydir() in j1939_tp_recv() check the previously
-set flags J1939_ECU_LOCAL_DST and J1939_ECU_LOCAL_SRC of incoming skb, thus
-multipacket broadcast message was aborted by receive side because it may come
-from remote ECUs and have no exact dst address. Similarly, j1939_tp_cmd_recv()
-and j1939_xtp_rx_dat() didn't process broadcast message.
+Most of the DAPM widgets for DSP ASoC components reuse reg field
+of the widgets for its internal calculations, however these are not
+real registers. So read/writes to these numbers are not really
+valid. However ASoC core will read these registers to get default
+state during startup.
 
-So fix it by checking and process broadcast message in j1939_tp_recv(),
-j1939_tp_cmd_recv() and j1939_xtp_rx_dat().
+With recent changes to ASoC core, every register read/write
+failures are reported very verbosely. Prior to this fails to reads
+are totally ignored, so we never saw any error messages.
 
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
-Link: https://lore.kernel.org/r/1596599425-5534-2-git-send-email-zhangchangzhong@huawei.com
-Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+To fix this add dummy read/write function to return default value.
+
+Fixes: e3a33673e845 ("ASoC: qdsp6: q6routing: Add q6routing driver")
+Reported-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Link: https://lore.kernel.org/r/20200811120205.21805-2-srinivas.kandagatla@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/can/j1939/transport.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ sound/soc/qcom/qdsp6/q6routing.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index 90a2baac8a4aa..67189b4c482c5 100644
---- a/net/can/j1939/transport.c
-+++ b/net/can/j1939/transport.c
-@@ -1673,8 +1673,12 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
- 			return;
- 		}
- 		session = j1939_xtp_rx_rts_session_new(priv, skb);
--		if (!session)
-+		if (!session) {
-+			if (cmd == J1939_TP_CMD_BAM && j1939_sk_recv_match(priv, skcb))
-+				netdev_info(priv->ndev, "%s: failed to create TP BAM session\n",
-+					    __func__);
- 			return;
-+		}
- 	} else {
- 		if (j1939_xtp_rx_rts_session_active(session, skb)) {
- 			j1939_session_put(session);
-@@ -1852,6 +1856,13 @@ static void j1939_xtp_rx_dat(struct j1939_priv *priv, struct sk_buff *skb)
- 		else
- 			j1939_xtp_rx_dat_one(session, skb);
- 	}
-+
-+	if (j1939_cb_is_broadcast(skcb)) {
-+		session = j1939_session_get_by_addr(priv, &skcb->addr, false,
-+						    false);
-+		if (session)
-+			j1939_xtp_rx_dat_one(session, skb);
-+	}
+diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
+index 46e50612b92c1..750e6a30444eb 100644
+--- a/sound/soc/qcom/qdsp6/q6routing.c
++++ b/sound/soc/qcom/qdsp6/q6routing.c
+@@ -973,6 +973,20 @@ static int msm_routing_probe(struct snd_soc_component *c)
+ 	return 0;
  }
  
- /* j1939 main intf */
-@@ -1943,7 +1954,7 @@ static void j1939_tp_cmd_recv(struct j1939_priv *priv, struct sk_buff *skb)
- 		if (j1939_tp_im_transmitter(skcb))
- 			j1939_xtp_rx_rts(priv, skb, true);
++static unsigned int q6routing_reg_read(struct snd_soc_component *component,
++				       unsigned int reg)
++{
++	/* default value */
++	return 0;
++}
++
++static int q6routing_reg_write(struct snd_soc_component *component,
++			       unsigned int reg, unsigned int val)
++{
++	/* dummy */
++	return 0;
++}
++
+ static const struct snd_soc_component_driver msm_soc_routing_component = {
+ 	.probe = msm_routing_probe,
+ 	.name = DRV_NAME,
+@@ -981,6 +995,8 @@ static const struct snd_soc_component_driver msm_soc_routing_component = {
+ 	.num_dapm_widgets = ARRAY_SIZE(msm_qdsp6_widgets),
+ 	.dapm_routes = intercon,
+ 	.num_dapm_routes = ARRAY_SIZE(intercon),
++	.read = q6routing_reg_read,
++	.write = q6routing_reg_write,
+ };
  
--		if (j1939_tp_im_receiver(skcb))
-+		if (j1939_tp_im_receiver(skcb) || j1939_cb_is_broadcast(skcb))
- 			j1939_xtp_rx_rts(priv, skb, false);
- 
- 		break;
-@@ -2007,7 +2018,7 @@ int j1939_tp_recv(struct j1939_priv *priv, struct sk_buff *skb)
- {
- 	struct j1939_sk_buff_cb *skcb = j1939_skb_to_cb(skb);
- 
--	if (!j1939_tp_im_involved_anydir(skcb))
-+	if (!j1939_tp_im_involved_anydir(skcb) && !j1939_cb_is_broadcast(skcb))
- 		return 0;
- 
- 	switch (skcb->addr.pgn) {
+ static int q6pcm_routing_probe(struct platform_device *pdev)
 -- 
 2.25.1
 
