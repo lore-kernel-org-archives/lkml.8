@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F15C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A70A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33A78221E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BE4E204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259215;
-	bh=ZqJNIiiwA28tyhVtUywZznol3MimkOdjb66+geBpQGw=;
+	s=default; t=1598259220;
+	bh=di2ffhM93KuWPbjQWdPka5qwpk5VpGh7Bf232eFp8dU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Btyns0IAZMcf6prh8eLUvnlgadxx8YJAaT6qaJjp5MqC+xsnYX/HI3dDo7K45B2A9
-	 DT8pDZN5cLKr9dtcPs8zAJukFSZaRbJfzVjQTo+YNH0mFosIVMI6hlTU8I9UAzRcKs
-	 BcvNcTbc280b+Cf4C8mYJmCjrlmD+GOTLnvTkAmc=
+	b=aJcnZC8Laaq/PH4o4jBPvryVGN24tEhmb6We/un3qdNoAPKQGV3FdJAMbNoOjYf+2
+	 MZKCiDxOyGwvdyzcyJ7mMVgEPIFSN9MFib72BbNgw+bU0KkUbv4E3SJ0YZWp5t7QY/
+	 7q1TfEpVwqXf5obx+hmFaDVpR+82WzjNwEYQCKec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbgHXIx2 (ORCPT
+        id S1729950AbgHXIxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:53:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60324 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:53:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730156AbgHXIxM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:53:12 -0400
+        id S1728423AbgHXIxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:53:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB76C2072D;
-        Mon, 24 Aug 2020 08:53:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 385222087D;
+        Mon, 24 Aug 2020 08:53:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259191;
-        bh=ZqJNIiiwA28tyhVtUywZznol3MimkOdjb66+geBpQGw=;
+        s=default; t=1598259203;
+        bh=di2ffhM93KuWPbjQWdPka5qwpk5VpGh7Bf232eFp8dU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rkL74E3mIf6+oKdESajER2RgJas8yTIBwv4MxEWgzwmzPcrpxEZ2GifTPfU1DBzds
-         qN58eJ/pCkhcxm+CQwshGPs5JB6JqnHQrRW1jMuco+ZefQdP88fmIbPIkMNg51Wjet
-         BDQUqByieQfVgCVKzB+asK/4XDBEl4Zm9d10hV60=
+        b=lH4ki5eKefJqENdm8RiwtW3qs+05WDb7oUv2ssfrARF5RGGD6eQmGshUSPweaX5Q3
+         jvdMUcvewiw5yH5/yG9irpylZH8108ATVxvauWVImK8ycArBg4JnVDFukbUCTuIQZF
+         1Ocn6hMCbqd09+N9xhHPXvB4q5Tgh4RGhbeQ9oMY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marcos Paulo de Souza <mpdesouza@suse.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 07/50] btrfs: export helpers for subvolume name/id resolution
-Date:   Mon, 24 Aug 2020 10:31:08 +0200
-Message-Id: <20200824082352.275946548@linuxfoundation.org>
+Subject: [PATCH 4.14 20/50] scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
+Date:   Mon, 24 Aug 2020 10:31:21 +0200
+Message-Id: <20200824082353.037644430@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -60,105 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit c0c907a47dccf2cf26251a8fb4a8e7a3bf79ce84 ]
+[ Upstream commit c0a18ee0ce78d7957ec1a53be35b1b3beba80668 ]
 
-The functions will be used outside of export.c and super.c to allow
-resolving subvolume name from a given id, eg. for subvolume deletion by
-id ioctl.
+It is confirmed that Micron device needs DELAY_BEFORE_LPM quirk to have a
+delay before VCC is powered off. Sdd Micron vendor ID and this quirk for
+Micron devices.
 
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ split from the next patch ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Link: https://lore.kernel.org/r/20200612012625.6615-2-stanley.chu@mediatek.com
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.h  | 2 ++
- fs/btrfs/export.c | 8 ++++----
- fs/btrfs/export.h | 5 +++++
- fs/btrfs/super.c  | 8 ++++----
- 4 files changed, 15 insertions(+), 8 deletions(-)
+ drivers/scsi/ufs/ufs_quirks.h | 1 +
+ drivers/scsi/ufs/ufshcd.c     | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index 5412b12491cb8..de951987fd23d 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -3262,6 +3262,8 @@ ssize_t btrfs_listxattr(struct dentry *dentry, char *buffer, size_t size);
- int btrfs_parse_options(struct btrfs_fs_info *info, char *options,
- 			unsigned long new_flags);
- int btrfs_sync_fs(struct super_block *sb, int wait);
-+char *btrfs_get_subvol_name_from_objectid(struct btrfs_fs_info *fs_info,
-+					  u64 subvol_objectid);
+diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
+index 71f73d1d1ad1f..6c944fbefd40a 100644
+--- a/drivers/scsi/ufs/ufs_quirks.h
++++ b/drivers/scsi/ufs/ufs_quirks.h
+@@ -21,6 +21,7 @@
+ #define UFS_ANY_VENDOR 0xFFFF
+ #define UFS_ANY_MODEL  "ANY_MODEL"
  
- static inline __printf(2, 3)
- void btrfs_no_printk(const struct btrfs_fs_info *fs_info, const char *fmt, ...)
-diff --git a/fs/btrfs/export.c b/fs/btrfs/export.c
-index 3aeb5770f8965..b6ce765aa7f33 100644
---- a/fs/btrfs/export.c
-+++ b/fs/btrfs/export.c
-@@ -56,9 +56,9 @@ static int btrfs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
- 	return type;
- }
++#define UFS_VENDOR_MICRON      0x12C
+ #define UFS_VENDOR_TOSHIBA     0x198
+ #define UFS_VENDOR_SAMSUNG     0x1CE
+ #define UFS_VENDOR_SKHYNIX     0x1AD
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 1e2a97a10033b..11e917b44a0f1 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -189,6 +189,8 @@ ufs_get_desired_pm_lvl_for_dev_link_state(enum ufs_dev_pwr_mode dev_state,
  
--static struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
--				       u64 root_objectid, u32 generation,
--				       int check_generation)
-+struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
-+				u64 root_objectid, u32 generation,
-+				int check_generation)
- {
- 	struct btrfs_fs_info *fs_info = btrfs_sb(sb);
- 	struct btrfs_root *root;
-@@ -151,7 +151,7 @@ static struct dentry *btrfs_fh_to_dentry(struct super_block *sb, struct fid *fh,
- 	return btrfs_get_dentry(sb, objectid, root_objectid, generation, 1);
- }
- 
--static struct dentry *btrfs_get_parent(struct dentry *child)
-+struct dentry *btrfs_get_parent(struct dentry *child)
- {
- 	struct inode *dir = d_inode(child);
- 	struct btrfs_fs_info *fs_info = btrfs_sb(dir->i_sb);
-diff --git a/fs/btrfs/export.h b/fs/btrfs/export.h
-index 91b3908e7c549..15db024621414 100644
---- a/fs/btrfs/export.h
-+++ b/fs/btrfs/export.h
-@@ -17,4 +17,9 @@ struct btrfs_fid {
- 	u64 parent_root_objectid;
- } __attribute__ ((packed));
- 
-+struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
-+				u64 root_objectid, u32 generation,
-+				int check_generation);
-+struct dentry *btrfs_get_parent(struct dentry *child);
-+
- #endif
-diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-index 17a8463ef35c1..ca95e57b60ee1 100644
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -939,8 +939,8 @@ out:
- 	return error;
- }
- 
--static char *get_subvol_name_from_objectid(struct btrfs_fs_info *fs_info,
--					   u64 subvol_objectid)
-+char *btrfs_get_subvol_name_from_objectid(struct btrfs_fs_info *fs_info,
-+					  u64 subvol_objectid)
- {
- 	struct btrfs_root *root = fs_info->tree_root;
- 	struct btrfs_root *fs_root;
-@@ -1427,8 +1427,8 @@ static struct dentry *mount_subvol(const char *subvol_name, u64 subvol_objectid,
- 				goto out;
- 			}
- 		}
--		subvol_name = get_subvol_name_from_objectid(btrfs_sb(mnt->mnt_sb),
--							    subvol_objectid);
-+		subvol_name = btrfs_get_subvol_name_from_objectid(
-+					btrfs_sb(mnt->mnt_sb), subvol_objectid);
- 		if (IS_ERR(subvol_name)) {
- 			root = ERR_CAST(subvol_name);
- 			subvol_name = NULL;
+ static struct ufs_dev_fix ufs_fixups[] = {
+ 	/* UFS cards deviations table */
++	UFS_FIX(UFS_VENDOR_MICRON, UFS_ANY_MODEL,
++		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
+ 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
+ 		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
+ 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL, UFS_DEVICE_NO_VCCQ),
 -- 
 2.25.1
 
