@@ -2,141 +2,116 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E619DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BACC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8D99206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A830206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 18:53:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bqOH7tKo"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="R7QLWqV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgHXSxL (ORCPT
+        id S1726519AbgHXSxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 14:53:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgHXSxJ (ORCPT
+        Mon, 24 Aug 2020 14:53:17 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:40618 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgHXSxL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 14:53:09 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F178C061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:53:08 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id s9so5064002lfs.4
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:53:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kr/ilKP3KtnpaNLBR4Wfqo2ibtevdlA/61dd3WxVQbQ=;
-        b=bqOH7tKogCiyKYB3sMzalRYYv42T8tBwVa1C577l6dLDiQqHISTeBcw3/rVMjcQVRr
-         +oeKkG0mXbC9eLC33+u8/ltcR8dvp2UukEC9uSYpxY/C3Gkwd5Y8jfWXavf3P3sBT+Er
-         X0gXWdng+UeTkQ4qPQxDaSxZZL7g5raQtCJsQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kr/ilKP3KtnpaNLBR4Wfqo2ibtevdlA/61dd3WxVQbQ=;
-        b=KQh/97Zihta8lzoubao7TtScOsnE6A8ZFfkOUlf100CYOg/QV66erPS3QdB2FA7ufu
-         0GWAS6t1gTm2h/qfOdpbzUnWH0Dikb0gDPa+Egr8B02vkhbaBEXqKvbjdW63MabRiwyJ
-         wV21tISVsG7E8NMNGRuTaiO6EMrXUJxpV9IkY6QU+Lxp63Vc4gDXtr+6UhyNr+ZzmIK1
-         RlqsM7UMyqTdx/kKbCxn/IDg/1ALd29jlXwGgB8fkoOX2ld5iTT8navPp25LdH9EfjPO
-         QjQ+4o2SBUesdYmCS2L7FS7JLs0Wrc41wH6EjUMjdPUe7hltq0Ia66tDh9+vPFdehorF
-         6bSQ==
-X-Gm-Message-State: AOAM531RcnW2FqRrK5riMtFMnY5efAsvlSRS9M7lGY0MNv8KJutoeSE0
-        fqDc9+hDhmeb8Wm/I1rn9m6dPKwc1SJGeg==
-X-Google-Smtp-Source: ABdhPJyXy9ttX/Eo51XPJdJQEXNsfnpN7yzT6Um0xNgrhz500Ryuk6NUh4Hkgb/0qGogYNx/YyFhAA==
-X-Received: by 2002:ac2:4c0a:: with SMTP id t10mr3248261lfq.90.1598295187009;
-        Mon, 24 Aug 2020 11:53:07 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id e14sm2335668ljl.96.2020.08.24.11.53.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 11:53:06 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id v12so10875535ljc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 11:53:06 -0700 (PDT)
-X-Received: by 2002:a05:651c:d5:: with SMTP id 21mr2906073ljr.276.1598295186265;
- Mon, 24 Aug 2020 11:53:06 -0700 (PDT)
+        Mon, 24 Aug 2020 14:53:11 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4D59320B4908;
+        Mon, 24 Aug 2020 11:53:10 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4D59320B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598295190;
+        bh=PEVXNrC7qCWoYQ6cBtLYoPpmAUDgidOX4sUr/CphXTg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R7QLWqV+9eLHIC/H822jOb7WbBoiRn0rn1itquDa3hPXynwCr51RWyETdkczvlskK
+         FuYDBXnHn7fnH9PIriiAm57ikZpiyUKWRT/86CvnUmCjDZ6isf2YubKJnDxZIASBTa
+         fZs4mDmS0K7mJNoJ2t+D4iepSFSAoARMBdOTZwKE=
+Date:   Mon, 24 Aug 2020 13:53:08 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] ima: Fix keyrings race condition and other key
+ related bugs
+Message-ID: <20200824185308.GD4148@sequoia>
+References: <20200811192621.281675-1-tyhicks@linux.microsoft.com>
+ <839d2b185ba482d664edd3fda7c03965543553fa.camel@linux.ibm.com>
 MIME-Version: 1.0
-References: <MN2PR18MB2637D7C742BC235FE38367F0A09C0@MN2PR18MB2637.namprd18.prod.outlook.com>
- <20200821082720.7716-1-penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <20200821082720.7716-1-penguin-kernel@I-love.SAKURA.ne.jp>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Mon, 24 Aug 2020 11:52:53 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXOHDU+SWmr+7aOUtbuzC22T-UWhZXJ5UXtcsev5ZTbqMw@mail.gmail.com>
-Message-ID: <CA+ASDXOHDU+SWmr+7aOUtbuzC22T-UWhZXJ5UXtcsev5ZTbqMw@mail.gmail.com>
-Subject: Re: [PATCH v2] mwifiex: don't call del_timer_sync() on uninitialized timer
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        amit karwar <amitkarwar@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "<netdev@vger.kernel.org>" <netdev@vger.kernel.org>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+373e6719b49912399d21@syzkaller.appspotmail.com>,
-        syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <839d2b185ba482d664edd3fda7c03965543553fa.camel@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 1:28 AM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> syzbot is reporting that del_timer_sync() is called from
-> mwifiex_usb_cleanup_tx_aggr() from mwifiex_unregister_dev() without
-> checking timer_setup() from mwifiex_usb_tx_init() was called [1].
->
-> Ganapathi Bhat proposed a possibly cleaner fix, but it seems that
-> that fix was forgotten [2].
->
-> "grep -FrB1 'del_timer' drivers/ | grep -FA1 '.function)'" says that
-> currently there are 28 locations which call del_timer[_sync]() only if
-> that timer's function field was initialized (because timer_setup() sets
-> that timer's function field). Therefore, let's use same approach here.
->
-> [1] https://syzkaller.appspot.com/bug?id=26525f643f454dd7be0078423e3cdb0d57744959
-> [2] https://lkml.kernel.org/r/CA+ASDXMHt2gq9Hy+iP_BYkWXsSreWdp3_bAfMkNcuqJ3K+-jbQ@mail.gmail.com
->
-> Reported-by: syzbot <syzbot+dc4127f950da51639216@syzkaller.appspotmail.com>
-> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-> Cc: Brian Norris <briannorris@chromium.org>
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+On 2020-08-24 14:44:55, Mimi Zohar wrote:
+> Hi Tyler,
+> 
+> On Tue, 2020-08-11 at 14:26 -0500, Tyler Hicks wrote:
+> > v2:
+> >  - Always return an ERR_PTR from ima_alloc_rule_opt_list() (Nayna)
+> >  - Add Lakshmi's Reviewed-by to both patches
+> >  - Rebased on commit 3db0d0c276a7 ("integrity: remove redundant
+> >    initialization of variable ret") of next-integrity
+> > v1: https://lore.kernel.org/lkml/20200727140831.64251-1-tyhicks@linux.microsoft.com/
+> > 
+> > Nayna pointed out that the "keyrings=" option in an IMA policy rule
+> > should only be accepted when CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is
+> > enabled:
+> > 
+> >  https://lore.kernel.org/linux-integrity/336cc947-1f70-0286-6506-6df3d1d23a1d@linux.vnet.ibm.com/
+> > 
+> > While fixing this, the compiler warned me about the potential for the
+> > ima_keyrings pointer to be NULL despite it being used, without a check
+> > for NULL, as the destination address for the strcpy() in
+> > ima_match_keyring().
+> > 
+> > It also became apparent that there was not adequate locking around the
+> > use of the pre-allocated buffer that ima_keyrings points to. The kernel
+> > keyring has a lock (.sem member of struct key) that ensures only one key
+> > can be added to a given keyring at a time but there's no protection
+> > against adding multiple keys to different keyrings at the same time.
+> > 
+> > The first patch in this series fixes both ima_keyrings related issues by
+> > parsing the list of keyrings in a KEY_CHECK rule at policy load time
+> > rather than deferring the parsing to policy check time. Once that fix is
+> > in place, the second patch can enforce that
+> > CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS must be enabled in order to use
+> > "func=KEY_CHECK" or "keyrings=" options in IMA policy.
+> 
+> Thank you for fixing and cleaning up the existing keyring policy
+> support. 
+> 
+> > 
+> > The new "keyrings=" value handling is done in a generic manner that can
+> > be reused by other options in the future. This seems to make sense as
+> > "appraise_type=" has similar style (though it doesn't need to be fully
+> > parsed at this time) and using "|" as an alternation delimiter is
+> > becoming the norm in IMA policy.
+> 
+> Yes, thank you.  Better extending existing key value pairs than
+> defining new boot command line options.
+> 
+> This patch set is now queued in next-integrity-testing.
 
-This seems good to me:
+Thanks! I'm glad you found it useful.
 
-Reviewed-by: Brian Norris <briannorris@chromium.org>
+Tyler
 
-> ---
->  drivers/net/wireless/marvell/mwifiex/usb.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/net/wireless/marvell/mwifiex/usb.c b/drivers/net/wireless/marvell/mwifiex/usb.c
-> index 6f3cfde4654c..426e39d4ccf0 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/usb.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/usb.c
-> @@ -1353,7 +1353,8 @@ static void mwifiex_usb_cleanup_tx_aggr(struct mwifiex_adapter *adapter)
->                                 skb_dequeue(&port->tx_aggr.aggr_list)))
->                                 mwifiex_write_data_complete(adapter, skb_tmp,
->                                                             0, -1);
-> -               del_timer_sync(&port->tx_aggr.timer_cnxt.hold_timer);
-> +               if (port->tx_aggr.timer_cnxt.hold_timer.function)
-> +                       del_timer_sync(&port->tx_aggr.timer_cnxt.hold_timer);
->                 port->tx_aggr.timer_cnxt.is_hold_timer_set = false;
->                 port->tx_aggr.timer_cnxt.hold_tmo_msecs = 0;
->         }
-> --
-> 2.18.4
->
+> 
+> Mimi
