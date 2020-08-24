@@ -2,108 +2,80 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8B3C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE1FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5260E2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wi+Zu+BG"
+	by mail.kernel.org (Postfix) with ESMTP id D092A20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727877AbgHXNDJ (ORCPT
+        id S1727895AbgHXND1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:03:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11976 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727774AbgHXNDH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:03:07 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OD2ZHx095086;
-        Mon, 24 Aug 2020 09:03:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=W2mh9+xogrvrMRCw5xMAGNdHiDT6mqWyQbS8cOp1XkY=;
- b=Wi+Zu+BGQgMhUNJ/D+bcMUocxMnfFto0qT/BfJ4B9r+5BjPRnKpo05FD+41FlZARhkT/
- uWhb45mUpPDxDdeRxFCLUgDMWNybV4NWiae+KNN08MFwTcNVNj9mrAXULGZsPs74dxvA
- 6QYpAW9N1iLZfaxpo36GQnJvTP9qPUTNl4VdSCsFTRajaTGk68dyy2GDMeY0oi8xpqW0
- g0+C1mq/Y15eL9v+Ioaj+LD7QgdulVBvH5Yc6i2Br0AjxPxTuRtZN5sOKxBuhJeM0/DO
- 8vN87tz6T0Dix82uX/Ypo/azNqjYIh70nyIMxYlnMp8o9rjrITVoYJwD76OfSy3Lk1SH Kg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 334b5c5ndh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 09:03:03 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07OD2tAJ096823;
-        Mon, 24 Aug 2020 09:02:57 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 334b5c5mve-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 09:02:57 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07OCwAA6009870;
-        Mon, 24 Aug 2020 13:02:19 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma06fra.de.ibm.com with ESMTP id 332uwesef0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 13:02:19 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07OD2HR459900208
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Aug 2020 13:02:17 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 016F3A4068;
-        Mon, 24 Aug 2020 13:02:17 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 94C76A4062;
-        Mon, 24 Aug 2020 13:02:15 +0000 (GMT)
-Received: from sig-9-65-254-31.ibm.com (unknown [9.65.254.31])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Aug 2020 13:02:15 +0000 (GMT)
-Message-ID: <681d6bd21410152c0488615b634f4b29140a3974.camel@linux.ibm.com>
-Subject: Re: [PATCH 09/11] ima: Don't remove security.ima if file must not
- be appraised
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
-Date:   Mon, 24 Aug 2020 09:02:14 -0400
-In-Reply-To: <20200618160458.1579-9-roberto.sassu@huawei.com>
-References: <20200618160329.1263-2-roberto.sassu@huawei.com>
-         <20200618160458.1579-9-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
+        Mon, 24 Aug 2020 09:03:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:33588 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727774AbgHXND0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 09:03:26 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C5921FB;
+        Mon, 24 Aug 2020 06:03:20 -0700 (PDT)
+Received: from [192.168.2.22] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7E98B3F66B;
+        Mon, 24 Aug 2020 06:03:19 -0700 (PDT)
+Subject: Re: [PATCH] MAINTAINERS, edac: Calxeda Highbank, handover maintenance
+ to Andre Przywara
+To:     Robert Richter <rric@kernel.org>, Borislav Petkov <bp@alien8.de>
+Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200824124931.2933-1-rric@kernel.org>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Organization: ARM Ltd.
+Message-ID: <06bfa7db-5810-a184-a26c-add3fff9badf@arm.com>
+Date:   Mon, 24 Aug 2020 14:02:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200824124931.2933-1-rric@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-24_11:2020-08-24,2020-08-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 impostorscore=0 suspectscore=3 clxscore=1015
- phishscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=772
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-18 at 18:04 +0200, Roberto Sassu wrote:
-> Files might come from a remote source and might have xattrs, including
-> security.ima. It should not be IMA task to decide whether security.ima
-> should be kept or not. This patch removes the removexattr() system
-> call in ima_inode_post_setattr().
+On 24/08/2020 13:49, Robert Richter wrote:
+> I do not have hardware anymore, nor there is ongoing development. So
+> handover maintenance to Andre who already maintains the last
+> remainings of Calxeda.
 > 
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Cc: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: Robert Richter <rric@kernel.org>
 
-Yes, this has been previously discussed.
+Acked-by: Andre Przywara <andre.przywara@arm.com>
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Thanks!
+Andre
+
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1b7b0c1a24c8..6ed56e1a7d28 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6148,7 +6148,7 @@ S:	Supported
+>  F:	drivers/edac/bluefield_edac.c
+>  
+>  EDAC-CALXEDA
+> -M:	Robert Richter <rric@kernel.org>
+> +M:	Andre Przywara <andre.przywara@arm.com>
+>  L:	linux-edac@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/edac/highbank*
+> 
 
