@@ -2,60 +2,52 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2FC4C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA45C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2AFF206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FD52074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598257951;
-	bh=aRx+YliMIlfhHADwgY6F1wy2b/b10bc5vVPUkcz9jwY=;
+	s=default; t=1598257956;
+	bh=hk0rrmN0UrDD5bnIQHnlzMyy8SmbjiJM9k2H25JwJCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=piBi+acvi3sEVMIZXCPNh+2tz3kac1RCcf3hbaHuOLQE+me091aaijJBCBUFUfpsc
-	 2GVVd7WL9C1hc7oP7tuT94LeOWNGU70dF3R6rGtdFw7IlLNJMzYYivw3R6TKmRStob
-	 0ySJIr21tydX93YOmdJ+pNNKEQbRsEoi2aNji/vo=
+	b=gLlNIaivq+UnUOQNQF7xb6UauS5udeQz7BlzrYm2NT/FQ8LYjTq8HbqCYclxKSy63
+	 fbnH9jlj+wbLq/QSQ7lrMx4YU9cWz/iXGLPROcpcv4tFPl0gBoyxhUgdEKm1AYlIPq
+	 d0Sn8qoljWS3N3dZrw7kYUVtDGDM4blwWC1Vz9DY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgHXIca (ORCPT
+        id S1726770AbgHXIcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:32:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39218 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:32:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726682AbgHXIcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:32:24 -0400
+        id S1726718AbgHXIca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:32:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 201A5207D3;
-        Mon, 24 Aug 2020 08:32:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86108207D3;
+        Mon, 24 Aug 2020 08:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257943;
-        bh=aRx+YliMIlfhHADwgY6F1wy2b/b10bc5vVPUkcz9jwY=;
+        s=default; t=1598257950;
+        bh=hk0rrmN0UrDD5bnIQHnlzMyy8SmbjiJM9k2H25JwJCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DMjlXSHGOjMP5wDgzvM6nVWtFmBCznS2q2R7wV3nd8fPZNFhEaq/w+i1knW2cZQ4P
-         hdvR/k35pL4FnMSIqljAL17nOS+XJOE7NduymfPQpU/n/hCbqWtqH3aM/BIlHSJnFQ
-         ocVUagGwlpCdziVtBJj7gXsJKIBV31XLdqw9IVgY=
+        b=RteBJJVmISZA1ItDSZ22tR+KzV094kheRr1bQA/CVQB1G5+DZuByJ4yTbxq2y43pG
+         O+iwASOPXv9XHtftH/CLa/Zbm8rljm1kRizzsAUkXtHkzVdxhALf/K22Oj7F8zGYYe
+         ts1DU5HuEM3g+9krUiWc9W33iP9ObIlM15jUIZXk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Prochazka <nicolas.prochazka@gmail.com>,
-        Tomoatsu Shimada <shimada@walbrix.com>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Philippe Liard <pliard@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Adrien Schildknecht <adrien+dev@schischi.me>,
-        Daniel Rosenberg <drosen@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 017/148] squashfs: avoid bio_alloc() failure with 1Mbyte blocks
-Date:   Mon, 24 Aug 2020 10:28:35 +0200
-Message-Id: <20200824082414.791473408@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 002/148] drm/panel-simple: Fix inverted V/H SYNC for Frida FRD350H54004 panel
+Date:   Mon, 24 Aug 2020 10:28:20 +0200
+Message-Id: <20200824082414.038213682@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -68,54 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phillip Lougher <phillip@squashfs.org.uk>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit f26044c83e6e473a61917f5db411d1417327d425 upstream.
+[ Upstream commit bad20a2dbfdfaf01560026909506b6ed69d65ba2 ]
 
-This is a regression introduced by the patch "migrate from ll_rw_block
-usage to BIO".
+The FRD350H54004 panel was marked as having active-high VSYNC and HSYNC
+signals, which sorts-of worked, but resulted in the picture fading out
+under certain circumstances.
 
-Bio_alloc() is limited to 256 pages (1 Mbyte).  This can cause a failure
-when reading 1 Mbyte block filesystems.  The problem is a datablock can be
-fully (or almost uncompressed), requiring 256 pages, but, because blocks
-are not aligned to page boundaries, it may require 257 pages to read.
+Fix this issue by marking VSYNC and HSYNC signals active-low.
 
-Bio_kmalloc() can handle 1024 pages, and so use this for the edge
-condition.
+v2: Rebase on drm-misc-next
 
-Fixes: 93e72b3c612a ("squashfs: migrate from ll_rw_block usage to BIO")
-Reported-by: Nicolas Prochazka <nicolas.prochazka@gmail.com>
-Reported-by: Tomoatsu Shimada <shimada@walbrix.com>
-Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
-Cc: Philippe Liard <pliard@google.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Adrien Schildknecht <adrien+dev@schischi.me>
-Cc: Daniel Rosenberg <drosen@google.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200815035637.15319-1-phillip@squashfs.org.uk
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7b6bd8433609 ("drm/panel: simple: Add support for the Frida FRD350H54004 panel")
+Cc: stable@vger.kernel.org # v5.5
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200716125647.10964-1-paul@crapouillou.net
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/squashfs/block.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/panel/panel-simple.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/squashfs/block.c
-+++ b/fs/squashfs/block.c
-@@ -87,7 +87,11 @@ static int squashfs_bio_read(struct supe
- 	int error, i;
- 	struct bio *bio;
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 444b77490a42a..7debf2ca42522 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1717,7 +1717,7 @@ static const struct drm_display_mode frida_frd350h54004_mode = {
+ 	.vsync_end = 240 + 2 + 6,
+ 	.vtotal = 240 + 2 + 6 + 2,
+ 	.vrefresh = 60,
+-	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+ };
  
--	bio = bio_alloc(GFP_NOIO, page_count);
-+	if (page_count <= BIO_MAX_PAGES)
-+		bio = bio_alloc(GFP_NOIO, page_count);
-+	else
-+		bio = bio_kmalloc(GFP_NOIO, page_count);
-+
- 	if (!bio)
- 		return -ENOMEM;
- 
+ static const struct panel_desc frida_frd350h54004 = {
+-- 
+2.25.1
+
 
 
