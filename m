@@ -2,109 +2,104 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D472C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1912FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6365C206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD52E206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598267143;
+	bh=9APzb+PIK28bYSi6UfNZRcD15AFZZuBMXg3adS+rpc8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q37bvhOV/W/KnlPa7T5pXMF+gVRsOi6NDqlRgT6epNy6ceD3gNdojulkW6BSkQOmf
+	 8q/28I2a1L3r1/XWzztW4SKhvOlsd3Y9Lp0g3uhJY/sIrBwXEvAvT+M8nD/4WhBWVF
+	 +JEnTdYfdaRbGXqKjwmatueBqYYnZu+egOoesr5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726354AbgHXLE6 (ORCPT
+        id S1726529AbgHXLFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:04:58 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:35447 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgHXLE4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:04:56 -0400
-Received: from [2001:67c:670:201:5054:ff:fe8d:eefb] (helo=localhost)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1kAAHW-0000RH-8m; Mon, 24 Aug 2020 13:04:54 +0200
-Message-ID: <25afd4892c3d73c247293a99a666192d3d40df10.camel@pengutronix.de>
-Subject: Re: [PATCH] drm/etnaviv: fix external abort seen on GC600 rev 0x19
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>
-Cc:     "Ing. Josua Mayer" <josua.mayer@jm0.eu>,
-        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        The etnaviv authors <etnaviv@lists.freedesktop.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>
-Date:   Mon, 24 Aug 2020 13:04:13 +0200
-In-Reply-To: <20200823191956.GH1551@shell.armlinux.org.uk>
-References: <20200821181731.94852-1-christian.gmeiner@gmail.com>
-         <4dbee9c7-8a59-9250-ab13-394cbab689a8@jm0.eu>
-         <CAH9NwWdLnwb0BiR6qAHKFexFm2NJkpHv7Z7YAdQ7fJBVxjGH4w@mail.gmail.com>
-         <20200823191956.GH1551@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        Mon, 24 Aug 2020 07:05:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbgHXLFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:05:33 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0443206B5;
+        Mon, 24 Aug 2020 11:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598267133;
+        bh=9APzb+PIK28bYSi6UfNZRcD15AFZZuBMXg3adS+rpc8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uI7LWHi3gy3FVvYd39Lj7Q3nWy2hq5jsyryJzwcxW8RTZqgwfjWbctyzU/z8DKTwN
+         hEGSqZctJAo3maBX3X/U31Vy/iO8Kc6l+uyjeNlDBFRcy9QqzfncV+KgQ//CNQHSX7
+         YpwbJwTP39TX8nppWsgCeYU3GGpGn9siQaUw/yoo=
+Date:   Mon, 24 Aug 2020 12:04:58 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Gene Chen <gene_chen@richtek.com>
+Subject: Re: [PATCH v3 1/2] regulator: mt6360: Add support for MT6360
+ regulator
+Message-ID: <20200824110458.GB4676@sirena.org.uk>
+References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1597910022-22617-2-git-send-email-gene.chen.richtek@gmail.com>
+ <20200820114524.GC5854@sirena.org.uk>
+ <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
+Content-Disposition: inline
+In-Reply-To: <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
+X-Cookie: Weekend, where are you?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russell,
 
-Am Sonntag, den 23.08.2020, 20:19 +0100 schrieb Russell King - ARM Linux admin:
-> On Sun, Aug 23, 2020 at 09:10:25PM +0200, Christian Gmeiner wrote:
-> > Hi
-> > 
-> > > I have formally tested the patch with 5.7.10 - and it doesn't resolve
-> > > the issue - sadly :(
-> > > 
-> > > From my testing, the reads on
-> > > VIVS_HI_CHIP_PRODUCT_ID
-> > > VIVS_HI_CHIP_ECO_ID
-> > > need to be conditional - while
-> > > VIVS_HI_CHIP_CUSTOMER_ID
-> > > seems to be okay.
-> > > 
-> > 
-> > Uhh.. okay.. just send a V2 - thanks for testing :)
-> 
-> There is also something else going on with the GC600 - 5.4 worked fine,
-> 5.8 doesn't - my 2D Xorg driver gets stuck waiting on a BO after just
-> a couple of minutes.  Looking in debugfs, there's a whole load of BOs
-> that are listed as "active", yet the GPU is idle:
-> 
->    00020000: A  0 ( 7) 00000000 00000000 8294400
->    00010000: I  0 ( 1) 00000000 00000000 4096
->    00010000: I  0 ( 1) 00000000 00000000 4096
->    00010000: I  0 ( 1) 00000000 00000000 327680
->    00010000: A  0 ( 7) 00000000 00000000 8388608
->    00010000: I  0 ( 1) 00000000 00000000 8388608
->    00010000: I  0 ( 1) 00000000 00000000 8388608
->    00010000: A  0 ( 7) 00000000 00000000 8388608
->    00010000: A  0 ( 3) 00000000 00000000 8388608
->    00010000: A  0 ( 4) 00000000 00000000 8388608
->    00010000: A  0 ( 3) 00000000 00000000 8388608
->    00010000: A  0 ( 3) 00000000 00000000 8388608
->    00010000: A  0 ( 3) 00000000 00000000 8388608
-> ....
->    00010000: A  0 ( 3) 00000000 00000000 8388608
-> Total 38 objects, 293842944 bytes
-> 
-> My guess is there's something up with the way a job completes that's
-> causing the BOs not to be marked inactive.  I haven't yet been able
-> to debug any further.
+--s/l3CgOIzMHHjg/5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The patch I just sent out should fix this issue. The DRM scheduler is
-doing some funny business which breaks our job done signalling if the
-GPU timeout has been hit, even if our timeout handler is just extending
-the timeout as the GPU is still working normally.
+On Mon, Aug 24, 2020 at 06:23:19PM +0800, Gene Chen wrote:
+> Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8820=E6=97=
+=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:45=E5=AF=AB=E9=81=93=EF=BC=9A
 
-Regards,
-Lucas
+> > This device only exists in the context of a single parent device, there
+> > should be no need for a compatible string here - this is just a detail
+> > of how Linux does things.  The MFD should just instntiate the platform
+> > device.
 
+> Trying to autoload module without of_id_table will cause run-time error:
+> ueventd: LoadWithAliases was unable to load
+> of:NregulatorT(null)Cmediatek,mt6360-regulator
+
+You shouldn't have this described in the device tree at all, like I say
+the MFD should just instantiate the platform device.
+
+--s/l3CgOIzMHHjg/5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9DntoACgkQJNaLcl1U
+h9AI7Qf/aKJwrqZi6N40mt5MpwiV+hZ9suHb3xMS5nDmfB/Wbs5e2QhLRELVG8Di
+V/J+aX+cSq7xN9elG/yRpB6Rv3jEZ+HuzNgWnZT6EEwTO6BFa8JdiDS9Ya9JzOf4
+I9mT76nHMMxb0io4hTy0YjxbZIh0BtHU9NK97n3LsG7btQLsQD2eZfdVQHU6RUFy
+A55EqlQAvNBZ/fRrl0uJmE7iuuOz9KISKypEcBi96+ztklTRTsoet/9XqoqghOkO
+ch9U8SL21g3Y5/GNW1eyHCA+ZVTeTQQ/mxO7ptJoeMU1FF9/gc7gzd0n/O17MbXH
+SSApfApl1vKX5VfDD8xKLFEM+9khCw==
+=rBbb
+-----END PGP SIGNATURE-----
+
+--s/l3CgOIzMHHjg/5--
