@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF98C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B353C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCE99207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27DA208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259228;
-	bh=Rb8dpyBVkPJBOLdqZaBKluQsV2XUws3PR6snB0G3e5M=;
+	s=default; t=1598259235;
+	bh=yGkGGqYHKx4qmbR+SG0JcEnjcPvm0sV/7vkVg/3qdF4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hCt1M7+HXq1F+2SXIwwtORKJ/zcbkYpjxGqbfnjbj9EbTVi1Fht0saGKKE+EKOnzN
-	 eCq8aQi1TqFyvrD5wYrTnSQcxUW9pxcnDN+PLY1qsG+v3ErqYa6jTrnkVteu90MBrc
-	 VF8RU0FCYeVfxkmpx6RxLbpBoKp3wTDm31lynWEk=
+	b=PdmTDUZT0u29iD4o1ASSxc7q/keJj+VcciWt22XXlf+idxdLcp7xARakTGaTjCCr9
+	 CsEklenJ/r7xt1Pcvg7DECbY7SjZjZOyoRUTokKVEkDosvPT6v3laFjXb1F0tGZuaZ
+	 ZqxckJkHdqTyayvdaeg+3FNqtgM0Iz4SPcUKGYv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbgHXIxq (ORCPT
+        id S1730249AbgHXIxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:53:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32900 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:53:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730197AbgHXIxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:53:34 -0400
+        id S1728423AbgHXIxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:53:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 406942072D;
-        Mon, 24 Aug 2020 08:53:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3FC82072D;
+        Mon, 24 Aug 2020 08:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259213;
-        bh=Rb8dpyBVkPJBOLdqZaBKluQsV2XUws3PR6snB0G3e5M=;
+        s=default; t=1598259219;
+        bh=yGkGGqYHKx4qmbR+SG0JcEnjcPvm0sV/7vkVg/3qdF4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jPvPY8+3weEJGxymGfmQNk0eHE+NgGGe0TEdmJgzk7Y3dpTAP4pDnv8kS2PkrNTKF
-         II5CuwmIAsLv4odJJV+nhtcu/gmN6aO6pQAeirsOY8xBx3mi7JQ6lp1qj005dZHV8L
-         PCIQoE5XfmY9pNt4re5SDOIuZ9QDiw/tWn5xPpnI=
+        b=g/XKbFpninYyxMchjq6V9RUhzH9QIrmHMMPQV0xm0X0Z9MLBkqoRNvtDaSNxohR9f
+         TDs4JRKNXTClQOFu8xWdg5ill8g3ZDTpTklub/I+Xm6hztOrV7uWeceSD/r2mRr8K/
+         KtPzG3yAYoBbGiRENZW63WfozRhHlmXhtfwzJNEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 24/50] Input: psmouse - add a newline when printing proto by sysfs
-Date:   Mon, 24 Aug 2020 10:31:25 +0200
-Message-Id: <20200824082353.260942193@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 26/50] xfs: fix inode quota reservation checks
+Date:   Mon, 24 Aug 2020 10:31:27 +0200
+Message-Id: <20200824082353.352112534@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -60,37 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 4aec14de3a15cf9789a0e19c847f164776f49473 ]
+[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
 
-When I cat parameter 'proto' by sysfs, it displays as follows. It's
-better to add a newline for easy reading.
+xfs_trans_dqresv is the function that we use to make reservations
+against resource quotas.  Each resource contains two counters: the
+q_core counter, which tracks resources allocated on disk; and the dquot
+reservation counter, which tracks how much of that resource has either
+been allocated or reserved by threads that are working on metadata
+updates.
 
-root@syzkaller:~# cat /sys/module/psmouse/parameters/proto
-autoroot@syzkaller:~#
+For disk blocks, we compare the proposed reservation counter against the
+hard and soft limits to decide if we're going to fail the operation.
+However, for inodes we inexplicably compare against the q_core counter,
+not the incore reservation count.
 
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200720073846.120724-1-wangxiongfeng2@huawei.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Since the q_core counter is always lower than the reservation count and
+we unlock the dquot between reservation and transaction commit, this
+means that multiple threads can reserve the last inode count before we
+hit the hard limit, and when they commit, we'll be well over the hard
+limit.
+
+Fix this by checking against the incore inode reservation counter, since
+we would appear to maintain that correctly (and that's what we report in
+GETQUOTA).
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/psmouse-base.c | 2 +-
+ fs/xfs/xfs_trans_dquot.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
-index 8ac9e03c05b45..ca8f726dab2e7 100644
---- a/drivers/input/mouse/psmouse-base.c
-+++ b/drivers/input/mouse/psmouse-base.c
-@@ -2012,7 +2012,7 @@ static int psmouse_get_maxproto(char *buffer, const struct kernel_param *kp)
- {
- 	int type = *((unsigned int *)kp->arg);
- 
--	return sprintf(buffer, "%s", psmouse_protocol_by_type(type)->name);
-+	return sprintf(buffer, "%s\n", psmouse_protocol_by_type(type)->name);
- }
- 
- static int __init psmouse_init(void)
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index c3d547211d160..9c42e50a5cb7e 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -669,7 +669,7 @@ xfs_trans_dqresv(
+ 			}
+ 		}
+ 		if (ninos > 0) {
+-			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
++			total_count = dqp->q_res_icount + ninos;
+ 			timer = be32_to_cpu(dqp->q_core.d_itimer);
+ 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
+ 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
 -- 
 2.25.1
 
