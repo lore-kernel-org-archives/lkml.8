@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F828C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE7952063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E372074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289095;
-	bh=6v8rcxjk5E46zO64zz2NpKgHnlGR5IMJkXeHxdpH0BU=;
+	s=default; t=1598289098;
+	bh=8mAwtX+Ee+1eCxWfNv/7nBgIok4K2DaHXIGeWUc3hjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oEXT1y7fCJnPgZrZjQoIKe4XN6bgXLNUim+noEhE+kqrU9Mo7afLOl6uwXJKsek/k
-	 wc9rbpeu78LmlgipVcQ9LrS4DppZvSMVS0VFCZYVH30P3PYFbEjhrxhWZ3RPzHU2l6
-	 Ker2AaU8tDsqcUAIceXAV5Ly/mYLPPgdGwkfpmgg=
+	b=w0J715QAEUoLm7D4aR5TjI/OXZ/gOanU47ZYkziyFnsw+3UUKGlf/gKfQvEHZIUB2
+	 Nfwi31+EOiiCuLs+/JRYbb2YiCuJSFF75WQAwDr+62+PPBcabNDSETlUBrbjuObiMX
+	 Lg+O8rsqX/8kgSXfoprg0jlDdkhdG5Kv653wcerM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHXRLe (ORCPT
+        id S1728245AbgHXRLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39694 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:11:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728400AbgHXQh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:37:56 -0400
+        id S1728394AbgHXQhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:37:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 983DB22D08;
-        Mon, 24 Aug 2020 16:37:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 207A322D6D;
+        Mon, 24 Aug 2020 16:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287039;
-        bh=6v8rcxjk5E46zO64zz2NpKgHnlGR5IMJkXeHxdpH0BU=;
+        s=default; t=1598287029;
+        bh=8mAwtX+Ee+1eCxWfNv/7nBgIok4K2DaHXIGeWUc3hjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBPJvsoRNRrR4FJ535hSSVsMnhtxul4W4uRmxCoInXUpzJlJntrDzdx6AEHjUP3nj
-         zSnpfEyBK2FG1SVe/LRza2qVZnPKkxMvZ3IUiDEemfjaQt9JOXlaADIgjsW+NAxCf7
-         amA2oEmp8vOujv8WwEf9ige46M1bF+Ry1YDxuYJg=
+        b=UZGKgHJ4WjoyGd+uBDI04jx7WiT7/CUdJLgLvd9bCqu44RruCao726EWajCnekKHW
+         sUCv/EGfuSGC1lWJm3ADBXLryBt/hvQBbF1DWz86+osaPEaSgdLKTETQmxwoa1a+RT
+         fuTHJDa/HBV3d9mz++radCezkdf3tm1moLHFJ0h4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Christie <michael.christie@oracle.com>,
-        Hannes Reinecke <hare@suse.de>, Lee Duncan <lduncan@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc:     Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 33/54] scsi: fcoe: Fix I/O path allocation
-Date:   Mon, 24 Aug 2020 12:36:12 -0400
-Message-Id: <20200824163634.606093-33-sashal@kernel.org>
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 25/54] selftests/bpf: Correct various core_reloc 64-bit assumptions
+Date:   Mon, 24 Aug 2020 12:36:04 -0400
+Message-Id: <20200824163634.606093-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -61,37 +61,237 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <michael.christie@oracle.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit fa39ab5184d64563cd36f2fb5f0d3fbad83a432c ]
+[ Upstream commit 5705d705832f74395c5465ce93192688f543006a ]
 
-ixgbe_fcoe_ddp_setup() can be called from the main I/O path and is called
-with a spin_lock held, so we have to use GFP_ATOMIC allocation instead of
-GFP_KERNEL.
+Ensure that types are memory layout- and field alignment-compatible regardless
+of 32/64-bitness mix of libbpf and BPF architecture.
 
-Link: https://lore.kernel.org/r/1596831813-9839-1-git-send-email-michael.christie@oracle.com
-cc: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20200813204945.1020225-8-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../selftests/bpf/prog_tests/core_reloc.c     | 20 +++---
+ .../selftests/bpf/progs/core_reloc_types.h    | 69 ++++++++++---------
+ 2 files changed, 47 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
-index ec7a11d13fdc0..9e70b9a674409 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
-@@ -192,7 +192,7 @@ static int ixgbe_fcoe_ddp_setup(struct net_device *netdev, u16 xid,
+diff --git a/tools/testing/selftests/bpf/prog_tests/core_reloc.c b/tools/testing/selftests/bpf/prog_tests/core_reloc.c
+index 084ed26a7d78c..a54eafc5e4b31 100644
+--- a/tools/testing/selftests/bpf/prog_tests/core_reloc.c
++++ b/tools/testing/selftests/bpf/prog_tests/core_reloc.c
+@@ -237,8 +237,8 @@
+ 		.union_sz = sizeof(((type *)0)->union_field),		\
+ 		.arr_sz = sizeof(((type *)0)->arr_field),		\
+ 		.arr_elem_sz = sizeof(((type *)0)->arr_field[0]),	\
+-		.ptr_sz = sizeof(((type *)0)->ptr_field),		\
+-		.enum_sz = sizeof(((type *)0)->enum_field),	\
++		.ptr_sz = 8, /* always 8-byte pointer for BPF */	\
++		.enum_sz = sizeof(((type *)0)->enum_field),		\
  	}
  
- 	/* alloc the udl from per cpu ddp pool */
--	ddp->udl = dma_pool_alloc(ddp_pool->pool, GFP_KERNEL, &ddp->udp);
-+	ddp->udl = dma_pool_alloc(ddp_pool->pool, GFP_ATOMIC, &ddp->udp);
- 	if (!ddp->udl) {
- 		e_err(drv, "failed allocated ddp context\n");
- 		goto out_noddp_unmap;
+ #define SIZE_CASE(name) {						\
+@@ -432,20 +432,20 @@ static struct core_reloc_test_case test_cases[] = {
+ 		.sb4 = -1,
+ 		.sb20 = -0x17654321,
+ 		.u32 = 0xBEEF,
+-		.s32 = -0x3FEDCBA987654321,
++		.s32 = -0x3FEDCBA987654321LL,
+ 	}),
+ 	BITFIELDS_CASE(bitfields___bitfield_vs_int, {
+-		.ub1 = 0xFEDCBA9876543210,
++		.ub1 = 0xFEDCBA9876543210LL,
+ 		.ub2 = 0xA6,
+-		.ub7 = -0x7EDCBA987654321,
+-		.sb4 = -0x6123456789ABCDE,
+-		.sb20 = 0xD00D,
++		.ub7 = -0x7EDCBA987654321LL,
++		.sb4 = -0x6123456789ABCDELL,
++		.sb20 = 0xD00DLL,
+ 		.u32 = -0x76543,
+-		.s32 = 0x0ADEADBEEFBADB0B,
++		.s32 = 0x0ADEADBEEFBADB0BLL,
+ 	}),
+ 	BITFIELDS_CASE(bitfields___just_big_enough, {
+-		.ub1 = 0xF,
+-		.ub2 = 0x0812345678FEDCBA,
++		.ub1 = 0xFLL,
++		.ub2 = 0x0812345678FEDCBALL,
+ 	}),
+ 	BITFIELDS_ERR_CASE(bitfields___err_too_big_bitfield),
+ 
+diff --git a/tools/testing/selftests/bpf/progs/core_reloc_types.h b/tools/testing/selftests/bpf/progs/core_reloc_types.h
+index 6d598cfbdb3e2..f9da9f62c4b34 100644
+--- a/tools/testing/selftests/bpf/progs/core_reloc_types.h
++++ b/tools/testing/selftests/bpf/progs/core_reloc_types.h
+@@ -1,5 +1,10 @@
+ #include <stdint.h>
+ #include <stdbool.h>
++
++void preserce_ptr_sz_fn(long x) {}
++
++#define __bpf_aligned __attribute__((aligned(8)))
++
+ /*
+  * KERNEL
+  */
+@@ -444,51 +449,51 @@ struct core_reloc_primitives {
+ 	char a;
+ 	int b;
+ 	enum core_reloc_primitives_enum c;
+-	void *d;
+-	int (*f)(const char *);
++	void *d __bpf_aligned;
++	int (*f)(const char *) __bpf_aligned;
+ };
+ 
+ struct core_reloc_primitives___diff_enum_def {
+ 	char a;
+ 	int b;
+-	void *d;
+-	int (*f)(const char *);
++	void *d __bpf_aligned;
++	int (*f)(const char *) __bpf_aligned;
+ 	enum {
+ 		X = 100,
+ 		Y = 200,
+-	} c; /* inline enum def with differing set of values */
++	} c __bpf_aligned; /* inline enum def with differing set of values */
+ };
+ 
+ struct core_reloc_primitives___diff_func_proto {
+-	void (*f)(int); /* incompatible function prototype */
+-	void *d;
+-	enum core_reloc_primitives_enum c;
++	void (*f)(int) __bpf_aligned; /* incompatible function prototype */
++	void *d __bpf_aligned;
++	enum core_reloc_primitives_enum c __bpf_aligned;
+ 	int b;
+ 	char a;
+ };
+ 
+ struct core_reloc_primitives___diff_ptr_type {
+-	const char * const d; /* different pointee type + modifiers */
+-	char a;
++	const char * const d __bpf_aligned; /* different pointee type + modifiers */
++	char a __bpf_aligned;
+ 	int b;
+ 	enum core_reloc_primitives_enum c;
+-	int (*f)(const char *);
++	int (*f)(const char *) __bpf_aligned;
+ };
+ 
+ struct core_reloc_primitives___err_non_enum {
+ 	char a[1];
+ 	int b;
+ 	int c; /* int instead of enum */
+-	void *d;
+-	int (*f)(const char *);
++	void *d __bpf_aligned;
++	int (*f)(const char *) __bpf_aligned;
+ };
+ 
+ struct core_reloc_primitives___err_non_int {
+ 	char a[1];
+-	int *b; /* ptr instead of int */
+-	enum core_reloc_primitives_enum c;
+-	void *d;
+-	int (*f)(const char *);
++	int *b __bpf_aligned; /* ptr instead of int */
++	enum core_reloc_primitives_enum c __bpf_aligned;
++	void *d __bpf_aligned;
++	int (*f)(const char *) __bpf_aligned;
+ };
+ 
+ struct core_reloc_primitives___err_non_ptr {
+@@ -496,7 +501,7 @@ struct core_reloc_primitives___err_non_ptr {
+ 	int b;
+ 	enum core_reloc_primitives_enum c;
+ 	int d; /* int instead of ptr */
+-	int (*f)(const char *);
++	int (*f)(const char *) __bpf_aligned;
+ };
+ 
+ /*
+@@ -507,7 +512,7 @@ struct core_reloc_mods_output {
+ };
+ 
+ typedef const int int_t;
+-typedef const char *char_ptr_t;
++typedef const char *char_ptr_t __bpf_aligned;
+ typedef const int arr_t[7];
+ 
+ struct core_reloc_mods_substruct {
+@@ -523,9 +528,9 @@ typedef struct {
+ struct core_reloc_mods {
+ 	int a;
+ 	int_t b;
+-	char *c;
++	char *c __bpf_aligned;
+ 	char_ptr_t d;
+-	int e[3];
++	int e[3] __bpf_aligned;
+ 	arr_t f;
+ 	struct core_reloc_mods_substruct g;
+ 	core_reloc_mods_substruct_t h;
+@@ -535,9 +540,9 @@ struct core_reloc_mods {
+ struct core_reloc_mods___mod_swap {
+ 	int b;
+ 	int_t a;
+-	char *d;
++	char *d __bpf_aligned;
+ 	char_ptr_t c;
+-	int f[3];
++	int f[3] __bpf_aligned;
+ 	arr_t e;
+ 	struct {
+ 		int y;
+@@ -555,7 +560,7 @@ typedef arr1_t arr2_t;
+ typedef arr2_t arr3_t;
+ typedef arr3_t arr4_t;
+ 
+-typedef const char * const volatile fancy_char_ptr_t;
++typedef const char * const volatile fancy_char_ptr_t __bpf_aligned;
+ 
+ typedef core_reloc_mods_substruct_t core_reloc_mods_substruct_tt;
+ 
+@@ -567,7 +572,7 @@ struct core_reloc_mods___typedefs {
+ 	arr4_t e;
+ 	fancy_char_ptr_t d;
+ 	fancy_char_ptr_t c;
+-	int3_t b;
++	int3_t b __bpf_aligned;
+ 	int3_t a;
+ };
+ 
+@@ -739,19 +744,19 @@ struct core_reloc_bitfields___bit_sz_change {
+ 	int8_t		sb4: 1;		/*  4 ->  1 */
+ 	int32_t		sb20: 30;	/* 20 -> 30 */
+ 	/* non-bitfields */
+-	uint16_t	u32;		/* 32 -> 16 */
+-	int64_t		s32;		/* 32 -> 64 */
++	uint16_t	u32;			/* 32 -> 16 */
++	int64_t		s32 __bpf_aligned;	/* 32 -> 64 */
+ };
+ 
+ /* turn bitfield into non-bitfield and vice versa */
+ struct core_reloc_bitfields___bitfield_vs_int {
+ 	uint64_t	ub1;		/*  3 -> 64 non-bitfield */
+ 	uint8_t		ub2;		/* 20 ->  8 non-bitfield */
+-	int64_t		ub7;		/*  7 -> 64 non-bitfield signed */
+-	int64_t		sb4;		/*  4 -> 64 non-bitfield signed */
+-	uint64_t	sb20;		/* 20 -> 16 non-bitfield unsigned */
+-	int32_t		u32: 20;	/* 32 non-bitfield -> 20 bitfield */
+-	uint64_t	s32: 60;	/* 32 non-bitfield -> 60 bitfield */
++	int64_t		ub7 __bpf_aligned;	/*  7 -> 64 non-bitfield signed */
++	int64_t		sb4 __bpf_aligned;	/*  4 -> 64 non-bitfield signed */
++	uint64_t	sb20 __bpf_aligned;	/* 20 -> 16 non-bitfield unsigned */
++	int32_t		u32: 20;		/* 32 non-bitfield -> 20 bitfield */
++	uint64_t	s32: 60 __bpf_aligned;	/* 32 non-bitfield -> 60 bitfield */
+ };
+ 
+ struct core_reloc_bitfields___just_big_enough {
 -- 
 2.25.1
 
