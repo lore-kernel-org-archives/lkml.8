@@ -2,72 +2,114 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A21BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31C5820738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF58207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHXI0P (ORCPT
+        id S1726610AbgHXI0V convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:26:15 -0400
-Received: from mail-pg1-f169.google.com ([209.85.215.169]:33315 "EHLO
-        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725968AbgHXI0N (ORCPT
+        Mon, 24 Aug 2020 04:26:21 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:47931 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726581AbgHXI0U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:26:13 -0400
-Received: by mail-pg1-f169.google.com with SMTP id o13so4222172pgf.0;
-        Mon, 24 Aug 2020 01:26:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=aQ9rPrQx2TTeyieFtrED4ZWS/SQHcBBxbir1kHz+JC+MhAN7IswsaMKSQYMSpzKHBh
-         J4ZOzGbfjBC030wyZsNKpejnrjX8czWO2Lg4LjXQpZtVNay6s/y3pgWl2jS+3038edH1
-         z6ejoKqZHrpORcPwaHzXjGMvnK2M+uuwSzd6J9g3Wdya8mXKWzaJmlJ67A0IrqkDscCk
-         rJuTfzMnQg2a1lvlICbaGDB5eftvoupXWcL555kEebCGI4EQpGZb5uBq2AuRN+Cu9o7P
-         +Q8dDKOqkudraQOPC/4mlSAPMa4ToXXQFIc7UMasOeoDkjvCsBg7Vc5CC579GvgRnS7M
-         ypcQ==
-X-Gm-Message-State: AOAM530hnytZHxPPUDApVjOcKQ/Vfn9zs7K4eet8g6QX6RgdjxodWDL0
-        v3LJCB8v6Dss7E/KFcd/YXc=
-X-Google-Smtp-Source: ABdhPJzXiZUVeS8YfUquyoWsC4hh0fRsUgPV5IJXXRp/HScfGTNVi+qxSJ9+/HWxEZO7m6q+OGBEBA==
-X-Received: by 2002:a63:1417:: with SMTP id u23mr2850482pgl.289.1598257572669;
-        Mon, 24 Aug 2020 01:26:12 -0700 (PDT)
-Received: from ?IPv6:2601:647:4802:9070:cda6:bf68:c972:645d? ([2601:647:4802:9070:cda6:bf68:c972:645d])
-        by smtp.gmail.com with ESMTPSA id h9sm11302035pfq.18.2020.08.24.01.26.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 01:26:12 -0700 (PDT)
-Subject: Re: [PATCH 3/3] nvme: don't call revalidate_disk from
- nvme_set_queue_dying
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     linux-s390@vger.kernel.org, Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Justin Sanders <justin@coraid.com>,
-        linux-nvme@lists.infradead.org, Josef Bacik <josef@toxicpanda.com>,
-        Xianting Tian <xianting_tian@126.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        dm-devel@redhat.com, Stefan Haberland <sth@linux.ibm.com>,
-        nbd@other.debian.org
-References: <20200823091043.2600261-1-hch@lst.de>
- <20200823091043.2600261-4-hch@lst.de>
-From:   Sagi Grimberg <sagi@grimberg.me>
-Message-ID: <b5422c22-7f68-e2a5-ec53-e1457d11f3ad@grimberg.me>
-Date:   Mon, 24 Aug 2020 01:26:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200823091043.2600261-4-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 24 Aug 2020 04:26:20 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-280-YmP3yX5pPw6c5HnJR1Czfw-1; Mon, 24 Aug 2020 09:26:14 +0100
+X-MC-Unique: YmP3yX5pPw6c5HnJR1Czfw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 24 Aug 2020 09:26:13 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 24 Aug 2020 09:26:13 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Nicolas Boichat' <drinkcat@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+CC:     "dianders@chromium.org" <dianders@chromium.org>,
+        "groeck@chromium.org" <groeck@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        Kars Mulder <kerneldev@karsmulder.nl>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Will Deacon <will@kernel.org>, Yue Hu <huyue2@yulong.com>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v5] kernel/trace: Add DISALLOW_TRACE_PRINTK make option
+Thread-Topic: [PATCH v5] kernel/trace: Add DISALLOW_TRACE_PRINTK make option
+Thread-Index: AQHWecKchjFb7pHUGUqNEDurUkt7jKlG664w
+Date:   Mon, 24 Aug 2020 08:26:13 +0000
+Message-ID: <3f84781f12424cbfa552981af42dfaf2@AcuMS.aculab.com>
+References: <20200824105852.v5.1.I4feb11d34ce7a0dd5ee2c3327fb5a1a9a646be30@changeid>
+In-Reply-To: <20200824105852.v5.1.I4feb11d34ce7a0dd5ee2c3327fb5a1a9a646be30@changeid>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.002
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+From: Nicolas Boichat
+> Sent: 24 August 2020 03:59
+> 
+> trace_printk is meant as a debugging tool, and should not be
+> compiled into production code without specific debug Kconfig
+> options enabled, or source code changes, as indicated by the
+> warning that shows up on boot if any trace_printk is called:
+>  **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
+>  **                                                      **
+>  ** trace_printk() being used. Allocating extra memory.  **
+>  **                                                      **
+>  ** This means that this is a DEBUG kernel and it is     **
+>  ** unsafe for production use.                           **
+> 
+> If DISALLOW_TRACE_PRINTK=1 is passed on the make command
+> line, the kernel will generate a build-time error if
+> trace_printk is used. We expect distributors to set this
+> option for their production kernels.
+> 
+> Note that the code to handle trace_printk is still present,
+> so this does not prevent people from compiling out-of-tree
+> kernel modules, or BPF programs.
+> 
+> Also, we are not making this a kernel config option as we
+> want the developer convenience of being able to reuse a
+> production kernel config, add trace_printk for debugging,
+> and rebuild, without any config changes.
+
+Since the objective seems to be to ensure there are no
+calls to trace_printk() in the git tree, but to allow
+them in uncommitted sources. Why not use a config option
+and rely on rand-config builds to detect any 'accidental'
+commits?
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
