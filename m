@@ -5,52 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F62C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE798C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FFA0207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D5720FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259261;
-	bh=Ol6LQYuAZ7Ecx1GB6D9KOVvKbVKPp2CzqIRyagn7Kvs=;
+	s=default; t=1598259262;
+	bh=V8IP8EA9VpB2T1l2jYQmpbW7svvqjAwsboHqoVjbVN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gb+XkhCFFDo6uFFmZkCCdDOpBvoykzBq0IwF5KnZ6d14ezj4NCjBZxNMlPuvWHR1G
-	 4Gl73Er9kMGLW4Kx8iJ/83rmUaknWOFhc+2rhAPSAmNX1nVB2ZvjbzwPxtV8kF7WBi
-	 7UUYUPcDPejroH0Hm273YSDMw1QN0K3UnPeohYeM=
+	b=Fxg+ZXQjWmRGNeUWg5gJ0+ADBz4gWQQym3mHR9+46wq6RjoqTxYBeeXD73jXN9YEQ
+	 MStoyTdTvjluUbdUXS0tl/0FZ0PlD4UqSVcm7J81bgyF82cT09mR50JGGL2MS58T2e
+	 5QmejXoNt5iQgtxAO21VB82bvX0uk4Wo5cD6nKvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730315AbgHXIyT (ORCPT
+        id S1730323AbgHXIyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:54:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34030 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:54:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729980AbgHXIyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:54:06 -0400
+        id S1730036AbgHXIyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A21D6207DF;
-        Mon, 24 Aug 2020 08:54:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E55A204FD;
+        Mon, 24 Aug 2020 08:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259245;
-        bh=Ol6LQYuAZ7Ecx1GB6D9KOVvKbVKPp2CzqIRyagn7Kvs=;
+        s=default; t=1598259252;
+        bh=V8IP8EA9VpB2T1l2jYQmpbW7svvqjAwsboHqoVjbVN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ywckWovLN7Cc/bXkNr0BuPXNZjQ+t5urqj56SEGIECo3WFBFVKTAIuLpxh+TgCkth
-         09744GCYx551g1R+O8Zkzu9HGkoEhlcvQsYdebafcKOGhHnlLLPj+gQo0k7LR56I+H
-         MbUGiWx3YOusMykkVAjrs3+pVxbadiDKxlyDQ6Us=
+        b=wGolTF5lRjcNAmEin3jzLuAxvkP7d/VhEFhedsOGQFDf+bsdXStmoFMEkbjuYt2QZ
+         zCpQjUaVeVdxbfOqoPbbmjj0NsC5PIDJdqr2ys4MgTU/uvniRB0khcqlZkVhd1GaAL
+         0RCVJhNpclnxbk6llGLGEZsbv3UmXuEJpcjN3vGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grzegorz Szczurek <grzegorzx.szczurek@intel.com>,
-        Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 35/50] i40e: Fix crash during removing i40e driver
-Date:   Mon, 24 Aug 2020 10:31:36 +0200
-Message-Id: <20200824082353.822920275@linuxfoundation.org>
+        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>
+Subject: [PATCH 4.14 11/50] btrfs: sysfs: use NOFS for device creation
+Date:   Mon, 24 Aug 2020 10:31:12 +0200
+Message-Id: <20200824082352.476380248@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -63,78 +59,188 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grzegorz Szczurek <grzegorzx.szczurek@intel.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 5b6d4a7f20b09c47ca598760f6dafd554af8b6d5 ]
+Dave hit this splat during testing btrfs/078:
 
-Fix the reason of crashing system by add waiting time to finish reset
-recovery process before starting remove driver procedure.
-Now VSI is releasing if VSI is not in reset recovery mode.
-Without this fix it was possible to start remove driver if other
-processing command need reset recovery procedure which resulted in
-null pointer dereference. VSI used by the ethtool process has been
-cleared by remove driver process.
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.8.0-rc6-default+ #1191 Not tainted
+  ------------------------------------------------------
+  kswapd0/75 is trying to acquire lock:
+  ffffa040e9d04ff8 (&delayed_node->mutex){+.+.}-{3:3}, at: __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
 
-[ 6731.508665] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[ 6731.508668] #PF: supervisor read access in kernel mode
-[ 6731.508670] #PF: error_code(0x0000) - not-present page
-[ 6731.508671] PGD 0 P4D 0
-[ 6731.508674] Oops: 0000 [#1] SMP PTI
-[ 6731.508679] Hardware name: Intel Corporation S2600WT2R/S2600WT2R, BIOS SE5C610.86B.01.01.0021.032120170601 03/21/2017
-[ 6731.508694] RIP: 0010:i40e_down+0x252/0x310 [i40e]
-[ 6731.508696] Code: c7 78 de fa c0 e8 61 02 3a c1 66 83 bb f6 0c 00 00 00 0f 84 bf 00 00 00 45 31 e4 45 31 ff eb 03 41 89 c7 48 8b 83 98 0c 00 00 <4a> 8b 3c 20 e8 a5 79 02 00 48 83 bb d0 0c 00 00 00 74 10 48 8b 83
-[ 6731.508698] RSP: 0018:ffffb75ac7b3faf0 EFLAGS: 00010246
-[ 6731.508700] RAX: 0000000000000000 RBX: ffff9c9874bd5000 RCX: 0000000000000007
-[ 6731.508701] RDX: 0000000000000000 RSI: 0000000000000096 RDI: ffff9c987f4d9780
-[ 6731.508703] RBP: ffffb75ac7b3fb30 R08: 0000000000005b60 R09: 0000000000000004
-[ 6731.508704] R10: ffffb75ac64fbd90 R11: 0000000000000001 R12: 0000000000000000
-[ 6731.508706] R13: ffff9c97a08e0000 R14: ffff9c97a08e0a68 R15: 0000000000000000
-[ 6731.508708] FS:  00007f2617cd2740(0000) GS:ffff9c987f4c0000(0000) knlGS:0000000000000000
-[ 6731.508710] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 6731.508711] CR2: 0000000000000000 CR3: 0000001e765c4006 CR4: 00000000003606e0
-[ 6731.508713] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 6731.508714] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 6731.508715] Call Trace:
-[ 6731.508734]  i40e_vsi_close+0x84/0x90 [i40e]
-[ 6731.508742]  i40e_quiesce_vsi.part.98+0x3c/0x40 [i40e]
-[ 6731.508749]  i40e_pf_quiesce_all_vsi+0x55/0x60 [i40e]
-[ 6731.508757]  i40e_prep_for_reset+0x59/0x130 [i40e]
-[ 6731.508765]  i40e_reconfig_rss_queues+0x5a/0x120 [i40e]
-[ 6731.508774]  i40e_set_channels+0xda/0x170 [i40e]
-[ 6731.508778]  ethtool_set_channels+0xe9/0x150
-[ 6731.508781]  dev_ethtool+0x1b94/0x2920
-[ 6731.508805]  dev_ioctl+0xc2/0x590
-[ 6731.508811]  sock_do_ioctl+0xae/0x150
-[ 6731.508813]  sock_ioctl+0x34f/0x3c0
-[ 6731.508821]  ksys_ioctl+0x98/0xb0
-[ 6731.508828]  __x64_sys_ioctl+0x1a/0x20
-[ 6731.508831]  do_syscall_64+0x57/0x1c0
-[ 6731.508835]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  but task is already holding lock:
+  ffffffff8b0c8040 (fs_reclaim){+.+.}-{0:0}, at: __fs_reclaim_acquire+0x5/0x30
 
-Fixes: 4b8164467b85 ("i40e: Add common function for finding VSI by type")
-Signed-off-by: Grzegorz Szczurek <grzegorzx.szczurek@intel.com>
-Signed-off-by: Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  which lock already depends on the new lock.
+
+  the existing dependency chain (in reverse order) is:
+
+  -> #2 (fs_reclaim){+.+.}-{0:0}:
+	 __lock_acquire+0x56f/0xaa0
+	 lock_acquire+0xa3/0x440
+	 fs_reclaim_acquire.part.0+0x25/0x30
+	 __kmalloc_track_caller+0x49/0x330
+	 kstrdup+0x2e/0x60
+	 __kernfs_new_node.constprop.0+0x44/0x250
+	 kernfs_new_node+0x25/0x50
+	 kernfs_create_link+0x34/0xa0
+	 sysfs_do_create_link_sd+0x5e/0xd0
+	 btrfs_sysfs_add_devices_dir+0x65/0x100 [btrfs]
+	 btrfs_init_new_device+0x44c/0x12b0 [btrfs]
+	 btrfs_ioctl+0xc3c/0x25c0 [btrfs]
+	 ksys_ioctl+0x68/0xa0
+	 __x64_sys_ioctl+0x16/0x20
+	 do_syscall_64+0x50/0xe0
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+  -> #1 (&fs_info->chunk_mutex){+.+.}-{3:3}:
+	 __lock_acquire+0x56f/0xaa0
+	 lock_acquire+0xa3/0x440
+	 __mutex_lock+0xa0/0xaf0
+	 btrfs_chunk_alloc+0x137/0x3e0 [btrfs]
+	 find_free_extent+0xb44/0xfb0 [btrfs]
+	 btrfs_reserve_extent+0x9b/0x180 [btrfs]
+	 btrfs_alloc_tree_block+0xc1/0x350 [btrfs]
+	 alloc_tree_block_no_bg_flush+0x4a/0x60 [btrfs]
+	 __btrfs_cow_block+0x143/0x7a0 [btrfs]
+	 btrfs_cow_block+0x15f/0x310 [btrfs]
+	 push_leaf_right+0x150/0x240 [btrfs]
+	 split_leaf+0x3cd/0x6d0 [btrfs]
+	 btrfs_search_slot+0xd14/0xf70 [btrfs]
+	 btrfs_insert_empty_items+0x64/0xc0 [btrfs]
+	 __btrfs_commit_inode_delayed_items+0xb2/0x840 [btrfs]
+	 btrfs_async_run_delayed_root+0x10e/0x1d0 [btrfs]
+	 btrfs_work_helper+0x2f9/0x650 [btrfs]
+	 process_one_work+0x22c/0x600
+	 worker_thread+0x50/0x3b0
+	 kthread+0x137/0x150
+	 ret_from_fork+0x1f/0x30
+
+  -> #0 (&delayed_node->mutex){+.+.}-{3:3}:
+	 check_prev_add+0x98/0xa20
+	 validate_chain+0xa8c/0x2a00
+	 __lock_acquire+0x56f/0xaa0
+	 lock_acquire+0xa3/0x440
+	 __mutex_lock+0xa0/0xaf0
+	 __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
+	 btrfs_evict_inode+0x3bf/0x560 [btrfs]
+	 evict+0xd6/0x1c0
+	 dispose_list+0x48/0x70
+	 prune_icache_sb+0x54/0x80
+	 super_cache_scan+0x121/0x1a0
+	 do_shrink_slab+0x175/0x420
+	 shrink_slab+0xb1/0x2e0
+	 shrink_node+0x192/0x600
+	 balance_pgdat+0x31f/0x750
+	 kswapd+0x206/0x510
+	 kthread+0x137/0x150
+	 ret_from_fork+0x1f/0x30
+
+  other info that might help us debug this:
+
+  Chain exists of:
+    &delayed_node->mutex --> &fs_info->chunk_mutex --> fs_reclaim
+
+   Possible unsafe locking scenario:
+
+	 CPU0                    CPU1
+	 ----                    ----
+    lock(fs_reclaim);
+				 lock(&fs_info->chunk_mutex);
+				 lock(fs_reclaim);
+    lock(&delayed_node->mutex);
+
+   *** DEADLOCK ***
+
+  3 locks held by kswapd0/75:
+   #0: ffffffff8b0c8040 (fs_reclaim){+.+.}-{0:0}, at: __fs_reclaim_acquire+0x5/0x30
+   #1: ffffffff8b0b50b8 (shrinker_rwsem){++++}-{3:3}, at: shrink_slab+0x54/0x2e0
+   #2: ffffa040e057c0e8 (&type->s_umount_key#26){++++}-{3:3}, at: trylock_super+0x16/0x50
+
+  stack backtrace:
+  CPU: 2 PID: 75 Comm: kswapd0 Not tainted 5.8.0-rc6-default+ #1191
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
+  Call Trace:
+   dump_stack+0x78/0xa0
+   check_noncircular+0x16f/0x190
+   check_prev_add+0x98/0xa20
+   validate_chain+0xa8c/0x2a00
+   __lock_acquire+0x56f/0xaa0
+   lock_acquire+0xa3/0x440
+   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
+   __mutex_lock+0xa0/0xaf0
+   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
+   ? __lock_acquire+0x56f/0xaa0
+   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
+   ? lock_acquire+0xa3/0x440
+   ? btrfs_evict_inode+0x138/0x560 [btrfs]
+   ? btrfs_evict_inode+0x2fe/0x560 [btrfs]
+   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
+   __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
+   btrfs_evict_inode+0x3bf/0x560 [btrfs]
+   evict+0xd6/0x1c0
+   dispose_list+0x48/0x70
+   prune_icache_sb+0x54/0x80
+   super_cache_scan+0x121/0x1a0
+   do_shrink_slab+0x175/0x420
+   shrink_slab+0xb1/0x2e0
+   shrink_node+0x192/0x600
+   balance_pgdat+0x31f/0x750
+   kswapd+0x206/0x510
+   ? _raw_spin_unlock_irqrestore+0x3e/0x50
+   ? finish_wait+0x90/0x90
+   ? balance_pgdat+0x750/0x750
+   kthread+0x137/0x150
+   ? kthread_stop+0x2a0/0x2a0
+   ret_from_fork+0x1f/0x30
+
+This is because we're holding the chunk_mutex while adding this device
+and adding its sysfs entries.  We actually hold different locks in
+different places when calling this function, the dev_replace semaphore
+for instance in dev replace, so instead of moving this call around
+simply wrap it's operations in NOFS.
+
+CC: stable@vger.kernel.org # 4.14+
+Reported-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 ---
- drivers/net/ethernet/intel/i40e/i40e_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/btrfs/sysfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index aa2b446d6ad0f..f4475cbf8ce86 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -11822,6 +11822,9 @@ static void i40e_remove(struct pci_dev *pdev)
- 	i40e_write_rx_ctl(hw, I40E_PFQF_HENA(0), 0);
- 	i40e_write_rx_ctl(hw, I40E_PFQF_HENA(1), 0);
+diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
+index f05341bda1d14..383546ff62f04 100644
+--- a/fs/btrfs/sysfs.c
++++ b/fs/btrfs/sysfs.c
+@@ -25,6 +25,7 @@
+ #include <linux/bug.h>
+ #include <linux/genhd.h>
+ #include <linux/debugfs.h>
++#include <linux/sched/mm.h>
  
-+	while (test_bit(__I40E_RESET_RECOVERY_PENDING, pf->state))
-+		usleep_range(1000, 2000);
-+
- 	/* no more scheduling of any task */
- 	set_bit(__I40E_SUSPENDED, pf->state);
- 	set_bit(__I40E_DOWN, pf->state);
+ #include "ctree.h"
+ #include "disk-io.h"
+@@ -749,7 +750,9 @@ int btrfs_sysfs_add_device_link(struct btrfs_fs_devices *fs_devices,
+ {
+ 	int error = 0;
+ 	struct btrfs_device *dev;
++	unsigned int nofs_flag;
+ 
++	nofs_flag = memalloc_nofs_save();
+ 	list_for_each_entry(dev, &fs_devices->devices, dev_list) {
+ 		struct hd_struct *disk;
+ 		struct kobject *disk_kobj;
+@@ -768,6 +771,7 @@ int btrfs_sysfs_add_device_link(struct btrfs_fs_devices *fs_devices,
+ 		if (error)
+ 			break;
+ 	}
++	memalloc_nofs_restore(nofs_flag);
+ 
+ 	return error;
+ }
 -- 
 2.25.1
 
