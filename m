@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E09C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AD0C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF8C221E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FAD92177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258261;
-	bh=V/qnBjUrVKqGhq0notUnExub5T1VMCljPUy/iBSdNXM=;
+	s=default; t=1598258264;
+	bh=efTXhLA1Wenoo87S0O0Fb0+ibbIN/NCes9dGiWbG7gs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JugZmS0Dd2gBZ+35FuaKUaPlFOTdgnY2EVeZMy1MkCZZKvWZ1abYE72Kd2IV81Cy2
-	 SZpxdgbltLAHXCoEA2a41XwXtZ8oAOLUZy4OBj7myH075R0H+KPbNsI8i3G0DRuA1Z
-	 vSCb5ARUG30or+qtnX/5O6D5t6u4jIBpd+TVj6hI=
+	b=zVw8bllHXffPGJRHx4sZpuACgDQksaASVDS9BOC4usu8olB3AN5tCGB6vzZh8Roev
+	 2Ji5KNyj7OFthK7j7AOalxh8AuiI80jT49HMw/OJEkWJkmP4Za7+WQuUY/pfEblr6v
+	 TlB92PrjLNS4qcxUqsEJGXK6wakTe/bLYIEgAsr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgHXIhj (ORCPT
+        id S1728449AbgHXIhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51010 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:37:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728424AbgHXIhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:37:33 -0400
+        id S1728433AbgHXIhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:37:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DBBB207DF;
-        Mon, 24 Aug 2020 08:37:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 476872177B;
+        Mon, 24 Aug 2020 08:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258252;
-        bh=V/qnBjUrVKqGhq0notUnExub5T1VMCljPUy/iBSdNXM=;
+        s=default; t=1598258254;
+        bh=efTXhLA1Wenoo87S0O0Fb0+ibbIN/NCes9dGiWbG7gs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ePQsVBL3Ku9lHO5TGnJmZp+15GznVwi7bdvSljQTUvos8y8BpzFk+fg+w69o7EnFp
-         r6ipPJZlLl25v3t6fEMWHEjJ0o8shTFi3fk2S0CTvKGuBJ89GDUxwgR7AtobDpm6Pz
-         Vp4d8dRQGveIe11Lc0IGnEttGKAs+HQbGvtNBs8c=
+        b=H3TWumbRmXoMt/F2vFjNHSVy6kSZu48qx0kZzGKBpd5IX5Fy3dThtLCf9WtUIubS0
+         ALhCGoR6PnPRxjFOk3difi14wqA0CXlYxmpjegyUH6z0mYfaTQeY/8ocR26Fh3GhCH
+         ar6KnYqxGo7RYoJueXxu6ZHem0t98D2+fWD0lm6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Roth <mdroth@linux.vnet.ibm.com>,
-        Greg Kurz <groug@kaod.org>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        stable@vger.kernel.org, Jiri Wiesner <jwiesner@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 131/148] powerpc/pseries/hotplug-cpu: wait indefinitely for vCPU death
-Date:   Mon, 24 Aug 2020 10:30:29 +0200
-Message-Id: <20200824082420.291601067@linuxfoundation.org>
+Subject: [PATCH 5.8 132/148] bonding: fix active-backup failover for current ARP slave
+Date:   Mon, 24 Aug 2020 10:30:30 +0200
+Message-Id: <20200824082420.339995079@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -62,158 +60,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Roth <mdroth@linux.vnet.ibm.com>
+From: Jiri Wiesner <jwiesner@suse.com>
 
-[ Upstream commit 801980f6497946048709b9b09771a1729551d705 ]
+[ Upstream commit 0410d07190961ac526f05085765a8d04d926545b ]
 
-For a power9 KVM guest with XIVE enabled, running a test loop
-where we hotplug 384 vcpus and then unplug them, the following traces
-can be seen (generally within a few loops) either from the unplugged
-vcpu:
+When the ARP monitor is used for link detection, ARP replies are
+validated for all slaves (arp_validate=3) and fail_over_mac is set to
+active, two slaves of an active-backup bond may get stuck in a state
+where both of them are active and pass packets that they receive to
+the bond. This state makes IPv6 duplicate address detection fail. The
+state is reached thus:
+1. The current active slave goes down because the ARP target
+   is not reachable.
+2. The current ARP slave is chosen and made active.
+3. A new slave is enslaved. This new slave becomes the current active
+   slave and can reach the ARP target.
+As a result, the current ARP slave stays active after the enslave
+action has finished and the log is littered with "PROBE BAD" messages:
+> bond0: PROBE: c_arp ens10 && cas ens11 BAD
+The workaround is to remove the slave with "going back" status from
+the bond and re-enslave it. This issue was encountered when DPDK PMD
+interfaces were being enslaved to an active-backup bond.
 
-  cpu 65 (hwid 65) Ready to die...
-  Querying DEAD? cpu 66 (66) shows 2
-  list_del corruption. next->prev should be c00a000002470208, but was c00a000002470048
-  ------------[ cut here ]------------
-  kernel BUG at lib/list_debug.c:56!
-  Oops: Exception in kernel mode, sig: 5 [#1]
-  LE SMP NR_CPUS=2048 NUMA pSeries
-  Modules linked in: fuse nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 ...
-  CPU: 66 PID: 0 Comm: swapper/66 Kdump: loaded Not tainted 4.18.0-221.el8.ppc64le #1
-  NIP:  c0000000007ab50c LR: c0000000007ab508 CTR: 00000000000003ac
-  REGS: c0000009e5a17840 TRAP: 0700   Not tainted  (4.18.0-221.el8.ppc64le)
-  MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 28000842  XER: 20040000
-  ...
-  NIP __list_del_entry_valid+0xac/0x100
-  LR  __list_del_entry_valid+0xa8/0x100
-  Call Trace:
-    __list_del_entry_valid+0xa8/0x100 (unreliable)
-    free_pcppages_bulk+0x1f8/0x940
-    free_unref_page+0xd0/0x100
-    xive_spapr_cleanup_queue+0x148/0x1b0
-    xive_teardown_cpu+0x1bc/0x240
-    pseries_mach_cpu_die+0x78/0x2f0
-    cpu_die+0x48/0x70
-    arch_cpu_idle_dead+0x20/0x40
-    do_idle+0x2f4/0x4c0
-    cpu_startup_entry+0x38/0x40
-    start_secondary+0x7bc/0x8f0
-    start_secondary_prolog+0x10/0x14
+I would be possible to fix the issue in bond_enslave() or
+bond_change_active_slave() but the ARP monitor was fixed instead to
+keep most of the actions changing the current ARP slave in the ARP
+monitor code. The current ARP slave is set as inactive and backup
+during the commit phase. A new state, BOND_LINK_FAIL, has been
+introduced for slaves in the context of the ARP monitor. This allows
+administrators to see how slaves are rotated for sending ARP requests
+and attempts are made to find a new active slave.
 
-or on the worker thread handling the unplug:
-
-  pseries-hotplug-cpu: Attempting to remove CPU <NULL>, drc index: 1000013a
-  Querying DEAD? cpu 314 (314) shows 2
-  BUG: Bad page state in process kworker/u768:3  pfn:95de1
-  cpu 314 (hwid 314) Ready to die...
-  page:c00a000002577840 refcount:0 mapcount:-128 mapping:0000000000000000 index:0x0
-  flags: 0x5ffffc00000000()
-  raw: 005ffffc00000000 5deadbeef0000100 5deadbeef0000200 0000000000000000
-  raw: 0000000000000000 0000000000000000 00000000ffffff7f 0000000000000000
-  page dumped because: nonzero mapcount
-  Modules linked in: kvm xt_CHECKSUM ipt_MASQUERADE xt_conntrack ...
-  CPU: 0 PID: 548 Comm: kworker/u768:3 Kdump: loaded Not tainted 4.18.0-224.el8.bz1856588.ppc64le #1
-  Workqueue: pseries hotplug workque pseries_hp_work_fn
-  Call Trace:
-    dump_stack+0xb0/0xf4 (unreliable)
-    bad_page+0x12c/0x1b0
-    free_pcppages_bulk+0x5bc/0x940
-    page_alloc_cpu_dead+0x118/0x120
-    cpuhp_invoke_callback.constprop.5+0xb8/0x760
-    _cpu_down+0x188/0x340
-    cpu_down+0x5c/0xa0
-    cpu_subsys_offline+0x24/0x40
-    device_offline+0xf0/0x130
-    dlpar_offline_cpu+0x1c4/0x2a0
-    dlpar_cpu_remove+0xb8/0x190
-    dlpar_cpu_remove_by_index+0x12c/0x150
-    dlpar_cpu+0x94/0x800
-    pseries_hp_work_fn+0x128/0x1e0
-    process_one_work+0x304/0x5d0
-    worker_thread+0xcc/0x7a0
-    kthread+0x1ac/0x1c0
-    ret_from_kernel_thread+0x5c/0x80
-
-The latter trace is due to the following sequence:
-
-  page_alloc_cpu_dead
-    drain_pages
-      drain_pages_zone
-        free_pcppages_bulk
-
-where drain_pages() in this case is called under the assumption that
-the unplugged cpu is no longer executing. To ensure that is the case,
-and early call is made to __cpu_die()->pseries_cpu_die(), which runs a
-loop that waits for the cpu to reach a halted state by polling its
-status via query-cpu-stopped-state RTAS calls. It only polls for 25
-iterations before giving up, however, and in the trace above this
-results in the following being printed only .1 seconds after the
-hotplug worker thread begins processing the unplug request:
-
-  pseries-hotplug-cpu: Attempting to remove CPU <NULL>, drc index: 1000013a
-  Querying DEAD? cpu 314 (314) shows 2
-
-At that point the worker thread assumes the unplugged CPU is in some
-unknown/dead state and procedes with the cleanup, causing the race
-with the XIVE cleanup code executed by the unplugged CPU.
-
-Fix this by waiting indefinitely, but also making an effort to avoid
-spurious lockup messages by allowing for rescheduling after polling
-the CPU status and printing a warning if we wait for longer than 120s.
-
-Fixes: eac1e731b59ee ("powerpc/xive: guest exploitation of the XIVE interrupt controller")
-Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Michael Roth <mdroth@linux.vnet.ibm.com>
-Tested-by: Greg Kurz <groug@kaod.org>
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Reviewed-by: Greg Kurz <groug@kaod.org>
-[mpe: Trim oopses in change log slightly for readability]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200811161544.10513-1-mdroth@linux.vnet.ibm.com
+Fixes: b2220cad583c9 ("bonding: refactor ARP active-backup monitor")
+Signed-off-by: Jiri Wiesner <jwiesner@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/hotplug-cpu.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/net/bonding/bond_main.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-index 6d4ee03d476a9..ec04fc7f5a641 100644
---- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-@@ -107,22 +107,28 @@ static int pseries_cpu_disable(void)
-  */
- static void pseries_cpu_die(unsigned int cpu)
- {
--	int tries;
- 	int cpu_status = 1;
- 	unsigned int pcpu = get_hard_smp_processor_id(cpu);
-+	unsigned long timeout = jiffies + msecs_to_jiffies(120000);
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index f438e20fcda1f..500aa3e19a4c7 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2825,6 +2825,9 @@ static int bond_ab_arp_inspect(struct bonding *bond)
+ 			if (bond_time_in_interval(bond, last_rx, 1)) {
+ 				bond_propose_link_state(slave, BOND_LINK_UP);
+ 				commit++;
++			} else if (slave->link == BOND_LINK_BACK) {
++				bond_propose_link_state(slave, BOND_LINK_FAIL);
++				commit++;
+ 			}
+ 			continue;
+ 		}
+@@ -2933,6 +2936,19 @@ static void bond_ab_arp_commit(struct bonding *bond)
  
--	for (tries = 0; tries < 25; tries++) {
-+	while (true) {
- 		cpu_status = smp_query_cpu_stopped(pcpu);
- 		if (cpu_status == QCSS_STOPPED ||
- 		    cpu_status == QCSS_HARDWARE_ERROR)
- 			break;
--		cpu_relax();
+ 			continue;
  
-+		if (time_after(jiffies, timeout)) {
-+			pr_warn("CPU %i (hwid %i) didn't die after 120 seconds\n",
-+				cpu, pcpu);
-+			timeout = jiffies + msecs_to_jiffies(120000);
-+		}
++		case BOND_LINK_FAIL:
++			bond_set_slave_link_state(slave, BOND_LINK_FAIL,
++						  BOND_SLAVE_NOTIFY_NOW);
++			bond_set_slave_inactive_flags(slave,
++						      BOND_SLAVE_NOTIFY_NOW);
 +
-+		cond_resched();
++			/* A slave has just been enslaved and has become
++			 * the current active slave.
++			 */
++			if (rtnl_dereference(bond->curr_active_slave))
++				RCU_INIT_POINTER(bond->current_arp_slave, NULL);
++			continue;
++
+ 		default:
+ 			slave_err(bond->dev, slave->dev,
+ 				  "impossible: link_new_state %d on slave\n",
+@@ -2983,8 +2999,6 @@ static bool bond_ab_arp_probe(struct bonding *bond)
+ 			return should_notify_rtnl;
  	}
  
--	if (cpu_status != 0) {
--		printk("Querying DEAD? cpu %i (%i) shows %i\n",
--		       cpu, pcpu, cpu_status);
-+	if (cpu_status == QCSS_HARDWARE_ERROR) {
-+		pr_warn("CPU %i (hwid %i) reported error while dying\n",
-+			cpu, pcpu);
- 	}
- 
- 	/* Isolation and deallocation are definitely done by
+-	bond_set_slave_inactive_flags(curr_arp_slave, BOND_SLAVE_NOTIFY_LATER);
+-
+ 	bond_for_each_slave_rcu(bond, slave, iter) {
+ 		if (!found && !before && bond_slave_is_up(slave))
+ 			before = slave;
 -- 
 2.25.1
 
