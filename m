@@ -2,56 +2,55 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C45AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C798C433E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E75F6204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F052074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259363;
-	bh=LehtCaV42rdQFo3R1F6wlwdqE9D0Rqqwrku+qzm3Gnk=;
+	s=default; t=1598259369;
+	bh=mYiy1U+6aDVDGNbMhew9y2jYBrUhIdioZaGVFmmRo0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sB1y5TZVqDShrG/32XnUQPBYYQDU88JCqt0ztptcgd8fKUE3fQI+xaItaEFJitlFj
-	 39SMssMCSa5UKHf0J4UrHHckCfgSoLHmi9rqibaF2OJmZuHupYAp/x/F9hi8jpTJbL
-	 umjMou6g7/SYVLXub8D+rP8MYNAuXLZmS9rzNRUM=
+	b=0a6DcqMDkcJbGeisq3AEoJs2PpN/KRuF9E62ZFJL5lfseDDLbHPt9BrK6yg49A1U4
+	 3+Z2yg/+NHwFQdexOXYanzehmKAxa2h6bBp0x7ucsMZ348pjrYgI0hUJ+6AOnna0UX
+	 j9zNiGyB4iAs1Vr0pEhUVgHqVfnLS5zSMJNzXdso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbgHXIz7 (ORCPT
+        id S1730467AbgHXI4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:55:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37534 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:56:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730417AbgHXIz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:27 -0400
+        id S1728018AbgHXIza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:55:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCAD3204FD;
-        Mon, 24 Aug 2020 08:55:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 622F22072D;
+        Mon, 24 Aug 2020 08:55:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259327;
-        bh=LehtCaV42rdQFo3R1F6wlwdqE9D0Rqqwrku+qzm3Gnk=;
+        s=default; t=1598259330;
+        bh=mYiy1U+6aDVDGNbMhew9y2jYBrUhIdioZaGVFmmRo0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EgLFu0qlzv/2bbLhlK98J54rISIAPYcbdSzXK7sg9hopUJt+0+tL0hU+AuzJeHF4/
-         LoHMlK+f9awrnzDlAc75TtwgDQ7PmNvkr7mbwwDY15IsRobCVaF7j35CSmsi+FUG5o
-         SSpF9gUzuvYtSEVPNq1jELk4+f6GkJF/K9nDkxEk=
+        b=mEY8JbuQjzvBHghNbCKtD2+ha/FOBTHznyML14KIVPUME7Z3g3fkiqZZldBFQsgeE
+         Rm4FoQvyV88bsLaJlpFEjQyY4H+xcvw2TA+nvE5be5KIm/xhgSdU54REYUhZfNeEcG
+         akG9S0LGrAxLAXdAh+9YdcFnOqgso8x4dUWOP0bs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Xu Yu <xuyu@linux.alibaba.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Yang Shi <shy828301@gmail.com>
-Subject: [PATCH 4.19 17/71] mm/memory.c: skip spurious TLB flush for retried page fault
-Date:   Mon, 24 Aug 2020 10:31:08 +0200
-Message-Id: <20200824082356.758044582@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 02/71] perf probe: Fix memory leakage when the probe point is not found
+Date:   Mon, 24 Aug 2020 10:30:53 +0200
+Message-Id: <20200824082355.990627469@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -64,52 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <shy828301@gmail.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit b7333b58f358f38d90d78e00c1ee5dec82df10ad upstream.
+[ Upstream commit 12d572e785b15bc764e956caaa8a4c846fd15694 ]
 
-Recently we found regression when running will_it_scale/page_fault3 test
-on ARM64.  Over 70% down for the multi processes cases and over 20% down
-for the multi threads cases.  It turns out the regression is caused by
-commit 89b15332af7c ("mm: drop mmap_sem before calling
-balance_dirty_pages() in write fault").
+Fix the memory leakage in debuginfo__find_trace_events() when the probe
+point is not found in the debuginfo. If there is no probe point found in
+the debuginfo, debuginfo__find_probes() will NOT return -ENOENT, but 0.
 
-The test mmaps a memory size file then write to the mapping, this would
-make all memory dirty and trigger dirty pages throttle, that upstream
-commit would release mmap_sem then retry the page fault.  The retried
-page fault would see correct PTEs installed then just fall through to
-spurious TLB flush.  The regression is caused by the excessive spurious
-TLB flush.  It is fine on x86 since x86's spurious TLB flush is no-op.
+Thus the caller of debuginfo__find_probes() must check the tf.ntevs and
+release the allocated memory for the array of struct probe_trace_event.
 
-We could just skip the spurious TLB flush to mitigate the regression.
+The current code releases the memory only if the debuginfo__find_probes()
+hits an error but not checks tf.ntevs. In the result, the memory allocated
+on *tevs are not released if tf.ntevs == 0.
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: Xu Yu <xuyu@linux.alibaba.com>
-Debugged-by: Xu Yu <xuyu@linux.alibaba.com>
-Tested-by: Xu Yu <xuyu@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Yang Shi <shy828301@gmail.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This fixes the memory leakage by checking tf.ntevs == 0 in addition to
+ret < 0.
 
+Fixes: ff741783506c ("perf probe: Introduce debuginfo to encapsulate dwarf information")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/159438668346.62703.10887420400718492503.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory.c |    3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/probe-finder.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4062,6 +4062,9 @@ static vm_fault_t handle_pte_fault(struc
- 				vmf->flags & FAULT_FLAG_WRITE)) {
- 		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
- 	} else {
-+		/* Skip spurious TLB flush for retried page fault */
-+		if (vmf->flags & FAULT_FLAG_TRIED)
-+			goto unlock;
- 		/*
- 		 * This is needed only for protection faults but the arch code
- 		 * is not yet telling us if this is a protection fault or not.
+diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
+index 60169196b9481..4da4ec2552463 100644
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1351,7 +1351,7 @@ int debuginfo__find_trace_events(struct debuginfo *dbg,
+ 	tf.ntevs = 0;
+ 
+ 	ret = debuginfo__find_probes(dbg, &tf.pf);
+-	if (ret < 0) {
++	if (ret < 0 || tf.ntevs == 0) {
+ 		for (i = 0; i < tf.ntevs; i++)
+ 			clear_probe_trace_event(&tf.tevs[i]);
+ 		zfree(tevs);
+-- 
+2.25.1
+
 
 
