@@ -2,92 +2,144 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949A4C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90072206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E3E2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:36:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHXD1L (ORCPT
+        id S1727849AbgHXDgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 23:27:11 -0400
-Received: from mga05.intel.com ([192.55.52.43]:54060 "EHLO mga05.intel.com"
+        Sun, 23 Aug 2020 23:36:44 -0400
+Received: from mga17.intel.com ([192.55.52.151]:5441 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726684AbgHXD1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 23:27:11 -0400
-IronPort-SDR: SC9BCE1OJp0/5pzzQ+Prs6+hVwRI5Fa3NG8yKmNWiugxIshY2Kd4th9SHLTVxcSLNBP00sjUHF
- Ag+6NrJmIRBQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="240652813"
+        id S1726684AbgHXDgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 23:36:43 -0400
+IronPort-SDR: pdUjgg4ZTh4z+WweoKdF5mU7yHvfrLr3GTq38VsjBcUFZ+Gx1oyG/rV5f+ETv3vgrQpSIW151c
+ aur9N5hYCBnw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="135899568"
 X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="scan'208";a="240652813"
+   d="scan'208";a="135899568"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2020 20:27:09 -0700
-IronPort-SDR: K+fZ6JLXSmksjbeNCGf+l7l5S9udUDS7ZP6MfHpEr3qjEgheL81KEtWSpCouTUfT+vCyrPFruo
- DQM/5lLAG3UQ==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2020 20:36:43 -0700
+IronPort-SDR: msrS4M8nR96qno0wJZiirWrctNcVFKv/SoOFZCWP8lUj32FBeACjkGiu8+BpQLRop+qMi6V3aG
+ RYGK+1/6MUFQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="scan'208";a="322006007"
-Received: from ipu5-build.bj.intel.com (HELO [10.238.232.196]) ([10.238.232.196])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Aug 2020 20:27:07 -0700
-Subject: Re: [PATCH] media: staging/intel-ipu3: css: Correctly reset some
- memory
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        sakari.ailus@linux.intel.com, bingbu.cao@intel.com,
-        tian.shu.qiu@intel.com, mchehab@kernel.org,
-        gregkh@linuxfoundation.org, yong.zhi@intel.com
-Cc:     linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200822131124.157917-1-christophe.jaillet@wanadoo.fr>
-From:   Bingbu Cao <bingbu.cao@linux.intel.com>
-Message-ID: <5ae34514-13dc-671f-35a6-75c0343ddd68@linux.intel.com>
-Date:   Mon, 24 Aug 2020 11:26:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+   d="scan'208";a="322008258"
+Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Aug 2020 20:36:39 -0700
+From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
+To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org
+Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Subject: [PATCH v10 0/2] pwm: intel: Add PWM driver for a new SoC
+Date:   Mon, 24 Aug 2020 11:36:35 +0800
+Message-Id: <cover.1598240097.git.rahul.tanwar@linux.intel.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200822131124.157917-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the patch.
+Patch 1 adds dt binding document in YAML format.
+Patch 2 add PWM fan controller driver for LGM SoC.
 
-On 8/22/20 9:11 PM, Christophe JAILLET wrote:
-> The intent here is to reset the whole 'scaler_coeffs_luma' array, not just
-> the first element.
-> 
-> Fixes: 	e11110a5b744 ("media: staging/intel-ipu3: css: Compute and program ccs")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/staging/media/ipu3/ipu3-css-params.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/ipu3/ipu3-css-params.c b/drivers/staging/media/ipu3/ipu3-css-params.c
-> index fbd53d7c097c..e9d6bd9e9332 100644
-> --- a/drivers/staging/media/ipu3/ipu3-css-params.c
-> +++ b/drivers/staging/media/ipu3/ipu3-css-params.c
-> @@ -159,7 +159,7 @@ imgu_css_scaler_calc(u32 input_width, u32 input_height, u32 target_width,
->  
->  	memset(&cfg->scaler_coeffs_chroma, 0,
->  	       sizeof(cfg->scaler_coeffs_chroma));
-> -	memset(&cfg->scaler_coeffs_luma, 0, sizeof(*cfg->scaler_coeffs_luma));
-> +	memset(&cfg->scaler_coeffs_luma, 0, sizeof(cfg->scaler_coeffs_luma));
->  	do {
->  		phase_step_correction++;
->  
-> 
-Reviewed-by: Bingbu Cao <bingbu.cao@intel.com>
+v10:
+- Removed unused of_device.h and added platform_device.h
+  & mod_devicetable.h
+
+v9:
+- Address code quality related review concerns (Andy Shevchenko)
+- Use devm_add_action_or_reset() instead of explicit unwind calls.
+
+v8:
+- Remove fan related optional properties usage, keep
+  them as default. If needed, change pwm-fan driver
+  separately in future to add them as generic properties.
+
+v7:
+- Address code quality related review concerns.
+- Rename fan related property to pwm-*.
+- Fix one make dt_binding_check reported error.
+
+v6:
+- Readjust .apply op as per review feedback.
+- Add back pwm-cells property to resolve make dt_binding_check error.
+  pwm-cells is a required property for PWM driver.
+- Add back fan related optional properties.
+
+v5:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve comments about Limitations.
+  * Use return value of regmap_update_bits if container function returns
+    error code.
+  * Modify .apply op to have strict checking for fixed period supported
+    by PWM HW.
+  * Use u64 as type when use min_t for duty_cycle.
+  * Add reset_control_assert() in failure case in probe where it was missing
+    earlier.
+- Remove fan specific optional properties from pwm dt binding document (Rob Herring)
+
+v4:
+- Address below review concerns from Uwe Kleine-König.
+  * Improve notes and limitations comments.
+  * Add common prefixes for all #defines.
+  * Modify/Improve logic in .apply & .get_state ops as advised.
+  * Skip error messages in probe when error is -EPROBE_DEFER.
+  * Add dependencies in Kconfig (OF & HAS_IOMEM) and add select REGMAP_MMIO.
+  * Address other code quality related review concerns.
+- Fix make dt_binding_check reported error in YAML file.
+
+v3:
+- Address below review concerns from Uwe Kleine-König.
+  * Remove fan rpm calibration task from the driver.
+  * Modify apply op as per the review feedback.
+  * Add roundup & round down where necessary.
+  * Address other misc code quality related review concerns.
+  * Use devm_reset_control_get_exclusive(). (Philipp Zabel)
+  * Improve dt binding document.
+
+v2:
+- Address below review concerns from Uwe Kleine-König.
+  * Add notes and limitations about PWM HW.
+  * Rename all functions and structure to lgm_pwm_* 
+  * Readjust space aligninment in structure fields to single space.
+  * Switch to using apply instead of config/enable/disable.
+  * Address other code quality related concerns.
+  * Rebase to 5.8-rc1.
+- Address review concerns in dt binding YAML from Rob Herring.
+
+v1:
+- Initial version.
+
+
+Rahul Tanwar (2):
+  Add DT bindings YAML schema for PWM fan controller of LGM SoC
+  Add PWM fan controller driver for LGM SoC
+
+ .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     |  44 ++++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-intel-lgm.c                        | 242 +++++++++++++++++++++
+ 4 files changed, 298 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-intel-lgm.c
 
 -- 
-Best regards,
-Bingbu Cao
+2.11.0
+
