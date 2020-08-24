@@ -2,56 +2,61 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C27C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF382075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB968207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259123;
-	bh=5nk3NJXNopBSzjnj7Lpg8MhVeJiX9H+Pd26H61xczsw=;
+	s=default; t=1598259131;
+	bh=PvGubglU6cmFIj4jp9q0XiJbLPU4XYVuiuvBCjSn7m8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rDjP7r3/BIj5Kh8t0qYpJ+wg2W3sqpbc+kTHyu12BOgAbE/T0mYE4UC22R2OW7FTz
-	 YKj+OSoWeFTtZwFVQmfcdEEYiVaadf+QQC43JkEW5UUEyXUqkG/0GT2GKqoDxRkxcf
-	 313XzwsDpqTYLro/QwoaEaXMsbVlUSYV3UOMPGPA=
+	b=Ef+5yiDe7aHOi/NPzGC7fX/3L8DuCZK6nKFPiX4bIS0uqA0JXKwKVqEiOoiuAO+9+
+	 K+3P0x5wyFNksN+0KJakLHOWkZLc5DhQYshCGY6h0/EpUGABbgm2xRmwgnFavDki0k
+	 BWdtyx6QMf0ZjyDmgA+yez2NTZ8XN5kigHhcboO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbgHXIwC (ORCPT
+        id S1730066AbgHXIwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:52:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57446 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:52:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730018AbgHXIv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:51:56 -0400
+        id S1729494AbgHXIwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:52:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C7E22072D;
-        Mon, 24 Aug 2020 08:51:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F4DC2072D;
+        Mon, 24 Aug 2020 08:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259116;
-        bh=5nk3NJXNopBSzjnj7Lpg8MhVeJiX9H+Pd26H61xczsw=;
+        s=default; t=1598259129;
+        bh=PvGubglU6cmFIj4jp9q0XiJbLPU4XYVuiuvBCjSn7m8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f6QjgZ6MsLrvuI14TG3qh/hL2qiOpOp9FETNgsy6ZkEV9Mm2WsJbmrIqMFfwZuDuL
-         UOJtzGxKhPnydpE9u/B66sU57GNX9x/3aCLfiOdglj6Wq3KXLRD69HCfxu9lVamPPP
-         pQBxH6vJVTDBGuaj+MZpeAI4WRwN5TuKfSOaYj5U=
+        b=ZTbKiTdZL5dNOxslZh8bdEDjwsQv3DSUg/MULH8NlGH33/6gr3aY/ZYuE30q5bPbr
+         dagGofBIvnb0yufkZTewd7rEeBcgvwWZkzRFbalxANKux0QqUx07UsqVm1x9tO5378
+         nw4QOWWvNTAlNJmjCnYGOOBErDHlJCy2YNt61GMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Girish Basrur <gbasrur@marvell.com>,
-        Santosh Vernekar <svernekar@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        Shyam Sundar <ssundar@marvell.com>,
-        Javed Hasan <jhasan@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 25/39] scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
-Date:   Mon, 24 Aug 2020 10:31:24 +0200
-Message-Id: <20200824082349.828559262@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        David Rientjes <rientjes@google.com>,
+        Michel Lespinasse <walken@google.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Akash Goel <akash.goel@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 12/39] kernel/relay.c: fix memleak on destroy relay channel
+Date:   Mon, 24 Aug 2020 10:31:11 +0200
+Message-Id: <20200824082349.099514201@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -64,66 +69,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Javed Hasan <jhasan@marvell.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit ec007ef40abb6a164d148b0dc19789a7a2de2cc8 ]
+commit 71e843295c680898959b22dc877ae3839cc22470 upstream.
 
-In fc_disc_gpn_id_resp(), skb is supposed to get freed in all cases except
-for PTR_ERR. However, in some cases it didn't.
+kmemleak report memory leak as follows:
 
-This fix is to call fc_frame_free(fp) before function returns.
+  unreferenced object 0x607ee4e5f948 (size 8):
+  comm "syz-executor.1", pid 2098, jiffies 4295031601 (age 288.468s)
+  hex dump (first 8 bytes):
+  00 00 00 00 00 00 00 00 ........
+  backtrace:
+     relay_open kernel/relay.c:583 [inline]
+     relay_open+0xb6/0x970 kernel/relay.c:563
+     do_blk_trace_setup+0x4a8/0xb20 kernel/trace/blktrace.c:557
+     __blk_trace_setup+0xb6/0x150 kernel/trace/blktrace.c:597
+     blk_trace_ioctl+0x146/0x280 kernel/trace/blktrace.c:738
+     blkdev_ioctl+0xb2/0x6a0 block/ioctl.c:613
+     block_ioctl+0xe5/0x120 fs/block_dev.c:1871
+     vfs_ioctl fs/ioctl.c:48 [inline]
+     __do_sys_ioctl fs/ioctl.c:753 [inline]
+     __se_sys_ioctl fs/ioctl.c:739 [inline]
+     __x64_sys_ioctl+0x170/0x1ce fs/ioctl.c:739
+     do_syscall_64+0x33/0x40 arch/x86/entry/common.c:46
+     entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Link: https://lore.kernel.org/r/20200729081824.30996-2-jhasan@marvell.com
-Reviewed-by: Girish Basrur <gbasrur@marvell.com>
-Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
-Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
-Reviewed-by: Shyam Sundar <ssundar@marvell.com>
-Signed-off-by: Javed Hasan <jhasan@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+'chan->buf' is malloced in relay_open() by alloc_percpu() but not free
+while destroy the relay channel.  Fix it by adding free_percpu() before
+return from relay_destroy_channel().
+
+Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Michel Lespinasse <walken@google.com>
+Cc: Daniel Axtens <dja@axtens.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Akash Goel <akash.goel@intel.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200817122826.48518-1-weiyongjun1@huawei.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/scsi/libfc/fc_disc.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ kernel/relay.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
-index 880a9068ca126..ef06af4e3611d 100644
---- a/drivers/scsi/libfc/fc_disc.c
-+++ b/drivers/scsi/libfc/fc_disc.c
-@@ -595,8 +595,12 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- 	mutex_lock(&disc->disc_mutex);
- 	if (PTR_ERR(fp) == -FC_EX_CLOSED)
- 		goto out;
--	if (IS_ERR(fp))
--		goto redisc;
-+	if (IS_ERR(fp)) {
-+		mutex_lock(&disc->disc_mutex);
-+		fc_disc_restart(disc);
-+		mutex_unlock(&disc->disc_mutex);
-+		goto out;
-+	}
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -196,6 +196,7 @@ free_buf:
+ static void relay_destroy_channel(struct kref *kref)
+ {
+ 	struct rchan *chan = container_of(kref, struct rchan, kref);
++	free_percpu(chan->buf);
+ 	kfree(chan);
+ }
  
- 	cp = fc_frame_payload_get(fp, sizeof(*cp));
- 	if (!cp)
-@@ -621,7 +625,7 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- 				new_rdata->disc_id = disc->disc_id;
- 				lport->tt.rport_login(new_rdata);
- 			}
--			goto out;
-+			goto free_fp;
- 		}
- 		rdata->disc_id = disc->disc_id;
- 		lport->tt.rport_login(rdata);
-@@ -635,6 +639,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- redisc:
- 		fc_disc_restart(disc);
- 	}
-+free_fp:
-+	fc_frame_free(fp);
- out:
- 	mutex_unlock(&disc->disc_mutex);
- 	kref_put(&rdata->kref, lport->tt.rport_destroy);
--- 
-2.25.1
-
 
 
