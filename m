@@ -2,52 +2,54 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1997C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A64422B43
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29181221E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258111;
-	bh=eA4vERAy34S0VeWfur/IzoADNGAc7BgNJIWlo12kVsM=;
+	s=default; t=1598258121;
+	bh=7E+dN2Dwfn9XnzV0ZiH7houZl7O40rFViWmGZxzzRPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4qyLSy+OgLZAAjNBRma8lT81v0A02YXoJUooxQdWrYX4f0vB0UVgj4OqvhJRyXgS
-	 /DbHqSHw25aT3eYO2ZCe4baZGova8CbXDibqAUwwONXC05VLcA2pz/MPvf6KcA0dQO
-	 EItAEZKnlrn467iffw09VV2dZBo3x3DCwfO3PS2s=
+	b=WgTET8udlg41662n3ww5vLwho2OJaT33MvWaLmjauXQe4U610IcMMFns5Y26CpfV5
+	 R5TWac/DGSJcf9Zafp0RaJQYR034MdKCsZIrJAf5eFFjCptwPI2F52wmwW8LZH9mal
+	 QJJSjHkOlexVsYdSxKe0s2ePflaYtRpaiv4Qqycs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgHXIfK (ORCPT
+        id S1728087AbgHXIfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:35:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44784 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:35:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728048AbgHXIfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:35:00 -0400
+        id S1726753AbgHXIfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:35:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C2602087D;
-        Mon, 24 Aug 2020 08:34:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA939206F0;
+        Mon, 24 Aug 2020 08:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258100;
-        bh=eA4vERAy34S0VeWfur/IzoADNGAc7BgNJIWlo12kVsM=;
+        s=default; t=1598258108;
+        bh=7E+dN2Dwfn9XnzV0ZiH7houZl7O40rFViWmGZxzzRPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gk74LnMBfj8ShWKT9vd8kjl9EzPp4zRzM2NT3J0D/OWkMLQIswqqmxbp8AlDsUCfp
-         10J9AQzVXuzBug5kSaKcrsjXaZ7RQhsaKrWhYh0JONogrHs8/AwtWGFHwpm08ENXL7
-         Hxzs5xkdeBJk+G/zEYOREo4sRIH0r7rCmgEnHgyA=
+        b=OIcZCORKA3JYdyxEFkvVSsIyAm4BCfzNWg/1zhPBLqHbZFK2UK+Ms11k5ZUCRIQH3
+         v8k4H7QgUJz7lHbVFZyr3cJxMENlGGEZ/qo4Vn+9MGQIGjN8IVeGv8VmeR4k1H7Xu7
+         pwtdEQRjj3j9WfIrCJs9yOSBrcgQKJ23Rq09XMOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
+        Alain Volmat <alain.volmat@st.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 074/148] ext4: dont allow overlapping system zones
-Date:   Mon, 24 Aug 2020 10:29:32 +0200
-Message-Id: <20200824082417.616819822@linuxfoundation.org>
+Subject: [PATCH 5.8 077/148] spi: stm32: fixes suspend/resume management
+Date:   Mon, 24 Aug 2020 10:29:35 +0200
+Message-Id: <20200824082417.764517299@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -60,83 +62,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Amelie Delaunay <amelie.delaunay@st.com>
 
-[ Upstream commit bf9a379d0980e7413d94cb18dac73db2bfc5f470 ]
+[ Upstream commit db96bf976a4fc65439be0b4524c0d41427d98814 ]
 
-Currently, add_system_zone() just silently merges two added system zones
-that overlap. However the overlap should not happen and it generally
-suggests that some unrelated metadata overlap which indicates the fs is
-corrupted. We should have caught such problems earlier (e.g. in
-ext4_check_descriptors()) but add this check as another line of defense.
-In later patch we also use this for stricter checking of journal inode
-extent tree.
+This patch adds pinctrl power management, and reconfigure spi controller
+in case of resume.
 
-Reviewed-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200728130437.7804-3-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 038ac869c9d2 ("spi: stm32: add runtime PM support")
+
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Link: https://lore.kernel.org/r/1597043558-29668-5-git-send-email-alain.volmat@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/block_validity.c | 36 +++++++++++++-----------------------
- 1 file changed, 13 insertions(+), 23 deletions(-)
+ drivers/spi/spi-stm32.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-index 16e9b2fda03ae..b394a50ebbe30 100644
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -68,7 +68,7 @@ static int add_system_zone(struct ext4_system_blocks *system_blks,
- 			   ext4_fsblk_t start_blk,
- 			   unsigned int count)
- {
--	struct ext4_system_zone *new_entry = NULL, *entry;
-+	struct ext4_system_zone *new_entry, *entry;
- 	struct rb_node **n = &system_blks->root.rb_node, *node;
- 	struct rb_node *parent = NULL, *new_node = NULL;
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 4c643dfc7fbbc..9672cda2f8031 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -13,6 +13,7 @@
+ #include <linux/iopoll.h>
+ #include <linux/module.h>
+ #include <linux/of_platform.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/reset.h>
+ #include <linux/spi/spi.h>
+@@ -1996,6 +1997,8 @@ static int stm32_spi_remove(struct platform_device *pdev)
  
-@@ -79,30 +79,20 @@ static int add_system_zone(struct ext4_system_blocks *system_blks,
- 			n = &(*n)->rb_left;
- 		else if (start_blk >= (entry->start_blk + entry->count))
- 			n = &(*n)->rb_right;
--		else {
--			if (start_blk + count > (entry->start_blk +
--						 entry->count))
--				entry->count = (start_blk + count -
--						entry->start_blk);
--			new_node = *n;
--			new_entry = rb_entry(new_node, struct ext4_system_zone,
--					     node);
--			break;
--		}
-+		else	/* Unexpected overlap of system zones. */
-+			return -EFSCORRUPTED;
- 	}
+ 	pm_runtime_disable(&pdev->dev);
  
--	if (!new_entry) {
--		new_entry = kmem_cache_alloc(ext4_system_zone_cachep,
--					     GFP_KERNEL);
--		if (!new_entry)
--			return -ENOMEM;
--		new_entry->start_blk = start_blk;
--		new_entry->count = count;
--		new_node = &new_entry->node;
--
--		rb_link_node(new_node, parent, n);
--		rb_insert_color(new_node, &system_blks->root);
--	}
-+	new_entry = kmem_cache_alloc(ext4_system_zone_cachep,
-+				     GFP_KERNEL);
-+	if (!new_entry)
-+		return -ENOMEM;
-+	new_entry->start_blk = start_blk;
-+	new_entry->count = count;
-+	new_node = &new_entry->node;
++	pinctrl_pm_select_sleep_state(&pdev->dev);
 +
-+	rb_link_node(new_node, parent, n);
-+	rb_insert_color(new_node, &system_blks->root);
+ 	return 0;
+ }
  
- 	/* Can we merge to the left? */
- 	node = rb_prev(new_node);
+@@ -2007,13 +2010,18 @@ static int stm32_spi_runtime_suspend(struct device *dev)
+ 
+ 	clk_disable_unprepare(spi->clk);
+ 
+-	return 0;
++	return pinctrl_pm_select_sleep_state(dev);
+ }
+ 
+ static int stm32_spi_runtime_resume(struct device *dev)
+ {
+ 	struct spi_master *master = dev_get_drvdata(dev);
+ 	struct stm32_spi *spi = spi_master_get_devdata(master);
++	int ret;
++
++	ret = pinctrl_pm_select_default_state(dev);
++	if (ret)
++		return ret;
+ 
+ 	return clk_prepare_enable(spi->clk);
+ }
+@@ -2043,10 +2051,23 @@ static int stm32_spi_resume(struct device *dev)
+ 		return ret;
+ 
+ 	ret = spi_master_resume(master);
+-	if (ret)
++	if (ret) {
+ 		clk_disable_unprepare(spi->clk);
++		return ret;
++	}
+ 
+-	return ret;
++	ret = pm_runtime_get_sync(dev);
++	if (ret) {
++		dev_err(dev, "Unable to power device:%d\n", ret);
++		return ret;
++	}
++
++	spi->cfg->config(spi);
++
++	pm_runtime_mark_last_busy(dev);
++	pm_runtime_put_autosuspend(dev);
++
++	return 0;
+ }
+ #endif
+ 
 -- 
 2.25.1
 
