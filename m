@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB162C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E09C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6148221E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF8C221E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258255;
-	bh=scT6Thky0JvXaho0x7iShlzBAYxDWBWqkWXwF7EqmPk=;
+	s=default; t=1598258261;
+	bh=V/qnBjUrVKqGhq0notUnExub5T1VMCljPUy/iBSdNXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pZWenS5UWHLA4dvA9phUUMsErD23utu7kT1kUdPkdF5KLvjRRF/GEOyEyO3nlCmt6
-	 TDXj2Jv3G+OE46MZA1frWUS0ZwjG3iAManBWLib7rlSgnF93OSp9qV+uzqd08yPBZL
-	 7SL5KZzPtDU7hroBerubX/l6rjRZhQaXE2tM53vg=
+	b=JugZmS0Dd2gBZ+35FuaKUaPlFOTdgnY2EVeZMy1MkCZZKvWZ1abYE72Kd2IV81Cy2
+	 SZpxdgbltLAHXCoEA2a41XwXtZ8oAOLUZy4OBj7myH075R0H+KPbNsI8i3G0DRuA1Z
+	 vSCb5ARUG30or+qtnX/5O6D5t6u4jIBpd+TVj6hI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgHXIhe (ORCPT
+        id S1728439AbgHXIhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:37:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50912 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728415AbgHXIha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:37:30 -0400
+        id S1728424AbgHXIhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:37:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D57B2177B;
-        Mon, 24 Aug 2020 08:37:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DBBB207DF;
+        Mon, 24 Aug 2020 08:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258249;
-        bh=scT6Thky0JvXaho0x7iShlzBAYxDWBWqkWXwF7EqmPk=;
+        s=default; t=1598258252;
+        bh=V/qnBjUrVKqGhq0notUnExub5T1VMCljPUy/iBSdNXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cOJ0Dzro/e1tm8WiP9dFmsYzsfdVyg+PHbz5G7eDSwAG4Q4Im4b5LnX6WHmEq1xYy
-         YVPaW5hm9xdQdEO42f4UDt4fjEB4kGRTgnVSYFTOocVdTKiFhl83S61ukzGs94+QI5
-         mulds9QhS37YR+OWUfvm0QpYwFDb93BAeveIKAL4=
+        b=ePQsVBL3Ku9lHO5TGnJmZp+15GznVwi7bdvSljQTUvos8y8BpzFk+fg+w69o7EnFp
+         r6ipPJZlLl25v3t6fEMWHEjJ0o8shTFi3fk2S0CTvKGuBJ89GDUxwgR7AtobDpm6Pz
+         Vp4d8dRQGveIe11Lc0IGnEttGKAs+HQbGvtNBs8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Roth <mdroth@linux.vnet.ibm.com>,
+        Greg Kurz <groug@kaod.org>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 130/148] bpf: Use get_file_rcu() instead of get_file() for task_file iterator
-Date:   Mon, 24 Aug 2020 10:30:28 +0200
-Message-Id: <20200824082420.243013589@linuxfoundation.org>
+Subject: [PATCH 5.8 131/148] powerpc/pseries/hotplug-cpu: wait indefinitely for vCPU death
+Date:   Mon, 24 Aug 2020 10:30:29 +0200
+Message-Id: <20200824082420.291601067@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -61,129 +62,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonghong Song <yhs@fb.com>
+From: Michael Roth <mdroth@linux.vnet.ibm.com>
 
-[ Upstream commit cf28f3bbfca097d956f9021cb710dfad56adcc62 ]
+[ Upstream commit 801980f6497946048709b9b09771a1729551d705 ]
 
-With latest `bpftool prog` command, we observed the following kernel
-panic.
-    BUG: kernel NULL pointer dereference, address: 0000000000000000
-    #PF: supervisor instruction fetch in kernel mode
-    #PF: error_code(0x0010) - not-present page
-    PGD dfe894067 P4D dfe894067 PUD deb663067 PMD 0
-    Oops: 0010 [#1] SMP
-    CPU: 9 PID: 6023 ...
-    RIP: 0010:0x0
-    Code: Bad RIP value.
-    RSP: 0000:ffffc900002b8f18 EFLAGS: 00010286
-    RAX: ffff8883a405f400 RBX: ffff888e46a6bf00 RCX: 000000008020000c
-    RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff8883a405f400
-    RBP: ffff888e46a6bf50 R08: 0000000000000000 R09: ffffffff81129600
-    R10: ffff8883a405f300 R11: 0000160000000000 R12: 0000000000002710
-    R13: 000000e9494b690c R14: 0000000000000202 R15: 0000000000000009
-    FS:  00007fd9187fe700(0000) GS:ffff888e46a40000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: ffffffffffffffd6 CR3: 0000000de5d33002 CR4: 0000000000360ee0
-    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-    Call Trace:
-     <IRQ>
-     rcu_core+0x1a4/0x440
-     __do_softirq+0xd3/0x2c8
-     irq_exit+0x9d/0xa0
-     smp_apic_timer_interrupt+0x68/0x120
-     apic_timer_interrupt+0xf/0x20
-     </IRQ>
-    RIP: 0033:0x47ce80
-    Code: Bad RIP value.
-    RSP: 002b:00007fd9187fba40 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
-    RAX: 0000000000000002 RBX: 00007fd931789160 RCX: 000000000000010c
-    RDX: 00007fd9308cdfb4 RSI: 00007fd9308cdfb4 RDI: 00007ffedd1ea0a8
-    RBP: 00007fd9187fbab0 R08: 000000000000000e R09: 000000000000002a
-    R10: 0000000000480210 R11: 00007fd9187fc570 R12: 00007fd9316cc400
-    R13: 0000000000000118 R14: 00007fd9308cdfb4 R15: 00007fd9317a9380
+For a power9 KVM guest with XIVE enabled, running a test loop
+where we hotplug 384 vcpus and then unplug them, the following traces
+can be seen (generally within a few loops) either from the unplugged
+vcpu:
 
-After further analysis, the bug is triggered by
-Commit eaaacd23910f ("bpf: Add task and task/file iterator targets")
-which introduced task_file bpf iterator, which traverses all open file
-descriptors for all tasks in the current namespace.
-The latest `bpftool prog` calls a task_file bpf program to traverse
-all files in the system in order to associate processes with progs/maps, etc.
-When traversing files for a given task, rcu read_lock is taken to
-access all files in a file_struct. But it used get_file() to grab
-a file, which is not right. It is possible file->f_count is 0 and
-get_file() will unconditionally increase it.
-Later put_file() may cause all kind of issues with the above
-as one of sympotoms.
+  cpu 65 (hwid 65) Ready to die...
+  Querying DEAD? cpu 66 (66) shows 2
+  list_del corruption. next->prev should be c00a000002470208, but was c00a000002470048
+  ------------[ cut here ]------------
+  kernel BUG at lib/list_debug.c:56!
+  Oops: Exception in kernel mode, sig: 5 [#1]
+  LE SMP NR_CPUS=2048 NUMA pSeries
+  Modules linked in: fuse nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 ...
+  CPU: 66 PID: 0 Comm: swapper/66 Kdump: loaded Not tainted 4.18.0-221.el8.ppc64le #1
+  NIP:  c0000000007ab50c LR: c0000000007ab508 CTR: 00000000000003ac
+  REGS: c0000009e5a17840 TRAP: 0700   Not tainted  (4.18.0-221.el8.ppc64le)
+  MSR:  800000000282b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 28000842  XER: 20040000
+  ...
+  NIP __list_del_entry_valid+0xac/0x100
+  LR  __list_del_entry_valid+0xa8/0x100
+  Call Trace:
+    __list_del_entry_valid+0xa8/0x100 (unreliable)
+    free_pcppages_bulk+0x1f8/0x940
+    free_unref_page+0xd0/0x100
+    xive_spapr_cleanup_queue+0x148/0x1b0
+    xive_teardown_cpu+0x1bc/0x240
+    pseries_mach_cpu_die+0x78/0x2f0
+    cpu_die+0x48/0x70
+    arch_cpu_idle_dead+0x20/0x40
+    do_idle+0x2f4/0x4c0
+    cpu_startup_entry+0x38/0x40
+    start_secondary+0x7bc/0x8f0
+    start_secondary_prolog+0x10/0x14
 
-The failure can be reproduced with the following steps in a few seconds:
-    $ cat t.c
-    #include <stdio.h>
-    #include <sys/types.h>
-    #include <sys/stat.h>
-    #include <fcntl.h>
-    #include <unistd.h>
+or on the worker thread handling the unplug:
 
-    #define N 10000
-    int fd[N];
-    int main() {
-      int i;
+  pseries-hotplug-cpu: Attempting to remove CPU <NULL>, drc index: 1000013a
+  Querying DEAD? cpu 314 (314) shows 2
+  BUG: Bad page state in process kworker/u768:3  pfn:95de1
+  cpu 314 (hwid 314) Ready to die...
+  page:c00a000002577840 refcount:0 mapcount:-128 mapping:0000000000000000 index:0x0
+  flags: 0x5ffffc00000000()
+  raw: 005ffffc00000000 5deadbeef0000100 5deadbeef0000200 0000000000000000
+  raw: 0000000000000000 0000000000000000 00000000ffffff7f 0000000000000000
+  page dumped because: nonzero mapcount
+  Modules linked in: kvm xt_CHECKSUM ipt_MASQUERADE xt_conntrack ...
+  CPU: 0 PID: 548 Comm: kworker/u768:3 Kdump: loaded Not tainted 4.18.0-224.el8.bz1856588.ppc64le #1
+  Workqueue: pseries hotplug workque pseries_hp_work_fn
+  Call Trace:
+    dump_stack+0xb0/0xf4 (unreliable)
+    bad_page+0x12c/0x1b0
+    free_pcppages_bulk+0x5bc/0x940
+    page_alloc_cpu_dead+0x118/0x120
+    cpuhp_invoke_callback.constprop.5+0xb8/0x760
+    _cpu_down+0x188/0x340
+    cpu_down+0x5c/0xa0
+    cpu_subsys_offline+0x24/0x40
+    device_offline+0xf0/0x130
+    dlpar_offline_cpu+0x1c4/0x2a0
+    dlpar_cpu_remove+0xb8/0x190
+    dlpar_cpu_remove_by_index+0x12c/0x150
+    dlpar_cpu+0x94/0x800
+    pseries_hp_work_fn+0x128/0x1e0
+    process_one_work+0x304/0x5d0
+    worker_thread+0xcc/0x7a0
+    kthread+0x1ac/0x1c0
+    ret_from_kernel_thread+0x5c/0x80
 
-      for (i = 0; i < N; i++) {
-        fd[i] = open("./note.txt", 'r');
-        if (fd[i] < 0) {
-           fprintf(stderr, "failed\n");
-           return -1;
-        }
-      }
-      for (i = 0; i < N; i++)
-        close(fd[i]);
+The latter trace is due to the following sequence:
 
-      return 0;
-    }
-    $ gcc -O2 t.c
-    $ cat run.sh
-    #/bin/bash
-    for i in {1..100}
-    do
-      while true; do ./a.out; done &
-    done
-    $ ./run.sh
-    $ while true; do bpftool prog >& /dev/null; done
+  page_alloc_cpu_dead
+    drain_pages
+      drain_pages_zone
+        free_pcppages_bulk
 
-This patch used get_file_rcu() which only grabs a file if the
-file->f_count is not zero. This is to ensure the file pointer
-is always valid. The above reproducer did not fail for more
-than 30 minutes.
+where drain_pages() in this case is called under the assumption that
+the unplugged cpu is no longer executing. To ensure that is the case,
+and early call is made to __cpu_die()->pseries_cpu_die(), which runs a
+loop that waits for the cpu to reach a halted state by polling its
+status via query-cpu-stopped-state RTAS calls. It only polls for 25
+iterations before giving up, however, and in the trace above this
+results in the following being printed only .1 seconds after the
+hotplug worker thread begins processing the unplug request:
 
-Fixes: eaaacd23910f ("bpf: Add task and task/file iterator targets")
-Suggested-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Link: https://lore.kernel.org/bpf/20200817174214.252601-1-yhs@fb.com
+  pseries-hotplug-cpu: Attempting to remove CPU <NULL>, drc index: 1000013a
+  Querying DEAD? cpu 314 (314) shows 2
+
+At that point the worker thread assumes the unplugged CPU is in some
+unknown/dead state and procedes with the cleanup, causing the race
+with the XIVE cleanup code executed by the unplugged CPU.
+
+Fix this by waiting indefinitely, but also making an effort to avoid
+spurious lockup messages by allowing for rescheduling after polling
+the CPU status and printing a warning if we wait for longer than 120s.
+
+Fixes: eac1e731b59ee ("powerpc/xive: guest exploitation of the XIVE interrupt controller")
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Michael Roth <mdroth@linux.vnet.ibm.com>
+Tested-by: Greg Kurz <groug@kaod.org>
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Reviewed-by: Greg Kurz <groug@kaod.org>
+[mpe: Trim oopses in change log slightly for readability]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200811161544.10513-1-mdroth@linux.vnet.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/task_iter.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/hotplug-cpu.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/bpf/task_iter.c b/kernel/bpf/task_iter.c
-index ac7869a389990..a4a0fb4f94cc1 100644
---- a/kernel/bpf/task_iter.c
-+++ b/kernel/bpf/task_iter.c
-@@ -177,10 +177,11 @@ task_file_seq_get_next(struct bpf_iter_seq_task_file_info *info,
- 		f = fcheck_files(curr_files, curr_fd);
- 		if (!f)
- 			continue;
-+		if (!get_file_rcu(f))
-+			continue;
+diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+index 6d4ee03d476a9..ec04fc7f5a641 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
++++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+@@ -107,22 +107,28 @@ static int pseries_cpu_disable(void)
+  */
+ static void pseries_cpu_die(unsigned int cpu)
+ {
+-	int tries;
+ 	int cpu_status = 1;
+ 	unsigned int pcpu = get_hard_smp_processor_id(cpu);
++	unsigned long timeout = jiffies + msecs_to_jiffies(120000);
  
- 		/* set info->fd */
- 		info->fd = curr_fd;
--		get_file(f);
- 		rcu_read_unlock();
- 		return f;
+-	for (tries = 0; tries < 25; tries++) {
++	while (true) {
+ 		cpu_status = smp_query_cpu_stopped(pcpu);
+ 		if (cpu_status == QCSS_STOPPED ||
+ 		    cpu_status == QCSS_HARDWARE_ERROR)
+ 			break;
+-		cpu_relax();
+ 
++		if (time_after(jiffies, timeout)) {
++			pr_warn("CPU %i (hwid %i) didn't die after 120 seconds\n",
++				cpu, pcpu);
++			timeout = jiffies + msecs_to_jiffies(120000);
++		}
++
++		cond_resched();
  	}
+ 
+-	if (cpu_status != 0) {
+-		printk("Querying DEAD? cpu %i (%i) shows %i\n",
+-		       cpu, pcpu, cpu_status);
++	if (cpu_status == QCSS_HARDWARE_ERROR) {
++		pr_warn("CPU %i (hwid %i) reported error while dying\n",
++			cpu, pcpu);
+ 	}
+ 
+ 	/* Isolation and deallocation are definitely done by
 -- 
 2.25.1
 
