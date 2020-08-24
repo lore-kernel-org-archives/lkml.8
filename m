@@ -2,55 +2,54 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4705C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC91C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9935A206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F2120738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261656;
-	bh=uJYzN7zIgnFcA0TUq9P37mdOgEg+m3+tG22SL19KF4o=;
+	s=default; t=1598261664;
+	bh=Jneed6ie/AYBGZ4JnR/nz3pF9fM3dYNvhGU5zeQzGlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lq4/UDHXRXjYWGmnmG6BXrS2NRtm7Zn47eO07J0skCuvHFAQstzBuK23WqVkxXSIw
-	 1q/f/EF1q0GN0TWNMrFG2n5h/Sgbv+H0X7RoAnRMpEjb2vjWXZYOIEu3hU3wWXjcnV
-	 ViyObxDc1LvnKVVAuOpkNS4EkTKPTlFRqGy+h3Wk=
+	b=RCmipPJeuqmM57s7W1aZoQdV5H8C5CPMkgkSnrT1JxZVmZyGQgQdUS9oKIs77j21q
+	 RM8kAoiWuPA6fvs8Z5geN+dxHNpY2R6OX8RzZomkJ9FvjS9uuP84d/n0Z+PoU0S0pG
+	 1ZpHn6TL16EqtK4zpPYBFD0ARTHPxxtmHOsxAg2M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgHXJeL (ORCPT
+        id S1729730AbgHXItd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:34:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52050 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:49:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729737AbgHXIte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:49:34 -0400
+        id S1729438AbgHXItV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:49:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FC4F207D3;
-        Mon, 24 Aug 2020 08:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 676F12072D;
+        Mon, 24 Aug 2020 08:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258973;
-        bh=uJYzN7zIgnFcA0TUq9P37mdOgEg+m3+tG22SL19KF4o=;
+        s=default; t=1598258961;
+        bh=Jneed6ie/AYBGZ4JnR/nz3pF9fM3dYNvhGU5zeQzGlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rwLT9zHzSvQ0Kim2Njyli9wR/P0U2V2QWJrwl4R+LmKOA0V/NFbopJ7bNJRnK/WA8
-         ecl+4LHGe54DQ4exKEmhqmqi8UMBygR65KsXOUik626tBBJ5mszj37v8o2u5hJYOzQ
-         TshZVXlgwMwvwe04A6K0kyMc1I6LWJNKW9AOjaRE=
+        b=dVu4AwZsRhlBl2pBgKEhIeZQKtEVUfUVZ+GvVvauKY3kQeGZD9cSKF+M5rNaEgIFe
+         +0GbGCisiwiXndYM081tksVtOmSPy6x+Z7CMHi6R500eJjIWdphKqrppcessp4EVJS
+         QTFQUByppTaYvcKMfZXPleWcnoFMAtcdU4nkxSSo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 106/107] mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
-Date:   Mon, 24 Aug 2020 10:31:12 +0200
-Message-Id: <20200824082410.333656140@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Zhang Changzhong <zhangchangzhong@huawei.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 079/107] can: j1939: abort multipacket broadcast session when timeout occurs
+Date:   Mon, 24 Aug 2020 10:30:45 +0200
+Message-Id: <20200824082409.030477715@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -63,91 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Xu <peterx@redhat.com>
+From: Zhang Changzhong <zhangchangzhong@huawei.com>
 
-commit 75802ca66354a39ab8e35822747cd08b3384a99a upstream.
+[ Upstream commit 2b8b2e31555cf55ba3680fb28e2b382e168d7ea1 ]
 
-This is found by code observation only.
+If timeout occurs, j1939_tp_rxtimer() first calls hrtimer_start() to restart
+rxtimer, and then calls __j1939_session_cancel() to set session->state =
+J1939_SESSION_WAITING_ABORT. At next timeout expiration, because of the
+J1939_SESSION_WAITING_ABORT session state j1939_tp_rxtimer() will call
+j1939_session_deactivate_activate_next() to deactivate current session, and
+rxtimer won't be set.
 
-Firstly, the worst case scenario should assume the whole range was covered
-by pmd sharing.  The old algorithm might not work as expected for ranges
-like (1g-2m, 1g+2m), where the adjusted range should be (0, 1g+2m) but the
-expected range should be (0, 2g).
+But for multipacket broadcast session, __j1939_session_cancel() don't set
+session->state = J1939_SESSION_WAITING_ABORT, thus current session won't be
+deactivate and hrtimer_start() is called to start new rxtimer again and again.
 
-Since at it, remove the loop since it should not be required.  With that,
-the new code should be faster too when the invalidating range is huge.
+So fix it by moving session->state = J1939_SESSION_WAITING_ABORT out of if
+(!j1939_cb_is_broadcast(&session->skcb)) statement.
 
-Mike said:
-
-: With range (1g-2m, 1g+2m) within a vma (0, 2g) the existing code will only
-: adjust to (0, 1g+2m) which is incorrect.
-:
-: We should cc stable.  The original reason for adjusting the range was to
-: prevent data corruption (getting wrong page).  Since the range is not
-: always adjusted correctly, the potential for corruption still exists.
-:
-: However, I am fairly confident that adjust_range_if_pmd_sharing_possible
-: is only gong to be called in two cases:
-:
-: 1) for a single page
-: 2) for range == entire vma
-:
-: In those cases, the current code should produce the correct results.
-:
-: To be safe, let's just cc stable.
-
-Fixes: 017b1660df89 ("mm: migration: fix migration of huge PMD shared pages")
-Signed-off-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200730201636.74778-1-peterx@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+Link: https://lore.kernel.org/r/1596599425-5534-4-git-send-email-zhangchangzhong@huawei.com
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/hugetlb.c |   24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
+ net/can/j1939/transport.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -4846,25 +4846,21 @@ static bool vma_shareable(struct vm_area
- void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
- 				unsigned long *start, unsigned long *end)
- {
--	unsigned long check_addr = *start;
-+	unsigned long a_start, a_end;
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index d1a9adde677b0..e3167619b196f 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -1074,9 +1074,9 @@ static void __j1939_session_cancel(struct j1939_session *session,
+ 	lockdep_assert_held(&session->priv->active_session_list_lock);
  
- 	if (!(vma->vm_flags & VM_MAYSHARE))
- 		return;
- 
--	for (check_addr = *start; check_addr < *end; check_addr += PUD_SIZE) {
--		unsigned long a_start = check_addr & PUD_MASK;
--		unsigned long a_end = a_start + PUD_SIZE;
-+	/* Extend the range to be PUD aligned for a worst case scenario */
-+	a_start = ALIGN_DOWN(*start, PUD_SIZE);
-+	a_end = ALIGN(*end, PUD_SIZE);
- 
--		/*
--		 * If sharing is possible, adjust start/end if necessary.
--		 */
--		if (range_in_vma(vma, a_start, a_end)) {
--			if (a_start < *start)
--				*start = a_start;
--			if (a_end > *end)
--				*end = a_end;
--		}
--	}
-+	/*
-+	 * Intersect the range with the vma range, since pmd sharing won't be
-+	 * across vma after all
-+	 */
-+	*start = max(vma->vm_start, a_start);
-+	*end = min(vma->vm_end, a_end);
- }
- 
- /*
+ 	session->err = j1939_xtp_abort_to_errno(priv, err);
++	session->state = J1939_SESSION_WAITING_ABORT;
+ 	/* do not send aborts on incoming broadcasts */
+ 	if (!j1939_cb_is_broadcast(&session->skcb)) {
+-		session->state = J1939_SESSION_WAITING_ABORT;
+ 		j1939_xtp_tx_abort(priv, &session->skcb,
+ 				   !session->transmission,
+ 				   err, session->skcb.addr.pgn);
+-- 
+2.25.1
+
 
 
