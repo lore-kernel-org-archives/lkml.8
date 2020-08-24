@@ -2,217 +2,108 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C08C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B47C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95022206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3123A206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 14:22:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Sp02BRdg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="LcX0Q13F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbgHXOVi (ORCPT
+        id S1726718AbgHXOWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 10:21:38 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44562 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725780AbgHXOVf (ORCPT
+        Mon, 24 Aug 2020 10:22:16 -0400
+Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:17739 "EHLO
+        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgHXOWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 10:21:35 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OE37sh104032;
-        Mon, 24 Aug 2020 10:21:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
- : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=1wD5iP9XXFrhZGWRafnNIFyc1TmmQnE+W/MmRp+/g7I=;
- b=Sp02BRdgU7dAN1klrEDeEIhCPw+EQppk+YPeMU8+kuhi0lLLjjRWBdLF87xnUlzauJuc
- 4EZPHRypkF3nVpJLxVl0EcMbXgk5yus07RoJC6L+aj5OSmEI/CenjLcM7m3+SrtAV/xO
- gerMW0tGxRGdyQGU768CuQBsvIw7aPtzvjjtEpTJD1keCuuxTQWt9/DxxtRj7COFJnFx
- 4ZUpLsmkYlGM3vvU8ljR2tox4svqDT7AukidjQrRbpuVPuN5TEJOFEAzlDts+CLInhJn
- 3qcCuJfPkVBLiGI/qCc51jgI+yuMXgPsxNBZyN2Tn5xBhC+L3RtubppE7qoBnRKkFb2c QA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 334ev4rwn5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 10:21:29 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07OE3gdA106661;
-        Mon, 24 Aug 2020 10:21:29 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 334ev4rwmh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 10:21:29 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07OEBoRP024344;
-        Mon, 24 Aug 2020 14:21:28 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma02dal.us.ibm.com with ESMTP id 332uttxasb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 14:21:28 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07OELNCH28901678
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Aug 2020 14:21:23 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A7C41BE051;
-        Mon, 24 Aug 2020 14:21:26 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AB26CBE04F;
-        Mon, 24 Aug 2020 14:21:25 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.211.88.114])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Aug 2020 14:21:25 +0000 (GMT)
-Subject: Re: [PATCH v3] PCI: Introduce flag for detached virtual functions
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     alex.williamson@redhat.com, bhelgaas@google.com
-Cc:     schnelle@linux.ibm.com, pmorel@linux.ibm.com, mpe@ellerman.id.au,
-        oohall@gmail.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <1597333243-29483-1-git-send-email-mjrosato@linux.ibm.com>
- <1597333243-29483-2-git-send-email-mjrosato@linux.ibm.com>
-Message-ID: <6917634d-0976-6f7b-6efc-a7a855686fb9@linux.ibm.com>
-Date:   Mon, 24 Aug 2020 10:21:24 -0400
+        Mon, 24 Aug 2020 10:22:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1598278931;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=6ZqAL8XzsNQ5my/LVQKdlQtrZWak9QB6BcQ1XCkyhys=;
+  b=LcX0Q13FHSua+E6RI3Gw8DnmGpXVu5rcChnJwSNZUgRQE0j6eCWDazP5
+   LfJeFnJ5bHxeqFjm37uyzGjJ+d4cDdr1yWMwW/wZ42P/UHnp1EO8Akg2h
+   ygBxcxFzNPTP0CWBD6KxGlcUpMd87h5FoXxX8V0NGUp++WyR6gcvITwE9
+   8=;
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: S/owU0jQ1Zek4imb6IBEJTywAXw/d+Qp+OzIR/n9oDG9pE2TJoweP+pNnI5A2f2l0WF/ZkYQLr
+ IVL3NMlcEMUfKCVcz2OVtX1TecuGo9U21UtRxKiQqSTMlth2PskmKAROgdjg0RFVW/pyT5ptZP
+ DBlor+Y3THdN8MmmT4WCYzGXqBcj7DSGsQHTwk58ILkLw26RPZNd8y2mF+IkFXtlf8d0Z/Dgvr
+ 95dioBiOMS3/0La6v9ke0ebwlvGy4cIjh4v5hLzj5yCN1vIS2qfIG0GoMgH7JtVFkswHYUgp5l
+ /Tc=
+X-SBRS: 2.7
+X-MesageID: 25147877
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,348,1592884800"; 
+   d="scan'208";a="25147877"
+Subject: Re: [PATCH] x86/entry: Fix AC assertion
+To:     <peterz@infradead.org>, <x86@kernel.org>
+CC:     Juergen Gross <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Andy Lutomirski" <luto@kernel.org>
+References: <20200824101428.GS1362448@hirez.programming.kicks-ass.net>
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+Message-ID: <d2b0c6a5-19d8-f868-e092-e5c197ab0d0e@citrix.com>
+Date:   Mon, 24 Aug 2020 15:22:06 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1597333243-29483-2-git-send-email-mjrosato@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200824101428.GS1362448@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- mlxlogscore=999 bulkscore=0 phishscore=0 spamscore=0 suspectscore=0
- clxscore=1015 mlxscore=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240112
+Content-Language: en-GB
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/20 11:40 AM, Matthew Rosato wrote:
-> s390x has the notion of providing VFs to the kernel in a manner
-> where the associated PF is inaccessible other than via firmware.
-> These are not treated as typical VFs and access to them is emulated
-> by underlying firmware which can still access the PF.  After
-> the referened commit however these detached VFs were no longer able
-> to work with vfio-pci as the firmware does not provide emulation of
-> the PCI_COMMAND_MEMORY bit.  In this case, let's explicitly recognize
-> these detached VFs so that vfio-pci can allow memory access to
-> them again. >
-> Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+On 24/08/2020 11:14, peterz@infradead.org wrote:
+> The WARN added in commit 3c73b81a9164 ("x86/entry, selftests: Further
+> improve user entry sanity checks") unconditionally triggers on my IVB
+> machine because it does not support SMAP.
+>
+> For !SMAP hardware we patch out CLAC/STAC instructions and thus if
+> userspace sets AC, we'll still have it set after entry.
 
-Polite ping - If unhappy with the approach moving in this direction, I 
-have also played around with Alex's prior suggestion of a dev_flags bit 
-that denotes a device that doesn't implement PCI_COMMAND_MEMORY.  Please 
-advise.
+Technically, you don't patch in, rather than patch out.
 
+>
+> Fixes: 3c73b81a9164 ("x86/entry, selftests: Further improve user entry sanity checks")
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Acked-by: Andy Lutomirski <luto@kernel.org>
 > ---
->   arch/s390/pci/pci_bus.c            | 13 +++++++++++++
->   drivers/vfio/pci/vfio_pci_config.c |  8 ++++----
->   include/linux/pci.h                |  4 ++++
->   3 files changed, 21 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-> index 642a993..1b33076 100644
-> --- a/arch/s390/pci/pci_bus.c
-> +++ b/arch/s390/pci/pci_bus.c
-> @@ -184,6 +184,19 @@ static inline int zpci_bus_setup_virtfn(struct zpci_bus *zbus,
->   }
->   #endif
->   
-> +void pcibios_bus_add_device(struct pci_dev *pdev)
-> +{
-> +	struct zpci_dev *zdev = to_zpci(pdev);
+>  arch/x86/include/asm/entry-common.h |   11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+>
+> --- a/arch/x86/include/asm/entry-common.h
+> +++ b/arch/x86/include/asm/entry-common.h
+> @@ -18,8 +18,15 @@ static __always_inline void arch_check_u
+>  		 * state, not the interrupt state as imagined by Xen.
+>  		 */
+>  		unsigned long flags = native_save_fl();
+> -		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
+> -				      X86_EFLAGS_NT));
+> +		unsigned long mask = X86_EFLAGS_DF | X86_EFLAGS_NT;
 > +
-> +	/*
-> +	 * If we have a VF on a non-multifunction bus, it must be a VF that is
-> +	 * detached from its parent PF.  We rely on firmware emulation to
-> +	 * provide underlying PF details.
-> +	 */
-> +	if (zdev->vfn && !zdev->zbus->multifunction)
-> +		pdev->detached_vf = 1;
-> +}
-> +
->   static int zpci_bus_add_device(struct zpci_bus *zbus, struct zpci_dev *zdev)
->   {
->   	struct pci_bus *bus;
-> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-> index d98843f..98f93d1 100644
-> --- a/drivers/vfio/pci/vfio_pci_config.c
-> +++ b/drivers/vfio/pci/vfio_pci_config.c
-> @@ -406,7 +406,7 @@ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
->   	 * PF SR-IOV capability, there's therefore no need to trigger
->   	 * faults based on the virtual value.
->   	 */
-> -	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
-> +	return dev_is_vf(&pdev->dev) || (cmd & PCI_COMMAND_MEMORY);
->   }
->   
->   /*
-> @@ -420,7 +420,7 @@ static void vfio_bar_restore(struct vfio_pci_device *vdev)
->   	u16 cmd;
->   	int i;
->   
-> -	if (pdev->is_virtfn)
-> +	if (dev_is_vf(&pdev->dev))
->   		return;
->   
->   	pci_info(pdev, "%s: reset recovery - restoring BARs\n", __func__);
-> @@ -521,7 +521,7 @@ static int vfio_basic_config_read(struct vfio_pci_device *vdev, int pos,
->   	count = vfio_default_config_read(vdev, pos, count, perm, offset, val);
->   
->   	/* Mask in virtual memory enable for SR-IOV devices */
-> -	if (offset == PCI_COMMAND && vdev->pdev->is_virtfn) {
-> +	if ((offset == PCI_COMMAND) && (dev_is_vf(&vdev->pdev->dev))) {
->   		u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
->   		u32 tmp_val = le32_to_cpu(*val);
->   
-> @@ -1713,7 +1713,7 @@ int vfio_config_init(struct vfio_pci_device *vdev)
->   	vdev->rbar[5] = le32_to_cpu(*(__le32 *)&vconfig[PCI_BASE_ADDRESS_5]);
->   	vdev->rbar[6] = le32_to_cpu(*(__le32 *)&vconfig[PCI_ROM_ADDRESS]);
->   
-> -	if (pdev->is_virtfn) {
-> +	if (dev_is_vf(&pdev->dev)) {
->   		*(__le16 *)&vconfig[PCI_VENDOR_ID] = cpu_to_le16(pdev->vendor);
->   		*(__le16 *)&vconfig[PCI_DEVICE_ID] = cpu_to_le16(pdev->device);
->   
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 8355306..7c062de 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -445,6 +445,7 @@ struct pci_dev {
->   	unsigned int	is_probed:1;		/* Device probing in progress */
->   	unsigned int	link_active_reporting:1;/* Device capable of reporting link active */
->   	unsigned int	no_vf_scan:1;		/* Don't scan for VFs after IOV enablement */
-> +	unsigned int	detached_vf:1;		/* VF without local PF access */
->   	pci_dev_flags_t dev_flags;
->   	atomic_t	enable_cnt;	/* pci_enable_device has been called */
->   
-> @@ -1057,6 +1058,8 @@ struct resource *pci_find_parent_resource(const struct pci_dev *dev,
->   void pci_sort_breadthfirst(void);
->   #define dev_is_pci(d) ((d)->bus == &pci_bus_type)
->   #define dev_is_pf(d) ((dev_is_pci(d) ? to_pci_dev(d)->is_physfn : false))
-> +#define dev_is_vf(d) ((dev_is_pci(d) ? (to_pci_dev(d)->is_virtfn || \
-> +					to_pci_dev(d)->detached_vf) : false))
->   
->   /* Generic PCI functions exported to card drivers */
->   
-> @@ -1764,6 +1767,7 @@ static inline struct pci_dev *pci_get_domain_bus_and_slot(int domain,
->   
->   #define dev_is_pci(d) (false)
->   #define dev_is_pf(d) (false)
-> +#define dev_is_vf(d) (false)
->   static inline bool pci_acs_enabled(struct pci_dev *pdev, u16 acs_flags)
->   { return false; }
->   static inline int pci_irqd_intx_xlate(struct irq_domain *d,
-> 
+> +		/*
+> +		 * For !SMAP hardware we patch out CLAC on entry.
+> +		 */
+> +		if (boot_cpu_has(X86_FEATURE_SMAP))
+> +			mask |= X86_EFLAGS_AC;
 
+The Xen PV ABI clears AC on entry for 64bit guests, because Linux is
+actually running in Ring 3, and therefore susceptible to #AC's which
+wouldn't occur natively.
+
+~Andrew
