@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A3CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BA3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6D2A207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661D822B3F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258208;
-	bh=/gjIw9uefbH/RR7Kq3mLhc20432IUM944MfCzRIain0=;
+	s=default; t=1598258212;
+	bh=P1YFOqrouA8yrEQ8MUFTsSAPi/ZHWBfDY5S/J5gFgyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H44N9uaL2Ts83wVRurZIOQSOMtK4RE9MdDizQPeMaN1n9At3l8LI/WA8jutO51nsj
-	 faeT1kEAClOMzNbEu1Jwuz8sRWN0UicaNfJbtqeDnXBHgAMWfD0KFZGIEHMwFEejHt
-	 /SP9lo+8ji/v+kszTk+KwITMuRqdyNJJT5SOY+hg=
+	b=qke7Y5dMqt3cK63BkdjGZfkIPzuJDixXkbypnOeDuRZUr3rYmVrrBLLacZl6P6ob7
+	 mBszr5CMNGtj1kqS+TYiF6ukuXqR2OQDEw2+zlx6uCvMYPfhdzQzZQbxWoRcfPHHFG
+	 71fVE8O6NX0+BM79MR/DvmCUsw7KFZAuvO055pEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgHXIgq (ORCPT
+        id S1726391AbgHXIgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:36:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49480 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:36:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726806AbgHXIgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:36:42 -0400
+        id S1727123AbgHXIgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:36:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B954207DF;
-        Mon, 24 Aug 2020 08:36:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B4182177B;
+        Mon, 24 Aug 2020 08:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258201;
-        bh=/gjIw9uefbH/RR7Kq3mLhc20432IUM944MfCzRIain0=;
+        s=default; t=1598258198;
+        bh=P1YFOqrouA8yrEQ8MUFTsSAPi/ZHWBfDY5S/J5gFgyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+P22WonVnUB4kx5siIENps+8Pwx7Evdna/NRFHoVL+gwF1sC+lXD3j5ipm+fUu+t
-         UZjVE+Iem1GDENPtx2/E+5f5eqlsCH5U3EMGjPUTYeH+cfjsIm+DaCgq1b4c66zwJ0
-         LVP/FYJPuOJ13sIZCDzkjEt4BORkeDmWWqt+FPKI=
+        b=WbYjVdd+GeFjb6HZrIvhlneZf+XweVBSdVRwrxIcWnSD5iPA1Ht7jueBV6npRvUaa
+         B25wqDnPck515KHX97qhq0Z1F8JnNXCEN6lctq/9L+XjvauyNjLSfXKyYMWXPDHKor
+         tZGQT9r3x60pysXvCdX/PphLA8fXqoKypEnfROLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        stable@vger.kernel.org, Can Guo <cang@codeaurora.org>,
+        Avri Altman <avri.altman@wdc.com>,
         Seungwon Jeon <essuuj@gmail.com>,
         Alim Akhtar <alim.akhtar@samsung.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 111/148] scsi: ufs: Add quirk to disallow reset of interrupt aggregation
-Date:   Mon, 24 Aug 2020 10:30:09 +0200
-Message-Id: <20200824082419.336489121@linuxfoundation.org>
+Subject: [PATCH 5.8 110/148] scsi: ufs: Add quirk to fix mishandling utrlclr/utmrlclr
+Date:   Mon, 24 Aug 2020 10:30:08 +0200
+Message-Id: <20200824082419.287805815@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -64,50 +65,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alim Akhtar <alim.akhtar@samsung.com>
 
-[ Upstream commit b638b5eb624bd5d0766683b6181d578f414585e9 ]
+[ Upstream commit 871838412adf533ffda0b4a0ede0c2984e3511e7 ]
 
-Some host controllers support interrupt aggregation but don't allow
-resetting counter and timer in software.
+With the correct behavior, setting the bit to '0' indicates clear and '1'
+indicates no change. If host controller handles this the other way around,
+UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR can be used.
 
-Link: https://lore.kernel.org/r/20200528011658.71590-3-alim.akhtar@samsung.com
+Link: https://lore.kernel.org/r/20200528011658.71590-2-alim.akhtar@samsung.com
+Reviewed-by: Can Guo <cang@codeaurora.org>
 Reviewed-by: Avri Altman <avri.altman@wdc.com>
 Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
 Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 ++-
- drivers/scsi/ufs/ufshcd.h | 6 ++++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd.c | 11 +++++++++--
+ drivers/scsi/ufs/ufshcd.h |  5 +++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 9da44a389becb..47a4c4c239196 100644
+index dec56e99335f0..9da44a389becb 100644
 --- a/drivers/scsi/ufs/ufshcd.c
 +++ b/drivers/scsi/ufs/ufshcd.c
-@@ -4914,7 +4914,8 @@ static irqreturn_t ufshcd_transfer_req_compl(struct ufs_hba *hba)
- 	 * false interrupt if device completes another request after resetting
- 	 * aggregation and before reading the DB.
- 	 */
--	if (ufshcd_is_intr_aggr_allowed(hba))
-+	if (ufshcd_is_intr_aggr_allowed(hba) &&
-+	    !(hba->quirks & UFSHCI_QUIRK_SKIP_RESET_INTR_AGGR))
- 		ufshcd_reset_intr_aggr(hba);
+@@ -674,7 +674,11 @@ static inline int ufshcd_get_tr_ocs(struct ufshcd_lrb *lrbp)
+  */
+ static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
+ {
+-	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
++	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
++		ufshcd_writel(hba, (1 << pos), REG_UTP_TRANSFER_REQ_LIST_CLEAR);
++	else
++		ufshcd_writel(hba, ~(1 << pos),
++				REG_UTP_TRANSFER_REQ_LIST_CLEAR);
+ }
  
- 	tr_doorbell = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
+ /**
+@@ -684,7 +688,10 @@ static inline void ufshcd_utrl_clear(struct ufs_hba *hba, u32 pos)
+  */
+ static inline void ufshcd_utmrl_clear(struct ufs_hba *hba, u32 pos)
+ {
+-	ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
++	if (hba->quirks & UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR)
++		ufshcd_writel(hba, (1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
++	else
++		ufshcd_writel(hba, ~(1 << pos), REG_UTP_TASK_REQ_LIST_CLEAR);
+ }
+ 
+ /**
 diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index 2ddf4c2f76f55..bda7ba1aea519 100644
+index 16187be98a94c..2ddf4c2f76f55 100644
 --- a/drivers/scsi/ufs/ufshcd.h
 +++ b/drivers/scsi/ufs/ufshcd.h
-@@ -525,6 +525,12 @@ enum ufshcd_quirks {
- 	 * Clear handling for transfer/task request list is just opposite.
+@@ -520,6 +520,11 @@ enum ufshcd_quirks {
+ 	 * ops (get_ufs_hci_version) to get the correct version.
  	 */
- 	UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR		= 1 << 6,
+ 	UFSHCD_QUIRK_BROKEN_UFS_HCI_VERSION		= 1 << 5,
 +
 +	/*
-+	 * This quirk needs to be enabled if host controller doesn't allow
-+	 * that the interrupt aggregation timer and counter are reset by s/w.
++	 * Clear handling for transfer/task request list is just opposite.
 +	 */
-+	UFSHCI_QUIRK_SKIP_RESET_INTR_AGGR		= 1 << 7,
++	UFSHCI_QUIRK_BROKEN_REQ_LIST_CLR		= 1 << 6,
  };
  
  enum ufshcd_caps {
