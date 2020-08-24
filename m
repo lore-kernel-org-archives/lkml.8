@@ -2,357 +2,105 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CEFDC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4E0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9412074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 771F22074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 03:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgHXDg6 (ORCPT
+        id S1727988AbgHXDlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 23 Aug 2020 23:36:58 -0400
-Received: from mga18.intel.com ([134.134.136.126]:57197 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727858AbgHXDg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 23 Aug 2020 23:36:56 -0400
-IronPort-SDR: HDuUOIkLytM3Yx7f62EpKMOOA4Nl6yt0VdXWgbQ5IstNYKf36FFa3TiYjqBTgOSWVM7+6C79IZ
- 4lP5ptV/GfRg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9722"; a="143480812"
-X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="scan'208";a="143480812"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2020 20:36:54 -0700
-IronPort-SDR: n30R3YyTyxBbgi6mQ0LYGwFOkvfsBNDqM+8NbbUsE+cbxeHJuXRjiVvqYbVjcgcyi+3UyCfDP6
- QSm99e9f1PHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,347,1592895600"; 
-   d="scan'208";a="279508029"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by fmsmga007.fm.intel.com with ESMTP; 23 Aug 2020 20:36:51 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com, Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v10 2/2] Add PWM fan controller driver for LGM SoC
-Date:   Mon, 24 Aug 2020 11:36:37 +0800
-Message-Id: <05b664b961e37c1c35fa7d5d1cfc9ae244bc86bc.1598240097.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1598240097.git.rahul.tanwar@linux.intel.com>
-References: <cover.1598240097.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1598240097.git.rahul.tanwar@linux.intel.com>
-References: <cover.1598240097.git.rahul.tanwar@linux.intel.com>
+        Sun, 23 Aug 2020 23:41:13 -0400
+Received: from mail03.asahi-net.or.jp ([202.224.55.15]:50159 "EHLO
+        mail03.asahi-net.or.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbgHXDlL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 23 Aug 2020 23:41:11 -0400
+X-Greylist: delayed 314 seconds by postgrey-1.27 at vger.kernel.org; Sun, 23 Aug 2020 23:41:10 EDT
+Received: from sakura.ysato.name (ik1-413-38519.vs.sakura.ne.jp [153.127.30.23])
+        (Authenticated sender: PQ4Y-STU)
+        by mail03.asahi-net.or.jp (Postfix) with ESMTPA id 6C93827D27;
+        Mon, 24 Aug 2020 12:35:55 +0900 (JST)
+Received: from yo-satoh-debian.ysato.ml (ZM005235.ppp.dion.ne.jp [222.8.5.235])
+        by sakura.ysato.name (Postfix) with ESMTPSA id 8E6731C07B2;
+        Mon, 24 Aug 2020 12:35:54 +0900 (JST)
+Date:   Mon, 24 Aug 2020 12:35:51 +0900
+Message-ID: <87o8n0emw8.wl-ysato@users.sourceforge.jp>
+From:   Yoshinori Sato <ysato@users.sourceforge.jp>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] h8300: dts: Fix /chosen:stdout-path
+In-Reply-To: <20200819122838.18452-1-geert+renesas@glider.be>
+References: <20200819122838.18452-1-geert+renesas@glider.be>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-This PWM controller does not have any other consumer, it is a
-dedicated PWM controller for fan attached to the system. Add
-driver for this PWM fan controller.
+On Wed, 19 Aug 2020 21:28:38 +0900,
+Geert Uytterhoeven wrote:
+> 
+>     arch/h8300/boot/dts/h8s_sim.dts:11.3-25: Warning (chosen_node_stdout_path): /chosen:stdout-path: property is not a string
+>     arch/h8300/boot/dts/h8300h_sim.dts:11.3-25: Warning (chosen_node_stdout_path): /chosen:stdout-path: property is not a string
+> 
+> Drop the angle brackets to fix this.
+> 
+> A similar fix was already applied to arch/h8300/boot/dts/edosk2674.dts
+> in commit 780ffcd51cb28717 ("h8300: register address fix").
+> 
+> Fixes: 38d6bded13084d50 ("h8300: devicetree source")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> v2:
+>   - Add Reviewed-by.
+> ---
+>  arch/h8300/boot/dts/h8300h_sim.dts | 2 +-
+>  arch/h8300/boot/dts/h8s_sim.dts    | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/h8300/boot/dts/h8300h_sim.dts b/arch/h8300/boot/dts/h8300h_sim.dts
+> index 595398b9d0180a80..e1d4d9b7f6b40c04 100644
+> --- a/arch/h8300/boot/dts/h8300h_sim.dts
+> +++ b/arch/h8300/boot/dts/h8300h_sim.dts
+> @@ -8,7 +8,7 @@
+>  
+>  	chosen {
+>  		bootargs = "earlyprintk=h8300-sim";
+> -		stdout-path = <&sci0>;
+> +		stdout-path = &sci0;
+>  	};
+>  	aliases {
+>  		serial0 = &sci0;
+> diff --git a/arch/h8300/boot/dts/h8s_sim.dts b/arch/h8300/boot/dts/h8s_sim.dts
+> index 932cc3c5a81bcdd2..4848e40e607ecc1d 100644
+> --- a/arch/h8300/boot/dts/h8s_sim.dts
+> +++ b/arch/h8300/boot/dts/h8s_sim.dts
+> @@ -8,7 +8,7 @@
+>  
+>  	chosen {
+>  		bootargs = "earlyprintk=h8300-sim";
+> -		stdout-path = <&sci0>;
+> +		stdout-path = &sci0;
+>  	};
+>  	aliases {
+>  		serial0 = &sci0;
+> -- 
+> 2.17.1
+> 
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- drivers/pwm/Kconfig         |  11 ++
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-intel-lgm.c | 242 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 254 insertions(+)
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
+Applied h8300-next.
+Thanks.
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 7dbcf6973d33..4949c51fe90b 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -232,6 +232,17 @@ config PWM_IMX_TPM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-imx-tpm.
- 
-+config PWM_INTEL_LGM
-+	tristate "Intel LGM PWM support"
-+	depends on HAS_IOMEM
-+	depends on (OF && X86) || COMPILE_TEST
-+	select REGMAP_MMIO
-+	help
-+	  Generic PWM fan controller driver for LGM SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-intel-lgm.
-+
- config PWM_IQS620A
- 	tristate "Azoteq IQS620A PWM support"
- 	depends on MFD_IQS62X || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 2c2ba0a03557..e9431b151694 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
- obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
- obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-+obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
-diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-new file mode 100644
-index 000000000000..bfe784be3809
---- /dev/null
-+++ b/drivers/pwm/pwm-intel-lgm.c
-@@ -0,0 +1,242 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ *
-+ * Limitations:
-+ * - The hardware supports fixed period which is dependent on 2/3 or 4
-+ *   wire fan mode.
-+ * - Supports normal polarity. Does not support changing polarity.
-+ * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
-+ *   keep track of running period.
-+ * - When duty cycle is changed, PWM output may be a mix of previous setting
-+ *   and new setting for the first period. From second period, the output is
-+ *   based on new setting.
-+ * - It is a dedicated PWM fan controller. There are no other consumers for
-+ *   this PWM controller.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#define LGM_PWM_FAN_CON0		0x0
-+#define LGM_PWM_FAN_EN_EN		BIT(0)
-+#define LGM_PWM_FAN_EN_DIS		0x0
-+#define LGM_PWM_FAN_EN_MSK		BIT(0)
-+#define LGM_PWM_FAN_MODE_2WIRE		0x0
-+#define LGM_PWM_FAN_MODE_MSK		BIT(1)
-+#define LGM_PWM_FAN_DC_MSK		GENMASK(23, 16)
-+
-+#define LGM_PWM_FAN_CON1		0x4
-+#define LGM_PWM_FAN_MAX_RPM_MSK		GENMASK(15, 0)
-+
-+#define LGM_PWM_MAX_RPM			(BIT(16) - 1)
-+#define LGM_PWM_DEFAULT_RPM		4000
-+#define LGM_PWM_MAX_DUTY_CYCLE		(BIT(8) - 1)
-+
-+#define LGM_PWM_DC_BITS			8
-+
-+#define LGM_PWM_PERIOD_2WIRE_NS		(40 * NSEC_PER_MSEC)
-+
-+struct lgm_pwm_chip {
-+	struct pwm_chip chip;
-+	struct regmap *regmap;
-+	struct clk *clk;
-+	struct reset_control *rst;
-+	u32 period;
-+};
-+
-+static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct lgm_pwm_chip, chip);
-+}
-+
-+static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	struct regmap *regmap = pc->regmap;
-+
-+	return regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_EN_MSK,
-+				  enable ? LGM_PWM_FAN_EN_EN : LGM_PWM_FAN_EN_DIS);
-+}
-+
-+static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			 const struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty_cycle, val;
-+	int ret;
-+
-+	/*
-+	 * The hardware only supports
-+	 * normal polarity and fixed period.
-+	 */
-+	if (state->polarity != PWM_POLARITY_NORMAL || state->period < pc->period)
-+		return -EINVAL;
-+
-+	if (!state->enabled)
-+		return lgm_pwm_enable(chip, 0);
-+
-+	duty_cycle = min_t(u64, state->duty_cycle, pc->period);
-+	val = duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / pc->period;
-+
-+	ret = regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC_MSK,
-+				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
-+	if (ret)
-+		return ret;
-+
-+	return lgm_pwm_enable(chip, 1);
-+}
-+
-+static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty, val;
-+
-+	state->enabled = regmap_test_bits(pc->regmap, LGM_PWM_FAN_CON0,
-+					  LGM_PWM_FAN_EN_EN);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+	state->period = pc->period; /* fixed period */
-+
-+	regmap_read(pc->regmap, LGM_PWM_FAN_CON0, &val);
-+	duty = FIELD_GET(LGM_PWM_FAN_DC_MSK, val);
-+	state->duty_cycle = DIV_ROUND_UP(duty * pc->period, LGM_PWM_MAX_DUTY_CYCLE);
-+}
-+
-+static const struct pwm_ops lgm_pwm_ops = {
-+	.get_state = lgm_pwm_get_state,
-+	.apply = lgm_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static void lgm_pwm_init(struct lgm_pwm_chip *pc)
-+{
-+	struct regmap *regmap = pc->regmap;
-+	u32 con0_val;
-+
-+	con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_2WIRE);
-+	pc->period = LGM_PWM_PERIOD_2WIRE_NS;
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON1, LGM_PWM_FAN_MAX_RPM_MSK,
-+			   LGM_PWM_DEFAULT_RPM);
-+	regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_MODE_MSK,
-+			   con0_val);
-+}
-+
-+static const struct regmap_config lgm_pwm_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+};
-+
-+static void lgm_pwm_action(void *data)
-+{
-+	struct lgm_pwm_chip *pc = data;
-+
-+	clk_disable_unprepare(pc->clk);
-+	reset_control_assert(pc->rst);
-+}
-+
-+static int lgm_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct lgm_pwm_chip *pc;
-+	void __iomem *io_base;
-+	int ret;
-+
-+	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	io_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(io_base))
-+		return PTR_ERR(io_base);
-+
-+	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
-+	if (IS_ERR(pc->regmap)) {
-+		ret = PTR_ERR(pc->regmap);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err_probe(dev, ret, "failed to init register map\n");
-+		return ret;
-+	}
-+
-+	pc->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pc->clk)) {
-+		ret = PTR_ERR(pc->clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err_probe(dev, ret, "failed to get clock\n");
-+		return ret;
-+	}
-+
-+	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(pc->rst)) {
-+		ret = PTR_ERR(pc->rst);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err_probe(dev, ret, "failed to get reset control\n");
-+		return ret;
-+	}
-+
-+	ret = reset_control_deassert(pc->rst);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err_probe(dev, ret, "cannot deassert reset control\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(pc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(dev, lgm_pwm_action, pc);
-+	if (ret)
-+		return ret;
-+
-+	pc->chip.dev = dev;
-+	pc->chip.ops = &lgm_pwm_ops;
-+	pc->chip.npwm = 1;
-+
-+	lgm_pwm_init(pc);
-+
-+	ret = pwmchip_add(&pc->chip);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, pc);
-+	return 0;
-+}
-+
-+static int lgm_pwm_remove(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&pc->chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id lgm_pwm_of_match[] = {
-+	{ .compatible = "intel,lgm-pwm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
-+
-+static struct platform_driver lgm_pwm_driver = {
-+	.driver = {
-+		.name = "intel-pwm",
-+		.of_match_table = lgm_pwm_of_match,
-+	},
-+	.probe = lgm_pwm_probe,
-+	.remove = lgm_pwm_remove,
-+};
-+module_platform_driver(lgm_pwm_driver);
 -- 
-2.11.0
-
+Yosinori Sato
