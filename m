@@ -2,123 +2,112 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3741C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:00:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CD7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87425206B5
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:00:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8455206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQVbPJt2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sTMfmVTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgHXLAc (ORCPT
+        id S1727062AbgHXLBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:00:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57552 "EHLO
+        Mon, 24 Aug 2020 07:01:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgHXLAB (ORCPT
+        with ESMTP id S1726673AbgHXLBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:00:01 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF3B7C061573;
-        Mon, 24 Aug 2020 04:00:00 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id j25so2125030ejk.9;
-        Mon, 24 Aug 2020 04:00:00 -0700 (PDT)
+        Mon, 24 Aug 2020 07:01:03 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6A58C061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:01:02 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so8248450wrw.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 04:01:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=wURfUL1E5T5G5zAtpp5gFw8NGNP7EBRkkT26Hn99rX4=;
-        b=EQVbPJt2lR/3QwZovyxFsOzDX8o+E46tU9mik1qQ++52BWgAfjcjbjF9tQ3fzLBiF8
-         Wn8i+XI/Rx6tKExYWM7XK+3XmWqcQ4Gf191vbyFMDoxKDWXYkh50R6ZkO/K8vWbbV2ia
-         QElt81XQGHqyUVhTUO2vOBJGDHkl7cbtcaHVGL3F8cRSUjAA4IacPAb1MopfZ+Uhgx1O
-         8UgoSZgOFmhw4xEc0JLcI/kRGxRjxh+cz6QzYPrFCPY0n/I082ojwal4MVamqTQsh3TR
-         /bDhxLVQyqLLgri9IEbaDhQeY+ddEUZYB9DfOeBtx4BPj50Xd8mi735rb1zgsLQ7MrqW
-         SL0g==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vJ1eNEFLaB8nJQQFgwghGU2wabwAkxn1KgMf6hL5Xh8=;
+        b=sTMfmVTwLeCOxUYP0/k8SSgTjJs9jk9DQarL7xUBCbYbtS7PLGpK4BOOxSzsUPouFh
+         /+dcD4qNa1NDz8hZ36wc0aHERmx8lVLKxVGbLchsAMyDFaxFQPXGGhqrJGZrdmNCZq51
+         GjNtFOlLkVfnufZ9Qws82+UOiJFfCTeqQOp1eLQU78+kKoOuLV9C9b+nguzrXEmpTwsI
+         pQwE2u/MRLkzuDT/fu5YhVew1acgk1FfLLkJLTorupCAT6n2dlH8hXN/GfFVKRdnGP6b
+         8CyE0TlrlGuCDRd8tINbMXV8ISCBAu7PyU/IfY16jC/c3LOz9KwK8dxmIfOQCO9hfnmN
+         x3zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=wURfUL1E5T5G5zAtpp5gFw8NGNP7EBRkkT26Hn99rX4=;
-        b=BAmJNu+Q6nzslxD0I0ea+XEipK1qCNavfCcLpw3/Hu7ZVT7JNke06txBeXK2/KhNJQ
-         sifrcMB93xIC48meOfI29xKDZN6igrlZy+BHt16S63nNp4/+cuLndere/f35iUtraKsM
-         iKjLl16YWjIDPqtSiO0BR5UjfDcNEq4+Q+8LkJMcXVhLIcpS3yafdml3WRDemT9JrqC0
-         x3Z+bUkiBYRTBAnIVBiKz3tBo5dMlDXJqP0CW6m/ZgQ3C8D4VNdDyApalfC+a+w/AN0m
-         LeQNo8O7raap0lppzEYzq5azivwRW65tVZOpkj/5G5zaO0CNV0gQFYuRndIpBM5zzoZv
-         i8qw==
-X-Gm-Message-State: AOAM531WjxAbdEkbXPA8jvL62bEBRdlEwQx0l4+G9D23VemcPzybjjZl
-        UU8FFYVqCw6Ci8kjXlOHLCM=
-X-Google-Smtp-Source: ABdhPJwzRYW0prDIEUuFJxaVv29Jwxwx6HiYbSRC4xi8TfKhYZC2RVakGKAGITZuJS41xlZzsc0BlQ==
-X-Received: by 2002:a17:906:403:: with SMTP id d3mr4881944eja.522.1598266799343;
-        Mon, 24 Aug 2020 03:59:59 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id l7sm8926447edn.45.2020.08.24.03.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 03:59:58 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 13:59:56 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Cc:     David Miller <davem@davemloft.net>, Jiafei.Pan@nxp.com,
-        kuba@kernel.org, netdev@vger.kernel.org, claudiu.manoil@nxp.com,
-        ioana.ciornei@nxp.com, yangbo.lu@nxp.com,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH net-next 2/2] enetc: use napi_schedule to be compatible
- with PREEMPT_RT
-Message-ID: <20200824105956.7urh3wkzd45ror3r@skbuf>
-References: <20200803201009.613147-1-olteanv@gmail.com>
- <20200803201009.613147-2-olteanv@gmail.com>
- <20200803.182145.2300252460016431673.davem@davemloft.net>
- <20200812135144.hpsfgxusojdrsewl@linutronix.de>
- <20200812143430.xuzg2ddsl7ouhn5m@skbuf>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vJ1eNEFLaB8nJQQFgwghGU2wabwAkxn1KgMf6hL5Xh8=;
+        b=OMFPUYRv/aRuyxK6vDWu4T55LBc99jRPnczeCMAy1PEe5zQoKRFk+iaMmrwM8aWTJR
+         laAA+LkjoiqlsrvEM5aKwPHCfSlSs+ElSqaX3QXAuZ4i36LF9WCKu62JFU7rIernRcYt
+         sy7v8K+MQxSbvOK4sXeyQs0PvjMyJ6hvZ691PVG/2yp3kNigGFvfb3vtAYkpoR3JK3h9
+         0JjSSlxEvItnw5DeRJOuI1rjZXAFkSpjH4hMOaePMXdxgf0RR7ANEMAUXJ0nJ15hoCU5
+         lsEZaaSDSlglPsVZgNQM6br8hkWnWZ8/Wp/wtVCZp9NCN/wlFDrdl+skVSXcS/65oPsD
+         +xLw==
+X-Gm-Message-State: AOAM532y6EG8fYq3Ju2UL/fya+hQael4TS2BPQ83K6eivZzfqS2pHwDm
+        umjBu/vv55fuJm6Hf+Qz8xjxHQ==
+X-Google-Smtp-Source: ABdhPJybWoKbzrnXY1ZEEs5uOne0Za2Q/iVEnEp5VoqZtSurpnQJ6PCFjrJAQOjeOulEsHmjz+NiVw==
+X-Received: by 2002:adf:f64f:: with SMTP id x15mr5717930wrp.180.1598266861232;
+        Mon, 24 Aug 2020 04:01:01 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:cd42:2fa4:120f:76b0? ([2a01:e34:ed2f:f020:cd42:2fa4:120f:76b0])
+        by smtp.googlemail.com with ESMTPSA id c4sm22629929wrt.41.2020.08.24.04.01.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 04:01:00 -0700 (PDT)
+Subject: Re: [PATCH] clocksource/drivers/timer-ti-dm: Do reset before enable
+To:     Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200817092428.6176-1-tony@atomide.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <1e43fb86-df5b-88e0-aa54-8cc3336ce97a@linaro.org>
+Date:   Mon, 24 Aug 2020 13:00:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200817092428.6176-1-tony@atomide.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200812143430.xuzg2ddsl7ouhn5m@skbuf>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha,
-
-On Wed, Aug 12, 2020 at 05:34:30PM +0300, Vladimir Oltean wrote:
-> On Wed, Aug 12, 2020 at 03:51:44PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2020-08-03 18:21:45 [-0700], David Miller wrote:
-> > > From: Vladimir Oltean <olteanv@gmail.com>
-> > > > The driver calls napi_schedule_irqoff() from a context where, in RT,
-> > > > hardirqs are not disabled, since the IRQ handler is force-threaded.
-> > …
-> > > > 
-> > > > Signed-off-by: Jiafei Pan <Jiafei.Pan@nxp.com>
-> > > > Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> > > 
-> > > Applied.
-> > 
-> > Could these two patches be forwarded -stable, please? The changelog
-> > describes this as a problem on PREEMPT_RT but this also happens on !RT
-> > with the `threadirqs' commandline switch.
-> > 
-> > Sebastian
+On 17/08/2020 11:24, Tony Lindgren wrote:
+> Commit 6cfcd5563b4f ("clocksource/drivers/timer-ti-dm: Fix suspend and
+> resume for am3 and am4") exposed a new issue for type2 dual mode timers
+> on at least omap5 where the clockevent will stop when the SoC starts
+> entering idle states during the boot.
 > 
-> I expect the driver maintainers to have something to say about this. I
-> didn't test on stable kernels, and at least for dpaa2-eth, the change
-> would need to go pretty deep down the stable line.
+> Turns out we are wrongly first enabling the system timer and then
+> resetting it, while we must also re-enable it after reset. The current
+> sequence leaves the timer module in a partially initialized state. This
+> issue went unnoticed earlier with ti-sysc driver reconfiguring the timer
+> module until we fixed the issue of ti-sysc reconfiguring system timers.
 > 
-> Also, not really sure who is using the threadirqs option except for
-> testing purposes.
+> Let's fix the issue by calling dmtimer_systimer_enable() from reset for
+> both type1 and type2 timers, and switch the order of reset and enable in
+> dmtimer_systimer_setup(). Let's also move dmtimer_systimer_enable() and
+> dmtimer_systimer_disable() to do this without adding forward declarations.
 > 
-> Thanks,
-> -Vladimir
+> Fixes: 6cfcd5563b4f ("clocksource/drivers/timer-ti-dm: Fix suspend and resume for am3 and am4")
+> Reported-by: H. Nikolaus Schaller" <hns@goldelico.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
 
-Do you think that this type of request is something that AUTOSEL can
-handle?
+Applied, thanks
 
-Thanks,
--Vladimir
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
