@@ -2,103 +2,123 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F353C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBD6C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 024C5205CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598310021;
-	bh=hFYSfq3Ws1eknk28E3gL3qTiauzIGTJVHWsHQW8VQvg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TAqF/8DqI9P0Dq82jimgnWFSCD+mrDGbzGiN4j+HmINUalY6m+8oo4zLGLlKIqhvo
-	 eLp7t4yJZnwevmk6bWRYmFb08cYOl25NSVQe7LzDO2FRsVVKsGyXQTym+/LNXWw5uA
-	 lru+3YOx/9Ljd9IarT+ZoI85Jw8abebhyJkOLoVo=
+	by mail.kernel.org (Postfix) with ESMTP id 1C35420702
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:01:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bhHutHwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgHXXAT (ORCPT
+        id S1728114AbgHXXBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:00:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35230 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 19:01:00 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55587 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726519AbgHXXAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 19:00:18 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726519AbgHXXA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 19:00:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2CAF20706;
-        Mon, 24 Aug 2020 23:00:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598310017;
-        bh=hFYSfq3Ws1eknk28E3gL3qTiauzIGTJVHWsHQW8VQvg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MwB9HxxApRF52tXIKzjRRnfjyHr+VskuNN3QHQlCpBUNtIGoS05zhpZkDJeSa8UKv
-         0yDtOTSqjqF0MBw9q4pS2f/bBfuqOBO0JsMXsfqX+0U4CowfHdNFg1y1t9Ya9bmMgw
-         WIeTiN+FRS091HsV5kYbVekcIDXi3RBOG5gvbIAc=
-Date:   Mon, 24 Aug 2020 16:00:15 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Theodore Ts'o <tytso@mit.edu>
-Cc:     Daniel Rosenberg <drosen@google.com>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fscrypt@vger.kernel.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-ext4@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>
-Subject: Re: [PATCH v12 0/4] Prepare for upcoming Casefolding/Encryption
- patches
-Message-ID: <20200824230015.GA810@sol.localdomain>
-References: <20200708091237.3922153-1-drosen@google.com>
- <20200720170951.GE1292162@gmail.com>
- <20200727164508.GE1138@sol.localdomain>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bb6zq03mTz9sSP;
+        Tue, 25 Aug 2020 09:00:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1598310057;
+        bh=eDDydcN+yRwqvCr58cy3ZtpIXf7l8cnkzFj+j1CqajM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bhHutHwcHIAL9ZElVcQQk25ly0t5DlWuVtHmK3kFpuxfYpgSIUxe3i7Dwf+HPRMWN
+         D+F49Hy90V3rnGPOmwlB8FmTw4m5u0OVlESvELOTcUL/qquubwqnXGVzL9LD3aPMwc
+         CGMiBfTl2CvWpU0XobpSYMeT3zf2EcuOYroHY3UZ7xd2COfY9DSIdNoq5Dk+iqdqVz
+         TJbQ6AjtyUJzVlovsBKnXm93TnFjnvnUBsZilA2GoXAIUizRL1PNSLM/3rGX866oa6
+         RDPFiyMo6NtWzdAszGH8k1rf76B8FW4FMDFQPvXYBSzPX2JpXzy/HkXEJr1+g+Xrdl
+         LmHnzuTFbCojw==
+Date:   Tue, 25 Aug 2020 09:00:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Qian Cai <cai@lca.pw>, Alex Shi <alex.shi@linux.alibaba.com>,
+        akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
+Subject: Re: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead
+ page charged
+Message-ID: <20200825090054.3c5dd68a@canb.auug.org.au>
+In-Reply-To: <20200824151045.GC3415@dhcp22.suse.cz>
+References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
+        <20200820145850.GA4622@lca.pw>
+        <20200824145201.GB4337@lca.pw>
+        <20200824151045.GC3415@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200727164508.GE1138@sol.localdomain>
+Content-Type: multipart/signed; boundary="Sig_/GBWE4=3K9zAUW5hSuk=F0/p";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 27, 2020 at 09:45:08AM -0700, Eric Biggers wrote:
-> On Mon, Jul 20, 2020 at 10:09:51AM -0700, Eric Biggers wrote:
-> > On Wed, Jul 08, 2020 at 02:12:33AM -0700, Daniel Rosenberg wrote:
-> > > This lays the ground work for enabling casefolding and encryption at the
-> > > same time for ext4 and f2fs. A future set of patches will enable that
-> > > functionality.
-> > > 
-> > > These unify the highly similar dentry_operations that ext4 and f2fs both
-> > > use for casefolding. In addition, they improve d_hash by not requiring a
-> > > new string allocation.
-> > > 
-> > > Daniel Rosenberg (4):
-> > >   unicode: Add utf8_casefold_hash
-> > >   fs: Add standard casefolding support
-> > >   f2fs: Use generic casefolding support
-> > >   ext4: Use generic casefolding support
-> > > 
-> > 
-> > Ted, are you interested in taking this through the ext4 tree for 5.9?
-> > 
-> > - Eric
-> 
-> Ping?
-> 
+--Sig_/GBWE4=3K9zAUW5hSuk=F0/p
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Unfortunately this patchset got ignored for 5.9.
+Hi Michal,
 
-Ted, will you have any interest in taking this patchset for 5.10?  Or should
-Jaegeuk just take patches 1-3 via the f2fs tree?
+On Mon, 24 Aug 2020 17:10:45 +0200 Michal Hocko <mhocko@suse.com> wrote:
+>
+> On Mon 24-08-20 10:52:02, Qian Cai wrote:
+> > On Thu, Aug 20, 2020 at 10:58:50AM -0400, Qian Cai wrote: =20
+> > > On Tue, Aug 11, 2020 at 07:10:27PM +0800, Alex Shi wrote: =20
+> > > > Since readahead page is charged on memcg too, in theory we don't ha=
+ve to
+> > > > check this exception now. Before safely remove them all, add a warn=
+ing
+> > > > for the unexpected !memcg.
+> > > >=20
+> > > > Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+> > > > Acked-by: Michal Hocko <mhocko@suse.com> =20
+> > >=20
+> > > This will trigger, =20
+> >=20
+> > Andrew, Stephen, can you drop this series for now? I did manage to trig=
+ger this
+> > warning on all arches, powerpc, x86 and arm64 (below). =20
+>=20
+> Yes, I do agree. See http://lkml.kernel.org/r/20200824151013.GB3415@dhcp2=
+2.suse.cz
 
-The fscrypt tree is also an option, but I feel it's not really appropriate since
-this patchset is just a refactoring of the existing casefolding support.
+OK, I have removed the following from linux-next for today:
 
-More reviews on patches 1-2 would be appreciated too.  So far just Gabriel and I
-have reviewed them.  I was hoping that other people would review them too.
+  c443db77c9f3 ("mm/thp: narrow lru locking")
+  18bafefba73d ("mm/thp: remove code path which never got into")
+  5fb6c0683017 ("mm/thp: clean up lru_add_page_tail")
+  9d1d568727a8 ("mm/thp: move lru_add_page_tail func to huge_memory.c")
+  47eb331560ff ("mm/memcg: bail out early from swap accounting when memcg i=
+s disabled")
+  4b0d99a64d78 ("mm/memcg: warning on !memcg after readahead page charged")
 
-- Eric
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/GBWE4=3K9zAUW5hSuk=F0/p
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9ERqYACgkQAVBC80lX
+0GwA5wf+MmH5x5QjwvI+81lnKYiqyUbfsEnlGMvy8JrOIX37/7lb9nUtabZtlOIx
+RV6oA0amomiZDwc/c2X6GQh3oVsn69NpycxvuwZmofK7TSCz6U+YZFaUsFLxdJmd
+RfQIvC55ORNcYXyjd67/OgCeXYDf//WyYMy82qd37YvLK3E7vtQQRRvdrskLBMNr
+MpcRDAW4Lj3JBojpGVBspX2t0L0rmXzQY2OomgWQB29HFnJqNxPQ77aRLhm2zM6E
+uRoOgMi2ca9F/cxXJKQwDrPceC7xWzaiUgCD8uOxFLwqtzcdiipnOOAeg6SJ1krt
+7HQIE8bmAXf6XXAKncXy8nF4+VL0Pg==
+=v0cS
+-----END PGP SIGNATURE-----
+
+--Sig_/GBWE4=3K9zAUW5hSuk=F0/p--
