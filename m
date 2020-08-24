@@ -2,98 +2,119 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B147C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7568C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D19120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC922074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:17:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J7Wbx9Em"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVxFQX8h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgHXKQp (ORCPT
+        id S1726804AbgHXKRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:16:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50502 "EHLO
+        Mon, 24 Aug 2020 06:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbgHXKQn (ORCPT
+        with ESMTP id S1725906AbgHXKRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:16:43 -0400
-Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67BA5C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 03:16:43 -0700 (PDT)
-Received: by mail-vk1-xa31.google.com with SMTP id m12so1848650vko.5
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 03:16:43 -0700 (PDT)
+        Mon, 24 Aug 2020 06:17:04 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766D3C061573;
+        Mon, 24 Aug 2020 03:17:03 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id y2so8986403ljc.1;
+        Mon, 24 Aug 2020 03:17:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OiCnBS3GYYoc2kTu6U4ScV/ziyrA981gLnUbVdRpKoY=;
-        b=J7Wbx9EmaRP0OLY3dh6kuTXPZs9/tD8i70xzq0R0UJLlPGvI+QuyEXm0317YUV78wI
-         77sU+R+hq+azI2/J3yBcN9y9LuvaLS324FEGORsIJh/EYAoQzPM5NSmMFrtrKOoCKHoS
-         DTBZaI9c1Iv4jWmPWv1q4GM6oz1jvOPwLVfPZDpkOSK242goI8eNhpuE9qsEducUHHKS
-         Qsm/CmGzEqNmI7ykmtkIxxS6iv2obxKOq+t1LMYhf44YZQ9+3r2WokkeTKvha/Z6JcRQ
-         qSUpWFpThpFDZGhtXOBxIdJpjbakZLgukJxr6JWI2bI5E3cRp8rI1dr71zWdENcEg0eG
-         r6Ww==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EO6NpAg0w4GDPViUfV2sBM0Yy3icsdCv6CnK4KTImqc=;
+        b=NVxFQX8hvxJpgbMYgWDP8ljVHy+fJWPMXrej1XIN0mQJrxqZqZ7rZ7q5Jr3ijgyGlf
+         T3OdrM5cuz0hbZsZDGoiDq6Qac6igGMQUNV8ExM7LTC0YIBGX9lNSqiEeB8rxnqeUu2W
+         /m2pfPwGkZ/XhhspBiEDuDE82+a5usjw734uegAh6VfTqoirraDGyDeuPQRyHEI8vdqs
+         Gq/wyUmgCK6/o0p8Z+REYA4rkSupFZ8tMdvOe5iyVLRkONnmKN11ajMV3MQLSiewiWwt
+         7Rx4vkTe3vIO/BL5NR7FylxG9n/shFmmXbMS19pVax/PyPZHWUY5v1v57bfQIZBn2+M5
+         EjEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OiCnBS3GYYoc2kTu6U4ScV/ziyrA981gLnUbVdRpKoY=;
-        b=mFE/kCwbiZTImphBRnGFCoAxGIlJPsVuQVvaPoY+7udAHYkNFou3NaD+WUg3jXC0xE
-         OKz0tLSvJUuVonvSEGprW34/h9J4qm8wpPVUcC4op6nhO1ElXEPT3aCwAnQW9g5iXzLb
-         1EHNrNrbabsVLynJXAeNHcKIjL7+F/eMa2fN/4vmVmZ0Oug3d59pS9ioRBvhdNmdAr0e
-         pLzNjwCzgBrf7FQVqbzDPVwOmXz74h9U0ybMX//UZS/6IV94zV03NwaoPWwU1+0Z1rQh
-         fX7KAWjKhMkUlfHIkoJUrGZL8dyGShQzZLZpoU3HZOcA2Gety2b6Fcf8zS3FQIwGoE1t
-         JRNg==
-X-Gm-Message-State: AOAM53132OCX4KiJh/yCBDokRON8LVJDHU3eMf9YkZoCzE3KZoAUeCS5
-        nmkXB2dySzNl5bmmPpHKQkML/0XX2yfFMdGdfqXYBA==
-X-Google-Smtp-Source: ABdhPJyL/7mPRqeQIbvTo4BErUCy3JkI6gdC46co6kFSio+FPo/F2dgD3SAvRWGLInV9c6P76V1Lf7HyDhKIwGTMGWA=
-X-Received: by 2002:a1f:a256:: with SMTP id l83mr1859945vke.78.1598264202330;
- Mon, 24 Aug 2020 03:16:42 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=EO6NpAg0w4GDPViUfV2sBM0Yy3icsdCv6CnK4KTImqc=;
+        b=Ptnh0JCIMkprXszF2tofnoE7WrYg//iRatLCSPwaMgPHv9nAftKbcKjAn5MGwGggxc
+         J1BIKzXOGBHT1/EEjqE2sOPwTLu0reEjZNTzHHR0HAcwscEikmtvDMfLEmlYFhGtUZWt
+         m2dGHxYvbJUVQ1aMOYO3p4LEYYYeA6N2u+NJsyn6M/D+JKD12QRIpj7KsaoHMzSPbhCr
+         cRd3IJsMsbNpgmGaVLLQQfOCCFHXNUIuS5f/76XPh29bL5ZlHz25s3NdDUvMMyAlXR9s
+         37ug/CZYQEerG7u09gGM+q085p2e8Wy86NwL4sPBFAq+ZJs3w3lw+bMxRZ7NF+xQQMQq
+         w9BQ==
+X-Gm-Message-State: AOAM533RpymZKFV7KXN2SF17hMf8AI23Noqj7+GDiqUcxnvONOaf3goI
+        a65dU8vxx0BpphHL2ak6NX7BrNcpAjA=
+X-Google-Smtp-Source: ABdhPJy/u/4LLu9r4mhcxwDPpCC7JjeLfk00HvQSpyKtVoG0ldd1sVtB6GCZfVC6S4L1b5e/fmkjSg==
+X-Received: by 2002:a2e:b708:: with SMTP id j8mr2411912ljo.375.1598264217513;
+        Mon, 24 Aug 2020 03:16:57 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id t18sm2111855ljc.126.2020.08.24.03.16.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 03:16:56 -0700 (PDT)
+Subject: Re: [PATCH v1 3/6] leds: Add driver for Acer Iconia Tab A500
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Dan Murphy <dmurphy@ti.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200823140846.19299-1-digetx@gmail.com>
+ <20200823140846.19299-4-digetx@gmail.com>
+ <20200823223434.cjxo762ehxgo4caz@duo.ucw.cz>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <c7d37174-1dcd-206d-01ac-eb95aa0b5dc8@gmail.com>
+Date:   Mon, 24 Aug 2020 13:16:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <CA+G9fYt=oYWHEG6VNkfEh8+UxbReS6_+9hnz+1bOYZHj5j1F_Q@mail.gmail.com>
-In-Reply-To: <CA+G9fYt=oYWHEG6VNkfEh8+UxbReS6_+9hnz+1bOYZHj5j1F_Q@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 24 Aug 2020 15:46:30 +0530
-Message-ID: <CA+G9fYtVCb6p_eeBayp_bzJGYFBOx+yG+Bgpda3KcFy-Yj1VgA@mail.gmail.com>
-Subject: Re: BUG: Bad page state in process true  pfn:a8fed on arm
-To:     linux-mm <linux-mm@kvack.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LTP List <ltp@lists.linux.it>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Xu <peterx@redhat.com>, opendmb@gmail.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        afzal.mohd.ma@gmail.com, Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200823223434.cjxo762ehxgo4caz@duo.ucw.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 at 15:14, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> Kernel BUG noticed on arm architecture on linux next 20200824 tag kernel
-> while running LTP CVE "thp01 -I 120" , LTP mm, LTP hugetlb test cases
-> and libhugetlbfs test suite.
+24.08.2020 01:34, Pavel Machek пишет:
+> On Sun 2020-08-23 17:08:43, Dmitry Osipenko wrote:
+>> Acer Iconia Tab A500 is an Android tablet device which has two LEDs
+>> embedded into the Power Button. Orange LED indicates "battery charging"
+>> status and white LED indicates "wake-up/charge-done" status. The new LED
+>> driver provides control over both LEDs to userspace.
+> 
+> Hmm. If the ENE controller is similar to other devices, should it also
+> share LED driver?
+> 
+> And I guess the cdev names should be different based on info above (I
+> gave you wrong suggestions before)... and they probably should be
+> parsed from the device tree.
 
-BAD: next-20200820
-GOOD: next-20200819
+The ENE controller hardware is the same on all devices that use it, but
+firmware isn't the same and apparently every vendor invents its own
+thing in regards to the firmware because firmware features and interface
+varies vastly from device to device. Hence, unfortunately, usually there
+is very little compatibility even if devices come form the same vendor
 
-We are trying to bisect this problem and get back to you shortly.
+AFAIK, the ENE controller provides some compatibility on x86 machines
+via ACPI EC standard, but this doesn't apply to the ARM devices.
 
-- Naresh
+I know that Acer A200 should be able to re-use the A500 EC driver as-is,
+but A200 is pretty much the same device as A500, so it's not surprising.
+IIRC, A200 model only misses back camera in comparison to A500. Hence
+there shouldn't be a need to parse the names from a device-tree, but
+I'll try to double-check it to be sure.
+
+Thanks!
