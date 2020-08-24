@@ -2,106 +2,98 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B6DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAD5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 514162078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B5FA20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:32:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iIs7xHLk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UIMUTWo0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHXPck (ORCPT
+        id S1727954AbgHXPcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:32:40 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25766 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727858AbgHXPbG (ORCPT
+        Mon, 24 Aug 2020 11:32:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43536 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbgHXPbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:31:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598283049;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=O53y8SXTHe8UM7SjU5jL95IZsuNLkUIcYidxItMzlrY=;
-        b=iIs7xHLkeq33qtNCBaLQQKTav1d+12zNnNPk2m/75vKR03sLAM7BOMF0A9aAlBbJoh3cCH
-        8wfDjvbPB49A9P3QpWxh6TtOS5dMUoWV1JDyL2wOlW579QBAuMpjOTAfAi0zWXeZ3B5YGV
-        TTQcVuQYg3A6ElAs8oyu4/XxJKXnksQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-6-Vepn4HL3P5GapuSjSxnMkQ-1; Mon, 24 Aug 2020 11:30:42 -0400
-X-MC-Unique: Vepn4HL3P5GapuSjSxnMkQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 456311019629;
-        Mon, 24 Aug 2020 15:30:41 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B53DF7038A;
-        Mon, 24 Aug 2020 15:30:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 2/2] Modify the pipe(2) manpage for notification queues
-From:   David Howells <dhowells@redhat.com>
-To:     mtk.manpages@gmail.com, me@benboeckel.net
-Cc:     torvalds@linux-foundation.org, dhowells@redhat.com,
-        keyrings@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
+        Mon, 24 Aug 2020 11:31:18 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816EAC061755;
+        Mon, 24 Aug 2020 08:31:16 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id h2so4406651plr.0;
+        Mon, 24 Aug 2020 08:31:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yfrSztbxyVdrNkvRaWSKyH2m7g61Tuoyn5zH5uHd9ms=;
+        b=UIMUTWo0aS/9WpBY0/Rgjj0FyKbsqnIHwrU2InueSQVvJLzR3llEIhviAxPpttma8L
+         nfqV4+dyId2sZUfB1BiS01o0hEpnxTUGg0o9E/p2GOMVHaxUB832Xsl17w7/3EvJg2cu
+         IJ1CkUbxuKNKD4fyMc+UVEE8hE+Znuahni2rZ2nnxnrLo/Y5Tpx8mKLrD83kUFntC0LY
+         urHiVMfpUsBCuZFULaPL81ZrdsuKIk4ByelrIClMTyZFWWioi/iMlCHhvG69c9PdzoV2
+         BR/OzONhPkbAV2f8qk8thXcuowm1rCh6V3UUBvPyWnm8doRCQOxeMRIUk7UAAjl6MIvx
+         CqFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yfrSztbxyVdrNkvRaWSKyH2m7g61Tuoyn5zH5uHd9ms=;
+        b=VEWJ9mQa/fkroK/s4Y2gLQsg0BkjcqsUbfM9eYO9BzAZ8AQauJhzYnA2gn4T3PLrtY
+         /KcfCM0NwbTpf3cMI7ZFFlTHJ+8eiyumLQjQn7t9Pu0f0NOUBAvCkOsc5+HrTP7vzvVx
+         xeGv8MLt3OrjHIo0EHvb+DjRiunOjpwcN4wh9tt6fcMPFQhgrShdYE2y1f6+7FemHaaA
+         QivC3Saux/55Cpwdp5AU862ijPumbJmYtj8Oz0+XxsqFOJ2TFoZ4UhI0zH8vN3aTHTz5
+         c5Mgv2umRMnBqbX+4pcQcpuhwo3kUCKoj9F8npfF4Ho14XDTdq1ST7yjtLBclgL0p3Ya
+         1FqQ==
+X-Gm-Message-State: AOAM533/eDVxtYwrosSe1szM4b04zM+EpgomKvi5DSHweoytye+jeg05
+        L5UWLOmXKO1m9t8RQbZ5321Xf9xPzkw=
+X-Google-Smtp-Source: ABdhPJyeufnHQksiycUw+vgAQFd1rddVw+8vkyVrFnPxm115km4UoI0yMxlnpguo5uIIYHONBOzvPg==
+X-Received: by 2002:a17:90b:b18:: with SMTP id bf24mr4697310pjb.223.1598283075175;
+        Mon, 24 Aug 2020 08:31:15 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id x127sm12343586pfd.86.2020.08.24.08.31.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 08:31:14 -0700 (PDT)
+Subject: Re: [PATCH] net: systemport: Fix memleak in bcm_sysport_probe
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>, kjlu@umn.edu
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Mon, 24 Aug 2020 16:30:38 +0100
-Message-ID: <159828303892.330133.569968242547202064.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159828303137.330133.10953708050467314086.stgit@warthog.procyon.org.uk>
-References: <159828303137.330133.10953708050467314086.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+References: <20200824055831.26745-1-dinghao.liu@zju.edu.cn>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <a83f59bd-e4cf-bb97-2812-5641daaaac1a@gmail.com>
+Date:   Mon, 24 Aug 2020 08:31:13 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200824055831.26745-1-dinghao.liu@zju.edu.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify the pipe(2) manual page to cover support for notification queues
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
-
- man2/pipe.2 |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/man2/pipe.2 b/man2/pipe.2
-index 117f8950c..c50b38530 100644
---- a/man2/pipe.2
-+++ b/man2/pipe.2
-@@ -146,6 +146,13 @@ referred to by the new file descriptors.
- Using this flag saves extra calls to
- .BR fcntl (2)
- to achieve the same result.
-+.TP
-+.B O_NOTIFICATION_PIPE
-+This enables use of the pipe as a notification transport (see
-+.BR watch_queue (7)
-+for more information).  When a pipe is in this mode, it may not be spliced as
-+the insertion of notification messages into the pipe buffer can happen
-+asynchronously and may cause splice to malfunction.
- .SH RETURN VALUE
- On success, zero is returned.
- On error, \-1 is returned,
-@@ -292,4 +299,5 @@ main(int argc, char *argv[])
- .BR vmsplice (2),
- .BR write (2),
- .BR popen (3),
--.BR pipe (7)
-+.BR pipe (7),
-+.BR watch_queue (7)
 
 
+On 8/23/2020 10:58 PM, Dinghao Liu wrote:
+> When devm_kcalloc() fails, dev should be freed just
+> like what we've done in the subsequent error paths.
+> 
+> Fixes: 7b78be48a8eb6 ("net: systemport: Dynamically allocate number of TX rings")
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+This has already been applied, but this is good.
+-- 
+Florian
