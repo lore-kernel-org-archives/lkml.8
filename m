@@ -2,207 +2,159 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE36C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6CCC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B04B4206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:01:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Emngsf7u"
+	by mail.kernel.org (Postfix) with ESMTP id 911CF206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598252832;
+	bh=L7lFreml+LeSlRAYWIfDf6ivAo/g2mibkewQKdqPv8g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eXEq6zoygLDpjjM2fAc06xKk63Re1NqnPO3oMsp2F+b+mZIsEN4BEIDOUBPsrC501
+	 16Nfkg7Pn2+eeqye+Mx8uibBaYKU2GewuJNTzQ1xNAqgAoYkFFfXLZoxKF1ZCZ+7V+
+	 mkP2S2YDS30O+UIBpdGxIo2Y/Ve0KpYpWdeVTaTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgHXHBy (ORCPT
+        id S1726189AbgHXHHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 03:01:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgHXHBw (ORCPT
+        Mon, 24 Aug 2020 03:07:11 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40907 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgHXHHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 03:01:52 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F4E1C061573;
-        Mon, 24 Aug 2020 00:01:52 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p37so4121556pgl.3;
-        Mon, 24 Aug 2020 00:01:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=0zrV+CngMOhoULdpw/C/2MOfxZLOIh5Q40JHaANvzKE=;
-        b=Emngsf7uI/mwcI/x1V+pb/qwNVd8PuBgm1QYQU3Y6qPKeAwtd22GOSE9OJfQdajGWV
-         iQwaaXBWyej2k2tTn0V9kVCS0q+Hg5pPoFl80y8/GYd4ZPBppfTl93lFVqqh00+2gNLP
-         hYk/4/wD2dzP1oHDZy4plLdc+uKfLDqB1+1Hr31pbpKOStimR43YcKbgtN+1R46HHM6x
-         6de8akFHe8JwTjHKTIUrzjCI6320CarAMAdkKZmvRRKejduMBbbZ+DQfDS9XPrfa5sjs
-         UARXEcLVxpdC2Dfui3p46OQbFf2LklyItTpqZDa5+el0alad8+ySFp2vAPviVm7OsDVP
-         KfyA==
+        Mon, 24 Aug 2020 03:07:10 -0400
+Received: by mail-wm1-f68.google.com with SMTP id k20so7114138wmi.5;
+        Mon, 24 Aug 2020 00:07:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=0zrV+CngMOhoULdpw/C/2MOfxZLOIh5Q40JHaANvzKE=;
-        b=dqGLeBg511ou5SR01LITTcJh6ayU9f1a78Y/lhFPP9OvuMnRzV628IfQzFH6iDvDl+
-         E2Sd7jO78i/0utzI+khHvsBKG9mAWBPme1Z6i7IJeLdV80cEv+WVmRbPF+EQSFOTbsvu
-         waJNrvn46Yo4bVnO75QVvTTOMuCOlzs0RwDFKkvNtDQfWm4P2eqyD3P4SgKMy4CQHBEt
-         JKxGs9le0uZFegMWbeIplHQCXwJOIVEfPBCb86cMh0wWzN9O78K1XvvjSgJURTMW6yFp
-         WHqboqPLX3KNXmwQswx42D+7asZYj2o2TBSxZ6PLY6/YSO7BxowBtB79upmG6C7/835U
-         tqog==
-X-Gm-Message-State: AOAM533r2Aw2AnLqFtsMzXa1U0krpegA39ora1rCDPykvgt7PtpN9hw6
-        6aj14eBonTtyjAyRqHXW6mM=
-X-Google-Smtp-Source: ABdhPJzjfI/8BrR22q4cvETsVuCnk7AMqOjuVfibV6FoP6omGJgWAutyVPLt8b9ZQphvgSa7eciqHw==
-X-Received: by 2002:aa7:9f92:: with SMTP id z18mr3153579pfr.260.1598252511953;
-        Mon, 24 Aug 2020 00:01:51 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o38sm8506730pgb.38.2020.08.24.00.01.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 00:01:50 -0700 (PDT)
-Subject: Re: linux-next: build failure after merge of the hwmon-staging tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Kitt <steve@sk2.org>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-References: <20200824102858.5554a2b2@canb.auug.org.au>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
- RYHA7RCEK2dh6dDccykQk3bC90xXMPg+O3R+C/SkwcnUak1UZaeK/SwQbq/t0tkMzYDRxfJ7
- nyFiKxUehbNF3r9qlJgPqONwX5vJy4/GvDHdddSCxV41P/ejsZ8PykxyJs98UWhF54tGRWFl
- 7i1xvaDB9lN5WTLRKSO7wICuLiSz5WZHXMkyF4d+/O5ll7yz/o/JxK5vO/sduYDIlFTvBZDh
- gzaEtNf5tQjsjG4io8E0Yq0ViobLkS2RTNZT8ICq/Jmvl0SpbHRvYwa2DhNsK0YjHFQBB0FX
- IdhdUEzNefcNcYvqigJpdICoP2e4yJSyflHFO4dr0OrdnGLe1Zi/8Xo/2+M1dSSEt196rXaC
- kwu2KgIgmkRBb3cp2vIBBIIowU8W3qC1+w+RdMUrZxKGWJ3juwcgveJlzMpMZNyM1jobSXZ0
- VHGMNJ3MwXlrEFPXaYJgibcg6brM6wGfX/LBvc/haWw4yO24lT5eitm4UBdIy9pKkKmHHh7s
- jfZJkB5fWKVdoCv/omy6UyH6ykLOPFugl+hVL2Prf8xrXuZe1CMS7ID9Lc8FaL1ROIN/W8Vk
- BIsJMaWOhks//7d92Uf3EArDlDShwR2+D+AMon8NULuLBHiEUQARAQABzTJHdWVudGVyIFJv
- ZWNrIChMaW51eCBhY2NvdW50KSA8bGludXhAcm9lY2stdXMubmV0PsLBgQQTAQIAKwIbAwYL
- CQgHAwIGFQgCCQoLBBYCAwECHgECF4ACGQEFAlVcphcFCRmg06EACgkQyx8mb86fmYFg0RAA
- nzXJzuPkLJaOmSIzPAqqnutACchT/meCOgMEpS5oLf6xn5ySZkl23OxuhpMZTVX+49c9pvBx
- hpvl5bCWFu5qC1jC2eWRYU+aZZE4sxMaAGeWenQJsiG9lP8wkfCJP3ockNu0ZXXAXwIbY1O1
- c+l11zQkZw89zNgWgKobKzrDMBFOYtAh0pAInZ9TSn7oA4Ctejouo5wUugmk8MrDtUVXmEA9
- 7f9fgKYSwl/H7dfKKsS1bDOpyJlqhEAH94BHJdK/b1tzwJCFAXFhMlmlbYEk8kWjcxQgDWMu
- GAthQzSuAyhqyZwFcOlMCNbAcTSQawSo3B9yM9mHJne5RrAbVz4TWLnEaX8gA5xK3uCNCeyI
- sqYuzA4OzcMwnnTASvzsGZoYHTFP3DQwf2nzxD6yBGCfwNGIYfS0i8YN8XcBgEcDFMWpOQhT
- Pu3HeztMnF3HXrc0t7e5rDW9zCh3k2PA6D2NV4fews9KDFhLlTfCVzf0PS1dRVVWM+4jVl6l
- HRIAgWp+2/f8dx5vPc4Ycp4IsZN0l1h9uT7qm1KTwz+sSl1zOqKD/BpfGNZfLRRxrXthvvY8
- BltcuZ4+PGFTcRkMytUbMDFMF9Cjd2W9dXD35PEtvj8wnEyzIos8bbgtLrGTv/SYhmPpahJA
- l8hPhYvmAvpOmusUUyB30StsHIU2LLccUPPOwU0ETofVZwEQALlLbQeBDTDbwQYrj0gbx3bq
- 7kpKABxN2MqeuqGr02DpS9883d/t7ontxasXoEz2GTioevvRmllJlPQERVxM8gQoNg22twF7
- pB/zsrIjxkE9heE4wYfN1AyzT+AxgYN6f8hVQ7Nrc9XgZZe+8IkuW/Nf64KzNJXnSH4u6nJM
- J2+Dt274YoFcXR1nG76Q259mKwzbCukKbd6piL+VsT/qBrLhZe9Ivbjq5WMdkQKnP7gYKCAi
- pNVJC4enWfivZsYupMd9qn7Uv/oCZDYoBTdMSBUblaLMwlcjnPpOYK5rfHvC4opxl+P/Vzyz
- 6WC2TLkPtKvYvXmdsI6rnEI4Uucg0Au/Ulg7aqqKhzGPIbVaL+U0Wk82nz6hz+WP2ggTrY1w
- ZlPlRt8WM9w6WfLf2j+PuGklj37m+KvaOEfLsF1v464dSpy1tQVHhhp8LFTxh/6RWkRIR2uF
- I4v3Xu/k5D0LhaZHpQ4C+xKsQxpTGuYh2tnRaRL14YMW1dlI3HfeB2gj7Yc8XdHh9vkpPyuT
- nY/ZsFbnvBtiw7GchKKri2gDhRb2QNNDyBnQn5mRFw7CyuFclAksOdV/sdpQnYlYcRQWOUGY
- HhQ5eqTRZjm9z+qQe/T0HQpmiPTqQcIaG/edgKVTUjITfA7AJMKLQHgp04Vylb+G6jocnQQX
- JqvvP09whbqrABEBAAHCwWUEGAECAA8CGwwFAlVcpi8FCRmg08MACgkQyx8mb86fmYHNRQ/+
- J0OZsBYP4leJvQF8lx9zif+v4ZY/6C9tTcUv/KNAE5leyrD4IKbnV4PnbrVhjq861it/zRQW
- cFpWQszZyWRwNPWUUz7ejmm9lAwPbr8xWT4qMSA43VKQ7ZCeTQJ4TC8kjqtcbw41SjkjrcTG
- wF52zFO4bOWyovVAPncvV9eGA/vtnd3xEZXQiSt91kBSqK28yjxAqK/c3G6i7IX2rg6pzgqh
- hiH3/1qM2M/LSuqAv0Rwrt/k+pZXE+B4Ud42hwmMr0TfhNxG+X7YKvjKC+SjPjqp0CaztQ0H
- nsDLSLElVROxCd9m8CAUuHplgmR3seYCOrT4jriMFBtKNPtj2EE4DNV4s7k0Zy+6iRQ8G8ng
- QjsSqYJx8iAR8JRB7Gm2rQOMv8lSRdjva++GT0VLXtHULdlzg8VjDnFZ3lfz5PWEOeIMk7Rj
- trjv82EZtrhLuLjHRCaG50OOm0hwPSk1J64R8O3HjSLdertmw7eyAYOo4RuWJguYMg5DRnBk
- WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
- HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <3c308474-932d-a800-fc65-5d8e412cfa2f@roeck-us.net>
-Date:   Mon, 24 Aug 2020 00:01:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jMkESQ6/qDeh8yFOp5ut20DDKvKP8Egt8HrPQWgV3hI=;
+        b=qO1tdIinoFPIXWPm5/19KfBpyFAwq8uKSg7EQU1L8V6ovQx9nJWVqyn3VV5ax8kBxQ
+         pbVqTRVoiDADr0KvqztcBve3TkrN3Fl9lFP1UXt+MjKM+BULUR6gOD7v2Zhusjq4JE6W
+         PzNQzwmCMMpsOIyNMIOA0r7/IZ6GjQyzxV8g4uEdQmkom9Zl5Wc4naHb4zWQicafXGE+
+         ZBZfmBbEr3kyOvrivi2+KJJN9VY4xshpgyieT9qL2aC/lW3Zdm8z3E7U62EPJScgJYHS
+         rZDR3h+FNeOgElnSHLwSH/Qkfq6sJmMvHVFSA1T6JeHKf6x2mv2hDTBPb4P6UFBtA1J4
+         dwpg==
+X-Gm-Message-State: AOAM530XgyTPKsoaliYNEw6PrdoDEeX2dCtCpr8HI1/B5ZGAHNi9rttZ
+        zxzwkG2bBffmUngDYt1gm9g=
+X-Google-Smtp-Source: ABdhPJyU61NszbES0k6p1PAHajV48Erw/hGcjANLVNAFBKqGCzpj1Y19Wb9rD9qlokEO4JMhFKYb8w==
+X-Received: by 2002:a7b:c1c1:: with SMTP id a1mr4297940wmj.137.1598252826663;
+        Mon, 24 Aug 2020 00:07:06 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id m1sm21788437wmc.28.2020.08.24.00.07.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 00:07:06 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 09:07:03 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>
+Subject: Re: [PATCH 02/22] dt-bindings: gpio: fsl-imx-gpio: Add gpio-ranges
+ property
+Message-ID: <20200824070703.GA5382@kozik-lap>
+References: <20200823161550.3981-1-krzk@kernel.org>
+ <20200823161550.3981-2-krzk@kernel.org>
+ <20200824052446.GE13023@pengutronix.de>
+ <20200824063806.GA2497@kozik-lap>
+ <20200824065801.GH13023@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200824102858.5554a2b2@canb.auug.org.au>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="V1pIFd9W2l3G2AuVUZfwNfMyUYLDg2sDz"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200824065801.GH13023@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---V1pIFd9W2l3G2AuVUZfwNfMyUYLDg2sDz
-Content-Type: multipart/mixed; boundary="8IOyuIs8tBuUOaiqDTZ5ujYsv8eDUC8mX"
+On Mon, Aug 24, 2020 at 08:58:01AM +0200, Sascha Hauer wrote:
+> On Mon, Aug 24, 2020 at 08:38:06AM +0200, Krzysztof Kozlowski wrote:
+> > On Mon, Aug 24, 2020 at 07:24:46AM +0200, Sascha Hauer wrote:
+> > > On Sun, Aug 23, 2020 at 06:15:30PM +0200, Krzysztof Kozlowski wrote:
+> > > > The GPIO controller node can have gpio-ranges property.  This fixes
+> > > > dtbs_check warnings like:
+> > > > 
+> > > >   arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: gpio@30200000: 'gpio-ranges' does not match any of the regexes: 'pinctrl-[0-9]+'
+> > > >     From schema: Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > > > 
+> > > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > > ---
+> > > >  .../devicetree/bindings/gpio/fsl-imx-gpio.yaml    | 15 +++++++++++++++
+> > > >  1 file changed, 15 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > > > index 454db20c2d1a..1fac69573bb9 100644
+> > > > --- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > > > +++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> > > > @@ -51,6 +51,9 @@ properties:
+> > > >  
+> > > >    gpio-controller: true
+> > > >  
+> > > > +  gpio-ranges:
+> > > > +    maxItems: 1
+> > > > +
+> > > >  required:
+> > > >    - compatible
+> > > >    - reg
+> > > > @@ -62,6 +65,18 @@ required:
+> > > >  
+> > > >  additionalProperties: false
+> > > >  
+> > > > +allOf:
+> > > > +  - if:
+> > > > +      properties:
+> > > > +        compatible:
+> > > > +          contains:
+> > > > +            const: fsl,imx8mp-gpio
+> > > > +    then:
+> > > > +      properties:
+> > > > +        gpio-ranges:
+> > > > +          minItems: 1
+> > > > +          maxItems: 2
+> > > 
+> > > Why do you limit this to fsl,imx8mp-gpio? The i.MX5,6,7 dtsi files use
+> > > gpio-ranges as well and other i.MX dtsi files could also use it.
+> > 
+> > All other cases use maximum one element in gpio-ranges, so they are
+> > covered so I assumed they are continuous. But if it not the case, I can
+> > make all them maximum 2.
+> 
+> I misread this, I thought you allow gpio-ranges only for imx8mp, but
+> it's only the maxItems you set differently for that SoC. Anyway,
+> arch/arm/boot/dts/imx6dl.dtsi has this:
+> 
+> &gpio1 {
+>         gpio-ranges = <&iomuxc  0 131 2>, <&iomuxc  2 137 8>, <&iomuxc 10 189 2>,
+>                       <&iomuxc 12 194 1>, <&iomuxc 13 193 1>, <&iomuxc 14 192 1>,
+>                       <&iomuxc 15 191 1>, <&iomuxc 16 185 2>, <&iomuxc 18 184 1>,
+>                       <&iomuxc 19 187 1>, <&iomuxc 20 183 1>, <&iomuxc 21 188 1>,
+>                       <&iomuxc 22 123 3>, <&iomuxc 25 121 1>, <&iomuxc 26 127 1>,
+>                       <&iomuxc 27 126 1>, <&iomuxc 28 128 1>, <&iomuxc 29 130 1>,
+>                       <&iomuxc 30 129 1>, <&iomuxc 31 122 1>;
+> };
+> 
+> I don't think it makes sense to specify maxItems.
 
---8IOyuIs8tBuUOaiqDTZ5ujYsv8eDUC8mX
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Indeed, I will skip the max limit.
 
-On 8/23/20 5:28 PM, Stephen Rothwell wrote:
-> Hi all,
->=20
-> After merging the hwmon-staging tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->=20
-> drivers/hwmon/pmbus/adm1266.c: In function 'adm1266_probe':
-> drivers/hwmon/pmbus/adm1266.c:478:31: error: passing argument 2 of 'pmb=
-us_do_probe' from incompatible pointer type [-Werror=3Dincompatible-point=
-er-types]
->   478 |  ret =3D pmbus_do_probe(client, id, &data->info);
->       |                               ^~
->       |                               |
->       |                               const struct i2c_device_id *
-> In file included from drivers/hwmon/pmbus/adm1266.c:20:
-> drivers/hwmon/pmbus/pmbus.h:492:73: note: expected 'struct pmbus_driver=
-_info *' but argument is of type 'const struct i2c_device_id *'
->   492 | int pmbus_do_probe(struct i2c_client *client, struct pmbus_driv=
-er_info *info);
->       |                                               ~~~~~~~~~~~~~~~~~=
-~~~~~~~~~^~~~
-> drivers/hwmon/pmbus/adm1266.c:478:8: error: too many arguments to funct=
-ion 'pmbus_do_probe'
->   478 |  ret =3D pmbus_do_probe(client, id, &data->info);
->       |        ^~~~~~~~~~~~~~
-> In file included from drivers/hwmon/pmbus/adm1266.c:20:
-> drivers/hwmon/pmbus/pmbus.h:492:5: note: declared here
->   492 | int pmbus_do_probe(struct i2c_client *client, struct pmbus_driv=
-er_info *info);
->       |     ^~~~~~~~~~~~~~
-> cc1: some warnings being treated as errors
->=20
-> Caused by commit
->=20
->   9832ecffd8f8 ("hwmon: (pmbus) Add support for ADM1266")
->=20
-> interacting with commit
->=20
->   d46dc459db38 ("hwmon (pmbus) use simple i2c probe function")
->=20
-> I have used the hwmon-staging tree from next-20200821 for today.
->=20
+Best regards,
+Krzysztof
 
-Fixed. Sorry for the trouble.
-
-Guenter
-
-
---8IOyuIs8tBuUOaiqDTZ5ujYsv8eDUC8mX--
-
---V1pIFd9W2l3G2AuVUZfwNfMyUYLDg2sDz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEiHPvMQj9QTOCiqgVyx8mb86fmYEFAl9DZd0ACgkQyx8mb86f
-mYFrhA//Z8xz0+JuNoGIUlrazcN5bDvFscvYxnrqVPyDVlu8a+BlN8EGqduJVd9X
-ZwpiWdOy4MbmzvdHGWncwi4pb9PoFGpr/IABo3Z0XL1YOoEq6WfuQrL+HQ7hh5Z8
-vmY/t37+uWtqHQgThjuKAlHmOM7km/qkj8MXYv3mpjZ9ANlrTSpPMDOo3FJS/whY
-f9oV0EgtDhRzc39sYWTgBrvbhyaF4GbRR2Lpbn69REB5ti8IhNaQRHS4039NVhmy
-Y+2hRSnHFqAM6FVIphE8i50YHYVkP8pwbFDVma4AuuQ6kmGKAkc9nXicQ9ITgoJT
-AaLoOZV405VQmlTYSTwF+BQRgPGogluFGEXzrW8/LHo9IQCAUCh/cNwXSQq/4mkT
-0Xxerwr8F2BKsFVT4/ybrScHUq3aruRW4n1a7JyhW7Ul8cKBQndMVSMq+pkhMAAa
-Sz9LSGhCQEsmO93CTLvj2Wf1KRbYlkfTskFl5P372dECAPnyXBXUkVjUPf9tFB9L
-s4WpnOk8g2W313v+2rABvCCW4TVpDko8ST50mBCrMxNPrCnCCQlQaBLAMOOw7V8P
-KRSeGCQkqVCNrTZH8irmdHyDyVkJt3t5SOvX7q2GZb3XUffauCl3C3xoWboD4CRP
-WsOGA1b5g0tuq8yfg8+pPrDO79hV/wd6O750zB56XN3p/UZcGsc=
-=KiuN
------END PGP SIGNATURE-----
-
---V1pIFd9W2l3G2AuVUZfwNfMyUYLDg2sDz--
