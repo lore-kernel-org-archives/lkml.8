@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE34C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26933C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94CF2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8341206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598288555;
-	bh=boO3UhrcRJfX5gwXV0+PVQIzWwKXyQ6hS1sptGVagAc=;
+	s=default; t=1598288563;
+	bh=z7WM8kvm7Ky2+fBfqb0kIuuS0/swvnvpl4HnDc7EUXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uzm8zJOLsoJ4YCw0wRaUP8vnFVedp2pgBhB7F00ICR7t5hcVWrdS7J41ImRryf3GV
-	 JbS4nZRE3ZWEMQ9pyBtq80X57ZM7WArfG9cX9D9iyhC6BFEsm7ysuya6CTX8u4Bw7T
-	 LQq3ygYHY4NGAhD5DGijP8ZuCRPX0C3TpNF5IvxI=
+	b=yeVMzoDHNVAxlR4QUE7dzBZLxNJNXZ5OukQ+LmFstibTajo2q86LEpmd5Aydw7Lvp
+	 2ZsuA1BslTvI3LQ8R0K8dlOA9Bd7JIKN0cSdxvX//y7RVoDnZgH9vGVgqc+tmiLq7U
+	 E73dwGZ4vz+8LQorFMHa/8a3FcPKexvBhFb0W9Gg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgHXRCc (ORCPT
+        id S1726711AbgHXRCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:02:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728492AbgHXQik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728487AbgHXQik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:38:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1959B22D73;
-        Mon, 24 Aug 2020 16:38:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7387922D37;
+        Mon, 24 Aug 2020 16:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287113;
-        bh=boO3UhrcRJfX5gwXV0+PVQIzWwKXyQ6hS1sptGVagAc=;
+        s=default; t=1598287108;
+        bh=z7WM8kvm7Ky2+fBfqb0kIuuS0/swvnvpl4HnDc7EUXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wj8Zoc0BU0ftampSXOQskS3Wnttvz4/+lHKwqLFwakz1QZpoI6t1Xi7PnHqiX3F6n
-         az3JbfJOMqOJqGm5cqMSeq03amzD9uY4tb0xrMDdDVVlHgV8yDcAm/gMyXdX//PVZ9
-         EJrTBbFt6aEzv47S5ecn8u5PqVQT024R2SmdWlQg=
+        b=OPfWwTDDpaCCRMaUF0H+EbdjTaqqN8W/RN3DoqmrU9VoXY/k/ecHL4MjN7iOUEWB1
+         LLzfGzxPtaFefITS0a1pv1skIQP1fiOe7LZL01oz+RzvK1UDcJgXIlDxR8luuiIQqC
+         C30XR8v/LsB1BkZKiATUyTmqG79JnWB/ZKcHBRjw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Nilesh Javali <njavali@marvell.com>,
+Cc:     Stanley Chu <stanley.chu@mediatek.com>,
+        Can Guo <cang@codeaurora.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bean Huo <beanhuo@micron.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 30/38] scsi: qla2xxx: Fix null pointer access during disconnect from subsystem
-Date:   Mon, 24 Aug 2020 12:37:42 -0400
-Message-Id: <20200824163751.606577-30-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 27/38] scsi: ufs: Clean up completed request without interrupt notification
+Date:   Mon, 24 Aug 2020 12:37:39 -0400
+Message-Id: <20200824163751.606577-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163751.606577-1-sashal@kernel.org>
 References: <20200824163751.606577-1-sashal@kernel.org>
@@ -61,73 +64,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit 83949613fac61e8e37eadf8275bf072342302f4e ]
+[ Upstream commit b10178ee7fa88b68a9e8adc06534d2605cb0ec23 ]
 
-NVMEAsync command is being submitted to QLA while the same NVMe controller
-is in the middle of reset. The reset path has deleted the association and
-freed aen_op->fcp_req.private. Add a check for this private pointer before
-issuing the command.
+If somehow no interrupt notification is raised for a completed request and
+its doorbell bit is cleared by host, UFS driver needs to cleanup its
+outstanding bit in ufshcd_abort(). Otherwise, system may behave abnormally
+in the following scenario:
 
-...
- 6 [ffffb656ca11fce0] page_fault at ffffffff8c00114e
-    [exception RIP: qla_nvme_post_cmd+394]
-    RIP: ffffffffc0d012ba  RSP: ffffb656ca11fd98  RFLAGS: 00010206
-    RAX: ffff8fb039eda228  RBX: ffff8fb039eda200  RCX: 00000000000da161
-    RDX: ffffffffc0d4d0f0  RSI: ffffffffc0d26c9b  RDI: ffff8fb039eda220
-    RBP: 0000000000000013   R8: ffff8fb47ff6aa80   R9: 0000000000000002
-    R10: 0000000000000000  R11: ffffb656ca11fdc8  R12: ffff8fb27d04a3b0
-    R13: ffff8fc46dd98a58  R14: 0000000000000000  R15: ffff8fc4540f0000
-    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
- 7 [ffffb656ca11fe08] nvme_fc_start_fcp_op at ffffffffc0241568 [nvme_fc]
- 8 [ffffb656ca11fe50] nvme_fc_submit_async_event at ffffffffc0241901 [nvme_fc]
- 9 [ffffb656ca11fe68] nvme_async_event_work at ffffffffc014543d [nvme_core]
-10 [ffffb656ca11fe98] process_one_work at ffffffff8b6cd437
-11 [ffffb656ca11fed8] worker_thread at ffffffff8b6cdcef
-12 [ffffb656ca11ff10] kthread at ffffffff8b6d3402
-13 [ffffb656ca11ff50] ret_from_fork at ffffffff8c000255
+After ufshcd_abort() returns, this request will be requeued by SCSI layer
+with its outstanding bit set. Any future completed request will trigger
+ufshcd_transfer_req_compl() to handle all "completed outstanding bits". At
+this time the "abnormal outstanding bit" will be detected and the "requeued
+request" will be chosen to execute request post-processing flow. This is
+wrong because this request is still "alive".
 
---
-PID: 37824  TASK: ffff8fb033063d80  CPU: 20  COMMAND: "kworker/u97:451"
- 0 [ffffb656ce1abc28] __schedule at ffffffff8be629e3
- 1 [ffffb656ce1abcc8] schedule at ffffffff8be62fe8
- 2 [ffffb656ce1abcd0] schedule_timeout at ffffffff8be671ed
- 3 [ffffb656ce1abd70] wait_for_completion at ffffffff8be639cf
- 4 [ffffb656ce1abdd0] flush_work at ffffffff8b6ce2d5
- 5 [ffffb656ce1abe70] nvme_stop_ctrl at ffffffffc0144900 [nvme_core]
- 6 [ffffb656ce1abe80] nvme_fc_reset_ctrl_work at ffffffffc0243445 [nvme_fc]
- 7 [ffffb656ce1abe98] process_one_work at ffffffff8b6cd437
- 8 [ffffb656ce1abed8] worker_thread at ffffffff8b6cdb50
- 9 [ffffb656ce1abf10] kthread at ffffffff8b6d3402
-10 [ffffb656ce1abf50] ret_from_fork at ffffffff8c000255
-
-Link: https://lore.kernel.org/r/20200806111014.28434-10-njavali@marvell.com
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Link: https://lore.kernel.org/r/20200811141859.27399-2-huobean@gmail.com
+Reviewed-by: Can Guo <cang@codeaurora.org>
+Acked-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Bean Huo <beanhuo@micron.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_nvme.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/scsi/ufs/ufshcd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
-index 941aa53363f56..f4815a4084d8c 100644
---- a/drivers/scsi/qla2xxx/qla_nvme.c
-+++ b/drivers/scsi/qla2xxx/qla_nvme.c
-@@ -535,6 +535,11 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
- 	struct nvme_private *priv = fd->private;
- 	struct qla_nvme_rport *qla_rport = rport->private;
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 99c1b0138c573..df38e069c9a8b 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -6138,7 +6138,7 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
+ 			/* command completed already */
+ 			dev_err(hba->dev, "%s: cmd at tag %d successfully cleared from DB.\n",
+ 				__func__, tag);
+-			goto out;
++			goto cleanup;
+ 		} else {
+ 			dev_err(hba->dev,
+ 				"%s: no response from device. tag = %d, err %d\n",
+@@ -6172,6 +6172,7 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
+ 		goto out;
+ 	}
  
-+	if (!priv) {
-+		/* nvme association has been torn down */
-+		return rval;
-+	}
-+
- 	fcport = qla_rport->fcport;
++cleanup:
+ 	scsi_dma_unmap(cmd);
  
- 	if (!qpair || !fcport || (qpair && !qpair->fw_started) ||
+ 	spin_lock_irqsave(host->host_lock, flags);
 -- 
 2.25.1
 
