@@ -2,53 +2,51 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A766C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C90FE2177B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217B022B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258391;
-	bh=X1Jc6HRrlX3sT+03uEUsKl4ouu4xw5betJQxvtle9D8=;
+	s=default; t=1598258398;
+	bh=f+eJYYMbONiJeb1v9bjRb1whw7sxNoF7XtF8OaQ7S1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LLETvfPAmNnSVlnO8BUVa44XXDK87Suzx/B+OomFdmJUSTOI+ac+Vk/1IFCoO4MiF
-	 52qTzpJypLRojKMxCic6eadpHrkijPM9Mtar4tXMsmDEmwSyimh5CMSpM8aLY2S+mO
-	 bf4QHv0GTsRC5jKLRcV9QNesya+zMsHxiJmbFrGY=
+	b=B5dWU2hcs0+axe/xTnHgdOt/rByFWf0TAeeOwEwHSGIvbxtVb9rWqfWDr5OZ+qFDK
+	 2snGR9dqwNI+kIrB4mW6AL47617g1hf4Y8JGppUrYr9n/+B2OE0BGZpYbbWx2gpqSD
+	 +lcSzcXaW3YBQvVwz3VMAxX9NKK+6p7BxxvUBCIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgHXIjs (ORCPT
+        id S1728689AbgHXIjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:39:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55834 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:39:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728670AbgHXIjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:39:42 -0400
+        id S1728665AbgHXIjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:39:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 336F82177B;
-        Mon, 24 Aug 2020 08:39:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B14F5221E2;
+        Mon, 24 Aug 2020 08:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258381;
-        bh=X1Jc6HRrlX3sT+03uEUsKl4ouu4xw5betJQxvtle9D8=;
+        s=default; t=1598258384;
+        bh=f+eJYYMbONiJeb1v9bjRb1whw7sxNoF7XtF8OaQ7S1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kkoLwT/zbNTDZDu1l7fIMLaJll9e8fCbHtRSwieePHADc9Xutfg6Jwq1vbp489/em
-         ekC7ulkbyEdJZJsUlwAmFGVLC9rMh7ZqtKETBuuElyi5mz6Meb/g2u18ri4KInGMVF
-         ekMvHjhXDQHdh4oU/bCCJKGA8mN+utM2BLUozSeY=
+        b=xv2k2z9CxQutNGp9smaH7MdRjaWVplTtKzfijkc5VtoSH1FiUa+g2RxjlYS9eGeV2
+         10kHlercUfHgeZVU22+gtfcD7nPfdeDIjo/0m+DnnCkOoTevHasvesqq1rGR/dCzEM
+         k+S+yhDcdxL6XNklQZ1N5Pi98TVDAmzD7JkS7o64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Krunoslav Kovac <Krunoslav.Kovac@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.7 027/124] drm/amd/display: fix pow() crashing when given base 0
-Date:   Mon, 24 Aug 2020 10:29:21 +0200
-Message-Id: <20200824082410.747521526@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 028/124] io-wq: reorder cancellation pending -> running
+Date:   Mon, 24 Aug 2020 10:29:22 +0200
+Message-Id: <20200824082410.797298921@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -61,36 +59,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-commit d2e59d0ff4c44d1f6f8ed884a5bea7d1bb7fd98c upstream.
+[ Upstream commit f4c2665e33f48904f2766d644df33fb3fd54b5ec ]
 
-[Why&How]
-pow(a,x) is implemented as exp(x*log(a)). log(0) will crash.
-So return 0^x = 0, unless x=0, convention seems to be 0^0 = 1.
+Go all over all pending lists and cancel works there, and only then
+try to match running requests. No functional changes here, just a
+preparation for bulk cancellation.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Krunoslav Kovac <Krunoslav.Kovac@amd.com>
-Reviewed-by: Anthony Koo <Anthony.Koo@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/include/fixed31_32.h |    3 +++
- 1 file changed, 3 insertions(+)
+ fs/io-wq.c | 54 ++++++++++++++++++++++++++++++++----------------------
+ 1 file changed, 32 insertions(+), 22 deletions(-)
 
---- a/drivers/gpu/drm/amd/display/include/fixed31_32.h
-+++ b/drivers/gpu/drm/amd/display/include/fixed31_32.h
-@@ -431,6 +431,9 @@ struct fixed31_32 dc_fixpt_log(struct fi
-  */
- static inline struct fixed31_32 dc_fixpt_pow(struct fixed31_32 arg1, struct fixed31_32 arg2)
+diff --git a/fs/io-wq.c b/fs/io-wq.c
+index 4023c98468608..3283f8c5b5a18 100644
+--- a/fs/io-wq.c
++++ b/fs/io-wq.c
+@@ -931,19 +931,14 @@ static bool io_wq_worker_cancel(struct io_worker *worker, void *data)
+ 	return ret;
+ }
+ 
+-static enum io_wq_cancel io_wqe_cancel_work(struct io_wqe *wqe,
+-					    struct io_cb_cancel_data *match)
++static bool io_wqe_cancel_pending_work(struct io_wqe *wqe,
++				       struct io_cb_cancel_data *match)
  {
-+	if (arg1.value == 0)
-+		return arg2.value == 0 ? dc_fixpt_one : dc_fixpt_zero;
+ 	struct io_wq_work_node *node, *prev;
+ 	struct io_wq_work *work;
+ 	unsigned long flags;
+ 	bool found = false;
+ 
+-	/*
+-	 * First check pending list, if we're lucky we can just remove it
+-	 * from there. CANCEL_OK means that the work is returned as-new,
+-	 * no completion will be posted for it.
+-	 */
+ 	spin_lock_irqsave(&wqe->lock, flags);
+ 	wq_list_for_each(node, prev, &wqe->work_list) {
+ 		work = container_of(node, struct io_wq_work, list);
+@@ -956,21 +951,20 @@ static enum io_wq_cancel io_wqe_cancel_work(struct io_wqe *wqe,
+ 	}
+ 	spin_unlock_irqrestore(&wqe->lock, flags);
+ 
+-	if (found) {
++	if (found)
+ 		io_run_cancel(work, wqe);
+-		return IO_WQ_CANCEL_OK;
+-	}
++	return found;
++}
 +
- 	return dc_fixpt_exp(
- 		dc_fixpt_mul(
- 			dc_fixpt_log(arg1),
++static bool io_wqe_cancel_running_work(struct io_wqe *wqe,
++				       struct io_cb_cancel_data *match)
++{
++	bool found;
+ 
+-	/*
+-	 * Now check if a free (going busy) or busy worker has the work
+-	 * currently running. If we find it there, we'll return CANCEL_RUNNING
+-	 * as an indication that we attempt to signal cancellation. The
+-	 * completion will run normally in this case.
+-	 */
+ 	rcu_read_lock();
+ 	found = io_wq_for_each_worker(wqe, io_wq_worker_cancel, match);
+ 	rcu_read_unlock();
+-	return found ? IO_WQ_CANCEL_RUNNING : IO_WQ_CANCEL_NOTFOUND;
++	return found;
+ }
+ 
+ enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
+@@ -980,18 +974,34 @@ enum io_wq_cancel io_wq_cancel_cb(struct io_wq *wq, work_cancel_fn *cancel,
+ 		.fn	= cancel,
+ 		.data	= data,
+ 	};
+-	enum io_wq_cancel ret = IO_WQ_CANCEL_NOTFOUND;
+ 	int node;
+ 
++	/*
++	 * First check pending list, if we're lucky we can just remove it
++	 * from there. CANCEL_OK means that the work is returned as-new,
++	 * no completion will be posted for it.
++	 */
+ 	for_each_node(node) {
+ 		struct io_wqe *wqe = wq->wqes[node];
+ 
+-		ret = io_wqe_cancel_work(wqe, &match);
+-		if (ret != IO_WQ_CANCEL_NOTFOUND)
+-			break;
++		if (io_wqe_cancel_pending_work(wqe, &match))
++			return IO_WQ_CANCEL_OK;
+ 	}
+ 
+-	return ret;
++	/*
++	 * Now check if a free (going busy) or busy worker has the work
++	 * currently running. If we find it there, we'll return CANCEL_RUNNING
++	 * as an indication that we attempt to signal cancellation. The
++	 * completion will run normally in this case.
++	 */
++	for_each_node(node) {
++		struct io_wqe *wqe = wq->wqes[node];
++
++		if (io_wqe_cancel_running_work(wqe, &match))
++			return IO_WQ_CANCEL_RUNNING;
++	}
++
++	return IO_WQ_CANCEL_NOTFOUND;
+ }
+ 
+ static bool io_wq_io_cb_cancel_data(struct io_wq_work *work, void *data)
+-- 
+2.25.1
+
 
 
