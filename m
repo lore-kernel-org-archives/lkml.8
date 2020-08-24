@@ -2,85 +2,100 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAC5C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8A5C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 044A32078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28D332078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="2x55aK2z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KTv84FgO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgHXMHr (ORCPT
+        id S1726661AbgHXMKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:07:47 -0400
-Received: from www.zeus03.de ([194.117.254.33]:42510 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgHXMHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:07:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=FdR4jm5F5Z57/fNoP7GbP3o8BTe0
-        1SeGyFzr5uf+Mjc=; b=2x55aK2z+U98UaGg0Qz0QZq2rgYhAt60zNi3Br6OvhWo
-        etczisSRyJJ3G6jpG40qxnu7dTTPS5wqPh3YAfrPqi6cbI+rTOfp81pCylJF5YqM
-        uQ/wDtmQHKfIGsQroTAGiDIBtOWpV8asDAZYug1WBBspXLMkqP34SVZ2kcl9/NU=
-Received: (qmail 1869772 invoked from network); 24 Aug 2020 14:07:38 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 24 Aug 2020 14:07:38 +0200
-X-UD-Smtp-Session: l3s3148p1@3jPJbp6tvIAgAwDPXwQSAE8ZH2VjqKES
-Date:   Mon, 24 Aug 2020 14:07:35 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Dirk Behme <dirk.behme@de.bosch.com>,
-        Andy Lowe <andy_lowe@mentor.com>
-Subject: Re: [PATCH] i2c: i2c-rcar: Auto select RESET_CONTROLLER
-Message-ID: <20200824120734.GA2500@ninjato>
-References: <20200824062623.9346-1-erosca@de.adit-jv.com>
+        Mon, 24 Aug 2020 08:10:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgHXMKI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 08:10:08 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC046C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:10:07 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id v16so4139349plo.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 05:10:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UE8GsvqgRfc/MyLKuyAyg2OP5wLsadeZZ0TASbpeOos=;
+        b=KTv84FgOZYRLZaVzaKcnEGSiCtWts+r2p99KbkS11TfoNQ/BrCBvN7N4i/4/qHxOsq
+         CP1xcENdSEXYN3VrgKiqm3XSXW5FZLjPbs2bnilRxS0c5ke1bpt6oMDLCBzVUaNmI80H
+         Uu2UdzVMM5csaNwdlcoX5mKA85TnAmliqBPhjktUQ6XmF+2ys2vH5kzZ+JlPDWoLUdiV
+         Hzkwd7Ff+WKIKcm7fLxxNJivNlQEmdVhz/ohvd2+cyIRibD6OjtMjt2+pN+F8sHqYPzS
+         Cyzh7HmJxTSzw7GgnJBd6B0xw5MX0UN3U/zwLzLPWvlekTPwJpjnEqlUGPtg5808CLSM
+         96tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UE8GsvqgRfc/MyLKuyAyg2OP5wLsadeZZ0TASbpeOos=;
+        b=I32iB00RdlylmFAVT4dnSz5wiLCluq+WrnMVerlxQQeDtlS/NErWH1auIma5OXCgOF
+         cMDf0Zs310rS13gyjUOmfYBNWfSOYBgkiFBkLAfTjbsN4yUQuFQORuaR49NJmGKvGnhl
+         Ome2JyDJ9R7lpF/4/fZ/yS3w445knfiJNgZ1k+zBrQUQTgJSt6d2amWZOHoh4Jyad/wr
+         DAdmucSRV3FV3QtI2Aed7cEzKUDuaGx8P8tCLvX0a+N0a4HM3nfYefvuY/nQ6/0yDlMN
+         ymoIBqGObBWGTNu33/mVoLENs84usJwqBFTjjx64XTFIhVNhCHvYo+82/bZsINxAaDcU
+         kLFQ==
+X-Gm-Message-State: AOAM530gp1AGqpy9y39n3cprNXjibfjfZirmRoi7YZQQQb4//ZyCLSlJ
+        RBtoKfZCb2T9PM0tqkgzCo275w==
+X-Google-Smtp-Source: ABdhPJzTb31VyJiQjxBciWNtrTi8EcV65QqVW5MQGVt8MNlXhG3Y/Wn8eVkWOXBIr1qDQ+OLlpCMkQ==
+X-Received: by 2002:a17:90a:dc13:: with SMTP id i19mr4052844pjv.161.1598271007440;
+        Mon, 24 Aug 2020 05:10:07 -0700 (PDT)
+Received: from localhost ([122.172.43.13])
+        by smtp.gmail.com with ESMTPSA id 124sm11616600pfb.19.2020.08.24.05.10.06
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Aug 2020 05:10:06 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 17:40:04 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Niklas Cassel <nks@flawful.org>
+Subject: Re: [RFC PATCH 1/3] opp: Reduce code duplication in
+ _set_required_opps()
+Message-ID: <20200824121004.mvssnqu4khg75cyb@vireshk-i7>
+References: <20200730080146.25185-1-stephan@gerhold.net>
+ <20200730080146.25185-2-stephan@gerhold.net>
+ <20200824111820.rcaingohxw3wozgd@vireshk-i7>
+ <20200824113016.GA131681@gerhold.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824062623.9346-1-erosca@de.adit-jv.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200824113016.GA131681@gerhold.net>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 24-08-20, 13:30, Stephan Gerhold wrote:
+> You're right. Not sure why I removed it.
+> 
+> I suspect I had it in _set_required_opp() at some point, but I moved
+> code around several times until I was happy with the result.
+> 
+> We should just add it back.
+> Should I send a v2 with it fixed or would you like to handle it?
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I have applied the first two patches to linux-next branch in my tree,
+please have a look.
 
-
-> +	select RESET_CONTROLLER
-
-Only needed for Gen3, so 'if ARCH_RCAR_GEN3'?
-
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9DrYMACgkQFA3kzBSg
-KbbSZQ/+PhuTLW6kqCSCd55WdUymNIJPFUzPNEyQa59oRhx0DHZsP+KfEVlV/zug
-vhM8gpwTWCenzuydgeV2f1tFI4lVYKNF3ER1ukl5hQI9QTjKarodaEnC3i40D5vN
-8JW1hIPl0KD1R/5mSr7/D7qEAZxPenNkmsrjN85pMz0BhYP4lV8If4pxf3BBPWqO
-kG27YT/jt4mfAeAEabP9iEJobaJaPEiZ7YPfkH53a/bttg1JZW+60BNfh4D9nD7+
-FwbfjyJ5dj6K3xdmpffs4hFqavKq/xO3drIvf+ALQ5AqD4i55YRWGpJai93VVtiu
-45t7guU1HCPcxIPphJCBSHODV0xuOoEcWOuvpelnd/+dJyeYZ4u0rsu8EEEdJpKt
-8tJSTqruY7Q+/GhAqk/J6pTc/wOjA//s6RCbreQPXIggsWg1H9u0/nWEVKEoVjhJ
-bgIcaDrpMocnw5maTQ95pS+ni4ekDbJ+i/H/tUSGWS/rS4wZYYVfFW+NOjyF0UpC
-FXz42WfpyaDNrTywaX1zU7W4nNUtYOC/ZnHE+P7jBWSD7pj7JRBCKHkWRKXZaM7+
-ET1ymMRV/T/6vgQqbFP+xCU6+HWV9diauWfo5UFEms39F3fjJS944ucw60m8e8kf
-T/HSvjWKefoY7D2QbsXJ0/izOBc5be05f9a/ycHiBK+/XkEkf24=
-=b6JU
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
+-- 
+viresh
