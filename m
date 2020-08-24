@@ -2,179 +2,87 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF21C433F7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B5EC43462
 	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 06:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF82820578
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 06:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2202311D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 06:26:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725973AbgHXGRt (ORCPT
+        id S1725962AbgHXG06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 02:17:49 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:35258 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725817AbgHXGRt (ORCPT
+        Mon, 24 Aug 2020 02:26:58 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:39095 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725817AbgHXG0y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 02:17:49 -0400
-X-IronPort-AV: E=Sophos;i="5.76,347,1592841600"; 
-   d="scan'208";a="98447864"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 24 Aug 2020 14:17:43 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 2F58148990D2;
-        Mon, 24 Aug 2020 14:17:42 +0800 (CST)
-Received: from [10.167.225.206] (10.167.225.206) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Mon, 24 Aug 2020 14:17:44 +0800
-Subject: Re: [PATCH] fs: Kill DCACHE_DONTCACHE dentry even if
- DCACHE_REFERENCED is set
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     <viro@zeniv.linux.org.uk>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <y-goto@fujitsu.com>
-References: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
- <20200821174040.GG3142014@iweiny-DESK2.sc.intel.com>
- <20200823065413.GA535011@iweiny-DESK2.sc.intel.com>
-From:   "Li, Hao" <lihao2018.fnst@cn.fujitsu.com>
-Message-ID: <66cbc944-064f-01e9-e282-fd4a4ec99ad0@cn.fujitsu.com>
-Date:   Mon, 24 Aug 2020 14:17:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.1.1
+        Mon, 24 Aug 2020 02:26:54 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 5EE303C0579;
+        Mon, 24 Aug 2020 08:26:52 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id RL9EZsvaXaPk; Mon, 24 Aug 2020 08:26:45 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id E1DD23C0016;
+        Mon, 24 Aug 2020 08:26:45 +0200 (CEST)
+Received: from lxhi-065.adit-jv.com (10.72.94.11) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 24 Aug
+ 2020 08:26:45 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <stable@vger.kernel.org>, Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Dirk Behme <dirk.behme@de.bosch.com>,
+        Andy Lowe <andy_lowe@mentor.com>
+Subject: [PATCH] i2c: i2c-rcar: Auto select RESET_CONTROLLER
+Date:   Mon, 24 Aug 2020 08:26:23 +0200
+Message-ID: <20200824062623.9346-1-erosca@de.adit-jv.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20200823065413.GA535011@iweiny-DESK2.sc.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.167.225.206]
-X-ClientProxiedBy: G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) To
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201)
-X-yoursite-MailScanner-ID: 2F58148990D2.AADA1
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: lihao2018.fnst@cn.fujitsu.com
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.72.94.11]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/23 14:54, Ira Weiny wrote:
-> On Fri, Aug 21, 2020 at 10:40:41AM -0700, 'Ira Weiny' wrote:
->> On Fri, Aug 21, 2020 at 09:59:53AM +0800, Hao Li wrote:
->>> Currently, DCACHE_REFERENCED prevents the dentry with DCACHE_DONTCACHE
->>> set from being killed, so the corresponding inode can't be evicted. If
->>> the DAX policy of an inode is changed, we can't make policy changing
->>> take effects unless dropping caches manually.
->>>
->>> This patch fixes this problem and flushes the inode to disk to prepare
->>> for evicting it.
->> This looks intriguing and I really hope this helps but I don't think this will
->> guarantee that the state changes immediately will it?
->>
->> Do you have a test case which fails before and passes after?  Perhaps one of
->> the new xfstests submitted by Xiao?
-> Ok I just went back and read your comment before.[1]  Sorry for being a bit
-> slow on the correlation between this patch and that email.  (BTW, I think it
-> would have been good to put those examples in the commit message and or
-> reference that example.)
+From: Dirk Behme <dirk.behme@de.bosch.com>
 
-Thanks for your advice. I will add those examples in v2 after further
-discussion of this patch.
+The i2c-rcar driver utilizes the Generic Reset Controller kernel
+feature, so select the RESET_CONTROLLER option when the I2C_RCAR
+option is selected.
 
-> I'm assuming that with this patch example 2 from [1]
-> works without a drop_cache _if_ no other task has the file open?
+Fixes: 2b16fd63059ab9 ("i2c: rcar: handle RXDMA HW behaviour on Gen3")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+Signed-off-by: Andy Lowe <andy_lowe@mentor.com>
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+---
+ drivers/i2c/busses/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yes. If no other task is opening the file, the inode and page cache of this
-file will be dropped during xfs_io exiting process. There is no need to run
-echo 2 > drop_caches.
-
-> Anyway, with that explanation I think you are correct that this improves the
-> situation _if_ the only references on the file is controlled by the user and
-> they have indeed closed all of them.
->
-> The code for DCACHE_DONTCACHE as I attempted to write it was that it should
-> have prevented further caching of the inode such that the inode would evict
-> sooner.  But it seems you have found a bug/optimization?
-
-Yes. This patch is an optimization and can also be treated as a bugfix.
-On the other side, even though this patch can make DCACHE_DONTCACHE more
-reasonable, I am not quite sure if my approach is safe and doesn't impact
-the fs performance. I hope the community can give me more advice.
-
-> In the end, however, if another user (such as a backup running by the admin)
-> has a reference the DAX change may still be delayed.
-
-Yes. In this situation, neither drop_caches approach nor this patch can make
-the DAX change take effects soon.
-Moreover, things are different if the backup task exits, this patch
-will make sure the inode and page cache of the file can be dropped
-_automatically_ without manual intervention. By contrast, the original
-approach needs a manual cache dropping.
-
-> So I'm thinking the
-> documentation should remain largely as is?  But perhaps I am wrong.  Does this
-> completely remove the need for a drop_caches or only in the example you gave?
-
-I think the contents related to drop_caches in documentation can be removed
-if this patch's approach is acceptable.
-
-> Since I'm not a FS expert I'm still not sure.
-
-Frankly, I'm not an expert either, so I hope this patch can be discussed
-further in case it has side effects.
-
-Thanks,
-Hao Li
-
->
-> Regardless, thanks for the fixup!  :-D
-> Ira
->
-> [1] https://lore.kernel.org/linux-xfs/ba98b77e-a806-048a-a0dc-ca585677daf3@cn.fujitsu.com/
->
->> Ira
->>
->>> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
->>> ---
->>>  fs/dcache.c | 3 ++-
->>>  fs/inode.c  | 2 +-
->>>  2 files changed, 3 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/fs/dcache.c b/fs/dcache.c
->>> index ea0485861d93..486c7409dc82 100644
->>> --- a/fs/dcache.c
->>> +++ b/fs/dcache.c
->>> @@ -796,7 +796,8 @@ static inline bool fast_dput(struct dentry *dentry)
->>>  	 */
->>>  	smp_rmb();
->>>  	d_flags = READ_ONCE(dentry->d_flags);
->>> -	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
->>> +	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED
->>> +			| DCACHE_DONTCACHE;
->>>  
->>>  	/* Nothing to do? Dropping the reference was all we needed? */
->>>  	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
->>> diff --git a/fs/inode.c b/fs/inode.c
->>> index 72c4c347afb7..5218a8aebd7f 100644
->>> --- a/fs/inode.c
->>> +++ b/fs/inode.c
->>> @@ -1632,7 +1632,7 @@ static void iput_final(struct inode *inode)
->>>  	}
->>>  
->>>  	state = inode->i_state;
->>> -	if (!drop) {
->>> +	if (!drop || (drop && (inode->i_state & I_DONTCACHE))) {
->>>  		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
->>>  		spin_unlock(&inode->i_lock);
->>>  
->>> -- 
->>> 2.28.0
->>>
->>>
->>>
->
-
-
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 293e7a0760e7..bb80f0944d61 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -1181,6 +1181,7 @@ config I2C_RCAR
+ 	tristate "Renesas R-Car I2C Controller"
+ 	depends on ARCH_RENESAS || COMPILE_TEST
+ 	select I2C_SLAVE
++	select RESET_CONTROLLER
+ 	help
+ 	  If you say yes to this option, support will be included for the
+ 	  R-Car I2C controller.
+-- 
+2.28.0
 
