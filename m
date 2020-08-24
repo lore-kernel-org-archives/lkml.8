@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C30E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58E82204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9772A207D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258900;
-	bh=88Xw40YC1QnjNuLG/+6YqfiY2ut1djo/oaUujd9yOWg=;
+	s=default; t=1598258909;
+	bh=D+Vmybzmzen28AV30V9SfoitNCjmhrlbMMUqq2jVhw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yqf/dfBZJjmvNgCMf7NnKEZfgRf/+bvTViVR8gfAaI0CfFcRAnzdSF2uOyW43+WQ4
-	 EnOzSOlNpG89pLvFYSbcFThl80FuvkVLRsumKrJO8yDswy37OoNBLYd1m9T2/+GnkF
-	 j/peQBRjkmduJkwWMGO10zofTUnR1R2SDNu/D66g=
+	b=XRuEow2hi1FgtOamUdhk5Po+4hI657zKJjcrUfqYKG5khXByTSqeDfX9ig4492P2j
+	 frMY5nbw0X3BHU/HtyZemET+9pltl5tEUGFVpdCagemuqHDqhiuigGR7zlExwaaOz2
+	 JNwEJIU+DgwYRg95Q+qS4hDOFLnnv/37aVBz3dJQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgHXIsS (ORCPT
+        id S1729540AbgHXIs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:48:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48462 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:48:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729513AbgHXIr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:47:59 -0400
+        id S1729091AbgHXIsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:48:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9362206F0;
-        Mon, 24 Aug 2020 08:47:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8323F204FD;
+        Mon, 24 Aug 2020 08:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258878;
-        bh=88Xw40YC1QnjNuLG/+6YqfiY2ut1djo/oaUujd9yOWg=;
+        s=default; t=1598258884;
+        bh=D+Vmybzmzen28AV30V9SfoitNCjmhrlbMMUqq2jVhw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1F7lANRjdHiMGrw1ZmotJ076q4vwmzLXN7EIBPAAlFbqha0+7gScn8qbqV187nTF
-         8qAQual7B0qR1JGdtId0UXNmSruO6zgRwwo+RZKKocePhLJROeru2wI5RJBBucwvul
-         VeWojVaftOhaTHhcnZEMtOZBsmyDBCRmKZlXROTU=
+        b=00y9SttHYIr7OEDDTWtoLvfKE/db2gHcXGgCm88EINZNAr1HUeFMGQj9hpYlQcRFP
+         UL03j2TIkDf1J3/owI7hUkcm6A32RvjHktzqQGGkRKqhTekbTKb0OSj3gJJePnTDHL
+         tH7vt+Rg/sha4zCX/rfq08Ctr+6/KqGfP3nMkHXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jinyang He <hejinyang@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 047/107] MIPS: Fix unable to reserve memory for Crash kernel
-Date:   Mon, 24 Aug 2020 10:30:13 +0200
-Message-Id: <20200824082407.463082027@linuxfoundation.org>
+Subject: [PATCH 5.4 071/107] can: j1939: transport: j1939_simple_recv(): ignore local J1939 messages send not by J1939 stack
+Date:   Mon, 24 Aug 2020 10:30:37 +0200
+Message-Id: <20200824082408.639964158@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -61,77 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jinyang He <hejinyang@loongson.cn>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-[ Upstream commit b1ce9716f3b5ed3b49badf1f003b9e34b7ead0f9 ]
+[ Upstream commit b43e3a82bc432c1caaed8950e7662c143470c54c ]
 
-Use 0 as the align parameter in memblock_find_in_range() is
-incorrect when we reserve memory for Crash kernel.
+In current J1939 stack implementation, we process all locally send
+messages as own messages. Even if it was send by CAN_RAW socket.
 
-The environment as follows:
-[    0.000000] MIPS: machine is loongson,loongson64c-4core-rs780e
-...
-[    1.951016]     crashkernel=64M@128M
+To reproduce it use following commands:
+testj1939 -P -r can0:0x80 &
+cansend can0 18238040#0123
 
-The warning as follows:
-[    0.000000] Invalid memory region reserved for crash kernel
+This step will trigger false positive not critical warning:
+j1939_simple_recv: Received already invalidated message
 
-And the iomem as follows:
-00200000-0effffff : System RAM
-  04000000-0484009f : Kernel code
-  048400a0-04ad7fff : Kernel data
-  04b40000-05c4c6bf : Kernel bss
-1a000000-1bffffff : pci@1a000000
-...
+With this patch we add additional check to make sure, related skb is own
+echo message.
 
-The align parameter may be finally used by round_down() or round_up().
-Like the following call tree:
-
-mips-next: mm/memblock.c
-
-memblock_find_in_range
-└── memblock_find_in_range_node
-    ├── __memblock_find_range_bottom_up
-    │   └── round_up
-    └── __memblock_find_range_top_down
-        └── round_down
-\#define round_up(x, y) ((((x)-1) | __round_mask(x, y))+1)
-\#define round_down(x, y) ((x) & ~__round_mask(x, y))
-\#define __round_mask(x, y) ((__typeof__(x))((y)-1))
-
-The round_down(or round_up)'s second parameter must be a power of 2.
-If the second parameter is 0, it both will return 0.
-
-Use 1 as the parameter to fix the bug and the iomem as follows:
-00200000-0effffff : System RAM
-  04000000-0484009f : Kernel code
-  048400a0-04ad7fff : Kernel data
-  04b40000-05c4c6bf : Kernel bss
-  08000000-0bffffff : Crash kernel
-1a000000-1bffffff : pci@1a000000
-...
-
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Link: https://lore.kernel.org/r/20200807105200.26441-2-o.rempel@pengutronix.de
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/can/j1939/socket.c    | 1 +
+ net/can/j1939/transport.c | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 7b06e6ee6817d..b8884de89c81e 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -494,7 +494,7 @@ static void __init mips_parse_crashkernel(void)
- 	if (ret != 0 || crash_size <= 0)
+diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
+index 1b7dc1a8547f3..bf9fd6ee88fe0 100644
+--- a/net/can/j1939/socket.c
++++ b/net/can/j1939/socket.c
+@@ -398,6 +398,7 @@ static int j1939_sk_init(struct sock *sk)
+ 	spin_lock_init(&jsk->sk_session_queue_lock);
+ 	INIT_LIST_HEAD(&jsk->sk_session_queue);
+ 	sk->sk_destruct = j1939_sk_sock_destruct;
++	sk->sk_protocol = CAN_J1939;
+ 
+ 	return 0;
+ }
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index 5bfe6bf15a999..30957c9a8eb7a 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -2032,6 +2032,10 @@ void j1939_simple_recv(struct j1939_priv *priv, struct sk_buff *skb)
+ 	if (!skb->sk)
  		return;
  
--	if (!memblock_find_in_range(crash_base, crash_base + crash_size, crash_size, 0)) {
-+	if (!memblock_find_in_range(crash_base, crash_base + crash_size, crash_size, 1)) {
- 		pr_warn("Invalid memory region reserved for crash kernel\n");
- 		return;
- 	}
++	if (skb->sk->sk_family != AF_CAN ||
++	    skb->sk->sk_protocol != CAN_J1939)
++		return;
++
+ 	j1939_session_list_lock(priv);
+ 	session = j1939_session_get_simple(priv, skb);
+ 	j1939_session_list_unlock(priv);
 -- 
 2.25.1
 
