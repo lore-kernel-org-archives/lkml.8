@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B1BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A2EC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCFD206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCAF422B3F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258812;
-	bh=ldyMiwBbRauUHe1SIjQNGlhy0uoQPyGhgSory7/YRWg=;
+	s=default; t=1598258816;
+	bh=U1u6ehBMN1TSDawPESs3Nv2ss5ugOulhMj+FxlnMsqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pD13B20yV95ucn/CGN6pDgRp1z6+ZuSxEm5W6eHcn2URFVrLMRKM+nNlV9HmE/XNj
-	 xm+HdOkNXpX+5Q6IWpS7I1TN1vi4gktsanmYFhxxBMMZmtou+I18j9dkUUFY4AvXJ6
-	 vORONG6p0wg7MwQteALrB0w4ZRWrlSrQlu15nS0Q=
+	b=FXFFfBNouc+OLZO9vj4nhDuGqTN6/JmVatDzpaqpoVInfI4s6OeblMRStDglx7i5T
+	 Ci2Q6zGBzDt9CGGYRdp8z8hdGC9bn3jvaRekLfGvP8EDVUqBmeSHsM71IqpldRq6zP
+	 EKCQhv2gFvNUiUtZCNwT2/b4+BsTYqCt7fShubg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbgHXIqu (ORCPT
+        id S1729398AbgHXIqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:46:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:46:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729350AbgHXIql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:46:41 -0400
+        id S1729390AbgHXIqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:46:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B8E72074D;
-        Mon, 24 Aug 2020 08:46:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63115206F0;
+        Mon, 24 Aug 2020 08:46:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258800;
-        bh=ldyMiwBbRauUHe1SIjQNGlhy0uoQPyGhgSory7/YRWg=;
+        s=default; t=1598258810;
+        bh=U1u6ehBMN1TSDawPESs3Nv2ss5ugOulhMj+FxlnMsqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n/ElQ8x4W3PjfUink2TAmBXg3HmmRhQ2GK82j3yxYqZDq9wF1tWjziurP62tP8Qc1
-         6wTnxDiNx83c8nx966fkLgGcEFhNtTHpPzlev4ypWrs3bQSjiBdSOEdLXrydlm6wcu
-         mtdqoXWzmv4rYLc/1IRVIbRZJ4Wr3N4sHAJuVxPo=
+        b=tqWQKDTlY5SK8QmY4y2g4GmsC9E8c48L0r6MtalNFAjWCk7WFPp6vzU6IVvmhr+Vn
+         5Wj1kuZMCI0J+WNw2gWyAUDa/El8NsSVrJDQrdsdjEDfX7rl+mYhddeskhGLqbFZyd
+         E0gI0QsX6KNaQXgATD3cYTxvyf5yQRY67AXHv3kg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Chandan Babu R <chandanrlinux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 050/107] xfs: fix inode quota reservation checks
-Date:   Mon, 24 Aug 2020 10:30:16 +0200
-Message-Id: <20200824082407.611833855@linuxfoundation.org>
+        syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com,
+        Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 053/107] ceph: fix use-after-free for fsc->mdsc
+Date:   Mon, 24 Aug 2020 10:30:19 +0200
+Message-Id: <20200824082407.764178753@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -62,54 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
+[ Upstream commit a7caa88f8b72c136f9a401f498471b8a8e35370d ]
 
-xfs_trans_dqresv is the function that we use to make reservations
-against resource quotas.  Each resource contains two counters: the
-q_core counter, which tracks resources allocated on disk; and the dquot
-reservation counter, which tracks how much of that resource has either
-been allocated or reserved by threads that are working on metadata
-updates.
+If the ceph_mdsc_init() fails, it will free the mdsc already.
 
-For disk blocks, we compare the proposed reservation counter against the
-hard and soft limits to decide if we're going to fail the operation.
-However, for inodes we inexplicably compare against the q_core counter,
-not the incore reservation count.
-
-Since the q_core counter is always lower than the reservation count and
-we unlock the dquot between reservation and transaction commit, this
-means that multiple threads can reserve the last inode count before we
-hit the hard limit, and when they commit, we'll be well over the hard
-limit.
-
-Fix this by checking against the incore inode reservation counter, since
-we would appear to maintain that correctly (and that's what we report in
-GETQUOTA).
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reported-by: syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_trans_dquot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/mds_client.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index 16457465833ba..904780dd74aa3 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -646,7 +646,7 @@ xfs_trans_dqresv(
- 			}
- 		}
- 		if (ninos > 0) {
--			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
-+			total_count = dqp->q_res_icount + ninos;
- 			timer = be32_to_cpu(dqp->q_core.d_itimer);
- 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
- 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index 701bc3f4d4ba1..b0077f5a31688 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -4143,7 +4143,6 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
+ 		return -ENOMEM;
+ 	}
+ 
+-	fsc->mdsc = mdsc;
+ 	init_completion(&mdsc->safe_umount_waiters);
+ 	init_waitqueue_head(&mdsc->session_close_wq);
+ 	INIT_LIST_HEAD(&mdsc->waiting_for_map);
+@@ -4195,6 +4194,8 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
+ 
+ 	strscpy(mdsc->nodename, utsname()->nodename,
+ 		sizeof(mdsc->nodename));
++
++	fsc->mdsc = mdsc;
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
