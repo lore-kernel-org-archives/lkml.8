@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84532C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6154AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7DB20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF092071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262264;
-	bh=iMzsFT6t7SGlhIOUqQv2/+hi3POeH7jRh46e6QHr64I=;
+	s=default; t=1598262267;
+	bh=l+KKjuyv0K+3EtnedaDSTu3bi2Trkpi4G9PEyEiUh64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UiHnVLKyVEL0kschg7xm2lmVOqm1ADxR4SYEObI1BHrOAGW9pgqHA1u5lB0Buk+bS
-	 cVSEa6Idd7XZ0jp3a4nVrvu9fhiQYpz3LGGV0cUitVJNyjOJ1ZxBJOFVSLoXfZPwZF
-	 +EJy391vOjVZLRmtbW8QeJkQIE97u+D7rHjpkLzo=
+	b=CCwgO6WrAe8s4TmdfgLULU2G6HEpZzHtaS1yZ4voXN187pIJY+AOcv5e0DPruNaVC
+	 99vxF8Gjn7A27gLs2gEgz/7f8qH83SfGkp2DxG8fx9YPTyREooZL35Ll8fQbBCCycD
+	 AqNiG8h5L1UJN/8tVAHkfuHg5xmZsTsb9aASZPyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgHXJoW (ORCPT
+        id S1729107AbgHXJoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:44:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37732 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:44:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729053AbgHXIn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:43:26 -0400
+        id S1728510AbgHXIn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:43:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 554A12075B;
-        Mon, 24 Aug 2020 08:43:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BCA02074D;
+        Mon, 24 Aug 2020 08:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258604;
-        bh=iMzsFT6t7SGlhIOUqQv2/+hi3POeH7jRh46e6QHr64I=;
+        s=default; t=1598258608;
+        bh=l+KKjuyv0K+3EtnedaDSTu3bi2Trkpi4G9PEyEiUh64=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AtJKQUDy+xhVGitbiSRMgjQyR0kWwKpqLprygILInpPxpStXGcsLbmK5NkLgUY9CS
-         UdIHRrGQNIIG7qxR33gthJYCm7VR2MFlWFmNpXtjVBx8rVMhxKtYFfQVCVvb9L5X5a
-         hGlr+g6uGo4k5l2rjnXlmQqeW1kaUFlE5gRvxQjE=
+        b=plinFpnd/n2LPNJddUv+1k0ZYQAV2zVMvYB+2JS6p0CknPvW+Wv5KXXsINdpc/uPd
+         stiQ9SRXuCX+7xyf+uh/ifdBl/wafsf81/3E3hkAFNCZAwxpi+pcSd7n+Ci9hfSvQo
+         Ek4FOoXUA+uFTRev3DZ/M/yTl1BbzlbrjAAtNqiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 106/124] afs: Fix NULL deref in afs_dynroot_depopulate()
-Date:   Mon, 24 Aug 2020 10:30:40 +0200
-Message-Id: <20200824082414.623751839@linuxfoundation.org>
+Subject: [PATCH 5.7 107/124] ARM64: vdso32: Install vdso32 from vdso_install
+Date:   Mon, 24 Aug 2020 10:30:41 +0200
+Message-Id: <20200824082414.672823482@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -62,86 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit 5e0b17b026eb7c6de9baa9b0d45a51b05f05abe1 ]
+[ Upstream commit 8d75785a814241587802655cc33e384230744f0c ]
 
-If an error occurs during the construction of an afs superblock, it's
-possible that an error occurs after a superblock is created, but before
-we've created the root dentry.  If the superblock has a dynamic root
-(ie.  what's normally mounted on /afs), the afs_kill_super() will call
-afs_dynroot_depopulate() to unpin any created dentries - but this will
-oops if the root hasn't been created yet.
+Add the 32-bit vdso Makefile to the vdso_install rule so that 'make
+vdso_install' installs the 32-bit compat vdso when it is compiled.
 
-Fix this by skipping that bit of code if there is no root dentry.
-
-This leads to an oops looking like:
-
-	general protection fault, ...
-	KASAN: null-ptr-deref in range [0x0000000000000068-0x000000000000006f]
-	...
-	RIP: 0010:afs_dynroot_depopulate+0x25f/0x529 fs/afs/dynroot.c:385
-	...
-	Call Trace:
-	 afs_kill_super+0x13b/0x180 fs/afs/super.c:535
-	 deactivate_locked_super+0x94/0x160 fs/super.c:335
-	 afs_get_tree+0x1124/0x1460 fs/afs/super.c:598
-	 vfs_get_tree+0x89/0x2f0 fs/super.c:1547
-	 do_new_mount fs/namespace.c:2875 [inline]
-	 path_mount+0x1387/0x2070 fs/namespace.c:3192
-	 do_mount fs/namespace.c:3205 [inline]
-	 __do_sys_mount fs/namespace.c:3413 [inline]
-	 __se_sys_mount fs/namespace.c:3390 [inline]
-	 __x64_sys_mount+0x27f/0x300 fs/namespace.c:3390
-	 do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-which is oopsing on this line:
-
-	inode_lock(root->d_inode);
-
-presumably because sb->s_root was NULL.
-
-Fixes: 0da0b7fd73e4 ("afs: Display manually added cells in dynamic root mount")
-Reported-by: syzbot+c1eff8205244ae7e11a6@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: a7f71a2c8903 ("arm64: compat: Add vDSO")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Link: https://lore.kernel.org/r/20200818014950.42492-1-swboyd@chromium.org
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/afs/dynroot.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ arch/arm64/Makefile               | 1 +
+ arch/arm64/kernel/vdso32/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-index 7503899c0a1b5..f07e53ab808e3 100644
---- a/fs/afs/dynroot.c
-+++ b/fs/afs/dynroot.c
-@@ -289,15 +289,17 @@ void afs_dynroot_depopulate(struct super_block *sb)
- 		net->dynroot_sb = NULL;
- 	mutex_unlock(&net->proc_cells_lock);
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 85e4149cc5d5c..d3c7ffa72902d 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -156,6 +156,7 @@ zinstall install:
+ PHONY += vdso_install
+ vdso_install:
+ 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso $@
++	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso32 $@
  
--	inode_lock(root->d_inode);
--
--	/* Remove all the pins for dirs created for manually added cells */
--	list_for_each_entry_safe(subdir, tmp, &root->d_subdirs, d_child) {
--		if (subdir->d_fsdata) {
--			subdir->d_fsdata = NULL;
--			dput(subdir);
-+	if (root) {
-+		inode_lock(root->d_inode);
-+
-+		/* Remove all the pins for dirs created for manually added cells */
-+		list_for_each_entry_safe(subdir, tmp, &root->d_subdirs, d_child) {
-+			if (subdir->d_fsdata) {
-+				subdir->d_fsdata = NULL;
-+				dput(subdir);
-+			}
- 		}
--	}
+ # We use MRPROPER_FILES and CLEAN_FILES now
+ archclean:
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index 0433bb58ce52c..601c075f1f476 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -201,7 +201,7 @@ quiet_cmd_vdsosym = VDSOSYM $@
+       cmd_vdsosym = $(NM) $< | $(gen-vdsosym) | LC_ALL=C sort > $@
  
--	inode_unlock(root->d_inode);
-+		inode_unlock(root->d_inode);
-+	}
- }
+ # Install commands for the unstripped file
+-quiet_cmd_vdso_install = INSTALL $@
++quiet_cmd_vdso_install = INSTALL32 $@
+       cmd_vdso_install = cp $(obj)/$@.dbg $(MODLIB)/vdso/vdso32.so
+ 
+ vdso.so: $(obj)/vdso.so.dbg
 -- 
 2.25.1
 
