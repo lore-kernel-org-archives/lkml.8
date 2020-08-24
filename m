@@ -5,49 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4657FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99830C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 233672072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7661C2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258796;
-	bh=5qiH8qx2OjearFlXAlfeyMwlKikrC6AqQAD4PhxXNpo=;
+	s=default; t=1598258803;
+	bh=1RUvlJj4UOjBfLIGHgxFknh/nqgcIeP7tjGttnAp8Oo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQo4CNqVKzarH8ppLTRWWWMrXtorgHYA2qzucRo8ibfno85ctC8YQtYF6cVdJifLX
-	 B9OybX7YUWfdrgLX40kIbxBvcPbR9e5Zc/jTlTkLSZgHSULAqxuM2Qf96E8QD5vi6Z
-	 pTkga3XfSxYvsxLdw9WbGa4qP6NYWzvNCZgXHDcw=
+	b=lfFG5UXyc754L80Vg5VQ1mOIwdh2F/faw4gmHgLiEqaOIFNnhQIBJJpfwW7rXLGjZ
+	 gbjKwwCz8h+Ii+NxApLgPopdCCKL/lWLJQNiXZ1uw4ZjwX7r0dZG0JNKAtQVdiNSnu
+	 KW/ULP6PGFrTZSNEjXL9upJ7r0qWpzmS7wN260Os=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbgHXIqe (ORCPT
+        id S1728732AbgHXIqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44402 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:46:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729336AbgHXIqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:46:21 -0400
+        id S1729343AbgHXIq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:46:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA65206F0;
-        Mon, 24 Aug 2020 08:46:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7270206F0;
+        Mon, 24 Aug 2020 08:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258778;
-        bh=5qiH8qx2OjearFlXAlfeyMwlKikrC6AqQAD4PhxXNpo=;
+        s=default; t=1598258786;
+        bh=1RUvlJj4UOjBfLIGHgxFknh/nqgcIeP7tjGttnAp8Oo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KTvXlj07kq0Sdz0g+pyEuSp/O2MWGBfXCHV3IDm4G2UAquZ1wxFgjVDjlMT1/F1Ej
-         eYLeEklGvvEPsly8yjslJVhZqsJRvm1cFDt3tFCESBH8JBVcqzwQ/Pzqhpu9ouUCgv
-         wEzMaRjRb8+pOB7nP2gA2SaJB5yIxls/T5ed80Do=
+        b=z0iuatpNFbQ6+p7OixpymmSQTZYYwcc+inqXkPgJghqEeAudQYro6vZOMyghANyAk
+         3Q8GMOadiS7BkUcZHMOyprMIl3bVJk66nc5pNZksDRJoZm6oq9OSuOALRthgAoACmZ
+         rj6JDGG5Q0h0w955WVCcHhADHW7j5o8hdJ5YHixg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Yang Shi <shy828301@gmail.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 012/107] gfs2: Never call gfs2_block_zero_range with an open transaction
-Date:   Mon, 24 Aug 2020 10:29:38 +0200
-Message-Id: <20200824082405.672531551@linuxfoundation.org>
+Subject: [PATCH 5.4 015/107] khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
+Date:   Mon, 24 Aug 2020 10:29:41 +0200
+Message-Id: <20200824082405.826004689@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -60,156 +68,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit 70499cdfeb3625c87eebe4f7a7ea06fa7447e5df ]
+[ Upstream commit f3f99d63a8156c7a4a6b20aac22b53c5579c7dc1 ]
 
-Before this patch, some functions started transactions then they called
-gfs2_block_zero_range. However, gfs2_block_zero_range, like writes, can
-start transactions, which results in a recursive transaction error.
-For example:
+syzbot crashes on the VM_BUG_ON_MM(khugepaged_test_exit(mm), mm) in
+__khugepaged_enter(): yes, when one thread is about to dump core, has set
+core_state, and is waiting for others, another might do something calling
+__khugepaged_enter(), which now crashes because I lumped the core_state
+test (known as "mmget_still_valid") into khugepaged_test_exit().  I still
+think it's best to lump them together, so just in this exceptional case,
+check mm->mm_users directly instead of khugepaged_test_exit().
 
-do_shrink
-   trunc_start
-      gfs2_trans_begin <------------------------------------------------
-         gfs2_block_zero_range
-            iomap_zero_range(inode, from, length, NULL, &gfs2_iomap_ops);
-               iomap_apply ... iomap_zero_range_actor
-                  iomap_begin
-                     gfs2_iomap_begin
-                        gfs2_iomap_begin_write
-                  actor (iomap_zero_range_actor)
-		     iomap_zero
-			iomap_write_begin
-			   gfs2_iomap_page_prepare
-			      gfs2_trans_begin <------------------------
-
-This patch reorders the callers of gfs2_block_zero_range so that they
-only start their transactions after the call. It also adds a BUG_ON to
-ensure this doesn't happen again.
-
-Fixes: 2257e468a63b ("gfs2: implement gfs2_block_zero_range using iomap_zero_range")
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Fixes: bbe98f9cadff ("khugepaged: khugepaged_test_exit() check mmget_still_valid()")
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Yang Shi <shy828301@gmail.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: <stable@vger.kernel.org>	[4.8+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008141503370.18085@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/bmap.c | 69 ++++++++++++++++++++++++++++----------------------
- 1 file changed, 39 insertions(+), 30 deletions(-)
+ mm/khugepaged.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
-index 4846e0c47e6af..50fa3e08c02f3 100644
---- a/fs/gfs2/bmap.c
-+++ b/fs/gfs2/bmap.c
-@@ -1350,9 +1350,15 @@ int gfs2_extent_map(struct inode *inode, u64 lblock, int *new, u64 *dblock, unsi
- 	return ret;
- }
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 76e3e90dbc16e..3623d1c5343f2 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -438,7 +438,7 @@ int __khugepaged_enter(struct mm_struct *mm)
+ 		return -ENOMEM;
  
-+/*
-+ * NOTE: Never call gfs2_block_zero_range with an open transaction because it
-+ * uses iomap write to perform its actions, which begin their own transactions
-+ * (iomap_begin, page_prepare, etc.)
-+ */
- static int gfs2_block_zero_range(struct inode *inode, loff_t from,
- 				 unsigned int length)
- {
-+	BUG_ON(current->journal_info);
- 	return iomap_zero_range(inode, from, length, NULL, &gfs2_iomap_ops);
- }
- 
-@@ -1413,6 +1419,16 @@ static int trunc_start(struct inode *inode, u64 newsize)
- 	u64 oldsize = inode->i_size;
- 	int error;
- 
-+	if (!gfs2_is_stuffed(ip)) {
-+		unsigned int blocksize = i_blocksize(inode);
-+		unsigned int offs = newsize & (blocksize - 1);
-+		if (offs) {
-+			error = gfs2_block_zero_range(inode, newsize,
-+						      blocksize - offs);
-+			if (error)
-+				return error;
-+		}
-+	}
- 	if (journaled)
- 		error = gfs2_trans_begin(sdp, RES_DINODE + RES_JDATA, GFS2_JTRUNC_REVOKES);
- 	else
-@@ -1426,19 +1442,10 @@ static int trunc_start(struct inode *inode, u64 newsize)
- 
- 	gfs2_trans_add_meta(ip->i_gl, dibh);
- 
--	if (gfs2_is_stuffed(ip)) {
-+	if (gfs2_is_stuffed(ip))
- 		gfs2_buffer_clear_tail(dibh, sizeof(struct gfs2_dinode) + newsize);
--	} else {
--		unsigned int blocksize = i_blocksize(inode);
--		unsigned int offs = newsize & (blocksize - 1);
--		if (offs) {
--			error = gfs2_block_zero_range(inode, newsize,
--						      blocksize - offs);
--			if (error)
--				goto out;
--		}
-+	else
- 		ip->i_diskflags |= GFS2_DIF_TRUNC_IN_PROG;
--	}
- 
- 	i_size_write(inode, newsize);
- 	ip->i_inode.i_mtime = ip->i_inode.i_ctime = current_time(&ip->i_inode);
-@@ -2446,25 +2453,7 @@ int __gfs2_punch_hole(struct file *file, loff_t offset, loff_t length)
- 	loff_t start, end;
- 	int error;
- 
--	start = round_down(offset, blocksize);
--	end = round_up(offset + length, blocksize) - 1;
--	error = filemap_write_and_wait_range(inode->i_mapping, start, end);
--	if (error)
--		return error;
--
--	if (gfs2_is_jdata(ip))
--		error = gfs2_trans_begin(sdp, RES_DINODE + 2 * RES_JDATA,
--					 GFS2_JTRUNC_REVOKES);
--	else
--		error = gfs2_trans_begin(sdp, RES_DINODE, 0);
--	if (error)
--		return error;
--
--	if (gfs2_is_stuffed(ip)) {
--		error = stuffed_zero_range(inode, offset, length);
--		if (error)
--			goto out;
--	} else {
-+	if (!gfs2_is_stuffed(ip)) {
- 		unsigned int start_off, end_len;
- 
- 		start_off = offset & (blocksize - 1);
-@@ -2487,6 +2476,26 @@ int __gfs2_punch_hole(struct file *file, loff_t offset, loff_t length)
- 		}
- 	}
- 
-+	start = round_down(offset, blocksize);
-+	end = round_up(offset + length, blocksize) - 1;
-+	error = filemap_write_and_wait_range(inode->i_mapping, start, end);
-+	if (error)
-+		return error;
-+
-+	if (gfs2_is_jdata(ip))
-+		error = gfs2_trans_begin(sdp, RES_DINODE + 2 * RES_JDATA,
-+					 GFS2_JTRUNC_REVOKES);
-+	else
-+		error = gfs2_trans_begin(sdp, RES_DINODE, 0);
-+	if (error)
-+		return error;
-+
-+	if (gfs2_is_stuffed(ip)) {
-+		error = stuffed_zero_range(inode, offset, length);
-+		if (error)
-+			goto out;
-+	}
-+
- 	if (gfs2_is_jdata(ip)) {
- 		BUG_ON(!current->journal_info);
- 		gfs2_journaled_truncate_range(inode, offset, length);
+ 	/* __khugepaged_exit() must not run from under us */
+-	VM_BUG_ON_MM(khugepaged_test_exit(mm), mm);
++	VM_BUG_ON_MM(atomic_read(&mm->mm_users) == 0, mm);
+ 	if (unlikely(test_and_set_bit(MMF_VM_HUGEPAGE, &mm->flags))) {
+ 		free_mm_slot(mm_slot);
+ 		return 0;
 -- 
 2.25.1
 
