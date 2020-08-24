@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A57A206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9276F206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598288906;
-	bh=IRYV+X6VW9rjKkby9X778CS1Hr+wn3yRd29eHWImALU=;
+	s=default; t=1598288914;
+	bh=Td21fzMvy0zTxw1H3Ikwhc/hSA5KxIOZs6Zlok9kupw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MMuzrfIIPxiIBn2kqX4uXw4IkVnf7zogPobQsrsnbtT8qy1+pqNW6VFM0ZfnxxCnM
-	 oV5p2n/yxbowCd74092MZlAh05ipja2QTAxIkQA14Q8NbzxKPfu59YVvO4b3wAZQdL
-	 azxAziiJd1/+sSB6s3VxhTh5GlKcLi2usy+TfODU=
+	b=N1//5GG3WWGw8ZuqJSE76B2YbDvdCMNaqTU91qAKhRfYWLHW/7k+TiJ1vZAJunXwg
+	 MxoF+pNuf3JEgulO+C7QBPIexNVf/JwtvqxAgei7AfLT9AfiKTGJXNoZ5JdTcDuz39
+	 H3E0qMHgZ2BQBw1NFSxA8Bz+hLTL2QgheDA5P+EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgHXRIY (ORCPT
+        id S1727774AbgHXRId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:08:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39632 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:08:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbgHXQiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728431AbgHXQiY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:38:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E2312310F;
-        Mon, 24 Aug 2020 16:37:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B8D2310E;
+        Mon, 24 Aug 2020 16:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287065;
-        bh=IRYV+X6VW9rjKkby9X778CS1Hr+wn3yRd29eHWImALU=;
+        s=default; t=1598287061;
+        bh=Td21fzMvy0zTxw1H3Ikwhc/hSA5KxIOZs6Zlok9kupw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OFkbONU9yOBiP9wAvadbYIcLhi48S9wEjx8Cx9dGKLrVPDNa5HYEeJvqt/MgubmcH
-         ssUnbbNAMhcX3Tfv+5kttplzJo5pY/ZqgDyhsYU1j49ByOHSVirnBvli+cvBjTJOB5
-         L6ZtkT9IoqTHVZMpRj8bM92fvVyOpiJsPDBQFJ4Y=
+        b=pAQLqw1iToSdIxY/8T8LJbUoi3BLyexP/Q7b+yK7+WZgcfUDk7xY7gN2eZGRDK3kz
+         PaYl13C5dp7Pv3zhKRmODxr/88YH23GnQBRlQbbe7r1bqkPlpfvzAVJDObp7pC2snj
+         BExH0iqeFOYdSO4thy3bAVEAmZt+eX+4hEYCfzeE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 51/54] libbpf: Fix map index used in error message
-Date:   Mon, 24 Aug 2020 12:36:30 -0400
-Message-Id: <20200824163634.606093-51-sashal@kernel.org>
+Cc:     Huang Rui <ray.huang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 48/54] drm/amdkfd: fix the wrong sdma instance query for renoir
+Date:   Mon, 24 Aug 2020 12:36:27 -0400
+Message-Id: <20200824163634.606093-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,35 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Huang Rui <ray.huang@amd.com>
 
-[ Upstream commit 1e891e513e16c145cc9b45b1fdb8bf4a4f2f9557 ]
+[ Upstream commit 34174b89bfa495bed9cddcc504fb38feca90fab7 ]
 
-The error message emitted by bpf_object__init_user_btf_maps() was using the
-wrong section ID.
+Renoir only has one sdma instance, it will get failed once query the
+sdma1 registers. So use switch-case instead of static register array.
 
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200819110534.9058-1-toke@redhat.com
+Signed-off-by: Huang Rui <ray.huang@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c | 31 +++++++++++++------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 3e53bfcba2b1a..ae19778220574 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -2151,7 +2151,7 @@ static int bpf_object__init_user_btf_maps(struct bpf_object *obj, bool strict,
- 		data = elf_getdata(scn, NULL);
- 	if (!scn || !data) {
- 		pr_warn("failed to get Elf_Data from map section %d (%s)\n",
--			obj->efile.maps_shndx, MAPS_ELF_SEC);
-+			obj->efile.btf_maps_shndx, MAPS_ELF_SEC);
- 		return -EINVAL;
- 	}
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c
+index df841c2ac5e74..cdcf3b8e914a7 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gfx_v9.c
+@@ -197,19 +197,32 @@ static uint32_t get_sdma_rlc_reg_offset(struct amdgpu_device *adev,
+ 				unsigned int engine_id,
+ 				unsigned int queue_id)
+ {
+-	uint32_t sdma_engine_reg_base[2] = {
+-		SOC15_REG_OFFSET(SDMA0, 0,
+-				 mmSDMA0_RLC0_RB_CNTL) - mmSDMA0_RLC0_RB_CNTL,
+-		SOC15_REG_OFFSET(SDMA1, 0,
+-				 mmSDMA1_RLC0_RB_CNTL) - mmSDMA1_RLC0_RB_CNTL
+-	};
+-	uint32_t retval = sdma_engine_reg_base[engine_id]
++	uint32_t sdma_engine_reg_base = 0;
++	uint32_t sdma_rlc_reg_offset;
++
++	switch (engine_id) {
++	default:
++		dev_warn(adev->dev,
++			 "Invalid sdma engine id (%d), using engine id 0\n",
++			 engine_id);
++		fallthrough;
++	case 0:
++		sdma_engine_reg_base = SOC15_REG_OFFSET(SDMA0, 0,
++				mmSDMA0_RLC0_RB_CNTL) - mmSDMA0_RLC0_RB_CNTL;
++		break;
++	case 1:
++		sdma_engine_reg_base = SOC15_REG_OFFSET(SDMA1, 0,
++				mmSDMA1_RLC0_RB_CNTL) - mmSDMA0_RLC0_RB_CNTL;
++		break;
++	}
++
++	sdma_rlc_reg_offset = sdma_engine_reg_base
+ 		+ queue_id * (mmSDMA0_RLC1_RB_CNTL - mmSDMA0_RLC0_RB_CNTL);
  
+ 	pr_debug("RLC register offset for SDMA%d RLC%d: 0x%x\n", engine_id,
+-			queue_id, retval);
++		 queue_id, sdma_rlc_reg_offset);
+ 
+-	return retval;
++	return sdma_rlc_reg_offset;
+ }
+ 
+ static inline struct v9_mqd *get_mqd(void *mqd)
 -- 
 2.25.1
 
