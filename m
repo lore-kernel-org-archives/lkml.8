@@ -2,247 +2,211 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B187CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0F42074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598260874;
-	bh=TOH0XfetC5x5cPnPlP3/ST+07xfAaN/CKrgzAfroaaQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p3pcVs9MxFCoirGlYimvalfuB5/bU6+ayB8eIhvwRM7pAiAm7EZtUX7oILiyrFxhr
-	 lzLx+n/G5GIRpqJppz+7/Aw8elQff2uuMNXnfXwwfBrzDYDrvDaFvaCkC6XlXlHODb
-	 T/qwaCJviT4OGWTpsFpgHuIApuR0TzuWcUd8/xdk=
+	by mail.kernel.org (Postfix) with ESMTP id 8B98D2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MH1x+F6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbgHXJVN (ORCPT
+        id S1729396AbgHXJVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730230AbgHXIzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 334AA204FD;
-        Mon, 24 Aug 2020 08:55:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259347;
-        bh=TOH0XfetC5x5cPnPlP3/ST+07xfAaN/CKrgzAfroaaQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZmvNwKgvDy5WnzJGDwgBdqLmCIETga1x8nXBXGH7wUX7xXd1h/K/y2pQExqv3VycI
-         SCR9WQ/4/En8zwsisKvLTaHX5+yJyd6zEpYwgDyBExM52vNOLxO9wRyDoVJG5ogNLl
-         COiIO+ubBnCVBoXRMgW8SKYeQilB2YXOXirwUu0I=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>
-Subject: [PATCH 4.19 09/71] btrfs: sysfs: use NOFS for device creation
-Date:   Mon, 24 Aug 2020 10:31:00 +0200
-Message-Id: <20200824082356.348762357@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
-References: <20200824082355.848475917@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Aug 2020 05:21:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730222AbgHXIzq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:55:46 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 116C1C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:55:46 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id x69so6712128qkb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:55:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4+DPdTdqNuyBoVS4RbQIr9UMaA1D5lYrJkHWf4GkHBQ=;
+        b=MH1x+F6HuXwDNwXoyQJcunv0GP2bLigkIo02yDGCp7PNi8rBk8ujHLvQ40AyCg0Ish
+         bVOgBrCJBjKQDAsN2axhHWiMVDLlNaLSa4jVdTFGsyD1bxAY7bAUKWfGLCh66oKH7HXm
+         r5S1vNkuLKXbrXt+Kkx8kg+ZOzUiA+qTnK9115FlM3dbVxZ8wwd8Ws+FCr/iWe8iYcmQ
+         fioom413+yIGdKEYzOfAOqEv5jVs4G9hm7XluPo+/08F33geafgjLLW0u30RPSJoxMNR
+         JkPRvuciD+M1L7XY/rePVkakQNglMsQgKBXPRfN203c5Q8bcg3/dsDr8ij0k3buKaSDp
+         uaww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4+DPdTdqNuyBoVS4RbQIr9UMaA1D5lYrJkHWf4GkHBQ=;
+        b=bMW07/Un1MB6Bo9F1fUZ0vpc8aK0fSdGs1DRfShw+H9Q/OkiWcAUnmpUopPQXfKCvw
+         XHsdaOefvQfM6HzboiKvV59WorSmD+2gFQIDqQ58AcPk2ODKc1O4UqnY2kyIeVmW1wEi
+         D0S0dMFMy8+i5IptaTBZgTVmE4LgTRROGvdTTNWEJVmtlXxjWqJMUmMslNzaB8EQZjRc
+         wQsEFLhQL7BawVfTif1IdFkeJsc3CTNrI0PurbkEBw0GcxaUAeTZaInuBR6l1JmLrYoD
+         yWeshnjTQ5T3GLxkQ3y6B2vE6w/JpP/KDrFnOqkkgMMOfKOMoJas5ziawDK+siD4wlc3
+         s22g==
+X-Gm-Message-State: AOAM532EdNoTu8eWyjtm8OnoISD23cr4/iagGbm/mioU5VkdzENqBiF0
+        +++OGmBs5ScB6aH8tbCYs/bRp6fRqjaY0ht7O3kR8w==
+X-Google-Smtp-Source: ABdhPJweKUqUpQomWynHHhtNTqvLsvrsIrDv2Gk4h+l3xzPB0RswtWfNznQ1EDCUE/qCzmGdN7Zdxc63Y4doRjkGvHY=
+X-Received: by 2002:a05:620a:134b:: with SMTP id c11mr1857358qkl.256.1598259339701;
+ Mon, 24 Aug 2020 01:55:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200823082042.20816-1-himadrispandya@gmail.com>
+ <CACT4Y+Y1TpqYowNXj+OTcQwH-7T4n6PtPPa4gDWkV-np5KhKAQ@mail.gmail.com>
+ <20200823101924.GA3078429@kroah.com> <CACT4Y+YbDODLRFn8M5QcY4CazhpeCaunJnP_udXtAs0rYoASSg@mail.gmail.com>
+ <20200823105808.GB87391@kroah.com>
+In-Reply-To: <20200823105808.GB87391@kroah.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 24 Aug 2020 10:55:28 +0200
+Message-ID: <CACT4Y+ZiZQK8WBre9E4777NPaRK4UDOeZOeMZOQC=5tDsDu23A@mail.gmail.com>
+Subject: Re: [PATCH] net: usb: Fix uninit-was-stored issue in asix_read_cmd()
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Himadri Pandya <himadrispandya@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        USB list <linux-usb@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+On Sun, Aug 23, 2020 at 12:57 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Sun, Aug 23, 2020 at 12:31:03PM +0200, Dmitry Vyukov wrote:
+> > On Sun, Aug 23, 2020 at 12:19 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Sun, Aug 23, 2020 at 11:26:27AM +0200, Dmitry Vyukov wrote:
+> > > > On Sun, Aug 23, 2020 at 10:21 AM Himadri Pandya
+> > > > <himadrispandya@gmail.com> wrote:
+> > > > >
+> > > > > Initialize the buffer before passing it to usb_read_cmd() function(s) to
+> > > > > fix the uninit-was-stored issue in asix_read_cmd().
+> > > > >
+> > > > > Fixes: KMSAN: kernel-infoleak in raw_ioctl
+> > > > > Reported by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
+> > > > >
+> > > > > Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
+> > > > > ---
+> > > > >  drivers/net/usb/asix_common.c | 2 ++
+> > > > >  1 file changed, 2 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
+> > > > > index e39f41efda3e..a67ea1971b78 100644
+> > > > > --- a/drivers/net/usb/asix_common.c
+> > > > > +++ b/drivers/net/usb/asix_common.c
+> > > > > @@ -17,6 +17,8 @@ int asix_read_cmd(struct usbnet *dev, u8 cmd, u16 value, u16 index,
+> > > > >
+> > > > >         BUG_ON(!dev);
+> > > > >
+> > > > > +       memset(data, 0, size);
+> > > >
+> > > > Hi Himadri,
+> > > >
+> > > > I think the proper fix is to check
+> > > > usbnet_read_cmd/usbnet_read_cmd_nopm return value instead.
+> > > > Memsetting data helps to fix the warning at hand, but the device did
+> > > > not send these 0's and we use them as if the device did send them.
+> > >
+> > > But, for broken/abusive devices, that really is the safest thing to do
+> > > here.  They are returning something that is obviously not correct, so
+> > > either all callers need to check the size received really is the size
+> > > they asked for, or we just plod onward with a 0 value like this.  Or we
+> > > could pick some other value, but that could cause other problems if it
+> > > is treated as an actual value.
+> >
+> > Do we want callers to do at least some error check (e.g. device did
+> > not return anything at all, broke, hang)?
+> > If yes, then with a separate helper function that fails on short
+> > reads, we can get both benefits at no additional cost. User code will
+> > say "I want 4 bytes, anything that is not 4 bytes is an error" and
+> > then 1 error check will do. In fact, it seems that that was the
+> > intention of whoever wrote this code (they assumed no short reads),
+> > it's just they did not actually implement that "anything that is not 4
+> > bytes is an error" part.
+> >
+> >
+> > > > Perhaps we need a separate helper function (of a bool flag) that will
+> > > > fail on incomplete reads. Maybe even in the common USB layer because I
+> > > > think we've seen this type of bug lots of times and I guess there are
+> > > > dozens more.
+> > >
+> > > It's not always a failure, some devices have protocols that are "I could
+> > > return up to a max X bytes but could be shorter" types of messages, so
+> > > it's up to the caller to check that they got what they really asked for.
+> >
+> > Yes, that's why I said _separate_ helper function. There seems to be
+> > lots of callers that want exactly this -- "I want 4 bytes, anything
+> > else is an error". With the current API it's harder to do - you need
+> > additional checks, additional code, maybe even additional variables to
+> > store the required size. APIs should make correct code easy to write.
+>
+> I guess I already answered both of these in my previous email...
+>
+> > > Yes, it's more work to do this checking.  However converting the world
+> > > over to a "give me an error value if you don't read X number of bytes"
+> > > function would also be the same amount of work, right?
+> >
+> > Should this go into the common USB layer then?
+> > It's weird to have such a special convention on the level of a single
+> > driver. Why are rules for this single driver so special?...
+>
+> They aren't special at all, so yes, we should be checking for a short
+> read everywhere.  That would be the "correct" thing to do, I was just
+> suggesting a "quick fix" here, sorry.
 
-Dave hit this splat during testing btrfs/078:
+Re quick fix, I guess it depends on the amount of work for the larger
+fix and if we can find volunteers (thanks Himadri!). We need to be
+practical as well.
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.8.0-rc6-default+ #1191 Not tainted
-  ------------------------------------------------------
-  kswapd0/75 is trying to acquire lock:
-  ffffa040e9d04ff8 (&delayed_node->mutex){+.+.}-{3:3}, at: __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
+Re:
+        retval = usb_control_msg(....., data, data_size, ...);
+        if (retval < buf_size) {
 
-  but task is already holding lock:
-  ffffffff8b0c8040 (fs_reclaim){+.+.}-{0:0}, at: __fs_reclaim_acquire+0x5/0x30
+There may be a fine line between interfaces and what code they
+provoke. Let me describe my reasoning.
 
-  which lock already depends on the new lock.
+Yes, the current interface allows writing correct code with moderate
+amount of effort. Yet we see cases where it's used incorrectly, maybe
+people were just a little bit lazy, or maybe they did not understand
+how to use it properly (nobody reads the docs, and it's also
+reasonable to assume that if you ask for N bytes and the function does
+not fail, then you get N bytes).
 
-  the existing dependency chain (in reverse order) is:
+Currently to write correct code (1) we need a bit of duplication,
+which gets worse if data_size is actually some lengthy expression
+(X+Y*Z), maybe one will need an additional variable to use it
+correctly.
+(2) one needs to understand the contract;
+(3) may be subject to the following class of bugs (after some copy-paste:
+        retval = usb_control_msg(....., data, 4, ...);
+        if (retval < 2) {
+This class of bugs won't be necessary immediately caught by kernel
+testing systems (can have long life-time).
 
-  -> #2 (fs_reclaim){+.+.}-{0:0}:
-	 __lock_acquire+0x56f/0xaa0
-	 lock_acquire+0xa3/0x440
-	 fs_reclaim_acquire.part.0+0x25/0x30
-	 __kmalloc_track_caller+0x49/0x330
-	 kstrdup+0x2e/0x60
-	 __kernfs_new_node.constprop.0+0x44/0x250
-	 kernfs_new_node+0x25/0x50
-	 kernfs_create_link+0x34/0xa0
-	 sysfs_do_create_link_sd+0x5e/0xd0
-	 btrfs_sysfs_add_devices_dir+0x65/0x100 [btrfs]
-	 btrfs_init_new_device+0x44c/0x12b0 [btrfs]
-	 btrfs_ioctl+0xc3c/0x25c0 [btrfs]
-	 ksys_ioctl+0x68/0xa0
-	 __x64_sys_ioctl+0x16/0x20
-	 do_syscall_64+0x50/0xe0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+I would add a "default" function (with shorter name) that does full read:
 
-  -> #1 (&fs_info->chunk_mutex){+.+.}-{3:3}:
-	 __lock_acquire+0x56f/0xaa0
-	 lock_acquire+0xa3/0x440
-	 __mutex_lock+0xa0/0xaf0
-	 btrfs_chunk_alloc+0x137/0x3e0 [btrfs]
-	 find_free_extent+0xb44/0xfb0 [btrfs]
-	 btrfs_reserve_extent+0x9b/0x180 [btrfs]
-	 btrfs_alloc_tree_block+0xc1/0x350 [btrfs]
-	 alloc_tree_block_no_bg_flush+0x4a/0x60 [btrfs]
-	 __btrfs_cow_block+0x143/0x7a0 [btrfs]
-	 btrfs_cow_block+0x15f/0x310 [btrfs]
-	 push_leaf_right+0x150/0x240 [btrfs]
-	 split_leaf+0x3cd/0x6d0 [btrfs]
-	 btrfs_search_slot+0xd14/0xf70 [btrfs]
-	 btrfs_insert_empty_items+0x64/0xc0 [btrfs]
-	 __btrfs_commit_inode_delayed_items+0xb2/0x840 [btrfs]
-	 btrfs_async_run_delayed_root+0x10e/0x1d0 [btrfs]
-	 btrfs_work_helper+0x2f9/0x650 [btrfs]
-	 process_one_work+0x22c/0x600
-	 worker_thread+0x50/0x3b0
-	 kthread+0x137/0x150
-	 ret_from_fork+0x1f/0x30
+if (!usb_control_msg(, ...., data, 4))
 
-  -> #0 (&delayed_node->mutex){+.+.}-{3:3}:
-	 check_prev_add+0x98/0xa20
-	 validate_chain+0xa8c/0x2a00
-	 __lock_acquire+0x56f/0xaa0
-	 lock_acquire+0xa3/0x440
-	 __mutex_lock+0xa0/0xaf0
-	 __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-	 btrfs_evict_inode+0x3bf/0x560 [btrfs]
-	 evict+0xd6/0x1c0
-	 dispose_list+0x48/0x70
-	 prune_icache_sb+0x54/0x80
-	 super_cache_scan+0x121/0x1a0
-	 do_shrink_slab+0x175/0x420
-	 shrink_slab+0xb1/0x2e0
-	 shrink_node+0x192/0x600
-	 balance_pgdat+0x31f/0x750
-	 kswapd+0x206/0x510
-	 kthread+0x137/0x150
-	 ret_from_fork+0x1f/0x30
+and a function with longer name to read variable-size data:
 
-  other info that might help us debug this:
+n = usb_control_msg_variable_length(, ...., data, sizeof(data)));
 
-  Chain exists of:
-    &delayed_node->mutex --> &fs_info->chunk_mutex --> fs_reclaim
-
-   Possible unsafe locking scenario:
-
-	 CPU0                    CPU1
-	 ----                    ----
-    lock(fs_reclaim);
-				 lock(&fs_info->chunk_mutex);
-				 lock(fs_reclaim);
-    lock(&delayed_node->mutex);
-
-   *** DEADLOCK ***
-
-  3 locks held by kswapd0/75:
-   #0: ffffffff8b0c8040 (fs_reclaim){+.+.}-{0:0}, at: __fs_reclaim_acquire+0x5/0x30
-   #1: ffffffff8b0b50b8 (shrinker_rwsem){++++}-{3:3}, at: shrink_slab+0x54/0x2e0
-   #2: ffffa040e057c0e8 (&type->s_umount_key#26){++++}-{3:3}, at: trylock_super+0x16/0x50
-
-  stack backtrace:
-  CPU: 2 PID: 75 Comm: kswapd0 Not tainted 5.8.0-rc6-default+ #1191
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
-  Call Trace:
-   dump_stack+0x78/0xa0
-   check_noncircular+0x16f/0x190
-   check_prev_add+0x98/0xa20
-   validate_chain+0xa8c/0x2a00
-   __lock_acquire+0x56f/0xaa0
-   lock_acquire+0xa3/0x440
-   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-   __mutex_lock+0xa0/0xaf0
-   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-   ? __lock_acquire+0x56f/0xaa0
-   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-   ? lock_acquire+0xa3/0x440
-   ? btrfs_evict_inode+0x138/0x560 [btrfs]
-   ? btrfs_evict_inode+0x2fe/0x560 [btrfs]
-   ? __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-   __btrfs_release_delayed_node.part.0+0x3f/0x310 [btrfs]
-   btrfs_evict_inode+0x3bf/0x560 [btrfs]
-   evict+0xd6/0x1c0
-   dispose_list+0x48/0x70
-   prune_icache_sb+0x54/0x80
-   super_cache_scan+0x121/0x1a0
-   do_shrink_slab+0x175/0x420
-   shrink_slab+0xb1/0x2e0
-   shrink_node+0x192/0x600
-   balance_pgdat+0x31f/0x750
-   kswapd+0x206/0x510
-   ? _raw_spin_unlock_irqrestore+0x3e/0x50
-   ? finish_wait+0x90/0x90
-   ? balance_pgdat+0x750/0x750
-   kthread+0x137/0x150
-   ? kthread_stop+0x2a0/0x2a0
-   ret_from_fork+0x1f/0x30
-
-This is because we're holding the chunk_mutex while adding this device
-and adding its sysfs entries.  We actually hold different locks in
-different places when calling this function, the dev_replace semaphore
-for instance in dev replace, so instead of moving this call around
-simply wrap it's operations in NOFS.
-
-CC: stable@vger.kernel.org # 4.14+
-Reported-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
----
- fs/btrfs/sysfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/fs/btrfs/sysfs.c b/fs/btrfs/sysfs.c
-index aefb0169d46d7..afec808a763b1 100644
---- a/fs/btrfs/sysfs.c
-+++ b/fs/btrfs/sysfs.c
-@@ -10,6 +10,7 @@
- #include <linux/kobject.h>
- #include <linux/bug.h>
- #include <linux/debugfs.h>
-+#include <linux/sched/mm.h>
- 
- #include "ctree.h"
- #include "disk-io.h"
-@@ -766,7 +767,9 @@ int btrfs_sysfs_add_device_link(struct btrfs_fs_devices *fs_devices,
- {
- 	int error = 0;
- 	struct btrfs_device *dev;
-+	unsigned int nofs_flag;
- 
-+	nofs_flag = memalloc_nofs_save();
- 	list_for_each_entry(dev, &fs_devices->devices, dev_list) {
- 		struct hd_struct *disk;
- 		struct kobject *disk_kobj;
-@@ -785,6 +788,7 @@ int btrfs_sysfs_add_device_link(struct btrfs_fs_devices *fs_devices,
- 		if (error)
- 			break;
- 	}
-+	memalloc_nofs_restore(nofs_flag);
- 
- 	return error;
- }
--- 
-2.25.1
-
-
-
+The full read should be "the default" (shorter name), because if you
+need full read and use the wrong function, it won't be caught by
+testing (most likely long-lived bug). Whereas if you use full read for
+lengthy variable size data read, this will be immediately caught
+during any testing (even manual) -- you ask for 4K, you get fewer
+bytes, all your reads fail.
+So having "full read" easier to spell will lead to fewer bugs by design.
