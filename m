@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE866C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D54C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 909E8206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570E6206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259674;
-	bh=nG/68UkyJbPFo39KSSnnMAkMSDLG37DYiU7yZfHaGPg=;
+	s=default; t=1598259677;
+	bh=7BLz4oHXor+cAmkcYWWb+qAE5oH/+YW+t/smg2v2l1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WVH1jKSUEDS/FmYaafeL8c2vyLcNuPEXr6G0ZFwUA0BRhkDVGaCfKqF3zsaDa+s6w
-	 fSMg8U7yxguQ0svSkvUvk/OrpaxzPSe41MTzVZjgceipSVFghfzqqUc4sMBTt9dXEe
-	 06h08ndr1OThjE+5zB3OCefdxTzNp9HnVeO+Kl0Y=
+	b=EjrvgqMT6UHrF+nLGJ9GJUzPm66d5NyfY2SwUb1dHw+JgQ/jpn7t9Xpegw9MFpFia
+	 Tu/Gj5AplQq3SNBW2FG1yLOBv5QJqi7X+Ts7vLkWBMbBh2xIbTOQZmvi+xSO5I87tc
+	 k8FJXR0HXhRUYhCcr5oIE8jCTTW462UZXkuFIm3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730017AbgHXJBM (ORCPT
+        id S1728959AbgHXJBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:01:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43592 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:01:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728959AbgHXI5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:57:04 -0400
+        id S1730618AbgHXI5B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17B252072D;
-        Mon, 24 Aug 2020 08:57:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA10C2087D;
+        Mon, 24 Aug 2020 08:57:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259423;
-        bh=nG/68UkyJbPFo39KSSnnMAkMSDLG37DYiU7yZfHaGPg=;
+        s=default; t=1598259421;
+        bh=7BLz4oHXor+cAmkcYWWb+qAE5oH/+YW+t/smg2v2l1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TiSM+Z01rB3nqIepwNUGllhhDcCNhwQ4RW74dz5B1ZMkYjXpysBKBfQQuMm4tIjvg
-         qrMlleKoPA6ZpOa3eHKxm6IZjKOPbTFF75lkl5EgmwV/zB5NNfkHTj7hWtnGx+hI55
-         yE+WrDb0910pMsV4am/kRL2XnpbuIsUqV6TfhrQg=
+        b=YLCv8rZymk7FTvuir/628ohzeotyVgpAJkYxIaW9UcpQ72QPwIPsjVvOWZ8wjK1j4
+         wLOhRt779OsZMTIBYb4NhksRKRNyzeh0ROsUGhRT+rv0ohnLb+gI9wc61dfV+EzAhV
+         mO+jfZv09mYVGuhZHRfzZQJk5UnNanSM96mNBb1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 24/71] rtc: goldfish: Enable interrupt in set_alarm() when necessary
-Date:   Mon, 24 Aug 2020 10:31:15 +0200
-Message-Id: <20200824082357.095355850@linuxfoundation.org>
+Subject: [PATCH 4.19 23/71] media: budget-core: Improve exception handling in budget_register()
+Date:   Mon, 24 Aug 2020 10:31:14 +0200
+Message-Id: <20200824082357.043186332@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -61,37 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 22f8d5a1bf230cf8567a4121fc3789babb46336d ]
+[ Upstream commit fc0456458df8b3421dba2a5508cd817fbc20ea71 ]
 
-When use goldfish rtc, the "hwclock" command fails with "select() to
-/dev/rtc to wait for clock tick timed out". This is because "hwclock"
-need the set_alarm() hook to enable interrupt when alrm->enabled is
-true. This operation is missing in goldfish rtc (but other rtc drivers,
-such as cmos rtc, enable interrupt here), so add it.
+budget_register() has no error handling after its failure.
+Add the missed undo functions for error handling to fix it.
 
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Link: https://lore.kernel.org/r/1592654683-31314-1-git-send-email-chenhc@lemote.com
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-goldfish.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/pci/ttpci/budget-core.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/rtc/rtc-goldfish.c b/drivers/rtc/rtc-goldfish.c
-index a1c44d0c85578..30cbe22c57a8e 100644
---- a/drivers/rtc/rtc-goldfish.c
-+++ b/drivers/rtc/rtc-goldfish.c
-@@ -87,6 +87,7 @@ static int goldfish_rtc_set_alarm(struct device *dev,
- 		rtc_alarm64 = rtc_alarm * NSEC_PER_SEC;
- 		writel((rtc_alarm64 >> 32), base + TIMER_ALARM_HIGH);
- 		writel(rtc_alarm64, base + TIMER_ALARM_LOW);
-+		writel(1, base + TIMER_IRQ_ENABLED);
- 	} else {
- 		/*
- 		 * if this function was called with enabled=0
+diff --git a/drivers/media/pci/ttpci/budget-core.c b/drivers/media/pci/ttpci/budget-core.c
+index b3dc45b91101d..9b545c7431685 100644
+--- a/drivers/media/pci/ttpci/budget-core.c
++++ b/drivers/media/pci/ttpci/budget-core.c
+@@ -383,20 +383,25 @@ static int budget_register(struct budget *budget)
+ 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->hw_frontend);
+ 
+ 	if (ret < 0)
+-		return ret;
++		goto err_release_dmx;
+ 
+ 	budget->mem_frontend.source = DMX_MEMORY_FE;
+ 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->mem_frontend);
+ 	if (ret < 0)
+-		return ret;
++		goto err_release_dmx;
+ 
+ 	ret = dvbdemux->dmx.connect_frontend(&dvbdemux->dmx, &budget->hw_frontend);
+ 	if (ret < 0)
+-		return ret;
++		goto err_release_dmx;
+ 
+ 	dvb_net_init(&budget->dvb_adapter, &budget->dvb_net, &dvbdemux->dmx);
+ 
+ 	return 0;
++
++err_release_dmx:
++	dvb_dmxdev_release(&budget->dmxdev);
++	dvb_dmx_release(&budget->demux);
++	return ret;
+ }
+ 
+ static void budget_unregister(struct budget *budget)
 -- 
 2.25.1
 
