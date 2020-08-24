@@ -7,56 +7,52 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D272FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23934C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2DCB20639
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E535820639
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258749;
-	bh=MdqGIJpCx/+wgQQjrkGUNZbwGiGXF25VfSr3JxxELIo=;
+	s=default; t=1598258753;
+	bh=bwJDBs57T0HWecCtTiQwXS+EX5zVLlTne8P+SfQfMyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NnthU10qnXV/pRAjSohQ+DMsi72yZiAkTpk9SYSoMda6TzpXsnvRxaIBY2rmUQlGT
-	 ZCVT5g38GIjWhPT5jQJFPX/munoIfGEtCtj7/M2PwTbA/8c6/vDZjJU8Ba7/nHr7OH
-	 ksCh3VG0YpDnIBPiVqS2bJN1Snkp1TbHHMYxHGZc=
+	b=kt5nab4K8A8cVcAXmrn/TVSPL3uHsx2u8PgaWhNpGfo81DVMAoYtGkv0k3p/Y6d6t
+	 wcR86tq5u1x7cELZCTw/LL9/i1FMZ6GWmAlI54QHigU02QWZJF9HflUa1vqfOLZL9g
+	 cZvPqA84CPf1w0qoruGK3hshTp13Ebgr4vVTfWuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgHXIps (ORCPT
+        id S1729260AbgHXIpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:45:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42974 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:45:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729150AbgHXIpk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:45:40 -0400
+        id S1729245AbgHXIpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:45:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60E2320639;
-        Mon, 24 Aug 2020 08:45:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46046206F0;
+        Mon, 24 Aug 2020 08:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258739;
-        bh=MdqGIJpCx/+wgQQjrkGUNZbwGiGXF25VfSr3JxxELIo=;
+        s=default; t=1598258742;
+        bh=bwJDBs57T0HWecCtTiQwXS+EX5zVLlTne8P+SfQfMyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nY51259KlF/JkfnRDaby+C1EH2s22k5ngO7egIqHYpdIqeclEvkbNkui3pZwjcB1C
-         /JcFyBZdqJ33Dp+gDOUnXc/6zb2gTj/MKjMtIBloqPgD5ZD3XN5dWjXlQ41u1QEgH5
-         fchLN1/CRe/SBczRim4SY+VAndcEkAPJ2ybBTaX0=
+        b=fdRpS36dcc9bF5t18oQsFuU5X9ou0R1h9UCjkQAi3N9kp8KQqHaaGhK98efcVDGMu
+         4OyUc/y1K09jVgWecheKcmL1TaNDUOX21b2m/8zPMxo27BJvhgZSMLlDyumvo9G247
+         u4R+GJRCnkWFppUN1JHX86KCoIrPwpmv8uMve8Qs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Hugh Dickins <hughd@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        David Rientjes <rientjes@google.com>,
-        Michel Lespinasse <walken@google.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Akash Goel <akash.goel@intel.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Song Liu <songliubraving@fb.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 027/107] kernel/relay.c: fix memleak on destroy relay channel
-Date:   Mon, 24 Aug 2020 10:29:53 +0200
-Message-Id: <20200824082406.453840307@linuxfoundation.org>
+Subject: [PATCH 5.4 028/107] uprobes: __replace_page() avoid BUG in munlock_vma_page()
+Date:   Mon, 24 Aug 2020 10:29:54 +0200
+Message-Id: <20200824082406.505127550@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -69,65 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Hugh Dickins <hughd@google.com>
 
-commit 71e843295c680898959b22dc877ae3839cc22470 upstream.
+commit c17c3dc9d08b9aad9a55a1e53f205187972f448e upstream.
 
-kmemleak report memory leak as follows:
+syzbot crashed on the VM_BUG_ON_PAGE(PageTail) in munlock_vma_page(), when
+called from uprobes __replace_page().  Which of many ways to fix it?
+Settled on not calling when PageCompound (since Head and Tail are equals
+in this context, PageCompound the usual check in uprobes.c, and the prior
+use of FOLL_SPLIT_PMD will have cleared PageMlocked already).
 
-  unreferenced object 0x607ee4e5f948 (size 8):
-  comm "syz-executor.1", pid 2098, jiffies 4295031601 (age 288.468s)
-  hex dump (first 8 bytes):
-  00 00 00 00 00 00 00 00 ........
-  backtrace:
-     relay_open kernel/relay.c:583 [inline]
-     relay_open+0xb6/0x970 kernel/relay.c:563
-     do_blk_trace_setup+0x4a8/0xb20 kernel/trace/blktrace.c:557
-     __blk_trace_setup+0xb6/0x150 kernel/trace/blktrace.c:597
-     blk_trace_ioctl+0x146/0x280 kernel/trace/blktrace.c:738
-     blkdev_ioctl+0xb2/0x6a0 block/ioctl.c:613
-     block_ioctl+0xe5/0x120 fs/block_dev.c:1871
-     vfs_ioctl fs/ioctl.c:48 [inline]
-     __do_sys_ioctl fs/ioctl.c:753 [inline]
-     __se_sys_ioctl fs/ioctl.c:739 [inline]
-     __x64_sys_ioctl+0x170/0x1ce fs/ioctl.c:739
-     do_syscall_64+0x33/0x40 arch/x86/entry/common.c:46
-     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-'chan->buf' is malloced in relay_open() by alloc_percpu() but not free
-while destroy the relay channel.  Fix it by adding free_percpu() before
-return from relay_destroy_channel().
-
-Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Fixes: 5a52c9df62b4 ("uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT")
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Michel Lespinasse <walken@google.com>
-Cc: Daniel Axtens <dja@axtens.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Akash Goel <akash.goel@intel.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200817122826.48518-1-weiyongjun1@huawei.com
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: <stable@vger.kernel.org>	[5.4+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008161338360.20413@eggly.anvils
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/relay.c |    1 +
- 1 file changed, 1 insertion(+)
+ kernel/events/uprobes.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/relay.c
-+++ b/kernel/relay.c
-@@ -197,6 +197,7 @@ free_buf:
- static void relay_destroy_channel(struct kref *kref)
- {
- 	struct rchan *chan = container_of(kref, struct rchan, kref);
-+	free_percpu(chan->buf);
- 	kfree(chan);
- }
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -211,7 +211,7 @@ static int __replace_page(struct vm_area
+ 		try_to_free_swap(old_page);
+ 	page_vma_mapped_walk_done(&pvmw);
+ 
+-	if (vma->vm_flags & VM_LOCKED)
++	if ((vma->vm_flags & VM_LOCKED) && !PageCompound(old_page))
+ 		munlock_vma_page(old_page);
+ 	put_page(old_page);
  
 
 
