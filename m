@@ -2,111 +2,107 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC0CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3B9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 169C020702
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB12120702
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="knIBq9oV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qvPXFyii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgHXVmy (ORCPT
+        id S1727114AbgHXVo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45080 "EHLO
+        Mon, 24 Aug 2020 17:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXVmw (ORCPT
+        with ESMTP id S1726090AbgHXVoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:42:52 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB60DC061574;
-        Mon, 24 Aug 2020 14:42:51 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o4so6570950wrn.0;
-        Mon, 24 Aug 2020 14:42:51 -0700 (PDT)
+        Mon, 24 Aug 2020 17:44:23 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7ECBC061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 14:44:22 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f26so11393031ljc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 14:44:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-transfer-encoding:content-language;
-        bh=hkARozwEXZJVRsmCa4FsWOarTsVSbx9L2pp/ThDbffw=;
-        b=knIBq9oV5ZdXmHcbgn/kURoApVFwIuY5ZXEgUVupmzKeR/GzaQsx/D1AgoW9iM2AZo
-         E0vOqcjTp4MrN7Dx0Q+cZFPrvDSUambr75qx592tyS+81bWVoYWeKiIdA4AU5Rlg2Rc2
-         USAKOtDY+OfzBVI6oWLHFjPDzQ6lyX0uLPYfy+78kwZLlhC9PtlyT1U7Gf35G+3XkPFt
-         G3VMH05l+l0OO8A7tJr1OsLbUBXexkeRXmieu+oKk1sDL4YdVk3ZmfK2YHdH6Ns0JIW7
-         0/sK3VZkF5RfnfNXuyGCe18l4r4aVDmY8EGuZwKOLmOPG58hauBf8QXrsrj6HHofVZBT
-         0Q/A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pQGMDLgnQcZfCXtlBfQxFvlPhHCw4gBNVdghbltUFKI=;
+        b=qvPXFyiiYLjL0OnYlRaR9GDjFDX6AiC7aEEDE1rnd6KnnoTKDTpuxAGNpcUMcTPNsI
+         1gu3Ofi2/lxBJdZbwd/m/s0ZnERd7m9LRu7Il7zT19EhsYhoI0GEl0x4pSahHKYDqFMm
+         LFU4qcP/zgO5a4z1mYSECe2w9s/q8YebpTWpgdpm6zqgCCtGfHgkNGMQnosbX5V/E1AN
+         Ym51CUon6FkJDJJEr7+q2bGynfxeCuheU1FYe+0qJwRLutIb7jnaeb27RrARAYBajzLJ
+         XmC3+O1u4CFz/FjvDgge4vK8REdhNfz6Fkiuk8G1kVDK580eIEWubgqgOPpij8X5PRVT
+         xgQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=hkARozwEXZJVRsmCa4FsWOarTsVSbx9L2pp/ThDbffw=;
-        b=AcOctC1teTby5FgcmXuJ4KBOudlffVlKE2y4QR8ddqAnHIgkzbEZmWgv9GbeW/jaww
-         WzBLrXqU1ElsR+tNmH9IEwPtB5FfxGcHyIWOJTaRvHZt8INqS5P2+We1sRJdNww4Emkl
-         tCFyMs+NWO0XlyrfNJ5bB0PDOkxbQfQYMch0uvX9P8zXV0sYRNs5dUIIwfgJjteljSox
-         KNqTW/QtZQf4wpDnPLbPt8QVReL4oinxomlm+ZdKExSOms0T5CZqv6BX7wmDzAn88vBg
-         YiXbx1sAIdn3RSyKIGYBz3xA0nZBmjTdpfD9c0AFmBXXSR5hMkQH5mZ5S1ftCmdtz4FU
-         wy4A==
-X-Gm-Message-State: AOAM530oFKujTjTTcurIPGTI1sKggoikZF0sPmvdCOWuvZbJO4IqcrXU
-        p6v5PDplneniqdeS0chXOJex9/Ugt3ytIRlf
-X-Google-Smtp-Source: ABdhPJyj3e46TgMt/sLQrGzqR+7Yrt9u/xxxCUdaD7yGd+UoWdKmYEquZ5Ai38Bl4okVH5SiX6yOag==
-X-Received: by 2002:adf:83c5:: with SMTP id 63mr7441486wre.321.1598305369981;
-        Mon, 24 Aug 2020 14:42:49 -0700 (PDT)
-Received: from [192.168.0.18] (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id b14sm26542424wrj.93.2020.08.24.14.42.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Aug 2020 14:42:49 -0700 (PDT)
-Subject: Re: [PATCH] scsi: qla2xxx: Remove unnecessary call to memset
-To:     Nilesh Javali <njavali@marvell.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200820185149.932178-1-alex.dewar90@gmail.com>
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Message-ID: <c6f52893-6fa4-f5f8-42a8-9a2482f16c45@gmail.com>
-Date:   Mon, 24 Aug 2020 22:42:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pQGMDLgnQcZfCXtlBfQxFvlPhHCw4gBNVdghbltUFKI=;
+        b=dQ10kpCKpCcPWdeHXofzyM2lcDJ14vesxZGYon81LYStLVJaMj9OfVmrt6M1f5fYzi
+         I56mlHJFyjEFQqukqeDVIhk6S8qjyvdx3JRxl7l/zROEyGzw/GvZyAMArK0NvgfSUCPF
+         PAKZxQvEW2PoUZX1mMHEKF32ZG/uUM5hZ4Gmo9URZN74wccLqvUNUrlrmAzjaTVNoz4v
+         MzQtG5axOMtTpNPIswTbUBo11bpf/lDvi2j2un+ed12TkWR3AwlMraPldzXZkEZoKADl
+         Fl8c/OvQQbDkOzl39D0rd5N1LhPN9puPy94s/Hy+nwZF8BX+B1qgIYghiQGlzvQ1W26L
+         EQ7g==
+X-Gm-Message-State: AOAM5320Xb1RuIpVLUN/M2PWWDRCwsDBLN4Soy/qBNFBzItWYEmhgd8S
+        6eAZEanyggg2g9tcoc0EQ6E=
+X-Google-Smtp-Source: ABdhPJxWLT04cLFqvdj1mZDGf1Au/fOfCDj5CY+3tAAV6bRyvi2qoUJDDZnZuLUmyFA6+qD11VPAfA==
+X-Received: by 2002:a2e:9a11:: with SMTP id o17mr3335890lji.314.1598305461169;
+        Mon, 24 Aug 2020 14:44:21 -0700 (PDT)
+Received: from localhost.localdomain (h-82-196-111-59.NA.cust.bahnhof.se. [82.196.111.59])
+        by smtp.gmail.com with ESMTPSA id l18sm2564366lfc.27.2020.08.24.14.44.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 14:44:20 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH] const_structs.checkpatch: Add phy_ops
+Date:   Mon, 24 Aug 2020 23:41:32 +0200
+Message-Id: <20200824214132.9072-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20200820185149.932178-1-alex.dewar90@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-20 19:51, Alex Dewar wrote:
-> In qla25xx_set_els_cmds_supported(), a call is made to
-> dma_alloc_coherent() followed by zeroing the memory with memset. This is
-> unnecessary as dma_alloc_coherent() already zeros memory. Remove.
->
-> Issue identified with Coccinelle.
->
-> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-Gentle ping?
-> ---
->   drivers/scsi/qla2xxx/qla_mbx.c | 2 --
->   1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-> index 226f1428d3e5..e00f604bbf7a 100644
-> --- a/drivers/scsi/qla2xxx/qla_mbx.c
-> +++ b/drivers/scsi/qla2xxx/qla_mbx.c
-> @@ -4925,8 +4925,6 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t *vha)
->   		return QLA_MEMORY_ALLOC_FAILED;
->   	}
->   
-> -	memset(els_cmd_map, 0, ELS_CMD_MAP_SIZE);
-> -
->   	/* List of Purex ELS */
->   	cmd_opcode[0] = ELS_FPIN;
->   	cmd_opcode[1] = ELS_RDP;
+All usages of phy_ops in include/linux uses const phy_ops * and all
+instances of phy_ops in the kernel that are not const already can be
+made const (patches have been posted for those separately).
+
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+See [1] for a patch series constifying the remaining non-const phy_ops.
+
+[1] https://lore.kernel.org/lkml/20200823220025.17588-1-rikard.falkeborn@gmail.com/
+
+ scripts/const_structs.checkpatch | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/scripts/const_structs.checkpatch b/scripts/const_structs.checkpatch
+index e9df9cc28a85..cd45cb3c2b04 100644
+--- a/scripts/const_structs.checkpatch
++++ b/scripts/const_structs.checkpatch
+@@ -39,6 +39,7 @@ nlmsvc_binding
+ nvkm_device_chip
+ of_device_id
+ pci_raw_ops
++phy_ops
+ pipe_buf_operations
+ platform_hibernation_ops
+ platform_suspend_ops
+-- 
+2.28.0
 
