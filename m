@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C253C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F367C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CA622063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B35C2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289153;
-	bh=TYTTdCegp15oLYrWq/F7PP5Ab8BnxcWk62tjoSVlprc=;
+	s=default; t=1598289159;
+	bh=AJ5GY7sStFFpN4d2wp55vrmNmGGsqU3GnYKHqvcwtPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Ng8ghcchdgaIOb54Yz/w2mjgwg5Dm+sabhrn7JeBQ4PEChrhNpgLaWeFYJtYN927
-	 PB3C7bdFlkQgfBr5zh04MWvWNfrsKa1CFpwM/UMy6zybnJtzCPDorsP5TsgR92AHgG
-	 QjxxMG2hDvpf6/23oSaJrcN+guSE2/f2GPxt3Wo0=
+	b=R5Zaf6NHHdVrjHlSjNUGFo1PrzUeWbSZ6dIWmZMTWDs/DIWZxbF9bRs0IIhGjj8SN
+	 QcpjFOK4JWAqHq9RV7Oa40KH+e3SSuunKx76hJp05+l4hs8Kuy7cMcEIXeqBwyd13x
+	 lo6NX6f1tP13HGl9OLJgX6WKPlb6uSPEi5b66kg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgHXRMa (ORCPT
+        id S1728442AbgHXRMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:12:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41056 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbgHXQhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:37:47 -0400
+        id S1728387AbgHXQhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:37:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2D3B22D3E;
-        Mon, 24 Aug 2020 16:37:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2A8723106;
+        Mon, 24 Aug 2020 16:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287021;
-        bh=TYTTdCegp15oLYrWq/F7PP5Ab8BnxcWk62tjoSVlprc=;
+        s=default; t=1598287025;
+        bh=AJ5GY7sStFFpN4d2wp55vrmNmGGsqU3GnYKHqvcwtPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eMsL5rRmqDybtENNNmFKjsGU7HxASjVgAG0+owzOqM96SJmLfkUTAzCTOWiigS+be
-         iZI5x0IN91FTDRxqpzog3Z8gl0fhwE58JXO0ev52TWAeOa0fTj8WRY03ZtV3zP10E1
-         fvX+PDkQvMen7aE1Oiu+7g8Osk7FJ2+Ux7MgeVko=
+        b=mrUy5o8QBQZPLyA+LAz1WgIBD0MJHqFNm15B88n1GOc+79qlURWRWe9AnegbeP+CI
+         ntjSlEoqKaS1cbIs6XakTovcSm+Sw2DIvUBdem2LS95HLiJy7ZmV7uuTpSqT5mrLDy
+         XLs5/slftwviV2Nqfm9eCAbL2Qgkbo4OmNahYq9I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jianlin Lv <Jianlin.Lv@arm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 20/54] selftests/bpf: Fix segmentation fault in test_progs
-Date:   Mon, 24 Aug 2020 12:35:59 -0400
-Message-Id: <20200824163634.606093-20-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 22/54] netfilter: avoid ipv6 -> nf_defrag_ipv6 module dependency
+Date:   Mon, 24 Aug 2020 12:36:01 -0400
+Message-Id: <20200824163634.606093-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -62,99 +61,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jianlin Lv <Jianlin.Lv@arm.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 0390c429dbed4068bd2cd8dded937d9a5ec24cd2 ]
+[ Upstream commit 2404b73c3f1a5f15726c6ecd226b56f6f992767f ]
 
-test_progs reports the segmentation fault as below:
+nf_ct_frag6_gather is part of nf_defrag_ipv6.ko, not ipv6 core.
 
-  $ sudo ./test_progs -t mmap --verbose
-  test_mmap:PASS:skel_open_and_load 0 nsec
-  [...]
-  test_mmap:PASS:adv_mmap1 0 nsec
-  test_mmap:PASS:adv_mmap2 0 nsec
-  test_mmap:PASS:adv_mmap3 0 nsec
-  test_mmap:PASS:adv_mmap4 0 nsec
-  Segmentation fault
+The current use of the netfilter ipv6 stub indirections  causes a module
+dependency between ipv6 and nf_defrag_ipv6.
 
-This issue was triggered because mmap() and munmap() used inconsistent
-length parameters; mmap() creates a new mapping of 3 * page_size, but the
-length parameter set in the subsequent re-map and munmap() functions is
-4 * page_size; this leads to the destruction of the process space.
+This prevents nf_defrag_ipv6 module from being removed because ipv6 can't
+be unloaded.
 
-To fix this issue, first create 4 pages of anonymous mapping, then do all
-the mmap() with MAP_FIXED.
+Remove the indirection and always use a direct call.  This creates a
+depency from nf_conntrack_bridge to nf_defrag_ipv6 instead:
 
-Another issue is that when unmap the second page fails, the length
-parameter to delete tmp1 mappings should be 4 * page_size.
+modinfo nf_conntrack
+depends:        nf_conntrack,nf_defrag_ipv6,bridge
 
-Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200810153940.125508-1-Jianlin.Lv@arm.com
+.. and nf_conntrack already depends on nf_defrag_ipv6 anyway.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/prog_tests/mmap.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ include/linux/netfilter_ipv6.h             | 18 ------------------
+ net/bridge/netfilter/nf_conntrack_bridge.c |  8 ++++++--
+ net/ipv6/netfilter.c                       |  3 ---
+ 3 files changed, 6 insertions(+), 23 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mmap.c b/tools/testing/selftests/bpf/prog_tests/mmap.c
-index 43d0b5578f461..9c3c5c0f068fb 100644
---- a/tools/testing/selftests/bpf/prog_tests/mmap.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mmap.c
-@@ -21,7 +21,7 @@ void test_mmap(void)
- 	const long page_size = sysconf(_SC_PAGE_SIZE);
- 	int err, duration = 0, i, data_map_fd, data_map_id, tmp_fd, rdmap_fd;
- 	struct bpf_map *data_map, *bss_map;
--	void *bss_mmaped = NULL, *map_mmaped = NULL, *tmp1, *tmp2;
-+	void *bss_mmaped = NULL, *map_mmaped = NULL, *tmp0, *tmp1, *tmp2;
- 	struct test_mmap__bss *bss_data;
- 	struct bpf_map_info map_info;
- 	__u32 map_info_sz = sizeof(map_info);
-@@ -183,16 +183,23 @@ void test_mmap(void)
+diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
+index aac42c28fe62d..9b67394471e1c 100644
+--- a/include/linux/netfilter_ipv6.h
++++ b/include/linux/netfilter_ipv6.h
+@@ -58,7 +58,6 @@ struct nf_ipv6_ops {
+ 			int (*output)(struct net *, struct sock *, struct sk_buff *));
+ 	int (*reroute)(struct sk_buff *skb, const struct nf_queue_entry *entry);
+ #if IS_MODULE(CONFIG_IPV6)
+-	int (*br_defrag)(struct net *net, struct sk_buff *skb, u32 user);
+ 	int (*br_fragment)(struct net *net, struct sock *sk,
+ 			   struct sk_buff *skb,
+ 			   struct nf_bridge_frag_data *data,
+@@ -117,23 +116,6 @@ static inline int nf_ip6_route(struct net *net, struct dst_entry **dst,
  
- 	/* check some more advanced mmap() manipulations */
+ #include <net/netfilter/ipv6/nf_defrag_ipv6.h>
  
-+	tmp0 = mmap(NULL, 4 * page_size, PROT_READ, MAP_SHARED | MAP_ANONYMOUS,
-+			  -1, 0);
-+	if (CHECK(tmp0 == MAP_FAILED, "adv_mmap0", "errno %d\n", errno))
-+		goto cleanup;
-+
- 	/* map all but last page: pages 1-3 mapped */
--	tmp1 = mmap(NULL, 3 * page_size, PROT_READ, MAP_SHARED,
-+	tmp1 = mmap(tmp0, 3 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
- 			  data_map_fd, 0);
--	if (CHECK(tmp1 == MAP_FAILED, "adv_mmap1", "errno %d\n", errno))
-+	if (CHECK(tmp0 != tmp1, "adv_mmap1", "tmp0: %p, tmp1: %p\n", tmp0, tmp1)) {
-+		munmap(tmp0, 4 * page_size);
- 		goto cleanup;
-+	}
+-static inline int nf_ipv6_br_defrag(struct net *net, struct sk_buff *skb,
+-				    u32 user)
+-{
+-#if IS_MODULE(CONFIG_IPV6)
+-	const struct nf_ipv6_ops *v6_ops = nf_get_ipv6_ops();
+-
+-	if (!v6_ops)
+-		return 1;
+-
+-	return v6_ops->br_defrag(net, skb, user);
+-#elif IS_BUILTIN(CONFIG_IPV6)
+-	return nf_ct_frag6_gather(net, skb, user);
+-#else
+-	return 1;
+-#endif
+-}
+-
+ int br_ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+ 		    struct nf_bridge_frag_data *data,
+ 		    int (*output)(struct net *, struct sock *sk,
+diff --git a/net/bridge/netfilter/nf_conntrack_bridge.c b/net/bridge/netfilter/nf_conntrack_bridge.c
+index 8096732223828..8d033a75a766e 100644
+--- a/net/bridge/netfilter/nf_conntrack_bridge.c
++++ b/net/bridge/netfilter/nf_conntrack_bridge.c
+@@ -168,6 +168,7 @@ static unsigned int nf_ct_br_defrag4(struct sk_buff *skb,
+ static unsigned int nf_ct_br_defrag6(struct sk_buff *skb,
+ 				     const struct nf_hook_state *state)
+ {
++#if IS_ENABLED(CONFIG_NF_DEFRAG_IPV6)
+ 	u16 zone_id = NF_CT_DEFAULT_ZONE_ID;
+ 	enum ip_conntrack_info ctinfo;
+ 	struct br_input_skb_cb cb;
+@@ -180,14 +181,17 @@ static unsigned int nf_ct_br_defrag6(struct sk_buff *skb,
  
- 	/* unmap second page: pages 1, 3 mapped */
- 	err = munmap(tmp1 + page_size, page_size);
- 	if (CHECK(err, "adv_mmap2", "errno %d\n", errno)) {
--		munmap(tmp1, map_sz);
-+		munmap(tmp1, 4 * page_size);
- 		goto cleanup;
- 	}
+ 	br_skb_cb_save(skb, &cb, sizeof(struct inet6_skb_parm));
  
-@@ -201,7 +208,7 @@ void test_mmap(void)
- 		    MAP_SHARED | MAP_FIXED, data_map_fd, 0);
- 	if (CHECK(tmp2 == MAP_FAILED, "adv_mmap3", "errno %d\n", errno)) {
- 		munmap(tmp1, page_size);
--		munmap(tmp1 + 2*page_size, page_size);
-+		munmap(tmp1 + 2*page_size, 2 * page_size);
- 		goto cleanup;
- 	}
- 	CHECK(tmp1 + page_size != tmp2, "adv_mmap4",
-@@ -211,7 +218,7 @@ void test_mmap(void)
- 	tmp2 = mmap(tmp1, 4 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
- 		    data_map_fd, 0);
- 	if (CHECK(tmp2 == MAP_FAILED, "adv_mmap5", "errno %d\n", errno)) {
--		munmap(tmp1, 3 * page_size); /* unmap page 1 */
-+		munmap(tmp1, 4 * page_size); /* unmap page 1 */
- 		goto cleanup;
- 	}
- 	CHECK(tmp1 != tmp2, "adv_mmap6", "tmp1: %p, tmp2: %p\n", tmp1, tmp2);
+-	err = nf_ipv6_br_defrag(state->net, skb,
+-				IP_DEFRAG_CONNTRACK_BRIDGE_IN + zone_id);
++	err = nf_ct_frag6_gather(state->net, skb,
++				 IP_DEFRAG_CONNTRACK_BRIDGE_IN + zone_id);
+ 	/* queued */
+ 	if (err == -EINPROGRESS)
+ 		return NF_STOLEN;
+ 
+ 	br_skb_cb_restore(skb, &cb, IP6CB(skb)->frag_max_size);
+ 	return err == 0 ? NF_ACCEPT : NF_DROP;
++#else
++	return NF_ACCEPT;
++#endif
+ }
+ 
+ static int nf_ct_br_ip_check(const struct sk_buff *skb)
+diff --git a/net/ipv6/netfilter.c b/net/ipv6/netfilter.c
+index 409e79b84a830..6d0e942d082d4 100644
+--- a/net/ipv6/netfilter.c
++++ b/net/ipv6/netfilter.c
+@@ -245,9 +245,6 @@ static const struct nf_ipv6_ops ipv6ops = {
+ 	.route_input		= ip6_route_input,
+ 	.fragment		= ip6_fragment,
+ 	.reroute		= nf_ip6_reroute,
+-#if IS_MODULE(CONFIG_IPV6) && IS_ENABLED(CONFIG_NF_DEFRAG_IPV6)
+-	.br_defrag		= nf_ct_frag6_gather,
+-#endif
+ #if IS_MODULE(CONFIG_IPV6)
+ 	.br_fragment		= br_ip6_fragment,
+ #endif
 -- 
 2.25.1
 
