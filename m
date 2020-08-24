@@ -2,149 +2,114 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D89C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 869F3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE7C9206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A36206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:20:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="S1z/AmmN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730479AbgHXJUW (ORCPT
+        id S1730424AbgHXJUo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:20:22 -0400
-Received: from 8bytes.org ([81.169.241.247]:36908 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730282AbgHXIzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:50 -0400
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 407D136B;
-        Mon, 24 Aug 2020 10:55:47 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 02/76] KVM: SVM: Add GHCB definitions
-Date:   Mon, 24 Aug 2020 10:53:57 +0200
-Message-Id: <20200824085511.7553-3-joro@8bytes.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
+        Mon, 24 Aug 2020 05:20:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41642 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730502AbgHXJUa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:20:30 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79BF0C0613ED
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 02:20:29 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id b11so3928027pld.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 02:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KQzdEJUadSVD+lgD6sVSSDMTvkRGkwdel+4+TdgeUE4=;
+        b=S1z/AmmNOCH9afSNr/qrDInALgK0j4q5VYp45vGoszL08gQOq77XWvhovm91maa4+P
+         FqKO0IvQQ1zgFOTeD7xwiYdXCC4eSy866y0i4iOHUdhtIcu9OyTLXqq9sIjITeHIlDP/
+         TqDQL3++BGqzXH8U95cUEVFQg9f7Oyelz1pTusAebmjo7UGy1iK4oNwyu8zu1fDcAfPX
+         nbF7uSCxB/11Zqo85kx55hx/wYlWNGXWIUW2MXqUz8acgYZGRkoKmiKOAMbN76qrQ5Ur
+         CsLY7wA5OwEKSwWBknbMM6OhsOsgmjQ3BQKlOzM52TKrjGMbACD7aubcslrIXV21mpIp
+         D4Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KQzdEJUadSVD+lgD6sVSSDMTvkRGkwdel+4+TdgeUE4=;
+        b=mQBuv2H51wGO+X5KR7FSFxJu3ANnduWf0/MAGIuZ8AZATKo9/+i4sQnOSawTM/KrA2
+         FbV3j0CW0P88XS23VM8RH7QeriWEc0LXUtwkloERtB2yREsMUJhSEKIkgV9h5/kkFDtP
+         0xJAIbgSQtm7JcKL1625yrPBA/zSvqSRHXQXsxH5i93RXepkzhcwG/j9vlctdDeCdOnl
+         c08eidI6tP4wNry9sbjUJ9F17G58hshjyIm8DtrhAAYFh8yYGmnYJgYZB4tgaAirjheD
+         hRdFEI34oFUwiCiuDKbM59wmGuhbDNHqVKxEllfwOh7UBcYWb6lYLh/8LDpClg3mjsjZ
+         UOXA==
+X-Gm-Message-State: AOAM530L962avMkCgrLgddLGpV8OvThADtaHIWuE7ZemWAbnQCdBvPLL
+        3nGdfgxa+r6s9aAjX062ro5SXyvXhlpvEWlc
+X-Google-Smtp-Source: ABdhPJyCrZvD6mxlThjGGxFBbEkhy5RNyLB5+uuwXeW5h1XhNu5PQ5mV/pcyDAllrzYkYjEheHn/mA==
+X-Received: by 2002:a17:90a:f994:: with SMTP id cq20mr3717444pjb.229.1598260828641;
+        Mon, 24 Aug 2020 02:20:28 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id x144sm897257pfc.82.2020.08.24.02.20.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 02:20:27 -0700 (PDT)
+Subject: Re: [PATCH 4/5] bio: introduce BIO_FOLL_PIN flag
+To:     Christoph Hellwig <hch@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200822042059.1805541-1-jhubbard@nvidia.com>
+ <20200822042059.1805541-5-jhubbard@nvidia.com>
+ <20200823062559.GA32480@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d75ce230-6c8d-8623-49a2-500835f6cdfc@kernel.dk>
+Date:   Mon, 24 Aug 2020 03:20:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200823062559.GA32480@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+On 8/23/20 12:25 AM, Christoph Hellwig wrote:
+> On Fri, Aug 21, 2020 at 09:20:58PM -0700, John Hubbard wrote:
+>> Add a new BIO_FOLL_PIN flag to struct bio, whose "short int" flags field
+>> was full, thuse triggering an expansion of the field from 16, to 32
+>> bits. This allows for a nice assertion in bio_release_pages(), that the
+>> bio page release mechanism matches the page acquisition mechanism.
+>>
+>> Set BIO_FOLL_PIN whenever pin_user_pages_fast() is used, and check for
+>> BIO_FOLL_PIN before using unpin_user_page().
+> 
+> When would the flag not be set when BIO_NO_PAGE_REF is not set?
+> 
+> Also I don't think we can't just expand the flags field, but I can send
+> a series to kill off two flags.
 
-Extend the vmcb_safe_area with SEV-ES fields and add a new
-'struct ghcb' which will be used for guest-hypervisor communication.
+(not relevant to this series as this patch has thankfully already been
+dropped, just in general - but yes, definitely need a *strong* justification
+to bump the bio size).
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/svm.h | 45 +++++++++++++++++++++++++++++++++++++-
- arch/x86/kvm/svm/svm.c     |  2 ++
- 2 files changed, 46 insertions(+), 1 deletion(-)
+Would actually be nice to kill off a few flags, if possible, so the
+flags space isn't totally full.
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 8a1f5382a4ea..094b8f8fb1d4 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -200,13 +200,56 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
- 	u64 br_to;
- 	u64 last_excp_from;
- 	u64 last_excp_to;
-+
-+	/*
-+	 * The following part of the save area is valid only for
-+	 * SEV-ES guests when referenced through the GHCB.
-+	 */
-+	u8 reserved_7[104];
-+	u64 reserved_8;		/* rax already available at 0x01f8 */
-+	u64 rcx;
-+	u64 rdx;
-+	u64 rbx;
-+	u64 reserved_9;		/* rsp already available at 0x01d8 */
-+	u64 rbp;
-+	u64 rsi;
-+	u64 rdi;
-+	u64 r8;
-+	u64 r9;
-+	u64 r10;
-+	u64 r11;
-+	u64 r12;
-+	u64 r13;
-+	u64 r14;
-+	u64 r15;
-+	u8 reserved_10[16];
-+	u64 sw_exit_code;
-+	u64 sw_exit_info_1;
-+	u64 sw_exit_info_2;
-+	u64 sw_scratch;
-+	u8 reserved_11[56];
-+	u64 xcr0;
-+	u8 valid_bitmap[16];
-+	u64 x87_state_gpa;
- };
- 
-+struct ghcb {
-+	struct vmcb_save_area save;
-+	u8 reserved_save[2048 - sizeof(struct vmcb_save_area)];
-+
-+	u8 shared_buffer[2032];
-+
-+	u8 reserved_1[10];
-+	u16 protocol_version;	/* negotiated SEV-ES/GHCB protocol version */
-+	u32 ghcb_usage;
-+} __packed;
-+
- 
- static inline void __unused_size_checks(void)
- {
--	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 0x298);
-+	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 1032);
- 	BUILD_BUG_ON(sizeof(struct vmcb_control_area) != 256);
-+	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
- }
- 
- struct __attribute__ ((__packed__)) vmcb {
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 03dd7bac8034..4368b66615c1 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -4164,6 +4164,8 @@ static struct kvm_x86_init_ops svm_init_ops __initdata = {
- 
- static int __init svm_init(void)
- {
-+	__unused_size_checks();
-+
- 	return kvm_init(&svm_init_ops, sizeof(struct vcpu_svm),
- 			__alignof__(struct vcpu_svm), THIS_MODULE);
- }
 -- 
-2.28.0
+Jens Axboe
 
