@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A9DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 784A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0030F20FC3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5187321741
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258718;
-	bh=M4z6on9r6wlNLY/GOUFNFqaR4s897OfOKj3P/Hay3bo=;
+	s=default; t=1598258721;
+	bh=44e3L+wfAhsJFaYQWD5Hycna69Md2DIlFvyL3u8gXZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VtispAx7cgrPoCn6A09V4YzQizxMHSc+uYs23vSKaqW8Y0lgMeXQVILO6V+bQgMfr
-	 WVva4+WyFN4RzrUep1IY7TOLjX5WrDCXyu8FGbazQ5WtECRDpcMv0eFi80IV4/kZPK
-	 x3jHAX2k784DkEmtCpP6ROkqoIBhtTco9clugkJM=
+	b=D+dqihCJnPqWVptN66unEkpyG7vf2n2N+9F4lAb2gcOdzZUTKLnSsTIraMlbMGADD
+	 764hRSQDwiRCdV8rPyG94PeLPX7QSsz7C/Y1fVgBh1txlWLMj1Y0X8Kl9kEQydOyFe
+	 gM/EbnpIE2qWgrpToaoVrCi1dH+OX5iVMGqyiUT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgHXIpR (ORCPT
+        id S1729218AbgHXIpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:45:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42028 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:45:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726956AbgHXIpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:45:12 -0400
+        id S1729211AbgHXIpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:45:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E1B321741;
-        Mon, 24 Aug 2020 08:45:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F30D2075B;
+        Mon, 24 Aug 2020 08:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258711;
-        bh=M4z6on9r6wlNLY/GOUFNFqaR4s897OfOKj3P/Hay3bo=;
+        s=default; t=1598258715;
+        bh=44e3L+wfAhsJFaYQWD5Hycna69Md2DIlFvyL3u8gXZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZlhZFwDKtETXx3owdv0XfuLbxhhsG1JFALJkdny9twp+xKQFRR3QmP8F76F6u7URz
-         pmKXMKP0WG/YLWbt7SYoJMkZOfeDBnptZegY4ETY1FHTOeJChRlRdsPqCFX3hpq7Ss
-         gKBZvefZ1WwPUOVy77uYnJ5iHpA9384vN0z3Jrxo=
+        b=GfMdnEXBF2QfZG9SDSoXMb7vYKL1v5sX5xtfCV84WraFa7hdTwP3HajuJiM68FPw2
+         JOrll3P6Fzm0hjkwBAtdiOhmMD57zxO2xOfcm6g7rrp71yYvPJobAnsZNPlcAlvGto
+         k5pGNyLavIHhFeahLHePLtPlttBLws15gpPB7X20=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Sandeen <esandeen@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 019/107] btrfs: return EROFS for BTRFS_FS_STATE_ERROR cases
-Date:   Mon, 24 Aug 2020 10:29:45 +0200
-Message-Id: <20200824082406.038630748@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 020/107] btrfs: add wrapper for transaction abort predicate
+Date:   Mon, 24 Aug 2020 10:29:46 +0200
+Message-Id: <20200824082406.096763389@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -60,155 +60,250 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: David Sterba <dsterba@suse.com>
 
-Eric reported seeing this message while running generic/475
+[ Upstream commit bf31f87f71cc7a89871ab0a451c047a0c0144bf1 ]
 
-  BTRFS: error (device dm-3) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
+The status of aborted transaction can change between calls and it needs
+to be accessed by READ_ONCE. Add a helper that also wraps the unlikely
+hint.
 
-Full stack trace:
-
-  BTRFS: error (device dm-0) in btrfs_commit_transaction:2323: errno=-5 IO failure (Error while writing out transaction)
-  BTRFS info (device dm-0): forced readonly
-  BTRFS warning (device dm-0): Skipping commit of aborted transaction.
-  ------------[ cut here ]------------
-  BTRFS: error (device dm-0) in cleanup_transaction:1894: errno=-5 IO failure
-  BTRFS: Transaction aborted (error -117)
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6480 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6488 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6490 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6498 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64c0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85e8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85f0 len 4096 err no 10
-  WARNING: CPU: 3 PID: 23985 at fs/btrfs/tree-log.c:3084 btrfs_sync_log+0xbc8/0xd60 [btrfs]
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4288 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4290 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4298 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42d0 len 4096 err no 10
-  CPU: 3 PID: 23985 Comm: fsstress Tainted: G        W    L    5.8.0-rc4-default+ #1181
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
-  RIP: 0010:btrfs_sync_log+0xbc8/0xd60 [btrfs]
-  RSP: 0018:ffff909a44d17bd0 EFLAGS: 00010286
-  RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000001
-  RDX: ffff8f3be41cb940 RSI: ffffffffb0108d2b RDI: ffffffffb0108ff7
-  RBP: ffff909a44d17e70 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000037988 R12: ffff8f3bd20e4000
-  R13: ffff8f3bd20e4428 R14: 00000000ffffff8b R15: ffff909a44d17c70
-  FS:  00007f6a6ed3fb80(0000) GS:ffff8f3c3dc00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f6a6ed3e000 CR3: 00000000525c0003 CR4: 0000000000160ee0
-  Call Trace:
-   ? finish_wait+0x90/0x90
-   ? __mutex_unlock_slowpath+0x45/0x2a0
-   ? lock_acquire+0xa3/0x440
-   ? lockref_put_or_lock+0x9/0x30
-   ? dput+0x20/0x4a0
-   ? dput+0x20/0x4a0
-   ? do_raw_spin_unlock+0x4b/0xc0
-   ? _raw_spin_unlock+0x1f/0x30
-   btrfs_sync_file+0x335/0x490 [btrfs]
-   do_fsync+0x38/0x70
-   __x64_sys_fsync+0x10/0x20
-   do_syscall_64+0x50/0xe0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f6a6ef1b6e3
-  Code: Bad RIP value.
-  RSP: 002b:00007ffd01e20038 EFLAGS: 00000246 ORIG_RAX: 000000000000004a
-  RAX: ffffffffffffffda RBX: 000000000007a120 RCX: 00007f6a6ef1b6e3
-  RDX: 00007ffd01e1ffa0 RSI: 00007ffd01e1ffa0 RDI: 0000000000000003
-  RBP: 0000000000000003 R08: 0000000000000001 R09: 00007ffd01e2004c
-  R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000009f
-  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-  irq event stamp: 0
-  hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-  hardirqs last disabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
-  softirqs last  enabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
-  softirqs last disabled at (0): [<0000000000000000>] 0x0
-  ---[ end trace af146e0e38433456 ]---
-  BTRFS: error (device dm-0) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
-
-This ret came from btrfs_write_marked_extents().  If we get an aborted
-transaction via EIO before, we'll see it in btree_write_cache_pages()
-and return EUCLEAN, which gets printed as "Filesystem corrupted".
-
-Except we shouldn't be returning EUCLEAN here, we need to be returning
-EROFS because EUCLEAN is reserved for actual corruption, not IO errors.
-
-We are inconsistent about our handling of BTRFS_FS_STATE_ERROR
-elsewhere, but we want to use EROFS for this particular case.  The
-original transaction abort has the real error code for why we ended up
-with an aborted transaction, all subsequent actions just need to return
-EROFS because they may not have a trans handle and have no idea about
-the original cause of the abort.
-
-After patch "btrfs: don't WARN if we abort a transaction with EROFS" the
-stacktrace will not be dumped either.
-
-Reported-by: Eric Sandeen <esandeen@redhat.com>
-CC: stable@vger.kernel.org # 5.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ add full test stacktrace ]
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent_io.c   | 2 +-
- fs/btrfs/scrub.c       | 2 +-
- fs/btrfs/transaction.c | 5 ++++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ fs/btrfs/block-group.c   |  2 +-
+ fs/btrfs/delayed-inode.c |  2 +-
+ fs/btrfs/extent-tree.c   | 10 +++++-----
+ fs/btrfs/super.c         |  2 +-
+ fs/btrfs/transaction.c   | 25 +++++++++++++------------
+ fs/btrfs/transaction.h   | 12 ++++++++++++
+ 6 files changed, 33 insertions(+), 20 deletions(-)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 035ea5bc692ad..5707bf0575d43 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4073,7 +4073,7 @@ retry:
- 	if (!test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state)) {
- 		ret = flush_write_bio(&epd);
- 	} else {
--		ret = -EUCLEAN;
-+		ret = -EROFS;
- 		end_write_bio(&epd, ret);
+diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+index 42d69e77f89d9..b167649f5f5de 100644
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -2168,7 +2168,7 @@ static int cache_save_setup(struct btrfs_block_group_cache *block_group,
+ 		return 0;
  	}
- 	return ret;
-diff --git a/fs/btrfs/scrub.c b/fs/btrfs/scrub.c
-index a7b043fd7a572..498b824148187 100644
---- a/fs/btrfs/scrub.c
-+++ b/fs/btrfs/scrub.c
-@@ -3717,7 +3717,7 @@ static noinline_for_stack int scrub_supers(struct scrub_ctx *sctx,
- 	struct btrfs_fs_info *fs_info = sctx->fs_info;
  
- 	if (test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state))
--		return -EIO;
-+		return -EROFS;
+-	if (trans->aborted)
++	if (TRANS_ABORTED(trans))
+ 		return 0;
+ again:
+ 	inode = lookup_free_space_inode(block_group, path);
+diff --git a/fs/btrfs/delayed-inode.c b/fs/btrfs/delayed-inode.c
+index 5bcccfbcc7c15..a34ee9c2f3151 100644
+--- a/fs/btrfs/delayed-inode.c
++++ b/fs/btrfs/delayed-inode.c
+@@ -1151,7 +1151,7 @@ static int __btrfs_run_delayed_items(struct btrfs_trans_handle *trans, int nr)
+ 	int ret = 0;
+ 	bool count = (nr > 0);
  
- 	/* Seed devices of a new filesystem has their own generation. */
- 	if (scrub_dev->fs_devices != fs_info->fs_devices)
+-	if (trans->aborted)
++	if (TRANS_ABORTED(trans))
+ 		return -EIO;
+ 
+ 	path = btrfs_alloc_path();
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index 739332b462059..a36bd4507bacd 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -1561,7 +1561,7 @@ static int run_delayed_extent_op(struct btrfs_trans_handle *trans,
+ 	int err = 0;
+ 	int metadata = !extent_op->is_data;
+ 
+-	if (trans->aborted)
++	if (TRANS_ABORTED(trans))
+ 		return 0;
+ 
+ 	if (metadata && !btrfs_fs_incompat(fs_info, SKINNY_METADATA))
+@@ -1681,7 +1681,7 @@ static int run_one_delayed_ref(struct btrfs_trans_handle *trans,
+ {
+ 	int ret = 0;
+ 
+-	if (trans->aborted) {
++	if (TRANS_ABORTED(trans)) {
+ 		if (insert_reserved)
+ 			btrfs_pin_extent(trans->fs_info, node->bytenr,
+ 					 node->num_bytes, 1);
+@@ -2169,7 +2169,7 @@ int btrfs_run_delayed_refs(struct btrfs_trans_handle *trans,
+ 	int run_all = count == (unsigned long)-1;
+ 
+ 	/* We'll clean this up in btrfs_cleanup_transaction */
+-	if (trans->aborted)
++	if (TRANS_ABORTED(trans))
+ 		return 0;
+ 
+ 	if (test_bit(BTRFS_FS_CREATING_FREE_SPACE_TREE, &fs_info->flags))
+@@ -2892,7 +2892,7 @@ int btrfs_finish_extent_commit(struct btrfs_trans_handle *trans)
+ 	else
+ 		unpin = &fs_info->freed_extents[0];
+ 
+-	while (!trans->aborted) {
++	while (!TRANS_ABORTED(trans)) {
+ 		struct extent_state *cached_state = NULL;
+ 
+ 		mutex_lock(&fs_info->unused_bg_unpin_mutex);
+@@ -2924,7 +2924,7 @@ int btrfs_finish_extent_commit(struct btrfs_trans_handle *trans)
+ 		u64 trimmed = 0;
+ 
+ 		ret = -EROFS;
+-		if (!trans->aborted)
++		if (!TRANS_ABORTED(trans))
+ 			ret = btrfs_discard_extent(fs_info,
+ 						   block_group->key.objectid,
+ 						   block_group->key.offset,
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index e21cae80c6d58..a1498df419b4f 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -241,7 +241,7 @@ void __btrfs_abort_transaction(struct btrfs_trans_handle *trans,
+ {
+ 	struct btrfs_fs_info *fs_info = trans->fs_info;
+ 
+-	trans->aborted = errno;
++	WRITE_ONCE(trans->aborted, errno);
+ 	/* Nothing used. The other threads that have joined this
+ 	 * transaction may be able to continue. */
+ 	if (!trans->dirty && list_empty(&trans->new_bgs)) {
 diff --git a/fs/btrfs/transaction.c b/fs/btrfs/transaction.c
-index 54589e940f9af..465ddb297c381 100644
+index 465ddb297c381..c346ee7ec18d4 100644
 --- a/fs/btrfs/transaction.c
 +++ b/fs/btrfs/transaction.c
-@@ -873,7 +873,10 @@ static int __btrfs_end_transaction(struct btrfs_trans_handle *trans,
- 	if (trans->aborted ||
+@@ -174,7 +174,7 @@ loop:
+ 
+ 	cur_trans = fs_info->running_transaction;
+ 	if (cur_trans) {
+-		if (cur_trans->aborted) {
++		if (TRANS_ABORTED(cur_trans)) {
+ 			spin_unlock(&fs_info->trans_lock);
+ 			return cur_trans->aborted;
+ 		}
+@@ -390,7 +390,7 @@ static inline int is_transaction_blocked(struct btrfs_transaction *trans)
+ {
+ 	return (trans->state >= TRANS_STATE_BLOCKED &&
+ 		trans->state < TRANS_STATE_UNBLOCKED &&
+-		!trans->aborted);
++		!TRANS_ABORTED(trans));
+ }
+ 
+ /* wait for commit against the current transaction to become unblocked
+@@ -409,7 +409,7 @@ static void wait_current_trans(struct btrfs_fs_info *fs_info)
+ 
+ 		wait_event(fs_info->transaction_wait,
+ 			   cur_trans->state >= TRANS_STATE_UNBLOCKED ||
+-			   cur_trans->aborted);
++			   TRANS_ABORTED(cur_trans));
+ 		btrfs_put_transaction(cur_trans);
+ 	} else {
+ 		spin_unlock(&fs_info->trans_lock);
+@@ -870,7 +870,7 @@ static int __btrfs_end_transaction(struct btrfs_trans_handle *trans,
+ 	if (throttle)
+ 		btrfs_run_delayed_iputs(info);
+ 
+-	if (trans->aborted ||
++	if (TRANS_ABORTED(trans) ||
  	    test_bit(BTRFS_FS_STATE_ERROR, &info->fs_state)) {
  		wake_up_process(info->transaction_kthread);
--		err = -EIO;
-+		if (TRANS_ABORTED(trans))
-+			err = trans->aborted;
-+		else
-+			err = -EROFS;
- 	}
+ 		if (TRANS_ABORTED(trans))
+@@ -1730,7 +1730,8 @@ static void wait_current_trans_commit_start(struct btrfs_fs_info *fs_info,
+ 					    struct btrfs_transaction *trans)
+ {
+ 	wait_event(fs_info->transaction_blocked_wait,
+-		   trans->state >= TRANS_STATE_COMMIT_START || trans->aborted);
++		   trans->state >= TRANS_STATE_COMMIT_START ||
++		   TRANS_ABORTED(trans));
+ }
  
- 	kmem_cache_free(btrfs_trans_handle_cachep, trans);
+ /*
+@@ -1742,7 +1743,8 @@ static void wait_current_trans_commit_start_and_unblock(
+ 					struct btrfs_transaction *trans)
+ {
+ 	wait_event(fs_info->transaction_wait,
+-		   trans->state >= TRANS_STATE_UNBLOCKED || trans->aborted);
++		   trans->state >= TRANS_STATE_UNBLOCKED ||
++		   TRANS_ABORTED(trans));
+ }
+ 
+ /*
+@@ -1960,7 +1962,7 @@ int btrfs_commit_transaction(struct btrfs_trans_handle *trans)
+ 	trans->dirty = true;
+ 
+ 	/* Stop the commit early if ->aborted is set */
+-	if (unlikely(READ_ONCE(cur_trans->aborted))) {
++	if (TRANS_ABORTED(cur_trans)) {
+ 		ret = cur_trans->aborted;
+ 		btrfs_end_transaction(trans);
+ 		return ret;
+@@ -2034,7 +2036,7 @@ int btrfs_commit_transaction(struct btrfs_trans_handle *trans)
+ 
+ 		wait_for_commit(cur_trans);
+ 
+-		if (unlikely(cur_trans->aborted))
++		if (TRANS_ABORTED(cur_trans))
+ 			ret = cur_trans->aborted;
+ 
+ 		btrfs_put_transaction(cur_trans);
+@@ -2053,7 +2055,7 @@ int btrfs_commit_transaction(struct btrfs_trans_handle *trans)
+ 			spin_unlock(&fs_info->trans_lock);
+ 
+ 			wait_for_commit(prev_trans);
+-			ret = prev_trans->aborted;
++			ret = READ_ONCE(prev_trans->aborted);
+ 
+ 			btrfs_put_transaction(prev_trans);
+ 			if (ret)
+@@ -2107,8 +2109,7 @@ int btrfs_commit_transaction(struct btrfs_trans_handle *trans)
+ 	wait_event(cur_trans->writer_wait,
+ 		   atomic_read(&cur_trans->num_writers) == 1);
+ 
+-	/* ->aborted might be set after the previous check, so check it */
+-	if (unlikely(READ_ONCE(cur_trans->aborted))) {
++	if (TRANS_ABORTED(cur_trans)) {
+ 		ret = cur_trans->aborted;
+ 		goto scrub_continue;
+ 	}
+@@ -2226,7 +2227,7 @@ int btrfs_commit_transaction(struct btrfs_trans_handle *trans)
+ 	 * The tasks which save the space cache and inode cache may also
+ 	 * update ->aborted, check it.
+ 	 */
+-	if (unlikely(READ_ONCE(cur_trans->aborted))) {
++	if (TRANS_ABORTED(cur_trans)) {
+ 		ret = cur_trans->aborted;
+ 		mutex_unlock(&fs_info->tree_log_mutex);
+ 		mutex_unlock(&fs_info->reloc_mutex);
+diff --git a/fs/btrfs/transaction.h b/fs/btrfs/transaction.h
+index b15c31d231488..7291a2a930751 100644
+--- a/fs/btrfs/transaction.h
++++ b/fs/btrfs/transaction.h
+@@ -116,6 +116,10 @@ struct btrfs_trans_handle {
+ 	struct btrfs_block_rsv *orig_rsv;
+ 	refcount_t use_count;
+ 	unsigned int type;
++	/*
++	 * Error code of transaction abort, set outside of locks and must use
++	 * the READ_ONCE/WRITE_ONCE access
++	 */
+ 	short aborted;
+ 	bool adding_csums;
+ 	bool allocating_chunk;
+@@ -127,6 +131,14 @@ struct btrfs_trans_handle {
+ 	struct list_head new_bgs;
+ };
+ 
++/*
++ * The abort status can be changed between calls and is not protected by locks.
++ * This accepts btrfs_transaction and btrfs_trans_handle as types. Once it's
++ * set to a non-zero value it does not change, so the macro should be in checks
++ * but is not necessary for further reads of the value.
++ */
++#define TRANS_ABORTED(trans)		(unlikely(READ_ONCE((trans)->aborted)))
++
+ struct btrfs_pending_snapshot {
+ 	struct dentry *dentry;
+ 	struct inode *dir;
 -- 
 2.25.1
 
