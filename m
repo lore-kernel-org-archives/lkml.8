@@ -2,106 +2,115 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 036E82071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:01:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263287;
-	bh=hwaAYTxU9ShV0QTbj+Oo85m5JIPfVll379yiha5uFyU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e4qYXOcyLsbZo2q5IDv1yXdGGNXwTsc8Bi/lUWT6eypY03nFlt5hyUs79g7J7UpNm
-	 eujv2Jpt365Ip9/cCX/sDGw9YsGkFJA+fTRu6quBoQYrPyJT34GVLXOWsBHsJ21HyZ
-	 H9vImJFmKG9T3a8R55x4h+8Vw7JMWw6czuoXqqJI=
+	by mail.kernel.org (Postfix) with ESMTP id 34C2D2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgHXKBZ (ORCPT
+        id S1726736AbgHXKEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:01:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726086AbgHXIcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:32:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FB5A206F0;
-        Mon, 24 Aug 2020 08:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598257940;
-        bh=hwaAYTxU9ShV0QTbj+Oo85m5JIPfVll379yiha5uFyU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZamW+jDLFb6u9SMvVXRwHegeT6XlZyE+1i7qlh+q9miQGB4d55d5rn5qV1jTBgk14
-         RrQxnMqPH5psW+v5yFNSge2I4dneX3eLXd/Ke8fAg3rJLGNHUA47ODs9U5eRs4Tpyl
-         JI7E51PvCRwvJhJrtMCQ5pAYsfgQNp6X90o54RJw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Song Liu <songliubraving@fb.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 016/148] uprobes: __replace_page() avoid BUG in munlock_vma_page()
-Date:   Mon, 24 Aug 2020 10:28:34 +0200
-Message-Id: <20200824082414.746586028@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
-References: <20200824082413.900489417@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Aug 2020 06:04:30 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:36598 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726086AbgHXKE3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 06:04:29 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R741e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U6giGpr_1598263465;
+Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U6giGpr_1598263465)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 24 Aug 2020 18:04:25 +0800
+Reply-To: xlpang@linux.alibaba.com
+Subject: Re: [PATCH v2 0/3] mm/slub: Fix count_partial() problem
+To:     Pekka Enberg <penberg@gmail.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
+        Wen Yang <wenyang@linux.alibaba.com>,
+        Roman Gushchin <guro@fb.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        David Rientjes <rientjes@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+References: <1597061872-58724-1-git-send-email-xlpang@linux.alibaba.com>
+ <CAOJsxLE9SkLY5V=D=Ot1oyLkbAORagfozYqxk1iNDW6b7QZrwg@mail.gmail.com>
+From:   xunlei <xlpang@linux.alibaba.com>
+Message-ID: <f0355157-d70a-893b-5b85-b8cb90e03361@linux.alibaba.com>
+Date:   Mon, 24 Aug 2020 18:04:25 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CAOJsxLE9SkLY5V=D=Ot1oyLkbAORagfozYqxk1iNDW6b7QZrwg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+On 2020/8/20 下午10:02, Pekka Enberg wrote:
+> On Mon, Aug 10, 2020 at 3:18 PM Xunlei Pang <xlpang@linux.alibaba.com> wrote:
+>>
+>> v1->v2:
+>> - Improved changelog and variable naming for PATCH 1~2.
+>> - PATCH3 adds per-cpu counter to avoid performance regression
+>>   in concurrent __slab_free().
+>>
+>> [Testing]
+>> On my 32-cpu 2-socket physical machine:
+>> Intel(R) Xeon(R) CPU E5-2650 v2 @ 2.60GHz
+>> perf stat --null --repeat 10 -- hackbench 20 thread 20000
+>>
+>> == original, no patched
+>>       19.211637055 seconds time elapsed                                          ( +-  0.57% )
+>>
+>> == patched with patch1~2
+>>  Performance counter stats for 'hackbench 20 thread 20000' (10 runs):
+>>
+>>       21.731833146 seconds time elapsed                                          ( +-  0.17% )
+>>
+>> == patched with patch1~3
+>>  Performance counter stats for 'hackbench 20 thread 20000' (10 runs):
+>>
+>>       19.112106847 seconds time elapsed                                          ( +-  0.64% )
+>>
+>>
+>> Xunlei Pang (3):
+>>   mm/slub: Introduce two counters for partial objects
+>>   mm/slub: Get rid of count_partial()
+>>   mm/slub: Use percpu partial free counter
+>>
+>>  mm/slab.h |   2 +
+>>  mm/slub.c | 124 +++++++++++++++++++++++++++++++++++++++++++-------------------
+>>  2 files changed, 89 insertions(+), 37 deletions(-)
+> 
+> We probably need to wrap the counters under CONFIG_SLUB_DEBUG because
+> AFAICT all the code that uses them is also wrapped under it.
 
-commit c17c3dc9d08b9aad9a55a1e53f205187972f448e upstream.
+/sys/kernel/slab/***/partial sysfs also uses it, I can wrap it with
+CONFIG_SLUB_DEBUG or CONFIG_SYSFS for backward compatibility.
 
-syzbot crashed on the VM_BUG_ON_PAGE(PageTail) in munlock_vma_page(), when
-called from uprobes __replace_page().  Which of many ways to fix it?
-Settled on not calling when PageCompound (since Head and Tail are equals
-in this context, PageCompound the usual check in uprobes.c, and the prior
-use of FOLL_SPLIT_PMD will have cleared PageMlocked already).
+> 
+> An alternative approach for this patch would be to somehow make the
+> lock in count_partial() more granular, but I don't know how feasible
+> that actually is.
+> 
+> Anyway, I am OK with this approach:
+> 
+> Reviewed-by: Pekka Enberg <penberg@kernel.org>
 
-Fixes: 5a52c9df62b4 ("uprobe: use FOLL_SPLIT_PMD instead of FOLL_SPLIT")
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org>	[5.4+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008161338360.20413@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thanks!
 
----
- kernel/events/uprobes.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> You still need to convince Christoph, though, because he had
+> objections over this approach.
 
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -205,7 +205,7 @@ static int __replace_page(struct vm_area
- 		try_to_free_swap(old_page);
- 	page_vma_mapped_walk_done(&pvmw);
- 
--	if (vma->vm_flags & VM_LOCKED)
-+	if ((vma->vm_flags & VM_LOCKED) && !PageCompound(old_page))
- 		munlock_vma_page(old_page);
- 	put_page(old_page);
- 
+Christoph, what do you think, or any better suggestion to address this
+*in production* issue?
 
-
+> 
+> - Pekka
+> 
