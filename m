@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD00C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10A172071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45BA22071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262170;
-	bh=leVTurjUD+8+YlGK6i8qakCakA8BGvB6rJ0efjYly1g=;
+	s=default; t=1598262182;
+	bh=RxrUd6NwJT1JocZoUbagDtzQCpm8uEzFEdrEK3y0wMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IsdeLGpb6N27DsiY+qaoPcbSetIzHsomZi6MNABvMcHuwwKmF5uT4/qYBN1l/GtKG
-	 qPJIDIMaAwHBfloLn9G3d4FacxZ4Pg2W7CXuUuYhxm7pdVAUIwYX8BzlnPlIarvB5F
-	 etH6iVbto+blnjIbRWkABtpLAnDEX/6dG8GnTp1s=
+	b=lWp+spE/JrCWkVkVYUSj/0vJjEIcvN5MQaj6ej4qKMbP+TU7GpAI2RBSSDeuaK4Hg
+	 fHAo3UPjy3kVpEo3zV9BTA91/QteAA8Rf4K/dEfpiPDykPIlv193okyVtRKJQ2xsc3
+	 IEYCJpptuYpOO1NQfQM5NmUZ+tiR2+q+8xX+bPa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgHXIoq (ORCPT
+        id S1729353AbgHXJnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:44:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40710 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:43:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728923AbgHXIoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:44:39 -0400
+        id S1728562AbgHXIoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:44:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 129B222BEA;
-        Mon, 24 Aug 2020 08:44:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 591FF2075B;
+        Mon, 24 Aug 2020 08:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258678;
-        bh=leVTurjUD+8+YlGK6i8qakCakA8BGvB6rJ0efjYly1g=;
+        s=default; t=1598258669;
+        bh=RxrUd6NwJT1JocZoUbagDtzQCpm8uEzFEdrEK3y0wMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h/jw55ELGsEnuuK/kVItbUaMTE4BWPCRqPVCG1qHVJc/y26qp3NycTHd6QyA5Jg4b
-         thx0ng0llowlaeU8YHQenDzcMynOEGYbQf1jXnY5zDyZoFgY302SgFALIWRPG1eLrq
-         Bs9nm3yc+WSqMg5dLZRmBVWosfwHeYj65uHixcbc=
+        b=idvuJM2V9I7ai6SRes5qute8bm5Vmgo3CutZCv6dHKXiEEq/SevABUTUtzNlHjvjy
+         2MMMOENsS+4I0Vsy4O33fqtVSGbr27PEDxRQsBFvQuLQehcMaEfoEwYwKn3BDugkja
+         mx2eGofvbsneaaurPSwNyb1wkiIgJiIZbrB7BEjU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Selvin Xavier <selvin.xavier@broadcom.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 105/124] RDMA/bnxt_re: Do not add user qps to flushlist
-Date:   Mon, 24 Aug 2020 10:30:39 +0200
-Message-Id: <20200824082414.574698115@linuxfoundation.org>
+Subject: [PATCH 5.7 102/124] kconfig: qconf: fix signal connection to invalid slots
+Date:   Mon, 24 Aug 2020 10:30:36 +0200
+Message-Id: <20200824082414.437274361@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -60,40 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Selvin Xavier <selvin.xavier@broadcom.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit a812f2d60a9fb7818f9c81f967180317b52545c0 ]
+[ Upstream commit d85de3399f97467baa2026fbbbe587850d01ba8a ]
 
-Driver shall add only the kernel qps to the flush list for clean up.
-During async error events from the HW, driver is adding qps to this list
-without checking if the qp is kernel qp or not.
+If you right-click in the ConfigList window, you will see the following
+messages in the console:
 
-Add a check to avoid user qp addition to the flush list.
+QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:888
+QObject::connect:  (sender name:   'config')
+QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:897
+QObject::connect:  (sender name:   'config')
+QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:906
+QObject::connect:  (sender name:   'config')
 
-Fixes: 942c9b6ca8de ("RDMA/bnxt_re: Avoid Hard lockup during error CQE processing")
-Fixes: c50866e2853a ("bnxt_re: fix the regression due to changes in alloc_pbl")
-Link: https://lore.kernel.org/r/1596689148-4023-1-git-send-email-selvin.xavier@broadcom.com
-Signed-off-by: Selvin Xavier <selvin.xavier@broadcom.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Right, there is no such slot in QAction. I think this is a typo of
+setChecked.
+
+Due to this bug, when you toggled the menu "Option->Show Name/Range/Data"
+the state of the context menu was not previously updated. Fix this.
+
+Fixes: d5d973c3f8a9 ("Port xconfig to Qt5 - Put back some of the old implementation(part 2)")
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/bnxt_re/main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ scripts/kconfig/qconf.cc | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
-index b12fbc857f942..5c41e13496a02 100644
---- a/drivers/infiniband/hw/bnxt_re/main.c
-+++ b/drivers/infiniband/hw/bnxt_re/main.c
-@@ -811,7 +811,8 @@ static int bnxt_re_handle_qp_async_event(struct creq_qp_event *qp_event,
- 	struct ib_event event;
- 	unsigned int flags;
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index e7e201d261f78..1eb076c7eae17 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -890,7 +890,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
+ 		connect(action, SIGNAL(toggled(bool)),
+ 			parent(), SLOT(setShowName(bool)));
+ 		connect(parent(), SIGNAL(showNameChanged(bool)),
+-			action, SLOT(setOn(bool)));
++			action, SLOT(setChecked(bool)));
+ 		action->setChecked(showName);
+ 		headerPopup->addAction(action);
  
--	if (qp->qplib_qp.state == CMDQ_MODIFY_QP_NEW_STATE_ERR) {
-+	if (qp->qplib_qp.state == CMDQ_MODIFY_QP_NEW_STATE_ERR &&
-+	    rdma_is_kernel_res(&qp->ib_qp.res)) {
- 		flags = bnxt_re_lock_cqs(qp);
- 		bnxt_qplib_add_flush_qp(&qp->qplib_qp);
- 		bnxt_re_unlock_cqs(qp, flags);
+@@ -899,7 +899,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
+ 		connect(action, SIGNAL(toggled(bool)),
+ 			parent(), SLOT(setShowRange(bool)));
+ 		connect(parent(), SIGNAL(showRangeChanged(bool)),
+-			action, SLOT(setOn(bool)));
++			action, SLOT(setChecked(bool)));
+ 		action->setChecked(showRange);
+ 		headerPopup->addAction(action);
+ 
+@@ -908,7 +908,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
+ 		connect(action, SIGNAL(toggled(bool)),
+ 			parent(), SLOT(setShowData(bool)));
+ 		connect(parent(), SIGNAL(showDataChanged(bool)),
+-			action, SLOT(setOn(bool)));
++			action, SLOT(setChecked(bool)));
+ 		action->setChecked(showData);
+ 		headerPopup->addAction(action);
+ 	}
+@@ -1240,7 +1240,7 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
+ 
+ 	action->setCheckable(true);
+ 	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
+-	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
++	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setChecked(bool)));
+ 	action->setChecked(showDebug());
+ 	popup->addSeparator();
+ 	popup->addAction(action);
 -- 
 2.25.1
 
