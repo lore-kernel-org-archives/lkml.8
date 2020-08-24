@@ -2,89 +2,130 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A46C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9D12071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27DC2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 10:45:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fS2e3eFO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="djzw2pFL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgHXKpV (ORCPT
+        id S1727798AbgHXKp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 06:45:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54946 "EHLO
+        Mon, 24 Aug 2020 06:45:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgHXKpD (ORCPT
+        with ESMTP id S1726983AbgHXKps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 06:45:03 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C58A6C061573;
-        Mon, 24 Aug 2020 03:45:02 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f07f0001d1adc8210ec988a.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:f000:1d1a:dc82:10ec:988a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D6E3B1EC0104;
-        Mon, 24 Aug 2020 12:44:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1598265899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=iXpxuVriWvU3M3aiYmzDwnWWzJtCErVklAPMKOlDAEk=;
-        b=fS2e3eFO6CT56yvF10hoqjXs05VZge7E7YK1yU71Tg6skRgdi5uFdlZePV2aXb+A2JVG8w
-        LyNrQAcyd0zTiPuZS95AOdUdLmUxPHPWU6WBmtTXBqKg/pnqunuyP9VEdcHY9yhudf1fd1
-        xRi8B0HFEmL11S+NQIPPeaaVRUJeIPI=
-Date:   Mon, 24 Aug 2020 12:44:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 02/76] KVM: SVM: Add GHCB definitions
-Message-ID: <20200824104451.GA4732@zn.tnic>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-3-joro@8bytes.org>
+        Mon, 24 Aug 2020 06:45:48 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71427C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 03:45:47 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a15so8159090wrh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 03:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=X8bdXVUd2ZafGrZsydrb9Z2SDYX2iihTQNdU7gM/cJc=;
+        b=djzw2pFL0sp4R2OU4tnnwlDJLAAGiiLxvawtf/pn6iCIU6rKtkt8eaf+BO9jA5tE2W
+         HZovWyr/D7Ev8X3iAu7c+3MY4uzodttKCiscrln/O2s/iYqiN9YbWpUN4FyV4nGzBjg9
+         Do35p2yVIlrImH/KJctjLq2ogKxPgGIZeBKnMc+TspcSiWZOExXE41sQDtBBlRuHaz6a
+         XmI+4kdnLPo5RHDZnS4V1DlhaO2+G1oWBmVUvkplQ9h8RurrZRW5GakuTOQFrmqktkfX
+         ZzwwzpzXtTHBsetSZT4X3vJEMR66UvXTTL2O4Jh1ApfFSG6mYBIkW0Vs8orRt2G65qIq
+         bHHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=X8bdXVUd2ZafGrZsydrb9Z2SDYX2iihTQNdU7gM/cJc=;
+        b=t2hrBkAKqwGRwn+6nf61j5Yr/rRrS9F1KRGdUoGk7jNC1t9abQGJV8nH1niuJi4LbM
+         uZhJrIoRmd+rDLKrfsc6a/jr43QnSZZsEvtPkZfjkUWjPOurmkkECxEZM06KyDpDGtFG
+         hFfnz7I4NwxkpmR6f0DqfxkGGNMWTywXZIoEPzu5XlWRmH6q2yeZ6dLrARgK4B5y1V/2
+         7jrdoObaZr/C6dvaUr2cUNUvwi+YNJwZAF/u+gqjdPf6vZxosMr7lMKGtxz9Du7v85P1
+         1PlpcWVqHpdBIhDY+FC3rL2hJl0TAi5/dFJfoXMRap0atpGokGqpYYm+syQuQRhniSih
+         /k3w==
+X-Gm-Message-State: AOAM531ZhgXm4ItION8mTPM2kZaY5SXNJCOKvj/y/5nNykPfs2L7IZPw
+        lbHfF3MtX2QN4UZA0iIHTgxHUA==
+X-Google-Smtp-Source: ABdhPJwJNM3y0nTcF+wtJ6Cz0O5X4b7N5G51v7E2SaMTd8WX5GsGNsYigj8nrXHBthl9cvaB+mDhtg==
+X-Received: by 2002:adf:fe50:: with SMTP id m16mr5499738wrs.27.1598265946046;
+        Mon, 24 Aug 2020 03:45:46 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:cd42:2fa4:120f:76b0? ([2a01:e34:ed2f:f020:cd42:2fa4:120f:76b0])
+        by smtp.googlemail.com with ESMTPSA id j7sm10146855wmj.38.2020.08.24.03.45.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 03:45:45 -0700 (PDT)
+Subject: Re: [PATCH] thermal: ti-soc-thermal: Fix bogus thermal shutdowns for
+ omap4430
+To:     Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>
+Cc:     Eduardo Valentin <edubezval@gmail.com>, Keerthy <j-keerthy@ti.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+References: <20200706183338.25622-1-tony@atomide.com>
+ <20200823211204.zerldmljfd6rrk7g@duo.ucw.cz>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <d359b309-7fa2-5089-df14-e27eafed96d1@linaro.org>
+Date:   Mon, 24 Aug 2020 12:45:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824085511.7553-3-joro@8bytes.org>
+In-Reply-To: <20200823211204.zerldmljfd6rrk7g@duo.ucw.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:53:57AM +0200, Joerg Roedel wrote:
->  static inline void __unused_size_checks(void)
->  {
-> -	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 0x298);
-> +	BUILD_BUG_ON(sizeof(struct vmcb_save_area) != 1032);
->  	BUILD_BUG_ON(sizeof(struct vmcb_control_area) != 256);
-> +	BUILD_BUG_ON(sizeof(struct ghcb) != 4096);
+On 23/08/2020 23:12, Pavel Machek wrote:
+> Hi!
+> 
+>> We can sometimes get bogus thermal shutdowns on omap4430 at least with
+>> droid4 running idle with a battery charger connected:
+>>
+>> thermal thermal_zone0: critical temperature reached (143 C), shutting down
+>>
+>> Dumping out the register values shows we can occasionally get a 0x7f value
+>> that is outside the TRM listed values in the ADC conversion table. And then
+>> we get a normal value when reading again after that. Reading the register
+>> multiple times does not seem help avoiding the bogus values as they stay
+>> until the next sample is ready.
+>>
+>> Looking at the TRM chapter "18.4.10.2.3 ADC Codes Versus Temperature", we
+>> should have values from 13 to 107 listed with a total of 95 values. But
+>> looking at the omap4430_adc_to_temp array, the values are off, and the
+>> end values are missing. And it seems that the 4430 ADC table is similar
+>> to omap3630 rather than omap4460.
+>>
+>> Let's fix the issue by using values based on the omap3630 table and just
+>> ignoring invalid values. Compared to the 4430 TRM, the omap3630 table has
+>> the missing values added while the TRM table only shows every second
+>> value.
+>>
+>> Note that sometimes the ADC register values within the valid table can
+>> also be way off for about 1 out of 10 values. But it seems that those
+>> just show about 25 C too low values rather than too high values. So those
+>> do not cause a bogus thermal shutdown.
+> 
+> This does not seem to be in recent -next. Ping?
 
-Could those naked numbers be proper, meaningfully named defines?
+Pong.
+
+Going back from vacation. Will be in next very soon.
+
 
 -- 
-Regards/Gruss,
-    Boris.
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
