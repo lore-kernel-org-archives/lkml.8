@@ -2,125 +2,144 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD31CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C086C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 874DC2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:10:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="iUUhlZoU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Njs+/a++"
+	by mail.kernel.org (Postfix) with ESMTP id 7B0E02072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgHXQKi (ORCPT
+        id S1727851AbgHXQLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:10:38 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:41179 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725958AbgHXQKf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:10:35 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.west.internal (Postfix) with ESMTP id EABCC10C7;
-        Mon, 24 Aug 2020 12:10:32 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 24 Aug 2020 12:10:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=ro+rwv7AObJQS7gsI/+u11qWbHt
-        zXSw24/6H9jgVM/Q=; b=iUUhlZoU5mGQP+5qTazZWAsMBmoLTM6JMYP5/klFgi4
-        xoRUtVS95yWZA1Exb117Gn6FLb6nPPrHJbwZ5N6lTf11vATzIeaDCKfW/LWAGPuh
-        kaA6R1eBFiZoxHxcrvRVF8KaSIODGqKc9hk7YlD3jyhf6YwuikJsnInbA7JBtcyo
-        BdgvHRpsNEcqJWOpq1KkfxBsZ1v89P2xugpvkGtZNoXwP48mdP9WkfOhZmtKxB7L
-        28PLimpFogUYiM/d1d0WFqJB1OSU/DZiMNrFvlurltxBj3YRqeSx+U+RdkUbMnkC
-        fligHiZSK8HyF0NIglrLEfHq6ci9Ru71NafI9AJ94hg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ro+rwv
-        7AObJQS7gsI/+u11qWbHtzXSw24/6H9jgVM/Q=; b=Njs+/a++23hWyavD9D7I83
-        5keNeyBat0iIAmhOQ7mUL/jR/hHCPXW4lXuzaRtdM1MYBq6LBfkKkd7jrAqCAiJs
-        duE/jmUDzB1d1Keu/YaGs3KiA5Q8ku1RsEQzFG5qVjoVBEyZiOCtHn27NjqxRLJa
-        xu2V9Dt9RgXJ39Jk4NOqwaqGq9BewABR4awDtXbSNOYN4BQm/ZDNf0VEV6f6BBqy
-        G31bypDHbdgJG6Qj6doeCyLiZOslM+60ahOEF7FVI2Y593rCXGjF88xsElJ6TvnM
-        EiFdq+GH9/ILt3H/EO6JLD3JxhXUuFEltJUBjFD96/friMcHU5GtXdwxe1mEtjYA
-        ==
-X-ME-Sender: <xms:d-ZDX58ngR626vRUNYiOoxJpvqyyQNUbGbBstYXU_FF_T5DaH0FZ-Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddukedghedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevueehje
-    fgfffgiedvudekvdektdelleelgefhleejieeugeegveeuuddukedvteenucfkphepkeef
-    rdekiedrkeelrddutdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrg
-    hilhhfrhhomhepghhrvghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:d-ZDX9vUILdMGvs7U55PP0EI2gDKz7YvKsTP4XOCu99xljvJK4Yw_w>
-    <xmx:d-ZDX3C7e5PlQ7C8ilhMxIrSQJboXqlkao6VHnSz_O-005fq62l5Jg>
-    <xmx:d-ZDX9faOCYGkaUDluvpTY1xWRaC3DjvsjDw-tpUcKXGzDqcRCWjDw>
-    <xmx:eOZDX9dLpUZmUk_77I6dNPnEdifo0KX8tBQDflbCP-YYkpfsIe8JeySltpo>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7456530600B1;
-        Mon, 24 Aug 2020 12:10:31 -0400 (EDT)
-Date:   Mon, 24 Aug 2020 18:10:49 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     stable@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sajida Bhanu <sbhanu@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>, linux-pm@vger.kernel.org,
+        Mon, 24 Aug 2020 12:11:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59102 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbgHXQK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:10:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 867BCAC79;
+        Mon, 24 Aug 2020 16:11:24 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 46C201E1316; Mon, 24 Aug 2020 18:10:54 +0200 (CEST)
+Date:   Mon, 24 Aug 2020 18:10:54 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, Jan Kara <jack@suse.cz>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH - stable v5.4 and v5.7] opp: Enable resources again if
- they were disabled earlier
-Message-ID: <20200824161049.GE435319@kroah.com>
-References: <31f315cf2b0c4afd60b07b7121058dcaa6e4afa1.1598260882.git.viresh.kumar@linaro.org>
+Subject: Re: [PATCH 5/7] mm: Remove nr_entries parameter from
+ pagevec_lookup_entries
+Message-ID: <20200824161054.GJ24877@quack2.suse.cz>
+References: <20200819150555.31669-1-willy@infradead.org>
+ <20200819150555.31669-6-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <31f315cf2b0c4afd60b07b7121058dcaa6e4afa1.1598260882.git.viresh.kumar@linaro.org>
+In-Reply-To: <20200819150555.31669-6-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 02:52:23PM +0530, Viresh Kumar wrote:
-> From: Rajendra Nayak <rnayak@codeaurora.org>
+On Wed 19-08-20 16:05:53, Matthew Wilcox (Oracle) wrote:
+> All callers want to fetch the full size of the pvec.
 > 
-> commit a4501bac0e553bed117b7e1b166d49731caf7260 upstream.
-> 
-> dev_pm_opp_set_rate() can now be called with freq = 0 in order
-> to either drop performance or bandwidth votes or to disable
-> regulators on platforms which support them.
-> 
-> In such cases, a subsequent call to dev_pm_opp_set_rate() with
-> the same frequency ends up returning early because 'old_freq == freq'
-> 
-> Instead make it fall through and put back the dropped performance
-> and bandwidth votes and/or enable back the regulators.
-> 
-> Cc: v5.3+ <stable@vger.kernel.org> # v5.3+
-> Fixes: cd7ea582866f ("opp: Make dev_pm_opp_set_rate() handle freq = 0 to drop performance votes")
-> Reported-by: Sajida Bhanu <sbhanu@codeaurora.org>
-> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
-> Reported-by: Matthias Kaehlcke <mka@chromium.org>
-> Tested-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> [ Viresh: Don't skip clk_set_rate() and massaged changelog ]
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> [ Viresh: Updated the patch to apply to v5.4 ]
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+
+Looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
->  drivers/opp/core.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-
-This too is already in the 5.7 and 5.4 queues, why add it again?
-
-thanks,
-
-greg k-h
+>  include/linux/pagevec.h |  2 +-
+>  mm/swap.c               |  4 ++--
+>  mm/truncate.c           | 10 ++++------
+>  3 files changed, 7 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/linux/pagevec.h b/include/linux/pagevec.h
+> index 4b245592262c..ce77724a2ab7 100644
+> --- a/include/linux/pagevec.h
+> +++ b/include/linux/pagevec.h
+> @@ -27,7 +27,7 @@ void __pagevec_release(struct pagevec *pvec);
+>  void __pagevec_lru_add(struct pagevec *pvec);
+>  unsigned pagevec_lookup_entries(struct pagevec *pvec,
+>  		struct address_space *mapping, pgoff_t start, pgoff_t end,
+> -		unsigned nr_entries, pgoff_t *indices);
+> +		pgoff_t *indices);
+>  void pagevec_remove_exceptionals(struct pagevec *pvec);
+>  unsigned pagevec_lookup_range(struct pagevec *pvec,
+>  			      struct address_space *mapping,
+> diff --git a/mm/swap.c b/mm/swap.c
+> index b6e56a84b466..d4e3ba4c967c 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -1058,9 +1058,9 @@ void __pagevec_lru_add(struct pagevec *pvec)
+>   */
+>  unsigned pagevec_lookup_entries(struct pagevec *pvec,
+>  		struct address_space *mapping, pgoff_t start, pgoff_t end,
+> -		unsigned nr_entries, pgoff_t *indices)
+> +		pgoff_t *indices)
+>  {
+> -	pvec->nr = find_get_entries(mapping, start, end, nr_entries,
+> +	pvec->nr = find_get_entries(mapping, start, end, PAGEVEC_SIZE,
+>  				    pvec->pages, indices);
+>  	return pagevec_count(pvec);
+>  }
+> diff --git a/mm/truncate.c b/mm/truncate.c
+> index 9c617291fb1e..96a45ba28042 100644
+> --- a/mm/truncate.c
+> +++ b/mm/truncate.c
+> @@ -327,7 +327,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
+>  	pagevec_init(&pvec);
+>  	index = start;
+>  	while (pagevec_lookup_entries(&pvec, mapping, index, end - 1,
+> -			PAGEVEC_SIZE, indices)) {
+> +			indices)) {
+>  		/*
+>  		 * Pagevec array has exceptional entries and we may also fail
+>  		 * to lock some pages. So we store pages that can be deleted
+> @@ -411,7 +411,7 @@ void truncate_inode_pages_range(struct address_space *mapping,
+>  	for ( ; ; ) {
+>  		cond_resched();
+>  		if (!pagevec_lookup_entries(&pvec, mapping, index, end - 1,
+> -				PAGEVEC_SIZE, indices)) {
+> +				indices)) {
+>  			/* If all gone from start onwards, we're done */
+>  			if (index == start)
+>  				break;
+> @@ -540,8 +540,7 @@ unsigned long invalidate_mapping_pages(struct address_space *mapping,
+>  	int i;
+>  
+>  	pagevec_init(&pvec);
+> -	while (pagevec_lookup_entries(&pvec, mapping, index, end,
+> -			PAGEVEC_SIZE, indices)) {
+> +	while (pagevec_lookup_entries(&pvec, mapping, index, end, indices)) {
+>  		for (i = 0; i < pagevec_count(&pvec); i++) {
+>  			struct page *page = pvec.pages[i];
+>  
+> @@ -680,8 +679,7 @@ int invalidate_inode_pages2_range(struct address_space *mapping,
+>  
+>  	pagevec_init(&pvec);
+>  	index = start;
+> -	while (pagevec_lookup_entries(&pvec, mapping, index, end,
+> -			PAGEVEC_SIZE, indices)) {
+> +	while (pagevec_lookup_entries(&pvec, mapping, index, end, indices)) {
+>  		for (i = 0; i < pagevec_count(&pvec); i++) {
+>  			struct page *page = pvec.pages[i];
+>  
+> -- 
+> 2.28.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
