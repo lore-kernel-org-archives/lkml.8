@@ -2,96 +2,81 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC260C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC34C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDEC2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:22:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KHA8P/9i"
+	by mail.kernel.org (Postfix) with ESMTP id 1D6042087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 07:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbgHXHWL (ORCPT
+        id S1726347AbgHXHYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 03:22:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50550 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgHXHWJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 03:22:09 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E4AC061573;
-        Mon, 24 Aug 2020 00:22:09 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id s1so7614525iot.10;
-        Mon, 24 Aug 2020 00:22:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wURU5CfyuxeoiAiYavrkiUF7W5jzEOVatHlGY5b9gAQ=;
-        b=KHA8P/9ihR89353Mtkzi/vVjvBcx53K3IXfueYKDlkg/QsU4ejz37+W1Qkr21BTuQO
-         uarEanWspS+m4mrc29EEHBFYViYwC5LcntKr+HX+TIxj8zSJTTZUooZQAmzo2OkULEkF
-         HaT4zLagzVpbGGTGXsNK2hyJKh4tIQVaQlxbJiojEhP5LTVoygt34t2J/bv1ZUap4Ijd
-         isKG8e8XNwf5bStU8wTnS5FwC5rE+1twCqB7acg5rSvMgHM/Et+m7INu/s4GpmVhqJpK
-         7nO57UAhsUlXHiYbXd57ywY6/Ag0kzdytffxOH6dFjqWG9McB95EfT7JBk9fcKXcvimQ
-         aK8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wURU5CfyuxeoiAiYavrkiUF7W5jzEOVatHlGY5b9gAQ=;
-        b=JIXaAqKOlM6i68JdqsTQIpNhUvBvmX6qRr2bclETeMJp+hD9TKTPwRAqvHDjCYl47Z
-         lNFSh3qQrZNOGWhI9iMcx15Z/4iP2H3YcPxIJH6d0Z/W67goJOtsQHP1x5V/AtQFcKfe
-         BIkcDqqntYFMGdckLVqpYTsBb7NMZ6l8jakaHqbERzk+VYm1CdyE28J/ID3Cv0JOk/+B
-         wiOPbHNTisRoywTNh1nQgH5vPpqaMqXtHxOX+UAZJGuJ2xf778EsxNS9GaG/q7DO2zL6
-         VDxHPNBOT0nfhPZpIo30pM8xCk3sjY+p4KEyV/FXVxML1TOMfyDz0Ej2lVH5uQAMSJBj
-         Qn/A==
-X-Gm-Message-State: AOAM531ePh/WZV+Az08nVICzVsOjFHHhMIdQH5kCs45s0npTEqvsIMfp
-        Ty0zg4y3XLEHDoAfuCRA9AZQzS4ZEVOtj1ibAoM=
-X-Google-Smtp-Source: ABdhPJyIuC2hH0bMEkHUPoarTiWp84gpsTAg9EGOmVfRzmTGMZ8A+G1fLCxwQ3GK4nI52FU0ZMjkUMBCMELoFMhkp5k=
-X-Received: by 2002:a05:6638:1489:: with SMTP id j9mr4514597jak.22.1598253728521;
- Mon, 24 Aug 2020 00:22:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
- <1597910022-22617-3-git-send-email-gene.chen.richtek@gmail.com> <20200820113015.GB5854@sirena.org.uk>
-In-Reply-To: <20200820113015.GB5854@sirena.org.uk>
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Mon, 24 Aug 2020 15:21:57 +0800
-Message-ID: <CAE+NS36C0AwbrFJdYGY6_n_g3DVitp_e1GfZUxjMbKu1bJ_t4w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] regulator: mt6360: Add DT binding documentation
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Gene Chen <gene_chen@richtek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 24 Aug 2020 03:24:11 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:47098 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725850AbgHXHYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 03:24:11 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app2 (Coremail) with SMTP id by_KCgDn7+cQa0NfUDcjAg--.30749S4;
+        Mon, 24 Aug 2020 15:24:03 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Alexandrov Stansilav <neko@nya.ai>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] HID: elan: Fix memleak in elan_input_configured
+Date:   Mon, 24 Aug 2020 15:23:59 +0800
+Message-Id: <20200824072400.9612-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: by_KCgDn7+cQa0NfUDcjAg--.30749S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKF1DJr17uFy3Aw4xuw4fuFg_yoW3XFc_Ww
+        18uwnrWr1DKF10vr1DKrWfZryDZr4kZas3ZF1vqF1rtrW7Xa1Du39IgFn3G3W5Ww42ga1k
+        Ar9Fgry8ArsIkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbIkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48J
+        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
+        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+        CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x0JUBpB-UUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUCBlZdtPpD7wAMsm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=8A=95
+When input_mt_init_slots() fails, input should be
+freed to prevent memleak.
 
-Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8820=E6=97=
-=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=887:30=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Thu, Aug 20, 2020 at 03:53:42PM +0800, Gene Chen wrote:
->
-> > +properties:
-> > +  compatible:
-> > +    const: mediatek,mt6360-regulator
-> > +
-> > +  LDO_VIN3-supply:
-> > +    description: Input supply phandle(s) for LDO3
-> > +
->
-> Only LDO3 needs a supply?
+Fixes: 9a6a4193d65b8 ("HID: Add driver for USB ELAN Touchpad")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/hid/hid-elan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-LDO_VIN1/LDO_VIN2 is real MT6360 pin supply from VSYS to LDO1/2/3/5
-LDO_VIN3 is also real pin supply from BUCK2 to LDO6/7
+diff --git a/drivers/hid/hid-elan.c b/drivers/hid/hid-elan.c
+index 45c4f888b7c4..858442004258 100644
+--- a/drivers/hid/hid-elan.c
++++ b/drivers/hid/hid-elan.c
+@@ -188,6 +188,7 @@ static int elan_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	ret = input_mt_init_slots(input, ELAN_MAX_FINGERS, INPUT_MT_POINTER);
+ 	if (ret) {
+ 		hid_err(hdev, "Failed to init elan MT slots: %d\n", ret);
++		input_free_device(input);
+ 		return ret;
+ 	}
+ 
+-- 
+2.17.1
+
