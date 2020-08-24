@@ -2,376 +2,173 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D335EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB84C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A025E207CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VR39J7E9"
+	by mail.kernel.org (Postfix) with ESMTP id 5F7C9207CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgHXN5k (ORCPT
+        id S1727769AbgHXN6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57072 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbgHXN5h (ORCPT
+        Mon, 24 Aug 2020 09:58:42 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:52750 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbgHXN6Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:57:37 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04DB7C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 06:57:36 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id x2so5203615ybf.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 06:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Oo7EoEwOiZey2I4RU2qQv+WisYvPVkgt+M+WNJhnTL8=;
-        b=VR39J7E9tFxK+yB+ezFY8PMyDn5TLnBx+Lonea3XzBXf1UQSI8p4U9ZR2KrimEgyuc
-         5UYegxnSxkvgUqQXCxozkV97e/FrgEZ+Y52E2Enw5Qf+aLqp1Vnd/9e9iMM3KBAm8tL/
-         3ASVmLfiuE6c/w/dic7iBCPA7XwfQBDOADADP19Y8N4A6camHjP5QxjD6he2hRN7X6Jn
-         Q0FnfGgOuL6SqTCexzKC4v+qhTw8oYaLoMMFDe7uqIz7Ut0+SKw2cgO4M+L1v1AoUHcd
-         30WnuJHXS3BsvwJieXSdaFsy95ruhUTSLGdLtMHVeUnpIBhcW86NcN4/IykuI+1YaGEB
-         2xDg==
+        Mon, 24 Aug 2020 09:58:25 -0400
+Received: by mail-io1-f72.google.com with SMTP id n16so6174654iop.19
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 06:58:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Oo7EoEwOiZey2I4RU2qQv+WisYvPVkgt+M+WNJhnTL8=;
-        b=j0DbBFJMJK/IgPTQkQx2jVypIzGpDPoiJTugXJXWvdyuQcr7ofmQ9ZLXJ3cGyyC39I
-         caX98yfsVln/f+ItxdKhTrxMqHavyq20rVa8AazFKOj+/2aAib0Y6gpX6IlaI2DxqqvS
-         3ZpGWyz+1RD+BPOPo/rsDiciXGnJyn2oFzTgsI449wLSTUSHz042zWa/XNa3Vhae6U2c
-         NvQFVzav02YUCGA4jLBKrNfBpDpivTfSZ9km2W9p+UKSNltlUg67QILAyaDKSikW2Fbi
-         0J8NpHpomVEOD3xcXOFpmr6QYfU6QC7z7fs/xYoUfuPA7GpPI99JWAmbKxT/KJQFY/AR
-         k5IA==
-X-Gm-Message-State: AOAM532U7dejXOJ3l0XqYtuy+qFoAKpuNVH6htzSpowc/VFq4R+/AO78
-        3eM3MkIJm+h8GwIKdNTXUCzu4yt9F4BDL9oNaQwt7A==
-X-Google-Smtp-Source: ABdhPJw8s6GiaXKF5L8TlRTLSe0reZhdlDG+9HnMh9dOcWz4zRHL695zACntxCw6DNBUp6B0OXpaqnWOAiDerCfYw1I=
-X-Received: by 2002:a25:854c:: with SMTP id f12mr7927467ybn.130.1598277455386;
- Mon, 24 Aug 2020 06:57:35 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=+V0QzvgG14Z720o2lIX3LxzlzhonjMzU55Q/hPYeJzs=;
+        b=spA0ZCiuL1Ppv/yfUlWmA5Xk5Mhod62tymzBPquyARTKs1LQOC/h0U3+6/Ked4pHcR
+         DQcytqO/citkvqbazDb0Cpqy1WA0Dx5X5kN6qFs/KWWO9csXLLdIbvhGZ4edNP9rYrgv
+         OuEJF36wwrtQZ2MFT3TtuCW/6xI+InG7hEVhW8TvRfOiAi/YEl0NP4TWSD+dmzrzquYM
+         cfxwa8SbP+ae2l+KnjI3XEdBcCKnQGz4Jy3lP5zrEUI5pt7rWNl4aJjFKGtrKrM1j+ly
+         R8tJAr07/BqI4Q8mg6jR2zLSPaFs7X4vPwbXTaBCz/eivs5pSb88AG2W6z+kfi6q4bDh
+         wNZg==
+X-Gm-Message-State: AOAM531WNx+29gfFew879eIXNwVn6Vf8D7r74rbgvJmLjV6yEBV4IeCT
+        785Wlsmr0AgrZwLyzgbKoPe01oI8NULdH5a8Q2D6wqqVkIcd
+X-Google-Smtp-Source: ABdhPJz9+MNTbmYaygbznNojo1zCWjjM1cvV8uf26efNvgfqFvYArf/xzRYpvkp3qupeC3r8pUBY7AdMzFgka09oRgeWFyO2p1i1
 MIME-Version: 1.0
-References: <20200823012134.3813457-1-agoode@google.com> <20200823012134.3813457-2-agoode@google.com>
- <20200823145417.GC6002@pendragon.ideasonboard.com> <20200823150822.GD6002@pendragon.ideasonboard.com>
- <5a2882e5-c029-dde7-c6ff-bd6f57aa7850@xs4all.nl>
-In-Reply-To: <5a2882e5-c029-dde7-c6ff-bd6f57aa7850@xs4all.nl>
-From:   Adam Goode <agoode@google.com>
-Date:   Mon, 24 Aug 2020 09:56:59 -0400
-Message-ID: <CAOf41NnrfW6h++nR42R1OxR0B3DVrKg9RVLTQVJ=nEkn3GW4aw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] media: uvcvideo: Convey full ycbcr colorspace
- information to v4l2
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Received: by 2002:a5d:8b4f:: with SMTP id c15mr4900416iot.146.1598277503540;
+ Mon, 24 Aug 2020 06:58:23 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 06:58:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d9e4bb05ad9ffaef@google.com>
+Subject: KMSAN: uninit-value in skb_trim
+From:   syzbot <syzbot+e4534e8c1c382508312c@syzkaller.appspotmail.com>
+To:     ath9k-devel@qca.qualcomm.com, davem@davemloft.net,
+        glider@google.com, kuba@kernel.org, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 4:48 AM Hans Verkuil <hverkuil-cisco@xs4all.nl> wro=
-te:
->
-> On 23/08/2020 17:08, Laurent Pinchart wrote:
-> > Hi Adam,
-> >
-> > (CC'ing Hans Verkuil)
-> >
-> > On Sun, Aug 23, 2020 at 05:54:24PM +0300, Laurent Pinchart wrote:
-> >> Hi Adam,
-> >>
-> >> Thank you for the patch.
-> >>
-> >> On Sat, Aug 22, 2020 at 09:21:34PM -0400, Adam Goode wrote:
-> >>> The Color Matching Descriptor has been present in USB cameras since
-> >>> the original version of UVC, but it has never been fully used
-> >>> in Linux.
-> >>>
-> >>> This change informs V4L2 of all of the critical colorspace parameters=
-:
-> >>> colorspace (called "color primaries" in UVC), transfer function
-> >>> (called "transfer characteristics" in UVC), ycbcr encoding (called
-> >>> "matrix coefficients" in UVC), and quantization, which is always
-> >>> LIMITED for UVC, see section 2.26 in USB_Video_FAQ_1.5.pdf.
-> >>
-> >> Isn't this valid for MJPEG only though ? There's not much else we can =
-do
-> >> though, as UVC cameras don't report quantization information. Shouldn'=
-t
-> >> we however reflect this in the commit message, and in the comment belo=
-w,
-> >> to state that UVC requires limited quantization range for MJPEG, and
-> >> while it doesn't explicitly specify the quantization range for other
-> >> formats, we can only assume it should be limited as well ?
-> >>
+Hello,
 
-Yes, I am happy to improve the comment to be clearer.
+syzbot found the following issue on:
+
+HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=16e3c4b6900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=e4534e8c1c382508312c
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e4534e8c1c382508312c@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in skb_trim+0x1f2/0x280 net/core/skbuff.c:1916
+CPU: 1 PID: 8770 Comm: syz-executor.1 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x21c/0x280 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ skb_trim+0x1f2/0x280 net/core/skbuff.c:1916
+ ath9k_htc_rx_msg+0x5f6/0x1f50 drivers/net/wireless/ath/ath9k/htc_hst.c:453
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:638 [inline]
+ ath9k_hif_usb_rx_cb+0x1841/0x1d10 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+ __usb_hcd_giveback_urb+0x687/0x870 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x1cb/0x730 drivers/usb/core/hcd.c:1716
+ dummy_timer+0xd98/0x71c0 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x226/0x550 kernel/time/timer.c:1404
+ expire_timers+0x4fc/0x780 kernel/time/timer.c:1449
+ __run_timers+0xaf4/0xd30 kernel/time/timer.c:1773
+ run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
+ __do_softirq+0x2ea/0x7f5 kernel/softirq.c:293
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:23 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:50 [inline]
+ do_softirq_own_stack+0x7c/0xa0 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:390 [inline]
+ __irq_exit_rcu+0x226/0x270 kernel/softirq.c:420
+ irq_exit_rcu+0xe/0x10 kernel/softirq.c:432
+ sysvec_apic_timer_interrupt+0x107/0x130 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:593
+RIP: 0010:kmsan_slab_free+0x8c/0xb0 mm/kmsan/kmsan_hooks.c:109
+Code: 00 00 b9 03 00 00 00 e8 12 ea ff ff be ff ff ff ff 65 0f c1 35 75 57 cc 7d ff ce 75 1a e8 6c ff 14 ff 4c 89 7d e0 ff 75 e0 9d <48> 83 c4 10 5b 41 5e 41 5f 5d c3 0f 0b 48 c7 c7 b0 63 e1 91 31 c0
+RSP: 0018:ffff888036ea36e8 EFLAGS: 00000246
+RAX: c38ce7a59d21d100 RBX: ffff88812f403c00 RCX: 0000000000000003
+RDX: 0000000000000002 RSI: 0000000000000000 RDI: ffff8881c7f65bb0
+RBP: ffff888036ea3710 R08: ffffea000000000f R09: ffff88812fffa000
+R10: 0000000000000010 R11: ffffffff912007f5 R12: 0000000000000000
+R13: 0000000000000000 R14: ffff8881c7f65bb0 R15: 0000000000000246
+ slab_free_freelist_hook mm/slub.c:1507 [inline]
+ slab_free mm/slub.c:3088 [inline]
+ kfree+0x4f3/0x3000 mm/slub.c:4069
+ kvfree+0x91/0xa0 mm/util.c:603
+ __vunmap+0xfec/0x1080 mm/vmalloc.c:2320
+ __vfree mm/vmalloc.c:2364 [inline]
+ vfree+0xcc/0x1c0 mm/vmalloc.c:2394
+ copy_entries_to_user net/ipv4/netfilter/ip_tables.c:867 [inline]
+ get_entries net/ipv4/netfilter/ip_tables.c:1024 [inline]
+ do_ipt_get_ctl+0x115c/0x11e0 net/ipv4/netfilter/ip_tables.c:1700
+ nf_sockopt net/netfilter/nf_sockopt.c:104 [inline]
+ nf_getsockopt+0x588/0x5e0 net/netfilter/nf_sockopt.c:122
+ ip_getsockopt+0x34e/0x520 net/ipv4/ip_sockglue.c:1749
+ tcp_getsockopt+0x1de/0x210 net/ipv4/tcp.c:3893
+ sock_common_getsockopt+0x13a/0x170 net/core/sock.c:3221
+ __sys_getsockopt+0x6c7/0x820 net/socket.c:2172
+ __do_sys_getsockopt net/socket.c:2187 [inline]
+ __se_sys_getsockopt+0xe1/0x100 net/socket.c:2184
+ __x64_sys_getsockopt+0x62/0x80 net/socket.c:2184
+ do_syscall_64+0xad/0x160 arch/x86/entry/common.c:386
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x46008a
+Code: Bad RIP value.
+RSP: 002b:000000000169f6b8 EFLAGS: 00000212 ORIG_RAX: 0000000000000037
+RAX: ffffffffffffffda RBX: 000000000169f6e0 RCX: 000000000046008a
+RDX: 0000000000000041 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000749e60 R08: 000000000169f6dc R09: 0000000000004000
+R10: 000000000169f740 R11: 0000000000000212 R12: 000000000169f740
+R13: 0000000000000003 R14: 0000000000748a20 R15: 0000000000000000
+
+Uninit was created at:
+ kmsan_save_stack_with_flags+0x3c/0x90 mm/kmsan/kmsan.c:144
+ kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:269 [inline]
+ kmsan_alloc_page+0xc5/0x1a0 mm/kmsan/kmsan_shadow.c:293
+ __alloc_pages_nodemask+0xdf0/0x1030 mm/page_alloc.c:4889
+ __alloc_pages include/linux/gfp.h:509 [inline]
+ __alloc_pages_node include/linux/gfp.h:522 [inline]
+ alloc_pages_node include/linux/gfp.h:536 [inline]
+ __page_frag_cache_refill mm/page_alloc.c:4964 [inline]
+ page_frag_alloc+0x35b/0x880 mm/page_alloc.c:4994
+ __netdev_alloc_skb+0x2a8/0xc90 net/core/skbuff.c:451
+ __dev_alloc_skb include/linux/skbuff.h:2813 [inline]
+ ath9k_hif_usb_rx_stream drivers/net/wireless/ath/ath9k/hif_usb.c:620 [inline]
+ ath9k_hif_usb_rx_cb+0xe5a/0x1d10 drivers/net/wireless/ath/ath9k/hif_usb.c:671
+ __usb_hcd_giveback_urb+0x687/0x870 drivers/usb/core/hcd.c:1650
+ usb_hcd_giveback_urb+0x1cb/0x730 drivers/usb/core/hcd.c:1716
+ dummy_timer+0xd98/0x71c0 drivers/usb/gadget/udc/dummy_hcd.c:1967
+ call_timer_fn+0x226/0x550 kernel/time/timer.c:1404
+ expire_timers+0x4fc/0x780 kernel/time/timer.c:1449
+ __run_timers+0xaf4/0xd30 kernel/time/timer.c:1773
+ run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1786
+ __do_softirq+0x2ea/0x7f5 kernel/softirq.c:293
+=====================================================
 
 
-> >> The code otherwise looks good to me.
-> >>
-> >> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >>
-> >> Please let me know if you'd like to address the above issue.
-> >>
-> >>> The quantization is the most important improvement for this patch,
-> >>> because V4L2 will otherwise interpret MJPEG as FULL range. Web browse=
-rs
-> >>> such as Chrome and Firefox already ignore V4L2's quantization for USB
-> >>> devices and use the correct LIMITED value, but other programs such
-> >>> as qv4l2 will incorrectly interpret the output of MJPEG from USB
-> >>> cameras without this change.
-> >>>
-> >>> Signed-off-by: Adam Goode <agoode@google.com>
-> >>> ---
-> >>>  drivers/media/usb/uvc/uvc_driver.c | 52 +++++++++++++++++++++++++++-=
---
-> >>>  drivers/media/usb/uvc/uvc_v4l2.c   |  6 ++++
-> >>>  drivers/media/usb/uvc/uvcvideo.h   |  5 ++-
-> >>>  3 files changed, 58 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/u=
-vc/uvc_driver.c
-> >>> index 431d86e1c94b..c0c81b089b7d 100644
-> >>> --- a/drivers/media/usb/uvc/uvc_driver.c
-> >>> +++ b/drivers/media/usb/uvc/uvc_driver.c
-> >>> @@ -248,10 +248,10 @@ static struct uvc_format_desc *uvc_format_by_gu=
-id(const u8 guid[16])
-> >>>     return NULL;
-> >>>  }
-> >>>
-> >>> -static u32 uvc_colorspace(const u8 primaries)
-> >>> +static enum v4l2_colorspace uvc_colorspace(const u8 primaries)
-> >>>  {
-> >>> -   static const u8 colorprimaries[] =3D {
-> >>> -           0,
-> >>> +   static const enum v4l2_colorspace colorprimaries[] =3D {
-> >>> +           V4L2_COLORSPACE_DEFAULT,  /* Unspecified */
-> >>>             V4L2_COLORSPACE_SRGB,
-> >>>             V4L2_COLORSPACE_470_SYSTEM_M,
-> >>>             V4L2_COLORSPACE_470_SYSTEM_BG,
-> >>> @@ -262,7 +262,43 @@ static u32 uvc_colorspace(const u8 primaries)
-> >>>     if (primaries < ARRAY_SIZE(colorprimaries))
-> >>>             return colorprimaries[primaries];
-> >>>
-> >>> -   return 0;
-> >>> +   return V4L2_COLORSPACE_DEFAULT;  /* Reserved */
-> >>> +}
-> >>> +
-> >>> +static enum v4l2_xfer_func uvc_xfer_func(const u8 transfer_character=
-istics)
-> >>> +{
-> >>> +   static const enum v4l2_xfer_func xfer_funcs[] =3D {
-> >>> +           V4L2_XFER_FUNC_DEFAULT,  /* Unspecified */
-> >>> +           V4L2_XFER_FUNC_709,
-> >>> +           V4L2_XFER_FUNC_709,      /* BT.470-2 M */
-> >>> +           V4L2_XFER_FUNC_709,      /* BT.470-2 B, G */
-> >>> +           V4L2_XFER_FUNC_709,      /* SMPTE 170M */
-> >>> +           V4L2_XFER_FUNC_SMPTE240M,
-> >>> +           V4L2_XFER_FUNC_NONE,     /* Linear (V =3D Lc) */
-> >>> +           V4L2_XFER_FUNC_SRGB,
-> >>> +   };
-> >>> +
-> >>> +   if (transfer_characteristics < ARRAY_SIZE(xfer_funcs))
-> >>> +           return xfer_funcs[transfer_characteristics];
-> >>> +
-> >>> +   return V4L2_XFER_FUNC_DEFAULT;  /* Reserved */
-> >>> +}
-> >>> +
-> >>> +static enum v4l2_ycbcr_encoding uvc_ycbcr_enc(const u8 matrix_coeffi=
-cients)
-> >>> +{
-> >>> +   static const enum v4l2_ycbcr_encoding ycbcr_encs[] =3D {
-> >>> +           V4L2_YCBCR_ENC_DEFAULT,  /* Unspecified */
-> >>> +           V4L2_YCBCR_ENC_709,
-> >>> +           V4L2_YCBCR_ENC_601,      /* FCC */
-> >
-> > I may have spoken a bit too fast. Doesn't FCC differ from BT.601 ?
-> > According to https://en.wikipedia.org/wiki/Talk%3AYCbCr, the former use=
-s
-> >
-> >  E'Y =3D 0.59 E'G + 0.11 E'B + 0.30 E'R
-> >  E'PB =3D =E2=80=93 0.331 E'G + 0.500 E'B =E2=80=93 0.169 E'R
-> >  E'PR =3D =E2=80=93 0.421 E'G =E2=80=93 0.079 E'B + 0.500 E'R
-> >
-> > while the latter uses
-> >
-> >  E'Y =3D 0.587 E'G + 0.114 E'B + 0.299 E'R
-> >  E'PB =3D =E2=80=93 0.331 E'G + 0.500 E'B =E2=80=93 0.169 E'R
-> >  E'PR =3D =E2=80=93 0.419 E'G =E2=80=93 0.081 E'B + 0.500 E'R
-> >
-> > We seems to be missing FCC in the V4L2 color space definitions.
->
-> The differences between the two are minuscule. Add to that that NTSC 1953
-> hasn't been in use for many decades. So I have no plans to add another YC=
-C
-> encoding for this. I'll double check this in a few weeks time when I have
-> access to a better book on colorimetry.
->
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-I can add a comment directly to clarify, but I am following the
-mappings described in videodev2.h (with the assumption that "FCC" is
-close enough to 601):
-
-/*
-* Mapping of V4L2_XFER_FUNC_DEFAULT to actual transfer functions
-* for the various colorspaces:
-*
-* V4L2_COLORSPACE_SMPTE170M, V4L2_COLORSPACE_470_SYSTEM_M,
-* V4L2_COLORSPACE_470_SYSTEM_BG, V4L2_COLORSPACE_REC709 and
-* V4L2_COLORSPACE_BT2020: V4L2_XFER_FUNC_709
-*
-* V4L2_COLORSPACE_SRGB, V4L2_COLORSPACE_JPEG: V4L2_XFER_FUNC_SRGB
-*
-* V4L2_COLORSPACE_OPRGB: V4L2_XFER_FUNC_OPRGB
-*
-* V4L2_COLORSPACE_SMPTE240M: V4L2_XFER_FUNC_SMPTE240M
-*
-* V4L2_COLORSPACE_RAW: V4L2_XFER_FUNC_NONE
-*
-* V4L2_COLORSPACE_DCI_P3: V4L2_XFER_FUNC_DCI_P3
-*/
-
-/*
-* Mapping of V4L2_YCBCR_ENC_DEFAULT to actual encodings for the
-* various colorspaces:
-*
-* V4L2_COLORSPACE_SMPTE170M, V4L2_COLORSPACE_470_SYSTEM_M,
-* V4L2_COLORSPACE_470_SYSTEM_BG, V4L2_COLORSPACE_SRGB,
-* V4L2_COLORSPACE_OPRGB and V4L2_COLORSPACE_JPEG: V4L2_YCBCR_ENC_601
-*
-* V4L2_COLORSPACE_REC709 and V4L2_COLORSPACE_DCI_P3: V4L2_YCBCR_ENC_709
-*
-* V4L2_COLORSPACE_BT2020: V4L2_YCBCR_ENC_BT2020
-*
-* V4L2_COLORSPACE_SMPTE240M: V4L2_YCBCR_ENC_SMPTE240M
-*/
-
-We could potentially do with some more xfer functions, though.
-
-> >
-> >>> +           V4L2_YCBCR_ENC_601,      /* BT.470-2 B, G */
-> >>> +           V4L2_YCBCR_ENC_601,      /* SMPTE 170M */
-> >>> +           V4L2_YCBCR_ENC_SMPTE240M,
-> >>> +   };
-> >>> +
-> >>> +   if (matrix_coefficients < ARRAY_SIZE(ycbcr_encs))
-> >>> +           return ycbcr_encs[matrix_coefficients];
-> >>> +
-> >>> +   return V4L2_YCBCR_ENC_DEFAULT;  /* Reserved */
-> >>>  }
-> >>>
-> >>>  /* Simplify a fraction using a simple continued fraction decompositi=
-on. The
-> >>> @@ -704,6 +740,14 @@ static int uvc_parse_format(struct uvc_device *d=
-ev,
-> >>>             }
-> >>>
-> >>>             format->colorspace =3D uvc_colorspace(buffer[3]);
-> >>> +           format->xfer_func =3D uvc_xfer_func(buffer[4]);
-> >>> +           format->ycbcr_enc =3D uvc_ycbcr_enc(buffer[5]);
-> >>> +           /* All USB YCbCr encodings use LIMITED range as of UVC 1.=
-5.
-> >>> +            * This is true even for MJPEG, which V4L2 otherwise assu=
-mes to
-> >>> +            * be FULL.
-> >>> +            * See section 2.26 in USB_Video_FAQ_1.5.pdf.
->
-> Not true. I checked the FAQ: the FAQ describes what happens when a video =
-renderer
-> incorrectly interprets the decoded JPEG color components as limited range=
- instead
-> of full range (which they are to be JPEG compliant). JPEG always encodes =
-YCbCr as
-> full range.
->
-
-Here is what the FAQ says:
-
-"If the images are encoded with the luma and chroma units in the 0-255
-range that is used
-for typical JPEG still images, then the saturation and contrast will
-look artificially boosted
-when the video is rendered under the assumption that the levels were
-in the YCbCr color
-space. BT601 specifies eight-bit coding where Y is in the range of 16
-(black) to 235 (white)
-inclusive."
-
-I read this as saying "if you encode MJPEG the same as typical JPEG
-still images, it is wrong because Y must be in the range 16-235". Am I
-reading this incorrectly?
-
-> >>> +            */
-> >>> +           format->quantization =3D V4L2_QUANTIZATION_LIM_RANGE;
->
-> What about sRGB? That uses full range.
->
-
-It is a little confusing in the code, but I only set the quantization
-explicitly when we get a Color Matching descriptor from the device. My
-reading of the spec says that this descriptor isn't present for RGB
-formats, only YCrCb. When the spec mentions sRGB in Color Matching, it
-is referring only to primaries or gamma.
-
-> Regards,
->
->         Hans
->
-> >>>
-> >>>             buflen -=3D buffer[0];
-> >>>             buffer +=3D buffer[0];
-> >>> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc=
-/uvc_v4l2.c
-> >>> index 7f14096cb44d..79daf46b3dcd 100644
-> >>> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> >>> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> >>> @@ -279,6 +279,9 @@ static int uvc_v4l2_try_format(struct uvc_streami=
-ng *stream,
-> >>>     fmt->fmt.pix.sizeimage =3D probe->dwMaxVideoFrameSize;
-> >>>     fmt->fmt.pix.pixelformat =3D format->fcc;
-> >>>     fmt->fmt.pix.colorspace =3D format->colorspace;
-> >>> +   fmt->fmt.pix.xfer_func =3D format->xfer_func;
-> >>> +   fmt->fmt.pix.ycbcr_enc =3D format->ycbcr_enc;
-> >>> +   fmt->fmt.pix.quantization =3D format->quantization;
-> >>>
-> >>>     if (uvc_format !=3D NULL)
-> >>>             *uvc_format =3D format;
-> >>> @@ -315,6 +318,9 @@ static int uvc_v4l2_get_format(struct uvc_streami=
-ng *stream,
-> >>>     fmt->fmt.pix.bytesperline =3D uvc_v4l2_get_bytesperline(format, f=
-rame);
-> >>>     fmt->fmt.pix.sizeimage =3D stream->ctrl.dwMaxVideoFrameSize;
-> >>>     fmt->fmt.pix.colorspace =3D format->colorspace;
-> >>> +   fmt->fmt.pix.xfer_func =3D format->xfer_func;
-> >>> +   fmt->fmt.pix.ycbcr_enc =3D format->ycbcr_enc;
-> >>> +   fmt->fmt.pix.quantization =3D format->quantization;
-> >>>
-> >>>  done:
-> >>>     mutex_unlock(&stream->mutex);
-> >>> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc=
-/uvcvideo.h
-> >>> index 6ab972c643e3..6508192173dd 100644
-> >>> --- a/drivers/media/usb/uvc/uvcvideo.h
-> >>> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> >>> @@ -370,7 +370,10 @@ struct uvc_format {
-> >>>     u8 type;
-> >>>     u8 index;
-> >>>     u8 bpp;
-> >>> -   u8 colorspace;
-> >>> +   enum v4l2_colorspace colorspace;
-> >>> +   enum v4l2_xfer_func xfer_func;
-> >>> +   enum v4l2_ycbcr_encoding ycbcr_enc;
-> >>> +   enum v4l2_quantization quantization;
-> >>>     u32 fcc;
-> >>>     u32 flags;
-> >>>
-> >
->
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
