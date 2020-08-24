@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57347C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C2BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E99F206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 985E2206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgHXJLH (ORCPT
+        id S1729507AbgHXJLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:11:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37540 "EHLO
+        Mon, 24 Aug 2020 05:11:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730519AbgHXI4W (ORCPT
+        with ESMTP id S1730240AbgHXI4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:56:22 -0400
+        Mon, 24 Aug 2020 04:56:20 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 607EEC0613ED;
-        Mon, 24 Aug 2020 01:56:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B1BC061755;
+        Mon, 24 Aug 2020 01:56:19 -0700 (PDT)
 Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 53DCCF8E;
-        Mon, 24 Aug 2020 10:56:14 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id E29D2F91;
+        Mon, 24 Aug 2020 10:56:12 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -49,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 45/76] x86/sev-es: Allocate and Map IST stack for #VC handler
-Date:   Mon, 24 Aug 2020 10:54:40 +0200
-Message-Id: <20200824085511.7553-46-joro@8bytes.org>
+Subject: [PATCH v6 43/76] x86/sev-es: Setup GHCB based boot #VC handler
+Date:   Mon, 24 Aug 2020 10:54:38 +0200
+Message-Id: <20200824085511.7553-44-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
 References: <20200824085511.7553-1-joro@8bytes.org>
@@ -64,213 +64,265 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Allocate and map an IST stack and an additional fall-back stack for
-the #VC handler.  The memory for the stacks is allocated only when
-SEV-ES is active.
-
-The #VC handler needs to use an IST stack because it could be raised
-from kernel space with unsafe stack, e.g. in the SYSCALL entry path.
-
-Since the #VC exception can be nested, the #VC handler switches back to
-the interrupted stack when entered from kernel space. If switching back
-is not possible the fall-back stack is used.
+Add the infrastructure to handle #VC exceptions when the kernel runs
+on virtual addresses and has a GHCB mapped. This handler will be used
+until the runtime #VC handler takes over.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-45-joro@8bytes.org
+Link: https://lore.kernel.org/r/20200724160336.5435-43-joro@8bytes.org
 ---
- arch/x86/include/asm/cpu_entry_area.h | 33 +++++++++++++++++----------
- arch/x86/include/asm/page_64_types.h  |  1 +
- arch/x86/kernel/cpu/common.c          |  2 ++
- arch/x86/kernel/dumpstack_64.c        |  8 +++++--
- arch/x86/kernel/sev-es.c              | 33 +++++++++++++++++++++++++++
- 5 files changed, 63 insertions(+), 14 deletions(-)
+ arch/x86/include/asm/segment.h  |   2 +-
+ arch/x86/include/asm/sev-es.h   |   1 +
+ arch/x86/kernel/head64.c        |   6 ++
+ arch/x86/kernel/sev-es-shared.c |  14 ++--
+ arch/x86/kernel/sev-es.c        | 116 ++++++++++++++++++++++++++++++++
+ arch/x86/mm/extable.c           |   1 +
+ 6 files changed, 132 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
-index 8902fdb7de13..f87e4c0c16f4 100644
---- a/arch/x86/include/asm/cpu_entry_area.h
-+++ b/arch/x86/include/asm/cpu_entry_area.h
-@@ -11,25 +11,29 @@
- #ifdef CONFIG_X86_64
+diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segment.h
+index 517920928989..7fdd4facfce7 100644
+--- a/arch/x86/include/asm/segment.h
++++ b/arch/x86/include/asm/segment.h
+@@ -226,7 +226,7 @@
+ #define NUM_EXCEPTION_VECTORS		32
  
- /* Macro to enforce the same ordering and stack sizes */
--#define ESTACKS_MEMBERS(guardsize)		\
--	char	DF_stack_guard[guardsize];	\
--	char	DF_stack[EXCEPTION_STKSZ];	\
--	char	NMI_stack_guard[guardsize];	\
--	char	NMI_stack[EXCEPTION_STKSZ];	\
--	char	DB_stack_guard[guardsize];	\
--	char	DB_stack[EXCEPTION_STKSZ];	\
--	char	MCE_stack_guard[guardsize];	\
--	char	MCE_stack[EXCEPTION_STKSZ];	\
--	char	IST_top_guard[guardsize];	\
-+#define ESTACKS_MEMBERS(guardsize, optional_stack_size)		\
-+	char	DF_stack_guard[guardsize];			\
-+	char	DF_stack[EXCEPTION_STKSZ];			\
-+	char	NMI_stack_guard[guardsize];			\
-+	char	NMI_stack[EXCEPTION_STKSZ];			\
-+	char	DB_stack_guard[guardsize];			\
-+	char	DB_stack[EXCEPTION_STKSZ];			\
-+	char	MCE_stack_guard[guardsize];			\
-+	char	MCE_stack[EXCEPTION_STKSZ];			\
-+	char	VC_stack_guard[guardsize];			\
-+	char	VC_stack[optional_stack_size];			\
-+	char	VC2_stack_guard[guardsize];			\
-+	char	VC2_stack[optional_stack_size];			\
-+	char	IST_top_guard[guardsize];			\
+ /* Bitmask of exception vectors which push an error code on the stack: */
+-#define EXCEPTION_ERRCODE_MASK		0x00027d00
++#define EXCEPTION_ERRCODE_MASK		0x20027d00
  
- /* The exception stacks' physical storage. No guard pages required */
- struct exception_stacks {
--	ESTACKS_MEMBERS(0)
-+	ESTACKS_MEMBERS(0, 0)
- };
+ #define GDT_SIZE			(GDT_ENTRIES*8)
+ #define GDT_ENTRY_TLS_ENTRIES		3
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+index ec0e112a742b..824e9e6b067c 100644
+--- a/arch/x86/include/asm/sev-es.h
++++ b/arch/x86/include/asm/sev-es.h
+@@ -75,5 +75,6 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
  
- /* The effective cpu entry area mapping with guard pages. */
- struct cea_exception_stacks {
--	ESTACKS_MEMBERS(PAGE_SIZE)
-+	ESTACKS_MEMBERS(PAGE_SIZE, EXCEPTION_STKSZ)
- };
+ /* Early IDT entry points for #VC handler */
+ extern void vc_no_ghcb(void);
++extern bool handle_vc_boot_ghcb(struct pt_regs *regs);
  
- /*
-@@ -40,6 +44,8 @@ enum exception_stack_ordering {
- 	ESTACK_NMI,
- 	ESTACK_DB,
- 	ESTACK_MCE,
-+	ESTACK_VC,
-+	ESTACK_VC2,
- 	N_EXCEPTION_STACKS
- };
- 
-@@ -139,4 +145,7 @@ static inline struct entry_stack *cpu_entry_stack(int cpu)
- #define __this_cpu_ist_top_va(name)					\
- 	CEA_ESTACK_TOP(__this_cpu_read(cea_exception_stacks), name)
- 
-+#define __this_cpu_ist_bot_va(name)					\
-+	CEA_ESTACK_BOT(__this_cpu_read(cea_exception_stacks), name)
-+
  #endif
-diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
-index 288b065955b7..d0c6c10c18a0 100644
---- a/arch/x86/include/asm/page_64_types.h
-+++ b/arch/x86/include/asm/page_64_types.h
-@@ -28,6 +28,7 @@
- #define	IST_INDEX_NMI		1
- #define	IST_INDEX_DB		2
- #define	IST_INDEX_MCE		3
-+#define	IST_INDEX_VC		4
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 250fae33bf66..ce2d8284edb9 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -403,6 +403,12 @@ void __init do_early_exception(struct pt_regs *regs, int trapnr)
+ 	    early_make_pgtable(native_read_cr2()))
+ 		return;
  
- /*
-  * Set __PAGE_OFFSET to the most negative possible address +
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 8aa20bc2f1ca..1d65365363a1 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1821,6 +1821,8 @@ static inline void tss_setup_ist(struct tss_struct *tss)
- 	tss->x86_tss.ist[IST_INDEX_NMI] = __this_cpu_ist_top_va(NMI);
- 	tss->x86_tss.ist[IST_INDEX_DB] = __this_cpu_ist_top_va(DB);
- 	tss->x86_tss.ist[IST_INDEX_MCE] = __this_cpu_ist_top_va(MCE);
-+	/* Only mapped when SEV-ES is active */
-+	tss->x86_tss.ist[IST_INDEX_VC] = __this_cpu_ist_top_va(VC);
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	if (trapnr == X86_TRAP_VC &&
++	    handle_vc_boot_ghcb(regs))
++		return;
++#endif
++
+ 	early_fixup_exception(regs, trapnr);
  }
  
- #else /* CONFIG_X86_64 */
-diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
-index 4a94d38cd141..c49cf594714b 100644
---- a/arch/x86/kernel/dumpstack_64.c
-+++ b/arch/x86/kernel/dumpstack_64.c
-@@ -24,11 +24,13 @@ static const char * const exception_stack_names[] = {
- 		[ ESTACK_NMI	]	= "NMI",
- 		[ ESTACK_DB	]	= "#DB",
- 		[ ESTACK_MCE	]	= "#MC",
-+		[ ESTACK_VC	]	= "#VC",
-+		[ ESTACK_VC2	]	= "#VC2",
- };
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index 18619279a46f..aa77f2eb8d88 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -9,7 +9,7 @@
+  * and is included directly into both code-bases.
+  */
  
- const char *stack_type_name(enum stack_type type)
+-static void __maybe_unused sev_es_terminate(unsigned int reason)
++static void sev_es_terminate(unsigned int reason)
  {
--	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
-+	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
+ 	u64 val = GHCB_SEV_TERMINATE;
  
- 	if (type == STACK_TYPE_IRQ)
- 		return "IRQ";
-@@ -79,6 +81,8 @@ struct estack_pages estack_pages[CEA_ESTACK_PAGES] ____cacheline_aligned = {
- 	EPAGERANGE(NMI),
- 	EPAGERANGE(DB),
- 	EPAGERANGE(MCE),
-+	EPAGERANGE(VC),
-+	EPAGERANGE(VC2),
- };
+@@ -27,7 +27,7 @@ static void __maybe_unused sev_es_terminate(unsigned int reason)
+ 		asm volatile("hlt\n" : : : "memory");
+ }
  
- static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
-@@ -88,7 +92,7 @@ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
- 	struct pt_regs *regs;
- 	unsigned int k;
+-static bool __maybe_unused sev_es_negotiate_protocol(void)
++static bool sev_es_negotiate_protocol(void)
+ {
+ 	u64 val;
  
--	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
-+	BUILD_BUG_ON(N_EXCEPTION_STACKS != 6);
+@@ -46,7 +46,7 @@ static bool __maybe_unused sev_es_negotiate_protocol(void)
+ 	return true;
+ }
  
- 	begin = (unsigned long)__this_cpu_read(cea_exception_stacks);
- 	/*
+-static void __maybe_unused vc_ghcb_invalidate(struct ghcb *ghcb)
++static void vc_ghcb_invalidate(struct ghcb *ghcb)
+ {
+ 	memset(ghcb->save.valid_bitmap, 0, sizeof(ghcb->save.valid_bitmap));
+ }
+@@ -58,9 +58,9 @@ static bool vc_decoding_needed(unsigned long exit_code)
+ 		 exit_code <= SVM_EXIT_LAST_EXCP);
+ }
+ 
+-static enum es_result __maybe_unused vc_init_em_ctxt(struct es_em_ctxt *ctxt,
+-						     struct pt_regs *regs,
+-						     unsigned long exit_code)
++static enum es_result vc_init_em_ctxt(struct es_em_ctxt *ctxt,
++				      struct pt_regs *regs,
++				      unsigned long exit_code)
+ {
+ 	enum es_result ret = ES_OK;
+ 
+@@ -73,7 +73,7 @@ static enum es_result __maybe_unused vc_init_em_ctxt(struct es_em_ctxt *ctxt,
+ 	return ret;
+ }
+ 
+-static void __maybe_unused vc_finish_insn(struct es_em_ctxt *ctxt)
++static void vc_finish_insn(struct es_em_ctxt *ctxt)
+ {
+ 	ctxt->regs->ip += ctxt->insn.length;
+ }
 diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 734afaee378d..64002d86a237 100644
+index 0b698b653c0b..bb3e702a71eb 100644
 --- a/arch/x86/kernel/sev-es.c
 +++ b/arch/x86/kernel/sev-es.c
-@@ -17,6 +17,7 @@
+@@ -7,7 +7,9 @@
+  * Author: Joerg Roedel <jroedel@suse.de>
+  */
+ 
++#include <linux/sched/debug.h>	/* For show_regs() */
  #include <linux/kernel.h>
++#include <linux/printk.h>
  #include <linux/mm.h>
  
-+#include <asm/cpu_entry_area.h>
  #include <asm/sev-es.h>
- #include <asm/insn-eval.h>
- #include <asm/fpu/internal.h>
-@@ -37,10 +38,41 @@ static struct ghcb __initdata *boot_ghcb;
- /* #VC handler runtime per-cpu data */
- struct sev_es_runtime_data {
- 	struct ghcb ghcb_page;
+@@ -18,6 +20,18 @@
+ #include <asm/trapnr.h>
+ #include <asm/svm.h>
+ 
++/* For early boot hypervisor communication in SEV-ES enabled guests */
++static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
 +
-+	/* Physical storage for the per-cpu IST stack of the #VC handler */
-+	char ist_stack[EXCEPTION_STKSZ] __aligned(PAGE_SIZE);
++/*
++ * Needs to be in the .data section because we need it NULL before bss is
++ * cleared
++ */
++static struct ghcb __initdata *boot_ghcb;
++
++/* Needed in vc_early_forward_exception */
++void do_early_exception(struct pt_regs *regs, int trapnr);
++
+ static inline u64 sev_es_rd_ghcb_msr(void)
+ {
+ 	return native_read_msr(MSR_AMD64_SEV_ES_GHCB);
+@@ -161,3 +175,105 @@ static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
+ 
+ /* Include code shared with pre-decompression boot stage */
+ #include "sev-es-shared.c"
++
++/*
++ * This function runs on the first #VC exception after the kernel
++ * switched to virtual addresses.
++ */
++static bool __init sev_es_setup_ghcb(void)
++{
++	/* First make sure the hypervisor talks a supported protocol. */
++	if (!sev_es_negotiate_protocol())
++		return false;
 +
 +	/*
-+	 * Physical storage for the per-cpu fall-back stack of the #VC handler.
-+	 * The fall-back stack is used when it is not safe to switch back to the
-+	 * interrupted stack in the #VC entry code.
++	 * Clear the boot_ghcb. The first exception comes in before the bss
++	 * section is cleared.
 +	 */
-+	char fallback_stack[EXCEPTION_STKSZ] __aligned(PAGE_SIZE);
- };
- 
- static DEFINE_PER_CPU(struct sev_es_runtime_data*, runtime_data);
- 
-+static void __init sev_es_setup_vc_stacks(int cpu)
-+{
-+	struct sev_es_runtime_data *data;
-+	struct cpu_entry_area *cea;
-+	unsigned long vaddr;
-+	phys_addr_t pa;
++	memset(&boot_ghcb_page, 0, PAGE_SIZE);
 +
-+	data = per_cpu(runtime_data, cpu);
-+	cea  = get_cpu_entry_area(cpu);
++	/* Alright - Make the boot-ghcb public */
++	boot_ghcb = &boot_ghcb_page;
 +
-+	/* Map #VC IST stack */
-+	vaddr = CEA_ESTACK_BOT(&cea->estacks, VC);
-+	pa    = __pa(data->ist_stack);
-+	cea_set_pte((void *)vaddr, pa, PAGE_KERNEL);
-+
-+	/* Map VC fall-back stack */
-+	vaddr = CEA_ESTACK_BOT(&cea->estacks, VC2);
-+	pa    = __pa(data->fallback_stack);
-+	cea_set_pte((void *)vaddr, pa, PAGE_KERNEL);
++	return true;
 +}
 +
- /* Needed in vc_early_forward_exception */
- void do_early_exception(struct pt_regs *regs, int trapnr);
++static void __init vc_early_forward_exception(struct es_em_ctxt *ctxt)
++{
++	int trapnr = ctxt->fi.vector;
++
++	if (trapnr == X86_TRAP_PF)
++		native_write_cr2(ctxt->fi.cr2);
++
++	ctxt->regs->orig_ax = ctxt->fi.error_code;
++	do_early_exception(ctxt->regs, trapnr);
++}
++
++static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
++					 struct ghcb *ghcb,
++					 unsigned long exit_code)
++{
++	enum es_result result;
++
++	switch (exit_code) {
++	default:
++		/*
++		 * Unexpected #VC exception
++		 */
++		result = ES_UNSUPPORTED;
++	}
++
++	return result;
++}
++
++bool __init handle_vc_boot_ghcb(struct pt_regs *regs)
++{
++	unsigned long exit_code = regs->orig_ax;
++	struct es_em_ctxt ctxt;
++	enum es_result result;
++
++	/* Do initial setup or terminate the guest */
++	if (unlikely(boot_ghcb == NULL && !sev_es_setup_ghcb()))
++		sev_es_terminate(GHCB_SEV_ES_REASON_GENERAL_REQUEST);
++
++	vc_ghcb_invalidate(boot_ghcb);
++
++	result = vc_init_em_ctxt(&ctxt, regs, exit_code);
++	if (result == ES_OK)
++		result = vc_handle_exitcode(&ctxt, boot_ghcb, exit_code);
++
++	/* Done - now check the result */
++	switch (result) {
++	case ES_OK:
++		vc_finish_insn(&ctxt);
++		break;
++	case ES_UNSUPPORTED:
++		early_printk("PANIC: Unsupported exit-code 0x%02lx in early #VC exception (IP: 0x%lx)\n",
++				exit_code, regs->ip);
++		goto fail;
++	case ES_VMM_ERROR:
++		early_printk("PANIC: Failure in communication with VMM (exit-code 0x%02lx IP: 0x%lx)\n",
++				exit_code, regs->ip);
++		goto fail;
++	case ES_DECODE_FAILED:
++		early_printk("PANIC: Failed to decode instruction (exit-code 0x%02lx IP: 0x%lx)\n",
++				exit_code, regs->ip);
++		goto fail;
++	case ES_EXCEPTION:
++		vc_early_forward_exception(&ctxt);
++		break;
++	case ES_RETRY:
++		/* Nothing to do */
++		break;
++	default:
++		BUG();
++	}
++
++	return true;
++
++fail:
++	show_regs(regs);
++
++	while (true)
++		halt();
++}
+diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
+index 1d6cb07f4f86..3966749d07ac 100644
+--- a/arch/x86/mm/extable.c
++++ b/arch/x86/mm/extable.c
+@@ -5,6 +5,7 @@
+ #include <xen/xen.h>
  
-@@ -249,6 +281,7 @@ void __init sev_es_init_vc_handling(void)
- 	for_each_possible_cpu(cpu) {
- 		sev_es_alloc_runtime_data(cpu);
- 		sev_es_init_ghcb(cpu);
-+		sev_es_setup_vc_stacks(cpu);
- 	}
- }
+ #include <asm/fpu/internal.h>
++#include <asm/sev-es.h>
+ #include <asm/traps.h>
+ #include <asm/kdebug.h>
  
 -- 
 2.28.0
