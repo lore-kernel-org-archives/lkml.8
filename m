@@ -5,49 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E29C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77D3F2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B643E2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261234;
-	bh=YUEmkkPw1tVD4ci3Fl8gL2AxajOkTwiImYf2WDABfDc=;
+	s=default; t=1598261238;
+	bh=4hK1erPQRlP1+oL9gdRiB7F0rzjISyPy6USi40HgIjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LC9lj7fzvWAAywA2FIvogTVCCBI8I5Rc1bYQCYCYXlPxRuj7VKux4fc5rbvPM10GJ
-	 4GL+VFZFsmEve+kNBXn3YFb9b9J6MUHjvEk5BIYdf9NHh1paHgEzgkj1KwSG7FGjEH
-	 I90Dd4NsbrdIt3Hjn/X017AipFWM2C5nkuY0zL+A=
+	b=RG0gYRK34F87jAYz7Z1E33HfY1mF/tZJnAIy8vkpLZyt2iibh85BBFgbcpwVMIifz
+	 Q/ch7dNhM9xwjMllg9m6BSc9hwvRaRjrQ02qjVgO0f2QTC2Oj+awiLr0XYvqQKW83Z
+	 daBrYV67RZdJZtkiJquOm/1TdT4S65YwgdUw5xXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbgHXJ1N (ORCPT
+        id S1729916AbgHXJ1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:27:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58988 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:27:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730103AbgHXIwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:52:39 -0400
+        id S1730101AbgHXIwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:52:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A02942075B;
-        Mon, 24 Aug 2020 08:52:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 220C020FC3;
+        Mon, 24 Aug 2020 08:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259155;
-        bh=YUEmkkPw1tVD4ci3Fl8gL2AxajOkTwiImYf2WDABfDc=;
+        s=default; t=1598259152;
+        bh=4hK1erPQRlP1+oL9gdRiB7F0rzjISyPy6USi40HgIjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wvbYseJ8+T3y7fPc5uHoPWYuItW8/dD5cK9Gzf1ij+pkIUZZIV2xytuOCgkUxyeRj
-         qG0PmwaZFgokFDwO/do0nhSND44WUQdJKWYwyPJxAgmFNGstYmx9G7cBfBT5AGMgER
-         RdVvucM4SuQGuBfMZKjU0FLVwfWhKXvFrlTicqok=
+        b=0CQDzscgn1P3sfLLVJDl9VoIJZ7NJ7Kz7gfVne8C5rCLI04X1zhCiRsXlT5JFQzh0
+         pGx7f1opQzqGq1DplT3W83Vjt453te5OzNd1jZBK0ZL8kpc6EH6xcNS0IohbWH9oQ2
+         /MC3oKdVwYDAOU4znPdgvXcSSPVX2MXhE+kSqFyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>, Jan Kara <jack@suse.cz>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 29/39] ext4: fix potential negative array index in do_split()
-Date:   Mon, 24 Aug 2020 10:31:28 +0200
-Message-Id: <20200824082350.027967420@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 28/39] alpha: fix annotation of io{read,write}{16,32}be()
+Date:   Mon, 24 Aug 2020 10:31:27 +0200
+Message-Id: <20200824082349.976616110@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082348.445866152@linuxfoundation.org>
 References: <20200824082348.445866152@linuxfoundation.org>
@@ -60,66 +66,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Sandeen <sandeen@redhat.com>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit 5872331b3d91820e14716632ebb56b1399b34fe1 ]
+[ Upstream commit bd72866b8da499e60633ff28f8a4f6e09ca78efe ]
 
-If for any reason a directory passed to do_split() does not have enough
-active entries to exceed half the size of the block, we can end up
-iterating over all "count" entries without finding a split point.
+These accessors must be used to read/write a big-endian bus.  The value
+returned or written is native-endian.
 
-In this case, count == move, and split will be zero, and we will
-attempt a negative index into map[].
+However, these accessors are defined using be{16,32}_to_cpu() or
+cpu_to_be{16,32}() to make the endian conversion but these expect a
+__be{16,32} when none is present.  Keeping them would need a force cast
+that would solve nothing at all.
 
-Guard against this by detecting this case, and falling back to
-split-to-half-of-count instead; in this case we will still have
-plenty of space (> half blocksize) in each split block.
+So, do the conversion using swab{16,32}, like done in asm-generic for
+similar situations.
 
-Fixes: ef2b02d3e617 ("ext34: ensure do_split leaves enough free space in both blocks")
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/f53e246b-647c-64bb-16ec-135383c70ad7@redhat.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Link: http://lkml.kernel.org/r/20200622114232.80039-1-luc.vanoostenryck@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/namei.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/alpha/include/asm/io.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index 2d918b43b536e..157dbbe235f90 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -1759,7 +1759,7 @@ static struct ext4_dir_entry_2 *do_split(handle_t *handle, struct inode *dir,
- 			     blocksize, hinfo, map);
- 	map -= count;
- 	dx_sort_map(map, count);
--	/* Split the existing block in the middle, size-wise */
-+	/* Ensure that neither split block is over half full */
- 	size = 0;
- 	move = 0;
- 	for (i = count-1; i >= 0; i--) {
-@@ -1769,8 +1769,18 @@ static struct ext4_dir_entry_2 *do_split(handle_t *handle, struct inode *dir,
- 		size += map[i].size;
- 		move++;
- 	}
--	/* map index at which we will split */
--	split = count - move;
-+	/*
-+	 * map index at which we will split
-+	 *
-+	 * If the sum of active entries didn't exceed half the block size, just
-+	 * split it in half by count; each resulting block will have at least
-+	 * half the space free.
-+	 */
-+	if (i > 0)
-+		split = count - move;
-+	else
-+		split = count/2;
-+
- 	hash2 = map[split].hash;
- 	continued = hash2 == map[split - 1].hash;
- 	dxtrace(printk(KERN_INFO "Split block %lu at %x, %i/%i\n",
+diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
+index ff4049155c840..355aec0867f4d 100644
+--- a/arch/alpha/include/asm/io.h
++++ b/arch/alpha/include/asm/io.h
+@@ -491,10 +491,10 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
+ }
+ #endif
+ 
+-#define ioread16be(p) be16_to_cpu(ioread16(p))
+-#define ioread32be(p) be32_to_cpu(ioread32(p))
+-#define iowrite16be(v,p) iowrite16(cpu_to_be16(v), (p))
+-#define iowrite32be(v,p) iowrite32(cpu_to_be32(v), (p))
++#define ioread16be(p) swab16(ioread16(p))
++#define ioread32be(p) swab32(ioread32(p))
++#define iowrite16be(v,p) iowrite16(swab16(v), (p))
++#define iowrite32be(v,p) iowrite32(swab32(v), (p))
+ 
+ #define inb_p		inb
+ #define inw_p		inw
 -- 
 2.25.1
 
