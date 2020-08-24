@@ -2,130 +2,99 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A9DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7361F2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:09:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cFWXMyWn"
+	by mail.kernel.org (Postfix) with ESMTP id E8ADC2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598296167;
+	bh=WM1mj9GPK7MyD6GlnY/K1UotRAuqdew7qiTlVR6AOSU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gK4tQvaI/oKqy7E4D7xn19tIdDjDsyhB8FF0grVsV0f9iwfdTJHJ7V//nJ46KrP99
+	 KphWF3C9CXrIyQqoJLMDCS/d2yA7nRYmj0Vzp9yykwdBY5sW7Azgfs3dhh2rRIyaMe
+	 RnR6KY+RjT5GCyfkmJ3/m4l3z5QNPlkKFy38PyWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgHXTJF (ORCPT
+        id S1727964AbgHXTJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:09:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgHXTJD (ORCPT
+        Mon, 24 Aug 2020 15:09:25 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53280 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbgHXTJW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:09:03 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77856C061573;
-        Mon, 24 Aug 2020 12:09:03 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id h15so3327962wrt.12;
-        Mon, 24 Aug 2020 12:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=1/OwrF6O4VfIPs9S1xxSmo2BOW+0i4nsagYJC2DaJR0=;
-        b=cFWXMyWnhZK5nA5qU9KqQ9s7hjZ3hz6kAsmKD3x6qC1cRjhnC6qDyns9g2XG0PXpYZ
-         NfxulGrAmAF5NwG45URsOSf4qZX6nlueL2C1RtJYvp3d3PL5+Pr8zcIl03id53/GOLzM
-         ealXfC2ehlkCBMi0nJfjcIdc+A5swPmfwC8NswkVKAkc0ctu57maYtebzCDgwu3sqnIU
-         PmsRD/aY8njmxdznomtKxkz6sIuaAJ5/WzfwVGW38Xle0LMESS0xBV66v/+fPitw0ezX
-         Yk6tJ2C+MjbgfDJfOJT1PrdE7P3X8XhsTktsd5hEguM8V9BM+2DO2c1JnDC4VmzlwmIM
-         CVEQ==
+        Mon, 24 Aug 2020 15:09:22 -0400
+Received: by mail-wm1-f68.google.com with SMTP id u18so9781804wmc.3;
+        Mon, 24 Aug 2020 12:09:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=1/OwrF6O4VfIPs9S1xxSmo2BOW+0i4nsagYJC2DaJR0=;
-        b=Mm4JD83WFAFxrJRI4sxThyORqzuLRic9LTqsHuthyHOQL+6NE/IzUjhlsZWkuIYvro
-         7p7eI0axd0MWFntz67oIRVasYiTgS4ueLJEuHSlzK8eOxyRMFonHxaeO1lSf7SFS4D4O
-         Vgk7dqzsVzW0IBrDZ0WHCIpjDf63iTIlMGTGLEQ609cqbVPR0s7dud6hW69CEIabNe+7
-         MIwfgsuzP+JGw8w0OuFlThTadt62/wCcr+gikGI0INVsCBrleCDOxk7KFBpEaRKSZ4fg
-         us1qQWvFWt0G1H3uIXffSrfAgOTb/qGHYKl4xtPf5tP1LpNbvVPGthDWXCD4p5BqaN7s
-         44Qw==
-X-Gm-Message-State: AOAM532yuH8BLHP+jsVRWhdj1lCNQm/Pk/JNenCKjfE8r6zr2xVZgdfx
-        a18/TtufigHjee5XdzzpkBFRYBRFoklrRwYNm0s=
-X-Google-Smtp-Source: ABdhPJwLbaBmcJ0YU0Mm63DMRB1XUTp+nUhq0FoG7V+AI1bd+N1eoy8dCmFllCCCc33XNjvD+ws1FKPboGBlQG76Rsk=
-X-Received: by 2002:adf:e8cc:: with SMTP id k12mr7385575wrn.2.1598296142108;
- Mon, 24 Aug 2020 12:09:02 -0700 (PDT)
-MIME-Version: 1.0
-From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Date:   Mon, 24 Aug 2020 22:08:25 +0300
-Message-ID: <CAJ1xhMUpqtKMuGUZdComskTqd0oOKCfDuVQT3+c13u=NSJLkBw@mail.gmail.com>
-Subject: nouveau PUSHBUFFER_ERR on 5.9.0-rc2-next-20200824
-To:     bskeggs@redhat.com, Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau@lists.freedesktop.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lkYuZ+AU/xmAHBPjtK9v9v+eSex3YmMEccb9nQ0uFOg=;
+        b=YDbdWh6Sf+rnXJK525OJXzbExo+KGCvF7M9T2/tnRY0ZGHjg6y0KgtDqvGHWPRLdS1
+         YxP5bD0RVtWohGGfP0KQQxmVOl9vspQbZE3et/y5aod64ap6UpkwBeuVdyn5s/zo6g+p
+         yIvzw0RkG3cOU1u29tc6i/AI0v++d02mdee9ThYC6k7j+GdvA58sD95zEBNO6MGKuh9Q
+         Hmni0aauuziq03Cpt1M6qP68GjPQbd4URfARf/H5g5pItJJNeGoKgvGOp0dDbAe5zcKj
+         IN1H1MLz8k2KNuljUi6CoKvNWEJMBl8QwLtPp8qzq8ObhMmSdSDbDLbdsgayNPetGIfG
+         VyEg==
+X-Gm-Message-State: AOAM5319HyF/l7dLtPmAhB7xqUYrzNzh4pICffzDvpzEYANqw8voa4s4
+        r7bU0FyXBYJaLjv8wooULFI=
+X-Google-Smtp-Source: ABdhPJyqfbE+cdOfZ4IGBp4XY991J2Mg2zGm1lFpUETzbAozdFqX/22fzbavZUIVBbh0wo3qFzcasA==
+X-Received: by 2002:a1c:4b0e:: with SMTP id y14mr672535wma.60.1598296160696;
+        Mon, 24 Aug 2020 12:09:20 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id o66sm954229wmb.27.2020.08.24.12.09.19
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 12:09:20 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 21:09:17 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux-Next <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 3/4] arm64: dts: imx8mm-var-som: Add Variscite
+ VAR-SOM-MX8MM System on Module
+Message-ID: <20200824190917.GA8631@kozik-lap>
+References: <20200824160247.19032-1-krzk@kernel.org>
+ <20200824160247.19032-3-krzk@kernel.org>
+ <CAOMZO5DquPR9BmQP0kZfTqNJmRabPe1Vtc801M9CVCPFCd1usQ@mail.gmail.com>
+ <20200824185713.GA5343@kozik-lap>
+ <CAOMZO5B71L7+d_bUY2D=fjhhg5QFEnTsq=U84+7k9nhhmxV04g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5B71L7+d_bUY2D=fjhhg5QFEnTsq=U84+7k9nhhmxV04g@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since upgrading to linux-next based on 5.9.0-rc1 and 5.9.0-rc2 I have
-had my mouse pointer disappear soon after logging in, and I have
-observed the system freezing temporarily when clicking on objects and
-when typing text.
-I have also found records of push buffer errors in dmesg output:
-[ 6625.450394] nouveau 0000:01:00.0: disp: ERROR 1 [PUSHBUFFER_ERR] 02
-[] chid 0 mthd 0000 data 00000400
+On Mon, Aug 24, 2020 at 04:03:53PM -0300, Fabio Estevam wrote:
+> On Mon, Aug 24, 2020 at 3:57 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> 
+> > True, I'll fix it up, thanks.
+> >
+> > Any comments for the Symphony DTS before v4?
+> 
+> It looks good.
+> 
+> One suggestion is to remove pinctrl_pcie0 for now and add it when PCI
+> support is in place.
 
-I tried setting CONFIG_NOUVEAU_DEBUG=5 (tracing) to try and collect
-further debug info, but nothing caught the eye.
+Indeed, a left over from a removed PCIe node.
 
-The error message in question comes from nv50_disp_intr_error in
-drivers/gpu/drm/nouveau/nvkm/engine/disp/nv50.c:613,645.
-And nv50_disp_intr_error is called from nv50_disp_intr in the
-following while block:
-drivers/gpu/drm/nouveau/nvkm/engine/disp/nv50.c:647,658
-void
-nv50_disp_intr(struct nv50_disp *disp)
-{
-        struct nvkm_device *device = disp->base.engine.subdev.device;
-        u32 intr0 = nvkm_rd32(device, 0x610020);
-        u32 intr1 = nvkm_rd32(device, 0x610024);
+Thanks for review.
 
-        while (intr0 & 0x001f0000) {
-                u32 chid = __ffs(intr0 & 0x001f0000) - 16;
-                nv50_disp_intr_error(disp, chid);
-                intr0 &= ~(0x00010000 << chid);
-        }
-...
-}
+Best regards,
+Krzysztof
 
-Could this be in any way related to this series of commits?
-commit 0a96099691c8cd1ac0744ef30b6846869dc2b566
-Author: Ben Skeggs <bskeggs@redhat.com>
-Date:   Tue Jul 21 11:34:07 2020 +1000
-
-    drm/nouveau/kms/nv50-: implement proper push buffer control logic
-
-    We had a, what was supposed to be temporary, hack in the KMS code where we'd
-    completely drain an EVO/NVD channel's push buffer when wrapping to the start
-    again, instead of treating it as a ring buffer.
-
-    Let's fix that, finally.
-
-    Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-
-Here are my GPU details:
-01:00.0 VGA compatible controller: NVIDIA Corporation GT216 [GeForce
-210] (rev a1)
-        Subsystem: Micro-Star International Co., Ltd. [MSI] Device 8a93
-        Kernel driver in use: nouveau
-
-The last linux-next kernel I built where the problem reported does not
-manifest itself is 5.8.0-rc6-next-20200720.
-
-I would appreciate being given any pointers on how to further debug this.
-Or is git bisect the only way to proceed with this?
-
-Thanks.
