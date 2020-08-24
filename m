@@ -2,118 +2,105 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF550C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE4AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94EEF2078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598273771;
-	bh=uaIpIkYXWrHltizAIIf9mWbKoMDFCmIolkVH3w/Ohp4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=plpVII6MaH2P0Q3J68vkE0p/rSZBTxzpH/Y5aeIkyhUxy8l8E1Hbj1Vdz/GgiS63I
-	 +cpPjuM9hdRJKRj2kIc08niukZrdndE5GOoin4jtAfkI1Ir5PQ04vqYK13AANGhRNR
-	 CvsADtiR4APuPH/ZzZzcAXWGZBGWpDQVYoVmQGMk=
+	by mail.kernel.org (Postfix) with ESMTP id 7038522B40
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgHXM4K (ORCPT
+        id S1727970AbgHXM4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:56:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbgHXMzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:55:55 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10AD020838;
-        Mon, 24 Aug 2020 12:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598273755;
-        bh=uaIpIkYXWrHltizAIIf9mWbKoMDFCmIolkVH3w/Ohp4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=azHT/aIvCD/fhdYwv6V4TMwMl5hcMboYO4ABWj7syBpuZ8Ej+ZOh8eTIXP8WG2WjC
-         Plq3dzr5Mq1PdfanNBX1TSOW9B2DGO48MgzNHoc+h4kPKQZm1mdrdM5pLijRL1dQx8
-         gYGFSnysboVazxCkToYQDi260ScgK/i45RtvhNF8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kAC0v-006DfH-HL; Mon, 24 Aug 2020 13:55:53 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 24 Aug 2020 13:55:53 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        suzuki.poulose@arm.com, james.morse@arm.com, pbonzini@redhat.com,
-        kernel-team@android.com, stable@vger.kernel.org
-Subject: Re: [PATCH stable-4.9.y backport] KVM: arm/arm64: Don't reschedule in
- unmap_stage2_range()
-In-Reply-To: <20200824112940.24706-1-will@kernel.org>
-References: <20200824112940.24706-1-will@kernel.org>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <d59a7d7de22b1a83ff2ca4bf5204c551@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: will@kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, suzuki.poulose@arm.com, james.morse@arm.com, pbonzini@redhat.com, kernel-team@android.com, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Mon, 24 Aug 2020 08:56:14 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:60780 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727948AbgHXM4J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 08:56:09 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0U6k9-bl_1598273712;
+Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6k9-bl_1598273712)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 24 Aug 2020 20:55:22 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, willy@infradead.org,
+        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        shakeelb@google.com, iamjoonsoo.kim@lge.com,
+        richard.weiyang@gmail.com, kirill@shutemov.name,
+        alexander.duyck@gmail.com, rong.a.chen@intel.com, mhocko@suse.com,
+        vdavydov.dev@gmail.com, shy828301@gmail.com
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH v18 26/32] mm/mlock: remove __munlock_isolate_lru_page
+Date:   Mon, 24 Aug 2020 20:54:59 +0800
+Message-Id: <1598273705-69124-27-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-24 12:29, Will Deacon wrote:
-> Upstream commits fdfe7cbd5880 ("KVM: Pass MMU notifier range flags to
-> kvm_unmap_hva_range()") and b5331379bc62 ("KVM: arm64: Only reschedule
-> if MMU_NOTIFIER_RANGE_BLOCKABLE is not set") fix a "sleeping from 
-> invalid
-> context" BUG caused by unmap_stage2_range() attempting to reschedule 
-> when
-> called on the OOM path.
-> 
-> Unfortunately, these patches rely on the MMU notifier callback being
-> passed knowledge about whether or not blocking is permitted, which was
-> introduced in 4.19. Rather than backport this considerable amount of
-> infrastructure just for KVM on arm, instead just remove the conditional
-> reschedule.
-> 
-> Cc: <stable@vger.kernel.org> # v4.9 only
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: James Morse <james.morse@arm.com>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  arch/arm/kvm/mmu.c | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/arch/arm/kvm/mmu.c b/arch/arm/kvm/mmu.c
-> index bb0d5e21d60b..b5ce1e81f945 100644
-> --- a/arch/arm/kvm/mmu.c
-> +++ b/arch/arm/kvm/mmu.c
-> @@ -298,12 +298,6 @@ static void unmap_stage2_range(struct kvm *kvm,
-> phys_addr_t start, u64 size)
->  		next = stage2_pgd_addr_end(addr, end);
->  		if (!stage2_pgd_none(*pgd))
->  			unmap_stage2_puds(kvm, pgd, addr, next);
-> -		/*
-> -		 * If the range is too large, release the kvm->mmu_lock
-> -		 * to prevent starvation and lockup detector warnings.
-> -		 */
-> -		if (next != end)
-> -			cond_resched_lock(&kvm->mmu_lock);
->  	} while (pgd++, addr = next, addr != end);
->  }
+The func only has one caller, remove it to clean up code and simplify
+code.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/mlock.c | 22 ++++------------------
+ 1 file changed, 4 insertions(+), 18 deletions(-)
 
-         M.
+diff --git a/mm/mlock.c b/mm/mlock.c
+index 46a05e6ec5ba..40a8bb79c65e 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -102,23 +102,6 @@ void mlock_vma_page(struct page *page)
+ }
+ 
+ /*
+- * Isolate a page from LRU with optional get_page() pin.
+- * Assumes lru_lock already held and page already pinned.
+- */
+-static bool __munlock_isolate_lru_page(struct page *page,
+-				struct lruvec *lruvec, bool getpage)
+-{
+-	if (TestClearPageLRU(page)) {
+-		if (getpage)
+-			get_page(page);
+-		del_page_from_lru_list(page, lruvec, page_lru(page));
+-		return true;
+-	}
+-
+-	return false;
+-}
+-
+-/*
+  * Finish munlock after successful page isolation
+  *
+  * Page must be locked. This is a wrapper for try_to_munlock()
+@@ -300,7 +283,10 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+ 			 * We already have pin from follow_page_mask()
+ 			 * so we can spare the get_page() here.
+ 			 */
+-			if (__munlock_isolate_lru_page(page, lruvec, false)) {
++			if (TestClearPageLRU(page)) {
++				enum lru_list lru = page_lru(page);
++
++				del_page_from_lru_list(page, lruvec, lru);
+ 				unlock_page_memcg(page);
+ 				continue;
+ 			} else
 -- 
-Jazz is not dead. It just smells funny...
+1.8.3.1
+
