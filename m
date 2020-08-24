@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E85FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D310DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEB482071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8BA2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263063;
-	bh=TEnAfCRFKqzWR8b/LmW6mBYUZ01Boo0wZb54NQoT21g=;
+	s=default; t=1598263070;
+	bh=bTH5iXVwhap6MKUOjysl2NNrLylw8YNHEzLt+9lZNL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SmIx9DSoSLW5xnuHXmWQPoR0Ow89kUB/DAWaSWtjJqXn16LpyiTIiVgKuBTpqbwAK
-	 okd0fPEzyIQ8xRUd1mdCTUbITx/PvL2CNE9NZe/+iE/363U3dW3/Gzzs/dO5RW6R3z
-	 VtCjdpZNaEB+0ySI6FuGcoA/2qclDMDRzFNKe9RY=
+	b=fuUcAMGQXztN3PiLgvKqQqBOQ8nxSQjBhs0L9B/TI/u4pZOuqbi3kk+Y4X09/l+cn
+	 Yd6sbPx1LqPbSkBiD6TOD+TriZUnUgNYZY0c3TZNwRW4mhLKmm7mTZ3Ww4t51zoMrg
+	 s4IQ8lvXCwskzbqJgUcewF9ZM0OHCaijtDUcMQgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729773AbgHXJ5m (ORCPT
+        id S1729823AbgHXJ5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:57:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44138 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:57:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgHXIev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:34:51 -0400
+        id S1726690AbgHXIes (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:34:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ECD8207D3;
-        Mon, 24 Aug 2020 08:34:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A806B206F0;
+        Mon, 24 Aug 2020 08:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258090;
-        bh=TEnAfCRFKqzWR8b/LmW6mBYUZ01Boo0wZb54NQoT21g=;
+        s=default; t=1598258088;
+        bh=bTH5iXVwhap6MKUOjysl2NNrLylw8YNHEzLt+9lZNL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FPwgfWA4h4XBgqZ4mNNIPJvJtX/NloZ5uSkqx9l0b/0t4HDMJ9KoKLfv03JIAa+Ag
-         Z4VjcGnOjEPgXCwCByLHdlbsqCtV18SAd8VTYroX/tUEtQj0OxubVFE+uI579sGkWv
-         ohSv32cuH6lEzTUeusc7YAJOAB1CmSsa1dLhM+Gw=
+        b=KaG8lLXpN84gr6nHAOSPISDajPMx/gWGOldTOcyGYOWS4H7Xa2l5BrnHjz4r8gtM1
+         7GrtUsP7n8XZ05ARm4PdpZLe43gF7CqgBhuSIwJ3FPJJwUyamWVVI2y+t+gIlBN5N0
+         pX6UT51p4+f9JIftosIofuGHJMyZ/3EyfVh8F0dk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Laurent Vivier <laurent@vivier.eu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 071/148] fs/signalfd.c: fix inconsistent return codes for signalfd4
-Date:   Mon, 24 Aug 2020 10:29:29 +0200
-Message-Id: <20200824082417.477038233@linuxfoundation.org>
+Subject: [PATCH 5.8 053/148] Input: psmouse - add a newline when printing proto by sysfs
+Date:   Mon, 24 Aug 2020 10:29:11 +0200
+Message-Id: <20200824082416.607254112@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -63,58 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-[ Upstream commit a089e3fd5a82aea20f3d9ec4caa5f4c65cc2cfcc ]
+[ Upstream commit 4aec14de3a15cf9789a0e19c847f164776f49473 ]
 
-The kernel signalfd4() syscall returns different error codes when called
-either in compat or native mode.  This behaviour makes correct emulation
-in qemu and testing programs like LTP more complicated.
+When I cat parameter 'proto' by sysfs, it displays as follows. It's
+better to add a newline for easy reading.
 
-Fix the code to always return -in both modes- EFAULT for unaccessible user
-memory, and EINVAL when called with an invalid signal mask.
+root@syzkaller:~# cat /sys/module/psmouse/parameters/proto
+autoroot@syzkaller:~#
 
-Signed-off-by: Helge Deller <deller@gmx.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Laurent Vivier <laurent@vivier.eu>
-Link: http://lkml.kernel.org/r/20200530100707.GA10159@ls3530.fritz.box
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200720073846.120724-1-wangxiongfeng2@huawei.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/signalfd.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/input/mouse/psmouse-base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/signalfd.c b/fs/signalfd.c
-index 44b6845b071c3..5b78719be4455 100644
---- a/fs/signalfd.c
-+++ b/fs/signalfd.c
-@@ -314,9 +314,10 @@ SYSCALL_DEFINE4(signalfd4, int, ufd, sigset_t __user *, user_mask,
+diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
+index 527ae0b9a191e..0b4a3039f312f 100644
+--- a/drivers/input/mouse/psmouse-base.c
++++ b/drivers/input/mouse/psmouse-base.c
+@@ -2042,7 +2042,7 @@ static int psmouse_get_maxproto(char *buffer, const struct kernel_param *kp)
  {
- 	sigset_t mask;
+ 	int type = *((unsigned int *)kp->arg);
  
--	if (sizemask != sizeof(sigset_t) ||
--	    copy_from_user(&mask, user_mask, sizeof(mask)))
-+	if (sizemask != sizeof(sigset_t))
- 		return -EINVAL;
-+	if (copy_from_user(&mask, user_mask, sizeof(mask)))
-+		return -EFAULT;
- 	return do_signalfd4(ufd, &mask, flags);
+-	return sprintf(buffer, "%s", psmouse_protocol_by_type(type)->name);
++	return sprintf(buffer, "%s\n", psmouse_protocol_by_type(type)->name);
  }
  
-@@ -325,9 +326,10 @@ SYSCALL_DEFINE3(signalfd, int, ufd, sigset_t __user *, user_mask,
- {
- 	sigset_t mask;
- 
--	if (sizemask != sizeof(sigset_t) ||
--	    copy_from_user(&mask, user_mask, sizeof(mask)))
-+	if (sizemask != sizeof(sigset_t))
- 		return -EINVAL;
-+	if (copy_from_user(&mask, user_mask, sizeof(mask)))
-+		return -EFAULT;
- 	return do_signalfd4(ufd, &mask, 0);
- }
- 
+ static int __init psmouse_init(void)
 -- 
 2.25.1
 
