@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65618C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48F33206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C103206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:17:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbgHXJR1 (ORCPT
+        id S1730068AbgHXJRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:17:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37458 "EHLO
+        Mon, 24 Aug 2020 05:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730428AbgHXIz6 (ORCPT
+        with ESMTP id S1730427AbgHXIz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 04:55:58 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD70C0613ED;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E26A2C061755;
         Mon, 24 Aug 2020 01:55:57 -0700 (PDT)
 Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 6015760C;
-        Mon, 24 Aug 2020 10:55:50 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 60A6E542;
+        Mon, 24 Aug 2020 10:55:49 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -49,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 08/76] x86/umip: Factor out instruction fetch
-Date:   Mon, 24 Aug 2020 10:54:03 +0200
-Message-Id: <20200824085511.7553-9-joro@8bytes.org>
+Subject: [PATCH v6 06/76] x86/traps: Move pf error codes to <asm/trap_pf.h>
+Date:   Mon, 24 Aug 2020 10:54:01 +0200
+Message-Id: <20200824085511.7553-7-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
 References: <20200824085511.7553-1-joro@8bytes.org>
@@ -64,126 +64,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Factor out the code to fetch the instruction from user-space to a helper
-function.
-
-No functional changes.
+Move the definition of the x86 page-fault error code bits to the new
+header file asm/trap_pf.h. This makes it easier to include them into
+pre-decompression boot code. No functional changes.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-8-joro@8bytes.org
+Link: https://lore.kernel.org/r/20200724160336.5435-6-joro@8bytes.org
 ---
- arch/x86/include/asm/insn-eval.h |  2 ++
- arch/x86/kernel/umip.c           | 26 +++++-----------------
- arch/x86/lib/insn-eval.c         | 38 ++++++++++++++++++++++++++++++++
- 3 files changed, 46 insertions(+), 20 deletions(-)
+ arch/x86/include/asm/trap_pf.h | 24 ++++++++++++++++++++++++
+ arch/x86/include/asm/traps.h   | 19 +------------------
+ 2 files changed, 25 insertions(+), 18 deletions(-)
+ create mode 100644 arch/x86/include/asm/trap_pf.h
 
-diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
-index 2b6ccf2c49f1..b8b9ef1bbd06 100644
---- a/arch/x86/include/asm/insn-eval.h
-+++ b/arch/x86/include/asm/insn-eval.h
-@@ -19,5 +19,7 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
- int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
- unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
- int insn_get_code_seg_params(struct pt_regs *regs);
-+int insn_fetch_from_user(struct pt_regs *regs,
-+			 unsigned char buf[MAX_INSN_SIZE]);
- 
- #endif /* _ASM_X86_INSN_EVAL_H */
-diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-index 2c304fd0bb1a..ad135be4f1f0 100644
---- a/arch/x86/kernel/umip.c
-+++ b/arch/x86/kernel/umip.c
-@@ -335,11 +335,11 @@ static void force_sig_info_umip_fault(void __user *addr, struct pt_regs *regs)
-  */
- bool fixup_umip_exception(struct pt_regs *regs)
- {
--	int not_copied, nr_copied, reg_offset, dummy_data_size, umip_inst;
--	unsigned long seg_base = 0, *reg_addr;
-+	int nr_copied, reg_offset, dummy_data_size, umip_inst;
- 	/* 10 bytes is the maximum size of the result of UMIP instructions */
- 	unsigned char dummy_data[10] = { 0 };
- 	unsigned char buf[MAX_INSN_SIZE];
-+	unsigned long *reg_addr;
- 	void __user *uaddr;
- 	struct insn insn;
- 	int seg_defs;
-@@ -347,26 +347,12 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	if (!regs)
- 		return false;
- 
--	/*
--	 * If not in user-space long mode, a custom code segment could be in
--	 * use. This is true in protected mode (if the process defined a local
--	 * descriptor table), or virtual-8086 mode. In most of the cases
--	 * seg_base will be zero as in USER_CS.
--	 */
--	if (!user_64bit_mode(regs))
--		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
--
--	if (seg_base == -1L)
--		return false;
--
--	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
--				    sizeof(buf));
--	nr_copied = sizeof(buf) - not_copied;
-+	nr_copied = insn_fetch_from_user(regs, buf);
- 
- 	/*
--	 * The copy_from_user above could have failed if user code is protected
--	 * by a memory protection key. Give up on emulation in such a case.
--	 * Should we issue a page fault?
-+	 * The insn_fetch_from_user above could have failed if user code
-+	 * is protected by a memory protection key. Give up on emulation
-+	 * in such a case.  Should we issue a page fault?
- 	 */
- 	if (!nr_copied)
- 		return false;
-diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index 31600d851fd8..0c4f7ebc261b 100644
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -1369,3 +1369,41 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs)
- 		return (void __user *)-1L;
- 	}
- }
+diff --git a/arch/x86/include/asm/trap_pf.h b/arch/x86/include/asm/trap_pf.h
+new file mode 100644
+index 000000000000..305bc1214aef
+--- /dev/null
++++ b/arch/x86/include/asm/trap_pf.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_TRAP_PF_H
++#define _ASM_X86_TRAP_PF_H
 +
-+/**
-+ * insn_fetch_from_user() - Copy instruction bytes from user-space memory
-+ * @regs:	Structure with register values as seen when entering kernel mode
-+ * @buf:	Array to store the fetched instruction
++/*
++ * Page fault error code bits:
 + *
-+ * Gets the linear address of the instruction and copies the instruction bytes
-+ * to the buf.
-+ *
-+ * Returns:
-+ *
-+ * Number of instruction bytes copied.
-+ *
-+ * 0 if nothing was copied.
++ *   bit 0 ==	 0: no page found	1: protection fault
++ *   bit 1 ==	 0: read access		1: write access
++ *   bit 2 ==	 0: kernel-mode access	1: user-mode access
++ *   bit 3 ==				1: use of reserved bit detected
++ *   bit 4 ==				1: fault was an instruction fetch
++ *   bit 5 ==				1: protection keys block access
 + */
-+int insn_fetch_from_user(struct pt_regs *regs, unsigned char buf[MAX_INSN_SIZE])
-+{
-+	unsigned long seg_base = 0;
-+	int not_copied;
++enum x86_pf_error_code {
++	X86_PF_PROT	=		1 << 0,
++	X86_PF_WRITE	=		1 << 1,
++	X86_PF_USER	=		1 << 2,
++	X86_PF_RSVD	=		1 << 3,
++	X86_PF_INSTR	=		1 << 4,
++	X86_PF_PK	=		1 << 5,
++};
 +
-+	/*
-+	 * If not in user-space long mode, a custom code segment could be in
-+	 * use. This is true in protected mode (if the process defined a local
-+	 * descriptor table), or virtual-8086 mode. In most of the cases
-+	 * seg_base will be zero as in USER_CS.
-+	 */
-+	if (!user_64bit_mode(regs)) {
-+		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
-+		if (seg_base == -1L)
-+			return 0;
-+	}
-+
-+
-+	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
-+				    MAX_INSN_SIZE);
-+
-+	return MAX_INSN_SIZE - not_copied;
-+}
++#endif /* _ASM_X86_TRAP_PF_H */
+diff --git a/arch/x86/include/asm/traps.h b/arch/x86/include/asm/traps.h
+index 714b1a30e7b0..6a308355ea29 100644
+--- a/arch/x86/include/asm/traps.h
++++ b/arch/x86/include/asm/traps.h
+@@ -8,6 +8,7 @@
+ #include <asm/debugreg.h>
+ #include <asm/idtentry.h>
+ #include <asm/siginfo.h>			/* TRAP_TRACE, ... */
++#include <asm/trap_pf.h>
+ 
+ #ifdef CONFIG_X86_64
+ asmlinkage __visible notrace struct pt_regs *sync_regs(struct pt_regs *eregs);
+@@ -41,22 +42,4 @@ void __noreturn handle_stack_overflow(const char *message,
+ 				      unsigned long fault_address);
+ #endif
+ 
+-/*
+- * Page fault error code bits:
+- *
+- *   bit 0 ==	 0: no page found	1: protection fault
+- *   bit 1 ==	 0: read access		1: write access
+- *   bit 2 ==	 0: kernel-mode access	1: user-mode access
+- *   bit 3 ==				1: use of reserved bit detected
+- *   bit 4 ==				1: fault was an instruction fetch
+- *   bit 5 ==				1: protection keys block access
+- */
+-enum x86_pf_error_code {
+-	X86_PF_PROT	=		1 << 0,
+-	X86_PF_WRITE	=		1 << 1,
+-	X86_PF_USER	=		1 << 2,
+-	X86_PF_RSVD	=		1 << 3,
+-	X86_PF_INSTR	=		1 << 4,
+-	X86_PF_PK	=		1 << 5,
+-};
+ #endif /* _ASM_X86_TRAPS_H */
 -- 
 2.28.0
 
