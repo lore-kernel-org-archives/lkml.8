@@ -2,93 +2,143 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:37:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E19AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC1C22067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494412067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:39:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EflxfCon"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ua8GVG/w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgHXRhF (ORCPT
+        id S1726870AbgHXRjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34886 "EHLO
+        Mon, 24 Aug 2020 13:39:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbgHXRgq (ORCPT
+        with ESMTP id S1726513AbgHXRjG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:36:46 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03114C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:36:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=PDGpX/gLn6F/h8sTkr6/xtJftCfZUJ0TMwjy5eqECbw=; b=EflxfCon92BXdyEpHqw0j6BRKB
-        kHi1RfocRHJrsGcFweJYVWk1o8lsW3K+xRkyZRTDbZ4K1RcSRWQElpDgwAJsJndV0PRfjhdTnT5e1
-        Z2R2bc9dUvv5a+bBZmqdI1FBJsLI36RsUiBo2mEWrU4jJwrl7I5jgj12xCCa42ItzmkhozXwebjRi
-        5Ymj7UAF354UfSMh2mUB4v1cVVXDlM8U5BwnffhxApZ76471ZKtO3M1I0Z0OiS+L42gP4hHGVwYLz
-        4MXysnyDzjjdB4x+71CKqGrCC/s+x8vVIEmtS/lMJPz/VDfFsxw1UVWFTJKz0m4OqFMTnWXCe5Hum
-        SOLhP7JQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAGOe-0006CA-2D; Mon, 24 Aug 2020 17:36:40 +0000
-Date:   Mon, 24 Aug 2020 18:36:39 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] mm: Pass pvec directly to find_get_entries
-Message-ID: <20200824173639.GD17456@casper.infradead.org>
-References: <20200819150555.31669-1-willy@infradead.org>
- <20200819150555.31669-7-willy@infradead.org>
- <20200824161620.GK24877@quack2.suse.cz>
+        Mon, 24 Aug 2020 13:39:06 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E93C061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:39:05 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id g75so8996335wme.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 10:39:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NHqg/CRd3ImS5C9/z0529f/sgF1Y8XoJ8ekTa/Kbeao=;
+        b=ua8GVG/wkZhFJ0nIz55IgC5mKz64cCXHEZh8OOq+bgoz7H1Jx6HwMl4N1S5vVT5wnd
+         mno1udnNO1eRtrBmID3NCP+QZTMJBaA9kail1BX9zI42pqVXxqgOeUeLmdrUc61fF8UZ
+         ZXUjrZ+W9pm2GwriQ3Gwfdbr3wYQKqGAsgh7CLuJJqCswrR0Kl3ZctHiDD9vGCLUZcA1
+         Ctai4tRtrkCU5qZ+6GHuWGppBdzhu1cSWG4XtZv7xUghqrOajjhVCWRlBXmLGXNTIAgm
+         Knw1sB06QFJU8qfzkuhkFoid/ptQrThXWttttA7kvk2NviUj9k6mBc01BxwBImLvlKwy
+         bLZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NHqg/CRd3ImS5C9/z0529f/sgF1Y8XoJ8ekTa/Kbeao=;
+        b=AQ+/99UuUDKpM7ASOw91tB8tAOIskWd3Lbt9tOGsWGjnluT/CbxxQGq381IUSLUcc8
+         BB3nsO3klno4K84tRauNSXlOpE9VLdEBDNDIA518sz8rBSzjHWFRX4fEcqi9kyKYGj7X
+         HEcOaFq55uoeXxzqMvmt488pkCGumtTVm6A9098ruZuCL22qAg4sDPq28V0nL9/sA9fZ
+         +9lG/xNnYWCgOZzjGOt/etUdobqPbh64cOl1go1XXCHpXDaYg6dN6mQh3eR3+mzkcQxa
+         b/DOB1rT/2hmfTlT42n27C66smMYSjG9Y6qK7Dqnz2IdFBZb9dY506Tbui4tLYf8uA8i
+         4dmg==
+X-Gm-Message-State: AOAM531PPn0cJ1FfwRm7Jlk7jXaMwQ9GlwrKv5x2VKncawkw+5HUwE11
+        Gi89FnTMpRFWLcN8Zo1ipPsQaA==
+X-Google-Smtp-Source: ABdhPJyzldmOEXlL6891aI7qL7sR+2Tl5GOk5HnmHxIL3oR6HsnWwls74S99vrVXQdme8MY2daqqOw==
+X-Received: by 2002:a1c:6555:: with SMTP id z82mr344446wmb.67.1598290743340;
+        Mon, 24 Aug 2020 10:39:03 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id y24sm471977wmi.17.2020.08.24.10.39.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 10:39:02 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v9 0/3] devres: provide and use devm_krealloc()
+Date:   Mon, 24 Aug 2020 19:38:56 +0200
+Message-Id: <20200824173859.4910-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824161620.GK24877@quack2.suse.cz>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 06:16:20PM +0200, Jan Kara wrote:
-> On Wed 19-08-20 16:05:54, Matthew Wilcox (Oracle) wrote:
-> > All callers of find_get_entries() use a pvec, so pass it directly
-> > instead of manipulating it in the caller.
-> > 
-> > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> 
-> Rather than passing pvec to find_get_entries() and then making everybody
-> use it, won't it more consistent WRT the naming to make everybody use
-> pagevec_lookup_entries() (which is trivial at this point in the series) and
-> then rename find_get_entries() to pagevec_lookup_entries()? I.e., I'd prefer
-> if the final function was called pagevec_lookup_entries() because that is
-> IMO more consistent with how other functions are named in this area...
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-It seemed more consistent to me to have everybody using
-find_get_entries().  To me the pagevec functions:
+Regular krealloc() obviously can't work with managed memory. This series
+implements devm_krealloc() and adds two first users with hope that this
+helper will be adopted by other drivers currently using non-managed
+krealloc().
 
-1. Are in mm/swap.c (not really sure why)
-2. Take pvec as the first argument, not the last
-3. Wrap a find_* function
+v1 -> v2:
+- remove leftover call to hwmon_device_unregister() from pmbus_core.c
+- add a patch extending devm_kmalloc() to handle zero size case
+- use WARN_ON() instead of WARN_ONCE() in devm_krealloc() when passed
+  a pointer to non-managed memory
+- correctly handle the case when devm_krealloc() is passed a pointer to
+  memory in .rodata (potentially returned by devm_kstrdup_const())
+- correctly handle ZERO_SIZE_PTR passed as the ptr argument in devm_krealloc()
 
-Whereas the find_* functions:
+v2 -> v3:
+- drop already applied patches
+- collect Acks
+- add an additional user in iio
 
-1. Are in mm/filemap.c
-2. Take mapping as the first argument
-3. Manipulate the XArray directly
+v3 -> v4:
+- add the kerneldoc for devm_krealloc()
+- WARN() outside of spinlock
+- rename local variable
 
-We already have functions in filemap which take a pagevec, eg
-page_cache_delete_batch() and delete_from_page_cache_batch().
+v4 -> v5:
+- tweak the kerneldoc
 
-So if we're going to merge the two functions, it seems more natural to
-have it in filemap.c and called find_get_entries(), but I'm definitely
-open to persuasion on this!
+v5 -> v6:
+- tweak the devres_lock handling in devm_krealloc()
+
+v6 -> v7:
+- rework devm_krealloc() to avoid calling krealloc() with spinlock taken
+
+v7 -> v8:
+- drop unnecessary explicit pointer casting in to_devres()
+- check the return value of ksize() to make sure the pointer actually
+  points to a dynamically allocated chunk
+- add more comments to explain the locking strategy and resource handling
+
+v8 -> v9:
+- use container_of() and offsetoff() instead of manual offset calculations
+- use kfree() instead of devres_free() in error path as the latter expects
+  the pointer to devres data, not devres node
+
+Bartosz Golaszewski (3):
+  devres: provide devm_krealloc()
+  hwmon: pmbus: use more devres helpers
+  iio: adc: xilinx-xadc: use devm_krealloc()
+
+ .../driver-api/driver-model/devres.rst        |   1 +
+ drivers/base/devres.c                         | 105 ++++++++++++++++++
+ drivers/hwmon/pmbus/pmbus_core.c              |  28 ++---
+ drivers/iio/adc/xilinx-xadc-core.c            |  16 +--
+ include/linux/device.h                        |   2 +
+ 5 files changed, 125 insertions(+), 27 deletions(-)
+
+-- 
+2.26.1
+
