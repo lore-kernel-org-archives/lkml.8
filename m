@@ -2,104 +2,166 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED8CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C0FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12EF320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D0EA20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289757;
-	bh=sH+WiNnMuk0nwT4rp2dCNtqndJKdX3eBBdQnYezdNvU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FDnBe3lP1eTGd0Q0xTgrfmh74VLvtsMVI3QNgJlS/I23QbUksFMWPuit/fMu4CB06
-	 k37UvSV3Dj2CmUQt2MpYb9BSDzp14SkD0vN3OPt18FYirDfXH8vBTIa/+fSyb8jvK/
-	 sWCGlPyRgGhYtjdLS4BaplgwnIWBcj2vTEu1J2qA=
+	s=default; t=1598289778;
+	bh=MCxPakGL9ABd29OvlEbGaratiOtRqPYeKeb2GiLmDas=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZS8qgZZyu54rECKUl3iiYMfQwtE42YSGQVCjGBAbsMW32To2lyvp4u2hjZqMrO3Ob
+	 WBcjdKf8Yin/SNfnj3bHMAPQCFAYpMq+mKVyGIoq4xIsVI/kUyo9IhX2NGKiSsDSSe
+	 oQGPPfTDv846omkjyzr1R8N6LiKVL6rRZ1TAiTZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgHXRWe (ORCPT
+        id S1728289AbgHXRWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:22:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52800 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:22:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728286AbgHXRVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:21:24 -0400
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+        id S1727937AbgHXQfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:35:48 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB5A820838;
-        Mon, 24 Aug 2020 17:21:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C76022C9F;
+        Mon, 24 Aug 2020 16:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598289683;
-        bh=sH+WiNnMuk0nwT4rp2dCNtqndJKdX3eBBdQnYezdNvU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2r4y2fLlZJIvd7JMQDacHVZMdE3Z4V4tBygC922SM7g2I0e8td2x/Ea1hqTRm66Dg
-         Vntlz1vxnVk+en7apoqIZgadbvM/nhhPSlBihbixtytgW6FilsO8AsPp5y2s1+mFJt
-         mGQxUtl6hsFQTlrSFfWE7wsiqA+K5zNVMxeXJBRI=
-Received: by mail-oo1-f51.google.com with SMTP id k63so2072112oob.1;
-        Mon, 24 Aug 2020 10:21:23 -0700 (PDT)
-X-Gm-Message-State: AOAM532THL6FY0Y+aHKwszQnJrn/8pJWQ6LMrtB4J7tpyNpQafRYXmYj
-        LAziORJRjTZnKuvNW818u274qxX7ZwVdoO2pYfk=
-X-Google-Smtp-Source: ABdhPJzyH85xYIGIeBE9sN+bjxkfbXh88DkmjecqfF5cPfX7TgkE1iV7HMq8OKg0j4Fz3naiB4WzW5y7/VR72XNWa/s=
-X-Received: by 2002:a4a:da4c:: with SMTP id f12mr4378791oou.41.1598289682952;
- Mon, 24 Aug 2020 10:21:22 -0700 (PDT)
+        s=default; t=1598286948;
+        bh=MCxPakGL9ABd29OvlEbGaratiOtRqPYeKeb2GiLmDas=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Aiyy2/O8nlIvYRTnXuz3JB4k8JaR2i/IMtJIxYoUWcKqV2Kk88ksQZHku/zEpGJa6
+         ARXFYneRGr9LLan5fsDpTy0Gsdg0MYZNGEdverShA++jpUDVywuVlfAthL3oUGGwLx
+         c9JhX+q8/i9N5UV31IEQaThoEI5izwhuMfE3t8iE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xie He <xie.he.0141@gmail.com>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Martin Schiller <ms@dev.tdt.de>,
+        Andrew Hendry <andrew.hendry@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 32/63] drivers/net/wan/hdlc_x25: Added needed_headroom and a skb->len check
+Date:   Mon, 24 Aug 2020 12:34:32 -0400
+Message-Id: <20200824163504.605538-32-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
+References: <20200824163504.605538-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com> <1598287583-71762-10-git-send-email-mikelley@microsoft.com>
-In-Reply-To: <1598287583-71762-10-git-send-email-mikelley@microsoft.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 24 Aug 2020 19:21:12 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHd2vs+O6N6FeNeJeGPh=RTs++3rGms7tCd0Oy7qt3faQ@mail.gmail.com>
-Message-ID: <CAMj1kXHd2vs+O6N6FeNeJeGPh=RTs++3rGms7tCd0Oy7qt3faQ@mail.gmail.com>
-Subject: Re: [PATCH v7 09/10] arm64: efi: Export screen_info
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>, wei.liu@kernel.org,
-        vkuznets <vkuznets@redhat.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 at 18:48, Michael Kelley <mikelley@microsoft.com> wrote:
->
-> The Hyper-V frame buffer driver may be built as a module, and
-> it needs access to screen_info. So export screen_info.
->
-> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+From: Xie He <xie.he.0141@gmail.com>
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+[ Upstream commit 77b981c82c1df7c7ad32a046f17f007450b46954 ]
 
-> ---
->  arch/arm64/kernel/efi.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
-> index d0cf596..8ff557a 100644
-> --- a/arch/arm64/kernel/efi.c
-> +++ b/arch/arm64/kernel/efi.c
-> @@ -55,6 +55,7 @@ static __init pteval_t create_mapping_protection(efi_memory_desc_t *md)
->
->  /* we will fill this structure from the stub, so don't put it in .bss */
->  struct screen_info screen_info __section(.data);
-> +EXPORT_SYMBOL(screen_info);
->
->  int __init efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md)
->  {
-> --
-> 1.8.3.1
->
+1. Added a skb->len check
+
+This driver expects upper layers to include a pseudo header of 1 byte
+when passing down a skb for transmission. This driver will read this
+1-byte header. This patch added a skb->len check before reading the
+header to make sure the header exists.
+
+2. Added needed_headroom and set hard_header_len to 0
+
+When this driver transmits data,
+  first this driver will remove a pseudo header of 1 byte,
+  then the lapb module will prepend the LAPB header of 2 or 3 bytes.
+So the value of needed_headroom in this driver should be 3 - 1.
+
+Because this driver has no header_ops, according to the logic of
+af_packet.c, the value of hard_header_len should be 0.
+
+Reason of setting needed_headroom and hard_header_len at this place:
+
+This driver is written using the API of the hdlc module, the hdlc
+module enables this driver (the protocol driver) to run on any hardware
+that has a driver (the hardware driver) written using the API of the
+hdlc module.
+
+Two other hdlc protocol drivers - hdlc_ppp and hdlc_raw_eth, also set
+things like hard_header_len at this place. In hdlc_ppp, it sets
+hard_header_len after attach_hdlc_protocol and before setting dev->type.
+In hdlc_raw_eth, it sets hard_header_len by calling ether_setup after
+attach_hdlc_protocol and after memcpy the settings.
+
+3. Reset needed_headroom when detaching protocols (in hdlc.c)
+
+When detaching a protocol from a hardware device, the hdlc module will
+reset various parameters of the device (including hard_header_len) to
+the default values. We add needed_headroom here so that needed_headroom
+will also be reset.
+
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Cc: Andrew Hendry <andrew.hendry@gmail.com>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wan/hdlc.c     |  1 +
+ drivers/net/wan/hdlc_x25.c | 17 ++++++++++++++++-
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wan/hdlc.c b/drivers/net/wan/hdlc.c
+index dfc16770458d8..386ed2aa31fd9 100644
+--- a/drivers/net/wan/hdlc.c
++++ b/drivers/net/wan/hdlc.c
+@@ -230,6 +230,7 @@ static void hdlc_setup_dev(struct net_device *dev)
+ 	dev->max_mtu		 = HDLC_MAX_MTU;
+ 	dev->type		 = ARPHRD_RAWHDLC;
+ 	dev->hard_header_len	 = 16;
++	dev->needed_headroom	 = 0;
+ 	dev->addr_len		 = 0;
+ 	dev->header_ops		 = &hdlc_null_ops;
+ }
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index f70336bb6f524..f52b9fed05931 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -107,8 +107,14 @@ static netdev_tx_t x25_xmit(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	int result;
+ 
++	/* There should be a pseudo header of 1 byte added by upper layers.
++	 * Check to make sure it is there before reading it.
++	 */
++	if (skb->len < 1) {
++		kfree_skb(skb);
++		return NETDEV_TX_OK;
++	}
+ 
+-	/* X.25 to LAPB */
+ 	switch (skb->data[0]) {
+ 	case X25_IFACE_DATA:	/* Data to be transmitted */
+ 		skb_pull(skb, 1);
+@@ -294,6 +300,15 @@ static int x25_ioctl(struct net_device *dev, struct ifreq *ifr)
+ 			return result;
+ 
+ 		memcpy(&state(hdlc)->settings, &new_settings, size);
++
++		/* There's no header_ops so hard_header_len should be 0. */
++		dev->hard_header_len = 0;
++		/* When transmitting data:
++		 * first we'll remove a pseudo header of 1 byte,
++		 * then we'll prepend an LAPB header of at most 3 bytes.
++		 */
++		dev->needed_headroom = 3 - 1;
++
+ 		dev->type = ARPHRD_X25;
+ 		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
+ 		netif_dormant_off(dev);
+-- 
+2.25.1
+
