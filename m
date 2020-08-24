@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD55C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C253C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63EBE206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CA622063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289149;
-	bh=3wKM+eofZ9MBJ6+Q56FyXiwsjGuqFNmK8dy1L010v3E=;
+	s=default; t=1598289153;
+	bh=TYTTdCegp15oLYrWq/F7PP5Ab8BnxcWk62tjoSVlprc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i0lOfvRO05+RoKz1OrQMnDCDFnaKAaVOzzi1PaWRyL1LAXO5F288ixLGdbY13Js6B
-	 6AQSwmj73y5jI24bI1AbXXJ3h7fRRcUU3SUz72M1Mn94cREubWtvopeR3mssAxXYLs
-	 tSzgbw+O9+xRNYDOsNDs5aaRRodxk94euJ4RCqJk=
+	b=1Ng8ghcchdgaIOb54Yz/w2mjgwg5Dm+sabhrn7JeBQ4PEChrhNpgLaWeFYJtYN927
+	 PB3C7bdFlkQgfBr5zh04MWvWNfrsKa1CFpwM/UMy6zybnJtzCPDorsP5TsgR92AHgG
+	 QjxxMG2hDvpf6/23oSaJrcN+guSE2/f2GPxt3Wo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgHXRMY (ORCPT
+        id S1728428AbgHXRMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:12:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41066 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:12:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728022AbgHXQhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:37:53 -0400
+        id S1728382AbgHXQhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:37:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66EE522CB1;
-        Mon, 24 Aug 2020 16:37:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2D3B22D3E;
+        Mon, 24 Aug 2020 16:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287026;
-        bh=3wKM+eofZ9MBJ6+Q56FyXiwsjGuqFNmK8dy1L010v3E=;
+        s=default; t=1598287021;
+        bh=TYTTdCegp15oLYrWq/F7PP5Ab8BnxcWk62tjoSVlprc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xSFHHUwcaaYww2gTxGdok27s6qgj43vY5bCN3eY8e9mNljCJqef3g9OeOAv2t1dhM
-         u+5zTyk326tT0nMhXYUYq1KIeN4EaoE5U8nJUtRuC7Y1JVQaIQfccrWHd5x45uhNgS
-         hhfWV2D1KPBqx66wbgUpWR3htbIr7eorYkeJyoos=
+        b=eMsL5rRmqDybtENNNmFKjsGU7HxASjVgAG0+owzOqM96SJmLfkUTAzCTOWiigS+be
+         iZI5x0IN91FTDRxqpzog3Z8gl0fhwE58JXO0ev52TWAeOa0fTj8WRY03ZtV3zP10E1
+         fvX+PDkQvMen7aE1Oiu+7g8Osk7FJ2+Ux7MgeVko=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+Cc:     Jianlin Lv <Jianlin.Lv@arm.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 23/54] libbpf: Prevent overriding errno when logging errors
-Date:   Mon, 24 Aug 2020 12:36:02 -0400
-Message-Id: <20200824163634.606093-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 20/54] selftests/bpf: Fix segmentation fault in test_progs
+Date:   Mon, 24 Aug 2020 12:35:59 -0400
+Message-Id: <20200824163634.606093-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,55 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Jianlin Lv <Jianlin.Lv@arm.com>
 
-[ Upstream commit 23ab656be263813acc3c20623757d3cd1496d9e1 ]
+[ Upstream commit 0390c429dbed4068bd2cd8dded937d9a5ec24cd2 ]
 
-Turns out there were a few more instances where libbpf didn't save the
-errno before writing an error message, causing errno to be overridden by
-the printf() return and the error disappearing if logging is enabled.
+test_progs reports the segmentation fault as below:
 
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+  $ sudo ./test_progs -t mmap --verbose
+  test_mmap:PASS:skel_open_and_load 0 nsec
+  [...]
+  test_mmap:PASS:adv_mmap1 0 nsec
+  test_mmap:PASS:adv_mmap2 0 nsec
+  test_mmap:PASS:adv_mmap3 0 nsec
+  test_mmap:PASS:adv_mmap4 0 nsec
+  Segmentation fault
+
+This issue was triggered because mmap() and munmap() used inconsistent
+length parameters; mmap() creates a new mapping of 3 * page_size, but the
+length parameter set in the subsequent re-map and munmap() functions is
+4 * page_size; this leads to the destruction of the process space.
+
+To fix this issue, first create 4 pages of anonymous mapping, then do all
+the mmap() with MAP_FIXED.
+
+Another issue is that when unmap the second page fails, the length
+parameter to delete tmp1 mappings should be 4 * page_size.
+
+Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200813142905.160381-1-toke@redhat.com
+Link: https://lore.kernel.org/bpf/20200810153940.125508-1-Jianlin.Lv@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ tools/testing/selftests/bpf/prog_tests/mmap.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index c417cff2cdaf4..3e53bfcba2b1a 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -3210,10 +3210,11 @@ bpf_object__probe_global_data(struct bpf_object *obj)
+diff --git a/tools/testing/selftests/bpf/prog_tests/mmap.c b/tools/testing/selftests/bpf/prog_tests/mmap.c
+index 43d0b5578f461..9c3c5c0f068fb 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mmap.c
++++ b/tools/testing/selftests/bpf/prog_tests/mmap.c
+@@ -21,7 +21,7 @@ void test_mmap(void)
+ 	const long page_size = sysconf(_SC_PAGE_SIZE);
+ 	int err, duration = 0, i, data_map_fd, data_map_id, tmp_fd, rdmap_fd;
+ 	struct bpf_map *data_map, *bss_map;
+-	void *bss_mmaped = NULL, *map_mmaped = NULL, *tmp1, *tmp2;
++	void *bss_mmaped = NULL, *map_mmaped = NULL, *tmp0, *tmp1, *tmp2;
+ 	struct test_mmap__bss *bss_data;
+ 	struct bpf_map_info map_info;
+ 	__u32 map_info_sz = sizeof(map_info);
+@@ -183,16 +183,23 @@ void test_mmap(void)
  
- 	map = bpf_create_map_xattr(&map_attr);
- 	if (map < 0) {
--		cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
-+		ret = -errno;
-+		cp = libbpf_strerror_r(ret, errmsg, sizeof(errmsg));
- 		pr_warn("Error in %s():%s(%d). Couldn't create simple array map.\n",
--			__func__, cp, errno);
--		return -errno;
-+			__func__, cp, -ret);
-+		return ret;
+ 	/* check some more advanced mmap() manipulations */
+ 
++	tmp0 = mmap(NULL, 4 * page_size, PROT_READ, MAP_SHARED | MAP_ANONYMOUS,
++			  -1, 0);
++	if (CHECK(tmp0 == MAP_FAILED, "adv_mmap0", "errno %d\n", errno))
++		goto cleanup;
++
+ 	/* map all but last page: pages 1-3 mapped */
+-	tmp1 = mmap(NULL, 3 * page_size, PROT_READ, MAP_SHARED,
++	tmp1 = mmap(tmp0, 3 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
+ 			  data_map_fd, 0);
+-	if (CHECK(tmp1 == MAP_FAILED, "adv_mmap1", "errno %d\n", errno))
++	if (CHECK(tmp0 != tmp1, "adv_mmap1", "tmp0: %p, tmp1: %p\n", tmp0, tmp1)) {
++		munmap(tmp0, 4 * page_size);
+ 		goto cleanup;
++	}
+ 
+ 	/* unmap second page: pages 1, 3 mapped */
+ 	err = munmap(tmp1 + page_size, page_size);
+ 	if (CHECK(err, "adv_mmap2", "errno %d\n", errno)) {
+-		munmap(tmp1, map_sz);
++		munmap(tmp1, 4 * page_size);
+ 		goto cleanup;
  	}
  
- 	insns[0].imm = map;
-@@ -5508,9 +5509,10 @@ int bpf_program__pin_instance(struct bpf_program *prog, const char *path,
+@@ -201,7 +208,7 @@ void test_mmap(void)
+ 		    MAP_SHARED | MAP_FIXED, data_map_fd, 0);
+ 	if (CHECK(tmp2 == MAP_FAILED, "adv_mmap3", "errno %d\n", errno)) {
+ 		munmap(tmp1, page_size);
+-		munmap(tmp1 + 2*page_size, page_size);
++		munmap(tmp1 + 2*page_size, 2 * page_size);
+ 		goto cleanup;
  	}
- 
- 	if (bpf_obj_pin(prog->instances.fds[instance], path)) {
--		cp = libbpf_strerror_r(errno, errmsg, sizeof(errmsg));
-+		err = -errno;
-+		cp = libbpf_strerror_r(err, errmsg, sizeof(errmsg));
- 		pr_warn("failed to pin program: %s\n", cp);
--		return -errno;
-+		return err;
+ 	CHECK(tmp1 + page_size != tmp2, "adv_mmap4",
+@@ -211,7 +218,7 @@ void test_mmap(void)
+ 	tmp2 = mmap(tmp1, 4 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
+ 		    data_map_fd, 0);
+ 	if (CHECK(tmp2 == MAP_FAILED, "adv_mmap5", "errno %d\n", errno)) {
+-		munmap(tmp1, 3 * page_size); /* unmap page 1 */
++		munmap(tmp1, 4 * page_size); /* unmap page 1 */
+ 		goto cleanup;
  	}
- 	pr_debug("pinned program '%s'\n", path);
- 
+ 	CHECK(tmp1 != tmp2, "adv_mmap6", "tmp1: %p, tmp2: %p\n", tmp1, tmp2);
 -- 
 2.25.1
 
