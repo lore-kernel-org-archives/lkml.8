@@ -2,136 +2,176 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7943C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3592EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81B2C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:23:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rD8Vonqj"
+	by mail.kernel.org (Postfix) with ESMTP id 0210F20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598311483;
+	bh=Qre3ThT/+e1rSJX969UERkChhiUJFQvZRK41YX8uwro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MQBeSprxIWvy03X1RpMWjWLG0bV2meO3m4aU6u/M1iCclqh8csPsLLgPAWkwadA35
+	 48gxR1WXpNnQ/TK5nUBqzbtX2jefmFps4huAaScumi4xe2Nz/cEapAN2YxfQ0WpzUg
+	 87sJwHC7z67nHEbnnv/wlJt6OAf5PikDxOV91+i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgHXXXQ (ORCPT
+        id S1728148AbgHXXYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 19:23:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60718 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHXXXP (ORCPT
+        Mon, 24 Aug 2020 19:24:42 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:39253 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHXXYl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 19:23:15 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27FA8C061574;
-        Mon, 24 Aug 2020 16:23:15 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id l63so6548263edl.9;
-        Mon, 24 Aug 2020 16:23:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=IMKGdqUT+Wm0EM2slFZGgokEf7SVcwurGsjspfBC4Vw=;
-        b=rD8Vonqj5fif4pBYbR9r7Vi70mcoVG/5u1oM018c4xJ2uhNW3MvdLEerdf0N/naDEZ
-         E1j/y+v02nbdqyN2pY5wd1o6wcGWzIeH7pgJ70Rbdc6P4LBXrzv5iT00Pf7bBkmTN4RC
-         qe/bZzHGf/UATzFlwIpqJpcKCHUKKobTQoLT5s4jWqw4I5S4s51HXn0EY/oBaMsVjl5n
-         VgBKf9y1b86K4TlY/K3cGAqsEy+Yx1ZETfLYtASnEEqMf9xmm9hR0cHIqi5tHlbujfll
-         ISZicku4izGO/b/Sii+ttgpCCXKkj7wQ9uDQ/QydAk8qPN9dMcVcFMqTY5Ql8zrMsxlX
-         LGQg==
+        Mon, 24 Aug 2020 19:24:41 -0400
+Received: by mail-il1-f195.google.com with SMTP id f12so8837729ils.6;
+        Mon, 24 Aug 2020 16:24:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=IMKGdqUT+Wm0EM2slFZGgokEf7SVcwurGsjspfBC4Vw=;
-        b=pH71E5I4OtGVRSAR3dmRnsT4T2s5l9UAvL7KCVbG+ENInnxhoXS2kjXcC7B6XdnxGM
-         zcdkEGwoc7nZzItqgOjZhIP5PSn0HujvPZPtgm0lYhSnIkZMOJ1ndBYOHdUbumihCSe3
-         PMYabwK8rruLE/jH8ZC2xzR/0qYAb/RDIcmdyZggdptyWqqCB7s2oJb37K4wexeyNs8u
-         xYUhOOpTuGsEEfQtD8amHXiNXfDTffJkW7Oyyb57qoGfPQKXVSz7oN+CAZXtgVf3MqB4
-         +w0HYDSGGT9RvxjPDpKMKBpq7P4CA/Tfc1M3+OpBBPvbhOcijvBjNYY1MgEEOt2A5GYz
-         EuiQ==
-X-Gm-Message-State: AOAM530bdXoswRb8/oa87pHcKWKxxiory/1fyb1vmmzWGim0fyLD7WVi
-        H0EittbjEeFZg3uMvHtxDMw=
-X-Google-Smtp-Source: ABdhPJwZKBlW9Oh2kcLlQDcMGwt1oIpnizxaEklu1dZLnaBBinI4xPTlwpC98tK8BDEzK9upr3L73A==
-X-Received: by 2002:a50:c38b:: with SMTP id h11mr7783148edf.308.1598311393688;
-        Mon, 24 Aug 2020 16:23:13 -0700 (PDT)
-Received: from BV030612LT ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id j3sm11691701eje.75.2020.08.24.16.23.11
+        bh=JwCY8rswka2evtE21QF7ein3AFgooZR8ofb7Ek5G2oQ=;
+        b=hnmOt0f8Sf4ZLsXp3NS0YE01QMyIUnHFl8QO/p4VTcsCrQEAiYfDU4fOpOBGqscqQD
+         9Q5d9KnXo//QJn1oQBAq4tVvz8VAMTdY3eFImrNjhW+QkmPk8VcqElDBIW5TWPPr/GnF
+         Tapgl090S8AZmUjfGNg9KUjqGbh2OlsBrV+sbdPLl6EhkziS4izczzS1pLF+iYXBbCz3
+         dVwzGyF3RwkZtZOy8Iq5Zg6zzPvAF5qgOPPlnzS8zZOn6Lpt6/ORltZkhLFkqsoar+XN
+         dQS/GYrr/WMoSZBPZmWt97AcYVrR95Rj0Xi6ZHjH+mhaZaWPAFwu9dvjkZV3eogFXyR2
+         ZCog==
+X-Gm-Message-State: AOAM532Z1kR5nybnZ9eBpDHtxQIIbj52XJE8zwBZnfWZ0ghQeazMEBpX
+        B6Fsa5WUBSnrtPdImuzhJQ==
+X-Google-Smtp-Source: ABdhPJx7LtfsqA1qY3DyB66QRPALZplHC090bvD6c3U46iI9qD4WKEflLmoQC5seq1+YwsA9qyvLjA==
+X-Received: by 2002:a92:a188:: with SMTP id b8mr7329457ill.81.1598311480006;
+        Mon, 24 Aug 2020 16:24:40 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id a16sm8105572ilp.23.2020.08.24.16.24.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 16:23:13 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 02:23:10 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] regulator: Add regulator driver for ATC260x PMICs
-Message-ID: <20200824232310.GA2301286@BV030612LT>
-References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
- <8da70f0b19de17fb8edead7ff06461ae2451b0e9.1598043782.git.cristian.ciocaltea@gmail.com>
- <20200824110045.GA4676@sirena.org.uk>
+        Mon, 24 Aug 2020 16:24:39 -0700 (PDT)
+Received: (nullmailer pid 3530535 invoked by uid 1000);
+        Mon, 24 Aug 2020 23:24:38 -0000
+Date:   Mon, 24 Aug 2020 17:24:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Boris Brezillon <boris.brezillon@collabora.com>,
+        linux-i3c@lists.infradead.org, devicetree@vger.kernel.org,
+        Nicolas Pitre <nico@fluxnic.net>,
+        Rajeev Huralikoppi <rajeev.huralikoppi@silvaco.com>,
+        Conor Culhane <conor.culhane@silvaco.com>,
+        linux-kernel@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: i3c: Describe Silvaco master binding
+Message-ID: <20200824232438.GA3525200@bogus>
+References: <20200812141312.3331-1-miquel.raynal@bootlin.com>
+ <20200812141312.3331-2-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824110045.GA4676@sirena.org.uk>
+In-Reply-To: <20200812141312.3331-2-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
-
-Thanks for reviewing!
-
-On Mon, Aug 24, 2020 at 12:00:45PM +0100, Mark Brown wrote:
-> On Sat, Aug 22, 2020 at 01:19:49AM +0300, Cristian Ciocaltea wrote:
+On Wed, Aug 12, 2020 at 04:13:10PM +0200, Miquel Raynal wrote:
+> Silvaco provide a dual-role I3C master.
 > 
-> > +static int atc260x_set_voltage_time_sel(struct regulator_dev *rdev,
-> > +					unsigned int old_selector,
-> > +					unsigned int new_selector)
-> > +{
-> > +	struct atc260x_regulator_data *data = rdev_get_drvdata(rdev);
-> > +	int id = rdev_get_id(rdev);
-> > +
-> > +	if (new_selector > old_selector)
-> > +		return id > data->last_dcdc_reg_id ? data->voltage_time_ldo
-> > +						   : data->voltage_time_dcdc;
+> Description is rather simple: it needs a register mapping, three
+> clocks and an interrupt.
 > 
-> Please write normal conditional statements to make things easier to
-> read.  It also looks like this would be more robustly written by just
-> having separate ops for DCDCs and LDOs, this could easily break if
-> another device is supported in the driver.
-
-Sure, I can provide separate ops, but in this case we duplicate almost
-all of them. If this is not acceptable, then I will just rewrite the
-conditional statement.
-
-> > +static const struct of_device_id atc260x_regulator_of_match[] = {
-> > +	{ .compatible = "actions,atc2603c-regulator" },
-> > +	{ .compatible = "actions,atc2609a-regulator" },
-> > +	{ /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, atc260x_regulator_of_match);
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
 > 
-> We don't need compatibles here, this is just reflecting the current
-> Linux device model into the OS neutral DT bindings.  Another OS may
-> choose to split regulators up differently.  We should just instantiate
-> the regulator device from the MFD based on identifying the chip overall.
+> Changes in v2:
+> * Updated Rob's tool and fixed the mistake reported.
+> * Updated the vendor prefix.
+> 
+>  .../bindings/i3c/silvaco,i3c-master.yaml      | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
+> new file mode 100644
+> index 000000000000..63731e8a9068
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/i3c/silvaco,i3c-master.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Silvaco I3C master
+> +
+> +maintainers:
+> +  - Conor Culhane <conor.culhane@silvaco.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: silvaco,i3c-master
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    description: |
+> +      There are three clocks:
+> +        pclk:     System clock
+> +        fast_clk: Fast clock (for the bus)
+> +        slow_clk: Slow clock (for other events)
 
-I have actually seen this in some MFD drivers I had been studying before
-starting this work. I wasn't sure what is the rationale behind, I
-assumed they have just an informative purpose.
+You basically say this in the schema... If you want some description, do 
+it in 'clocks':
 
-So, if I understand correctly, this approach is deprecated now and I
-should remove the compatibles from both the function driver and the
-corresponding mfd_cell in the core implementation. And not only for
-regulators, but for all the other functions of the MFD device.
+clocks:
+  items:
+    - description: ...
+    - description: ...
+    - description: ...
 
-Regards,
-Cristi
+> +
+> +    items:
+> +      - const: pclk
+> +      - const: fast_clk
+> +      - const: slow_clk
+> +
+> +  clocks:
+> +    minItems: 3
+> +    maxItems: 3
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clock-names
+> +  - clocks
+
+additionalProperties: false
+
+And that will point out some errors in the example.
+
+> +
+> +examples:
+> +  - |
+> +    i3c-master@a0000000 {
+> +        compatible = "silvaco,i3c-master";
+> +        clocks = <&zynqmp_clk 71>, <&fclk>, <&sclk>;
+> +        clock-names = "pclk", "fast_clk", "slow_clk";
+> +        interrupt-parent = <&gic>;
+> +        interrupts = <0 89 4>;
+> +        reg = <0xa0000000 0x1000>;
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +    };
+> -- 
+> 2.20.1
+> 
