@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C90C0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAF3A22B3F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB2A2177B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258192;
-	bh=TMcgGpj0HK5jtl7J2jbGq1Bs+4VVnmcgR1udoAv4ziQ=;
+	s=default; t=1598258196;
+	bh=est7SGQG0fblsWK2YX33ulc92bM7hIZ3xQWuUtc6svA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T7htCBkLYDTOoOBh69HEL1R2hKaslpfp6ldnhCtiDQw+zxTtboayXkczwtVnYavPC
-	 QZ+qkQwIq089NrZqEu3CRSqy8fH1Rq0o+cIMTI9Btp0LoGR8/cX24w1k4Le/q53U/c
-	 jDM+5Iu+liVVYgjElS++vr60afLUpwnlDPfHuRYE=
+	b=2brKu0tSjbhLcmPfvfe2bMfEZR+0yvtSWs9mJhPZzcbI6ayTwVPDAriMtk6QqGRGr
+	 0vf1bIjjF2XwkT+3fkwrjwinxUiD6NVE5CjeF6CMRRA2yXqTFJMlz9Jovs7GX8Q8av
+	 CGjgHXSJ24X5ERVxhsR97w4qVuz8QZoduFh1EOIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbgHXIga (ORCPT
+        id S1726581AbgHXIgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:36:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48564 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:36:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbgHXIgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:36:15 -0400
+        id S1728226AbgHXIgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:36:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BA1C206F0;
-        Mon, 24 Aug 2020 08:36:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6443204FD;
+        Mon, 24 Aug 2020 08:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258174;
-        bh=TMcgGpj0HK5jtl7J2jbGq1Bs+4VVnmcgR1udoAv4ziQ=;
+        s=default; t=1598258180;
+        bh=est7SGQG0fblsWK2YX33ulc92bM7hIZ3xQWuUtc6svA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TO4XS+GqaP2sMJvZYDLFTuY2+QvtPHMX+ERdJQxuQZsJhiHZnhXG0+m6FSYOzgdWf
-         t/zjBZQ4hUI1+FJPIDJmFcJw26D+b6VCy7ARtwJhipp9wEl7PF0wq2bOoBNtBgMwXk
-         zHMrcmCEbfAQ2AeDCYYl4kRPs0ucGSNqOpxR0xA4=
+        b=B6MlHWy6IOIjNz3qHkh5L3jaSauiFVXIzvUc+7l3rZd2F3+welEk2jTPRVvDVR/H5
+         Cq0boS+YrhUayrSflj1VCche13LUKM1CZkg0tLd6b5/60jkdy6ZMzSyzoA8/S2J352
+         YUNq+vJ4KzwpLpEntRuysjkPlsDmf5ZYlHHCZ+hA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        stable@vger.kernel.org, Zhiyi Guo <zhguo@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 102/148] watch_queue: Limit the number of watches a user can hold
-Date:   Mon, 24 Aug 2020 10:30:00 +0200
-Message-Id: <20200824082418.916968691@linuxfoundation.org>
+Subject: [PATCH 5.8 103/148] vfio-pci: Avoid recursive read-lock usage
+Date:   Mon, 24 Aug 2020 10:30:01 +0200
+Message-Id: <20200824082418.965556568@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -62,97 +61,273 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-[ Upstream commit 29e44f4535faa71a70827af3639b5e6762d8f02a ]
+[ Upstream commit bc93b9ae0151ae5ad5b8504cdc598428ea99570b ]
 
-Impose a limit on the number of watches that a user can hold so that
-they can't use this mechanism to fill up all the available memory.
+A down_read on memory_lock is held when performing read/write accesses
+to MMIO BAR space, including across the copy_to/from_user() callouts
+which may fault.  If the user buffer for these copies resides in an
+mmap of device MMIO space, the mmap fault handler will acquire a
+recursive read-lock on memory_lock.  Avoid this by reducing the lock
+granularity.  Sequential accesses requiring multiple ioread/iowrite
+cycles are expected to be rare, therefore typical accesses should not
+see additional overhead.
 
-This is done by putting a counter in user_struct that's incremented when
-a watch is allocated and decreased when it is released.  If the number
-exceeds the RLIMIT_NOFILE limit, the watch is rejected with EAGAIN.
+VGA MMIO accesses are expected to be non-fatal regardless of the PCI
+memory enable bit to allow legacy probing, this behavior remains with
+a comment added.  ioeventfds are now included in memory access testing,
+with writes dropped while memory space is disabled.
 
-This can be tested by the following means:
-
- (1) Create a watch queue and attach it to fd 5 in the program given - in
-     this case, bash:
-
-	keyctl watch_session /tmp/nlog /tmp/gclog 5 bash
-
- (2) In the shell, set the maximum number of files to, say, 99:
-
-	ulimit -n 99
-
- (3) Add 200 keyrings:
-
-	for ((i=0; i<200; i++)); do keyctl newring a$i @s || break; done
-
- (4) Try to watch all of the keyrings:
-
-	for ((i=0; i<200; i++)); do echo $i; keyctl watch_add 5 %:a$i || break; done
-
-     This should fail when the number of watches belonging to the user hits
-     99.
-
- (5) Remove all the keyrings and all of those watches should go away:
-
-	for ((i=0; i<200; i++)); do keyctl unlink %:a$i; done
-
- (6) Kill off the watch queue by exiting the shell spawned by
-     watch_session.
-
-Fixes: c73be61cede5 ("pipe: Add general notification queue support")
-Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+Reported-by: Zhiyi Guo <zhguo@redhat.com>
+Tested-by: Zhiyi Guo <zhguo@redhat.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sched/user.h | 3 +++
- kernel/watch_queue.c       | 8 ++++++++
- 2 files changed, 11 insertions(+)
+ drivers/vfio/pci/vfio_pci_private.h |   2 +
+ drivers/vfio/pci/vfio_pci_rdwr.c    | 120 ++++++++++++++++++++++------
+ 2 files changed, 98 insertions(+), 24 deletions(-)
 
-diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
-index 917d88edb7b9d..a8ec3b6093fcb 100644
---- a/include/linux/sched/user.h
-+++ b/include/linux/sched/user.h
-@@ -36,6 +36,9 @@ struct user_struct {
-     defined(CONFIG_NET) || defined(CONFIG_IO_URING)
- 	atomic_long_t locked_vm;
- #endif
-+#ifdef CONFIG_WATCH_QUEUE
-+	atomic_t nr_watches;	/* The number of watches this user currently has */
+diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+index 86a02aff8735f..61ca8ab165dc1 100644
+--- a/drivers/vfio/pci/vfio_pci_private.h
++++ b/drivers/vfio/pci/vfio_pci_private.h
+@@ -33,12 +33,14 @@
+ 
+ struct vfio_pci_ioeventfd {
+ 	struct list_head	next;
++	struct vfio_pci_device	*vdev;
+ 	struct virqfd		*virqfd;
+ 	void __iomem		*addr;
+ 	uint64_t		data;
+ 	loff_t			pos;
+ 	int			bar;
+ 	int			count;
++	bool			test_mem;
+ };
+ 
+ struct vfio_pci_irq_ctx {
+diff --git a/drivers/vfio/pci/vfio_pci_rdwr.c b/drivers/vfio/pci/vfio_pci_rdwr.c
+index 916b184df3a5b..9e353c484ace2 100644
+--- a/drivers/vfio/pci/vfio_pci_rdwr.c
++++ b/drivers/vfio/pci/vfio_pci_rdwr.c
+@@ -37,17 +37,70 @@
+ #define vfio_ioread8	ioread8
+ #define vfio_iowrite8	iowrite8
+ 
++#define VFIO_IOWRITE(size) \
++static int vfio_pci_iowrite##size(struct vfio_pci_device *vdev,		\
++			bool test_mem, u##size val, void __iomem *io)	\
++{									\
++	if (test_mem) {							\
++		down_read(&vdev->memory_lock);				\
++		if (!__vfio_pci_memory_enabled(vdev)) {			\
++			up_read(&vdev->memory_lock);			\
++			return -EIO;					\
++		}							\
++	}								\
++									\
++	vfio_iowrite##size(val, io);					\
++									\
++	if (test_mem)							\
++		up_read(&vdev->memory_lock);				\
++									\
++	return 0;							\
++}
++
++VFIO_IOWRITE(8)
++VFIO_IOWRITE(16)
++VFIO_IOWRITE(32)
++#ifdef iowrite64
++VFIO_IOWRITE(64)
 +#endif
++
++#define VFIO_IOREAD(size) \
++static int vfio_pci_ioread##size(struct vfio_pci_device *vdev,		\
++			bool test_mem, u##size *val, void __iomem *io)	\
++{									\
++	if (test_mem) {							\
++		down_read(&vdev->memory_lock);				\
++		if (!__vfio_pci_memory_enabled(vdev)) {			\
++			up_read(&vdev->memory_lock);			\
++			return -EIO;					\
++		}							\
++	}								\
++									\
++	*val = vfio_ioread##size(io);					\
++									\
++	if (test_mem)							\
++		up_read(&vdev->memory_lock);				\
++									\
++	return 0;							\
++}
++
++VFIO_IOREAD(8)
++VFIO_IOREAD(16)
++VFIO_IOREAD(32)
++
+ /*
+  * Read or write from an __iomem region (MMIO or I/O port) with an excluded
+  * range which is inaccessible.  The excluded range drops writes and fills
+  * reads with -1.  This is intended for handling MSI-X vector tables and
+  * leftover space for ROM BARs.
+  */
+-static ssize_t do_io_rw(void __iomem *io, char __user *buf,
++static ssize_t do_io_rw(struct vfio_pci_device *vdev, bool test_mem,
++			void __iomem *io, char __user *buf,
+ 			loff_t off, size_t count, size_t x_start,
+ 			size_t x_end, bool iswrite)
+ {
+ 	ssize_t done = 0;
++	int ret;
  
- 	/* Miscellaneous per-user rate limit */
- 	struct ratelimit_state ratelimit;
-diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
-index f74020f6bd9d5..0ef8f65bd2d71 100644
---- a/kernel/watch_queue.c
-+++ b/kernel/watch_queue.c
-@@ -393,6 +393,7 @@ static void free_watch(struct rcu_head *rcu)
- 	struct watch *watch = container_of(rcu, struct watch, rcu);
+ 	while (count) {
+ 		size_t fillable, filled;
+@@ -66,9 +119,15 @@ static ssize_t do_io_rw(void __iomem *io, char __user *buf,
+ 				if (copy_from_user(&val, buf, 4))
+ 					return -EFAULT;
  
- 	put_watch_queue(rcu_access_pointer(watch->queue));
-+	atomic_dec(&watch->cred->user->nr_watches);
- 	put_cred(watch->cred);
+-				vfio_iowrite32(val, io + off);
++				ret = vfio_pci_iowrite32(vdev, test_mem,
++							 val, io + off);
++				if (ret)
++					return ret;
+ 			} else {
+-				val = vfio_ioread32(io + off);
++				ret = vfio_pci_ioread32(vdev, test_mem,
++							&val, io + off);
++				if (ret)
++					return ret;
+ 
+ 				if (copy_to_user(buf, &val, 4))
+ 					return -EFAULT;
+@@ -82,9 +141,15 @@ static ssize_t do_io_rw(void __iomem *io, char __user *buf,
+ 				if (copy_from_user(&val, buf, 2))
+ 					return -EFAULT;
+ 
+-				vfio_iowrite16(val, io + off);
++				ret = vfio_pci_iowrite16(vdev, test_mem,
++							 val, io + off);
++				if (ret)
++					return ret;
+ 			} else {
+-				val = vfio_ioread16(io + off);
++				ret = vfio_pci_ioread16(vdev, test_mem,
++							&val, io + off);
++				if (ret)
++					return ret;
+ 
+ 				if (copy_to_user(buf, &val, 2))
+ 					return -EFAULT;
+@@ -98,9 +163,15 @@ static ssize_t do_io_rw(void __iomem *io, char __user *buf,
+ 				if (copy_from_user(&val, buf, 1))
+ 					return -EFAULT;
+ 
+-				vfio_iowrite8(val, io + off);
++				ret = vfio_pci_iowrite8(vdev, test_mem,
++							val, io + off);
++				if (ret)
++					return ret;
+ 			} else {
+-				val = vfio_ioread8(io + off);
++				ret = vfio_pci_ioread8(vdev, test_mem,
++						       &val, io + off);
++				if (ret)
++					return ret;
+ 
+ 				if (copy_to_user(buf, &val, 1))
+ 					return -EFAULT;
+@@ -178,14 +249,6 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 
+ 	count = min(count, (size_t)(end - pos));
+ 
+-	if (res->flags & IORESOURCE_MEM) {
+-		down_read(&vdev->memory_lock);
+-		if (!__vfio_pci_memory_enabled(vdev)) {
+-			up_read(&vdev->memory_lock);
+-			return -EIO;
+-		}
+-	}
+-
+ 	if (bar == PCI_ROM_RESOURCE) {
+ 		/*
+ 		 * The ROM can fill less space than the BAR, so we start the
+@@ -213,7 +276,8 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 		x_end = vdev->msix_offset + vdev->msix_size;
+ 	}
+ 
+-	done = do_io_rw(io, buf, pos, count, x_start, x_end, iswrite);
++	done = do_io_rw(vdev, res->flags & IORESOURCE_MEM, io, buf, pos,
++			count, x_start, x_end, iswrite);
+ 
+ 	if (done >= 0)
+ 		*ppos += done;
+@@ -221,9 +285,6 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 	if (bar == PCI_ROM_RESOURCE)
+ 		pci_unmap_rom(pdev, io);
+ out:
+-	if (res->flags & IORESOURCE_MEM)
+-		up_read(&vdev->memory_lock);
+-
+ 	return done;
  }
  
-@@ -452,6 +453,13 @@ int add_watch_to_object(struct watch *watch, struct watch_list *wlist)
- 	watch->cred = get_current_cred();
- 	rcu_assign_pointer(watch->watch_list, wlist);
+@@ -278,7 +339,12 @@ ssize_t vfio_pci_vga_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 		return ret;
+ 	}
  
-+	if (atomic_inc_return(&watch->cred->user->nr_watches) >
-+	    task_rlimit(current, RLIMIT_NOFILE)) {
-+		atomic_dec(&watch->cred->user->nr_watches);
-+		put_cred(watch->cred);
-+		return -EAGAIN;
-+	}
-+
- 	spin_lock_bh(&wqueue->lock);
- 	kref_get(&wqueue->usage);
- 	kref_get(&watch->usage);
+-	done = do_io_rw(iomem, buf, off, count, 0, 0, iswrite);
++	/*
++	 * VGA MMIO is a legacy, non-BAR resource that hopefully allows
++	 * probing, so we don't currently worry about access in relation
++	 * to the memory enable bit in the command register.
++	 */
++	done = do_io_rw(vdev, false, iomem, buf, off, count, 0, 0, iswrite);
+ 
+ 	vga_put(vdev->pdev, rsrc);
+ 
+@@ -296,17 +362,21 @@ static int vfio_pci_ioeventfd_handler(void *opaque, void *unused)
+ 
+ 	switch (ioeventfd->count) {
+ 	case 1:
+-		vfio_iowrite8(ioeventfd->data, ioeventfd->addr);
++		vfio_pci_iowrite8(ioeventfd->vdev, ioeventfd->test_mem,
++				  ioeventfd->data, ioeventfd->addr);
+ 		break;
+ 	case 2:
+-		vfio_iowrite16(ioeventfd->data, ioeventfd->addr);
++		vfio_pci_iowrite16(ioeventfd->vdev, ioeventfd->test_mem,
++				   ioeventfd->data, ioeventfd->addr);
+ 		break;
+ 	case 4:
+-		vfio_iowrite32(ioeventfd->data, ioeventfd->addr);
++		vfio_pci_iowrite32(ioeventfd->vdev, ioeventfd->test_mem,
++				   ioeventfd->data, ioeventfd->addr);
+ 		break;
+ #ifdef iowrite64
+ 	case 8:
+-		vfio_iowrite64(ioeventfd->data, ioeventfd->addr);
++		vfio_pci_iowrite64(ioeventfd->vdev, ioeventfd->test_mem,
++				   ioeventfd->data, ioeventfd->addr);
+ 		break;
+ #endif
+ 	}
+@@ -378,11 +448,13 @@ long vfio_pci_ioeventfd(struct vfio_pci_device *vdev, loff_t offset,
+ 		goto out_unlock;
+ 	}
+ 
++	ioeventfd->vdev = vdev;
+ 	ioeventfd->addr = vdev->barmap[bar] + pos;
+ 	ioeventfd->data = data;
+ 	ioeventfd->pos = pos;
+ 	ioeventfd->bar = bar;
+ 	ioeventfd->count = count;
++	ioeventfd->test_mem = vdev->pdev->resource[bar].flags & IORESOURCE_MEM;
+ 
+ 	ret = vfio_virqfd_enable(ioeventfd, vfio_pci_ioeventfd_handler,
+ 				 NULL, NULL, &ioeventfd->virqfd, fd);
 -- 
 2.25.1
 
