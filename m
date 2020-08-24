@@ -7,33 +7,32 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA11C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2B17206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3C6206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730133AbgHXJS3 (ORCPT
+        id S1730388AbgHXJTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:18:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37450 "EHLO
+        Mon, 24 Aug 2020 05:19:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730425AbgHXIz6 (ORCPT
+        with ESMTP id S1730361AbgHXIzz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:55:58 -0400
+        Mon, 24 Aug 2020 04:55:55 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D135BC061573;
-        Mon, 24 Aug 2020 01:55:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6519C061575;
+        Mon, 24 Aug 2020 01:55:54 -0700 (PDT)
 Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 5FB1C664;
-        Mon, 24 Aug 2020 10:55:51 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id C056348C;
+        Mon, 24 Aug 2020 10:55:47 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
@@ -44,14 +43,15 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Mike Stunes <mstunes@vmware.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 10/76] x86/insn: Add insn_get_modrm_reg_off()
-Date:   Mon, 24 Aug 2020 10:54:05 +0200
-Message-Id: <20200824085511.7553-11-joro@8bytes.org>
+Subject: [PATCH v6 03/76] KVM: SVM: Add GHCB Accessor functions
+Date:   Mon, 24 Aug 2020 10:53:58 +0200
+Message-Id: <20200824085511.7553-4-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
 References: <20200824085511.7553-1-joro@8bytes.org>
@@ -64,77 +64,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add a function to the instruction decoder which returns the pt_regs
-offset of the register specified in the reg field of the modrm byte.
+Building a correct GHCB for the hypervisor requires setting valid bits
+in the GHCB. Simplify that process by providing accessor functions to
+set values and to update the valid bitmap and to check the valid bitmap
+in KVM.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Link: https://lore.kernel.org/r/20200724160336.5435-10-joro@8bytes.org
 ---
- arch/x86/include/asm/insn-eval.h |  1 +
- arch/x86/lib/insn-eval.c         | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+ arch/x86/include/asm/svm.h | 43 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
-index 392b4fe377f9..f748f57f1491 100644
---- a/arch/x86/include/asm/insn-eval.h
-+++ b/arch/x86/include/asm/insn-eval.h
-@@ -17,6 +17,7 @@
+diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+index 094b8f8fb1d4..50e5fa8d3249 100644
+--- a/arch/x86/include/asm/svm.h
++++ b/arch/x86/include/asm/svm.h
+@@ -341,4 +341,47 @@ struct __attribute__ ((__packed__)) vmcb {
  
- void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
- int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
-+int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
- unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
- int insn_get_code_seg_params(struct pt_regs *regs);
- int insn_fetch_from_user(struct pt_regs *regs,
-diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index f52046f90dd3..a8ac5c5e94f0 100644
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -20,6 +20,7 @@
+ #define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
  
- enum reg_type {
- 	REG_TYPE_RM = 0,
-+	REG_TYPE_REG,
- 	REG_TYPE_INDEX,
- 	REG_TYPE_BASE,
- };
-@@ -441,6 +442,13 @@ static int get_reg_offset(struct insn *insn, struct pt_regs *regs,
- 			regno += 8;
- 		break;
- 
-+	case REG_TYPE_REG:
-+		regno = X86_MODRM_REG(insn->modrm.value);
++/* GHCB Accessor functions */
 +
-+		if (X86_REX_R(insn->rex_prefix.value))
-+			regno += 8;
-+		break;
++#define GHCB_BITMAP_IDX(field)							\
++	(offsetof(struct vmcb_save_area, field) / sizeof(u64))
 +
- 	case REG_TYPE_INDEX:
- 		regno = X86_SIB_INDEX(insn->sib.value);
- 		if (X86_REX_X(insn->rex_prefix.value))
-@@ -809,6 +817,21 @@ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs)
- 	return get_reg_offset(insn, regs, REG_TYPE_RM);
- }
- 
-+/**
-+ * insn_get_modrm_reg_off() - Obtain register in reg part of the ModRM byte
-+ * @insn:	Instruction containing the ModRM byte
-+ * @regs:	Register values as seen when entering kernel mode
-+ *
-+ * Returns:
-+ *
-+ * The register indicated by the reg part of the ModRM byte. The
-+ * register is obtained as an offset from the base of pt_regs.
-+ */
-+int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs)
-+{
-+	return get_reg_offset(insn, regs, REG_TYPE_REG);
-+}
++#define DEFINE_GHCB_ACCESSORS(field)						\
++	static inline bool ghcb_##field##_is_valid(const struct ghcb *ghcb)	\
++	{									\
++		return test_bit(GHCB_BITMAP_IDX(field),				\
++				(unsigned long *)&ghcb->save.valid_bitmap);	\
++	}									\
++										\
++	static inline void ghcb_set_##field(struct ghcb *ghcb, u64 value)	\
++	{									\
++		__set_bit(GHCB_BITMAP_IDX(field),				\
++			  (unsigned long *)&ghcb->save.valid_bitmap);		\
++		ghcb->save.field = value;					\
++	}
 +
- /**
-  * get_seg_base_limit() - obtain base address and limit of a segment
-  * @insn:	Instruction. Must be valid.
++DEFINE_GHCB_ACCESSORS(cpl)
++DEFINE_GHCB_ACCESSORS(rip)
++DEFINE_GHCB_ACCESSORS(rsp)
++DEFINE_GHCB_ACCESSORS(rax)
++DEFINE_GHCB_ACCESSORS(rcx)
++DEFINE_GHCB_ACCESSORS(rdx)
++DEFINE_GHCB_ACCESSORS(rbx)
++DEFINE_GHCB_ACCESSORS(rbp)
++DEFINE_GHCB_ACCESSORS(rsi)
++DEFINE_GHCB_ACCESSORS(rdi)
++DEFINE_GHCB_ACCESSORS(r8)
++DEFINE_GHCB_ACCESSORS(r9)
++DEFINE_GHCB_ACCESSORS(r10)
++DEFINE_GHCB_ACCESSORS(r11)
++DEFINE_GHCB_ACCESSORS(r12)
++DEFINE_GHCB_ACCESSORS(r13)
++DEFINE_GHCB_ACCESSORS(r14)
++DEFINE_GHCB_ACCESSORS(r15)
++DEFINE_GHCB_ACCESSORS(sw_exit_code)
++DEFINE_GHCB_ACCESSORS(sw_exit_info_1)
++DEFINE_GHCB_ACCESSORS(sw_exit_info_2)
++DEFINE_GHCB_ACCESSORS(sw_scratch)
++DEFINE_GHCB_ACCESSORS(xcr0)
++
+ #endif
 -- 
 2.28.0
 
