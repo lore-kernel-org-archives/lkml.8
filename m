@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E35C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E265DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F66A2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C1E02074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598268562;
-	bh=NYiwj+2Xby3LHMGCk1joilOc35OND3SJCoRZ5v2O4ho=;
+	s=default; t=1598268606;
+	bh=sr8h31oVBhwwGNGUqRzUcOWMUXXTUZq5SuhMZEvleDY=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=kVIpJgGG/sdbf04KtRjly8YqSIV0lNPTCQXYjEibkdy5Uz7bYseuyCWiHeUNg47s5
-	 FPK4YS+eSTYpB2leRfheUnGRRoGgOGXucTIhJcMCG1Togf4apQqcI0odrxdwzozrMW
-	 4HOCJO/GqvuahOsN30iSkg7knRQ69MxOHrZML7HY=
+	b=xcIYIHOqZ2PcNAclv1M52ITBxSq6LSIGDED6pL+R1ygLWOzAbH9adQcDimM8QnHpe
+	 OvqOupbkLX9rZMVM3PP91TS/w/TfxO1NDY0rjaVVZ9OhZj2JMzk8tDLFdyDKSwHwqv
+	 s6zc4ETjFRywpC2rOFHa+fJaJ0HGTZXRpIFRnt6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbgHXL3T (ORCPT
+        id S1726874AbgHXLaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38918 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 07:30:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726863AbgHXL3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:29:04 -0400
+        id S1726483AbgHXL3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:29:47 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98E1B2074D;
-        Mon, 24 Aug 2020 11:28:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E29832074D;
+        Mon, 24 Aug 2020 11:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598268540;
-        bh=NYiwj+2Xby3LHMGCk1joilOc35OND3SJCoRZ5v2O4ho=;
+        s=default; t=1598268587;
+        bh=sr8h31oVBhwwGNGUqRzUcOWMUXXTUZq5SuhMZEvleDY=;
         h=From:To:Cc:Subject:Date:From;
-        b=BJTBpmHdnlW+qaqYVqPtom/sjAATJrACtYHEXriX5yxrKSvR3wb7J4olSa9V0uTtP
-         Qm99tVniFcVRhnhIomjjiIA8QbCYoyQbmRpz1ShUaodlmH7jjB7WoHMD/7radwmSiX
-         o5Cgg2z6rYKA8X6sAP9YmegCOfAMUlwWxmWRLfdI=
+        b=Vhe9H5ItJFq4txVxAATthQYWtFxl7wVew7GJzCSo7txaXfYOCspXg37tLlUkBVJqP
+         bquOLg04GMRUw1fQ/8kTuB3FJlYilZqTn4c/JKqnpiXK3XaYQy3dYoFancfnvwvE2i
+         70dEDtAj7ffQGABRucc0m2J9Zd6IdqRlQn9LxbTg=
 From:   Will Deacon <will@kernel.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-kernel@vger.kernel.org, maz@kernel.org,
         suzuki.poulose@arm.com, james.morse@arm.com, pbonzini@redhat.com,
         kernel-team@android.com, Will Deacon <will@kernel.org>,
         stable@vger.kernel.org
-Subject: [PATCH stable-4.4.y backport] KVM: arm/arm64: Don't reschedule in unmap_stage2_range()
-Date:   Mon, 24 Aug 2020 12:28:54 +0100
-Message-Id: <20200824112854.24651-1-will@kernel.org>
+Subject: [PATCH stable-4.9.y backport] KVM: arm/arm64: Don't reschedule in unmap_stage2_range()
+Date:   Mon, 24 Aug 2020 12:29:40 +0100
+Message-Id: <20200824112940.24706-1-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -68,30 +68,28 @@ introduced in 4.19. Rather than backport this considerable amount of
 infrastructure just for KVM on arm, instead just remove the conditional
 reschedule.
 
-Cc: <stable@vger.kernel.org> # v4.4 only
+Cc: <stable@vger.kernel.org> # v4.9 only
 Cc: Marc Zyngier <maz@kernel.org>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
 Cc: James Morse <james.morse@arm.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- arch/arm/kvm/mmu.c | 8 --------
- 1 file changed, 8 deletions(-)
+ arch/arm/kvm/mmu.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
 diff --git a/arch/arm/kvm/mmu.c b/arch/arm/kvm/mmu.c
-index e0267532bd4e..edd392fdc14b 100644
+index bb0d5e21d60b..b5ce1e81f945 100644
 --- a/arch/arm/kvm/mmu.c
 +++ b/arch/arm/kvm/mmu.c
-@@ -300,14 +300,6 @@ static void unmap_range(struct kvm *kvm, pgd_t *pgdp,
- 		next = kvm_pgd_addr_end(addr, end);
- 		if (!pgd_none(*pgd))
- 			unmap_puds(kvm, pgd, addr, next);
+@@ -298,12 +298,6 @@ static void unmap_stage2_range(struct kvm *kvm, phys_addr_t start, u64 size)
+ 		next = stage2_pgd_addr_end(addr, end);
+ 		if (!stage2_pgd_none(*pgd))
+ 			unmap_stage2_puds(kvm, pgd, addr, next);
 -		/*
--		 * If we are dealing with a large range in
--		 * stage2 table, release the kvm->mmu_lock
--		 * to prevent starvation and lockup detector
--		 * warnings.
+-		 * If the range is too large, release the kvm->mmu_lock
+-		 * to prevent starvation and lockup detector warnings.
 -		 */
--		if (kvm && (next != end))
+-		if (next != end)
 -			cond_resched_lock(&kvm->mmu_lock);
  	} while (pgd++, addr = next, addr != end);
  }
