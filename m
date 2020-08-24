@@ -2,187 +2,103 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C886C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F353C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6289E20706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 22:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024C5205CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 23:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598309829;
-	bh=22BcqTI+EFX6g2/L1n2dshueIvUnN7Cn3gYOcnM7xzE=;
+	s=default; t=1598310021;
+	bh=hFYSfq3Ws1eknk28E3gL3qTiauzIGTJVHWsHQW8VQvg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=I/OYmPPW4mXnvdjixrnf0CyJHdC/0Fi3DYZqKI2zdScVSZztNgmNsDYsZu4Rtie9t
-	 tTtSz+h/iKJSHvCVVPxjqcrlxkJDWCyt8+R4finzQAmwFrae/yR5bi6HTp/z2iNcou
-	 QtUkbCCK7STTL0FdEZRO1Gwyi/PDGiwqH5McY+x8=
+	b=TAqF/8DqI9P0Dq82jimgnWFSCD+mrDGbzGiN4j+HmINUalY6m+8oo4zLGLlKIqhvo
+	 eLp7t4yJZnwevmk6bWRYmFb08cYOl25NSVQe7LzDO2FRsVVKsGyXQTym+/LNXWw5uA
+	 lru+3YOx/9Ljd9IarT+ZoI85Jw8abebhyJkOLoVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgHXW5I (ORCPT
+        id S1728085AbgHXXAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 18:57:08 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37367 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHXW5G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 18:57:06 -0400
-Received: by mail-io1-f65.google.com with SMTP id b16so10533646ioj.4;
-        Mon, 24 Aug 2020 15:57:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xVGE6rEY1RUDdQNh7SGiTq/hwvuBPw98UGPGdGtkR3s=;
-        b=lQvqzcs3mkwd5VVG3w+U7rs2eFkOK8Vle0sjfYsOfa9VwJckgtOE5XMv2oIifCyMKv
-         w/fOZJgu18iUo8waE5X+tQGOld9pzegHgDXl4jo3OJsFBU6VxVbcLG8Iwd1WraJjXf++
-         NYovcS0CtYqL+FKVLHutecS31xk/L/gdg1DksZYp0su5OjWTVDHn68+IQ/a37CMyzzWU
-         mZ9dc8nWon+1H228Ovx1ttCpa3crUNH8vg4uYseiXYG9w0+igXYZvfh27/3msRXmgAg1
-         jq40fvQIx9awLG5f+YraZuOR8QWxj1sd+PduNKhuExdWWe8ICeDhrYQfnUnknLEyp+I6
-         vbJA==
-X-Gm-Message-State: AOAM530QWX/gXK+vILJxcypfRQzrJv+DY4NsJCX+0trptgbqjlSs6PTo
-        PE/Y2v+xyMezCAHnV9uuWQ==
-X-Google-Smtp-Source: ABdhPJxZzTqlGIuc2GQiyiK402zSrSHAuiMtS1zh+LVYBDoR7GLuyYLF4mBV82z4DWNQVeHgr2UhYQ==
-X-Received: by 2002:a6b:6204:: with SMTP id f4mr6678058iog.56.1598309824569;
-        Mon, 24 Aug 2020 15:57:04 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id i11sm7909593ilr.47.2020.08.24.15.57.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 15:57:03 -0700 (PDT)
-Received: (nullmailer pid 3486301 invoked by uid 1000);
-        Mon, 24 Aug 2020 22:57:02 -0000
-Date:   Mon, 24 Aug 2020 16:57:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Krishna Manikandan <mkrishn@codeaurora.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        kalyan_t@codeaurora.org, nganji@codeaurora.org
-Subject: Re: [PATCH 1/2] dt-bindings: msm: disp: add yaml schemas for DPU and
- DSI bindings
-Message-ID: <20200824225702.GA3460018@bogus>
-References: <1597066683-6044-1-git-send-email-mkrishn@codeaurora.org>
+        Mon, 24 Aug 2020 19:00:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726519AbgHXXAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 19:00:18 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2CAF20706;
+        Mon, 24 Aug 2020 23:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598310017;
+        bh=hFYSfq3Ws1eknk28E3gL3qTiauzIGTJVHWsHQW8VQvg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MwB9HxxApRF52tXIKzjRRnfjyHr+VskuNN3QHQlCpBUNtIGoS05zhpZkDJeSa8UKv
+         0yDtOTSqjqF0MBw9q4pS2f/bBfuqOBO0JsMXsfqX+0U4CowfHdNFg1y1t9Ya9bmMgw
+         WIeTiN+FRS091HsV5kYbVekcIDXi3RBOG5gvbIAc=
+Date:   Mon, 24 Aug 2020 16:00:15 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     Daniel Rosenberg <drosen@google.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-fscrypt@vger.kernel.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-ext4@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>
+Subject: Re: [PATCH v12 0/4] Prepare for upcoming Casefolding/Encryption
+ patches
+Message-ID: <20200824230015.GA810@sol.localdomain>
+References: <20200708091237.3922153-1-drosen@google.com>
+ <20200720170951.GE1292162@gmail.com>
+ <20200727164508.GE1138@sol.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1597066683-6044-1-git-send-email-mkrishn@codeaurora.org>
+In-Reply-To: <20200727164508.GE1138@sol.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 07:08:02PM +0530, Krishna Manikandan wrote:
-> MSM Mobile Display Subsytem (MDSS) encapsulates sub-blocks
-> like DPU display controller, DSI etc. Add YAML schema
-> for the device tree bindings for the same.
+On Mon, Jul 27, 2020 at 09:45:08AM -0700, Eric Biggers wrote:
+> On Mon, Jul 20, 2020 at 10:09:51AM -0700, Eric Biggers wrote:
+> > On Wed, Jul 08, 2020 at 02:12:33AM -0700, Daniel Rosenberg wrote:
+> > > This lays the ground work for enabling casefolding and encryption at the
+> > > same time for ext4 and f2fs. A future set of patches will enable that
+> > > functionality.
+> > > 
+> > > These unify the highly similar dentry_operations that ext4 and f2fs both
+> > > use for casefolding. In addition, they improve d_hash by not requiring a
+> > > new string allocation.
+> > > 
+> > > Daniel Rosenberg (4):
+> > >   unicode: Add utf8_casefold_hash
+> > >   fs: Add standard casefolding support
+> > >   f2fs: Use generic casefolding support
+> > >   ext4: Use generic casefolding support
+> > > 
+> > 
+> > Ted, are you interested in taking this through the ext4 tree for 5.9?
+> > 
+> > - Eric
 > 
-> Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+> Ping?
 > 
-> Changes in v2:
->     - Changed dpu to DPU (Sam Ravnborg)
->     - Fixed indentation issues (Sam Ravnborg)
->     - Added empty line between different properties (Sam Ravnborg)
->     - Replaced reference txt files with  their corresponding
->       yaml files (Sam Ravnborg)
->     - Modified the file to use "|" only when it is
->       necessary (Sam Ravnborg)
-> 
-> Changes in v3:
->     - Corrected the license used (Rob Herring)
->     - Added maxItems for properties (Rob Herring)
->     - Dropped generic descriptions (Rob Herring)
->     - Added ranges property (Rob Herring)
->     - Corrected the indendation (Rob Herring)
->     - Added additionalProperties (Rob Herring)
->     - Split dsi file into two, one for dsi controller
->       and another one for dsi phy per target (Rob Herring)
->     - Corrected description for pinctrl-names (Rob Herring)
->     - Corrected the examples used in yaml file (Rob Herring)
->     - Delete dsi.txt and dpu.txt (Rob Herring)
-> 
-> Changes in v4:
->     - Move schema up by one level (Rob Herring)
->     - Add patternProperties for mdp node (Rob Herring)
->     - Corrected description of some properties (Rob Herring)
-> 
-> Changes in v5:
->     - Correct the indentation (Rob Herring)
->     - Remove unnecessary description from properties (Rob Herring)
->     - Correct the number of interconnect entries (Rob Herring)
->     - Add interconnect names for sc7180 (Rob Herring)
->     - Add description for ports (Rob Herring)
->     - Remove common properties (Rob Herring)
->     - Add unevalutatedProperties (Rob Herring)
->     - Reference existing dsi controller yaml in the common
->       dsi controller file (Rob Herring)
->     - Correct the description of clock names to include only the
->       clocks that are required (Rob Herring)
->     - Remove properties which are already covered under the common
->       binding (Rob Herring)
->     - Add dsi phy supply nodes which are required for sc7180 and
->       sdm845 targets (Rob Herring)
->     - Add type ref for syscon-sfpb (Rob Herring)
-> 
-> Changes in v6:
->     - Fixed errors during dt_binding_check (Rob Herring)
->     - Add maxItems for phys and phys-names (Rob Herring)
->     - Use unevaluatedProperties wherever required (Rob Herring)
->     - Removed interrupt controller from required properties for
->       dsi controller (Rob Herring)
->     - Add constraints for dsi-phy reg-names based on the compatible
->       phy version (Rob Herring)
->     - Add constraints for dsi-phy supply nodes based on the
->       compatible phy version (Rob Herring)
-> 
-> Changes in v7:
->     - Add default value for qcom,mdss-mdp-transfer-time-us (Rob Herring)
->     - Modify the schema for data-lanes (Rob Herring)
->     - Split the phy schema into separate schemas based on
->       the phy version (Rob Herring)
-> 
-> Changes in v8:
->     - Resolve merge conflicts with latest dsi.txt file
->     - Include dp yaml change also in the same series
 
-I'm done reviewing this because I'm tired of repeating myself and you're 
-just throwing crap at the wall and seeing what sticks. Get someone else 
-working on QCom stuff to review because I'm done until someone I know 
-and trust reviews it.
+Unfortunately this patchset got ignored for 5.9.
 
-> ---
->  .../bindings/display/msm/dpu-sc7180.yaml           | 236 +++++++++++++++++++
->  .../bindings/display/msm/dpu-sdm845.yaml           | 216 ++++++++++++++++++
->  .../devicetree/bindings/display/msm/dpu.txt        | 141 ------------
->  .../display/msm/dsi-common-controller.yaml         | 249 +++++++++++++++++++++
->  .../display/msm/dsi-controller-sc7180.yaml         | 120 ++++++++++
->  .../display/msm/dsi-controller-sdm845.yaml         | 120 ++++++++++
+Ted, will you have any interest in taking this patchset for 5.10?  Or should
+Jaegeuk just take patches 1-3 via the f2fs tree?
 
-Once again, what's the difference between dsi-controller-sc7180.yaml and 
-dsi-controller-sdm845.yaml? I don't see one. If there's not a 
-difference, why do we have msm/dsi-common-controller.yaml? If there is a 
-difference dsi-controller-sc7180.yaml and dsi-controller-sdm845.yaml 
-should *only* have what's different because 
-msm/dsi-common-controller.yaml should have everything that is the same.
+The fscrypt tree is also an option, but I feel it's not really appropriate since
+this patchset is just a refactoring of the existing casefolding support.
 
->  .../bindings/display/msm/dsi-phy-10nm.yaml         |  62 +++++
->  .../bindings/display/msm/dsi-phy-14nm.yaml         |  62 +++++
->  .../bindings/display/msm/dsi-phy-20nm.yaml         |  66 ++++++
->  .../bindings/display/msm/dsi-phy-28nm.yaml         |  62 +++++
->  .../bindings/display/msm/dsi-phy-sc7180.yaml       |  80 +++++++
->  .../bindings/display/msm/dsi-phy-sdm845.yaml       |  82 +++++++
->  .../devicetree/bindings/display/msm/dsi.txt        | 247 --------------------
->  13 files changed, 1355 insertions(+), 388 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dpu-sdm845.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/msm/dpu.txt
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-common-controller.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-controller-sdm845.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-10nm.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-14nm.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-20nm.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-28nm.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sc7180.yaml
->  create mode 100644 Documentation/devicetree/bindings/display/msm/dsi-phy-sdm845.yaml
->  delete mode 100644 Documentation/devicetree/bindings/display/msm/dsi.txt
+More reviews on patches 1-2 would be appreciated too.  So far just Gabriel and I
+have reviewed them.  I was hoping that other people would review them too.
+
+- Eric
