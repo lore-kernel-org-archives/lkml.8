@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8219CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 998E42071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57BD62071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:58:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598263077;
-	bh=YyAY6cc7QTViLWyp9xxjMzcu4icKEU23qQoNGK7Dd/w=;
+	s=default; t=1598263085;
+	bh=lnxsdBh+zE47m4uo4Po/DXympUpbxUrHQw2OAbpZ/no=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xAXua2LFlpuqBkMNEiEY0lF7SHoIxyi9PBx0phXMygVCqqmoYZROctu56PdaIMCGN
-	 /j8n/Wl6l2i2Dw673k5kUEstFNnCr3qn43eAy1RkDtJeWIIvJNavtW6+4Bf/dn7+lN
-	 SfwZSC+9d8d2ns6SDj/sIRmgDLhnLMhXfQc0JtnE=
+	b=hSkWxUS+Mo9kgZKUpHjMgWPl7cEnLE4VpkWuwYdIsULPIBIpV8WgSJTdbVVX4HJ2R
+	 Nfkf/gf6GGsYlk9+Ct620GHaQm7Oed73J/c9zNnVXdMk7zS+L7duRLG+RxC8VgkFQb
+	 IXczLVxPe9kX2Te/EcLtUmJDGIWN/wHuB8tJBXz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbgHXIem (ORCPT
+        id S1726939AbgHXIei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:34:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43312 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:34:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727942AbgHXIef (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:34:35 -0400
+        id S1727923AbgHXIea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:34:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CAC72087D;
-        Mon, 24 Aug 2020 08:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2643D206F0;
+        Mon, 24 Aug 2020 08:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258074;
-        bh=YyAY6cc7QTViLWyp9xxjMzcu4icKEU23qQoNGK7Dd/w=;
+        s=default; t=1598258069;
+        bh=lnxsdBh+zE47m4uo4Po/DXympUpbxUrHQw2OAbpZ/no=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AztTB+xg82Q6UVRF0yJQUDARNt5fKAgKsY84C2hR0kIjhji5XT3a6We9CTDqwDlzx
-         R+HZRb913audQXqZFj2B+hJljKwAvLAfJmYdSypDKJ2hRTzmo4PcPQ+awGVwLtNsqs
-         jNcetMYPD9TTCUEemP1iqci7ceC8HS/7G6v1EXJA=
+        b=Zr+f8rBEV/KRPZWC99XUMyQPNaRfpOcyoEue3zyU0GkN/adxO32rtj8OveUviThx8
+         kEsYicq/gmHDPjRSUEUp/xuhy/67EWkQ24tfTtq96nCRRxbqUzILOTFBgpDoO1ia2v
+         3SHAm91h3kDH3ckGrEx7WoRXMyNGlNLctSBeW+p8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Anton Vasilyev <vasilyev@ispras.ru>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Girish Basrur <gbasrur@marvell.com>,
+        Santosh Vernekar <svernekar@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        Shyam Sundar <ssundar@marvell.com>,
+        Javed Hasan <jhasan@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 066/148] media: camss: fix memory leaks on error handling paths in probe
-Date:   Mon, 24 Aug 2020 10:29:24 +0200
-Message-Id: <20200824082417.236636968@linuxfoundation.org>
+Subject: [PATCH 5.8 064/148] scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
+Date:   Mon, 24 Aug 2020 10:29:22 +0200
+Message-Id: <20200824082417.139100903@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -62,97 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Javed Hasan <jhasan@marvell.com>
 
-[ Upstream commit f45882cfb152f5d3a421fd58f177f227e44843b9 ]
+[ Upstream commit ec007ef40abb6a164d148b0dc19789a7a2de2cc8 ]
 
-camss_probe() does not free camss on error handling paths. The patch
-introduces an additional error label for this purpose. Besides, it
-removes call of v4l2_async_notifier_cleanup() from
-camss_of_parse_ports() since its caller, camss_probe(), cleans up all
-its resources itself.
+In fc_disc_gpn_id_resp(), skb is supposed to get freed in all cases except
+for PTR_ERR. However, in some cases it didn't.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+This fix is to call fc_frame_free(fp) before function returns.
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Co-developed-by: Anton Vasilyev <vasilyev@ispras.ru>
-Signed-off-by: Anton Vasilyev <vasilyev@ispras.ru>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Link: https://lore.kernel.org/r/20200729081824.30996-2-jhasan@marvell.com
+Reviewed-by: Girish Basrur <gbasrur@marvell.com>
+Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
+Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
+Reviewed-by: Shyam Sundar <ssundar@marvell.com>
+Signed-off-by: Javed Hasan <jhasan@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/camss/camss.c | 30 +++++++++++++++--------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ drivers/scsi/libfc/fc_disc.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-index 3fdc9f964a3c6..2483641799dfb 100644
---- a/drivers/media/platform/qcom/camss/camss.c
-+++ b/drivers/media/platform/qcom/camss/camss.c
-@@ -504,7 +504,6 @@ static int camss_of_parse_ports(struct camss *camss)
- 	return num_subdevs;
+diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
+index 2b865c6423e29..e00dc4693fcbd 100644
+--- a/drivers/scsi/libfc/fc_disc.c
++++ b/drivers/scsi/libfc/fc_disc.c
+@@ -581,8 +581,12 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
  
- err_cleanup:
--	v4l2_async_notifier_cleanup(&camss->notifier);
- 	of_node_put(node);
- 	return ret;
- }
-@@ -835,29 +834,38 @@ static int camss_probe(struct platform_device *pdev)
- 		camss->csid_num = 4;
- 		camss->vfe_num = 2;
- 	} else {
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto err_free;
+ 	if (PTR_ERR(fp) == -FC_EX_CLOSED)
+ 		goto out;
+-	if (IS_ERR(fp))
+-		goto redisc;
++	if (IS_ERR(fp)) {
++		mutex_lock(&disc->disc_mutex);
++		fc_disc_restart(disc);
++		mutex_unlock(&disc->disc_mutex);
++		goto out;
++	}
+ 
+ 	cp = fc_frame_payload_get(fp, sizeof(*cp));
+ 	if (!cp)
+@@ -609,7 +613,7 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 				new_rdata->disc_id = disc->disc_id;
+ 				fc_rport_login(new_rdata);
+ 			}
+-			goto out;
++			goto free_fp;
+ 		}
+ 		rdata->disc_id = disc->disc_id;
+ 		mutex_unlock(&rdata->rp_mutex);
+@@ -626,6 +630,8 @@ redisc:
+ 		fc_disc_restart(disc);
+ 		mutex_unlock(&disc->disc_mutex);
  	}
- 
- 	camss->csiphy = devm_kcalloc(dev, camss->csiphy_num,
- 				     sizeof(*camss->csiphy), GFP_KERNEL);
--	if (!camss->csiphy)
--		return -ENOMEM;
-+	if (!camss->csiphy) {
-+		ret = -ENOMEM;
-+		goto err_free;
-+	}
- 
- 	camss->csid = devm_kcalloc(dev, camss->csid_num, sizeof(*camss->csid),
- 				   GFP_KERNEL);
--	if (!camss->csid)
--		return -ENOMEM;
-+	if (!camss->csid) {
-+		ret = -ENOMEM;
-+		goto err_free;
-+	}
- 
- 	camss->vfe = devm_kcalloc(dev, camss->vfe_num, sizeof(*camss->vfe),
- 				  GFP_KERNEL);
--	if (!camss->vfe)
--		return -ENOMEM;
-+	if (!camss->vfe) {
-+		ret = -ENOMEM;
-+		goto err_free;
-+	}
- 
- 	v4l2_async_notifier_init(&camss->notifier);
- 
- 	num_subdevs = camss_of_parse_ports(camss);
--	if (num_subdevs < 0)
--		return num_subdevs;
-+	if (num_subdevs < 0) {
-+		ret = num_subdevs;
-+		goto err_cleanup;
-+	}
- 
- 	ret = camss_init_subdevices(camss);
- 	if (ret < 0)
-@@ -936,6 +944,8 @@ err_register_entities:
- 	v4l2_device_unregister(&camss->v4l2_dev);
- err_cleanup:
- 	v4l2_async_notifier_cleanup(&camss->notifier);
-+err_free:
-+	kfree(camss);
- 
- 	return ret;
- }
++free_fp:
++	fc_frame_free(fp);
+ out:
+ 	kref_put(&rdata->kref, fc_rport_destroy);
+ 	if (!IS_ERR(fp))
 -- 
 2.25.1
 
