@@ -2,184 +2,171 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCF9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85B1F20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E6AD2071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261868;
-	bh=YTJRcXK1ZnJiD5zCZMM5LGHCt49kjkUKNjoMZvKaxHs=;
+	s=default; t=1598261879;
+	bh=0ASM38NtqHvLkfihwuFhfZDcSaxHNeAcxdPp58Kpa4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2dgRUzb6l0LpFIomQbSavAJWgMYUcF+fuB4vAnKEbhN649KwoQ5UyQoPqDlQPeXy6
-	 TKQ+ZrVYoDplcj7d+1hXXTLzOx5s6pMwYoxSn8BLUOCuBMB0DGmMYWs9ys6pXUSVN1
-	 Di08fotPfk870vW5PT+3nvx0473YfV3DJCP1OKXY=
+	b=mRxdYeBLJRl+QckyNeX1f7pRry6z53UzYoI5b85HB/H5pfpWg4czwX0J4vHGB3xC8
+	 snsdVzBN554Y5fQvKWmldj0JY/rbsl6Lo13koYwZD2jW5MzbczXftsW+8DWsuo5hh+
+	 P16IHJOjkyCFg3ck85jxEWj9JAhMNz+1t/4xtBPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgHXJhq (ORCPT
+        id S1729543AbgHXJh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:37:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47760 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:37:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729366AbgHXIrl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:47:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1727111AbgHXIr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:47:29 -0400
+Received: from localhost.localdomain (unknown [122.171.38.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0DE72075B;
-        Mon, 24 Aug 2020 08:47:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28FD22072D;
+        Mon, 24 Aug 2020 08:47:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258860;
-        bh=YTJRcXK1ZnJiD5zCZMM5LGHCt49kjkUKNjoMZvKaxHs=;
+        s=default; t=1598258848;
+        bh=0ASM38NtqHvLkfihwuFhfZDcSaxHNeAcxdPp58Kpa4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZNh3ieQP0bab/JKxYW9lyvza99hhv54p6AQTsttxsBpxUvwYiEh641HarVKggmxKn
-         P3J2qZ2v0z1DWW4F5W9smfcAf10AorK8dgBe5auhZDLx9jp69fZX8ReiOgsCw47SnA
-         d+nRkRRfh6Z3iZsQa8jTynkC4f/x3twbZo5x2iss=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 069/107] bpf: sock_ops sk access may stomp registers when dst_reg = src_reg
-Date:   Mon, 24 Aug 2020 10:30:35 +0200
-Message-Id: <20200824082408.541331644@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
-References: <20200824082405.020301642@linuxfoundation.org>
-User-Agent: quilt/0.66
+        b=0gzmVpTI2iar2LvRnsjGkjkzApTW6XVndHLQEY3qt0D8XTS42IHBGP0dgVmubv0aZ
+         FqcCNSMULXxLDNsju8mdgsXxYtQ/rm66bzd0zRfxqenI5czhowATCehVbQeJf5Q2vi
+         WMJX1C7ea6zTVH2tEWBSvjvlt851G0WzmqythizQ=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     dmaengine@vger.kernel.org
+Cc:     Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 2/3] dmaengine: add peripheral configuration
+Date:   Mon, 24 Aug 2020 14:17:11 +0530
+Message-Id: <20200824084712.2526079-3-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200824084712.2526079-1-vkoul@kernel.org>
+References: <20200824084712.2526079-1-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+Some complex dmaengine controllers have capability to program the
+peripheral device, so pass on the peripheral configuration as part of
+dma_slave_config
 
-[ Upstream commit 84f44df664e9f0e261157e16ee1acd77cc1bb78d ]
-
-Similar to patch ("bpf: sock_ops ctx access may stomp registers") if the
-src_reg = dst_reg when reading the sk field of a sock_ops struct we
-generate xlated code,
-
-  53: (61) r9 = *(u32 *)(r9 +28)
-  54: (15) if r9 == 0x0 goto pc+3
-  56: (79) r9 = *(u64 *)(r9 +0)
-
-This stomps on the r9 reg to do the sk_fullsock check and then when
-reading the skops->sk field instead of the sk pointer we get the
-sk_fullsock. To fix use similar pattern noted in the previous fix
-and use the temp field to save/restore a register used to do
-sk_fullsock check.
-
-After the fix the generated xlated code reads,
-
-  52: (7b) *(u64 *)(r9 +32) = r8
-  53: (61) r8 = *(u32 *)(r9 +28)
-  54: (15) if r9 == 0x0 goto pc+3
-  55: (79) r8 = *(u64 *)(r9 +32)
-  56: (79) r9 = *(u64 *)(r9 +0)
-  57: (05) goto pc+1
-  58: (79) r8 = *(u64 *)(r9 +32)
-
-Here r9 register was in-use so r8 is chosen as the temporary register.
-In line 52 r8 is saved in temp variable and at line 54 restored in case
-fullsock != 0. Finally we handle fullsock == 0 case by restoring at
-line 58.
-
-This adds a new macro SOCK_OPS_GET_SK it is almost possible to merge
-this with SOCK_OPS_GET_FIELD, but I found the extra branch logic a
-bit more confusing than just adding a new macro despite a bit of
-duplicating code.
-
-Fixes: 1314ef561102e ("bpf: export bpf_sock for BPF_PROG_TYPE_SOCK_OPS prog type")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/159718349653.4728.6559437186853473612.stgit@john-Precision-5820-Tower
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- net/core/filter.c | 49 ++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 38 insertions(+), 11 deletions(-)
+ include/linux/dmaengine.h | 75 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index bd1e46d61d8a1..5c490d473df1d 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -8010,6 +8010,43 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
- 				      offsetof(OBJ, OBJ_FIELD));	      \
- 	} while (0)
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index 6fbd5c99e30c..264643ca9209 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -380,6 +380,73 @@ enum dma_slave_buswidth {
+ 	DMA_SLAVE_BUSWIDTH_64_BYTES = 64,
+ };
  
-+#define SOCK_OPS_GET_SK()							      \
-+	do {								      \
-+		int fullsock_reg = si->dst_reg, reg = BPF_REG_9, jmp = 1;     \
-+		if (si->dst_reg == reg || si->src_reg == reg)		      \
-+			reg--;						      \
-+		if (si->dst_reg == reg || si->src_reg == reg)		      \
-+			reg--;						      \
-+		if (si->dst_reg == si->src_reg) {			      \
-+			*insn++ = BPF_STX_MEM(BPF_DW, si->src_reg, reg,	      \
-+					  offsetof(struct bpf_sock_ops_kern,  \
-+					  temp));			      \
-+			fullsock_reg = reg;				      \
-+			jmp += 2;					      \
-+		}							      \
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
-+						struct bpf_sock_ops_kern,     \
-+						is_fullsock),		      \
-+				      fullsock_reg, si->src_reg,	      \
-+				      offsetof(struct bpf_sock_ops_kern,      \
-+					       is_fullsock));		      \
-+		*insn++ = BPF_JMP_IMM(BPF_JEQ, fullsock_reg, 0, jmp);	      \
-+		if (si->dst_reg == si->src_reg)				      \
-+			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
-+				      offsetof(struct bpf_sock_ops_kern,      \
-+				      temp));				      \
-+		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(			      \
-+						struct bpf_sock_ops_kern, sk),\
-+				      si->dst_reg, si->src_reg,		      \
-+				      offsetof(struct bpf_sock_ops_kern, sk));\
-+		if (si->dst_reg == si->src_reg)	{			      \
-+			*insn++ = BPF_JMP_A(1);				      \
-+			*insn++ = BPF_LDX_MEM(BPF_DW, reg, si->src_reg,	      \
-+				      offsetof(struct bpf_sock_ops_kern,      \
-+				      temp));				      \
-+		}							      \
-+	} while (0)
++/**
++ * enum spi_transfer_cmd - spi transfer commands
++ */
++enum spi_transfer_cmd {
++	SPI_TX = 1,
++	SPI_RX,
++	SPI_DUPLEX,
++};
 +
- #define SOCK_OPS_GET_TCP_SOCK_FIELD(FIELD) \
- 		SOCK_OPS_GET_FIELD(FIELD, FIELD, struct tcp_sock)
++/**
++ * struct dmaengine_spi_config - spi config for peripheral
++ *
++ * @loopback_en: spi loopback enable when set
++ * @clock_pol: clock polarity
++ * @data_pol: data polarity
++ * @pack_en: process tx/rx buffers as packed
++ * @word_len: spi word length
++ * @clk_div: source clock divider
++ * @clk_src: serial clock
++ * @cmd: spi cmd
++ * @cs: chip select toggle
++ * @rx_len: receive length for spi buffer
++ */
++struct dmaengine_spi_config {
++	u8 loopback_en;
++	u8 clock_pol;
++	u8 data_pol;
++	u8 pack_en;
++	u8 word_len;
++	u32 clk_div;
++	u32 clk_src;
++	u8 fragmentation;
++	enum spi_transfer_cmd cmd;
++	u8 cs;
++	u32 rx_len;
++};
++
++/**
++ * struct dmaengine_i2c_config - i2c config for peripheral
++ *
++ * @pack_enable: process tx/rx buffers as packed
++ * @cycle_count: clock cycles to be sent
++ * @high_count: high period of clock
++ * @low_count: low period of clock
++ * @clk_div: source clock divider
++ * @addr: i2c bus address
++ * @strech: strech the clock at eot
++ * @op: i2c cmd
++ */
++struct dmaengine_i2c_config {
++	u8 pack_enable;
++	u8 cycle_count;
++	u8 high_count;
++	u8 low_count;
++	u16 clk_div;
++	u8 addr;
++	u8 strech;
++	u8 op;
++};
++
++enum dmaengine_peripheral {
++	DMAENGINE_PERIPHERAL_SPI,
++	DMAENGINE_PERIPHERAL_I2C,
++	DMAENGINE_PERIPHERAL_UART,
++	DMAENGINE_PERIPHERAL_LAST = DMAENGINE_PERIPHERAL_UART,
++};
++
+ /**
+  * struct dma_slave_config - dma slave channel runtime config
+  * @direction: whether the data shall go in or out on this slave
+@@ -418,6 +485,10 @@ enum dma_slave_buswidth {
+  * @slave_id: Slave requester id. Only valid for slave channels. The dma
+  * slave peripheral will have unique id as dma requester which need to be
+  * pass as slave config.
++ * @peripheral: type of peripheral to DMA to/from
++ * @set_config: set peripheral config
++ * @spi: peripheral config for spi
++ * @:i2c peripheral config for i2c
+  *
+  * This struct is passed in as configuration data to a DMA engine
+  * in order to set up a certain channel for DMA transport at runtime.
+@@ -443,6 +514,10 @@ struct dma_slave_config {
+ 	u32 dst_port_window_size;
+ 	bool device_fc;
+ 	unsigned int slave_id;
++	enum dmaengine_peripheral peripheral;
++	u8 set_config;
++	struct dmaengine_spi_config spi;
++	struct dmaengine_i2c_config i2c;
+ };
  
-@@ -8294,17 +8331,7 @@ static u32 sock_ops_convert_ctx_access(enum bpf_access_type type,
- 		SOCK_OPS_GET_TCP_SOCK_FIELD(bytes_acked);
- 		break;
- 	case offsetof(struct bpf_sock_ops, sk):
--		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
--						struct bpf_sock_ops_kern,
--						is_fullsock),
--				      si->dst_reg, si->src_reg,
--				      offsetof(struct bpf_sock_ops_kern,
--					       is_fullsock));
--		*insn++ = BPF_JMP_IMM(BPF_JEQ, si->dst_reg, 0, 1);
--		*insn++ = BPF_LDX_MEM(BPF_FIELD_SIZEOF(
--						struct bpf_sock_ops_kern, sk),
--				      si->dst_reg, si->src_reg,
--				      offsetof(struct bpf_sock_ops_kern, sk));
-+		SOCK_OPS_GET_SK();
- 		break;
- 	}
- 	return insn - insn_buf;
+ /**
 -- 
-2.25.1
-
-
+2.26.2
 
