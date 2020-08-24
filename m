@@ -7,46 +7,52 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E99C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27247C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28CC82074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A31206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258786;
-	bh=G/McZE4QBg9BkUHnwrJRZBU4YvBJ3uxeKAUg6szMSYg=;
+	s=default; t=1598258790;
+	bh=AxxRPdXt761L1egkPM2Zgbh76QNcwqgJpjeiF3Qo5KM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PTnbDZI67V4nI8tIDFET1Vd+wciLzBXxaPm7IfR+1A1l0Q7tk8q3jvgUrlZL0wvwt
-	 cOhb51Gkd1yhmfbh4dRSeJQZRsXmCnh09j+QSYuFfu/SYdoFDhLpV7jaYV91LTUdiQ
-	 sKvDQ/+RDrRFArlILthHR7mtFwDv5Lc5RPLo2OeA=
+	b=KpI88cNn9o5ecOkIhWB2qyiX8zynxBU3E4Mpb1tGMwfrT/IPu9u7AXYvlZ9GWrZug
+	 l1TTmhBNIV5R2OvTSSgW7nwDFbqnIJokq7IcB7htKiJB5EsSQ85pe5mEs75adZkvEm
+	 X8PryLFNpDGtKLpJ0M7ireh25DpBBN2i33CdG4Fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgHXIqU (ORCPT
+        id S1728519AbgHXIq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:46:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44322 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:46:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729330AbgHXIqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:46:16 -0400
+        id S1728584AbgHXIqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:46:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31CE1204FD;
-        Mon, 24 Aug 2020 08:46:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5964204FD;
+        Mon, 24 Aug 2020 08:46:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258775;
-        bh=G/McZE4QBg9BkUHnwrJRZBU4YvBJ3uxeKAUg6szMSYg=;
+        s=default; t=1598258783;
+        bh=AxxRPdXt761L1egkPM2Zgbh76QNcwqgJpjeiF3Qo5KM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=arobwEZkndPlKFrIDOpzVwXxoJS8vaXrM6Of53oyw3TEJAONFAzeC1VCxAYyxI56+
-         h1/0BDro+ImiVakm8oHtrMbP3WN29WQIVN9dX9aAu6FcVpPbvmtDfDeImf6YtPq6jh
-         nr5+EemXoraoaULJOw7kQr7KW2FRAIq8NUvZlAM0=
+        b=Ye9om/q/jVqnLLkWgi7s8h44dFiOZSV4TsfWNENMjDcYx04xZQv9FCkRa8HPAE2Ji
+         QjHmAKpwoMZBUZ/qeKmXWrmD24J+PYZXzbMf8MJ1eexo3PkmL6M7w4Sik7eYJ2IkJl
+         gSCvDjoZM6OpJD/bSYp8rEiatYY+RRbWrALsha+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>,
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Song Liu <songliubraving@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 011/107] gfs2: Improve mmap write vs. punch_hole consistency
-Date:   Mon, 24 Aug 2020 10:29:37 +0200
-Message-Id: <20200824082405.621982099@linuxfoundation.org>
+Subject: [PATCH 5.4 014/107] khugepaged: khugepaged_test_exit() check mmget_still_valid()
+Date:   Mon, 24 Aug 2020 10:29:40 +0200
+Message-Id: <20200824082405.768655436@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -59,60 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit 39c3a948ecf6e7b8f55f0e91a5febc924fede4d7 ]
+[ Upstream commit bbe98f9cadff58cdd6a4acaeba0efa8565dabe65 ]
 
-When punching a hole in a file, use filemap_write_and_wait_range to
-write back any dirty pages in the range of the hole.  As a side effect,
-if the hole isn't page aligned, this marks unaligned pages at the
-beginning and the end of the hole read-only.  This is required when the
-block size is smaller than the page size: when those pages are written
-to again after the hole punching, we must make sure that page_mkwrite is
-called for those pages so that the page will be fully allocated and any
-blocks turned into holes from the hole punching will be reallocated.
-(If a page is writably mapped, page_mkwrite won't be called.)
+Move collapse_huge_page()'s mmget_still_valid() check into
+khugepaged_test_exit() itself.  collapse_huge_page() is used for anon THP
+only, and earned its mmget_still_valid() check because it inserts a huge
+pmd entry in place of the page table's pmd entry; whereas
+collapse_file()'s retract_page_tables() or collapse_pte_mapped_thp()
+merely clears the page table's pmd entry.  But core dumping without mmap
+lock must have been as open to mistaking a racily cleared pmd entry for a
+page table at physical page 0, as exit_mmap() was.  And we certainly have
+no interest in mapping as a THP once dumping core.
 
-Fixes xfstest generic/567.
-
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Fixes: 59ea6d06cfa9 ("coredump: fix race condition between collapse_huge_page() and core dumping")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: <stable@vger.kernel.org>	[4.8+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021217020.27773@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/bmap.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ mm/khugepaged.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/fs/gfs2/bmap.c b/fs/gfs2/bmap.c
-index adbb8fef22162..4846e0c47e6af 100644
---- a/fs/gfs2/bmap.c
-+++ b/fs/gfs2/bmap.c
-@@ -2442,8 +2442,16 @@ int __gfs2_punch_hole(struct file *file, loff_t offset, loff_t length)
- 	struct inode *inode = file_inode(file);
- 	struct gfs2_inode *ip = GFS2_I(inode);
- 	struct gfs2_sbd *sdp = GFS2_SB(inode);
-+	unsigned int blocksize = i_blocksize(inode);
-+	loff_t start, end;
- 	int error;
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 719f49d1fba2f..76e3e90dbc16e 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -401,7 +401,7 @@ static void insert_to_mm_slots_hash(struct mm_struct *mm,
  
-+	start = round_down(offset, blocksize);
-+	end = round_up(offset + length, blocksize) - 1;
-+	error = filemap_write_and_wait_range(inode->i_mapping, start, end);
-+	if (error)
-+		return error;
-+
- 	if (gfs2_is_jdata(ip))
- 		error = gfs2_trans_begin(sdp, RES_DINODE + 2 * RES_JDATA,
- 					 GFS2_JTRUNC_REVOKES);
-@@ -2457,9 +2465,8 @@ int __gfs2_punch_hole(struct file *file, loff_t offset, loff_t length)
- 		if (error)
- 			goto out;
- 	} else {
--		unsigned int start_off, end_len, blocksize;
-+		unsigned int start_off, end_len;
+ static inline int khugepaged_test_exit(struct mm_struct *mm)
+ {
+-	return atomic_read(&mm->mm_users) == 0;
++	return atomic_read(&mm->mm_users) == 0 || !mmget_still_valid(mm);
+ }
  
--		blocksize = i_blocksize(inode);
- 		start_off = offset & (blocksize - 1);
- 		end_len = (offset + length) & (blocksize - 1);
- 		if (start_off) {
+ static bool hugepage_vma_check(struct vm_area_struct *vma,
+@@ -1019,9 +1019,6 @@ static void collapse_huge_page(struct mm_struct *mm,
+ 	 * handled by the anon_vma lock + PG_lock.
+ 	 */
+ 	down_write(&mm->mmap_sem);
+-	result = SCAN_ANY_PROCESS;
+-	if (!mmget_still_valid(mm))
+-		goto out;
+ 	result = hugepage_vma_revalidate(mm, address, &vma);
+ 	if (result)
+ 		goto out;
 -- 
 2.25.1
 
