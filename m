@@ -2,230 +2,155 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44D6C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC178C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A45CF20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF23D20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 19:35:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FC8IkSCl"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1H+z8gNo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fZa/eesR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgHXTa6 (ORCPT
+        id S1726444AbgHXTfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 15:30:58 -0400
-Received: from rnd-relay.smtp.broadcom.com ([192.19.229.170]:43024 "EHLO
-        rnd-relay.smtp.broadcom.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726971AbgHXTaw (ORCPT
+        Mon, 24 Aug 2020 15:35:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44446 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbgHXTf3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 15:30:52 -0400
-Received: from mail-irv-17.broadcom.com (mail-irv-17.lvn.broadcom.net [10.75.242.48])
-        by rnd-relay.smtp.broadcom.com (Postfix) with ESMTP id E303030C574;
-        Mon, 24 Aug 2020 12:28:00 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 rnd-relay.smtp.broadcom.com E303030C574
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-        s=dkimrelay; t=1598297280;
-        bh=eBGAUAZcrhyvX03rXpMdcv7UKT4zpz122ZC6+a8yb40=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FC8IkSClhvtxmx/fhQO9bttCoL8GE+NBK0ZMRdxRNmULave0Im7UrlrGeZetdcW/z
-         AKgUbGpDgMgJ1XbjW0G6zS+a1HSOQLuO/yttUcBtP5tgFw0kX383q0c7yVHVfc39QG
-         CjNUabQvuhSCh8EDKwPuCfuTbSaQrADa1XIyl1Cc=
-Received: from stbsrv-and-01.and.broadcom.net (stbsrv-and-01.and.broadcom.net [10.28.16.211])
-        by mail-irv-17.broadcom.com (Postfix) with ESMTP id 4C0B914008F;
-        Mon, 24 Aug 2020 12:30:49 -0700 (PDT)
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-To:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Jim Quinlan <james.quinlan@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v11 06/11] PCI: brcmstb: Add control of rescal reset
-Date:   Mon, 24 Aug 2020 15:30:19 -0400
-Message-Id: <20200824193036.6033-7-james.quinlan@broadcom.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200824193036.6033-1-james.quinlan@broadcom.com>
-References: <20200824193036.6033-1-james.quinlan@broadcom.com>
+        Mon, 24 Aug 2020 15:35:29 -0400
+Date:   Mon, 24 Aug 2020 21:35:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598297727;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=s1UXCq2sCaXk8D9Ftb5SFZUbL2VtwY3Bdh1ohHy/nq0=;
+        b=1H+z8gNouO152NAeUgGE/+lFf0x5m7yXvhjIBQKe7rY/L+0Ma/xmY+HEoyu15U/Nyv6FWP
+        b3u6Vxct3tkicdHE/OEdruk91HjETkCvJ77h3JBEKELtqtLdwv+6G2/WKQx7uncf7+Gb6e
+        eR5uCtWGGTV/F1QyrKS+aT/OX2ZSQz2Z471TqdXM4L+V8j3Kh3Wn6Fh2yhDByOpZl6uRpM
+        /7aoeAAJGVwCqOoSKH8cIgWHMLGqf8Ip6ITxIT17v2dYxfuCTHIncUXwzcNXg1Yz8xp43/
+        wgr7mqO+9lKYyefs7jLmTmmm19gqO902VG1wJyVab7ujw/3emzTNvicnIj4iAQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598297727;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=s1UXCq2sCaXk8D9Ftb5SFZUbL2VtwY3Bdh1ohHy/nq0=;
+        b=fZa/eesRoqGb6lVXqdy4Hl63qcEQvwOr3IKcp1Cl/dW6Y9lnPDr9FVk7yAfiFU6clSAJG6
+        aYGQIu+YQB4LKXCw==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     kernel test robot <lkp@intel.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ofer Levi <oferle@mellanox.com>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: {standard input}:5973: Error: operand out of range (512 is not
+ between -512 and 511)
+Message-ID: <20200824193525.utkbrhgvwpi2i37m@linutronix.de>
+References: <202008241018.RkyIlLKd%lkp@intel.com>
+ <20200824095831.5lpkmkafelnvlpi2@linutronix.de>
+ <28384fea-4a07-c57d-04b0-f44f1c70adc2@synopsys.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <28384fea-4a07-c57d-04b0-f44f1c70adc2@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Quinlan <jquinlan@broadcom.com>
+On 2020-08-24 18:21:21 [+0000], Vineet Gupta wrote:
+> >>>> {standard input}:5973: Error: operand out of range (512 is not between -512 and 511)
+> >>
+> 
+> The error above was fixed back in April:
+> 799587d5731db9dc ("ARC: [plat-eznps]: Restrict to CONFIG_ISA_ARCOMPACT")
 
-Some STB chips have a special purpose reset controller named RESCAL (reset
-calibration).  The PCIe HW can now control RESCAL to start and stop its
-operation.  On probe(), the RESCAL is deasserted and the driver goes
-through the sequence of setting registers and reading status in order to
-start the internal PHY that is required for the PCIe.
+This commit is
+|git describe --contains 799587d5731db9dc
+|v5.7-rc7~32^2~2
 
-Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 82 ++++++++++++++++++++++++++-
- 1 file changed, 81 insertions(+), 1 deletion(-)
+and CI said:
+|head:   d012a7190fc1fd72ed48911e77ca97ba4521bccd
+^^ v5.9-rc2
+|commit: de8f5e4f2dc1f032b46afda0a78cab5456974f89 lockdep: Introduce wait-type checks
+^^ v5.7-rc1
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index acf2239b0251..041b8d109563 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -23,6 +23,7 @@
- #include <linux/of_platform.h>
- #include <linux/pci.h>
- #include <linux/printk.h>
-+#include <linux/reset.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
- #include <linux/string.h>
-@@ -158,6 +159,16 @@
- #define DATA_ADDR(pcie)			(pcie->reg_offsets[EXT_CFG_DATA])
- #define PCIE_RGR1_SW_INIT_1(pcie)	(pcie->reg_offsets[RGR1_SW_INIT_1])
- 
-+/* Rescal registers */
-+#define PCIE_DVT_PMU_PCIE_PHY_CTRL				0xc700
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS			0x3
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK		0x4
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT	0x2
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK		0x2
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT		0x1
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK		0x1
-+#define  PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT		0x0
-+
- enum {
- 	RGR1_SW_INIT_1,
- 	EXT_CFG_INDEX,
-@@ -247,6 +258,7 @@ struct brcm_pcie {
- 	const int		*reg_offsets;
- 	const int		*reg_field_info;
- 	enum pcie_type		type;
-+	struct reset_control	*rescal;
- };
- 
- /*
-@@ -965,6 +977,47 @@ static void brcm_pcie_enter_l23(struct brcm_pcie *pcie)
- 		dev_err(pcie->dev, "failed to enter low-power link state\n");
- }
- 
-+static int brcm_phy_cntl(struct brcm_pcie *pcie, const int start)
-+{
-+	static const u32 shifts[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_SHIFT,
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_SHIFT,
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_SHIFT,};
-+	static const u32 masks[PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS] = {
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_PWRDN_MASK,
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_RESET_MASK,
-+		PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_DIG_RESET_MASK,};
-+	const int beg = start ? 0 : PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS - 1;
-+	const int end = start ? PCIE_DVT_PMU_PCIE_PHY_CTRL_DAST_NFLDS : -1;
-+	u32 tmp, combined_mask = 0;
-+	u32 val = !!start;
-+	void __iomem *base = pcie->base;
-+	int i;
-+
-+	for (i = beg; i != end; start ? i++ : i--) {
-+		tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-+		tmp = (tmp & ~masks[i]) | ((val << shifts[i]) & masks[i]);
-+		writel(tmp, base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-+		usleep_range(50, 200);
-+		combined_mask |= masks[i];
-+	}
-+
-+	tmp = readl(base + PCIE_DVT_PMU_PCIE_PHY_CTRL);
-+	val = start ? combined_mask : 0;
-+
-+	return (tmp & combined_mask) == val ? 0 : -EIO;
-+}
-+
-+static inline int brcm_phy_start(struct brcm_pcie *pcie)
-+{
-+	return pcie->rescal ? brcm_phy_cntl(pcie, 1) : 0;
-+}
-+
-+static inline int brcm_phy_stop(struct brcm_pcie *pcie)
-+{
-+	return pcie->rescal ? brcm_phy_cntl(pcie, 0) : 0;
-+}
-+
- static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
- {
- 	void __iomem *base = pcie->base;
-@@ -992,11 +1045,15 @@ static void brcm_pcie_turn_off(struct brcm_pcie *pcie)
- static int brcm_pcie_suspend(struct device *dev)
- {
- 	struct brcm_pcie *pcie = dev_get_drvdata(dev);
-+	int ret;
- 
- 	brcm_pcie_turn_off(pcie);
-+	ret = brcm_phy_stop(pcie);
-+	if (ret)
-+		dev_err(pcie->dev, "failed to stop phy\n");
- 	clk_disable_unprepare(pcie->clk);
- 
--	return 0;
-+	return ret;
- }
- 
- static int brcm_pcie_resume(struct device *dev)
-@@ -1009,6 +1066,12 @@ static int brcm_pcie_resume(struct device *dev)
- 	base = pcie->base;
- 	clk_prepare_enable(pcie->clk);
- 
-+	ret = brcm_phy_start(pcie);
-+	if (ret) {
-+		dev_err(pcie->dev, "failed to start phy\n");
-+		return ret;
-+	}
-+
- 	/* Take bridge out of reset so we can access the SERDES reg */
- 	brcm_pcie_bridge_sw_init_set(pcie, 0);
- 
-@@ -1034,6 +1097,9 @@ static void __brcm_pcie_remove(struct brcm_pcie *pcie)
- {
- 	brcm_msi_remove(pcie);
- 	brcm_pcie_turn_off(pcie);
-+	if (brcm_phy_stop(pcie))
-+		dev_err(pcie->dev, "failed to stop phy\n");
-+	reset_control_assert(pcie->rescal);
- 	clk_disable_unprepare(pcie->clk);
- }
- 
-@@ -1112,6 +1178,20 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "could not enable clock\n");
- 		return ret;
- 	}
-+	pcie->rescal = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
-+	if (IS_ERR(pcie->rescal))
-+		return PTR_ERR(pcie->rescal);
-+
-+	ret = reset_control_deassert(pcie->rescal);
-+	if (ret)
-+		dev_err(&pdev->dev, "failed to deassert 'rescal'\n");
-+
-+	ret = brcm_phy_start(pcie);
-+	if (ret) {
-+		dev_err(pcie->dev, "failed to start phy\n");
-+		reset_control_assert(pcie->rescal);
-+		return ret;
-+	}
- 
- 	ret = brcm_pcie_setup(pcie);
- 	if (ret)
--- 
-2.17.1
+so my assumption was that it tested rc2 and bisected it down to that
+commit. Otherwise I don't see the point in testing such an old commit on
+a recent -rc2 and complaining about things not related to one another.
 
+> > I have here gcc 10 and the output is:
+> 
+> I suppose this is mainline gcc 10 ? Although it doesn't seem like compiler version
+> related.
+
+Sorry for that. It is
+|$ ~/cross-gcc/gcc-10.1.0-nolibc/arc-linux/bin/arc-linux-gcc -v
+|Using built-in specs.
+|COLLECT_GCC=/home/bigeasy/cross-gcc/gcc-10.1.0-nolibc/arc-linux/bin/arc-linux-gcc
+|COLLECT_LTO_WRAPPER=/home/bigeasy/cross-gcc/gcc-10.1.0-nolibc/arc-linux/bin/../libexec/gcc/arc-linux/10.1.0/lto-wrapper
+|Target: arc-linux
+|Configured with: /home/arnd/git/gcc/configure --target=arc-linux --enable-targets=all --prefix=/home/arnd/cross/x86_64/gcc-10.1.0-nolibc/arc-linux --enable-languages=c --without-headers --disable-bootstrap --disable-nls --disable-threads --disable-shared --disable-libmudflap --disable-libssp --disable-libgomp --disable-decimal-float --disable-libquadmath --disable-libatomic --disable-libcc1 --disable-libmpx --enable-checking=release
+|Thread model: single
+|Supported LTO compression algorithms: zlib
+|gcc version 10.1.0 (GCC) 
+
+This is the one built by Arnd and hosted at
+	https://www.kernel.org/pub/tools/crosstool/
+
+Is it suitable for testing?
+
+> > and the assembler does not like that.
+> > After the removal CONFIG_ARC_PLAT_EZNPS I got to stage 2:
+> > |drivers/irqchip/irq-eznps.c:80:16: error: 'CTOP_AUX_IACK' undeclared (first use in this function)
+> > |   80 |  write_aux_reg(CTOP_AUX_IACK, 1 << irq);
+> > 
+> 
+> Indeed this is a problem I can reproduce. Enabling CONFIG_EZNPS_GIC on a non
+> ARC700 build causes the issue: the ctop header is inside platform code
+> (arch/arc/plat-eznps/include/plat/ctop.h) which obviously fails if not building
+> for ARC.
+> 
+> My solution is to move ctop.h to include/soc/nps/plat/.
+
+You know probably best :)
+
+> > so I removed CONFIG_EZNPS_GIC. And then I ended with:
+> > |  LD      vmlinux.o
+> > |arc-linux-ld: gcc-10.1.0-nolibc/arc-linux/bin/../lib/gcc/arc-linux/10.1.0/arc700/libgcc.a(_muldi3.o): compiled for a little endian system and target is big endian
+> > |arc-linux-ld: failed to merge target specific data of file gcc-10.1.0-nolibc/arc-linux/bin/../lib/gcc/arc-linux/10.1.0/arc700/libgcc.a(_muldi3.o)
+> 
+> This is unrelated since original .config with CONFIG_ARC_PLAT_EZNPS would have
+> selected Big endina build, but you need a BE toolchain to get that working (since
+> libgcc emulation code still comes from toolchain).
+
+Is a switch missing while building the gcc, another gcc target needed or
+is this something that is not part of upstream gcc?
+ 
+> > 
+> > Please update CI and ARC.
+> 
+> Nothing to update in CI. I'll send the ARC patch as a follow up.
+
+but it shouldn't complain about a commit merged in v5.7-rc1 because it
+caused an error which was then fixed in v5.7-rc7 while using HEAD
+v5.9-rc2?
+
+> Thx for reporting.
+
+You are welcome.
+
+> -Vineet
+
+Sebastian
