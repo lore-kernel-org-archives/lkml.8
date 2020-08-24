@@ -2,114 +2,147 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF58207D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D638C20738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:28:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="BbgUsbwb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbgHXI0V convert rfc822-to-8bit (ORCPT
+        id S1726306AbgHXI2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:26:21 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:47931 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726581AbgHXI0U (ORCPT
+        Mon, 24 Aug 2020 04:28:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726104AbgHXI2s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:26:20 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-280-YmP3yX5pPw6c5HnJR1Czfw-1; Mon, 24 Aug 2020 09:26:14 +0100
-X-MC-Unique: YmP3yX5pPw6c5HnJR1Czfw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 24 Aug 2020 09:26:13 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 24 Aug 2020 09:26:13 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Nicolas Boichat' <drinkcat@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-CC:     "dianders@chromium.org" <dianders@chromium.org>,
-        "groeck@chromium.org" <groeck@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        Kars Mulder <kerneldev@karsmulder.nl>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Will Deacon <will@kernel.org>, Yue Hu <huyue2@yulong.com>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v5] kernel/trace: Add DISALLOW_TRACE_PRINTK make option
-Thread-Topic: [PATCH v5] kernel/trace: Add DISALLOW_TRACE_PRINTK make option
-Thread-Index: AQHWecKchjFb7pHUGUqNEDurUkt7jKlG664w
-Date:   Mon, 24 Aug 2020 08:26:13 +0000
-Message-ID: <3f84781f12424cbfa552981af42dfaf2@AcuMS.aculab.com>
-References: <20200824105852.v5.1.I4feb11d34ce7a0dd5ee2c3327fb5a1a9a646be30@changeid>
-In-Reply-To: <20200824105852.v5.1.I4feb11d34ce7a0dd5ee2c3327fb5a1a9a646be30@changeid>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 24 Aug 2020 04:28:48 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3620EC061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:28:48 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id b2so7277205edw.5
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 01:28:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VJdZxE/y/ZWFHMLl1jOIxfMQEHtM7AeHNk1ErzUcyxc=;
+        b=BbgUsbwbLVLw2AiTwU/gHmj2IDYL+2kZn5nlxDFnqmrUXbaRroQUVA3s6NGiuwu3qB
+         cQiapZjS/llynrOMoBMxUXtBuWmnbTen8LFK4MJ1bBXeSagQENJwyMVL9fjYrwnZa30y
+         +foEqC0q8iiq3RKjbOWB+OcT7s3IFSyVHXdjTaxjPm8EOYXMalhtl0kL+qHHl2WPAWh9
+         2QP9XXr903CLxVSYQfhe6y/Al2GNQ4U+XCdya6HfnLzUsN3vzw2YZLH5xv6EUBiyp+vh
+         NQw/u5xQgIcjK6lOfqA82knVqvZryx2XxlpjT+hqr0oDyqmaf2sY3PSTfT8cu/MSO8RY
+         BXIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=VJdZxE/y/ZWFHMLl1jOIxfMQEHtM7AeHNk1ErzUcyxc=;
+        b=fY4Ml8ZztnKYgoPqyvKxyshkpIfB7uLLdiOMWCk5yEwfmvEhv9/38gSUirBASrGnjK
+         V2WvjEkqDu6cE7hn7RmpsIq68zDqryIAVOC+3zPAYcKttxcWGaiLJVQichaMVSJ/Hgb2
+         W+tOaUHWLgE0CaJA5bGTPb2Tm7K25ScosND5i78AJS1ajBCS31hGOLwMrVdCfQ9wAXxf
+         Bu6cHVuhlFwCvEDP3slcXLMHrMGiZD1ZbIAgxMqaTwpnv0T86Qws+wk84aWnoZPJu3af
+         ALZY/KO9sN8GzPcRfdPdaV/yKE+X7i24g6/ZFWfaMKaGb/P3fnZqA161Q7QLi4MgIGVm
+         KTLQ==
+X-Gm-Message-State: AOAM5333u29lYlFMX/6tgvuafB0j6GNBiKKP5KWjE8qqg3vlErMj13fj
+        Hi1Em2/2yJDl4z9MyLLEs9cYWOKTKoIj0A==
+X-Google-Smtp-Source: ABdhPJxTJYfNQWScPNlLbLAhMRkcA5iR1YwjMiQo2KcF690VugvDAQQ5/Gz3prKZ4xAUH/ZSKl1xjw==
+X-Received: by 2002:aa7:c596:: with SMTP id g22mr4362781edq.109.1598257726595;
+        Mon, 24 Aug 2020 01:28:46 -0700 (PDT)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id a26sm7418266eje.78.2020.08.24.01.28.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 01:28:46 -0700 (PDT)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Manish Narani <manish.narani@xilinx.com>,
+        Michael Tretter <m.tretter@pengutronix.de>,
+        Nava kishore Manne <nava.manne@xilinx.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] arm64: dts: zynqmp: Remove undocumented u-boot properties
+Date:   Mon, 24 Aug 2020 10:28:45 +0200
+Message-Id: <8ba339425b9c9f319bdedce7741367055a30713c.1598257720.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.002
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat
-> Sent: 24 August 2020 03:59
-> 
-> trace_printk is meant as a debugging tool, and should not be
-> compiled into production code without specific debug Kconfig
-> options enabled, or source code changes, as indicated by the
-> warning that shows up on boot if any trace_printk is called:
->  **   NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE NOTICE   **
->  **                                                      **
->  ** trace_printk() being used. Allocating extra memory.  **
->  **                                                      **
->  ** This means that this is a DEBUG kernel and it is     **
->  ** unsafe for production use.                           **
-> 
-> If DISALLOW_TRACE_PRINTK=1 is passed on the make command
-> line, the kernel will generate a build-time error if
-> trace_printk is used. We expect distributors to set this
-> option for their production kernels.
-> 
-> Note that the code to handle trace_printk is still present,
-> so this does not prevent people from compiling out-of-tree
-> kernel modules, or BPF programs.
-> 
-> Also, we are not making this a kernel config option as we
-> want the developer convenience of being able to reuse a
-> production kernel config, add trace_printk for debugging,
-> and rebuild, without any config changes.
+u-boot, DT properties are not documented anywhere in Linux DT binding
+that's why remove them.
 
-Since the objective seems to be to ensure there are no
-calls to trace_printk() in the git tree, but to allow
-them in uncommitted sources. Why not use a config option
-and rely on rand-config builds to detect any 'accidental'
-commits?
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-	David
+ arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi | 5 -----
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi         | 1 -
+ 2 files changed, 6 deletions(-)
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
+index 9868ca15dfc5..c94c3bb67edc 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-clk-ccf.dtsi
+@@ -10,35 +10,30 @@
+ #include <dt-bindings/clock/xlnx-zynqmp-clk.h>
+ / {
+ 	pss_ref_clk: pss_ref_clk {
+-		u-boot,dm-pre-reloc;
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <33333333>;
+ 	};
+ 
+ 	video_clk: video_clk {
+-		u-boot,dm-pre-reloc;
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <27000000>;
+ 	};
+ 
+ 	pss_alt_ref_clk: pss_alt_ref_clk {
+-		u-boot,dm-pre-reloc;
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <0>;
+ 	};
+ 
+ 	gt_crx_ref_clk: gt_crx_ref_clk {
+-		u-boot,dm-pre-reloc;
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <108000000>;
+ 	};
+ 
+ 	aux_ref_clk: aux_ref_clk {
+-		u-boot,dm-pre-reloc;
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+ 		clock-frequency = <27000000>;
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index d1e9a5eb4f70..6a8ff4bcc09b 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -131,7 +131,6 @@ zynqmp_power: zynqmp-power {
+ 			};
+ 
+ 			zynqmp_clk: clock-controller {
+-				u-boot,dm-pre-reloc;
+ 				#clock-cells = <1>;
+ 				compatible = "xlnx,zynqmp-clk";
+ 				clocks = <&pss_ref_clk>,
+-- 
+2.28.0
 
