@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B2AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F66BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 106A4206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6802071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262595;
-	bh=83LRrZrC4LInnS5Myvxnbeok5E3I28f+ZTEuGCIFQTQ=;
+	s=default; t=1598262603;
+	bh=BqM7o2e/XpFObW5JVtqYy64KJBe/bKQ+MmX8mHuRk0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ee+haR3KaoXfsCtw82aoH2ELPQen/OR17XRrR9mDMETpuzMTEA5i+FZF1ADkHg27m
-	 D9ShlecMI0mdRNcoCJ7vgnsOz7RmeKlgkE8P/FgnK8mRI2xYxwzJoA7sXSfEujBpbr
-	 bXGRdtwhY9WyHJw5OVT5CNHF61Ba8ggLvF/IMGPo=
+	b=tDZpL4LqnG60lZ1Npdd2g5+MvZcXreRSUe8ysqcBL/i+p0QWnBsz1HVKzG3lgppWl
+	 UjgcO+7g5kbcxM8S7AHKVme7r1Fj/DGPZZSRIiWrnxNqSYKKIMTRYKdVmz3QGfpkbU
+	 88sZOxVpv79Bxbk7qXteKvFA1pzrqmUZqhNzR01E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgHXJtw (ORCPT
+        id S1728613AbgHXIjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:49:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55210 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:39:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727889AbgHXIj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:39:27 -0400
+        id S1728122AbgHXIjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:39:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CB6920FC3;
-        Mon, 24 Aug 2020 08:39:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E93622B49;
+        Mon, 24 Aug 2020 08:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258366;
-        bh=83LRrZrC4LInnS5Myvxnbeok5E3I28f+ZTEuGCIFQTQ=;
+        s=default; t=1598258339;
+        bh=BqM7o2e/XpFObW5JVtqYy64KJBe/bKQ+MmX8mHuRk0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=twt840eeclLi3CT4e3t7W8smeH46sQoGacvHuxTLeOt4ztENfboPxBYNC0F806CW4
-         kg1GMmmGUY+nJ8B04a0bvEOvP/l3mc74mEF4b5rAV6WX+aA7V6tVbVs1fzlyyBqS3S
-         JGBkmtVM+ZJblVri7zfndMPh7o0cWNqYU00rS/0c=
+        b=JZyxcvAB45nzElO+B+J6VrtuUi1N1MvtMVqkzQzuxqVUs/bZUnEWGMYXGaJoGNejV
+         u0toadsdrHYHWOIvCkGxC2jl/M5J+zegkGzFAso9srzwziVVAjQg4VJT1yEIlDyLIF
+         fFWGU5hXuyI+kmSdMZWQ0lB9jI8pQjbfTj/9vMm0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Xu Yu <xuyu@linux.alibaba.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Yang Shi <shy828301@gmail.com>
-Subject: [PATCH 5.7 022/124] mm/memory.c: skip spurious TLB flush for retried page fault
-Date:   Mon, 24 Aug 2020 10:29:16 +0200
-Message-Id: <20200824082410.510847956@linuxfoundation.org>
+        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Jason Baron <jbaron@akamai.com>,
+        David Rientjes <rientjes@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 014/124] mm: include CMA pages in lowmem_reserve at boot
+Date:   Mon, 24 Aug 2020 10:29:08 +0200
+Message-Id: <20200824082410.113811181@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082409.368269240@linuxfoundation.org>
 References: <20200824082409.368269240@linuxfoundation.org>
@@ -64,52 +64,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <shy828301@gmail.com>
+From: Doug Berger <opendmb@gmail.com>
 
-commit b7333b58f358f38d90d78e00c1ee5dec82df10ad upstream.
+commit e08d3fdfe2dafa0331843f70ce1ff6c1c4900bf4 upstream.
 
-Recently we found regression when running will_it_scale/page_fault3 test
-on ARM64.  Over 70% down for the multi processes cases and over 20% down
-for the multi threads cases.  It turns out the regression is caused by
-commit 89b15332af7c ("mm: drop mmap_sem before calling
-balance_dirty_pages() in write fault").
+The lowmem_reserve arrays provide a means of applying pressure against
+allocations from lower zones that were targeted at higher zones.  Its
+values are a function of the number of pages managed by higher zones and
+are assigned by a call to the setup_per_zone_lowmem_reserve() function.
 
-The test mmaps a memory size file then write to the mapping, this would
-make all memory dirty and trigger dirty pages throttle, that upstream
-commit would release mmap_sem then retry the page fault.  The retried
-page fault would see correct PTEs installed then just fall through to
-spurious TLB flush.  The regression is caused by the excessive spurious
-TLB flush.  It is fine on x86 since x86's spurious TLB flush is no-op.
+The function is initially called at boot time by the function
+init_per_zone_wmark_min() and may be called later by accesses of the
+/proc/sys/vm/lowmem_reserve_ratio sysctl file.
 
-We could just skip the spurious TLB flush to mitigate the regression.
+The function init_per_zone_wmark_min() was moved up from a module_init to
+a core_initcall to resolve a sequencing issue with khugepaged.
+Unfortunately this created a sequencing issue with CMA page accounting.
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: Xu Yu <xuyu@linux.alibaba.com>
-Debugged-by: Xu Yu <xuyu@linux.alibaba.com>
-Tested-by: Xu Yu <xuyu@linux.alibaba.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
+The CMA pages are added to the managed page count of a zone when
+cma_init_reserved_areas() is called at boot also as a core_initcall.  This
+makes it uncertain whether the CMA pages will be added to the managed page
+counts of their zones before or after the call to
+init_per_zone_wmark_min() as it becomes dependent on link order.  With the
+current link order the pages are added to the managed count after the
+lowmem_reserve arrays are initialized at boot.
+
+This means the lowmem_reserve values at boot may be lower than the values
+used later if /proc/sys/vm/lowmem_reserve_ratio is accessed even if the
+ratio values are unchanged.
+
+In many cases the difference is not significant, but for example
+an ARM platform with 1GB of memory and the following memory layout
+
+  cma: Reserved 256 MiB at 0x0000000030000000
+  Zone ranges:
+    DMA      [mem 0x0000000000000000-0x000000002fffffff]
+    Normal   empty
+    HighMem  [mem 0x0000000030000000-0x000000003fffffff]
+
+would result in 0 lowmem_reserve for the DMA zone.  This would allow
+userspace to deplete the DMA zone easily.
+
+Funnily enough
+
+  $ cat /proc/sys/vm/lowmem_reserve_ratio
+
+would fix up the situation because as a side effect it forces
+setup_per_zone_lowmem_reserve.
+
+This commit breaks the link order dependency by invoking
+init_per_zone_wmark_min() as a postcore_initcall so that the CMA pages
+have the chance to be properly accounted in their zone(s) and allowing
+the lowmem_reserve arrays to receive consistent values.
+
+Fixes: bc22af74f271 ("mm: update min_free_kbytes from khugepaged after core initialization")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Yang Shi <shy828301@gmail.com>
+Link: http://lkml.kernel.org/r/1597423766-27849-1-git-send-email-opendmb@gmail.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memory.c |    3 +++
- 1 file changed, 3 insertions(+)
+ mm/page_alloc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4237,6 +4237,9 @@ static vm_fault_t handle_pte_fault(struc
- 				vmf->flags & FAULT_FLAG_WRITE)) {
- 		update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
- 	} else {
-+		/* Skip spurious TLB flush for retried page fault */
-+		if (vmf->flags & FAULT_FLAG_TRIED)
-+			goto unlock;
- 		/*
- 		 * This is needed only for protection faults but the arch code
- 		 * is not yet telling us if this is a protection fault or not.
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -7959,7 +7959,7 @@ int __meminit init_per_zone_wmark_min(vo
+ 
+ 	return 0;
+ }
+-core_initcall(init_per_zone_wmark_min)
++postcore_initcall(init_per_zone_wmark_min)
+ 
+ /*
+  * min_free_kbytes_sysctl_handler - just a wrapper around proc_dointvec() so
 
 
