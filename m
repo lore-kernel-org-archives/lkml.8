@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A832C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C5CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 334DC20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFEFF20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 12:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgHXM6a (ORCPT
+        id S1727912AbgHXM6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 08:58:30 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:50327 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727012AbgHXMzV (ORCPT
+        Mon, 24 Aug 2020 08:58:52 -0400
+Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:40037 "EHLO
+        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727030AbgHXMzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 08:55:21 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U6k9-bl_1598273712;
+        Mon, 24 Aug 2020 08:55:20 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0U6k9-bl_1598273712;
 Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6k9-bl_1598273712)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 24 Aug 2020 20:55:14 +0800
+          Mon, 24 Aug 2020 20:55:15 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
@@ -35,9 +35,10 @@ To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
         richard.weiyang@gmail.com, kirill@shutemov.name,
         alexander.duyck@gmail.com, rong.a.chen@intel.com, mhocko@suse.com,
         vdavydov.dev@gmail.com, shy828301@gmail.com
-Subject: [PATCH v18 04/32] mm/thp: clean up lru_add_page_tail
-Date:   Mon, 24 Aug 2020 20:54:37 +0800
-Message-Id: <1598273705-69124-5-git-send-email-alex.shi@linux.alibaba.com>
+Cc:     Michal Hocko <mhocko@kernel.org>
+Subject: [PATCH v18 07/32] mm/swap.c: stop deactivate_file_page if page not on lru
+Date:   Mon, 24 Aug 2020 20:54:40 +0800
+Message-Id: <1598273705-69124-8-git-send-email-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
 References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
@@ -46,51 +47,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the first parameter is only used by head page, it's better to make
-it explicit.
+Keeping deactivate_file_page is useless if page isn't on lru list. So
+let's stop it.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Reviewed-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Matthew Wilcox <willy@infradead.org>
 Cc: Hugh Dickins <hughd@google.com>
-Cc: linux-mm@kvack.org
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
 ---
- mm/huge_memory.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ mm/swap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 84fb64e8faa1..739497770a3d 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -2313,19 +2313,19 @@ static void remap_page(struct page *page)
- 	}
- }
+diff --git a/mm/swap.c b/mm/swap.c
+index c674fb441fe9..ea9e1f538313 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -671,7 +671,7 @@ void deactivate_file_page(struct page *page)
+ 	 * In a workload with many unevictable page such as mprotect,
+ 	 * unevictable page deactivation for accelerating reclaim is pointless.
+ 	 */
+-	if (PageUnevictable(page))
++	if (PageUnevictable(page) || !PageLRU(page))
+ 		return;
  
--static void lru_add_page_tail(struct page *page, struct page *page_tail,
-+static void lru_add_page_tail(struct page *head, struct page *page_tail,
- 				struct lruvec *lruvec, struct list_head *list)
- {
--	VM_BUG_ON_PAGE(!PageHead(page), page);
--	VM_BUG_ON_PAGE(PageCompound(page_tail), page);
--	VM_BUG_ON_PAGE(PageLRU(page_tail), page);
-+	VM_BUG_ON_PAGE(!PageHead(head), head);
-+	VM_BUG_ON_PAGE(PageCompound(page_tail), head);
-+	VM_BUG_ON_PAGE(PageLRU(page_tail), head);
- 	lockdep_assert_held(&lruvec_pgdat(lruvec)->lru_lock);
- 
- 	if (!list)
- 		SetPageLRU(page_tail);
- 
--	if (likely(PageLRU(page)))
--		list_add_tail(&page_tail->lru, &page->lru);
-+	if (likely(PageLRU(head)))
-+		list_add_tail(&page_tail->lru, &head->lru);
- 	else if (list) {
- 		/* page reclaim is reclaiming a huge page */
- 		get_page(page_tail);
+ 	if (likely(get_page_unless_zero(page))) {
 -- 
 1.8.3.1
 
