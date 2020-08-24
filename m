@@ -2,131 +2,130 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DBCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2402C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE9BB2071E
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:54:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598284485;
-	bh=tlhDK74kblmVgmQocqJM+lzR26F0EmsbpcsbtBOo7GU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=W+Oj+QTg5CgOg/qJynUj33JL467EPxMGgqHFQJyI6Dm/PYMBwho50EEW9KlGPXnBK
-	 NXm1E12R2hAqFs5tIMOVrmNUo5HIK+/zvMxIz0rfX5g0+VpUF3pVjQQIN87G541Y6f
-	 2bmBactif/fwAg7xz0etMA7Pyir+qRKhxoTJ0RR0=
+	by mail.kernel.org (Postfix) with ESMTP id 97B912071E
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 15:57:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="opPN4+DP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgHXPyo (ORCPT
+        id S1726803AbgHXP5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 11:54:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726413AbgHXPyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 11:54:31 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 881562071E;
-        Mon, 24 Aug 2020 15:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598284470;
-        bh=tlhDK74kblmVgmQocqJM+lzR26F0EmsbpcsbtBOo7GU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HkH5jFfh96DQqgd/LjAA1YFjVvnBb9dVSC9uS7doB+zXKALcwbFmo9k4mSrXvmXiq
-         8bJ0XY87PnEpPVL4MD3fgon/4RAHnIx8r23aTkoIjixOnqZ2Zuu7kOr0HnPPMiTNOO
-         20NMQgy6tK5G3uJ5xabhslhnmZhp/0i8H/61SXNY=
-Date:   Tue, 25 Aug 2020 00:54:26 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function
- entry is not optimized (trigger by int3 breakpoint)
-Message-Id: <20200825005426.f592075d13be740cb3c9aa77@kernel.org>
-In-Reply-To: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
-References: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 24 Aug 2020 11:57:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47686 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbgHXP5R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 11:57:17 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4966C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 08:57:16 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id l2so9248587wrc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 08:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jrxa6Z8ALzEuFxZJIIcbsGCrFOHRb7EFnZzL1WDCR2k=;
+        b=opPN4+DPMKzVCy6OMKWUjwd6nxWILScUWHODyf/FxxKIHaZHJmgu9gNAHiHDefZjVK
+         a8QIC+WR6msx3K1bFtaJ9c+2kfl0e3WRYxycw0GcoWkrX+tRn/64NXbb5fHLEeV5Jcyp
+         mMvNJxH+7hbx0ZMZb7bmEVZHAzxQlsD6kPPuXJZ+4l0d8tYmn+mjFic2s6eBe/Em1epw
+         uokDIPMODQqlMRPYwdvZU+mLLhbMKz5i4Pf70EX9ACqDrAfB2aNU9Ci4sooxdWCFhATK
+         QCgAaM/CzfiRU+6NgElaEhz8NPJxlWLip5Yxv/fsI0zH83QFisqnm6TUaXL/xQbNS0nP
+         33Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jrxa6Z8ALzEuFxZJIIcbsGCrFOHRb7EFnZzL1WDCR2k=;
+        b=C3woP3IiK7D9VzV9vWDbyaj7YkQ3/Xblmw166ewUYhGReMEfeRNlz6iBS6XfCM8aOK
+         2zsCXmsG6qvI+ru3dsF5iJppR4EMeFyFEVvAtGMN73EFQzX/IopcazZqw7bROHveXSRf
+         3pGxhq6Y7uTskdOgk3wVXNGjwIkCfBc0XNmOB5632IrkKjFCpZ7wRl06MB6Zh5G0nLYB
+         TUBOhzkpl2HTiWw0XFBiBxTvukDatLwDgqHbznBn3HqClUFOHECubtBZdFQ/w0jRDc7P
+         rr5PmDanzpvg9TmTFKxO7xfLUDqLRleDLcKiSiQZLC6oDZXjf8vdblCBUZQBA3CwVLei
+         ul1Q==
+X-Gm-Message-State: AOAM5330KBzi705YkxlqNuIGGGs0+TtTUKcVRaw4gnxMaFSKvKy7H2OQ
+        b95TaTYQerONWy5U8n+xsqQ=
+X-Google-Smtp-Source: ABdhPJwBrCRzx4/MFP1jzZ8EfYaPyIE/Mi2xyX4LCfw4lUCCf7RghVEjdLaUblX7BAX7khcctHPONw==
+X-Received: by 2002:a05:6000:18a:: with SMTP id p10mr6001122wrx.33.1598284635511;
+        Mon, 24 Aug 2020 08:57:15 -0700 (PDT)
+Received: from medion (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id e2sm16408164wrt.66.2020.08.24.08.57.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 08:57:14 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
+Date:   Mon, 24 Aug 2020 16:57:12 +0100
+To:     Alex Dewar <alex.dewar90@gmail.com>
+Cc:     dan.carpenter@oracle.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Javier F. Arias" <jarias.linux@gmail.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
+        Saiyam Doshi <saiyamdoshi.in@gmail.com>,
+        Magnus Damm <damm+renesas@opensource.se>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: emxx_udc: Fix passing of NULL to
+ dma_alloc_coherent()
+Message-ID: <20200824155712.4kgxwqiufm2ieboz@medion>
+References: <20200824142118.GA223827@mwanda>
+ <20200824151920.251446-1-alex.dewar90@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824151920.251446-1-alex.dewar90@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 12:02:58 +0000
-"Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com> wrote:
-
-> Greetings!
+On Mon, Aug 24, 2020 at 04:19:17PM +0100, Alex Dewar wrote:
+> In nbu2ss_eq_queue() memory is allocated with dma_alloc_coherent(),
+> though, strangely, NULL is passed as the struct device* argument. Pass
+> the UDC's device instead.
 > 
-> Starting from kernel 5.8 (x86_64), kretprobe handler will always missed if corresponding kprobe on function entry is not optimized (using break point instead).
-
-Oops, good catch. I always enabled ftrace hook for kretprobe, I didn't noticed that.
-
-> Step to reproduce this:
-> 1) Build the kretprobe example module (CONFIG_SAMPLE_KRETPROBES=m)
-> 2) Disable jump optimization (`sysctl debug.kprobes-optimization=0` or register any kprobe.post_handler at same location)
-> 3) Insert the kretprobe_example module
-> 4) Launch some process to trigger _do_fork
-> 5) Remove kretprobe_example module
-> 6) dmesg shows that all probing instances are missed
+> Build-tested on x86 only.
 > 
-> Example output:
-> # sysctl debug.kprobes-optimization=0
-> debug.kprobes-optimization = 0
-> # insmod samples/kprobes/kretprobe_example.ko
-> # ls > /dev/null
-> # rmmod kretprobe_example
-> # dmesg
-> [48555.067295] Planted return probe at _do_fork: 0000000038ae0211
-> [48560.229459] kretprobe at 0000000038ae0211 unregistered
-> [48560.229460] Missed probing 3 instances of _do_fork
+> Fixes: 33aa8d45a4fe ("staging: emxx_udc: Add Emma Mobile USB Gadget driver")
+> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> ---
 > 
-> After bisecting, I found this behavior seems to introduce by this commit: (5.8-rc1)
-> 0d00449c7a28a1514595630735df383dec606812 x86: Replace ist_enter() with nmi_enter()
-> This make kprobe_int3_handler() effectively running as NMI context, which pre_handler_kretprobe() explicitly checked to prevent recursion.
-
-Thanks for the bisecting! 
-
+> So I *think* this is the right fix, but I don't have the hardware so
+> I've only been able to build-test it. My worry is that I could be
+> passing in the wrong struct device* here, which would squelch the
+> warning without fixing the breakage.
 > 
-> (in_nmi() check appears from v3.17)
-> f96f56780ca584930bb3a2769d73fd9a101bcbbe kprobes: Skip kretprobe hit in NMI context to avoid deadlock
+> Can someone cleverer than me tell me if this makes sense?
 > 
-> To make kretprobe work again with int3 breakpoint, I think we can replace the in_nmi() check with in_nmi() == (1 << NMI_SHIFT) at kprobe_int3_handler() and skip kretprobe if nested NMI.
+> - Alex
 
-Ah, I see. Now int3 is a kind of NMI, so in the handler in_nmi() always returns !0.
+PS -- I meant to put an RFC in the subject line and an extra tag:
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-> Did a quick test on 5.9-rc2 and it seems to be working.
-> I'm not sure if it is the best way to do since it may also require change to other architecture as well, any thought?
-
-Hmm, this behavior is arch-dependent. So I think we need an weak function like this.
-
-@kernel/kprobes.c
-
-bool __weak arch_kprobe_in_nmi(void)
-{
-	return in_nmi()
-}
-
-@arch/x86/kernel/kprobes/core.c
-
-bool arch_kprobe_in_nmi(void)
-{
-       /*
-        * Since the int3 is one of NMI, we have to check in_nmi() is
-        * bigger than 1 << NMI_SHIFT instead of !0.
-        */
-       return in_nmi() > (1 << NMI_SHIFT);
-}
-
-And use arch_kprobe_in_nmi() instead of in_nmi() in kprobes.c.
-
-Thanks,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  drivers/staging/emxx_udc/emxx_udc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/emxx_udc/emxx_udc.c b/drivers/staging/emxx_udc/emxx_udc.c
+> index 03929b9d3a8b..09e91449c08c 100644
+> --- a/drivers/staging/emxx_udc/emxx_udc.c
+> +++ b/drivers/staging/emxx_udc/emxx_udc.c
+> @@ -2593,7 +2593,7 @@ static int nbu2ss_ep_queue(struct usb_ep *_ep,
+>  
+>  	if (req->unaligned) {
+>  		if (!ep->virt_buf)
+> -			ep->virt_buf = dma_alloc_coherent(NULL, PAGE_SIZE,
+> +			ep->virt_buf = dma_alloc_coherent(udc->dev, PAGE_SIZE,
+>  							  &ep->phys_buf,
+>  							  GFP_ATOMIC | GFP_DMA);
+>  		if (ep->epnum > 0)  {
+> -- 
+> 2.28.0
+> 
