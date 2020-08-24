@@ -2,107 +2,184 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84986C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E4220639
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4752E20639
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:54:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="exZhBBQu"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="jv9ij9F1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgHXRyM (ORCPT
+        id S1726772AbgHXRye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:54:12 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23312 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725958AbgHXRyI (ORCPT
+        Mon, 24 Aug 2020 13:54:34 -0400
+Received: from sonic312-30.consmr.mail.ne1.yahoo.com ([66.163.191.211]:36222
+        "EHLO sonic312-30.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726630AbgHXRyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 13:54:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598291647;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ef4R5O5Cq7LZWsF/vmaYxvTJ7WpiMWWuCBWCNUUsdH0=;
-        b=exZhBBQuH9czr5ZykM5TicEW1la/JGCjJMdSCqwioNW1GANGdIudoNWGM8jMWxnVx5SqAf
-        U/Y5Sh+XN+gsFvPcVEeaxQofNPBKoZnmChihu8pfhPsjcq84GJcIxmAKRVc9TsZEA/S4RT
-        YSJHA/JVNU/xbfl60M3zMNPIP8E6Lqw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-415-VqlurWbUNcmfBK7sxFhF-Q-1; Mon, 24 Aug 2020 13:54:05 -0400
-X-MC-Unique: VqlurWbUNcmfBK7sxFhF-Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D02EA101963C;
-        Mon, 24 Aug 2020 17:54:03 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2BD2360BF1;
-        Mon, 24 Aug 2020 17:54:02 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200824165802.GB408760@erythro.dev.benboeckel.internal>
-References: <20200824165802.GB408760@erythro.dev.benboeckel.internal> <20200807160531.GA1345000@erythro.dev.benboeckel.internal> <159681277616.35436.11229310534842613599.stgit@warthog.procyon.org.uk> <329586.1598282852@warthog.procyon.org.uk>
-To:     me@benboeckel.net
-Cc:     dhowells@redhat.com, mtk.manpages@gmail.com,
-        torvalds@linux-foundation.org, keyrings@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] Add a manpage for watch_queue(7)
+        Mon, 24 Aug 2020 13:54:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1598291670; bh=wZWdeV82grk1vCCG3xyxethbZMe/msX85Us+HfU7CEg=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=jv9ij9F16qa1xzyTPbSC3hnDR9x22zIAPzidexwZ8V1iieDz9qQ/QN8c/5W2Jbv/RvY9OghklFdK6UC6ACXnwnKkaK3gEPYF8slGbb77OJvt89udcJQ8lt2o4FGalovEt69dZXhzGFXVWNdmXn1gITh97KNgA+x/yghb5m+RtTs8K2DGYGRBZ1LxhgNYCQ3SfIPqnvfxfAr2gm3uL7bMB3nXUNFDDCIWXqu5LNhtLYa25Yd3J0/PWMsQuNwPbggpYy5BOzmhLnBlo+rTYbN6ON3DNDscx4cBjle9Lt+xCYKgqNTsGFJXQcVRYZI+dI+jl8UzPaoiJqqp1OZjhWTVhQ==
+X-YMail-OSG: Ws92fo4VM1mkc77h2D.KIK2Of1VKQjfcG5Xhd0ffvRyyGPxmw9R4IkYrt3w_B4b
+ uRu0TI7SB834dyQBAW16L3WTq8guJKN9SnGrQI682oRyq8S0HBrrClnY0tm608wSl6e3kY7Mt1aO
+ _TwTmWs8c9b7CReMmupYS_BFSTdILsnwtqeVd4ASRxDgYVrePEB48z4xAIbuk9Wt0eY1ntsCuV0N
+ ndQVjlcXGGF1NcPAwXX3R7Awt2x_J_2_EMq3GkSJSfHkzKUSXzkWm6te2_2R0uOQfmPb6I9sqmCf
+ DhCvnkDN6PgwBLxxC9nJk5zT13M05d4EHWhzDIeNEpdq6pzj9so6aOfOmHpLFU4gIBGMERjL21WM
+ lLx3pmo38q5YF6e4rPEefVJwOhHFzQvzbT7kGM2gLh6M67pPYu9rcsll2EaXzshDj2UE4bgk4h0z
+ EJD9MzIm2kS5dMGquCPX_kiRTlgFfI8WBufDu4YehRbblA7tbIA8glPx5jecV.DPDLSW19ACBDIV
+ BkUpCHmGP7Iu_8ANK0LDOBjhnE9QzbLVz1.fz_fe20UroPQRTqOPL2oAEtlu2NeLk2NZcgO5mOpR
+ SInSnlqLSrrKn8O1SQJOHDmwDYx5mV1vYVytf0tDe4cGcDx47goIaEHpbAWg3avgrUIdVDwngvtJ
+ xdUEUeQIYM5Xx7u14JXVpK5Ib06jDfAv_YeHma3cvtO1DlAs6FP9AH2TxRGQDwIKf7NTf0qhlv.x
+ bK48ym9Bw_PvQnrqHgVJIXEoHM0mX_dH_udz50xk4J7BYNesuvKx9JT3Q6p7oRYNnWQRMWd0VOyE
+ 7rIuNK4.k4LytuDmTc_TSJl_UUvGCh9BsyZSOxSBJTufmGspWuIN4ksYXsOGG3aw0slVVo2L44iO
+ fEQmBsFjAVslIG9ZeCHgoJvo9aYQuI81W_uC0n7gn8G6NS0ulF7vJoop4D5PYyylIt8N4u9VStW1
+ agihrNPCnfxLp3_oR.gEOemkPgt_iJcdk614qyiGNKHia_fQAr4iHPcR2SlXyhhZ1c85xjf4yTjE
+ B3Fxup53R1f1YHFJp5qUk7BdTYVgaQu3Wmi3h9jYyFe_xdXLG0xFQpd0a._wNrLqoFBmgC9RJiF8
+ _D3CQmdMGmxndAzeE5XwNIyw1tFUVo7urFX_A5p42ad71YG.1U4xQ6iTjdQzif4a.YHw2q58F9ds
+ Uy39Nr4CvGo_zhZT6Dk1W4wg9FVEtW5aUxbTZVFJgSs583KudHfuUTIZGXJ_i7liInk3QGuI2tRd
+ zpH.1lsfZjpRTMzJQu4fGAWP.PLbs1p0PO6LNj_4e777B2DC2tRgahap0rzyqkXoIgstGQuhHXGs
+ 0KxDgruSu3k9EPUQhyv0oXDER8iiKPHQs_FwCze07PxxvntxkXcRSuLlHALZduypZH0CBJuYizUK
+ A0mBeQoFFQ35XUBUU1y_6oCoWRIznzI577W5FeDQXKuEOPZb..FtUGTHdoikcFPLt4YO31C2t.bQ
+ ScOGwV2hCGpehlb0oPMb1k1Y2FMeodRGu.jaGcMb4oGVhHiM_aimKPooogDH9S6OzZRgFLSbBY6X
+ 5G0lBS86LqJKcNwVHcvZzWz0tcrwnweTi6vQMuLUDQyK1pB9NMDaBEonHoI8IXLH5tVZCjewdCMH
+ PZqw_tM36DJszZMAbNQAtJ5mH
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic312.consmr.mail.ne1.yahoo.com with HTTP; Mon, 24 Aug 2020 17:54:30 +0000
+Received: by smtp424.mail.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 56d747b8779068a3f044ba03cad1d4c1;
+          Mon, 24 Aug 2020 17:54:29 +0000 (UTC)
+Subject: Re: [RFC] security: replace indirect calls with static calls
+To:     Brendan Jackman <jackmanb@google.com>
+Cc:     Brendan Jackman <jackmanb@chromium.org>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Paul Renauld <renauld@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        rafael.j.wysocki@intel.com, Kees Cook <keescook@chromium.org>,
+        thgarnie@chromium.org, KP Singh <kpsingh@google.com>,
+        paul.renauld.epfl@gmail.com,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <20200820164753.3256899-1-jackmanb@chromium.org>
+ <42fb4180-772c-5579-ef3e-b4003e2b784b@schaufler-ca.com>
+ <CA+i-1C09YZ8aCr6p5NOA2e3Ji5TKwdET=qAy=M328NK--L=0RA@mail.gmail.com>
+ <66a35f25-53be-17c3-8ab3-7cb32b0bc77a@schaufler-ca.com>
+ <CA+i-1C1GwgYJAfaUofzv47nyryQ15znE6OLWhAN-gsscm6mMoA@mail.gmail.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Message-ID: <04b2d1ca-1524-d503-084c-4b27d55f862c@schaufler-ca.com>
+Date:   Mon, 24 Aug 2020 10:54:26 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <348447.1598291641.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 24 Aug 2020 18:54:01 +0100
-Message-ID: <348448.1598291641@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <CA+i-1C1GwgYJAfaUofzv47nyryQ15znE6OLWhAN-gsscm6mMoA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.16455 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ben Boeckel <me@benboeckel.net> wrote:
+On 8/24/2020 10:04 AM, Brendan Jackman wrote:
+> On Mon, 24 Aug 2020 at 18:43, Casey Schaufler <casey@schaufler-ca.com> wrote:
+>> On 8/24/2020 8:20 AM, Brendan Jackman wrote:
+>>> On Fri, 21 Aug 2020 at 00:46, Casey Schaufler <casey@schaufler-ca.com> wrote:
+>>>> On 8/20/2020 9:47 AM, Brendan Jackman wrote:
+>>> [...]
+>>>> What does NOP really look like?
+>>> The NOP is the same as a regular function call but the CALL
+>>> instruction is replaced with a NOP instruction. The code that sets up
+>>> the call parameters is unchanged, and so is the code that expects to
+>>> get the return value in eax or whatever.
+>> Right. Are you saying that NOP is in-line assembler in your switch?
+> That's right - although it's behind the static_call API that the patch
+> depends on ([5] in the original mail).
+>
+>>> That means we cannot actually
+>>> call the static_calls for NULL slots, we'd get undefined behaviour
+>>> (except for void hooks) - this is what Peter is talking about in the
+>>> sibling thread.
+>> Referring to the "sibling thread" is kinda confusing, and
+>> assumes everyone is one all the right mailing lists, and knows
+>> which other thread you're talking about.
+> Sure, sorry - here's the Lore link for future reference:
+>
+> https://lore.kernel.org/lkml/20200820164753.3256899-1-jackmanb@chromium.org/T/#m5a6fb3f10141049ce43e18a41f154796090ae1d5
+>
+>>> For this reason, there are _no gaps_ in the callback table. For a
+>>> given LSM hook, all the slots after base_slot_idx are filled,
+>> Why go to all the trouble of maintaining the base_slot_idx
+>> if NOP is so cheap? Why not fill all unused slots with NOP?
+>> Worst case would be a hook with no users, in which case you
+>> have 11 NOPS in the void hook case and 11 "if (ret != DEFAULT_RET)"
+>> and 11 NOPS in the int case. No switch magic required. Even
+>> better, in the int case you have two calls/slot, the first is the
+>> module supplied function (or NOP) and the second is
+>>         int isit(int ret) { return (ret != DEFAULT_RET) ? ret : 0; }
+>> (or NOP).
+>>
+>> The no security module case degenerates to 22 NOP instructions
+>> and no if checks of any sort. I'm not the performance guy, but
+>> that seems better than maintaining and checking base_slot_idx
+>> to me.
+> The switch trick is not really motivated by performance.
 
-> > One loss message.  I set a flag on the last slot in the pipe ring to s=
-ay that
-> > message loss occurred, but there's insufficient space to store a count=
-er
-> > without making the slot larger (and I really don't want to do that).
-> > =
+Then what is its motivation? It makes the code more complicated,
+and is unnecessary.
 
-> > Note that every slot in the pipe ring has such a flag, so you could,
-> > theoretically, get a loss message after every normal message that you =
-read
-> > out.
-> =
+> I think all the focus on the NOPs themselves is a bit misleading here
+> - we _can't_ execute the NOPs for the int hooks, because there are
+> instructions after them that expect a function to have just returned a
+> value, which NOP doesn't do.
 
-> Ah, so a "you lost something" is just a flag on the next event that does
-> make it into the queue? I read it as a whole message existed indicating
-> that data was lost. Not sure of the best wording here.
+That's what I was hoping to address with the second call in the slot.
+The first call in the slot would be either the module supplied code
+or a NOP if the module isn't using the hook. The second would be
+supplied by the LSM infrastructure and would be NOP if the module
+didn't use the hook. The LSM supplied function would do the necessary
+checking. Its more complicated than the void case, but not that much
+more complicated than the existing list based scheme.
 
-No.  That flag is internal.  It causes read() to fabricate a message and
-insert it into the user buffer after the flagged message has been copied o=
-ver.
+The concern about the non-existent return on a NOP can be dealt with
+by setting up initial conditions correctly in most cases. Dealing with
+multiple security modules providing information (e.g. secid_to_secctx)
+is where it gets tricky.
 
-> > bit 0 is 2^0 in this case.  I'm not sure how better to describe it.
-> =
+>  When there is a NOP in the slot instead
+> of a CALL, it would appear to "return" whatever value is leftover in
+> the return register. At the C level, this is why the static_call API
+> doesn't allow static_call_cond to return a value (which is what PeterZ
+> is referring to in the thread I linked above).
+>
+> So, we could drop the switch trick for void hooks and just use
+> static_call_cond, but this doesn't work for int hooks. IMO that
+> variation between the two hook types would just add confusion.
 
-> OK, so the bits are in native-endian order in the enclosing bytes. But C
-> just doesn't have a set ABI for bitfields (AFAIK), so I guess it's
-> "whatever GCC does" in practice?
+With the number of cases where the switch trick isn't going to
+work in the long term I'm disinclined to think it makes things
+less confusing.
 
-Hard to say - powerpc and s390 have bit 0 as the MSB:-/
 
-But "& (1 << 0)" gets you 2^0, whatever the CPU book says.
+>>>>> +#define __UNROLL_MACRO_LOOP_20(MACRO, ...) \
+>>>>> + __UNROLL_MACRO_LOOP_19(MACRO, __VA_ARGS__) \
+>>>>> + MACRO(19, __VA_ARGS__)
+>>>>> +
+>>>> Where does "20" come from? Why are you unrolling beyond 11?
+>>> It's just an arbitrary limit on the unrolling macro implementation, we
+>>> aren't actually unrolling beyond 11 where the macro is used (N is set
+>>> to 11).
+>> I'm not a fan of including macros you can't use, especially
+>> when they're just obvious variants of other macros.
+> Not sure what you mean here - is there already a macro that does what
+> UNROLL_MACRO_LOOP does?
 
-David
+No, I'm saying that __UNROLL_MACRO_LOOP_20() will never be used on
+a system that has at most 11 security modules. You've added a bunch of
+text that serves no purpose. "Future expansion" is pretty silly here.
 
