@@ -2,161 +2,114 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B347C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA1E320774
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598269006;
-	bh=bt7dFAcDuO0UdPyEe5tTiZUrM3cI4CmBaNfQ2X4kSiY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AUCH6I1GNqVwLxmoVzhMzxAJnsdgHiJ8wI89914H5SzMUcLOtiy8o8tHPk02j+GeX
-	 6G1WZaQ5tax3rxn99XfitC39shdCBQHiYHl1XVTyzV8oDyiwL3DqmcoNk2kDBeej/r
-	 WYRVNrrp9eHrDUmPw8/mckVVTAjcwk8M4FrpdHEQ=
+	by mail.kernel.org (Postfix) with ESMTP id E0FA420774
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 11:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgHXLgg (ORCPT
+        id S1726870AbgHXLht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 07:36:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40842 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 07:37:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:60190 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726570AbgHXLaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 07:30:39 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11B3D207D3;
-        Mon, 24 Aug 2020 11:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598268629;
-        bh=bt7dFAcDuO0UdPyEe5tTiZUrM3cI4CmBaNfQ2X4kSiY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lt32UVbWH5/QjXYwo5xbqFXcjvVDVxIQtlxjOIceDtcUJDMnGaSYbBetkYc2uIy0g
-         R2QZtNor9TILz6FSszTk/mch2MKJef5vqhy49U/HRLFz5EAnQ/xEKZQGC5AIiQO1zw
-         CN2PfKxV6rUe6gJ6YXT4VcTWeHk0vBz4gQOiTzU8=
-From:   Will Deacon <will@kernel.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, maz@kernel.org,
-        suzuki.poulose@arm.com, james.morse@arm.com, pbonzini@redhat.com,
-        kernel-team@android.com, Will Deacon <will@kernel.org>,
-        stable@vger.kernel.org
-Subject: [PATCH stable-5.4.y backport 2/2] KVM: arm64: Only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is not set
-Date:   Mon, 24 Aug 2020 12:30:22 +0100
-Message-Id: <20200824113022.24860-2-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200824113022.24860-1-will@kernel.org>
-References: <20200824113022.24860-1-will@kernel.org>
+        id S1727114AbgHXLeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 07:34:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECC4E1063;
+        Mon, 24 Aug 2020 04:34:12 -0700 (PDT)
+Received: from [10.37.12.65] (unknown [10.37.12.65])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D50583F66B;
+        Mon, 24 Aug 2020 04:34:09 -0700 (PDT)
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Remove interrupts from DMC
+ controller in Exynos5422
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, willy.mh.wolff.ml@gmail.com,
+        k.konieczny@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        s.nawrocki@samsung.com, kgene@kernel.org
+References: <20200708153420.29484-1-lukasz.luba@arm.com>
+ <20200708153420.29484-3-lukasz.luba@arm.com>
+ <20200817155021.GC15887@kozik-lap>
+ <2099aea9-5a63-6e5b-d7f9-4e6476584461@arm.com>
+ <CAJKOXPc063m_YcouAO2Q9piJ_GV1Fh9XeS3ZZ3KR=ZyMxPKZ5w@mail.gmail.com>
+ <CAJKOXPcfo+1UY2wmy0WhyNRo_KqS7sGb9d8bDskDTOehFZoN5Q@mail.gmail.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <7a531591-83e5-2c93-ef61-4154635f761e@arm.com>
+Date:   Mon, 24 Aug 2020 12:34:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJKOXPcfo+1UY2wmy0WhyNRo_KqS7sGb9d8bDskDTOehFZoN5Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit b5331379bc62611d1026173a09c73573384201d9 upstream.
 
-When an MMU notifier call results in unmapping a range that spans multiple
-PGDs, we end up calling into cond_resched_lock() when crossing a PGD boundary,
-since this avoids running into RCU stalls during VM teardown. Unfortunately,
-if the VM is destroyed as a result of OOM, then blocking is not permitted
-and the call to the scheduler triggers the following BUG():
 
- | BUG: sleeping function called from invalid context at arch/arm64/kvm/mmu.c:394
- | in_atomic(): 1, irqs_disabled(): 0, non_block: 1, pid: 36, name: oom_reaper
- | INFO: lockdep is turned off.
- | CPU: 3 PID: 36 Comm: oom_reaper Not tainted 5.8.0 #1
- | Hardware name: QEMU QEMU Virtual Machine, BIOS 0.0.0 02/06/2015
- | Call trace:
- |  dump_backtrace+0x0/0x284
- |  show_stack+0x1c/0x28
- |  dump_stack+0xf0/0x1a4
- |  ___might_sleep+0x2bc/0x2cc
- |  unmap_stage2_range+0x160/0x1ac
- |  kvm_unmap_hva_range+0x1a0/0x1c8
- |  kvm_mmu_notifier_invalidate_range_start+0x8c/0xf8
- |  __mmu_notifier_invalidate_range_start+0x218/0x31c
- |  mmu_notifier_invalidate_range_start_nonblock+0x78/0xb0
- |  __oom_reap_task_mm+0x128/0x268
- |  oom_reap_task+0xac/0x298
- |  oom_reaper+0x178/0x17c
- |  kthread+0x1e4/0x1fc
- |  ret_from_fork+0x10/0x30
+On 8/21/20 7:32 AM, Krzysztof Kozlowski wrote:
+> On Fri, 21 Aug 2020 at 08:31, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> On Mon, 17 Aug 2020 at 19:17, Lukasz Luba <lukasz.luba@arm.com> wrote:
+>>>
+>>> Hi Krzysztof,
+>>>
+>>> On 8/17/20 4:50 PM, Krzysztof Kozlowski wrote:
+>>>> On Wed, Jul 08, 2020 at 04:34:20PM +0100, Lukasz Luba wrote:
+>>>>> The interrupts in Dynamic Memory Controller in Exynos5422 and Odroid
+>>>>> XU3-family boards are no longer needed. They have been used in order
+>>>>> to workaround some issues in scheduled work in devfreq. Now when the
+>>>>> devfreq framework design is improved, remove the interrupt driven
+>>>>> approach and rely on devfreq monitoring mechanism with fixed intervals.
+>>>>>
+>>>>> Reported-by: Willy Wolff <willy.mh.wolff.ml@gmail.com>
+>>>>> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+>>>>> ---
+>>>>>    arch/arm/boot/dts/exynos5420.dtsi | 3 ---
+>>>>>    1 file changed, 3 deletions(-)
+>>>>
+>>>> I think the dependencies were merged so this can be safely applied
+>>>> without bisectability problems?
+>>>
+>>> I have created v2 of that fix and it got merged
+>>> via Chanwoo's tree, the commit 4fc9a0470d2dc37028
+>>> https://lkml.org/lkml/2020/7/10/1048
+>>>
+>>> That commit switched the driver default mode from 'irq driven' to
+>>> new devfreq monitoring mechanism. Furthermore, when the driver is
+>>> built as a module, you can try to use the 'irq mode', but for this
+>>> you would need the DT IRQs description (this $subject tries to remove).
+>>>
+>>> I would like to keep this IRQ mode for experimentation, as I
+>>> described in answers to Bartek's questions:
+>>> https://lkml.org/lkml/2020/7/14/315
+>>>
+>>> Unfortunately, I am quite busy and won't make any progress before the
+>>> LPC.
+>>
+>> None of these were the actual answer to my question, unless by "v2 of
+>> that fix and it got merged" means the dependencies?
+>>
+>> I'll drop it from the queue. Please resend if it is valid.
+> 
+> Agh, not drop, I mean postpone for the next cycle (this is v5.11).
+> 
 
-Use the new 'flags' argument to kvm_unmap_hva_range() to ensure that we
-only reschedule if MMU_NOTIFIER_RANGE_BLOCKABLE is set in the notifier
-flags.
+Fair enough
 
-Cc: <stable@vger.kernel.org> # v5.4 only
-Fixes: 8b3405e345b5 ("kvm: arm/arm64: Fix locking for kvm_free_stage2_pgd")
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Message-Id: <20200811102725.7121-3-will@kernel.org>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Will Deacon <will@kernel.org>
----
- virt/kvm/arm/mmu.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index b4a6bbadd144..7501ec8a4600 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -332,7 +332,8 @@ static void unmap_stage2_puds(struct kvm *kvm, pgd_t *pgd,
-  * destroying the VM), otherwise another faulting VCPU may come in and mess
-  * with things behind our backs.
-  */
--static void unmap_stage2_range(struct kvm *kvm, phys_addr_t start, u64 size)
-+static void __unmap_stage2_range(struct kvm *kvm, phys_addr_t start, u64 size,
-+				 bool may_block)
- {
- 	pgd_t *pgd;
- 	phys_addr_t addr = start, end = start + size;
-@@ -357,11 +358,16 @@ static void unmap_stage2_range(struct kvm *kvm, phys_addr_t start, u64 size)
- 		 * If the range is too large, release the kvm->mmu_lock
- 		 * to prevent starvation and lockup detector warnings.
- 		 */
--		if (next != end)
-+		if (may_block && next != end)
- 			cond_resched_lock(&kvm->mmu_lock);
- 	} while (pgd++, addr = next, addr != end);
- }
- 
-+static void unmap_stage2_range(struct kvm *kvm, phys_addr_t start, u64 size)
-+{
-+	__unmap_stage2_range(kvm, start, size, true);
-+}
-+
- static void stage2_flush_ptes(struct kvm *kvm, pmd_t *pmd,
- 			      phys_addr_t addr, phys_addr_t end)
- {
-@@ -2045,7 +2051,10 @@ static int handle_hva_to_gpa(struct kvm *kvm,
- 
- static int kvm_unmap_hva_handler(struct kvm *kvm, gpa_t gpa, u64 size, void *data)
- {
--	unmap_stage2_range(kvm, gpa, size);
-+	unsigned flags = *(unsigned *)data;
-+	bool may_block = flags & MMU_NOTIFIER_RANGE_BLOCKABLE;
-+
-+	__unmap_stage2_range(kvm, gpa, size, may_block);
- 	return 0;
- }
- 
-@@ -2056,7 +2065,7 @@ int kvm_unmap_hva_range(struct kvm *kvm,
- 		return 0;
- 
- 	trace_kvm_unmap_hva_range(start, end);
--	handle_hva_to_gpa(kvm, start, end, &kvm_unmap_hva_handler, NULL);
-+	handle_hva_to_gpa(kvm, start, end, &kvm_unmap_hva_handler, &flags);
- 	return 0;
- }
- 
--- 
-2.28.0.297.g1956fa8f8d-goog
-
+Regards,
+Lukasz
