@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90ED7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FE4C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67C2F22B4D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B90422B47
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258280;
-	bh=v1rV0+cSpDxIvN/6ZeU7yyZcDQgDMvN6tAWvb4P70Wo=;
+	s=default; t=1598258285;
+	bh=KfNoq6N2p+aGqJfVnuq17Kbyr3o0jWGxUz32+IgQyRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KISwRQ38YQHIvVB/ZAXBnAsapHdxV2DdbxxR3+DJA6pyxrbj8MC6eIaag8ttmmKHr
-	 n+mD71IrKeXY/b3RGaIyzYxV717KoMsVYtOAWd9WUQwn5nCaZMc175BCd8f5BNuojF
-	 CU5MAJb+3KqZT+XH6Sx0P/YcxWRCSntmgpmqDmQ4=
+	b=ycQTo2EuJqz66S0rDECHfzWknqTQc4Mi+vtxt7SqlOq5l2WfJK6Z5T6NapCxyZAqc
+	 LJf7Z+pUUm61h1wiaXubO+OuUYVU0fJPgRa6Fyj7OV4B6YpBdxizkfUdJK2WVNvZzd
+	 KEUslO/7gQxmGw6alw80H4v48m0nQEaArO/yytbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbgHXIh6 (ORCPT
+        id S1726104AbgHXIiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:37:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51864 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728460AbgHXIh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:37:56 -0400
+        id S1728488AbgHXIiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:38:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B38AB2177B;
-        Mon, 24 Aug 2020 08:37:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E49022B47;
+        Mon, 24 Aug 2020 08:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258276;
-        bh=v1rV0+cSpDxIvN/6ZeU7yyZcDQgDMvN6tAWvb4P70Wo=;
+        s=default; t=1598258279;
+        bh=KfNoq6N2p+aGqJfVnuq17Kbyr3o0jWGxUz32+IgQyRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xhb+a6KloZLYpJSjFqkBzVfZfNLKj7PKLQ8R9K+24bZ3NKR74FtM+DuDEosMqnrOy
-         trkWPZpOIl5rRewRqg5bsNJhgYE/EGovYKBIbxbkQEZ5UCWj9w+b1QBxw2NtAMO0Qo
-         6+BKVAwt9on50XRaVLB/80bfuYxbLKcJRyfZChTM=
+        b=mba/tSEzVDpp5c+q5S/hvMp4vTglCDex1s0jTTuu49MSwGhOAfO4CFpb6zqp+mwyv
+         clvuD1+mcxicV3sFIXBqFQvODvACuc1aR7Z0xiJhDmlyVld7yufpZUUWezpF15Ao/F
+         kYhak2Pk5O23Rva/cD76nWEMoy9PU+4KkUjtxn5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.8 139/148] epoll: Keep a reference on files added to the check list
-Date:   Mon, 24 Aug 2020 10:30:37 +0200
-Message-Id: <20200824082420.676387963@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Neuling <mikey@neuling.org>,
+        Vaidyanathan Srinivasan <svaidy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.8 140/148] powerpc: Fix P10 PVR revision in /proc/cpuinfo for SMT4 cores
+Date:   Mon, 24 Aug 2020 10:30:38 +0200
+Message-Id: <20200824082420.725353079@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -59,71 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Michael Neuling <mikey@neuling.org>
 
-commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682 upstream.
+commit 030a2c689fb46e1690f7ded8b194bab7678efb28 upstream.
 
-When adding a new fd to an epoll, and that this new fd is an
-epoll fd itself, we recursively scan the fds attached to it
-to detect cycles, and add non-epool files to a "check list"
-that gets subsequently parsed.
+On POWER10 bit 12 in the PVR indicates if the core is SMT4 or SMT8.
+Bit 12 is set for SMT4.
 
-However, this check list isn't completely safe when deletions
-can happen concurrently. To sidestep the issue, make sure that
-a struct file placed on the check list sees its f_count increased,
-ensuring that a concurrent deletion won't result in the file
-disapearing from under our feet.
+Without this patch, /proc/cpuinfo on a SMT4 DD1 POWER10 looks like
+this:
+  cpu             : POWER10, altivec supported
+  revision        : 17.0 (pvr 0080 1100)
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: a3ea40d5c736 ("powerpc: Add POWER10 architected mode")
+Cc: stable@vger.kernel.org # v5.8
+Signed-off-by: Michael Neuling <mikey@neuling.org>
+Reviewed-by: Vaidyanathan Srinivasan <svaidy@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200803035600.1820371-1-mikey@neuling.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/eventpoll.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/setup-common.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1994,9 +1994,11 @@ static int ep_loop_check_proc(void *priv
- 			 * not already there, and calling reverse_path_check()
- 			 * during ep_insert().
- 			 */
--			if (list_empty(&epi->ffd.file->f_tfile_llink))
-+			if (list_empty(&epi->ffd.file->f_tfile_llink)) {
-+				get_file(epi->ffd.file);
- 				list_add(&epi->ffd.file->f_tfile_llink,
- 					 &tfile_check_list);
-+			}
- 		}
- 	}
- 	mutex_unlock(&ep->mtx);
-@@ -2040,6 +2042,7 @@ static void clear_tfile_check_list(void)
- 		file = list_first_entry(&tfile_check_list, struct file,
- 					f_tfile_llink);
- 		list_del_init(&file->f_tfile_llink);
-+		fput(file);
- 	}
- 	INIT_LIST_HEAD(&tfile_check_list);
- }
-@@ -2204,13 +2207,17 @@ int do_epoll_ctl(int epfd, int op, int f
- 					clear_tfile_check_list();
- 					goto error_tgt_fput;
- 				}
--			} else
-+			} else {
-+				get_file(tf.file);
- 				list_add(&tf.file->f_tfile_llink,
- 							&tfile_check_list);
-+			}
- 			error = epoll_mutex_lock(&ep->mtx, 0, nonblock);
- 			if (error) {
- out_del:
- 				list_del(&tf.file->f_tfile_llink);
-+				if (!is_file_epoll(tf.file))
-+					fput(tf.file);
- 				goto error_tgt_fput;
- 			}
- 			if (is_file_epoll(tf.file)) {
+--- a/arch/powerpc/kernel/setup-common.c
++++ b/arch/powerpc/kernel/setup-common.c
+@@ -311,6 +311,7 @@ static int show_cpuinfo(struct seq_file
+ 				min = pvr & 0xFF;
+ 				break;
+ 			case 0x004e: /* POWER9 bits 12-15 give chip type */
++			case 0x0080: /* POWER10 bit 12 gives SMT8/4 */
+ 				maj = (pvr >> 8) & 0x0F;
+ 				min = pvr & 0xFF;
+ 				break;
 
 
