@@ -2,170 +2,104 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D592BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70968C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:14:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA75F206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D28F206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:14:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598260496;
+	bh=0yGrpJu7gFKvvJbC+j+tbevmFHvNI47Gc6ry9YWKlB0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nn9kYZJmVJbkFIHUxFJMlORyTs4b2tgh5QcIBpI9Z++jxCikZBuhN6JvQYZpoPVga
+	 5cz94ZyFf66y1cXxUbEsjLXmOEbAJSRlAb6ZehWYSIV0a8ilYEe1iGq0pNZ5WmTPm9
+	 NNdEaR2a8iysK5fajFoRwFS/lCpPwBEdPVDYN/4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgHXJOr (ORCPT
+        id S1728202AbgHXJOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:14:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729858AbgHXI4D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:14:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730450AbgHXI4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 04:56:03 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F928C061755;
-        Mon, 24 Aug 2020 01:56:03 -0700 (PDT)
-Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 2F29AE46;
-        Mon, 24 Aug 2020 10:56:00 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v6 26/76] x86/fpu: Move xgetbv()/xsetbv() into separate header
-Date:   Mon, 24 Aug 2020 10:54:21 +0200
-Message-Id: <20200824085511.7553-27-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id D7F6B206F0;
+        Mon, 24 Aug 2020 08:56:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598259363;
+        bh=0yGrpJu7gFKvvJbC+j+tbevmFHvNI47Gc6ry9YWKlB0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KKYYEthWmWKbK0N/kyadIpxIUUhuLI740YrctfktHCbHEldckIKmWfVjL8mv5mgiY
+         VINBcRaio6RQCXCVAAbyojuxi5pxlaLD6Vj07CnnkiBTZCxUZ+ZmVQV330bb0E/eFZ
+         ceqVcDqpntND70/U/M2l+S28mqWR8WvccmULR1p8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com,
+        Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 31/71] ceph: fix use-after-free for fsc->mdsc
+Date:   Mon, 24 Aug 2020 10:31:22 +0200
+Message-Id: <20200824082357.439672252@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
+In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
+References: <20200824082355.848475917@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Xiubo Li <xiubli@redhat.com>
 
-The xgetbv() function is needed in pre-decompression boot code, but
-asm/fpu/internal.h can't be included there directly. Doing so opens
-the door to include-hell due to various include-magic in
-boot/compressed/misc.h.
+[ Upstream commit a7caa88f8b72c136f9a401f498471b8a8e35370d ]
 
-Avoid that by moving xgetbv()/xsetbv() to a separate header file and
-include this instead.
+If the ceph_mdsc_init() fails, it will free the mdsc already.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200724160336.5435-26-joro@8bytes.org
+Reported-by: syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/fpu/internal.h | 30 +------------------------
- arch/x86/include/asm/fpu/xcr.h      | 34 +++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+), 29 deletions(-)
- create mode 100644 arch/x86/include/asm/fpu/xcr.h
+ fs/ceph/mds_client.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-index 21a8b5259477..ceeba9f63172 100644
---- a/arch/x86/include/asm/fpu/internal.h
-+++ b/arch/x86/include/asm/fpu/internal.h
-@@ -19,6 +19,7 @@
- #include <asm/user.h>
- #include <asm/fpu/api.h>
- #include <asm/fpu/xstate.h>
-+#include <asm/fpu/xcr.h>
- #include <asm/cpufeature.h>
- #include <asm/trace/fpu.h>
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index a2e903203bf9f..0fa14d8b9c64c 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3682,7 +3682,6 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
+ 		return -ENOMEM;
+ 	}
  
-@@ -585,33 +586,4 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
- 	__write_pkru(pkru_val);
+-	fsc->mdsc = mdsc;
+ 	init_completion(&mdsc->safe_umount_waiters);
+ 	init_waitqueue_head(&mdsc->session_close_wq);
+ 	INIT_LIST_HEAD(&mdsc->waiting_for_map);
+@@ -3723,6 +3722,8 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
+ 
+ 	strscpy(mdsc->nodename, utsname()->nodename,
+ 		sizeof(mdsc->nodename));
++
++	fsc->mdsc = mdsc;
+ 	return 0;
  }
  
--/*
-- * MXCSR and XCR definitions:
-- */
--
--static inline void ldmxcsr(u32 mxcsr)
--{
--	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
--}
--
--extern unsigned int mxcsr_feature_mask;
--
--#define XCR_XFEATURE_ENABLED_MASK	0x00000000
--
--static inline u64 xgetbv(u32 index)
--{
--	u32 eax, edx;
--
--	asm volatile("xgetbv" : "=a" (eax), "=d" (edx) : "c" (index));
--	return eax + ((u64)edx << 32);
--}
--
--static inline void xsetbv(u32 index, u64 value)
--{
--	u32 eax = value;
--	u32 edx = value >> 32;
--
--	asm volatile("xsetbv" :: "a" (eax), "d" (edx), "c" (index));
--}
--
- #endif /* _ASM_X86_FPU_INTERNAL_H */
-diff --git a/arch/x86/include/asm/fpu/xcr.h b/arch/x86/include/asm/fpu/xcr.h
-new file mode 100644
-index 000000000000..1c7ab8d95da5
---- /dev/null
-+++ b/arch/x86/include/asm/fpu/xcr.h
-@@ -0,0 +1,34 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_FPU_XCR_H
-+#define _ASM_X86_FPU_XCR_H
-+
-+/*
-+ * MXCSR and XCR definitions:
-+ */
-+
-+static inline void ldmxcsr(u32 mxcsr)
-+{
-+	asm volatile("ldmxcsr %0" :: "m" (mxcsr));
-+}
-+
-+extern unsigned int mxcsr_feature_mask;
-+
-+#define XCR_XFEATURE_ENABLED_MASK	0x00000000
-+
-+static inline u64 xgetbv(u32 index)
-+{
-+	u32 eax, edx;
-+
-+	asm volatile("xgetbv" : "=a" (eax), "=d" (edx) : "c" (index));
-+	return eax + ((u64)edx << 32);
-+}
-+
-+static inline void xsetbv(u32 index, u64 value)
-+{
-+	u32 eax = value;
-+	u32 edx = value >> 32;
-+
-+	asm volatile("xsetbv" :: "a" (eax), "d" (edx), "c" (index));
-+}
-+
-+#endif /* _ASM_X86_FPU_XCR_H */
 -- 
-2.28.0
+2.25.1
+
+
 
