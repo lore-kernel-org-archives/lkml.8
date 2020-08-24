@@ -2,81 +2,59 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7713B208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:18:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnqeJkTd"
+	by mail.kernel.org (Postfix) with ESMTP id 64C8D206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:18:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgHXJSM (ORCPT
+        id S1729670AbgHXJSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41222 "EHLO
+        Mon, 24 Aug 2020 05:18:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbgHXJSC (ORCPT
+        with ESMTP id S1730424AbgHXIz6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 05:18:02 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4318C061573;
-        Mon, 24 Aug 2020 02:18:02 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x25so4501391pff.4;
-        Mon, 24 Aug 2020 02:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rMbx9PJ3DCBK5KCbc3Tq72JFtt/jZJ3a0mHSBLV/+uA=;
-        b=AnqeJkTdPwAVQxkz4xsNAtHq1yAHzh39+X/LXN7tfivOxU91cTAYJkDJJEjAHalmTR
-         JZlcvmT0jYOFVX6LkmIh6yFcYtztGmbUR6o6yzTt2BxiUbPXknRCADhyi23jcFSPn4uw
-         M71l9lbogTqNOdr1bUTHbUybuPAn+BIlK1zzCStEEaaRqb7iMr0gqZvvHFJO39zu68h7
-         3y9YUX1d1+rSQqgmOEVJ5qdyprOkA23HJUvmKtbuFOwVLNgYGmxJLg6a+sS7/fE7N5Eq
-         mksxmBPLx7hej4N+hF4XWBKcKl1DxvAZHPO+gnF2uzOwJWB6Lgc0gxCpW6QyWAHddreL
-         MUQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rMbx9PJ3DCBK5KCbc3Tq72JFtt/jZJ3a0mHSBLV/+uA=;
-        b=OHIupXePxRwVVrsdOC5YHTAS+bM7EKbiHE1B37fZI+imbKYAVEj3WKQohJeUDMPaPF
-         OicXOl4AqJwYKuMS7pOWf3LlNVBnIGtt2MVEIEcIML82dDTmaMfWDeFJm/Z2jcdMouW5
-         KBVJOUVu2u/sHDRAvOLJpcnNt1tAHKD27RF+tThMYR/y6g9EBydAfM9excyMkKP3lCQW
-         IqozGWVg40NtKNhf09s+ga41o5cyyWGSRZDp+fbXFm6kpVbNYWRWMrmqXzBfxFCuhPDB
-         VT3PZyhLZvKZiZBag62tZqAY2GnsU6aVRGM0Xc5+3zZE0gIE4F4QcTBDID9hPTm3EE6S
-         e86Q==
-X-Gm-Message-State: AOAM532VmLXjOzxpDUbNSIegrEXvH6Z5tTKv9Kep1OiRYyuC5GI2hX0U
-        +R2yvjtVSBhA6UQRwWChB7xQgY2MCVQnpg==
-X-Google-Smtp-Source: ABdhPJwH15eOuacRsnIJtiFTkzCC9mVtco/DG7gF2PFLarQs3vCzzD3G4wVhpqSTXi5lRLlEgpy9XQ==
-X-Received: by 2002:a63:4b63:: with SMTP id k35mr2965491pgl.235.1598260682241;
-        Mon, 24 Aug 2020 02:18:02 -0700 (PDT)
-Received: from localhost ([121.0.29.56])
-        by smtp.gmail.com with ESMTPSA id 62sm10342504pfx.47.2020.08.24.02.18.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 02:18:01 -0700 (PDT)
-From:   Lai Jiangshan <jiangshanlai@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lai Jiangshan <laijs@linux.alibaba.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        Mon, 24 Aug 2020 04:55:58 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAAA7C061575;
+        Mon, 24 Aug 2020 01:55:57 -0700 (PDT)
+Received: from cap.home.8bytes.org (p4ff2bb8d.dip0.t-ipconnect.de [79.242.187.141])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id E71546D8;
+        Mon, 24 Aug 2020 10:55:51 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Mike Stunes <mstunes@vmware.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        kvm@vger.kernel.org
-Subject: [PATCH] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
-Date:   Mon, 24 Aug 2020 18:18:25 +0800
-Message-Id: <20200824101825.4106-1-jiangshanlai@gmail.com>
-X-Mailer: git-send-email 2.19.1.6.gb485710b
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v6 11/76] x86/insn: Add insn_has_rep_prefix() helper
+Date:   Mon, 24 Aug 2020 10:54:06 +0200
+Message-Id: <20200824085511.7553-12-joro@8bytes.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824085511.7553-1-joro@8bytes.org>
+References: <20200824085511.7553-1-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,32 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lai Jiangshan <laijs@linux.alibaba.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
-changed it without giving any reason in the changelog.
+Add a function to check whether an instruction has a REP prefix.
 
-In theory, the syncing is needed, and need to be fixed by reverting
-this part of change.
-
-Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Link: https://lore.kernel.org/r/20200724160336.5435-11-joro@8bytes.org
 ---
- arch/x86/kvm/mmu/mmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/insn-eval.h |  1 +
+ arch/x86/lib/insn-eval.c         | 24 ++++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 4e03841f053d..9a93de921f2b 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -2468,7 +2468,7 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
- 		}
+diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
+index f748f57f1491..a0f839aa144d 100644
+--- a/arch/x86/include/asm/insn-eval.h
++++ b/arch/x86/include/asm/insn-eval.h
+@@ -15,6 +15,7 @@
+ #define INSN_CODE_SEG_OPND_SZ(params) (params & 0xf)
+ #define INSN_CODE_SEG_PARAMS(oper_sz, addr_sz) (oper_sz | (addr_sz << 4))
  
- 		if (sp->unsync_children)
--			kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-+			kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
++bool insn_has_rep_prefix(struct insn *insn);
+ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index a8ac5c5e94f0..8ed9d645259c 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -53,6 +53,30 @@ static bool is_string_insn(struct insn *insn)
+ 	}
+ }
  
- 		__clear_sp_write_flooding_count(sp);
- 
++/**
++ * insn_has_rep_prefix() - Determine if instruction has a REP prefix
++ * @insn:	Instruction containing the prefix to inspect
++ *
++ * Returns:
++ *
++ * true if the instruction has a REP prefix, false if not.
++ */
++bool insn_has_rep_prefix(struct insn *insn)
++{
++	int i;
++
++	insn_get_prefixes(insn);
++
++	for (i = 0; i < insn->prefixes.nbytes; i++) {
++		insn_byte_t p = insn->prefixes.bytes[i];
++
++		if (p == 0xf2 || p == 0xf3)
++			return true;
++	}
++
++	return false;
++}
++
+ /**
+  * get_seg_reg_override_idx() - obtain segment register override index
+  * @insn:	Valid instruction with segment override prefixes
 -- 
-2.19.1.6.gb485710b
+2.28.0
 
