@@ -2,111 +2,136 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87130C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B7EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D72E20706
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3976D20706
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 21:21:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJ7V62ZV"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hrKzx0va"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgHXVVV (ORCPT
+        id S1728009AbgHXVVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 17:21:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41776 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgHXVVT (ORCPT
+        Mon, 24 Aug 2020 17:21:30 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55088 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgHXVVU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 17:21:19 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A4AC061574;
-        Mon, 24 Aug 2020 14:21:18 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id a15so10546069wrh.10;
-        Mon, 24 Aug 2020 14:21:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aEVH3KeEKImpzoTD8sOJ0HUqoecJmgA9xUt/L5UEv9Q=;
-        b=TJ7V62ZVq7GSWFy91CFPG7K6Qardtn7N0bIo9gS78kvC3AFAdgFN9k3zz09WVjfBwA
-         m6r+rwMdRJbnx2Cc5Jjw33IhpnhcVOLbb019l2IvUiI52dP4MZwbxnTsGf9O6jSZCH95
-         ao8eR1r9eXOf/uEsI+FjiOFGApD0DOBtSrvyviLhRYqdoxZT+CO7wark/zlqaqMOqoVG
-         3M7QA1cai3VKb36artZbp+GXnOHZJX0mObM0keyAcNcRsFMFpy7Xu901zQSPPgs2Y2qr
-         NMMhiSAunMG9ND1lhDX+XqV43wr71tvqcpNXZ/JQEzHUfa4Ix11Bc4006iuOTagl2/rj
-         Epng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aEVH3KeEKImpzoTD8sOJ0HUqoecJmgA9xUt/L5UEv9Q=;
-        b=gSOsKqRyOXa2mE8ZgYUaavv5e0iCeav5vUqq8X3lC3rBjbwt6M/PK8v29sDv2Fmpjo
-         OqQ2/PSu/JYfNT+tH4xncQsBRqhXjvi3ebyktK2TVgZXWIlKDptcxsyGiW6OiYG4A0PP
-         hI+eALcR/wkavpBOlEk94DuWZg+N6aNaCFHBCw3l+0xbAQTO4skl7KoWcA4yY5aUAPs2
-         E/zucZmeXuEAo4wSiRn6IhxYh3wi7uwNu78RGihXsp7tGry85MUCChE8rholdPMXlnqO
-         GhE9joIyz7A0GJHgMXTH52kUrOc9wWHOCmrO4rzTWuQP8+emV0Z9diBeIH75qUhEO5tS
-         Lv6Q==
-X-Gm-Message-State: AOAM533yHjSMHqWDL7P35RkYM9Lr4RG5JbamudTcCsDkGpFUk6e54/sH
-        eBRF4CKSrXkLtnh1da5w6KCkJpir0odQ3ZU3
-X-Google-Smtp-Source: ABdhPJwucY1j3myAwja5npvITAje1Z6NxRhzDiiW8NUuHhAtd5JRGj7sqdyXBpWsann3oSjfzMGafw==
-X-Received: by 2002:adf:e986:: with SMTP id h6mr7600816wrm.106.1598304077509;
-        Mon, 24 Aug 2020 14:21:17 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id k204sm1726281wma.21.2020.08.24.14.21.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 14:21:16 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Alex Dewar <alex.dewar90@gmail.com>
-Subject: [PATCH] ima: use kmemdup() rather than kmalloc+memcpy
-Date:   Mon, 24 Aug 2020 22:21:02 +0100
-Message-Id: <20200824212102.602559-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Mon, 24 Aug 2020 17:21:20 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OLJC6H023009;
+        Mon, 24 Aug 2020 21:21:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=fpRDC2bHPNF6m/pB8XIxeOQ3WPtTDRkGmvzUK9xLqGE=;
+ b=hrKzx0vaQAcliZjQUlO+QnsL9u/LZuZD93HwLF6LVBoJ6ju5M0Xmv53S3WP9Y0BW4PTJ
+ zbZPoreVAQOs+6zHMpxEQjsUhnC8+B90ygGBKVt4W+OQMnPZAysSSY1lN02fXbJbpUBV
+ L72ZEzKz2ezbDjAqmTVE5jOWm82lbuScjRs1ryVGxwuUjrcK5RL5NLIJlFYvU/9yXeNq
+ wZytV/aYpjjsqQx4G0jBrKCM8f1X1lRFCP8OMWDXuHVjmN93/+sjoOrAQJXhfeSYW23T
+ eL9g3glZcf5EXpTSRbVqlISB7F5FKobngrjia7PL5X5B+0VwXYAj90DWTJYVzcv/OHae GQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 333w6tnhp9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Aug 2020 21:21:10 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OLAYsY146623;
+        Mon, 24 Aug 2020 21:19:10 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 333rtx1gcb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 21:19:10 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07OLJ8Hn023370;
+        Mon, 24 Aug 2020 21:19:08 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Aug 2020 14:19:08 -0700
+Subject: Re: [PATCH] mm/hugetlb: Fix a race between hugetlb sysctl handlers
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Muchun Song <songmuchun@bytedance.com>
+Cc:     npiggin@suse.de, agl@us.ibm.com, ak@linux.intel.com,
+        nacc@us.ibm.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200822095328.61306-1-songmuchun@bytedance.com>
+ <20200824135924.b485e000d358cee817c4f05c@linux-foundation.org>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <79800508-54c9-4cda-02de-29b1a6912e75@oracle.com>
+Date:   Mon, 24 Aug 2020 14:19:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200824135924.b485e000d358cee817c4f05c@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008240166
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 clxscore=1011 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008240167
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Issue identified with Coccinelle.
+On 8/24/20 1:59 PM, Andrew Morton wrote:
+> On Sat, 22 Aug 2020 17:53:28 +0800 Muchun Song <songmuchun@bytedance.com> wrote:
+> 
+>> There is a race between the assignment of `table->data` and write value
+>> to the pointer of `table->data` in the __do_proc_doulongvec_minmax().
+> 
+> Where does __do_proc_doulongvec_minmax() write to table->data?
+> 
+> I think you're saying that there is a race between the assignment of
+> ctl_table->table in hugetlb_sysctl_handler_common() and the assignment
+> of the same ctl_table->table in hugetlb_overcommit_handler()?
+> 
+> Or not, maybe I'm being thick.  Can you please describe the race more
+> carefully and completely?
+> 
 
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- security/integrity/ima/ima_policy.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+I too am looking at this now and do not completely understand the race.
+It could be that:
 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index b4de33074b37..ea917a787d9d 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -284,7 +284,7 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- 	struct ima_rule_entry *nentry;
- 	int i;
- 
--	nentry = kmalloc(sizeof(*nentry), GFP_KERNEL);
-+	nentry = kmemdup(entry, sizeof(*nentry), GFP_KERNEL);
- 	if (!nentry)
- 		return NULL;
- 
-@@ -292,7 +292,6 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- 	 * Immutable elements are copied over as pointers and data; only
- 	 * lsm rules can change
- 	 */
--	memcpy(nentry, entry, sizeof(*nentry));
- 	memset(nentry->lsm, 0, sizeof_field(struct ima_rule_entry, lsm));
- 
- 	for (i = 0; i < MAX_LSM_RULES; i++) {
+hugetlb_sysctl_handler_common
+...
+	table->data = &tmp;
+
+and, do_proc_doulongvec_minmax()
+...
+	return __do_proc_doulongvec_minmax(table->data, table, write, ...
+with __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, ...
+...
+	i = (unsigned long *) data;
+	...
+		*i = val;
+	
+So, __do_proc_doulongvec_minmax can be dereferencing and writing to the pointer
+in one thread when hugetlb_sysctl_handler_common is setting it in another?
+
+Another confusing part of the message is the stack trace which includes
+...
+     ? set_max_huge_pages+0x3da/0x4f0
+     ? alloc_pool_huge_page+0x150/0x150
+
+which are 'downstream' from these routines.  I don't understand why these
+are in the trace.
+
+If the race is with the pointer set and dereference/write, then this type of
+fix is OK.  However, if you really have two 'sysadmin type' global operations
+racing then one or both are not going to get what they expected.  Instead of
+changing the code to 'handle the race', I think it might be acceptable to just
+put a big semaphore around it.
 -- 
-2.28.0
-
+Mike Kravetz
