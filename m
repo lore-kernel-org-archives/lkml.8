@@ -2,222 +2,114 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC59FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B60BE2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261417;
-	bh=JybTueb32MztoA3mhfLUfMFI647wfKdR59gapxgWM/E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2lsKB38dBLUu5F2yFg11ZLoRTjnAjRx0wJuLlpPM6eJxidTol9cJNcF/SwXLaXBMp
-	 0xAA/tPYxJpUvsV5O550sKRLbaJ0LkBxCIgzY7MuXYdtWmVW4HTBxremIXtdNHbmWb
-	 96PO3N0LZkENbwzZv4dFyN246M8m5veIZDf6fmEI=
+	by mail.kernel.org (Postfix) with ESMTP id 9F1E32072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:30:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zb6H8ukR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgHXJaN (ORCPT
+        id S1729116AbgHXJaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:30:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729878AbgHXIu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:50:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C64DE2075B;
-        Mon, 24 Aug 2020 08:50:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259056;
-        bh=JybTueb32MztoA3mhfLUfMFI647wfKdR59gapxgWM/E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D0J/3/WbhaEPhM2S0Ho1kSdERuQOvILdtSo/FWxa7r9fkCLpnrPIv+ymxhZGmglZe
-         7rr1Y9e6re0b1Amk+QilgrI6VBAevBMV/26d5uR3gdQjwXtkTqLX9RHfAt0JPpERtm
-         8jUiKLzIk6HiIANM2AhCC/cebWLn/4aNF9IhRVfM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 14/33] ext4: clean up ext4_match() and callers
-Date:   Mon, 24 Aug 2020 10:31:10 +0200
-Message-Id: <20200824082347.245673019@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
-References: <20200824082346.498653578@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 24 Aug 2020 05:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43160 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728402AbgHXJaO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 05:30:14 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF407C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 02:30:14 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k13so3925054plk.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 02:30:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pK5bVNvEUkGmkHt7h+22p1PRjllmkBfGKoPd86o06Lw=;
+        b=zb6H8ukRfhieLWr3DBnUXOTmg55+e5EVKeqsfa2altwwB4K1VmjB+xm8dp0KBc1B0F
+         KH/tRUbVH5H9kDw1etY4+d/Urtgr+0Uix5vBzCbL7jtkQ1eORBWByV8kv2G/GTNO34Vt
+         mSH6FAZHzaRAefjA6cu7fJfPaD6DxdXrTBmzBKhB6v3cEnUrPrwh8faxFALumEMVOqJA
+         CTTMXQeHQ8MSlQBI1kcnwyGWnp1vQ2Y8z7P0NgI/6mlqv0ZgTeOsB4RhP2gBC/WJvl+H
+         E/7v/z49lP1blJipG/yCn02u9NiwT7GRfdVRKXa+EBMMQvQmxFyFlkyzbmIzDvLjy4lx
+         1+hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pK5bVNvEUkGmkHt7h+22p1PRjllmkBfGKoPd86o06Lw=;
+        b=Pmq0VVtptpwC9ipMhier8jxEbC1PKVWAR5llIINKwM2bFUgXNk94BPA/nWj0/9uLD6
+         IFzJyWLKhqwKSdnYWxXJqd+BIvHTbDRXD5Tv6gjH5VccdpW7UAkGstSrII1+VXzUlfgG
+         AhM8yNci2wT/HxIr1Ne2MIPqtCpkflwqYrSVHrGrc1IoMJ6KKcT+M0nPuYkOiIvelBmk
+         k0Rwz/fC7OOWrvSIaovz8wskXeDC/PCkVFLfSXVJO8hTFNKzslVyFaQHjRnh4gDQ2BLh
+         tVb2UHC9CmxEF4OyQmeljaopywPGi/bvwJxC3+Dm92PTwlTwsoNEe0oa2lNYHdxNsUr2
+         e/OA==
+X-Gm-Message-State: AOAM530DqHt5tZsM5OFnoq8dgfDHo6027vroeXm+KZumEFJtpsUXQE7p
+        WNxEKZZqMILC+p7R9t4ymxhY8w==
+X-Google-Smtp-Source: ABdhPJwzqLJz/+aP8JzlsLfMYGqG9zUEjWrPHt0rxu0+/5xAZOVgSxNCJ+v8x4WUX1WjzQRFq4pUgA==
+X-Received: by 2002:a17:90a:448e:: with SMTP id t14mr3829392pjg.59.1598261414267;
+        Mon, 24 Aug 2020 02:30:14 -0700 (PDT)
+Received: from localhost ([122.172.43.13])
+        by smtp.gmail.com with ESMTPSA id y3sm9647312pjg.8.2020.08.24.02.30.13
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Aug 2020 02:30:13 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     stable@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH - for v5.7 stable] opp: Put opp table in dev_pm_opp_set_rate() for empty tables
+Date:   Mon, 24 Aug 2020 15:00:03 +0530
+Message-Id: <e7e9f887328c06800a79f3b48feb623fd15aa3d5.1598261323.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit d9b9f8d5a88cb7881d9f1c2b7e9de9a3fe1dc9e2 ]
+commit 8979ef70850eb469e1094279259d1ef393ffe85f upstream.
 
-When ext4 encryption was originally merged, we were encrypting the
-user-specified filename in ext4_match(), introducing a lot of additional
-complexity into ext4_match() and its callers.  This has since been
-changed to encrypt the filename earlier, so we can remove the gunk
-that's no longer needed.  This more or less reverts ext4_search_dir()
-and ext4_find_dest_de() to the way they were in the v4.0 kernel.
+We get the opp_table pointer at the top of the function and so we should
+put the pointer at the end of the function like all other exit paths
+from this function do.
 
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: v5.7+ <stable@vger.kernel.org> # v5.7+
+Fixes: aca48b61f963 ("opp: Manage empty OPP tables with clk handle")
+Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+[ Viresh: Split the patch into two ]
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+[ Viresh: Update the code for v5.7-stable ]
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- fs/ext4/namei.c | 81 +++++++++++++++----------------------------------
- 1 file changed, 25 insertions(+), 56 deletions(-)
+ drivers/opp/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/namei.c b/fs/ext4/namei.c
-index 566a8b08ccdd6..eb41fb189d4b3 100644
---- a/fs/ext4/namei.c
-+++ b/fs/ext4/namei.c
-@@ -1226,19 +1226,18 @@ static void dx_insert_block(struct dx_frame *frame, u32 hash, ext4_lblk_t block)
- }
- 
- /*
-- * NOTE! unlike strncmp, ext4_match returns 1 for success, 0 for failure.
-+ * Test whether a directory entry matches the filename being searched for.
-  *
-- * `len <= EXT4_NAME_LEN' is guaranteed by caller.
-- * `de != NULL' is guaranteed by caller.
-+ * Return: %true if the directory entry matches, otherwise %false.
-  */
--static inline int ext4_match(struct ext4_filename *fname,
--			     struct ext4_dir_entry_2 *de)
-+static inline bool ext4_match(const struct ext4_filename *fname,
-+			      const struct ext4_dir_entry_2 *de)
- {
- 	const void *name = fname_name(fname);
- 	u32 len = fname_len(fname);
- 
- 	if (!de->inode)
--		return 0;
-+		return false;
- 
- #ifdef CONFIG_EXT4_FS_ENCRYPTION
- 	if (unlikely(!name)) {
-@@ -1270,48 +1269,31 @@ int ext4_search_dir(struct buffer_head *bh, char *search_buf, int buf_size,
- 	struct ext4_dir_entry_2 * de;
- 	char * dlimit;
- 	int de_len;
--	int res;
- 
- 	de = (struct ext4_dir_entry_2 *)search_buf;
- 	dlimit = search_buf + buf_size;
- 	while ((char *) de < dlimit) {
- 		/* this code is executed quadratically often */
- 		/* do minimal checking `by hand' */
--		if ((char *) de + de->name_len <= dlimit) {
--			res = ext4_match(fname, de);
--			if (res < 0) {
--				res = -1;
--				goto return_result;
--			}
--			if (res > 0) {
--				/* found a match - just to be sure, do
--				 * a full check */
--				if (ext4_check_dir_entry(dir, NULL, de, bh,
--						bh->b_data,
--						 bh->b_size, offset)) {
--					res = -1;
--					goto return_result;
--				}
--				*res_dir = de;
--				res = 1;
--				goto return_result;
--			}
--
-+		if ((char *) de + de->name_len <= dlimit &&
-+		    ext4_match(fname, de)) {
-+			/* found a match - just to be sure, do
-+			 * a full check */
-+			if (ext4_check_dir_entry(dir, NULL, de, bh, bh->b_data,
-+						 bh->b_size, offset))
-+				return -1;
-+			*res_dir = de;
-+			return 1;
- 		}
- 		/* prevent looping on a bad block */
- 		de_len = ext4_rec_len_from_disk(de->rec_len,
- 						dir->i_sb->s_blocksize);
--		if (de_len <= 0) {
--			res = -1;
--			goto return_result;
--		}
-+		if (de_len <= 0)
-+			return -1;
- 		offset += de_len;
- 		de = (struct ext4_dir_entry_2 *) ((char *) de + de_len);
- 	}
--
--	res = 0;
--return_result:
--	return res;
-+	return 0;
- }
- 
- static int is_dx_internal_node(struct inode *dir, ext4_lblk_t block,
-@@ -1824,24 +1806,15 @@ int ext4_find_dest_de(struct inode *dir, struct inode *inode,
- 	int nlen, rlen;
- 	unsigned int offset = 0;
- 	char *top;
--	int res;
- 
- 	de = (struct ext4_dir_entry_2 *)buf;
- 	top = buf + buf_size - reclen;
- 	while ((char *) de <= top) {
- 		if (ext4_check_dir_entry(dir, NULL, de, bh,
--					 buf, buf_size, offset)) {
--			res = -EFSCORRUPTED;
--			goto return_result;
--		}
--		/* Provide crypto context and crypto buffer to ext4 match */
--		res = ext4_match(fname, de);
--		if (res < 0)
--			goto return_result;
--		if (res > 0) {
--			res = -EEXIST;
--			goto return_result;
--		}
-+					 buf, buf_size, offset))
-+			return -EFSCORRUPTED;
-+		if (ext4_match(fname, de))
-+			return -EEXIST;
- 		nlen = EXT4_DIR_REC_LEN(de->name_len);
- 		rlen = ext4_rec_len_from_disk(de->rec_len, buf_size);
- 		if ((de->inode ? rlen - nlen : rlen) >= reclen)
-@@ -1849,15 +1822,11 @@ int ext4_find_dest_de(struct inode *dir, struct inode *inode,
- 		de = (struct ext4_dir_entry_2 *)((char *)de + rlen);
- 		offset += rlen;
- 	}
--
- 	if ((char *) de > top)
--		res = -ENOSPC;
--	else {
--		*dest_de = de;
--		res = 0;
--	}
--return_result:
--	return res;
-+		return -ENOSPC;
-+
-+	*dest_de = de;
-+	return 0;
- }
- 
- int ext4_insert_dentry(struct inode *dir,
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index bb7060d52eec..c94e725e6522 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -820,7 +820,7 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+ 		if (opp_table->required_opp_tables) {
+ 			ret = _set_required_opps(dev, opp_table, NULL);
+ 		} else if (!_get_opp_count(opp_table)) {
+-			return 0;
++			ret = 0;
+ 		} else {
+ 			dev_err(dev, "target frequency can't be 0\n");
+ 			ret = -EINVAL;
 -- 
-2.25.1
-
-
+2.25.0.rc1.19.g042ed3e048af
 
