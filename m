@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B69DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D90902067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D65420866
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287317;
-	bh=mdxoQ4ei3+fvVShYPWCRRxh5xRlB/KycAgoxaaOHUIA=;
+	s=default; t=1598287338;
+	bh=BWK2hS0GdXLTqvn3LCDebg7pXZphF7c3VLKfxq34sFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MpGRYm0f/Dp095EVwQjGZ2NVmBWz8228swRDLyVt1wQd9wvyUrgPLjJJbEx7hTXkf
-	 AMq+TXXoaH/y1pyyA2ZtC8mCIL621LMJQQvEqtYh5COHLCVP+2T4dH2M5+yl7DQdYe
-	 D/uSKnrhvNngxoso1ifNrE0fFEUa0D66/pJuw1Ak=
+	b=13+YaV6RNvGp80Q7H1QtiFKSNX+agzbqoE/pG/67b6W+hxB4VoOeswSzxLsuZAkm7
+	 zQ2cw8yiGK8aHtZ4w2n+jAe5ilN3uogH2I1vCHZrIHjUORNAawDttxBSID6Tw2fGL7
+	 qltlUt4Xk+8Cuu8hBbPhQP9tqkvQWNPv742SueOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgHXQly (ORCPT
+        id S1728153AbgHXQmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:41:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48040 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:42:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgHXQju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:39:50 -0400
+        id S1728623AbgHXQjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:39:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB14622C9F;
-        Mon, 24 Aug 2020 16:39:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBB8320838;
+        Mon, 24 Aug 2020 16:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287190;
-        bh=mdxoQ4ei3+fvVShYPWCRRxh5xRlB/KycAgoxaaOHUIA=;
+        s=default; t=1598287187;
+        bh=BWK2hS0GdXLTqvn3LCDebg7pXZphF7c3VLKfxq34sFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O3YJF8tVHVfKzeB5iECkcoWXA3Rjc3wz/Po72PlESWPdEDHSAuCepumSocTjaw1FP
-         eKqLXIUlXcOPmijzZ7ON+gDrEz7D3cobJEL3mL99roDE5a6slUIa7H2yV5KWeNKML4
-         QaIEk0SxyKNb+WGoCRs/gfjyrzMemN6qwAQcxGZY=
+        b=Hm/qvMS8UTUZRx3+hdE+hFeKSSLJlIc0yxiT/3IN5RluUdxcgJqiL98wJUMWfi6b8
+         WdITJuV2q5gj2pj+C4XDf1l/Q2AOXJglow4qG4k/oAsS72wvBa9bdiG21txy5wEBFk
+         vn0KnusnMjRPCS0VIw9xde6Rq8Io8odwEKTaqTO0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sumera Priyadarsini <sylphrenadin@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 5/6] net: gianfar: Add of_node_put() before goto statement
-Date:   Mon, 24 Aug 2020 12:39:42 -0400
-Message-Id: <20200824163943.607406-5-sashal@kernel.org>
+Cc:     Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 3/6] s390/cio: add cond_resched() in the slow_eval_known_fn() loop
+Date:   Mon, 24 Aug 2020 12:39:40 -0400
+Message-Id: <20200824163943.607406-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163943.607406-1-sashal@kernel.org>
 References: <20200824163943.607406-1-sashal@kernel.org>
@@ -59,44 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumera Priyadarsini <sylphrenadin@gmail.com>
+From: Vineeth Vijayan <vneethv@linux.ibm.com>
 
-[ Upstream commit 989e4da042ca4a56bbaca9223d1a93639ad11e17 ]
+[ Upstream commit 0b8eb2ee9da1e8c9b8082f404f3948aa82a057b2 ]
 
-Every iteration of for_each_available_child_of_node() decrements
-reference count of the previous node, however when control
-is transferred from the middle of the loop, as in the case of
-a return or break or goto, there is no decrement thus ultimately
-resulting in a memory leak.
+The scanning through subchannels during the time of an event could
+take significant amount of time in case of platforms with lots of
+known subchannels. This might result in higher scheduling latencies
+for other tasks especially on systems with a single CPU. Add
+cond_resched() call, as the loop in slow_eval_known_fn() can be
+executed for a longer duration.
 
-Fix a potential memory leak in gianfar.c by inserting of_node_put()
-before the goto statement.
-
-Issue found with Coccinelle.
-
-Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/gianfar.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/s390/cio/css.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
-index 37cc1f838dd8b..96310e2ee5458 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -845,8 +845,10 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
- 				continue;
- 
- 			err = gfar_parse_group(child, priv, model);
--			if (err)
-+			if (err) {
-+				of_node_put(child);
- 				goto err_grp_init;
-+			}
- 		}
- 	} else { /* SQ_SG_MODE */
- 		err = gfar_parse_group(np, priv, model);
+diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+index 8ecc956ecb59c..370a3a2c6de73 100644
+--- a/drivers/s390/cio/css.c
++++ b/drivers/s390/cio/css.c
+@@ -529,6 +529,11 @@ static int slow_eval_known_fn(struct subchannel *sch, void *data)
+ 		rc = css_evaluate_known_subchannel(sch, 1);
+ 		if (rc == -EAGAIN)
+ 			css_schedule_eval(sch->schid);
++		/*
++		 * The loop might take long time for platforms with lots of
++		 * known devices. Allow scheduling here.
++		 */
++		cond_resched();
+ 	}
+ 	return 0;
+ }
 -- 
 2.25.1
 
