@@ -2,51 +2,51 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A28EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17E39204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3291C204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598259542;
-	bh=l+IlGmVgTkHi1c1y8iGMegmvpD5qjDYAPHHILkNqBvA=;
+	s=default; t=1598259546;
+	bh=CCOg6YcDob3vQqntrLoC6A5RQVbfcFciQ4LH6jL9ox8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iir4VWBHQGL79euPvWMgVdcx+DtRzD5YJzhQhE6pVHx35of+Hj14B/g2qZTUAJly4
-	 7U32ZxFxrpKctk6SWBBQuOCm97ro9v0p4KgSayYyTqFI0WDH0bpeKq+FQ9JdZdpjDJ
-	 n0egstuJ1p7K9YdI1H3guBwp7Z7Usrz4UyW/efJo=
+	b=NNOA4VI+fYB+q/6JgrImcSywt8Ux5qXtf9J+Nk5zFYAhFdHtby/D1PE3I3af/TG5b
+	 +xNjy2R4uhB2rJ5Dms7HUWZJleOVJm/f5uh5hyTVfRtJXJqCg7xD6BG/WirScyBLxw
+	 9Kdyddi11A7g+vxZLDhUTP0DBFqnc3nYIIqkD26Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbgHXI7B (ORCPT
+        id S1730727AbgHXI55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:59:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45850 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:57:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730372AbgHXI6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:58:03 -0400
+        id S1730263AbgHXI5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:57:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6078B204FD;
-        Mon, 24 Aug 2020 08:58:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69073204FD;
+        Mon, 24 Aug 2020 08:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259482;
-        bh=l+IlGmVgTkHi1c1y8iGMegmvpD5qjDYAPHHILkNqBvA=;
+        s=default; t=1598259458;
+        bh=CCOg6YcDob3vQqntrLoC6A5RQVbfcFciQ4LH6jL9ox8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BsnT7VFhV2Lh4Rzr2890oBrGI0ewQYEalp8un2ina9ZewFjUf16dDFNthvBybaSPA
-         kJ0wAKEX3j7hNUceXAXkFd0rAQoh5BJQu/9J+NQeBURWsmS4VOuS88PUokbh5UpSRz
-         g1CfCeyzZmIjHWYVDFM/xAEL6ZqQckwURWMXz03k=
+        b=HMw4IdQXPrtaNX0MP3IqgmCcx+DA2IRdA1H0LccH6LlQTMH59Va80Hb8pAXF8x2gY
+         +MUZ0lk5zBjm8jhlDTsAiXjrISsdJSzdDc2+PM7e74ensNE6z3pEysrI0GPTRqjnCO
+         YgPDaqbQIqqh1L4qcROhskwzkDjj5CHYYWXp7/hE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 55/71] kconfig: qconf: fix signal connection to invalid slots
-Date:   Mon, 24 Aug 2020 10:31:46 +0200
-Message-Id: <20200824082358.650771922@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 4.19 67/71] epoll: Keep a reference on files added to the check list
+Date:   Mon, 24 Aug 2020 10:31:58 +0200
+Message-Id: <20200824082359.318904388@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082355.848475917@linuxfoundation.org>
 References: <20200824082355.848475917@linuxfoundation.org>
@@ -59,75 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
 
-[ Upstream commit d85de3399f97467baa2026fbbbe587850d01ba8a ]
+commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682 upstream.
 
-If you right-click in the ConfigList window, you will see the following
-messages in the console:
+When adding a new fd to an epoll, and that this new fd is an
+epoll fd itself, we recursively scan the fds attached to it
+to detect cycles, and add non-epool files to a "check list"
+that gets subsequently parsed.
 
-QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:888
-QObject::connect:  (sender name:   'config')
-QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:897
-QObject::connect:  (sender name:   'config')
-QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:906
-QObject::connect:  (sender name:   'config')
+However, this check list isn't completely safe when deletions
+can happen concurrently. To sidestep the issue, make sure that
+a struct file placed on the check list sees its f_count increased,
+ensuring that a concurrent deletion won't result in the file
+disapearing from under our feet.
 
-Right, there is no such slot in QAction. I think this is a typo of
-setChecked.
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Due to this bug, when you toggled the menu "Option->Show Name/Range/Data"
-the state of the context menu was not previously updated. Fix this.
-
-Fixes: d5d973c3f8a9 ("Port xconfig to Qt5 - Put back some of the old implementation(part 2)")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/qconf.cc | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/eventpoll.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 294d4329f4810..1ee33d2e15bf8 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -878,7 +878,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
- 		connect(action, SIGNAL(toggled(bool)),
- 			parent(), SLOT(setShowName(bool)));
- 		connect(parent(), SIGNAL(showNameChanged(bool)),
--			action, SLOT(setOn(bool)));
-+			action, SLOT(setChecked(bool)));
- 		action->setChecked(showName);
- 		headerPopup->addAction(action);
- 
-@@ -887,7 +887,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
- 		connect(action, SIGNAL(toggled(bool)),
- 			parent(), SLOT(setShowRange(bool)));
- 		connect(parent(), SIGNAL(showRangeChanged(bool)),
--			action, SLOT(setOn(bool)));
-+			action, SLOT(setChecked(bool)));
- 		action->setChecked(showRange);
- 		headerPopup->addAction(action);
- 
-@@ -896,7 +896,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
- 		connect(action, SIGNAL(toggled(bool)),
- 			parent(), SLOT(setShowData(bool)));
- 		connect(parent(), SIGNAL(showDataChanged(bool)),
--			action, SLOT(setOn(bool)));
-+			action, SLOT(setChecked(bool)));
- 		action->setChecked(showData);
- 		headerPopup->addAction(action);
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1890,9 +1890,11 @@ static int ep_loop_check_proc(void *priv
+ 			 * not already there, and calling reverse_path_check()
+ 			 * during ep_insert().
+ 			 */
+-			if (list_empty(&epi->ffd.file->f_tfile_llink))
++			if (list_empty(&epi->ffd.file->f_tfile_llink)) {
++				get_file(epi->ffd.file);
+ 				list_add(&epi->ffd.file->f_tfile_llink,
+ 					 &tfile_check_list);
++			}
+ 		}
  	}
-@@ -1228,7 +1228,7 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
- 
- 	action->setCheckable(true);
- 	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
--	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
-+	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setChecked(bool)));
- 	action->setChecked(showDebug());
- 	popup->addSeparator();
- 	popup->addAction(action);
--- 
-2.25.1
-
+ 	mutex_unlock(&ep->mtx);
+@@ -1936,6 +1938,7 @@ static void clear_tfile_check_list(void)
+ 		file = list_first_entry(&tfile_check_list, struct file,
+ 					f_tfile_llink);
+ 		list_del_init(&file->f_tfile_llink);
++		fput(file);
+ 	}
+ 	INIT_LIST_HEAD(&tfile_check_list);
+ }
+@@ -2095,9 +2098,11 @@ SYSCALL_DEFINE4(epoll_ctl, int, epfd, in
+ 					clear_tfile_check_list();
+ 					goto error_tgt_fput;
+ 				}
+-			} else
++			} else {
++				get_file(tf.file);
+ 				list_add(&tf.file->f_tfile_llink,
+ 							&tfile_check_list);
++			}
+ 			mutex_lock_nested(&ep->mtx, 0);
+ 			if (is_file_epoll(tf.file)) {
+ 				tep = tf.file->private_data;
 
 
