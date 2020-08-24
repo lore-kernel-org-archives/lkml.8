@@ -2,190 +2,250 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F93C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 20:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F0CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 20:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90A442067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 20:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B282067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 20:54:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="FF1JD2ey"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CK8l+vZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgHXUww (ORCPT
+        id S1726863AbgHXUyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 16:52:52 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.253]:25622 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726241AbgHXUwv (ORCPT
+        Mon, 24 Aug 2020 16:54:35 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:34878 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726051AbgHXUyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 16:52:51 -0400
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id EB90414BBF
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 15:52:44 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id AJSNkUQkKOIGpAJSOk5GHy; Mon, 24 Aug 2020 15:52:44 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=d4R9KA8mR+zr6FmqLfeiCcmRaaH35vamjamhAgIiUEA=; b=FF1JD2eyx9uc15dWHgaldBr2VY
-        h9jP+jcixa/ZVPo5abX1plwVa6ti84mrwk0KQYpJsx24vWvEQa5XuJWs4kwVDXAflsRgjOZZSin0z
-        n9oIzZWvvVqs7LoGqGTgghiCMgFkzQFUmdG/5mufHxlMNDro1B/T1jvjK3kujqFXT7xcFWGx++LR1
-        BHLzDumUk0SRs+2QaW6x+9dtJxU+Kry6vwR9XRLQZshbw7eVnGVHEbKWKEFFBaUd25an/j5mWU29L
-        Iq2/iTkEV1vk7TqJhlwbaVWslqRC1ssL6mZSwRABJ51FeANvH7rTYz4LjMa81nuBJsq/I3ojMquCS
-        MJr2D9uQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:42054 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1kAJSN-002KO6-Ht; Mon, 24 Aug 2020 15:52:43 -0500
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200824034841.GA29995@embeddedor>
- <CAHk-=wh8a8crLw5Lbs7C2Mz34fAUQn1tTHWqqOXCxbXF1bc_WA@mail.gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Subject: Re: [GIT PULL] fallthrough pseudo-keyword macro conversions for
- 5.9-rc3
-Message-ID: <a99adda0-c44d-2ce7-b28c-5549dcf90352@embeddedor.com>
-Date:   Mon, 24 Aug 2020 15:58:41 -0500
+        Mon, 24 Aug 2020 16:54:33 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OKrujQ001381;
+        Mon, 24 Aug 2020 20:53:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=c4tTQwgRXwM5ARju4FlIwJfaQb8i4m5GCIC+yda2N5w=;
+ b=CK8l+vZoCA8jA222sHhZ0Au75OjAwOrDRoTPiGtlYq/KBKWS6rCy7HP9ylj0dXkUph6w
+ GA7NkbnaH77pq9iQ+h9p94W6Z3oeL1Gw5x7533nzrLWLLhrBxVkIv4BhxwijYOh70pv2
+ VqQ0GsqK+p4e9/qBYS6ah9jNRC1EkQjLUrCen0gybv6Vnqa42HjGjbcEjZ/Jw+KdlN+I
+ Uw2U2q5uo2XWNGaXjfhAZraKFhifgOrPKFQzy4c7hL5FFyAaQB3DEYvGO0M6nkVSihKG
+ eDE1JTQHn3by6DeanERTpGRwJbKRkP+OrH4uzLB6Z+I4M/tY5E5JC2tVgDKGuCYDCDvg sw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 333dbrpw8y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 24 Aug 2020 20:53:56 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07OKoYWA063700;
+        Mon, 24 Aug 2020 20:53:55 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 333rtx0vpx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 20:53:55 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07OKroVA009900;
+        Mon, 24 Aug 2020 20:53:50 GMT
+Received: from [192.168.0.193] (/69.207.174.138)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 24 Aug 2020 13:53:50 -0700
+Subject: Re: [RFC] Design proposal for upstream core-scheduling interface
+To:     Joel Fernandes <joel@joelfernandes.org>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        JulienDesfossez@google.com, jdesfossez@digitalocean.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, linux-kernel@vger.kernel.org,
+        fweisbec@gmail.com, keescook@chromium.org,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joel Fernandes <joelaf@google.com>, vineethrp@gmail.com,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        dhaval.giani@gmail.com, paulmck@kernel.org, joshdon@google.com,
+        xii@google.com, haoluo@google.com, bsegall@google.com
+References: <20200822030155.GA414063@google.com>
+From:   chris hyser <chris.hyser@oracle.com>
+Message-ID: <6d25f0e8-9894-386e-7669-9ecbc176bd5b@oracle.com>
+Date:   Mon, 24 Aug 2020 16:53:45 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wh8a8crLw5Lbs7C2Mz34fAUQn1tTHWqqOXCxbXF1bc_WA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200822030155.GA414063@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1kAJSN-002KO6-Ht
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:42054
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008240163
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
+ priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008240163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/24/20 13:46, Linus Torvalds wrote:
-> On Sun, Aug 23, 2020 at 8:42 PM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
->>
->> Not sure what the problem was with my pull-request for -rc2. So, I'm giving
->> this a second try because I think it is worth it.
+On 8/21/20 11:01 PM, Joel Fernandes wrote:
+> Hello!
+> Core-scheduling aims to allow making it safe for more than 1 task that trust
+> each other to safely share hyperthreads within a CPU core [1]. This results
+> in a performance improvement for workloads that can benefit from using
+> hyperthreading safely while limiting core-sharing when it is not safe.
 > 
-> Just "a ton of lines changed across subsystems, I feel like I need to check it".
+> Currently no universally agreed set of interface exists and companies have
+> been hacking up their own interface to make use of the patches. This post
+> aims to list usecases which I got after talking to various people at Google
+> and Oracle. After which actual development of code to add interfaces can follow.
 > 
-
-Yep; you're right. These are tons of changes...
-
-> For example, you say that you remove unnecessary fall-through
-> markings, but I'm not sure what your pattern for that was.
+> The below text uses the terms cookie and tag interchangeably. Further, cookie
+> of 0 is assumed to indicate a trusted process - such as kernel threads or
+> system daemons. By default, if nothing is tagged then everything is
+> considered trusted since the scheduler assumes all tasks are a match for each
+> other.
 > 
-
-fall-through markings are not necessary for consecutive case labels.
-
-I will soon send a patch to add this info to "Implicit switch case fall-through"
-in deprecated.rst
-
-> You left the one in arch/arm64/kernel/cpuinfo.c:
-> cpuinfo_detect_icache_policy(), for example.
->> And you've fixed up indentation clearly by hand in places, but then
-> it's incorrectly done in other places (dib8096_set_param_override())
->
-
-Yeah; I overlooked those two. I'll address them in a future pull-request.
-
-> I've pulled it, but these kinds of "trivial" conversions do make me
-> nervous. We've had a lot of cases of them breaking things, and it's a
-> pain to find when it happens.
+> Usecase 1: Google's cloud group tags CGroups with a 32-bit integer. This
+> int32 is split into 2 parts, the color and the id. The color can only be set
+> by privileged processes and the id can be set by anyone. The CGroup structure
+> looks like:
 > 
-
-I know; don't worry, I'll be here to fix anything that has to do with
-this change ASAP, like in this case:
-
-https://lore.kernel.org/lkml/20200824203614.GA28543@embeddedor/
-
-could you take it?
-
-> I think I'd have preferred to get this as a couple of scripts that do
-> the obvious 1:1 direct conversion of the simple cases that cover 90%
-> of it all, so then the manual fixups separately.
+>     A         B
+>    / \      / \ \
+>   C   D    E  F  G
 > 
-
-I've got it. I will certainly take this into account for future PRs.
-
-> Oh well. I've pulled it.
+> Here A and B are container CGroups for 2 jobs are assigned a color by a
+> privileged daemon. The job itself has more sub-CGroups within (for ex, B has
+> E, F and G). When these sub-CGroups are spawned, they inherit the color from
+> the parent. An unprivileged user can then set an id for the sub-CGroup
+> without the knowledge of the privileged daemon if it desires to add further
+> isolation. This setting of id can be an unprivileged operation because the
+> root daemon has already isolated A and B.
 > 
+> Usecase 2: Chrome browser - tagging renderers. In Chrome, each tab opened
+> spawns a renderer. A renderer is a sandboxed process and it is assumed it
+> could run arbitrary code (Javascript etc). When a renderer is created, a
+> prctl call is made to tag the renderer. Every thread that is spawned by the
+> renderer is also tagged. Essentially this turns SMT off for the renderer, but
+> still gives a performance boost due to privileged system threads being able
+> to share a core. The tagging also forbids the renderer from sharing a core
+> with privileged system processes. In the future, we plan to allow threads to
+> share a core as well (especially once we get syscall-isolation upstreamed.
+> Patches were posted recently for the same [2]).
+> 
+> Usecase 3: ChromeOS VMs - each vCPU thread that is created by the VMM is
+> tagged thus disallowing core sharing between the vCPU thread and any other
+> thread on the system. This is because such VMs may run arbitrary user code
+> and attack both the guest and the host systems sharing the core.
+> 
+> Usecase 4: Oracle - Setting a sub-CGroup as trusted (cookie 0). Chris Hyser
+> talked to me on IRC that in a CGroup hierarcy, some CGroups should be allowed
+> to not have to share its parent's CGroup tag. In fact, it should be allowed to
+> untag the child CGroup if needed thus allowing them to share a core with
+> trusted tasks. Others have had similar requirements.
+> 
+> Proposal for tagging
+> --------------------
+> We have to support both CGroup and non-CGroup users. CGroup may be overkill
+> for some and the CGroup v2 unified hierarchy may be too inflexible.
+> Regardless, we must support CGroup due its easy of use and existing users.
+> 
+> For Usecase #1
+> ----------
+> Usecase #1 requires a 2-level tagging mechanism. I propose 2 new files
+> to the CPU controller:
+> - tag : a boolean (0/1). If set, this CGroup and all sub-CGroups will be
+>    tagged.  (In the kernel, the cookie will be derived from the pointer value
+>    of a ref-counted cookie object.). If reset, then the CGroup will inherit
+>    the parent CGroup's cookie if there is one.
+> 
+> - color : The ref-counted object will be aligned say to a 256-byte boundary
+>    (for example), then the lower 8 bits of the pointer can be used to specify
+>    color. Together, the pointer with the color will form a cookie used by the
+>    scheduler.
+> 
+> Note that if 2 CGroups belong to 2 different tagged hierarchies, then setting
+> their color to be the same does not imply that the 2 groups will share a
+> core. This is key.  Also, to support usecase #4, we could add a third tag
+> value -- 2, along with the usual 0 and 1 to suggest that the CGroup can share
+> a core with cookie-0 tasks (Chris Hyser feel free to add any more comments
+> here).
 
-Awesome. :)
+Let em think about this. This looks like it would support delegation of a cgroup subtree, which I suppose containers are 
+going to want eventually. That seems to be the advantage over just allowing setting the entire cookie. Anyway, I look 
+forward to tomorrow and thanks for putting this together.
 
-Thank you!
---
-Gustavo
+-chrish
+
+
+
+> For Usecase #2
+> --------------
+> We could add an interface that Peter suggested where 2 PIDs A and B want to
+> share a core. So if A wants to share a core with B, then it issues
+> prctl(SET_CORE_SHARE, B). ptrace_may_access() can be used to restrict access.
+> For renderers though, we want to likely allow a renderer to share a core
+> exclusive with only threads within a renderer and no one else. To support
+> this, renderer A could simply issue prctl(SET_CORE_SHARE, A).
+> 
+> For Usecase #3
+> --------------
+> By default, all threads within a process will share a core. This makes the
+> most sense because threads in a process share the same virtual address space.
+> However, for virtual machines in ChromeOS, we would like vCPU threads to not
+> share a core with other vCPU threads as mentioned above. To support this,
+> when a vCPU thread is forked, a new clone flag - CLONE_NEW_CORE_TAG could be
+> introduced to cause the forked thread to not share a core with its parent.
+> This could also support usecase #2 in the future (instead of prctl, a new
+> renderer being forked can simply be passed CLONE_NEW_CORE_TAG which will tag the
+> forked process or thread even if the forking process is not tagged).
+> 
+> Other considerations:
+> - To share a core anyway even if tags don't match: If we assume that the only
+>    purpose of core-scheduling is to enforce security, then if the kernel knows
+>    that CPUs are not vulnerable then cores can be shared anyway, whether the
+>    tasks are tagged or not (Suggested-by PeterZ).
+> 
+> - Addition of a new CGroup controller: Instead of CPU controller, it may be
+>    better to add a new CGroup controller in case the CPU controller is not
+>    attached to some parts of the hierarchy and it is still desirable to use
+>    CGroup interface for core tagging.
+> 
+> - Co-existence of CGroup with prctl/clone. The prctl/clone tagging should
+>    always be made to override CGroup. For this purpose, I propose a new
+>    'tasks_no_cg_tag' or a similar file in the CGroup controller. This file
+>    will list all tasks that don't associate with the CGroup's tag. NOTE: I am not
+>    sure yet how this new file will work with prctl/clone-tagging of individual
+>    threads in a non-thread-mode CGroup v2 usage.
+> 
+> - Differences in tagging of a forked task (!CLONE_THREAD): If a process is
+>    a part of a CGroup and is forked, then the child process is automatically
+>    added to that CGroup. If such CGroup was tagged before, then the child is
+>    automatically tagged. However, it may be desired to give the child its own
+>    tag. In this case also, the earlier CLONE_NEW_CORE_TAG flag can be used to
+>    achieve this behavior. If the forking process was not a part of a CGroup
+>    but got a tag through other means before, then by default a !CLONE_THREAD
+>    fork would imply CLONE_NEW_CORE_TAG. However, to turns this off, a
+>    CLONE_CORE_TAG flag can be added (forking process's tag will be inheritted
+>    by the child).
+> 
+> Let me know your thoughts and looking forward to a good LPC MC discussion!
+> 
+> thanks,
+> 
+>   - Joel
+> 
+> [1] https://lwn.net/Articles/780703/
+> [2] https://lwn.net/Articles/828889/
+> 
