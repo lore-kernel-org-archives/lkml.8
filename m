@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26933C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7675EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8341206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34BD7206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598288563;
-	bh=z7WM8kvm7Ky2+fBfqb0kIuuS0/swvnvpl4HnDc7EUXY=;
+	s=default; t=1598288589;
+	bh=q3l7jc+zapPFxS8bE4d79iLvbw7yHwayvtwFS0cHIjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yeVMzoDHNVAxlR4QUE7dzBZLxNJNXZ5OukQ+LmFstibTajo2q86LEpmd5Aydw7Lvp
-	 2ZsuA1BslTvI3LQ8R0K8dlOA9Bd7JIKN0cSdxvX//y7RVoDnZgH9vGVgqc+tmiLq7U
-	 E73dwGZ4vz+8LQorFMHa/8a3FcPKexvBhFb0W9Gg=
+	b=J+MRtdNgKlcn5CnGZHxj0W7iPe0f5PInN1ZLS/JWrZBHWJC2WRuCRCMfMELCixV+g
+	 u3Uln33CH4iebXnYKGG8q8cJYWy3YoRhNUDVJ69n1MHU29DCjZg5f8CrQZSj1b4RhM
+	 IjRnYkRuP7IAbbzct6AwmCXEKKcyyPiVZMy8ewW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgHXRCi (ORCPT
+        id S1726627AbgHXRDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41056 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:03:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728487AbgHXQik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728190AbgHXQik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 24 Aug 2020 12:38:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7387922D37;
-        Mon, 24 Aug 2020 16:38:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5FE222CBB;
+        Mon, 24 Aug 2020 16:38:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287108;
-        bh=z7WM8kvm7Ky2+fBfqb0kIuuS0/swvnvpl4HnDc7EUXY=;
+        s=default; t=1598287111;
+        bh=q3l7jc+zapPFxS8bE4d79iLvbw7yHwayvtwFS0cHIjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OPfWwTDDpaCCRMaUF0H+EbdjTaqqN8W/RN3DoqmrU9VoXY/k/ecHL4MjN7iOUEWB1
-         LLzfGzxPtaFefITS0a1pv1skIQP1fiOe7LZL01oz+RzvK1UDcJgXIlDxR8luuiIQqC
-         C30XR8v/LsB1BkZKiATUyTmqG79JnWB/ZKcHBRjw=
+        b=1Mxyh4iJpJ3X6f9tRAe81ivvM/XE/dVP4KPyF4jH3MY1+IdVmskfiTN3pIB4Yms1B
+         LN7H/urKoc1qZu7UZS4OnDXRfOCQSnSX7xfGqGxrYN7uiHn2XFZ4i2wFmrkQYCMOhc
+         05GIF9OmUO2JmgqQVZwgj/Jj2wsylUwpoPhqUrvo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Can Guo <cang@codeaurora.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bean Huo <beanhuo@micron.com>,
+Cc:     Saurav Kashyap <skashyap@marvell.com>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Nilesh Javali <njavali@marvell.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 27/38] scsi: ufs: Clean up completed request without interrupt notification
-Date:   Mon, 24 Aug 2020 12:37:39 -0400
-Message-Id: <20200824163751.606577-27-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 29/38] scsi: qla2xxx: Check if FW supports MQ before enabling
+Date:   Mon, 24 Aug 2020 12:37:41 -0400
+Message-Id: <20200824163751.606577-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163751.606577-1-sashal@kernel.org>
 References: <20200824163751.606577-1-sashal@kernel.org>
@@ -64,54 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Saurav Kashyap <skashyap@marvell.com>
 
-[ Upstream commit b10178ee7fa88b68a9e8adc06534d2605cb0ec23 ]
+[ Upstream commit dffa11453313a115157b19021cc2e27ea98e624c ]
 
-If somehow no interrupt notification is raised for a completed request and
-its doorbell bit is cleared by host, UFS driver needs to cleanup its
-outstanding bit in ufshcd_abort(). Otherwise, system may behave abnormally
-in the following scenario:
+OS boot during Boot from SAN was stuck at dracut emergency shell after
+enabling NVMe driver parameter. For non-MQ support the driver was enabling
+MQ. Add a check to confirm if FW supports MQ.
 
-After ufshcd_abort() returns, this request will be requeued by SCSI layer
-with its outstanding bit set. Any future completed request will trigger
-ufshcd_transfer_req_compl() to handle all "completed outstanding bits". At
-this time the "abnormal outstanding bit" will be detected and the "requeued
-request" will be chosen to execute request post-processing flow. This is
-wrong because this request is still "alive".
-
-Link: https://lore.kernel.org/r/20200811141859.27399-2-huobean@gmail.com
-Reviewed-by: Can Guo <cang@codeaurora.org>
-Acked-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
+Link: https://lore.kernel.org/r/20200806111014.28434-9-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_os.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 99c1b0138c573..df38e069c9a8b 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6138,7 +6138,7 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
- 			/* command completed already */
- 			dev_err(hba->dev, "%s: cmd at tag %d successfully cleared from DB.\n",
- 				__func__, tag);
--			goto out;
-+			goto cleanup;
- 		} else {
- 			dev_err(hba->dev,
- 				"%s: no response from device. tag = %d, err %d\n",
-@@ -6172,6 +6172,7 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
- 		goto out;
- 	}
- 
-+cleanup:
- 	scsi_dma_unmap(cmd);
- 
- 	spin_lock_irqsave(host->host_lock, flags);
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index d7ec4083a0911..3c0af66e24d65 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -1993,6 +1993,11 @@ qla2x00_iospace_config(struct qla_hw_data *ha)
+ 	/* Determine queue resources */
+ 	ha->max_req_queues = ha->max_rsp_queues = 1;
+ 	ha->msix_count = QLA_BASE_VECTORS;
++
++	/* Check if FW supports MQ or not */
++	if (!(ha->fw_attributes & BIT_6))
++		goto mqiobase_exit;
++
+ 	if (!ql2xmqsupport || !ql2xnvmeenable ||
+ 	    (!IS_QLA25XX(ha) && !IS_QLA81XX(ha)))
+ 		goto mqiobase_exit;
 -- 
 2.25.1
 
