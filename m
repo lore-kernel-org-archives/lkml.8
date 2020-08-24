@@ -2,61 +2,54 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D73AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC00C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 287E52074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9792D2074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261007;
-	bh=PvGubglU6cmFIj4jp9q0XiJbLPU4XYVuiuvBCjSn7m8=;
+	s=default; t=1598261016;
+	bh=Gl4jNOH4OH/fe6YEFEorvVIhkVY8kwj2SMw84rehO6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E9US+GR9TSariHuNfltbW/W0YPl4GGK5eIM3MFduK+hMLhr6hqMM/3px26rjXqrnH
-	 xhopFJ9xwvB8fiyawiVmTkwcKv+LNsGc9iqx+PtWJ6lTaS7GqAvhTDLxmqYQ8+GJZt
-	 raA+GTXklu/MpUdjv+CgIP4XMJuG4OcHocsnjCjs=
+	b=u8DDXPpzV9Bi8dlwjsyMdD8QbxJ3uoZdKTSUJdTAx6mkcgr4l69YDD3QQenJTfIW3
+	 w3n5lxo3gPNGMkzh/paapb0YXkAFgwet+yZm+7O3H9mMZa5IoTSaIRmHeTYEQ4pe+U
+	 orc2wJU7NJY/w/gYDYbQWxef+hfFZH+dDGYstZ9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730199AbgHXJXZ (ORCPT
+        id S1730260AbgHXJXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:23:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34826 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:23:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729645AbgHXIyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:54:23 -0400
+        id S1730309AbgHXIyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80E42207D3;
-        Mon, 24 Aug 2020 08:54:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87895207DF;
+        Mon, 24 Aug 2020 08:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259263;
-        bh=PvGubglU6cmFIj4jp9q0XiJbLPU4XYVuiuvBCjSn7m8=;
+        s=default; t=1598259258;
+        bh=Gl4jNOH4OH/fe6YEFEorvVIhkVY8kwj2SMw84rehO6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ioAqUkNmzXlnJ3Zv70ObhIMBQoOdk4W1RpzmN/Tfh+8aLci1htE6lX3BguqmoIvrS
-         81dg3iSJeJPfmvEFG3ZnCffOFyBIMRD/vq86mK56T0zIE7UxUa6AF9wV/q2oBLT5by
-         Q3tiudjMzJg+8sEARBIk0inX4jUdGYiYSK+Vwzs8=
+        b=2Z6z9cmS7MR8TYiioz68QuzK3XHAZjntrQwijkNJzAZLDh7Zn50XuXUKJW3uu1XpY
+         /q4Wjhx56W3u9vy/c1OLcHAA+8pkGpaYCfPmioo2wvRFmvKz/pD7etBI+IGSQZ+ing
+         Tz/WPG7CcU+Cn5qZhYoS+oJl/bdvEQwh6YjSY1Vo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        David Rientjes <rientjes@google.com>,
-        Michel Lespinasse <walken@google.com>,
-        Daniel Axtens <dja@axtens.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Akash Goel <akash.goel@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 13/50] kernel/relay.c: fix memleak on destroy relay channel
-Date:   Mon, 24 Aug 2020 10:31:14 +0200
-Message-Id: <20200824082352.641695215@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 39/50] ASoC: msm8916-wcd-analog: fix register Interrupt offset
+Date:   Mon, 24 Aug 2020 10:31:40 +0200
+Message-Id: <20200824082354.029293409@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -69,65 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-commit 71e843295c680898959b22dc877ae3839cc22470 upstream.
+[ Upstream commit ff69c97ef84c9f7795adb49e9f07c9adcdd0c288 ]
 
-kmemleak report memory leak as follows:
+For some reason interrupt set and clear register offsets are
+not set correctly.
+This patch corrects them!
 
-  unreferenced object 0x607ee4e5f948 (size 8):
-  comm "syz-executor.1", pid 2098, jiffies 4295031601 (age 288.468s)
-  hex dump (first 8 bytes):
-  00 00 00 00 00 00 00 00 ........
-  backtrace:
-     relay_open kernel/relay.c:583 [inline]
-     relay_open+0xb6/0x970 kernel/relay.c:563
-     do_blk_trace_setup+0x4a8/0xb20 kernel/trace/blktrace.c:557
-     __blk_trace_setup+0xb6/0x150 kernel/trace/blktrace.c:597
-     blk_trace_ioctl+0x146/0x280 kernel/trace/blktrace.c:738
-     blkdev_ioctl+0xb2/0x6a0 block/ioctl.c:613
-     block_ioctl+0xe5/0x120 fs/block_dev.c:1871
-     vfs_ioctl fs/ioctl.c:48 [inline]
-     __do_sys_ioctl fs/ioctl.c:753 [inline]
-     __se_sys_ioctl fs/ioctl.c:739 [inline]
-     __x64_sys_ioctl+0x170/0x1ce fs/ioctl.c:739
-     do_syscall_64+0x33/0x40 arch/x86/entry/common.c:46
-     entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-'chan->buf' is malloced in relay_open() by alloc_percpu() but not free
-while destroy the relay channel.  Fix it by adding free_percpu() before
-return from relay_destroy_channel().
-
-Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Michel Lespinasse <walken@google.com>
-Cc: Daniel Axtens <dja@axtens.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Akash Goel <akash.goel@intel.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200817122826.48518-1-weiyongjun1@huawei.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200811103452.20448-1-srinivas.kandagatla@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/relay.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/codecs/msm8916-wcd-analog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/relay.c
-+++ b/kernel/relay.c
-@@ -196,6 +196,7 @@ free_buf:
- static void relay_destroy_channel(struct kref *kref)
- {
- 	struct rchan *chan = container_of(kref, struct rchan, kref);
-+	free_percpu(chan->buf);
- 	kfree(chan);
- }
+diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
+index 3633eb30dd135..4f949ad50d6a7 100644
+--- a/sound/soc/codecs/msm8916-wcd-analog.c
++++ b/sound/soc/codecs/msm8916-wcd-analog.c
+@@ -16,8 +16,8 @@
  
+ #define CDC_D_REVISION1			(0xf000)
+ #define CDC_D_PERPH_SUBTYPE		(0xf005)
+-#define CDC_D_INT_EN_SET		(0x015)
+-#define CDC_D_INT_EN_CLR		(0x016)
++#define CDC_D_INT_EN_SET		(0xf015)
++#define CDC_D_INT_EN_CLR		(0xf016)
+ #define MBHC_SWITCH_INT			BIT(7)
+ #define MBHC_MIC_ELECTRICAL_INS_REM_DET	BIT(6)
+ #define MBHC_BUTTON_PRESS_DET		BIT(5)
+-- 
+2.25.1
+
 
 
