@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F38A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B03BC20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE6520738
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 16:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598287275;
-	bh=p8BE7X+nZ6st4U/GVQwBf0Sc/g1a6v51AjLXWy+aJXQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lx9KDHF9JYYEN0QorXmUykV2cgH3r0nuV1Ao4TrDddPUUho0QcjwbTb2ElipbpKB9
-	 2mT7la1n3LMYKLI1fgrqz5Bl7rAcGkZcn8z9sURuHiKrGY7PI3SbdBp4oC97nb3V8w
-	 CIim/whOYpHNj9FrV9JFAcG28TDZJ6igvZ8SSiF4=
+	s=default; t=1598287289;
+	bh=msI9Izo9L4J+yHwpIL1IKf+9sn3TvKT/LB9B3RnpodM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=haMZLAQZgJWCD6yMDXiNsbuoVvqc+g0fNslzgL3zZ+fsFXJipJyD3e7josoYoYVxn
+	 bPP102miXC9KxtBPFdT0uTt9B8BzMe19lAf3+A/CceKU+WTxaJ4PzJpGBZ/d0WPJS6
+	 i9aaqKjAgr4pTfojYxHecwyXxm+7/RG1CGN7AZ5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbgHXQlJ (ORCPT
+        id S1728516AbgHXQlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:41:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 12:41:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728601AbgHXQjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:39:39 -0400
+        id S1728615AbgHXQjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:39:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F8DC22D3E;
-        Mon, 24 Aug 2020 16:39:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C7BD22CB1;
+        Mon, 24 Aug 2020 16:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287177;
-        bh=p8BE7X+nZ6st4U/GVQwBf0Sc/g1a6v51AjLXWy+aJXQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XuXpSbZKKMQeJJEAmX6wqSu6fH12guoA5eCdI0MWB0h1vtu/sgP42E0JMrjOy7z1Z
-         XSLefBtf8F6oZKSwP/wdjDaKvInEPTl4AeGwAur7z0TUxHIvD8ILIFE9P9QC1hhgv0
-         CIMK9NTV77WG685foqmnvNkNga58a7rbzJ8iipn8=
+        s=default; t=1598287185;
+        bh=msI9Izo9L4J+yHwpIL1IKf+9sn3TvKT/LB9B3RnpodM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=E8e/v10YdAdK387IXaImTRDm+GiebBuMTjLwusEzImLSzCrOjNhN41cxHpxtVtTSz
+         WrRYZwhrSC76TKBYUb+O2SBWTh9tneOmhIHmfok3hKKed4QAXXRJfp1S56o14yrklL
+         rWzNJoYl2E6XeFjOjZr0+gjcv8YfCl3VvUAKfai0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 4/8] s390/cio: add cond_resched() in the slow_eval_known_fn() loop
-Date:   Mon, 24 Aug 2020 12:39:27 -0400
-Message-Id: <20200824163931.607291-4-sashal@kernel.org>
+Cc:     Lukas Czerner <lczerner@redhat.com>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 1/6] jbd2: make sure jh have b_transaction set in refile/unfile_buffer
+Date:   Mon, 24 Aug 2020 12:39:38 -0400
+Message-Id: <20200824163943.607406-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200824163931.607291-1-sashal@kernel.org>
-References: <20200824163931.607291-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,41 +57,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineeth Vijayan <vneethv@linux.ibm.com>
+From: Lukas Czerner <lczerner@redhat.com>
 
-[ Upstream commit 0b8eb2ee9da1e8c9b8082f404f3948aa82a057b2 ]
+[ Upstream commit 24dc9864914eb5813173cfa53313fcd02e4aea7d ]
 
-The scanning through subchannels during the time of an event could
-take significant amount of time in case of platforms with lots of
-known subchannels. This might result in higher scheduling latencies
-for other tasks especially on systems with a single CPU. Add
-cond_resched() call, as the loop in slow_eval_known_fn() can be
-executed for a longer duration.
+Callers of __jbd2_journal_unfile_buffer() and
+__jbd2_journal_refile_buffer() assume that the b_transaction is set. In
+fact if it's not, we can end up with journal_head refcounting errors
+leading to crash much later that might be very hard to track down. Add
+asserts to make sure that is the case.
 
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+We also make sure that b_next_transaction is NULL in
+__jbd2_journal_unfile_buffer() since the callers expect that as well and
+we should not get into that stage in this state anyway, leading to
+problems later on if we do.
+
+Tested with fstests.
+
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200617092549.6712-1-lczerner@redhat.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/css.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/jbd2/transaction.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index 39a2b0cde9e42..d81fdcd6a1fe0 100644
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -529,6 +529,11 @@ static int slow_eval_known_fn(struct subchannel *sch, void *data)
- 		rc = css_evaluate_known_subchannel(sch, 1);
- 		if (rc == -EAGAIN)
- 			css_schedule_eval(sch->schid);
-+		/*
-+		 * The loop might take long time for platforms with lots of
-+		 * known devices. Allow scheduling here.
-+		 */
-+		cond_resched();
- 	}
- 	return 0;
- }
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 3233e5ac9774f..622610934c9ad 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1906,6 +1906,9 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
+  */
+ static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
+ {
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
++
+ 	__jbd2_journal_temp_unlink_buffer(jh);
+ 	jh->b_transaction = NULL;
+ 	jbd2_journal_put_journal_head(jh);
+@@ -2453,6 +2456,13 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
+ 
+ 	was_dirty = test_clear_buffer_jbddirty(bh);
+ 	__jbd2_journal_temp_unlink_buffer(jh);
++
++	/*
++	 * b_transaction must be set, otherwise the new b_transaction won't
++	 * be holding jh reference
++	 */
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++
+ 	/*
+ 	 * We set b_transaction here because b_next_transaction will inherit
+ 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
 -- 
 2.25.1
 
