@@ -3,200 +3,174 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D18EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10074C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C76F2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82AC20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:03:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HfpJdQn6"
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="m5Ec/S25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHXNDh (ORCPT
+        id S1727913AbgHXND4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:03:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18870 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726820AbgHXND3 (ORCPT
+        Mon, 24 Aug 2020 09:03:56 -0400
+Received: from de-smtp-delivery-102.mimecast.com ([62.140.7.102]:26998 "EHLO
+        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728002AbgHXNDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:03:29 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07OD2Xeb094901;
-        Mon, 24 Aug 2020 09:03:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=/Berv+RXYni/EpfBinvlSS7q5Og6GZMPUA3Mdr4e7C8=;
- b=HfpJdQn6BQdd8P8bPquOAqj2zw2uWBs+uEUVJrdxZzTnp4Q1ZR4ws0gUQV8I/oNuAMof
- Sd31HJe/+T0yKdU/Xbdv5kzm+oKTLrufjxuWoJQoO8XFCsaaYFz7pokhP3czRRD2/IbU
- QyokIhC7ZLEsVLcZmhyJGxVLUwjjNI3yvClnsxPPn2sDpeXet/0uk1rOICS7Jx40I0TB
- ZKtsZM8+o39LDP25SmZctx7CvPicpoNB6jne/9xxOqbDBX0owwYRt+ThsVvhCHHJHpFe
- 9tPNviMNToxF1ik6o5jIMpKcEazJ4ExIp3Bbldtxt2ZItVlV82VxdXktpNd4lyBXi6R3 lg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 334b5c5nc1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 09:03:02 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07OD2tAH096823;
-        Mon, 24 Aug 2020 09:02:55 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 334b5c5msx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 09:02:54 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07OCwQTa009904;
-        Mon, 24 Aug 2020 13:02:13 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma06fra.de.ibm.com with ESMTP id 332uweseew-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Aug 2020 13:02:13 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07OD0ebv33817084
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Aug 2020 13:00:40 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1B5CAE056;
-        Mon, 24 Aug 2020 13:02:10 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 582E4AE05D;
-        Mon, 24 Aug 2020 13:02:09 +0000 (GMT)
-Received: from sig-9-65-254-31.ibm.com (unknown [9.65.254.31])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Aug 2020 13:02:09 +0000 (GMT)
-Message-ID: <32ef47317871a27f24287e48a2f6ac5a7e552943.camel@linux.ibm.com>
-Subject: Re: [PATCH 08/11] ima: Allow imasig requirement to be satisfied by
- EVM portable signatures
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>, mjg59@google.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
-Date:   Mon, 24 Aug 2020 09:02:08 -0400
-In-Reply-To: <20200618160458.1579-8-roberto.sassu@huawei.com>
-References: <20200618160329.1263-2-roberto.sassu@huawei.com>
-         <20200618160458.1579-8-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-24_11:2020-08-24,2020-08-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 impostorscore=0 suspectscore=3 clxscore=1015
- phishscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008240099
+        Mon, 24 Aug 2020 09:03:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
+        t=1598274222;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=AXVD1RfIwl31t5YQOgoHAX9cxnAs1egVfHN4qtPaxBk=;
+        b=m5Ec/S25s5zAHa1IP6m1E/FtWPI6yQbgIQPnxvfkCyArWhYPMYkoG2QdlhlASlqpHWCFJI
+        RdTv6g1OrIOmS5ochoogP0hewKwq8dZ91xfaoOvnxcWrWRltiT3GZdeneXa7UQlcv6zQaH
+        vVJiwX9P3JG8paKnd+GQgfdBRyuRehQ=
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com
+ (mail-db3eur04lp2051.outbound.protection.outlook.com [104.47.12.51]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ de-mta-18--QGSovW0O0GzoX2vUYQ6Sw-1; Mon, 24 Aug 2020 15:03:41 +0200
+X-MC-Unique: -QGSovW0O0GzoX2vUYQ6Sw-1
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LIf4ekyLyAtPIM9jM4iu4WNQJNUMcfc2pYa5ckdytG3/FyLYLEL7EU8hoVa0rbZ65QifKd/oQSkYzSw9L6ZxSjTQKwGnElo3rQLNv/dfvdJXq4WkdoufDmjiN2qPa6g6dQ66SVESzYLL6xKPwTjuD+oKko1C2UMN3dastOhB9P4eczRiNkCop9ZhYCLDgn0Se8W3jneltI8jE7QonFYec6X/Q9qqXWO8ioN6vzsg35RcLSPP3ZjWmfLObzemkKO+boaVmZv/9LfnmNLFfMrk0yRmLArRjc/UNCRfYCVzHef4kAAuBW1jMRiancZNMtHW1+qQmm+Gkx7sT71KqO5uCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AXVD1RfIwl31t5YQOgoHAX9cxnAs1egVfHN4qtPaxBk=;
+ b=hspl9nS1Eg7OEfFO6TPOJ6PRVcLAz7scmJEcVNlBMioxGGW2hR7VfbFbq7jU5NIpXLhohXoxr/MnGtfhVzajgg4G4III9J32AM2Bq2BoXMaB7/kLG4EUV+PGHDvuRMO1whsujyMKOmTfDbwug9j3KV58xMtNJFSzDV+KboDZi7ophoxkOPRmKM5tBRdhbbpWo7tgGnIMuBVjniR804LwAeqyzdJTvkl+4NWGqtpcuft3IPsONz9QA4faOkITiwPg1SYYoKxNfXcL6ILDBUgA0jnASC5B4KYwbijcfyi71QAdoL3InnDFtcWwwl4rjEkp1UN75WniZnkERoZkigQfYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=suse.com;
+Received: from VI1PR04MB7102.eurprd04.prod.outlook.com (2603:10a6:800:124::12)
+ by VI1PR0401MB2238.eurprd04.prod.outlook.com (2603:10a6:800:28::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Mon, 24 Aug
+ 2020 13:03:39 +0000
+Received: from VI1PR04MB7102.eurprd04.prod.outlook.com
+ ([fe80::c8e6:73d6:6e2e:9adf]) by VI1PR04MB7102.eurprd04.prod.outlook.com
+ ([fe80::c8e6:73d6:6e2e:9adf%5]) with mapi id 15.20.3305.026; Mon, 24 Aug 2020
+ 13:03:39 +0000
+Date:   Mon, 24 Aug 2020 21:03:20 +0800
+From:   joeyli <jlee@suse.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Subject: Re: [PATCH] efi/efivars: create efivars mount point when get
+ variable services are available
+Message-ID: <20200824130320.GT7501@linux-l9pv.suse>
+References: <20200819092838.11290-1-jlee@suse.com>
+ <CAMj1kXGx=34tqSWqDUbfJ5WAB-3rWhBc1xsh2-kk2pQgcnfbRQ@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGx=34tqSWqDUbfJ5WAB-3rWhBc1xsh2-kk2pQgcnfbRQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK2PR06CA0018.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::30) To VI1PR04MB7102.eurprd04.prod.outlook.com
+ (2603:10a6:800:124::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linux-l9pv.suse (124.11.22.254) by HK2PR06CA0018.apcprd06.prod.outlook.com (2603:1096:202:2e::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Mon, 24 Aug 2020 13:03:35 +0000
+X-Originating-IP: [124.11.22.254]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 38fa6730-412a-4895-0094-08d8482e1eb1
+X-MS-TrafficTypeDiagnostic: VI1PR0401MB2238:
+X-Microsoft-Antispam-PRVS: <VI1PR0401MB2238A6FDBFEB808F2B209CF0A3560@VI1PR0401MB2238.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:46;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UOOmVIpIHyKQ8hWJpxkonH9POajocomYv0DIzdjdYrXghWGERBM3yEYe7N82///M5w+wXfk4T7Zyr7Nzx4696l75IMSE3LUCwxDKOcExXJ0BgJ75nBIuFeK2DOlk37tQdVakPiwzMennrIj50g12Ba6alR0GgUL9yCM41qYyRVNZgm5AfRK5c0NZwWFjXyW4V4xNuNkqP5B4kTWmYrFIa+xo9Fn/WylQ176vbhDL6hBYbzPGlc/rsOb1MencKfjSXF18GYvvasCzx/FYnu3ahB1oG7Y0XfWc5U/mGBlA33dh3H4JtXMKrU8KWwXhB0DiFGOGcIBgYTk/smd2RZbwmsHKFV+CmSHImrp/eNydbsJGN5Un1eT9ld8rXOS2fYPW
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB7102.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(366004)(346002)(136003)(39860400002)(396003)(86362001)(6666004)(83380400001)(54906003)(7696005)(316002)(4326008)(9686003)(33656002)(8886007)(6506007)(6916009)(2906002)(52116002)(956004)(55016002)(478600001)(8936002)(1076003)(186003)(16526019)(26005)(66946007)(8676002)(5660300002)(36756003)(66476007)(66556008)(43062003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: NSC5+kxMATxikrcJ9rNgVtwFMNhLWIexUu7tvfXLkNqOlTni9Jl6XZDibM7yh8Z2hRKwsxcAo//+dZfLFQbqyRm58+1JllGcZ9WlideM0yzVor9ClcyDqzyOLQyWxW8RkXYEjQnK9bAhyG3vexO5EPNtnWeocbpw2ew3B12RW+tTKL++YH+mZmO2Idc9EI4vZntizwUNiEwEuJ2rJogWKZHb7GNatu9oT1PUAtl8lQBAgyLtNsZLiDnDh3QdInwycQJQ8BoqDHqoP0R1Gmz/wQScws70E/7A2mVRslwLSBmeyupuX5q+HPjGMmHtC9ZtKqWwcbsP0qCuR44CeIZQC0ktQRiBNxMrAkRLnxbd7itMeJDuDZkfidg/rl9NywujSytiwdsiYBEmmQuHLoQXIHncHoNvLRQG+wSq0lAb5igikDxLyH0fLYaMywBNAmSASnP0LoNup8JpQlyp9GS+p6c5UEByKB1AxjtTwDcZ2Ga476ssrGJ7X9HHua5s72U782fMPjknqHo9PJxFRpIc/OC5rKhuc9mnW9y7qD9/r16sec+hUz5OuUeCWmzIdBG1iECvooEuwGIl9vrkkewaVbLMcMd+vHA+2/J81hn3OlA4m4BNQUIAotQdoR9CVaQNGeqkAePK9KCX4O46k9rdhQ==
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38fa6730-412a-4895-0094-08d8482e1eb1
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB7102.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2020 13:03:39.6663
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TzUS/rP692PalD5ogX+95LjZXRedqFn1crPpHaUtQQ7Fyj+ovTfawj/lrUBlvj4B
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2238
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-18 at 18:04 +0200, Roberto Sassu wrote:
-> System administrators can require that all accessed files have a signature
-> by specifying appraise_type=imasig in a policy rule.
+Hi Ard,
+
+On Thu, Aug 20, 2020 at 11:30:27AM +0200, Ard Biesheuvel wrote:
+> On Wed, 19 Aug 2020 at 11:28, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
+> >
+> > The efivars filesystem depends on GetVariable or GetNextVariable EFI
+> > runtime services. So the /sys/firmware/efi/efivars does not need to be
+> > created when GetVariable and GetNextVariable are not available.
+> >
+> > It is useful for userland to determine the availability of efivars
+> > filesystem.
+> >
+> > Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
 > 
-> Currently, only IMA signatures satisfy this requirement.
-
-Appended signatures may also satisfy this requirement, but are not
-applicable as ...
-
-> IMA signatures
-> ensure data source authentication for file content and prevent any change.
-> EVM signatures instead ensure data source authentication for file metadata.
-> Given that the digest or signature of the file content must be included in
-> the metadata, EVM signatures provide at least the same guarantees of IMA
-> signatures.
-
-^provide the same file data guarantees of IMA signatures, as well as
-providing file metadata guarantees.
-
+> Hello Joey,
 > 
-> This patch lets systems protected with EVM signatures pass appraisal
-> verification if the appraise_type=imasig requirement is specified in the
-> policy. This facilitates deployment in the scenarios where only EVM
-> signatures are available.
+> This is not the right check to perform here: the efivarfs code could
+> be instantiated using a different efivars abstraction, so whether the
+> RT services are implemented is not entirely relevant.
 > 
-> The patch makes the following changes:
-> 
-> file xattr types:
-> security.ima: IMA_XATTR_DIGEST/IMA_XATTR_DIGEST_NG
-> security.evm: EVM_XATTR_PORTABLE_DIGSIG
-> 
-> execve(), mmap(), open() behavior (with appraise_type=imasig):
-> before: denied (file without IMA signature, imasig requirement not met)
-> after: allowed (file with EVM portable signature, imasig requirement met)
-> 
-> open(O_WRONLY) behavior (without appraise_type=imasig):
-> before: allowed (file without IMA signature, not immutable)
-> after: denied (file with EVM portable signature, immutable)
-> 
-> In addition, similarly to IMA signatures, this patch temporarily allows
-> new files without or with incomplete metadata to be opened so that content
-> can be written.
-> 
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Please look at commit f88814cc2578c121e6edef686365036db72af0ed
+> ("efi/efivars: Expose RT service availability via efivars
+> abstraction") for an explanation of the underlying issue, and update
+> your patch accordingly.
+>
 
-After addressing the comments above and below,
+Thanks for youre review! I will look at f88814cc257 and change my
+patch for v2.
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-
-> ---
->  security/integrity/ima/ima_appraise.c | 20 +++++++++++++-------
->  1 file changed, 13 insertions(+), 7 deletions(-)
+Joey Lee
+ 
 > 
-> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-> index 21bda264fc30..9505bb390d90 100644
-> --- a/security/integrity/ima/ima_appraise.c
-> +++ b/security/integrity/ima/ima_appraise.c
-> @@ -219,12 +219,16 @@ static int xattr_verify(enum ima_hooks func, struct integrity_iint_cache *iint,
->  		hash_start = 1;
->  		/* fall through */
->  	case IMA_XATTR_DIGEST:
-> -		if (iint->flags & IMA_DIGSIG_REQUIRED) {
-> -			*cause = "IMA-signature-required";
-> -			*status = INTEGRITY_FAIL;
-> -			break;
-> +		if (*status != INTEGRITY_PASS_IMMUTABLE) {
-> +			if (iint->flags & IMA_DIGSIG_REQUIRED) {
-> +				*cause = "IMA-signature-required";
-> +				*status = INTEGRITY_FAIL;
-> +				break;
-> +			}
-> +			clear_bit(IMA_DIGSIG, &iint->atomic_flags);
-> +		} else {
-> +			set_bit(IMA_DIGSIG, &iint->atomic_flags);
->  		}
-> -		clear_bit(IMA_DIGSIG, &iint->atomic_flags);
->  		if (xattr_len - sizeof(xattr_value->type) - hash_start >=
->  				iint->ima_hash->length)
->  			/*
-> @@ -394,6 +398,8 @@ int ima_appraise_measurement(enum ima_hooks func,
->  		cause = "missing-HMAC";
->  		goto out;
->  	case INTEGRITY_FAIL_IMMUTABLE:
-> +		set_bit(IMA_DIGSIG, &iint->atomic_flags);
-> +		fallthrough;
->  	case INTEGRITY_FAIL:		/* Invalid HMAC/signature. */
->  		cause = "invalid-HMAC";
->  		goto out;
-> @@ -437,9 +443,9 @@ int ima_appraise_measurement(enum ima_hooks func,
->  				status = INTEGRITY_PASS;
->  		}
->  
-> -		/* Permit new files with file signatures, but without data. */
-> +		/* Permit new files marked as immutable, but without data. */
-
-This comment isn't quite right.
-
->  		if (inode->i_size == 0 && iint->flags & IMA_NEW_FILE &&
-> -		    xattr_value && xattr_value->type == EVM_IMA_XATTR_DIGSIG) {
-> +		    test_bit(IMA_DIGSIG, &iint->atomic_flags)) {
->  			status = INTEGRITY_PASS;
->  		}
->  
-
+> > ---
+> >  drivers/firmware/efi/efi.c | 13 ++++++++-----
+> >  1 file changed, 8 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > index fdd1db025dbf..929fbf4dfd5d 100644
+> > --- a/drivers/firmware/efi/efi.c
+> > +++ b/drivers/firmware/efi/efi.c
+> > @@ -404,11 +404,14 @@ static int __init efisubsys_init(void)
+> >         if (error)
+> >                 goto err_remove_group;
+> >
+> > -       /* and the standard mountpoint for efivarfs */
+> > -       error = sysfs_create_mount_point(efi_kobj, "efivars");
+> > -       if (error) {
+> > -               pr_err("efivars: Subsystem registration failed.\n");
+> > -               goto err_remove_group;
+> > +       if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE |
+> > +                                     EFI_RT_SUPPORTED_GET_NEXT_VARIABLE_NAME)) {
+> > +               /* and the standard mountpoint for efivarfs */
+> > +               error = sysfs_create_mount_point(efi_kobj, "efivars");
+> > +               if (error) {
+> > +                       pr_err("efivars: Subsystem registration failed.\n");
+> > +                       goto err_remove_group;
+> > +               }
+> >         }
+> >
+> >         if (efi_enabled(EFI_DBG) && efi_enabled(EFI_PRESERVE_BS_REGIONS))
+> > --
+> > 2.16.4
+> >
 
