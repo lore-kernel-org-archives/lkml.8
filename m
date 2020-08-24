@@ -2,51 +2,51 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08F74C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3A70206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE134206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598262803;
-	bh=RsLtqsOq7s7yk7751y3KEOm21IF0y9XdheSoIvQVt/k=;
+	s=default; t=1598262806;
+	bh=5cbQV9c2lHZGlqdrGa8MUGaqrhRQfarfY4yneXqdzGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x6+hsQdtyytNetTxj+gwfn3XMdMiPFEHZdFkd0Y2cBKcEtSgna1l9DZF7c03euV5B
-	 oU6JdQDnFxCk1bYLOddVc2iyvqfJWk4+DrRbSCJDuXNve7xZDoWLMMdVl3UJ4DVHVN
-	 02ikRdoisO7/Ut0rRqEeFzKtZhTUCezYbiTKH+Pg=
+	b=els1BE/LRF/Du+moYwFDm6i6wUr4/sAUgEkO9aFRY3CVEc5+xL0CKNM8grVrRLOPO
+	 8NjnavntDLWsTH9ZkP4qdle/Q631n3RHfAJsmfDNMcuCO1P3TYDZzdxH2XPZw/BNa4
+	 X5aTJNGbs7nM2azWiZe6+uN4MO0gq2ZteN4e/bes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgHXJxU (ORCPT
+        id S1729565AbgHXJxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:53:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52744 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:53:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728518AbgHXIiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:38:21 -0400
+        id S1728513AbgHXIiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:38:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FDDE20FC3;
-        Mon, 24 Aug 2020 08:38:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21E3520FC3;
+        Mon, 24 Aug 2020 08:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258300;
-        bh=RsLtqsOq7s7yk7751y3KEOm21IF0y9XdheSoIvQVt/k=;
+        s=default; t=1598258290;
+        bh=5cbQV9c2lHZGlqdrGa8MUGaqrhRQfarfY4yneXqdzGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kj1TTAQfZR2zGtdbduy0Hq5hdkKkPf8Dl6sUseWRpf3tzyeNkXmlOURIhVTJBnyEo
-         6UK/wcXNnCDTAzKbha2jD9GgfInPADgQHklanTIvkZwu81xiSzsg/kHk0stbvboZS2
-         /V4ps0lNCnivZv4u5pLb2bajBhzDS4/TBwjd8f40=
+        b=YVBMMQbQA9mbuFlL8L2rGKq+GCOD8VQrnUaSEhJfe8auPVlQLLpjW90Hkftvy3+6r
+         uhRu7QO+MnhXMytckTeOJQsQiLqujToPrcdAEonV4Ns0IiQ53o06p52rL4J5i4wYXy
+         g8TK2isHY4uuGHWCA/9DaPkpc/MnMHeRsl/ocIhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 119/148] kconfig: qconf: fix signal connection to invalid slots
-Date:   Mon, 24 Aug 2020 10:30:17 +0200
-Message-Id: <20200824082419.712373164@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Li Heng <liheng40@huawei.com>, Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH 5.8 144/148] efi: add missed destroy_workqueue when efisubsys_init fails
+Date:   Mon, 24 Aug 2020 10:30:42 +0200
+Message-Id: <20200824082420.921660253@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -59,75 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Li Heng <liheng40@huawei.com>
 
-[ Upstream commit d85de3399f97467baa2026fbbbe587850d01ba8a ]
+commit 98086df8b70c06234a8f4290c46064e44dafa0ed upstream.
 
-If you right-click in the ConfigList window, you will see the following
-messages in the console:
+destroy_workqueue() should be called to destroy efi_rts_wq
+when efisubsys_init() init resources fails.
 
-QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:888
-QObject::connect:  (sender name:   'config')
-QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:897
-QObject::connect:  (sender name:   'config')
-QObject::connect: No such slot QAction::setOn(bool) in scripts/kconfig/qconf.cc:906
-QObject::connect:  (sender name:   'config')
+Cc: <stable@vger.kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Li Heng <liheng40@huawei.com>
+Link: https://lore.kernel.org/r/1595229738-10087-1-git-send-email-liheng40@huawei.com
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Right, there is no such slot in QAction. I think this is a typo of
-setChecked.
-
-Due to this bug, when you toggled the menu "Option->Show Name/Range/Data"
-the state of the context menu was not previously updated. Fix this.
-
-Fixes: d5d973c3f8a9 ("Port xconfig to Qt5 - Put back some of the old implementation(part 2)")
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/qconf.cc | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/firmware/efi/efi.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index be67e74237d22..91ed69b651e99 100644
---- a/scripts/kconfig/qconf.cc
-+++ b/scripts/kconfig/qconf.cc
-@@ -873,7 +873,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
- 		connect(action, SIGNAL(toggled(bool)),
- 			parent(), SLOT(setShowName(bool)));
- 		connect(parent(), SIGNAL(showNameChanged(bool)),
--			action, SLOT(setOn(bool)));
-+			action, SLOT(setChecked(bool)));
- 		action->setChecked(showName);
- 		headerPopup->addAction(action);
- 
-@@ -882,7 +882,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
- 		connect(action, SIGNAL(toggled(bool)),
- 			parent(), SLOT(setShowRange(bool)));
- 		connect(parent(), SIGNAL(showRangeChanged(bool)),
--			action, SLOT(setOn(bool)));
-+			action, SLOT(setChecked(bool)));
- 		action->setChecked(showRange);
- 		headerPopup->addAction(action);
- 
-@@ -891,7 +891,7 @@ void ConfigList::contextMenuEvent(QContextMenuEvent *e)
- 		connect(action, SIGNAL(toggled(bool)),
- 			parent(), SLOT(setShowData(bool)));
- 		connect(parent(), SIGNAL(showDataChanged(bool)),
--			action, SLOT(setOn(bool)));
-+			action, SLOT(setChecked(bool)));
- 		action->setChecked(showData);
- 		headerPopup->addAction(action);
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -381,6 +381,7 @@ static int __init efisubsys_init(void)
+ 	efi_kobj = kobject_create_and_add("efi", firmware_kobj);
+ 	if (!efi_kobj) {
+ 		pr_err("efi: Firmware registration failed.\n");
++		destroy_workqueue(efi_rts_wq);
+ 		return -ENOMEM;
  	}
-@@ -1275,7 +1275,7 @@ QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
  
- 	action->setCheckable(true);
- 	connect(action, SIGNAL(toggled(bool)), SLOT(setShowDebug(bool)));
--	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setOn(bool)));
-+	connect(this, SIGNAL(showDebugChanged(bool)), action, SLOT(setChecked(bool)));
- 	action->setChecked(showDebug());
- 	popup->addSeparator();
- 	popup->addAction(action);
--- 
-2.25.1
-
+@@ -424,6 +425,7 @@ err_unregister:
+ 		generic_ops_unregister();
+ err_put:
+ 	kobject_put(efi_kobj);
++	destroy_workqueue(efi_rts_wq);
+ 	return error;
+ }
+ 
 
 
