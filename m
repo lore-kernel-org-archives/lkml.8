@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB5EC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB2AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BF53207DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF3A22B3F
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 08:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598258188;
-	bh=CiB2JlYzRRv4NoLy9qj+dbZcYvJL+2KWQ7TFKK68R+k=;
+	s=default; t=1598258192;
+	bh=TMcgGpj0HK5jtl7J2jbGq1Bs+4VVnmcgR1udoAv4ziQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNCvkw6J+7lrsz8j8rcMC02dDQ/f078OPjGGrlS7AxddEbMi7By7h7+6eUi5rPkgB
-	 kz17shJ1w6pVNJS1rZkmNccvZsNgxm8HwA20edaTqa70jb/StIwNoszWG+mSidHj8s
-	 pyRGlZBJxcKqZZ6JBW7wfGV7h38RF4uQlvmqmdQQ=
+	b=T7htCBkLYDTOoOBh69HEL1R2hKaslpfp6ldnhCtiDQw+zxTtboayXkczwtVnYavPC
+	 QZ+qkQwIq089NrZqEu3CRSqy8fH1Rq0o+cIMTI9Btp0LoGR8/cX24w1k4Le/q53U/c
+	 jDM+5Iu+liVVYgjElS++vr60afLUpwnlDPfHuRYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgHXIg0 (ORCPT
+        id S1726548AbgHXIga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 04:36:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48306 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 04:36:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728234AbgHXIgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:36:09 -0400
+        id S1728253AbgHXIgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:36:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34F89204FD;
-        Mon, 24 Aug 2020 08:36:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BA1C206F0;
+        Mon, 24 Aug 2020 08:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258168;
-        bh=CiB2JlYzRRv4NoLy9qj+dbZcYvJL+2KWQ7TFKK68R+k=;
+        s=default; t=1598258174;
+        bh=TMcgGpj0HK5jtl7J2jbGq1Bs+4VVnmcgR1udoAv4ziQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GLXnjPZYlvDSqKrptPma0uA+3n7k7TVdtNw8uRZy4dWe0oOHckS7zG+xtPfR+6HAy
-         MIbpIQpfoBhgwBvLKBrhtLjj7EXu+7xNuymiol4XnAM8gJ5trlKnc2R6xiTgIGMfkd
-         r35Gil7M3PyWKxrtRVCh/n5/Qjm52NgCwvyqCsJs=
+        b=TO4XS+GqaP2sMJvZYDLFTuY2+QvtPHMX+ERdJQxuQZsJhiHZnhXG0+m6FSYOzgdWf
+         t/zjBZQ4hUI1+FJPIDJmFcJw26D+b6VCy7ARtwJhipp9wEl7PF0wq2bOoBNtBgMwXk
+         zHMrcmCEbfAQ2AeDCYYl4kRPs0ucGSNqOpxR0xA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Mark Brown <broonie@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 100/148] ASoC: msm8916-wcd-analog: fix register Interrupt offset
-Date:   Mon, 24 Aug 2020 10:29:58 +0200
-Message-Id: <20200824082418.829268163@linuxfoundation.org>
+Subject: [PATCH 5.8 102/148] watch_queue: Limit the number of watches a user can hold
+Date:   Mon, 24 Aug 2020 10:30:00 +0200
+Message-Id: <20200824082418.916968691@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
 References: <20200824082413.900489417@linuxfoundation.org>
@@ -62,40 +62,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit ff69c97ef84c9f7795adb49e9f07c9adcdd0c288 ]
+[ Upstream commit 29e44f4535faa71a70827af3639b5e6762d8f02a ]
 
-For some reason interrupt set and clear register offsets are
-not set correctly.
-This patch corrects them!
+Impose a limit on the number of watches that a user can hold so that
+they can't use this mechanism to fill up all the available memory.
 
-Fixes: 585e881e5b9e ("ASoC: codecs: Add msm8916-wcd analog codec")
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: Stephan Gerhold <stephan@gerhold.net>
-Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200811103452.20448-1-srinivas.kandagatla@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+This is done by putting a counter in user_struct that's incremented when
+a watch is allocated and decreased when it is released.  If the number
+exceeds the RLIMIT_NOFILE limit, the watch is rejected with EAGAIN.
+
+This can be tested by the following means:
+
+ (1) Create a watch queue and attach it to fd 5 in the program given - in
+     this case, bash:
+
+	keyctl watch_session /tmp/nlog /tmp/gclog 5 bash
+
+ (2) In the shell, set the maximum number of files to, say, 99:
+
+	ulimit -n 99
+
+ (3) Add 200 keyrings:
+
+	for ((i=0; i<200; i++)); do keyctl newring a$i @s || break; done
+
+ (4) Try to watch all of the keyrings:
+
+	for ((i=0; i<200; i++)); do echo $i; keyctl watch_add 5 %:a$i || break; done
+
+     This should fail when the number of watches belonging to the user hits
+     99.
+
+ (5) Remove all the keyrings and all of those watches should go away:
+
+	for ((i=0; i<200; i++)); do keyctl unlink %:a$i; done
+
+ (6) Kill off the watch queue by exiting the shell spawned by
+     watch_session.
+
+Fixes: c73be61cede5 ("pipe: Add general notification queue support")
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/msm8916-wcd-analog.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/sched/user.h | 3 +++
+ kernel/watch_queue.c       | 8 ++++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/sound/soc/codecs/msm8916-wcd-analog.c b/sound/soc/codecs/msm8916-wcd-analog.c
-index 85bc7ae4d2671..26cf372ccda6f 100644
---- a/sound/soc/codecs/msm8916-wcd-analog.c
-+++ b/sound/soc/codecs/msm8916-wcd-analog.c
-@@ -19,8 +19,8 @@
+diff --git a/include/linux/sched/user.h b/include/linux/sched/user.h
+index 917d88edb7b9d..a8ec3b6093fcb 100644
+--- a/include/linux/sched/user.h
++++ b/include/linux/sched/user.h
+@@ -36,6 +36,9 @@ struct user_struct {
+     defined(CONFIG_NET) || defined(CONFIG_IO_URING)
+ 	atomic_long_t locked_vm;
+ #endif
++#ifdef CONFIG_WATCH_QUEUE
++	atomic_t nr_watches;	/* The number of watches this user currently has */
++#endif
  
- #define CDC_D_REVISION1			(0xf000)
- #define CDC_D_PERPH_SUBTYPE		(0xf005)
--#define CDC_D_INT_EN_SET		(0x015)
--#define CDC_D_INT_EN_CLR		(0x016)
-+#define CDC_D_INT_EN_SET		(0xf015)
-+#define CDC_D_INT_EN_CLR		(0xf016)
- #define MBHC_SWITCH_INT			BIT(7)
- #define MBHC_MIC_ELECTRICAL_INS_REM_DET	BIT(6)
- #define MBHC_BUTTON_PRESS_DET		BIT(5)
+ 	/* Miscellaneous per-user rate limit */
+ 	struct ratelimit_state ratelimit;
+diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
+index f74020f6bd9d5..0ef8f65bd2d71 100644
+--- a/kernel/watch_queue.c
++++ b/kernel/watch_queue.c
+@@ -393,6 +393,7 @@ static void free_watch(struct rcu_head *rcu)
+ 	struct watch *watch = container_of(rcu, struct watch, rcu);
+ 
+ 	put_watch_queue(rcu_access_pointer(watch->queue));
++	atomic_dec(&watch->cred->user->nr_watches);
+ 	put_cred(watch->cred);
+ }
+ 
+@@ -452,6 +453,13 @@ int add_watch_to_object(struct watch *watch, struct watch_list *wlist)
+ 	watch->cred = get_current_cred();
+ 	rcu_assign_pointer(watch->watch_list, wlist);
+ 
++	if (atomic_inc_return(&watch->cred->user->nr_watches) >
++	    task_rlimit(current, RLIMIT_NOFILE)) {
++		atomic_dec(&watch->cred->user->nr_watches);
++		put_cred(watch->cred);
++		return -EAGAIN;
++	}
++
+ 	spin_lock_bh(&wqueue->lock);
+ 	kref_get(&wqueue->usage);
+ 	kref_get(&watch->usage);
 -- 
 2.25.1
 
