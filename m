@@ -7,51 +7,56 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49983C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D73AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 212BB2074D
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 287E52074D
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261000;
-	bh=vAP04jwMI/FiLQGnOccQ5DGSaQlnhXFCumurrNG1r44=;
+	s=default; t=1598261007;
+	bh=PvGubglU6cmFIj4jp9q0XiJbLPU4XYVuiuvBCjSn7m8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CPurtUEjDcrhWcmTQUzZH8S0axRt2GRBqujRGa2OnXpwcHQF4eUFakSRwUOoF+BtP
-	 VdIOmxwf/uTKvaUgSdsIWIpu3h4mmIgJ1XhZfR02NeM9dkV1kVPhN/l+UaluB0qDEX
-	 9XoAdHQ464s23WIyZv/dyMKhGNKfW4kF1DJDWfuY=
+	b=E9US+GR9TSariHuNfltbW/W0YPl4GGK5eIM3MFduK+hMLhr6hqMM/3px26rjXqrnH
+	 xhopFJ9xwvB8fiyawiVmTkwcKv+LNsGc9iqx+PtWJ6lTaS7GqAvhTDLxmqYQ8+GJZt
+	 raA+GTXklu/MpUdjv+CgIP4XMJuG4OcHocsnjCjs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgHXJXS (ORCPT
+        id S1730199AbgHXJXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:23:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34906 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:23:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728930AbgHXIy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:54:26 -0400
+        id S1729645AbgHXIyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:54:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A111204FD;
-        Mon, 24 Aug 2020 08:54:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80E42207D3;
+        Mon, 24 Aug 2020 08:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598259265;
-        bh=vAP04jwMI/FiLQGnOccQ5DGSaQlnhXFCumurrNG1r44=;
+        s=default; t=1598259263;
+        bh=PvGubglU6cmFIj4jp9q0XiJbLPU4XYVuiuvBCjSn7m8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d0T6M+mVZ8qe6/NzNvkW3WMPC2mUBxuImgTQ4SVzujib1R5II3o3HntejfAl2BTXV
-         D0iupByEYibqC7YBZA3vzpGy+HVmyc1HzDlCmNZlo8DEaXtWEIt94M8mquBIl1rLWg
-         OQt2RI1LUwpYT3rf6H8VHbHM1XU0cYq+4QxFJSsk=
+        b=ioAqUkNmzXlnJ3Zv70ObhIMBQoOdk4W1RpzmN/Tfh+8aLci1htE6lX3BguqmoIvrS
+         81dg3iSJeJPfmvEFG3ZnCffOFyBIMRD/vq86mK56T0zIE7UxUa6AF9wV/q2oBLT5by
+         Q3tiudjMzJg+8sEARBIk0inX4jUdGYiYSK+Vwzs8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Jason Baron <jbaron@akamai.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         David Rientjes <rientjes@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michel Lespinasse <walken@google.com>,
+        Daniel Axtens <dja@axtens.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Akash Goel <akash.goel@intel.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 14/50] mm: include CMA pages in lowmem_reserve at boot
-Date:   Mon, 24 Aug 2020 10:31:15 +0200
-Message-Id: <20200824082352.694956352@linuxfoundation.org>
+Subject: [PATCH 4.14 13/50] kernel/relay.c: fix memleak on destroy relay channel
+Date:   Mon, 24 Aug 2020 10:31:14 +0200
+Message-Id: <20200824082352.641695215@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082351.823243923@linuxfoundation.org>
 References: <20200824082351.823243923@linuxfoundation.org>
@@ -64,85 +69,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-commit e08d3fdfe2dafa0331843f70ce1ff6c1c4900bf4 upstream.
+commit 71e843295c680898959b22dc877ae3839cc22470 upstream.
 
-The lowmem_reserve arrays provide a means of applying pressure against
-allocations from lower zones that were targeted at higher zones.  Its
-values are a function of the number of pages managed by higher zones and
-are assigned by a call to the setup_per_zone_lowmem_reserve() function.
+kmemleak report memory leak as follows:
 
-The function is initially called at boot time by the function
-init_per_zone_wmark_min() and may be called later by accesses of the
-/proc/sys/vm/lowmem_reserve_ratio sysctl file.
+  unreferenced object 0x607ee4e5f948 (size 8):
+  comm "syz-executor.1", pid 2098, jiffies 4295031601 (age 288.468s)
+  hex dump (first 8 bytes):
+  00 00 00 00 00 00 00 00 ........
+  backtrace:
+     relay_open kernel/relay.c:583 [inline]
+     relay_open+0xb6/0x970 kernel/relay.c:563
+     do_blk_trace_setup+0x4a8/0xb20 kernel/trace/blktrace.c:557
+     __blk_trace_setup+0xb6/0x150 kernel/trace/blktrace.c:597
+     blk_trace_ioctl+0x146/0x280 kernel/trace/blktrace.c:738
+     blkdev_ioctl+0xb2/0x6a0 block/ioctl.c:613
+     block_ioctl+0xe5/0x120 fs/block_dev.c:1871
+     vfs_ioctl fs/ioctl.c:48 [inline]
+     __do_sys_ioctl fs/ioctl.c:753 [inline]
+     __se_sys_ioctl fs/ioctl.c:739 [inline]
+     __x64_sys_ioctl+0x170/0x1ce fs/ioctl.c:739
+     do_syscall_64+0x33/0x40 arch/x86/entry/common.c:46
+     entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-The function init_per_zone_wmark_min() was moved up from a module_init to
-a core_initcall to resolve a sequencing issue with khugepaged.
-Unfortunately this created a sequencing issue with CMA page accounting.
+'chan->buf' is malloced in relay_open() by alloc_percpu() but not free
+while destroy the relay channel.  Fix it by adding free_percpu() before
+return from relay_destroy_channel().
 
-The CMA pages are added to the managed page count of a zone when
-cma_init_reserved_areas() is called at boot also as a core_initcall.  This
-makes it uncertain whether the CMA pages will be added to the managed page
-counts of their zones before or after the call to
-init_per_zone_wmark_min() as it becomes dependent on link order.  With the
-current link order the pages are added to the managed count after the
-lowmem_reserve arrays are initialized at boot.
-
-This means the lowmem_reserve values at boot may be lower than the values
-used later if /proc/sys/vm/lowmem_reserve_ratio is accessed even if the
-ratio values are unchanged.
-
-In many cases the difference is not significant, but for example
-an ARM platform with 1GB of memory and the following memory layout
-
-  cma: Reserved 256 MiB at 0x0000000030000000
-  Zone ranges:
-    DMA      [mem 0x0000000000000000-0x000000002fffffff]
-    Normal   empty
-    HighMem  [mem 0x0000000030000000-0x000000003fffffff]
-
-would result in 0 lowmem_reserve for the DMA zone.  This would allow
-userspace to deplete the DMA zone easily.
-
-Funnily enough
-
-  $ cat /proc/sys/vm/lowmem_reserve_ratio
-
-would fix up the situation because as a side effect it forces
-setup_per_zone_lowmem_reserve.
-
-This commit breaks the link order dependency by invoking
-init_per_zone_wmark_min() as a postcore_initcall so that the CMA pages
-have the chance to be properly accounted in their zone(s) and allowing
-the lowmem_reserve arrays to receive consistent values.
-
-Fixes: bc22af74f271 ("mm: update min_free_kbytes from khugepaged after core initialization")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
+Fixes: 017c59c042d0 ("relay: Use per CPU constructs for the relay channel buffer pointers")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Jason Baron <jbaron@akamai.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: David Rientjes <rientjes@google.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Michel Lespinasse <walken@google.com>
+Cc: Daniel Axtens <dja@axtens.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Akash Goel <akash.goel@intel.com>
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/1597423766-27849-1-git-send-email-opendmb@gmail.com
+Link: http://lkml.kernel.org/r/20200817122826.48518-1-weiyongjun1@huawei.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/relay.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -7018,7 +7018,7 @@ int __meminit init_per_zone_wmark_min(vo
- 
- 	return 0;
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -196,6 +196,7 @@ free_buf:
+ static void relay_destroy_channel(struct kref *kref)
+ {
+ 	struct rchan *chan = container_of(kref, struct rchan, kref);
++	free_percpu(chan->buf);
+ 	kfree(chan);
  }
--core_initcall(init_per_zone_wmark_min)
-+postcore_initcall(init_per_zone_wmark_min)
  
- /*
-  * min_free_kbytes_sysctl_handler - just a wrapper around proc_dointvec() so
 
 
