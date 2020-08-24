@@ -2,99 +2,147 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F72C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583B8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D47A2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A78204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 13:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0rZI2Hf"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="jC40hn4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgHXNkg (ORCPT
+        id S1727917AbgHXNkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 09:40:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgHXNk3 (ORCPT
+        Mon, 24 Aug 2020 09:40:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13596 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727859AbgHXNik (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 09:40:29 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 587A8C061573;
-        Mon, 24 Aug 2020 06:40:29 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id q1so4247867pjd.1;
-        Mon, 24 Aug 2020 06:40:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GegIgy0cL58i7RxC1XLMfU37QkwjYG7OWhDY0lJZn2w=;
-        b=a0rZI2HfhmAbO+VUjRe9nkEk7FRjOg4vQUzBRmuEwkUE2vF1UqM8tFYTqnjnLppUae
-         jkesHyKEcbgqvAwCUWORIvHZ4uEVTQNRQ42jIstNbI1qA1Gh3mL1k3LlmsqwBOqANWQU
-         Gu4kCfWerkJAFNrzc0HiDqIP3/OuPH9pi+4p6vZQdhi4DuYjYJ7j9W1k84t9vBYiJa6D
-         S9ZlSWnKcY2+JvlPeTSXapd7GhBDqr4vbFmB4Ysz235FvNHp8j9W1+IyIpNR6AgXuo3y
-         m2tqj97GpLugV8eBYONUI90s0D3XjGovvg7CEAS8WyWejlifSOx4U8E75tGl6YTL0kg/
-         kPSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GegIgy0cL58i7RxC1XLMfU37QkwjYG7OWhDY0lJZn2w=;
-        b=OyufOZUgVQfZ1Ep+t9G3yuPSsHo4NM8OmoydPglDW53CvY0kIIz1IWn21EvYPZ7e48
-         pQMuupigk74ab3ERVZRFweTjeTD6s0zfKu3V8Yhcq4gkqdBDHcg/o2bGIEV2uOa/5xga
-         0loc4kDsRLZeIyuv1pIdK1SDt5Adz+bz78/5Ay8zkRQqsNygK4WHXGM2kUg+KEQc7MkU
-         0zqljgLTFPbqVqY7C6glRsDh9iTzU00cpKieij2YQwkdLDsOG4lFZMIErhcm38L6bUtc
-         OXAU81ruHqA8aeGYpfeVlSsko7T6stWNQGPXcQRhuTc1/GbkjyTtGjj0G6aapYc3Oh4g
-         e55A==
-X-Gm-Message-State: AOAM532ZedNMjOt6Wi/VqViEWE9ARGPwZ3PAgBq2TrNGNrr0KYlmT8Sw
-        jstwj/rOEiIcHf1ZcE4b9ok=
-X-Google-Smtp-Source: ABdhPJypdU9vfBbHzYiJjmQeyV0UlkeqK7XgvlUODaVkKK0n/arzdhMqV3fIZ7SFe7XH9U+9RVeZ6Q==
-X-Received: by 2002:a17:902:d715:: with SMTP id w21mr4020030ply.14.1598276428969;
-        Mon, 24 Aug 2020 06:40:28 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t63sm9846396pgt.50.2020.08.24.06.40.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 06:40:28 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 06:40:27 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.8 000/148] 5.8.4-rc1 review
-Message-ID: <20200824134027.GA86241@roeck-us.net>
-References: <20200824082413.900489417@linuxfoundation.org>
+        Mon, 24 Aug 2020 09:38:40 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07ODWAun037927;
+        Mon, 24 Aug 2020 09:38:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : reply-to : references : mime-version : content-type
+ : in-reply-to; s=pp1; bh=J6snxcYbQgYaI1dLzLSaJ+5USc2AXUnB6IShN2cfXmU=;
+ b=jC40hn4mTYC5ra28Pn3LuGL/MNVFMZ3H3vO9T+UpSly+BYV7i/QrGwihLczp09CkrloW
+ 84DbDqNjdPUBHKoo666FdNfe4TdZu/AxXBbSsxNlPIrURWlFeOVMThj7jH1P7LMCDPZT
+ il6Bpep98ZARYgKOHj/4cZqUtw3DVNjhaD/SEirzd5FUIud6QGA3t7+nXm+yCyWa2uj1
+ E1KTnE767U9PkUz+16bQouc0lARrQLAebfJz2ghhGQ00Rw1CU8VwvnxHNbS9nXo3Hbfb
+ /N5QSPff02znXT7wsGGpIoeG0uTISjyLnaT5OJhgv12x/42Km00ahtmS+6pLYooWfqdc tw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 334eamgmcw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 09:38:27 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07ODWGbi038571;
+        Mon, 24 Aug 2020 09:38:27 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 334eamgmbt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 09:38:27 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07ODbKH6008980;
+        Mon, 24 Aug 2020 13:38:25 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04fra.de.ibm.com with ESMTP id 332ujjsfj9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Aug 2020 13:38:25 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07ODcMhu25756104
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Aug 2020 13:38:22 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B46194C04A;
+        Mon, 24 Aug 2020 13:38:22 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4376A4C040;
+        Mon, 24 Aug 2020 13:38:21 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Mon, 24 Aug 2020 13:38:21 +0000 (GMT)
+Date:   Mon, 24 Aug 2020 19:08:20 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Xunlei Pang <xlpang@linux.alibaba.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Wetp Zhang <wetp.zy@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/fair: Fix wrong cpu selecting from isolated domain
+Message-ID: <20200824133820.GA31355@linux.vnet.ibm.com>
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <1598272219-43040-1-git-send-email-xlpang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200824082413.900489417@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1598272219-43040-1-git-send-email-xlpang@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ mlxlogscore=999 clxscore=1015 mlxscore=0 phishscore=0 spamscore=0
+ suspectscore=0 bulkscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008240104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:28:18AM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.8.4 release.
-> There are 148 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+* Xunlei Pang <xlpang@linux.alibaba.com> [2020-08-24 20:30:19]:
+
+> We've met problems that occasionally tasks with full cpumask
+> (e.g. by putting it into a cpuset or setting to full affinity)
+> were migrated to our isolated cpus in production environment.
 > 
-> Responses should be made by Wed, 26 Aug 2020 08:23:34 +0000.
-> Anything received after that time might be too late.
+> After some analysis, we found that it is due to the current
+> select_idle_smt() not considering the sched_domain mask.
 > 
+> Fix it by checking the valid domain mask in select_idle_smt().
+> 
+> Fixes: 10e2f1acd010 ("sched/core: Rewrite and improve select_idle_siblings())
+> Reported-by: Wetp Zhang <wetp.zy@linux.alibaba.com>
+> Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
+> ---
+>  kernel/sched/fair.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1a68a05..fa942c4 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -6075,7 +6075,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
+>  /*
+>   * Scan the local SMT mask for idle CPUs.
+>   */
+> -static int select_idle_smt(struct task_struct *p, int target)
+> +static int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
+>  {
+>  	int cpu;
+>  
+> @@ -6083,7 +6083,8 @@ static int select_idle_smt(struct task_struct *p, int target)
+>  		return -1;
+>  
+>  	for_each_cpu(cpu, cpu_smt_mask(target)) {
+> -		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+> +		if (!cpumask_test_cpu(cpu, p->cpus_ptr) ||
+> +		    !cpumask_test_cpu(cpu, sched_domain_span(sd)))
+>  			continue;
 
-Building powerpc:defconfig ... failed
---------------
-Error log:
-powerpc64-linux-ld: arch/powerpc/kernel/cputable.o:(.init.data+0xd78): undefined reference to `__machine_check_early_realmode_p10'
-make[1]: *** [vmlinux] Error 1
-make: *** [__sub-make] Error 2
+Don't think this is right thing to do.  What if this task had set a cpumask
+that doesn't cover all the cpus in this sched_domain_span(sd)
 
-The problem affects several builds.
+cpu_smt_mask(target) would already limit to the sched_domain_span(sd) so I
+am not sure how this can help?
 
-Guenter
+
+-- 
+Thanks and Regards
+Srikar Dronamraju
