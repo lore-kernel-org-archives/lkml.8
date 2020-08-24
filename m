@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DFCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8BBC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 069DA20738
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E182075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 09:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598261753;
-	bh=aGgwDWYjSKmMo2LVbQqokUyLTC8TnJAaE8WyCCsgPB0=;
+	s=default; t=1598261762;
+	bh=KZ2BHr07enCjNMSNg4VFxmSoSjAQSayzoOOA9Gb1oIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wf/CbQ8sLzdE5oBvr8VOeNnEjx+sSApTlLa7p0CCFSM0BKfjUdnOWDuIilIwZspvG
-	 7J8UJBralg4VLkIWFu86xlP1OlEMmDIWTn7AlWPmN2KpiKIrPDzcXazdowppVEmQC6
-	 Eg6kNmTuUAuYMxCjfJqFkrtVM15Zzpegj9vh8fwo=
+	b=a0mhDXniDfVGyITuRNNjzWk7Pyt2MFpdajlXm/C8Z0wiPLg7WjMhyC2vHHMAhB78k
+	 SsbFkFSDjVlR26xYNlEoguNUYS2ewTqhoJhpoMUlnJMamINVRNBklLOXKVwgwgMUns
+	 8tcHb8ovKjMMjlJDjcLcT3slg2k5JvChui++OqZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgHXJfw (ORCPT
+        id S1729762AbgHXJgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 05:35:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50700 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 05:36:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbgHXIs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 04:48:56 -0400
+        id S1729619AbgHXIsv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 04:48:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488D52072D;
-        Mon, 24 Aug 2020 08:48:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ADD7204FD;
+        Mon, 24 Aug 2020 08:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598258935;
-        bh=aGgwDWYjSKmMo2LVbQqokUyLTC8TnJAaE8WyCCsgPB0=;
+        s=default; t=1598258931;
+        bh=KZ2BHr07enCjNMSNg4VFxmSoSjAQSayzoOOA9Gb1oIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v818+Ds3L+KfcCT0hyq5rej6ZzUiQQYGetRcr1V/FwAztfIiiVxTgwPSoozu+VVNQ
-         dF1O6OS6JhN1FL0x7OwKS6jsDNjNEC3iYS9rAkap/vVbWF/hxWIplU5yyQzgwrZeq0
-         Z0XxdUkXjiEInhBxXk+nx9QYrKWlw96pXCPqVjtU=
+        b=ejdRWHlz0G8PnS45eM1lHdL79wiA07mU1McIHuUlSYFxLLZMeW/C9yR9eaznRrOtm
+         G8EaFZsOySwp5X6AwzgqYnNmZj1C+WIMcrc16pvTti5dPecTNBe7/lOHkOeEGMm620
+         Q8RMAcspwZ4cZ6lCjm+PrkW353R1ePr58Nj1FCvI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shay Agroskin <shayagr@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 098/107] net: ena: Prevent reset after device destruction
-Date:   Mon, 24 Aug 2020 10:31:04 +0200
-Message-Id: <20200824082409.939091265@linuxfoundation.org>
+Subject: [PATCH 5.4 096/107] ARM64: vdso32: Install vdso32 from vdso_install
+Date:   Mon, 24 Aug 2020 10:31:02 +0200
+Message-Id: <20200824082409.850105593@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200824082405.020301642@linuxfoundation.org>
 References: <20200824082405.020301642@linuxfoundation.org>
@@ -60,93 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shay Agroskin <shayagr@amazon.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-[ Upstream commit 63d4a4c145cca2e84dc6e62d2ef5cb990c9723c2 ]
+[ Upstream commit 8d75785a814241587802655cc33e384230744f0c ]
 
-The reset work is scheduled by the timer routine whenever it
-detects that a device reset is required (e.g. when a keep_alive signal
-is missing).
-When releasing device resources in ena_destroy_device() the driver
-cancels the scheduling of the timer routine without destroying the reset
-work explicitly.
+Add the 32-bit vdso Makefile to the vdso_install rule so that 'make
+vdso_install' installs the 32-bit compat vdso when it is compiled.
 
-This creates the following bug:
-    The driver is suspended and the ena_suspend() function is called
-	-> This function calls ena_destroy_device() to free the net device
-	   resources
-	    -> The driver waits for the timer routine to finish
-	    its execution and then cancels it, thus preventing from it
-	    to be called again.
-
-    If, in its final execution, the timer routine schedules a reset,
-    the reset routine might be called afterwards,and a redundant call to
-    ena_restore_device() would be made.
-
-By changing the reset routine we allow it to read the device's state
-accurately.
-This is achieved by checking whether ENA_FLAG_TRIGGER_RESET flag is set
-before resetting the device and making both the destruction function and
-the flag check are under rtnl lock.
-The ENA_FLAG_TRIGGER_RESET is cleared at the end of the destruction
-routine. Also surround the flag check with 'likely' because
-we expect that the reset routine would be called only when
-ENA_FLAG_TRIGGER_RESET flag is set.
-
-The destruction of the timer and reset services in __ena_shutoff() have to
-stay, even though the timer routine is destroyed in ena_destroy_device().
-This is to avoid a case in which the reset routine is scheduled after
-free_netdev() in __ena_shutoff(), which would create an access to freed
-memory in adapter->flags.
-
-Fixes: 8c5c7abdeb2d ("net: ena: add power management ops to the ENA driver")
-Signed-off-by: Shay Agroskin <shayagr@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a7f71a2c8903 ("arm64: compat: Add vDSO")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Link: https://lore.kernel.org/r/20200818014950.42492-1-swboyd@chromium.org
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ arch/arm64/Makefile               | 1 +
+ arch/arm64/kernel/vdso32/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.c b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-index 26325f7b3c1fa..4d0d13d5d0998 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -2835,16 +2835,14 @@ static void ena_fw_reset_device(struct work_struct *work)
- {
- 	struct ena_adapter *adapter =
- 		container_of(work, struct ena_adapter, reset_task);
--	struct pci_dev *pdev = adapter->pdev;
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index d65aef47ece3b..11a7d6208087f 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -146,6 +146,7 @@ zinstall install:
+ PHONY += vdso_install
+ vdso_install:
+ 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso $@
++	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso32 $@
  
--	if (unlikely(!test_bit(ENA_FLAG_TRIGGER_RESET, &adapter->flags))) {
--		dev_err(&pdev->dev,
--			"device reset schedule while reset bit is off\n");
--		return;
--	}
- 	rtnl_lock();
--	ena_destroy_device(adapter, false);
--	ena_restore_device(adapter);
-+
-+	if (likely(test_bit(ENA_FLAG_TRIGGER_RESET, &adapter->flags))) {
-+		ena_destroy_device(adapter, false);
-+		ena_restore_device(adapter);
-+	}
-+
- 	rtnl_unlock();
- }
+ # We use MRPROPER_FILES and CLEAN_FILES now
+ archclean:
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index 76b327f88fbb1..40dffe60b8454 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -190,7 +190,7 @@ quiet_cmd_vdsosym = VDSOSYM $@
+       cmd_vdsosym = $(NM) $< | $(gen-vdsosym) | LC_ALL=C sort > $@
  
-@@ -3675,8 +3673,11 @@ static void __ena_shutoff(struct pci_dev *pdev, bool shutdown)
- 		netdev->rx_cpu_rmap = NULL;
- 	}
- #endif /* CONFIG_RFS_ACCEL */
--	del_timer_sync(&adapter->timer_service);
+ # Install commands for the unstripped file
+-quiet_cmd_vdso_install = INSTALL $@
++quiet_cmd_vdso_install = INSTALL32 $@
+       cmd_vdso_install = cp $(obj)/$@.dbg $(MODLIB)/vdso/vdso32.so
  
-+	/* Make sure timer and reset routine won't be called after
-+	 * freeing device resources.
-+	 */
-+	del_timer_sync(&adapter->timer_service);
- 	cancel_work_sync(&adapter->reset_task);
- 
- 	rtnl_lock(); /* lock released inside the below if-else block */
+ vdso.so: $(obj)/vdso.so.dbg
 -- 
 2.25.1
 
