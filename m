@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA0AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E72C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3C92063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 768F92063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598289159;
-	bh=XgAPwW5p08EVNxpEPZXKmgq4NXimCCuJjGzdGrbacpk=;
+	s=default; t=1598289201;
+	bh=Qb8aFC6TvWQKenk2+lVWb3TA3O+op2FVQc9sneFbMwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y5x/kXYJMtqbBbtEX00GBv2QnBHp0/aXjgklaMDbeWGASDxrxp7G6gFcS6S1YZG0h
-	 CtVo97ED7AXq1zC2bz+HUp23BllP/W6W4cOAYDmVDmSVT8zIT57TJHdBR3wUvUSk+N
-	 Gd31pXP3HZGh2S+f9HvOQr0wUAPo4RTIzr3uSSkg=
+	b=g680c1g9EBte+2Pw4DLegRZrkcii75Hx2drXs2NlyoFPOW8FybIwgeSbuS/OZxUGW
+	 LZmU4iGKrPWi7Z+B+M4JCssX4LNPOT3J0yiyHXNzrveoTVeqU+z/hxNCZzCryBPTVf
+	 bzVzpVaekThh+ojO9Qt4JaTKo7udRV7ICz+4xu/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbgHXRMi (ORCPT
+        id S1727905AbgHXRNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 13:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40652 "EHLO mail.kernel.org"
+        Mon, 24 Aug 2020 13:13:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728355AbgHXQhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:37:47 -0400
+        id S1728378AbgHXQhn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:37:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E08D22BED;
-        Mon, 24 Aug 2020 16:37:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C29F22EBF;
+        Mon, 24 Aug 2020 16:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598287023;
-        bh=XgAPwW5p08EVNxpEPZXKmgq4NXimCCuJjGzdGrbacpk=;
+        s=default; t=1598287019;
+        bh=Qb8aFC6TvWQKenk2+lVWb3TA3O+op2FVQc9sneFbMwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O5e+NDAdH+5jc/hGF+2ekXFwoohqBSMzmdG3298tYf30rC2kwtl36xFLOLOF72eGb
-         fshzslzScw30mCtC0SvxQ1x8tiHBCbXpdgSMecV+cczgtgLO3FvXuINmiHVGsZssiq
-         sRUMR72ypxWbHg0mIzfChLU7DggLONYMe2roEbVs=
+        b=gn61ZB2Feda4wJ0VboChj9+18dDyN3LT2UYHNilO9pm4FZJnCTVTe5kxntE+ExRIZ
+         +v2Dzsg/nstD0+F0PLHv+gcpbNOUXkA9qWyoK8tMS+c0NtIzKHdntrewpKAnb5WY0f
+         a2QIQ1o+5wTPcIq56S4vSvfM1M0dCxEwHpK0kwwU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Jakov Petrina <jakov.petrina@sartura.hr>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.7 21/54] libbpf: Handle GCC built-in types for Arm NEON
-Date:   Mon, 24 Aug 2020 12:36:00 -0400
-Message-Id: <20200824163634.606093-21-sashal@kernel.org>
+Cc:     Anthony Koo <Anthony.Koo@amd.com>, Aric Cyr <Aric.Cyr@amd.com>,
+        Qingqing Zhuo <qingqing.zhuo@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.7 18/54] drm/amd/display: Fix LFC multiplier changing erratically
+Date:   Mon, 24 Aug 2020 12:35:57 -0400
+Message-Id: <20200824163634.606093-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200824163634.606093-1-sashal@kernel.org>
 References: <20200824163634.606093-1-sashal@kernel.org>
@@ -62,113 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+From: Anthony Koo <Anthony.Koo@amd.com>
 
-[ Upstream commit 702eddc77a905782083b14ccd05b23840675fd18 ]
+[ Upstream commit e4ed4dbbc8383d42a197da8fe7ca6434b0f14def ]
 
-When building Arm NEON (SIMD) code from lib/raid6/neon.uc, GCC emits
-DWARF information using a base type "__Poly8_t", which is internal to
-GCC and not recognized by Clang. This causes build failures when
-building with Clang a vmlinux.h generated from an arm64 kernel that was
-built with GCC.
+[Why]
+1. There is a calculation that is using frame_time_in_us instead of
+last_render_time_in_us to calculate whether choosing an LFC multiplier
+would cause the inserted frame duration to be outside of range.
 
-	vmlinux.h:47284:9: error: unknown type name '__Poly8_t'
-	typedef __Poly8_t poly8x16_t[16];
-	        ^~~~~~~~~
+2. We do not handle unsigned integer subtraction correctly and it underflows
+to a really large value, which causes some logic errors.
 
-The polyX_t types are defined as unsigned integers in the "Arm C
-Language Extension" document (101028_Q220_00_en). Emit typedefs based on
-standard integer types for the GCC internal types, similar to those
-emitted by Clang.
+[How]
+1. Fix logic to calculate 'within range' using last_render_time_in_us
+2. Split out delta_from_mid_point_delta_in_us calculation to ensure
+we don't underflow and wrap around
 
-Including linux/kernel.h to use ARRAY_SIZE() incidentally redefined
-max(), causing a build bug due to different types, hence the seemingly
-unrelated change.
-
-Reported-by: Jakov Petrina <jakov.petrina@sartura.hr>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200812143909.3293280-1-jean-philippe@linaro.org
+Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/btf_dump.c | 35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+ .../amd/display/modules/freesync/freesync.c   | 36 +++++++++++++++----
+ 1 file changed, 29 insertions(+), 7 deletions(-)
 
-diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
-index 653dbbe2e3663..55a729682cf94 100644
---- a/tools/lib/bpf/btf_dump.c
-+++ b/tools/lib/bpf/btf_dump.c
-@@ -13,6 +13,7 @@
- #include <errno.h>
- #include <linux/err.h>
- #include <linux/btf.h>
-+#include <linux/kernel.h>
- #include "btf.h"
- #include "hashmap.h"
- #include "libbpf.h"
-@@ -548,6 +549,9 @@ static int btf_dump_order_type(struct btf_dump *d, __u32 id, bool through_ptr)
- 	}
- }
+diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+index c33454a9e0b4d..85dcb3b078df7 100644
+--- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
++++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
+@@ -324,22 +324,44 @@ static void apply_below_the_range(struct core_freesync *core_freesync,
  
-+static void btf_dump_emit_missing_aliases(struct btf_dump *d, __u32 id,
-+					  const struct btf_type *t);
-+
- static void btf_dump_emit_struct_fwd(struct btf_dump *d, __u32 id,
- 				     const struct btf_type *t);
- static void btf_dump_emit_struct_def(struct btf_dump *d, __u32 id,
-@@ -670,6 +674,9 @@ static void btf_dump_emit_type(struct btf_dump *d, __u32 id, __u32 cont_id)
- 
- 	switch (kind) {
- 	case BTF_KIND_INT:
-+		/* Emit type alias definitions if necessary */
-+		btf_dump_emit_missing_aliases(d, id, t);
-+
- 		tstate->emit_state = EMITTED;
- 		break;
- 	case BTF_KIND_ENUM:
-@@ -869,7 +876,7 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
- 			btf_dump_printf(d, ": %d", m_sz);
- 			off = m_off + m_sz;
+ 		/* Choose number of frames to insert based on how close it
+ 		 * can get to the mid point of the variable range.
++		 *  - Delta for CEIL: delta_from_mid_point_in_us_1
++		 *  - Delta for FLOOR: delta_from_mid_point_in_us_2
+ 		 */
+-		if ((frame_time_in_us / mid_point_frames_ceil) > in_out_vrr->min_duration_in_us &&
+-				(delta_from_mid_point_in_us_1 < delta_from_mid_point_in_us_2 ||
+-						mid_point_frames_floor < 2)) {
++		if ((last_render_time_in_us / mid_point_frames_ceil) < in_out_vrr->min_duration_in_us) {
++			/* Check for out of range.
++			 * If using CEIL produces a value that is out of range,
++			 * then we are forced to use FLOOR.
++			 */
++			frames_to_insert = mid_point_frames_floor;
++		} else if (mid_point_frames_floor < 2) {
++			/* Check if FLOOR would result in non-LFC. In this case
++			 * choose to use CEIL
++			 */
++			frames_to_insert = mid_point_frames_ceil;
++		} else if (delta_from_mid_point_in_us_1 < delta_from_mid_point_in_us_2) {
++			/* If choosing CEIL results in a frame duration that is
++			 * closer to the mid point of the range.
++			 * Choose CEIL
++			 */
+ 			frames_to_insert = mid_point_frames_ceil;
+-			delta_from_mid_point_delta_in_us = delta_from_mid_point_in_us_2 -
+-					delta_from_mid_point_in_us_1;
  		} else {
--			m_sz = max(0, btf__resolve_size(d->btf, m->type));
-+			m_sz = max(0LL, btf__resolve_size(d->btf, m->type));
- 			off = m_off + m_sz * 8;
++			/* If choosing FLOOR results in a frame duration that is
++			 * closer to the mid point of the range.
++			 * Choose FLOOR
++			 */
+ 			frames_to_insert = mid_point_frames_floor;
+-			delta_from_mid_point_delta_in_us = delta_from_mid_point_in_us_1 -
+-					delta_from_mid_point_in_us_2;
  		}
- 		btf_dump_printf(d, ";");
-@@ -889,6 +896,32 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
- 		btf_dump_printf(d, " __attribute__((packed))");
- }
  
-+static const char *missing_base_types[][2] = {
-+	/*
-+	 * GCC emits typedefs to its internal __PolyX_t types when compiling Arm
-+	 * SIMD intrinsics. Alias them to standard base types.
-+	 */
-+	{ "__Poly8_t",		"unsigned char" },
-+	{ "__Poly16_t",		"unsigned short" },
-+	{ "__Poly64_t",		"unsigned long long" },
-+	{ "__Poly128_t",	"unsigned __int128" },
-+};
-+
-+static void btf_dump_emit_missing_aliases(struct btf_dump *d, __u32 id,
-+					  const struct btf_type *t)
-+{
-+	const char *name = btf_dump_type_name(d, id);
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(missing_base_types); i++) {
-+		if (strcmp(name, missing_base_types[i][0]) == 0) {
-+			btf_dump_printf(d, "typedef %s %s;\n\n",
-+					missing_base_types[i][1], name);
-+			break;
+ 		/* Prefer current frame multiplier when BTR is enabled unless it drifts
+ 		 * too far from the midpoint
+ 		 */
++		if (delta_from_mid_point_in_us_1 < delta_from_mid_point_in_us_2) {
++			delta_from_mid_point_delta_in_us = delta_from_mid_point_in_us_2 -
++					delta_from_mid_point_in_us_1;
++		} else {
++			delta_from_mid_point_delta_in_us = delta_from_mid_point_in_us_1 -
++					delta_from_mid_point_in_us_2;
 +		}
-+	}
-+}
-+
- static void btf_dump_emit_enum_fwd(struct btf_dump *d, __u32 id,
- 				   const struct btf_type *t)
- {
+ 		if (in_out_vrr->btr.frames_to_insert != 0 &&
+ 				delta_from_mid_point_delta_in_us < BTR_DRIFT_MARGIN) {
+ 			if (((last_render_time_in_us / in_out_vrr->btr.frames_to_insert) <
 -- 
 2.25.1
 
