@@ -2,250 +2,186 @@ Return-Path: <SRS0=wYIT=CC=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB492067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3A12067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 24 Aug 2020 17:30:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598290244;
+	bh=k9EA6Yz5BlgytRW2iMDZ8yHVhMkyTP3Gu35nJjpBIVE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=m28z0vmeGtiYUyt/Fmbno5nhfGwtRApxgJNjU7bgFtV0DSD5wvQ2MrDM928D35l7/
+	 9h8bzobtoSZtp22HC22yOTu9HFZHKfOcAYhTMvGn80mZ8uTJrSlg5p38ehVW2MCiMv
+	 7KgsPGJFSqhcO/yf7aLwY0OG8htiO6R5O7t2m5Og=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgHXQfX (ORCPT
+        id S1728208AbgHXRaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 12:35:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50708 "EHLO mx2.suse.de"
+        Mon, 24 Aug 2020 13:30:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728120AbgHXQdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 12:33:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 49EBAAF7A;
-        Mon, 24 Aug 2020 16:33:59 +0000 (UTC)
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 10/12] MIPS: Get rid of BCM1250_M3_WAR
-Date:   Mon, 24 Aug 2020 18:32:52 +0200
-Message-Id: <20200824163257.44533-11-tsbogend@alpha.franken.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200824163257.44533-1-tsbogend@alpha.franken.de>
-References: <20200824163257.44533-1-tsbogend@alpha.franken.de>
+        id S1728152AbgHXQfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 12:35:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D9E922B49;
+        Mon, 24 Aug 2020 16:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598286920;
+        bh=k9EA6Yz5BlgytRW2iMDZ8yHVhMkyTP3Gu35nJjpBIVE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qcAbktjSglz3BueAt3UEOLno8+6B2bP3jNG+75S0NVdqEFfXm96DVwJXTwEQpWNSI
+         bGL83legWAc7lSUDAYrTMccTnFXXH2he8dvEK8+iEUisMUS5/jErto6vmEwCeZk8XQ
+         iNsRM9b2e9BwC3I7xabD5GiWntFw8lSBDPVjiYGw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xianting Tian <xianting_tian@126.com>,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 12/63] fs: prevent BUG_ON in submit_bh_wbc()
+Date:   Mon, 24 Aug 2020 12:34:12 -0400
+Message-Id: <20200824163504.605538-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200824163504.605538-1-sashal@kernel.org>
+References: <20200824163504.605538-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BCM1250_M3_WAR is depending on CONFIG_CONFIG_SB1_PASS_2_WORKAROUNDS.
-So using this option directly lets and remove define.
+From: Xianting Tian <xianting_tian@126.com>
 
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+[ Upstream commit 377254b2cd2252c7c3151b113cbdf93a7736c2e9 ]
+
+If a device is hot-removed --- for example, when a physical device is
+unplugged from pcie slot or a nbd device's network is shutdown ---
+this can result in a BUG_ON() crash in submit_bh_wbc().  This is
+because the when the block device dies, the buffer heads will have
+their Buffer_Mapped flag get cleared, leading to the crash in
+submit_bh_wbc.
+
+We had attempted to work around this problem in commit a17712c8
+("ext4: check superblock mapped prior to committing").  Unfortunately,
+it's still possible to hit the BUG_ON(!buffer_mapped(bh)) if the
+device dies between when the work-around check in ext4_commit_super()
+and when submit_bh_wbh() is finally called:
+
+Code path:
+ext4_commit_super
+    judge if 'buffer_mapped(sbh)' is false, return <== commit a17712c8
+          lock_buffer(sbh)
+          ...
+          unlock_buffer(sbh)
+               __sync_dirty_buffer(sbh,...
+                    lock_buffer(sbh)
+                        judge if 'buffer_mapped(sbh))' is false, return <== added by this patch
+                            submit_bh(...,sbh)
+                                submit_bh_wbc(...,sbh,...)
+
+[100722.966497] kernel BUG at fs/buffer.c:3095! <== BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc()
+[100722.966503] invalid opcode: 0000 [#1] SMP
+[100722.966566] task: ffff8817e15a9e40 task.stack: ffffc90024744000
+[100722.966574] RIP: 0010:submit_bh_wbc+0x180/0x190
+[100722.966575] RSP: 0018:ffffc90024747a90 EFLAGS: 00010246
+[100722.966576] RAX: 0000000000620005 RBX: ffff8818a80603a8 RCX: 0000000000000000
+[100722.966576] RDX: ffff8818a80603a8 RSI: 0000000000020800 RDI: 0000000000000001
+[100722.966577] RBP: ffffc90024747ac0 R08: 0000000000000000 R09: ffff88207f94170d
+[100722.966578] R10: 00000000000437c8 R11: 0000000000000001 R12: 0000000000020800
+[100722.966578] R13: 0000000000000001 R14: 000000000bf9a438 R15: ffff88195f333000
+[100722.966580] FS:  00007fa2eee27700(0000) GS:ffff88203d840000(0000) knlGS:0000000000000000
+[100722.966580] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[100722.966581] CR2: 0000000000f0b008 CR3: 000000201a622003 CR4: 00000000007606e0
+[100722.966582] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[100722.966583] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[100722.966583] PKRU: 55555554
+[100722.966583] Call Trace:
+[100722.966588]  __sync_dirty_buffer+0x6e/0xd0
+[100722.966614]  ext4_commit_super+0x1d8/0x290 [ext4]
+[100722.966626]  __ext4_std_error+0x78/0x100 [ext4]
+[100722.966635]  ? __ext4_journal_get_write_access+0xca/0x120 [ext4]
+[100722.966646]  ext4_reserve_inode_write+0x58/0xb0 [ext4]
+[100722.966655]  ? ext4_dirty_inode+0x48/0x70 [ext4]
+[100722.966663]  ext4_mark_inode_dirty+0x53/0x1e0 [ext4]
+[100722.966671]  ? __ext4_journal_start_sb+0x6d/0xf0 [ext4]
+[100722.966679]  ext4_dirty_inode+0x48/0x70 [ext4]
+[100722.966682]  __mark_inode_dirty+0x17f/0x350
+[100722.966686]  generic_update_time+0x87/0xd0
+[100722.966687]  touch_atime+0xa9/0xd0
+[100722.966690]  generic_file_read_iter+0xa09/0xcd0
+[100722.966694]  ? page_cache_tree_insert+0xb0/0xb0
+[100722.966704]  ext4_file_read_iter+0x4a/0x100 [ext4]
+[100722.966707]  ? __inode_security_revalidate+0x4f/0x60
+[100722.966709]  __vfs_read+0xec/0x160
+[100722.966711]  vfs_read+0x8c/0x130
+[100722.966712]  SyS_pread64+0x87/0xb0
+[100722.966716]  do_syscall_64+0x67/0x1b0
+[100722.966719]  entry_SYSCALL64_slow_path+0x25/0x25
+
+To address this, add the check of 'buffer_mapped(bh)' to
+__sync_dirty_buffer().  This also has the benefit of fixing this for
+other file systems.
+
+With this addition, we can drop the workaround in ext4_commit_supper().
+
+[ Commit description rewritten by tytso. ]
+
+Signed-off-by: Xianting Tian <xianting_tian@126.com>
+Link: https://lore.kernel.org/r/1596211825-8750-1-git-send-email-xianting_tian@126.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/include/asm/mach-cavium-octeon/war.h |  2 --
- arch/mips/include/asm/mach-generic/war.h       |  2 --
- arch/mips/include/asm/mach-ip22/war.h          |  2 --
- arch/mips/include/asm/mach-ip27/war.h          |  2 --
- arch/mips/include/asm/mach-ip28/war.h          |  2 --
- arch/mips/include/asm/mach-ip30/war.h          |  2 --
- arch/mips/include/asm/mach-ip32/war.h          |  2 --
- arch/mips/include/asm/mach-malta/war.h         |  2 --
- arch/mips/include/asm/mach-rc32434/war.h       |  2 --
- arch/mips/include/asm/mach-rm/war.h            |  2 --
- arch/mips/include/asm/mach-sibyte/war.h        | 14 --------------
- arch/mips/include/asm/mach-tx49xx/war.h        |  2 --
- arch/mips/include/asm/war.h                    | 14 --------------
- arch/mips/mm/tlbex.c                           |  6 +++++-
- 14 files changed, 5 insertions(+), 51 deletions(-)
+ fs/buffer.c     | 9 +++++++++
+ fs/ext4/super.c | 7 -------
+ 2 files changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/arch/mips/include/asm/mach-cavium-octeon/war.h b/arch/mips/include/asm/mach-cavium-octeon/war.h
-index 0a2bf6b7af94..616de70e697c 100644
---- a/arch/mips/include/asm/mach-cavium-octeon/war.h
-+++ b/arch/mips/include/asm/mach-cavium-octeon/war.h
-@@ -9,8 +9,6 @@
- #ifndef __ASM_MIPS_MACH_CAVIUM_OCTEON_WAR_H
- #define __ASM_MIPS_MACH_CAVIUM_OCTEON_WAR_H
- 
--#define BCM1250_M3_WAR			0
--
- #define CAVIUM_OCTEON_DCACHE_PREFETCH_WAR	\
- 	OCTEON_IS_MODEL(OCTEON_CN6XXX)
- 
-diff --git a/arch/mips/include/asm/mach-generic/war.h b/arch/mips/include/asm/mach-generic/war.h
-index 6b7de91435e3..94796ad7e7de 100644
---- a/arch/mips/include/asm/mach-generic/war.h
-+++ b/arch/mips/include/asm/mach-generic/war.h
-@@ -8,6 +8,4 @@
- #ifndef __ASM_MACH_GENERIC_WAR_H
- #define __ASM_MACH_GENERIC_WAR_H
- 
--#define BCM1250_M3_WAR			0
--
- #endif /* __ASM_MACH_GENERIC_WAR_H */
-diff --git a/arch/mips/include/asm/mach-ip22/war.h b/arch/mips/include/asm/mach-ip22/war.h
-index 70de6a5008d3..12cf05dd46d3 100644
---- a/arch/mips/include/asm/mach-ip22/war.h
-+++ b/arch/mips/include/asm/mach-ip22/war.h
-@@ -8,6 +8,4 @@
- #ifndef __ASM_MIPS_MACH_IP22_WAR_H
- #define __ASM_MIPS_MACH_IP22_WAR_H
- 
--#define BCM1250_M3_WAR			0
--
- #endif /* __ASM_MIPS_MACH_IP22_WAR_H */
-diff --git a/arch/mips/include/asm/mach-ip27/war.h b/arch/mips/include/asm/mach-ip27/war.h
-index 5b01e8fe245f..0852fe64594d 100644
---- a/arch/mips/include/asm/mach-ip27/war.h
-+++ b/arch/mips/include/asm/mach-ip27/war.h
-@@ -8,6 +8,4 @@
- #ifndef __ASM_MIPS_MACH_IP27_WAR_H
- #define __ASM_MIPS_MACH_IP27_WAR_H
- 
--#define BCM1250_M3_WAR			0
--
- #endif /* __ASM_MIPS_MACH_IP27_WAR_H */
-diff --git a/arch/mips/include/asm/mach-ip28/war.h b/arch/mips/include/asm/mach-ip28/war.h
-index ba4267e2d34d..32796925700a 100644
---- a/arch/mips/include/asm/mach-ip28/war.h
-+++ b/arch/mips/include/asm/mach-ip28/war.h
-@@ -8,6 +8,4 @@
- #ifndef __ASM_MIPS_MACH_IP28_WAR_H
- #define __ASM_MIPS_MACH_IP28_WAR_H
- 
--#define BCM1250_M3_WAR			0
--
- #endif /* __ASM_MIPS_MACH_IP28_WAR_H */
-diff --git a/arch/mips/include/asm/mach-ip30/war.h b/arch/mips/include/asm/mach-ip30/war.h
-index f404e22b7798..ea77545f5128 100644
---- a/arch/mips/include/asm/mach-ip30/war.h
-+++ b/arch/mips/include/asm/mach-ip30/war.h
-@@ -5,6 +5,4 @@
- #ifndef __ASM_MIPS_MACH_IP30_WAR_H
- #define __ASM_MIPS_MACH_IP30_WAR_H
- 
--#define BCM1250_M3_WAR			0
--
- #endif /* __ASM_MIPS_MACH_IP30_WAR_H */
-diff --git a/arch/mips/include/asm/mach-ip32/war.h b/arch/mips/include/asm/mach-ip32/war.h
-index 01475db746ec..3e81408795b4 100644
---- a/arch/mips/include/asm/mach-ip32/war.h
-+++ b/arch/mips/include/asm/mach-ip32/war.h
-@@ -8,6 +8,4 @@
- #ifndef __ASM_MIPS_MACH_IP32_WAR_H
- #define __ASM_MIPS_MACH_IP32_WAR_H
- 
--#define BCM1250_M3_WAR			0
--
- #endif /* __ASM_MIPS_MACH_IP32_WAR_H */
-diff --git a/arch/mips/include/asm/mach-malta/war.h b/arch/mips/include/asm/mach-malta/war.h
-index 68b204ff59a6..0f5401c0e888 100644
---- a/arch/mips/include/asm/mach-malta/war.h
-+++ b/arch/mips/include/asm/mach-malta/war.h
-@@ -8,6 +8,4 @@
- #ifndef __ASM_MIPS_MACH_MIPS_WAR_H
- #define __ASM_MIPS_MACH_MIPS_WAR_H
- 
--#define BCM1250_M3_WAR			0
--
- #endif /* __ASM_MIPS_MACH_MIPS_WAR_H */
-diff --git a/arch/mips/include/asm/mach-rc32434/war.h b/arch/mips/include/asm/mach-rc32434/war.h
-index 68b204ff59a6..0f5401c0e888 100644
---- a/arch/mips/include/asm/mach-rc32434/war.h
-+++ b/arch/mips/include/asm/mach-rc32434/war.h
-@@ -8,6 +8,4 @@
- #ifndef __ASM_MIPS_MACH_MIPS_WAR_H
- #define __ASM_MIPS_MACH_MIPS_WAR_H
- 
--#define BCM1250_M3_WAR			0
--
- #endif /* __ASM_MIPS_MACH_MIPS_WAR_H */
-diff --git a/arch/mips/include/asm/mach-rm/war.h b/arch/mips/include/asm/mach-rm/war.h
-index 093a3894ae41..723c9de79ea1 100644
---- a/arch/mips/include/asm/mach-rm/war.h
-+++ b/arch/mips/include/asm/mach-rm/war.h
-@@ -8,6 +8,4 @@
- #ifndef __ASM_MIPS_MACH_RM_WAR_H
- #define __ASM_MIPS_MACH_RM_WAR_H
- 
--#define BCM1250_M3_WAR			0
--
- #endif /* __ASM_MIPS_MACH_RM_WAR_H */
-diff --git a/arch/mips/include/asm/mach-sibyte/war.h b/arch/mips/include/asm/mach-sibyte/war.h
-index 71eff5bc3f53..157eca1be328 100644
---- a/arch/mips/include/asm/mach-sibyte/war.h
-+++ b/arch/mips/include/asm/mach-sibyte/war.h
-@@ -8,18 +8,4 @@
- #ifndef __ASM_MIPS_MACH_SIBYTE_WAR_H
- #define __ASM_MIPS_MACH_SIBYTE_WAR_H
- 
--#if defined(CONFIG_SB1_PASS_2_WORKAROUNDS)
--
--#ifndef __ASSEMBLY__
--extern int sb1250_m3_workaround_needed(void);
--#endif
--
--#define BCM1250_M3_WAR	sb1250_m3_workaround_needed()
--
--#else
--
--#define BCM1250_M3_WAR	0
--
--#endif
--
- #endif /* __ASM_MIPS_MACH_SIBYTE_WAR_H */
-diff --git a/arch/mips/include/asm/mach-tx49xx/war.h b/arch/mips/include/asm/mach-tx49xx/war.h
-index 0dc2beb5bf5a..edf50e2bbb34 100644
---- a/arch/mips/include/asm/mach-tx49xx/war.h
-+++ b/arch/mips/include/asm/mach-tx49xx/war.h
-@@ -8,6 +8,4 @@
- #ifndef __ASM_MIPS_MACH_TX49XX_WAR_H
- #define __ASM_MIPS_MACH_TX49XX_WAR_H
- 
--#define BCM1250_M3_WAR			0
--
- #endif /* __ASM_MIPS_MACH_TX49XX_WAR_H */
-diff --git a/arch/mips/include/asm/war.h b/arch/mips/include/asm/war.h
-index 2ce5cd61a072..c20c04855089 100644
---- a/arch/mips/include/asm/war.h
-+++ b/arch/mips/include/asm/war.h
-@@ -72,18 +72,4 @@
- #define DADDI_WAR 0
- #endif
- 
--/*
-- * Workaround for the Sibyte M3 errata the text of which can be found at
-- *
-- *   http://sibyte.broadcom.com/hw/bcm1250/docs/pass2errata.txt
-- *
-- * This will enable the use of a special TLB refill handler which does a
-- * consistency check on the information in c0_badvaddr and c0_entryhi and
-- * will just return and take the exception again if the information was
-- * found to be inconsistent.
-- */
--#ifndef BCM1250_M3_WAR
--#error Check setting of BCM1250_M3_WAR for your platform
--#endif
--
- #endif /* _ASM_WAR_H */
-diff --git a/arch/mips/mm/tlbex.c b/arch/mips/mm/tlbex.c
-index e931eb06af57..a7521b8f7658 100644
---- a/arch/mips/mm/tlbex.c
-+++ b/arch/mips/mm/tlbex.c
-@@ -83,9 +83,13 @@ static inline int r4k_250MHZhwbug(void)
- 	return 0;
- }
- 
-+extern int sb1250_m3_workaround_needed(void);
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 64fe82ec65ff1..75a8849abb5d2 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -3160,6 +3160,15 @@ int __sync_dirty_buffer(struct buffer_head *bh, int op_flags)
+ 	WARN_ON(atomic_read(&bh->b_count) < 1);
+ 	lock_buffer(bh);
+ 	if (test_clear_buffer_dirty(bh)) {
++		/*
++		 * The bh should be mapped, but it might not be if the
++		 * device was hot-removed. Not much we can do but fail the I/O.
++		 */
++		if (!buffer_mapped(bh)) {
++			unlock_buffer(bh);
++			return -EIO;
++		}
 +
- static inline int __maybe_unused bcm1250_m3_war(void)
- {
--	return BCM1250_M3_WAR;
-+	if (IS_ENABLED(CONFIG_SB1_PASS_2_WORKAROUNDS))
-+		return sb1250_m3_workaround_needed();
-+	return 0;
- }
+ 		get_bh(bh);
+ 		bh->b_end_io = end_buffer_write_sync;
+ 		ret = submit_bh(REQ_OP_WRITE, op_flags, bh);
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 4c8253188d8df..f3614299ffd09 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -5204,13 +5204,6 @@ static int ext4_commit_super(struct super_block *sb, int sync)
+ 	if (!sbh || block_device_ejected(sb))
+ 		return error;
  
- static inline int __maybe_unused r10000_llsc_war(void)
+-	/*
+-	 * The superblock bh should be mapped, but it might not be if the
+-	 * device was hot-removed. Not much we can do but fail the I/O.
+-	 */
+-	if (!buffer_mapped(sbh))
+-		return error;
+-
+ 	/*
+ 	 * If the file system is mounted read-only, don't update the
+ 	 * superblock write time.  This avoids updating the superblock
 -- 
-2.16.4
+2.25.1
 
