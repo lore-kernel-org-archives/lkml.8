@@ -7,116 +7,117 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9861C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F679C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 855C52071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671CE2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="FY+BZBxM";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="D1ieySps"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XFK78CQl";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="K5CKLmlH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgHYNhG (ORCPT
+        id S1726858AbgHYNhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:37:06 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:49681 "EHLO
+        Tue, 25 Aug 2020 09:37:20 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:52193 "EHLO
         wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726580AbgHYNgD (ORCPT
+        by vger.kernel.org with ESMTP id S1725998AbgHYNgH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:36:03 -0400
+        Tue, 25 Aug 2020 09:36:07 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id DF382C53;
-        Tue, 25 Aug 2020 09:36:01 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:02 -0400
+        by mailnew.west.internal (Postfix) with ESMTP id 430D8CB7;
+        Tue, 25 Aug 2020 09:36:06 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ypPIgBZlj0QkzTKDgIZnXB33E2I
-        dNRV4QSnBi+COnQA=; b=FY+BZBxM/ANQECCXkC7udwol6SQYhnzjgPVgEJvWmYk
-        WF/sQHvlu4zQbTE5F3hgXdzPLrmesCWy63bAkUOsLQCxP8TIqMsoIclMPwOaJdX5
-        3rc0CUf1F+2NlIm9vkLoDPKqq2RZ/Jx7DLEIwzUxGffnGEqU4dtcXGrONC1J8A+z
-        U6MWaRxN7AOv5FBncsi3kriGukuH04NQaVlAUV80Gi8i+t86O0APITKWvyb32cg6
-        tv4VSKBd+jG6DIzs7UKCTLPQQmiru8aNqd8g0EXoYwRPcsRNL3mHm4Ul1RxiH24s
-        nZ1H/pQ+0SCkcJD7HQr8I1jp/a0D5rO8qrIi3OEOa6w==
+        :content-type:in-reply-to; s=fm3; bh=7A7IyNQAX4KGw2bi0hCwk/gNt7/
+        v19Lp9o3x4DENAWI=; b=XFK78CQlOrY04Z0f4pm6PsGxK52trgYd4RzZAi7cc4x
+        ZuD/l9TkbBAwWP33ZgkIyr6uPNAjmvtEUW3HwC+E+90KIFNUiL4WYB3M7UAcAKF0
+        xlPT7O0ddPJrwtxbFviVBMbgl7dW9ifKII41zXLoAVWg3XZJhS/MCtMVzdGmTkTX
+        y+jsQT5cETKWRWBGuQEBWVDGHrsg8VWobYmXUzi7O00hKzJk//7E0h9+i9GSzOAM
+        2HjHLro5ekq3plgB1/+V+85hiitsEhSDUibKQxWRP/LHJv47RAW1u80qCdt+L+6W
+        zLAEuLcIQlL5XLS+n71gKwvPXLlqb0sUtBjFd6Dz52A==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ypPIgB
-        Zlj0QkzTKDgIZnXB33E2IdNRV4QSnBi+COnQA=; b=D1ieySpsg2WkooCMaqirJB
-        c+0bD5GKSFzdWU+Wk7VM3KUI7RgTDwchMr1EpSy/1u7BwCbzj036PFoEE8uHiGxG
-        ujR+ascEB1fQUgozHMwI+Ad0LTaHjCKODLovvP/uJnMTq22js1y5WkR6UcMyEAPa
-        /VFzY3NTK1QxyJy54PvF4iiilTsyMQV/hHWU//iL7Ziz/8s6w4bexbaUE37pI4RR
-        rH4k2Kuggwz7u9uZU4DG7avXS8YytADwI+20PTmnkQ9I70xSn9DYGWbn5cwo83TN
-        plbdEc39ZkSqLkjt5hCO2bWyj/5B7WRWp27Oohke8iMNLhXmAsXfhxa0gSDJ9ZOg
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=7A7IyN
+        QAX4KGw2bi0hCwk/gNt7/v19Lp9o3x4DENAWI=; b=K5CKLmlHcw71nJDgSpEpt9
+        TxGws8VwIjUuXZPHQBZPx4mZ1aK2iePGVrx4MweA5sGaCKn6l5zaxpMmUn/jdh1L
+        MT0ZIGKiwbeugKQ2LH+iZ5T7O+qJDilCC5pGZ3/3+DtZATdXHkWLOI/dh3H5D1dw
+        0WvYLIpE3pALi7SOipu9ZfW+axc5DL9BDJiR4bn9AUWcGBxuHZ7dagtH07H1QHBf
+        VgAPWUqtTAERLFwq//BuGGutk49rl7qKHk/9pUVRX1gQVEoxmyTLfGXTcHaz2Cr+
+        xPr9YAqzQa7Z2UqBsaKliv8QAW7HCaleK9VbcpXDA9oxfBVoUnMIc6ILKcTR70UA
         ==
-X-ME-Sender: <xms:wRNFXzUBXODmYvlbqEuxJYgww5qquOYjGRzNXMXq79rrmIXiRYWweA>
+X-ME-Sender: <xms:xRNFXwRDLUTPQe1yntKB0lzccEDs3t6Fewy_jHeErf4oi8XhYKMJIg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepleenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:wRNFX7k9FIvyXPQKRPVmtlwBrwHIR9VYWwWmV-n7iutQXeNe5sbcnA>
-    <xmx:wRNFX_bV_rKmMyHQ0POSPAoWq1oThWNTATiqfiJxln71LxD5rlNrYw>
-    <xmx:wRNFX-WJZwJKmD9xo7gu5C5PNKqnNBw6St7s_6820ZYsXlABhdzI7g>
-    <xmx:wRNFX_4nh9us8QGBjybN6UYXlVzDuUMIGI1SJOVpWT69NHtSbfPHurMqDUU>
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudegne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:xRNFX9w8ITlfwAeNHwfowmVw101nfaknpJcwaXcPjHKNfEgsHTxWBQ>
+    <xmx:xRNFX93pBAqQJpVcrkfN2NE72QaKP7d_6WO-MjAysKsSzjxEbwsIdw>
+    <xmx:xRNFX0CN0zAkfS4ytkZDicgncFSDB2vm78Zm0fzN9MfxzvrtXls2zw>
+    <xmx:xRNFX-ZQ8M9Xa8WWzjpZ182TYRGqyXWBBrLzAAOEXmEKudq9Z4PiK_7V3E0>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 238EA30600B1;
-        Tue, 25 Aug 2020 09:36:01 -0400 (EDT)
-Date:   Tue, 25 Aug 2020 10:44:51 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7B7A43280059;
+        Tue, 25 Aug 2020 09:36:05 -0400 (EDT)
+Date:   Tue, 25 Aug 2020 10:46:10 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Frank Lee <frank@allwinnertech.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, wens@csie.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 04/16] dt-bindings: pinctrl: sunxi: Add A100 pinctrl
- bindings
-Message-ID: <20200825084451.w5xfgqwszk7brv4c@gilmour.lan>
+Cc:     anarsoul@gmail.com, tiny.windzz@gmail.com, rui.zhang@intel.com,
+        daniel.lezcano@linaro.org, amit.kucheria@verdurent.com,
+        robh+dt@kernel.org, wens@csie.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, huangshuosheng@allwinnertech.com,
+        liyong@allwinnertech.com
+Subject: Re: [PATCH v5 08/16] thermal: sun8i: add TEMP_CALIB_MASK for
+ calibration data in sun50i_h6_ths_calibrate
+Message-ID: <20200825084610.s4wfrdcix46ngztc@gilmour.lan>
 References: <cover.1595572867.git.frank@allwinnertech.com>
- <a5773d677bcc89af3810cdd187fae54eced82f27.1595572867.git.frank@allwinnertech.com>
+ <dcf98648c16aff7649ff82438bfce6caae3e176f.1595572867.git.frank@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ezfe6ijrj5w62qid"
+        protocol="application/pgp-signature"; boundary="amb66d7k4sp7gd6t"
 Content-Disposition: inline
-In-Reply-To: <a5773d677bcc89af3810cdd187fae54eced82f27.1595572867.git.frank@allwinnertech.com>
+In-Reply-To: <dcf98648c16aff7649ff82438bfce6caae3e176f.1595572867.git.frank@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ezfe6ijrj5w62qid
+--amb66d7k4sp7gd6t
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 24, 2020 at 03:02:42PM +0800, Frank Lee wrote:
+On Fri, Jul 24, 2020 at 03:11:42PM +0800, Frank Lee wrote:
 > From: Yangtao Li <frank@allwinnertech.com>
 >=20
-> Add device tree binding Documentation details for A100 pinctrl driver,
-> which has a r pin controller and a pin controller with more irq lines.
+> For sun50i_h6_ths_calibrate(), the data read from nvmem needs a round of
+> calculation. On the other hand, the newer SOC may store other data in
+> the space other than 12bit sensor data. Add mask operation to read data
+> to avoid conversion error.
 >=20
 > Signed-off-by: Yangtao Li <frank@allwinnertech.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
 Acked-by: Maxime Ripard <mripard@kernel.org>
 
-Thanks!
 Maxime
 
---ezfe6ijrj5w62qid
+--amb66d7k4sp7gd6t
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TPgwAKCRDj7w1vZxhR
-xd0WAP0VlEEuyAwTMWD+dZDnp9yz/vWvxTFhioJZ2/bd+AXDbgD+LzaGkBwR7pn4
-Dy3kMc74IBgMbiWfwLaDJBa/ViRSUA8=
-=nw65
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TP0gAKCRDj7w1vZxhR
+xccQAP9CCPtCw7TtG7p625fxJ0FYNYrLiEl6trsuXgmQC1WKygD/baMZswGDFigJ
+KpxCgoleFdIJu2WpLSR+zOzbvULctAw=
+=p4tr
 -----END PGP SIGNATURE-----
 
---ezfe6ijrj5w62qid--
+--amb66d7k4sp7gd6t--
