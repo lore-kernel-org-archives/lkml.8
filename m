@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307D0C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05324C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F36F2224D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BD020782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgHYOxH convert rfc822-to-8bit (ORCPT
+        id S1726794AbgHYOyX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:53:07 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:26156 "EHLO
+        Tue, 25 Aug 2020 10:54:23 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:37904 "EHLO
         eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726763AbgHYOwo (ORCPT
+        by vger.kernel.org with ESMTP id S1726825AbgHYOxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:52:44 -0400
+        Tue, 25 Aug 2020 10:53:04 -0400
 Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
  TLS) by relay.mimecast.com with ESMTP id
- uk-mta-79-zk8xmwPXOHmEFa64UqMB8Q-1; Tue, 25 Aug 2020 15:52:40 +0100
-X-MC-Unique: zk8xmwPXOHmEFa64UqMB8Q-1
+ uk-mta-27-47vdrNzgP36-UycG-3cNjw-1; Tue, 25 Aug 2020 15:53:00 +0100
+X-MC-Unique: 47vdrNzgP36-UycG-3cNjw-1
 Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
  AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 25 Aug 2020 15:52:38 +0100
+ Server (TLS) id 15.0.1347.2; Tue, 25 Aug 2020 15:52:59 +0100
 Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
  AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 25 Aug 2020 15:52:38 +0100
+ Tue, 25 Aug 2020 15:52:59 +0100
 From:   David Laight <David.Laight@ACULAB.COM>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
@@ -39,13 +39,13 @@ To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "'kent.overstreet@gmail.com'" <kent.overstreet@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         "'Neil Horman'" <nhorman@tuxdriver.com>
-Subject: [PATCH 13/13] lib/generic-radix-tree: Simplify __genradix_ptr()
-Thread-Topic: [PATCH 13/13] lib/generic-radix-tree: Simplify __genradix_ptr()
-Thread-Index: AdZ6719rWD9U8XgbSzKIbUgnCK1q2w==
-Date:   Tue, 25 Aug 2020 14:52:38 +0000
-Message-ID: <35b7ab36369249d8bf17a04f58a0f337@AcuMS.aculab.com>
+Subject: [PATCH 05/13] lib/generic-radix-tree: Optimise __genradix_ptr_alloc()
+Thread-Topic: [PATCH 05/13] lib/generic-radix-tree: Optimise
+ __genradix_ptr_alloc()
+Thread-Index: AdZ67sMku/ljxmRrQsK68AYlrafjuQ==
+Date:   Tue, 25 Aug 2020 14:52:59 +0000
+Message-ID: <3313cca9b8a64ef0a192fc1a5562fb1c@AcuMS.aculab.com>
 Accept-Language: en-GB, en-US
-Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-ms-exchange-transport-fromentityheader: Hosted
@@ -57,50 +57,163 @@ X-Mimecast-Spam-Score: 0.002
 X-Mimecast-Originator: aculab.com
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that requests for small trees are inlined there is no need
-to aggressively optimise for them in __genradix_ptr().
+Take the code that allocates an new page and inserts it in the tree
+out of line. It is uncommon (and already expensive).
+
+Optimise for the common case where the entire tree fits in one page.
 
 Signed-off-by: David Laight <david.laight@aculab.com>
 ---
- lib/generic-radix-tree.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ lib/generic-radix-tree.c | 111 ++++++++++++++++++++++++++-------------
+ 1 file changed, 74 insertions(+), 37 deletions(-)
 
 diff --git a/lib/generic-radix-tree.c b/lib/generic-radix-tree.c
-index 7029a14eed97..497ac5effda0 100644
+index 212e04cf171a..b378e10c8fa4 100644
 --- a/lib/generic-radix-tree.c
 +++ b/lib/generic-radix-tree.c
-@@ -45,9 +45,6 @@ void *__genradix_ptr(struct genradix_root *r, size_t offset)
- 	unsigned int shift = __genradix_root_to_shift(r);
- 	unsigned int idx;
+@@ -108,6 +108,35 @@ static inline void genradix_free_node(struct genradix_node *node)
+ 	free_page((unsigned long)node);
+ }
  
--	if (likely(shift == GENRADIX_ROOT_SHIFT))
--		return offset < PAGE_SIZE ? n->data + offset : NULL;
--
- 	if (unlikely(!shift))
- 		return NULL;
- 
-@@ -56,13 +53,13 @@ void *__genradix_ptr(struct genradix_root *r, size_t offset)
- 		return NULL;
- 
- 	for (;;) {
-+		if (likely(shift == GENRADIX_ROOT_SHIFT))
-+			return n->data + (offset % PAGE_SIZE);
++static noinline struct genradix_node *
++alloc_node(struct genradix_node **tgt, struct genradix_node *old,
++	    struct genradix_node *child, unsigned int level, gfp_t gfp_mask)
++{
++	struct genradix_node *n = genradix_alloc_node(gfp_mask);
++	struct genradix_node *new_node, *check;
 +
- 		n = READ_ONCE(n->children[idx]);
- 		if (unlikely(!n))
++	if (!n)
++		return NULL;
++	n->children[0] = child;
++
++	/* The 'root' address is 'overpunched' with the level */
++	new_node = (void *)((unsigned long)n + level);
++
++	check = cmpxchg_release(tgt, old, new_node);
++	if (check == old)
++		return new_node;
++
++	genradix_free_node(n);
++	return check;
++}
++
++static struct genradix_root *
++alloc_root(struct genradix_root **tgt, struct genradix_root *old,
++	    struct genradix_node *child, unsigned int level, gfp_t gfp_mask)
++{
++	return (void *)alloc_node((void *)tgt, (void *)old, child, level, gfp_mask);
++}
++
+ /*
+  * Returns pointer to the specified byte @offset within @radix, allocating it if
+  * necessary - newly allocated slots are always zeroed out:
+@@ -115,55 +144,63 @@ static inline void genradix_free_node(struct genradix_node *node)
+ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset,
+ 			   gfp_t gfp_mask)
+ {
+-	struct genradix_root *v = READ_ONCE(radix->root);
+-	struct genradix_node *n, *new_node;
+-	unsigned level;
++	struct genradix_node *n, *n1;
++	struct genradix_root *r;
++	unsigned int level, shift;
++	unsigned int idx;
+ 
+-	/* Increase tree depth if necessary: */
+-	while (1) {
+-		struct genradix_root *r = v, *new_root;
++	r = READ_ONCE(radix->root);
++	level = genradix_root_to_depth(r);
++
++	/* Optimise non-tree structures */
++	if (likely(!level) && likely(offset < PAGE_SIZE)) {
++		n = genradix_root_to_node(r);
++		if (likely(n))
++			return n->data + offset;
++		r = alloc_root(&radix->root, NULL, NULL, 0, gfp_mask);
++		if (!r)
++			return NULL;
++		level = genradix_root_to_depth(r);
++		if (!level) {
++			n = genradix_root_to_node(r);
++			return n->data + offset;
++		}
++	}
+ 
+-		n	= genradix_root_to_node(r);
+-		level	= genradix_root_to_depth(r);
++	/* Ensure tree is deep enough */
++	for (;;) {
++		n = genradix_root_to_node(r);
++		shift = genradix_depth_shift(level) - GENRADIX_ARY_SHIFT;
++		idx = offset >> shift;
+ 
+-		if (n && !(offset >> genradix_depth_shift(level)))
++		if (likely(idx < GENRADIX_ARY))
+ 			break;
+ 
+-		new_node = genradix_alloc_node(gfp_mask);
+-		if (!new_node)
++		/* Tree depth needs increasing */
++		r = alloc_root(&radix->root, r, n, level + 1, gfp_mask);
++		if (!r)
  			return NULL;
  
--		if (shift == PAGE_SHIFT)
--			return n->data + (offset % PAGE_SIZE);
+-		new_node->children[0] = n;
+-		new_root = ((struct genradix_root *)
+-			    ((unsigned long) new_node | (n ? level + 1 : 0)));
 -
- 		shift -= GENRADIX_ARY_SHIFT;
- 		idx = (offset >> shift) % GENRADIX_ARY;
+-		v = cmpxchg_release(&radix->root, r, new_root);
+-		if (v == r)
+-			v = new_root;
+-		else
+-			genradix_free_node(new_node);
++		/* Multiple levels could have been added by someone else. */
++		level = genradix_root_to_depth(r);
  	}
+ 
+-	while (level--) {
+-		struct genradix_node **p =
+-			&n->children[offset >> genradix_depth_shift(level)];
+-		offset &= genradix_depth_size(level) - 1;
+-
+-		n = READ_ONCE(*p);
+-		if (!n) {
+-			new_node = genradix_alloc_node(gfp_mask);
+-			if (!new_node)
++	/* Descend the tree */
++	for (;;) {
++		n1 = READ_ONCE(n->children[idx]);
++		if (unlikely(!n1)) {
++			n1 = alloc_node(n->children + idx, NULL, NULL, 0, gfp_mask);
++			if (!n1)
+ 				return NULL;
+-
+-			n = cmpxchg_release(p, NULL, new_node);
+-			if (!n)
+-				n = new_node;
+-			else
+-				genradix_free_node(new_node);
+ 		}
+-	}
+ 
+-	return &n->data[offset];
++		n = n1;
++		if (shift == PAGE_SHIFT)
++			return n->data + (offset % PAGE_SIZE);
++
++		shift -= GENRADIX_ARY_SHIFT;
++		idx = (offset >> shift) % GENRADIX_ARY;
++	}
+ }
+ EXPORT_SYMBOL(__genradix_ptr_alloc);
+ 
 -- 
 2.25.1
 
