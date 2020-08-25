@@ -2,239 +2,190 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A35CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718CDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62B8B20782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:54:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348EC20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598338466;
-	bh=QTOssPeTxMooyonVyo7p70FWZuhmZZcFLiqChmW5rAk=;
+	s=default; t=1598338542;
+	bh=O8xVWhecf0GTNNOQhzrq9+gFIK5wLyvxcyy2rCvFaVg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DbxQGEU+h34ChhT8v6jpYiPdtj5bykh4LR++wdeh0XVXacOvg7xQAsIeERGsPwQbc
-	 VhehiVdHUWilIdEUP98n5yrOGhu5b2OjFXr9lqjWmUTXxcGxOlkN/sGlh8dIh7Y+h1
-	 Dm4XPILiRn4I1EFgHNHVn1xUDZP6IE0ETga+RFsg=
+	b=OujEUHY9xdhCm8g/2t4bNYQkft8n9Q/wrDcLYLJfQ1hQ+Qc0nYWo2IGPiveXNlOp+
+	 6w+KnNOwzWYOQ7d9254NXzB2vkg2qBu/JX5K1Q6RtAEIVz99si+/14pIeg3SiwXsui
+	 PvnytvZFeJ3qanvybvZm+w87Quj9E8CbpHvWkPVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbgHYGyZ (ORCPT
+        id S1729256AbgHYGzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:54:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729110AbgHYGyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:54:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5E8D2076C;
-        Tue, 25 Aug 2020 06:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598338462;
-        bh=QTOssPeTxMooyonVyo7p70FWZuhmZZcFLiqChmW5rAk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sDvfHcMd+8MwLRGbLaeJe7Msxlt+I3rvc6ZJDCydE6j1+PrQkPIvq75KKGm3DSRNg
-         O/RzXI4r+OHfpdzKsKT4+HO9JGr/8K4Q731Zv5EwI5n6AOIqmbHmFEQb0zmrmW0CfD
-         qig9slt2Cy4X5MP6xZlDUHmmN18YrjTLv4yKgLow=
-Date:   Tue, 25 Aug 2020 08:54:39 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Himadri Pandya <himadrispandya@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        USB list <linux-usb@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH] net: usb: Fix uninit-was-stored issue in asix_read_cmd()
-Message-ID: <20200825065439.GB1319770@kroah.com>
-References: <20200823082042.20816-1-himadrispandya@gmail.com>
- <CACT4Y+Y1TpqYowNXj+OTcQwH-7T4n6PtPPa4gDWkV-np5KhKAQ@mail.gmail.com>
- <20200823101924.GA3078429@kroah.com>
- <CACT4Y+YbDODLRFn8M5QcY4CazhpeCaunJnP_udXtAs0rYoASSg@mail.gmail.com>
- <20200823105808.GB87391@kroah.com>
- <CACT4Y+ZiZQK8WBre9E4777NPaRK4UDOeZOeMZOQC=5tDsDu23A@mail.gmail.com>
- <20200825065135.GA1316856@kroah.com>
+        Tue, 25 Aug 2020 02:55:41 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39147 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729148AbgHYGzk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 02:55:40 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g75so1073879wme.4;
+        Mon, 24 Aug 2020 23:55:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1/BMEK5hdF0iweITjCzRL7tnq3hV766kEY/n/gaXN14=;
+        b=WHzldN0LodFs4WwI1EiYmhb8ySSaSJGDjLsyILIAUtbX6NZUpj9poLC3tfs2etTU1Q
+         0hsnnl3yyVRnIF7PTLAhkCU1IPDknPPnqS0xI1CVzTW6f3L7fuuP4SjAgRuJ8ys+utLz
+         LQ/jZkZzIdcasBBm+uEB81qzz8wyYNj//OpKVLx1xj1jYq8H+PLusLAFFZnT97HrmFPb
+         zuZn4EGWjX3IBiwgTS98GuMBBdWHsg1DGp3wh52fI/6X7etyyMVoRHYzjdgqLKiBxXFm
+         rotwOddo+254em0OlKRjNYjVPgrrPqP8nAPVGD8OEM/pPjEfK9c0YAclcdoXOdr4UOZV
+         z+HQ==
+X-Gm-Message-State: AOAM530jjo0WCxiUtnSAhAoIJ3xEzC9FVl/q1kjrsaTR4JDZ8CizO7XU
+        OOOtqtxyuybtlJPcUScePvY=
+X-Google-Smtp-Source: ABdhPJzVthOSQHuBCkTElEnSeTuy6N11zAwWgCV1RLWESAC/VoowTAPU7THZp0e1uMR0gy8Ohekb8Q==
+X-Received: by 2002:a1c:7fd3:: with SMTP id a202mr547797wmd.67.1598338538029;
+        Mon, 24 Aug 2020 23:55:38 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id z1sm11576477wru.6.2020.08.24.23.55.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 24 Aug 2020 23:55:37 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 08:55:34 +0200
+From:   "krzk@kernel.org" <krzk@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "han.xu@nxp.com" <han.xu@nxp.com>,
+        "Anson.Huang@nxp.com" <Anson.Huang@nxp.com>,
+        "yibin.gong@nxp.com" <yibin.gong@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "aford173@gmail.com" <aford173@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "richard@nod.at" <richard@nod.at>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "jun.li@nxp.com" <jun.li@nxp.com>
+Subject: Re: [PATCH 01/16] dt-bindings: mfd: rohm,bd71847-pmic: Correct clock
+ properties requirements
+Message-ID: <20200825065534.GB3458@kozik-lap>
+References: <20200824190701.8447-1-krzk@kernel.org>
+ <b75867fd1c662a83d933ae8f0c4373ba017eb808.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200825065135.GA1316856@kroah.com>
+In-Reply-To: <b75867fd1c662a83d933ae8f0c4373ba017eb808.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 08:51:35AM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Aug 24, 2020 at 10:55:28AM +0200, Dmitry Vyukov wrote:
-> > On Sun, Aug 23, 2020 at 12:57 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Sun, Aug 23, 2020 at 12:31:03PM +0200, Dmitry Vyukov wrote:
-> > > > On Sun, Aug 23, 2020 at 12:19 PM Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > > > >
-> > > > > On Sun, Aug 23, 2020 at 11:26:27AM +0200, Dmitry Vyukov wrote:
-> > > > > > On Sun, Aug 23, 2020 at 10:21 AM Himadri Pandya
-> > > > > > <himadrispandya@gmail.com> wrote:
-> > > > > > >
-> > > > > > > Initialize the buffer before passing it to usb_read_cmd() function(s) to
-> > > > > > > fix the uninit-was-stored issue in asix_read_cmd().
-> > > > > > >
-> > > > > > > Fixes: KMSAN: kernel-infoleak in raw_ioctl
-> > > > > > > Reported by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
-> > > > > > >
-> > > > > > > Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
-> > > > > > > ---
-> > > > > > >  drivers/net/usb/asix_common.c | 2 ++
-> > > > > > >  1 file changed, 2 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
-> > > > > > > index e39f41efda3e..a67ea1971b78 100644
-> > > > > > > --- a/drivers/net/usb/asix_common.c
-> > > > > > > +++ b/drivers/net/usb/asix_common.c
-> > > > > > > @@ -17,6 +17,8 @@ int asix_read_cmd(struct usbnet *dev, u8 cmd, u16 value, u16 index,
-> > > > > > >
-> > > > > > >         BUG_ON(!dev);
-> > > > > > >
-> > > > > > > +       memset(data, 0, size);
-> > > > > >
-> > > > > > Hi Himadri,
-> > > > > >
-> > > > > > I think the proper fix is to check
-> > > > > > usbnet_read_cmd/usbnet_read_cmd_nopm return value instead.
-> > > > > > Memsetting data helps to fix the warning at hand, but the device did
-> > > > > > not send these 0's and we use them as if the device did send them.
-> > > > >
-> > > > > But, for broken/abusive devices, that really is the safest thing to do
-> > > > > here.  They are returning something that is obviously not correct, so
-> > > > > either all callers need to check the size received really is the size
-> > > > > they asked for, or we just plod onward with a 0 value like this.  Or we
-> > > > > could pick some other value, but that could cause other problems if it
-> > > > > is treated as an actual value.
-> > > >
-> > > > Do we want callers to do at least some error check (e.g. device did
-> > > > not return anything at all, broke, hang)?
-> > > > If yes, then with a separate helper function that fails on short
-> > > > reads, we can get both benefits at no additional cost. User code will
-> > > > say "I want 4 bytes, anything that is not 4 bytes is an error" and
-> > > > then 1 error check will do. In fact, it seems that that was the
-> > > > intention of whoever wrote this code (they assumed no short reads),
-> > > > it's just they did not actually implement that "anything that is not 4
-> > > > bytes is an error" part.
-> > > >
-> > > >
-> > > > > > Perhaps we need a separate helper function (of a bool flag) that will
-> > > > > > fail on incomplete reads. Maybe even in the common USB layer because I
-> > > > > > think we've seen this type of bug lots of times and I guess there are
-> > > > > > dozens more.
-> > > > >
-> > > > > It's not always a failure, some devices have protocols that are "I could
-> > > > > return up to a max X bytes but could be shorter" types of messages, so
-> > > > > it's up to the caller to check that they got what they really asked for.
-> > > >
-> > > > Yes, that's why I said _separate_ helper function. There seems to be
-> > > > lots of callers that want exactly this -- "I want 4 bytes, anything
-> > > > else is an error". With the current API it's harder to do - you need
-> > > > additional checks, additional code, maybe even additional variables to
-> > > > store the required size. APIs should make correct code easy to write.
-> > >
-> > > I guess I already answered both of these in my previous email...
-> > >
-> > > > > Yes, it's more work to do this checking.  However converting the world
-> > > > > over to a "give me an error value if you don't read X number of bytes"
-> > > > > function would also be the same amount of work, right?
-> > > >
-> > > > Should this go into the common USB layer then?
-> > > > It's weird to have such a special convention on the level of a single
-> > > > driver. Why are rules for this single driver so special?...
-> > >
-> > > They aren't special at all, so yes, we should be checking for a short
-> > > read everywhere.  That would be the "correct" thing to do, I was just
-> > > suggesting a "quick fix" here, sorry.
-> > 
-> > Re quick fix, I guess it depends on the amount of work for the larger
-> > fix and if we can find volunteers (thanks Himadri!). We need to be
-> > practical as well.
-> > 
-> > Re:
-> >         retval = usb_control_msg(....., data, data_size, ...);
-> >         if (retval < buf_size) {
-> > 
-> > There may be a fine line between interfaces and what code they
-> > provoke. Let me describe my reasoning.
-> > 
-> > Yes, the current interface allows writing correct code with moderate
-> > amount of effort. Yet we see cases where it's used incorrectly, maybe
-> > people were just a little bit lazy, or maybe they did not understand
-> > how to use it properly (nobody reads the docs, and it's also
-> > reasonable to assume that if you ask for N bytes and the function does
-> > not fail, then you get N bytes).
+On Tue, Aug 25, 2020 at 06:23:36AM +0000, Vaittinen, Matti wrote:
 > 
-> I did a quick scan of the tree, and in short, I think it's worse than we
-> both imagined, more below...
+> Hello Krzysztof,
 > 
-> > Currently to write correct code (1) we need a bit of duplication,
-> > which gets worse if data_size is actually some lengthy expression
-> > (X+Y*Z), maybe one will need an additional variable to use it
-> > correctly.
-> > (2) one needs to understand the contract;
-> > (3) may be subject to the following class of bugs (after some copy-paste:
-> >         retval = usb_control_msg(....., data, 4, ...);
-> >         if (retval < 2) {
-> > This class of bugs won't be necessary immediately caught by kernel
-> > testing systems (can have long life-time).
-> > 
-> > I would add a "default" function (with shorter name) that does full read:
-> > 
-> > if (!usb_control_msg(, ...., data, 4))
-> > 
-> > and a function with longer name to read variable-size data:
-> > 
-> > n = usb_control_msg_variable_length(, ...., data, sizeof(data)));
-> > 
-> > The full read should be "the default" (shorter name), because if you
-> > need full read and use the wrong function, it won't be caught by
-> > testing (most likely long-lived bug). Whereas if you use full read for
-> > lengthy variable size data read, this will be immediately caught
-> > during any testing (even manual) -- you ask for 4K, you get fewer
-> > bytes, all your reads fail.
-> > So having "full read" easier to spell will lead to fewer bugs by design.
+> On Mon, 2020-08-24 at 21:06 +0200, Krzysztof Kozlowski wrote:
+> > The input clock and number of clock provider cells are not required
+> > for
+> > the PMIC to operate.  They are needed only for the optional bd718x7
+> > clock driver.
 > 
-> Originally I would sick to my first proposal that "all is fine" and the
-> api is "easy enough", but in auditing the tree, it's horrid.
+> I have always found the DT bindings hard to do. I quite often end up
+> having a different view with Rob so I probably could just shut-up and
+> watch how this evolves :)
 > 
-> The error checking for this function call is almost non-existant.  And,
-> to make things more difficult, this is a bi-directional call, it is a
-> read or write call, depending on what USB endpoint the user asks for (or
-> both for some endpoints.)  So trying to automatically scan the tree for
-> valid error handling is really really hard.
+> But as keeping my mouth is so difficult...
 > 
-> Combine that with the need of many subsystems to "wrap" this function in
-> a helper call, because the USB core isn't providing a useful call it
-> could call directly, and we have a total mess.
-> 
-> At first glance, I think this can all be cleaned up, but it will take a
-> bit of tree-wide work.  I agree, we need a "read this message and error
-> if the whole thing is not there", as well as a "send this message and
-> error if the whole thing was not sent", and also a way to handle
-> stack-provided data, which seems to be the primary reason subsystems
-> wrap this call (they want to make it easier on their drivers to use it.)
-> 
-> Let me think about this in more detail, but maybe something like:
-> 	usb_control_msg_read()
-> 	usb_control_msg_send()
-> is a good first step (as the caller knows this) and stack provided data
-> would be allowed, and it would return an error if the whole message was
-> not read/sent properly.  That way we can start converting everything
-> over to a sane, and checkable, api and remove a bunch of wrapper
-> functions as well.
+> ...All of the drivers are optional. The PMIC can power-on without any
+> drivers. Drivers are mostly used just for disabling the voltage from
+> graphics accelerator block when it is not needed (optional). Or some
+> DVS (optional). But yes, maybe the clk driver is "more optional" than
+> the rest. XD So, I am not against this.
 
-Oh, and if you want to start creating a bunch of syzbot bugs to report,
-like this one, just start doing "short reads" on almost any control
-message request...
+Each regulator node is optional, it can be skipped. And device will
+work and regulator driver will bind. The difference here is that without
+clocks the clock driver won't even bind... but if we keep clocks as
+required, then multiple DTSes do not pass the bindings check.
 
-greg k-h
+I don't have strong feelings about dropping requirement for clocks, just
+this looks easier to implement and logical to me (this is a PMIC so
+clock is a secondary feature).
+
+> 
+> > Add also clock-output-names as driver takes use of it.
+> > 
+> > This fixes dtbs_check warnings like:
+> > 
+> >     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b:
+> > 'clocks' is a required property
+> >     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b:
+> > '#clock-cells' is a required property
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  .../devicetree/bindings/mfd/rohm,bd71847-pmic.yaml       | 9
+> > +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71847-
+> > pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71847-
+> > pmic.yaml
+> > index 77bcca2d414f..5d531051a153 100644
+> > --- a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+> > +++ b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+> > @@ -38,6 +38,9 @@ properties:
+> >    "#clock-cells":
+> >      const: 0
+> >  
+> > +  clock-output-names:
+> > +    maxItems: 1
+> 
+> I had this in original binding (text) document patch series. For some
+> reason it was later dropped. Unfortunately I didn't easily find a
+> reason as to why. Adding it back now is absolutely fine for me though.
+> 
+> > +
+> >  # The BD71847 abd BD71850 support two different HW states as reset
+> > target
+> >  # states. States are called as SNVS and READY. At READY state all
+> > the PMIC
+> >  # power outputs go down and OTP is reload. At the SNVS state all
+> > other logic
+> > @@ -116,12 +119,14 @@ required:
+> >    - compatible
+> >    - reg
+> >    - interrupts
+> > -  - clocks
+> > -  - "#clock-cells"
+> >    - regulators
+> >  
+> >  additionalProperties: false
+> >  
+> > +dependencies:
+> > +  '#clock-cells': [clocks]
+> > +  clocks: ['#clock-cells']
+> 
+> This is new to me. Please educate me - does this simply mean that if
+> '#clock-cells' is given, then also the 'clocks' must be given - and the
+> other way around?
+
+Yes, because the clocks do not have sense without clock-cells and vice versa.
+
+> 
+> If so, then:
+> Acked-By: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> 
+
+Thanks.
+
+Best regards,
+Krzysztof
