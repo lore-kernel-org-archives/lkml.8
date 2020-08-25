@@ -2,107 +2,79 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A76C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9110E2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:32:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ruck6EpD"
+	by mail.kernel.org (Postfix) with ESMTP id BCD90207F7
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgHYQcg (ORCPT
+        id S1726698AbgHYQgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:32:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52726 "EHLO
+        Tue, 25 Aug 2020 12:36:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgHYQcb (ORCPT
+        with ESMTP id S1726257AbgHYQgG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:32:31 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83111C061574;
-        Tue, 25 Aug 2020 09:32:31 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id p4so11504321qkf.0;
-        Tue, 25 Aug 2020 09:32:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=L/YYXtkHKUaPE/tsOglLtbLhqc+vooSNTKXW0aTvskU=;
-        b=Ruck6EpDDJUMiWSpUI++B6KFoPI6MKPwhYk0mJmL4hlnavxCeSbo2k1DH0ZyxRdXzw
-         C4hwdfBwXC5AZ2aQIDLTDMBI2mV8cSnY0IwKqdBHrKy4mPUSTEi/ozh8ITPSyV1CO+Ow
-         9ZaEL7RdIueOtZECnXOyxFtA3068aVVmdBc297+6mdFdQMKMBe6jLn4IC8XVLH9oCQNI
-         KK1V5w1hHMD/DSzkL0YJ87fWEMIHqGVdQbsQow33rH3kj4ms9jKoPnE1dqqx6/P0ANFN
-         jJEdc9l0+ZlrypGmSkplvwHUtm3oUFF500nTHUUOP+A3v3KY/dnu4TE0QhfnE4iagD6S
-         uY9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L/YYXtkHKUaPE/tsOglLtbLhqc+vooSNTKXW0aTvskU=;
-        b=H8Fnf458XFQGkYL7K3ZH00jUldV7H/VMbEjrmf9OyC3Er7X+uSJ4UmF6aEr6Uro1Vc
-         AuAcEkgL3BdMh7Q+EGl8IW0aIM4OErm6HxgXEI78DN2+bTt+R7Vg0EZwAG0RXdZuI6mj
-         A34bft841nRwjBXYeID4VDmPLyd76q+WIXstkwidgksxGwCRFnAGcqlSvs1O4oZK+LLR
-         Dd+C0ZcfaJBKkP0y1QUPvLaz+VFDFJIduc2MjN3hUMb8jHL7BVxsI0dwJw2IfqoIuyRx
-         DJFpfjGe6xMuPAT3of9TdNouzr7Ott0H9mc9qqLKfwB1lV0Dwjp5YK3scbtuAgdys/Ui
-         AQXQ==
-X-Gm-Message-State: AOAM5303iXBPcRjnDku/c9nU6hbOXvuInG6Et3IYxAhTnM+/JFU27BoS
-        WP5ChzFi0UwV38UuauzDyg==
-X-Google-Smtp-Source: ABdhPJygG7e+gxhwz0C4hnF5wpa4P6IRvKiDdc3MvmUIWrTHT3KHZ4b7wpFx8V252DTJql45jYyREw==
-X-Received: by 2002:a37:9b15:: with SMTP id d21mr10444984qke.9.1598373150483;
-        Tue, 25 Aug 2020 09:32:30 -0700 (PDT)
-Received: from zaphod.evilpiepirate.org ([2601:19b:c500:a1:144c:c173:c2b9:af15])
-        by smtp.gmail.com with ESMTPSA id a3sm13699802qtj.21.2020.08.25.09.32.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 09:32:29 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 12:32:24 -0400
-From:   Kent Overstreet <kent.overstreet@gmail.com>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        'Catalin Marinas' <catalin.marinas@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        'Neil Horman' <nhorman@tuxdriver.com>
-Subject: Re: [PATCH 00/13] lib/generic-radix-tree: genradix bug fix and
- optimisations.
-Message-ID: <20200825163224.GA499490@zaphod.evilpiepirate.org>
-References: <21289d79b0474811b21ed8478c465159@AcuMS.aculab.com>
- <20200825154127.GB2444@localhost.localdomain>
- <17da427b99b444ce9d310d6542ae197e@AcuMS.aculab.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <17da427b99b444ce9d310d6542ae197e@AcuMS.aculab.com>
+        Tue, 25 Aug 2020 12:36:06 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 192B7C061574;
+        Tue, 25 Aug 2020 09:36:06 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 64AE2134A0E3F;
+        Tue, 25 Aug 2020 09:19:18 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:36:03 -0700 (PDT)
+Message-Id: <20200825.093603.2026695844604591106.davem@davemloft.net>
+To:     m-karicheri2@ti.com
+Cc:     kuba@kernel.org, grygorii.strashko@ti.com, nsekhar@ti.com,
+        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [net v3 PATCH] net: ethernet: ti: cpsw_new: fix error handling
+ in cpsw_ndo_vlan_rx_kill_vid()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200824170100.21319-1-m-karicheri2@ti.com>
+References: <20200824170100.21319-1-m-karicheri2@ti.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 25 Aug 2020 09:19:18 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 04:00:35PM +0000, David Laight wrote:
-> From: 'Marcelo Ricardo Leitner'
-> > Sent: 25 August 2020 16:41
-> > 
-> > On Tue, Aug 25, 2020 at 02:52:34PM +0000, David Laight wrote:
-> > > The genradix code is used by SCTP for accessing per-stream data.
-> > > This means there are quite a lot of lookups but the code wasn't
-> > > really optimised at all.
-> > 
-> > My test box is down for the moment and will bring it on later today or
-> > tomorrow, so I can't test it yet. What should we expect as performance
-> > gains here?
-> 
-> Not sure, probably not much, but it ought to show up :-)
-> There'll be bigger gains on a cpu that has software ilog2().
-> 
-> I've only checked SCTP still works.
-> I've requested 32k streams on a listener - to force a level-2 tree.
-> I've also done at least one check with a massive pad in the sctp
-> stream structure.
+From: Murali Karicheri <m-karicheri2@ti.com>
+Date: Mon, 24 Aug 2020 13:01:00 -0400
 
-Have you benchmarked at all? Or were you looking at the generated assembly?
+> +	ret = cpsw_ale_del_vlan(cpsw->ale, vid, 0);
+> +	if (ret)
+> +		dev_err(priv->dev, "%s: failed %d: ret %d\n",
+> +			__func__, __LINE__, ret);
+> +	ret = cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
+> +				 HOST_PORT_NUM, ALE_VLAN, vid);
+> +	if (ret)
+> +		dev_err(priv->dev, "%s: failed %d: ret %d\n",
+> +			__func__, __LINE__, ret);
+> +	ret = cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
+> +				 0, ALE_VLAN, vid);
+> +	if (ret)
+> +		dev_err(priv->dev, "%s: failed %d: ret %d\n",
+> +			__func__, __LINE__, ret);
+>  	cpsw_ale_flush_multicast(cpsw->ale, ALE_PORT_HOST, vid);
+
+These error messages are extremely unhelpful.  You're calling three
+different functions, yet emitting basically the same __func__ for
+each of those cases.  No user can send you a useful bug report
+immediately if they just have func and line.
+
+Please get rid of the "__func__" and "__line__" stuff completely, it's
+never advisable to ever use that in my opinion.  Instead, describe
+which delete operation failed, optionally with the error return.
+
