@@ -2,163 +2,165 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45C8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9373C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B52B22074A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:51:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C45742074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:51:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="CoEHvz8i";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="VvTCJ942"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rchlr1Gb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgHYWve (ORCPT
+        id S1726757AbgHYWvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:51:34 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:49908 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726672AbgHYWvd (ORCPT
+        Tue, 25 Aug 2020 18:51:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgHYWvf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 18:51:33 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PModsN017669;
-        Tue, 25 Aug 2020 15:51:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=M4MrdGeMtOwMcyy8yWZ1G2yjC1fRN0lpZywSTmNKCAM=;
- b=CoEHvz8iyxjJ9jr/9bKUDmSzysFXsPROH5d8dYhWP4mZqBKzxqtWnS6EPjZmV44DJoky
- fLHYtrirUwDiuExWDcsC33wcLJwgpgrgp5fMJVMvI4LAIAlMUA9nd9qIL0L4y54mDGJc
- H7TmN3jQerkh6PGNQUEMXyhEkE5BZnrhlts= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 3330vjrqau-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 25 Aug 2020 15:51:25 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 25 Aug 2020 15:51:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e5j1Sim+kY49kY8IaB0j1OMo5KmUhkohBaGznSEutdLPpDl2WanXP8UX8XkE720biAsJWPwQA3W5lIDKEy8URMnVVFXK4cL4cPMD8H9QNDl57mqh8a94H33MHdtAjcHOdfmy/4et9fGHr/wRPm6ddQSS1lRtH9DAD15BW6uFis8kqRm2VIigh5gwTQfy51i6sdXRtDSRDEWQqOX2eIvr5cfxe2LcIOZq60LFhz9bUB6y4ZUxZ5IbXuZQUPSBKCSz3d/xouLOLVJ05S+iBMyaCT2H1GuqQhj9hFwBwbrTYgzTfmIsN/ajifri8JdXiYWUpr5DQ6uovaqmocttynlkOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M4MrdGeMtOwMcyy8yWZ1G2yjC1fRN0lpZywSTmNKCAM=;
- b=Tw1Ebk7XT4QeTesUzpsugdo2aNh2JJ5bsXBTRKkNLlV9peLpUe9jhUPOmwzge1TthEfYLA7WlcGoPwM7EZy6SCnLiNfiTd2yodDhB7LtwlE9g+LwQe+9J2ZFG6PZxdBQKWFliHvcj2GTUGXseu5jrHiDqfQOQ1S60/94kJP8LkBsikAfjpxnGwZOFB9nnmoJClsh36hlUi26RcZMPobR3x4UqzbbAFJbJaMUwpxUbEoZJYDbczNlCq26MKpufh8/MccIQ6lBIlK7yyyxk7crmMJtBMSRng8smE6SLJxnBqNcpB1zp5j3d+YCx1iYTw98xs8MoH2zFWZcFiU/EZjFug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M4MrdGeMtOwMcyy8yWZ1G2yjC1fRN0lpZywSTmNKCAM=;
- b=VvTCJ942FrfvTweZFcizEzVUMXT70H5WhNml9LRegD8tGTNQoXkE3IZCpZ9uZVeFcbifPP+hk96Hvs8NgJ69lx5ET6wXaOz6a/ltD2+OGO2nM2wJ58Z9pGzrQkgRBOYCKaWV4a72IdvVK0uzcznYImM9yxpMYDQ17nj1kuFs0JA=
-Received: from BY5PR15MB3667.namprd15.prod.outlook.com (2603:10b6:a03:1f9::18)
- by BYAPR15MB2584.namprd15.prod.outlook.com (2603:10b6:a03:150::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Tue, 25 Aug
- 2020 22:51:08 +0000
-Received: from BY5PR15MB3667.namprd15.prod.outlook.com
- ([fe80::f4b9:8011:9aaa:e4ea]) by BY5PR15MB3667.namprd15.prod.outlook.com
- ([fe80::f4b9:8011:9aaa:e4ea%3]) with mapi id 15.20.3305.026; Tue, 25 Aug 2020
- 22:51:08 +0000
-From:   Nick Terrell <terrelln@fb.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "od@zcrc.me" <od@zcrc.me>, "Yann Collet" <cyan@fb.com>
-Subject: Re: [PATCH v2 1/2] lib: decompress_unzstd: Limit output size
-Thread-Topic: [PATCH v2 1/2] lib: decompress_unzstd: Limit output size
-Thread-Index: AQHWeyMWQ6UvCpHPl0W6+2O1jLwYH6lJbimA
-Date:   Tue, 25 Aug 2020 22:51:08 +0000
-Message-ID: <36FE5764-0CFC-44EC-8F3A-5A50F5391C57@fb.com>
-References: <20200825210127.17850-1-paul@crapouillou.net>
-In-Reply-To: <20200825210127.17850-1-paul@crapouillou.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: crapouillou.net; dkim=none (message not signed)
- header.d=none;crapouillou.net; dmarc=none action=none header.from=fb.com;
-x-originating-ip: [2620:10d:c090:400::5:ad82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0f6d7753-7047-4733-a244-08d849495b3f
-x-ms-traffictypediagnostic: BYAPR15MB2584:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB25843BE4081BDCE009F678B8AB570@BYAPR15MB2584.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qLpXPEKZ1hhptkm2vkiTqypcaSVMAcpOp4ZZcpysacLMgH/f07wOBa3SQPlZUhtDwACqtdu7YPu46YsHFnVYT4YssVsht06X40A+EQhwi8SDVXiZdaoMznpCjwn9G2et/fKBQM+m2Dtw3rmWz/liQGrG0T6t6S3R29aR547E/rN+/DTkOjFAIcfzam+oIAt5e3KVWZ0338tGfMVs0d9Pwk4zZuSZKfNhnUesHCj9my+lJhteJz9OI9RMEZa1Y0zfgmNAa/YzTahMhgeF9WLTCJ4CsuNO6vNXqrTNQbdbRosG9FOsWymzJ+XQwk9aD6ei
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3667.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(396003)(366004)(346002)(136003)(39860400002)(53546011)(33656002)(316002)(8676002)(8936002)(6506007)(36756003)(4326008)(6916009)(478600001)(2616005)(71200400001)(6512007)(54906003)(86362001)(2906002)(6486002)(5660300002)(186003)(76116006)(66446008)(66556008)(64756008)(66476007)(66946007)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: EBM9Zq3/k6/MVpltMzFHB8LTVY2nbT39B/G/npyXCTm1bbUMXUbil/9ekVjbVv4J7RlsgFD2AXW4E7m1VV8sMJeGD6sgS2++flTNlTkiruQIZqhuBFgWrXpz+LvXvbCNXbY/L2LQXpSOUiWal1LprE9HfsKt4AwU6bkMweVRgdcMXsfqr/e/JsA+rOeVcArBmuOBr5UDHmCnN5ordcNkA3CggsvsBqhVOa5yoqc1bI4VbGj3D3rk/I2rgcPHTM/M253QpFQ9XmtG8Npc1ANrn9a5hzhxqTA+Yhn8exLqdsdSCxxtrRk3Eheehj18n2efuTG/riZ80b3iBls/a4TgxCATCBnioXI+PCY0QX5bFabE3L/pSNRq2tDxg6XQS8VPpBQz+1S++hQPmxve3C2XIVpFGEYLH6jwEB3bSqeM6guDiFWd8geXRmT0Jm6g/xpjnTbf+d5DqpB/fxhr5vB6j+FhwJemCeGZlrvMkEOT34qoZrPoFTP9hsHzpKA6FidqsY2cFppHs+4z/ROwITt6jVpg3fXehYwpJ9uj13k/8eV1lbuhmC3vqDYF94l44GFsB8w2PGF/1HYjiEdiU7SYFM+HPzZiqNRcCPQnqJA5olKJ+ZmVUnUiUm7EXecYxTp6/4X0tm7ux4yLrIgjqokJD07E2+PG3hxbUwHyo+Mu45TOn+kD4H1RzheDtgkL50k4
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <09E9FA08649B7D45ABB2765269C66D52@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 25 Aug 2020 18:51:35 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E37AC061574;
+        Tue, 25 Aug 2020 15:51:35 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id s16so324820qtn.7;
+        Tue, 25 Aug 2020 15:51:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RRYm8K54iTM0KmZ7diI013rBcUcgsXrhjLGzNHRl7Rg=;
+        b=rchlr1Gb7qoXlcfZld/WTVS7B4cMQosuzwK/vU04y3i/CR5vmoawJu5NNf+PWijlzO
+         zh7Pk7v9aG6fTAev6uTCPjAECWd83nm6cVfRBAw2ejiJQJ1l/hzPH73M3eVf4Xg86eTG
+         3iIspWHHE99X0ElIPniIErSg2xHJwb9btjaD0OLYAKihJuXTZn1+C/+FX7anBZdX5U/J
+         nJopOCgMoYX+4QHC4oxVfxhQVpaWN9tff8Yi0p6e66DsPGFjW5VOC6npbzo0eyvxgOYe
+         IWrk988JpKGN3LEQ9dYJ8a2hguKkcxjFxArWzU7FzhvuqlC33OzHifX6smu3jipeJsIM
+         2+Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RRYm8K54iTM0KmZ7diI013rBcUcgsXrhjLGzNHRl7Rg=;
+        b=tnOj7+oZfWh1D1Ym879HfPy9DOqJnFRXrdhSvAfUohqH5mAtoazVyntPXCa0X3mJxl
+         B15dHAK8p+ECH/0J3AK+cd/Abdfx1xRVJBS4+c/2K48UQCvRVyGB83mJScDTVFFjbGKV
+         qyRjr4xZ1EXdQDwDRjJUb5OToppO11R4AFJMKv7NuseqnW8VWaLONWkR05A/CG7EVmtU
+         l+3lAXdMb5llZNfSe/Y8zjR23gw05iWDZxDEelvqcVqExK7Rl/4vlRBZACyVimxIFu9b
+         ojz3wisBQf4iXxO7F6mZZSLd1fJXDoqtn3XT/IKJ7EddjDSKes92bstw+JS1fWNQJ8bs
+         nqzg==
+X-Gm-Message-State: AOAM531DuGpuKUjTYEYkUZqKDWNETLWpkVK+Add9wgP4fZKY10RZ11es
+        g+dlVqrFDuveT539WuAcheo=
+X-Google-Smtp-Source: ABdhPJzlIF0klzc1WeI+3Dpjcw7mOVpEhCkd6vWLI961R34YyHmWrmRqxKNFA1rLy9d2d2Qot81Ypg==
+X-Received: by 2002:ac8:75c8:: with SMTP id z8mr11468112qtq.327.1598395894379;
+        Tue, 25 Aug 2020 15:51:34 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id g13sm254959qki.62.2020.08.25.15.51.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 15:51:33 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 15:51:31 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>, Borislav Petkov <bp@suse.de>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation: add minimum clang/llvm version
+Message-ID: <20200825225131.GA2702183@ubuntu-n2-xlarge-x86>
+References: <20200825222552.3113760-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3667.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f6d7753-7047-4733-a244-08d849495b3f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Aug 2020 22:51:08.4242
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1NCpu4iPuCPvLH97ok2AqQY5cNbEQLC+yV4uAETUUPAWe1OBC5S+qhuCo6DctaVo
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2584
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-25_10:2020-08-25,2020-08-25 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- priorityscore=1501 clxscore=1015 lowpriorityscore=0 mlxscore=0 spamscore=0
- adultscore=0 malwarescore=0 bulkscore=0 impostorscore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250170
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825222552.3113760-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IE9uIEF1ZyAyNSwgMjAyMCwgYXQgMjowMSBQTSwgUGF1bCBDZXJjdWVpbCA8cGF1bEBjcmFw
-b3VpbGxvdS5uZXQ+IHdyb3RlOg0KPiANCj4gVGhlIHpzdGQgZGVjb21wcmVzc2lvbiBjb2RlLCBh
-cyBpdCBpcyByaWdodCBub3csIHdpbGwgaGF2ZSBpbnRlcm5hbA0KPiB2YWx1ZXMgb3ZlcmZsb3cg
-b24gMzItYml0IHN5c3RlbXMgd2hlbiB0aGUgb3V0cHV0IHNpemUgaXMgYmlnZ2VyIHRoYW4NCj4g
-MSBHaUIuDQo+IA0KPiBVbnRpbCBzb21lb25lIHNtYXJ0ZXIgdGhhbiBtZSBjYW4gZmlndXJlIG91
-dCBob3cgdG8gZml4IHRoZSB6c3RkIGNvZGUNCj4gcHJvcGVybHksIGxpbWl0IHRoZSBkZXN0aW5h
-dGlvbiBidWZmZXIgc2l6ZSB0byAxIEdpQiwgd2hpY2ggc2hvdWxkIGJlDQo+IGVub3VnaCBmb3Ig
-ZXZlcnlib2R5LCBpbiBvcmRlciB0byBtYWtlIGl0IHVzYWJsZSBvbiAzMi1iaXQgc3lzdGVtcy4N
-Cg0KSSB3YXMgdGFsa2luZyB3aXRoIFlhbm4gQ29sbGV0LCBhbmQgd2UgYmVsaWV2ZSB0aGF0IGl0
-IGlzbuKAmXQgdGhlIGxvbmcgdGhhdA0KaXMgb3ZlcmZsb3dpbmcsIGJ1dCB0aGUgcG9pbnRlcnMu
-IFpzdGQgZXhwZWN0cyB0byBiZSBnaXZlbiBhIHZhbGlkIG91dHB1dA0Kc2l6ZS4gSXQgZ2VuZXJh
-bGx5IHVzZXMgYSBiZWdpbi9lbmQgcG9pbnRlciB3aXRoIGl0cyBvdXRwdXQgYnVmZmVyLiBTbyB3
-aGVuDQppdCBpcyBnaXZlbiBhIHZlcnkgbGFyZ2Ugb3V0cHV0IHNpemUgaW4gMzItYml0IG1vZGUg
-dGhlIGVuZCBwb2ludGVyIHdpbGwNCm92ZXJmbG93IHRoZSBwb2ludGVyIGVpdGhlciBjYXVzaW5n
-IFVCLCBvciBlbmQgcG9pbnRlciA8IGJlZ2luIHBvaW50ZXIsDQp3aGljaCBicmVha3MgenN0ZC4N
-Cg0KWnN0ZCB3aWxsIHByb2JhYmx5IG5ldmVyIGJlIGFibGUgdG8gd29yayBwcm9wZXJseSBpbiB0
-aGlzIHdheS4gQSBiZXR0ZXINCnNvbHV0aW9uIG1pZ2h0IGJlIHRvIHBhc3MgTUFYX0FERFJFU1Nf
-UFRSIC0gT1VUUFVUX1BUUiBhcw0KdGhlIHNpemUgdG8gdGhlIF9fZGVjb21wcmVzcygpIGNhbGwu
-IE9yIHNvbWUgb3RoZXIgc2l6ZSB0aGF0IHdvbuKAmXQNCm92ZXJmbG93IHRoZSBwb2ludGVyLg0K
-DQpCZXN0LA0KTmljaw0KDQo+IFNpZ25lZC1vZmYtYnk6IFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3Jh
-cG91aWxsb3UubmV0Pg0KPiBSZXZpZXdlZC1ieTogTmljayBUZXJyZWxsIDx0ZXJyZWxsbkBmYi5j
-b20+DQo+IC0tLQ0KPiANCj4gTm90ZXM6DQo+ICAgIHYyOiBDaGFuZ2UgbGltaXQgdG8gMSBHaUIN
-Cj4gDQo+IGxpYi9kZWNvbXByZXNzX3VuenN0ZC5jIHwgMyArKy0NCj4gMSBmaWxlIGNoYW5nZWQs
-IDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2xpYi9k
-ZWNvbXByZXNzX3VuenN0ZC5jIGIvbGliL2RlY29tcHJlc3NfdW56c3RkLmMNCj4gaW5kZXggMGFk
-MmMxNTQ3OWVkLi40MTQ1MTdiYWVkYjAgMTAwNjQ0DQo+IC0tLSBhL2xpYi9kZWNvbXByZXNzX3Vu
-enN0ZC5jDQo+ICsrKyBiL2xpYi9kZWNvbXByZXNzX3VuenN0ZC5jDQo+IEBAIC03Nyw2ICs3Nyw3
-IEBADQo+IA0KPiAjaW5jbHVkZSA8bGludXgvZGVjb21wcmVzcy9tbS5oPg0KPiAjaW5jbHVkZSA8
-bGludXgva2VybmVsLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvc2l6ZXMuaD4NCj4gI2luY2x1ZGUg
-PGxpbnV4L3pzdGQuaD4NCj4gDQo+IC8qIDEyOE1CIGlzIHRoZSBtYXhpbXVtIHdpbmRvdyBzaXpl
-IHN1cHBvcnRlZCBieSB6c3RkLiAqLw0KPiBAQCAtMTc5LDcgKzE4MCw3IEBAIHN0YXRpYyBpbnQg
-SU5JVCBfX3VuenN0ZCh1bnNpZ25lZCBjaGFyICppbl9idWYsIGxvbmcgaW5fbGVuLA0KPiAJc2l6
-ZV90IHJldDsNCj4gDQo+IAlpZiAob3V0X2xlbiA9PSAwKQ0KPiAtCQlvdXRfbGVuID0gTE9OR19N
-QVg7IC8qIG5vIGxpbWl0ICovDQo+ICsJCW91dF9sZW4gPSBTWl8xRzsgLyogc2hvdWxkIGJlIGJp
-ZyBlbm91Z2gsIHJpZ2h0PyAqLw0KPiANCj4gCWlmIChmaWxsID09IE5VTEwgJiYgZmx1c2ggPT0g
-TlVMTCkNCj4gCQkvKg0KPiAtLSANCj4gMi4yOC4wDQo+IA0KDQo=
+On Tue, Aug 25, 2020 at 03:25:51PM -0700, Nick Desaulniers wrote:
+> Based on a vote at the LLVM BoF at Plumbers 2020, we decided to start
+> small, supporting just one formal upstream release of LLVM for now.
+> 
+> We can probably widen the support window of supported versions over
+> time.  Also, note that LLVM's release process is different than GCC's.
+> GCC tends to have 1 major release per year while releasing minor updates
+> to the past 3 major versions.  LLVM tends to support one major release
+> and one minor release every six months.
+> 
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+> Note to reviewers: working remote, I'm having trouble testing/verifying
+> that I have the RST links wired up correctly; I would appreciate it if
+> someone is able to `make htmldocs` and check
+> Documentation/output/process/changes.html properly links to
+> Documentation/output/kbuild/llvm.html.
+
+I ran 'make O=out htmldocs' and can confirm that the link works properly
+in process/changes.html, pointing to kbuild/llvm.html.
+
+>  Documentation/kbuild/llvm.rst     |  2 ++
+>  Documentation/process/changes.rst | 10 ++++++++++
+>  2 files changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+> index 2aac50b97921..70ec6e9a183b 100644
+> --- a/Documentation/kbuild/llvm.rst
+> +++ b/Documentation/kbuild/llvm.rst
+> @@ -1,3 +1,5 @@
+> +.. _kbuild_llvm:
+> +
+>  ==============================
+>  Building Linux with Clang/LLVM
+>  ==============================
+> diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
+> index ee741763a3fc..6c580ef9f2a3 100644
+> --- a/Documentation/process/changes.rst
+> +++ b/Documentation/process/changes.rst
+> @@ -30,6 +30,7 @@ you probably needn't concern yourself with pcmciautils.
+>          Program        Minimal version       Command to check the version
+>  ====================== ===============  ========================================
+>  GNU C                  4.9              gcc --version
+> +Clang/LLVM (optional)  10.0.1           clang --version
+
+Maybe it is worth making the "(optional)" a footnote like Sphinx? Seems
+to just kind of stick out to me but I do not have a strong opinion
+unless others do.
+
+>  GNU make               3.81             make --version
+>  binutils               2.23             ld -v
+>  flex                   2.5.35           flex --version
+> @@ -68,6 +69,15 @@ GCC
+>  The gcc version requirements may vary depending on the type of CPU in your
+>  computer.
+>  
+> +Clang/LLVM (optional)
+> +---------------------
+> +
+> +The latest formal release of clang and LLVM utils (according to
+> +`releases.llvm.org <https://releases.llvm.org>`_) are supported for building
+> +kernels. Older releases aren't gauranteed to work, and we may drop workarounds
+> +from the kernel that were used to support older versions. Please see additional
+> +docs on :ref:`Building Linux with Clang/LLVM <kbuild_llvm>`.
+> +
+
+Do we maybe want to add a section for LLVM/clang in the "Getting updated
+software" section? Maybe just a link to the existing section that we
+have in kbuild/llvm.rst?
+
+>  Make
+>  ----
+>  
+> -- 
+> 2.28.0.297.g1956fa8f8d-goog
+> 
+
+Regardless of the nits above:
+
+Reviewed-and-tested-by: Nathan Chancellor <natechancellor@gmail.com>
