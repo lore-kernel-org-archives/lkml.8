@@ -2,112 +2,115 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A558B2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72FB2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:32:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skogtun.org header.i=@skogtun.org header.b="gOzfmTZU"
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="MMVkUG6Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgHYQcO (ORCPT
+        id S1727043AbgHYQc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:32:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52662 "EHLO
+        Tue, 25 Aug 2020 12:32:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726938AbgHYQcH (ORCPT
+        with ESMTP id S1726938AbgHYQcY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:32:07 -0400
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95AE3C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:32:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=skogtun.org
-        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Azq8s/g0P7WuVH3XCd58/5BNtHWhEWrZ8Xs/jBWMaEA=; b=gOzfmTZUDkwhzWbfXXFxiyUrJe
-        iUX8kg4P+tCCZ6cTVVvJq59/y4QVEBCizu8a9cwNnRk9Lqy7YstihRDV36wxbC20Rc/k9T8eLRoqs
-        aay6r4MgjFMBfhrcfyTcQIm4bfona+6074HuaNdRYd8IN5WtFsWULgDSMMxaVdvkODdLUkC+yVMJ5
-        o4h/l5ylsG4Mh8Jh9Fkhwgzo3CFNFcZyTOMynPNBrwJD9PV2dtPNf5MAUk9KSyQN1Fe7aJsCrmkgn
-        wsOzVD/C0j9SSQS9qUNXC8+ABxz3x2t5yAdEsmuSg/IUuwBpjQdAsEjPmCgVddvq7aeN12OHUHtG3
-        rnH4ecVw==;
-Received: from [2a01:79c:cebf:7fb0:de97:df61:fecc:46bb] (port=53120)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <harald@skogtun.org>)
-        id 1kAbrZ-00031x-Af; Tue, 25 Aug 2020 18:31:57 +0200
-Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to
- mainline
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-References: <20200817161132.GA4711@amd>
- <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
- <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com>
- <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com>
- <20200820092349.GA3792@amd>
- <CAHk-=wjX=ck_u8uvp=PjGCQ3M9igE-yqyRPsJ54th1gQWpwMnA@mail.gmail.com>
- <20200821091900.hzbivycs5ky5d3iw@duo.ucw.cz> <87tuwr59te.fsf@intel.com>
-From:   Harald Arnesen <harald@skogtun.org>
-Message-ID: <7efa547d-b7a4-b873-f1aa-4f19eb849fa3@skogtun.org>
-Date:   Tue, 25 Aug 2020 18:31:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 12:32:24 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82B1FC061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:32:21 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id b17so9110310ejq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kylehuey.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2+dIJmuSMgJbsQBBUKMgpxWSQF3Ivrp0GmzROa4iBmw=;
+        b=MMVkUG6Q9GIG8JKpLRQRwf0zeRciqB1FjPAIfTWEWc28q11DdfHRMtydeftDYgiw5h
+         4IIXJDbCuOUR3izFfE77eLxG4VdPbgY9h7cCHuGqaPd/Nf5wnSaGt3exsu01Vg60CgVa
+         Xwysl2NWuxQMfm5EtFW1tvzfKSzAFzXaiRLmnd8WGlA5jwYeOBfVaTlWON8ZgvjemPLY
+         97P2QWWrGq1HqLB0S1VFlgyxrjq5oP8g5BbO91JoQHO9SQQQdiRIGcNBxdgMFSxc0x7z
+         B0wNBIJbu67Qe+myC/C5gfrO8VS4j2OQI7xJwU+5M0usx0JJmEr1D9KaviAYvTK93RqA
+         fRXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2+dIJmuSMgJbsQBBUKMgpxWSQF3Ivrp0GmzROa4iBmw=;
+        b=qblwMqQZ5mDGMpUvdOERYCz6Zqq+9JDxclJeF/2gGLpf2V6XqiVLE471BXZhGLzX4F
+         SZRK/3pMYKxcBjWfPTUx4rYQu8B2gCgG2tEJxbhUJ4w0ef1sLfwGNisscFNBhqWFuIhB
+         gAYwznT9Cvs44iJLrcSdjJF7R6G4i17VKhPqkvf8a2w3SxvpOwYniy7EARtodgH5OeAk
+         XxuNctcTVn1TIensB8AhGTSHe0+vVgaQVEa6khvsH4uv/bx9Dm3Oppju2MUbt0/Y8bw+
+         RVGCuDsI1lsULVZdzGFPIGa4G+WIHBNm4czrgXDF2rJAFtsLuJQvDmczDtIC8+PHlpDb
+         SKqA==
+X-Gm-Message-State: AOAM530zKAOuKQ4jRWELZVMiVerByBS13wp5lQTxBbsCekvp3HSinTFa
+        qkiP4Hxts6nxHDQgIH3EpMY0CpHSgLfUduJ372kzbPG3ofp7tA==
+X-Google-Smtp-Source: ABdhPJz5Oqbea80XpYQhN6ZgBsYQzTZEyQCdO0DoTgIfj9OHeDrMgvau+6rRuKToV7mDWVgBMRFN2NHkLoRYV36g7c0=
+X-Received: by 2002:a17:906:1c59:: with SMTP id l25mr11860868ejg.182.1598373139996;
+ Tue, 25 Aug 2020 09:32:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87tuwr59te.fsf@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAOp6jLYrwMqV=7hmxgdZUdDZ2aeUB27TTHm=j6cQT7C10Muhww@mail.gmail.com>
+ <7DF88F22-0310-40C9-9DA6-5EBCB4877933@amacapital.net> <CALCETrUrvrQNw6dPau_rtHjA_YuCVdCTWYd4dsdcvcGsOaspmg@mail.gmail.com>
+ <b0813ec5-b163-cc11-bfc9-e9d08c9c4ff2@zytor.com> <CALCETrXvgb257CWnaA1NgUUp3x08+gJBEOQh4o9OYkB-RvAo1A@mail.gmail.com>
+ <CAP045Ao6xBquwSDoCLzzNbEW1Lr969d+D0jQQ2Zb4pX3B77-Xw@mail.gmail.com> <CALCETrUgm-Cph4fwqk108VHZPLuM7XWL=nff-xB+hc+hiDrqsg@mail.gmail.com>
+In-Reply-To: <CALCETrUgm-Cph4fwqk108VHZPLuM7XWL=nff-xB+hc+hiDrqsg@mail.gmail.com>
+From:   Kyle Huey <me@kylehuey.com>
+Date:   Tue, 25 Aug 2020 09:32:08 -0700
+Message-ID: <CAP045Aqhox6YSdk0v_YZWY=y7Ps4ZfH779MG-W4a=gc+cYEY+Q@mail.gmail.com>
+Subject: Re: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on
+ a 64 bit system
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Robert O'Callahan" <robert@ocallahan.org>,
+        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jani Nikula [25.08.2020 11:55]:
+On Tue, Aug 25, 2020 at 9:12 AM Andy Lutomirski <luto@amacapital.net> wrote=
+:
+> I don=E2=80=99t like this at all. Your behavior really shouldn=E2=80=99t =
+depend on
+> whether the new instructions are available.  Also, some day I would
+> like to change Linux to have the new behavior even if FSGSBASE
+> instructions are not available, and this will break rr again.  (The
+> current !FSGSBASE behavior is an ugly optimization of dubious value.
+> I would not go so far as to describe it as correct.)
 
-> On Fri, 21 Aug 2020, Pavel Machek <pavel@ucw.cz> wrote:
->> On Thu 2020-08-20 09:16:18, Linus Torvalds wrote:
->>> On Thu, Aug 20, 2020 at 2:23 AM Pavel Machek <pavel@ucw.cz> wrote:
->>> >
->>> > Yes, it seems they make things work. (Chris asked for new patch to be
->>> > tested, so I am switching to his kernel, but it survived longer than
->>> > it usually does.)
->>> 
->>> Ok, so at worst we know how to solve it, at best the reverts won't be
->>> needed because Chris' patch will fix the issue properly.
->>> 
->>> So I'll archive this thread, but remind me if this hasn't gotten
->>> sorted out in the later rc's.
->>
->> Yes, thank you, it seems we have a solution w/o the revert.
-> 
-> For posterity, I'm told the fix is [1].
-> 
-> BR,
-> Jani.
-> 
-> 
-> [1] https://lore.kernel.org/intel-gfx/20200821123746.16904-1-joro@8bytes.org/
+Ok.
 
-Doesn't fix it for me. As soon as I start XFCE, the mouse and keyboard
-freeezes. I can still ssh into the machine
+> I would suggest you do one of the following things:
+>
+> 1. Use int $0x80 directly to load 32-bit regs into a child.  This
+> might dramatically simplify your code and should just do the right
+> thing.
 
-The three reverts (763fedd6a216, 7ac2d2536dfa and 9e0f9464e2ab) fixes
-the bug for me.
--- 
-Hilsen Harald
+I don't know what that means.
+
+> 2. Something like your patch but make it unconditional.
+>
+> 3. Ask for, and receive, real kernel support for setting FS and GS in
+> the way that 32-bit code expects.
+
+I think the easiest way forward for us would be a PTRACE_GET/SETREGSET
+like operation that operates on the regsets according to the
+*tracee*'s bitness (rather than the tracer, as it works currently).
+Does that sound workable?
+
+- Kyle
