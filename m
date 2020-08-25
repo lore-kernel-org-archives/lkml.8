@@ -2,128 +2,73 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDCCC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43804C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB0EC206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:52:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jroyZo4/"
+	by mail.kernel.org (Postfix) with ESMTP id 1E21F206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbgHYUwo (ORCPT
+        id S1726619AbgHYUzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:52:44 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:49864 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYUwn (ORCPT
+        Tue, 25 Aug 2020 16:55:32 -0400
+Received: from smtprelay0134.hostedemail.com ([216.40.44.134]:37306 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726149AbgHYUzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:52:43 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PKipJV156187;
-        Tue, 25 Aug 2020 20:52:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=auC1QONwDp3dgkmIBt9CYKiGBVa5ZJTSWe0A2XEhlOg=;
- b=jroyZo4/g0Ix8rW8adNAhTYqRd7Lxv3X8YrSWiyjBdtsB5IlyHpukUBF1A8S/ef70uk5
- m1qQOLHOqR3GOk5N1fN5gK6PQOMpPtK3sMUbhGVEVOYeTatjz5Z5esXD3ul5sX30TI+M
- vLaD7uV8LRKjIA54bybx6/XYTe3GKUyGWJky4JlNVSCtOlYmikxcceES60hJoiOZlZG2
- EugiHtQFnDDJOeasZ3m+LUzAQcmPBlP3LIh24cRawh2me07iTXsmNHmL23BUDrvkFwco
- mX7g0LlIzy5vjPcLB4ZhAwEiGWSjIZXvuHXVpMbHzTTUCM0Q7QkPWNtNQYCFI33hFung FQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 333csj4xj7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 20:52:37 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PKinCo171916;
-        Tue, 25 Aug 2020 20:50:36 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 333r9kc0fj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 20:50:36 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07PKoadf021420;
-        Tue, 25 Aug 2020 20:50:36 GMT
-Received: from localhost (/10.159.234.29)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Aug 2020 13:50:36 -0700
-Date:   Tue, 25 Aug 2020 13:50:34 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 4/9] iomap: Use bitmap ops to set uptodate bits
-Message-ID: <20200825205034.GI6096@magnolia>
-References: <20200824145511.10500-1-willy@infradead.org>
- <20200824145511.10500-5-willy@infradead.org>
+        Tue, 25 Aug 2020 16:55:32 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id CDB9318019153;
+        Tue, 25 Aug 2020 20:55:30 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: dock12_4708a5a2705e
+X-Filterd-Recvd-Size: 1702
+Received: from XPS-9350 (unknown [172.58.43.20])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 25 Aug 2020 20:55:28 +0000 (UTC)
+Message-ID: <1e9f4efd420c7ff516097050f1f50d0299a1e180.camel@perches.com>
+Subject: Re: [PATCH] IB/qib: remove superfluous fallthrough statements
+From:   Joe Perches <joe@perches.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roland Dreier <roland@purestorage.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 25 Aug 2020 13:55:23 -0700
+In-Reply-To: <36066d75-899e-c9ca-835e-0040659c914b@embeddedor.com>
+References: <20200825155142.349651-1-alex.dewar90@gmail.com>
+         <4877c3a5-365e-4500-43c0-4a4361e2cda3@embeddedor.com>
+         <086ee29ef75f657dcf45e92d4ebfdf2b3f4fcab8.camel@perches.com>
+         <da65ca20-49cb-2940-76d6-7e341687a9e2@embeddedor.com>
+         <777e01f8dc9bd35e8b7bdf1b5181d0d13b86d8b9.camel@perches.com>
+         <36066d75-899e-c9ca-835e-0040659c914b@embeddedor.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824145511.10500-5-willy@infradead.org>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008250157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 clxscore=1015
- spamscore=0 priorityscore=1501 impostorscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=1 mlxlogscore=999 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250157
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:55:05PM +0100, Matthew Wilcox (Oracle) wrote:
-> Now that the bitmap is protected by a spinlock, we can use the
-> more efficient bitmap ops instead of individual test/set bit ops.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+On Tue, 2020-08-25 at 12:01 -0500, Gustavo A. R. Silva wrote:
+> On 8/25/20 11:47, Joe Perches wrote
+[]
+> You would have noticed this should be two patches.
 
-Yay!
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+That's interpretational.
 
---D
+> > I think your desire for micropatches is unnecessary.
+> > 
+> You might be generalizing. My 'desire' here is justified and specific.
 
-> ---
->  fs/iomap/buffered-io.c | 12 ++----------
->  1 file changed, 2 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index 639d54a4177e..dbf9572dabe9 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -134,19 +134,11 @@ iomap_iop_set_range_uptodate(struct page *page, unsigned off, unsigned len)
->  	struct inode *inode = page->mapping->host;
->  	unsigned first = off >> inode->i_blkbits;
->  	unsigned last = (off + len - 1) >> inode->i_blkbits;
-> -	bool uptodate = true;
->  	unsigned long flags;
-> -	unsigned int i;
->  
->  	spin_lock_irqsave(&iop->uptodate_lock, flags);
-> -	for (i = 0; i < i_blocks_per_page(inode, page); i++) {
-> -		if (i >= first && i <= last)
-> -			set_bit(i, iop->uptodate);
-> -		else if (!test_bit(i, iop->uptodate))
-> -			uptodate = false;
-> -	}
-> -
-> -	if (uptodate)
-> +	bitmap_set(iop->uptodate, first, last - first + 1);
-> +	if (bitmap_full(iop->uptodate, i_blocks_per_page(inode, page)))
->  		SetPageUptodate(page);
->  	spin_unlock_irqrestore(&iop->uptodate_lock, flags);
->  }
-> -- 
-> 2.28.0
-> 
+And to date undescribed.
+
+
