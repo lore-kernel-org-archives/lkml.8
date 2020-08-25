@@ -2,146 +2,115 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3D1C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55010C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A74F020639
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29EB920639
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:23:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gJV28BEO"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="IDKv9EHC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728891AbgHYIWn (ORCPT
+        id S1728921AbgHYIXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:22:43 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:4669 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725970AbgHYIWn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:22:43 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f44ca440002>; Tue, 25 Aug 2020 01:22:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 25 Aug 2020 01:22:42 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 25 Aug 2020 01:22:42 -0700
-Received: from [10.26.74.41] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Aug
- 2020 08:22:40 +0000
-Subject: Re: [PATCH V2] cpufreq: tegra186: Fix initial frequency
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-pm@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200824145907.331899-1-jonathanh@nvidia.com>
- <20200825055003.qfsuktsv7cyouxei@vireshk-i7>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <ab693b02-9ae2-48c2-0104-e82d949d82b7@nvidia.com>
-Date:   Tue, 25 Aug 2020 09:22:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200825055003.qfsuktsv7cyouxei@vireshk-i7>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598343748; bh=LkkmwW6Ou5KUyXiZ9GFzOWPI5DK3g7/4RUVRkK4oGKk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gJV28BEOFvRtdFiEGfwtPMV9+KMj2wVPpgmf+wPdzt4yXxsbxi6eJjkjARn8ho1ED
-         RFsZbjZMTmgM+wU4V0PCz8l2u6gYmkj9+x7k/558EHveYWxFEIOLfJa2FlgycXMX31
-         ivG6lNFQ/966NIFZu/i8iEOFn2e6Qhg6N3RGwK3cc3OQZx4DuwOox7KoEZA8YeXHNV
-         +XIHri+B3MUoLTglzV5ICmURBfeaeHOmwcA7uUVdvIkudMXMRF/ILs8uXQpJhsBiGI
-         Ut6AuKgQ7hi6334gfIwOqZdLR9bmSKyAr12aCi2OZb+BMCAr/HfNUyasy101Fqq98U
-         usCthjRAs0E/w==
+        Tue, 25 Aug 2020 04:23:19 -0400
+Received: from m12-18.163.com ([220.181.12.18]:45409 "EHLO m12-18.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725970AbgHYIXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 04:23:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=6TbjWjz/T5CmZA6u71
+        mDuio88nMrkLsUiCb9hwSiQ+A=; b=IDKv9EHCpoQeXW8znfv6O/TaklFB45m18L
+        9C7BG/RQxFe1BUuzO0UZx8FtG2pGCOlDgF0YHXE24RSA9aK0LK+Kg/eaM993KNda
+        SGnS1zkH083M3DiTm3VyjMcyH5VfQtXPhlRJ+Fj5iY/gfewTyfxZGDC42t7BdI85
+        VZ3IGcNek=
+Received: from localhost.localdomain (unknown [58.33.102.45])
+        by smtp14 (Coremail) with SMTP id EsCowADn7pY5ykRf0ZtgKw--.56943S2;
+        Tue, 25 Aug 2020 16:22:22 +0800 (CST)
+From:   Grant Feng <von81@163.com>
+To:     von81@163.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        dmurphy@ti.com, robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 1/2] leds: is31fl319x: Add shutdown pin and generate a 5ms low pulse when startup
+Date:   Tue, 25 Aug 2020 16:22:05 +0800
+Message-Id: <20200825082206.26575-1-von81@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: EsCowADn7pY5ykRf0ZtgKw--.56943S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7AF17try5XFWUWr1rAw15twb_yoW8Cr4xpF
+        1q9F1FyFW3tFW7K3W3ZFy7ZFy5t3W8tF4DArWxuayS93Wvgrn0gFn0qFnFvF17XFZ5uayU
+        Jw4Dtay8Gr48ArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jwhL8UUUUU=
+X-Originating-IP: [58.33.102.45]
+X-CM-SenderInfo: xyrqmii6rwjhhfrp/xtbB0B6LOlUMN0n7hAAAsn
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+generate a 5ms low pulse on shutdown pin when startup, then the chip
+becomes more stable in the complex EM environment.
 
-On 25/08/2020 06:50, Viresh Kumar wrote:
-> On 24-08-20, 15:59, Jon Hunter wrote:
->> Commit 6cc3d0e9a097 ("cpufreq: tegra186: add
->> CPUFREQ_NEED_INITIAL_FREQ_CHECK flag") fixed CPUFREQ support for
->> Tegra186 but as a consequence the following warnings are now seen on
->> boot ...
->>
->>  cpufreq: cpufreq_online: CPU0: Running at unlisted freq: 0 KHz
->>  cpufreq: cpufreq_online: CPU0: Unlisted initial frequency changed to: 2035200 KHz
->>  cpufreq: cpufreq_online: CPU1: Running at unlisted freq: 0 KHz
->>  cpufreq: cpufreq_online: CPU1: Unlisted initial frequency changed to: 2035200 KHz
->>  cpufreq: cpufreq_online: CPU2: Running at unlisted freq: 0 KHz
->>  cpufreq: cpufreq_online: CPU2: Unlisted initial frequency changed to: 2035200 KHz
->>  cpufreq: cpufreq_online: CPU3: Running at unlisted freq: 0 KHz
->>  cpufreq: cpufreq_online: CPU3: Unlisted initial frequency changed to: 2035200 KHz
->>  cpufreq: cpufreq_online: CPU4: Running at unlisted freq: 0 KHz
->>  cpufreq: cpufreq_online: CPU4: Unlisted initial frequency changed to: 2035200 KHz
->>  cpufreq: cpufreq_online: CPU5: Running at unlisted freq: 0 KHz
->>  cpufreq: cpufreq_online: CPU5: Unlisted initial frequency changed to: 2035200 KHz
->>
->> Fix this by adding a 'get' callback for the Tegra186 CPUFREQ driver to
->> retrieve the current operating frequency for a given CPU. The 'get'
->> callback uses the current 'ndiv' value that is programmed to determine
->> that current operating frequency.
->>
->> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->> ---
->> Changes since V1:
->> - Moved code into a 'get' callback
->>
->>  drivers/cpufreq/tegra186-cpufreq.c | 30 ++++++++++++++++++++++++++++++
->>  1 file changed, 30 insertions(+)
->>
->> diff --git a/drivers/cpufreq/tegra186-cpufreq.c b/drivers/cpufreq/tegra186-cpufreq.c
->> index 01e1f58ba422..0d0fcff60765 100644
->> --- a/drivers/cpufreq/tegra186-cpufreq.c
->> +++ b/drivers/cpufreq/tegra186-cpufreq.c
->> @@ -14,6 +14,7 @@
->>  
->>  #define EDVD_CORE_VOLT_FREQ(core)		(0x20 + (core) * 0x4)
->>  #define EDVD_CORE_VOLT_FREQ_F_SHIFT		0
->> +#define EDVD_CORE_VOLT_FREQ_F_MASK		0xffff
->>  #define EDVD_CORE_VOLT_FREQ_V_SHIFT		16
->>  
->>  struct tegra186_cpufreq_cluster_info {
->> @@ -91,10 +92,39 @@ static int tegra186_cpufreq_set_target(struct cpufreq_policy *policy,
->>  	return 0;
->>  }
->>  
->> +static unsigned int tegra186_cpufreq_get(unsigned int cpu)
->> +{
->> +	struct cpufreq_frequency_table *tbl;
->> +	struct cpufreq_policy *policy;
->> +	void __iomem *edvd_reg;
->> +	unsigned int i, freq = 0;
->> +	u32 ndiv;
->> +
->> +	policy = cpufreq_cpu_get(cpu);
->> +	if (!policy)
->> +		return -EINVAL;
-> 
-> This should be return 0;
-> 
-> Applied with that change. Thanks.
+Signed-off-by: Grant Feng <von81@163.com>
+---
+ drivers/leds/leds-is31fl319x.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-
-OK, thanks!
-
-Jon
-
+diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
+index ca6634b8683c..54ac50740d43 100644
+--- a/drivers/leds/leds-is31fl319x.c
++++ b/drivers/leds/leds-is31fl319x.c
+@@ -16,6 +16,8 @@
+ #include <linux/of_device.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ 
+ /* register numbers */
+ #define IS31FL319X_SHUTDOWN		0x00
+@@ -61,6 +63,7 @@
+ struct is31fl319x_chip {
+ 	const struct is31fl319x_chipdef *cdef;
+ 	struct i2c_client               *client;
++	struct gpio_desc		*shutdown_gpio;
+ 	struct regmap                   *regmap;
+ 	struct mutex                    lock;
+ 	u32                             audio_gain_db;
+@@ -207,6 +210,15 @@ static int is31fl319x_parse_dt(struct device *dev,
+ 	if (!np)
+ 		return -ENODEV;
+ 
++	is31->shutdown_gpio = devm_gpiod_get_optional(dev,
++						"shutdown",
++						GPIOD_OUT_HIGH);
++	if (IS_ERR(is31->shutdown_gpio)) {
++		ret = PTR_ERR(is31->shutdown_gpio);
++		dev_err(dev, "Failed to get shutdown gpio: %d\n", ret);
++		return ret;
++	}
++
+ 	of_dev_id = of_match_device(of_is31fl319x_match, dev);
+ 	if (!of_dev_id) {
+ 		dev_err(dev, "Failed to match device with supported chips\n");
+@@ -350,6 +362,12 @@ static int is31fl319x_probe(struct i2c_client *client,
+ 	if (err)
+ 		goto free_mutex;
+ 
++	if (is31->shutdown_gpio) {
++		gpiod_direction_output(is31->shutdown_gpio, 0);
++		mdelay(5);
++		gpiod_direction_output(is31->shutdown_gpio, 1);
++	}
++
+ 	is31->client = client;
+ 	is31->regmap = devm_regmap_init_i2c(client, &regmap_config);
+ 	if (IS_ERR(is31->regmap)) {
 -- 
-nvpublic
+2.17.1
+
+
