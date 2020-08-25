@@ -2,86 +2,99 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1574EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE392C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF4B020786
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D1420786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:24:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgHYPX3 convert rfc822-to-8bit (ORCPT
+        id S1726845AbgHYPYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:23:29 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:49165 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgHYPXR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:23:17 -0400
-X-Originating-IP: 90.89.180.255
-Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
-        (Authenticated sender: kevin.lhopital@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 7DB231BF225;
-        Tue, 25 Aug 2020 15:23:10 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 17:23:09 +0200
-From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        yong.deng@magewell.com, p.zabel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH 1/7] media: sun6i-csi: Fix the bpp for 10-bit bayer
- formats
-Message-ID: <20200825172309.6756760d@lhopital-XPS-13-9360>
-In-Reply-To: <20200824165536.u2yzonoskiqu3c5j@gilmour.lan>
-References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
-        <20200821145935.20346-2-kevin.lhopital@bootlin.com>
-        <20200824165536.u2yzonoskiqu3c5j@gilmour.lan>
-Organization: bootlin
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 25 Aug 2020 11:24:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35106 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726113AbgHYPYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 11:24:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C8787ACBA;
+        Tue, 25 Aug 2020 15:24:34 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id C0D531E1316; Tue, 25 Aug 2020 17:24:03 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 17:24:03 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] mm: Pass pvec directly to find_get_entries
+Message-ID: <20200825152403.GE32298@quack2.suse.cz>
+References: <20200819150555.31669-1-willy@infradead.org>
+ <20200819150555.31669-7-willy@infradead.org>
+ <20200824161620.GK24877@quack2.suse.cz>
+ <20200824173639.GD17456@casper.infradead.org>
+ <20200825123324.GB32298@quack2.suse.cz>
+ <20200825132814.GO17456@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825132814.GO17456@casper.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-Le Mon, 24 Aug 2020 18:55:36 +0200,
-Maxime Ripard <maxime@cerno.tech> a écrit :
-
-> On Fri, Aug 21, 2020 at 04:59:29PM +0200, Kévin L'hôpital wrote:
-> > 10-bit bayer formats are aligned to 16 bits in memory, so this is
-> > what needs to be used as bpp for calculating the size of the
-> > buffers to allocate.
+On Tue 25-08-20 14:28:14, Matthew Wilcox wrote:
+> On Tue, Aug 25, 2020 at 02:33:24PM +0200, Jan Kara wrote:
+> > On Mon 24-08-20 18:36:39, Matthew Wilcox wrote:
+> > > We already have functions in filemap which take a pagevec, eg
+> > > page_cache_delete_batch() and delete_from_page_cache_batch().
 > > 
-> > Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>  
+> > Right but those are really pretty internal helper functions so I don't
+> > think they form or strong precedence.
 > 
-> Generally speaking, you should also explain why it's not an issue for
-> the callers. Depending on what that function is supposed to be doing
-> (returning the padded bits or the padded bits per pixel), your patch
-> could be either right or wrong.
+> To be honest, I saw that as being the way forward for the page cache APIs.
+> If we're going to use a batching mechanism, it should be pagevecs, and
+> it should be built into the page cache interfaces rather than hanging
+> out off on the side.
 > 
-> Since all the callers are using it to generate the number of bytes per
-> line, your patch is indeed correct. But it should be mentionned in the
-> commit log.
+> > > So if we're going to merge the two functions, it seems more natural to
+> > > have it in filemap.c and called find_get_entries(), but I'm definitely
+> > > open to persuasion on this!
+> > 
+> > I agree that having non-trivial xarray code in mm/swap.c isn't attractive
+> > either. Dunno, I dislike the inconsistency between find_get_pages() and
+> > find_get_entries() you create but they aren't completely consistent anyway
+> > so I can live with that. Or we can just leave the pagevec_lookup_entries()
+> > wrapper and the API will stay consistent...
 > 
-> Maxime
+> I was thinking about this some more [1] [2].  I think we can get to the
+> point where find_get_pages(), find_get_entries() and find_get_pages_tag()
+> (and all their variants) end up taking a pagevec as their last argument.
+> 
+> Also, I was thinking that all these names are wrong.  Really, they're
+> mapping_get_pages(), mapping_get_entries() and mapping_get_marked_pages().
+> So maybe I should move in that direction.
 
-All right, I will add this explanation.
+Well, as I wrote to you in one of the replies. IMO pagevec unnecessarily
+complicate matters and we should rather have for_each_mapping_page() and
+for_each_mapping_entry() magic macros that hide pagevecs inside. Most of
+users process returned pages/entries one by one so these macros would
+simplify them. So it would seem better to me to go more into this direction
+than to spread pagevecs...
 
-Thank you very much for the review
+> [1] https://lore.kernel.org/lkml/20200824214841.17132-1-willy@infradead.org/
+> [2] https://lore.kernel.org/lkml/20200824183424.4222-1-willy@infradead.org/
 
-Kévin 
-
+								Honza
 -- 
-Kevin L'Hopital, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
