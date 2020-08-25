@@ -2,240 +2,97 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80788C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5176C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 610092071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598383106;
-	bh=u0yt9nN7jC9w69HbJd62x6Z35R6lns7cJyBEEAs+5T8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iW6BoKy17OwG479SKB0UO0qm+MNTOEcjepQnJ1ja+38SoNQAmI6btoYOs0DvwE8xm
-	 vQeH9OSxq5BGkqWz7+Pi6Tl/oUD2cQ23ss5Y5QUhrDzrtBPZa8YS6xWgcr0luNBtEo
-	 oW+B7rmLXxMnKGwXtJmMn3F9rSmxfBe6mOyFD3Kg=
+	by mail.kernel.org (Postfix) with ESMTP id A9D8F2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:19:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pkZYaV+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHYTSZ (ORCPT
+        id S1726718AbgHYTTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:18:25 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37163 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgHYTST (ORCPT
+        Tue, 25 Aug 2020 15:19:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgHYTTL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:18:19 -0400
-Received: by mail-io1-f68.google.com with SMTP id b16so13679575ioj.4;
-        Tue, 25 Aug 2020 12:18:18 -0700 (PDT)
+        Tue, 25 Aug 2020 15:19:11 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D8EEC061574;
+        Tue, 25 Aug 2020 12:19:11 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id j13so26385pjd.4;
+        Tue, 25 Aug 2020 12:19:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CHkPYxiJz7RfurndXTXM2/NyRfbRCRqTVCJ4ExH0P7M=;
+        b=pkZYaV+w0oo3aPhI3C+RrX66X13wq/heJRzWR6ajT8SSc/Skn0gDX5+3lFdoysbBhW
+         VBix8ZsyKeGa3Qz6FxCvgU/eFhYLLGAaIBnRk3if13Nl2PD3ajl6PI6r9eJS4jbZtby1
+         6rICc/YeHO2lHX4NSLP+3cQ9tSij2sRvbsRFKA8PyFivMwQtOsqe5df/dkv3N+gIYd3W
+         nnSfjKqcJOSuxzBbTjQQVICWw7b2+bSnNyTrpU4pcYiDygIBS9SPnIrJ9rAcB51kIiJV
+         uHaSbLE+g/zaFBZDTSGVpggPHwi6HkQebzSAd5W5U3arV6P7GFIuVbY9gSZ00j1cXHrL
+         dnqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CbaB4dARNo7ofkMDOqGcoP4PrODHbcuDwxHGPmOw1BA=;
-        b=sNCfOT5dHmSDUTFAgW6F8h1cNNYP71UH8D7pGXg0IBeyejyVhUMgaDTqxT5jRy07kS
-         0gL4CIkNpnw0thXdcrHWs1mmyV26lQNBylHFw0YQVwLShE21Sdgo+ar7YcGh6NvT0JRV
-         CvCtbasoIcQodx2rd9ggwii+4QNab6Mon5B6mPf3+NQrFx2snndqgdVcd9y3a3AE6WMK
-         gUDxtCwvY2F8KHQNLuK7terxK5JYI8EmTE0si4nKQeT3iBL0kyAPE5cVWq75J36iNvoW
-         LG1zVsdLz2hW3vgQQn0+YcpU49U6dRbePhOX7fSm7sFEKR+gqR6XsxZDQ0C/SHGq1hmC
-         QxvQ==
-X-Gm-Message-State: AOAM532A+pezKdivMH1y7WEVZirmrEg67HnQjXkRiEccHGcRGFlI7D3o
-        3zD7thA8ZuLmwKEj1PDlhw==
-X-Google-Smtp-Source: ABdhPJyiuVhU4p4Zo1w9sz/+dYV7JwEuyuIWv7XvYB+aH6q7VTjJEiPzSYZ7YE7LmEn2epNgM4kg9A==
-X-Received: by 2002:a02:93c5:: with SMTP id z63mr2612135jah.122.1598383098433;
-        Tue, 25 Aug 2020 12:18:18 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id l5sm9636540ilj.88.2020.08.25.12.18.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 12:18:17 -0700 (PDT)
-Received: (nullmailer pid 1158885 invoked by uid 1000);
-        Tue, 25 Aug 2020 19:18:14 -0000
-Date:   Tue, 25 Aug 2020 13:18:14 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>, dianders@chromium.org,
-        dgreid@chromium.org, tzungbi@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v5 1/2] ASoC: qcom: dt-bindings: Add sc7180 machine
- bindings
-Message-ID: <20200825191814.GA1155274@bogus>
-References: <20200818035028.2265197-1-cychiang@chromium.org>
- <20200818035028.2265197-2-cychiang@chromium.org>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CHkPYxiJz7RfurndXTXM2/NyRfbRCRqTVCJ4ExH0P7M=;
+        b=BLYgZl5xp8p3R0yym9EvRLl0sdcwtAGmqK6pxpLpSFejNN1uaJ0d/+gGYPMIat6eQ2
+         ndmRMHWwHqqX+N5pC/4S9eM9CF2DXG+a5uW/N6ONGUpnh7BDRjpxcakG78JmJSTVT7f4
+         Aw906//DpTqdTbOtzFO5byppysnDEq68+jg43AVrDEB8GPT8dTK4ypxTTQ6kEwr5UMUj
+         3IdWAs5Q0F2Gbz35i9qlFY3EDhrbJlWNXaKv54n5QyPwTAv95iHm+c8yDs65b43UKIXL
+         hHFOMGiB++FjntfT0/HcQhNP9KzEAR/J+cEeMrFN0v2CnsHSSst0OnXgglL3Tu+eC5Qf
+         cBYA==
+X-Gm-Message-State: AOAM530e1YngrJiWxQq0V/YA/0qeyGGrpNKku4PufPUhm6bOY2AX8/yM
+        kmAGryngzyKATlq4Tkd+2Ug=
+X-Google-Smtp-Source: ABdhPJxBggtto6dNpsxIW6OGkGAvwa1lYzpYeE7T577CHAJZnJrXvSByfh/ftZNKLM0NskL6ENvubg==
+X-Received: by 2002:a17:90a:1117:: with SMTP id d23mr2777109pja.33.1598383150748;
+        Tue, 25 Aug 2020 12:19:10 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a12sm5840991pfr.217.2020.08.25.12.19.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 12:19:10 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 12:19:08 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 00/34] 4.4.234-rc2 review
+Message-ID: <20200825191908.GA36661@roeck-us.net>
+References: <20200824164719.331619736@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200818035028.2265197-2-cychiang@chromium.org>
+In-Reply-To: <20200824164719.331619736@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:50:27AM +0800, Cheng-Yi Chiang wrote:
-> Add devicetree bindings documentation file for sc7180 sound card.
+On Mon, Aug 24, 2020 at 06:49:01PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.234 release.
+> There are 34 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> ---
->  .../bindings/sound/qcom,sc7180.yaml           | 127 ++++++++++++++++++
->  1 file changed, 127 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+> Responses should be made by Wed, 26 Aug 2020 16:47:07 +0000.
+> Anything received after that time might be too late.
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> new file mode 100644
-> index 000000000000..b5cdaa0fe559
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
-> @@ -0,0 +1,127 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
-> +
-> +maintainers:
-> +  - Rohit kumar <rohitkr@codeaurora.org>
-> +  - Cheng-Yi Chiang <cychiang@chromium.org>
-> +
-> +description:
-> +  This binding describes the SC7180 sound card which uses LPASS for audio.
-> +
-> +properties:
-> +  compatible:
-> +    contains:
 
-Drop contains. Should be exactly the string listed.
+Build results:
+total: 169 pass: 169 fail: 0
+Qemu test results:
+total: 332 pass: 332 fail: 0
 
-> +      const: qcom,sc7180-sndcard
-> +
-> +  audio-routing:
-> +    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-> +    description:
-> +      A list of the connections between audio components. Each entry is a
-> +      pair of strings, the first being the connection's sink, the second
-> +      being the connection's source.
-> +
-> +  model:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description: User specified audio sound card name
-> +
-> +  aux-dev:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: phandle of the codec for headset detection
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^dai-link(@[0-9]+)?$":
+Tested-by: Guenter Roeck <linux@roeck-us.net>
 
-Unit addresses are hex. Do you really have more than 10?
-
-> +    description:
-> +      Each subnode represents a dai link. Subnodes of each dai links would be
-> +      cpu/codec dais.
-> +
-> +    type: object
-> +
-> +    properties:
-> +      link-name:
-> +        description: Indicates dai-link name and PCM stream name.
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        maxItems: 1
-> +
-> +      reg:
-> +        description: dai link address.
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-
-reg already has a type. Drop.
-
-> +        maxItems: 1
-> +
-> +      cpu:
-> +        description: Holds subnode which indicates cpu dai.
-> +        type: object
-> +        properties:
-> +          sound-dai: true
-> +
-> +      codec:
-> +        description: Holds subnode which indicates codec dai.
-> +        type: object
-> +        properties:
-> +          sound-dai: true
-> +
-> +    required:
-> +      - link-name
-> +      - cpu
-> +      - codec
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - model
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +
-> +  - |
-> +    sound {
-> +        compatible = "qcom,sc7180-sndcard";
-> +        model = "sc7180-snd-card";
-> +
-> +        audio-routing =
-> +                    "Headphone Jack", "HPOL",
-> +                    "Headphone Jack", "HPOR";
-> +
-> +        aux-dev = <&alc5682>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        dai-link@0 {
-> +            link-name = "MultiMedia0";
-> +            reg = <0>;
-> +            cpu {
-> +                sound-dai = <&lpass_cpu 0>;
-> +            };
-> +
-> +            codec {
-> +                sound-dai = <&alc5682 0>;
-> +            };
-> +        };
-> +
-> +        dai-link@1 {
-> +            link-name = "MultiMedia1";
-> +            reg = <1>;
-> +            cpu {
-> +                sound-dai = <&lpass_cpu 1>;
-> +            };
-> +
-> +            codec {
-> +                sound-dai = <&max98357a>;
-> +            };
-> +        };
-> +    };
-> -- 
-> 2.28.0.220.ged08abb693-goog
-> 
+Guenter
