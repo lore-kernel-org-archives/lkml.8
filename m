@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E230FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2B21204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34C3204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbgHYCvA (ORCPT
+        id S1728488AbgHYCvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:51:00 -0400
-Received: from mga18.intel.com ([134.134.136.126]:37715 "EHLO mga18.intel.com"
+        Mon, 24 Aug 2020 22:51:22 -0400
+Received: from mga18.intel.com ([134.134.136.126]:37741 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbgHYCu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 22:50:57 -0400
-IronPort-SDR: MUrsUnphiXkkaubGoTNnkTWFtYNvqBSyAuxW7GWgditoxFBQHbTAcMO2fztYwjllTn47rKHBnF
- H4nKV9HhkduQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="143690768"
+        id S1728475AbgHYCvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 22:51:17 -0400
+IronPort-SDR: /wrYvFq5HJpKV1kueaSDIupd25D0JCEocSk0Il/7Sg/phjkVgk6ZpenBr7G2AauscTHtAj9la2
+ eDLXC216usHQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="143690822"
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="143690768"
+   d="scan'208";a="143690822"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 19:50:55 -0700
-IronPort-SDR: KZ36llnBC89UVprDZVRQY5dGq44j350x5PZcUbD6nSZ8YHGrNY3WzfjOZ8NgYV+wjsBjQ4F5Em
- bA9f2S0o0eZg==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 19:51:15 -0700
+IronPort-SDR: 7IWqB2Phs74SVmqmpMNXjckljljuWuJZ+/Qs4LSV/YGBdCs+V+P8o7GStwzcBGvkgyGZT1rjVI
+ ZqlDiUBFibKw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="312409758"
+   d="scan'208";a="312409849"
 Received: from shsi6026.sh.intel.com ([10.239.147.135])
-  by orsmga002.jf.intel.com with ESMTP; 24 Aug 2020 19:50:51 -0700
+  by orsmga002.jf.intel.com with ESMTP; 24 Aug 2020 19:51:12 -0700
 From:   shuo.a.liu@intel.com
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,12 +46,11 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Yu Wang <yu1.wang@intel.com>,
         Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
         Shuo Liu <shuo.a.liu@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
         Zhi Wang <zhi.a.wang@intel.com>,
         Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH 05/17] virt: acrn: Introduce ACRN HSM basic driver
-Date:   Tue, 25 Aug 2020 10:45:05 +0800
-Message-Id: <20200825024516.16766-6-shuo.a.liu@intel.com>
+Subject: [PATCH 11/17] virt: acrn: Introduce interfaces for PCI device passthrough
+Date:   Tue, 25 Aug 2020 10:45:11 +0800
+Message-Id: <20200825024516.16766-12-shuo.a.liu@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200825024516.16766-1-shuo.a.liu@intel.com>
 References: <20200825024516.16766-1-shuo.a.liu@intel.com>
@@ -64,338 +63,257 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shuo Liu <shuo.a.liu@intel.com>
 
-ACRN Hypervisor Service Module (HSM) is a kernel module in Service VM
-which communicates with ACRN userspace through ioctls and talks to ACRN
-Hypervisor through hypercalls.
+PCI device passthrough enables an OS in a virtual machine to directly
+access a PCI device in the host. It promises almost the native
+performance, which is required in performance-critical scenarios of
+ACRN.
 
-Add a basic HSM driver which allows Service VM userspace to communicate
-with ACRN. The following patches will add more ioctls, guest VM memory
-mapping caching, I/O request processing, ioeventfd and irqfd into this
-module. HSM exports a char device interface (/dev/acrn_hsm) to userspace.
+HSM provides the following ioctls:
+ - Assign - ACRN_IOCTL_ASSIGN_PCIDEV
+   Pass data struct acrn_pcidev from userspace to the hypervisor, and
+   inform the hypervisor to assign a PCI device to a User VM.
+
+ - De-assign - ACRN_IOCTL_DEASSIGN_PCIDEV
+   Pass data struct acrn_pcidev from userspace to the hypervisor, and
+   inform the hypervisor to de-assign a PCI device from a User VM.
+
+ - Set a interrupt of a passthrough device - ACRN_IOCTL_SET_PTDEV_INTR
+   Pass data struct acrn_ptdev_irq from userspace to the hypervisor,
+   and inform the hypervisor to map a INTx interrupt of passthrough
+   device of User VM.
+
+ - Reset passthrough device interrupt - ACRN_IOCTL_RESET_PTDEV_INTR
+   Pass data struct acrn_ptdev_irq from userspace to the hypervisor,
+   and inform the hypervisor to unmap a INTx interrupt of passthrough
+   device of User VM.
 
 Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
+Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Zhi Wang <zhi.a.wang@intel.com>
 Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
 Cc: Yu Wang <yu1.wang@intel.com>
 Cc: Reinette Chatre <reinette.chatre@intel.com>
 ---
- .../userspace-api/ioctl/ioctl-number.rst      |   1 +
- MAINTAINERS                                   |   2 +
- drivers/virt/Kconfig                          |   2 +
- drivers/virt/Makefile                         |   1 +
- drivers/virt/acrn/Kconfig                     |  14 +++
- drivers/virt/acrn/Makefile                    |   3 +
- drivers/virt/acrn/acrn_drv.h                  |  21 ++++
- drivers/virt/acrn/hsm.c                       | 115 ++++++++++++++++++
- drivers/virt/acrn/hypercall.h                 |  30 +++++
- include/uapi/linux/acrn.h                     |  33 +++++
- 10 files changed, 222 insertions(+)
- create mode 100644 drivers/virt/acrn/Kconfig
- create mode 100644 drivers/virt/acrn/Makefile
- create mode 100644 drivers/virt/acrn/acrn_drv.h
- create mode 100644 drivers/virt/acrn/hsm.c
- create mode 100644 drivers/virt/acrn/hypercall.h
- create mode 100644 include/uapi/linux/acrn.h
+ drivers/virt/acrn/hsm.c       | 46 +++++++++++++++++++++++++
+ drivers/virt/acrn/hypercall.h | 54 ++++++++++++++++++++++++++++++
+ include/uapi/linux/acrn.h     | 63 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 163 insertions(+)
 
-diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-index 2a198838fca9..ac60efedb104 100644
---- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-+++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-@@ -319,6 +319,7 @@ Code  Seq#    Include File                                           Comments
- 0xA0  all    linux/sdp/sdp.h                                         Industrial Device Project
-                                                                      <mailto:kenji@bitgate.com>
- 0xA1  0      linux/vtpm_proxy.h                                      TPM Emulator Proxy Driver
-+0xA2  all    uapi/linux/acrn.h                                       ACRN hypervisor
- 0xA3  80-8F                                                          Port ACL  in development:
-                                                                      <mailto:tlewis@mindspring.com>
- 0xA3  90-9F  linux/dtlk.h
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e0fea5e464b4..d4c1ef303c2d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -442,6 +442,8 @@ L:	acrn-dev@lists.projectacrn.org
- S:	Supported
- W:	https://projectacrn.org
- F:	Documentation/virt/acrn/
-+F:	drivers/virt/acrn/
-+F:	include/uapi/linux/acrn.h
- 
- AD1889 ALSA SOUND DRIVER
- L:	linux-parisc@vger.kernel.org
-diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
-index cbc1f25c79ab..d9484a2e9b46 100644
---- a/drivers/virt/Kconfig
-+++ b/drivers/virt/Kconfig
-@@ -32,4 +32,6 @@ config FSL_HV_MANAGER
- 	     partition shuts down.
- 
- source "drivers/virt/vboxguest/Kconfig"
-+
-+source "drivers/virt/acrn/Kconfig"
- endif
-diff --git a/drivers/virt/Makefile b/drivers/virt/Makefile
-index fd331247c27a..f0491bbf0d4d 100644
---- a/drivers/virt/Makefile
-+++ b/drivers/virt/Makefile
-@@ -5,3 +5,4 @@
- 
- obj-$(CONFIG_FSL_HV_MANAGER)	+= fsl_hypervisor.o
- obj-y				+= vboxguest/
-+obj-$(CONFIG_ACRN_HSM)		+= acrn/
-diff --git a/drivers/virt/acrn/Kconfig b/drivers/virt/acrn/Kconfig
-new file mode 100644
-index 000000000000..36c80378c30c
---- /dev/null
-+++ b/drivers/virt/acrn/Kconfig
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: GPL-2.0
-+config ACRN_HSM
-+	tristate "ACRN Hypervisor Service Module"
-+	depends on ACRN_GUEST
-+	help
-+	  ACRN Hypervisor Service Module (HSM) is a kernel module which
-+	  communicates with ACRN userspace through ioctls and talks to
-+	  the ACRN Hypervisor through hypercalls. HSM will only run in
-+	  a privileged management VM, called Service VM, to manage User
-+	  VMs and do I/O emulation. Not required for simply running
-+	  under ACRN as a User VM.
-+
-+	  To compile as a module, choose M, the module will be called
-+	  acrn. If unsure, say N.
-diff --git a/drivers/virt/acrn/Makefile b/drivers/virt/acrn/Makefile
-new file mode 100644
-index 000000000000..6920ed798aaf
---- /dev/null
-+++ b/drivers/virt/acrn/Makefile
-@@ -0,0 +1,3 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_ACRN_HSM)	:= acrn.o
-+acrn-y := hsm.o
-diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
-new file mode 100644
-index 000000000000..36f43d8d43d0
---- /dev/null
-+++ b/drivers/virt/acrn/acrn_drv.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __ACRN_HSM_DRV_H
-+#define __ACRN_HSM_DRV_H
-+
-+#include <linux/acrn.h>
-+#include <linux/types.h>
-+
-+#include "hypercall.h"
-+
-+#define ACRN_INVALID_VMID (0xffffU)
-+
-+/**
-+ * struct acrn_vm - Properties of ACRN User VM.
-+ * @vmid:	User VM ID
-+ */
-+struct acrn_vm {
-+	u16	vmid;
-+};
-+
-+#endif /* __ACRN_HSM_DRV_H */
 diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
-new file mode 100644
-index 000000000000..a08169f35c96
---- /dev/null
+index 3c7bea54e476..ab2a052900e8 100644
+--- a/drivers/virt/acrn/hsm.c
 +++ b/drivers/virt/acrn/hsm.c
-@@ -0,0 +1,115 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ACRN Hypervisor Service Module (HSM)
-+ *
-+ * Copyright (C) 2020 Intel Corporation. All rights reserved.
-+ *
-+ * Authors:
-+ *	Fengwei Yin <fengwei.yin@intel.com>
-+ *	Yakui Zhao <yakui.zhao@intel.com>
-+ */
+@@ -50,7 +50,9 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+ 	struct acrn_vm_creation *vm_param;
+ 	struct acrn_vcpu_regs *cpu_regs;
+ 	struct acrn_ioreq_notify notify;
++	struct acrn_ptdev_irq *irq_info;
+ 	struct acrn_vm_memmap memmap;
++	struct acrn_pcidev *pcidev;
+ 	int ret = 0;
+ 
+ 	if (cmd == ACRN_IOCTL_GET_API_VERSION) {
+@@ -130,6 +132,50 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+ 
+ 		ret = acrn_vm_memseg_unmap(vm, &memmap);
+ 		break;
++	case ACRN_IOCTL_ASSIGN_PCIDEV:
++		pcidev = memdup_user((void __user *)ioctl_param,
++				     sizeof(struct acrn_pcidev));
++		if (IS_ERR(pcidev))
++			return PTR_ERR(pcidev);
 +
-+#define pr_fmt(fmt) "acrn: " fmt
++		ret = hcall_assign_pcidev(vm->vmid, virt_to_phys(pcidev));
++		if (ret < 0)
++			pr_err("Failed to assign pci device!\n");
++		kfree(pcidev);
++		break;
++	case ACRN_IOCTL_DEASSIGN_PCIDEV:
++		pcidev = memdup_user((void __user *)ioctl_param,
++				     sizeof(struct acrn_pcidev));
++		if (IS_ERR(pcidev))
++			return PTR_ERR(pcidev);
 +
-+#include <linux/miscdevice.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
++		ret = hcall_deassign_pcidev(vm->vmid, virt_to_phys(pcidev));
++		if (ret < 0)
++			pr_err("Failed to deassign pci device!\n");
++		kfree(pcidev);
++		break;
++	case ACRN_IOCTL_SET_PTDEV_INTR:
++		irq_info = memdup_user((void __user *)ioctl_param,
++				       sizeof(struct acrn_ptdev_irq));
++		if (IS_ERR(irq_info))
++			return PTR_ERR(irq_info);
 +
-+#include <asm/acrn.h>
-+#include <asm/hypervisor.h>
++		ret = hcall_set_ptdev_intr(vm->vmid, virt_to_phys(irq_info));
++		if (ret < 0)
++			pr_err("Failed to configure intr for ptdev!\n");
++		kfree(irq_info);
++		break;
++	case ACRN_IOCTL_RESET_PTDEV_INTR:
++		irq_info = memdup_user((void __user *)ioctl_param,
++				       sizeof(struct acrn_ptdev_irq));
++		if (IS_ERR(irq_info))
++			return PTR_ERR(irq_info);
 +
-+#include "acrn_drv.h"
-+
-+static struct acrn_api_version api_version;
-+
-+/*
-+ * When /dev/acrn_hsm is opened, a 'struct acrn_vm' object is created to
-+ * represent a VM instance and continues to be associated with the opened file
-+ * descriptor. All ioctl operations on this file descriptor will be targeted to
-+ * the VM instance. Release of this file descriptor will destroy the object.
-+ */
-+static int acrn_dev_open(struct inode *inode, struct file *filp)
-+{
-+	struct acrn_vm *vm;
-+
-+	vm = kzalloc(sizeof(*vm), GFP_KERNEL);
-+	if (!vm)
-+		return -ENOMEM;
-+
-+	vm->vmid = ACRN_INVALID_VMID;
-+	filp->private_data = vm;
-+	return 0;
-+}
-+
-+static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
-+			   unsigned long ioctl_param)
-+{
-+	if (cmd == ACRN_IOCTL_GET_API_VERSION) {
-+		if (copy_to_user((void __user *)ioctl_param,
-+				 &api_version, sizeof(api_version)))
-+			return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
-+static int acrn_dev_release(struct inode *inode, struct file *filp)
-+{
-+	struct acrn_vm *vm = filp->private_data;
-+
-+	kfree(vm);
-+	return 0;
-+}
-+
-+static const struct file_operations acrn_fops = {
-+	.owner		= THIS_MODULE,
-+	.open		= acrn_dev_open,
-+	.release	= acrn_dev_release,
-+	.unlocked_ioctl	= acrn_dev_ioctl,
-+};
-+
-+static struct miscdevice acrn_dev = {
-+	.minor	= MISC_DYNAMIC_MINOR,
-+	.name	= "acrn_hsm",
-+	.fops	= &acrn_fops,
-+};
-+
-+static int __init hsm_init(void)
-+{
-+	int ret;
-+
-+	if (x86_hyper_type != X86_HYPER_ACRN)
-+		return -ENODEV;
-+
-+	if (!acrn_is_privileged_vm())
-+		return -EPERM;
-+
-+	ret = hcall_get_api_version(slow_virt_to_phys(&api_version));
-+	if (ret < 0) {
-+		pr_err("Failed to get API version from hypervisor!\n");
-+		return ret;
-+	}
-+
-+	pr_info("API version is %u.%u\n",
-+		api_version.major_version, api_version.minor_version);
-+
-+	ret = misc_register(&acrn_dev);
-+	if (ret) {
-+		pr_err("Create misc dev failed!\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void __exit hsm_exit(void)
-+{
-+	misc_deregister(&acrn_dev);
-+}
-+module_init(hsm_init);
-+module_exit(hsm_exit);
-+
-+MODULE_AUTHOR("Intel Corporation");
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("ACRN Hypervisor Service Module (HSM)");
++		ret = hcall_reset_ptdev_intr(vm->vmid, virt_to_phys(irq_info));
++		if (ret < 0)
++			pr_err("Failed to reset intr for ptdev!\n");
++		kfree(irq_info);
++		break;
+ 	case ACRN_IOCTL_CREATE_IOREQ_CLIENT:
+ 		if (vm->default_client)
+ 			return -EEXIST;
 diff --git a/drivers/virt/acrn/hypercall.h b/drivers/virt/acrn/hypercall.h
-new file mode 100644
-index 000000000000..3ad1b708e162
---- /dev/null
+index d85dbcdb9f00..41409df943a2 100644
+--- a/drivers/virt/acrn/hypercall.h
 +++ b/drivers/virt/acrn/hypercall.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * ACRN HSM: hypercalls of ACRN Hypervisor
-+ */
-+#ifndef __ACRN_HSM_HYPERCALL_H
-+#define __ACRN_HSM_HYPERCALL_H
-+#include <asm/acrn.h>
+@@ -31,6 +31,12 @@
+ #define HC_ID_MEM_BASE			0x40UL
+ #define HC_VM_SET_MEMORY_REGIONS	_HC_ID(HC_ID, HC_ID_MEM_BASE + 0x02)
+ 
++#define HC_ID_PCI_BASE			0x50UL
++#define HC_SET_PTDEV_INTR		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x03)
++#define HC_RESET_PTDEV_INTR		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x04)
++#define HC_ASSIGN_PCIDEV		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x05)
++#define HC_DEASSIGN_PCIDEV		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x06)
 +
-+/*
-+ * Hypercall IDs of the ACRN Hypervisor
-+ */
-+#define _HC_ID(x, y) (((x) << 24) | (y))
-+
-+#define HC_ID 0x80UL
-+
-+#define HC_ID_GEN_BASE			0x0UL
-+#define HC_GET_API_VERSION		_HC_ID(HC_ID, HC_ID_GEN_BASE + 0x00)
-+
+ /**
+  * hcall_get_api_version() - Get API version from hypervisor
+  * @api_version:	Service VM GPA of version info
+@@ -144,4 +150,52 @@ static inline long hcall_set_memory_regions(u64 regions_pa)
+ 	return acrn_hypercall1(HC_VM_SET_MEMORY_REGIONS, regions_pa);
+ }
+ 
 +/**
-+ * hcall_get_api_version() - Get API version from hypervisor
-+ * @api_version:	Service VM GPA of version info
++ * hcall_assign_pcidev() - Assign a PCI device to a User VM
++ * @vmid:	User VM ID
++ * @addr:	Service VM GPA of the &struct acrn_pcidev
 + *
 + * Return: 0 on success, <0 on failure
 + */
-+static inline long hcall_get_api_version(u64 api_version)
++static inline long hcall_assign_pcidev(u64 vmid, u64 addr)
 +{
-+	return acrn_hypercall1(HC_GET_API_VERSION, api_version);
++	return acrn_hypercall2(HC_ASSIGN_PCIDEV, vmid, addr);
 +}
 +
-+#endif /* __ACRN_HSM_HYPERCALL_H */
-diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
-new file mode 100644
-index 000000000000..c59488ad7252
---- /dev/null
-+++ b/include/uapi/linux/acrn.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Userspace interface for /dev/acrn_hsm - ACRN Hypervisor Service Module
++/**
++ * hcall_deassign_pcidev() - De-assign a PCI device from a User VM
++ * @vmid:	User VM ID
++ * @addr:	Service VM GPA of the &struct acrn_pcidev
 + *
-+ * This file can be used by applications that need to communicate with the HSM
-+ * via the ioctl interface.
++ * Return: 0 on success, <0 on failure
 + */
-+
-+#ifndef _UAPI_ACRN_H
-+#define _UAPI_ACRN_H
-+
-+#include <linux/types.h>
++static inline long hcall_deassign_pcidev(u64 vmid, u64 addr)
++{
++	return acrn_hypercall2(HC_DEASSIGN_PCIDEV, vmid, addr);
++}
 +
 +/**
-+ * struct acrn_api_version - ACRN Hypervisor API version.
-+ * @major_version:	Major version of ACRN Hypervisor API.
-+ * @minor_version:	Minor version of ACRN Hypervisor API.
++ * hcall_set_ptdev_intr() - Configure an interrupt for an assigned PCI device.
++ * @vmid:	User VM ID
++ * @irq:	Service VM GPA of the &struct acrn_ptdev_irq
++ *
++ * Return: 0 on success, <0 on failure
 + */
-+struct acrn_api_version {
-+	__u32	major_version;
-+	__u32	minor_version;
++static inline long hcall_set_ptdev_intr(u64 vmid, u64 irq)
++{
++	return acrn_hypercall2(HC_SET_PTDEV_INTR, vmid, irq);
++}
++
++/**
++ * hcall_reset_ptdev_intr() - Reset an interrupt for an assigned PCI device.
++ * @vmid:	User VM ID
++ * @irq:	Service VM GPA of the &struct acrn_ptdev_irq
++ *
++ * Return: 0 on success, <0 on failure
++ */
++static inline long hcall_reset_ptdev_intr(u64 vmid, u64 irq)
++{
++	return acrn_hypercall2(HC_RESET_PTDEV_INTR, vmid, irq);
++}
++
+ #endif /* __ACRN_HSM_HYPERCALL_H */
+diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
+index c8bb71a1cef7..45891da3d8a1 100644
+--- a/include/uapi/linux/acrn.h
++++ b/include/uapi/linux/acrn.h
+@@ -299,6 +299,60 @@ struct acrn_vm_memmap {
+ 	__u32	attr;
+ } __attribute__((aligned(8)));
+ 
++/* Type of interrupt of a passthrough device */
++#define ACRN_PTDEV_IRQ_INTX	0
++#define ACRN_PTDEV_IRQ_MSI	1
++#define ACRN_PTDEV_IRQ_MSIX	2
++/**
++ * struct acrn_ptdev_irq - Interrupt data of a passthrough device.
++ * @type:		Type (ACRN_PTDEV_IRQ_*)
++ * @virt_bdf:		Virtual Bus/Device/Function
++ * @phys_bdf:		Physical Bus/Device/Function
++ * @intx:		Info of interrupt
++ * @intx.virt_pin:	Virtual IOAPIC pin
++ * @intx.phys_pin:	Physical IOAPIC pin
++ * @intx.is_pic_pin:	Is PIC pin or not
++ *
++ * This structure will be passed to hypervisor directly.
++ */
++struct acrn_ptdev_irq {
++	__u32	type;
++	__u16	virt_bdf;
++	__u16	phys_bdf;
++
++	struct {
++		__u32	virt_pin;
++		__u32	phys_pin;
++		__u32	is_pic_pin;
++	} intx;
 +} __attribute__((aligned(8)));
 +
-+/* The ioctl type, documented in ioctl-number.rst */
-+#define ACRN_IOCTL_TYPE			0xA2
++/* Type of PCI device assignment */
++#define ACRN_PTDEV_QUIRK_ASSIGN	(1U << 0)
 +
-+/*
-+ * Common IOCTL IDs definition for ACRN userspace
++#define ACRN_PCI_NUM_BARS	6
++/**
++ * struct acrn_pcidev - Info for assigning or de-assigning a PCI device
++ * @type:	Type of the assignment
++ * @virt_bdf:	Virtual Bus/Device/Function
++ * @phys_bdf:	Physical Bus/Device/Function
++ * @intr_line:	PCI interrupt line
++ * @intr_pin:	PCI interrupt pin
++ * @bar:	PCI BARs.
++ * @reserved:	Reserved.
++ *
++ * This structure will be passed to hypervisor directly.
 + */
-+#define ACRN_IOCTL_GET_API_VERSION	\
-+	_IOR(ACRN_IOCTL_TYPE, 0, struct acrn_api_version)
++struct acrn_pcidev {
++	__u32	type;
++	__u16	virt_bdf;
++	__u16	phys_bdf;
++	__u8	intr_line;
++	__u8	intr_pin;
++	__u32	bar[ACRN_PCI_NUM_BARS];
++	__u32	reserved[6];
++} __attribute__((aligned(8)));
 +
-+#endif /* _UAPI_ACRN_H */
+ /* The ioctl type, documented in ioctl-number.rst */
+ #define ACRN_IOCTL_TYPE			0xA2
+ 
+@@ -337,4 +391,13 @@ struct acrn_vm_memmap {
+ #define ACRN_IOCTL_UNSET_MEMSEG		\
+ 	_IOW(ACRN_IOCTL_TYPE, 0x42, struct acrn_vm_memmap)
+ 
++#define ACRN_IOCTL_SET_PTDEV_INTR	\
++	_IOW(ACRN_IOCTL_TYPE, 0x53, struct acrn_ptdev_irq)
++#define ACRN_IOCTL_RESET_PTDEV_INTR	\
++	_IOW(ACRN_IOCTL_TYPE, 0x54, struct acrn_ptdev_irq)
++#define ACRN_IOCTL_ASSIGN_PCIDEV	\
++	_IOW(ACRN_IOCTL_TYPE, 0x55, struct acrn_pcidev)
++#define ACRN_IOCTL_DEASSIGN_PCIDEV	\
++	_IOW(ACRN_IOCTL_TYPE, 0x56, struct acrn_pcidev)
++
+ #endif /* _UAPI_ACRN_H */
 -- 
 2.28.0
 
