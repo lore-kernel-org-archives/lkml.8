@@ -2,156 +2,116 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6070AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E04C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3942E2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:05:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lFsjxZgp"
+	by mail.kernel.org (Postfix) with ESMTP id 4ACA62068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:08:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598350122;
+	bh=n9qU1VSIX6taYiBT6mEUe2Plo9U8hi0SVYmW+Orzzd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oELp7j8L7DUmphXoF09Q648qu3q5D8wTQM0BZr9dKpVdaVRieWmdezOz/AhdlLWmQ
+	 wsnxnxSPpyJED7IO4dRoE8O+/JOdPwvINZhzqdyFHmFjJmnp1oYnpNbcfXCFn824WL
+	 Nhg1mwN00KQpv9n6wY8xSez2vcblOpayyMXkcYn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729722AbgHYKFR (ORCPT
+        id S1729628AbgHYKIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:05:17 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:39910 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729680AbgHYKFQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:05:16 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PA5DA2066723;
-        Tue, 25 Aug 2020 10:05:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=BZIUEtXtKF8QpcVIa/9DQc2vAr4Q696mxXfxPphi1F0=;
- b=lFsjxZgp/BR2EReGU1069zZfbMPHSUHoUdIdCQUo31oJBbK2XFFOavjD3DJ9Pk+/4b5l
- geMOOgf6CYqNVlaB2rNRUjp0sCKR4HbVp8+QtDC5Uh8F5mF6QmGMNTOgnVMhtOnrDelf
- mkdTg1eDjgZeKlVDthIZ07w3HwGRtpvIcOdAGKtjUdT+2HiVe2pffOpizrK7MlUF3NYo
- P0V0GwCjb64A6rlMDVU0EjBQXWswAtGZMT485Bh7dgQswmBnk0sNqTUG4gwGd91AJTnX
- n8iF/7lBJyi9ksy/+QjqPyOlvfG5mwhw02Mer7xTMI1vgzdYLHHynlUQvcNAbFFkphHE yA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 333w6tr3ws-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 10:05:13 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07P9kAvu168653;
-        Tue, 25 Aug 2020 10:05:07 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 333ru74u2h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 10:05:06 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07PA55Q9018090;
-        Tue, 25 Aug 2020 10:05:05 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Aug 2020 03:05:05 -0700
-Date:   Tue, 25 Aug 2020 13:04:58 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     qianli zhao <zhaoqianligood@gmail.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        Qianli Zhao <zhaoqianli@xiaomi.com>, Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] workqueue: Warn when work flush own workqueue
-Message-ID: <20200825100458.GV1793@kadam>
-References: <74f570e0aab48b86f7a157d87c16715289d457f4.1598323824.git.zhaoqianli@xiaomi.com>
- <8aef74ea-5b28-07e1-d66b-91ed9e0920e9@web.de>
- <CAPx_LQEaVq_LFXdhTAkyc_EczurqkLzKcVhb6YKFw6V_0jQbvg@mail.gmail.com>
+        Tue, 25 Aug 2020 06:08:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33208 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbgHYKIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 06:08:40 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A7F52068E;
+        Tue, 25 Aug 2020 10:08:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598350119;
+        bh=n9qU1VSIX6taYiBT6mEUe2Plo9U8hi0SVYmW+Orzzd4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oAHKwHhEbqG3Luk+KNI3Up89EAA3hMJmJGkV9m4yPc1m6UsLhIV28q2ZTJ9lSXR4l
+         wnsPvF0CxCwEVBMzwt4znGF6GTXVcAT3C1VP9lT3jxhqWkqvIGvuPScHpuSCsFNrVE
+         +/0SJQNTnYv3XgOWHf5riql3ZsVpVqXizwtWvmnw=
+Date:   Tue, 25 Aug 2020 11:08:04 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Gene Chen <gene_chen@richtek.com>
+Subject: Re: [PATCH v3 2/2] regulator: mt6360: Add DT binding documentation
+Message-ID: <20200825100804.GD5379@sirena.org.uk>
+References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1597910022-22617-3-git-send-email-gene.chen.richtek@gmail.com>
+ <20200820113015.GB5854@sirena.org.uk>
+ <CAE+NS36C0AwbrFJdYGY6_n_g3DVitp_e1GfZUxjMbKu1bJ_t4w@mail.gmail.com>
+ <20200824194840.GF4676@sirena.org.uk>
+ <CAE+NS37p38dAN1bAi_VvEYYGNiWDVFKrdHL-hTgi2nim_7Zvqw@mail.gmail.com>
+ <20200825093404.GB5379@sirena.org.uk>
+ <CAE+NS35eh9PhRA1M2f2med52WhRsEfWp=zWUfgETq4odHouxDg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6Nae48J/T25AfBN4"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPx_LQEaVq_LFXdhTAkyc_EczurqkLzKcVhb6YKFw6V_0jQbvg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 clxscore=1011 mlxscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008250075
+In-Reply-To: <CAE+NS35eh9PhRA1M2f2med52WhRsEfWp=zWUfgETq4odHouxDg@mail.gmail.com>
+X-Cookie: Don't get to bragging.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have asked Markus to stop harrassing people about commit messages but
-he refuses so I think he was banned from vger at the start of the month.
 
-On Tue, Aug 25, 2020 at 04:55:52PM +0800, qianli zhao wrote:
-> Markus
-> 
-> Thanks for your suggestion,and sorry for my poor wording.
-> 
-> On Tue, Aug 25, 2020 at 4:00 PM Markus Elfring <Markus.Elfring@web.de> wrote:
-> >
-> > > Flushing own workqueue or work self in work context will lead to
-> > > a deadlock.
-> >
-> > I imagine that the wording “or work self” can become clearer another bit.
-> >
-> >
-> > > Catch this incorrect usage and issue a warning when issue happened
-> >
-> > * Would you like to mark the end of such a sentence with a dot?
-> >
-> > * How do you think about to adjust the repetition of the word “issue”?
-> 
-> How about below changelog?
-> 
-> workqueue: Warn when work flush own workqueue
-> 
-> Flushing itself or own workqueue in work context will
-> lead to a deadlock.
-> Catch this incorrect usage and warning when issue happened.
+--6Nae48J/T25AfBN4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-"If a workqueue flushes itself then that will lead to a deadlock.  Print
-a warning and a stack trace when this happens."
+On Tue, Aug 25, 2020 at 06:01:46PM +0800, Gene Chen wrote:
+> Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8825=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=885:34=E5=AF=AB=E9=81=93=EF=BC=9A
 
-> 
-> >
-> >
-> > …
-> > > - update comment
-> > > ---
-> > >  kernel/workqueue.c | 10 +++++++---
-> >
-> > I suggest to replace these triple dashes by a blank line.
-> Ok
+> > > LDO_VINx is HW design layout, so actually it can't be changed by devi=
+ce tree.
+> > > LDO_VIN1/LDO_VIN2 supply from VSYS, not regulator, so I think usually
+> > > not to show the supply from in device tree.
+> > > or I should declare a dummy reference to system power like "*-supply =
+=3D
+> > > <&system_power>;"?
 
-This does not matter at all.  Keep the dashes or remove them.  It
-doesn't matter at all.
+> > When you say it's from the hardware design do you mean it's fixed by the
+> > silicon or is this something that's fixed in the board?
 
-> >
-> >
-> > …
-> > > @@ -2585,6 +2585,7 @@ static int rescuer_thread(void *__rescuer)
-> > >   * @target_work: work item being flushed (NULL for workqueue flushes)
-> > >   *
-> > >   * %current is trying to flush the whole @target_wq or @target_work on it.
-> > > + * If a work flushing own workqueue or itself will lead to a deadlock.
-> >
-> > I stumble on understanding challenges for the wording “work flushing”.
-> > Can an adjustment help in comparison to the term “work item”?
-> 
-> How about below comment?
-> 
-> * If a work item flushing own workqueue or itself will lead to a deadlock.
+> fixed in the board, not silicon.
 
-Write this:
+Ah, if it's fixed by the board that's exactly the sort of thing that
+should be in DT - the DT describes the board so if some other system has
+a different configuration then it will have a different DT.  With supply
+properties you can just leave them missing in the DT, you're not
+supposed to but so many systems do it that the framework will handle it.
+Otherwise if you want to represent VSYS you can have a fixed voltage
+regulator with no control and hook them up to it.
 
-	* If a work queue flushes itself, that will lead to a deadlock
+--6Nae48J/T25AfBN4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-regards,
-dan carpenter
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9E4wMACgkQJNaLcl1U
+h9Co+wf/Xf8KbC9/vFFir2BN6SL1tFkB0IvZMWZj1u+U08sPmTCIh2KRaC8xDJxI
+y6HF+I7FRWlcaj9ozuuNedPeXJi29wZC7BkgExRo31AMpx+SWE3blPoJit/M/YnI
+zk7ZAQKh63RF/Zaqk+drtruqz4w1yQ5vLXTLoQcbzk8YMTqfnUiBaNkFv1TCL1bq
+0Qp6/LyejmL4sHZ2SF8WF0TvepxuR9EXGMB3cabyE+J8nw68QBisaHVFk99pVhul
+QIqvJOTMLq/XZeHklnt1rXdmHcIFzp0FUQyx6eek6b2nMjsSPlAtozQjFxZBl9Uw
+1fiHa/CwqrgxU5Iv3JIuf+WM1tMNdw==
+=M9CH
+-----END PGP SIGNATURE-----
+
+--6Nae48J/T25AfBN4--
