@@ -2,129 +2,121 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF83AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A09920782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:52:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598367123;
-	bh=rHpH6wHGNoovgRhLFyzbIbC3W/iWfvzXP7qIc1FSfWk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cGMzgmvef/L9LVk47rwACWPG+ZCmXEY+W9PXophTfM0O8qOCCy20IJ9I0PNdTaHmj
-	 ZxlMWdf6k4UQuNN8vdVgj7Bnbmp2DAgN2eiTjnmqSM10XtZG3CFPp3PtEKiwLibVMv
-	 nuLflC28cdEvVXPBMXtMiTcyfeTbs0p2hc+ndVWY=
+	by mail.kernel.org (Postfix) with ESMTP id 136ED2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgHYOwB (ORCPT
+        id S1726793AbgHYOwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:52:01 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34009 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgHYOvw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:51:52 -0400
-Received: by mail-oi1-f195.google.com with SMTP id z22so11831213oid.1;
-        Tue, 25 Aug 2020 07:51:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+ylVPg9/PXce4pT2IR4gKle+fSVW1ZRt1vDCYod4rN8=;
-        b=HI0uJ5ca375SW36B0Qqv9rSR83yIsIobvbzGIRzOQokQ2xOtYOF4HMA2qnS50c7/rm
-         ilV6/LXdBsNwKLht5ZAW6hgoJddexutbxZzuDT2PU3+tHzn33mbt7Vp30EMFjMZVJaWe
-         nHkJSPAJyuGZ4IvSVIgVGHMjF/Ai/z/M7fB6FLbV1h/r1mmoaKPWcZXZR76BOqQ/W8pt
-         UrGWqXRS+8QqNg3MUPPE2MXmkIqa/5tag0xRTb3h8/30+0rQOxJF/g5ckiTfQkiFYYUP
-         mJZilsuNasJxrr/OtcZVf/gQfzuSkgPGUf2NgYEV3hO2BTrcHsrzPUMNcBcVXKUQzZpx
-         lYdw==
-X-Gm-Message-State: AOAM532xjSD7xyK7iPzJX3gfTvKc9kNOwfKWAVTFHhklDXWNvq7k4ksq
-        dR4U3xXPrCDG7tAy1os2lUNSTOuA48x+mOQORhQ=
-X-Google-Smtp-Source: ABdhPJwqJQS2tbUF7jqx3k1gHhGfoM4gKMhNdMHaSpRuHkR0DsUvna55zZygMHn8se8UyztTq7pobqnChzlnhKJ6j+4=
-X-Received: by 2002:a05:6808:3d5:: with SMTP id o21mr1287215oie.110.1598367111572;
- Tue, 25 Aug 2020 07:51:51 -0700 (PDT)
+        Tue, 25 Aug 2020 10:52:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:60504 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726700AbgHYOvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:51:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3125130E;
+        Tue, 25 Aug 2020 07:51:54 -0700 (PDT)
+Received: from [172.16.1.113] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60CCC3F71F;
+        Tue, 25 Aug 2020 07:51:53 -0700 (PDT)
+Subject: Re: [PATCH] arm64: traps: clean up arm64_ras_serror_get_severity()
+To:     Liguang Zhang <zhangliguang@linux.alibaba.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200812110918.18575-1-zhangliguang@linux.alibaba.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <f5d171fd-8fc6-cd39-1467-45ce29517f47@arm.com>
+Date:   Tue, 25 Aug 2020 15:51:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <4169555.5IIHXK4Dsd@kreacher> <2064342.aRc67yb0pC@kreacher> <61ea43fce7dd8700d94f12236a86ffec6f76a898.camel@gmail.com>
-In-Reply-To: <61ea43fce7dd8700d94f12236a86ffec6f76a898.camel@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 25 Aug 2020 16:51:40 +0200
-Message-ID: <CAJZ5v0hkmcAuCsnfjCSWTarr4pkQry2VCtk2aWM74fOW2guzmg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] cpufreq: intel_pstate: Always return last EPP
- value from sysfs
-To:     Artem Bityutskiy <dedekind1@gmail.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Doug Smythies <dsmythies@telus.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200812110918.18575-1-zhangliguang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 8:20 AM Artem Bityutskiy <dedekind1@gmail.com> wrote:
->
-> On Mon, 2020-08-24 at 19:42 +0200, Rafael J. Wysocki wrote:
-> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> >
-> > Make the energy_performance_preference policy attribute in sysfs
-> > always return the last EPP value written to it instead of the one
-> > currently in the HWP Request MSR to avoid possible confusion when
-> > the performance scaling algorithm is used in the active mode with
-> > HWP enabled (in which case the EPP is forced to 0 regardless of
-> > what value it has been set to via sysfs).
->
-> Why is this a good idea, I wonder. If there was a prior discussion,
-> please, point to it.
->
-> The general approach to changing settings via sysfs is often like this:
->
-> 1. Write new value.
-> 2. Read it back and verify that it is the same. Because there is no
-> better way to verify that the kernel "accepted" the value.
+Hi Zhang,
 
-If the write is successful (ie. no errors returned and the value
-returned is equal to the number of written characters), the kernel
-*has* accepted the written value, but it may not have taken effect.
-These are two different things.
+On 12/08/2020 12:09, Liguang Zhang wrote:
+> Function arm64_is_fatal_ras_serror() is always called after
+> arm64_is_ras_serror(), so we should remove some needless
+> arm64_is_ras_serror() call in function arm64_ras_serror_get_severity().
 
-The written value may take an effect immediately or it may take an
-effect later, depending on the current configuration etc.  If you
-don't see the effect of it immediately, it doesn't matter that there
-was a failure of some sort.
+> diff --git a/arch/arm64/include/asm/traps.h b/arch/arm64/include/asm/traps.h
+> index cee5928e1b7d..287b4d64dc67 100644
+> --- a/arch/arm64/include/asm/traps.h
+> +++ b/arch/arm64/include/asm/traps.h
+> @@ -79,13 +79,6 @@ static inline bool arm64_is_ras_serror(u32 esr)
+>   */
+>  static inline u32 arm64_ras_serror_get_severity(u32 esr)
+>  {
+> -	u32 aet = esr & ESR_ELx_AET;
+> -
+> -	if (!arm64_is_ras_serror(esr)) {
+> -		/* Not a RAS error, we can't interpret the ESR. */
+> -		return ESR_ELx_AET_UC;
+> -	}
 
-> Let's say I write 'balanced' to energy_performance_preference. I read
-> it back, and it contains 'balanced', so I am happy, I trust the kernel
-> changed EPP to "balanced".
->
-> If the kernel, in fact, uses something else, I want to know about it
-> and have my script fail.
+I agree this can go, it looks like I had it here as a sanity check while the KVM bits were
+sorted out.
 
-Why do you want it to fail then?
+Please also remove the comment that says it does this:
+| * Non-RAS SError's are reported as Uncontained/Uncategorized.
 
-> Why caching the value and making my script _think_ it succeeded is a good idea.
+This becomes the callers problem.
 
-Because when you change the scaling algorithm or the driver's
-operation mode, the value you have written will take effect.
 
-In this particular case it is explained in the driver documentation
-that the performance scaling algorithm in the active mode overrides
-the sysfs value and that's the only case when it can be overridden.
-So whatever you write to this attribute will not take effect
-immediately anyway, but it may take an effect later.
+>  	/*
+>  	 * AET is RES0 if 'the value returned in the DFSC field is not
+>  	 * [ESR_ELx_FSC_SERROR]'
 
-> In other words, in my usage scenarios at list, I prefer kernel telling
-> the true EPP value, not some "cached, but not used" value.
+> diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+> index 13ebd5ca2070..635d4cca0a4b 100644
+> --- a/arch/arm64/kernel/traps.c
+> +++ b/arch/arm64/kernel/traps.c
+> @@ -913,7 +913,7 @@ bool arm64_is_fatal_ras_serror(struct pt_regs *regs, unsigned int esr)
+>  	case ESR_ELx_AET_UC:	/* Uncontainable or Uncategorized error */
+>  	default:
+>  		/* Error has been silently propagated */
+> -		arm64_serror_panic(regs, esr);
+> +		return true;
 
-An alternative is to fail writes to energy_performance_preference if
-the driver works in the active mode and the scaling algorithm for the
-scaling CPU is performance and *then* to make reads from it return the
-value in the register.
+KVM depends on this, please don't remove it.
 
-Accepting a write and returning a different value in a subsequent read
-is confusing.
+What does 'fatal' mean?
+To the arch code it means panic(), as we don't (yet) have the information to fix the
+error. But to KVM 'fatal' means kill-the-guest. KVM does this as without user-space's
+involvement, there is very little else it can do.
 
-Thanks!
+KVM can only do this if the error is contained. As it must have been contained by stage2,
+so the host can keep running. But if the error was reported as uncontained, KVM would need
+to panic() the host.
+
+(An example of an Uncontained error is a store that went to the wrong address due to
+corruption that wasn't caught in time. We can't trust any value in memory once we've seen
+one of these.)
+
+
+I agree it looks funny, but it was simpler for the arch code helper to do this, instead of
+having an 'arm64_is_uncontained_ras_serror(), as now you'd always have to check three things.
+
+
+>  	}
+>  }
+
+
+Thanks,
+
+James
