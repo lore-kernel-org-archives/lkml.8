@@ -2,127 +2,101 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AA0C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A50C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7262A20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:34:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkXhmIey"
+	by mail.kernel.org (Postfix) with ESMTP id 7160E20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgHYMeu (ORCPT
+        id S1727048AbgHYMft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43558 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbgHYMes (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:34:48 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7878AC061574;
-        Tue, 25 Aug 2020 05:34:48 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id a6so2654088oog.9;
-        Tue, 25 Aug 2020 05:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8STidKdjB3IAsSg9qwMG6/fnbTG9ueb7BIUx1fPaPdM=;
-        b=EkXhmIeyqrFX4pTjEOdzP/jGeBGkdRMiIPackjwd0wko0Uj4wDHsnTqJgmE/DUMoOC
-         7UM2Ma7p67yIwuDuwdq0mgDsKjxEhDGZMd3UWwWr9xXzO3XiFPdfZsfq+Ybu18CJpCmv
-         sXA6HfyteNRB35O6jz+EhrtqehZZxQofMP/ar5YWVagBCdMGwjiqJ6yJ6q1Hp0knCTct
-         aFtdRkXwm9KZexzNqUipJ2ymmG0sdCjJldCZKNtdIkR85mQeiCYyMmw5x/pJdFJ1VjcP
-         rCPFgsIJBtyhUZXXDg+oIHHSImxO+1/EvkVPy+bXhZ9PRswqPxoROp7rklfG/xgMCD4C
-         G+wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8STidKdjB3IAsSg9qwMG6/fnbTG9ueb7BIUx1fPaPdM=;
-        b=n1cnoctdPTt2h7EUXpW/J0FqOsXO5gJ1amXYZj7qdw8KQaWjkIYn0irRYjbLTV5o2u
-         VsMCAw7A1B+UN6Z33RlsBz3wHo8K5JW6irqQlqNoMOYg23QJFcDq8BHQxT9ZpOJ2RVhK
-         mDvJRrWtPIsup6lyYvFS8NkvEwBW/zxJpH4RP7m27abAArG0c7Me02xOkMCJUawXAMaS
-         ZnQeK6hdhSSlBMYHkPAVvjscdimqIZHbBglGZUtrzb3TgIzNARzqAKuitzoYHBHZa2re
-         vFs8X7qNB9HhR3K4AsU9GvAMQn6I0IoRvD0zk/nAb560Ats/NK6gFpHBFxbsL2ykK4H1
-         iexA==
-X-Gm-Message-State: AOAM530Gu6OVnrEVQX6FV4QZgHiDdKLmk0EHVRVkKZWRADy5rRjUSN+c
-        eA/OvCk9m4qpQzZNJOT1t5J5yHziLGRiTp/z2rw=
-X-Google-Smtp-Source: ABdhPJyaNv6o4uVnFGumvl1cK7gZdIPeLXqVmwVKwDEiu2FCFHEKUVACuI2WumJhRdItKWAqsIjyLUZJMeK+/egbH10=
-X-Received: by 2002:a4a:380b:: with SMTP id c11mr6876012ooa.17.1598358887626;
- Tue, 25 Aug 2020 05:34:47 -0700 (PDT)
+        Tue, 25 Aug 2020 08:35:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54598 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726429AbgHYMfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 08:35:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C521BAF8A;
+        Tue, 25 Aug 2020 12:36:14 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 14:35:42 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Kieran Bingham <kbingham@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2][next] update gdb scripts for lockless printk
+ ringbuffer
+Message-ID: <20200825123542.GU4353@alley>
+References: <20200814212525.6118-1-john.ogness@linutronix.de>
+ <20200821080813.GM4353@alley>
+ <d81e8b0d-fa7f-1da1-671f-0541b94ad349@siemens.com>
+ <a5f4c178-9b3c-6ccd-9ea1-24d8fdc13273@kernel.org>
 MIME-Version: 1.0
-References: <20200819071633.76494-1-alexandru.ardelean@analog.com>
- <20200819071633.76494-2-alexandru.ardelean@analog.com> <20200825112435.GO2639@vkoul-mobl>
-In-Reply-To: <20200825112435.GO2639@vkoul-mobl>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Tue, 25 Aug 2020 15:34:36 +0300
-Message-ID: <CA+U=DspxU+Fo3Ynwr0ST2pyNW8Hrie=r0N2QZGrgiEqMvpicuA@mail.gmail.com>
-Subject: Re: [PATCH 2/5] dmaengine: axi-dmac: move clock enable earlier
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>, dan.j.williams@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5f4c178-9b3c-6ccd-9ea1-24d8fdc13273@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 2:24 PM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 19-08-20, 10:16, Alexandru Ardelean wrote:
-> > The clock may also be required to read registers from the IP core (if it is
-> > provided and the driver needs to control it).
-> > So, move it earlier in the probe.
-> >
-> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > ---
-> >  drivers/dma/dma-axi-dmac.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-> > index 088c79137398..07665c60c21b 100644
-> > --- a/drivers/dma/dma-axi-dmac.c
-> > +++ b/drivers/dma/dma-axi-dmac.c
-> > @@ -850,6 +850,10 @@ static int axi_dmac_probe(struct platform_device *pdev)
-> >       if (IS_ERR(dmac->clk))
-> >               return PTR_ERR(dmac->clk);
-> >
-> > +     ret = clk_prepare_enable(dmac->clk);
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> >       INIT_LIST_HEAD(&dmac->chan.active_descs);
->
-> Change is fine, but then you need to jump to err_clk_disable in few
-> place below this and not return error
+On Mon 2020-08-24 10:20:53, Kieran Bingham wrote:
+> Hi Petr,
+> 
+> On 21/08/2020 09:55, Jan Kiszka wrote:
+> > On 21.08.20 10:08, Petr Mladek wrote:
+> >> On Fri 2020-08-14 23:31:23, John Ogness wrote:
+> >>> Hi,
+> >>>
+> >>> When we brought in the new lockless printk ringbuffer, we overlooked the gdb
+> >>> scripts. Here are a set of patches to implement gdb support for the new
+> >>> ringbuffer.
+> >>>
+> >>> John Ogness (2):
+> >>>   scripts/gdb: add utils.read_ulong()
+> >>>   scripts/gdb: update for lockless printk ringbuffer
+> >>
+> >> I am not fluent in the gdb macros and python so I did not try any
+> >> deep review. But both patches work for me:
+> >>
+> >> Tested-by: Petr Mladek <pmladek@suse.com>
+> >>
+> >> I am going to give it few more days before pushing just in case there is
+> >> another feedback.
+> 
+> Before 'pushing' ?
+> 
+> What context do you mean here? These patches go through AKPM don't they?
+> Did I miss some update to procedures?
 
-oops;
-thanks for catching this;
-will send a v2
+Both patches should go into mainline together with the lockless printk
+ring buffer. It is already in linux-next via printk/linux.git,
+branch printk-rework.
 
->
-> >
-> >       of_channels = of_get_child_by_name(pdev->dev.of_node, "adi,channels");
-> > @@ -892,10 +896,6 @@ static int axi_dmac_probe(struct platform_device *pdev)
-> >       dmac->chan.vchan.desc_free = axi_dmac_desc_free;
-> >       vchan_init(&dmac->chan.vchan, dma_dev);
-> >
-> > -     ret = clk_prepare_enable(dmac->clk);
-> > -     if (ret < 0)
-> > -             return ret;
-> > -
-> >       version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
-> >
-> >       ret = axi_dmac_detect_caps(dmac, version);
-> > --
-> > 2.17.1
->
-> --
-> ~Vinod
+The plan is to get it into mainline when pr_cont() handling is solved.
+It is more complicated than we hoped for, see
+https://lore.kernel.org/r/20200824103538.31446-1-john.ogness@linutronix.de
+It is still not clear whether it will be ready for 5.10.
+
+Andrew, would you mind when I take the three gdb/lockless-printk
+related changes via printk tree to avoid synchronization problems?
+
+Best Regards,
+Petr
