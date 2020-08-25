@@ -2,234 +2,215 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1708DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082EAC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C04C9204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:40:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="ZGu+1EFv";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VlDRMj6d"
+	by mail.kernel.org (Postfix) with ESMTP id CB620204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgHYOkj (ORCPT
+        id S1726661AbgHYOl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:40:39 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:50599 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726617AbgHYOk1 (ORCPT
+        Tue, 25 Aug 2020 10:41:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40432 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbgHYOlU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:40:27 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 70A0D5805C6;
-        Tue, 25 Aug 2020 10:40:26 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 10:40:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=w
-        MzjRVZ2eQmnRLOWtihVl3tYEELP/S8Nb3EyoLwdO9Q=; b=ZGu+1EFvpMlJgGP/h
-        7q33zmEHNWl1PX8uKISBMLxwVqQwdmrDUwPBbwH8tEfaBbTxRaWqi/QIyAzk4Ap2
-        PlmBLwPBNEE34nqXb3i+8BdD6Ya4sDE2wbOjjtkOjHANE1rtTW89BWbb5xxYCEO7
-        ELX/yCqNSL9wDWUD7e6gtVX38OXPrb6k/ZyKLf/XJAlgUo0i0veHxuSpPc/oZTOy
-        JQGhDMuVTv8eoztbFGgocgx4GO6RlzoOlEF8o3sh5/xCsKMTmFi2AhjylGjV4vZl
-        ggcSuRhEYSQgtR57lr0T/8Jvxp2VlhP6POBYmfhTd+ztFFFprdu8yHrI1BtpIdNW
-        Sk2jA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=wMzjRVZ2eQmnRLOWtihVl3tYEELP/S8Nb3EyoLwdO
-        9Q=; b=VlDRMj6dBtQg08iBd10GaVK5O3M7B+0mCO0wZduK7cIMoVzhn9/pSI3eq
-        0RKJtAlxoF9AX0UbffAxcCf8gXgnJAyLO6hENEQF0WGRa0pxe82x27bsv4d1NFQU
-        oAZ/T91/XTefiJGVa2SNFlRCobjJflJavbAYVcIE97926YRW5vtFFCxN/k7F5kFd
-        RBtsr3pygiGTaCHTLRDcb6w1Y+TgHWKN8U6eQSwHNBM+07wbLlGU0dgK15JkPMT9
-        3BbIuVnnjxxKdK1AWK0AqcJ6U/Iq6zhMIgekyGDQrXrmny8ShWPZ9s/Y/i/GlHB/
-        tu4QX61Oy2ZLXK27K1oDaBRjW5yjg==
-X-ME-Sender: <xms:2CJFX4pX79xgkgrQW1NbaOfBzTAl_u3mzl1LDaB1-upMlEi6KgMdYg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgkedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtudenucfhrhhomhepofgrgihi
-    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
-    htthgvrhhnpeehledvhfeklefgveelkeeludevffethfdukedvfffhhfegfeeugfehgeef
-    jeevtdenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:2CJFX-pdvMGRNKPeQbmAqGMelw_PWcWrPKji7sz0Z0HqGA55PsUdHQ>
-    <xmx:2CJFX9OQrDCtzePv3h8UXa-XRIx98lP2HeImaFSk-wu_aMRWf-vPsQ>
-    <xmx:2CJFX_6n_oSOO04vY4S1Gd-0BjB2__ZVLvE5_e21FL2DlMYC-aSflw>
-    <xmx:2iJFX0HEJT5ve-0Ac8oI61oKCtRX7NdjBnDwErAMJHMjDJgAWn7t3g>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4B6EF30600B7;
-        Tue, 25 Aug 2020 10:40:24 -0400 (EDT)
-Date:   Tue, 25 Aug 2020 16:40:22 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        yong.deng@magewell.com, p.zabel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH 7/7] [NOT FOR MERGE] ARM: dts: sun8i: a83t: bananapi-m3:
- Enable OV8865 camera
-Message-ID: <20200825144022.mwkcqaqny7l5bab4@gilmour.lan>
-References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
- <20200821145935.20346-8-kevin.lhopital@bootlin.com>
+        Tue, 25 Aug 2020 10:41:20 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1kAa88-0003Fw-2k; Tue, 25 Aug 2020 14:40:56 +0000
+Date:   Tue, 25 Aug 2020 16:40:54 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     Michal Hocko <mhocko@suse.com>, mingo@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com,
+        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
+        Oleg Nesterov <oleg@redhat.com>, adobriyan@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de,
+        John Johansen <john.johansen@canonical.com>,
+        laoar.shao@gmail.com, Tim Murray <timmurray@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, stable <stable@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH v2 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200825144054.obvhipwce7g7sgdm@wittgenstein>
+References: <20200824153036.3201505-1-surenb@google.com>
+ <20200825111524.v2bnoya35spde3zt@wittgenstein>
+ <CAJuCfpE7YQjBJDKBcc-20qEDsu9koirFuGSO306NDuKz6_9Tsg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200821145935.20346-8-kevin.lhopital@bootlin.com>
+In-Reply-To: <CAJuCfpE7YQjBJDKBcc-20qEDsu9koirFuGSO306NDuKz6_9Tsg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Aug 25, 2020 at 07:24:34AM -0700, Suren Baghdasaryan wrote:
+> On Tue, Aug 25, 2020 at 4:15 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > On Mon, Aug 24, 2020 at 08:30:36AM -0700, Suren Baghdasaryan wrote:
+> > > Currently __set_oom_adj loops through all processes in the system to
+> > > keep oom_score_adj and oom_score_adj_min in sync between processes
+> > > sharing their mm. This is done for any task with more that one mm_users,
+> > > which includes processes with multiple threads (sharing mm and signals).
+> > > However for such processes the loop is unnecessary because their signal
+> > > structure is shared as well.
+> > > Android updates oom_score_adj whenever a tasks changes its role
+> > > (background/foreground/...) or binds to/unbinds from a service, making
+> > > it more/less important. Such operation can happen frequently.
+> > > We noticed that updates to oom_score_adj became more expensive and after
+> > > further investigation found out that the patch mentioned in "Fixes"
+> > > introduced a regression. Using Pixel 4 with a typical Android workload,
+> > > write time to oom_score_adj increased from ~3.57us to ~362us. Moreover
+> > > this regression linearly depends on the number of multi-threaded
+> > > processes running on the system.
+> > > Mark the mm with a new MMF_PROC_SHARED flag bit when task is created with
+> > > (CLONE_VM && !CLONE_THREAD && !CLONE_VFORK). Change __set_oom_adj to use
+> > > MMF_PROC_SHARED instead of mm_users to decide whether oom_score_adj
+> > > update should be synchronized between multiple processes. To prevent
+> > > races between clone() and __set_oom_adj(), when oom_score_adj of the
+> > > process being cloned might be modified from userspace, we use
+> > > oom_adj_mutex. Its scope is changed to global and it is renamed into
+> > > oom_adj_lock for naming consistency with oom_lock. The combination of
+> > > (CLONE_VM && !CLONE_THREAD) is rarely used except for the case of vfork().
+> > > To prevent performance regressions of vfork(), we skip taking oom_adj_lock
+> > > and setting MMF_PROC_SHARED when CLONE_VFORK is specified. Clearing the
+> > > MMF_PROC_SHARED flag (when the last process sharing the mm exits) is left
+> > > out of this patch to keep it simple and because it is believed that this
+> > > threading model is rare. Should there ever be a need for optimizing that
+> > > case as well, it can be done by hooking into the exit path, likely
+> > > following the mm_update_next_owner pattern.
+> > > With the combination of (CLONE_VM && !CLONE_THREAD && !CLONE_VFORK) being
+> > > quite rare, the regression is gone after the change is applied.
+> > >
+> > > Fixes: 44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
+> > > Reported-by: Tim Murray <timmurray@google.com>
+> > > Debugged-by: Minchan Kim <minchan@kernel.org>
+> > > Suggested-by: Michal Hocko <mhocko@kernel.org>
+> > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > > ---
+> > >
+> > > v2:
+> > > - Implemented proposal from Michal Hocko in:
+> > > https://lore.kernel.org/linux-fsdevel/20200820124109.GI5033@dhcp22.suse.cz/
+> > > - Updated description to reflect the change
+> > >
+> > > v1:
+> > > - https://lore.kernel.org/linux-mm/20200820002053.1424000-1-surenb@google.com/
+> > >
+> > >  fs/proc/base.c                 |  7 +++----
+> > >  include/linux/oom.h            |  1 +
+> > >  include/linux/sched/coredump.h |  1 +
+> > >  kernel/fork.c                  | 21 +++++++++++++++++++++
+> > >  mm/oom_kill.c                  |  2 ++
+> > >  5 files changed, 28 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/fs/proc/base.c b/fs/proc/base.c
+> > > index 617db4e0faa0..cff1a58a236c 100644
+> > > --- a/fs/proc/base.c
+> > > +++ b/fs/proc/base.c
+> > > @@ -1055,7 +1055,6 @@ static ssize_t oom_adj_read(struct file *file, char __user *buf, size_t count,
+> > >
+> > >  static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> > >  {
+> > > -     static DEFINE_MUTEX(oom_adj_mutex);
+> > >       struct mm_struct *mm = NULL;
+> > >       struct task_struct *task;
+> > >       int err = 0;
+> > > @@ -1064,7 +1063,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> > >       if (!task)
+> > >               return -ESRCH;
+> > >
+> > > -     mutex_lock(&oom_adj_mutex);
+> > > +     mutex_lock(&oom_adj_lock);
+> > >       if (legacy) {
+> > >               if (oom_adj < task->signal->oom_score_adj &&
+> > >                               !capable(CAP_SYS_RESOURCE)) {
+> > > @@ -1095,7 +1094,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> > >               struct task_struct *p = find_lock_task_mm(task);
+> > >
+> > >               if (p) {
+> > > -                     if (atomic_read(&p->mm->mm_users) > 1) {
+> > > +                     if (test_bit(MMF_PROC_SHARED, &p->mm->flags)) {
+> > >                               mm = p->mm;
+> > >                               mmgrab(mm);
+> > >                       }
+> > > @@ -1132,7 +1131,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> > >               mmdrop(mm);
+> > >       }
+> > >  err_unlock:
+> > > -     mutex_unlock(&oom_adj_mutex);
+> > > +     mutex_unlock(&oom_adj_lock);
+> > >       put_task_struct(task);
+> > >       return err;
+> > >  }
+> > > diff --git a/include/linux/oom.h b/include/linux/oom.h
+> > > index f022f581ac29..861f22bd4706 100644
+> > > --- a/include/linux/oom.h
+> > > +++ b/include/linux/oom.h
+> > > @@ -55,6 +55,7 @@ struct oom_control {
+> > >  };
+> > >
+> > >  extern struct mutex oom_lock;
+> > > +extern struct mutex oom_adj_lock;
+> > >
+> > >  static inline void set_current_oom_origin(void)
+> > >  {
+> > > diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
+> > > index ecdc6542070f..070629b722df 100644
+> > > --- a/include/linux/sched/coredump.h
+> > > +++ b/include/linux/sched/coredump.h
+> > > @@ -72,6 +72,7 @@ static inline int get_dumpable(struct mm_struct *mm)
+> > >  #define MMF_DISABLE_THP              24      /* disable THP for all VMAs */
+> > >  #define MMF_OOM_VICTIM               25      /* mm is the oom victim */
+> > >  #define MMF_OOM_REAP_QUEUED  26      /* mm was queued for oom_reaper */
+> > > +#define MMF_PROC_SHARED      27      /* mm is shared while sighand is not */
+> > >  #define MMF_DISABLE_THP_MASK (1 << MMF_DISABLE_THP)
+> > >
+> > >  #define MMF_INIT_MASK                (MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
+> > > diff --git a/kernel/fork.c b/kernel/fork.c
+> > > index 4d32190861bd..6fce8ffa9b8b 100644
+> > > --- a/kernel/fork.c
+> > > +++ b/kernel/fork.c
+> > > @@ -1809,6 +1809,25 @@ static __always_inline void delayed_free_task(struct task_struct *tsk)
+> > >               free_task(tsk);
+> > >  }
+> > >
+> > > +static void copy_oom_score_adj(u64 clone_flags, struct task_struct *tsk)
+> > > +{
+> > > +     /* Skip if kernel thread */
+> > > +     if (!tsk->mm)
+> > > +             return;
+> >
+> > Hm, wouldn't
+> >
+> >         if (tsk->flags & PF_KTHREAD)
+> >                 return;
+> >
+> > be clearer and more future proof?
+> 
+> The check follows a similar pattern from copy_mm to detect when we are
 
-On Fri, Aug 21, 2020 at 04:59:35PM +0200, K=E9vin L'h=F4pital wrote:
-> The Bananapi M3 supports a camera module which includes an
-> OV8865 sensor connected via the parallel CSI interface and
-> an OV8865 sensor connected via MIPI CSI-2.
->=20
-> The I2C2 bus is shared by the two sensors as well as active-low
-> reset signal but each sensor has it own shutdown line.
->=20
-> The I2c address for the OV8865 is 0x36.
->=20
-> The bus type is hardcoded to 4 due to the lack of available
-> define usable in the device-tree.
->=20
-> Signed-off-by: K=E9vin L'h=F4pital <kevin.lhopital@bootlin.com>
->
-> ---
->  arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 99 ++++++++++++++++++++
->  1 file changed, 99 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot=
-/dts/sun8i-a83t-bananapi-m3.dts
-> index 9d34eabba121..f7839094695e 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-> +++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-> @@ -85,6 +85,38 @@
->  		};
->  	};
-> =20
-> +	reg_ov8865_avdd: ov8865-avdd {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "ov8865-avdd";
-> +		regulator-min-microvolt =3D <2800000>;
-> +		regulator-max-microvolt =3D <2800000>;
-> +		vin-supply =3D <&reg_dldo4>;
-> +	};
-> +
-> +	reg_ov8865_dovdd: ov8865-dovdd {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "ov8865-dovdd";
-> +		regulator-min-microvolt =3D <2800000>;
-> +		regulator-max-microvolt =3D <2800000>;
-> +		vin-supply =3D <&reg_dldo4>;
-> +	};
-> +
-> +	reg_ov8865_afvdd: ov8865-afvdd {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "ov8865-afvdd";
-> +		regulator-min-microvolt =3D <2800000>;
-> +		regulator-max-microvolt =3D <2800000>;
-> +		vin-supply =3D <&reg_dldo4>;
-> +	};
-> +
-> +	reg_ov8865_vdd2: ov8865-vdd2 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "ov8865-vdd2";
-> +		regulator-min-microvolt =3D <1200000>;
-> +		regulator-max-microvolt =3D <1200000>;
-> +		vin-supply =3D <&reg_eldo1>;
-> +	};
-> +
->  	reg_usb1_vbus: reg-usb1-vbus {
->  		compatible =3D "regulator-fixed";
->  		regulator-name =3D "usb1-vbus";
-> @@ -115,10 +147,59 @@
->  	cpu-supply =3D <&reg_dcdc3>;
->  };
-> =20
-> +&ccu {
-> +	assigned-clocks =3D <&ccu CLK_CSI_MCLK>;
-> +	assigned-clock-parents =3D <&osc24M>;
-> +	assigned-clock-rates =3D <24000000>;
-> +};
+Ah cool. Was mostly interest not me asking for a change. :)
+This looks like a simple enough fix now. Fwiw:
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
 
-Why do you need to use assigned-clocks here?
-
-> +&csi {
-> +	pinctrl-names =3D "default";
-> +	status =3D "okay";
-> +};
-
-pinctrl-names alone is useless
-
-> +
-> +&csi_in {
-> +	mipi_csi2_from_ov8865: endpoint {
-> +		remote-endpoint =3D <&ov8865_to_mipi_csi2>;
-> +		clock-lanes =3D <0>;
-> +		data-lanes =3D <1 2 3 4>;
-> +		bus-type =3D <4>;
-> +	};
-> +};
-> +
->  &de {
->  	status =3D "okay";
->  };
-> =20
-> +&i2c2 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&i2c2_pe_pins>;
-> +	status =3D "okay";
-> +
-> +	ov8865: camera@36 {
-> +		compatible =3D "ovti,ov8865";
-> +		reg =3D <0x36>;
-> +		clocks =3D <&ccu CLK_CSI_MCLK>;
-> +		clock-names =3D"xclk";
-> +		AVDD-supply =3D <&reg_ov8865_avdd>;
-> +		DOVDD-supply =3D <&reg_ov8865_dovdd>;
-> +		VDD2-supply =3D <&reg_ov8865_vdd2>;
-> +		AFVDD-supply =3D <&reg_ov8865_afvdd>;
-> +		powerdown-gpios =3D <&pio 4 17 GPIO_ACTIVE_LOW>; /* PE17 */
-> +		reset-gpios =3D <&pio 4 16 GPIO_ACTIVE_LOW>; /* PE16 */
-> +		rotation =3D <180>;
-> +
-> +		port {
-> +			ov8865_to_mipi_csi2: endpoint {
-> +				remote-endpoint =3D <&mipi_csi2_from_ov8865>;
-> +				data-lanes =3D <1 2 3 4>;
-> +				clock-lanes =3D <0>;
-> +				bus-type =3D <4>; /* V4L2_FWNODE_BUS_TYPE_CSI2_DPHY */
-> +			};
-> +		};
-> +	};
-> +};
-> +
->  &ehci0 {
->  	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
->  	status =3D "okay";
-> @@ -191,6 +272,11 @@
->  	status =3D "okay";
->  };
-> =20
-> +&pio {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&csi_mclk_pin>;
-> +};
-
-I'm not sure why you'd need to use the MCLK pin as a hog, assigning it
-to the camera device should be enough?
-
-Maxime
+Thanks!
+Christian
