@@ -2,58 +2,96 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8842C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F24EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD2442074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67185206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgHYAe4 (ORCPT
+        id S1728567AbgHYAfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 20:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43678 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbgHYAez (ORCPT
+        Mon, 24 Aug 2020 20:35:04 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:54197 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727846AbgHYAfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 20:34:55 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21687C061574;
-        Mon, 24 Aug 2020 17:34:55 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9598E1294C716;
-        Mon, 24 Aug 2020 17:18:08 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 17:34:54 -0700 (PDT)
-Message-Id: <20200824.173454.206331628247587976.davem@davemloft.net>
-To:     dinghao.liu@zju.edu.cn
-Cc:     kjlu@umn.edu, colin.king@canonical.com, netdev@vger.kernel.org,
+        Mon, 24 Aug 2020 20:35:03 -0400
+Received: (qmail 350796 invoked by uid 1000); 24 Aug 2020 20:35:01 -0400
+Date:   Mon, 24 Aug 2020 20:35:01 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Vito Caputo <vcaputo@pengaru.com>
+Cc:     trix@redhat.com, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] NFC: st95hf: Fix memleak in st95hf_in_send_cmd
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200823072346.17140-1-dinghao.liu@zju.edu.cn>
-References: <20200823072346.17140-1-dinghao.liu@zju.edu.cn>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Aug 2020 17:18:08 -0700 (PDT)
+Subject: Re: [PATCH v2] usb: storage: initialize variable
+Message-ID: <20200825003501.GA350601@rowland.harvard.edu>
+References: <20200824211027.11543-1-trix@redhat.com>
+ <20200824211839.6c7m7yhgd7ffq3g3@shells.gnugeneration.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824211839.6c7m7yhgd7ffq3g3@shells.gnugeneration.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Date: Sun, 23 Aug 2020 15:23:43 +0800
-
-> When down_killable() fails, skb_resp should be freed
-> just like when st95hf_spi_send() fails.
+On Mon, Aug 24, 2020 at 02:18:39PM -0700, Vito Caputo wrote:
+> On Mon, Aug 24, 2020 at 02:10:27PM -0700, trix@redhat.com wrote:
+> > From: Tom Rix <trix@redhat.com>
+> > 
+> > clang static analysis reports this representative problem
+> > 
+> > transport.c:495:15: warning: Assigned value is garbage or
+> >   undefined
+> >         length_left -= partial;
+> >                    ^  ~~~~~~~
+> > partial is set only when usb_stor_bulk_transfer_sglist()
+> > is successful.
+> > 
+> > So set partial on entry to 0.
+> > 
+> > Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> > Signed-off-by: Tom Rix <trix@redhat.com>
+> > ---
+> >  drivers/usb/storage/transport.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/usb/storage/transport.c b/drivers/usb/storage/transport.c
+> > index 238a8088e17f..044429717dcc 100644
+> > --- a/drivers/usb/storage/transport.c
+> > +++ b/drivers/usb/storage/transport.c
+> > @@ -414,6 +414,9 @@ static int usb_stor_bulk_transfer_sglist(struct us_data *us, unsigned int pipe,
+> >  {
+> >  	int result;
+> >  
+> > +	if (act_len)
+> > +		*act_len = 0;
+> > +
+> >  	/* don't submit s-g requests during abort processing */
+> >  	if (test_bit(US_FLIDX_ABORTING, &us->dflags))
+> >  		return USB_STOR_XFER_ERROR;
 > 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> At a glance this seems odd to me.  If the caller insists on ignoring
+> the return value, shouldn't it just initialize partial to zero?
 
-Applied, thank you.
+In this case, the callers are not the final consumers of the return 
+value or of partial.  They merely copy those values back up to _their_ 
+callers, and those copy operations are what the static analyzer objects 
+to.
+
+> In my experience it's generally frowned upon for functions to store
+> results in error paths.
+
+I don't see any reason for such an attitude, at least not here.  It 
+makes perfectly good sense, if an error prevents transmission of an 
+entire data buffer, to store the amount of data that did get 
+transmitted.
+
+Alan Stern
