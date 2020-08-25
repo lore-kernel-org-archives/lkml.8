@@ -2,91 +2,73 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5878EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FAAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3795920715
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:44:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oyqzKxzp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hCNaNP2M"
+	by mail.kernel.org (Postfix) with ESMTP id AD62D2068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:45:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgHYKoh (ORCPT
+        id S1729885AbgHYKpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:44:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53986 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYKob (ORCPT
+        Tue, 25 Aug 2020 06:45:04 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:61687 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729797AbgHYKpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:44:31 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A35B2C061574;
-        Tue, 25 Aug 2020 03:44:31 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598352270;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IaSnuDwRn2e4Hta1oGrGIYC52mweFdeQMzeRaFMJpUs=;
-        b=oyqzKxzp4iU6QuQ0GvCsPc3e1Pvw3TzzsZ5d97IJLH1aVK87mkMueHJYx5tla8JmQI1M7B
-        uKh8POxc0FNwluI0oKUnBX0wiGsWWdV+7Vk1IoBeMfkPYNALWOFbTHYhq3421trHlDPpVY
-        87EKt5gW7BESzx5jDDcmsTfBAWw6G+qMH4fp4DpX4qhzujXRqWHh5PO+yUltGdhjUpxgFr
-        uQg1wIIC0ApI0PKLOc5N17dUUmYxRfHU5X66D+c31qI5M+Z/jlZ+tzBq2EjGx6pjszvR0E
-        S6MIbkbmNZGG7H1V1/6iyIKEocYXUwCKr4kN/Kg7+Oy9zISB8YrtvGhIOyJevA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598352270;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IaSnuDwRn2e4Hta1oGrGIYC52mweFdeQMzeRaFMJpUs=;
-        b=hCNaNP2MxvMZjWhc53F6DQIOmBWGvvCn/J67GUDqPauRKOVVHV+xjeUOdGwXcgEf5HCWgf
-        2SLLTCBMSRM1dyAQ==
-To:     Brian Gerst <brgerst@gmail.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH v2] x86/entry/64: Do not use RDPID in paranoid entry to accomodate KVM
-In-Reply-To: <CAMzpN2h79bi5dd7PxjY45xYy71UdYomKa1t2gNxLtRpDkMs+Lw@mail.gmail.com>
-References: <20200821105229.18938-1-pbonzini@redhat.com> <20200821142152.GA6330@sjchrist-ice> <CAMzpN2h79bi5dd7PxjY45xYy71UdYomKa1t2gNxLtRpDkMs+Lw@mail.gmail.com>
-Date:   Tue, 25 Aug 2020 12:44:29 +0200
-Message-ID: <874kor57jm.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 25 Aug 2020 06:45:01 -0400
+X-IronPort-AV: E=Sophos;i="5.76,352,1592838000"; 
+   d="scan'208";a="55260239"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 25 Aug 2020 19:44:58 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 720BF4001B7F;
+        Tue, 25 Aug 2020 19:44:56 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pwm@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH 0/2] r8a774e1 add PWM support
+Date:   Tue, 25 Aug 2020 11:44:53 +0100
+Message-Id: <20200825104455.18000-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21 2020 at 11:35, Brian Gerst wrote:
-> On Fri, Aug 21, 2020 at 10:22 AM Sean Christopherson
->> >  .macro GET_PERCPU_BASE reg:req
->> > -     ALTERNATIVE \
->> > -             "LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
->> > -             "RDPID  \reg", \
->>
->> This was the only user of the RDPID macro, I assume we want to yank that out
->> as well?
->
-> No.  That one should be kept until the minimum binutils version is
-> raised to one that supports the RDPID opcode.
+Hi All,
 
-The macro is unused and nothing in the kernel can use RDPID as we just
-established.
+This patch series adds PWM support to R8A774E1 (RZ/G2H) SoC.
 
-Thanks,
+Patches apply on top of [1].
 
-        tglx
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
+    renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
+
+Cheers,
+Prabhakar
+
+Marian-Cristian Rotariu (2):
+  dt-bindings: pwm: renesas,pwm-rcar: Add r8a774e1 support
+  arm64: dts: renesas: r8a774e1: Add PWM device nodes
+
+ .../bindings/pwm/renesas,pwm-rcar.yaml        |  1 +
+ arch/arm64/boot/dts/renesas/r8a774e1.dtsi     | 64 ++++++++++++++++++-
+ 2 files changed, 64 insertions(+), 1 deletion(-)
+
+-- 
+2.17.1
 
