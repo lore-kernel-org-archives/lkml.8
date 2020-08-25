@@ -2,101 +2,150 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C967EC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C13C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:54:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5A22065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:54:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="l4uR4VK0"
+	by mail.kernel.org (Postfix) with ESMTP id 9223C2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgHYIyJ (ORCPT
+        id S1728890AbgHYIyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:54:09 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8503 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728109AbgHYIyI (ORCPT
+        Tue, 25 Aug 2020 04:54:39 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:45345 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725916AbgHYIyj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:54:08 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f44d1a20000>; Tue, 25 Aug 2020 01:53:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 25 Aug 2020 01:54:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 25 Aug 2020 01:54:08 -0700
-Received: from [10.2.53.36] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Aug
- 2020 08:54:08 +0000
-Subject: Re: [PATCH v3] tee: convert convert get_user_pages() -->
- pin_user_pages()
-To:     Jens Wiklander <jens.wiklander@linaro.org>
-List-Id: <soc.lore.kernel.org>
-CC:     <arm@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <olof@lixom.net>, <soc@kernel.org>,
-        <tee-dev@lists.linaro.org>, Sumit Semwal <sumit.semwal@linaro.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>
-References: <CAHUa44FrxidzSUOM_JchOTa5pF6P+j8uZJA5DpKfGLWaS6tCcw@mail.gmail.com>
- <20200824211125.1867329-1-jhubbard@nvidia.com>
- <20200825083204.GA2068961@jade>
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <1f111bb4-6e93-93d5-66ff-b9d4d456140f@nvidia.com>
-Date:   Tue, 25 Aug 2020 01:54:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 04:54:39 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U6oygkt_1598345661;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6oygkt_1598345661)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 25 Aug 2020 16:54:24 +0800
+Subject: Re: [PATCH v18 00/32] per memcg lru_lock
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Hugh Dickins <hughd@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        mgorman@techsingularity.net, tj@kernel.org,
+        khlebnikov@yandex-team.ru, willy@infradead.org, hannes@cmpxchg.org,
+        lkp@intel.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
+        shy828301@gmail.com
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
+ <alpine.LSU.2.11.2008241231460.1065@eggly.anvils>
+ <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <4cc9f54a-9eda-9966-df9a-a00bc9e88f4c@linux.alibaba.com>
+Date:   Tue, 25 Aug 2020 16:52:54 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200825083204.GA2068961@jade>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598345634; bh=MtrTtR7W0MYZILUrm95xWM9cnaEcReiy2mPIlaOwxxc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=l4uR4VK0PiJo5w0LLlk1qyx38HDxhUpGAbiDVLTQSDSZvzqgAuWEGYdtIsFkXSxdz
-         yRBUk/5DowXI23mfcBla6xZ9Vp6nBnk/JXDMZwa+y2CCi89SiTVFBx+dvvw6fcBIuO
-         H5hho5wMVNMq6Sa5S9drrs9yGhynhzZ8LpRvW737V/8kPSs94U23VsQ8108MhFi96v
-         s5Q21rxNTTFMA5jV0uh4MouuV/6NNF3/XK2egERx81KLcb787KwisqLdKs0QJXFEqm
-         p6W7UwmAvkrKgMW08nzZITEfncUx95cC0WalvQ7atCLVmsMYh2iVzbISbsTCGd4Dcv
-         j9bg78W4DcbHA==
+In-Reply-To: <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/25/20 1:32 AM, Jens Wiklander wrote:
-> On Mon, Aug 24, 2020 at 02:11:25PM -0700, John Hubbard wrote:
-...
->> OK, one more try, this time actually handling the _USER_MAPPED vs.
->> _KERNEL_MAPPED pages!
->>
->> thanks,
->> John Hubbard
->> NVIDIA
+
+
+ÔÚ 2020/8/25 ÉÏÎç9:56, Daniel Jordan Ð´µÀ:
+> On Mon, Aug 24, 2020 at 01:24:20PM -0700, Hugh Dickins wrote:
+>> On Mon, 24 Aug 2020, Andrew Morton wrote:
+>>> On Mon, 24 Aug 2020 20:54:33 +0800 Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>> Andrew demurred on version 17 for lack of review.  Alexander Duyck has
+>> been doing a lot on that front since then.  I have intended to do so,
+>> but it's a mirage that moves away from me as I move towards it: I have
 > 
-> Looks good and it works too! :-) I've tested it on my Hikey board with
-> the OP-TEE test suite.
-> I'm picking this up.
+> Same, I haven't been able to keep up with the versions or the recent review
+> feedback.  I got through about half of v17 last week and hope to have more time
+> for the rest this week and beyond.
+> 
+>>>> Following Daniel Jordan's suggestion, I have run 208 'dd' with on 104
+>>>> containers on a 2s * 26cores * HT box with a modefied case:
+> 
+> Alex, do you have a pointer to the modified readtwice case?
 > 
 
-Great! I see that I have, once again, somehow doubled up on the subject line:
-"tee: convert convert ...". This particular typo just seems to stick to me. :)
+Hi Daniel,
 
-If you get a chance to fix that up by changing it to just a single "convert"
-I'd appreciate it.
+my readtwice modification like below.
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+diff --git a/case-lru-file-readtwice b/case-lru-file-readtwice
+index 85533b248634..57cb97d121ae 100755
+--- a/case-lru-file-readtwice
++++ b/case-lru-file-readtwice
+@@ -15,23 +15,30 @@
+
+ . ./hw_vars
+
+-for i in `seq 1 $nr_task`
+-do
+-       create_sparse_file $SPARSE_FILE-$i $((ROTATE_BYTES / nr_task))
+-       timeout --foreground -s INT ${runtime:-600} dd bs=4k if=$SPARSE_FILE-$i of=/dev/null > $TMPFS_MNT/dd-output-1-$i 2>&1 &
+-       timeout --foreground -s INT ${runtime:-600} dd bs=4k if=$SPARSE_FILE-$i of=/dev/null > $TMPFS_MNT/dd-output-2-$i 2>&1 &
+-done
++OUT_DIR=$(hostname)-${nr_task}c-$(((mem + (1<<29))>>30))g
++TEST_CASES=${@:-$(echo case-*)}
++
++echo $((1<<30)) > /proc/sys/vm/max_map_count
++echo $((1<<20)) > /proc/sys/kernel/threads-max
++echo 1 > /proc/sys/vm/overcommit_memory
++#echo 3 > /proc/sys/vm/drop_caches
++
++
++i=1
++
++if [ "$1" == "m" ];then
++       mount_tmpfs
++       create_sparse_root
++       create_sparse_file $SPARSE_FILE-$i $((ROTATE_BYTES))
++       exit
++fi
++
++
++if [ "$1" == "r" ];then
++       (timeout --foreground -s INT ${runtime:-300} dd bs=4k if=$SPARSE_FILE-$i of=/dev/null > $TMPFS_MNT/dd-output-1-$i 2>&1)&
++       (timeout --foreground -s INT ${runtime:-300} dd bs=4k if=$SPARSE_FILE-$i of=/dev/null > $TMPFS_MNT/dd-output-2-$i 2>&1)&
++fi
+
+ wait
+ sleep 1
+
+-for file in $TMPFS_MNT/dd-output-*
+-do
+-       [ -s "$file" ] || {
+-               echo "dd output file empty: $file" >&2
+-       }
+-       cat $file
+-       rm  $file
+-done
+-
+-rm `seq -f $SPARSE_FILE-%g 1 $nr_task`
+diff --git a/hw_vars b/hw_vars
+index 8731cefb9f57..ceeaa9f17c0b 100755
+--- a/hw_vars
++++ b/hw_vars
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/sh -ex
+
+ if [ -n "$runtime" ]; then
+        USEMEM="$CMD ./usemem --runtime $runtime"
+@@ -43,7 +43,7 @@ create_loop_devices()
+        modprobe loop 2>/dev/null
+        [ -e "/dev/loop0" ] || modprobe loop 2>/dev/null
+
+-       for i in $(seq 0 8)
++       for i in $(seq 0 104)
+        do
+                [ -e "/dev/loop$i" ] && continue
+                mknod /dev/loop$i b 7 $i
