@@ -2,165 +2,182 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9373C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76367C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C45742074A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EC9E2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rchlr1Gb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QkYEIrVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbgHYWvi (ORCPT
+        id S1726783AbgHYWwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:51:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54990 "EHLO
+        Tue, 25 Aug 2020 18:52:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgHYWvf (ORCPT
+        with ESMTP id S1726698AbgHYWwL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 18:51:35 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E37AC061574;
-        Tue, 25 Aug 2020 15:51:35 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id s16so324820qtn.7;
-        Tue, 25 Aug 2020 15:51:35 -0700 (PDT)
+        Tue, 25 Aug 2020 18:52:11 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F433C061756
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 15:52:10 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id z9so619661wmk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 15:52:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RRYm8K54iTM0KmZ7diI013rBcUcgsXrhjLGzNHRl7Rg=;
-        b=rchlr1Gb7qoXlcfZld/WTVS7B4cMQosuzwK/vU04y3i/CR5vmoawJu5NNf+PWijlzO
-         zh7Pk7v9aG6fTAev6uTCPjAECWd83nm6cVfRBAw2ejiJQJ1l/hzPH73M3eVf4Xg86eTG
-         3iIspWHHE99X0ElIPniIErSg2xHJwb9btjaD0OLYAKihJuXTZn1+C/+FX7anBZdX5U/J
-         nJopOCgMoYX+4QHC4oxVfxhQVpaWN9tff8Yi0p6e66DsPGFjW5VOC6npbzo0eyvxgOYe
-         IWrk988JpKGN3LEQ9dYJ8a2hguKkcxjFxArWzU7FzhvuqlC33OzHifX6smu3jipeJsIM
-         2+Gg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cfOl2UQHdbCINZIldHubnmx8IVpsfXAYL83fcmtlXw4=;
+        b=QkYEIrVgLfpQTJIqmhbHY5M5fM5kJic86WqU3jpgR1PUjq7Lp9fn2kZtNEe1+D+oxZ
+         ulF3o5vvudoz2/UXKjoXPEelAOmg8R7YPWOaZ77xVjb+sciCMghJm9EQwHretixTnYp6
+         T4RmmOq9Fda1Hh/mBcwPwM0mT2ew82EgE/agw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RRYm8K54iTM0KmZ7diI013rBcUcgsXrhjLGzNHRl7Rg=;
-        b=tnOj7+oZfWh1D1Ym879HfPy9DOqJnFRXrdhSvAfUohqH5mAtoazVyntPXCa0X3mJxl
-         B15dHAK8p+ECH/0J3AK+cd/Abdfx1xRVJBS4+c/2K48UQCvRVyGB83mJScDTVFFjbGKV
-         qyRjr4xZ1EXdQDwDRjJUb5OToppO11R4AFJMKv7NuseqnW8VWaLONWkR05A/CG7EVmtU
-         l+3lAXdMb5llZNfSe/Y8zjR23gw05iWDZxDEelvqcVqExK7Rl/4vlRBZACyVimxIFu9b
-         ojz3wisBQf4iXxO7F6mZZSLd1fJXDoqtn3XT/IKJ7EddjDSKes92bstw+JS1fWNQJ8bs
-         nqzg==
-X-Gm-Message-State: AOAM531DuGpuKUjTYEYkUZqKDWNETLWpkVK+Add9wgP4fZKY10RZ11es
-        g+dlVqrFDuveT539WuAcheo=
-X-Google-Smtp-Source: ABdhPJzlIF0klzc1WeI+3Dpjcw7mOVpEhCkd6vWLI961R34YyHmWrmRqxKNFA1rLy9d2d2Qot81Ypg==
-X-Received: by 2002:ac8:75c8:: with SMTP id z8mr11468112qtq.327.1598395894379;
-        Tue, 25 Aug 2020 15:51:34 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id g13sm254959qki.62.2020.08.25.15.51.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 15:51:33 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 15:51:31 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Will Deacon <will@kernel.org>, Borislav Petkov <bp@suse.de>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: add minimum clang/llvm version
-Message-ID: <20200825225131.GA2702183@ubuntu-n2-xlarge-x86>
-References: <20200825222552.3113760-1-ndesaulniers@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cfOl2UQHdbCINZIldHubnmx8IVpsfXAYL83fcmtlXw4=;
+        b=m9fkBbf1gxzMImR6ts9JNyOXAdWPA53096T2E7ZFSC1KwCSgbWHreohArkcp17B/Oe
+         EZRsrBjlO8XafQUnY7jyvTYBNJA93j6P4ZDYNHGFeauVhkvM6MH40YD8rXFjznMLKxOm
+         jls9mlhQzJMqwgDD3eNNyWIv6KKWJPbVKWJmIIUhi9ndYWA1EaOeDy1iifSuYD5p5aUX
+         LIdAIn7297MpFNNasLeUNys23sIbxh0+AfKWDZlGHdreYc+cPQu+ChIZTe/POyPcAZu6
+         qxEv9MG/xUGeTJAVr84rx99e2AIudRZ7ILnpTmh4XoJIA0Nctp4QyQiaIsGqFt4APspY
+         emxw==
+X-Gm-Message-State: AOAM5332X51xGhQpKh53fvos/fmTVev0p12IAwciRL4w2s+mV8ziZFD2
+        ssB3WIRczOHtrhpHWYMdat9u9tvSwF69JMXdfigWHQ==
+X-Google-Smtp-Source: ABdhPJwpMoZqgzHr01+lgnJ9+FUckysA+/VP6wA0DAh6UJAf/MhHZjVoI3Nd3t+B0oMotoHDmAdl90MhToObkEkKQx4=
+X-Received: by 2002:a1c:a9c3:: with SMTP id s186mr3938731wme.131.1598395927741;
+ Tue, 25 Aug 2020 15:52:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825222552.3113760-1-ndesaulniers@google.com>
+References: <20200825182919.1118197-1-kpsingh@chromium.org>
+ <CAADnVQJG+vMTyuNGjWTYnWX11ZqJU-EE30UC5KPJtpv1MC78cw@mail.gmail.com> <CAADnVQK0sKWa-XMUR9y28KEqMCOQhnRcAu=MDv4rU8iPwLBW1w@mail.gmail.com>
+In-Reply-To: <CAADnVQK0sKWa-XMUR9y28KEqMCOQhnRcAu=MDv4rU8iPwLBW1w@mail.gmail.com>
+From:   KP Singh <kpsingh@chromium.org>
+Date:   Wed, 26 Aug 2020 00:51:57 +0200
+Message-ID: <CACYkzJ7fM4KEhWh1ACkJbtc+VNnN1A0CESkn3k45L5Bywae21w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v10 0/7] Generalizing bpf_local_storage
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 03:25:51PM -0700, Nick Desaulniers wrote:
-> Based on a vote at the LLVM BoF at Plumbers 2020, we decided to start
-> small, supporting just one formal upstream release of LLVM for now.
-> 
-> We can probably widen the support window of supported versions over
-> time.  Also, note that LLVM's release process is different than GCC's.
-> GCC tends to have 1 major release per year while releasing minor updates
-> to the past 3 major versions.  LLVM tends to support one major release
-> and one minor release every six months.
-> 
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
-> Note to reviewers: working remote, I'm having trouble testing/verifying
-> that I have the RST links wired up correctly; I would appreciate it if
-> someone is able to `make htmldocs` and check
-> Documentation/output/process/changes.html properly links to
-> Documentation/output/kbuild/llvm.html.
+On Wed, Aug 26, 2020 at 12:13 AM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Tue, Aug 25, 2020 at 2:05 PM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > On Tue, Aug 25, 2020 at 11:29 AM KP Singh <kpsingh@chromium.org> wrote:
+> > >
+> > > From: KP Singh <kpsingh@google.com>
+> > >
+> > > # v9 -> v10
+> > >
+> > > - Added NULL check for inode_storage_ptr before calling
+> > >   bpf_local_storage_update
+> > > - Removed an extraneous include
+> > > - Rebased and added Acks / Signoff.
+> >
+> > Hmm. Though it looks good I cannot apply it, because
+> > test_progs -t map_ptr
+> > is broken:
+> > 2225: (18) r2 = 0xffffc900004e5004
+> > 2227: (b4) w1 = 58
+> > 2228: (63) *(u32 *)(r2 +0) = r1
+> >  R0=map_value(id=0,off=0,ks=4,vs=4,imm=0) R1_w=inv58
+> > R2_w=map_value(id=0,off=4,ks=4,vs=8,imm=0) R3=inv49 R4=inv63
+> > R5=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6_w=inv0
+> > R7=invP8 R8=map_ptr(id=0,off=0,ks=4,vs=4,imm=0) R10=?
+> > ; VERIFY_TYPE(BPF_MAP_TYPE_SK_STORAGE, check_sk_storage);
+> > 2229: (18) r1 = 0xffffc900004e5000
+> > 2231: (b4) w3 = 24
+> > 2232: (63) *(u32 *)(r1 +0) = r3
+> >  R0=map_value(id=0,off=0,ks=4,vs=4,imm=0)
+> > R1_w=map_value(id=0,off=0,ks=4,vs=8,imm=0)
+> > R2_w=map_value(id=0,off=4,ks=4,vs=8,imm=0) R3_w=inv24 R4=inv63
+> > R5=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6_w=inv0
+> > R7=invP8 R8=map_pt?
+> > 2233: (18) r3 = 0xffff8881f03f7000
+> > ; VERIFY(indirect->map_type == direct->map_type);
+> > 2235: (85) call unknown#195896080
+> > invalid func unknown#195896080
+> > processed 4678 insns (limit 1000000) max_states_per_insn 9
+> > total_states 240 peak_states 178 mark_read 11
+> >
+> > libbpf: -- END LOG --
+> > libbpf: failed to load program 'cgroup_skb/egress'
+> > libbpf: failed to load object 'map_ptr_kern'
+> > libbpf: failed to load BPF skeleton 'map_ptr_kern': -4007
+> > test_map_ptr:FAIL:skel_open_load open_load failed
+> > #43 map_ptr:FAIL
+> >
+> > Above 'invalid func unknown#195896080' happens
+> > when libbpf fails to do a relocation at runtime.
+> > Please debug.
+> > It's certainly caused by this set, but not sure why.
+>
+> So I've ended up bisecting and debugging it.
+> It turned out that the patch 1 was responsible.
+> I've added the following hunk to fix it:
 
-I ran 'make O=out htmldocs' and can confirm that the link works properly
-in process/changes.html, pointing to kbuild/llvm.html.
+Thanks for fixing and debugging it.
 
->  Documentation/kbuild/llvm.rst     |  2 ++
->  Documentation/process/changes.rst | 10 ++++++++++
->  2 files changed, 12 insertions(+)
-> 
-> diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
-> index 2aac50b97921..70ec6e9a183b 100644
-> --- a/Documentation/kbuild/llvm.rst
-> +++ b/Documentation/kbuild/llvm.rst
-> @@ -1,3 +1,5 @@
-> +.. _kbuild_llvm:
-> +
->  ==============================
->  Building Linux with Clang/LLVM
->  ==============================
-> diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
-> index ee741763a3fc..6c580ef9f2a3 100644
-> --- a/Documentation/process/changes.rst
-> +++ b/Documentation/process/changes.rst
-> @@ -30,6 +30,7 @@ you probably needn't concern yourself with pcmciautils.
->          Program        Minimal version       Command to check the version
->  ====================== ===============  ========================================
->  GNU C                  4.9              gcc --version
-> +Clang/LLVM (optional)  10.0.1           clang --version
+> diff --git a/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+> b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+> index 473665cac67e..982a2d8aa844 100644
+> --- a/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+> +++ b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+> @@ -589,7 +589,7 @@ static inline int check_stack(void)
+>         return 1;
 
-Maybe it is worth making the "(optional)" a footnote like Sphinx? Seems
-to just kind of stick out to me but I do not have a strong opinion
-unless others do.
+[...]
 
->  GNU make               3.81             make --version
->  binutils               2.23             ld -v
->  flex                   2.5.35           flex --version
-> @@ -68,6 +69,15 @@ GCC
->  The gcc version requirements may vary depending on the type of CPU in your
->  computer.
->  
-> +Clang/LLVM (optional)
-> +---------------------
-> +
-> +The latest formal release of clang and LLVM utils (according to
-> +`releases.llvm.org <https://releases.llvm.org>`_) are supported for building
-> +kernels. Older releases aren't gauranteed to work, and we may drop workarounds
-> +from the kernel that were used to support older versions. Please see additional
-> +docs on :ref:`Building Linux with Clang/LLVM <kbuild_llvm>`.
-> +
+> and pushed the whole set.
+> In the future please always run test_progs and test_progs-no_alu32
 
-Do we maybe want to add a section for LLVM/clang in the "Getting updated
-software" section? Maybe just a link to the existing section that we
-have in kbuild/llvm.rst?
+Noted, I do run them but this test gave me a different error and I always
+ended up ignoring this:
 
->  Make
->  ----
->  
-> -- 
-> 2.28.0.297.g1956fa8f8d-goog
-> 
+./test_progs -t map_ptr
+libbpf: Error in bpf_create_map_xattr(m_array_of_maps):ERROR:
+strerror_r(-524)=22(-524). Retrying without BTF.
+libbpf: Error in bpf_create_map_xattr(m_hash_of_maps):ERROR:
+strerror_r(-524)=22(-524). Retrying without BTF.
+libbpf: Error in bpf_create_map_xattr(m_perf_event_array):ERROR:
+strerror_r(-524)=22(-524). Retrying without BTF.
+libbpf: Error in bpf_create_map_xattr(m_stack_trace):ERROR:
+strerror_r(-524)=22(-524). Retrying without BTF.
+libbpf: Error in bpf_create_map_xattr(m_cgroup_array):ERROR:
+strerror_r(-524)=22(-524). Retrying without BTF.
+libbpf: Error in bpf_create_map_xattr(m_devmap):ERROR:
+strerror_r(-524)=22(-524). Retrying without BTF.
+libbpf: Error in bpf_create_map_xattr(m_sockmap):Invalid
+argument(-22). Retrying without BTF.
+libbpf: map 'm_sockmap': failed to create: Invalid argument(-22)
+libbpf: failed to load object 'map_ptr_kern'
+libbpf: failed to load BPF skeleton 'map_ptr_kern': -22
+test_map_ptr:FAIL:skel_open_load open_load failed
 
-Regardless of the nits above:
+I now realized that I was not sourcing
+tools/testing/selftests/bpf/config correctly
+and CONFIG_BPF_STREAM_PARSER was not enabled in my configuration.
 
-Reviewed-and-tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Nonetheless, no excuses and will ensure these tests pass in the future.
+
+- KP
+
+> for every patch and submit patches only if _all_ tests are passing.
+> Do not assume that your change is not responsible for breakage.
