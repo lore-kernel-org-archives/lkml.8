@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83554C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 560DD207F7
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6303E2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:59:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b+B9hcGB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vo8PAURx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgHYT7Q (ORCPT
+        id S1726757AbgHYT7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56624 "EHLO
+        Tue, 25 Aug 2020 15:59:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbgHYT7K (ORCPT
+        with ESMTP id S1726707AbgHYT70 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:59:10 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8209CC061756
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:59:10 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id 68so8361ual.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:59:10 -0700 (PDT)
+        Tue, 25 Aug 2020 15:59:26 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98291C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:59:26 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id a13so40598vso.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:59:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AyZxIenRzLRb0uRNdBtgusm7ii5Z3WvQsO/+O8B9aLw=;
-        b=b+B9hcGB4rLX+gwJzENPKtNLlKGAgqbg52OJSJg1f0lT1z9E4c9rD3zsD6Zs3A/4y6
-         cHhV2Z10WGiLIf3VBY6UQvvTeU+eAn8mpZw+QeyjOGm8nzZ6glkmyD4YKNzyo0KH4ngq
-         9bN1QNwPEZriPLnpyzBN33I9fBMC/Nnhx1jD0=
+        bh=8b4RVU+WnTo74tNhlNkNqnD8k6zvXZjBOKRfwHkRmnI=;
+        b=Vo8PAURx7ORtd6yU5einn0LAVp/LY4DkDOYh0P4dgOmDIaVsQRPmUDC28SYLYa9rqq
+         SDKtkNjLuobPZZ5I+QrAE/JInPIxlmrhZKHva5dOV+4H+EK1EvC/dDnBaL2d0qUPuW5s
+         ACUhet6iMVgWy7rrxhpcnQ6E2hoN0yuhAH4f4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AyZxIenRzLRb0uRNdBtgusm7ii5Z3WvQsO/+O8B9aLw=;
-        b=tNFaQhvjYfzM2AwrCLbRZJWcTSZGtL7iYScPjdbjY9SzUmbqhLGV3agrg4Qi+qNPRy
-         DiDJOvVQUhkn3Glw30K0r9I0TcG418mpW7Md5HMIcq58NmjqTGdT88xz/+tprVj2vl4j
-         GLnE4rFeP+ogU6aVL5cniorhmSqcr0OuTMD3x/XGfqtBm8s4KzX4SPyHRMV+BBzxNswl
-         jv0YZhKNEyHhggDrrMoUe0HiRGfSi+vD7K+oYeLm7lCGbYWDaWUgOpaXkeJaa0NQJjI3
-         DUncE+peGQNwR1kQ95jLmkiTz2QwPHf/xe8rhEp6RftaK8b+ks4pnCtRCjOXb7hTXtfu
-         LLIQ==
-X-Gm-Message-State: AOAM531klI1hxBnUuQ40LPlQK71HFhR/qBhw9ZE62sFaV7MgMV5ZeoF7
-        kllBr0D4rS8BlqhbRMJbJn8TpONRbvqr2A==
-X-Google-Smtp-Source: ABdhPJwvh8xovK57NSuAjd99HeXId1OQh4hUBKHxZOHNJ9Sd3UHs3OLfihB12qXkCeU0t4vX9vbXhw==
-X-Received: by 2002:ab0:22c9:: with SMTP id z9mr6667948uam.17.1598385549266;
-        Tue, 25 Aug 2020 12:59:09 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id h8sm1980595uab.13.2020.08.25.12.59.07
+        bh=8b4RVU+WnTo74tNhlNkNqnD8k6zvXZjBOKRfwHkRmnI=;
+        b=TfTegqaUMJpucL5FQ6dliryoxpjoXrzEz5QIFIp84ImKlOPYsE9KzXFy9dC89cWMU7
+         ZYHkXujB74SWeJy3zH801vODo8Lo8HTVud9K6Gfek/UQ2Xj+xEKMMs3d9N5yiuBA+sGH
+         mBgOJrGnJ0J+pixHYoV0HcSq8YPunV124DIldMDoP71xD2BrxGPuLPn2Ysos6YtLBRPJ
+         O3q1TiKntLtgn1/dMG8bQtSLlz4PMeMMoPHnM5ujahlXP71YbZCaVoxlo7KZ3vighPM5
+         lR/MrNrnozPh68BnUVyB/EooqzUedynWMi6xKBys8gUJWnY6Kq85A5RUaYEiKK+luhFo
+         jQCw==
+X-Gm-Message-State: AOAM5330tUZAWHDFxb3YW7GtL2rA3Zdw95cm0FZoRvykjCT70vIMFGl9
+        XFscWIu0MjKCxm2urTfiG7N7PW7SPeAjhA==
+X-Google-Smtp-Source: ABdhPJzAUmm4ooW+N6mB1YBBR4GVrrmIOTMAnepeh6IfNX0yWgDk27+nn+sn8iI4ugbXPnt/O99nMA==
+X-Received: by 2002:a67:6896:: with SMTP id d144mr7078009vsc.92.1598385565542;
+        Tue, 25 Aug 2020 12:59:25 -0700 (PDT)
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
+        by smtp.gmail.com with ESMTPSA id f16sm18461vka.7.2020.08.25.12.59.24
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 12:59:08 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id s29so11827uae.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:59:07 -0700 (PDT)
-X-Received: by 2002:a9f:2966:: with SMTP id t93mr6981969uat.90.1598385547221;
- Tue, 25 Aug 2020 12:59:07 -0700 (PDT)
+        Tue, 25 Aug 2020 12:59:24 -0700 (PDT)
+Received: by mail-vs1-f43.google.com with SMTP id a1so63832vsp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:59:24 -0700 (PDT)
+X-Received: by 2002:a67:2787:: with SMTP id n129mr7024016vsn.219.1598385564167;
+ Tue, 25 Aug 2020 12:59:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org> <1598113021-4149-5-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1598113021-4149-5-git-send-email-mkshah@codeaurora.org>
+References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org> <1598113021-4149-6-git-send-email-mkshah@codeaurora.org>
+In-Reply-To: <1598113021-4149-6-git-send-email-mkshah@codeaurora.org>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 25 Aug 2020 12:58:55 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WMSx4ORdztkb1L-zh+pYEsQOLLALRNjazaZFsEk0Rvkw@mail.gmail.com>
-Message-ID: <CAD=FV=WMSx4ORdztkb1L-zh+pYEsQOLLALRNjazaZFsEk0Rvkw@mail.gmail.com>
-Subject: Re: [PATCH v5 4/6] pinctrl: qcom: Set IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND
+Date:   Tue, 25 Aug 2020 12:59:13 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=ViaBn-HJ3d3ofLXNRKVaVDTKeOrMruvmEj9cVAGBntww@mail.gmail.com>
+Message-ID: <CAD=FV=ViaBn-HJ3d3ofLXNRKVaVDTKeOrMruvmEj9cVAGBntww@mail.gmail.com>
+Subject: Re: [PATCH v5 5/6] irqchip: qcom-pdc: Set IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND
  flag
 To:     Maulik Shah <mkshah@codeaurora.org>
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -94,14 +94,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On Sat, Aug 22, 2020 at 9:17 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Sat, Aug 22, 2020 at 9:18 AM Maulik Shah <mkshah@codeaurora.org> wrote:
 >
 > Set IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag to enable/unmask the
 > wakeirqs during suspend entry.
 >
 > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 > ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 3 ++-
+>  drivers/irqchip/qcom-pdc.c | 3 ++-
 >  1 file changed, 2 insertions(+), 1 deletion(-)
 
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
