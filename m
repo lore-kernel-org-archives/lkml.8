@@ -7,105 +7,153 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A84BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9B2F20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B2C20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgHYNyX (ORCPT
+        id S1726763AbgHYNyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:54:23 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:37114 "EHLO pegase1.c-s.fr"
+        Tue, 25 Aug 2020 09:54:31 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:8129 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726051AbgHYNyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:54:10 -0400
+        id S1726632AbgHYNyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:54:14 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BbVpQ6gSHz9txlh;
-        Tue, 25 Aug 2020 15:54:06 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4BbVpR39r8z9txlp;
+        Tue, 25 Aug 2020 15:54:07 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ZFV0vU3mTpAd; Tue, 25 Aug 2020 15:54:06 +0200 (CEST)
+        with ESMTP id y3Ex4h2-vb7H; Tue, 25 Aug 2020 15:54:07 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BbVpQ5rr9z9txlf;
-        Tue, 25 Aug 2020 15:54:06 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BbVpR1hHJz9txlk;
+        Tue, 25 Aug 2020 15:54:07 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4CAD38B827;
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ADA178B822;
         Tue, 25 Aug 2020 15:54:08 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id QsCZbnIpDs1q; Tue, 25 Aug 2020 15:54:08 +0200 (CEST)
+        with ESMTP id D-iRctOA12bX; Tue, 25 Aug 2020 15:54:08 +0200 (CEST)
 Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1FA078B81F;
-        Tue, 25 Aug 2020 15:54:01 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 148A28B820;
+        Tue, 25 Aug 2020 15:54:05 +0200 (CEST)
 Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 38C9C65D3E; Tue, 25 Aug 2020 13:54:01 +0000 (UTC)
-Message-Id: <7a2db17f2ffe902620554b9fde0349b4cf0dc051.1598363608.git.christophe.leroy@csgroup.eu>
+        id 616B165D41; Tue, 25 Aug 2020 13:54:05 +0000 (UTC)
+Message-Id: <4c0893ca6848386eb764a016b2783f368b7d6740.1598363608.git.christophe.leroy@csgroup.eu>
 In-Reply-To: <df48ed76cf8a756a7f97ed42a1a39d0a404014bc.1598363608.git.christophe.leroy@csgroup.eu>
 References: <df48ed76cf8a756a7f97ed42a1a39d0a404014bc.1598363608.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v1 3/9] powerpc/vdso: Remove NULL termination element in
- vdso_pagelist
+Subject: [PATCH v1 7/9] powerpc/vdso: Move vdso datapage up front
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 25 Aug 2020 13:54:01 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 13:54:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No need of a NULL last element in pagelists, install_special_mapping()
-knows how long the list is.
+Move the vdso datapage in front of the VDSO area,
+before vdso test.
 
-Remove that element.
+This will allow to remove the __kernel_datapage_offset symbol
+and simplify __get_datapage() in the following patch.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/vdso.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ arch/powerpc/include/asm/mmu_context.h |  4 +++-
+ arch/powerpc/kernel/vdso.c             | 22 ++++++++++------------
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
+diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powerpc/include/asm/mmu_context.h
+index 7f3658a97384..be18ad12bb54 100644
+--- a/arch/powerpc/include/asm/mmu_context.h
++++ b/arch/powerpc/include/asm/mmu_context.h
+@@ -262,7 +262,9 @@ extern void arch_exit_mmap(struct mm_struct *mm);
+ static inline void arch_unmap(struct mm_struct *mm,
+ 			      unsigned long start, unsigned long end)
+ {
+-	if (start <= mm->context.vdso_base && mm->context.vdso_base < end)
++	unsigned long vdso_base = mm->context.vdso_base - PAGE_SIZE;
++
++	if (start <= vdso_base && vdso_base < end)
+ 		mm->context.vdso_base = 0;
+ }
+ 
 diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-index 3bc4d5b1980b..daef14a284a3 100644
+index b9270923452e..1d72c4b7672f 100644
 --- a/arch/powerpc/kernel/vdso.c
 +++ b/arch/powerpc/kernel/vdso.c
-@@ -752,7 +752,7 @@ static int __init vdso_init(void)
+@@ -124,7 +124,7 @@ static int vdso_mremap(unsigned long vdso_pages,
+ 	if (new_size != vdso_size)
+ 		return -EINVAL;
  
- #ifdef CONFIG_VDSO32
- 	/* Make sure pages are in the correct state */
--	vdso32_pagelist = kcalloc(vdso32_pages + 2, sizeof(struct page *),
-+	vdso32_pagelist = kcalloc(vdso32_pages + 1, sizeof(struct page *),
- 				  GFP_KERNEL);
- 	if (!vdso32_pagelist)
- 		goto alloc_failed;
-@@ -760,12 +760,11 @@ static int __init vdso_init(void)
- 	for (i = 0; i < vdso32_pages; i++)
- 		vdso32_pagelist[i] = virt_to_page(vdso32_kbase + i * PAGE_SIZE);
+-	current->mm->context.vdso_base = (unsigned long)new_vma->vm_start;
++	current->mm->context.vdso_base = (unsigned long)new_vma->vm_start + PAGE_SIZE;
  
--	vdso32_pagelist[i++] = virt_to_page(vdso_data);
--	vdso32_pagelist[i] = NULL;
-+	vdso32_pagelist[i] = virt_to_page(vdso_data);
- #endif
+ 	return 0;
+ }
+@@ -217,7 +217,7 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
+ 	 * install_special_mapping or the perf counter mmap tracking code
+ 	 * will fail to recognise it as a vDSO (since arch_vma_name fails).
+ 	 */
+-	current->mm->context.vdso_base = vdso_base;
++	current->mm->context.vdso_base = vdso_base + PAGE_SIZE;
  
- #ifdef CONFIG_PPC64
--	vdso64_pagelist = kcalloc(vdso64_pages + 2, sizeof(struct page *),
-+	vdso64_pagelist = kcalloc(vdso64_pages + 1, sizeof(struct page *),
- 				  GFP_KERNEL);
- 	if (!vdso64_pagelist)
- 		goto alloc_failed;
-@@ -773,8 +772,7 @@ static int __init vdso_init(void)
- 	for (i = 0; i < vdso64_pages; i++)
- 		vdso64_pagelist[i] = virt_to_page(vdso64_kbase + i * PAGE_SIZE);
- 
--	vdso64_pagelist[i++] = virt_to_page(vdso_data);
--	vdso64_pagelist[i] = NULL;
-+	vdso64_pagelist[i] = virt_to_page(vdso_data);
+ 	/*
+ 	 * our vma flags don't have VM_WRITE so by default, the process isn't
+@@ -516,8 +516,7 @@ static __init int vdso_fixup_datapage(struct lib32_elfinfo *v32,
+ 		return -1;
+ 	}
+ 	*((int *)(vdso64_kbase + sym64->st_value - VDSO64_LBASE)) =
+-		(vdso64_pages << PAGE_SHIFT) -
+-		(sym64->st_value - VDSO64_LBASE);
++		(sym64->st_value - VDSO64_LBASE) - PAGE_SIZE;
  #endif /* CONFIG_PPC64 */
  
- 	smp_wmb();
+ #ifdef CONFIG_VDSO32
+@@ -528,8 +527,7 @@ static __init int vdso_fixup_datapage(struct lib32_elfinfo *v32,
+ 		return -1;
+ 	}
+ 	*((int *)(vdso32_kbase + (sym32->st_value - VDSO32_LBASE))) =
+-		(vdso32_pages << PAGE_SHIFT) -
+-		(sym32->st_value - VDSO32_LBASE);
++		(sym32->st_value - VDSO32_LBASE) - PAGE_SIZE;
+ #endif
+ 
+ 	return 0;
+@@ -771,10 +769,10 @@ static int __init vdso_init(void)
+ 		if (!pagelist)
+ 			goto alloc_failed;
+ 
+-		for (i = 0; i < vdso32_pages; i++)
+-			pagelist[i] = virt_to_page(vdso32_kbase + i * PAGE_SIZE);
++		pagelist[0] = virt_to_page(vdso_data);
+ 
+-		pagelist[i++] = virt_to_page(vdso_data);
++		for (i = 0; i < vdso32_pages; i++)
++			pagelist[i + 1] = virt_to_page(vdso32_kbase + i * PAGE_SIZE);
+ 
+ 		vdso32_spec.pages = pagelist;
+ 	}
+@@ -784,10 +782,10 @@ static int __init vdso_init(void)
+ 		if (!pagelist)
+ 			goto alloc_failed;
+ 
+-		for (i = 0; i < vdso64_pages; i++)
+-			pagelist[i] = virt_to_page(vdso64_kbase + i * PAGE_SIZE);
++		pagelist[0] = virt_to_page(vdso_data);
+ 
+-		pagelist[i++] = virt_to_page(vdso_data);
++		for (i = 0; i < vdso64_pages; i++)
++			pagelist[i + 1] = virt_to_page(vdso64_kbase + i * PAGE_SIZE);
+ 
+ 		vdso64_spec.pages = pagelist;
+ 	}
 -- 
 2.25.0
 
