@@ -2,134 +2,188 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5539AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6793C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28148207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:27:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="opGYwbvy"
+	by mail.kernel.org (Postfix) with ESMTP id 9AFC3207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgHYD1m (ORCPT
+        id S1728630AbgHYD2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 23:27:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728105AbgHYD1l (ORCPT
+        Mon, 24 Aug 2020 23:28:34 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:53142 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726532AbgHYD2d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 23:27:41 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FFDBC061574;
-        Mon, 24 Aug 2020 20:27:41 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w14so12102368ljj.4;
-        Mon, 24 Aug 2020 20:27:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4ISkKwpf1NKEfistWSxUgd367ieHCmBZuSqVZcUfedQ=;
-        b=opGYwbvyYRgk6oN6QyfAJ+tyFRMEooh6BTTZdcbl6X5up1m9KwAW7wW7MicSB9vqA+
-         BUQd9lNNGa2ov58hsXHBsfItnGK/Vtz5B04twulawQ2EHGYIZSYISj8MFxyN05j25krP
-         3rQU1elXYMygrDUdTl1Oj8ptUyWwwiyNDUGQeOWgdHY0TP3OuQ2Yl2qxwQwcivdtBq7d
-         YjmMs+Dpf93XbVwYL6ht+tMEXByLg0See8V/Iu4De/LETcnqlHmrFU45u+qSbBL5ZYSI
-         Oz6yV8Zo7uvve3hX6vu4RGW2xkqvxmB05+g4ne4r3wdDcyHowXVBy/3gS75av7ZzF0Ci
-         aJZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4ISkKwpf1NKEfistWSxUgd367ieHCmBZuSqVZcUfedQ=;
-        b=OU1zGS+IWxnZAZyWK3jpc3fTPj6FFawAt6pL9A+VgDu81rh19a7Of2N7XKqoj1viOv
-         ygqpWcCuGS2fjZ+t/xu/uhEruB+KpJQA4f1zSjjOvp8PSBFxlzFcGA3wLyUzJYtAfNDZ
-         FHr41/tGljinQI+zkNDlbTnJw6V3+D+skZ5nWhpvMQ6GUwGiYQYPNbeLCFQ2cjFjS9No
-         +0mRvgJmb0mFxwsUDDQb/hqJFxY1FNXBfEdHG59tMVFEIPxbl2Rfjxn39B1uJ6bdC+v5
-         jE19NQSx2+bf3ymknFsl68vcKqlcvyWJqZsrwCpn5Ka52nKQy5qrhqF9OjisBeoGu4Bf
-         bKeA==
-X-Gm-Message-State: AOAM531h2l1auJkHU5+Fr+v2kJPJpqDXDTg7tnPZpHTZ0gI2COzq3iMZ
-        v6eicHoZSgzp8J3LxkBjMgbvMfRPtDMvCRMljk3H2mgEwAQ=
-X-Google-Smtp-Source: ABdhPJx929t7WmM1kzR4eLUL/43eA/hSVvqhj/hqPW/OCoF4qHfzdgBbNUA2ey4rGUquHSFICqAmnSHuTTAwhAi/qag=
-X-Received: by 2002:a2e:4e09:: with SMTP id c9mr4037385ljb.283.1598326059940;
- Mon, 24 Aug 2020 20:27:39 -0700 (PDT)
+        Mon, 24 Aug 2020 23:28:33 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U6nFDwk_1598326106;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6nFDwk_1598326106)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 25 Aug 2020 11:28:27 +0800
+Subject: Re: [PATCH v18 00/32] per memcg lru_lock
+To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Hugh Dickins <hughd@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        mgorman@techsingularity.net, tj@kernel.org,
+        khlebnikov@yandex-team.ru, willy@infradead.org, hannes@cmpxchg.org,
+        lkp@intel.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
+        shy828301@gmail.com
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
+ <alpine.LSU.2.11.2008241231460.1065@eggly.anvils>
+ <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <ec62a835-f79d-2b8c-99c7-120834703b42@linux.alibaba.com>
+Date:   Tue, 25 Aug 2020 11:26:58 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200821111111.6c04acd6@canb.auug.org.au> <20200825112020.43ce26bb@canb.auug.org.au>
- <CAADnVQLr8dU799ZrUnrBBDCtDxPyybZwrMFs5CAOHHW5pnLHHA@mail.gmail.com> <20200825130445.655885f8@canb.auug.org.au>
-In-Reply-To: <20200825130445.655885f8@canb.auug.org.au>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 24 Aug 2020 20:27:28 -0700
-Message-ID: <CAADnVQKGf7o8gJ60m_zjh+QcmRTNH+y1ha_B2q-1ixcCSAoHaw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the bpf-next tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 8:04 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Alexei,
->
-> On Mon, 24 Aug 2020 18:25:44 -0700 Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Mon, Aug 24, 2020 at 6:20 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > >
-> > > On Fri, 21 Aug 2020 11:11:11 +1000 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> > > >
-> > > > After merging the bpf-next tree, today's linux-next build (x86_64
-> > > > allmodconfig) failed like this:
-> > > >
-> > > > Auto-detecting system features:
-> > > > ...                        libelf: [  [31mOFF [m ]
-> > > > ...                          zlib: [  [31mOFF [m ]
-> > > > ...                           bpf: [  [32mon [m  ]
-> > > >
-> > > > No libelf found
-> > > > make[5]: *** [Makefile:284: elfdep] Error 1
-> > > >
-> > > > Caused by commit
-> > > >
-> > > >   d71fa5c9763c ("bpf: Add kernel module with user mode driver that populates bpffs.")
-> > > >
-> > > > [For a start, can we please *not* add this verbose feature detection
-> > > > output to the nrormal build?]
-> > > >
-> > > > This is a PowerPC hosted cross build.
-> > > >
-> > > > I have marked BPF_PRELOAD as BROKEN for now.
-> > >
-> > > Still getting this failure ...
-> >
-> > I don't have powerpc with crosscompiler to x86 to reproduce.
-> > What exactly the error?
->
-> Just as above.
 
-I didn't receive the first email you've replied to.
-The build error is:
-"
-No libelf found
-make[5]: *** [Makefile:284: elfdep] Error 1
-"
-and build process stops because libelf is not found, right?
-That is expected and necessary.
-bpf_preload needs libbpf that depends on libelf.
-The only 'fix' is to turn off bpf_preload.
-It's off by default.
-allmodconfig cannot build bpf_preload umd if there is no libelf.
-There is CC_CAN_LINK that does feature detection.
-We can extend scripts/cc-can-link.sh or add another script that
-will do CC_CAN_LINK_LIBELF, but such approach doesn't scale.
-imo it's cleaner to rely on feature detection by libbpf Makefile with
-an error above instead of adding such knobs to top Kconfig.
-Does it make sense?
+
+ÔÚ 2020/8/25 ÉÏÎç9:56, Daniel Jordan Ð´µÀ:
+> On Mon, Aug 24, 2020 at 01:24:20PM -0700, Hugh Dickins wrote:
+>> On Mon, 24 Aug 2020, Andrew Morton wrote:
+>>> On Mon, 24 Aug 2020 20:54:33 +0800 Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>> Andrew demurred on version 17 for lack of review.  Alexander Duyck has
+>> been doing a lot on that front since then.  I have intended to do so,
+>> but it's a mirage that moves away from me as I move towards it: I have
+> 
+> Same, I haven't been able to keep up with the versions or the recent review
+> feedback.  I got through about half of v17 last week and hope to have more time
+> for the rest this week and beyond.
+> 
+>>>> Following Daniel Jordan's suggestion, I have run 208 'dd' with on 104
+>>>> containers on a 2s * 26cores * HT box with a modefied case:
+> 
+> Alex, do you have a pointer to the modified readtwice case?
+
+Sorry, no. my developer machine crashed, so I lost case my container and modified
+case. I am struggling to get my container back from a account problematic repository. 
+
+But some testing scripts is here, generally, the original readtwice case will
+run each of threads on each of cpus. The new case will run one container on each cpus,
+and just run one readtwice thead in each of containers.
+
+Here is readtwice case changes(Just a reference)
+diff --git a/case-lru-file-readtwice b/case-lru-file-readtwice
+index 85533b248634..48c6b5f44256 100755
+--- a/case-lru-file-readtwice
++++ b/case-lru-file-readtwice
+@@ -15,12 +15,9 @@
+
+ . ./hw_vars
+
+-for i in `seq 1 $nr_task`
+-do
+        create_sparse_file $SPARSE_FILE-$i $((ROTATE_BYTES / nr_task))
+        timeout --foreground -s INT ${runtime:-600} dd bs=4k if=$SPARSE_FILE-$i of=/dev/null > $TMPFS_MNT/dd-output-1-$i 2>&1 &
+        timeout --foreground -s INT ${runtime:-600} dd bs=4k if=$SPARSE_FILE-$i of=/dev/null > $TMPFS_MNT/dd-output-2-$i 2>&1 &
+-done
+
+ wait
+ sleep 1
+@@ -31,7 +28,7 @@ do
+                echo "dd output file empty: $file" >&2
+        }
+        cat $file
+-       rm  $file
++       #rm  $file
+ done
+
+ rm `seq -f $SPARSE_FILE-%g 1 $nr_task`
+
+And here is how to running the case: 
+--------
+#run all case on 24 cpu machine, lrulockv2 is the container with modified case.
+for ((i=0; i<24; i++))
+do
+        #btw, vm-scalability need create 23 loop devices
+        docker run --privileged=true --rm lrulockv2 bash -c " sleep 20000" &
+done
+sleep 15  #wait all container ready. 
+
+#kick testing
+for i in `docker ps | sed '1 d' | awk '{print $1 }'` ;do docker exec --privileged=true -it $i bash -c "cd vm-scalability/; bash -x ./run case-lru-file-readtwice "& done
+
+#show testing result for all
+for i in `docker ps | sed '1 d' | awk '{print $1 }'` ;do echo === $i ===; docker exec $i bash -c 'cat /tmp/vm-scalability-tmp/dd-output-* '  & done
+for i in `docker ps | sed '1 d' | awk '{print $1 }'` ;do echo === $i ===; docker exec $i bash -c 'cat /tmp/vm-scalability-tmp/dd-output-* '  & done | grep MB | awk 'BEGIN {a=0
+;} { a+=$8} END {print NR, a/(NR)}'
+
+
+> 
+> Even better would be a description of the problem you're having in production
+> with lru_lock.  We might be able to create at least a simulation of it to show
+> what the expected improvement of your real workload is.
+
+we are using thousands memcgs in a machine, but as a simulation, I guess above case
+could be helpful to show the problem.
+
+Thanks a lot!
+Alex
+
+> 
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/tree/case-lru-file-readtwice
+>>>> With this patchset, the readtwice performance increased about 80%
+>>>> in concurrent containers.
+>>>
+>>> That's rather a slight amount of performance testing for a huge
+>>> performance patchset!
+>>
+>> Indeed.  And I see that clause about readtwice performance increased 80%
+>> going back eight months to v6: a lot of fundamental bugs have been fixed
+>> in it since then, so I do think it needs refreshing.  It could be faster
+>> now: v16 or v17 fixed the last bug I knew of, which had been slowing
+>> down reclaim considerably.
+>>
+>> When I last timed my repetitive swapping loads (not loads anyone sensible
+>> would be running with), across only two memcgs, Alex's patchset was
+>> slightly faster than without: it really did make a difference.  But
+>> I tend to think that for all patchsets, there exists at least one
+>> test that shows it faster, and another that shows it slower.
+
+In my testing, case-lru-file-mmap-read has a bit slower, 10+% on 96 thread machine,
+when memcg is enabled but unused, that may due to longer pointer jumpping on 
+lruvec than pgdat->lru_lock, since cgroup_disable=memory could fully remove the
+regression with the new lock path.
+
+I tried reusing page->prviate to store lruvec pointer, that could remove some 
+regression on this, since private is generally unused on a lru page. But the patch
+is too buggy now. 
+
+BTW, 
+Guess memcg would cause more memory disturb on a large machine, if it's enabled but
+unused, isn't it?
+
+
+>>
+>>> Is more detailed testing planned?
+>>
+>> Not by me, performance testing is not something I trust myself with,
+>> just get lost in the numbers: Alex, this is what we hoped for months
+>> ago, please make a more convincing case, I hope Daniel and others
+>> can make more suggestions.  But my own evidence suggests it's good.
+> 
+> I ran a few benchmarks on v17 last week (sysbench oltp readonly, kerndevel from
+> mmtests, a memcg-ized version of the readtwice case I cooked up) and then today
+> discovered there's a chance I wasn't running the right kernels, so I'm redoing
+> them on v18.  Plan to look into what other, more "macro" tests would be
+> sensitive to these changes.
+> 
