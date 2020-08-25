@@ -2,94 +2,105 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CADDC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5065820782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6024F2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:50:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g1XjYt4T";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2g3lJNGu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ANJ0Qn3P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726706AbgHYTtK (ORCPT
+        id S1726823AbgHYTu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:49:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51978 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYTtJ (ORCPT
+        Tue, 25 Aug 2020 15:50:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32300 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726757AbgHYTu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:49:09 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598384947;
+        Tue, 25 Aug 2020 15:50:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598385054;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Nx2guUxaBEVRMrKDYjrAwhgM23aIhrP6oY6kMfLb3ZY=;
-        b=g1XjYt4TEhfIY6zrAYI2vv7JWz6a8/qZG+rhV5sdrhKQwt5rS3GTPX98RLngamtPG9Z0Y3
-        ntvwf0MVpAvbdcNSDVleHqSaE4p5MlEYpYwvz7nk29+5U2TCyOKncN04dwSr0OWPdIgPJG
-        A0QSLZ0sA0h+HgZx/mQgRmO6I4yG2sHs1lsqMr3E/5CqXK42C+h/ARaLPPjp2MWk1QlXyk
-        v8uEnyfhYM2ViD4JqdUrsapwJA+hp33e9/oG1extMtwpcl8QfTKvS1iv25lguijo5REdDp
-        E/ZBLpZDhpgjaK4SpEzZRinrpGEDdfHgzczMI7oVnvGJo4BWezDtXkkgGUrtOQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598384947;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Nx2guUxaBEVRMrKDYjrAwhgM23aIhrP6oY6kMfLb3ZY=;
-        b=2g3lJNGuoxX9O8r/+8OdIEIqhjw+1a9reAJCb6GL7K9VJOf6bRa85U3T6T4Bopph0LPMC4
-        HIa0NGsb+LXwOSCA==
-To:     "Luck\, Tony" <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Christopherson\, Sean J" <sean.j.christopherson@intel.com>
-Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Pu Wen <puwen@hygon.cn>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Dirk Hohndel <dirkhh@vmware.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        "H. Peter Anvin" <hpa@linux.intel.com>,
-        "Mallick\, Asit K" <asit.k.mallick@intel.com>,
-        Gordon Tetlow <gordon@tetlows.org>,
-        David Kaplan <David.Kaplan@amd.com>
-Subject: RE: TDX #VE in SYSCALL gap (was: [RFD] x86: Curing the exception and syscall trainwreck in hardware)
-In-Reply-To: <dfce335fefe043868301bacf57120759@intel.com>
-References: <875z98jkof.fsf@nanos.tec.linutronix.de> <3babf003-6854-e50a-34ca-c87ce4169c77@citrix.com> <20200825043959.GF15046@sjchrist-ice> <CALCETrUP1T2k3UzZMsXMfAD83xbYEG+nAv3a-LeBjNW+=ijJAg@mail.gmail.com> <20200825171903.GA20660@sjchrist-ice> <CALCETrWy2x-RByfknjjKxRbE0LBPk2Ugj1d58xYHb91ogbfnvA@mail.gmail.com> <dfce335fefe043868301bacf57120759@intel.com>
-Date:   Tue, 25 Aug 2020 21:49:07 +0200
-Message-ID: <87ft8ay098.fsf@nanos.tec.linutronix.de>
+        bh=dcFp48n/aLMtpSE/1lSAUTj8bSRshm4WBYhHn9wvw8Q=;
+        b=ANJ0Qn3PmL0NlNapvHPjp+n1m76bZoRA/4/bYjTRhnXAbXCgC3YrLE1Iad5Jti6TNrfb1Z
+        Ajue8Jfs8nVFheWEfy+DMsAtrH+Jzg/54omC6gp7hYjSneOHk6Iny0KfrZrI97qMWiuqTv
+        5yRWH4g6hgj0pFbo3JVJR8drnyS+gvs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-147-yZX0uUUeN62Z5EUaxlUvSQ-1; Tue, 25 Aug 2020 15:50:53 -0400
+X-MC-Unique: yZX0uUUeN62Z5EUaxlUvSQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 526001014E00;
+        Tue, 25 Aug 2020 19:50:51 +0000 (UTC)
+Received: from Whitewolf.redhat.com (ovpn-120-227.rdu2.redhat.com [10.10.120.227])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CC5975D9D3;
+        Tue, 25 Aug 2020 19:50:49 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Airlie <airlied@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Takashi Iwai <tiwai@suse.de>, James Jones <jajones@nvidia.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [RFC v4 05/20] drm/nouveau/kms: Don't clear DP_MST_CTRL DPCD in nv50_mstm_new()
+Date:   Tue, 25 Aug 2020 15:50:12 -0400
+Message-Id: <20200825195027.74681-6-lyude@redhat.com>
+In-Reply-To: <20200825195027.74681-1-lyude@redhat.com>
+References: <20200825195027.74681-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25 2020 at 17:35, Tony Luck wrote:
->> > Or malicious hypervisor action, and that's a problem.
->> >
->> > Suppose the hypervisor remaps a GPA used in the SYSCALL gap (e.g. the
->> > actual SYSCALL text or the first memory it accesses -- I don't have a
->> > TDX spec so I don't know the details).
->
-> Is it feasible to defend against a malicious (or buggy) hypervisor?
->
-> Obviously, we can't leave holes that guests can exploit. But the hypervisor
-> can crash the system no matter how clever TDX is.
+Since fa3cdf8d0b09 ("drm/nouveau: Reset MST branching unit before
+enabling") we've been clearing DP_MST_CTRL before we start enabling MST.
+Since then clearing DP_MST_CTRL in nv50_mstm_new() has been unnecessary
+and redundant, so let's remove it.
 
-If it crashes and burns reliably then fine, but is that guaranteed?
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
+---
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-I have serious doubts about that given the history and fragility of all
-of this and I really have zero interest in dealing with the fallout a
-year from now.
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index e7874877da858..c4d138f0ca054 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -1535,17 +1535,6 @@ nv50_mstm_new(struct nouveau_encoder *outp, struct drm_dp_aux *aux, int aux_max,
+ 	struct drm_device *dev = outp->base.base.dev;
+ 	struct nv50_mstm *mstm;
+ 	int ret;
+-	u8 dpcd;
+-
+-	/* This is a workaround for some monitors not functioning
+-	 * correctly in MST mode on initial module load.  I think
+-	 * some bad interaction with the VBIOS may be responsible.
+-	 *
+-	 * A good ol' off and on again seems to work here ;)
+-	 */
+-	ret = drm_dp_dpcd_readb(aux, DP_DPCD_REV, &dpcd);
+-	if (ret >= 0 && dpcd >= 0x12)
+-		drm_dp_dpcd_writeb(aux, DP_MSTM_CTRL, 0);
+ 
+ 	if (!(mstm = *pmstm = kzalloc(sizeof(*mstm), GFP_KERNEL)))
+ 		return -ENOMEM;
+-- 
+2.26.2
 
-Thanks,
-
-        tglx
