@@ -2,89 +2,421 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B87C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8E22207BC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:44:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA00B2067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:45:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fB3h1DD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbgHYPot (ORCPT
+        id S1726806AbgHYPpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:44:49 -0400
-Received: from mail1.windriver.com ([147.11.146.13]:47779 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgHYPos (ORCPT
+        Tue, 25 Aug 2020 11:45:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45384 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgHYPp0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:44:48 -0400
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
-        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 07PFieiC001998
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 08:44:40 -0700 (PDT)
-Received: from pek-lpggp1.wrs.com (128.224.153.74) by ALA-HCB.corp.ad.wrs.com
- (147.11.189.41) with Microsoft SMTP Server id 14.3.487.0; Tue, 25 Aug 2020
- 08:44:22 -0700
-From:   <yanfei.xu@windriver.com>
-To:     <gregkh@linuxfoundation.org>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] USB: integrate macro definitions into include/linux/usb.h
-Date:   Tue, 25 Aug 2020 23:44:21 +0800
-Message-ID: <20200825154421.5463-1-yanfei.xu@windriver.com>
-X-Mailer: git-send-email 2.18.2
+        Tue, 25 Aug 2020 11:45:26 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1271DC061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:45:26 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id o4so9172211wrn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:45:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eJJBgzJDJvwhVGrYOx2wvKPvHwfqjhfh0K3W6UUwt+g=;
+        b=fB3h1DD3Tmcg5Mk6VKjyaCpYkm2BxWSv8yz/h2Fazb5K8M3Sd0jnV3KK13lCbYfOa6
+         vjwm1HoVwWRhzPv6ZgoCgbQAZbUoSGX+klVVl9ZrozMjmqRQ80MxJ3hhB5dyfuCEzIYg
+         6AnMCTAcAj1cTtah/MJB4ytfm1vN6fD/zC78g7FxfYOvs4Z+Ye2YM220LsZ8ytIXqdhk
+         o8/rqmtuzwFiWDJkiia0dDxY7wHrlMrd+7zDVsJo4E0oGMa+fP7WxqONaj2iMcgq3E0p
+         IExW63Y3dpbse8pqYVi87EDRxGxxtJl2EfVoJnLw9I4siVCAhJ1NtD4Z0Uzh+o60uOrI
+         h93g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eJJBgzJDJvwhVGrYOx2wvKPvHwfqjhfh0K3W6UUwt+g=;
+        b=TRC2oc9NirUm5+aQwmxsHFlimawT6I59VzHhfjKC+ZwvqRhU6prPsb6liwEhJFE4Pw
+         UgdIKzT9TYE9lLmTgvGKiEj6aJX+W9alfze0aqopndsBKHKkmT6fg/vH4bpzdH+0sAu9
+         tp7jGLQo/XQprUrhMgkADy2HCqhVyDnUOYKPMvUl+rQl35rMTCudYX7EHKJAFYu9kRk3
+         iqeG0ZgeiI6+EyT8fM5TN+Gih91j1bQ1LsQzkVYL/FdclKg7BHVdG+FJ6ZEzNpk3DA+8
+         GZRSpsX+N5Oesj/XW95M6ykbIsyoQ4zuQZKmzkAszo7YaMMKQpxnj+AGf97+cJqGvZBC
+         mYHQ==
+X-Gm-Message-State: AOAM531L5m4le3KV4ZUSs4pOH+dcWyM603b0nAJmgqvtcWTToAT/4XNd
+        LnUvPz/1bj5P0LFyPHd8MXY=
+X-Google-Smtp-Source: ABdhPJyPq0JF9/8/fhOANmrMrgOJJIi/UxAlP8pViXWdBxDdDpqC1/Ss3CH5NjOcicTbQmXglofJfw==
+X-Received: by 2002:adf:e486:: with SMTP id i6mr11055951wrm.258.1598370324550;
+        Tue, 25 Aug 2020 08:45:24 -0700 (PDT)
+Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
+        by smtp.gmail.com with ESMTPSA id o2sm29991783wrj.21.2020.08.25.08.45.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 08:45:24 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 12:45:17 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Simon Ser <contact@emersion.fr>,
+        Leandro Ribeiro <leandro.ribeiro@collabora.com>,
+        daniels@collabora.com, Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v5 3/3] drm/vkms: Add support for writeback
+Message-ID: <20200825154517.qjsfcl72udmmz7ib@smtp.gmail.com>
+References: <20200825023142.2561220-1-rodrigosiqueiramelo@gmail.com>
+ <20200825023142.2561220-4-rodrigosiqueiramelo@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825023142.2561220-4-rodrigosiqueiramelo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yanfei Xu <yanfei.xu@windriver.com>
-
-include/linux/usb.h also contains 'Hard limit' and 'Arbitrary limit'
-macro definitions in it, hence we can integrate these from config.c
-into include/linux/usb.h
-
-Signed-off-by: Yanfei Xu <yanfei.xu@windriver.com>
----
- drivers/usb/core/config.c | 3 ---
- include/linux/usb.h       | 3 +++
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/core/config.c b/drivers/usb/core/config.c
-index 562a730befda..58c5d946cd86 100644
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -14,9 +14,6 @@
- #include "usb.h"
- 
- 
--#define USB_MAXALTSETTING		128	/* Hard limit */
--
--#define USB_MAXCONFIG			8	/* Arbitrary limit */
- 
- 
- static inline const char *plural(int n)
-diff --git a/include/linux/usb.h b/include/linux/usb.h
-index 20c555db4621..d0a117cfc6bd 100644
---- a/include/linux/usb.h
-+++ b/include/linux/usb.h
-@@ -275,9 +275,12 @@ void usb_put_intf(struct usb_interface *intf);
- 
- /* Hard limit */
- #define USB_MAXENDPOINTS	30
-+#define USB_MAXALTSETTING	128
-+
- /* this maximum is arbitrary */
- #define USB_MAXINTERFACES	32
- #define USB_MAXIADS		(USB_MAXINTERFACES/2)
-+#define USB_MAXCONFIG		8
- 
- /*
-  * USB Resume Timer: Every Host controller driver should drive the resume
--- 
-2.18.2
-
+On 08/24, Rodrigo Siqueira wrote:
+> This patch implements the necessary functions to add writeback support
+> for vkms. This feature is useful for testing compositors if you don't
+> have hardware with writeback support.
+> 
+> Change in V4 (Emil and Melissa):
+> - Move signal completion above drm_crtc_add_crc_entry()
+> - Make writeback always available
+> - Use appropriate namespace
+> - Drop fb check in vkms_wb_atomic_commit
+> - Make vkms_set_composer visible for writeback code
+> - Enable composer operation on prepare_job and disable it on cleanup_job
+> 
+> Change in V3 (Daniel):
+> - If writeback is enabled, compose everything into the writeback buffer
+> instead of CRC private buffer
+> - Guarantees that the CRC will match exactly what we have in the
+> writeback buffer.
+> 
+> Change in V2:
+> - Rework signal completion (Brian)
+> - Integrates writeback with active_planes (Daniel)
+> - Compose cursor (Daniel)
+> 
+> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> ---
+>  drivers/gpu/drm/vkms/Makefile         |   9 +-
+>  drivers/gpu/drm/vkms/vkms_composer.c  |  21 +++-
+>  drivers/gpu/drm/vkms/vkms_drv.h       |  11 +-
+>  drivers/gpu/drm/vkms/vkms_output.c    |   4 +
+>  drivers/gpu/drm/vkms/vkms_writeback.c | 143 ++++++++++++++++++++++++++
+>  5 files changed, 181 insertions(+), 7 deletions(-)
+>  create mode 100644 drivers/gpu/drm/vkms/vkms_writeback.c
+> 
+> diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
+> index 0b767d7efa24..333d3cead0e3 100644
+> --- a/drivers/gpu/drm/vkms/Makefile
+> +++ b/drivers/gpu/drm/vkms/Makefile
+> @@ -1,4 +1,11 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -vkms-y := vkms_drv.o vkms_plane.o vkms_output.o vkms_crtc.o vkms_gem.o vkms_composer.o
+> +vkms-y := \
+> +	vkms_drv.o \
+> +	vkms_plane.o \
+> +	vkms_output.o \
+> +	vkms_crtc.o \
+> +	vkms_gem.o \
+> +	vkms_composer.o \
+> +	vkms_writeback.o
+>  
+>  obj-$(CONFIG_DRM_VKMS) += vkms.o
+> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> index 387b0690a64a..656085c4ebf3 100644
+> --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> @@ -163,16 +163,17 @@ void vkms_composer_worker(struct work_struct *work)
+>  	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
+>  	struct vkms_composer *primary_composer = NULL;
+>  	struct vkms_composer *cursor_composer = NULL;
+> +	bool crc_pending, wb_pending;
+>  	void *vaddr_out = NULL;
+>  	u32 crc32 = 0;
+>  	u64 frame_start, frame_end;
+> -	bool crc_pending;
+>  	int ret;
+>  
+>  	spin_lock_irq(&out->composer_lock);
+>  	frame_start = crtc_state->frame_start;
+>  	frame_end = crtc_state->frame_end;
+>  	crc_pending = crtc_state->crc_pending;
+> +	wb_pending = crtc_state->wb_pending;
+>  	crtc_state->frame_start = 0;
+>  	crtc_state->frame_end = 0;
+>  	crtc_state->crc_pending = false;
+> @@ -194,22 +195,32 @@ void vkms_composer_worker(struct work_struct *work)
+>  	if (!primary_composer)
+>  		return;
+>  
+> +	if (wb_pending)
+> +		vaddr_out = crtc_state->active_writeback;
+> +
+>  	ret = compose_planes(&vaddr_out, primary_composer, cursor_composer);
+>  	if (ret) {
+> -		if (ret == -EINVAL)
+> +		if (ret == -EINVAL && !wb_pending)
+>  			kfree(vaddr_out);
+>  		return;
+>  	}
+>  
+>  	crc32 = compute_crc(vaddr_out, primary_composer);
+>  
+> +	if (wb_pending) {
+> +		drm_writeback_signal_completion(&out->wb_connector, 0);
+> +		spin_lock_irq(&out->composer_lock);
+> +		crtc_state->wb_pending = false;
+> +		spin_unlock_irq(&out->composer_lock);
+> +	} else {
+> +		kfree(vaddr_out);
+> +	}
+> +
+>  	/*
+>  	 * The worker can fall behind the vblank hrtimer, make sure we catch up.
+>  	 */
+>  	while (frame_start <= frame_end)
+>  		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
+> -
+> -	kfree(vaddr_out);
+>  }
+>  
+>  static const char * const pipe_crc_sources[] = {"auto"};
+> @@ -252,7 +263,7 @@ int vkms_verify_crc_source(struct drm_crtc *crtc, const char *src_name,
+>  	return 0;
+>  }
+>  
+> -static void vkms_set_composer(struct vkms_output *out, bool enabled)
+> +void vkms_set_composer(struct vkms_output *out, bool enabled)
+>  {
+>  	bool old_enabled;
+>  
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+> index f4036bb0b9a8..641d8bc52a3a 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.h
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
+> @@ -8,6 +8,7 @@
+>  #include <drm/drm.h>
+>  #include <drm/drm_gem.h>
+>  #include <drm/drm_encoder.h>
+> +#include <drm/drm_writeback.h>
+>  
+>  #define XRES_MIN    20
+>  #define YRES_MIN    20
+> @@ -19,6 +20,7 @@
+>  #define YRES_MAX  8192
+>  
+>  extern bool enable_cursor;
+> +extern bool enable_writeback;
+>  
+>  struct vkms_composer {
+>  	struct drm_framebuffer fb;
+> @@ -52,9 +54,11 @@ struct vkms_crtc_state {
+>  	int num_active_planes;
+>  	/* stack of active planes for crc computation, should be in z order */
+>  	struct vkms_plane_state **active_planes;
+> +	void *active_writeback;
+>  
+> -	/* below three are protected by vkms_output.composer_lock */
+> +	/* below four are protected by vkms_output.composer_lock */
+>  	bool crc_pending;
+> +	bool wb_pending;
+>  	u64 frame_start;
+>  	u64 frame_end;
+>  };
+> @@ -63,6 +67,7 @@ struct vkms_output {
+>  	struct drm_crtc crtc;
+>  	struct drm_encoder encoder;
+>  	struct drm_connector connector;
+> +	struct drm_writeback_connector wb_connector;
+>  	struct hrtimer vblank_hrtimer;
+>  	ktime_t period_ns;
+>  	struct drm_pending_vblank_event *event;
+> @@ -143,5 +148,9 @@ int vkms_verify_crc_source(struct drm_crtc *crtc, const char *source_name,
+>  
+>  /* Composer Support */
+>  void vkms_composer_worker(struct work_struct *work);
+> +void vkms_set_composer(struct vkms_output *out, bool enabled);
+> +
+> +/* Writeback */
+> +int vkms_enable_writeback_connector(struct vkms_device *vkmsdev);
+>  
+>  #endif /* _VKMS_DRV_H_ */
+> diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
+> index 85afb77e97f0..4a1848b0318f 100644
+> --- a/drivers/gpu/drm/vkms/vkms_output.c
+> +++ b/drivers/gpu/drm/vkms/vkms_output.c
+> @@ -80,6 +80,10 @@ int vkms_output_init(struct vkms_device *vkmsdev, int index)
+>  		goto err_attach;
+>  	}
+>  
+> +	ret = vkms_enable_writeback_connector(vkmsdev);
+> +	if (ret)
+> +		DRM_ERROR("Failed to init writeback connector\n");
+> +
+>  	drm_mode_config_reset(dev);
+>  
+>  	return 0;
+> diff --git a/drivers/gpu/drm/vkms/vkms_writeback.c b/drivers/gpu/drm/vkms/vkms_writeback.c
+> new file mode 100644
+> index 000000000000..ddcd5ad0d7aa
+> --- /dev/null
+> +++ b/drivers/gpu/drm/vkms/vkms_writeback.c
+> @@ -0,0 +1,143 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +
+> +#include "vkms_drv.h"
+> +#include <drm/drm_fourcc.h>
+> +#include <drm/drm_writeback.h>
+> +#include <drm/drm_probe_helper.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_gem_framebuffer_helper.h>
+> +
+> +static const u32 vkms_wb_formats[] = {
+> +	DRM_FORMAT_XRGB8888,
+> +};
+> +
+> +static const struct drm_connector_funcs vkms_wb_connector_funcs = {
+> +	.fill_modes = drm_helper_probe_single_connector_modes,
+> +	.destroy = drm_connector_cleanup,
+> +	.reset = drm_atomic_helper_connector_reset,
+> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+> +};
+> +
+> +static int vkms_wb_encoder_atomic_check(struct drm_encoder *encoder,
+> +					struct drm_crtc_state *crtc_state,
+> +					struct drm_connector_state *conn_state)
+> +{
+> +	struct drm_framebuffer *fb;
+> +	const struct drm_display_mode *mode = &crtc_state->mode;
+> +
+> +	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
+> +		return 0;
+> +
+> +	fb = conn_state->writeback_job->fb;
+> +	if (fb->width != mode->hdisplay || fb->height != mode->vdisplay) {
+> +		DRM_DEBUG_KMS("Invalid framebuffer size %ux%u\n",
+> +			      fb->width, fb->height);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (fb->format->format != vkms_wb_formats[0]) {
+> +		struct drm_format_name_buf format_name;
+> +
+> +		DRM_DEBUG_KMS("Invalid pixel format %s\n",
+> +			      drm_get_format_name(fb->format->format,
+> +						  &format_name));
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct drm_encoder_helper_funcs vkms_wb_encoder_helper_funcs = {
+> +	.atomic_check = vkms_wb_encoder_atomic_check,
+> +};
+> +
+> +static int vkms_wb_connector_get_modes(struct drm_connector *connector)
+> +{
+> +	struct drm_device *dev = connector->dev;
+> +
+> +	return drm_add_modes_noedid(connector, dev->mode_config.max_width,
+> +				    dev->mode_config.max_height);
+> +}
+> +
+> +static int vkms_wb_prepare_job(struct drm_writeback_connector *wb_connector,
+> +			       struct drm_writeback_job *job)
+> +{
+> +	struct vkms_gem_object *vkms_obj;
+> +	struct drm_gem_object *gem_obj;
+> +	int ret;
+> +
+> +	if (!job->fb)
+> +		return 0;
+> +
+> +	gem_obj = drm_gem_fb_get_obj(job->fb, 0);
+> +	ret = vkms_gem_vmap(gem_obj);
+> +	if (ret) {
+> +		DRM_ERROR("vmap failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	vkms_obj = drm_gem_to_vkms_gem(gem_obj);
+> +	job->priv = vkms_obj->vaddr;
+> +
+> +	return 0;
+> +}
+> +
+> +static void vkms_wb_cleanup_job(struct drm_writeback_connector *connector,
+> +				struct drm_writeback_job *job)
+> +{
+> +	struct drm_gem_object *gem_obj;
+> +	struct vkms_device *vkmsdev;
+> +
+> +	if (!job->fb)
+> +		return;
+> +
+> +	gem_obj = drm_gem_fb_get_obj(job->fb, 0);
+> +	vkms_gem_vunmap(gem_obj);
+> +
+> +	vkmsdev = drm_device_to_vkms_device(gem_obj->dev);
+> +	vkms_set_composer(&vkmsdev->output, false);
+> +}
+> +
+> +static void vkms_wb_atomic_commit(struct drm_connector *conn,
+> +				  struct drm_connector_state *state)
+> +{
+> +	struct vkms_device *vkmsdev = drm_device_to_vkms_device(conn->dev);
+> +	struct vkms_output *output = &vkmsdev->output;
+> +	struct drm_writeback_connector *wb_conn = &output->wb_connector;
+> +	struct drm_connector_state *conn_state = wb_conn->base.state;
+> +	struct vkms_crtc_state *crtc_state = output->composer_state;
+> +
+> +	if (!conn_state)
+> +		return;
+> +
+> +	vkms_set_composer(&vkmsdev->output, true);
+> +
+> +	spin_lock_irq(&output->composer_lock);
+> +	crtc_state->active_writeback = conn_state->writeback_job->priv;
+> +	crtc_state->wb_pending = true;
+> +	spin_unlock_irq(&output->composer_lock);
+> +	drm_writeback_queue_job(wb_conn, state);
+> +}
+> +
+> +static const struct drm_connector_helper_funcs vkms_wb_conn_helper_funcs = {
+> +	.get_modes = vkms_wb_connector_get_modes,
+> +	.prepare_writeback_job = vkms_wb_prepare_job,
+> +	.cleanup_writeback_job = vkms_wb_cleanup_job,
+> +	.atomic_commit = vkms_wb_atomic_commit,
+> +};
+> +
+> +int vkms_enable_writeback_connector(struct vkms_device *vkmsdev)
+> +{
+> +	struct drm_writeback_connector *wb = &vkmsdev->output.wb_connector;
+> +
+> +	vkmsdev->output.wb_connector.encoder.possible_crtcs = 1;
+> +	drm_connector_helper_add(&wb->base, &vkms_wb_conn_helper_funcs);
+> +
+> +	return drm_writeback_connector_init(&vkmsdev->drm, wb,
+> +					    &vkms_wb_connector_funcs,
+> +					    &vkms_wb_encoder_helper_funcs,
+> +					    vkms_wb_formats,
+> +					    ARRAY_SIZE(vkms_wb_formats));
+> +}
+> +
+Another small fix: there is an extra line above.
+> -- 
+> 2.28.0
+> 
