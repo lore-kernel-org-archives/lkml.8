@@ -2,101 +2,94 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2199BC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECD1C2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:02:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMm7sBzV"
+	by mail.kernel.org (Postfix) with ESMTP id 911BA2068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:03:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729776AbgHYKCE (ORCPT
+        id S1729710AbgHYKDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:02:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47266 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729771AbgHYKB6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:01:58 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1481FC061574;
-        Tue, 25 Aug 2020 03:01:58 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id s2so11858276ioo.2;
-        Tue, 25 Aug 2020 03:01:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cdXOSaIFKvjsoYRk7r3Xc53JhhLYHxWYCI7Z/n8m81k=;
-        b=IMm7sBzV5X4zwHRscPuoC3u9UZqt64hd8sserQGXxqI6mbxEAT5Ms9HrY+73TDaR9X
-         hssRtyidc1rNEIWFRnnPUI8DpBEQrN/tb7Xv/0hzfkC+HPdeVpoJcP/C34djpr2BOoQm
-         AtWheKvk4bAllhjI0NxhEAOMQunK5VwKRfKd2b3EH57VD00UNQ+ReJxKWe4aBV0Tr+eX
-         nZhtemUUyga8ZwenQ/ktaRhJCt3HwXkCDpOS4eFv7Xwtb3Ppefq/4m95ohaW2gWW/luY
-         clmlgEXY6U5luciZ3tHnvcw5IKpvvPm3i1UqZr+d2hDUemTdh1T+zo0jnSf0Juu6TXjM
-         8SNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cdXOSaIFKvjsoYRk7r3Xc53JhhLYHxWYCI7Z/n8m81k=;
-        b=lVy0GrVKiOTaSNPLQP35WG0UImNLNB6Tj4XKnr1UXfwPXiVLBuQBvMgfJJQi3xo6iv
-         qmFkyd5B0ymAVJ/10CQH3CY8V0jGwZ4TE8vHb3eyrq3wRaRqP3/HfcbSCH03SyveF2Hi
-         w294d6XBlXtuzmFLRH59XieGh1PimDrsuS/r24TnK2r8XuXOXp5hciQDUT7xcty6F+wH
-         TEHfE0LZr5wNANf5jDQiwW8nf9DxdppO1mlNzSkYLTA/q69ov668T3HDwH6R8GscWoDq
-         cK1sAWDSjNBLecSAR+jgcmphQEB3/1QAliIXr/nAhQTvJB5H/kpP5+/xKaPsazJ7pX5S
-         09Sg==
-X-Gm-Message-State: AOAM532SdvYoBsNaamU7jHytzgl6uqvDMoYlIsNfeFR9266Eo+cHPhN8
-        0+dBRmv2WYBOxdyk51v8UrmxGIdWJxyTgl2IMpIfz6QM
-X-Google-Smtp-Source: ABdhPJzDO96H7XqMQSuPKRRm7Xpb0ASLiPOw/vsNFPklO/wlYprIV8dh62cilZJfg4HxBBtKiJJpZmTY1PLmOH2OeX8=
-X-Received: by 2002:a6b:dc0e:: with SMTP id s14mr2679164ioc.8.1598349717314;
- Tue, 25 Aug 2020 03:01:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
- <1597910022-22617-3-git-send-email-gene.chen.richtek@gmail.com>
- <20200820113015.GB5854@sirena.org.uk> <CAE+NS36C0AwbrFJdYGY6_n_g3DVitp_e1GfZUxjMbKu1bJ_t4w@mail.gmail.com>
- <20200824194840.GF4676@sirena.org.uk> <CAE+NS37p38dAN1bAi_VvEYYGNiWDVFKrdHL-hTgi2nim_7Zvqw@mail.gmail.com>
- <20200825093404.GB5379@sirena.org.uk>
-In-Reply-To: <20200825093404.GB5379@sirena.org.uk>
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-Date:   Tue, 25 Aug 2020 18:01:46 +0800
-Message-ID: <CAE+NS35eh9PhRA1M2f2med52WhRsEfWp=zWUfgETq4odHouxDg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] regulator: mt6360: Add DT binding documentation
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Gene Chen <gene_chen@richtek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 25 Aug 2020 06:03:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60806 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729456AbgHYKC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 06:02:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 531D4AD2C;
+        Tue, 25 Aug 2020 10:03:26 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 12:02:55 +0200
+Message-ID: <s5hsgcb59gw.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>, <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] Revert "ALSA: hda: Add support for Loongson 7A1000 controller"
+In-Reply-To: <1598348388-2518-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1598348388-2518-1-git-send-email-yangtiezhu@loongson.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8825=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=885:34=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Tue, Aug 25, 2020 at 05:21:06PM +0800, Gene Chen wrote:
-> > Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8825=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=883:49=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> > > So shouldn't there be a documented LDO_VIN1/2 then?
->
-> > LDO_VINx is HW design layout, so actually it can't be changed by device=
- tree.
-> > LDO_VIN1/LDO_VIN2 supply from VSYS, not regulator, so I think usually
-> > not to show the supply from in device tree.
-> > or I should declare a dummy reference to system power like "*-supply =
-=3D
-> > <&system_power>;"?
->
-> When you say it's from the hardware design do you mean it's fixed by the
-> silicon or is this something that's fixed in the board?
+On Tue, 25 Aug 2020 11:39:48 +0200,
+Tiezhu Yang wrote:
+> 
+> This reverts commit 61eee4a7fc40 ("ALSA: hda: Add support for Loongson
+> 7A1000 controller") to fix the following error on the Loongson LS7A
+> platform:
+> 
+> rcu: INFO: rcu_preempt self-detected stall on CPU
+> <SNIP>
+> NMI backtrace for cpu 0
+> CPU: 0 PID: 68 Comm: kworker/0:2 Not tainted 5.8.0+ #3
+> Hardware name:  , BIOS
+> Workqueue: events azx_probe_work [snd_hda_intel]
+> <SNIP>
+> Call Trace:
+> [<ffffffff80211a64>] show_stack+0x9c/0x130
+> [<ffffffff8065a740>] dump_stack+0xb0/0xf0
+> [<ffffffff80665774>] nmi_cpu_backtrace+0x134/0x140
+> [<ffffffff80665910>] nmi_trigger_cpumask_backtrace+0x190/0x200
+> [<ffffffff802b1abc>] rcu_dump_cpu_stacks+0x12c/0x190
+> [<ffffffff802b08cc>] rcu_sched_clock_irq+0xa2c/0xfc8
+> [<ffffffff802b91d4>] update_process_times+0x2c/0xb8
+> [<ffffffff802cad80>] tick_sched_timer+0x40/0xb8
+> [<ffffffff802ba5f0>] __hrtimer_run_queues+0x118/0x1d0
+> [<ffffffff802bab74>] hrtimer_interrupt+0x12c/0x2d8
+> [<ffffffff8021547c>] c0_compare_interrupt+0x74/0xa0
+> [<ffffffff80296bd0>] __handle_irq_event_percpu+0xa8/0x198
+> [<ffffffff80296cf0>] handle_irq_event_percpu+0x30/0x90
+> [<ffffffff8029d958>] handle_percpu_irq+0x88/0xb8
+> [<ffffffff80296124>] generic_handle_irq+0x44/0x60
+> [<ffffffff80b3cfd0>] do_IRQ+0x18/0x28
+> [<ffffffff8067ace4>] plat_irq_dispatch+0x64/0x100
+> [<ffffffff80209a20>] handle_int+0x140/0x14c
+> [<ffffffff802402e8>] irq_exit+0xf8/0x100
+> 
+> Because AZX_DRIVER_GENERIC can not work well for Loongson LS7A HDA
+> controller, it needs some workarounds which are not merged into the
+> upstream kernel at this time, so it should revert this patch now.
+> 
+> Fixes: 61eee4a7fc40 ("ALSA: hda: Add support for Loongson 7A1000 controller")
+> Cc: <stable@vger.kernel.org> # 5.9-rc1+
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+> 
+> v2: update commit message
 
-fixed in the board, not silicon.
+Applied now.  Thanks.
+
+
+Takashi
