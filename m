@@ -2,123 +2,106 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 591AFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF61D2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:00:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OeTt0X6J"
+	by mail.kernel.org (Postfix) with ESMTP id 2BC882075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:00:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598349619;
+	bh=irTYt5O2PpoAUCYR7EarbcRXvDjUj6OwT+D7o1nIg/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C6o5VyfJLLBDY+CQ1w+lAIWRWT3R8LuWHbbddnLDiM84NaXEWUxQ6ylUIQDGvvOZw
+	 juOP5a+N7mozciNVrvfIOzk89ak2us22v/Szxns/kgwSI+6w3lUEffc3uyrosZtmwe
+	 7z/B/GbeDI0VW1YeJazp61KQNWiDeJE7wD6fyzYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbgHYKAL (ORCPT
+        id S1729719AbgHYKAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:00:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46974 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbgHYKAK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:00:10 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C73C061574;
-        Tue, 25 Aug 2020 03:00:10 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id m34so6459486pgl.11;
-        Tue, 25 Aug 2020 03:00:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VM+RLzAWrkuL9HVQ42Csb2lSsT42rRve4CGTNXwHLig=;
-        b=OeTt0X6JS3ohzMd/hSDssWd+4zy8My22Yg4hcnugnCiDCl2h1J0/oRqN5/WVacbd4s
-         i8obfnthPWOE8CY/t/JIXyX0bITkaiWvuvqObBnm/zEQbOl/isDMg33zSQpOkL7pVrgw
-         W17sEKKFFPfhueAd4Wgn6upRkBqXVMoH3JYVjFfTQz2WM1n2uZp6SvG0Ewqww+t4l6mS
-         ywPoKSis2MDxWAmBUQ/RYIFHGBmGPg6F2EhxOGR4589tNWRecgkNeOj0jqmelNNLq2se
-         aV2F/eh4/pTojvdZ0ShfazuAc7Lko3Y40yzJvdRJS/OBY4scMCBr3A1AlNY5/MRolaq6
-         x3Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VM+RLzAWrkuL9HVQ42Csb2lSsT42rRve4CGTNXwHLig=;
-        b=ZUF2oUL3GSfHvzXewAMyOSaFWHXvth2Dv8LGcIcPLNUmj7lJHF+bTcTekGRcMeUDId
-         EMz18GmRNXPIiNNrbyHf2ApIsLvR6pyuBmW/G2v1U6op05iIRfS9esEUcoqzHA1nqyOb
-         7PBHjyOc8sdCQWKCvG4SRVI/SPU15CXGIduYJk4Ki90oynK85Mes/bkEI9/Wa5E7ILX3
-         6a4Y6pZxFnpJbPLaYDZ/TytHJsbHkn5WmayeWqn7ZCpQz+9tNH+3SoBSaQ70Lo9jyCix
-         xEstjC/MOknqXEuBA9enviseIQr/MkCVHI7uE5vI6FSjBQ4Gh7QM5HGG3zFWjLSgrQrh
-         wYXg==
-X-Gm-Message-State: AOAM532biD0A0NrWmT4ohO37Q5Y8/qN0G+S0Aar0YFzpHwmKqllNVDDf
-        70k/lmVNOWEZgA8H4ZMij0k=
-X-Google-Smtp-Source: ABdhPJzjseP65pqiWG+REWzajbnNnvZ739SyIomxreoKWdiNCub/QbNMoHvZDjzFOPfVoAx7KF5wWg==
-X-Received: by 2002:a17:902:6bc3:: with SMTP id m3mr3432524plt.137.1598349608895;
-        Tue, 25 Aug 2020 03:00:08 -0700 (PDT)
-Received: from eug-lubuntu (27-32-121-201.static.tpgi.com.au. [27.32.121.201])
-        by smtp.gmail.com with ESMTPSA id q207sm12699869pgq.71.2020.08.25.03.00.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 03:00:08 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 20:00:01 +1000
-From:   Eugene Lubarsky <elubarsky.linux@gmail.com>
-To:     Andrei Vagin <avagin@gmail.com>
-Cc:     linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, adobriyan@gmail.com,
-        dsahern@gmail.com, Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [RFC PATCH 0/5] Introduce /proc/all/ to gather stats from all
- processes
-Message-ID: <20200825200001.548b64d8@eug-lubuntu>
-In-Reply-To: <20200820174139.GA919358@gmail.com>
-References: <20200810145852.9330-1-elubarsky.linux@gmail.com>
-        <20200812075135.GA191218@gmail.com>
-        <20200814010100.3e9b6423@eug-lubuntu>
-        <20200820174139.GA919358@gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 25 Aug 2020 06:00:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbgHYKAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 06:00:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD7132068F;
+        Tue, 25 Aug 2020 10:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598349615;
+        bh=irTYt5O2PpoAUCYR7EarbcRXvDjUj6OwT+D7o1nIg/E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=y7rvTJHGkvzXFBZYDJ24AtRkX1a+Q6foRrvKrRNsO1QCCNO0Xp26VVZAcf/K3lmek
+         FS4RBwbp/AYESFgkxY/NNN8q7bLveN3zGp0UuYogiR5Y3XN4oNtrmLTRSbvr3Ygdb4
+         oev1PWF+Z3vfO1jImI8nHjW68ROBVe8Mf5PycaoU=
+Date:   Tue, 25 Aug 2020 12:00:31 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     =?utf-8?B?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Dongsheng Qiu <dongsheng.qiu@ingenic.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        qipengzhen <aric.pzqi@ingenic.com>,
+        Rick Tyliu <rick.tyliu@ingenic.com>,
+        Yanfei Li <yanfei.li@ingenic.com>, zhenwenjin@gmail.com,
+        =?utf-8?B?5ZGo5q2j?= <sernia.zhou@foxmail.com>
+Subject: Re: [PATCH] USB: PHY: JZ4770: Fix static checker warning
+Message-ID: <20200825100030.GA1347872@kroah.com>
+References: <96687bd5-aa10-b908-471a-31e8daa01472@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96687bd5-aa10-b908-471a-31e8daa01472@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 10:41:39 -0700
-Andrei Vagin <avagin@gmail.com> wrote:
-> Unfotunatly, I don't have enough time to lead a process of pushing
-> task_diag into the upstream. So if it is interesting for you, you can
-> restart this process and I am ready to help as much as time will
-> permit.
->
-> I think the main blocking issue was a lack of interest from the wide
-> audience to this. The slow proc is the problem just for a few users,
-> but task_diag is a big subsystem that repeats functionality of another
-> subsystem with all derived problems like code duplication.
-
-Unfortunately I don't have much time either and yes it sounds like
-upstreaming a new interface like this will require input & enthusiasm
-from more of those who are monitoring large numbers of processes,
-which is not really me..
-
-A related issue is that task_diag doesn't currently support the cgroup
-filesystem which has the same issues as /proc and is accessed very
-heavily by e.g. the Kubernetes kubelet cadvisor. Perhaps more interest
-in tackling this could come from the Kubernetes community.
-
+On Tue, Aug 25, 2020 at 11:35:16AM +0200, Markus Elfring wrote:
+> > The commit 2a6c0b82e651 ("USB: PHY: JZ4770: Add support for new
+> > Ingenic SoCs.") introduced the initialization function for different
+> > chips, but left the relevant code involved in the resetting process
+> > in the original function, resulting in uninitialized variable calls.
 > 
-> Another blocking issue is a new interface. There was no consensus on
-> this. Initially, I suggested to use netlink sockets, but developers
-> from non-network subsystem objected on this, so the transaction file
-> interface was introduced. The main idea similar to netlink sockets is
-> that we write a request and read a response.
+> * Can another imperative wording be helpful for the change description?
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=d012a7190fc1fd72ed48911e77ca97ba4521bccd#n151
 > 
-> There were some security concerns but I think I fixed them.
+> * How do you think about to mention any source code analysis tool here?
+> 
+> * Would an other commit subject be more appropriate?
+> 
+> 
+> > Fixes: 2a6c0b82e651 ("USB: PHY: JZ4770: Add support for new
+> > Ingenic SoCs.").
+> 
+> Please omit a line break for this tag.
+> 
+> 
+> I find that a single patch would not need a cover letter.
 
-There's currently a lot of momentum behind io_uring which could not only
-enable efficient enumeration and retrieval of small files but maybe it
-would also be a more natural place for an API like task_diag..
+Hi,
 
+This is the semi-friendly patch-bot of Greg Kroah-Hartman.
 
+Markus, you seem to have sent a nonsensical or otherwise pointless
+review comment to a patch submission on a Linux kernel developer mailing
+list.  I strongly suggest that you not do this anymore.  Please do not
+bother developers who are actively working to produce patches and
+features with comments that, in the end, are a waste of time.
 
-Best Wishes,
-Eugene
+Patch submitter, please ignore Markus's suggestion; you do not need to
+follow it at all.  The person/bot/AI that sent it is being ignored by
+almost all Linux kernel maintainers for having a persistent pattern of
+behavior of producing distracting and pointless commentary, and
+inability to adapt to feedback.  Please feel free to also ignore emails
+from them.
+
+thanks,
+
+greg k-h's patch email bot
