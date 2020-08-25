@@ -2,126 +2,242 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 421F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEFBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0D120665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F96520665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:24:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szXKpbW6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r27VoB6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726241AbgHYOYR (ORCPT
+        id S1726374AbgHYOYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:24:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60960 "EHLO
+        Tue, 25 Aug 2020 10:24:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHYOYQ (ORCPT
+        with ESMTP id S1725893AbgHYOYr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:24:16 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E50CAC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:24:15 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w25so13998798ljo.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:24:15 -0700 (PDT)
+        Tue, 25 Aug 2020 10:24:47 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972DBC061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:24:46 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id 68so1592016ual.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:24:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nXQjU6OEFoB3/boXeRzXBJsBgW4XWcKUgixiYsXTEJo=;
-        b=szXKpbW63POBP0IDXkHNpXWjBWBeJdeQX9Z/yfahammWxTplNTc2Sm3ME/ZiKBfXin
-         wbUJ/HdgMJvu//SSLay4FqQy99hcy267TXCOlIrawMCGn01DSblBT0zSeeDbUtjDhK+7
-         Xl9RjAAT+QQgVdBpoQtNVEBeiVouOrpdNx0sNKx+5BQ17XJSdbwiN7mTn0A2eWeRmu9S
-         SBN+ovPZPCkhwrLG+M+2/IrZhV+iQiygbNR9UKEuxX+JjI34WuyU9tGoBCky8oTzhuik
-         XXiLoUO/ZpA+4CM+BxXyNHjyLKqy2fvCrcR/y6GiJEEga9OrCH0wBZ5qXUTJIdBjm3rW
-         kPOw==
+        bh=okmSfG76Cm0/HZKPCuD/vD1jM1zwkcjUb4EgZODn79g=;
+        b=r27VoB6zXP3SyOq+GAb2qPoC+yspqQgbSlRsjPKEneFqgA1vgEo4i6jAx5Z90G0zHs
+         kckquU4h3UODmKcknAvvj9+sszBbxMNSCArj8yEQWl72XSLA/8sS3kRgaMRBNdf+L5q5
+         8YSwrWmcWIa+RRuFvwegLLgIHM1xj0pQUywZ2igKlFw/jxJ/85SE1yUqPPhF1jrRh2oF
+         NvINvwWr+bIqhUANCt9dOK8YX9nH/3hBCNY2kAVcuQXIti3moT8kZyp63ibcHxKlbRMu
+         jYkpcmaop8mipKgPcfUZbHxO4wX+Oj3iz/OI2cbkyyQXMAMi7ekH+UFEPW64dngxum2K
+         ufRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nXQjU6OEFoB3/boXeRzXBJsBgW4XWcKUgixiYsXTEJo=;
-        b=T2jsI0UotUp4NPm4hOIXMdViwPVkGmpa8XL8wRSBYCr7Dxv3SbP0o0h6Mtr/ye3RNc
-         QF5RMnDC2YHzldJudfVm4rOi10UCjCERn8QFTiJXi8Vf/bwMI0tTAXVjx2leeZExDZ/0
-         Y69GTXv3f4UQIuzfVxaTtlXklFL6qXoNfgYZ/Ep8HOedx2UXbe09YxmlN2MiSxPKCMr1
-         fKAEhh1lJg1OU64ITyruUx5amVdnoeAndZl4U+wOwjiOhBUoBWP04npEoUDB7fLkCN3j
-         rnHv+M5Pq96AlY3R/Wf8RblwE/4yf0OCUXIFlf4mRL66BYIgk+gypaY/23YZvM2BzUry
-         AOQg==
-X-Gm-Message-State: AOAM530+/RJPyN6F76IWN7Gl6uYpz+FqGET1j+X3muSgDPJZ+h9pXl1/
-        +pFbFiKj7rjGeslBU+V7AkovAJqa6xMH75vgOAk=
-X-Google-Smtp-Source: ABdhPJxBj1sEXsKUamx0YZrSBtWQjJ74+3rp3RhFUpdmOvR7HsforetI3GkKVTUY7N4/ds4cxGBGp7yoG09mDtHd2lo=
-X-Received: by 2002:a2e:1417:: with SMTP id u23mr5286032ljd.44.1598365454126;
- Tue, 25 Aug 2020 07:24:14 -0700 (PDT)
+        bh=okmSfG76Cm0/HZKPCuD/vD1jM1zwkcjUb4EgZODn79g=;
+        b=Qwg/UxKn6QfGPrZ+w2IZnVRKTiT2twvQElgGDYt88OvJtFGPgBB9QdUBFqNggC8kZO
+         MotGNDPC1d0Y/DF4hnYaeYLioA2ww4HRH41Vt8nuvGAd/+QMAXwIDaNO6nkppliL5n1N
+         aaI/YTLzXxCX9+1apmKmswNj+f8cXF5eBYFt61ioByjsGUJAay+Dbzx91EJEeBXKe0Ab
+         vflj1aqYsd935qIMmIAe094LMuaFbzpm+rGtvn169p0c78zIEOFK6/QLsKbcPCrtXNvo
+         mzuOEKJCvPAIQ3zsVKTmmdApbPTB9jjnWwqf7gRXLY3PUM83FbuDx2PzCODT6sM9++iv
+         otZw==
+X-Gm-Message-State: AOAM531duE8XkTMaTpfR1QT5RvDwPUh1brEIY9b6t6nH0WnAGBSmF9UR
+        5EknMyXqOHrLFP01ujr8hnknsXSF1tJ0xsnI0PpyRA==
+X-Google-Smtp-Source: ABdhPJxyGvLAySOcaQE1wH6W+EB0e+NuFGdnu6GmpbNN0KBXRl9yKJ7k4uW3MLbqXivQ7RUIBJUxMXzjCDnCC7f2zpY=
+X-Received: by 2002:ab0:3765:: with SMTP id o5mr3052916uat.92.1598365485422;
+ Tue, 25 Aug 2020 07:24:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200824091013.20640-1-matthias.schiffer@ew.tq-group.com>
- <20200824091013.20640-2-matthias.schiffer@ew.tq-group.com>
- <CAOMZO5DSX1pf3xxo=CGvgPmHcjMJoWFx74grVJBckSmjtF-RGg@mail.gmail.com> <4b7d57738ce8e2130c4740a0f3f973fbaf60a7cf.camel@ew.tq-group.com>
-In-Reply-To: <4b7d57738ce8e2130c4740a0f3f973fbaf60a7cf.camel@ew.tq-group.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 25 Aug 2020 11:24:02 -0300
-Message-ID: <CAOMZO5DYrkEb_G+EYAGrc+qjSsbjRdeBUU3tJUfkU6tjgNm_7g@mail.gmail.com>
-Subject: Re: (EXT) Re: [PATCH 2/2] ARM: dts: imx6qdl: tqma6: minor fixes
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200824153036.3201505-1-surenb@google.com> <20200825111524.v2bnoya35spde3zt@wittgenstein>
+In-Reply-To: <20200825111524.v2bnoya35spde3zt@wittgenstein>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Tue, 25 Aug 2020 07:24:34 -0700
+Message-ID: <CAJuCfpE7YQjBJDKBcc-20qEDsu9koirFuGSO306NDuKz6_9Tsg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Michal Hocko <mhocko@suse.com>, mingo@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com,
+        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
+        Oleg Nesterov <oleg@redhat.com>, adobriyan@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de,
+        John Johansen <john.johansen@canonical.com>,
+        laoar.shao@gmail.com, Tim Murray <timmurray@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, stable <stable@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
-
-On Tue, Aug 25, 2020 at 4:22 AM Matthias Schiffer
-<matthias.schiffer@ew.tq-group.com> wrote:
-
-> Hmm, unless I'm overlooking something, this is not going to work:
+On Tue, Aug 25, 2020 at 4:15 AM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
 >
-> - spi_get_gpio_descs() sets num_chipselect to the maximum of the
-> num_chipselect set in the driver and the number of cs-gpios
+> On Mon, Aug 24, 2020 at 08:30:36AM -0700, Suren Baghdasaryan wrote:
+> > Currently __set_oom_adj loops through all processes in the system to
+> > keep oom_score_adj and oom_score_adj_min in sync between processes
+> > sharing their mm. This is done for any task with more that one mm_users,
+> > which includes processes with multiple threads (sharing mm and signals).
+> > However for such processes the loop is unnecessary because their signal
+> > structure is shared as well.
+> > Android updates oom_score_adj whenever a tasks changes its role
+> > (background/foreground/...) or binds to/unbinds from a service, making
+> > it more/less important. Such operation can happen frequently.
+> > We noticed that updates to oom_score_adj became more expensive and after
+> > further investigation found out that the patch mentioned in "Fixes"
+> > introduced a regression. Using Pixel 4 with a typical Android workload,
+> > write time to oom_score_adj increased from ~3.57us to ~362us. Moreover
+> > this regression linearly depends on the number of multi-threaded
+> > processes running on the system.
+> > Mark the mm with a new MMF_PROC_SHARED flag bit when task is created with
+> > (CLONE_VM && !CLONE_THREAD && !CLONE_VFORK). Change __set_oom_adj to use
+> > MMF_PROC_SHARED instead of mm_users to decide whether oom_score_adj
+> > update should be synchronized between multiple processes. To prevent
+> > races between clone() and __set_oom_adj(), when oom_score_adj of the
+> > process being cloned might be modified from userspace, we use
+> > oom_adj_mutex. Its scope is changed to global and it is renamed into
+> > oom_adj_lock for naming consistency with oom_lock. The combination of
+> > (CLONE_VM && !CLONE_THREAD) is rarely used except for the case of vfork().
+> > To prevent performance regressions of vfork(), we skip taking oom_adj_lock
+> > and setting MMF_PROC_SHARED when CLONE_VFORK is specified. Clearing the
+> > MMF_PROC_SHARED flag (when the last process sharing the mm exits) is left
+> > out of this patch to keep it simple and because it is believed that this
+> > threading model is rare. Should there ever be a need for optimizing that
+> > case as well, it can be done by hooking into the exit path, likely
+> > following the mm_update_next_owner pattern.
+> > With the combination of (CLONE_VM && !CLONE_THREAD && !CLONE_VFORK) being
+> > quite rare, the regression is gone after the change is applied.
+> >
+> > Fixes: 44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
+> > Reported-by: Tim Murray <timmurray@google.com>
+> > Debugged-by: Minchan Kim <minchan@kernel.org>
+> > Suggested-by: Michal Hocko <mhocko@kernel.org>
+> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > ---
+> >
+> > v2:
+> > - Implemented proposal from Michal Hocko in:
+> > https://lore.kernel.org/linux-fsdevel/20200820124109.GI5033@dhcp22.suse.cz/
+> > - Updated description to reflect the change
+> >
+> > v1:
+> > - https://lore.kernel.org/linux-mm/20200820002053.1424000-1-surenb@google.com/
+> >
+> >  fs/proc/base.c                 |  7 +++----
+> >  include/linux/oom.h            |  1 +
+> >  include/linux/sched/coredump.h |  1 +
+> >  kernel/fork.c                  | 21 +++++++++++++++++++++
+> >  mm/oom_kill.c                  |  2 ++
+> >  5 files changed, 28 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/fs/proc/base.c b/fs/proc/base.c
+> > index 617db4e0faa0..cff1a58a236c 100644
+> > --- a/fs/proc/base.c
+> > +++ b/fs/proc/base.c
+> > @@ -1055,7 +1055,6 @@ static ssize_t oom_adj_read(struct file *file, char __user *buf, size_t count,
+> >
+> >  static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> >  {
+> > -     static DEFINE_MUTEX(oom_adj_mutex);
+> >       struct mm_struct *mm = NULL;
+> >       struct task_struct *task;
+> >       int err = 0;
+> > @@ -1064,7 +1063,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> >       if (!task)
+> >               return -ESRCH;
+> >
+> > -     mutex_lock(&oom_adj_mutex);
+> > +     mutex_lock(&oom_adj_lock);
+> >       if (legacy) {
+> >               if (oom_adj < task->signal->oom_score_adj &&
+> >                               !capable(CAP_SYS_RESOURCE)) {
+> > @@ -1095,7 +1094,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> >               struct task_struct *p = find_lock_task_mm(task);
+> >
+> >               if (p) {
+> > -                     if (atomic_read(&p->mm->mm_users) > 1) {
+> > +                     if (test_bit(MMF_PROC_SHARED, &p->mm->flags)) {
+> >                               mm = p->mm;
+> >                               mmgrab(mm);
+> >                       }
+> > @@ -1132,7 +1131,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> >               mmdrop(mm);
+> >       }
+> >  err_unlock:
+> > -     mutex_unlock(&oom_adj_mutex);
+> > +     mutex_unlock(&oom_adj_lock);
+> >       put_task_struct(task);
+> >       return err;
+> >  }
+> > diff --git a/include/linux/oom.h b/include/linux/oom.h
+> > index f022f581ac29..861f22bd4706 100644
+> > --- a/include/linux/oom.h
+> > +++ b/include/linux/oom.h
+> > @@ -55,6 +55,7 @@ struct oom_control {
+> >  };
+> >
+> >  extern struct mutex oom_lock;
+> > +extern struct mutex oom_adj_lock;
+> >
+> >  static inline void set_current_oom_origin(void)
+> >  {
+> > diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
+> > index ecdc6542070f..070629b722df 100644
+> > --- a/include/linux/sched/coredump.h
+> > +++ b/include/linux/sched/coredump.h
+> > @@ -72,6 +72,7 @@ static inline int get_dumpable(struct mm_struct *mm)
+> >  #define MMF_DISABLE_THP              24      /* disable THP for all VMAs */
+> >  #define MMF_OOM_VICTIM               25      /* mm is the oom victim */
+> >  #define MMF_OOM_REAP_QUEUED  26      /* mm was queued for oom_reaper */
+> > +#define MMF_PROC_SHARED      27      /* mm is shared while sighand is not */
+> >  #define MMF_DISABLE_THP_MASK (1 << MMF_DISABLE_THP)
+> >
+> >  #define MMF_INIT_MASK                (MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index 4d32190861bd..6fce8ffa9b8b 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -1809,6 +1809,25 @@ static __always_inline void delayed_free_task(struct task_struct *tsk)
+> >               free_task(tsk);
+> >  }
+> >
+> > +static void copy_oom_score_adj(u64 clone_flags, struct task_struct *tsk)
+> > +{
+> > +     /* Skip if kernel thread */
+> > +     if (!tsk->mm)
+> > +             return;
 >
-> - spi_imx_probe() sets num_chipselect to 3 if not specified in the
-> device tree
+> Hm, wouldn't
 >
-> So I think we would end up with 3 instead of 1 chipselect.
+>         if (tsk->flags & PF_KTHREAD)
+>                 return;
+>
+> be clearer and more future proof?
 
-Oh, this has changed recently in 8cdcd8aeee281 ("spi: imx/fsl-lpspi:
-Convert to GPIO descriptors"):
-....
+The check follows a similar pattern from copy_mm to detect when we are
+cloning a kernel thread. Also IMHO this is a more obvious way to
+protect from dereferencing a NULL tsk->mm, which is the important
+point here. I can change or remove the comment if that makes things
+more clear. Please LMK if that would help.
 
--       } else {
--               u32 num_cs;
--
--               if (!of_property_read_u32(np, "num-cs", &num_cs))
--                       master->num_chipselect = num_cs;
--               /* If not preset, default value of 1 is used */
-
-Initially, if num-cs was not present the default value for num_chipselect was 1.
-
--       }
-+       /*
-+        * Get number of chip selects from device properties. This can be
-+        * coming from device tree or boardfiles, if it is not defined,
-+        * a default value of 3 chip selects will be used, as all the legacy
-+        * board files have <= 3 chip selects.
-+        */
-+       if (!device_property_read_u32(&pdev->dev, "num-cs", &val))
-+               master->num_chipselect = val;
-+       else
-+               master->num_chipselect = 3;
-
-Now it became 3.
-
-I think this is a driver issue and we should fix the driver instead of
-requiring to pass num-cs to the device tree.
-
-
-num-cs is not even documented in the spi-imx binding.
+>
+> Christian
