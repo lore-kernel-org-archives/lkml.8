@@ -2,178 +2,88 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4CCC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E06FC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D25D206F0
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:31:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mNQPJdy2"
+	by mail.kernel.org (Postfix) with ESMTP id DF9D32075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgHYNbu (ORCPT
+        id S1726609AbgHYNcV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:31:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbgHYNbj (ORCPT
+        Tue, 25 Aug 2020 09:32:21 -0400
+Received: from mail-oo1-f68.google.com ([209.85.161.68]:38839 "EHLO
+        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgHYNcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:31:39 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F00C061756
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 06:31:39 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b17so11948149wru.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 06:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ox8QK/IzGS/2yKfoGq07DsTXf8p9QMN6eWLRJ1J4AIg=;
-        b=mNQPJdy2gY4XWix22ixlqX4gAjdlU3M6HmAifc6qwgvG8KDB2RtfoojcjwoOxRsoWq
-         85QxMnS8xmEJEqZvqPK/uY6IgabsmL4poARlffOF/1WY8IYEQKHCl62/BFfsRNCvlWjB
-         I3rUkJvXf1HSY0ud3Qpk5ukGsLaI/X+7wS4xUrvPjbR/MU+sxSfkPKSnHnrg4Mut2sJr
-         BnUQy7ewuSeizkEy57yes+sJYFbk4cyE1vir/mU+YfdTBYWp72iZRK+87WVKqyFbyjyR
-         V77xU+EBKOcwvQvdHa4QUUJpH2Q2QxR91rSwAR/BFUPm2HO+TAHVcQu3vXxTqnQiNEWm
-         I50Q==
+        Tue, 25 Aug 2020 09:32:20 -0400
+Received: by mail-oo1-f68.google.com with SMTP id z11so2701465oon.5;
+        Tue, 25 Aug 2020 06:32:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ox8QK/IzGS/2yKfoGq07DsTXf8p9QMN6eWLRJ1J4AIg=;
-        b=FHRpTO0Ok8diBhpKn7e67fcoicNF0sF5kLcl2rx06SVx1YrCNs1TCSDeeoB4sc5FTT
-         5PS3mYZClEwF3pSlJJb2mBXUL8Z5oOQQNyJbmf8WvhZWu591yz3IEIKMjZq4X83zxvHs
-         YgqmDQL/tJQimVTJjKKco5SgBIqsUv26txfdtNexB01ELaOqH+J7iDIAF9RAahu1vwqH
-         B0j6vRVNYWqH8pWL8735ZSgibPCJ5BMyA7nZKztOLsXJeknCpD9Lr721yqy1OHAoqxGU
-         NDRCgfMVAdZHm4vu4XOXlMe35hX0fz87scZGYCAEBymKxa1EaIL6TlMRfsxa6FrKBqhi
-         RKMQ==
-X-Gm-Message-State: AOAM533jrD2Dwf8jR94dsjNjL/BhkpK8LTSLREgFapXDUQ5W/uQ/PjHT
-        0Rdygis+TVamSXLDdyx2SikepuCuDmDEIkFhyWSsXg==
-X-Google-Smtp-Source: ABdhPJzUeQqJA/novRqHBseQlf6eWrBox45GDrOW28wDGMRdDNkXczDDP6iZM3MA8UOhbFpSCcNnxyXb9cIU+oTD434=
-X-Received: by 2002:a5d:688d:: with SMTP id h13mr10296178wru.176.1598362297868;
- Tue, 25 Aug 2020 06:31:37 -0700 (PDT)
+        bh=AoPa6tIoCK3whU9pBPzOcV5Uo3NIFh12F5Ac6ptY9h0=;
+        b=esWBPYuF9HYbSZYb8jEJOvte00O/TlqL1NLTlwOPPS2phgFLg4vg/MboaHH6bJ2sDL
+         yDcz646gKiAuHlZ1kDiBeN46mUK1pdkEq2AegPk3tIACBkFftyEbvB0j07d3LOeZeElS
+         sZNBMq/D25swdqtf3yuECW1b1YjDbFO+c06JCLsZVehjhry4HPhmhXChO1EzA954iteR
+         rpbJXwtFWsLemvfKtVRUm7bNZMKgfqI9WfH0JHW4E2rOMgrJ3onikuCC5zb8iryuw3vV
+         iefDq3C/oi3t4bELUTF4ov0zIIzufwyr6u/Cwuri723wFNWqqPNOOA39Znhys7t688va
+         +kzQ==
+X-Gm-Message-State: AOAM531QmEgY66wkH+OMM1hr/RrFmTOhk65t7YwpZnK1GJDAVQ2rPkoq
+        NYSs423cB7ZJP7pyf2x9x0sS0eAIHxD8gVxz8ng=
+X-Google-Smtp-Source: ABdhPJxLl4LjPnUw0osPkN7eyYfOkhZhX2vApW9KSn7zpZVt5FQDuryRNu96u+tAJACetGF/gPNsVbXqowakQy6v1oQ=
+X-Received: by 2002:a4a:275e:: with SMTP id w30mr7058474oow.40.1598362339606;
+ Tue, 25 Aug 2020 06:32:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <1598029961-2474-1-git-send-email-amit.pundir@linaro.org> <23c4191e-4d64-80d8-e688-27d004729ea1@gmail.com>
-In-Reply-To: <23c4191e-4d64-80d8-e688-27d004729ea1@gmail.com>
-From:   Amit Pundir <amit.pundir@linaro.org>
-Date:   Tue, 25 Aug 2020 19:01:01 +0530
-Message-ID: <CAMi1Hd0=FXSPk+UXte4Etq5p0Ths9rkt9Uuup1OOLD6qzT=XQA@mail.gmail.com>
-Subject: Re: [PATCH v5] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
-To:     Konrad Dybcio <konradybcio@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+References: <20200825104455.18000-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200825104455.18000-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20200825104455.18000-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 25 Aug 2020 15:32:08 +0200
+Message-ID: <CAMuHMdWmvcA8x-t=FgNOuMnAtw6j3OAgo8irmD5e2wrB+LfhHg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: renesas: r8a774e1: Add PWM device nodes
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Konrad,
+On Tue, Aug 25, 2020 at 12:45 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+>
+> This patch adds PWM[0123456] device nodes to the RZ/G2H (a.k.a R8A774E1)
+> device tree.
+>
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Sat, 22 Aug 2020 at 02:51, Konrad Dybcio <konradybcio@gmail.com> wrote:
->
-> Hi
->
-> First of all, sorry if anybody sees this twice. I've been messing with Thunderbird lately.
->
->
->
-> > dtb-$(CONFIG_ARCH_QCOM)       += sdm845-cheza-r3.dtb
-> > dtb-$(CONFIG_ARCH_QCOM)       += sdm845-db845c.dtb
-> > +dtb-$(CONFIG_ARCH_QCOM)      += sdm845-beryllium.dtb
->
-> [B]eryllium should come before [C]heza, no? Also, aren't the non-development boards supposed to include the vendor name? i.e. sdm845-(xiaomi/poco)-beryllium.dtb
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v5.10.
 
-Ack. I didn't pay attention to that part. I'll fix that.
+Gr{oetje,eeting}s,
 
->
->
-> > +     model = "Xiaomi Technologies Inc. Beryllium";
->
-> At least with Xperias, we settled on setting the model property to the "pretty" name, in this case Poco F1
+                        Geert
 
-Ack.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
->
->
-> > +     pm8998-rpmh-regulators {
-> > +             compatible = "qcom,pm8998-rpmh-regulators";
-> > +             qcom,pmic-id = "a";
-> > +
-> > +             vreg_l1a_0p875: ldo1 {
->
-> I think you forgot to include (regulatorname)-supply properties which should cause havoc with all things regulators..
-
-I didn't know that. Thanks for pointing that out. I just copied db845c
-dts and started removing the nodes/properties which I didn't seem fit.
-There is a very good probability that I goofed up big time.
-
-FWIW in my limited testing so far (Booted AOSP to UI, with working
-Touchscreen/BT/WiFi/Audio with out-of-tree drivers [1]), I didn't run
-into issues with mainline (v5.9-rc1) or Android GKI (v5.4.58). May be
-I just got lucky. I'll check up on the usage of (regulatorname)-supply
-properties.
-
->
->
-> > +             vreg_l1a_0p875: ldo1 {
-> > +                     regulator-min-microvolt = <880000>;
-> > +                     regulator-max-microvolt = <880000>;
-> 0p88? Unless it's a PMIC limitation.. Please also confirm names for the rest of the regulators.
->
-> Also why are there so few regulators? And none from pmi8998? Are the rest WIP/coming in a followup commit, or are they disabled on this board? AFAICS you only include SoC/PMIC DTs which would suggest they should be there.
-
-I intend to add more regulators and feature nodes in follow up commits.
-
->
->
-> > +/* Reserved memory changes from downstream */
->
-> Wouldn't it look better if you included that in the main {} node instead of reopening it in the middle of the file? I mean, it works, but let's hear what others have to say.
-
-Ack. I'll fix that if necessary.
-
->
->
-> > +                      * It seems that mmc_test reports errors if drive
-> > +                      * strength is not 16 on clk, cmd, and data pins.
->
-> You say that, but then you set "drive-strength = <10>;" for cmd and data, please confirm it's intentional.
-
-In sync with db845c as well as downstream dts but I'll check on this as well.
-
->
->
-> > +&ufs_mem_hc {
->
-> UFS comes before USB alphabetically.
-
-Ack. I'll add them alphabetically if that is the common norm.
-
-Regards,
-Amit Pundir
-[1] https://github.com/pundiramit/linux/commits/beryllium-mainline
-
-
->
->
-> > +&ufs_mem_phy
->
-> Ditto
->
->
-> > +&qup_uart6_default
->
-> Ditto
->
->
-> Konrad
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
