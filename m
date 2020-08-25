@@ -2,100 +2,126 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E41C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0F472075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:23:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598343831;
-	bh=7VMz50D7ZZ0WPmUQJONRcdBdlICzRU9qCkM2phdMJdQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ecY0PFYTevwvg8FFTF47CzBG5eYLN5o5AFA6lzDpBveoITUANEzojiK8fi9dSpGHt
-	 kCwN6z8MynCOUTm5iOpfPG8YjOMqXfi/udStsh/QyjTj0f6Fho1+pr54hzGsp48WLJ
-	 KZBwZCVgnOKqxXhEvR+FHVNXsgJ8mdrTv5qQosec=
+	by mail.kernel.org (Postfix) with ESMTP id D024E2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbgHYIXu (ORCPT
+        id S1728976AbgHYIZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:23:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39958 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 04:25:21 -0400
+Received: from foss.arm.com ([217.140.110.172]:53192 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725924AbgHYIXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:23:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ADE920639;
-        Tue, 25 Aug 2020 08:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598343829;
-        bh=7VMz50D7ZZ0WPmUQJONRcdBdlICzRU9qCkM2phdMJdQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PSSTiJO2m8BnQId0wTCEmWanF6KF5g8CXBUKfMDAyFPgW8Gn0fGvbJydaPaOxmT2U
-         R4lnDuXr76vs8Jgpw3T1G91qDVSlto0v9UyW4jMjVnpBxnC3tprU0tMtveud3c9r9g
-         mIzR0ED9ZZzDlfGaQR6zM139eUEBazVDckWoqkVE=
-Date:   Tue, 25 Aug 2020 10:24:06 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'Alex Dewar' <alex.dewar90@gmail.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "accessrunner-general@lists.sourceforge.net" 
-        <accessrunner-general@lists.sourceforge.net>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: atm: don't use snprintf() for sysfs attrs
-Message-ID: <20200825082406.GB1335351@kroah.com>
-References: <20200824222322.22962-1-alex.dewar90@gmail.com>
- <3e882693bb344424af37d4d35f3db605@AcuMS.aculab.com>
+        id S1725924AbgHYIZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 04:25:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0939A30E;
+        Tue, 25 Aug 2020 01:25:18 -0700 (PDT)
+Received: from [10.37.12.65] (unknown [10.37.12.65])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EF863F68F;
+        Tue, 25 Aug 2020 01:25:14 -0700 (PDT)
+Subject: Re: [PATCH v1] thermal/of: Introduce k-po, k-pu and k-i for a thermal
+ zone
+To:     Rob Herring <robh@kernel.org>
+Cc:     Finley Xiao <finley.xiao@rock-chips.com>, heiko@sntech.de,
+        rui.zhang@intel.com, daniel.lezcano@linaro.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        huangtao@rock-chips.com, tony.xie@rock-chips.com, cl@rock-chips.com
+References: <20200811123115.8144-1-finley.xiao@rock-chips.com>
+ <20200824230956.GA3500214@bogus>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <c3f54e18-8683-8bd9-90fa-e3465cddf8e8@arm.com>
+Date:   Tue, 25 Aug 2020 09:25:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e882693bb344424af37d4d35f3db605@AcuMS.aculab.com>
+In-Reply-To: <20200824230956.GA3500214@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 08:12:05AM +0000, David Laight wrote:
-> From: Alex Dewar
-> > Sent: 24 August 2020 23:23
-> > kernel/cpu.c: don't use snprintf() for sysfs attrs
-> > 
-> > As per the documentation (Documentation/filesystems/sysfs.rst),
-> > snprintf() should not be used for formatting values returned by sysfs.
-> > 
-> > In all of these cases, sprintf() suffices as we know that the formatted
-> > strings will be less than PAGE_SIZE in length.
+Hi Rob,
+
+On 8/25/20 12:09 AM, Rob Herring wrote:
+> On Tue, Aug 11, 2020 at 08:31:15PM +0800, Finley Xiao wrote:
+>> The default value for k_pu is:
+>>      2 * sustainable_power / (desired_temperature - switch_on_temp)
+>> The default value for k_po is:
+>>      sustainable_power / (desired_temperature - switch_on_temp)
+>> The default value for k_i is 10.
+>>
+>> Even though these parameters of the PID controller can be changed
+>> by the following sysfs files:
+>>      /sys/class/thermal/thermal_zoneX/k_pu
+>>      /sys/class/thermal/thermal_zoneX/k_po
+>>      /sys/class/thermal/thermal_zoneX/k_i
+>>
+>> But it's still more convenient to change the default values by devicetree,
+>> so introduce these three optional properties. If provided these properties,
+>> they will be parsed and associated with the thermal zone via the thermal
+>> zone parameters.
+>>
+>> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+>> ---
+>>   Documentation/devicetree/bindings/thermal/thermal.txt | 14 ++++++++++++++
 > 
-> Hmmmm....
-> I much prefer to see bounded string ops.
-> sysfs really ought to be passing through the buffer length.
+> Bindings should be a separate file and this one is a DT schema now.
+> 
+>>   drivers/thermal/thermal_of.c                          |  7 +++++++
+>>   2 files changed, 21 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> index f78bec19ca35..ebe936b57ded 100644
+>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+>> @@ -165,6 +165,20 @@ Optional property:
+>>   			2000mW, while on a 10'' tablet is around
+>>   			4500mW.
+>>   
+>> +- k-po:			Proportional parameter of the PID controller when
+>> +			current temperature is above the target.
+>> +  Type: signed
+>> +  Size: one cell
+>> +
+>> +- k-pu:			Proportional parameter of the PID controller when
+>> +			current temperature is below the target.
+>> +  Type: signed
+>> +  Size: one cell
+>> +
+>> +- k-i:			Integral parameter of the PID controller.
+>> +  Type: signed
+>> +  Size: one cell
+> 
+> What's PID?
+> 
+> I know nothing about the sysfs params, but the binding needs to stand on
+> it's own and needs enough detail to educate me.
+> 
 
-No.
+Sorry for the delay, I missed that patch.
+These parameters are the coefficients for the
+Proportional-Integral-Derivative (PID) controller [1], which is the
+core of the Intelligent Power Allocation (IPA) thermal governor.
 
-> The buffer size should probably be SYSFS_BUF_LEN not PAGE_SIZE
-> (even it happens to typically be the same).
+Only IPA uses them, thus I don't think the governors parameters:
+k-po, k-pu, k-i
+should be part of the DeviceTree. I haven't seen such governors
+tunnables in the DT, please point me if they exist somewhere.
 
-Nope.
+Do you think Rob they might be specified in the DT?
 
-> If PAGE_SIZE is big (or small) passing a 4k buffer may be
-> more appropriate than a PAGE_SIZE one.
+Regards,
+Lukasz
 
-Nope, sysfs is supposed to be "one value per file", and the buffer size
-was specifically not passed in because you should _NEVER_ need to care
-about it because all you are doing is printing out a single value.
-
-If you really want to print more than just a single value, you should
-not use sysfs.
-
-So this is designed this way on purpose, you shouldn't have to worry
-about any of this, and that way, you don't have to "program
-defensively", it all just works in a simple manner.
-
-thanks,
-
-greg k-h
+[1] https://en.wikipedia.org/wiki/PID_controller
