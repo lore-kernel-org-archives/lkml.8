@@ -2,148 +2,115 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D89CC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB50A2074A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598386092;
-	bh=XbmH07wbcFIV/RrfmMjndcKF+uq2nCiDV73youbhKi0=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Zm+5YZ1LVUxz0mS1QAEczHM/I3YY9oxhUP2NsZubz0FcGOOPS7TmURIJKelDlyG+8
-	 3+i3S3NrICZyQ+1zb+SVVMJ26Forg65d0LX5IANeFBfqSyuw+s6DiqTGnL9LsQUEJt
-	 hMqTzGB7QmQzRCVA/j+LfacLMkD2G6BSY/IY+KFQ=
+	by mail.kernel.org (Postfix) with ESMTP id 4869E20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgHYUIL (ORCPT
+        id S1726704AbgHYUI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbgHYUIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:08:10 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87D0120738;
-        Tue, 25 Aug 2020 20:08:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598386089;
-        bh=XbmH07wbcFIV/RrfmMjndcKF+uq2nCiDV73youbhKi0=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=SHpORjOmnqVvwizcO3gjZq0AEb4cMvekHXt8sABBCTobZfILv4HATTqe2+/5o9UpV
-         KXvUD3YtlLDPJM8IlTKIwdSD7T8KDTV5KXu7LG0tlv4BAmI6BXTufpInaqn00S+ryY
-         61B8pIM0cCRCFeT/h0+agOwNBkBaB86+xriKZCPk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 6B06F35226AE; Tue, 25 Aug 2020 13:08:09 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 13:08:09 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
-        dave@stgolabs.net, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neeraj.iitr10@gmail.com, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>, vineethrp@gmail.com
-Subject: Re: [PATCH v4 -rcu 1/4] rcu/segcblist: Do not depend on rcl->len to
- store the segcb len during merge
-Message-ID: <20200825200809.GW2855@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200825024842.3408659-1-joel@joelfernandes.org>
- <20200825024842.3408659-2-joel@joelfernandes.org>
+        Tue, 25 Aug 2020 16:08:56 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:51645 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgHYUIz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 16:08:55 -0400
+X-Originating-IP: 90.66.108.79
+Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 04B8F20007;
+        Tue, 25 Aug 2020 20:08:51 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 22:08:51 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Miguel Borges de Freitas <miguelborgesdefreitas@gmail.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Jon Nettleton <jon@solid-run.com>,
+        Rob Herring <robh@kernel.org>, a.zummo@towertech.it,
+        Baruch Siach <baruch@tkos.co.il>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: rtc: pcf8523: add DSM pm option for
+ battery switch-over
+Message-ID: <20200825200851.GI2389103@piout.net>
+References: <20200723195755.GV3428@piout.net>
+ <20200727094553.GH1551@shell.armlinux.org.uk>
+ <20200727144938.GC239143@piout.net>
+ <20200727152439.GK1551@shell.armlinux.org.uk>
+ <20200727154104.GE239143@piout.net>
+ <20200727154335.GL1551@shell.armlinux.org.uk>
+ <CABdtJHuVaTa5T0-KdQ-wZQrmFQ6HO3FvgnTgSo3aOi+=SPzDZA@mail.gmail.com>
+ <20200727161632.GF239143@piout.net>
+ <20200727173051.GM1551@shell.armlinux.org.uk>
+ <CAC4G8N5zUVc0YvT9mCP4BfeQD+KOAo6Rbswo8zqUh_mULa=Xsg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200825024842.3408659-2-joel@joelfernandes.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAC4G8N5zUVc0YvT9mCP4BfeQD+KOAo6Rbswo8zqUh_mULa=Xsg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:48:39PM -0400, Joel Fernandes (Google) wrote:
-> The donecbs's ->len field is used to store the total count of the segmented
-> callback list's length. This ->len field is then added to the destination segcb
-> list.
+On 27/07/2020 22:13:42+0100, Miguel Borges de Freitas wrote:
+> Russell King - ARM Linux admin <linux@armlinux.org.uk> escreveu no dia
+> segunda, 27/07/2020 à(s) 18:30:
+> >
+> > On Mon, Jul 27, 2020 at 06:16:32PM +0200, Alexandre Belloni wrote:
+> > > On 27/07/2020 17:55:50+0200, Jon Nettleton wrote:
+> > > > > So, can we please have that discussion, it is pertinent to this patch.
+> > > > >
+> > > >
+> > > > Thinking about this some more, I believe whether or not an IOCTL
+> > > > interface is in the works or needed is irrelevant.  This patch
+> > > > describes the hardware and how it is designed and the topic of
+> > > > discussion is if we need a simple boolean state, or if we need
+> > > > something that could be used to support dynamic configuration in the
+> > > > future.  I would rather make this decision now rather than keep
+> > > > tacking on boolean config options, or revisit a bunch of device-tree
+> > > > changes.
 > 
-> However, this presents a problem for per-segment length counting which is added
-> in a future patch. This future patch sets the rcl->len field as we move
-> segments of callbacks between source and destination lists, thus becoming
-> incompatible with the donecb's ->len field.
-
-OK, I will bite.  What is "rcl"?  A placeholder for donecbs and pendcbs?
-If so, please just name them both.  If not, please explain.
-
-> This commit therefore avoids depending on the ->len field in this way. IMHO,
-> this is also less error-prone and is more accurate - the donecb's ->len field
-> should be the length of the done segment and not just used as a temporarily
-> variable.
-
-Please also mention why ->len is handled specially at all, namely
-interactions between rcu_barrier() and callback invocation.  This is
-the answer to "why not just make all this work like normal lists?"
-This might go well in the first paragraph.
-
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/rcu_segcblist.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> For what it's worth I also tend to agree.
+> The patchset, regardless of the property name (that I admit might be
+> misleading), is intended at enforcing a mode that the RTC/driver
+> should use by default. This mode is strongly related to the hardware
+> definition/implementation and its capabilities. While I understand the
+> need for the IOCTL interface to solve issues exactly like the
+> aforementioned factory example, I fail to see how it can be of any
+> help to solve the problem at hand - as it won't likely configure the
+> driver to use a different default mode depending on the board. The
+> IOCTL interface might also allow the userspace to change this property
+> back to the default mode (000) and end up breaking the RTC operation,
+> but I guess that's the cost of configurability and, in the end, the
+> user's responsibility.
+> Any pointers on how to proceed are appreciated.
 > 
-> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-> index 2d2a6b6b9dfb..b70d4154433c 100644
-> --- a/kernel/rcu/rcu_segcblist.c
-> +++ b/kernel/rcu/rcu_segcblist.c
-> @@ -513,14 +513,18 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
->  {
->  	struct rcu_cblist donecbs;
->  	struct rcu_cblist pendcbs;
-> +	long src_len;
->  
->  	rcu_cblist_init(&donecbs);
->  	rcu_cblist_init(&pendcbs);
-> -	rcu_segcblist_extract_count(src_rsclp, &donecbs);
-> +
-> +	src_len = rcu_segcblist_xchg_len(src_rsclp, 0);
 
-Given that both rcu_segcblist_xchg_len() and rcu_segcblist_extract_count()
-have only one callsite each, why not get rid of one of them?
+I would think the simpler way to proceed is to have a device specific
+property indicating that standard mode is not available. From the
+driver, you can then switch from standard to DSM when this property is
+present.
 
-Or better yet, please see below, which should allow getting rid of both
-of them.
+I think it is difficult to come up with a generic property for that as
+most other RTCs with level/threshold switching have a fast edge
+detection feature that is usually enabled by default. So what they would
+require instead is a property indicating that the voltage is ramping
+down at a certain rate allowing to disable fast edge detection and
+saving a bit of power.
 
->  	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
->  	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
-> -	rcu_segcblist_insert_count(dst_rsclp, &donecbs);
-> +
-> +	rcu_segcblist_add_len(dst_rsclp, src_len);
->  	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
->  	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
 
-Rather than adding the blank lines, why not have the rcu_cblist structures
-carry the lengths?  You are already adjusting one of the two call sites
-that care (rcu_do_batch()), and the other is srcu_invoke_callbacks().
-That should shorten this function a bit more.  And make callback handling
-much more approachable, I suspect.
-
-There would still be the callback-invocation need to be careful with
-->cblist.len due to rcu_barrier() and srcu_barrier().  But both of
-those should be excluded by this code.  (But don't take my word for it,
-ask KCSAN.)
-
-							Thanx, Paul
-
-> +
->  	rcu_segcblist_init(src_rsclp);
->  }
-> -- 
-> 2.28.0.297.g1956fa8f8d-goog
-> 
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
