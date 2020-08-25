@@ -2,146 +2,194 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05840C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA0EC20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16BD20737
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:26:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="NfYTCdeL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KJ+kJnBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgHYF0K (ORCPT
+        id S1728508AbgHYF0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 01:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60764 "EHLO
+        Tue, 25 Aug 2020 01:26:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbgHYF0K (ORCPT
+        with ESMTP id S1728131AbgHYF0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 01:26:10 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBF63C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:26:09 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 83so13723323ybf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:26:09 -0700 (PDT)
+        Tue, 25 Aug 2020 01:26:11 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41AC8C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:26:11 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id 186so2539962vkx.4
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:26:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=LXGQz3dUPtoQDrSSVVfnKwCnxD+dn14EASNuB71qWps=;
-        b=NfYTCdeLik8nJHJ5W4Tzig5h9ofDMnLBuPWzZCTEfqi8uMCurIa2DrrmIuBV0yl/gQ
-         ndZfPCAipt4EMz1ePICSNhkeLQ/HnPG6Ix14Doua+1ifnEUiA4/uX/M8GghFDb0fQBRy
-         h/WDsoN/Z2322NPGYOO4daokc1abHQ2FF+21vQIBXM6I1WKzV23/juUjxRAfvIFk3yUS
-         vITMdYOnP0+9rmp3WenpSiGZJd58GEO2FJvUUL9daC7sLU2fO4TBRFugkiX5LjjPlUqe
-         vQ+nR57aBa17NAsIww2HrUlg4xTGOE/JpNNm3ZPhX9XgoMeZuoUrtbXHRdlRMGlnFg3+
-         j+MQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oB+i7wMr0KfB72EjZ1LpLq/WO77f/RwcZzv58/vqEgQ=;
+        b=KJ+kJnBUhtC+EU/lnfaRBtcxsb6wwOUgs0eeMukdCnJBjSds+CiMC0q+ymQZawsHe7
+         5enE+fuJsht0gK9F/uKBSbH0J+muHKt5+oGzIQV52r5PJpi8Xz+z1qZ49kJK7avSLghY
+         MkV1jco4wImjB97UHxVnuGhKedDeWFCNLCXxYNC0SZYga8OyLsUHSSxCF2/5CSWJD4LY
+         bBT8sFMHctM01/asgUySlcNxtj/QVJHnXDjbOf0181MJ3SajC/9oCIvHOIuUX5SbPCB4
+         Gh4OoborCKHVaQhE2+VkEzhq3hiFo4tpxx/WNKfxLN4SNRQnLfIEWgnQF+2W8OU1CZGD
+         a0eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=LXGQz3dUPtoQDrSSVVfnKwCnxD+dn14EASNuB71qWps=;
-        b=HxQqRdtirJsWSZsGNkU68UuN1AVqBlazzHp8cBYlDhzmUD2q2fSjzkJs0MPXvv+NbA
-         alA/cRxqJebkuHbr+s7epxLtWCdkU8+uIWprgXz3pxoGCU5qRDtveg7AtLJijDtsBtlq
-         8FrePO0rthn6w7J8kuH9altxCL5bkdkSuwVInVIH9ZJyDZYEDpkmLTvl08veXySG8KV+
-         2uyRaePxeL9CsdLNhKwbaNfISWZi3U7GcLROkEEQSMP4MuNPzcDUCBTa2JNcWlpYRQNQ
-         48R7MDuLfMp6MHvQgepTPOv05cURPhOOOMOA+7sV9/kM4g4EXrkmhydlLYBJdF3VnHe1
-         Q87Q==
-X-Gm-Message-State: AOAM533dLLblHkZ7K8kGz7TFXPu6kkVoOx+nKFVrKbSfbJ+aOiWcmd6d
-        03th77tVClS6AkyGOnvl+EnqDIkWps8L
-X-Google-Smtp-Source: ABdhPJzucRsZmc5RkVsCa4ewK6Q7FHUmorTbrz/iKmabcsEFOS5l9YC8Q8uA5a0g28dzMhczWRrg2G7qU62o
-X-Received: from nandos.syd.corp.google.com ([2401:fa00:9:14:725a:fff:fe46:72ab])
- (user=amistry job=sendgmr) by 2002:a25:b196:: with SMTP id
- h22mr12483522ybj.350.1598333168733; Mon, 24 Aug 2020 22:26:08 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 15:26:01 +1000
-Message-Id: <20200825152551.1.I6d12081e37d27ba7580a1af877727d882935787a@changeid>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH] CHROMIUM: arm64: dts: mt8183-elm: Set GPU power regulator to
- always on
-From:   Anand K Mistry <amistry@google.com>
-To:     linux-mediatek@lists.infradead.org
-Cc:     djkurtz@chromium.org, Anand K Mistry <amistry@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oB+i7wMr0KfB72EjZ1LpLq/WO77f/RwcZzv58/vqEgQ=;
+        b=smEBo12vgCDNtpBoOGAbUi4iTjP9m4uORkHOChsxxLKNwLCmqQqd9AiauJtEvoxARk
+         dQK1Rbbz7X2bxZQDiU2INsT3QyMakC5F5xTQqZnOnU527FzgaK4MEJgar9JmRE2220WS
+         ITgT8B85XxSDuM3eXPlaL7jx9nqVTbSjygDYTdGDbI2Qm5d/mo983ZTlSzlns745JR2I
+         bbBq0kL3KBLPY+LQ/uyZPnSgPLbfubiDvDASSQDbUg09bzyKgVkDsnuUsLGGj7Wdu5Py
+         0eQAWZtrbXdumyJ2MKjvdYGqbztyw+WPeLKwsQQ3avXzliL0TdjU10K9eku7s1hjHxFp
+         Iaog==
+X-Gm-Message-State: AOAM532vM13eXdgAUAUH2UHH+qxZqtVpgqn3vliZJWqgBk+9qGBNg303
+        hzVtEb3x/Oz/asVop5p0+x9IoGrMqwdqwRKxqk5qJA==
+X-Google-Smtp-Source: ABdhPJzoskqzz2A8MRBsPq7T9cAENOn46jOiOkgnZKdRJFor9LZ6YhwTU+6lNmuu4fU1i88oxhTX1TKpNYpGl+xS92U=
+X-Received: by 2002:a1f:eecb:: with SMTP id m194mr4451297vkh.40.1598333170253;
+ Mon, 24 Aug 2020 22:26:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200824164745.715432380@linuxfoundation.org>
+In-Reply-To: <20200824164745.715432380@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 25 Aug 2020 10:55:58 +0530
+Message-ID: <CA+G9fYuQ5+7HW_K2GieeAX3jubxqUXADd-7_Sx89ypyAmKUJgw@mail.gmail.com>
+Subject: Re: [PATCH 5.8 000/149] 5.8.4-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Keep the da9212 BUCKB always-on. This works around an issue on Elm/Hana
-devices where sometimes, the regulator is disabled before scpsys is
-suspended, causing the suspension of scpsys to fail.
+On Mon, 24 Aug 2020 at 22:18, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.8.4 release.
+> There are 149 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 26 Aug 2020 16:47:07 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.8.4-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.8.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Usually, the GPU and scpsys are suspended by the runtime PM before the
-system is suspended, due to the GPU being idle. In this case, scpsys is
-suspended inline with the GPU suspend, which then disables the
-regulator. However, if the GPU is still active when system is suspended,
-GPU suspend occurs but defers suspending scpsys to the PM's noirq phase.
-Since GPU suspend disables the regulator, scpsys isn't powered and
-suspending it fails with the following error:
-[  523.773227] mtk-scpsys 10006000.scpsys: Failed to power off domain mfg_2d
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-On resume, scpsys is resumed in the noirq phase. Since scpsys requires
-power from the regulator, which is still disabled at this point,
-attempting to turn it on will hang the CPU. A HW watchdog eventually
-reboots the system.
+Summary
+------------------------------------------------------------------------
 
-The obvious solution would be to add a link to the regulator from scpsys
-in the devicetree. This would prevent the regulator from being disabled
-until scpsys is suspended. However, in the case where suspending scpsys
-is deferred to the noirq phase, disabling the regulator will fail since
-it is connected over I2C which requires IRQs to be enabled. Even in the
-usual case where scpsys is suspended inline with the GPU, PM will always
-attempt to resume scpsys in noirq. This will attempt to enable the
-regulator, which will also fail due to being unable to communicate over
-I2C.
+kernel: 5.8.4-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.8.y
+git commit: ff3effda97baca98b891a29109810f88883045ac
+git describe: v5.8.3-150-gff3effda97ba
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.8-oe/bui=
+ld/v5.8.3-150-gff3effda97ba
 
-Since I2C can't be using with IRQs disabled, a workaround is to never
-turn off the regulator.
+No regressions (compared to build v5.8.3)
 
-Measuring power on the GPU rail on a Elm DVT shows that the change in
-power usage is negligible. The two relavent cases are S0 with an idle
-GPU, and S3.
+No fixes (compared to build v5.8.3)
 
-In S0 with an idle GPU, current behaviour with the regulator off:
-@@           NAME  COUNT  AVERAGE  STDDEV      MAX    MIN
-@@         gpu_mw    600     1.74    1.31     6.75   0.00
-... and with the regulator on, but no load:
-@@           NAME  COUNT  AVERAGE  STDDEV     MAX    MIN
-@@         gpu_mw    600     1.68    1.25    7.13   0.00
-The difference being well within the margin of error.
 
-In S3, current behaviour with the regulator off:
-@@           NAME  COUNT  AVERAGE  STDDEV     MAX    MIN
-@@         gpu_mw    600     0.94    0.74    3.25   0.00
-... and with the regulator on:
-@@           NAME  COUNT  AVERAGE  STDDEV     MAX     MIN
-@@         gpu_mw    600     0.83    0.66    3.25    0.00
+Ran 37993 total tests in the following environments and test suites.
 
-Signed-off-by: Anand K Mistry <amistry@google.com>
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
 
----
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-controllers-tests
+* ltp-cve-tests
+* ltp-fs-tests
+* ltp-sched-tests
+* ltp-tracing-tests
+* perf
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* network-basic-tests
+* ltp-dio-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-mm-tests
+* ltp-open-posix-tests
+* ltp-syscalls-tests
+* v4l2-compliance
+* igt-gpu-tools
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
 
- arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-index a5a12b2599a4..1294f27b21c1 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
-@@ -304,6 +304,7 @@ da9211_vgpu_reg: BUCKB {
- 				regulator-min-microamp  = <2000000>;
- 				regulator-max-microamp  = <3000000>;
- 				regulator-ramp-delay = <10000>;
-+				regulator-always-on;
- 			};
- 		};
- 	};
--- 
-2.28.0.297.g1956fa8f8d-goog
-
+--=20
+Linaro LKFT
+https://lkft.linaro.org
