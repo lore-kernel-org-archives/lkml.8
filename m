@@ -2,175 +2,128 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE46C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BDAC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 638A52076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02017207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:53:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oHzfQuFH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k3t5RucN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgHYRmt (ORCPT
+        id S1726466AbgHYRxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:42:49 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2110 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726119AbgHYRma (ORCPT
+        Tue, 25 Aug 2020 13:53:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgHYRxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:42:30 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PHVkMg119397;
-        Tue, 25 Aug 2020 13:42:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=YaEteyqYhXWEEFt5cfVRUCG9Bu1VG3wqjnkN65nMqUU=;
- b=oHzfQuFHJc2IeY8KZsVVlhLHqj2OMy70BTA+F3OMcrOxPDIAyO+EAS2fJ5q16Ts+xsIf
- SkZ2VoL1DDsssHMt6y6Zy3MVlwyCY3OYZRVuC8Kp4SJEPocEfxvKdnvTF7LIH0zElxk1
- Yu6HGgvBATpY5tsfyz2VXxzEDm0YSXLxHUK3/8bafDK2gq+NAfH6Q1CVBW+HL9GzYwkx
- PEhZTyelB5mefmatnWDEpuVLO4eEW8wgbco3S6tHv+A+bvIGqrroa5QuJrV29/OP94AP
- e8NG4rpBATZcGzSRBf/M3JCPnToqbpuXOQKgsffCpiyOVOXY06P7kxiZ2QBRTNwIo4xj CQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3356u68s7g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 13:42:21 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07PHW9b2121391;
-        Tue, 25 Aug 2020 13:42:21 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3356u68s71-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 13:42:21 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07PHbpeV010599;
-        Tue, 25 Aug 2020 17:42:19 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma03ams.nl.ibm.com with ESMTP id 332ujkup8c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 17:42:19 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07PHgHj511010526
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 17:42:17 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 399674C04E;
-        Tue, 25 Aug 2020 17:42:17 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A48D14C04A;
-        Tue, 25 Aug 2020 17:42:14 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.103.4])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Aug 2020 17:42:14 +0000 (GMT)
-Message-ID: <49f8a616d80344c539b512f8b83590ea281ee54d.camel@linux.ibm.com>
-Subject: Re: [PATCH] IMA: Handle early boot data measurement
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        stephen.smalley.work@gmail.com, casey@schaufler-ca.com
-Cc:     tyhicks@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        sashal@kernel.org, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 25 Aug 2020 13:42:13 -0400
-In-Reply-To: <307617de-b42d-ac52-6e9e-9e0d16bbc20e@linux.microsoft.com>
-References: <20200821231230.20212-1-nramas@linux.microsoft.com>
-         <a7ea2da1f895ee3db4697c00804160acb6db656e.camel@linux.ibm.com>
-         <307617de-b42d-ac52-6e9e-9e0d16bbc20e@linux.microsoft.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-25_08:2020-08-25,2020-08-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- lowpriorityscore=0 spamscore=0 mlxscore=0 phishscore=0 bulkscore=0
- adultscore=0 suspectscore=0 priorityscore=1501 clxscore=1015
- impostorscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008250129
+        Tue, 25 Aug 2020 13:53:49 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7044CC061756
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:53:49 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id l13so716932otp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:53:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=C1x1jyjBhFzCQy8a0EbMsi3qjsuzPMNqfqLhlXLSl7A=;
+        b=k3t5RucNoAwMD2XGqRLYQNKFhfSn1C0q4rGtp52+V7O6X/6WeDPvz2lk7ykbKchVOJ
+         kPCDzRJEovZZRaWBYKOZ/dGYhQ3tvXlh4IelW4WQAJEgZo4RP12M8sTKFFGxEQuMoxFQ
+         80sJYM2wFiGa55KienyTFIuZkrOZn2IPbVq5bd1X4wviQrMZmvMrrYpGp/GrXocAJYyN
+         wK27QECJDk71rlAOvF9ZNCkCTD2Tp3+Eypex5mWXwf/lOH+LZQ1gT1T3JCyYq1rjf0Oy
+         g3Uu6LEGQzfu0o/h01UYs6YqslQvZqhW4AqNXUPIoKn98U1VHlUsuLpR/2g7Mx1YMC7F
+         BpVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=C1x1jyjBhFzCQy8a0EbMsi3qjsuzPMNqfqLhlXLSl7A=;
+        b=mNXIp2moAX7AcKWA0l6o/JOrHdl/bOQsD/tTA1vsR/+8fkVXVnpqKCpa3CvwNrFjjD
+         vM0ypkWyurUKKzPq6LlW0AfxzAFYe/NgRIbO1uqY0b5sbAjX3k9OutLVlEHoQDBDd2ce
+         cDQV3rqO7+SJPWvOL6tY3cekWKccoR2mS2UN3G9/KXJijA3WUX5h/NMb4O+k8dL2uZjZ
+         a1cFemfi4Xz8VlKcTIV07yzS9GXxDy73eUAte40jEjuvyTci2LMClZIK1+S4+1KJd6dq
+         qBCyD6Az+wIN1k7qjCk1UpehaIhTZ5CvCmTId2rFVe3FxqdpyxbFksS/Xd92IYw3SsPh
+         S6pA==
+X-Gm-Message-State: AOAM533VmmvwzURv/hDjamW93XFm79w/DvKew5I2GdC5cUOK1o3ZILDB
+        04Sgcu/vS4Dk38ibdtpz3M5R1Q==
+X-Google-Smtp-Source: ABdhPJz82wuG/Ujs87c1fACgiNfpycutLB/WbcCGDf6CJAe7OGmHiti1fhnkkMUkGutRcWom15/OCA==
+X-Received: by 2002:a9d:27e7:: with SMTP id c94mr1043336otb.360.1598378028593;
+        Tue, 25 Aug 2020 10:53:48 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id b10sm418053oiy.7.2020.08.25.10.53.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 10:53:47 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 12:53:45 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Sibi Sankar <sibis@codeaurora.org>, khilman@kernel.org,
+        ulf.hansson@linaro.org, rjw@rjwysocki.net, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, pavel@ucw.cz,
+        len.brown@intel.com, rnayak@codeaurora.org, dianders@chromium.org,
+        mka@chromium.org
+Subject: Re: [PATCH v2 1/2] PM / Domains: Add GENPD_FLAG_NO_SUSPEND/RESUME
+ flags
+Message-ID: <20200825175345.GC3715@yoga>
+References: <20200821204921.32536-1-sibis@codeaurora.org>
+ <159804608868.334488.2486130699850456264@swboyd.mtv.corp.google.com>
+ <20200824164212.GA3715@yoga>
+ <159834001729.334488.11862381163144726708@swboyd.mtv.corp.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159834001729.334488.11862381163144726708@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-25 at 08:46 -0700, Lakshmi Ramasubramanian wrote:
-> On 8/25/20 8:40 AM, Mimi Zohar wrote:
-> > On Fri, 2020-08-21 at 16:12 -0700, Lakshmi Ramasubramanian wrote:
-> > > The current implementation of early boot measurement in
-> > > the IMA subsystem is very specific to asymmetric keys. It does not
-> > > handle early boot measurement of data from other subsystems such as
-> > > Linux Security Module (LSM), Device-Mapper, etc. As a result data,
-> > > provided by these subsystems during system boot are not measured by IMA.
-> > > 
-> > > Update the early boot key measurement to handle any early boot data.
-> > > Refactor the code from ima_queue_keys.c to a new file ima_queue_data.c.
-> > > Rename the kernel configuration CONFIG_IMA_QUEUE_EARLY_BOOT_KEYS to
-> > > CONFIG_IMA_QUEUE_EARLY_BOOT_DATA so it can be used for enabling any
-> > > early boot data measurement. Since measurement of asymmetric keys is
-> > > the first consumer of early boot measurement, this kernel configuration
-> > > is enabled if IMA_MEASURE_ASYMMETRIC_KEYS and SYSTEM_TRUSTED_KEYRING are
-> > > both enabled.
-> > > 
-> > > Update the IMA hook ima_measure_critical_data() to utilize early boot
-> > > measurement support.
+On Tue 25 Aug 02:20 CDT 2020, Stephen Boyd wrote:
+> Quoting Bjorn Andersson (2020-08-24 09:42:12)
+> > On Fri 21 Aug 14:41 PDT 2020, Stephen Boyd wrote:
+[..]
+> > > I find it odd that this is modeled as a power domain instead of some
+> > > Qualcomm specific message that the remoteproc driver sends to AOSS. Is
+> > > there some sort of benefit the driver gets from using the power domain
+> > > APIs for this vs. using a custom API?
 > > 
-> > Please limit the changes in this patch to renaming the functions and/or
-> > files.  For example, adding "measure_payload_hash" should be a separate
-> > patch, not hidden here.
+> > We need to send "up" and "down" notifications and this needs to happen
+> > at the same time as other standard resources are enabled/disabled.
 > > 
+> > Further more, at the time the all resources handled by the downstream
+> > driver was either power-domains (per above understanding) or clocks, so
+> > it made sense to me not to spin up a custom API.
+> > 
+>  
+> So the benefit is not spinning up a custom API? I'm not Ulf, but it
+> looks like this is hard to rationalize about as a power domain. It
+> doesn't have any benefit to model it this way besides to make it
+> possible to turn on with other power domains.
 > 
-> Thanks for the feedback Mimi.
-> 
-> I'll split this into 2 patches:
-> 
-> PATCH 1: Rename files + rename CONFIG
-> PATCH 2: Update IMA hook to utilize early boot data measurement.
+> This modem remoteproc drivers isn't SoC agnostic anyway, it relies on
+> SMEM APIs, so standing up another small qmp_remoteproc_booted() and
+> qmp_remoteproc_shutdown() API would avoid adding a genpd flag here that
+> probably will never be used outside of this corner-case. There is also
+> some get/put EPROBE_DEFER sort of logic to implement, but otherwise it
+> would be possible to do this outside of power domains, and that seems
+> better given that this isn't really a power domain to start with.
 
-I'm referring to introducing the "measure_payload_hash" flag.  I assume
-this is to indicate whether the buffer should be hashed or not.  
+In later platforms a few new users of the AOSS communication interface
+is introduced that certainly doesn't fit any existing API/framework in
+the kernel. So the plan was to pretty much expose qmp_send() to these
+drivers.
 
-Example 1: ima_alloc_key_entry() and ima_alloc_data_entry(0 comparison
-> -static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
-> -                                                const void *payload,
-> -                                                size_t payload_len)
-> -{
+My worry with using this interface is that we'll probably have to come
+up with some DT binding pieces and probably we'll end up adding yet
+another piece of hard coded information in the remoteproc drivers.
 
+But I'm not against us doing this work in favor of not having to
+introduce a one-off for this corner case.
 
-> +static struct ima_data_entry *ima_alloc_data_entry(const char *event_name,
-> +                                                  const void *payload,
-> +                                                  size_t payload_len,
-> +                                                  const char *event_data,
-> +                                                  enum ima_hooks func,
-> +                                                  bool measure_payload_hash)  <====
-> +{
-
-Example 2:  
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-index a74095793936..65423754765f 100644
---- a/security/integrity/ima/ima_asymmetric_keys.c
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -37,9 +37,10 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-        if (!payload || (payload_len == 0))
-                return;
- 
--       if (ima_should_queue_key())
--               queued = ima_queue_key(keyring, payload, payload_len);
--
-+       if (ima_should_queue_data())
-+               queued = ima_queue_data(keyring->description, payload,
-+                                       payload_len, keyring->description,
-+                                       KEY_CHECK, false);   <===
-        if (queued)
-                return;
-
-But in general, as much as possible function and file name changes
-should be done independently of other changes.
-
-thanks,
-
-Mimi
-
+Regards,
+Bjorn
