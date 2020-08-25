@@ -2,118 +2,86 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44953C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1574EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A93920786
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:23:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="OD7envjW"
+	by mail.kernel.org (Postfix) with ESMTP id DF4B020786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgHYPXT (ORCPT
+        id S1726840AbgHYPX3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:23:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41992 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgHYPXO (ORCPT
+        Tue, 25 Aug 2020 11:23:29 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:49165 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbgHYPXR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:23:14 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A69BC061574;
-        Tue, 25 Aug 2020 08:23:14 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id F31BB9A5;
-        Tue, 25 Aug 2020 17:23:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598368989;
-        bh=+ill/ZwwkhuFoJdnovdknow0Na//rSUqB2CNf3qkpuU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OD7envjWQAJrEAml+0DQ2452TNNYSfRGvyFs6++IeKv77xLHT9sFX9xSd09l+q0nU
-         1KbzerxZC2aFrQgCZbTznmP2opljNjrFaAHjd9JqFJHLwp5UvL2EdOgOOj6TlVQ6e7
-         RYJWa3VGMbigE/9h05xk2/3iUzXFsOU/YdCLUFDE=
-Date:   Tue, 25 Aug 2020 18:22:49 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu-tasks: Fix compilation warning with
- !CONFIG_TASKS_RCU and CONFIG_TINY_RCU
-Message-ID: <20200825152249.GF6767@pendragon.ideasonboard.com>
-References: <20200823030405.22174-1-laurent.pinchart@ideasonboard.com>
- <20200825150222.GP2855@paulmck-ThinkPad-P72>
+        Tue, 25 Aug 2020 11:23:17 -0400
+X-Originating-IP: 90.89.180.255
+Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
+        (Authenticated sender: kevin.lhopital@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 7DB231BF225;
+        Tue, 25 Aug 2020 15:23:10 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 17:23:09 +0200
+From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        yong.deng@magewell.com, p.zabel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 1/7] media: sun6i-csi: Fix the bpp for 10-bit bayer
+ formats
+Message-ID: <20200825172309.6756760d@lhopital-XPS-13-9360>
+In-Reply-To: <20200824165536.u2yzonoskiqu3c5j@gilmour.lan>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+        <20200821145935.20346-2-kevin.lhopital@bootlin.com>
+        <20200824165536.u2yzonoskiqu3c5j@gilmour.lan>
+Organization: bootlin
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200825150222.GP2855@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Hello,
 
-On Tue, Aug 25, 2020 at 08:02:22AM -0700, Paul E. McKenney wrote:
-> On Sun, Aug 23, 2020 at 06:04:05AM +0300, Laurent Pinchart wrote:
-> > Commit 8344496e8b49 ("rcu-tasks: Conditionally compile
-> > show_rcu_tasks_gp_kthreads()") introduced conditional compilation of
-> > several functions, but forgot one occurrence of
-> > show_rcu_tasks_classic_gp_kthread() that causes the compiler to warn of
-> > an unused static function. Fix it.
+Le Mon, 24 Aug 2020 18:55:36 +0200,
+Maxime Ripard <maxime@cerno.tech> a écrit :
+
+> On Fri, Aug 21, 2020 at 04:59:29PM +0200, Kévin L'hôpital wrote:
+> > 10-bit bayer formats are aligned to 16 bits in memory, so this is
+> > what needs to be used as bpp for calculating the size of the
+> > buffers to allocate.
 > > 
-> > Fixes: 8344496e8b49 ("rcu-tasks: Conditionally compile show_rcu_tasks_gp_kthreads()")
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > ---
-> >  kernel/rcu/tasks.h | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-> > index 835e2df8590a..bddf3968c1eb 100644
-> > --- a/kernel/rcu/tasks.h
-> > +++ b/kernel/rcu/tasks.h
-> > @@ -590,7 +590,9 @@ void exit_tasks_rcu_finish(void) __releases(&tasks_rcu_exit_srcu)
-> >  }
-> >  
-> >  #else /* #ifdef CONFIG_TASKS_RCU */
-> > +#ifndef CONFIG_TINY_RCU
-> >  static void show_rcu_tasks_classic_gp_kthread(void) { }
-> > +#endif /* #ifndef CONFIG_TINY_RCU */
-> >  void exit_tasks_rcu_start(void) { }
-> >  void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
-> >  #endif /* #else #ifdef CONFIG_TASKS_RCU */
+> > Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>  
 > 
-> Good catch!!!
+> Generally speaking, you should also explain why it's not an issue for
+> the callers. Depending on what that function is supposed to be doing
+> (returning the padded bits or the padded bits per pixel), your patch
+> could be either right or wrong.
 > 
-> But does the following addition of "static inline" work for you?
+> Since all the callers are using it to generate the number of bytes per
+> line, your patch is indeed correct. But it should be mentionned in the
+> commit log.
+> 
+> Maxime
 
-They do. I initially added a static inline, and realized #ifdef was used
-extensively when trying to find the proper Fixes: tag, so I went for
-that. I don't mind either way, as long as this gets fixed :-)
+All right, I will add this explanation.
 
-> ------------------------------------------------------------------------
-> 
-> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-> index 835e2df..3dc3ffc 100644
-> --- a/kernel/rcu/tasks.h
-> +++ b/kernel/rcu/tasks.h
-> @@ -590,9 +590,9 @@ void exit_tasks_rcu_finish(void) __releases(&tasks_rcu_exit_srcu)
->  }
->  
->  #else /* #ifdef CONFIG_TASKS_RCU */
-> -static void show_rcu_tasks_classic_gp_kthread(void) { }
-> -void exit_tasks_rcu_start(void) { }
-> -void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
-> +static inline void show_rcu_tasks_classic_gp_kthread(void) { }
-> +static inline void exit_tasks_rcu_start(void) { }
-> +static inline void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
->  #endif /* #else #ifdef CONFIG_TASKS_RCU */
->  
->  #ifdef CONFIG_TASKS_RUDE_RCU
+Thank you very much for the review
+
+Kévin 
 
 -- 
-Regards,
-
-Laurent Pinchart
+Kevin L'Hopital, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
