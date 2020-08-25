@@ -2,147 +2,109 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE37C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC860C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D767F20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598390729;
-	bh=exItujBeaLxlYncISKeCFKDXAuGly5nd73rR4bZxERQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lfRootFIZcaZLLXHeyOLWDh6yz48O28axrATDDdVACGnD/J9rac4gwhFGUbUJWr5J
-	 qeF27656Agg62alI11txOYtaTUFFbaTJTPziw2HrIrNSZ/3b8wsE2uAX3PFO5TlIHz
-	 s6x5hHMoWmFomBmi9YszaEcSmcHiEEVcAMOZBdaU=
+	by mail.kernel.org (Postfix) with ESMTP id C42EB20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:25:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XprYI4Hz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbgHYVZ2 (ORCPT
+        id S1726633AbgHYVZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:25:28 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42928 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbgHYVZ1 (ORCPT
+        Tue, 25 Aug 2020 17:25:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:52853 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726158AbgHYVZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 17:25:27 -0400
-Received: by mail-io1-f68.google.com with SMTP id g13so253100ioo.9;
-        Tue, 25 Aug 2020 14:25:26 -0700 (PDT)
+        Tue, 25 Aug 2020 17:25:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598390731;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Jvt61bqhDvrw7d/FiOCmHNvRxtd4yNajkq8FrCplPOM=;
+        b=XprYI4HzIm2FcSTTeIk4MlB3ta/C/T//ZRImvFeQTID0/d4oMrn1bx5CxjdRsiAP2N54QQ
+        t8U3cstYkJX3E1TszWC+HDwwOcA67vR6j5Sw5wGqtYG6diglDKRvLvCMO/fV0BYBorS1k9
+        d/+1LfXxdukmVW+BaF+SAuE8LCVMsT8=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-ah6tPfQLOzmj6sM-3pO3Wg-1; Tue, 25 Aug 2020 17:25:29 -0400
+X-MC-Unique: ah6tPfQLOzmj6sM-3pO3Wg-1
+Received: by mail-qt1-f199.google.com with SMTP id e11so47444qth.21
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 14:25:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=lg+hqZTHAe/BLEKS5GJeE0Rlebpak0rX9eme2hF12Uo=;
-        b=pt8OKLrQxekaTUmYFH9DNinNZAFtaaqhRfmB+7WMVgluxvcJBcD/JE9qqiXryxc85T
-         u97gXtLOAWKcPHNaIsShJS0iR3VsFR2dSXb7HFAJKer+Ka9KGydIgvCin4QRRs6gKEHr
-         /42yNHB/j/EHPXuWBQdYf28rJyMSNWDN8fZpildrM0jSAUmpiEqmr6oZSEjqSoiWhzsY
-         zcHZSDqGdndKMhs4CS//R0mYK9xFnIuP93wEnfELFXLB1eoLhIyUZzsxqj5Fwr29yGni
-         wQny6JPJ8DaX4g12ogovcLr+m/PFH22suTI6+f5y2YnQgdZ5jpd6PPiY2B9HD1u+0hBQ
-         Lpwg==
-X-Gm-Message-State: AOAM532BJ6kKPybOSKiV7NrBKG9KrFG+1cJ/hYd0woP/6UQFTYcgyV+g
-        wXm7r6BIjBd1VgN3fmtGxA==
-X-Google-Smtp-Source: ABdhPJx4FI3lgeilzIN4tG2HvKODEoeqep4y4IVVx4DDUmrw72padF0yehfdQVg1boNW+VeEFuytVA==
-X-Received: by 2002:a05:6638:24cf:: with SMTP id y15mr12384197jat.137.1598390725844;
-        Tue, 25 Aug 2020 14:25:25 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id p18sm123644ils.82.2020.08.25.14.25.23
+        bh=Jvt61bqhDvrw7d/FiOCmHNvRxtd4yNajkq8FrCplPOM=;
+        b=LrW9OEXuPHtawTJ1ujazTaUQjexUQwXd1bwNri9Aqfo7xeQiowCKDmsYWUHZLl1PpH
+         9UBRx/CfFucCLDGDPcQHaLUcJx2Joe4jKBvsr2MG6pnrkGHjukaUjliFfkGRtGNwM6wL
+         i8Olad1Fng7NEmuetSE90uEGA5SE0sNYYkfU335WYeRqAb9nbElhmU6AsD6GCnX3MH60
+         qLc7ovBCeIupf/8nNMs7eBXu+IJGw9TqhKuav4fySVu49aFR9seKoSG6+pTBp0mOt7ff
+         p//kcSPkz5f7/RxtZG2EAH7y8HvPaBtIgxn61JpzKHwPKoAoKuYmRVm/V4IPLvnL2MCv
+         AWGQ==
+X-Gm-Message-State: AOAM531lVM2xbhL5d+NO07txYa7YTuyJBinm1DwwbLYUTcebEQYMSRKq
+        YSlNnRPKURTYDRr2i1kdHzdDwrsgph7mbcZ0307VSlFAqRItVL/JObRqrHFR+VQpVN4CZ6RbSvH
+        3MblpyK359DbLddH37ZzYaOON
+X-Received: by 2002:ac8:4891:: with SMTP id i17mr10119843qtq.109.1598390729152;
+        Tue, 25 Aug 2020 14:25:29 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxw9Y2fG8E7x/3LrI9A6BsgkdM7gRHYBP8FQbC6LUlD17kQrRL2QzruCf3Sfmqr2QzPgTcPVA==
+X-Received: by 2002:ac8:4891:: with SMTP id i17mr10119824qtq.109.1598390728848;
+        Tue, 25 Aug 2020 14:25:28 -0700 (PDT)
+Received: from xz-x1 (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
+        by smtp.gmail.com with ESMTPSA id x124sm89046qkd.72.2020.08.25.14.25.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 14:25:25 -0700 (PDT)
-Received: (nullmailer pid 1359816 invoked by uid 1000);
-        Tue, 25 Aug 2020 21:25:21 -0000
-Date:   Tue, 25 Aug 2020 15:25:21 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Elliot Berman <eberman@codeaurora.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Trilok Soni <tsoni@codeaurora.org>,
-        Prasad Sodagudi <psodagud@codeaurora.org>
-Subject: Re: [RESEND PATCH v1 2/4] dt-bindings: power: reset: Add alternate
- reboot mode format
-Message-ID: <20200825212521.GA1346433@bogus>
-References: <1597776856-12014-1-git-send-email-eberman@codeaurora.org>
- <1597776856-12014-3-git-send-email-eberman@codeaurora.org>
+        Tue, 25 Aug 2020 14:25:28 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 17:25:26 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Tsirkin <mst@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] KVM: x86: KVM_MEM_PCI_HOLE memory
+Message-ID: <20200825212526.GC8235@xz-x1>
+References: <20200807141232.402895-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1597776856-12014-3-git-send-email-eberman@codeaurora.org>
+In-Reply-To: <20200807141232.402895-1-vkuznets@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:54:14AM -0700, Elliot Berman wrote:
-> Current reboot-mode device tree schema does not support reboot commands
-> with spaces in them [1]. Add an optional new node "reboot-mode-names"
-> and "reboot-mode-magic" which add an array of strings and u32s,
-> respectively which would permit any string in this framework.
+On Fri, Aug 07, 2020 at 04:12:29PM +0200, Vitaly Kuznetsov wrote:
+> When testing Linux kernel boot with QEMU q35 VM and direct kernel boot
+> I observed 8193 accesses to PCI hole memory. When such exit is handled
+> in KVM without exiting to userspace, it takes roughly 0.000001 sec.
+> Handling the same exit in userspace is six times slower (0.000006 sec) so
+> the overal; difference is 0.04 sec. This may be significant for 'microvm'
+> ideas.
 
-Kind of a weak justification. The intent was for the names to be a key, 
-not a multi word description which your example seems to be. Is 
-"dm-verity device corrupted" something Android has already standardized 
-on?
+Sorry to comment so late, but just curious... have you looked at what's those
+8000+ accesses to PCI holes and what they're used for?  What I can think of are
+some port IO reads (e.g. upon vendor ID field) during BIOS to scan the devices
+attached.  Though those should be far less than 8000+, and those should also be
+pio rather than mmio.
 
-> 
-> [1]:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/md/dm-verity-target.c?h=v5.5#n255
-> 
-> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
-> ---
->  .../devicetree/bindings/power/reset/reboot-mode.yaml    | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
-> index a6c9102..4ea6b33 100644
-> --- a/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
-> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
-> @@ -19,6 +19,9 @@ description: |
->    the bootloader what to do when the system reboots, and should be named
->    as mode-xxx = <magic> (xxx is mode name, magic should be a non-zero value).
->  
-> +  reboot-mode-magic and reboot-mode-names may be used in addition/instead of
-> +  mode-xxx style.
+If this is only an overhead for virt (since baremetal mmios should be fast),
+I'm also thinking whether we can make it even better to skip those pci hole
+reads.  Because we know we're virt, so it also gives us possibility that we may
+provide those information in a better way than reading PCI holes in the guest?
 
-It should be either/or in my opinion, not both.
+Thanks,
 
-> +
->    For example, modes common Android platform are:
->      - normal: Normal reboot mode, system reboot with command "reboot".
->      - recovery: Android Recovery mode, it is a mode to format the device or update a new image.
-> @@ -32,6 +35,14 @@ properties:
->        description: |
->          Default value to set on a reboot if no command was provided.
->  
-> +  reboot-mode-names:
-> +    $ref: /schemas/types.yaml#/definitions/string-array
-> +    description: List of reboot commands, paired with reboot-mode-magic by index
-> +
-> +  reboot-mode-magic:
+-- 
+Peter Xu
 
-'reboot-modes' would align with normal patterns.
-
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description: List of reboot magic, paired with reboot-mode-names by index
-> +
->  patternProperties:
->    "^mode-.*$":
->      $ref: /schemas/types.yaml#/definitions/uint32
-> @@ -44,4 +55,10 @@ examples:
->        mode-bootloader = <2>;
->        mode-loader = <3>;
->      };
-> +
-> +  - |
-> +    reboot-mode {
-> +      reboot-mode-names = "normal", "bootloader", "dm-verity device corrupted";
-> +      reboot-mode-magic = <0x0>, <0x1>, <0xf>;
-> +    };
->  ...
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
