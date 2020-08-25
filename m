@@ -2,110 +2,186 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB51C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2396BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 137F020738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0841620738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHYMdb (ORCPT
+        id S1727884AbgHYMdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:33:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53218 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726691AbgHYMda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:33:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 88B06AD77;
-        Tue, 25 Aug 2020 12:33:59 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 434B31E1316; Tue, 25 Aug 2020 14:33:24 +0200 (CEST)
-Date:   Tue, 25 Aug 2020 14:33:24 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jan Kara <jack@suse.cz>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] mm: Pass pvec directly to find_get_entries
-Message-ID: <20200825123324.GB32298@quack2.suse.cz>
-References: <20200819150555.31669-1-willy@infradead.org>
- <20200819150555.31669-7-willy@infradead.org>
- <20200824161620.GK24877@quack2.suse.cz>
- <20200824173639.GD17456@casper.infradead.org>
+        Tue, 25 Aug 2020 08:33:39 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10320 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726691AbgHYMdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 08:33:35 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EDFE757303068AF559DB;
+        Tue, 25 Aug 2020 20:33:28 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Tue, 25 Aug 2020
+ 20:33:19 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] net: clean up codestyle for net/ipv4
+Date:   Tue, 25 Aug 2020 08:32:11 -0400
+Message-ID: <20200825123211.33235-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824173639.GD17456@casper.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 24-08-20 18:36:39, Matthew Wilcox wrote:
-> On Mon, Aug 24, 2020 at 06:16:20PM +0200, Jan Kara wrote:
-> > On Wed 19-08-20 16:05:54, Matthew Wilcox (Oracle) wrote:
-> > > All callers of find_get_entries() use a pvec, so pass it directly
-> > > instead of manipulating it in the caller.
-> > > 
-> > > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> > 
-> > Rather than passing pvec to find_get_entries() and then making everybody
-> > use it, won't it more consistent WRT the naming to make everybody use
-> > pagevec_lookup_entries() (which is trivial at this point in the series) and
-> > then rename find_get_entries() to pagevec_lookup_entries()? I.e., I'd prefer
-> > if the final function was called pagevec_lookup_entries() because that is
-> > IMO more consistent with how other functions are named in this area...
-> 
-> It seemed more consistent to me to have everybody using
-> find_get_entries().  To me the pagevec functions:
-> 
-> 1. Are in mm/swap.c (not really sure why)
+This is a pure codestyle cleanup patch. Also add a blank line after
+declarations as warned by checkpatch.pl.
 
-Historical :). AFAIK pagevec abstraction was first created to make swapping
-out and reclaim of pages more effective. It has grown a bit since then...
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ net/ipv4/ip_options.c | 35 +++++++++++++++++++----------------
+ net/ipv4/ip_output.c  |  2 +-
+ net/ipv4/route.c      |  6 +++---
+ 3 files changed, 23 insertions(+), 20 deletions(-)
 
-> 2. Take pvec as the first argument, not the last
-
-Well, yes, I'd keep the argument order to match original
-pagevec_lookup_entries().
-
-> 3. Wrap a find_* function
-> 
-> Whereas the find_* functions:
-> 
-> 1. Are in mm/filemap.c
-> 2. Take mapping as the first argument
-> 3. Manipulate the XArray directly
-
-Agreed.
-
-> We already have functions in filemap which take a pagevec, eg
-> page_cache_delete_batch() and delete_from_page_cache_batch().
-
-Right but those are really pretty internal helper functions so I don't
-think they form or strong precedence.
-
-> So if we're going to merge the two functions, it seems more natural to
-> have it in filemap.c and called find_get_entries(), but I'm definitely
-> open to persuasion on this!
-
-I agree that having non-trivial xarray code in mm/swap.c isn't attractive
-either. Dunno, I dislike the inconsistency between find_get_pages() and
-find_get_entries() you create but they aren't completely consistent anyway
-so I can live with that. Or we can just leave the pagevec_lookup_entries()
-wrapper and the API will stay consistent...
-
-								Honza
+diff --git a/net/ipv4/ip_options.c b/net/ipv4/ip_options.c
+index 948747aac4e2..da1b5038bdfd 100644
+--- a/net/ipv4/ip_options.c
++++ b/net/ipv4/ip_options.c
+@@ -47,32 +47,32 @@ void ip_options_build(struct sk_buff *skb, struct ip_options *opt,
+ 	unsigned char *iph = skb_network_header(skb);
+ 
+ 	memcpy(&(IPCB(skb)->opt), opt, sizeof(struct ip_options));
+-	memcpy(iph+sizeof(struct iphdr), opt->__data, opt->optlen);
++	memcpy(iph + sizeof(struct iphdr), opt->__data, opt->optlen);
+ 	opt = &(IPCB(skb)->opt);
+ 
+ 	if (opt->srr)
+-		memcpy(iph+opt->srr+iph[opt->srr+1]-4, &daddr, 4);
++		memcpy(iph + opt->srr + iph[opt->srr + 1] - 4, &daddr, 4);
+ 
+ 	if (!is_frag) {
+ 		if (opt->rr_needaddr)
+-			ip_rt_get_source(iph+opt->rr+iph[opt->rr+2]-5, skb, rt);
++			ip_rt_get_source(iph + opt->rr + iph[opt->rr + 2] - 5, skb, rt);
+ 		if (opt->ts_needaddr)
+-			ip_rt_get_source(iph+opt->ts+iph[opt->ts+2]-9, skb, rt);
++			ip_rt_get_source(iph + opt->ts + iph[opt->ts + 2] - 9, skb, rt);
+ 		if (opt->ts_needtime) {
+ 			__be32 midtime;
+ 
+ 			midtime = inet_current_timestamp();
+-			memcpy(iph+opt->ts+iph[opt->ts+2]-5, &midtime, 4);
++			memcpy(iph + opt->ts + iph[opt->ts + 2] - 5, &midtime, 4);
+ 		}
+ 		return;
+ 	}
+ 	if (opt->rr) {
+-		memset(iph+opt->rr, IPOPT_NOP, iph[opt->rr+1]);
++		memset(iph + opt->rr, IPOPT_NOP, iph[opt->rr + 1]);
+ 		opt->rr = 0;
+ 		opt->rr_needaddr = 0;
+ 	}
+ 	if (opt->ts) {
+-		memset(iph+opt->ts, IPOPT_NOP, iph[opt->ts+1]);
++		memset(iph + opt->ts, IPOPT_NOP, iph[opt->ts + 1]);
+ 		opt->ts = 0;
+ 		opt->ts_needaddr = opt->ts_needtime = 0;
+ 	}
+@@ -495,26 +495,29 @@ EXPORT_SYMBOL(ip_options_compile);
+ void ip_options_undo(struct ip_options *opt)
+ {
+ 	if (opt->srr) {
+-		unsigned  char *optptr = opt->__data+opt->srr-sizeof(struct  iphdr);
+-		memmove(optptr+7, optptr+3, optptr[1]-7);
+-		memcpy(optptr+3, &opt->faddr, 4);
++		unsigned char *optptr = opt->__data + opt->srr - sizeof(struct iphdr);
++
++		memmove(optptr + 7, optptr + 3, optptr[1] - 7);
++		memcpy(optptr + 3, &opt->faddr, 4);
+ 	}
+ 	if (opt->rr_needaddr) {
+-		unsigned  char *optptr = opt->__data+opt->rr-sizeof(struct  iphdr);
++		unsigned char *optptr = opt->__data + opt->rr - sizeof(struct iphdr);
++
+ 		optptr[2] -= 4;
+-		memset(&optptr[optptr[2]-1], 0, 4);
++		memset(&optptr[optptr[2] - 1], 0, 4);
+ 	}
+ 	if (opt->ts) {
+-		unsigned  char *optptr = opt->__data+opt->ts-sizeof(struct  iphdr);
++		unsigned char *optptr = opt->__data + opt->ts - sizeof(struct iphdr);
++
+ 		if (opt->ts_needtime) {
+ 			optptr[2] -= 4;
+-			memset(&optptr[optptr[2]-1], 0, 4);
+-			if ((optptr[3]&0xF) == IPOPT_TS_PRESPEC)
++			memset(&optptr[optptr[2] - 1], 0, 4);
++			if ((optptr[3] & 0xF) == IPOPT_TS_PRESPEC)
+ 				optptr[2] -= 4;
+ 		}
+ 		if (opt->ts_needaddr) {
+ 			optptr[2] -= 4;
+-			memset(&optptr[optptr[2]-1], 0, 4);
++			memset(&optptr[optptr[2] - 1], 0, 4);
+ 		}
+ 	}
+ }
+diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
+index 61f802d5350c..329a0ab87542 100644
+--- a/net/ipv4/ip_output.c
++++ b/net/ipv4/ip_output.c
+@@ -1351,7 +1351,7 @@ ssize_t	ip_append_page(struct sock *sk, struct flowi4 *fl4, struct page *page,
+ 	if (cork->flags & IPCORK_OPT)
+ 		opt = cork->opt;
+ 
+-	if (!(rt->dst.dev->features&NETIF_F_SG))
++	if (!(rt->dst.dev->features & NETIF_F_SG))
+ 		return -EOPNOTSUPP;
+ 
+ 	hh_len = LL_RESERVED_SPACE(rt->dst.dev);
+diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+index 18c8baf32de5..96fcdfb9bb26 100644
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1079,7 +1079,7 @@ EXPORT_SYMBOL_GPL(ipv4_update_pmtu);
+ 
+ static void __ipv4_sk_update_pmtu(struct sk_buff *skb, struct sock *sk, u32 mtu)
+ {
+-	const struct iphdr *iph = (const struct iphdr *) skb->data;
++	const struct iphdr *iph = (const struct iphdr *)skb->data;
+ 	struct flowi4 fl4;
+ 	struct rtable *rt;
+ 
+@@ -1127,7 +1127,7 @@ void ipv4_sk_update_pmtu(struct sk_buff *skb, struct sock *sk, u32 mtu)
+ 		new = true;
+ 	}
+ 
+-	__ip_rt_update_pmtu((struct rtable *) xfrm_dst_path(&rt->dst), &fl4, mtu);
++	__ip_rt_update_pmtu((struct rtable *)xfrm_dst_path(&rt->dst), &fl4, mtu);
+ 
+ 	if (!dst_check(&rt->dst, 0)) {
+ 		if (new)
+@@ -1168,7 +1168,7 @@ EXPORT_SYMBOL_GPL(ipv4_redirect);
+ 
+ void ipv4_sk_redirect(struct sk_buff *skb, struct sock *sk)
+ {
+-	const struct iphdr *iph = (const struct iphdr *) skb->data;
++	const struct iphdr *iph = (const struct iphdr *)skb->data;
+ 	struct flowi4 fl4;
+ 	struct rtable *rt;
+ 	struct net *net = sock_net(sk);
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.19.1
+
