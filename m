@@ -2,95 +2,106 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B3BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E607A20782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:41:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnbIHLdz"
+	by mail.kernel.org (Postfix) with ESMTP id 22154207BC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:42:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHYPlg (ORCPT
+        id S1726717AbgHYPmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44788 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgHYPld (ORCPT
+        Tue, 25 Aug 2020 11:42:15 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:42508 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgHYPmK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:41:33 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44ACAC061574;
-        Tue, 25 Aug 2020 08:41:32 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b14so11317759qkn.4;
-        Tue, 25 Aug 2020 08:41:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oingoz6Frqg2SQRAjjCpZonRfq5vy9M9TOZAsFU+QTQ=;
-        b=HnbIHLdznZEhj5FyyQQtndeXrdnwHnv+24GTDPoTYMpFbo6q86P02qs6c5vCxCm0tI
-         xhW8JMR45zXRL5TpMnepCjbWZH1c3WHpWVYfkuLtI2ZeNUJOtrThuk00rc2LrnqM2PFR
-         yh2VUfSUNvzAudIwDA2s3AsgkwcDv67xfJJ3pgNEaa3yu3Xqg/OhS3RbPWAdvxIW94Q7
-         NsBArqOH4KfMUTVq+i37Y6uMHVea8YeTtwiDmXO9fSK1xs0dQqT4374porZN3HAjZj6p
-         F0ybDjVe9BCt6quZNAnL7LHm+DxfRhFQoe5NrRr0/3aVD/6ZH9lgmF/lEYjP+RZbjbp0
-         bSew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oingoz6Frqg2SQRAjjCpZonRfq5vy9M9TOZAsFU+QTQ=;
-        b=rXn3iTXOJ2cNJBL28LQ3vRIhjqW2inRS7tdq51wX1Xd+lHQXoF3h+thIetL1C7QW1B
-         u5DOVy0ZsadNpMzvCAYKn2KL5Pna3ZwbEZ9rI7j0COIAcm7B9P476H+iQLPaROc1U27e
-         x0OTrX3swR3PFYiwxtKmwdy/9EyxgMKSVAyHn1pOlTaBaQx2suRub0i0ZiXMywZgSizY
-         ujCPLSKF5yJ22UgaXN+mOBAJVebfCwuqH+5xqxbQJuiw7KPe/HZG2OSDs8+MkaxZ/2iR
-         CidxaaprpvPAnKiL4LCZcqMseIjv4zYZHa+hMHjvDnCibCCWxg1wgNP8n6w7C4qrH45c
-         TkHQ==
-X-Gm-Message-State: AOAM530wRw440HmXwDNzcjsEF8PIAeWmAV1pYddlpfwaznMz5g7vjNsO
-        hVLMqh3RlrZSZ1sOLMoxaiw=
-X-Google-Smtp-Source: ABdhPJxGM3dreknMCsSUoQUGt4iji2RSu+2ULCfK+U+iIMegceSfZvMPRBtgDvJSrOC+fhnHdMbVCw==
-X-Received: by 2002:a37:8b01:: with SMTP id n1mr7072338qkd.62.1598370091385;
-        Tue, 25 Aug 2020 08:41:31 -0700 (PDT)
-Received: from localhost.localdomain ([177.220.172.63])
-        by smtp.gmail.com with ESMTPSA id r6sm13827277qtu.93.2020.08.25.08.41.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 08:41:30 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id B3A12C4BDE; Tue, 25 Aug 2020 12:41:27 -0300 (-03)
-Date:   Tue, 25 Aug 2020 12:41:27 -0300
-From:   'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        'Catalin Marinas' <catalin.marinas@arm.com>,
-        "'kent.overstreet@gmail.com'" <kent.overstreet@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        'Neil Horman' <nhorman@tuxdriver.com>
-Subject: Re: [PATCH 00/13] lib/generic-radix-tree: genradix bug fix and
- optimisations.
-Message-ID: <20200825154127.GB2444@localhost.localdomain>
-References: <21289d79b0474811b21ed8478c465159@AcuMS.aculab.com>
+        Tue, 25 Aug 2020 11:42:10 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1kAb5L-00013W-G2; Tue, 25 Aug 2020 15:42:07 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH] MAINTAINERS: add namespace entry
+Date:   Tue, 25 Aug 2020 17:41:48 +0200
+Message-Id: <20200825154148.1219500-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <21289d79b0474811b21ed8478c465159@AcuMS.aculab.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 02:52:34PM +0000, David Laight wrote:
-> The genradix code is used by SCTP for accessing per-stream data.
-> This means there are quite a lot of lookups but the code wasn't
-> really optimised at all.
+Namespace maintainership has never been formalized which has led to confusion
+when people need to determine where to send patches and who should take a look
+at them. Especially, since we have a dedicated list
+containers.lists.linuxfoundation.org already for a long time. In preparation of
+this patch I added the containers.lists.linuxfoundation.org mailing list to be
+archived on lore.
 
-My test box is down for the moment and will bring it on later today or
-tomorrow, so I can't test it yet. What should we expect as performance
-gains here?
+This will not just make it easier to catch and review patches specific to
+namespaces and containers but also for changes not specifically touching
+namespaces but which nevertheless will have impact on namespaces and
+containers.
 
-  Marcelo
+Add an entry for Eric (who agreed to this) and me and add a first batch of
+files that are relevant. Currently, only a small set of files are added and
+only such namespaces that haven't gotten a separate maintainers entry (e.g.
+time namespaces). I expect this to grow more entries and/or regular expressions
+over time. For now these entries here are sufficient. I intend to route this
+patch upstream soon.
+
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ MAINTAINERS | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f0068bceeb61..272211cdc327 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11892,6 +11892,26 @@ S:	Supported
+ W:	https://www.cspi.com/ethernet-products/support/downloads/
+ F:	drivers/net/ethernet/myricom/myri10ge/
+ 
++NAMESPACES AND CONTAINERS
++M:     Christian Brauner <christian.brauner@ubuntu.com>
++M:     Eric W. Biederman <ebiederm@xmission.com>
++L:     containers.lists.linuxfoundation.org
++S:     Supported
++T:     https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/
++T:     https://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git/
++F:     ipc/namespace.c
++F:     kernel/nsproxy.c
++F:     kernel/pid_namespace.c
++F:     kernel/user_namespace.c
++F:     kernel/utsname.c
++F:     include/linux/nsproxy.h
++F:     include/linux/ipc_namespace.h
++F:     include/linux/ns_common.h
++F:     include/linux/nsproxy.h
++F:     include/linux/pid_namespace.h
++F:     include/linux/user_namespace.h
++F:     include/linux/utsname.h
++
+ NAND FLASH SUBSYSTEM
+ M:	Miquel Raynal <miquel.raynal@bootlin.com>
+ R:	Richard Weinberger <richard@nod.at>
+
+base-commit: d012a7190fc1fd72ed48911e77ca97ba4521bccd
+-- 
+2.28.0
+
