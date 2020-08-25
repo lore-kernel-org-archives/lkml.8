@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80604C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29F7220706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6934520706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgHYGD0 (ORCPT
+        id S1725792AbgHYGDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:03:26 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:35359 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbgHYGDV (ORCPT
+        Tue, 25 Aug 2020 02:03:25 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:39588 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728920AbgHYGDV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 02:03:21 -0400
-Received: by mail-io1-f70.google.com with SMTP id k20so7926494iog.2
+Received: by mail-io1-f72.google.com with SMTP id v10so7932655iot.6
         for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:03:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=GAX+WxcApQwVoEYjf2jsuHhuf7Di/Qgb3L44fflSXGk=;
-        b=Hf2NZ5goAeO0BTUMt0LX5pqmsbZ2uu2zC4d2VoQzHZCvFA9H+LKTz9g6E+uFe22iDA
-         /BH+7DUH+i64T7LHcHrjSiTMdwCyfO8cIJ8TNAWx3BJELa+zTq7Zr6FndoGXPI0Xcagj
-         TjyA/0L7sNdX0JjeCzWSMumxC1rBSALfCETmpS5orP4wDTcJbCtKYwRwNd8kI8+4zaTA
-         Q/WR4MFY951+q93RN+86YlkaiUwAzgEDXQMZs7ASor0sJB78/5jp7/CX9Q7iisaSO8mp
-         PiQQSxmhR7v3vmG6CRolZzfdKcX1hCnw2foRBxCFyAfVc9DmXSyOeNZcXTQDGbfQUicz
-         c6Og==
-X-Gm-Message-State: AOAM5312yp4DtoOuP8SNTaKJDvvnxPomV+an3X0U3JKrK2QZsXPYlUxu
-        BXeKWGXk/9pAtUJr7T/ZJHaLQiIlrU0C9VSmPt/pbjc+cyM/
-X-Google-Smtp-Source: ABdhPJzFN34e3DSn3VN8wzM63LFWTJJ1GMkIAe4bvEKKfPpQ4QfvOPx9A1oBIe451yYPTNGhn1Akh9XuDttG/3qBmkcAg1cI22HY
+        bh=17xNZ3vnGxrE2hDz45jTCe7zoYPZXJ1dqr7yf+KWimw=;
+        b=JJXkxOVvQtoqK0xyqzWK6yGAfhHjrMD4N8W8hCLBvYC2TfEp6pPnXCPCet1U4HjGhM
+         n0RABbvM6G2dzWl0S/jTd/zm1+XG6UHTCWUYRLgaOc2DSWeLass9syRI3ZKKV2r20HMx
+         Lwi21uJfbPqH4+O5dUfgS7IK5aqDCsmzbF8zCeQENhciVu3lhaP+nM+EqlJKH9SMHCve
+         RrpV2RpDmMmUiL/TNw/tCVP2JNPxzgKLt8YwvTcsnPjjJd05KAUG5o56L57VJkB1t+hp
+         xvy9a8qnAAZiKXtd+isUJ/iKD5vzez5Hki8gd4j80kIwofciDa/b9RT1AUBzJaYLv8py
+         miJg==
+X-Gm-Message-State: AOAM532pC3ou5qmPqjH6ObH0WWy6gNfUPJQhgn9ZKfKFQx7jQbCAWoWZ
+        C1EeUPASBXfSG+D7nH03JbiOVDfjF4KfkqVtA15EdJgpDAol
+X-Google-Smtp-Source: ABdhPJxZYqtuRP/BYxt/Fz6d80GNgy8Vw7ytoc/4EptZSHYEDB2g7sQpdAHgh4PMv2XnkLKhxpvlxmGCoqG47Esid1JtefV/KLUp
 MIME-Version: 1.0
-X-Received: by 2002:a92:ad12:: with SMTP id w18mr7339682ilh.218.1598335399868;
- Mon, 24 Aug 2020 23:03:19 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 23:03:19 -0700
+X-Received: by 2002:a6b:15c1:: with SMTP id 184mr7620531iov.130.1598335400096;
+ Mon, 24 Aug 2020 23:03:20 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 23:03:20 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bdc03705adad758d@google.com>
-Subject: KASAN: use-after-free Read in cgroup_path_ns
-From:   syzbot <syzbot+9b1ff7be974a403aa4cd@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        cgroups@vger.kernel.org, christian@brauner.io,
-        daniel@iogearbox.net, hannes@cmpxchg.org, john.fastabend@gmail.com,
-        kafai@fb.com, kpsingh@chromium.org, linux-kernel@vger.kernel.org,
-        lizefan@huawei.com, netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tj@kernel.org, yhs@fb.com
+Message-ID: <000000000000c139e505adad7558@google.com>
+Subject: KASAN: slab-out-of-bounds Read in read_descriptors (2)
+From:   syzbot <syzbot+256e56ddde8b8957eabd@syzkaller.appspotmail.com>
+To:     chenqiwu@xiaomi.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,128 +60,83 @@ syzbot found the following issue on:
 
 HEAD commit:    da2968ff Merge tag 'pci-v5.9-fixes-1' of git://git.kernel...
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=159763ce900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bb68b9e8a8cc842f
-dashboard link: https://syzkaller.appspot.com/bug?extid=9b1ff7be974a403aa4cd
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+console output: https://syzkaller.appspot.com/x/log.txt?x=153afba6900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a0437fdd630bee11
+dashboard link: https://syzkaller.appspot.com/bug?extid=256e56ddde8b8957eabd
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
 Unfortunately, I don't have any reproducer for this issue yet.
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9b1ff7be974a403aa4cd@syzkaller.appspotmail.com
+Reported-by: syzbot+256e56ddde8b8957eabd@syzkaller.appspotmail.com
 
 ==================================================================
-BUG: KASAN: use-after-free in cgroup_path_ns_locked kernel/cgroup/cgroup.c:2220 [inline]
-BUG: KASAN: use-after-free in cgroup_path_ns+0x76/0x100 kernel/cgroup/cgroup.c:2233
-Read of size 8 at addr ffff8880978fc2b8 by task syz-executor.1/9658
+BUG: KASAN: slab-out-of-bounds in read_descriptors+0x25f/0x280 drivers/usb/core/sysfs.c:903
+Read of size 8 at addr ffff88809100b848 by task systemd-udevd/22769
 
-CPU: 1 PID: 9658 Comm: syz-executor.1 Not tainted 5.9.0-rc1-syzkaller #0
+CPU: 1 PID: 22769 Comm: systemd-udevd Not tainted 5.9.0-rc1-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1f0/0x31e lib/dump_stack.c:118
- print_address_description+0x66/0x620 mm/kasan/report.c:383
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
  __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report+0x132/0x1d0 mm/kasan/report.c:530
- cgroup_path_ns_locked kernel/cgroup/cgroup.c:2220 [inline]
- cgroup_path_ns+0x76/0x100 kernel/cgroup/cgroup.c:2233
- proc_cpuset_show+0x5d4/0x660 kernel/cgroup/cpuset.c:3599
- proc_single_show+0xf6/0x180 fs/proc/base.c:775
- seq_read+0x41a/0xce0 fs/seq_file.c:208
- do_loop_readv_writev fs/read_write.c:734 [inline]
- do_iter_read+0x438/0x620 fs/read_write.c:955
- vfs_readv fs/read_write.c:1073 [inline]
- do_preadv+0x17b/0x290 fs/read_write.c:1165
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ read_descriptors+0x25f/0x280 drivers/usb/core/sysfs.c:903
+ sysfs_kf_bin_read+0x196/0x270 fs/sysfs/file.c:99
+ kernfs_file_direct_read fs/kernfs/file.c:213 [inline]
+ kernfs_fop_read+0x2eb/0x590 fs/kernfs/file.c:253
+ vfs_read+0x1df/0x5a0 fs/read_write.c:479
+ ksys_read+0x12d/0x250 fs/read_write.c:607
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d4d9
-Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f8a3ac8fc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000127
-RAX: ffffffffffffffda RBX: 0000000000025780 RCX: 000000000045d4d9
-RDX: 00000000000003da RSI: 00000000200017c0 RDI: 0000000000000004
-RBP: 000000000118cf90 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cf4c
-R13: 00007fffc35f745f R14: 00007f8a3ac909c0 R15: 000000000118cf4c
+RIP: 0033:0x7f6f8ba80210
+Code: 73 01 c3 48 8b 0d 98 7d 20 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d b9 c1 20 00 00 75 10 b8 00 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 4e fc ff ff 48 89 04 24
+RSP: 002b:00007ffecd2e3168 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 00005600a56b04a0 RCX: 00007f6f8ba80210
+RDX: 0000000000010011 RSI: 00007ffecd2e3190 RDI: 0000000000000007
+RBP: 0000000000000000 R08: 00005600a56b5d00 R09: 0000000000000001
+R10: 0000000000000073 R11: 0000000000000246 R12: 00005600a56a6690
+R13: 0000000000000007 R14: 00007ffecd2e3190 R15: 0000000000000000
 
-Allocated by task 1:
- kasan_save_stack mm/kasan/common.c:48 [inline]
+Allocated by task 29772:
+ kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
  kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc+0x100/0x130 mm/kasan/common.c:461
- kmem_cache_alloc_trace+0x1f6/0x2f0 mm/slab.c:3550
- kmalloc include/linux/slab.h:554 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+ __do_kmalloc mm/slab.c:3655 [inline]
+ __kmalloc+0x1a8/0x320 mm/slab.c:3664
+ kmalloc include/linux/slab.h:559 [inline]
  kzalloc include/linux/slab.h:666 [inline]
- cgroup1_root_to_use kernel/cgroup/cgroup-v1.c:1183 [inline]
- cgroup1_get_tree+0x747/0xae0 kernel/cgroup/cgroup-v1.c:1207
- vfs_get_tree+0x88/0x270 fs/super.c:1547
- do_new_mount fs/namespace.c:2875 [inline]
- path_mount+0x179d/0x29e0 fs/namespace.c:3192
- do_mount fs/namespace.c:3205 [inline]
- __do_sys_mount fs/namespace.c:3413 [inline]
- __se_sys_mount+0x126/0x180 fs/namespace.c:3390
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 8157:
- kasan_save_stack mm/kasan/common.c:48 [inline]
- kasan_set_track+0x3d/0x70 mm/kasan/common.c:56
- kasan_set_free_info+0x17/0x30 mm/kasan/generic.c:355
- __kasan_slab_free+0xdd/0x110 mm/kasan/common.c:422
- __cache_free mm/slab.c:3418 [inline]
- kfree+0x10a/0x220 mm/slab.c:3756
- process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
- worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
- kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
+ usb_get_configuration+0x186/0x3840 drivers/usb/core/config.c:887
+ usb_enumerate_device drivers/usb/core/hub.c:2387 [inline]
+ usb_new_device+0x387/0x6d0 drivers/usb/core/hub.c:2523
+ hub_port_connect drivers/usb/core/hub.c:5208 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
+ port_event drivers/usb/core/hub.c:5494 [inline]
+ hub_event+0x2033/0x3e40 drivers/usb/core/hub.c:5576
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
 
-Last call_rcu():
- kasan_save_stack+0x27/0x50 mm/kasan/common.c:48
- kasan_record_aux_stack+0x7b/0xb0 mm/kasan/generic.c:346
- __call_rcu kernel/rcu/tree.c:2894 [inline]
- call_rcu+0x139/0x840 kernel/rcu/tree.c:2968
- queue_rcu_work+0x74/0x90 kernel/workqueue.c:1747
- process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
- worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
- kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-Second to last call_rcu():
- kasan_save_stack+0x27/0x50 mm/kasan/common.c:48
- kasan_record_aux_stack+0x7b/0xb0 mm/kasan/generic.c:346
- __call_rcu kernel/rcu/tree.c:2894 [inline]
- call_rcu+0x139/0x840 kernel/rcu/tree.c:2968
- __percpu_ref_switch_to_atomic lib/percpu-refcount.c:192 [inline]
- __percpu_ref_switch_mode+0x2c1/0x4f0 lib/percpu-refcount.c:237
- percpu_ref_kill_and_confirm+0x8f/0x130 lib/percpu-refcount.c:350
- percpu_ref_kill include/linux/percpu-refcount.h:136 [inline]
- cgroup_kill_sb+0xea/0x160 kernel/cgroup/cgroup.c:2152
- deactivate_locked_super+0xa7/0xf0 fs/super.c:335
- cleanup_mnt+0x432/0x4e0 fs/namespace.c:1118
- task_work_run+0x137/0x1c0 kernel/task_work.c:141
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
- exit_to_user_mode_prepare+0xfa/0x1b0 kernel/entry/common.c:166
- syscall_exit_to_user_mode+0x5e/0x1a0 kernel/entry/common.c:241
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff8880978fc000
- which belongs to the cache kmalloc-8k of size 8192
-The buggy address is located 696 bytes inside of
- 8192-byte region [ffff8880978fc000, ffff8880978fe000)
+The buggy address belongs to the object at ffff88809100b840
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 8 bytes inside of
+ 32-byte region [ffff88809100b840, ffff88809100b860)
 The buggy address belongs to the page:
-page:00000000ab04f694 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x978fc
-head:00000000ab04f694 order:2 compound_mapcount:0 compound_pincount:0
-flags: 0xfffe0000010200(slab|head)
-raw: 00fffe0000010200 ffffea00025e3108 ffffea00025e4808 ffff8880aa440a00
-raw: 0000000000000000 ffff8880978fc000 0000000100000001 0000000000000000
+page:00000000227ef938 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88809100bfc1 pfn:0x9100b
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00015c1948 ffffea00007fcd88 ffff8880aa040100
+raw: ffff88809100bfc1 ffff88809100b000 000000010000003f 0000000000000000
 page dumped because: kasan: bad access detected
 
 Memory state around the buggy address:
- ffff8880978fc180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880978fc200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8880978fc280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                        ^
- ffff8880978fc300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880978fc380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809100b700: 05 fc fc fc fc fc fc fc fa fb fb fb fc fc fc fc
+ ffff88809100b780: 05 fc fc fc fc fc fc fc fa fb fb fb fc fc fc fc
+>ffff88809100b800: 06 fc fc fc fc fc fc fc 00 fc fc fc fc fc fc fc
+                                              ^
+ ffff88809100b880: 00 00 00 fc fc fc fc fc 00 04 fc fc fc fc fc fc
+ ffff88809100b900: 00 05 fc fc fc fc fc fc 05 fc fc fc fc fc fc fc
 ==================================================================
 
 
