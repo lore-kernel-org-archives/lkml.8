@@ -2,193 +2,174 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7513C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:12:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE89C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 377B620786
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E69820782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:12:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkjmavjP"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="S7QxLRcg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgHYQM0 (ORCPT
+        id S1727008AbgHYQMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49630 "EHLO
+        Tue, 25 Aug 2020 12:12:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgHYQMZ (ORCPT
+        with ESMTP id S1726936AbgHYQMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:12:25 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E43BC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:12:25 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id 12so6727995lfb.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:12:24 -0700 (PDT)
+        Tue, 25 Aug 2020 12:12:49 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27A69C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:12:49 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id o4so9271012wrn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:12:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=saPvfIvD3UMiUrJX+hEXlu7O1j8z2YbvbI+DUjiVJNM=;
-        b=GkjmavjP3rFLPUh7ERkUiQ3MTbnPISTkkG3/G7ZjJ8OjE9Q516ySPQp2Y0XkyG1X+0
-         rx/VYdPcmEOFf34RzKu6+ktfpd2LNq5Ar47qlRJ2Hf7/V5Elg5KgIEA45o+UyVieXt8d
-         EctseRv55mfXHOecsBUyNGmnleWN00GvchD8HYxMAjLiJi3w1rLt4q/SuuTPgw3y+6Py
-         GrHL9C8EQNJCP8Rq31pzab2+Mr6+5o1V7nh9NidGp03LP3eAJRb8UH6VkfJiCzOmvdIl
-         zUlCYnl+LtFKGpYCEvjwQ0TsmyUiO1isxYmA1pSZzXRPmTgL7frBL5rH/UtEZKs9MTSK
-         qZKw==
+         :cc:content-transfer-encoding;
+        bh=KeeelhNThceuvAVrIb7QCi1JJ9d3yQ1o1h3TMUjstBY=;
+        b=S7QxLRcgwkhCJDm0molIIQh/dn5C9AQSNgzhFglNsY7kPwH2/+80ldDjv7YnuqoMzs
+         TwQZ07quOL4IkCLdH0Paelpi14P7DuGaU7agZf42f0q3v31hZcuGGD5tthub1D4GE+Y8
+         fD/5vSOIR9Oy6im/x/qm/TVCyFvLuVVWCDjqXbuM/ihaS5wRz+6gKLKAeDO4+E5amTtD
+         08jjNie+BbGpGfFRjGu0XklY39zemCle9Gok1IWrLgM6GJfNzXV7NkqMCoU/xivZcqIy
+         Ta95hIzAITgFujSHhTT9SJtAUda7jWZ3PKGDjwJEAzWJ1AS1QBp9VuvtJ3/Io8CWDs3b
+         ITWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=saPvfIvD3UMiUrJX+hEXlu7O1j8z2YbvbI+DUjiVJNM=;
-        b=aj28R1UNRV1F7C84vzcNuA4nQZjAG/aiKdA/5IsuWdPBtAYcTVsxPBzAdYadn23qbc
-         JKVDu+UYFQ6Lct+ErHm1RU3/wREk+oCeSrhM72JRHbOT+9js1dsbvyjWcCtv79oIEb8O
-         k9Junkj8vJGVuuxOOLTPdiHD5c4e6BuUD1Me2uQV6bWkwHW7FOmho9LOJef4ZFCaIHuP
-         ohdPlA9q0YxoFwC6Z+eScpHmqr8ymtmmkpwgALrjIVa0c9tDMbJskE9MLRQlKZZF6Or7
-         fQ9selvcfvyJXESW/FI4jnJpZSe8C3FaZdYGwwAWrV3S8WQ5U6GqDBu+/5AuUH32a5+A
-         pgPA==
-X-Gm-Message-State: AOAM531Qehea4VEmSBmyczht3yFmLbIAQjEbA29ps7bvMyYqIkTDPTD6
-        KmQ0pGHbdFssSAipn4GJXgZw7YE4gjHVJv24Qgo=
-X-Google-Smtp-Source: ABdhPJz5w0/dYWgaBX6h0ZClaS4JS+bVVK48jlQu9ByUSF25DFxdqr6XgPUeX/DuCxXZ34qdoElfHCF5QE5xKW7WQSQ=
-X-Received: by 2002:a19:86c3:: with SMTP id i186mr5373441lfd.59.1598371943463;
- Tue, 25 Aug 2020 09:12:23 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KeeelhNThceuvAVrIb7QCi1JJ9d3yQ1o1h3TMUjstBY=;
+        b=ajyNOdWsLUeHb5xqPt+wYQpyDPPYkvASoSPG6DhCJ1xUa91tjvwSna0nKL7xjzZNh4
+         JDJJyFvOw6SyaOky3UHPdynnuJxPcH7z4e/wMCBIqRauanEa6L2TO/2XsdgGyGwMiqZ7
+         9da7zvkiHmWpMtXTprKFutb1v7ymt1ipvXCiSyPdu+yT1g+FP/7Yic/dDJd4zZX2Q9su
+         gjJq3Z+CbADpfUnvFWEorqP0Jg4fRWkn1JRrfC2ES8goKHyaXXFLUEYiwaVF9aquNkwc
+         r8RgFBE9m0I8MoNnmxHkvSaBLXHjwXBX2ZZb2jGAcpqpabCfzN6D8ff1Daey4yk3bw7n
+         tqKw==
+X-Gm-Message-State: AOAM533+l92FGT9Ua2xti0Wl44HuUkC2YPkQCrCQGtuTHFXZvbGOlEUg
+        Is5e7CrHBRpJIwqEfPup35Aq1MDB0iRXFTvGEDSfbB0eBg4jTQ==
+X-Google-Smtp-Source: ABdhPJzQZxnWRfCdB7Aq5tK35TRKd8mSWELzn/tMC3PNCV6e42nHkaD8USRkcmfS9b6KV0sRB4lAMjU6iyq9esdm1To=
+X-Received: by 2002:adf:9283:: with SMTP id 3mr11194937wrn.70.1598371967713;
+ Tue, 25 Aug 2020 09:12:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200825023142.2561220-1-rodrigosiqueiramelo@gmail.com> <20200825023142.2561220-2-rodrigosiqueiramelo@gmail.com>
-In-Reply-To: <20200825023142.2561220-2-rodrigosiqueiramelo@gmail.com>
-From:   Melissa Wen <melissa.srw@gmail.com>
-Date:   Tue, 25 Aug 2020 13:12:12 -0300
-Message-ID: <CAJeY4oFtusegHafy8oSYE2Z3T8YCYE6TdMiOHr9gnxV8B=9V8w@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] drm/vkms: Decouple crc operations from composer
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Simon Ser <contact@emersion.fr>,
-        Leandro Ribeiro <leandro.ribeiro@collabora.com>,
-        daniels@collabora.com, Emil Velikov <emil.l.velikov@gmail.com>
+References: <CAOp6jLYrwMqV=7hmxgdZUdDZ2aeUB27TTHm=j6cQT7C10Muhww@mail.gmail.com>
+ <7DF88F22-0310-40C9-9DA6-5EBCB4877933@amacapital.net> <CALCETrUrvrQNw6dPau_rtHjA_YuCVdCTWYd4dsdcvcGsOaspmg@mail.gmail.com>
+ <b0813ec5-b163-cc11-bfc9-e9d08c9c4ff2@zytor.com> <CALCETrXvgb257CWnaA1NgUUp3x08+gJBEOQh4o9OYkB-RvAo1A@mail.gmail.com>
+ <CAP045Ao6xBquwSDoCLzzNbEW1Lr969d+D0jQQ2Zb4pX3B77-Xw@mail.gmail.com>
+In-Reply-To: <CAP045Ao6xBquwSDoCLzzNbEW1Lr969d+D0jQQ2Zb4pX3B77-Xw@mail.gmail.com>
+From:   Andy Lutomirski <luto@amacapital.net>
+Date:   Tue, 25 Aug 2020 09:12:36 -0700
+Message-ID: <CALCETrUgm-Cph4fwqk108VHZPLuM7XWL=nff-xB+hc+hiDrqsg@mail.gmail.com>
+Subject: Re: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on
+ a 64 bit system
+To:     Kyle Huey <me@kylehuey.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Robert O'Callahan" <robert@ocallahan.org>,
+        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 11:31 PM Rodrigo Siqueira
-<rodrigosiqueiramelo@gmail.com> wrote:
+> On Aug 24, 2020, at 5:46 PM, Kyle Huey <me@kylehuey.com> wrote:
 >
-> In the vkms_composer.c, some of the functions related to CRC and compose
-> have interdependence between each other. This patch reworks some
-> functions inside vkms_composer to make crc and composer computation
-> decoupled.
+> =EF=BB=BFOn Mon, Aug 24, 2020 at 5:31 PM Andy Lutomirski <luto@kernel.org=
+> wrote:
+>>
+>>> On Mon, Aug 24, 2020 at 4:52 PM H. Peter Anvin <hpa@zytor.com> wrote:
+>>>
+>>> On 2020-08-24 14:10, Andy Lutomirski wrote:
+>>>>
+>>>> PTRACE_READ_SEGMENT_DESCRIPTOR to read a segment descriptor.
+>>>>
+>>>> PTRACE_SET_FS / PTRACE_SET_GS: Sets FS or GS and updates the base acco=
+rdingly.
+>>>>
+>>>> PTRACE_READ_SEGMENT_BASE: pass in a segment selector, get a base out.
+>>>> You would use this to populate the base fields.
+>>>>
+>>>> or perhaps a ptrace SETREGS variant that tries to preserve the old
+>>>> base semantics and magically sets the bases to match the selectors if
+>>>> the selectors are nonzero.
+>>>>
+>>>> Do any of these choices sound preferable to any of you?
+>>>>
+>>>
+>>> My suggestion would be to export the GDT and LDT as a (readonly or most=
+ly
+>>> readonly) regset(s) rather than adding entirely new operations. We coul=
+d allow
+>>> the LDT and the per-thread GDT entries to be written, subject to the sa=
+me
+>>> limitations as the corresponding system calls.
+>>>
+>>
+>> That seems useful, although we'd want to do some extensive
+>> sanitization of the GDT.  But maybe it's obnoxious to ask Kyle and
+>> Robert to parse the GDT, LDT, and selector just to emulate the
+>> demented pre-5.9 ptrace() behavior.
+>>
+>> --Andy
 >
-> This patch is preparation work for making vkms able to support new
-> features.
+> We've already addressed the main issue on rr's side[0]. The only
+> outstanding issue is that if you record a trace with 32 bit programs
+> on a pre-5.9 64 bit kernel and then try to replay it on 5.9 it won't
+> work. If you hit this case rr will print an error message telling you
+> to boot your 5.9 kernel with nofsgsbase if you want to replay the
+> trace. I think that's probably sufficient. 32 bit is legacy stuff we
+> don't care that much about anyways, replaying traces on a different
+> kernel/machine has always been a bit dicey, and if you absolutely must
+> do it there is a workaround. I'm not inclined to do much work to
+> support the narrow remaining case.
 >
-> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> ---
->  drivers/gpu/drm/vkms/vkms_composer.c | 49 ++++++++++++++++------------
->  1 file changed, 29 insertions(+), 20 deletions(-)
+> - Kyle
 >
-> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-> index 4f3b07a32b60..4d8bc04bb6ee 100644
-> --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> @@ -108,35 +108,31 @@ static void compose_cursor(struct vkms_composer *cursor_composer,
->               primary_composer, cursor_composer);
->  }
->
-> -static uint32_t _vkms_get_crc(struct vkms_composer *primary_composer,
-> -                             struct vkms_composer *cursor_composer)
-> +static int compose_planes(void **vaddr_out,
-> +                         struct vkms_composer *primary_composer,
-> +                         struct vkms_composer *cursor_composer)
->  {
->         struct drm_framebuffer *fb = &primary_composer->fb;
->         struct drm_gem_object *gem_obj = drm_gem_fb_get_obj(fb, 0);
->         struct vkms_gem_object *vkms_obj = drm_gem_to_vkms_gem(gem_obj);
-> -       void *vaddr_out = kzalloc(vkms_obj->gem.size, GFP_KERNEL);
-> -       u32 crc = 0;
->
-> -       if (!vaddr_out) {
-> -               DRM_ERROR("Failed to allocate memory for output frame.");
-> -               return 0;
-> +       if (!*vaddr_out) {
-> +               *vaddr_out = kzalloc(vkms_obj->gem.size, GFP_KERNEL);
-> +               if (!*vaddr_out) {
-> +                       DRM_ERROR("Cannot allocate memory for output frame.");
-> +                       return -ENOMEM;
-> +               }
->         }
->
-> -       if (WARN_ON(!vkms_obj->vaddr)) {
-> -               kfree(vaddr_out);
-> -               return crc;
-> -       }
-> +       if (WARN_ON(!vkms_obj->vaddr))
-> +               return -EINVAL;
->
-> -       memcpy(vaddr_out, vkms_obj->vaddr, vkms_obj->gem.size);
-> +       memcpy(*vaddr_out, vkms_obj->vaddr, vkms_obj->gem.size);
->
->         if (cursor_composer)
-> -               compose_cursor(cursor_composer, primary_composer, vaddr_out);
-> +               compose_cursor(cursor_composer, primary_composer, *vaddr_out);
->
-> -       crc = compute_crc(vaddr_out, primary_composer);
-> -
-> -       kfree(vaddr_out);
-> -
-> -       return crc;
-> +       return 0;
->  }
->
->  /**
-> @@ -157,9 +153,11 @@ void vkms_composer_worker(struct work_struct *work)
->         struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
->         struct vkms_composer *primary_composer = NULL;
->         struct vkms_composer *cursor_composer = NULL;
-> +       void *vaddr_out = NULL;
->         u32 crc32 = 0;
->         u64 frame_start, frame_end;
->         bool crc_pending;
-> +       int ret;
->
->         spin_lock_irq(&out->composer_lock);
->         frame_start = crtc_state->frame_start;
-> @@ -183,14 +181,25 @@ void vkms_composer_worker(struct work_struct *work)
->         if (crtc_state->num_active_planes == 2)
->                 cursor_composer = crtc_state->active_planes[1]->composer;
->
-> -       if (primary_composer)
-> -               crc32 = _vkms_get_crc(primary_composer, cursor_composer);
-> +       if (!primary_composer)
-> +               return;
-> +
-> +       ret = compose_planes(&vaddr_out, primary_composer, cursor_composer);
-> +       if (ret) {
-> +               if (ret == -EINVAL)
-> +                       kfree(vaddr_out);
-> +               return;
-> +       }
-> +
-> +       crc32 = compute_crc(vaddr_out, primary_composer);
->
->         /*
->          * The worker can fall behind the vblank hrtimer, make sure we catch up.
->          */
->         while (frame_start <= frame_end)
->                 drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
-> +
-> +       kfree(vaddr_out);
->  }
->
->  static const char * const pipe_crc_sources[] = {"auto"};
-> --
-> 2.28.0
->
+> [0] Namely, we're tracking fs/gsbase for 32 bit tracees on 64 bit
+> kernels where the fs/gsbase instructions work in new recordings now:
+> https://github.com/mozilla/rr/commit/c3292c75dbd8c9ce5256496108965c044242=
+4eef
 
-Tested-by: Melissa Wen <melissa.srw@gmail.com>
+
+I don=E2=80=99t like this at all. Your behavior really shouldn=E2=80=99t de=
+pend on
+whether the new instructions are available.  Also, some day I would
+like to change Linux to have the new behavior even if FSGSBASE
+instructions are not available, and this will break rr again.  (The
+current !FSGSBASE behavior is an ugly optimization of dubious value.
+I would not go so far as to describe it as correct.)
+
+I would suggest you do one of the following things:
+
+1. Use int $0x80 directly to load 32-bit regs into a child.  This
+might dramatically simplify your code and should just do the right
+thing.
+
+2. Something like your patch but make it unconditional.
+
+3. Ask for, and receive, real kernel support for setting FS and GS in
+the way that 32-bit code expects.
+
+Also, for other x86 kernel folks playing along, WTF is
+task_user_regset_vew() about?  It has eight callers, in two groups,
+and as far as I can tell every single call returns &user_x86_64_view
+because it's only called in the 64-bit and x32 syscall paths, and
+those are only reachable using the 64-bit SYSCALL instruction.  I
+suppose the exception is if someone ptraces the ptracer and changes CS
+at syscall entry.  In any case, if task_user_regset_view() ever
+returns anything else, the code will malfunction.  I'll send a patch
+to get rid of it.
+
+--Andy
