@@ -2,64 +2,67 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B161EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3437320706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4AF20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:32:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="ILiabPYE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="PAfzZk/j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgHYXcF (ORCPT
+        id S1726793AbgHYXcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:32:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32994 "EHLO
+        Tue, 25 Aug 2020 19:32:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbgHYXcC (ORCPT
+        with ESMTP id S1726737AbgHYXcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:32:02 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69407C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:32:02 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id o8so320829ybg.16
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:32:02 -0700 (PDT)
+        Tue, 25 Aug 2020 19:32:06 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34AA9C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:32:06 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id u128so318724ybg.17
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:32:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=mTR23obn3++N19RG/EtHRUQ3yC7sF+wMDpRoTOlZX0k=;
-        b=ILiabPYE0me1HApwqMZ2+3BMmFww6n1ALOpdSBbDFbzKlr8HpfRhnjA+ISbcuuCAQR
-         9T01Gt5pqwAn+LaofE7+YcT/A8YfaoOaSm1n03/ZcmKrAq4bY8iQ3M5U1xY70qywVrOD
-         /cvdd25kfRWSFfgRbHhF4e+h85P2hLdeSwto5EXMHXa8Fqk3Hkwai09/435nJcz7/Wxz
-         9oO+z1NaMwqw3BEs1OEnxEY05fEMo4zXU6l/2iQLtpIr1W0KYbfx7WWk8sLHtkoJF6mx
-         Lyn4XwjPSRbR2cL2swtxooPGCKUbsCemeyS7KjzH8jazjYlc/M/euZDEP39GlCSuEHAu
-         Si3A==
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=kaUkInMqAgQ2Lzd+PreohlLW19JNhR91SpBMUzQm9p0=;
+        b=PAfzZk/j+abf2vwqzxAFT3gplmX2gT7/B1H66vAmV6b/W/XwPJgtb8FtPyZDKENpe8
+         tcViB/VjdULapoXGX1+NZ10q95Z0GApG28ULg75ofb7vBDHgsoJhMdvc85pLcfMtZV3L
+         NbQgmUdXZ769CN8kuqLK6y3plvqnQpVXo8L7aY+pISgsrRsqa49ETbVSXd3YHuYj3/O5
+         D8VnYchfeiM0YGhbU/MdVsCVzZ63RvbBxgB3ez4T3MdzdkvHpNCFSY4brrYZ+kLf0xFq
+         nTxRTQVpWpKkgEg7h+fvY7ADfBsXvcDBMd268eE1GeY7hCANlw9uRxLwYupX58/Sc4Fp
+         wbBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=mTR23obn3++N19RG/EtHRUQ3yC7sF+wMDpRoTOlZX0k=;
-        b=m1mVZsYObNT3rZIW9mFZj0j0nfHcb8HnMQn7Afma9B1HmYCi24ZKGYJhD2VPUJ9pu4
-         WMPQWuiIZXS9ZXtusTTxbToEaZ69PgL5gZLFxWTW2L/lvPNcfqschFt0Qm3uJXAz0fR6
-         z++vSV4W2xlf41g+PcCiwQkLvKUn//AfbpdD1JBwLrNkhCHt7EWXjDRaEg2dxQ6jK1B+
-         3kdUmrySW8UFwctAEwXXXWVhnD8/Lt58Ee8m5ufp7+ULIyyFFIWC1VPOeRjIjDTLj5vC
-         viIP0sIFTy/0td64oK34oa+V1zmRfTp4KDH0mjjTh9YLoMZ9HzlmEACe55XK0apbpCzQ
-         Ls7Q==
-X-Gm-Message-State: AOAM5320sE5G6QxbjgPBatnzvdFN3rPdMoHftj4PTyB6+WhUQXFEt8Y1
-        ocTJdP/LDCUTXJw3d3xChdU22FvURb1qQ3tsvnpN
-X-Google-Smtp-Source: ABdhPJwwLjoeH289Grt/z9y7LeTjH6etNBMtETY13Iy6KtTX8eH2Poc0k3x27Uzj1hmt6b9xngXhpGRYYx+hu4S5cLCO
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=kaUkInMqAgQ2Lzd+PreohlLW19JNhR91SpBMUzQm9p0=;
+        b=Q3GrryJtmxypu84hKw59k1cgL8zMYnH2nsh4Awc5R8jwVo97Vg3tcQtdN0lGFpQ4Od
+         /z0QJfggOcCSZU9cmbV8/4iKjpfzkQPybEn1gH6H8tA+JhU8bADwdA2tOzSk326Cd1p3
+         +OcDl6rTHOO6kpwKQBem57SlWnNfuuTXmR2R0kCvzLGjDNz/bOZJlYKIttYkvUSZx5fM
+         QX1hvfzPPVgLmdaQGf4Cu/3XhQXnDEy5m2rJZlM1TEUSkQS5GXrCHq73cp3WMhuDFAz4
+         xAD0eWW0CbwI2cxJqi34WXj5rApIIXUi3oB9H50e9/puVfOR57mHDwXh73w+uRbh6+Ct
+         rmsQ==
+X-Gm-Message-State: AOAM532PmKQeYVde9wWzrSyzTl+6O40NavAniZGaXR1FThLWkQxyFBTs
+        rz95LSgHR/r0GQZfJJulbme9+laZhKSiyVtWjf45
+X-Google-Smtp-Source: ABdhPJxknta/s/oAGl30UwT+/4w1jNnjt42KUayAVjKNAjWvqKRJyEtmfW6BXOaX6IuAsQ4X260dPO/cE6HnQxsUjGv9
 X-Received: from danielwinkler-linux.mtv.corp.google.com ([2620:15c:202:201:f693:9fff:fef4:4e59])
- (user=danielwinkler job=sendgmr) by 2002:a25:c68b:: with SMTP id
- k133mr18907196ybf.491.1598398320460; Tue, 25 Aug 2020 16:32:00 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 16:31:49 -0700
-Message-Id: <20200825233151.1580920-1-danielwinkler@google.com>
+ (user=danielwinkler job=sendgmr) by 2002:a5b:70d:: with SMTP id
+ g13mr17995321ybq.160.1598398325448; Tue, 25 Aug 2020 16:32:05 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 16:31:50 -0700
+In-Reply-To: <20200825233151.1580920-1-danielwinkler@google.com>
+Message-Id: <20200825163120.1.I1f7e93bc6bad468fdc24fad319de8c32621a49a7@changeid>
 Mime-Version: 1.0
+References: <20200825233151.1580920-1-danielwinkler@google.com>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH 0/2] Bluetooth: Report extended adv capabilities to userspace
+Subject: [PATCH 1/2] bluetooth: Report num supported adv instances for hw offloading
 From:   Daniel Winkler <danielwinkler@google.com>
 To:     linux-bluetooth@vger.kernel.org
 Cc:     chromeos-bluetooth-upstreaming@chromium.org,
@@ -75,31 +78,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Here we make sure we properly report the number of supported
+advertising slots when we are using hardware offloading. If no
+hardware offloading is available, we default this value to
+HCI_MAX_ADV_INSTANCES for use in software rotation as before.
 
-Hi Maintainers,
+This change has been tested on kukui (no ext adv) and hatch (ext adv)
+chromebooks by verifying "SupportedInstances" shows 5 (the default) and
+6 (slots supported by controller), respectively.
 
-This series improves the kernel/controller support that is reported
-to userspace for the following extended advertising features:
+Signed-off-by: Daniel Winkler <danielwinkler@google.com>
+---
 
-1. If extended advertising is available, the number of hardware slots
-is used and reported, rather than the fixed default of 5. If no hardware
-support is available, default is used as before for software rotation.
+ net/bluetooth/hci_core.c | 2 +-
+ net/bluetooth/mgmt.c     | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-2. New flags indicating general hardware offloading and ability to
-set tx power level. These are kept as two separate flags because in
-the future vendor commands may allow tx power to be set without
-hardware offloading support.
-
-
-Daniel Winkler (2):
-  bluetooth: Report num supported adv instances for hw offloading
-  bluetooth: Add MGMT capability flags for tx power and ext advertising
-
- include/net/bluetooth/mgmt.h | 2 ++
- net/bluetooth/hci_core.c     | 2 +-
- net/bluetooth/mgmt.c         | 8 +++++---
- 3 files changed, 8 insertions(+), 4 deletions(-)
-
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 68bfe57b66250f..500ab478769508 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -2963,7 +2963,7 @@ int hci_add_adv_instance(struct hci_dev *hdev, u8 instance, u32 flags,
+ 		       sizeof(adv_instance->scan_rsp_data));
+ 	} else {
+ 		if (hdev->adv_instance_cnt >= hdev->le_num_of_adv_sets ||
+-		    instance < 1 || instance > HCI_MAX_ADV_INSTANCES)
++		    instance < 1 || instance > hdev->le_num_of_adv_sets)
+ 			return -EOVERFLOW;
+ 
+ 		adv_instance = kzalloc(sizeof(*adv_instance), GFP_KERNEL);
+diff --git a/net/bluetooth/mgmt.c b/net/bluetooth/mgmt.c
+index 5bbe71002fb950..8041c9cebd5cf6 100644
+--- a/net/bluetooth/mgmt.c
++++ b/net/bluetooth/mgmt.c
+@@ -7250,7 +7250,7 @@ static int read_adv_features(struct sock *sk, struct hci_dev *hdev,
+ 	rp->supported_flags = cpu_to_le32(supported_flags);
+ 	rp->max_adv_data_len = HCI_MAX_AD_LENGTH;
+ 	rp->max_scan_rsp_len = HCI_MAX_AD_LENGTH;
+-	rp->max_instances = HCI_MAX_ADV_INSTANCES;
++	rp->max_instances = hdev->le_num_of_adv_sets;
+ 	rp->num_instances = hdev->adv_instance_cnt;
+ 
+ 	instance = rp->instance;
+@@ -7446,7 +7446,7 @@ static int add_advertising(struct sock *sk, struct hci_dev *hdev,
+ 		return mgmt_cmd_status(sk, hdev->id, MGMT_OP_SET_ADVERTISING,
+ 				       MGMT_STATUS_NOT_SUPPORTED);
+ 
+-	if (cp->instance < 1 || cp->instance > HCI_MAX_ADV_INSTANCES)
++	if (cp->instance < 1 || cp->instance > hdev->le_num_of_adv_sets)
+ 		return mgmt_cmd_status(sk, hdev->id, MGMT_OP_ADD_ADVERTISING,
+ 				       MGMT_STATUS_INVALID_PARAMS);
+ 
+@@ -7699,7 +7699,7 @@ static int get_adv_size_info(struct sock *sk, struct hci_dev *hdev,
+ 		return mgmt_cmd_status(sk, hdev->id, MGMT_OP_GET_ADV_SIZE_INFO,
+ 				       MGMT_STATUS_REJECTED);
+ 
+-	if (cp->instance < 1 || cp->instance > HCI_MAX_ADV_INSTANCES)
++	if (cp->instance < 1 || cp->instance > hdev->le_num_of_adv_sets)
+ 		return mgmt_cmd_status(sk, hdev->id, MGMT_OP_GET_ADV_SIZE_INFO,
+ 				       MGMT_STATUS_INVALID_PARAMS);
+ 
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
