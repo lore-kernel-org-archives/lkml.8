@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79430C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 741ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADAA20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552622074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LsC5rdn+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAMO1U+R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgHYULy (ORCPT
+        id S1726985AbgHYUL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:11:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58578 "EHLO
+        Tue, 25 Aug 2020 16:11:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbgHYULk (ORCPT
+        with ESMTP id S1726882AbgHYULg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:11:40 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2B36C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:39 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id y11so91370qvl.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:39 -0700 (PDT)
+        Tue, 25 Aug 2020 16:11:36 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1C18C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:35 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id w2so62133qvh.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=u/YG2y7YYQKcyizD32v+alkIg1GqrI1eey3uzGqUNIM=;
-        b=LsC5rdn+JKeGTf0RY5xS6/YJy14TwVDXsYPwLnT70X+6Ql3ErrgsjybUvYsjd4CZSb
-         2XCZLBy9whZP7kJ3DhpkEn4Pqg7dV+p/06m1nOn6gFaai7pONHDukOrZ1BW6yT7sgGQM
-         E2MXZQMClifMICbIm8xsLsDJnAtVIQ6Z9AKup2xLGlxrLGE1Ty7JmqbHp5GY1iV3/kDW
-         hd0VW9t5eKFcKJbzuqYZCXLfU1lES6dAP171rg4VjXaYCd3n+Ka+qTwKWlULrc2QaVWm
-         QCqcGUcsKvlB0juz41pmJzSrk1tJeBW6k4+joY3hM9GOg2z7qj2wrBlN+Ai9ww+rhA4U
-         c38A==
+        bh=/+cwVyjZiU4lXoMXrR09xnU2c7BRFNH9q0stX6k3GcY=;
+        b=dAMO1U+RevIO7rh5rOP9d3DmIrKRIYbMXoicQvkuxYjBSssIN91V63VzUq8v+ElC+J
+         kEFSsOQeSsEE+MRgem6spXGSpf39HhkO3zZiAA/aa7J/QrVI2oIXadp57dY/HnHnYnyT
+         ZqY+xCLsWwOxsfZqUCllIvLNJQQsJrsgci3GJXQG9YdaOhXYdMkAEjLnOjsnPN3TwK7w
+         ZX0inEKHyz3zBtgxakoa1LFcYPk46N5MM6FD0Fb9FvtzTH49mH/AazMFlPrFXPJvJ0iw
+         doXU1Q5PL+18F7l+V4Dhg+dzaYTJJe96DSFC/8k9unw9ZNOms1Hh+4rxQSHrNZtWxP5d
+         tSQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=u/YG2y7YYQKcyizD32v+alkIg1GqrI1eey3uzGqUNIM=;
-        b=JVctJdl4cUxoDkMe5MFaNFhFV0PKSW5T8ETUmn8zOFt7GQSCHLfMmN+dsgdhXiOvH8
-         vl5VToH69lPdTyQ2sNQM21DmDgNGmDMFOHnMRaQWA27ZLI6SUhvFCklEztk/HdBRhxGM
-         Zd5+stwuH/AcPRr+Ywjd04c7UDYJU73E8mYH4CzpVASIlpz2xQaPIuD1sW4tE5rcMD5x
-         VbesaV9uNp57kzmMMxrXCO/5dGgPdm1IISUHOxe7gANqvpwAVZmGaccfFjbAlfxKIp/d
-         njTjk1acAs5AXLUEsZs6SGtQZLFObS344BUHKxtUoiSlbZEWN1hEoX/E+5ezGuFG5+6B
-         SC6A==
-X-Gm-Message-State: AOAM533f/43Mo61a++uMVk75Tn/wbv6xQGIzpOhO/4rnvXLv1qiSJsyj
-        Dvu/eEEcpL9ITcrFvYggMtc=
-X-Google-Smtp-Source: ABdhPJyIaDklSy5krYwDL1p2YCpM3OTQpYvynxWvLZOffa9sOD4vm46sbJdLPf4Hu90lF0UvHeJ/lw==
-X-Received: by 2002:a0c:f505:: with SMTP id j5mr11017299qvm.166.1598386298988;
-        Tue, 25 Aug 2020 13:11:38 -0700 (PDT)
+        bh=/+cwVyjZiU4lXoMXrR09xnU2c7BRFNH9q0stX6k3GcY=;
+        b=YFOyYkRtv0kB+rVsqqbRnGNQReOYGHYL8H0PNf5T1JrQq7WgIIIC+kwwNiFqDYq1Wu
+         DqNBgUczWaDoZUEXrLHxAjnM+axx14esNhHREzRQkhvY5yNinyIlT5ZQCPB7b1J0oc4h
+         3XGCf6lJE/fSsCMPeCHp1Efgb8bpMwM3BsmC3bsjC7BSWFixW/jJTy/OxyEmGckDmMs8
+         2wofg7KZBj3lqHtriOcitfRxhs6+Adamapv6UFO+F1Usr3oLb5izgalWAzICFnWVPhqf
+         CtqhJiUrS1mCyS94f+HGJJKw6K7r5JKgtsRi/tRWwaopZFxKJkUl75oRT9CGB8dUa+4m
+         DIPA==
+X-Gm-Message-State: AOAM533knQteJ7u32uTUCS9jJUHMEWBPp1FhUjUszmKXZo+CDoIOP7Fd
+        7Q4Ej+0xisWJgHkMtQjvu+Y=
+X-Google-Smtp-Source: ABdhPJxPOQcCxc3raJ9IRb9qpgoHHl7LUdH4TqQCk5D7HKxNaWnG7oex+RuA/9J9uFMXPxP7rM0+QA==
+X-Received: by 2002:ad4:4482:: with SMTP id m2mr11266618qvt.102.1598386294963;
+        Tue, 25 Aug 2020 13:11:34 -0700 (PDT)
 Received: from localhost.localdomain (cpe-71-65-111-223.cinci.res.rr.com. [71.65.111.223])
-        by smtp.googlemail.com with ESMTPSA id n23sm12453459qkk.105.2020.08.25.13.11.38
+        by smtp.googlemail.com with ESMTPSA id n23sm12453459qkk.105.2020.08.25.13.11.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 13:11:38 -0700 (PDT)
+        Tue, 25 Aug 2020 13:11:34 -0700 (PDT)
 From:   Connor McAdams <conmanx360@gmail.com>
 Cc:     conmanx360@gmail.com, Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 20/20] ALSA: hda/ca0132 - Add AE-7 exit commands.
-Date:   Tue, 25 Aug 2020 16:10:39 -0400
-Message-Id: <20200825201040.30339-21-conmanx360@gmail.com>
+Subject: [PATCH v2 18/20] ALSA: hda/ca0132 - Add AE-7 microphone selection commands.
+Date:   Tue, 25 Aug 2020 16:10:37 -0400
+Message-Id: <20200825201040.30339-19-conmanx360@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200825201040.30339-1-conmanx360@gmail.com>
 References: <20200825201040.30339-1-conmanx360@gmail.com>
@@ -78,60 +78,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add exit commands for the AE-7.
+Add AE-7 quirk data for setting of microphone. The AE-7 has no front
+panel connector, so only rear-mic/line-in have new commands.
 
 Signed-off-by: Connor McAdams <conmanx360@gmail.com>
 ---
- sound/pci/hda/patch_ca0132.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ sound/pci/hda/patch_ca0132.c | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
 diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
-index 52f6d3740e0a..9779978e4bc7 100644
+index dcc8d29d934c..8c6e38734489 100644
 --- a/sound/pci/hda/patch_ca0132.c
 +++ b/sound/pci/hda/patch_ca0132.c
-@@ -8838,6 +8838,32 @@ static void ae5_exit_chip(struct hda_codec *codec)
- 	snd_hda_codec_write(codec, 0x01, 0, 0x724, 0x83);
- }
+@@ -4997,6 +4997,15 @@ static int ca0132_alt_select_in(struct hda_codec *codec)
+ 			ca0113_mmio_command_set(codec, 0x30, 0x28, 0x00);
+ 			tmp = FLOAT_THREE;
+ 			break;
++		case QUIRK_AE7:
++			ca0113_mmio_command_set(codec, 0x30, 0x28, 0x00);
++			tmp = FLOAT_THREE;
++			chipio_set_conn_rate(codec, MEM_CONNID_MICIN2,
++					SR_96_000);
++			chipio_set_conn_rate(codec, MEM_CONNID_MICOUT2,
++					SR_96_000);
++			dspio_set_uint_param(codec, 0x80, 0x01, FLOAT_ZERO);
++			break;
+ 		default:
+ 			tmp = FLOAT_ONE;
+ 			break;
+@@ -5042,6 +5051,14 @@ static int ca0132_alt_select_in(struct hda_codec *codec)
+ 		case QUIRK_AE5:
+ 			ca0113_mmio_command_set(codec, 0x30, 0x28, 0x00);
+ 			break;
++		case QUIRK_AE7:
++			ca0113_mmio_command_set(codec, 0x30, 0x28, 0x3f);
++			chipio_set_conn_rate(codec, MEM_CONNID_MICIN2,
++					SR_96_000);
++			chipio_set_conn_rate(codec, MEM_CONNID_MICOUT2,
++					SR_96_000);
++			dspio_set_uint_param(codec, 0x80, 0x01, FLOAT_ZERO);
++			break;
+ 		default:
+ 			break;
+ 		}
+@@ -5051,7 +5068,10 @@ static int ca0132_alt_select_in(struct hda_codec *codec)
+ 		if (ca0132_quirk(spec) == QUIRK_R3DI)
+ 			chipio_set_conn_rate(codec, 0x0F, SR_96_000);
  
-+static void ae7_exit_chip(struct hda_codec *codec)
-+{
-+	chipio_set_stream_control(codec, 0x18, 0);
-+	chipio_set_stream_source_dest(codec, 0x21, 0xc8, 0xc8);
-+	chipio_set_stream_channels(codec, 0x21, 0);
-+	chipio_set_control_param(codec, CONTROL_PARAM_NODE_ID, 0x09);
-+	chipio_set_control_param(codec, 0x20, 0x01);
-+
-+	chipio_set_control_param(codec, CONTROL_PARAM_ASI, 0);
-+
-+	chipio_set_stream_control(codec, 0x18, 0);
-+	chipio_set_stream_control(codec, 0x0c, 0);
-+
-+	ca0113_mmio_command_set(codec, 0x30, 0x2b, 0x00);
-+	snd_hda_codec_write(codec, 0x15, 0, 0x724, 0x83);
-+	ca0113_mmio_command_set_type2(codec, 0x48, 0x07, 0x83);
-+	ca0113_mmio_command_set(codec, 0x30, 0x30, 0x00);
-+	ca0113_mmio_command_set(codec, 0x30, 0x2e, 0x00);
-+	ca0113_mmio_gpio_set(codec, 0, false);
-+	ca0113_mmio_gpio_set(codec, 1, false);
-+	ca0113_mmio_command_set(codec, 0x30, 0x32, 0x3f);
-+
-+	snd_hda_codec_write(codec, 0x01, 0, 0x793, 0x00);
-+	snd_hda_codec_write(codec, 0x01, 0, 0x794, 0x53);
-+}
-+
- static void zxr_exit_chip(struct hda_codec *codec)
- {
- 	chipio_set_stream_control(codec, 0x03, 0);
-@@ -9457,6 +9483,9 @@ static void ca0132_free(struct hda_codec *codec)
- 	case QUIRK_AE5:
- 		ae5_exit_chip(codec);
- 		break;
-+	case QUIRK_AE7:
-+		ae7_exit_chip(codec);
-+		break;
- 	case QUIRK_R3DI:
- 		r3di_gpio_shutdown(codec);
- 		break;
+-		tmp = FLOAT_ZERO;
++		if (ca0132_quirk(spec) == QUIRK_AE7)
++			tmp = FLOAT_THREE;
++		else
++			tmp = FLOAT_ZERO;
+ 		dspio_set_uint_param(codec, 0x80, 0x00, tmp);
+ 
+ 		switch (ca0132_quirk(spec)) {
 -- 
 2.20.1
 
