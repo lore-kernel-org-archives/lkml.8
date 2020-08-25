@@ -2,168 +2,204 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D250C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92723C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4E222072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:03:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598385814;
-	bh=bLQ/6Ns9xbbW32dBksiiwUFLCmw1usZgfNu6wzOIRRA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=GS9i159SQT5fIg8TujaWVSESAvnaA4lPYx26Uw5DXmysCX/Yqbd+q2pd0wHE+uIqm
-	 BS8wm4LLJaaRB2SOBR0TiphIVw/00ZPlVfT1NJdCuISuvuQSCCLLiZH+dQRCnqC1TQ
-	 uNkjiN08I0OR/k0/RNtLCqStz1HJ8NRSHf5heLyY=
+	by mail.kernel.org (Postfix) with ESMTP id 5C70F2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:03:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="iu4uZkCs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHYUDd (ORCPT
+        id S1726656AbgHYUDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:03:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgHYUDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:03:31 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADB662072D;
-        Tue, 25 Aug 2020 20:03:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598385811;
-        bh=bLQ/6Ns9xbbW32dBksiiwUFLCmw1usZgfNu6wzOIRRA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=l4bpkPmXM7023mZgcud7LiuXiDySo6mIf1kjucmaMFMfdwWuxCgjMXMMeZWTQlTNZ
-         S8ccFLX7/o+uLWvZssFvEMAlrztDO4R5uWWMK5/l+J5KEs2v6I2ftwQ6ue1mdzaRhM
-         G1nZBjJwkbjF80aF+i2KZjX8PiAMGCDb4+gafrqQ=
-Date:   Tue, 25 Aug 2020 15:03:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-pci@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 13/38] PCI: MSI: Rework pci_msi_domain_calc_hwirq()
-Message-ID: <20200825200329.GA1923406@bjorn-Precision-5520>
+        Tue, 25 Aug 2020 16:03:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYUDv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 16:03:51 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92362C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:03:50 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id l2so12156090eji.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:03:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kylehuey.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=KQDIiZy98GX5Xim6YXb546wx9NRSHPk1zUnMZMln4ko=;
+        b=iu4uZkCs6ySZEOsj8gMFTslBMJVVf4orMqR2ZnhH8gLNvxddS//sCsXd1bJdNUP3zJ
+         p49pPK92dGoGg8EK9PM/U123z5KGu6pZ9Jd6yIPG5dZoct6RcPfMeAMOqagTZaAqu+l1
+         f2IPyFC+vxxwIGY7A2PD8ETKji+HmlSEfAiGf5TJ51oVpEbis6iQ3vHd6JCfUCNLK8OJ
+         q/QK8XBJ6GDv9VNYS937QiTW6FGisWhq7xi3Ps1TdCGuoT37BQCOT9Ev+x/whG5dmOyS
+         6+qgHKyDduWrOuyb57g85Xt93K6jpG/bK/YsCZvQYVCfq7G+9JtOwPyNsEWakVLDYO6i
+         WDng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=KQDIiZy98GX5Xim6YXb546wx9NRSHPk1zUnMZMln4ko=;
+        b=i3/UdVNRGadf7J4/1IpbXKDywVdNYm66Tx5xgUxkH6+1xRa7h5MrL18a41ykXC0zzL
+         GCK6PYtg5hwLhTz8ShVWUKRFtRu4A0RzJ4xRSPTFBxVe1ci7j3JZy3FF8cye7T3354b7
+         4KtbmlilfvYeWtA7uytqzJVlvkgcGqgyF90ujbvNbJ3Qnie+iaz/6YE7ErMnQr6q5pCE
+         mwhBDz9ndKH9gfu1mEGVR7E59hDfiT9lCL8nS1Vkxzh/8n9glWf/wrXX1HrnwAVqxepz
+         IhWX+HPpUevnXIm7BG9E5OGI6amQvtV5q0LouKR8aKQTzmo99Zc/qXKJc7hZNzy8f9Dc
+         RXEA==
+X-Gm-Message-State: AOAM530cc1Xs0GzE4oMprmO0w1Sf8QtKDnJ78gUNUjOzwA7cHpzWKEKK
+        vorwKy1eNqq90NzZm7h3hn2SwgbLZ8kYO0WBXiPdHA==
+X-Google-Smtp-Source: ABdhPJxYJR1nLWA/6jxxBNAf1GNBE4NWIkEE/o2nmGQ4S0XJ1gR79t/1O67oGjHc/nEFZQxbDquAmn+lGPdeqcK7BOA=
+X-Received: by 2002:a17:906:d187:: with SMTP id c7mr12668828ejz.196.1598385827444;
+ Tue, 25 Aug 2020 13:03:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821002946.594509001@linutronix.de>
+References: <CAOp6jLYrwMqV=7hmxgdZUdDZ2aeUB27TTHm=j6cQT7C10Muhww@mail.gmail.com>
+ <7DF88F22-0310-40C9-9DA6-5EBCB4877933@amacapital.net> <CALCETrUrvrQNw6dPau_rtHjA_YuCVdCTWYd4dsdcvcGsOaspmg@mail.gmail.com>
+ <b0813ec5-b163-cc11-bfc9-e9d08c9c4ff2@zytor.com> <CALCETrXvgb257CWnaA1NgUUp3x08+gJBEOQh4o9OYkB-RvAo1A@mail.gmail.com>
+ <CAP045Ao6xBquwSDoCLzzNbEW1Lr969d+D0jQQ2Zb4pX3B77-Xw@mail.gmail.com>
+ <CALCETrUgm-Cph4fwqk108VHZPLuM7XWL=nff-xB+hc+hiDrqsg@mail.gmail.com>
+ <CAP045Aqhox6YSdk0v_YZWY=y7Ps4ZfH779MG-W4a=gc+cYEY+Q@mail.gmail.com>
+ <CALCETrX+TLB+w0X0jc9jq_U4SQezWXEmSpEmmdPobnbUuYfang@mail.gmail.com>
+ <CAP045ArKLoNdbX8rhkfC1gSuntTOE6PKaEFszUCh8xTDYYZZZw@mail.gmail.com>
+ <CAP045Arh1CORYbKn6GvBPWt+8u3S80Op4LFPVHcpbF2mr4upRw@mail.gmail.com> <CALCETrVnd4VVyReTxmGd0BeHPGp-7W7HoHJA8qdzZsy1OgF91A@mail.gmail.com>
+In-Reply-To: <CALCETrVnd4VVyReTxmGd0BeHPGp-7W7HoHJA8qdzZsy1OgF91A@mail.gmail.com>
+From:   Kyle Huey <me@kylehuey.com>
+Date:   Tue, 25 Aug 2020 13:03:36 -0700
+Message-ID: <CAP045Ao+OYoJWsiUYiBCp2Q6kh8+q0xD793ic9=4+NRbn3mfWQ@mail.gmail.com>
+Subject: Re: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on
+ a 64 bit system
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        "Robert O'Callahan" <robert@ocallahan.org>,
+        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 02:24:37AM +0200, Thomas Gleixner wrote:
-> Retrieve the PCI device from the msi descriptor instead of doing so at the
-> call sites.
+On Tue, Aug 25, 2020 at 12:32 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Tue, Aug 25, 2020 at 11:50 AM Kyle Huey <me@kylehuey.com> wrote:
+> >
+> > On Tue, Aug 25, 2020 at 10:31 AM Kyle Huey <me@kylehuey.com> wrote:
+> > >
+> > > On Tue, Aug 25, 2020 at 9:46 AM Andy Lutomirski <luto@kernel.org> wro=
+te:
+> > > >
+> > > > On Tue, Aug 25, 2020 at 9:32 AM Kyle Huey <me@kylehuey.com> wrote:
+> > > > >
+> > > > > On Tue, Aug 25, 2020 at 9:12 AM Andy Lutomirski <luto@amacapital.=
+net> wrote:
+> > > > > > I don=E2=80=99t like this at all. Your behavior really shouldn=
+=E2=80=99t depend on
+> > > > > > whether the new instructions are available.  Also, some day I w=
+ould
+> > > > > > like to change Linux to have the new behavior even if FSGSBASE
+> > > > > > instructions are not available, and this will break rr again.  =
+(The
+> > > > > > current !FSGSBASE behavior is an ugly optimization of dubious v=
+alue.
+> > > > > > I would not go so far as to describe it as correct.)
+> > > > >
+> > > > > Ok.
+> > > > >
+> > > > > > I would suggest you do one of the following things:
+> > > > > >
+> > > > > > 1. Use int $0x80 directly to load 32-bit regs into a child.  Th=
+is
+> > > > > > might dramatically simplify your code and should just do the ri=
+ght
+> > > > > > thing.
+> > > > >
+> > > > > I don't know what that means.
+> > > >
+> > > > This is untested, but what I mean is:
+> > > >
+> > > > static int ptrace32(int req, pid_t pid, int addr, int data) {
+> > > >    int ret;
+> > > >    /* new enough kernels won't clobber r8, etc. */
+> > > >    asm volatile ("int $0x80" : "=3Da" (ret) : "a" (26 /* ptrace */)=
+, "b"
+> > > > (req), "c" (pid), "d" (addr), "S" (data) : "flags", "r8", "r9", "r1=
+0",
+> > > > "r11");
+> > > >    return ret;
+> > > > }
+> > > >
+> > > > with a handful of caveats:
+> > > >
+> > > >  - This won't compile with -fPIC, I think.  Instead you'll need to
+> > > > write a little bit of asm to set up and restore ebx yourself.  gcc =
+is
+> > > > silly like this.
+> > > >
+> > > >  - Note that addr is an int.  You'll need to mmap(..., MAP_32BIT, .=
+..)
+> > > > to get a buffer that can be pointed to with an int.
+> > > >
+> > > > The advantage is that this should work on all kernels that support
+> > > > 32-bit mode at all.
+> > > >
+> > > > >
+> > > > > > 2. Something like your patch but make it unconditional.
+> > > > > >
+> > > > > > 3. Ask for, and receive, real kernel support for setting FS and=
+ GS in
+> > > > > > the way that 32-bit code expects.
+> > > > >
+> > > > > I think the easiest way forward for us would be a PTRACE_GET/SETR=
+EGSET
+> > > > > like operation that operates on the regsets according to the
+> > > > > *tracee*'s bitness (rather than the tracer, as it works currently=
+).
+> > > > > Does that sound workable?
+> > > > >
+> > > >
+> > > > Strictly speaking, on Linux, there is no unified concept of a task'=
+s
+> > > > bitness, so "set all these registers according to the target's
+> > > > bitness" is not well defined.  We could easily give you a
+> > > > PTRACE_SETREGS_X86_32, etc, though.
+> > >
+> > > In the process of responding to this I spent some time doing code
+> > > inspection and discovered a subtlety in the ptrace API that I was
+> > > previously unaware of. PTRACE_GET/SETREGS use the regset views
+> > > corresponding to the tracer but PTRACE_GET/SETREGSET use the regset
+> > > views corresponding to the tracee. This means it is possible for us
+> > > today to set FS/GS "the old way" with a 64 bit tracer/32 bit tracee
+> > > combo, as long as we use PTRACE_SETREGSET with NT_PRSTATUS instead of
+> > > PTRACE_SETREGS.
+> >
+> > Alright I reverted the previous changes and switched us to use
+> > PTRACE_SETREGSET with NT_PRSTATUS[0] and our 32 bit tests pass again.
+> > I assume this behavior will remain unchanged indefinitely even when
+> > the fs/gsbase manipulation instructions are not available since the 32
+> > bit user_regs_struct can't grow?
+>
+> Correct.
+>
+> I think it would be reasonable to add new, less erratic PTRACE_SETxyz
+> modes, but the old ones will stay as is.
+>
+> Strictly speaking, the issue you had wasn't a ptrace change.  It was a
+> context switching change.  Before the change, you were programming
+> garbage into the tracee state, but the context switch code wasn't
+> capable of restoring the garbage correctly and instead happened to
+> restore the state you actually wanted.  With the new code, the context
+> switch actually worked correctly (for some value of correctly), and
+> the tracee crashed.  Not that this distinction really matters.
 
-I'd like it *better* with "PCI/MSI: " in the subject (to match history
-and other patches in this series) and "MSI" here in the commit log,
-but nice cleanup and:
+Yes. We've been feeding the kernel trash for years. You were just
+letting us get away with it before ;)
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Minor comments below.
-
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-pci@vger.kernel.org
-> ---
->  arch/x86/kernel/apic/msi.c |    2 +-
->  drivers/pci/msi.c          |   13 ++++++-------
->  include/linux/msi.h        |    3 +--
->  3 files changed, 8 insertions(+), 10 deletions(-)
-> 
-> --- a/arch/x86/kernel/apic/msi.c
-> +++ b/arch/x86/kernel/apic/msi.c
-> @@ -232,7 +232,7 @@ EXPORT_SYMBOL_GPL(pci_msi_prepare);
->  
->  void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
->  {
-> -	arg->msi_hwirq = pci_msi_domain_calc_hwirq(arg->msi_dev, desc);
-> +	arg->msi_hwirq = pci_msi_domain_calc_hwirq(desc);
-
-I guess it's safe to assume that "arg->msi_dev ==
-msi_desc_to_pci_dev(desc)"?  I didn't try to verify that.
-
->  }
->  EXPORT_SYMBOL_GPL(pci_msi_set_desc);
->  
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -1346,17 +1346,17 @@ void pci_msi_domain_write_msg(struct irq
->  
->  /**
->   * pci_msi_domain_calc_hwirq - Generate a unique ID for an MSI source
-> - * @dev:	Pointer to the PCI device
->   * @desc:	Pointer to the MSI descriptor
->   *
->   * The ID number is only used within the irqdomain.
->   */
-> -irq_hw_number_t pci_msi_domain_calc_hwirq(struct pci_dev *dev,
-> -					  struct msi_desc *desc)
-> +irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc)
->  {
-> +	struct pci_dev *pdev = msi_desc_to_pci_dev(desc);
-
-If you named this "struct pci_dev *dev" (not "pdev"), the diff would
-be a little smaller and it would match other usage in the file.
-
->  	return (irq_hw_number_t)desc->msi_attrib.entry_nr |
-> -		pci_dev_id(dev) << 11 |
-> -		(pci_domain_nr(dev->bus) & 0xFFFFFFFF) << 27;
-> +		pci_dev_id(pdev) << 11 |
-> +		(pci_domain_nr(pdev->bus) & 0xFFFFFFFF) << 27;
->  }
->  
->  static inline bool pci_msi_desc_is_multi_msi(struct msi_desc *desc)
-> @@ -1406,8 +1406,7 @@ static void pci_msi_domain_set_desc(msi_
->  				    struct msi_desc *desc)
->  {
->  	arg->desc = desc;
-> -	arg->hwirq = pci_msi_domain_calc_hwirq(msi_desc_to_pci_dev(desc),
-> -					       desc);
-> +	arg->hwirq = pci_msi_domain_calc_hwirq(desc);
->  }
->  #else
->  #define pci_msi_domain_set_desc		NULL
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -369,8 +369,7 @@ void pci_msi_domain_write_msg(struct irq
->  struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
->  					     struct msi_domain_info *info,
->  					     struct irq_domain *parent);
-> -irq_hw_number_t pci_msi_domain_calc_hwirq(struct pci_dev *dev,
-> -					  struct msi_desc *desc);
-> +irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc);
->  int pci_msi_domain_check_cap(struct irq_domain *domain,
->  			     struct msi_domain_info *info, struct device *dev);
->  u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
-> 
+- Kyle
