@@ -2,120 +2,126 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A91EC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7A8F2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A462075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:47:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ekq2o5ZI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgHYOqu (ORCPT
+        id S1726736AbgHYOrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:46:50 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45054 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbgHYOqr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:46:47 -0400
-Received: by mail-lj1-f195.google.com with SMTP id g6so14086470ljn.11;
-        Tue, 25 Aug 2020 07:46:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YzIv0eWRqW17P5KtXr4y5sGRDVtxCepXAZ7i4vqsn6s=;
-        b=K/oWaTrjT5h30wgTcCdXSEI73oYfWrwplwBf4oy09U4a68CLk76kY3AMwhEEX1bUeS
-         +KStA5V7pv6Q9Dr0IJPGOIbWH+M6QSiK1s0qzBlqXegXTqJIQYoj4kGSVcYdZkQdfg6h
-         MBL9yi92S31m6A0zN45tUZjzL59nocCYWt9hYGOLt2rVmp1IjdM+r1AnaczJQ04z75zs
-         LvA7nIIT3jCtgLHuuKzKbW3/jV0RJV2N2JPJH8QGSm4SpZJIDzHQEuLxYzhr47nw454Z
-         mvZbP2NDFYXyJDs47mZ4M60rO5juhxBoEUOywn8QV+7lnBSnshH0GZemey0Xc+cDIP9d
-         iumw==
-X-Gm-Message-State: AOAM530rN8hJlaqXTxfLLn/JlgKIvls3H34dT5EqQoa5CUgAMTkBIWbg
-        TZhoWcN0aoEXbT9reFxILMsy59eveE07Ng==
-X-Google-Smtp-Source: ABdhPJwQFZ3rb/Sms9gUpHOZYc+JvqXDBhDueufT0/XJWT45uiHnJBmZfD7pLiiJAJAVcnjALBALAA==
-X-Received: by 2002:a2e:8901:: with SMTP id d1mr796399lji.426.1598366804862;
-        Tue, 25 Aug 2020 07:46:44 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id t19sm2872013ljc.137.2020.08.25.07.46.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 07:46:44 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id g6so14086407ljn.11;
-        Tue, 25 Aug 2020 07:46:44 -0700 (PDT)
-X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr5149410lji.47.1598366804084;
- Tue, 25 Aug 2020 07:46:44 -0700 (PDT)
+        Tue, 25 Aug 2020 10:47:39 -0400
+Received: from mail-bn8nam12on2048.outbound.protection.outlook.com ([40.107.237.48]:42881
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726218AbgHYOrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:47:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XvZM5BEz3rJLod78Ms/HgDmgfNMUVDcVWMu9LfQO7y5Kh+V+R/ybACNoAZQT+EgPaxIW1z1kRIHdmFF01MJYeO+AOq3xHtMjaOA9jJHDAF7azh/cDMrlTMFEWFPeqZCZVDrByoK0dTwoacRDjAsc09qymoXuH58bKCaZq9bubDvsJkfGkuJ+EntOXTMYUz3+S0Im5Dd0JqnakUWwBQi0bHS9HuOPUimR9M8xWH6yrJg4lQWXA9YfUW6+6VkcEPkbj0ha9c+Ga6EwXK4YFn96sKZLgh/yv+xUKkEXCzRqTOKN63YohKPN4VhQx13etAwfdB+jd0jO3wgKh+MUv/11GA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fjVYfu4fzEC2Ra6AUbUWtzHLChPWFu1quA9YBDh9SvE=;
+ b=bUDOzU2lGXF15uex6FWPyP/IRXriOnmgIFdtiGZ2XvXSbkErmtjlyl3WcLHObPlM4yHYM6qFEopw+aSmYfiB6M7g/vwStycvlhekFvoNuCi4AT3z2FnQ1seWlDzEN9iVg7/Sl6XnoE11Jw1avQDPsq30SmwP1SbObWbJ3rtrkfumuhqRcAg0hDwO+QsdJmU67x7gnMj4rSvwblE6vNXcTlMNbkhAZVJf+boOfSzJoam/9XbcDLAWcHoogsoZL+gYXeKlalMoxBMCGCvidHUcFYhTUB8sP/JJWCCNFe5XZ2WvuCkbfytxh3rdpzFTeLwRtTVPlN/Q1wlYHAm8KjS7yQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fjVYfu4fzEC2Ra6AUbUWtzHLChPWFu1quA9YBDh9SvE=;
+ b=ekq2o5ZIPZhIfNE/ywFE8dETbPpjdxIh3ibWsiv5v+IO2KDKnk/IjoWNDH7IEIbVyBwJPJQbytFC/S2f2z3lGknsDxxzoUPwk7ZLtDSTfu5YClamr5IrwHhRviujWhiJ/eUXyIsNds5ZA0sAYK4xsnd3gWwy+6rR9mzxOSYEiQM=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from SN6PR12MB2685.namprd12.prod.outlook.com (2603:10b6:805:67::33)
+ by SN6PR12MB2767.namprd12.prod.outlook.com (2603:10b6:805:75::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Tue, 25 Aug
+ 2020 14:47:30 +0000
+Received: from SN6PR12MB2685.namprd12.prod.outlook.com
+ ([fe80::48e9:c9c:7cd7:de86]) by SN6PR12MB2685.namprd12.prod.outlook.com
+ ([fe80::48e9:c9c:7cd7:de86%5]) with mapi id 15.20.3305.025; Tue, 25 Aug 2020
+ 14:47:30 +0000
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-acpi@vger.kernel.org,
+        devel@acpica.org
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Smita.KoralahalliChannabasappa@amd.com
+Subject: [PATCH 0/2] Decode raw MSR values of MCA registers in BERT
+Date:   Tue, 25 Aug 2020 09:47:08 -0500
+Message-Id: <20200825144710.23584-1-Smita.KoralahalliChannabasappa@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SA0PR11CA0070.namprd11.prod.outlook.com
+ (2603:10b6:806:d2::15) To SN6PR12MB2685.namprd12.prod.outlook.com
+ (2603:10b6:805:67::33)
 MIME-Version: 1.0
-References: <20200825131049.1277596-1-jernej.skrabec@siol.net>
-In-Reply-To: <20200825131049.1277596-1-jernej.skrabec@siol.net>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 25 Aug 2020 22:46:31 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66q15syd5g-9RUocmEwJyvpbJniTmwLJL4QH5s==fCi2Q@mail.gmail.com>
-Message-ID: <CAGb2v66q15syd5g-9RUocmEwJyvpbJniTmwLJL4QH5s==fCi2Q@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH] clk: sunxi-ng: sun8i: r40: Use sigma delta
- modulation for audio PLL
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by SA0PR11CA0070.namprd11.prod.outlook.com (2603:10b6:806:d2::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Tue, 25 Aug 2020 14:47:29 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.78.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3d1b1bc1-6fb3-47db-7e2d-08d84905cb02
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2767:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB276718111D5A4F9DAAA170A790570@SN6PR12MB2767.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Slz/1ZeJ2TzakOTQaBlGRe0wfEq4BYrInBDZSTTJmchPvygPjZkcfg5E2g6cQ3vlOTZ1pbd8cmQ7V8DQqIwvPBYXV4mrU/7ct/GTK4yiJQwv56I1lqf90Oh3a604vlV3ov0GQy7jka0QHbruwpYlGLeabIKjeHcWIoYVoEzfLudGl9OJ5acok41HjiOYUpIeK8iL5djHAjJS51MhRoKaJ+4yR8fwOIb4JwnG2KdEpwQaaHTtcsQUYJk+J+kvLSa9LBnBMWpOAXySY3QSkvBuZ6tZ2/a3oK2b6RjOMicnhH2V2s69V0RZiFMYCPG0TrEItgx3FE/Q+sZPr6FTLL1z4w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR12MB2685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(136003)(366004)(396003)(346002)(5660300002)(956004)(186003)(6486002)(2906002)(52116002)(8936002)(26005)(4326008)(8676002)(2616005)(1076003)(66946007)(7416002)(83380400001)(6666004)(16576012)(316002)(86362001)(4744005)(66476007)(36756003)(478600001)(66556008)(54906003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: Mdyk7Sc13BhWpM2Bc77qu58uViwsUV5PWjDmd+B+IwmltI07Szw9NPPWuiFf4hnZjRxLb2sZCVNHGW71x+XcnFcqPOivY5JtTr1r/+3CFMBmT8IuOFH66MEfoKspZefelvHyoJU4RIzquqPDW0qIwgLJ1I0BS0D3SNmE8Gigq28SB3c5BXw9zjvigttyEKPHIXS2gwcxlK9EH4eCc56taTBtYJNRs5Nw0Gc/wsOIX6zxRBt3nN2j88lR7mN/Wn3T2y02D0Nw85tmPgxC36pOduUJWTF9xRM1Wqowjffyi6hbtHm9bZR15/eG1IwPpE++vlRvl/InSh4EGL/4Q1+mtEBnHIR5dxx01Ox864u59ugMihu62NtacwP7CePckDdk4WMEakXX+5JRtEPBEVGH5EdMRrTNMgxPC9Fvpyatq2uSAgdRaWXaSoDaEfQ6TK46GfFj+5+0qan7Ko5a95ntMg+eTLcMiCigAjXmZHBk/LUaFuY4vnIVsWSVGF57H/D8awCW0owBkIV/PGaDnbMjhdSIv1yaHbVhEmHgJyLOH39H1p3RYFLljJYo/L8Kb77uLTWry2n4KHtGP6dozlwnlpXkDKhTodPWTJi7LXabbDdpda+dr1bRcrlr31zxxpFkX79UqBd1znTzSU78FGsZNg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d1b1bc1-6fb3-47db-7e2d-08d84905cb02
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR12MB2685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2020 14:47:30.4176
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UXDl8vkOvgkDEkaDFsMKK7+H3BWWByQKwEpHenwaQYdkJBCzQFUodLN1FwosShCw0A6NLyNFlINx4RWk4mJpow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2767
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 9:11 PM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
->
-> Audio cores need specific clock rates which can't be simply obtained by
-> adjusting integer multipliers and dividers. HW for such cases supports
-> delta-sigma modulation which enables fractional multipliers.
->
-> Port H3 delta-sigma table to R40. They have identical audio PLLs.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/clk/sunxi-ng/ccu-sun8i-r40.c | 37 ++++++++++++++++++----------
->  1 file changed, 24 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r40.c b/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
-> index 23bfe1d12f21..84153418453f 100644
-> --- a/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
-> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
-> @@ -45,18 +45,29 @@ static struct ccu_nkmp pll_cpu_clk = {
->   * the base (2x, 4x and 8x), and one variable divider (the one true
->   * pll audio).
->   *
-> - * We don't have any need for the variable divider for now, so we just
-> - * hardcode it to match with the clock names
-> + * With sigma-delta modulation for fractional-N on the audio PLL,
-> + * we have to use specific dividers. This means the variable divider
-> + * can no longer be used, as the audio codec requests the exact clock
-> + * rates we support through this mechanism. So we now hard code the
-> + * variable divider to 1. This means the clock rates will no longer
-> + * match the clock names.
->   */
->  #define SUN8I_R40_PLL_AUDIO_REG        0x008
->
-> -static SUNXI_CCU_NM_WITH_GATE_LOCK(pll_audio_base_clk, "pll-audio-base",
-> -                                  "osc24M", 0x008,
-> -                                  8, 7,        /* N */
-> -                                  0, 5,        /* M */
-> -                                  BIT(31),     /* gate */
-> -                                  BIT(28),     /* lock */
-> -                                  CLK_SET_RATE_UNGATE);
-> +static struct ccu_sdm_setting pll_audio_sdm_table[] = {
-> +       { .rate = 22579200, .pattern = 0xc0010d84, .m = 8, .n = 7 },
-> +       { .rate = 24576000, .pattern = 0xc000ac02, .m = 14, .n = 14 },
+This series provides better decoding for SMCA specific raw MSR values in
+BERT reported using x86 Processor Error Common Platform Error Record
+(CPER) format.
 
-The user manual has an additional requirement: 3 <= N/M <= 21.
-Though it then says 72 <= 24*N/P <= 504. Not sure which one is
-right...
+Patch 1 extracts the raw MSR values of MCA registers in BERT and passes
+it through the MCA handling chain.
 
-Did you run into any glitches or audio distortions?
+Patch 2 provides a fix of missing error logs as observed in Patch 1.
 
-ChenYu
+Smita Koralahalli (2):
+  cper, apei, mce: Pass x86 CPER through the MCA handling chain
+  x86/mce/dev-mcelog: Fix updating kflags in AMD systems
+
+ arch/x86/include/asm/mce.h           |  5 ++++
+ arch/x86/kernel/acpi/apei.c          | 10 ++++++++
+ arch/x86/kernel/cpu/mce/apei.c       | 38 ++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/mce/dev-mcelog.c |  4 ++-
+ drivers/firmware/efi/cper-x86.c      | 10 +++++---
+ include/acpi/apei.h                  |  2 ++
+ 6 files changed, 64 insertions(+), 5 deletions(-)
+
+-- 
+2.17.1
+
