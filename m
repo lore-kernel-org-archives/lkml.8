@@ -7,62 +7,63 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267EDC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07AC720737
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF092072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:22:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="n72OI6Mo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="qEp6lskp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbgHYEWg (ORCPT
+        id S1728601AbgHYEWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:22:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50858 "EHLO
+        Tue, 25 Aug 2020 00:22:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728496AbgHYEWe (ORCPT
+        with ESMTP id S1728548AbgHYEWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:22:34 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E8AC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:34 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id n1so4680258pgi.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:34 -0700 (PDT)
+        Tue, 25 Aug 2020 00:22:39 -0400
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9961FC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:38 -0700 (PDT)
+Received: by mail-pf1-x44a.google.com with SMTP id a73so7626128pfa.10
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=F8R7yB/uW413X5BedlVvfs1XP30S/Fpzu0dI0Wqxoxc=;
-        b=n72OI6MoEkQhfKUwJdHzWFQo0b8hAvkNDSD1jmWoyZQ0V8OJBU2zf9TYkIjQYpXtCo
-         dUStaSep5gflMaYcmcL10S6XR/DnqRv7amQsr9GxaBe2MnDAxILEhPQWW3VG5ABPS2vh
-         gDTLW7GGp0hfHW1TCkZJkfAAwPALmBk/VDLkGb6JSOt8XzTD1AjuqshMjX8wseVt5E8S
-         RY6f27PWDyrpbj01THKYTfJ5h+K5UhMQJSGDLhuErTYtZvRFeFQGkDh7vmu1PbxIrVWT
-         SBPc9z1H4Ln+WHTzwN1F8WXvd1I+1D7wnSbQtdxyTo2Gbffbf9SRmBA2yLbXStxxNNxR
-         C0yQ==
+        bh=nWeRgBg8Ta0JRUMqjnIe2WAINWblXQ1/8Tod3psP/Qw=;
+        b=qEp6lskpZWqC4EQJ85EobO2qxMlWdWKJb/ThqSCHe/SvBlUmgrda0L1rykQdI+/aNF
+         EfYKonzOKbyEeGAECfW4HAra3tDodTSOaX8EsUVhsIVDw9tLH52IRWcF5slGHj5OVpMN
+         ryNRSK6ZdR4dEC0zxZnHyzopX2OzuLFI3H6cjSKVjLml3qRbrBgMUd0f2VnGN4YtpTqo
+         PzQgm+/4yr/yegRzzmru3yOZ4grnL7NC+1ctWiv15hFwxJdKUXcDEUXAUdJekQE8BKx9
+         QHNJcfxwXHrxZ95ROVp7JovwMhp2ds9PkiGKheTQw5c5+A/jd/cntR5yW8YOmdH7PxVg
+         w0hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=F8R7yB/uW413X5BedlVvfs1XP30S/Fpzu0dI0Wqxoxc=;
-        b=BH5CuoHowXlqiHetnZeqQhUXwzQC+U/9CrE1FFkFoWIAsgsBRfFKKWL07BYEPJMFuf
-         MNrCqQquZlZGJFS/lRh0cVyxMtpuXtzpXq5rELoAgFLafJBSW1H+4ej7FaZQVxkoIxgL
-         nvitSUDmaD3h2lwbWgqt/J3m8RNz8abhwc/Gu9gVu/b0rWhQGf4cymDjgmsUgKr1iZnY
-         A/7m+0IO/5TwUv6/dDV+bNg44POjr2dBKfF1NhKv9O+htRtyrO/vZ1V8zGtjfGtg67V/
-         +Ik4MZTxCp7ciUFo1sx+slaxuRncqFkx9BaaKtdm3QWH+YDY0KF5Bs2/NkvEEDOidnSK
-         BqLQ==
-X-Gm-Message-State: AOAM5321duvWrRjQlNZU0OyzX5TuDuubRehoIzLJz75suD7hzZH0ceOM
-        sdY8AYO9SglwuJ8sH/GATsQiGFGiP6s=
-X-Google-Smtp-Source: ABdhPJzj5NrEqS6R/E/pway38JrzWHE+PYmAiWI5fTlEcegdm6POulaQfy5AaYM7tiD79DhVVquGuO7tQkA=
+        bh=nWeRgBg8Ta0JRUMqjnIe2WAINWblXQ1/8Tod3psP/Qw=;
+        b=rJbH3a2bqJZwHhdIyHuZvkh+2/qeDRdQm2YK05F/OhWhDOMJXCId1yGSjllUfW9OGs
+         VdgjcZqNz27I6h7oiZ4HEw13c1jH6uUYwnX5karMKHgTzUI4G7wO0vOSc2x9PuHKDF4X
+         Kurvn4feX5AicHkDYBjaOMu7Hyg6FtTSK6tbbD15XXM6JSB4+y0QVFRUP42M/UmCPrIT
+         sr0/1fhAVOs70cDe7Q/ibsVuEfmOV6ziQamvzNgEEV79aZzY46O3HxuHGRa/InoW6sq6
+         nBpMv9iNcevNvoOTzLIGZuLYmhxXLs9zdKDqNYdu+DWTGaHY6BbutMbOG1JHpItkb8cf
+         Djlw==
+X-Gm-Message-State: AOAM531ruO0xCFrd/b6ezNm4oTNRCccbz9www/QR3/QSGUi9C5cg+XMI
+        gQ9SIs7rz6vCkhPUGaq2z6W7VoVOgkU=
+X-Google-Smtp-Source: ABdhPJzgqZaIyM+aghkM5fFsP3zxDfJ+c5ExAt1tqg5VtdJqpTDO9F7xYLnF4n9fsWs0V1GJ/nfPbAbWH48=
 X-Received: from badhri.mtv.corp.google.com ([2620:15c:211:1:f292:1cff:fee0:66cf])
- (user=badhri job=sendgmr) by 2002:a17:90a:638c:: with SMTP id
- f12mr249425pjj.1.1598329353549; Mon, 24 Aug 2020 21:22:33 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 21:21:59 -0700
+ (user=badhri job=sendgmr) by 2002:a17:90a:5aa2:: with SMTP id
+ n31mr48366pji.33.1598329358088; Mon, 24 Aug 2020 21:22:38 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 21:22:00 -0700
 In-Reply-To: <20200825042210.300632-1-badhri@google.com>
-Message-Id: <20200825042210.300632-4-badhri@google.com>
+Message-Id: <20200825042210.300632-5-badhri@google.com>
 Mime-Version: 1.0
 References: <20200825042210.300632-1-badhri@google.com>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH 03/14 v1] usb: typec: tcpci: update ROLE_CONTROL for DRP
+Subject: [PATCH 04/14 v1] usb: typec: tcpci: Add a getter method to retrieve
+ tcpm_port reference
 From:   Badhri Jagan Sridharan <badhri@google.com>
 To:     Guenter Roeck <linux@roeck-us.net>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
@@ -75,71 +76,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROLE_CONTROL register would not have the actual CC terminations
-unless the port does not set ROLE_CONTROL.DRP. For DRP ports,
-CC_STATUS.cc1/cc2 indicates the final terminations applied
-when TCPC enters potential_connect_as_source/_sink.
-For DRP ports, infer port role from CC_STATUS and set corresponding
-CC terminations before setting the orientation.
+Allow chip level drivers to retrieve reference to tcpm_port.
 
 Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 ---
- drivers/usb/typec/tcpm/tcpci.c | 37 +++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+ drivers/usb/typec/tcpm/tcpci.c | 6 ++++++
+ drivers/usb/typec/tcpm/tcpci.h | 2 ++
+ 2 files changed, 8 insertions(+)
 
 diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-index 90d348caa6a8..9e814d454d14 100644
+index 9e814d454d14..7b7991c8ac87 100644
 --- a/drivers/usb/typec/tcpm/tcpci.c
 +++ b/drivers/usb/typec/tcpm/tcpci.c
-@@ -191,12 +191,47 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
- 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
- 	unsigned int reg;
- 	int ret;
-+	enum typec_cc_status cc1, cc2;
+@@ -38,6 +38,12 @@ struct tcpci_chip {
+ 	struct tcpci_data data;
+ };
  
--	/* Keep the disconnect cc line open */
-+	/* Obtain Rp setting from role control */
- 	ret = regmap_read(tcpci->regmap, TCPC_ROLE_CTRL, &reg);
- 	if (ret < 0)
- 		return ret;
++struct tcpm_port *tcpci_get_tcpm_port(struct tcpci *tcpci)
++{
++	return tcpci->port;
++}
++EXPORT_SYMBOL_GPL(tcpci_get_tcpm_port);
++
+ static inline struct tcpci *tcpc_to_tcpci(struct tcpc_dev *tcpc)
+ {
+ 	return container_of(tcpc, struct tcpci, tcpc);
+diff --git a/drivers/usb/typec/tcpm/tcpci.h b/drivers/usb/typec/tcpm/tcpci.h
+index cf9d8b63adcb..04c49a0b0368 100644
+--- a/drivers/usb/typec/tcpm/tcpci.h
++++ b/drivers/usb/typec/tcpm/tcpci.h
+@@ -150,4 +150,6 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data);
+ void tcpci_unregister_port(struct tcpci *tcpci);
+ irqreturn_t tcpci_irq(struct tcpci *tcpci);
  
-+	ret = tcpci_get_cc(tcpc, &cc1, &cc2);
-+	if (ret < 0)
-+		return ret;
-+
-+	/*
-+	 * When port has drp toggling enabled, ROLE_CONTROL would only have the initial
-+	 * terminations for the toggling and does not indicate the final cc
-+	 * terminations when ConnectionResult is 0 i.e. drp toggling stops and
-+	 * the connection is resolbed. Infer port role from TCPC_CC_STATUS based on the
-+	 * terminations seen. The port role is then used to set the cc terminations.
-+	 */
-+	if (reg & TCPC_ROLE_CTRL_DRP) {
-+		/* Disable DRP for the OPEN setting to take effect */
-+		reg = reg & ~TCPC_ROLE_CTRL_DRP;
-+
-+		if (polarity == TYPEC_POLARITY_CC2) {
-+			reg &= ~(TCPC_ROLE_CTRL_CC2_MASK << TCPC_ROLE_CTRL_CC2_SHIFT);
-+			/* Local port is source */
-+			if (cc2 == TYPEC_CC_RD)
-+				/* Role control would have the Rp setting when DRP was enabled */
-+				reg |= TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
-+			else
-+				reg |= TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT;
-+		} else {
-+			reg &= ~(TCPC_ROLE_CTRL_CC1_MASK << TCPC_ROLE_CTRL_CC1_SHIFT);
-+			/* Local port is source */
-+			if (cc1 == TYPEC_CC_RD)
-+				/* Role control would have the Rp setting when DRP was enabled */
-+				reg |= TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
-+			else
-+				reg |= TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT;
-+		}
-+	}
-+
- 	if (polarity == TYPEC_POLARITY_CC2)
- 		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC1_SHIFT;
- 	else
++struct tcpm_port;
++struct tcpm_port *tcpci_get_tcpm_port(struct tcpci *tcpci);
+ #endif /* __LINUX_USB_TCPCI_H */
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
