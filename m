@@ -2,73 +2,194 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13112C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A15C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD12C2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598370694;
-	bh=+uhEw3b1gTUz8slduurRGvop16JpIs0dqRKz0ZZTDDo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=PdoZdNOKKZtuql0Fbm6xEQqCmv8qaMUhPRDsGLRYD/+SPwbTXAKA9Akd4jtnEjDB4
-	 5JEAwArKvoDCqX8HxY1fIdVyS9JN7dAwhAXP0ilmNxvlKyZLbi0cdwnYfkV/1h5XV/
-	 0OA1KY9uxUKDrwbPSmP11W+I6cSdLbu7Hba8XpxA=
+	by mail.kernel.org (Postfix) with ESMTP id 91AEC2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rw/DxH6G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgHYPvc (ORCPT
+        id S1727076AbgHYPwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:51:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726971AbgHYPv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:51:29 -0400
-Received: from kicinski-fedora-PC1C0HJN (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19F6B2067C;
-        Tue, 25 Aug 2020 15:51:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598370689;
-        bh=+uhEw3b1gTUz8slduurRGvop16JpIs0dqRKz0ZZTDDo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0Sj/9uvdrKQF9Vu9WBAKh2vfzD3Fe4x6G0+v2AMnUNfoi3HM6Dsxzp+0mW88uNpg2
-         tulm14+7IPDfwHPep7T15dfHPtyT052erZLY1MSHi4bBbJZg/khKWUJ4FhiBH6S6RP
-         x8Qe3+stLb739yqTedhacEFwqbebiX4Bs2NhLz4I=
-Date:   Tue, 25 Aug 2020 08:51:27 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Ahmed Abdelsalam <ahabdels@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrea.mayer@uniroma2.it
-Subject: Re: [net-next v5 2/2] seg6: Add documentation for
- seg6_inherit_inner_ipv4_dscp sysctl
-Message-ID: <20200825085127.50ba9c82@kicinski-fedora-PC1C0HJN>
-In-Reply-To: <20200825121844.1576-1-ahabdels@gmail.com>
-References: <20200825121844.1576-1-ahabdels@gmail.com>
+        Tue, 25 Aug 2020 11:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgHYPv7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 11:51:59 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9128AC061574;
+        Tue, 25 Aug 2020 08:51:58 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id y8so1412528wma.0;
+        Tue, 25 Aug 2020 08:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2WWaSZZuXloXF3hXA39Q3ZCHpRit+wqprTZANU5AeMQ=;
+        b=rw/DxH6GxN345y2h6nelqrvVSJ+WYtUojlJ1ozoP6zQI7IOifGBqQkEy+dFuQPezPW
+         /jGm5n2pHyYB3wWTxGMSzkBGy7/LHnlOcL+6NNfFL/ZvkdoaAtUQgyrnY04r7jzXp87/
+         3g5GAsYiHOlRTZxhIE1fApeF9j334HZM++zkr2NMItqSo7CBW8r5EhfERPFzW7wOFbdN
+         QyvCwTntdoKisqeKhwXP+VT6BgmqDZQ7GMizaQad0yuP81CL86beJv2CtmZmMkC5KHgi
+         JYpl1hTjw3tTOCKmCoEIsUBcy5M5TqBBTPAIwmZlMKEbOG5lwKcKIDockt8QMICJ9Zfw
+         4O4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2WWaSZZuXloXF3hXA39Q3ZCHpRit+wqprTZANU5AeMQ=;
+        b=pJfTbk54qWMuwYwUAzIjzhpkHOLunNqGBxsuGPfwzj3xhfNwl2uG5R/bqcPAhHBoZW
+         fiZ32pg2ldmLNX6FiEFdQ/XqCuy+FhtLCQUzuOk07G+oGjMjJqcmvXpFfqnecGFx2VHT
+         aS4xomTHbnBGoEhFdYHpgiw4CDG9m0mGhfRfBZdrIgNY6TwRZLMVJ70b31Kqx0Bn71mU
+         NGcBXLjhcZgoKjjh78xlWB2YbmteQvKieOFGtgQiMAXJKgHNAxHkQdVf82Vc1mMJ4zdq
+         rFU5exjJFiGy7e/V3FzVg4UBquAkFuNVd2Zg0EYuv4vVnoEawh7RDMjikWEnKR0USA4l
+         Cwwg==
+X-Gm-Message-State: AOAM533fJS5DX+NSs4pqRALHmrCHXuI+IFiFJ9zuVR92/GlF9j9mStYN
+        7aiakNaobuq5nEuq5hR2wjM=
+X-Google-Smtp-Source: ABdhPJxbzjMYznH2bknIDMu+vaMPZmI1DImIMLu0bptCORhJT3lHHQlr6j84R6N4o63i7k8DOxxCkA==
+X-Received: by 2002:a7b:c205:: with SMTP id x5mr2819350wmi.161.1598370717236;
+        Tue, 25 Aug 2020 08:51:57 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id 33sm32511492wri.16.2020.08.25.08.51.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 08:51:56 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Alex Dewar <alex.dewar90@gmail.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Roland Dreier <roland@purestorage.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] IB/qib: remove superfluous fallthrough statements
+Date:   Tue, 25 Aug 2020 16:51:42 +0100
+Message-Id: <20200825155142.349651-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 12:18:44 +0000 Ahmed Abdelsalam wrote:
-> +	Enable the SRv6 encapsulation to inherit the DSCP value of the inner IPv4 packet.                                                                                                         
-> +
-> +	Default: FALSE (Do not inherit DSCP)
-> +
->  ``conf/default/*``:
->  	Change the interface-specific default settings.
->  
+Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
+erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
+were later converted to fallthrough statements by commit df561f6688fe
+("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
+warning about unreachable code.
 
-Checkpatch complains about whitespace:
+Remove the fallthrough statements and replace the mass of gotos with
+simple return statements to make the code terser and less bug-prone.
 
-ERROR: trailing whitespace
-#24: FILE: Documentation/networking/ip-sysctl.rst:1802:
-+seg6_inherit_inner_ipv4_dscp - BOOLEAN                                                                                                                                                                                                                                                                                                        $
+Addresses-Coverity: ("Unreachable code")
+Fixes: 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/infiniband/hw/qib/qib_mad.c | 52 ++++++++---------------------
+ 1 file changed, 13 insertions(+), 39 deletions(-)
+
+diff --git a/drivers/infiniband/hw/qib/qib_mad.c b/drivers/infiniband/hw/qib/qib_mad.c
+index e7789e724f56..f83e331977f8 100644
+--- a/drivers/infiniband/hw/qib/qib_mad.c
++++ b/drivers/infiniband/hw/qib/qib_mad.c
+@@ -2293,76 +2293,50 @@ static int process_cc(struct ib_device *ibdev, int mad_flags,
+ 			struct ib_mad *out_mad)
+ {
+ 	struct ib_cc_mad *ccp = (struct ib_cc_mad *)out_mad;
+-	int ret;
+-
+ 	*out_mad = *in_mad;
+ 
+ 	if (ccp->class_version != 2) {
+ 		ccp->status |= IB_SMP_UNSUP_VERSION;
+-		ret = reply((struct ib_smp *)ccp);
+-		goto bail;
++		return reply((struct ib_smp *)ccp);
+ 	}
+ 
+ 	switch (ccp->method) {
+ 	case IB_MGMT_METHOD_GET:
+ 		switch (ccp->attr_id) {
+ 		case IB_CC_ATTR_CLASSPORTINFO:
+-			ret = cc_get_classportinfo(ccp, ibdev);
+-			goto bail;
+-
++			return cc_get_classportinfo(ccp, ibdev);
+ 		case IB_CC_ATTR_CONGESTION_INFO:
+-			ret = cc_get_congestion_info(ccp, ibdev, port);
+-			goto bail;
+-
++			return cc_get_congestion_info(ccp, ibdev, port);
+ 		case IB_CC_ATTR_CA_CONGESTION_SETTING:
+-			ret = cc_get_congestion_setting(ccp, ibdev, port);
+-			goto bail;
+-
++			return cc_get_congestion_setting(ccp, ibdev, port);
+ 		case IB_CC_ATTR_CONGESTION_CONTROL_TABLE:
+-			ret = cc_get_congestion_control_table(ccp, ibdev, port);
+-			goto bail;
+-
+-			fallthrough;
++			return cc_get_congestion_control_table(ccp, ibdev, port);
+ 		default:
+ 			ccp->status |= IB_SMP_UNSUP_METH_ATTR;
+-			ret = reply((struct ib_smp *) ccp);
+-			goto bail;
++			return reply((struct ib_smp *) ccp);
+ 		}
+-
+ 	case IB_MGMT_METHOD_SET:
+ 		switch (ccp->attr_id) {
+ 		case IB_CC_ATTR_CA_CONGESTION_SETTING:
+-			ret = cc_set_congestion_setting(ccp, ibdev, port);
+-			goto bail;
+-
++			return cc_set_congestion_setting(ccp, ibdev, port);
+ 		case IB_CC_ATTR_CONGESTION_CONTROL_TABLE:
+-			ret = cc_set_congestion_control_table(ccp, ibdev, port);
+-			goto bail;
+-
+-			fallthrough;
++			return cc_set_congestion_control_table(ccp, ibdev, port);
+ 		default:
+ 			ccp->status |= IB_SMP_UNSUP_METH_ATTR;
+-			ret = reply((struct ib_smp *) ccp);
+-			goto bail;
++			return reply((struct ib_smp *) ccp);
+ 		}
+-
+ 	case IB_MGMT_METHOD_GET_RESP:
+ 		/*
+ 		 * The ib_mad module will call us to process responses
+ 		 * before checking for other consumers.
+ 		 * Just tell the caller to process it normally.
+ 		 */
+-		ret = IB_MAD_RESULT_SUCCESS;
+-		goto bail;
+-
+-	case IB_MGMT_METHOD_TRAP:
+-	default:
+-		ccp->status |= IB_SMP_UNSUP_METHOD;
+-		ret = reply((struct ib_smp *) ccp);
++		return IB_MAD_RESULT_SUCCESS;
+ 	}
+ 
+-bail:
+-	return ret;
++	/* method is unsupported */
++	ccp->status |= IB_SMP_UNSUP_METHOD;
++	return reply((struct ib_smp *) ccp);
+ }
+ 
+ /**
+-- 
+2.28.0
+
