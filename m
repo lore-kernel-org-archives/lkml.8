@@ -2,114 +2,164 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CB9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1ACDC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCE12074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:18:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rv4w+BsV"
+	by mail.kernel.org (Postfix) with ESMTP id 971BF2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:20:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598386805;
+	bh=SS+t45IQlef2ZNO8GZOFRl2+c25Lro4JNuNwmNwc8zQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=v53ajCkBu2WX+BjMqyXjchD/shOloa2TYaVAVaMPT+BaXgB4BYF/Tn+YtzRsjvGfB
+	 9GNS3Fo85tVQU2UpiJeNvcUf21jevKvzI2A5mxiQ0hUAWq6dldQEBTJO03XfrC73q7
+	 0ZWPXsl1NcrV8j5eUbtm1hFLVElZLomXCkgHw4V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgHYUSr (ORCPT
+        id S1726723AbgHYUUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:18:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYUSp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:18:45 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 522B8C061574;
-        Tue, 25 Aug 2020 13:18:45 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id f24so10087472edw.10;
-        Tue, 25 Aug 2020 13:18:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8k54/wE0SJdSYHFKB65kPT2GfYY/F68XNItC0ZawlMs=;
-        b=Rv4w+BsVBU9bQLlMX5nPmcv/iby7Atp6ZZWB8ouG2LBYQCQO6yK3bsOCRaDyo0fD2u
-         z9mvfWrDzWtn31JC7edW3JoTUVRsmcLVRWv0KqFtwGB54Mop9v5/IkA+0dSfl3zpVCqv
-         ukYUDPpLX4NrCWY36fBvJ0Gk1IpgbeDkXLPldeQ1+F27Yp0oC1XCDd6v/zL/V82b+ByN
-         MkZek+GZtchOBGt2lEkrS4ZdivRtPfSHCHtxJ1IMoI5oztjwEMMP3NlekvDiTfOmo2Y2
-         sMxaHNw4h65nSS0f+uiyIHOrYK0rOmgoHrvd4AuFoc3lFFDUUKoFZBLjxJ95PsQWMpSa
-         5XKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8k54/wE0SJdSYHFKB65kPT2GfYY/F68XNItC0ZawlMs=;
-        b=U+tJMUqjnziRCeMyDZf0ZO7QLd2crpM88kmJdRwOUy+rH5kbc6MvRAgG6PZ08+N6+e
-         buGU1gAQF7KhiyU3uOPWeffsztAIkREp05/B66X6PX9II+VWlcZbED2lll5DhQp4jNmj
-         2BphTGwl0GdXLf4MU1VOBcgybokLtI/vrJZn64lLd0QgzAoJswYYy5pqIUuTrbB36IzW
-         Xg5pgT743aobNw5EkFBlGeYTfUFF3+pxsfq7MUfZAC6qtFkXdqCeC0M691fMjv4pBnET
-         G/k69WuT3Q8jq+brQu1soqQKYlyVWVj5Bv1ZOaipMtD6g1ja4Bg0rgkQwbgP+GCLQ44z
-         XJyg==
-X-Gm-Message-State: AOAM532OoNpwdtHSciEOcoxZ7iYO+2FSTROojb/MsleCsmcUDmrffcUx
-        eTu4dujb500TL/ZCKeajGKyYghdcdfotHA==
-X-Google-Smtp-Source: ABdhPJwjRBjRSuLtemmLEN8j2cEzr4ZD1/ajIblLZhbYqPBNqz/8YT4tY6U4+d4dS25qBeJ7gxnJHg==
-X-Received: by 2002:a05:6402:74f:: with SMTP id p15mr10295040edy.377.1598386723973;
-        Tue, 25 Aug 2020 13:18:43 -0700 (PDT)
-Received: from [192.168.2.202] (pd9ea301b.dip0.t-ipconnect.de. [217.234.48.27])
-        by smtp.gmail.com with ESMTPSA id dr21sm15574816ejc.112.2020.08.25.13.18.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 13:18:43 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH net] mwifiex: Increase AES key storage size to 256 bits
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        netdev@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Kaloyan Nikolov <konik98@gmail.com>
-References: <20200825153829.38043-1-luzmaximilian@gmail.com>
- <CA+ASDXPoxdMb4b5d0Ayv=JFACHcq7EXub14pJtJfcCV2di95Rg@mail.gmail.com>
-Message-ID: <65b14706-321d-4025-f199-a89768815dfe@gmail.com>
-Date:   Tue, 25 Aug 2020 22:18:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 16:20:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbgHYUUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 16:20:03 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01E6D2074D;
+        Tue, 25 Aug 2020 20:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598386802;
+        bh=SS+t45IQlef2ZNO8GZOFRl2+c25Lro4JNuNwmNwc8zQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=UeuOVm1ZSIo+ErhE6OlxewMDFPnV4NsWvJxM77q2rQm3Y6ZJ+3mnLIcJH7jIXO4EC
+         /XE+2wmGjyHazKgT/AJKml79ce5k1iC5Q8WKAKcLKlgCau+LQEJi/95s8aaS2ETMil
+         Wsikip6rcjjaxBoIOlqOC42TYjOKJ7dhkIDcMCCw=
+Date:   Tue, 25 Aug 2020 15:20:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        linux-pci@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch RFC 17/38] x86/pci: Reducde #ifdeffery in PCI init code
+Message-ID: <20200825202000.GA1925088@bjorn-Precision-5520>
 MIME-Version: 1.0
-In-Reply-To: <CA+ASDXPoxdMb4b5d0Ayv=JFACHcq7EXub14pJtJfcCV2di95Rg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821002946.982695529@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/25/20 9:30 PM, Brian Norris wrote:
-> Also, while technically the regressing commit (e18696786548 ("mwifiex:
-> Prevent memory corruption handling keys")) was fixing a potential
-> overflow, the encasing command structure (struct host_cmd_ds_command)
-> is a union of a ton of other command layouts, and likely had plenty of
-> padding at the end, which would at least explain why non-malicious
-> scenarios weren't problematic pre-commit-e18696786548.
+s/Reducde/Reduce/ (in subject)
 
-This is pretty much spot on, although as far as I can tell, the padding
-comes from struct mwifiex_ie_type_key_param_set_v2. That contains a
-key_params member, which is a union over all supported key types,
-including other 256 bit types (like struct mwifiex_wapi_param).
+On Fri, Aug 21, 2020 at 02:24:41AM +0200, Thomas Gleixner wrote:
+> Adding a function call before the first #ifdef in arch_pci_init() triggers
+> a 'mixed declarations and code' warning if PCI_DIRECT is enabled.
+> 
+> Use stub functions and move the #ifdeffery to the header file where it is
+> not in the way.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-pci@vger.kernel.org
 
-I should also note that this fix also affects mwifiex_set_aes_key_v2(),
-where sizeof(struct mwifiex_aes_param) is used to calculate the command
-length of what looks like a command being sent to the chip. This should
-probably be reviewed by someone with a bit more inside knowledge about
-the driver, as this could potentially break something due to the commit
-changing it from 16 to 32. I think, however, that this might actually
-also fix a potential issue when setting 256 bit AES keys.
+Nice cleanup, thanks.  Glad to get rid of the useless initializer,
+too.
 
-Regards,
-Max
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> ---
+>  arch/x86/include/asm/pci_x86.h |   11 +++++++++++
+>  arch/x86/pci/init.c            |   10 +++-------
+>  2 files changed, 14 insertions(+), 7 deletions(-)
+> 
+> --- a/arch/x86/include/asm/pci_x86.h
+> +++ b/arch/x86/include/asm/pci_x86.h
+> @@ -114,9 +114,20 @@ extern const struct pci_raw_ops pci_dire
+>  extern bool port_cf9_safe;
+>  
+>  /* arch_initcall level */
+> +#ifdef CONFIG_PCI_DIRECT
+>  extern int pci_direct_probe(void);
+>  extern void pci_direct_init(int type);
+> +#else
+> +static inline int pci_direct_probe(void) { return -1; }
+> +static inline  void pci_direct_init(int type) { }
+> +#endif
+> +
+> +#ifdef CONFIG_PCI_BIOS
+>  extern void pci_pcbios_init(void);
+> +#else
+> +static inline void pci_pcbios_init(void) { }
+> +#endif
+> +
+>  extern void __init dmi_check_pciprobe(void);
+>  extern void __init dmi_check_skip_isa_align(void);
+>  
+> --- a/arch/x86/pci/init.c
+> +++ b/arch/x86/pci/init.c
+> @@ -8,11 +8,9 @@
+>     in the right sequence from here. */
+>  static __init int pci_arch_init(void)
+>  {
+> -#ifdef CONFIG_PCI_DIRECT
+> -	int type = 0;
+> +	int type;
+>  
+>  	type = pci_direct_probe();
+> -#endif
+>  
+>  	if (!(pci_probe & PCI_PROBE_NOEARLY))
+>  		pci_mmcfg_early_init();
+> @@ -20,18 +18,16 @@ static __init int pci_arch_init(void)
+>  	if (x86_init.pci.arch_init && !x86_init.pci.arch_init())
+>  		return 0;
+>  
+> -#ifdef CONFIG_PCI_BIOS
+>  	pci_pcbios_init();
+> -#endif
+> +
+>  	/*
+>  	 * don't check for raw_pci_ops here because we want pcbios as last
+>  	 * fallback, yet it's needed to run first to set pcibios_last_bus
+>  	 * in case legacy PCI probing is used. otherwise detecting peer busses
+>  	 * fails.
+>  	 */
+> -#ifdef CONFIG_PCI_DIRECT
+>  	pci_direct_init(type);
+> -#endif
+> +
+>  	if (!raw_pci_ops && !raw_pci_ext_ops)
+>  		printk(KERN_ERR
+>  		"PCI: Fatal: No config space access function found\n");
+> 
