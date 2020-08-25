@@ -2,183 +2,142 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A587FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7562FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6805A20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:15:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBdDG+jr"
+	by mail.kernel.org (Postfix) with ESMTP id 5822D207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:18:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbgHYDPL (ORCPT
+        id S1728460AbgHYDSc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 23:15:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbgHYDPJ (ORCPT
+        Mon, 24 Aug 2020 23:18:32 -0400
+Received: from gw-eagle1.siemens.com ([194.138.20.72]:10853 "EHLO
+        gw-eagle1.siemens.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbgHYDSb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 23:15:09 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA3EC061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 20:15:08 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id c12so8052769qtn.9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 20:15:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=SvW0vlaUXlhWFbm4GXWlUoLrbQbUVmWGmeetFSuThhE=;
-        b=lBdDG+jr+clUeV0eZJNh0HDFKzUBl3kRTE4wstKazWuV5tSm0WZL5CH4NcESSYmzwC
-         sP4WG8N++5UqDSc3i3VIMNJ0jvo8sUZYtbg6/s2Hh/U63UpgMYGr2OgHf5cwuWZvOr76
-         tmOZwzIAeSNJVqYyxCy0FQ1+N/2UUUOWWnInumaZmoOyep+CVW6y5F0dUJ+0+amyzmSh
-         s+PTEw1UPrFB36N8Kx/VnENvAlsIhownfXWtitpvHR2u91jdmB+afg4z4yi1l7dceg4g
-         X9ZWX+J6qgvDHUDyoWq/TUyWcZyD/OfUDexLvjw804QiXxRYV2LJyzlUVkp53xobKQCb
-         VUkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=SvW0vlaUXlhWFbm4GXWlUoLrbQbUVmWGmeetFSuThhE=;
-        b=bkn7OWblJfrS1F7KQUZ02ApsErR3o7Tx5JDzgwe5/VkrusSn7ju252WLaEnL3BuKiq
-         /vBdOmwBN9hZvpMEaa+Gh+AXo4uVdYNTNZTCTQtiVT6zo6rkpvKfBz3UTBXm28lsvfSF
-         4+NjGs1fLLfL0puxcQT5xN/2sR6FYFZd2nNhe8keXzXB6IBXpAQh7A7mCMeWD1NKKn/w
-         +lKgcicJrRyCHob5WVj+dD1bIx+qNW5xHurfGVhBmJDwwt4hjHH9sVc1wogkobRgHK8H
-         3iYXo/oxyhJxNBsT5bvq3nclXyxtsbsWcGT2n7r88cFyFIyWEcEm1eHFHJxLQgqu6H2/
-         bozg==
-X-Gm-Message-State: AOAM533Ao+VEyNZv2QafrkmXvLHEgkEkuxlelzoGu87XdqNzvAMjv2BZ
-        hn6uHIEpyTzwrZKtCoWtOkI=
-X-Google-Smtp-Source: ABdhPJxNJ48MdYSl7r2xKefnshL60K4Lxd4UGz3J+2l5UciwcxMPHBZ0Y1xQjLCZd+sM07lOCMSRhA==
-X-Received: by 2002:aed:3ead:: with SMTP id n42mr7978240qtf.5.1598325307956;
-        Mon, 24 Aug 2020 20:15:07 -0700 (PDT)
-Received: from smtp.gmail.com ([2607:fea8:56e0:6d60::2db6])
-        by smtp.gmail.com with ESMTPSA id d26sm13283713qtc.51.2020.08.24.20.15.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 20:15:07 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 23:15:01 -0400
-From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-To:     Sidong Yang <realwakka@gmail.com>
-Cc:     Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH] drm/vkms: Use alpha value to blend values.
-Message-ID: <20200825031501.y3knhdwph5a6knld@smtp.gmail.com>
-References: <20200818160215.19550-1-realwakka@gmail.com>
+        Mon, 24 Aug 2020 23:18:31 -0400
+X-Greylist: delayed 364 seconds by postgrey-1.27 at vger.kernel.org; Mon, 24 Aug 2020 23:18:29 EDT
+Received: from mail1.dc4ca.siemens.de (mail1.dc4ca.siemens.de [139.25.224.78])
+        by gw-eagle1.siemens.com (Postfix) with ESMTPS id 1020E4F0070;
+        Tue, 25 Aug 2020 05:12:24 +0200 (CEST)
+Received: from DEMCHDC89YA.ad011.siemens.net (demchdc89ya.ad011.siemens.net [139.25.226.104])
+        by mail1.dc4ca.siemens.de (Postfix) with ESMTPS id AA64C1622BD70;
+        Tue, 25 Aug 2020 05:12:23 +0200 (CEST)
+Received: from CNPEK01M03MSX.ad011.siemens.net (139.24.237.220) by
+ DEMCHDC89YA.ad011.siemens.net (139.25.226.104) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2044.4; Tue, 25 Aug 2020 05:12:22 +0200
+Received: from CNPEK01M03MSX.ad011.siemens.net ([139.24.237.220]) by
+ CNPEK01M03MSX.ad011.siemens.net ([139.24.237.220]) with mapi id
+ 15.01.2044.004; Tue, 25 Aug 2020 11:12:20 +0800
+From:   "Jin, Le" <le.jin@siemens.com>
+To:     "Kiszka, Jan" <jan.kiszka@siemens.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>
+CC:     Boris Brezillon <bbrezillon@kernel.org>,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "simon.k.r.goldschmidt@gmail.com" <simon.k.r.goldschmidt@gmail.com>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "marex@denx.de" <marex@denx.de>
+Subject: RE: [RESEND PATCH v3 5/8] mtd: spi-nor: cadence-quadspi: Handle probe
+ deferral while requesting DMA channel
+Thread-Topic: [RESEND PATCH v3 5/8] mtd: spi-nor: cadence-quadspi: Handle
+ probe deferral while requesting DMA channel
+Thread-Index: AQHWehUBoExbvQYBc0+HV1ub3Nt/GKlIJI9w
+Date:   Tue, 25 Aug 2020 03:12:20 +0000
+Message-ID: <84209e7d08e24362bdf7ccbab1c46e60@siemens.com>
+References: <20200601070444.16923-1-vigneshr@ti.com>
+ <20200601070444.16923-6-vigneshr@ti.com>
+ <6c8d9bff-3a67-0e6c-d4d1-36b7ed5007b9@web.de>
+ <8cebd31a-2366-4584-b1d1-faa30c18ed6a@ti.com>
+ <dbba9f0c-4621-2d58-8fb8-4cbe788558f9@siemens.com>
+In-Reply-To: <dbba9f0c-4621-2d58-8fb8-4cbe788558f9@siemens.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcejAwM3YwdXBcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1jODExZWUyMy1lNjgwLTExZWEtYTdiYi00OGJhNGUyOWM1YzBcYW1lLXRlc3RcYzgxMWVlMjUtZTY4MC0xMWVhLWE3YmItNDhiYTRlMjljNWMwYm9keS50eHQiIHN6PSIzNjUwIiB0PSIxMzI0Mjc5ODczODU0NDc1MjQiIGg9ImJ4TUU3bGZuQjZVTnBmbkZwUmxOSFNFRWJ6QT0iIGlkPSIiIGJsPSIwIiBibz0iMSIgY2k9ImNBQUFBRVJIVTFSU1JVRk5DZ1VBQUhBQUFBQms5RzJLalhyV0FhU2FmQ3MzYnY3RnBKcDhLemR1L3NVQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUJBQUFBQVFBQUFBQUFBQUFBQUFBQUFBQUFBQT09Ii8+PC9tZXRhPg==
+x-dg-rorf: 
+x-document-confidentiality: NotClassified
+x-originating-ip: [139.24.108.114]
+x-tm-snts-smtp: D8EF412AA5EA5D4009F7606EB488764A96583B18430D5CC3616F788D992CCDA82000:8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="hw63tmig6dcz7gis"
-Content-Disposition: inline
-In-Reply-To: <20200818160215.19550-1-realwakka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---hw63tmig6dcz7gis
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Sidong,
-
-Thanks a lot for your patch and effort to improve VKMS.
-
-On 08/18, Sidong Yang wrote:
-> I wrote this patch for TODO list in vkms documentation.
->=20
-> Use alpha value to blend source value and destination value Instead of
-> just overwrite with source value.
->=20
-> Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
->=20
-> Signed-off-by: Sidong Yang <realwakka@gmail.com>
-> ---
->  drivers/gpu/drm/vkms/vkms_composer.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/=
-vkms_composer.c
-> index 4f3b07a32b60..e3230e2a99af 100644
-> --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> @@ -77,6 +77,9 @@ static void blend(void *vaddr_dst, void *vaddr_src,
-> =20
->  	for (i =3D y_src, i_dst =3D y_dst; i < y_limit; ++i) {
->  		for (j =3D x_src, j_dst =3D x_dst; j < x_limit; ++j) {
-> +			u8 *src, *dst;
-> +			u32 alpha, inv_alpha;
-> +
->  			offset_dst =3D dest_composer->offset
->  				     + (i_dst * dest_composer->pitch)
->  				     + (j_dst++ * dest_composer->cpp);
-> @@ -84,8 +87,15 @@ static void blend(void *vaddr_dst, void *vaddr_src,
->  				     + (i * src_composer->pitch)
->  				     + (j * src_composer->cpp);
-> =20
-> -			memcpy(vaddr_dst + offset_dst,
-> -			       vaddr_src + offset_src, sizeof(u32));
-> +			src =3D vaddr_src + offset_src;
-> +			dst =3D vaddr_dst + offset_dst;
-> +			alpha =3D src[3] + 1;
-> +			inv_alpha =3D 256 - src[3];
-> +			dst[0] =3D (alpha * src[0] + inv_alpha * dst[0]) >> 8;
-> +			dst[1] =3D (alpha * src[1] + inv_alpha * dst[1]) >> 8;
-> +			dst[2] =3D (alpha * src[2] + inv_alpha * dst[2]) >> 8;
-
-Did you test your change with IGT? Maybe I missed something but looks
-like that you're applying the alpha value but the value that we get is
-already pre-multiplied.
-
-Btw, It looks like that you and Melissa are working in the same feature,
-maybe you two could try to sync for avoiding overlapping.
-
-Finally, do you have plans to send your fix for
-vkms_get_vblank_timestamp() function? That patch was really good and
-removes a lot of warning generated during the IGT test.
-
-Best Regards
-
-> +			dst[3] =3D 0xff;
-> +
->  		}
->  		i_dst++;
->  	}
-> --=20
-> 2.17.1
->=20
-
---=20
-Rodrigo Siqueira
-https://siqueira.tech
-
---hw63tmig6dcz7gis
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl9EgjAACgkQWJzP/com
-vP+QwRAAn9k/9RskirKfJGva/5Qzhykbkj2nANsnwZo+hY6t2TNNuj4jx/INI0XA
-l8eswurDyaB8yN/IUKs8HQ4LZEnrz4bKnYP8vpsJBxjPu6r+hTJ1vCEchISwaPHO
-gQENSqrjAjgwkfVwHBJ4ltt3mwuvxJ01xgR+pztsIQ+H7U15TnZVhv7wVmt3jbhx
-Rdgy9DM6mT5XVDcOJpriHlMQVCdfumRgbnQZxCSvyp++Bkb/HnvvV0YZnWpA1e0z
-azxOW5jDeiQkg3VTJMO7tgnbXF6nX/Gucfuc1eN9yuiYJrWEyzjEjYGucbCvsbRV
-U0l3XF3/lFGFLQOKe6MV+/TXVQ6rVmSAkNtSRdum8qHh8ukzHbIqdSFhdU6ThNlm
-rexe62XyN1+f09f+kb/7FLxt5ov/7zdEjd2Vx9HQ8PLGhnWXJTxEvEaw12YQk5HB
-Z5yvsD0V8nbUFCuCShvgDdQqSAAURMmoBxo0T8WYPnKIgfN100vL4WFu5Ru+MCFt
-bbLzX+z+CyHg0oND2jg2umTDf0F6Cr2tOlxCTb7N+oqo15rsC1wpB9HqySai/oi5
-3sADXinocJuSnwO08TvSpDtsQzLMvSm19V4hx33UCcheBH3Fk9nbtFmc70q/EY7f
-avYZXPn+CZKPFpGv7dgqsoYe5f2sTmKQUdzC/DsQb26OHQ7zilQ=
-=qLnU
------END PGP SIGNATURE-----
-
---hw63tmig6dcz7gis--
+SGVsbG8gSmFuLA0KDQpUaGUgZmxhc2ggb24gb3VyIGJvYXJkIGlzIFdpbmJvbmQgVzI1UTEyOEpW
+Lg0KDQpCZXN0IFJlZ2FyZHMsDQpMZSBKaW4NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0N
+CkZyb206IEtpc3prYSwgSmFuIChDVCBSREEgSU9UIFNFUy1ERSkgPGphbi5raXN6a2FAc2llbWVu
+cy5jb20+IA0KU2VudDogTW9uZGF5LCBBdWd1c3QgMjQsIDIwMjAgODo0OSBQTQ0KVG86IFZpZ25l
+c2ggUmFnaGF2ZW5kcmEgPHZpZ25lc2hyQHRpLmNvbT47IFR1ZG9yIEFtYmFydXMgPHR1ZG9yLmFt
+YmFydXNAbWljcm9jaGlwLmNvbT47IE1hcmsgQnJvd24gPGJyb29uaWVAa2VybmVsLm9yZz47IEpp
+biwgTGUgKFJDLUNOIERJIEZBIFImRCBTVykgPGxlLmppbkBzaWVtZW5zLmNvbT4NCkNjOiBCb3Jp
+cyBCcmV6aWxsb24gPGJicmV6aWxsb25Aa2VybmVsLm9yZz47IFJhbXV0aGV2YXIgVmFkaXZlbCBN
+dXJ1Z2FuIDx2YWRpdmVsLm11cnVnYW54LnJhbXV0aGV2YXJAbGludXguaW50ZWwuY29tPjsgbGlu
+dXgtbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
+IGxpbnV4LXNwaUB2Z2VyLmtlcm5lbC5vcmc7IHNpbW9uLmsuci5nb2xkc2NobWlkdEBnbWFpbC5j
+b207IGRpbmd1eWVuQGtlcm5lbC5vcmc7IG1hcmV4QGRlbnguZGUNClN1YmplY3Q6IFJlOiBbUkVT
+RU5EIFBBVENIIHYzIDUvOF0gbXRkOiBzcGktbm9yOiBjYWRlbmNlLXF1YWRzcGk6IEhhbmRsZSBw
+cm9iZSBkZWZlcnJhbCB3aGlsZSByZXF1ZXN0aW5nIERNQSBjaGFubmVsDQoNCk9uIDI0LjA4LjIw
+IDEzOjQ1LCBWaWduZXNoIFJhZ2hhdmVuZHJhIHdyb3RlOg0KPiANCj4gDQo+IE9uIDgvMjIvMjAg
+MTE6MzUgUE0sIEphbiBLaXN6a2Egd3JvdGU6DQo+PiBPbiAwMS4wNi4yMCAwOTowNCwgVmlnbmVz
+aCBSYWdoYXZlbmRyYSB3cm90ZToNCj4+PiBkbWFfcmVxdWVzdF9jaGFuX2J5X21hc2soKSBjYW4g
+dGhyb3cgRVBST0JFX0RFRkVSIGlmIERNQSBwcm92aWRlciBpcyANCj4+PiBub3QgeWV0IHByb2Jl
+ZC4gQ3VycmVudGx5IGRyaXZlciBqdXN0IGZhbGxzIGJhY2sgdG8gdXNpbmcgUElPIG1vZGUgDQo+
+Pj4gKHdoaWNoIGlzIGxlc3MgZWZmaWNpZW50KSBpbiB0aGlzIGNhc2UuIEluc3RlYWQgcmV0dXJu
+IHByb2JlIA0KPj4+IGRlZmVycmFsIGVycm9yIGFzIGlzIHNvIHRoYXQgZHJpdmVyIHdpbGwgYmUg
+cmUgcHJvYmVkIG9uY2UgRE1BIA0KPj4+IHByb3ZpZGVyIGlzIGF2YWlsYWJsZS4NCj4+Pg0KPj4+
+IFNpZ25lZC1vZmYtYnk6IFZpZ25lc2ggUmFnaGF2ZW5kcmEgPHZpZ25lc2hyQHRpLmNvbT4NCj4+
+PiBSZXZpZXdlZC1ieTogVHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29t
+Pg0KPj4+IC0tLQ0KPiBbLi4uXQ0KPj4+DQo+Pj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc3BpX25v
+cl9jb250cm9sbGVyX29wcyBjcXNwaV9jb250cm9sbGVyX29wcyA9IHsgDQo+Pj4gQEAgLTEyNjks
+OCArMTI3NCwxMSBAQCBzdGF0aWMgaW50IGNxc3BpX3NldHVwX2ZsYXNoKHN0cnVjdCBjcXNwaV9z
+dCAqY3FzcGksIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApDQo+Pj4gIAkJCWRldl9kYmcobm9yLT5k
+ZXYsICJ1c2luZyBkaXJlY3QgbW9kZSBmb3IgJXNcbiIsDQo+Pj4gIAkJCQltdGQtPm5hbWUpOw0K
+Pj4+DQo+Pj4gLQkJCWlmICghY3FzcGktPnJ4X2NoYW4pDQo+Pj4gLQkJCQljcXNwaV9yZXF1ZXN0
+X21tYXBfZG1hKGNxc3BpKTsNCj4+PiArCQkJaWYgKCFjcXNwaS0+cnhfY2hhbikgew0KPj4+ICsJ
+CQkJcmV0ID0gY3FzcGlfcmVxdWVzdF9tbWFwX2RtYShjcXNwaSk7DQo+Pj4gKwkJCQlpZiAocmV0
+ID09IC1FUFJPQkVfREVGRVIpDQo+Pj4gKwkJCQkJZ290byBlcnI7DQo+Pj4gKwkJCX0NCj4+PiAg
+CQl9DQo+Pj4gIAl9DQo+Pj4NCj4+Pg0KPj4NCj4+IFRoaXMgc2VlbSB0byBicmVhayByZWFkaW5n
+IHRoZSBTUEkgZmxhc2ggb24gb3VyIElPVDIwNTAgWzFdIChkaWRuJ3QgDQo+PiB0ZXN0IHRoZSBl
+dmFsIGJvYXJkIHlldCkuDQo+Pg0KPj4gV2l0aG91dCB0aGF0IGNvbW1pdCwgcmVhZCBoYXBwZW5z
+IHZpYSBQSU8sIGFuZCB0aGF0IHdvcmtzLiBXaXRoIHRoZSANCj4+IGNvbW1pdCwgdGhlIHBhdHRl
+cm4NCj4+DQo+PiB3aXRoIG9wZW4oIm91dC5iaW4iLCAid2IiKSBhcyBvdXQ6DQo+PiAgICAgcG9z
+ID0gMA0KPj4gICAgIHdoaWxlIHBvcyA8IDI6DQo+PiAgICAgICAgIHdpdGggb3BlbigiL2Rldi9t
+dGQwIiwgInJiIikgYXMgbXRkOg0KPj4gICAgICAgICAgICBtdGQuc2Vlayhwb3MgKiAweDEwMDAw
+KQ0KPj4gICAgICAgICAgICBvdXQud3JpdGUobXRkLnJlYWQoMHgxMDAwMCkpDQo+PiAgICAgICAg
+IHBvcyArPSAxDQo+Pg0KPj4gZ2l2ZXMgdGhlIHdyb25nIHJlc3VsdCBmb3IgdGhlIHNlY29uZCBi
+bG9jayB3aGlsZQ0KPiANCj4gSW50ZXJlc3RpbmcuLi4gQ291bGQgeW91IHBsZWFzZSBleHBsYWlu
+IHdyb25nIHJlc3VsdD8gSXMgdGhlIGRhdGEgbW92ZSANCj4gYXJvdW5kIG9yIGNvbXBsZXRlbHkg
+Z2FyYmFnZT8NCg0KSXQgbG9va3MgbGlrZSBzb21lIHN0cmlwZXMgY29udGFpbiBkYXRhIGZyb20g
+b3RoZXIgcGFydHMgb2YgdGhlIGZsYXNoIG9yIGtlcm5lbCBSQU0uIEl0J3Mgbm90IGp1c3QgZ2Fy
+YmFnZSwgdGhlcmUgYXJlIHJlYWRhYmxlIHN0cmluZ3MgaW5jbHVkZWQuDQoNCj4gDQo+IERvZXMg
+dGhpcyBmYWlsIGV2ZW4gb24gQU02NTQgRVZNPyBDb3VsZCB5b3Ugc2hhcmUgZnVsbCBzY3JpcHQg
+Zm9yIG1lIA0KPiB0byB0ZXN0IGxvY2FsbHk/DQoNClRoZSBzY3JpcHRzIGFyZSBjb21wbGV0ZSAo
+cHl0aG9uKS4gSnVzdCBiaW5hcnktZGlmZiB0aGUgb3V0cHV0cy4NCg0KSSdsbCB0cnkgb24gdGhl
+IEVWTSBsYXRlci4NCg0KPiANCj4gV2hhdCBpcyB0aGUgZmxhc2ggb24gdGhlIGJvYXJkPw0KDQpM
+ZSwgY291bGQgeW91IGFuc3dlciB0aGF0IG1vcmUgcHJlY2lzZWx5IHRoYW4gSSBjb3VsZD8NCg0K
+VGhhbmtzLA0KSmFuDQoNCj4gDQo+Pg0KPj4gd2l0aCBvcGVuKCJvdXQyLmJpbiIsICJ3YiIpIGFz
+IG91dDoNCj4+ICAgICB3aXRoIG9wZW4oIi9kZXYvbXRkMCIsICJyYiIpIGFzIG10ZDoNCj4+ICAg
+ICAgICAgb3V0LndyaXRlKG10ZC5yZWFkKDB4MjAwMDApKQ0KPj4NCj4+IChvciAibXRkX2RlYnVn
+IHJlYWQiKSBpcyBmaW5lLg0KPj4NCj4+IFdoYXQgY291bGQgYmUgdGhlIHJlYXNvbj8gT3VyIERU
+QnMgYW5kIGszLWFtNjU0LWJhc2UtYm9hcmQuZHRiIGhhZCANCj4+IHNvbWUgZGV2aWF0aW9ucyAv
+d3J0IHRoZSBvc3BpIG5vZGUsIGJ1dCBhbGlnbmluZyBvdXJzIHRvIHRoZSBiYXNlIA0KPj4gYm9h
+cmQgbWFkZSBubyBkaWZmZXJlbmNlLg0KPj4NCj4+IEphbg0KPj4NCj4+IFsxXSBodHRwczovL2dp
+dGh1Yi5jb20vc2llbWVucy9saW51eC9jb21taXRzL2phbi9pb3QyMDUwDQo+Pg0KDQotLQ0KU2ll
+bWVucyBBRywgQ29ycG9yYXRlIFRlY2hub2xvZ3ksIENUIFJEQSBJT1QgU0VTLURFIENvcnBvcmF0
+ZSBDb21wZXRlbmNlIENlbnRlciBFbWJlZGRlZCBMaW51eA0K
