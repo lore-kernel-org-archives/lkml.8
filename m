@@ -2,122 +2,129 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF83AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 373052075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A09920782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:52:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598367123;
+	bh=rHpH6wHGNoovgRhLFyzbIbC3W/iWfvzXP7qIc1FSfWk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cGMzgmvef/L9LVk47rwACWPG+ZCmXEY+W9PXophTfM0O8qOCCy20IJ9I0PNdTaHmj
+	 ZxlMWdf6k4UQuNN8vdVgj7Bnbmp2DAgN2eiTjnmqSM10XtZG3CFPp3PtEKiwLibVMv
+	 nuLflC28cdEvVXPBMXtMiTcyfeTbs0p2hc+ndVWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgHYOvv (ORCPT
+        id S1726772AbgHYOwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:51:51 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42812 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgHYOvt (ORCPT
+        Tue, 25 Aug 2020 10:52:01 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34009 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgHYOvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:51:49 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t6so14123147ljk.9;
-        Tue, 25 Aug 2020 07:51:47 -0700 (PDT)
+        Tue, 25 Aug 2020 10:51:52 -0400
+Received: by mail-oi1-f195.google.com with SMTP id z22so11831213oid.1;
+        Tue, 25 Aug 2020 07:51:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=P4P0Mqj4dl1NT6bCCZOf37xl543y0SvyDIEq1kl/4Bo=;
-        b=kRwe3FO3JRyOVlGPT3UsQFGRKjqGa4zqKP6NNrcBU5p/DmMhFzgfpCfdveytz8nDiK
-         ZDO0s5332ybFPLmGJu+tUC3n+82g/QBdY6gvs4mLsSk9nC4tgUbVhOZ1Z6fjDnrsnYRR
-         zsdR2BTxsqiYfK4z5FGHNAzPQIVBFwyn50F2r1Hpp/3ulvRnePfYSyq9901Nnwq9GQYu
-         C7aTgNtNRcooinqHbpknYb4I4knfS2UPUVZ2TMFJBnMVqzkP36ReicHd/c1ySyS5B4zx
-         +sGNdm79APZSLspb+dERCD4JRNEp3A5V94KWzz4kPnenSWj3HLHs7pipbo4PSRvx6CNh
-         L8iQ==
-X-Gm-Message-State: AOAM532NWRAPYlR8xVdhERlMiMjkQI4lET9vgv1fpHfKcCFq+xKFh+mX
-        Vh0drs5Fe+E/seqQDwNfDXE7eDsDNR22Dw==
-X-Google-Smtp-Source: ABdhPJzEaToII+E+MJulFKcYStOY/UgSO/IsLxXa/ccxOwY8j/Bh+qTlVEKJUepl0TqR4VA02EKwUw==
-X-Received: by 2002:a2e:8945:: with SMTP id b5mr4683045ljk.381.1598367106690;
-        Tue, 25 Aug 2020 07:51:46 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id t4sm2879161ljh.122.2020.08.25.07.51.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 07:51:46 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id 12so6575146lfb.11;
-        Tue, 25 Aug 2020 07:51:46 -0700 (PDT)
-X-Received: by 2002:a05:6512:31c2:: with SMTP id j2mr5148160lfe.85.1598367105913;
- Tue, 25 Aug 2020 07:51:45 -0700 (PDT)
+        bh=+ylVPg9/PXce4pT2IR4gKle+fSVW1ZRt1vDCYod4rN8=;
+        b=HI0uJ5ca375SW36B0Qqv9rSR83yIsIobvbzGIRzOQokQ2xOtYOF4HMA2qnS50c7/rm
+         ilV6/LXdBsNwKLht5ZAW6hgoJddexutbxZzuDT2PU3+tHzn33mbt7Vp30EMFjMZVJaWe
+         nHkJSPAJyuGZ4IvSVIgVGHMjF/Ai/z/M7fB6FLbV1h/r1mmoaKPWcZXZR76BOqQ/W8pt
+         UrGWqXRS+8QqNg3MUPPE2MXmkIqa/5tag0xRTb3h8/30+0rQOxJF/g5ckiTfQkiFYYUP
+         mJZilsuNasJxrr/OtcZVf/gQfzuSkgPGUf2NgYEV3hO2BTrcHsrzPUMNcBcVXKUQzZpx
+         lYdw==
+X-Gm-Message-State: AOAM532xjSD7xyK7iPzJX3gfTvKc9kNOwfKWAVTFHhklDXWNvq7k4ksq
+        dR4U3xXPrCDG7tAy1os2lUNSTOuA48x+mOQORhQ=
+X-Google-Smtp-Source: ABdhPJwqJQS2tbUF7jqx3k1gHhGfoM4gKMhNdMHaSpRuHkR0DsUvna55zZygMHn8se8UyztTq7pobqnChzlnhKJ6j+4=
+X-Received: by 2002:a05:6808:3d5:: with SMTP id o21mr1287215oie.110.1598367111572;
+ Tue, 25 Aug 2020 07:51:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200823075815.23457-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20200823075815.23457-1-dinghao.liu@zju.edu.cn>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 25 Aug 2020 22:51:33 +0800
-X-Gmail-Original-Message-ID: <CAGb2v640zTha1tzjOo3L+=T=N3hDRG+8qf2xu+bD8BMUnkhORQ@mail.gmail.com>
-Message-ID: <CAGb2v640zTha1tzjOo3L+=T=N3hDRG+8qf2xu+bD8BMUnkhORQ@mail.gmail.com>
-Subject: Re: [PATCH] rtc: sun6i: Fix memleak in sun6i_rtc_clk_init
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     Kangjie Lu <kjlu@umn.edu>, linux-rtc@vger.kernel.org,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <4169555.5IIHXK4Dsd@kreacher> <2064342.aRc67yb0pC@kreacher> <61ea43fce7dd8700d94f12236a86ffec6f76a898.camel@gmail.com>
+In-Reply-To: <61ea43fce7dd8700d94f12236a86ffec6f76a898.camel@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 25 Aug 2020 16:51:40 +0200
+Message-ID: <CAJZ5v0hkmcAuCsnfjCSWTarr4pkQry2VCtk2aWM74fOW2guzmg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] cpufreq: intel_pstate: Always return last EPP
+ value from sysfs
+To:     Artem Bityutskiy <dedekind1@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Doug Smythies <dsmythies@telus.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 23, 2020 at 3:59 PM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
+On Tue, Aug 25, 2020 at 8:20 AM Artem Bityutskiy <dedekind1@gmail.com> wrote:
 >
-> When clk_hw_register_fixed_rate_with_accuracy() fails,
-> clk_data should be freed. It's the same for the subsequent
-> error paths.
+> On Mon, 2020-08-24 at 19:42 +0200, Rafael J. Wysocki wrote:
+> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> >
+> > Make the energy_performance_preference policy attribute in sysfs
+> > always return the last EPP value written to it instead of the one
+> > currently in the HWP Request MSR to avoid possible confusion when
+> > the performance scaling algorithm is used in the active mode with
+> > HWP enabled (in which case the EPP is forced to 0 regardless of
+> > what value it has been set to via sysfs).
+>
+> Why is this a good idea, I wonder. If there was a prior discussion,
+> please, point to it.
+>
+> The general approach to changing settings via sysfs is often like this:
+>
+> 1. Write new value.
+> 2. Read it back and verify that it is the same. Because there is no
+> better way to verify that the kernel "accepted" the value.
 
-I suppose you should also unregister the already registered clocks
-in the latter two error paths?
+If the write is successful (ie. no errors returned and the value
+returned is equal to the number of written characters), the kernel
+*has* accepted the written value, but it may not have taken effect.
+These are two different things.
 
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/rtc/rtc-sun6i.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+The written value may take an effect immediately or it may take an
+effect later, depending on the current configuration etc.  If you
+don't see the effect of it immediately, it doesn't matter that there
+was a failure of some sort.
+
+> Let's say I write 'balanced' to energy_performance_preference. I read
+> it back, and it contains 'balanced', so I am happy, I trust the kernel
+> changed EPP to "balanced".
 >
-> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> index e2b8b150bcb4..a837c5a40508 100644
-> --- a/drivers/rtc/rtc-sun6i.c
-> +++ b/drivers/rtc/rtc-sun6i.c
-> @@ -272,7 +272,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
->                                                                 300000000);
->         if (IS_ERR(rtc->int_osc)) {
->                 pr_crit("Couldn't register the internal oscillator\n");
-> -               return;
-> +               goto err;
->         }
->
->         parents[0] = clk_hw_get_name(rtc->int_osc);
-> @@ -290,7 +290,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
->         rtc->losc = clk_register(NULL, &rtc->hw);
->         if (IS_ERR(rtc->losc)) {
->                 pr_crit("Couldn't register the LOSC clock\n");
-> -               return;
-> +               goto err;
->         }
->
->         of_property_read_string_index(node, "clock-output-names", 1,
-> @@ -301,7 +301,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
->                                           &rtc->lock);
->         if (IS_ERR(rtc->ext_losc)) {
->                 pr_crit("Couldn't register the LOSC external gate\n");
-> -               return;
-> +               goto err;
->         }
->
->         clk_data->num = 2;
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> If the kernel, in fact, uses something else, I want to know about it
+> and have my script fail.
+
+Why do you want it to fail then?
+
+> Why caching the value and making my script _think_ it succeeded is a good idea.
+
+Because when you change the scaling algorithm or the driver's
+operation mode, the value you have written will take effect.
+
+In this particular case it is explained in the driver documentation
+that the performance scaling algorithm in the active mode overrides
+the sysfs value and that's the only case when it can be overridden.
+So whatever you write to this attribute will not take effect
+immediately anyway, but it may take an effect later.
+
+> In other words, in my usage scenarios at list, I prefer kernel telling
+> the true EPP value, not some "cached, but not used" value.
+
+An alternative is to fail writes to energy_performance_preference if
+the driver works in the active mode and the scaling algorithm for the
+scaling CPU is performance and *then* to make reads from it return the
+value in the register.
+
+Accepting a write and returning a different value in a subsequent read
+is confusing.
+
+Thanks!
