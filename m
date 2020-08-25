@@ -2,112 +2,101 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E92BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F32C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57DF620782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC36E20782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:56:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dvJyYk4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgHYOzI convert rfc822-to-8bit (ORCPT
+        id S1726873AbgHYO4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:55:08 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:47345 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726751AbgHYOw4 (ORCPT
+        Tue, 25 Aug 2020 10:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgHYO4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:52:56 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-173-Wvx2BJGKOQiqJ5F1Fe8Fiw-1; Tue, 25 Aug 2020 15:52:51 +0100
-X-MC-Unique: Wvx2BJGKOQiqJ5F1Fe8Fiw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 25 Aug 2020 15:52:51 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 25 Aug 2020 15:52:51 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>,
-        'Catalin Marinas' <catalin.marinas@arm.com>,
-        "'kent.overstreet@gmail.com'" <kent.overstreet@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "'Neil Horman'" <nhorman@tuxdriver.com>
-Subject: [PATCH 09/13] lib/generic-radix-tree: Check sizeof(_type) when
- defining a tree.
-Thread-Topic: [PATCH 09/13] lib/generic-radix-tree: Check sizeof(_type) when
- defining a tree.
-Thread-Index: AdZ672a1FEFrjN29SvWEbOsXPPX6cQ==
-Date:   Tue, 25 Aug 2020 14:52:50 +0000
-Message-ID: <9ddf843612ea429682b68d5747bd93d8@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 25 Aug 2020 10:56:20 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15C7BC061574;
+        Tue, 25 Aug 2020 07:56:20 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id k18so7544112pfp.7;
+        Tue, 25 Aug 2020 07:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DXJMFSxcV9xYWsnVqv7Ps99ZWJR3OqDZVUVZ9L/SWjE=;
+        b=dvJyYk4ABNmrcOuHspQsH8XUQhBTK+lgCnrK2uA5hY7FH3GzUfU8XRPnt6o8h3fTXx
+         q1Nwo7lXPvbQtPK91Hatf5mxEYmoA9MD40QBuBaFGvZEd5E/BifsOZaODyCRAJPR9Hby
+         K6vqurjvNfQiQwJtOy9tzhfNj6r8AAc9jVU+rWAgWpJCGfvDuK/kH00bujhlBb1yNkwb
+         UMTaCHbAiekHf0xc/C5VkQciwLmeJknBGyiheaRY/iEDflIcHgmjJzpYB2fvhQ1deWsS
+         Jd4ODwO7Sn5/sNuU4puUESlmd0S5R+liRk6mGR9pE3Mtat3cv2oE3h0z5Dhy3imFQXbD
+         ltNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DXJMFSxcV9xYWsnVqv7Ps99ZWJR3OqDZVUVZ9L/SWjE=;
+        b=cMD0ulobyvN2AYkGJJw2V2bXxvPRidQ+Uw9lSpXt/O0xE4v/q/6sN01VutGNuMZvqS
+         TgHqOaPrwXV+EfXON6N8JpPAaFilC1KMnCC4KUbXBtiTAiUspdaJ98MVnc6g7m/eZ8k4
+         pYJ9OH1iz15zXXqFD5d67FPASceB7lu2lEEOj/QTZtjBsxBeGlBHaFsWEBXgUNzrbZED
+         IygCd6W8uEKrRQFin4hZU5ZQtovt8G6ASCGTVKdw/8da5zy/1obZ4ODoO1QW/+1mpnm+
+         sFJ7kHbzz/xS99y5yPbAah5YuJjcLHM1UKiRykABLRYCv6314moj6AydUD3+6CYnV5v0
+         ZzEw==
+X-Gm-Message-State: AOAM532+Je4o0PiprUea+BkbBaxSOcDiwGk6BN7Q2TYpUCF55hKnLz5G
+        AvL37GqZkbguwkFvWQsiP0E=
+X-Google-Smtp-Source: ABdhPJw/15iAcP1sYV3sJGlu8PB+9DVdCkBWGhe3FX1Gk4gJE5Gj7X74eI1uCHmH5dcCVGyxuwNEAA==
+X-Received: by 2002:aa7:9556:: with SMTP id w22mr8148808pfq.245.1598367379444;
+        Tue, 25 Aug 2020 07:56:19 -0700 (PDT)
+Received: from localhost.localdomain ([240d:1a:8f0:6c00:89cb:88d1:b6b2:3345])
+        by smtp.gmail.com with ESMTPSA id a1sm4469959pgc.54.2020.08.25.07.56.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 07:56:17 -0700 (PDT)
+From:   Alexandre Courbot <gnurou@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <gnurou@gmail.com>
+Subject: [PATCH 0/2] media: v4l2-mem2mem: fix poll() bug
+Date:   Tue, 25 Aug 2020 23:55:54 +0900
+Message-Id: <20200825145556.637323-1-gnurou@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.002
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the check for the structure type being larger than PAGE_SIZE from every
-use to the definition of a tree.
+This addresses a very corner case that probably nobody ever encounters,
+but I have hit it when playing with vicoded so here is a tentative fix.
 
-Signed-off-by: David Laight <david.laight@aculab.com>
----
- include/linux/generic-radix-tree.h | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Patch 1/2 addresses the issue that when the last buffer of a m2m device
+has been dequeued, any attempt to poll with EPOLLOUT will result in only
+EPOLLIN being returned, even if OUTPUT buffers are still pending. The
+issue stems from the fact that the last buffer check if done first, and
+returns immediately if true.
 
-diff --git a/include/linux/generic-radix-tree.h b/include/linux/generic-radix-tree.h
-index bfd00320c7f3..53149bc1b92a 100644
---- a/include/linux/generic-radix-tree.h
-+++ b/include/linux/generic-radix-tree.h
-@@ -64,12 +64,14 @@ struct __genradix {
-  * to it for casts/sizeof - we also force the alignment so that storing a type
-  * with a ridiculous alignment doesn't blow up the alignment or size of the
-  * genradix.
-+ *
-+ * Generates a compile-time error if the item is too large.
-  */
- 
- #define GENRADIX(_type)						\
- struct {							\
- 	struct __genradix	tree;				\
--	_type			type[0] __aligned(1);		\
-+	_type type[sizeof (_type) <= PAGE_SIZE ? 0 : -1] __aligned(1);	\
- }
- 
- #define DEFINE_GENRADIX(_name, _type)				\
-@@ -98,11 +100,6 @@ void __genradix_free(struct __genradix *);
- 
- static inline size_t __idx_to_offset(size_t idx, size_t obj_size)
- {
--	if (__builtin_constant_p(obj_size))
--		BUILD_BUG_ON(obj_size > PAGE_SIZE);
--	else
--		BUG_ON(obj_size > PAGE_SIZE);
--
- 	if (!is_power_of_2(obj_size)) {
- 		size_t objs_per_page = PAGE_SIZE / obj_size;
- 
+Patch 2/2 builds on the first one to (hopefully) clean up the code a bit
+and make the function flow easier to follow. Functionally speaking it is
+supposed to be a no-op and it can safely be dropped if the former code
+is preferred - the actual fix is in 1/2.
+
+Alexandre Courbot (2):
+  media: v4l2-mem2mem: consider OUTPUT queue first when polling
+  media: v4l2-mem2mem: simplify poll logic a bit
+
+ drivers/media/v4l2-core/v4l2-mem2mem.c | 42 +++++++++++---------------
+ 1 file changed, 18 insertions(+), 24 deletions(-)
+
 -- 
-2.25.1
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+2.28.0
 
