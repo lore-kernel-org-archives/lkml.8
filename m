@@ -2,109 +2,128 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16314C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDD3820737
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67132072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:22:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="iGXM5Qyc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbgHYEVG (ORCPT
+        id S1728394AbgHYEWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:21:06 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36106 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725263AbgHYEVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:21:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 43412B78E;
-        Tue, 25 Aug 2020 04:21:34 +0000 (UTC)
-Subject: Re: [patch RFC 24/38] x86/xen: Consolidate XEN-MSI init
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200821002424.119492231@linutronix.de>
- <20200821002947.667887608@linutronix.de>
- <5caec213-8f56-9f12-34db-a29de8326f95@suse.com>
- <87tuwr68q8.fsf@nanos.tec.linutronix.de>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <fb4e3d13-18c8-a425-19a8-975fda80d411@suse.com>
-Date:   Tue, 25 Aug 2020 06:21:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <87tuwr68q8.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 25 Aug 2020 00:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbgHYEWU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 00:22:20 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6116FC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:20 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id p138so13400448yba.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=/c51TfJaBziI1eN9wq01jeVj56xrIHjm/tLvMe9Q3YY=;
+        b=iGXM5QycrbOT8ijGc0fdMOrgKahpDZiqXkaucZYHEAWp7oMPCLFltMCwtqKHsxS7cV
+         02F3xQzc9dH5ovr6zzE9SNBwGQEFUE7GteWjLY3yGHPGtIbPZM8vZfkQKRB2MtWPi84N
+         hZg9BC5Q8Yt+xUsw341pCG9qDC/sJWv0yWQTMq0BfyRPUYeOGeU4NMn1STFVxirwhXfV
+         aJogMc/vJ2lHjkHL3csyJuuWPc+6SZgoJ9Y22t9YTAIxUgm9uf1zpvw2g/GWcH6PNggk
+         i2g0zJY3RaiEFvH2IDRHNIKdkrz/OzWaecHGtXKFQ9xnWskSIDEdKQ405i6R+Jwpnbqj
+         bGiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=/c51TfJaBziI1eN9wq01jeVj56xrIHjm/tLvMe9Q3YY=;
+        b=g47Ab2CLzSTFy4tDCNgxV4D1hC7n5AY8UojfoQxe00tfigkA7V//YQ57Z8fajvC9ki
+         NvAZo5WEUOMAyRQeObf5B8jGI9MiPub7uWbVJN9vC67ldTnW9r7Gd7hAPDLx/WW7iYeN
+         PTEvZN/cexJiw40+lsZ/V8avrAGKsKXZiohB1YvNV1JNjz1Pmxp+DnvKXeuWN7KkvIV9
+         Twbzn2MnjZrJH6NSTleAKHswEJDlnaKjCMHkSH/D+d5nC2WmuKuwB7jZfSGVe04sf8mj
+         jeF3sAYBh0twcQulrYnCPizt6++ZLr2L7M2oeWzCjQxFrwNURMXmKWSbtHdoSof3MCn4
+         K88A==
+X-Gm-Message-State: AOAM530HrT1DCyiomDup9M+zGDCVC99X2VHR6VgsQe2/XQ8aNzqvQ6tE
+        lc7CmyVO7l7Qgmb8l1sBT8wFDwfuthI=
+X-Google-Smtp-Source: ABdhPJyYhvZ0I7GKmQxC+8W9XVFnCFFUYlSNbsEep8zhRBabM7qpmnZtotDNd8ZuMfLd2HKdgRu5gaDK8mk=
+X-Received: from badhri.mtv.corp.google.com ([2620:15c:211:1:f292:1cff:fee0:66cf])
+ (user=badhri job=sendgmr) by 2002:a25:3c47:: with SMTP id j68mr12180701yba.59.1598329339498;
+ Mon, 24 Aug 2020 21:22:19 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 21:21:56 -0700
+Message-Id: <20200825042210.300632-1-badhri@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH 00/14] TCPM support for FRS and AutoDischarge Disconnect
+From:   Badhri Jagan Sridharan <badhri@google.com>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Badhri Jagan Sridharan <badhri@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.08.20 23:21, Thomas Gleixner wrote:
-> On Mon, Aug 24 2020 at 06:59, Jürgen Groß wrote:
->> On 21.08.20 02:24, Thomas Gleixner wrote:
->>> +static __init void xen_setup_pci_msi(void)
->>> +{
->>> +	if (xen_initial_domain()) {
->>> +		x86_msi.setup_msi_irqs = xen_initdom_setup_msi_irqs;
->>> +		x86_msi.teardown_msi_irqs = xen_teardown_msi_irqs;
->>> +		x86_msi.restore_msi_irqs = xen_initdom_restore_msi_irqs;
->>> +		pci_msi_ignore_mask = 1;
->>
->> This is wrong, as a PVH initial domain shouldn't do the pv settings.
->>
->> The "if (xen_initial_domain())" should be inside the pv case, like:
->>
->> if (xen_pv_domain()) {
->> 	if (xen_initial_domain()) {
->> 		...
->> 	} else {
->> 		...
->> 	}
->> } else if (xen_hvm_domain()) {
->> 	...
-> 
-> I still think it does the right thing depending on the place it is
-> called from, but even if so, it's completely unreadable gunk. I'll fix
-> that proper.
+Hi all,
 
-The main issue is that xen_initial_domain() and xen_pv_domain() are
-orthogonal to each other. So xen_initial_domain() can either be true
-for xen_pv_domain() (the "classic" pv dom0) or for xen_hvm_domain()
-(the new PVH dom0).
+With this patchset, I am hoping to add Sink Fast Role swap support to TCPM.
+Sink Fast Role swap is described by the USB Power Delivery Specification
+Revision 3.0. The patchset also adds support to Auto Discharge Disconnect
+described in the USB Type-C Port Controller Interface Specification.
+I am also sending the chip level driver for the TCPCI based type-c controller
+that supports Fast role swap.
 
+I tested the fast role swap implementation with the following
+accessories:
+1. https://ezq.com/usb-c-multimedia-hub-adapter-8-ports.html
+2. https://www.iogear.com/product/GUH3C22P/
 
-Juergen
+Note: I will rebase the patchset on top of https://lkml.org/lkml/2020/8/19/52
+once it's picked up in usb-next.
+
+Badhri Jagan Sridharan (14):
+  usb: typec: tcpci: Add register definitions to tcpci
+  usb: typec: tcpci: Add support when hidden tx registers are
+    inaccessible
+  usb: typec: tcpci: update ROLE_CONTROL for DRP
+  usb: typec: tcpci: Add a getter method to retrieve tcpm_port reference
+  usb: typec: tcpci: Add set_vbus tcpci callback
+  dt-bindings: usb: Maxim type-c controller device tree binding document
+  usb: typec: tcpci_maxim: Chip level TCPC driver
+  dt-bindings: connector: Add property to set initial current cap for
+    FRS
+  usb: typec: tcpm: Add support for Sink Fast Role SWAP(FRS)
+  usb: typec: tcpci: Implement callbacks for FRS
+  usb: typec: tcpci_maxim: Add support for Sink FRS
+  usb: typec: tcpm: Implement enabling Auto Discharge disconnect support
+  usb: typec: tcpci: Implement Auto discharge disconnect callbacks
+  usb: typec: tcpci_maxim: Implemnent set_auto_vbus_discharge_threshold
+
+ .../bindings/connector/usb-connector.txt      | 128 ++++
+ .../devicetree/bindings/usb/maxim,tcpci.txt   |  44 ++
+ drivers/usb/typec/tcpm/Kconfig                |   6 +
+ drivers/usb/typec/tcpm/Makefile               |  13 +-
+ drivers/usb/typec/tcpm/tcpci.c                | 149 ++++-
+ drivers/usb/typec/tcpm/tcpci.h                |  43 ++
+ drivers/usb/typec/tcpm/tcpci_maxim.c          | 564 ++++++++++++++++++
+ drivers/usb/typec/tcpm/tcpm.c                 | 271 ++++++++-
+ include/dt-bindings/usb/pd.h                  |  10 +
+ include/linux/usb/pd.h                        |  20 +-
+ include/linux/usb/tcpm.h                      |  24 +-
+ include/linux/usb/typec.h                     |  13 +
+ 12 files changed, 1249 insertions(+), 36 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/connector/usb-connector.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/maxim,tcpci.txt
+ create mode 100644 drivers/usb/typec/tcpm/tcpci_maxim.c
+
+-- 
+2.28.0.297.g1956fa8f8d-goog
+
