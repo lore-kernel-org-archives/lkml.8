@@ -2,92 +2,129 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5481DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D754AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27052204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B29C020578
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="H0y3ntQs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qx7zECjP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgHYCFJ (ORCPT
+        id S1727878AbgHYCFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:05:09 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:36775 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725781AbgHYCEv (ORCPT
+        Mon, 24 Aug 2020 22:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57690 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727809AbgHYCFK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 22:04:51 -0400
-X-UUID: dc928efca924495dbc2265b27d8bb7a2-20200825
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=21CT99gVNFEuuNYXRK1dReZRVbPZKir3/U3fY5f7SKg=;
-        b=H0y3ntQs+Tf3K30zteeLvHNpGdMvpl8hXOIMwl5UOkwqgv2GlhSKNNH4vtus87SD92QR+2reT+ccxL3+Oi1KJMlXcBDhlGJTTH9F5cr3bR9f720nwgwGfjviNZFix4zkcE7wtT7iiRMw0vciqtOmAiTi556t5TMFTwgd2yQbD08=;
-X-UUID: dc928efca924495dbc2265b27d8bb7a2-20200825
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1559288598; Tue, 25 Aug 2020 10:04:45 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 25 Aug 2020 10:04:39 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 25 Aug 2020 10:04:39 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-CC:     Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Bharat Gooty <bharat.gooty@broadcom.com>,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH 3/6] phy: phy-bcm-sr-usb: convert to readl_poll_timeout_atomic()
-Date:   Tue, 25 Aug 2020 10:03:04 +0800
-Message-ID: <1598320987-25518-3-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1598320987-25518-1-git-send-email-chunfeng.yun@mediatek.com>
-References: <1598320987-25518-1-git-send-email-chunfeng.yun@mediatek.com>
+        Mon, 24 Aug 2020 22:05:10 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A68FC061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 19:05:10 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id w10so2809442oti.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 19:05:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=xCEzVSHJfiSnfhxabuVNC9t0rkX2zX2AVt5dsDA1M40=;
+        b=Qx7zECjPFmyvrTTs8F/ocW7tCcVkTwhnunAlXDXZ02SD4HEo5pHK0qvUZ8cmV197QW
+         23MJoL24elKzlrQkZr8Yc7T8ZQWrmKbeOUd4hY5pKufw1Z5VW9CMRTRZfbjXU1Za+2yc
+         qRLjAl0KCQd2veC9jbi1F0Watbt0V5rKLyNSxNLUGzhHJw2G/qIDuCpOTi/JiHnQg6Lr
+         gSCfATvLRBLoL6yZredvS7LzkNyRekKGV1W4rh92bKf6/LJkuKnmLxgLMp2gUOAexBpV
+         MmYNyURSACJ5Zg10joqtevQml+/+IDZ7wYzyaTgpNw8011WUWi4XwnMLAStJVcudiGaV
+         qJuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=xCEzVSHJfiSnfhxabuVNC9t0rkX2zX2AVt5dsDA1M40=;
+        b=njdZVDmHuHdJ/fVe1XMFVann1SRnL+Q6jfY6IKkdczcoTVB9632m9g989xD+cvvUEo
+         DIS0QeQO9sJKSJxV5Im4laZKrzX8GqlwnjE+DFSDoxAKA2+PeRBn0gCrJkLPPyBeGkwd
+         HVNEDxg429ZtXagXcBCSSN5MnnJWrp1KQHxfS7aiF8a+iqHD8Gub7DyBePDiG9+A+Cpi
+         JqcWz+gCohUyzTuYmAfqDN40pcrod6nE5iB/Gh2E3AV5zWhUdJDxcmNNq4wKg986HlKY
+         MPzQTz066DR76yVZbCWycuw/Lw8d+ZUSKDlZTUl8QwhJDSecxXQvtMbTjeWQVZp+hm87
+         qJJg==
+X-Gm-Message-State: AOAM532k/kkO2cPx+90OVusrfwkMGOXziWfHRzjI1j4RcmK+0ehsGe2y
+        yKLf4300S20o7Q6bNiLrL+PLcA==
+X-Google-Smtp-Source: ABdhPJxzM2WV+TVOMQL/4Ow6BMstFoj6g+xmPTXBpDKBq7id1uxSEggrr4ObCz8lU1snOf/c5wzcZg==
+X-Received: by 2002:a9d:12a9:: with SMTP id g38mr5224481otg.299.1598321107433;
+        Mon, 24 Aug 2020 19:05:07 -0700 (PDT)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id w62sm2402101otb.52.2020.08.24.19.05.05
+        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
+        Mon, 24 Aug 2020 19:05:06 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 19:04:53 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+cc:     Michal Hocko <mhocko@suse.com>, Qian Cai <cai@lca.pw>,
+        akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, nao.horiguchi@gmail.com,
+        osalvador@suse.de, mike.kravetz@oracle.com
+Subject: Re: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead
+ page charged
+In-Reply-To: <12425e06-38ce-7ff4-28ce-b0418353fc67@linux.alibaba.com>
+Message-ID: <alpine.LSU.2.11.2008241849020.1171@eggly.anvils>
+References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com> <20200820145850.GA4622@lca.pw> <20200821080127.GD32537@dhcp22.suse.cz> <20200821123934.GA4314@lca.pw> <20200821134842.GF32537@dhcp22.suse.cz> <20200824151013.GB3415@dhcp22.suse.cz>
+ <12425e06-38ce-7ff4-28ce-b0418353fc67@linux.alibaba.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 588180CEE0623FA533389B0780B86B46F91CBD423006F5AC70031FD8AFAC5E452000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VXNlIHJlYWRsX3BvbGxfdGltZW91dF9hdG9taWMoKSB0byBzaW1wbGlmeSBjb2RlDQoNClNpZ25l
-ZC1vZmYtYnk6IENodW5mZW5nIFl1biA8Y2h1bmZlbmcueXVuQG1lZGlhdGVrLmNvbT4NCi0tLQ0K
-IGRyaXZlcnMvcGh5L2Jyb2FkY29tL3BoeS1iY20tc3ItdXNiLmMgfCAxOSArKysrKysrKy0tLS0t
-LS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0p
-DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BoeS9icm9hZGNvbS9waHktYmNtLXNyLXVzYi5jIGIv
-ZHJpdmVycy9waHkvYnJvYWRjb20vcGh5LWJjbS1zci11c2IuYw0KaW5kZXggNzdjMDI1YS4uYzNl
-OTlhZCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGh5L2Jyb2FkY29tL3BoeS1iY20tc3ItdXNiLmMN
-CisrKyBiL2RyaXZlcnMvcGh5L2Jyb2FkY29tL3BoeS1iY20tc3ItdXNiLmMNCkBAIC01LDYgKzUs
-NyBAQA0KIA0KICNpbmNsdWRlIDxsaW51eC9kZWxheS5oPg0KICNpbmNsdWRlIDxsaW51eC9pby5o
-Pg0KKyNpbmNsdWRlIDxsaW51eC9pb3BvbGwuaD4NCiAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+
-DQogI2luY2x1ZGUgPGxpbnV4L29mLmg+DQogI2luY2x1ZGUgPGxpbnV4L3BoeS9waHkuaD4NCkBA
-IC0xMDksMTkgKzExMCwxNSBAQCBzdGF0aWMgaW5saW5lIHZvaWQgYmNtX3VzYl9yZWczMl9zZXRi
-aXRzKHZvaWQgX19pb21lbSAqYWRkciwgdWludDMyX3Qgc2V0KQ0KIA0KIHN0YXRpYyBpbnQgYmNt
-X3VzYl9wbGxfbG9ja19jaGVjayh2b2lkIF9faW9tZW0gKmFkZHIsIHUzMiBiaXQpDQogew0KLQlp
-bnQgcmV0cnk7DQotCXUzMiByZF9kYXRhOw0KKwl1MzIgZGF0YTsNCisJaW50IHJldDsNCiANCi0J
-cmV0cnkgPSBQTExfTE9DS19SRVRSWV9DT1VOVDsNCi0JZG8gew0KLQkJcmRfZGF0YSA9IHJlYWRs
-KGFkZHIpOw0KLQkJaWYgKHJkX2RhdGEgJiBiaXQpDQotCQkJcmV0dXJuIDA7DQotCQl1ZGVsYXko
-MSk7DQotCX0gd2hpbGUgKC0tcmV0cnkgPiAwKTsNCisJcmV0ID0gcmVhZGxfcG9sbF90aW1lb3V0
-X2F0b21pYyhhZGRyLCBkYXRhLCAoZGF0YSAmIGJpdCksIDEsDQorCQkJCQlQTExfTE9DS19SRVRS
-WV9DT1VOVCk7DQorCWlmIChyZXQpDQorCQlwcl9lcnIoIiVzOiBGQUlMXG4iLCBfX2Z1bmNfXyk7
-DQogDQotCXByX2VycigiJXM6IEZBSUxcbiIsIF9fZnVuY19fKTsNCi0JcmV0dXJuIC1FVElNRURP
-VVQ7DQorCXJldHVybiByZXQ7DQogfQ0KIA0KIHN0YXRpYyBpbnQgYmNtX3VzYl9zc19waHlfaW5p
-dChzdHJ1Y3QgYmNtX3VzYl9waHlfY2ZnICpwaHlfY2ZnKQ0KLS0gDQoxLjkuMQ0K
+On Tue, 25 Aug 2020, Alex Shi wrote:
+> reproduce using our linux-mm random bug collection on NUMA systems.
+> >>
+> >> OK, I must have missed that this was on ppc. The order makes more sense
+> >> now. I will have a look at this next week.
+> > 
+> > OK, so I've had a look and I know what's going on there. The
+> > move_pages12 is migrating hugetlb pages. Those are not charged to any
+> > memcg. We have completely missed this case. There are two ways going
+> > around that. Drop the warning and update the comment so that we do not
+> > forget about that or special case hugetlb pages.
+> > 
+> > I think the first option is better.
+> > 
+> 
+> 
+> Hi Michal,
+> 
+> Compare to ignore the warning which is designed to give, seems addressing
+> the hugetlb out of charge issue is a better solution, otherwise the memcg
+> memory usage is out of control on hugetlb, is that right?
 
+Please don't suppose that this is peculiar to hugetlb: I'm not
+testing hugetlb at all (sorry), but I see the VM_WARN_ON_ONCE from
+mem_cgroup_page_lruvec(), and from mem_cgroup_migrate(), and from
+mem_cgroup_swapout().
+
+In all cases seen on a PageAnon page (well, in one case PageKsm).
+And not related to THP either: seen also on machine incapable of THP.
+
+Maybe there's an independent change in 5.9-rc that's defeating
+expectations here, or maybe they were never valid.  Worth
+investigating, even though the patch is currently removed,
+to find out why expectations were wrong.
+
+You'll ask me for more info, stacktraces etc, and I'll say sorry,
+no time today.  Please try the swapping tests I sent before.
+
+And may I say, the comment
+/* Readahead page is charged too, to see if other page uncharged */
+is nonsensical to me, and much better deleted: maybe it would make
+some sense if the reader could see the comment it replaces - as
+they can in the patch - but not in the resulting source file.
+
+Hugh
