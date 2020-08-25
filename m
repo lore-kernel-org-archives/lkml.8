@@ -2,666 +2,148 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9753C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD47C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC7F52068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740032068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:28:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rTGkwYTL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MNRhKl0q";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vNvYriJp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgHYK0h (ORCPT
+        id S1729827AbgHYK22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51170 "EHLO
+        Tue, 25 Aug 2020 06:28:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729458AbgHYK0g (ORCPT
+        with ESMTP id S1729458AbgHYK21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:26:36 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05647C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 03:26:36 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id md23so15088595ejb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 03:26:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yvKm08G9N42OyJ+MC6YThFMjFlADZQ7woVn08Fy+9dw=;
-        b=rTGkwYTLZv7K/j2k3ZwmcnSC3rIAufuG4UH7ZKlbhqmZXAxKuYqg/xqqaZl1FjjTtg
-         sxkz+/FilitUS0Q8OgllTyAIkgH6jAolNy+LqcVPFHPu6n3QZ3hw6942M8GbJcw9KKOd
-         A7PQYDf2DMnBsSNpWEonI+p2FWNuLw5PhU6lmPWBW4wQAnHejDPLQJEr/SdaRzIB5st3
-         aYcOsG+eEbNd3CLGJnBjiOSH+DEgrc+bhWofhfhe4/xaF2r0ZtzF3WBs9rLVnBwEjjIt
-         sb5+WetEuDKO/aYISRbhpx6GLE/gr8tzyNAfL3/63TlZIVtgDUohLO8UPW/AAnpxdnTf
-         uUBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yvKm08G9N42OyJ+MC6YThFMjFlADZQ7woVn08Fy+9dw=;
-        b=qlXOqZdxlXrHywSBfvKBS3A44lWFriHtt5nyEw++IjSmI6ejvcrXh6Zx3mGNG2tupY
-         nJzRHoWRsU7gevn+2QDPIgrmEH8ld3zc88ZzTZ7wufaQgnvo32r3H9hv9udF5GUJLWvi
-         H2fufi/c8y9Bl+56z4gt9scKyypVEqpps/RJxYesaqziCx5NKRNTYoLFkJaVAgxPC+ep
-         RyrG8VCtUeapm3B6b6AxSbeuX9NLLd0eB9U4FKaEZv9+2Azqu50WErz76ZVjmea5Vaz9
-         mMBzzjyRAUkfFUeNXcze3q9qcEN/Zth2KyCdU7Syowe4Seja4ALD94KMZVSfGpnM0ldn
-         kGgA==
-X-Gm-Message-State: AOAM53171LQx9Qr0v0fPGWy8Zt7Qw+OMEo7HW1E/QHx81jIghRFvnoj5
-        bceX7SGpoaln9ZNdcwly4ioj7g==
-X-Google-Smtp-Source: ABdhPJwjmTVcASqf4axBAruHRhKCF1F61Ejt1a2slxJyvNQFxR9YKlrtqr86H7rQObP3QfxRsmyhwQ==
-X-Received: by 2002:a17:907:7292:: with SMTP id dt18mr10406544ejc.512.1598351194502;
-        Tue, 25 Aug 2020 03:26:34 -0700 (PDT)
-Received: from myrica ([2001:1715:4e26:a7e0:116c:c27a:3e7f:5eaf])
-        by smtp.gmail.com with ESMTPSA id dk28sm12914906edb.90.2020.08.25.03.26.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 03:26:33 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 12:26:17 +0200
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Jacob Pan <jacob.pan.linux@gmail.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Eric Auger <eric.auger@redhat.com>, Wu Hao <hao.wu@intel.com>
-Subject: Re: [PATCH v2 6/9] iommu/ioasid: Introduce notification APIs
-Message-ID: <20200825102617.GD3252704@myrica>
-References: <1598070918-21321-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1598070918-21321-7-git-send-email-jacob.jun.pan@linux.intel.com>
+        Tue, 25 Aug 2020 06:28:27 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CF6C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 03:28:26 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598351305;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XGq27nqRzhydXuYXKqM77GLSeoyVZvew8+Gqoyfxaks=;
+        b=MNRhKl0qJ3SryZLP4eRQmYXdz3FaBYrzxO8W2bXu0lWcKc+pTA4/j4AH05VewuixcxT4Bj
+        6kjUIAB7SE2EzCnBiVSkqc9aAu5QWjDOGnhGBrGvPncGyM88VwRAboHDAWqsyp58rwHj0D
+        w1RNrKqMqMxeSXq/Ze7MfoxILzclWU1OKQBEtbL+NUyMOI7Y2F0afqjqVcWaGa5RfuV370
+        UwSPnrv681bmj1Y0juMM6ZYKLFxyB3IqhfX8kNSstLMyfkHTYzjZrL74RVMQZYOctDrr/G
+        BOLpIDt43lmfSvOYBZGc6AQ9bQuFpNHFDruXaAbM3m3/aXKiRkCTLzgKYvLsWw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598351305;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XGq27nqRzhydXuYXKqM77GLSeoyVZvew8+Gqoyfxaks=;
+        b=vNvYriJpXxiCcZDhrSzCuVO1860RkEGwRvJ24kUFCEevngTqJUnCmG3IUNU7idOSE/CJ5E
+        YWArQe2XGyg95+AA==
+To:     Alexander Graf <graf@amazon.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        avi@scylladb.com, "Herrenschmidt\, Benjamin" <benh@amazon.com>,
+        robketr@amazon.de, amos@scylladb.com
+Subject: Re: [patch V9 21/39] x86/irq: Convey vector as argument and not in ptregs
+In-Reply-To: <f0079706-4cb3-b3e3-9a5e-97aaba0aa0eb@amazon.com>
+References: <20200521200513.656533920@linutronix.de> <20200521202118.796915981@linutronix.de> <f0079706-4cb3-b3e3-9a5e-97aaba0aa0eb@amazon.com>
+Date:   Tue, 25 Aug 2020 12:28:24 +0200
+Message-ID: <87a6yj58af.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598070918-21321-7-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 09:35:15PM -0700, Jacob Pan wrote:
-> Relations among IOASID users largely follow a publisher-subscriber
-> pattern. E.g. to support guest SVA on Intel Scalable I/O Virtualization
-> (SIOV) enabled platforms, VFIO, IOMMU, device drivers, KVM are all users
-> of IOASIDs. When a state change occurs, VFIO publishes the change event
-> that needs to be processed by other users/subscribers.
-> 
-> This patch introduced two types of notifications: global and per
-> ioasid_set. The latter is intended for users who only needs to handle
-> events related to the IOASID of a given set.
-> For more information, refer to the kernel documentation at
-> Documentation/ioasid.rst.
-> 
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/iommu/ioasid.c | 280 ++++++++++++++++++++++++++++++++++++++++++++++++-
->  include/linux/ioasid.h |  70 +++++++++++++
->  2 files changed, 348 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> index c0aef38a4fde..6ddc09a7fe74 100644
-> --- a/drivers/iommu/ioasid.c
-> +++ b/drivers/iommu/ioasid.c
-> @@ -9,8 +9,35 @@
->  #include <linux/spinlock.h>
->  #include <linux/xarray.h>
->  #include <linux/ioasid.h>
-> +#include <linux/sched/mm.h>
->  
->  static DEFINE_XARRAY_ALLOC(ioasid_sets);
-> +/*
-> + * An IOASID could have multiple consumers where each consumeer may have
+Alex,
 
-consumer
+On Mon, Aug 24 2020 at 19:29, Alexander Graf wrote:
+> I'm currently trying to understand a performance regression with=20
+> ScyllaDB on i3en.3xlarge (KVM based VM on Skylake) which we reliably=20
+> bisected down to this commit:
+>
+>    https://github.com/scylladb/scylla/issues/7036
+>
+> What we're seeing is that syscalls such as membarrier() take forever=20
+> (0-10 =C2=B5s would be normal):
+...
+> That again seems to stem from a vastly slowed down=20
+> smp_call_function_many_cond():
+>
+> Samples: 218K of event 'cpu-clock', 4000 Hz
+> Overhead  Shared Object        Symbol
+>    94.51%  [kernel]             [k] smp_call_function_many_cond
+>     0.76%  [kernel]             [k] __do_softirq
+>     0.32%  [kernel]             [k] native_queued_spin_lock_slowpath
+> [...]
+>
+> which is stuck in
+>
+>         =E2=94=82     csd_lock_wait():
+>         =E2=94=82             smp_cond_load_acquire(&csd->flags, !(VAL &
+>    0.00 =E2=94=82       mov    0x8(%rcx),%edx
+>    0.00 =E2=94=82       and    $0x1,%edx
+>         =E2=94=82     =E2=86=93 je     2b9
+>         =E2=94=82     rep_nop():
+>    0.70 =E2=94=822af:   pause
+>         =E2=94=82     csd_lock_wait():
+>   92.82 =E2=94=82       mov    0x8(%rcx),%edx
+>    6.48 =E2=94=82       and    $0x1,%edx
+>    0.00 =E2=94=82     =E2=86=91 jne    2af
+>    0.00 =E2=94=822b9: =E2=86=91 jmp    282
+>
+>
+> Given the patch at hand I was expecting lost IPIs, but I can't quite see=
+=20
+> anything getting lost.
 
-> + * hardware contexts associated with IOASIDs.
-> + * When a status change occurs, such as IOASID is being freed, notifier chains
-> + * are used to keep the consumers in sync.
-> + * This is a publisher-subscriber pattern where publisher can change the
-> + * state of each IOASID, e.g. alloc/free, bind IOASID to a device and mm.
-> + * On the other hand, subscribers gets notified for the state change and
-> + * keep local states in sync.
-> + *
-> + * Currently, the notifier is global. A further optimization could be per
-> + * IOASID set notifier chain.
+I have no idea how that patch should be related to IPI and smp function
+calls. It's changing the way how regular device interrupts and their
+spurious counterpart are handled and not the way how IPIs are
+handled. They are handled by direct vectors and do not go through
+do_IRQ() at all.
 
-The patch adds both
-
-> + */
-> +static ATOMIC_NOTIFIER_HEAD(ioasid_chain);
-
-"ioasid_notifier" may be clearer
-
-> +
-> +/* List to hold pending notification block registrations */
-> +static LIST_HEAD(ioasid_nb_pending_list);
-> +static DEFINE_SPINLOCK(ioasid_nb_lock);
-> +struct ioasid_set_nb {
-> +	struct list_head	list;
-> +	struct notifier_block	*nb;
-> +	void			*token;
-> +	struct ioasid_set	*set;
-> +	bool			active;
-> +};
-> +
->  enum ioasid_state {
->  	IOASID_STATE_INACTIVE,
->  	IOASID_STATE_ACTIVE,
-> @@ -394,6 +421,7 @@ EXPORT_SYMBOL_GPL(ioasid_find_by_spid);
->  ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
->  		      void *private)
->  {
-> +	struct ioasid_nb_args args;
->  	struct ioasid_data *data;
->  	void *adata;
->  	ioasid_t id = INVALID_IOASID;
-> @@ -445,8 +473,14 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
->  		goto exit_free;
->  	}
->  	set->nr_ioasids++;
-> -	goto done_unlock;
-> +	args.id = id;
-> +	/* Set private ID is not attached during allocation */
-> +	args.spid = INVALID_IOASID;
-> +	args.set = set;
-
-args.pdata is uninitialized
-
-> +	atomic_notifier_call_chain(&set->nh, IOASID_ALLOC, &args);
-
-No global notification?
-
->  
-> +	spin_unlock(&ioasid_allocator_lock);
-> +	return id;
->  exit_free:
->  	kfree(data);
->  done_unlock:
-> @@ -479,6 +513,7 @@ static void ioasid_do_free(struct ioasid_data *data)
->  
->  static void ioasid_free_locked(struct ioasid_set *set, ioasid_t ioasid)
->  {
-> +	struct ioasid_nb_args args;
->  	struct ioasid_data *data;
->  
->  	data = xa_load(&active_allocator->xa, ioasid);
-> @@ -491,7 +526,16 @@ static void ioasid_free_locked(struct ioasid_set *set, ioasid_t ioasid)
->  		pr_warn("Cannot free IOASID %u due to set ownership\n", ioasid);
->  		return;
->  	}
-> +
->  	data->state = IOASID_STATE_FREE_PENDING;
-> +	/* Notify all users that this IOASID is being freed */
-> +	args.id = ioasid;
-> +	args.spid = data->spid;
-> +	args.pdata = data->private;
-> +	args.set = data->set;
-> +	atomic_notifier_call_chain(&ioasid_chain, IOASID_FREE, &args);
-> +	/* Notify the ioasid_set for per set users */
-> +	atomic_notifier_call_chain(&set->nh, IOASID_FREE, &args);
->  
->  	if (!refcount_dec_and_test(&data->users))
->  		return;
-> @@ -514,6 +558,28 @@ void ioasid_free(struct ioasid_set *set, ioasid_t ioasid)
->  }
->  EXPORT_SYMBOL_GPL(ioasid_free);
->  
-> +static void ioasid_add_pending_nb(struct ioasid_set *set)
-> +{
-> +	struct ioasid_set_nb *curr;
-> +
-> +	if (set->type != IOASID_SET_TYPE_MM)
-> +		return;
-> +
-> +	/*
-> +	 * Check if there are any pending nb requests for the given token, if so
-> +	 * add them to the notifier chain.
-> +	 */
-> +	spin_lock(&ioasid_nb_lock);
-> +	list_for_each_entry(curr, &ioasid_nb_pending_list, list) {
-> +		if (curr->token == set->token && !curr->active) {
-> +			atomic_notifier_chain_register(&set->nh, curr->nb);
-> +			curr->set = set;
-> +			curr->active = true;
-> +		}
-> +	}
-> +	spin_unlock(&ioasid_nb_lock);
-> +}
-> +
->  /**
->   * ioasid_alloc_set - Allocate a new IOASID set for a given token
->   *
-> @@ -601,6 +667,13 @@ struct ioasid_set *ioasid_alloc_set(void *token, ioasid_t quota, int type)
->  	sdata->quota = quota;
->  	sdata->sid = id;
->  	refcount_set(&sdata->ref, 1);
-> +	ATOMIC_INIT_NOTIFIER_HEAD(&sdata->nh);
-> +
-> +	/*
-> +	 * Check if there are any pending nb requests for the given token, if so
-> +	 * add them to the notifier chain.
-> +	 */
-> +	ioasid_add_pending_nb(sdata);
->  
->  	/*
->  	 * Per set XA is used to store private IDs within the set, get ready
-> @@ -617,6 +690,30 @@ struct ioasid_set *ioasid_alloc_set(void *token, ioasid_t quota, int type)
->  }
->  EXPORT_SYMBOL_GPL(ioasid_alloc_set);
->  
-> +
-> +/*
-> + * ioasid_find_mm_set - Retrieve IOASID set with mm token
-> + * Take a reference of the set if found.
-> + */
-> +static struct ioasid_set *ioasid_find_mm_set(struct mm_struct *token)
-> +{
-> +	struct ioasid_set *sdata, *set = NULL;
-> +	unsigned long index;
-> +
-> +	spin_lock(&ioasid_allocator_lock);
-> +
-> +	xa_for_each(&ioasid_sets, index, sdata) {
-> +		if (sdata->type == IOASID_SET_TYPE_MM && sdata->token == token) {
-> +			refcount_inc(&sdata->ref);
-> +			set = sdata;
-> +			goto exit_unlock;
-
-Or just break
-
-> +		}
-> +	}
-> +exit_unlock:
-> +	spin_unlock(&ioasid_allocator_lock);
-> +	return set;
-> +}
-> +
->  void ioasid_set_get_locked(struct ioasid_set *set)
->  {
->  	if (WARN_ON(xa_load(&ioasid_sets, set->sid) != set)) {
-> @@ -638,6 +735,8 @@ EXPORT_SYMBOL_GPL(ioasid_set_get);
->  
->  void ioasid_set_put_locked(struct ioasid_set *set)
->  {
-> +	struct ioasid_nb_args args = { 0 };
-> +	struct ioasid_set_nb *curr;
->  	struct ioasid_data *entry;
->  	unsigned long index;
->  
-> @@ -673,8 +772,24 @@ void ioasid_set_put_locked(struct ioasid_set *set)
->  done_destroy:
->  	/* Return the quota back to system pool */
->  	ioasid_capacity_avail += set->quota;
-> -	kfree_rcu(set, rcu);
->  
-> +	/* Restore pending status of the set NBs */
-> +	spin_lock(&ioasid_nb_lock);
-> +	list_for_each_entry(curr, &ioasid_nb_pending_list, list) {
-> +		if (curr->token == set->token) {
-> +			if (curr->active)
-> +				curr->active = false;
-> +			else
-> +				pr_warn("Set token exists but not active!\n");
-> +		}
-> +	}
-> +	spin_unlock(&ioasid_nb_lock);
-> +
-> +	args.set = set;
-> +	atomic_notifier_call_chain(&ioasid_chain, IOASID_SET_FREE, &args);
-> +
-> +	kfree_rcu(set, rcu);
-> +	pr_debug("Set freed %d\n", set->sid);
-
-set might have been freed
-
->  	/*
->  	 * Token got released right away after the ioasid_set is freed.
->  	 * If a new set is created immediately with the newly released token,
-> @@ -927,6 +1042,167 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
->  }
->  EXPORT_SYMBOL_GPL(ioasid_find);
->  
-> +int ioasid_register_notifier(struct ioasid_set *set, struct notifier_block *nb)
-
-Maybe add a bit of documentation on the difference with the _mm variant,
-as well as the @set parameter.
-
-Will this be used by anyone at first?  We could introduce only the _mm
-functions for now.
-
-> +{
-> +	if (set)
-> +		return atomic_notifier_chain_register(&set->nh, nb);
-> +	else
-> +		return atomic_notifier_chain_register(&ioasid_chain, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_register_notifier);
-> +
-> +void ioasid_unregister_notifier(struct ioasid_set *set,
-> +				struct notifier_block *nb)
-> +{
-> +	struct ioasid_set_nb *curr;
-> +
-> +	spin_lock(&ioasid_nb_lock);
-> +	/*
-> +	 * Pending list is registered with a token without an ioasid_set,
-> +	 * therefore should not be unregistered directly.
-> +	 */
-> +	list_for_each_entry(curr, &ioasid_nb_pending_list, list) {
-> +		if (curr->nb == nb) {
-> +			pr_warn("Cannot unregister NB from pending list\n");
-> +			spin_unlock(&ioasid_nb_lock);
-> +			return;
-> +		}
-> +	}
-> +	spin_unlock(&ioasid_nb_lock);
-> +
-> +	if (set)
-> +		atomic_notifier_chain_unregister(&set->nh, nb);
-> +	else
-> +		atomic_notifier_chain_unregister(&ioasid_chain, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_unregister_notifier);
-> +
-> +int ioasid_register_notifier_mm(struct mm_struct *mm, struct notifier_block *nb)
-> +{
-> +	struct ioasid_set_nb *curr;
-> +	struct ioasid_set *set;
-> +	int ret = 0;
-> +
-> +	if (!mm)
-> +		return -EINVAL;
-> +
-> +	spin_lock(&ioasid_nb_lock);
-> +
-> +	/* Check for duplicates, nb is unique per set */
-> +	list_for_each_entry(curr, &ioasid_nb_pending_list, list) {
-> +		if (curr->token == mm && curr->nb == nb) {
-> +			ret = -EBUSY;
-> +			goto exit_unlock;
-> +		}
-> +	}
-> +
-> +	/* Check if the token has an existing set */
-> +	set = ioasid_find_mm_set(mm);
-
-Seems to be a deadlock here, as ioasid_find_mm_set() grabs
-ioasid_allocator_lock while holding ioasid_nb_lock, and
-ioasid_set_put/get_locked() grabs ioasid_nb_lock while holding
-ioasid_allocator_lock.
-
-> +	if (IS_ERR_OR_NULL(set)) {
-
-Looks a bit off, maybe we can check !set since ioasid_find_mm_set()
-doesn't return errors.
-
-> +		/* Add to the rsvd list as inactive */
-> +		curr->active = false;
-
-curr isn't valid here
-
-> +	} else {
-> +		/* REVISIT: Only register empty set for now. Can add an option
-> +		 * in the future to playback existing PASIDs.
-> +		 */
-> +		if (set->nr_ioasids) {
-> +			pr_warn("IOASID set %d not empty\n", set->sid);
-> +			ret = -EBUSY;
-> +			goto exit_unlock;
-> +		}
-> +		curr = kzalloc(sizeof(*curr), GFP_ATOMIC);
-
-As a side-note, I think there's too much atomic allocation in this file,
-I'd like to try and rework the locking once it stabilizes and I find some
-time. Do you remember why ioasid_allocator_lock needed to be a spinlock?
-
-> +		if (!curr) {
-> +			ret = -ENOMEM;
-> +			goto exit_unlock;
-> +		}
-> +		curr->token = mm;
-> +		curr->nb = nb;
-> +		curr->active = true;
-> +		curr->set = set;
-> +
-> +		/* Set already created, add to the notifier chain */
-> +		atomic_notifier_chain_register(&set->nh, nb);
-> +		/*
-> +		 * Do not hold a reference, if the set gets destroyed, the nb
-> +		 * entry will be marked inactive.
-> +		 */
-> +		ioasid_set_put(set);
-> +	}
-> +
-> +	list_add(&curr->list, &ioasid_nb_pending_list);
-> +
-> +exit_unlock:
-> +	spin_unlock(&ioasid_nb_lock);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_register_notifier_mm);
-> +
-> +void ioasid_unregister_notifier_mm(struct mm_struct *mm, struct notifier_block *nb)
-> +{
-> +	struct ioasid_set_nb *curr;
-> +
-> +	spin_lock(&ioasid_nb_lock);
-> +	list_for_each_entry(curr, &ioasid_nb_pending_list, list) {
-> +		if (curr->token == mm && curr->nb == nb) {
-> +			list_del(&curr->list);
-> +			goto exit_free;
-> +		}
-> +	}
-> +	pr_warn("No ioasid set found for mm token %llx\n",  (u64)mm);
-> +	goto done_unlock;
-> +
-> +exit_free:
-> +	if (curr->active) {
-> +		pr_debug("mm set active, unregister %llx\n",
-> +			(u64)mm);
-
-%px shows raw pointers, but I would drop this altogether or use %p.
-
-> +		atomic_notifier_chain_unregister(&curr->set->nh, nb);
-> +	}
-> +	kfree(curr);
-> +done_unlock:
-> +	spin_unlock(&ioasid_nb_lock);
-> +	return;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_unregister_notifier_mm);
-> +
-> +/**
-> + * ioasid_notify - Send notification on a given IOASID for status change.
-> + *                 Used by publishers when the status change may affect
-> + *                 subscriber's internal state.
-> + *
-> + * @ioasid:	The IOASID to which the notification will send
-> + * @cmd:	The notification event
-> + * @flags:	Special instructions, e.g. notify with a set or global
-
-Describe valid values for @cmd and @flags?  I guess this function
-shouldn't accept IOASID_ALLOC, IOASID_FREE etc
-
-> + */
-> +int ioasid_notify(ioasid_t ioasid, enum ioasid_notify_val cmd, unsigned int flags)
-> +{
-> +	struct ioasid_data *ioasid_data;
-> +	struct ioasid_nb_args args = { 0 };
-> +	int ret = 0;
-> +
-> +	spin_lock(&ioasid_allocator_lock);
-> +	ioasid_data = xa_load(&active_allocator->xa, ioasid);
-> +	if (!ioasid_data) {
-> +		pr_err("Trying to notify unknown IOASID %u\n", ioasid);
-> +		spin_unlock(&ioasid_allocator_lock);
-> +		return -EINVAL;
-> +	}
-> +
-> +	args.id = ioasid;
-> +	args.set = ioasid_data->set;
-> +	args.pdata = ioasid_data->private;
-> +	args.spid = ioasid_data->spid;
-> +	if (flags & IOASID_NOTIFY_ALL) {
-> +		ret = atomic_notifier_call_chain(&ioasid_chain, cmd, &args);
-> +	} else if (flags & IOASID_NOTIFY_SET) {
-> +		ret = atomic_notifier_call_chain(&ioasid_data->set->nh,
-> +						 cmd, &args);
-> +	}
-
-else ret = -EINVAL?
-What about allowing both flags?
-
-> +	spin_unlock(&ioasid_allocator_lock);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_notify);
-> +
->  MODULE_AUTHOR("Jean-Philippe Brucker <jean-philippe.brucker@arm.com>");
->  MODULE_AUTHOR("Jacob Pan <jacob.jun.pan@linux.intel.com>");
->  MODULE_DESCRIPTION("IO Address Space ID (IOASID) allocator");
-> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> index d4b3e83672f6..572111cd3b4b 100644
-> --- a/include/linux/ioasid.h
-> +++ b/include/linux/ioasid.h
-> @@ -23,6 +23,7 @@ enum ioasid_set_type {
->   * struct ioasid_set - Meta data about ioasid_set
->   * @type:	Token types and other features
->   * @token:	Unique to identify an IOASID set
-> + * @nh:		Notifier for IOASID events within the set
->   * @xa:		XArray to store ioasid_set private IDs, can be used for
->   *		guest-host IOASID mapping, or just a private IOASID namespace.
->   * @quota:	Max number of IOASIDs can be allocated within the set
-> @@ -32,6 +33,7 @@ enum ioasid_set_type {
->   */
->  struct ioasid_set {
->  	void *token;
-> +	struct atomic_notifier_head nh;
->  	struct xarray xa;
->  	int type;
->  	int quota;
-> @@ -56,6 +58,49 @@ struct ioasid_allocator_ops {
->  	void *pdata;
->  };
->  
-> +/* Notification data when IOASID status changed */
-> +enum ioasid_notify_val {
-> +	IOASID_ALLOC = 1,
-> +	IOASID_FREE,
-> +	IOASID_BIND,
-> +	IOASID_UNBIND,
-> +	IOASID_SET_ALLOC,
-> +	IOASID_SET_FREE,
-> +};
-
-May be nicer to prefix these with IOASID_NOTIFY_
-
-> +
-> +#define IOASID_NOTIFY_ALL BIT(0)
-> +#define IOASID_NOTIFY_SET BIT(1)
-> +/**
-> + * enum ioasid_notifier_prios - IOASID event notification order
-> + *
-> + * When status of an IOASID changes, users might need to take actions to
-> + * reflect the new state. For example, when an IOASID is freed due to
-> + * exception, the hardware context in virtual CPU, DMA device, and IOMMU
-> + * shall be cleared and drained. Order is required to prevent life cycle
-> + * problems.
-> + */
-> +enum ioasid_notifier_prios {
-> +	IOASID_PRIO_LAST,
-> +	IOASID_PRIO_DEVICE,
-> +	IOASID_PRIO_IOMMU,
-> +	IOASID_PRIO_CPU,
-> +};
-
-Not used by this patch, can be added later
-
-> +
-> +/**
-> + * struct ioasid_nb_args - Argument provided by IOASID core when notifier
-> + * is called.
-> + * @id:		The IOASID being notified
-> + * @spid:	The set private ID associated with the IOASID
-> + * @set:	The IOASID set of @id
-> + * @pdata:	The private data attached to the IOASID
-> + */
-> +struct ioasid_nb_args {
-> +	ioasid_t id;
-> +	ioasid_t spid;
-> +	struct ioasid_set *set;
-> +	void *pdata;
-> +};
-> +
->  #if IS_ENABLED(CONFIG_IOASID)
->  void ioasid_install_capacity(ioasid_t total);
->  ioasid_t ioasid_get_capacity(void);
-> @@ -75,8 +120,16 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid, bool (*getter)(void *
->  int ioasid_attach_data(ioasid_t ioasid, void *data);
->  int ioasid_attach_spid(ioasid_t ioasid, ioasid_t spid);
->  ioasid_t ioasid_find_by_spid(struct ioasid_set *set, ioasid_t spid);
-> +
-> +int ioasid_register_notifier(struct ioasid_set *set,
-> +			struct notifier_block *nb);
-> +void ioasid_unregister_notifier(struct ioasid_set *set,
-> +				struct notifier_block *nb);
-> +
->  int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
->  void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
-> +
-> +int ioasid_notify(ioasid_t ioasid, enum ioasid_notify_val cmd, unsigned int flags);
->  void ioasid_is_in_set(struct ioasid_set *set, ioasid_t ioasid);
->  int ioasid_get(struct ioasid_set *set, ioasid_t ioasid);
->  int ioasid_get_locked(struct ioasid_set *set, ioasid_t ioasid);
-> @@ -85,6 +138,9 @@ void ioasid_put_locked(struct ioasid_set *set, ioasid_t ioasid);
->  int ioasid_set_for_each_ioasid(struct ioasid_set *sdata,
->  			       void (*fn)(ioasid_t id, void *data),
->  			       void *data);
-> +int ioasid_register_notifier_mm(struct mm_struct *mm, struct notifier_block *nb);
-> +void ioasid_unregister_notifier_mm(struct mm_struct *mm, struct notifier_block *nb);
-
-These need stubs for !CONFIG_IOASID
-
-> +
->  #else /* !CONFIG_IOASID */
->  static inline void ioasid_install_capacity(ioasid_t total)
->  {
-> @@ -124,6 +180,20 @@ static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid, bool (*
->  	return NULL;
->  }
->  
-> +static inline int ioasid_register_notifier(struct notifier_block *nb)
-
-Missing set argument
+Aside of that the commit just changes the way how the interrupt vector
+of a regular device interrupt is stored and conveyed. The extra read and
+write on the cache hot stack is hardly related to anything IPI.
 
 Thanks,
-Jean
 
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
-> +static inline void ioasid_unregister_notifier(struct notifier_block *nb)
-> +{
-> +}
-> +
-> +static inline int ioasid_notify(ioasid_t ioasid, enum ioasid_notify_val cmd, unsigned int flags)
-> +{
-> +	return -ENOTSUPP;
-> +}
-> +
->  static inline int ioasid_register_allocator(struct ioasid_allocator_ops *allocator)
->  {
->  	return -ENOTSUPP;
-> -- 
-> 2.7.4
-> 
+        tglx
+
+
