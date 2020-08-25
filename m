@@ -2,1491 +2,561 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5890C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D39C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF162074A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A6AD2074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:23:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="Qnv2AZBP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="ns/XRP+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbgHYMWG (ORCPT
+        id S1729747AbgHYMXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:22:06 -0400
-Received: from mail-vi1eur05on2133.outbound.protection.outlook.com ([40.107.21.133]:20768
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729349AbgHYMV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:21:28 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pcc+7KQ1HULq6laM7iDppi+At7+awZ1ujyzW7ulH+9K4ycNVos5x1Q14heDNNSfUeJuH7iplmRxg+KU7Aws9CGyPNK4pmYcw048as+9FbZSrckCOJZBJTKucdZUlp/+me3aEA2pAcZg+NUF+2WdoyBuFNTZft9kZ8/zrNywNaZ0MTF/oS5IkZcFRfxVDbSTuGWwRAUdDJG/Z3ZMctq6HUkmvuwaRYyFrSos0VVgiOOU8RumbRicukqt7FTE5XGwSz11x/nugAL6fAzeexG00xw0WZ4qaDWE/Hulwp4fcT65Dk+Zv6KI7G6Pd1M/sD0pUtVWMlQzoZ9bS/yL/wa22sQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z5dd6EVEqy6hXvgFAUZn+qfSpROxlfgdNFZWKMGVmXo=;
- b=TdjOBJbsBQGF/oOm6Ef976CaM/w6dH09nEt/YZPVcABJ+IOvcbdBYOq7m14UWuQITnnayIcTEhZwgcaA2UaH2WzRoybK2CedYMQgJRv4DclsKuBwfLH4TIyv6LUCAAZO6pyXHDS9tQmokyVxCnEhXZwtb6jkKFtJljeqj2cbWyr6BQbgqiZ2S4Lc8OMQkZZeOTuczMBPXuhRYVtQUgACZouvxtGfAWPF5AL6Q3/jWNzBKKf8JVDxitxlYvVOlKVWrsXwcP4JivCjzmSO1xg/45Fw5VGsPzAPBgGEOESPtscS/Xn7X/+Fn1cWBGZ42Qd/7cpifJ/JR7K6/f3LSfzPmw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z5dd6EVEqy6hXvgFAUZn+qfSpROxlfgdNFZWKMGVmXo=;
- b=Qnv2AZBP668wnjW6GxoLm2+0pXo9mWSHZ11/v2mq3XXJ1dpF9I4zbUy6nKRAf6CBJbPpu+XcTmM6WROxvlYgnqwyMl31szZWwsxi5jmt+3MHNk2ixn0HAT3zfPp5LslpXh+NEuCpWfZt0Kzc5lzAZtiSpbRrRgUvv9/PX5erfdw=
-Authentication-Results: davemloft.net; dkim=none (message not signed)
- header.d=none;davemloft.net; dmarc=none action=none header.from=plvision.eu;
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
- HE1P190MB0507.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:60::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3305.26; Tue, 25 Aug 2020 12:20:42 +0000
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::b1a4:e5e3:a12b:1305]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::b1a4:e5e3:a12b:1305%6]) with mapi id 15.20.3305.026; Tue, 25 Aug 2020
- 12:20:42 +0000
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mickey Rachamim <mickeyr@marvell.com>,
-        Vadym Kochan <vadym.kochan@plvision.eu>
-Subject: [net-next v5 4/6] net: marvell: prestera: Add ethtool interface support
-Date:   Tue, 25 Aug 2020 15:20:11 +0300
-Message-Id: <20200825122013.2844-5-vadym.kochan@plvision.eu>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200825122013.2844-1-vadym.kochan@plvision.eu>
-References: <20200825122013.2844-1-vadym.kochan@plvision.eu>
-Content-Type: text/plain
-X-ClientProxiedBy: AM6PR08CA0039.eurprd08.prod.outlook.com
- (2603:10a6:20b:c0::27) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:7:56::28)
+        Tue, 25 Aug 2020 08:23:02 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:26120 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728622AbgHYMW6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 08:22:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1598358177; x=1629894177;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=AiHGO2rnOa18mTC8Y9aUfmHoyktpRSbPRkY+oAfhCYI=;
+  b=ns/XRP+v/WSGVG1qkHfumu5bA3f36fXlxHTP6pKjXb7BjU/x9DScnDJt
+   eVq041VZW2A7frqFD8o1TlU0K4cnXcuMtdam4Y0r2lo/D/PI4VSy06xpW
+   E45zB5TX1wfKZ1lgVbMIpbYtPdWdvKNpqWSh6i6WDhKSrX2w7JuyicY4O
+   NcO1A5u/ictPRY+NsYiWOMhrDw9ZIjCgPSHb92+ZQ4B1gKpEFT6h0jP/j
+   bMdvjlH8yyrdSfU2KPwzOtuKmM6Ql7axCs3L7hUPb29a0eCTmX01tF20x
+   ufzaqOMQgRQ3cM1nqWToeQD2MkkrPP35fiu7rHNFFF2/lWg8Cpzcx5NVN
+   w==;
+IronPort-SDR: nkfPEh2b4uS0xoFguGHjB9bgFh6vkGkaZjWRDnRKw4lplVf2xjkB2B2H9SPhDR8Jx+BPZYUSv/
+ 55lxop6/DgJVZB1hP2cNqELVbz07Qw4WgBue+X883Z8EbvQ/mxtLtLrKNDJo4n+XauDj/4kIfQ
+ vCvguE1kRFLdGfXBsEb1aNWwXvUcHwUboDRXdZdzsOGFxKV2fDCWgusoS6Rs8Tocx4T0cH7UbZ
+ JYCBp+YMvvnpNEOPMJ+QPgHs9xRcEeK9n1SWqk2HQ5NTtsSGVmb+nuE5oc8gC6Uqw6krBTd+Vz
+ tLY=
+X-IronPort-AV: E=Sophos;i="5.76,352,1592841600"; 
+   d="scan'208";a="150113802"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Aug 2020 20:22:56 +0800
+IronPort-SDR: cHFAnwGe5K74ZKjcZpcv3hh8Q1UuylxyVHSWPrXvMb8UZE16Z2Ya+EYbv8hze7IBc/0UGAhjKV
+ EaTN1eW5vLfg==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 05:09:44 -0700
+IronPort-SDR: VoxwpDZYyB93stJ7KmyBTrVoQTRvov+NqfMaXT2c8AHmzSKsSp+RzX6KCer8tbHTs6NhrrV4UF
+ YdjqRjX+2uyw==
+WDCIronportException: Internal
+Received: from usa004563.ad.shared (HELO localhost.hgst.com) ([10.86.59.127])
+  by uls-op-cesaip02.wdc.com with ESMTP; 25 Aug 2020 05:22:55 -0700
+From:   Niklas Cassel <niklas.cassel@wdc.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     damien.lemoal@wdc.com, johannes.thumshirn@wdc.com,
+        Niklas Cassel <niklas.cassel@wdc.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] null_blk: add support for max open/active zone limit for zoned devices
+Date:   Tue, 25 Aug 2020 14:22:44 +0200
+Message-Id: <20200825122244.126129-1-niklas.cassel@wdc.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc60716vkochan.x.ow.s (217.20.186.93) by AM6PR08CA0039.eurprd08.prod.outlook.com (2603:10a6:20b:c0::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Tue, 25 Aug 2020 12:20:39 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 37cb84b1-4403-4eb2-a674-08d848f14886
-X-MS-TrafficTypeDiagnostic: HE1P190MB0507:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1P190MB0507D3D2B9D2FCB22C4DA48195570@HE1P190MB0507.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:257;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3B3qjLwBnOqmn5z8/jGZwfmso55lygFUfyDy+jmi8NHiQhBXbZdkxIQdHrlVDDEXJoKpGLzzBjMYIEdaoBNzAkzSXGGJT1m/Aa3tu3XITbY0RrbTalqJlMdFOu4bR2MctmA2bITQbrnvzhUU34spNi5AKYfYv0dnVAhGVdXzG0w2AxpCpSKbaWL99RfjQ3zbNZC5oiMBD7YlH23GdOks3lsSUhSIIqvl2cO3cd7kzY/GlA2ZhJPMoZa2YLw8MCZqImwfNkzrDQVrC0MLMda4xhYlOVf8fMVP7NuxQUDZBaA+yEoohVJf9MMdqovv4nxpv/9tcUpeb1oZp7hTYqEKDeH4fVGEreV/DhvAmP8CBwgfrIlrC5OHYSXu0xj11d96cTPXu6T0A+h9WTmLU9vpIA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(376002)(39830400003)(366004)(136003)(346002)(396003)(83380400001)(5660300002)(86362001)(4326008)(30864003)(107886003)(6506007)(36756003)(52116002)(8676002)(54906003)(26005)(186003)(6486002)(66556008)(66476007)(44832011)(66946007)(2616005)(8936002)(1076003)(956004)(316002)(110136005)(2906002)(16526019)(6512007)(478600001)(6666004)(333604002)(921003)(579004);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: HkNMejlt36yWY1Db8kgczbUmI1/7pWyi3clSgug+Jkx92oKO81j/f+j+d2CKMbuROkJTGJajjEGdvOnZXrylM4CpXk4Xbpr05rdx78t/+fpuVqfNrMmhJDBrYPJ+PxGDlkaKx59WTTvUl6FuhkYBlS1YTgSxbDolCW+6zM9CNVVwU3BqpQajVmtE3vr7l19n78Nxg7fXVQe03asJkXlQ+MjlEP51AThcF7dcNetCACa6MxO+4omqiA+U/0XMu61uM4ePqa2hY2izYy7oAtZS4LFTy/M9iIznaf64HYmFYpEnuk7lLZE5z0bZKiYutG7VxkaE6eu/sB3IkzNxcfC0CvmaN9omvaNzAvX8rDBAyPORg0oLCJoOd55XGKUJj/Th53clzjuKo0/4f5nu9v3E0Px1EpeNmInxDqHbli9ekzKcbquZeX4eSOEW702eO+BKA0DQO/Hc1a/dA7fDzDzYm/dbH9H5XYRl78LFOruQWdxE0yvlkXIYZgn7o4YD2gQiYFCxJRnkgWdhIvKKuQAZCUE6W3MC202n78BmD0nWcIUDvoo2qFGdKcL0RSKHlVV93+9g7SYvoClqpOgMUYA4zh09gN2eONAvF+6fPyS5pYG4WP4kcgNlWFn5BcPnxdgF4GSsA16i/kJuAWxdBXyX0g==
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37cb84b1-4403-4eb2-a674-08d848f14886
-X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2020 12:20:41.8998
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DJlFE81AtDfRFbe7w6XHqf79kZsWAW/e2EszXchkKgU7tqYkwzPa0HXuqv0totNqv24GRjMW6d9jkCP1Awrp4dU8C4M3iBPiC2WPr+S5Blk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0507
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ethtool API provides support for the configuration of the following
-features: speed and duplex, auto-negotiation, MDI-x, forward error
-correction, port media type. The API also provides information about the
-port status, hardware and software statistic. The following limitation
-exists:
+Add support for user space to set a max open zone and a max active zone
+limit via configfs. By default, the default value is 0 == no limit.
 
-    - port media type should be configured before speed setting
-    - ethtool -m option is not supported
-    - ethtool -p option is not supported
-    - ethtool -r option is supported for RJ45 port only
-    - the following combination of parameters is not supported:
+Call the block layer API functions used for exposing the configured
+limits to sysfs.
 
-          ethtool -s sw1pX port XX autoneg on
+Add accounting in null_blk_zoned so that these new limits are respected.
+Performing an operating that would exceed these limits results is a
+standard I/O error.
 
-    - forward error correction feature is supported only on SFP ports, 10G
-      speed
+A max open zone limit exists in the ZBC standard.
+While null_blk_zoned is used to test the Zoned Block Device model in
+Linux, when it comes to differences between ZBC and ZNS, null_blk_zoned
+mostly follows ZBC.
 
-    - auto-negotiation and MDI-x features are not supported on
-      Copper-to-Fiber SFP module
+Therefore, implement the manage open zone resources function from ZBC,
+but additionally add support for max active zones.
+This enables user space not only to test against a device with an open
+zone limit, but also to test against a device with an active zone limit.
 
-Co-developed-by: Andrii Savka <andrii.savka@plvision.eu>
-Signed-off-by: Andrii Savka <andrii.savka@plvision.eu>
-Co-developed-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
-Signed-off-by: Serhiy Boiko <serhiy.boiko@plvision.eu>
-Co-developed-by: Vadym Kochan <vadym.kochan@plvision.eu>
-Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
 ---
-PATCH v5:
+ drivers/block/null_blk.h       |   5 +
+ drivers/block/null_blk_main.c  |  16 +-
+ drivers/block/null_blk_zoned.c | 316 +++++++++++++++++++++++++++------
+ 3 files changed, 283 insertions(+), 54 deletions(-)
 
-    1) Convert following error check:
-
-        if (func(...))
-        or
-        if (!func(...))
-
-        to use err variable:
-
-        err = func(...)
-        if (err)
-
-    2) Remove "," from terminated enum entry.
-
-PATCH v4:
-    1) Export only prestera_ethtool_ops instead of
-       each ethtool handler.
-
-    2) Get rid of not needed cast in prestera_ethtool_get_stats(...)
-       when doing memcpy.
-
- .../net/ethernet/marvell/prestera/Makefile    |   2 +-
- .../net/ethernet/marvell/prestera/prestera.h  |   3 +
- .../marvell/prestera/prestera_ethtool.c       | 759 ++++++++++++++++++
- .../marvell/prestera/prestera_ethtool.h       |  14 +
- .../ethernet/marvell/prestera/prestera_hw.c   | 295 ++++++-
- .../ethernet/marvell/prestera/prestera_hw.h   |  65 ++
- .../ethernet/marvell/prestera/prestera_main.c |  28 +-
- 7 files changed, 1159 insertions(+), 7 deletions(-)
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_ethtool.c
- create mode 100644 drivers/net/ethernet/marvell/prestera/prestera_ethtool.h
-
-diff --git a/drivers/net/ethernet/marvell/prestera/Makefile b/drivers/net/ethernet/marvell/prestera/Makefile
-index babd71fba809..7684e7047562 100644
---- a/drivers/net/ethernet/marvell/prestera/Makefile
-+++ b/drivers/net/ethernet/marvell/prestera/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PRESTERA)	+= prestera.o
- prestera-objs		:= prestera_main.o prestera_hw.o prestera_dsa.o \
--			   prestera_rxtx.o prestera_devlink.o
-+			   prestera_rxtx.o prestera_devlink.o prestera_ethtool.o
+diff --git a/drivers/block/null_blk.h b/drivers/block/null_blk.h
+index daed4a9c34367..d2e7db43a52a7 100644
+--- a/drivers/block/null_blk.h
++++ b/drivers/block/null_blk.h
+@@ -42,6 +42,9 @@ struct nullb_device {
+ 	struct badblocks badblocks;
  
- obj-$(CONFIG_PRESTERA_PCI)	+= prestera_pci.o
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera.h b/drivers/net/ethernet/marvell/prestera/prestera.h
-index 886b12f656d4..b1fd0a1edad1 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera.h
-+++ b/drivers/net/ethernet/marvell/prestera/prestera.h
-@@ -173,4 +173,7 @@ void prestera_device_unregister(struct prestera_device *dev);
- struct prestera_port *prestera_port_find_by_hwid(struct prestera_switch *sw,
- 						 u32 dev_id, u32 hw_id);
+ 	unsigned int nr_zones;
++	unsigned int nr_zones_imp_open;
++	unsigned int nr_zones_exp_open;
++	unsigned int nr_zones_closed;
+ 	struct blk_zone *zones;
+ 	sector_t zone_size_sects;
  
-+int prestera_port_autoneg_set(struct prestera_port *port, bool enable,
-+			      u64 adver_link_modes, u8 adver_fec);
-+
- #endif /* _PRESTERA_H_ */
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_ethtool.c b/drivers/net/ethernet/marvell/prestera/prestera_ethtool.c
-new file mode 100644
-index 000000000000..d947c09ce134
---- /dev/null
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_ethtool.c
-@@ -0,0 +1,759 @@
-+// SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
-+/* Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved */
-+
-+#include <linux/kernel.h>
-+#include <linux/netdevice.h>
-+#include <linux/ethtool.h>
-+
-+#include "prestera.h"
-+#include "prestera_hw.h"
-+#include "prestera_ethtool.h"
-+
-+#define PRESTERA_STATS_CNT \
-+	(sizeof(struct prestera_port_stats) / sizeof(u64))
-+#define PRESTERA_STATS_IDX(name) \
-+	(offsetof(struct prestera_port_stats, name) / sizeof(u64))
-+#define PRESTERA_STATS_FIELD(name)	\
-+	[PRESTERA_STATS_IDX(name)] = __stringify(name)
-+
-+static const char driver_kind[] = "prestera";
-+
-+static const struct prestera_link_mode {
-+	enum ethtool_link_mode_bit_indices eth_mode;
-+	u32 speed;
-+	u64 pr_mask;
-+	u8 duplex;
-+	u8 port_type;
-+} port_link_modes[PRESTERA_LINK_MODE_MAX] = {
-+	[PRESTERA_LINK_MODE_10baseT_Half] = {
-+		.eth_mode =  ETHTOOL_LINK_MODE_10baseT_Half_BIT,
-+		.speed = 10,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_10baseT_Half,
-+		.duplex = PRESTERA_PORT_DUPLEX_HALF,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_10baseT_Full] = {
-+		.eth_mode =  ETHTOOL_LINK_MODE_10baseT_Full_BIT,
-+		.speed = 10,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_10baseT_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_100baseT_Half] = {
-+		.eth_mode =  ETHTOOL_LINK_MODE_100baseT_Half_BIT,
-+		.speed = 100,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_100baseT_Half,
-+		.duplex = PRESTERA_PORT_DUPLEX_HALF,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_100baseT_Full] = {
-+		.eth_mode =  ETHTOOL_LINK_MODE_100baseT_Full_BIT,
-+		.speed = 100,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_100baseT_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_1000baseT_Half] = {
-+		.eth_mode =  ETHTOOL_LINK_MODE_1000baseT_Half_BIT,
-+		.speed = 1000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_1000baseT_Half,
-+		.duplex = PRESTERA_PORT_DUPLEX_HALF,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_1000baseT_Full] = {
-+		.eth_mode =  ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
-+		.speed = 1000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_1000baseT_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_1000baseX_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_1000baseX_Full_BIT,
-+		.speed = 1000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_1000baseX_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_FIBRE,
-+	},
-+	[PRESTERA_LINK_MODE_1000baseKX_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_1000baseKX_Full_BIT,
-+		.speed = 1000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_1000baseKX_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_2500baseX_Full] = {
-+		.eth_mode =  ETHTOOL_LINK_MODE_2500baseX_Full_BIT,
-+		.speed = 2500,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_2500baseX_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+	},
-+	[PRESTERA_LINK_MODE_10GbaseKR_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_10000baseKR_Full_BIT,
-+		.speed = 10000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_10GbaseKR_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_10GbaseSR_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_10000baseSR_Full_BIT,
-+		.speed = 10000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_10GbaseSR_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_FIBRE,
-+	},
-+	[PRESTERA_LINK_MODE_10GbaseLR_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_10000baseLR_Full_BIT,
-+		.speed = 10000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_10GbaseLR_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_FIBRE,
-+	},
-+	[PRESTERA_LINK_MODE_20GbaseKR2_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_20000baseKR2_Full_BIT,
-+		.speed = 20000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_20GbaseKR2_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_25GbaseCR_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_25000baseCR_Full_BIT,
-+		.speed = 25000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_25GbaseCR_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_DA,
-+	},
-+	[PRESTERA_LINK_MODE_25GbaseKR_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_25000baseKR_Full_BIT,
-+		.speed = 25000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_25GbaseKR_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_25GbaseSR_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_25000baseSR_Full_BIT,
-+		.speed = 25000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_25GbaseSR_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_FIBRE,
-+	},
-+	[PRESTERA_LINK_MODE_40GbaseKR4_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_40000baseKR4_Full_BIT,
-+		.speed = 40000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_40GbaseKR4_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_40GbaseCR4_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_40000baseCR4_Full_BIT,
-+		.speed = 40000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_40GbaseCR4_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_DA,
-+	},
-+	[PRESTERA_LINK_MODE_40GbaseSR4_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_40000baseSR4_Full_BIT,
-+		.speed = 40000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_40GbaseSR4_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_FIBRE,
-+	},
-+	[PRESTERA_LINK_MODE_50GbaseCR2_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_50000baseCR2_Full_BIT,
-+		.speed = 50000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_50GbaseCR2_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_DA,
-+	},
-+	[PRESTERA_LINK_MODE_50GbaseKR2_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_50000baseKR2_Full_BIT,
-+		.speed = 50000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_50GbaseKR2_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_50GbaseSR2_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_50000baseSR2_Full_BIT,
-+		.speed = 50000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_50GbaseSR2_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_FIBRE,
-+	},
-+	[PRESTERA_LINK_MODE_100GbaseKR4_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_100000baseKR4_Full_BIT,
-+		.speed = 100000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_100GbaseKR4_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_TP,
-+	},
-+	[PRESTERA_LINK_MODE_100GbaseSR4_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_100000baseSR4_Full_BIT,
-+		.speed = 100000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_100GbaseSR4_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_FIBRE,
-+	},
-+	[PRESTERA_LINK_MODE_100GbaseCR4_Full] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_100000baseCR4_Full_BIT,
-+		.speed = 100000,
-+		.pr_mask = 1 << PRESTERA_LINK_MODE_100GbaseCR4_Full,
-+		.duplex = PRESTERA_PORT_DUPLEX_FULL,
-+		.port_type = PRESTERA_PORT_TYPE_DA,
-+	}
-+};
-+
-+static const struct prestera_fec {
-+	u32 eth_fec;
-+	enum ethtool_link_mode_bit_indices eth_mode;
-+	u8 pr_fec;
-+} port_fec_caps[PRESTERA_PORT_FEC_MAX] = {
-+	[PRESTERA_PORT_FEC_OFF] = {
-+		.eth_fec = ETHTOOL_FEC_OFF,
-+		.eth_mode = ETHTOOL_LINK_MODE_FEC_NONE_BIT,
-+		.pr_fec = 1 << PRESTERA_PORT_FEC_OFF,
-+	},
-+	[PRESTERA_PORT_FEC_BASER] = {
-+		.eth_fec = ETHTOOL_FEC_BASER,
-+		.eth_mode = ETHTOOL_LINK_MODE_FEC_BASER_BIT,
-+		.pr_fec = 1 << PRESTERA_PORT_FEC_BASER,
-+	},
-+	[PRESTERA_PORT_FEC_RS] = {
-+		.eth_fec = ETHTOOL_FEC_RS,
-+		.eth_mode = ETHTOOL_LINK_MODE_FEC_RS_BIT,
-+		.pr_fec = 1 << PRESTERA_PORT_FEC_RS,
-+	}
-+};
-+
-+static const struct prestera_port_type {
-+	enum ethtool_link_mode_bit_indices eth_mode;
-+	u8 eth_type;
-+} port_types[PRESTERA_PORT_TYPE_MAX] = {
-+	[PRESTERA_PORT_TYPE_NONE] = {
-+		.eth_mode = __ETHTOOL_LINK_MODE_MASK_NBITS,
-+		.eth_type = PORT_NONE,
-+	},
-+	[PRESTERA_PORT_TYPE_TP] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_TP_BIT,
-+		.eth_type = PORT_TP,
-+	},
-+	[PRESTERA_PORT_TYPE_AUI] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_AUI_BIT,
-+		.eth_type = PORT_AUI,
-+	},
-+	[PRESTERA_PORT_TYPE_MII] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_MII_BIT,
-+		.eth_type = PORT_MII,
-+	},
-+	[PRESTERA_PORT_TYPE_FIBRE] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_FIBRE_BIT,
-+		.eth_type = PORT_FIBRE,
-+	},
-+	[PRESTERA_PORT_TYPE_BNC] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_BNC_BIT,
-+		.eth_type = PORT_BNC,
-+	},
-+	[PRESTERA_PORT_TYPE_DA] = {
-+		.eth_mode = ETHTOOL_LINK_MODE_TP_BIT,
-+		.eth_type = PORT_TP,
-+	},
-+	[PRESTERA_PORT_TYPE_OTHER] = {
-+		.eth_mode = __ETHTOOL_LINK_MODE_MASK_NBITS,
-+		.eth_type = PORT_OTHER,
-+	}
-+};
-+
-+static const char prestera_cnt_name[PRESTERA_STATS_CNT][ETH_GSTRING_LEN] = {
-+	PRESTERA_STATS_FIELD(good_octets_received),
-+	PRESTERA_STATS_FIELD(bad_octets_received),
-+	PRESTERA_STATS_FIELD(mac_trans_error),
-+	PRESTERA_STATS_FIELD(broadcast_frames_received),
-+	PRESTERA_STATS_FIELD(multicast_frames_received),
-+	PRESTERA_STATS_FIELD(frames_64_octets),
-+	PRESTERA_STATS_FIELD(frames_65_to_127_octets),
-+	PRESTERA_STATS_FIELD(frames_128_to_255_octets),
-+	PRESTERA_STATS_FIELD(frames_256_to_511_octets),
-+	PRESTERA_STATS_FIELD(frames_512_to_1023_octets),
-+	PRESTERA_STATS_FIELD(frames_1024_to_max_octets),
-+	PRESTERA_STATS_FIELD(excessive_collision),
-+	PRESTERA_STATS_FIELD(multicast_frames_sent),
-+	PRESTERA_STATS_FIELD(broadcast_frames_sent),
-+	PRESTERA_STATS_FIELD(fc_sent),
-+	PRESTERA_STATS_FIELD(fc_received),
-+	PRESTERA_STATS_FIELD(buffer_overrun),
-+	PRESTERA_STATS_FIELD(undersize),
-+	PRESTERA_STATS_FIELD(fragments),
-+	PRESTERA_STATS_FIELD(oversize),
-+	PRESTERA_STATS_FIELD(jabber),
-+	PRESTERA_STATS_FIELD(rx_error_frame_received),
-+	PRESTERA_STATS_FIELD(bad_crc),
-+	PRESTERA_STATS_FIELD(collisions),
-+	PRESTERA_STATS_FIELD(late_collision),
-+	PRESTERA_STATS_FIELD(unicast_frames_received),
-+	PRESTERA_STATS_FIELD(unicast_frames_sent),
-+	PRESTERA_STATS_FIELD(sent_multiple),
-+	PRESTERA_STATS_FIELD(sent_deferred),
-+	PRESTERA_STATS_FIELD(good_octets_sent),
-+};
-+
-+static void prestera_ethtool_get_drvinfo(struct net_device *dev,
-+					 struct ethtool_drvinfo *drvinfo)
-+{
-+	struct prestera_port *port = netdev_priv(dev);
-+	struct prestera_switch *sw = port->sw;
-+
-+	strlcpy(drvinfo->driver, driver_kind, sizeof(drvinfo->driver));
-+	strlcpy(drvinfo->bus_info, dev_name(prestera_dev(sw)),
-+		sizeof(drvinfo->bus_info));
-+	snprintf(drvinfo->fw_version, sizeof(drvinfo->fw_version),
-+		 "%d.%d.%d",
-+		 sw->dev->fw_rev.maj,
-+		 sw->dev->fw_rev.min,
-+		 sw->dev->fw_rev.sub);
-+}
-+
-+static u8 prestera_port_type_get(struct prestera_port *port)
-+{
-+	if (port->caps.type < PRESTERA_PORT_TYPE_MAX)
-+		return port_types[port->caps.type].eth_type;
-+	return PORT_OTHER;
-+}
-+
-+static int prestera_port_type_set(const struct ethtool_link_ksettings *ecmd,
-+				  struct prestera_port *port)
-+{
-+	u32 new_mode = PRESTERA_LINK_MODE_MAX;
-+	u32 type, mode;
-+	int err;
-+
-+	for (type = 0; type < PRESTERA_PORT_TYPE_MAX; type++) {
-+		if (port_types[type].eth_type == ecmd->base.port &&
-+		    test_bit(port_types[type].eth_mode,
-+			     ecmd->link_modes.supported)) {
-+			break;
-+		}
-+	}
-+
-+	if (type == port->caps.type)
-+		return 0;
-+	if (type != port->caps.type && ecmd->base.autoneg == AUTONEG_ENABLE)
-+		return -EINVAL;
-+	if (type == PRESTERA_PORT_TYPE_MAX)
-+		return -EOPNOTSUPP;
-+
-+	for (mode = 0; mode < PRESTERA_LINK_MODE_MAX; mode++) {
-+		if ((port_link_modes[mode].pr_mask &
-+		    port->caps.supp_link_modes) &&
-+		    type == port_link_modes[mode].port_type) {
-+			new_mode = mode;
-+		}
-+	}
-+
-+	if (new_mode < PRESTERA_LINK_MODE_MAX)
-+		err = prestera_hw_port_link_mode_set(port, new_mode);
-+	else
-+		err = -EINVAL;
-+
-+	if (!err) {
-+		port->caps.type = type;
-+		port->autoneg = false;
-+	}
-+
-+	return err;
-+}
-+
-+static void prestera_modes_to_eth(unsigned long *eth_modes, u64 link_modes,
-+				  u8 fec, u8 type)
-+{
-+	u32 mode;
-+
-+	for (mode = 0; mode < PRESTERA_LINK_MODE_MAX; mode++) {
-+		if ((port_link_modes[mode].pr_mask & link_modes) == 0)
-+			continue;
-+		if (type != PRESTERA_PORT_TYPE_NONE &&
-+		    port_link_modes[mode].port_type != type)
-+			continue;
-+		__set_bit(port_link_modes[mode].eth_mode, eth_modes);
-+	}
-+
-+	for (mode = 0; mode < PRESTERA_PORT_FEC_MAX; mode++) {
-+		if ((port_fec_caps[mode].pr_fec & fec) == 0)
-+			continue;
-+		__set_bit(port_fec_caps[mode].eth_mode, eth_modes);
-+	}
-+}
-+
-+static void prestera_modes_from_eth(const unsigned long *eth_modes,
-+				    u64 *link_modes, u8 *fec, u8 type)
-+{
-+	u32 mode;
-+
-+	for (mode = 0; mode < PRESTERA_LINK_MODE_MAX; mode++) {
-+		if (!test_bit(port_link_modes[mode].eth_mode, eth_modes))
-+			continue;
-+		if (port_link_modes[mode].port_type != type)
-+			continue;
-+		*link_modes |= port_link_modes[mode].pr_mask;
-+	}
-+
-+	for (mode = 0; mode < PRESTERA_PORT_FEC_MAX; mode++) {
-+		if (!test_bit(port_fec_caps[mode].eth_mode, eth_modes))
-+			continue;
-+		*fec |= port_fec_caps[mode].pr_fec;
-+	}
-+}
-+
-+static void prestera_port_supp_types_get(struct ethtool_link_ksettings *ecmd,
-+					 struct prestera_port *port)
-+{
-+	u32 mode;
-+	u8 ptype;
-+
-+	for (mode = 0; mode < PRESTERA_LINK_MODE_MAX; mode++) {
-+		if ((port_link_modes[mode].pr_mask &
-+		    port->caps.supp_link_modes) == 0)
-+			continue;
-+		ptype = port_link_modes[mode].port_type;
-+		__set_bit(port_types[ptype].eth_mode,
-+			  ecmd->link_modes.supported);
-+	}
-+}
-+
-+static void prestera_port_remote_cap_get(struct ethtool_link_ksettings *ecmd,
-+					 struct prestera_port *port)
-+{
-+	bool asym_pause;
-+	bool pause;
-+	u64 bitmap;
-+	int err;
-+
-+	err = prestera_hw_port_remote_cap_get(port, &bitmap);
-+	if (!err) {
-+		prestera_modes_to_eth(ecmd->link_modes.lp_advertising,
-+				      bitmap, 0, PRESTERA_PORT_TYPE_NONE);
-+
-+		if (!bitmap_empty(ecmd->link_modes.lp_advertising,
-+				  __ETHTOOL_LINK_MODE_MASK_NBITS)) {
-+			ethtool_link_ksettings_add_link_mode(ecmd,
-+							     lp_advertising,
-+							     Autoneg);
-+		}
-+	}
-+
-+	err = prestera_hw_port_remote_fc_get(port, &pause, &asym_pause);
-+	if (err)
-+		return;
-+
-+	if (pause)
-+		ethtool_link_ksettings_add_link_mode(ecmd,
-+						     lp_advertising,
-+						     Pause);
-+	if (asym_pause)
-+		ethtool_link_ksettings_add_link_mode(ecmd,
-+						     lp_advertising,
-+						     Asym_Pause);
-+}
-+
-+static void prestera_port_speed_get(struct ethtool_link_ksettings *ecmd,
-+				    struct prestera_port *port)
-+{
-+	u32 speed;
-+	int err;
-+
-+	err = prestera_hw_port_speed_get(port, &speed);
-+	ecmd->base.speed = !err ? speed : SPEED_UNKNOWN;
-+}
-+
-+static void prestera_port_duplex_get(struct ethtool_link_ksettings *ecmd,
-+				     struct prestera_port *port)
-+{
-+	u8 duplex;
-+	int err;
-+
-+	err = prestera_hw_port_duplex_get(port, &duplex);
-+	if (err) {
-+		ecmd->base.duplex = DUPLEX_UNKNOWN;
-+		return;
-+	}
-+
-+	ecmd->base.duplex = duplex == PRESTERA_PORT_DUPLEX_FULL ?
-+			    DUPLEX_FULL : DUPLEX_HALF;
-+}
-+
-+static int
-+prestera_ethtool_get_link_ksettings(struct net_device *dev,
-+				    struct ethtool_link_ksettings *ecmd)
-+{
-+	struct prestera_port *port = netdev_priv(dev);
-+
-+	ethtool_link_ksettings_zero_link_mode(ecmd, supported);
-+	ethtool_link_ksettings_zero_link_mode(ecmd, advertising);
-+	ethtool_link_ksettings_zero_link_mode(ecmd, lp_advertising);
-+
-+	ecmd->base.autoneg = port->autoneg ? AUTONEG_ENABLE : AUTONEG_DISABLE;
-+
-+	if (port->caps.type == PRESTERA_PORT_TYPE_TP) {
-+		ethtool_link_ksettings_add_link_mode(ecmd, supported, Autoneg);
-+
-+		if (netif_running(dev) &&
-+		    (port->autoneg ||
-+		     port->caps.transceiver == PRESTERA_PORT_TCVR_COPPER))
-+			ethtool_link_ksettings_add_link_mode(ecmd, advertising,
-+							     Autoneg);
-+	}
-+
-+	prestera_modes_to_eth(ecmd->link_modes.supported,
-+			      port->caps.supp_link_modes,
-+			      port->caps.supp_fec,
-+			      port->caps.type);
-+
-+	prestera_port_supp_types_get(ecmd, port);
-+
-+	if (netif_carrier_ok(dev)) {
-+		prestera_port_speed_get(ecmd, port);
-+		prestera_port_duplex_get(ecmd, port);
-+	} else {
-+		ecmd->base.speed = SPEED_UNKNOWN;
-+		ecmd->base.duplex = DUPLEX_UNKNOWN;
-+	}
-+
-+	ecmd->base.port = prestera_port_type_get(port);
-+
-+	if (port->autoneg) {
-+		if (netif_running(dev))
-+			prestera_modes_to_eth(ecmd->link_modes.advertising,
-+					      port->adver_link_modes,
-+					      port->adver_fec,
-+					      port->caps.type);
-+
-+		if (netif_carrier_ok(dev) &&
-+		    port->caps.transceiver == PRESTERA_PORT_TCVR_COPPER)
-+			prestera_port_remote_cap_get(ecmd, port);
-+	}
-+
-+	if (port->caps.type == PRESTERA_PORT_TYPE_TP &&
-+	    port->caps.transceiver == PRESTERA_PORT_TCVR_COPPER)
-+		prestera_hw_port_mdix_get(port, &ecmd->base.eth_tp_mdix,
-+					  &ecmd->base.eth_tp_mdix_ctrl);
-+
-+	return 0;
-+}
-+
-+static int prestera_port_mdix_set(const struct ethtool_link_ksettings *ecmd,
-+				  struct prestera_port *port)
-+{
-+	if (ecmd->base.eth_tp_mdix_ctrl != ETH_TP_MDI_INVALID &&
-+	    port->caps.transceiver == PRESTERA_PORT_TCVR_COPPER &&
-+	    port->caps.type == PRESTERA_PORT_TYPE_TP)
-+		return prestera_hw_port_mdix_set(port,
-+						 ecmd->base.eth_tp_mdix_ctrl);
-+
-+	return 0;
-+}
-+
-+static int prestera_port_link_mode_set(struct prestera_port *port,
-+				       u32 speed, u8 duplex, u8 type)
-+{
-+	u32 new_mode = PRESTERA_LINK_MODE_MAX;
-+	u32 mode;
-+
-+	for (mode = 0; mode < PRESTERA_LINK_MODE_MAX; mode++) {
-+		if (speed != port_link_modes[mode].speed)
-+			continue;
-+		if (duplex != port_link_modes[mode].duplex)
-+			continue;
-+		if (!(port_link_modes[mode].pr_mask &
-+		    port->caps.supp_link_modes))
-+			continue;
-+		if (type != port_link_modes[mode].port_type)
-+			continue;
-+
-+		new_mode = mode;
-+		break;
-+	}
-+
-+	if (new_mode == PRESTERA_LINK_MODE_MAX)
-+		return -EOPNOTSUPP;
-+
-+	return prestera_hw_port_link_mode_set(port, new_mode);
-+}
-+
-+static int
-+prestera_port_speed_duplex_set(const struct ethtool_link_ksettings *ecmd,
-+			       struct prestera_port *port)
-+{
-+	u32 curr_mode;
-+	u8 duplex;
-+	u32 speed;
-+	int err;
-+
-+	err = prestera_hw_port_link_mode_get(port, &curr_mode);
-+	if (err || curr_mode >= PRESTERA_LINK_MODE_MAX)
-+		return -EINVAL;
-+
-+	if (ecmd->base.duplex != DUPLEX_UNKNOWN)
-+		duplex = ecmd->base.duplex == DUPLEX_FULL ?
-+			 PRESTERA_PORT_DUPLEX_FULL : PRESTERA_PORT_DUPLEX_HALF;
-+	else
-+		duplex = port_link_modes[curr_mode].duplex;
-+
-+	if (ecmd->base.speed != SPEED_UNKNOWN)
-+		speed = ecmd->base.speed;
-+	else
-+		speed = port_link_modes[curr_mode].speed;
-+
-+	return prestera_port_link_mode_set(port, speed, duplex,
-+					   port->caps.type);
-+}
-+
-+static int
-+prestera_ethtool_set_link_ksettings(struct net_device *dev,
-+				    const struct ethtool_link_ksettings *ecmd)
-+{
-+	struct prestera_port *port = netdev_priv(dev);
-+	u64 adver_modes = 0;
-+	u8 adver_fec = 0;
-+	int err;
-+
-+	err = prestera_port_type_set(ecmd, port);
-+	if (err)
-+		return err;
-+
-+	if (port->caps.transceiver == PRESTERA_PORT_TCVR_COPPER) {
-+		err = prestera_port_mdix_set(ecmd, port);
-+		if (err)
-+			return err;
-+	}
-+
-+	prestera_modes_from_eth(ecmd->link_modes.advertising, &adver_modes,
-+				&adver_fec, port->caps.type);
-+
-+	err = prestera_port_autoneg_set(port,
-+					ecmd->base.autoneg == AUTONEG_ENABLE,
-+					adver_modes, adver_fec);
-+	if (err)
-+		return err;
-+
-+	if (ecmd->base.autoneg == AUTONEG_DISABLE) {
-+		err = prestera_port_speed_duplex_set(ecmd, port);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int prestera_ethtool_get_fecparam(struct net_device *dev,
-+					 struct ethtool_fecparam *fecparam)
-+{
-+	struct prestera_port *port = netdev_priv(dev);
-+	u32 mode;
-+	u8 active;
-+	int err;
-+
-+	err = prestera_hw_port_fec_get(port, &active);
-+	if (err)
-+		return err;
-+
-+	fecparam->fec = 0;
-+	for (mode = 0; mode < PRESTERA_PORT_FEC_MAX; mode++) {
-+		if ((port_fec_caps[mode].pr_fec & port->caps.supp_fec) == 0)
-+			continue;
-+		fecparam->fec |= port_fec_caps[mode].eth_fec;
-+	}
-+
-+	if (active < PRESTERA_PORT_FEC_MAX)
-+		fecparam->active_fec = port_fec_caps[active].eth_fec;
-+	else
-+		fecparam->active_fec = ETHTOOL_FEC_AUTO;
-+
-+	return 0;
-+}
-+
-+static int prestera_ethtool_set_fecparam(struct net_device *dev,
-+					 struct ethtool_fecparam *fecparam)
-+{
-+	struct prestera_port *port = netdev_priv(dev);
-+	u8 fec, active;
-+	u32 mode;
-+	int err;
-+
-+	if (port->autoneg) {
-+		netdev_err(dev, "FEC set is not allowed while autoneg is on\n");
-+		return -EINVAL;
-+	}
-+
-+	err = prestera_hw_port_fec_get(port, &active);
-+	if (err)
-+		return err;
-+
-+	fec = PRESTERA_PORT_FEC_MAX;
-+	for (mode = 0; mode < PRESTERA_PORT_FEC_MAX; mode++) {
-+		if ((port_fec_caps[mode].eth_fec & fecparam->fec) &&
-+		    (port_fec_caps[mode].pr_fec & port->caps.supp_fec)) {
-+			fec = mode;
-+			break;
-+		}
-+	}
-+
-+	if (fec == active)
-+		return 0;
-+
-+	if (fec == PRESTERA_PORT_FEC_MAX)
-+		return -EOPNOTSUPP;
-+
-+	return prestera_hw_port_fec_set(port, fec);
-+}
-+
-+static int prestera_ethtool_get_sset_count(struct net_device *dev, int sset)
-+{
-+	switch (sset) {
-+	case ETH_SS_STATS:
-+		return PRESTERA_STATS_CNT;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static void prestera_ethtool_get_strings(struct net_device *dev,
-+					 u32 stringset, u8 *data)
-+{
-+	if (stringset != ETH_SS_STATS)
-+		return;
-+
-+	memcpy(data, prestera_cnt_name, sizeof(prestera_cnt_name));
-+}
-+
-+static void prestera_ethtool_get_stats(struct net_device *dev,
-+				       struct ethtool_stats *stats, u64 *data)
-+{
-+	struct prestera_port *port = netdev_priv(dev);
-+	struct prestera_port_stats *port_stats;
-+
-+	port_stats = &port->cached_hw_stats.stats;
-+
-+	memcpy(data, port_stats, sizeof(*port_stats));
-+}
-+
-+static int prestera_ethtool_nway_reset(struct net_device *dev)
-+{
-+	struct prestera_port *port = netdev_priv(dev);
-+
-+	if (netif_running(dev) &&
-+	    port->caps.transceiver == PRESTERA_PORT_TCVR_COPPER &&
-+	    port->caps.type == PRESTERA_PORT_TYPE_TP)
-+		return prestera_hw_port_autoneg_restart(port);
-+
-+	return -EINVAL;
-+}
-+
-+const struct ethtool_ops prestera_ethtool_ops = {
-+	.get_drvinfo = prestera_ethtool_get_drvinfo,
-+	.get_link_ksettings = prestera_ethtool_get_link_ksettings,
-+	.set_link_ksettings = prestera_ethtool_set_link_ksettings,
-+	.get_fecparam = prestera_ethtool_get_fecparam,
-+	.set_fecparam = prestera_ethtool_set_fecparam,
-+	.get_sset_count = prestera_ethtool_get_sset_count,
-+	.get_strings = prestera_ethtool_get_strings,
-+	.get_ethtool_stats = prestera_ethtool_get_stats,
-+	.get_link = ethtool_op_get_link,
-+	.nway_reset = prestera_ethtool_nway_reset
-+};
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_ethtool.h b/drivers/net/ethernet/marvell/prestera/prestera_ethtool.h
-new file mode 100644
-index 000000000000..016652b09ab6
---- /dev/null
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_ethtool.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0 */
-+/*
-+ * Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved.
-+ *
-+ */
-+#ifndef __PRESTERA_ETHTOOL_H_
-+#define __PRESTERA_ETHTOOL_H_
-+
-+#include <linux/netdevice.h>
-+#include <linux/ethtool.h>
-+
-+extern const struct ethtool_ops prestera_ethtool_ops;
-+
-+#endif /* _PRESTERA_ETHTOOL_H_ */
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_hw.c b/drivers/net/ethernet/marvell/prestera/prestera_hw.c
-index 9e98deb0ef43..ee2b553927bb 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera_hw.c
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_hw.c
-@@ -32,9 +32,18 @@ enum {
- 	PRESTERA_CMD_PORT_ATTR_ADMIN_STATE = 1,
- 	PRESTERA_CMD_PORT_ATTR_MTU = 3,
- 	PRESTERA_CMD_PORT_ATTR_MAC = 4,
-+	PRESTERA_CMD_PORT_ATTR_SPEED = 5,
- 	PRESTERA_CMD_PORT_ATTR_CAPABILITY = 9,
-+	PRESTERA_CMD_PORT_ATTR_REMOTE_CAPABILITY = 10,
-+	PRESTERA_CMD_PORT_ATTR_REMOTE_FC = 11,
-+	PRESTERA_CMD_PORT_ATTR_LINK_MODE = 12,
-+	PRESTERA_CMD_PORT_ATTR_TYPE = 13,
-+	PRESTERA_CMD_PORT_ATTR_FEC = 14,
- 	PRESTERA_CMD_PORT_ATTR_AUTONEG = 15,
--	PRESTERA_CMD_PORT_ATTR_STATS = 17
-+	PRESTERA_CMD_PORT_ATTR_DUPLEX = 16,
-+	PRESTERA_CMD_PORT_ATTR_STATS = 17,
-+	PRESTERA_CMD_PORT_ATTR_MDIX = 18,
-+	PRESTERA_CMD_PORT_ATTR_AUTONEG_RESTART = 19
+@@ -51,6 +54,8 @@ struct nullb_device {
+ 	unsigned long zone_size; /* zone size in MB if device is zoned */
+ 	unsigned long zone_capacity; /* zone capacity in MB if device is zoned */
+ 	unsigned int zone_nr_conv; /* number of conventional zones */
++	unsigned int zone_max_open; /* max number of open zones */
++	unsigned int zone_max_active; /* max number of active zones */
+ 	unsigned int submit_queues; /* number of submission queues */
+ 	unsigned int home_node; /* home node for the device */
+ 	unsigned int queue_mode; /* block interface */
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index d74443a9c8fa2..53161a418611b 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -208,6 +208,14 @@ static unsigned int g_zone_nr_conv;
+ module_param_named(zone_nr_conv, g_zone_nr_conv, uint, 0444);
+ MODULE_PARM_DESC(zone_nr_conv, "Number of conventional zones when block device is zoned. Default: 0");
+ 
++static unsigned int g_zone_max_open;
++module_param_named(zone_max_open, g_zone_max_open, uint, 0444);
++MODULE_PARM_DESC(zone_max_open, "Maximum number of open zones when block device is zoned. Default: 0 (no limit)");
++
++static unsigned int g_zone_max_active;
++module_param_named(zone_max_active, g_zone_max_active, uint, 0444);
++MODULE_PARM_DESC(zone_max_active, "Maximum number of active zones when block device is zoned. Default: 0 (no limit)");
++
+ static struct nullb_device *null_alloc_dev(void);
+ static void null_free_dev(struct nullb_device *dev);
+ static void null_del_dev(struct nullb *nullb);
+@@ -347,6 +355,8 @@ NULLB_DEVICE_ATTR(zoned, bool, NULL);
+ NULLB_DEVICE_ATTR(zone_size, ulong, NULL);
+ NULLB_DEVICE_ATTR(zone_capacity, ulong, NULL);
+ NULLB_DEVICE_ATTR(zone_nr_conv, uint, NULL);
++NULLB_DEVICE_ATTR(zone_max_open, uint, NULL);
++NULLB_DEVICE_ATTR(zone_max_active, uint, NULL);
+ 
+ static ssize_t nullb_device_power_show(struct config_item *item, char *page)
+ {
+@@ -464,6 +474,8 @@ static struct configfs_attribute *nullb_device_attrs[] = {
+ 	&nullb_device_attr_zone_size,
+ 	&nullb_device_attr_zone_capacity,
+ 	&nullb_device_attr_zone_nr_conv,
++	&nullb_device_attr_zone_max_open,
++	&nullb_device_attr_zone_max_active,
+ 	NULL,
  };
  
- enum {
-@@ -48,6 +57,13 @@ enum {
- 	PRESTERA_CMD_ACK_MAX
- };
- 
-+enum {
-+	PRESTERA_PORT_TP_NA,
-+	PRESTERA_PORT_TP_MDI,
-+	PRESTERA_PORT_TP_MDIX,
-+	PRESTERA_PORT_TP_AUTO
-+};
-+
- enum {
- 	PRESTERA_PORT_GOOD_OCTETS_RCV_CNT,
- 	PRESTERA_PORT_BAD_OCTETS_RCV_CNT,
-@@ -83,6 +99,13 @@ enum {
- 	PRESTERA_PORT_CNT_MAX
- };
- 
-+enum {
-+	PRESTERA_FC_NONE,
-+	PRESTERA_FC_SYMMETRIC,
-+	PRESTERA_FC_ASYMMETRIC,
-+	PRESTERA_FC_SYMM_ASYMM
-+};
-+
- struct prestera_fw_event_handler {
- 	struct list_head list;
- 	struct rcu_head rcu;
-@@ -138,11 +161,23 @@ struct prestera_msg_port_cap_param {
- 	u8  transceiver;
- };
- 
-+struct prestera_msg_port_mdix_param {
-+	u8 status;
-+	u8 admin_mode;
-+};
-+
- union prestera_msg_port_param {
- 	u8  admin_state;
- 	u8  oper_state;
- 	u32 mtu;
- 	u8  mac[ETH_ALEN];
-+	u32 speed;
-+	u32 link_mode;
-+	u8  type;
-+	u8  duplex;
-+	u8  fec;
-+	u8  fc;
-+	struct prestera_msg_port_mdix_param mdix;
- 	struct prestera_msg_port_autoneg_param autoneg;
- 	struct prestera_msg_port_cap_param cap;
- };
-@@ -477,6 +512,232 @@ int prestera_hw_port_cap_get(const struct prestera_port *port,
- 	return err;
+@@ -517,7 +529,7 @@ nullb_group_drop_item(struct config_group *group, struct config_item *item)
+ static ssize_t memb_group_features_show(struct config_item *item, char *page)
+ {
+ 	return snprintf(page, PAGE_SIZE,
+-			"memory_backed,discard,bandwidth,cache,badblocks,zoned,zone_size,zone_capacity,zone_nr_conv\n");
++			"memory_backed,discard,bandwidth,cache,badblocks,zoned,zone_size,zone_capacity,zone_nr_conv,zone_max_open,zone_max_active\n");
  }
  
-+int prestera_hw_port_remote_cap_get(const struct prestera_port *port,
-+				    u64 *link_mode_bitmap)
-+{
-+	struct prestera_msg_port_attr_resp resp;
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_REMOTE_CAPABILITY,
-+		.port = port->hw_id,
-+		.dev = port->dev_id
-+	};
-+	int err;
-+
-+	err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_GET,
-+			       &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
-+	if (err)
-+		return err;
-+
-+	*link_mode_bitmap = resp.param.cap.link_mode;
-+
-+	return err;
-+}
-+
-+int prestera_hw_port_remote_fc_get(const struct prestera_port *port,
-+				   bool *pause, bool *asym_pause)
-+{
-+	struct prestera_msg_port_attr_resp resp;
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_REMOTE_FC,
-+		.port = port->hw_id,
-+		.dev = port->dev_id
-+	};
-+	int err;
-+
-+	err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_GET,
-+			       &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
-+	if (err)
-+		return err;
-+
-+	switch (resp.param.fc) {
-+	case PRESTERA_FC_SYMMETRIC:
-+		*pause = true;
-+		*asym_pause = false;
-+		break;
-+	case PRESTERA_FC_ASYMMETRIC:
-+		*pause = false;
-+		*asym_pause = true;
-+		break;
-+	case PRESTERA_FC_SYMM_ASYMM:
-+		*pause = true;
-+		*asym_pause = true;
-+		break;
-+	default:
-+		*pause = false;
-+		*asym_pause = false;
-+	}
-+
-+	return err;
-+}
-+
-+int prestera_hw_port_type_get(const struct prestera_port *port, u8 *type)
-+{
-+	struct prestera_msg_port_attr_resp resp;
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_TYPE,
-+		.port = port->hw_id,
-+		.dev = port->dev_id
-+	};
-+	int err;
-+
-+	err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_GET,
-+			       &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
-+	if (err)
-+		return err;
-+
-+	*type = resp.param.type;
-+
-+	return err;
-+}
-+
-+int prestera_hw_port_fec_get(const struct prestera_port *port, u8 *fec)
-+{
-+	struct prestera_msg_port_attr_resp resp;
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_FEC,
-+		.port = port->hw_id,
-+		.dev = port->dev_id
-+	};
-+	int err;
-+
-+	err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_GET,
-+			       &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
-+	if (err)
-+		return err;
-+
-+	*fec = resp.param.fec;
-+
-+	return err;
-+}
-+
-+int prestera_hw_port_fec_set(const struct prestera_port *port, u8 fec)
-+{
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_FEC,
-+		.port = port->hw_id,
-+		.dev = port->dev_id,
-+		.param = {.fec = fec}
-+	};
-+
-+	return prestera_cmd(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_SET,
-+			    &req.cmd, sizeof(req));
-+}
-+
-+static u8 prestera_hw_mdix_to_eth(u8 mode)
-+{
-+	switch (mode) {
-+	case PRESTERA_PORT_TP_MDI:
-+		return ETH_TP_MDI;
-+	case PRESTERA_PORT_TP_MDIX:
-+		return ETH_TP_MDI_X;
-+	case PRESTERA_PORT_TP_AUTO:
-+		return ETH_TP_MDI_AUTO;
-+	}
-+
-+	return ETH_TP_MDI_INVALID;
-+}
-+
-+static u8 prestera_hw_mdix_from_eth(u8 mode)
-+{
-+	switch (mode) {
-+	case ETH_TP_MDI:
-+		return PRESTERA_PORT_TP_MDI;
-+	case ETH_TP_MDI_X:
-+		return PRESTERA_PORT_TP_MDIX;
-+	case ETH_TP_MDI_AUTO:
-+		return PRESTERA_PORT_TP_AUTO;
-+	}
-+
-+	return PRESTERA_PORT_TP_NA;
-+}
-+
-+int prestera_hw_port_mdix_get(const struct prestera_port *port, u8 *status,
-+			      u8 *admin_mode)
-+{
-+	struct prestera_msg_port_attr_resp resp;
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_MDIX,
-+		.port = port->hw_id,
-+		.dev = port->dev_id
-+	};
-+	int err;
-+
-+	err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_GET,
-+			       &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
-+	if (err)
-+		return err;
-+
-+	*status = prestera_hw_mdix_to_eth(resp.param.mdix.status);
-+	*admin_mode = prestera_hw_mdix_to_eth(resp.param.mdix.admin_mode);
-+
-+	return 0;
-+}
-+
-+int prestera_hw_port_mdix_set(const struct prestera_port *port, u8 mode)
-+{
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_MDIX,
-+		.port = port->hw_id,
-+		.dev = port->dev_id
-+	};
-+
-+	req.param.mdix.admin_mode = prestera_hw_mdix_from_eth(mode);
-+
-+	return prestera_cmd(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_SET,
-+			    &req.cmd, sizeof(req));
-+}
-+
-+int prestera_hw_port_link_mode_set(const struct prestera_port *port, u32 mode)
-+{
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_LINK_MODE,
-+		.port = port->hw_id,
-+		.dev = port->dev_id,
-+		.param = {.link_mode = mode}
-+	};
-+
-+	return prestera_cmd(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_SET,
-+			    &req.cmd, sizeof(req));
-+}
-+
-+int prestera_hw_port_link_mode_get(const struct prestera_port *port, u32 *mode)
-+{
-+	struct prestera_msg_port_attr_resp resp;
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_LINK_MODE,
-+		.port = port->hw_id,
-+		.dev = port->dev_id
-+	};
-+	int err;
-+
-+	err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_GET,
-+			       &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
-+
-+	*mode = resp.param.link_mode;
-+
-+	return err;
-+}
-+
-+int prestera_hw_port_speed_get(const struct prestera_port *port, u32 *speed)
-+{
-+	struct prestera_msg_port_attr_resp resp;
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_SPEED,
-+		.port = port->hw_id,
-+		.dev = port->dev_id
-+	};
-+	int err;
-+
-+	err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_GET,
-+			       &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
-+	if (err)
-+		return err;
-+
-+	*speed = resp.param.speed;
-+
-+	return err;
-+}
-+
- int prestera_hw_port_autoneg_set(const struct prestera_port *port,
- 				 bool autoneg, u64 link_modes, u8 fec)
- {
-@@ -494,6 +755,38 @@ int prestera_hw_port_autoneg_set(const struct prestera_port *port,
- 			    &req.cmd, sizeof(req));
+ CONFIGFS_ATTR_RO(memb_group_, features);
+@@ -580,6 +592,8 @@ static struct nullb_device *null_alloc_dev(void)
+ 	dev->zone_size = g_zone_size;
+ 	dev->zone_capacity = g_zone_capacity;
+ 	dev->zone_nr_conv = g_zone_nr_conv;
++	dev->zone_max_open = g_zone_max_open;
++	dev->zone_max_active = g_zone_max_active;
+ 	return dev;
  }
  
-+int prestera_hw_port_autoneg_restart(struct prestera_port *port)
-+{
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_AUTONEG_RESTART,
-+		.port = port->hw_id,
-+		.dev = port->dev_id,
-+	};
-+
-+	return prestera_cmd(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_SET,
-+			    &req.cmd, sizeof(req));
-+}
-+
-+int prestera_hw_port_duplex_get(const struct prestera_port *port, u8 *duplex)
-+{
-+	struct prestera_msg_port_attr_resp resp;
-+	struct prestera_msg_port_attr_req req = {
-+		.attr = PRESTERA_CMD_PORT_ATTR_DUPLEX,
-+		.port = port->hw_id,
-+		.dev = port->dev_id
-+	};
-+	int err;
-+
-+	err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_GET,
-+			       &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
-+	if (err)
-+		return err;
-+
-+	*duplex = resp.param.duplex;
-+
-+	return err;
-+}
-+
- int prestera_hw_port_stats_get(const struct prestera_port *port,
- 			       struct prestera_port_stats *st)
- {
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_hw.h b/drivers/net/ethernet/marvell/prestera/prestera_hw.h
-index f12c368c4727..196a8ee47f3f 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera_hw.h
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_hw.h
-@@ -9,19 +9,69 @@
- 
- #include <linux/types.h>
- 
-+enum {
-+	PRESTERA_LINK_MODE_10baseT_Half,
-+	PRESTERA_LINK_MODE_10baseT_Full,
-+	PRESTERA_LINK_MODE_100baseT_Half,
-+	PRESTERA_LINK_MODE_100baseT_Full,
-+	PRESTERA_LINK_MODE_1000baseT_Half,
-+	PRESTERA_LINK_MODE_1000baseT_Full,
-+	PRESTERA_LINK_MODE_1000baseX_Full,
-+	PRESTERA_LINK_MODE_1000baseKX_Full,
-+	PRESTERA_LINK_MODE_2500baseX_Full,
-+	PRESTERA_LINK_MODE_10GbaseKR_Full,
-+	PRESTERA_LINK_MODE_10GbaseSR_Full,
-+	PRESTERA_LINK_MODE_10GbaseLR_Full,
-+	PRESTERA_LINK_MODE_20GbaseKR2_Full,
-+	PRESTERA_LINK_MODE_25GbaseCR_Full,
-+	PRESTERA_LINK_MODE_25GbaseKR_Full,
-+	PRESTERA_LINK_MODE_25GbaseSR_Full,
-+	PRESTERA_LINK_MODE_40GbaseKR4_Full,
-+	PRESTERA_LINK_MODE_40GbaseCR4_Full,
-+	PRESTERA_LINK_MODE_40GbaseSR4_Full,
-+	PRESTERA_LINK_MODE_50GbaseCR2_Full,
-+	PRESTERA_LINK_MODE_50GbaseKR2_Full,
-+	PRESTERA_LINK_MODE_50GbaseSR2_Full,
-+	PRESTERA_LINK_MODE_100GbaseKR4_Full,
-+	PRESTERA_LINK_MODE_100GbaseSR4_Full,
-+	PRESTERA_LINK_MODE_100GbaseCR4_Full,
-+
-+	PRESTERA_LINK_MODE_MAX
-+};
-+
- enum {
- 	PRESTERA_PORT_TYPE_NONE,
- 	PRESTERA_PORT_TYPE_TP,
-+	PRESTERA_PORT_TYPE_AUI,
-+	PRESTERA_PORT_TYPE_MII,
-+	PRESTERA_PORT_TYPE_FIBRE,
-+	PRESTERA_PORT_TYPE_BNC,
-+	PRESTERA_PORT_TYPE_DA,
-+	PRESTERA_PORT_TYPE_OTHER,
- 
- 	PRESTERA_PORT_TYPE_MAX
- };
- 
-+enum {
-+	PRESTERA_PORT_TCVR_COPPER,
-+	PRESTERA_PORT_TCVR_SFP,
-+
-+	PRESTERA_PORT_TCVR_MAX
-+};
-+
- enum {
- 	PRESTERA_PORT_FEC_OFF,
-+	PRESTERA_PORT_FEC_BASER,
-+	PRESTERA_PORT_FEC_RS,
- 
- 	PRESTERA_PORT_FEC_MAX
- };
- 
-+enum {
-+	PRESTERA_PORT_DUPLEX_HALF,
-+	PRESTERA_PORT_DUPLEX_FULL
-+};
-+
- struct prestera_switch;
- struct prestera_port;
- struct prestera_port_stats;
-@@ -50,10 +100,25 @@ int prestera_hw_port_mac_set(const struct prestera_port *port, const char *mac);
- int prestera_hw_port_mac_get(const struct prestera_port *port, char *mac);
- int prestera_hw_port_cap_get(const struct prestera_port *port,
- 			     struct prestera_port_caps *caps);
-+int prestera_hw_port_remote_cap_get(const struct prestera_port *port,
-+				    u64 *link_mode_bitmap);
-+int prestera_hw_port_remote_fc_get(const struct prestera_port *port,
-+				   bool *pause, bool *asym_pause);
-+int prestera_hw_port_type_get(const struct prestera_port *port, u8 *type);
-+int prestera_hw_port_fec_get(const struct prestera_port *port, u8 *fec);
-+int prestera_hw_port_fec_set(const struct prestera_port *port, u8 fec);
- int prestera_hw_port_autoneg_set(const struct prestera_port *port,
- 				 bool autoneg, u64 link_modes, u8 fec);
-+int prestera_hw_port_autoneg_restart(struct prestera_port *port);
-+int prestera_hw_port_duplex_get(const struct prestera_port *port, u8 *duplex);
- int prestera_hw_port_stats_get(const struct prestera_port *port,
- 			       struct prestera_port_stats *stats);
-+int prestera_hw_port_link_mode_set(const struct prestera_port *port, u32 mode);
-+int prestera_hw_port_link_mode_get(const struct prestera_port *port, u32 *mode);
-+int prestera_hw_port_mdix_get(const struct prestera_port *port, u8 *status,
-+			      u8 *admin_mode);
-+int prestera_hw_port_mdix_set(const struct prestera_port *port, u8 mode);
-+int prestera_hw_port_speed_get(const struct prestera_port *port, u32 *speed);
- 
- /* Event handlers */
- int prestera_hw_event_handler_register(struct prestera_switch *sw,
-diff --git a/drivers/net/ethernet/marvell/prestera/prestera_main.c b/drivers/net/ethernet/marvell/prestera/prestera_main.c
-index 2eed7ba763ff..0fd483e617f0 100644
---- a/drivers/net/ethernet/marvell/prestera/prestera_main.c
-+++ b/drivers/net/ethernet/marvell/prestera/prestera_main.c
-@@ -15,6 +15,7 @@
- #include "prestera_hw.h"
- #include "prestera_rxtx.h"
- #include "prestera_devlink.h"
-+#include "prestera_ethtool.h"
- 
- #define PRESTERA_MTU_DEFAULT	1536
- 
-@@ -187,22 +188,38 @@ static const struct net_device_ops prestera_netdev_ops = {
- 	.ndo_get_devlink_port = prestera_devlink_get_port,
- };
- 
--static int prestera_port_autoneg_set(struct prestera_port *port, bool enable,
--				     u64 link_modes, u8 fec)
-+int prestera_port_autoneg_set(struct prestera_port *port, bool enable,
-+			      u64 adver_link_modes, u8 adver_fec)
- {
- 	bool refresh = false;
-+	u64 link_modes;
- 	int err = 0;
-+	u8 fec;
- 
- 	if (port->caps.type != PRESTERA_PORT_TYPE_TP)
- 		return enable ? -EINVAL : 0;
- 
--	if (port->adver_link_modes != link_modes || port->adver_fec != fec) {
--		port->adver_fec = fec ?: BIT(PRESTERA_PORT_FEC_OFF);
-+	if (!enable)
-+		goto set_autoneg;
-+
-+	link_modes = port->caps.supp_link_modes & adver_link_modes;
-+	fec = port->caps.supp_fec & adver_fec;
-+
-+	if (!link_modes && !fec)
-+		return -EOPNOTSUPP;
-+
-+	if (link_modes && port->adver_link_modes != link_modes) {
- 		port->adver_link_modes = link_modes;
- 		refresh = true;
+diff --git a/drivers/block/null_blk_zoned.c b/drivers/block/null_blk_zoned.c
+index 3d25c9ad23831..5fb38c9bdd4ae 100644
+--- a/drivers/block/null_blk_zoned.c
++++ b/drivers/block/null_blk_zoned.c
+@@ -51,6 +51,24 @@ int null_init_zoned_dev(struct nullb_device *dev, struct request_queue *q)
+ 			dev->zone_nr_conv);
  	}
  
--	if (port->autoneg == enable && !(port->autoneg && refresh))
-+	if (fec && port->adver_fec != fec) {
-+		port->adver_fec = fec;
-+		refresh = true;
++	/* Max active zones has to be <= number of sequential zones */
++	if (dev->zone_max_active > dev->nr_zones - dev->zone_nr_conv) {
++		dev->zone_max_active = dev->nr_zones - dev->zone_nr_conv;
++		pr_info("changed the maximum number of active zones to %u\n",
++			dev->nr_zones);
 +	}
 +
-+set_autoneg:
-+	if (port->autoneg == enable && !refresh)
- 		return 0;
++	/* Max open zones has to be <= max active zones */
++	if (dev->zone_max_active && dev->zone_max_open > dev->zone_max_active) {
++		dev->zone_max_open = dev->zone_max_active;
++		pr_info("changed the maximum number of open zones to %u\n",
++			dev->nr_zones);
++	} else if (dev->zone_max_open > dev->nr_zones - dev->zone_nr_conv) {
++		dev->zone_max_open = dev->nr_zones - dev->zone_nr_conv;
++		pr_info("changed the maximum number of open zones to %u\n",
++			dev->nr_zones);
++	}
++
+ 	for (i = 0; i <  dev->zone_nr_conv; i++) {
+ 		struct blk_zone *zone = &dev->zones[i];
  
- 	err = prestera_hw_port_autoneg_set(port, enable, port->adver_link_modes,
-@@ -243,6 +260,7 @@ static int prestera_port_create(struct prestera_switch *sw, u32 id)
+@@ -99,6 +117,8 @@ int null_register_zoned_dev(struct nullb *nullb)
+ 	}
  
- 	dev->features |= NETIF_F_NETNS_LOCAL;
- 	dev->netdev_ops = &prestera_netdev_ops;
-+	dev->ethtool_ops = &prestera_ethtool_ops;
+ 	blk_queue_max_zone_append_sectors(q, dev->zone_size_sects);
++	blk_queue_max_open_zones(q, dev->zone_max_open);
++	blk_queue_max_active_zones(q, dev->zone_max_active);
  
- 	netif_carrier_off(dev);
+ 	return 0;
+ }
+@@ -159,6 +179,99 @@ size_t null_zone_valid_read_len(struct nullb *nullb,
+ 	return (zone->wp - sector) << SECTOR_SHIFT;
+ }
  
++static blk_status_t null_close_zone(struct nullb_device *dev, struct blk_zone *zone)
++{
++	if (zone->type == BLK_ZONE_TYPE_CONVENTIONAL)
++		return BLK_STS_IOERR;
++
++	switch (zone->cond) {
++	case BLK_ZONE_COND_CLOSED:
++		/* close operation on closed is not an error */
++		return BLK_STS_OK;
++	case BLK_ZONE_COND_IMP_OPEN:
++		dev->nr_zones_imp_open--;
++		break;
++	case BLK_ZONE_COND_EXP_OPEN:
++		dev->nr_zones_exp_open--;
++		break;
++	case BLK_ZONE_COND_EMPTY:
++	case BLK_ZONE_COND_FULL:
++	default:
++		return BLK_STS_IOERR;
++	}
++
++	if (zone->wp == zone->start) {
++		zone->cond = BLK_ZONE_COND_EMPTY;
++	} else {
++		zone->cond = BLK_ZONE_COND_CLOSED;
++		dev->nr_zones_closed++;
++	}
++
++	return BLK_STS_OK;
++}
++
++static void null_close_first_imp_zone(struct nullb_device *dev)
++{
++	unsigned int i;
++
++	for (i = 0; i < dev->nr_zones; i++) {
++		if (dev->zones[i].type == BLK_ZONE_TYPE_CONVENTIONAL)
++			continue;
++		if (dev->zones[i].cond == BLK_ZONE_COND_IMP_OPEN) {
++			null_close_zone(dev, &dev->zones[i]);
++			return;
++		}
++	}
++}
++
++static bool null_room_in_active(struct nullb_device *dev)
++{
++	if (!dev->zone_max_active)
++		return true;
++
++	return dev->nr_zones_exp_open + dev->nr_zones_imp_open +
++	       dev->nr_zones_closed < dev->zone_max_active;
++}
++
++static bool null_room_in_open(struct nullb_device *dev)
++{
++	if (!dev->zone_max_open)
++		return true;
++
++	return dev->nr_zones_exp_open + dev->nr_zones_imp_open < dev->zone_max_open;
++}
++
++/*
++ * This function matches the manage open zone resources function in the ZBC standard,
++ * with the addition of max active zones support (added in the ZNS standard).
++ *
++ * ZBC states that an implicitly open zone shall be closed only if there is not
++ * room within the open limit. However, if an active limit is set, it is not certain
++ * that an implicitly opened zone can be closed without exceeding the active limit.
++ */
++static bool null_manage_zone_resources(struct nullb_device *dev, struct blk_zone *zone)
++{
++	switch (zone->cond) {
++	case BLK_ZONE_COND_EMPTY:
++		if (!null_room_in_active(dev))
++			return false;
++		fallthrough;
++	case BLK_ZONE_COND_CLOSED:
++		if (null_room_in_open(dev)) {
++			return true;
++		} else if (dev->nr_zones_imp_open && null_room_in_active(dev)) {
++			null_close_first_imp_zone(dev);
++			return true;
++		} else {
++			return false;
++		}
++	default:
++		/* Should never be called for other states */
++		WARN_ON(1);
++		return false;
++	}
++}
++
+ static blk_status_t null_zone_write(struct nullb_cmd *cmd, sector_t sector,
+ 				    unsigned int nr_sectors, bool append)
+ {
+@@ -177,43 +290,155 @@ static blk_status_t null_zone_write(struct nullb_cmd *cmd, sector_t sector,
+ 		/* Cannot write to a full zone */
+ 		return BLK_STS_IOERR;
+ 	case BLK_ZONE_COND_EMPTY:
++	case BLK_ZONE_COND_CLOSED:
++		if (!null_manage_zone_resources(dev, zone))
++			return BLK_STS_IOERR;
++		break;
+ 	case BLK_ZONE_COND_IMP_OPEN:
+ 	case BLK_ZONE_COND_EXP_OPEN:
++		break;
++	default:
++		/* Invalid zone condition */
++		return BLK_STS_IOERR;
++	}
++
++	/*
++	 * Regular writes must be at the write pointer position.
++	 * Zone append writes are automatically issued at the write
++	 * pointer and the position returned using the request or BIO
++	 * sector.
++	 */
++	if (append) {
++		sector = zone->wp;
++		if (cmd->bio)
++			cmd->bio->bi_iter.bi_sector = sector;
++		else
++			cmd->rq->__sector = sector;
++	} else if (sector != zone->wp) {
++		return BLK_STS_IOERR;
++	}
++
++	if (zone->wp + nr_sectors > zone->start + zone->capacity)
++		return BLK_STS_IOERR;
++
++	if (zone->cond == BLK_ZONE_COND_CLOSED) {
++		dev->nr_zones_closed--;
++		dev->nr_zones_imp_open++;
++	} else if (zone->cond == BLK_ZONE_COND_EMPTY) {
++		dev->nr_zones_imp_open++;
++	}
++	if (zone->cond != BLK_ZONE_COND_EXP_OPEN)
++		zone->cond = BLK_ZONE_COND_IMP_OPEN;
++
++	ret = null_process_cmd(cmd, REQ_OP_WRITE, sector, nr_sectors);
++	if (ret != BLK_STS_OK)
++		return ret;
++
++	zone->wp += nr_sectors;
++	if (zone->wp == zone->start + zone->capacity) {
++		if (zone->cond == BLK_ZONE_COND_EXP_OPEN)
++			dev->nr_zones_exp_open--;
++		else if (zone->cond == BLK_ZONE_COND_IMP_OPEN)
++			dev->nr_zones_imp_open--;
++		zone->cond = BLK_ZONE_COND_FULL;
++	}
++	return BLK_STS_OK;
++}
++
++static blk_status_t null_open_zone(struct nullb_device *dev, struct blk_zone *zone)
++{
++	if (zone->type == BLK_ZONE_TYPE_CONVENTIONAL)
++		return BLK_STS_IOERR;
++
++	switch (zone->cond) {
++	case BLK_ZONE_COND_EXP_OPEN:
++		/* open operation on exp open is not an error */
++		return BLK_STS_OK;
++	case BLK_ZONE_COND_EMPTY:
++		if (!null_manage_zone_resources(dev, zone))
++			return BLK_STS_IOERR;
++		break;
++	case BLK_ZONE_COND_IMP_OPEN:
++		dev->nr_zones_imp_open--;
++		break;
+ 	case BLK_ZONE_COND_CLOSED:
+-		/*
+-		 * Regular writes must be at the write pointer position.
+-		 * Zone append writes are automatically issued at the write
+-		 * pointer and the position returned using the request or BIO
+-		 * sector.
+-		 */
+-		if (append) {
+-			sector = zone->wp;
+-			if (cmd->bio)
+-				cmd->bio->bi_iter.bi_sector = sector;
+-			else
+-				cmd->rq->__sector = sector;
+-		} else if (sector != zone->wp) {
++		if (!null_manage_zone_resources(dev, zone))
+ 			return BLK_STS_IOERR;
+-		}
++		dev->nr_zones_closed--;
++		break;
++	case BLK_ZONE_COND_FULL:
++	default:
++		return BLK_STS_IOERR;
++	}
++
++	zone->cond = BLK_ZONE_COND_EXP_OPEN;
++	dev->nr_zones_exp_open++;
++
++	return BLK_STS_OK;
++}
++
++static blk_status_t null_finish_zone(struct nullb_device *dev, struct blk_zone *zone)
++{
++	if (zone->type == BLK_ZONE_TYPE_CONVENTIONAL)
++		return BLK_STS_IOERR;
+ 
+-		if (zone->wp + nr_sectors > zone->start + zone->capacity)
++	switch (zone->cond) {
++	case BLK_ZONE_COND_FULL:
++		/* finish operation on full is not an error */
++		return BLK_STS_OK;
++	case BLK_ZONE_COND_EMPTY:
++		if (!null_manage_zone_resources(dev, zone))
++			return BLK_STS_IOERR;
++		break;
++	case BLK_ZONE_COND_IMP_OPEN:
++		dev->nr_zones_imp_open--;
++		break;
++	case BLK_ZONE_COND_EXP_OPEN:
++		dev->nr_zones_exp_open--;
++		break;
++	case BLK_ZONE_COND_CLOSED:
++		if (!null_manage_zone_resources(dev, zone))
+ 			return BLK_STS_IOERR;
++		dev->nr_zones_closed--;
++		break;
++	default:
++		return BLK_STS_IOERR;
++	}
+ 
+-		if (zone->cond != BLK_ZONE_COND_EXP_OPEN)
+-			zone->cond = BLK_ZONE_COND_IMP_OPEN;
++	zone->cond = BLK_ZONE_COND_FULL;
++	zone->wp = zone->len;
+ 
+-		ret = null_process_cmd(cmd, REQ_OP_WRITE, sector, nr_sectors);
+-		if (ret != BLK_STS_OK)
+-			return ret;
++	return BLK_STS_OK;
++}
++
++static blk_status_t null_reset_zone(struct nullb_device *dev, struct blk_zone *zone)
++{
++	if (zone->type == BLK_ZONE_TYPE_CONVENTIONAL)
++		return BLK_STS_IOERR;
+ 
+-		zone->wp += nr_sectors;
+-		if (zone->wp == zone->start + zone->capacity)
+-			zone->cond = BLK_ZONE_COND_FULL;
++	switch (zone->cond) {
++	case BLK_ZONE_COND_EMPTY:
++		/* reset operation on empty is not an error */
+ 		return BLK_STS_OK;
++	case BLK_ZONE_COND_IMP_OPEN:
++		dev->nr_zones_imp_open--;
++		break;
++	case BLK_ZONE_COND_EXP_OPEN:
++		dev->nr_zones_exp_open--;
++		break;
++	case BLK_ZONE_COND_CLOSED:
++		dev->nr_zones_closed--;
++		break;
++	case BLK_ZONE_COND_FULL:
++		break;
+ 	default:
+-		/* Invalid zone condition */
+ 		return BLK_STS_IOERR;
+ 	}
++
++	zone->cond = BLK_ZONE_COND_EMPTY;
++	zone->wp = zone->start;
++
++	return BLK_STS_OK;
+ }
+ 
+ static blk_status_t null_zone_mgmt(struct nullb_cmd *cmd, enum req_opf op,
+@@ -222,49 +447,34 @@ static blk_status_t null_zone_mgmt(struct nullb_cmd *cmd, enum req_opf op,
+ 	struct nullb_device *dev = cmd->nq->dev;
+ 	unsigned int zone_no = null_zone_no(dev, sector);
+ 	struct blk_zone *zone = &dev->zones[zone_no];
++	blk_status_t ret;
+ 	size_t i;
+ 
+ 	switch (op) {
+ 	case REQ_OP_ZONE_RESET_ALL:
+ 		for (i = 0; i < dev->nr_zones; i++) {
+-			if (zone[i].type == BLK_ZONE_TYPE_CONVENTIONAL)
+-				continue;
+-			zone[i].cond = BLK_ZONE_COND_EMPTY;
+-			zone[i].wp = zone[i].start;
++			null_reset_zone(dev, &dev->zones[i]);
+ 		}
+ 		break;
+ 	case REQ_OP_ZONE_RESET:
+-		if (zone->type == BLK_ZONE_TYPE_CONVENTIONAL)
+-			return BLK_STS_IOERR;
+-
+-		zone->cond = BLK_ZONE_COND_EMPTY;
+-		zone->wp = zone->start;
++		ret = null_reset_zone(dev, zone);
++		if (ret != BLK_STS_OK)
++			return ret;
+ 		break;
+ 	case REQ_OP_ZONE_OPEN:
+-		if (zone->type == BLK_ZONE_TYPE_CONVENTIONAL)
+-			return BLK_STS_IOERR;
+-		if (zone->cond == BLK_ZONE_COND_FULL)
+-			return BLK_STS_IOERR;
+-
+-		zone->cond = BLK_ZONE_COND_EXP_OPEN;
++		ret = null_open_zone(dev, zone);
++		if (ret != BLK_STS_OK)
++			return ret;
+ 		break;
+ 	case REQ_OP_ZONE_CLOSE:
+-		if (zone->type == BLK_ZONE_TYPE_CONVENTIONAL)
+-			return BLK_STS_IOERR;
+-		if (zone->cond == BLK_ZONE_COND_FULL)
+-			return BLK_STS_IOERR;
+-
+-		if (zone->wp == zone->start)
+-			zone->cond = BLK_ZONE_COND_EMPTY;
+-		else
+-			zone->cond = BLK_ZONE_COND_CLOSED;
++		ret = null_close_zone(dev, zone);
++		if (ret != BLK_STS_OK)
++			return ret;
+ 		break;
+ 	case REQ_OP_ZONE_FINISH:
+-		if (zone->type == BLK_ZONE_TYPE_CONVENTIONAL)
+-			return BLK_STS_IOERR;
+-
+-		zone->cond = BLK_ZONE_COND_FULL;
+-		zone->wp = zone->start + zone->len;
++		ret = null_finish_zone(dev, zone);
++		if (ret != BLK_STS_OK)
++			return ret;
+ 		break;
+ 	default:
+ 		return BLK_STS_NOTSUPP;
 -- 
-2.17.1
+2.26.2
 
