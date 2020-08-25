@@ -2,107 +2,142 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B322AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF64FC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 992012074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1E72074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IJO6wug5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHYTqY (ORCPT
+        id S1726704AbgHYTsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:46:24 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:47524 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHYTqX (ORCPT
+        Tue, 25 Aug 2020 15:48:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18846 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726149AbgHYTsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:46:23 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 7BCE71C0BB9; Tue, 25 Aug 2020 21:46:21 +0200 (CEST)
-Date:   Tue, 25 Aug 2020 21:46:21 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        JiangYu <lnsyyj@hotmail.com>,
-        Daniel Meyerholt <dxm523@gmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 22/71] scsi: target: tcmu: Fix crash in
- tcmu_flush_dcache_range on ARM
-Message-ID: <20200825194621.GA27453@duo.ucw.cz>
-References: <20200824082355.848475917@linuxfoundation.org>
- <20200824082356.994960635@linuxfoundation.org>
+        Tue, 25 Aug 2020 15:48:07 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PJVxDs006515;
+        Tue, 25 Aug 2020 15:47:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=7Rl2UklbYVkVJfBrMuiwtrmhml+iZDfjKAcAFsLmd3w=;
+ b=IJO6wug5RqiSOpBic/JM2E7zcG24hhtuSpdf7fsjlf13Y0352A1nu+kKrvvp2FSFh/Zr
+ YYT3cViGFZF4kSEiAwTfvT8w9RSHuv0swMNpR7FYX36wrzELn3nUa1fTCsdtMI7SaZDs
+ cVFE9Fbp3ubrpuKKMAMRPXK3xmkPiaScjEAUncQbEIOfDnIu5r/gw2PIa/PqboRwdtEg
+ +ZpaJXgWP5JC2D998EK/gnlk6HFPJfuhcrgMR709RgDnOV07PwcMjERlCpHThLI39aFf
+ FmssUYM3Vrfw3tJ7hk1NnO9OUHHn5Rs+yCBgWX2oQtc4TGkP6GJgeUtSxHSZh8wpngY3 +Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3358kn0tpu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 15:47:55 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07PJWGuu007381;
+        Tue, 25 Aug 2020 15:47:55 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3358kn0tpd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 15:47:55 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07PJl7xm014803;
+        Tue, 25 Aug 2020 19:47:54 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma01dal.us.ibm.com with ESMTP id 332uttb3mf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 19:47:54 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07PJlrQs16253940
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Aug 2020 19:47:53 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 688C7AC05E;
+        Tue, 25 Aug 2020 19:47:53 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5A8F2AC059;
+        Tue, 25 Aug 2020 19:47:52 +0000 (GMT)
+Received: from [9.211.52.131] (unknown [9.211.52.131])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Aug 2020 19:47:52 +0000 (GMT)
+Subject: Re: [PATCH 3/5] i2c: aspeed: Mask IRQ status to relevant bits
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     linux-input@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        linux-i2c@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        dmitry.torokhov@gmail.com, Rob Herring <robh+dt@kernel.org>
+References: <20200820161152.22751-1-eajames@linux.ibm.com>
+ <20200820161152.22751-4-eajames@linux.ibm.com>
+ <CACPK8XdG1+3eQPQ71fZYZdHwcn8WNLQKF=5iKrOvGhLwispSQA@mail.gmail.com>
+From:   Eddie James <eajames@linux.ibm.com>
+Message-ID: <8fc365dd-8a89-9e5c-ed70-093ef2bf7265@linux.ibm.com>
+Date:   Tue, 25 Aug 2020 14:47:51 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
-Content-Disposition: inline
-In-Reply-To: <20200824082356.994960635@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACPK8XdG1+3eQPQ71fZYZdHwcn8WNLQKF=5iKrOvGhLwispSQA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_08:2020-08-25,2020-08-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ adultscore=0 impostorscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
+ mlxlogscore=861 clxscore=1015 priorityscore=1501 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---45Z9DzgjV8m4Oswq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 8/25/20 1:38 AM, Joel Stanley wrote:
+> On Thu, 20 Aug 2020 at 16:12, Eddie James <eajames@linux.ibm.com> wrote:
+>> Mask the IRQ status to only the bits that the driver checks. This
+>> prevents excessive driver warnings when operating in slave mode
+>> when additional bits are set that the driver doesn't handle.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>>   drivers/i2c/busses/i2c-aspeed.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+>> index 31268074c422..abf40f2af8b4 100644
+>> --- a/drivers/i2c/busses/i2c-aspeed.c
+>> +++ b/drivers/i2c/busses/i2c-aspeed.c
+>> @@ -604,6 +604,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
+>>          writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
+>>                 bus->base + ASPEED_I2C_INTR_STS_REG);
+>>          readl(bus->base + ASPEED_I2C_INTR_STS_REG);
+>> +       irq_received &= 0xf000ffff;
+>>          irq_remaining = irq_received;
+> This would defeat the check for irq_remaining. I don't think we want to do this.
+>
+> Can you explain why these bits are being set in slave mode?
 
-Hi!
 
-> From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
->=20
-> [ Upstream commit 3145550a7f8b08356c8ff29feaa6c56aca12901d ]
->=20
-> This patch fixes the following crash (see
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D208045)
->=20
->  Process iscsi_trx (pid: 7496, stack limit =3D 0x0000000010dd111a)
->  CPU: 0 PID: 7496 Comm: iscsi_trx Not tainted 4.19.118-0419118-generic
->         #202004230533
->  Hardware name: Greatwall QingTian DF720/F601, BIOS 601FBE20 Sep 26 2019
->  pstate: 80400005 (Nzcv daif +PAN -UAO)
-=2E..
-> The solution is based on patch:
->=20
->   "scsi: target: tcmu: Optimize use of flush_dcache_page"
->=20
-> which restricts the use of tcmu_flush_dcache_range() to addresses from
-> vmalloc'ed areas only.
+No, I don't have any documentation for the bits that are masked off 
+here, so I don't know why they would get set.
 
-Yeah, but the patch mentioned is not queued for 4.19, so we should not
-be simply applying this to 4.19. Does it need to be cherry-picked,
-too?
+The check for irq_remaining is still useful for detecting that the 
+driver state machine might be out of sync with what the master is doing.
 
-commit 3c58f737231e2c8cbf543a09d84d8c8e80e05e43
-Author: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-    scsi: target: tcmu: Optimize use of flush_dcache_page
-   =20
-    (scatter|gather)_data_area() need to flush dcache after writing data to=
- or
+Thanks,
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Eddie
 
---45Z9DzgjV8m4Oswq
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX0VqjQAKCRAw5/Bqldv6
-8vu/AJ9YX4Il9EcjOVNDspPm4O+tbFt5CgCgjktotSacjmX7kU0hdJ1wf/l4LM8=
-=+yPH
------END PGP SIGNATURE-----
-
---45Z9DzgjV8m4Oswq--
