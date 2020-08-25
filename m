@@ -2,97 +2,162 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49EB5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB4A2068E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:13:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263A32068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:13:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o5noqC2/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eE5YCzAa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbgHYKNu (ORCPT
+        id S1729805AbgHYKN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729778AbgHYKNs (ORCPT
+        Tue, 25 Aug 2020 06:13:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54557 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729778AbgHYKNy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:13:48 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6498BC061574;
-        Tue, 25 Aug 2020 03:13:48 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id o13so6506702pgf.0;
-        Tue, 25 Aug 2020 03:13:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=4G4DuKErvOyDuzxBJkBN29qvlat6IqEju9q8dYOb154=;
-        b=o5noqC2/wdN1xiBxyxbPmMEjlCjMi2LVdAcXbGV02KjTYzA7QlI5btsfY7Vb0a1s0Y
-         X05BYoDoABwRV7phcc92WGFbjkYZD2bF+KPjwdtQGv5Hv3i3v3b0Yim6b8eJeYcXNNhg
-         nORyo0zORlpYi9GIAGtRaURoh7ezcIQq2GCmCE1avYr3xOvCAKNpIYERrFuCm3X3FKjT
-         Wjl/q0W6fDG8kTW9i5Xy+xl/Ut1doF/nzfrG16Z7mBrOHyye4aoooKZIwxeLvRK06c7X
-         VUWa4fWnVcbHYNdJ3zdXnL/HDP9MGcwHOnpCsAah19IbVkE+OtB7AF5odr2nTiJ3LOdK
-         DFCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=4G4DuKErvOyDuzxBJkBN29qvlat6IqEju9q8dYOb154=;
-        b=bbmhaA7Imx9PhfaFeZDTTrPgeB04F+rH8UkQdy5qb2R5kMTykmuUd9gopaobyCSXF9
-         BNKpep66rlzEwyhuA1fu0fUN+0QBWhLe2J4Q0WHKTZKBt+Uo/ZW92+tUzmiI+bOcxXcm
-         0Q5NBWkEclRyA7QjV8LRfZ4+3fFnsKESuZNwlUY5/M6UgNBOlFsopTs3+0wUIUQdL9Vr
-         Oneen3s4Z5J7pnDZ4XDxN1DfiX6kOIQwBmPgc8BeOn/vwTk+DFeQd6aiZ7lSsAcmIG2g
-         xCiMBxeo1Qd/5p78Kjo9YBKmnCNpOtjWq2WCxXqs+gnCdHRauWVq2I/2ACly13whZfNV
-         LZKA==
-X-Gm-Message-State: AOAM533xLsJ78UX0b48W6KY9rQdRKKWnZSNrqfbsCugG+HoCaoDWCZSv
-        uGYm3pjdjX3W9BlPJqaLf5tGuLniYC/okA==
-X-Google-Smtp-Source: ABdhPJykSPKR3ufOXUEpAP3gSyIGOrl5nn7vYRLrcu4IoV+QqvdYqm0nFNVOUdXrptMslOlcieLiCQ==
-X-Received: by 2002:a65:498f:: with SMTP id r15mr6391268pgs.410.1598350427484;
-        Tue, 25 Aug 2020 03:13:47 -0700 (PDT)
-Received: from panther.thds.mooo.com (061239037006.ctinets.com. [61.239.37.6])
-        by smtp.gmail.com with ESMTPSA id y1sm14303925pfl.136.2020.08.25.03.13.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Aug 2020 03:13:46 -0700 (PDT)
-From:   Kenneth Chan <kenneth.t.chan@gmail.com>
-To:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     laforge@gnumonks.org, Kenneth Chan <kenneth.t.chan@gmail.com>
-Subject: [PATCH] panasonic-laptop: take over maintainership
-Date:   Tue, 25 Aug 2020 18:13:41 +0800
-Message-Id: <20200825101341.5699-1-kenneth.t.chan@gmail.com>
-X-Mailer: git-send-email 2.17.5
+        Tue, 25 Aug 2020 06:13:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598350433;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IfBjE/lnsE6zqa6amkpr22aF2GJzSWSxCKj8gx+aUU8=;
+        b=eE5YCzAa3gSQ/bw7+QxfyiPsqIrY5JgNq3TiI+A3UBkbCJBEUt7ES/GtVi5QfIW2LrGkDA
+        rw5MB3MDeoM9PqS/IHGst5Mah4lZUAREjfs8YrEWarJy4waRh+vi6ptIQHSwgwBvSl0hwH
+        HBNnL8c9xuYvrOY7UECK7b0nYTQMOcA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-Arl8Ua1PPfOCKcnBE9UipA-1; Tue, 25 Aug 2020 06:13:49 -0400
+X-MC-Unique: Arl8Ua1PPfOCKcnBE9UipA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54D2E18BA282;
+        Tue, 25 Aug 2020 10:13:46 +0000 (UTC)
+Received: from gondolin (ovpn-112-248.ams2.redhat.com [10.36.112.248])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E6D2319144;
+        Tue, 25 Aug 2020 10:13:36 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 12:13:34 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v10 02/16] s390/vfio-ap: use new AP bus interface to
+ search for queue devices
+Message-ID: <20200825121334.0ff35d7a.cohuck@redhat.com>
+In-Reply-To: <20200821195616.13554-3-akrowiak@linux.ibm.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+        <20200821195616.13554-3-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Take over maintaniership of panasonic-laptop from Harald Welte.
+On Fri, 21 Aug 2020 15:56:02 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
+> This patch refactor's the vfio_ap device driver to use the AP bus's
 
-Signed-off-by: Kenneth Chan <kenneth.t.chan@gmail.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+s/refactor's/refactors/
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3b186ade3597..3815ba053136 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13039,7 +13039,7 @@ F:	include/net/page_pool.h
- F:	net/core/page_pool.c
- 
- PANASONIC LAPTOP ACPI EXTRAS DRIVER
--M:	Harald Welte <laforge@gnumonks.org>
-+M:	Kenneth Chan <kenneth.t.chan@gmail.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/panasonic-laptop.c
+> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
+> information about a queue that is bound to the vfio_ap device driver.
+> The bus's ap_get_qdev() function retrieves the queue device from a
+> hashtable keyed by APQN. This is much more efficient than looping over
+> the list of devices attached to the AP bus by several orders of
+> magnitude.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_drv.c     | 27 ++-------
+>  drivers/s390/crypto/vfio_ap_ops.c     | 86 +++++++++++++++------------
+>  drivers/s390/crypto/vfio_ap_private.h |  8 ++-
+>  3 files changed, 59 insertions(+), 62 deletions(-)
+> 
 
-base-commit: 6a9dc5fd6170d0a41c8a14eb19e63d94bea5705a
--- 
-2.17.5
+(...)
+
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index e0bde8518745..ad3925f04f61 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -26,43 +26,26 @@
+>  
+>  static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
+>  
+> -static int match_apqn(struct device *dev, const void *data)
+> -{
+> -	struct vfio_ap_queue *q = dev_get_drvdata(dev);
+> -
+> -	return (q->apqn == *(int *)(data)) ? 1 : 0;
+> -}
+> -
+>  /**
+> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
+> - * @matrix_mdev: the associated mediated matrix
+> + * vfio_ap_get_queue: Retrieve a queue with a specific APQN.
+>   * @apqn: The queue APQN
+>   *
+> - * Retrieve a queue with a specific APQN from the list of the
+> - * devices of the vfio_ap_drv.
+> - * Verify that the APID and the APQI are set in the matrix.
+> + * Retrieve a queue with a specific APQN from the AP queue devices attached to
+> + * the AP bus.
+>   *
+> - * Returns the pointer to the associated vfio_ap_queue
+> + * Returns the pointer to the vfio_ap_queue with the specified APQN, or NULL.
+>   */
+> -static struct vfio_ap_queue *vfio_ap_get_queue(
+> -					struct ap_matrix_mdev *matrix_mdev,
+> -					int apqn)
+> +static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
+>  {
+> +	struct ap_queue *queue;
+>  	struct vfio_ap_queue *q;
+> -	struct device *dev;
+>  
+> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
+> -		return NULL;
+> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
+
+I think you should add some explanation to the patch description why
+testing the matrix bitmasks is not needed anymore.
+
+> +	queue = ap_get_qdev(apqn);
+> +	if (!queue)
+>  		return NULL;
+>  
+> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+> -				 &apqn, match_apqn);
+> -	if (!dev)
+> -		return NULL;
+> -	q = dev_get_drvdata(dev);
+> -	q->matrix_mdev = matrix_mdev;
+> -	put_device(dev);
+> +	q = dev_get_drvdata(&queue->ap_dev.device);
+> +	put_device(&queue->ap_dev.device);
+>  
+>  	return q;
+>  }
+
+(...)
 
