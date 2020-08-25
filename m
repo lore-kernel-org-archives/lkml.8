@@ -2,160 +2,145 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC1FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 249B12075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:18:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE2A52075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XGnzWoNI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g17iV+Lc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHYXSH (ORCPT
+        id S1726716AbgHYXTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:18:07 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:6726 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgHYXSD (ORCPT
+        Tue, 25 Aug 2020 19:19:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59270 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbgHYXTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:18:03 -0400
+        Tue, 25 Aug 2020 19:19:13 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75C00C061574;
+        Tue, 25 Aug 2020 16:19:12 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 31so64876pgy.13;
+        Tue, 25 Aug 2020 16:19:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598397481; x=1629933481;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=OZtUg8bkcWalZh9AnNqlOzfHczxvpTVUs+LUb8aFXXg=;
-  b=XGnzWoNI8BFAh/jbrn5Z06/iiHYPaSeEw0A22NvvRLUBLl+2ctUDMP/Y
-   iFfEX8zi3gDaW+x8H56A4lFfBpG3V5tf4IvNeyCfpbEQMIJkwYu0mm1LF
-   TswD1djyF+X89SISs6zKSumipLkR+NN1rMsaTf0uhu3MTgLsVLhThmCyC
-   o=;
-X-IronPort-AV: E=Sophos;i="5.76,354,1592870400"; 
-   d="scan'208";a="49993520"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 25 Aug 2020 23:17:52 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id 99BBDA238E;
-        Tue, 25 Aug 2020 23:17:50 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 25 Aug 2020 23:17:48 +0000
-Received: from s3-prod-s3ws-c3-7217.iad7.amazon.com (10.43.162.40) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 25 Aug 2020 23:17:41 +0000
-Subject: Re: [patch V9 21/39] x86/irq: Convey vector as argument and not in
- ptregs
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        <avi@scylladb.com>, "Herrenschmidt, Benjamin" <benh@amazon.com>,
-        <robketr@amazon.de>, <amos@scylladb.com>
-References: <20200521200513.656533920@linutronix.de>
- <20200521202118.796915981@linutronix.de>
- <f0079706-4cb3-b3e3-9a5e-97aaba0aa0eb@amazon.com>
- <87a6yj58af.fsf@nanos.tec.linutronix.de>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <051182cc-6c90-e48b-d191-8ca004385261@amazon.com>
-Date:   Wed, 26 Aug 2020 01:17:39 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:78.0)
- Gecko/20100101 Thunderbird/78.1.1
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nzT4cIv5aZloZUa85ooGLcuJKku+lTzXEIFwdhhhrM4=;
+        b=g17iV+Lc6aSBOLe+PXWahWJW6Y2WovRbdTAFwXkgWGEBHeis8BwaGJ1/CrBTJ6wOxj
+         UKRTRHo+JKIkjHdtn9pMcUYhCibnMervY6vIJWwS4RQlE3LSjVqmLUTaL39UbAGj4g6L
+         0j0826j4CHEZnT2exq6W7xhcrJUuL+xeGwEr2VpfFjtGbo9lANRsknS4EVWyKfxKl7Il
+         /yIG9aDg8s8XYB33HFnAKY/2MhxQ2vY2S/m+geHEPThOE90LQ6W/H7XBdg78bySpsa/G
+         t/9acHQaOTqhr0MpHdKlJO7fxd8cXHOELXVJXXUfDBije2GdrgU/aZZQogR8XNVpmWFo
+         c4uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nzT4cIv5aZloZUa85ooGLcuJKku+lTzXEIFwdhhhrM4=;
+        b=UH/AJUyQZxDqGfdAJrvy99L/wXSWNJqoMJeRcOnBBVJkiv0FnY3SySyXVH/LTKr60j
+         oMvu9nv0sFDYhJGzELcZ3RObUu37x69fdGcXhnuzNpOqe6MNKC7y+Fn7gv64q8XuMMJg
+         Fl/eP0aSuFiu5pTmLOrzpLx8br1sQTZlQyXUhzOSibkUz4oxHdSfWryc4Mc3Ow+lQf8E
+         kXR5NI9FQOkmvVvLv3n6ToXl9kjbhk8F9gnPIuR0Y24DQJNCdYMdb/zSgrZW+vXqnDjT
+         1raRdZuevUW5Y4ua4eq/gaf4K5OnDme1ys2qxDCmhnOMw7tV2rXShWxAGLpeAT/rDtzH
+         8pFg==
+X-Gm-Message-State: AOAM531RQ2CB+J5qzUPdxAeAslK88XaaXW/rHNA4fX23yd1QFCE7iQE3
+        XhNF4EW1mA0cye4p0n3KMpM=
+X-Google-Smtp-Source: ABdhPJyK06Dvh5ZLh8ZEvQMG4jqMYYcFE+LKTmieWcScqEbOmexcuH0IBvKor0u/mjocM4FCOCK/kw==
+X-Received: by 2002:a63:4545:: with SMTP id u5mr8237031pgk.229.1598397551754;
+        Tue, 25 Aug 2020 16:19:11 -0700 (PDT)
+Received: from Asurada-Nvidia (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id v78sm344700pfc.121.2020.08.25.16.19.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 16:19:11 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 16:19:00 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        tony.luck@intel.com, fenghua.yu@intel.com,
+        gerald.schaefer@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, davem@davemloft.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, sfr@canb.auug.org.au, hch@lst.de,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-parisc@vger.kernel.org
+Subject: Re: [RFT][PATCH 0/7] Avoid overflow at boundary_size
+Message-ID: <20200825231900.GA4726@Asurada-Nvidia>
+References: <20200820231923.23678-1-nicoleotsuka@gmail.com>
+ <4321af30-9554-6897-5281-05afd88f2631@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <87a6yj58af.fsf@nanos.tec.linutronix.de>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.40]
-X-ClientProxiedBy: EX13D06UWA004.ant.amazon.com (10.43.160.164) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4321af30-9554-6897-5281-05afd88f2631@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgVGhvbWFzLAoKT24gMjUuMDguMjAgMTI6MjgsIFRob21hcyBHbGVpeG5lciB3cm90ZToKPiAK
-PiBBbGV4LAo+IAo+IE9uIE1vbiwgQXVnIDI0IDIwMjAgYXQgMTk6MjksIEFsZXhhbmRlciBHcmFm
-IHdyb3RlOgo+PiBJJ20gY3VycmVudGx5IHRyeWluZyB0byB1bmRlcnN0YW5kIGEgcGVyZm9ybWFu
-Y2UgcmVncmVzc2lvbiB3aXRoCj4+IFNjeWxsYURCIG9uIGkzZW4uM3hsYXJnZSAoS1ZNIGJhc2Vk
-IFZNIG9uIFNreWxha2UpIHdoaWNoIHdlIHJlbGlhYmx5Cj4+IGJpc2VjdGVkIGRvd24gdG8gdGhp
-cyBjb21taXQ6Cj4+Cj4+ICAgICBodHRwczovL2dpdGh1Yi5jb20vc2N5bGxhZGIvc2N5bGxhL2lz
-c3Vlcy83MDM2Cj4+Cj4+IFdoYXQgd2UncmUgc2VlaW5nIGlzIHRoYXQgc3lzY2FsbHMgc3VjaCBh
-cyBtZW1iYXJyaWVyKCkgdGFrZSBmb3JldmVyCj4+ICgwLTEwIMK1cyB3b3VsZCBiZSBub3JtYWwp
-Ogo+IC4uLgo+PiBUaGF0IGFnYWluIHNlZW1zIHRvIHN0ZW0gZnJvbSBhIHZhc3RseSBzbG93ZWQg
-ZG93bgo+PiBzbXBfY2FsbF9mdW5jdGlvbl9tYW55X2NvbmQoKToKPj4KPj4gU2FtcGxlczogMjE4
-SyBvZiBldmVudCAnY3B1LWNsb2NrJywgNDAwMCBIego+PiBPdmVyaGVhZCAgU2hhcmVkIE9iamVj
-dCAgICAgICAgU3ltYm9sCj4+ICAgICA5NC41MSUgIFtrZXJuZWxdICAgICAgICAgICAgIFtrXSBz
-bXBfY2FsbF9mdW5jdGlvbl9tYW55X2NvbmQKPj4gICAgICAwLjc2JSAgW2tlcm5lbF0gICAgICAg
-ICAgICAgW2tdIF9fZG9fc29mdGlycQo+PiAgICAgIDAuMzIlICBba2VybmVsXSAgICAgICAgICAg
-ICBba10gbmF0aXZlX3F1ZXVlZF9zcGluX2xvY2tfc2xvd3BhdGgKPj4gWy4uLl0KPj4KPj4gd2hp
-Y2ggaXMgc3R1Y2sgaW4KPj4KPj4gICAgICAgICAg4pSCICAgICBjc2RfbG9ja193YWl0KCk6Cj4+
-ICAgICAgICAgIOKUgiAgICAgICAgICAgICBzbXBfY29uZF9sb2FkX2FjcXVpcmUoJmNzZC0+Zmxh
-Z3MsICEoVkFMICYKPj4gICAgIDAuMDAg4pSCICAgICAgIG1vdiAgICAweDgoJXJjeCksJWVkeAo+
-PiAgICAgMC4wMCDilIIgICAgICAgYW5kICAgICQweDEsJWVkeAo+PiAgICAgICAgICDilIIgICAg
-IOKGkyBqZSAgICAgMmI5Cj4+ICAgICAgICAgIOKUgiAgICAgcmVwX25vcCgpOgo+PiAgICAgMC43
-MCDilIIyYWY6ICAgcGF1c2UKPj4gICAgICAgICAg4pSCICAgICBjc2RfbG9ja193YWl0KCk6Cj4+
-ICAgIDkyLjgyIOKUgiAgICAgICBtb3YgICAgMHg4KCVyY3gpLCVlZHgKPj4gICAgIDYuNDgg4pSC
-ICAgICAgIGFuZCAgICAkMHgxLCVlZHgKPj4gICAgIDAuMDAg4pSCICAgICDihpEgam5lICAgIDJh
-Zgo+PiAgICAgMC4wMCDilIIyYjk6IOKGkSBqbXAgICAgMjgyCj4+Cj4+Cj4+IEdpdmVuIHRoZSBw
-YXRjaCBhdCBoYW5kIEkgd2FzIGV4cGVjdGluZyBsb3N0IElQSXMsIGJ1dCBJIGNhbid0IHF1aXRl
-IHNlZQo+PiBhbnl0aGluZyBnZXR0aW5nIGxvc3QuCj4gCj4gSSBoYXZlIG5vIGlkZWEgaG93IHRo
-YXQgcGF0Y2ggc2hvdWxkIGJlIHJlbGF0ZWQgdG8gSVBJIGFuZCBzbXAgZnVuY3Rpb24KPiBjYWxs
-cy4gSXQncyBjaGFuZ2luZyB0aGUgd2F5IGhvdyByZWd1bGFyIGRldmljZSBpbnRlcnJ1cHRzIGFu
-ZCB0aGVpcgo+IHNwdXJpb3VzIGNvdW50ZXJwYXJ0IGFyZSBoYW5kbGVkIGFuZCBub3QgdGhlIHdh
-eSBob3cgSVBJcyBhcmUKPiBoYW5kbGVkLiBUaGV5IGFyZSBoYW5kbGVkIGJ5IGRpcmVjdCB2ZWN0
-b3JzIGFuZCBkbyBub3QgZ28gdGhyb3VnaAo+IGRvX0lSUSgpIGF0IGFsbC4KPiAKPiBBc2lkZSBv
-ZiB0aGF0IHRoZSBjb21taXQganVzdCBjaGFuZ2VzIHRoZSB3YXkgaG93IHRoZSBpbnRlcnJ1cHQg
-dmVjdG9yCj4gb2YgYSByZWd1bGFyIGRldmljZSBpbnRlcnJ1cHQgaXMgc3RvcmVkIGFuZCBjb252
-ZXllZC4gVGhlIGV4dHJhIHJlYWQgYW5kCj4gd3JpdGUgb24gdGhlIGNhY2hlIGhvdCBzdGFjayBp
-cyBoYXJkbHkgcmVsYXRlZCB0byBhbnl0aGluZyBJUEkuCgpJIGFtIGFzIHB1enpsZWQgYXMgeW91
-IGFyZSwgYnV0IHRoZSBiaXNlY3QgaXMgdmVyeSBjbGVhcjogNzliOWMxODMwMjFlIAp3b3JrcyBm
-YXN0IGFuZCA2MzMyNjBmYTEgKGFzIHdlbGwgYXMgbWFpbmxpbmUpIHNob3dzIHRoZSB3ZWlyZCBi
-ZWhhdmlvciAKYWJvdmUuCgpJdCBnZXRzIGV2ZW4gYmV0dGVyLiBUaGlzIHNtYWxsIChkZW1vbnN0
-cmF0aXZlIG9ubHksIG1hbmdsZWQpIHBhdGNoIG9uIAp0b3Agb2YgNjMzMjYwZmExIGFsc28gcmVz
-b2x2ZXMgdGhlIHBlcmZvcm1hbmNlIGlzc3VlOgoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5l
-bC9pcnEuYyBiL2FyY2gveDg2L2tlcm5lbC9pcnEuYwppbmRleCBjNzY2OTM2Li43ZTkxZTlhIDEw
-MDY0NAotLS0gYS9hcmNoL3g4Ni9rZXJuZWwvaXJxLmMKKysrIGIvYXJjaC94ODYva2VybmVsL2ly
-cS5jCkBAIC0yMzksNiArMjM5LDcgQEAgX192aXNpYmxlIHZvaWQgX19pcnFfZW50cnkgZG9fSVJR
-KHN0cnVjdCBwdF9yZWdzIAoqcmVncywgdW5zaWduZWQgbG9uZyB2ZWN0b3IpCiAgCSAqIGxvd2Vy
-IDggYml0cy4KICAJICovCiAgCXZlY3RvciAmPSAweEZGOworCXJlZ3MtPm9yaWdfYXggPSB+dmVj
-dG9yOwoKICAJLyogZW50ZXJpbmdfaXJxKCkgdGVsbHMgUkNVIHRoYXQgd2UncmUgbm90IHF1aWVz
-Y2VudC4gIENoZWNrIGl0LiAqLwogIAlSQ1VfTE9DS0RFUF9XQVJOKCFyY3VfaXNfd2F0Y2hpbmco
-KSwgIklSUSBmYWlsZWQgdG8gd2FrZSB1cCBSQ1UiKTsKCgpUbyBtZSB0aGF0IHNvdW5kcyBsaWtl
-IHNvbWUgaXJxIGV4aXQgY29kZSBzb21ld2hlcmUgbXVzdCBzdGlsbCBiZSAKbG9va2luZyBhdCBv
-cmlnX2F4IHRvIGRlY2lkZSBvbiBzb21ldGhpbmcgLSBhbmQgdGhhdCBzb21ldGhpbmcgaXMgd3Jv
-bmcgCm5vdyB0aGF0IHdlIHJlbW92ZWQgdGhlIG5lZ2F0aW9uIG9mIHRoZSB2ZWN0b3IuIEl0IGFs
-c28gc2VlbXMgdG8gaGF2ZSBhbiAKaW1wYWN0IG9uIHJlbW90ZSBmdW5jdGlvbiBjYWxscy4KCkkn
-bGwgaGF2ZSBhIGRlZXBlciBsb29rIHRvbW9ycm93IGFnYWluIGlmIEkgY2FuIGZpbmQgYW55IHN1
-Y2ggcGxhY2UsIGJ1dCAKSSB3b3VsZG4ndCBtaW5kIGlmIGFueW9uZSBjb3VsZCBwb2ludCBtZSBp
-bnRvIHRoZSByaWdodCBkaXJlY3Rpb24gCmVhcmxpZXIgOikuCgoKQWxleAoKCgpBbWF6b24gRGV2
-ZWxvcG1lbnQgQ2VudGVyIEdlcm1hbnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBCZXJsaW4K
-R2VzY2hhZWZ0c2Z1ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBXZWlzcwpF
-aW5nZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIgMTQ5MTcz
-IEIKU2l0ejogQmVybGluClVzdC1JRDogREUgMjg5IDIzNyA4NzkKCgo=
+Hi Niklas,
 
+On Tue, Aug 25, 2020 at 12:16:27PM +0200, Niklas Schnelle wrote:
+> On 8/21/20 1:19 AM, Nicolin Chen wrote:
+> > We are expending the default DMA segmentation boundary to its
+> > possible maximum value (ULONG_MAX) to indicate that a device
+> > doesn't specify a boundary limit. So all dma_get_seg_boundary
+> > callers should take a precaution with the return values since
+> > it would easily get overflowed.
+> > 
+> > I scanned the entire kernel tree for all the existing callers
+> > and found that most of callers may get overflowed in two ways:
+> > either "+ 1" or passing it to ALIGN() that does "+ mask".
+> > 
+> > According to kernel defines:
+> >     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
+> >     #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
+> > 
+> > We can simplify the logic here:
+> >   ALIGN(boundary + 1, 1 << shift) >> shift
+> > = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
+> > = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
+> > = [b + 1 + (1 << s) - 1] >> s
+> > = [b + (1 << s)] >> s
+> > = (b >> s) + 1
+> > 
+> > So this series of patches fix the potential overflow with this
+> > overflow-free shortcut.
+ 
+> haven't seen any other feedback from other maintainers,
+
+I am wondering this too...whether I sent correctly or not.
+
+> so I guess you will resend this?
+
+Do I need to? Though I won't mind doing so if it's necessary..
+
+> On first glance it seems to make sense.
+> I'm a little confused why it is only a "potential overflow"
+> while this part
+> 
+> "We are expending the default DMA segmentation boundary to its
+>  possible maximum value (ULONG_MAX) to indicate that a device
+>  doesn't specify a boundary limit"
+> 
+> sounds to me like ULONG_MAX is actually used, does that
+> mean there are currently no devices which do not specify a
+> boundary limit?
+
+Sorry for the confusion. We actually applied ULONG_MAX change
+last week but reverted it right after, due to a bug report at
+one of these "potential" overflows. So at this moment the top
+of the tree doesn't set default boundary to ULONG_MAX yet.
+
+Thanks
+Nic
