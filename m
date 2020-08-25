@@ -5,59 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,
 	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3814C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB98C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 715A120738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D43620665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:00:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="kChPl54d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="aKhnLnCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgHYN7o (ORCPT
+        id S1726681AbgHYOAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:59:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57086 "EHLO
+        Tue, 25 Aug 2020 10:00:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgHYN64 (ORCPT
+        with ESMTP id S1726570AbgHYOAR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:58:56 -0400
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5098FC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 06:58:56 -0700 (PDT)
-Received: by mail-pf1-x449.google.com with SMTP id g6so8705230pfi.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 06:58:56 -0700 (PDT)
+        Tue, 25 Aug 2020 10:00:17 -0400
+Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E02C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:00:17 -0700 (PDT)
+Received: by mail-pj1-x104a.google.com with SMTP id gl22so1883215pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:message-id:mime-version:subject:from:to:cc;
         bh=Us+zKhWOc0nF2Stw/sjqwIYhi1P3cVkrUO+fKBNUwt4=;
-        b=kChPl54dn9ymEmCalokFzgP0MuYBhYIUai4sfhGRDTh7cmSDYrE9/f2w2wlzy79P1U
-         odUElDEA6bydiFE9ZvHxHgUU1DeCZfPfixc+QnXh6sqh3mCROa7cWR80GWycaCUfb4IF
-         UBKXlwIVApSR31H2zG7ZxWF6WxQTdY9nQlI9tLzJ7tq7xXyPlCbj3ruaO4VmIFc2t8FP
-         u5EoeZ4mdLG9kegCOTiKILj3FbecfJPwMC/TsHIbN2mbiBeuIHnoLEgj58tO1/iziyT3
-         ZHyFWI96H8MuXgxec7wRTEFCpZDQz1eBjJcUj1sj21HyfKjhnsCK5NAQONRKGgGjyfaK
-         ImQw==
+        b=aKhnLnCz8EWY/O9EwQPxzUF7jffQUPREucAEu/8yKU3QJT4H7vWbyhQ79WNhCjEevC
+         EWdjs6sr3iSqinEvLhq3LQjeiCyov9YbtBKKZdSDwNMNa01kfboS+9K1y9YJBIDd7/3b
+         DcfN94LhoDlCUDPYrhKYXqRX/KEyuLJnzYMRpqotPiVTboFLvnuKf4Vy2Bwr5fkLVSX4
+         QRftCpolQAJIyqqfLeDkCj2PVgFBxu2bTT/WQhuoS+HZ5+4PUMI9Vl1XUUCmD4QCipG9
+         OgJ/KdWNJBMVquN4Gm5pJpD16KJvtnAB2fsC1H/gpgTZ3Dnz/I7ucCh9Uxr7yUC3LBtl
+         517A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
          :to:cc;
         bh=Us+zKhWOc0nF2Stw/sjqwIYhi1P3cVkrUO+fKBNUwt4=;
-        b=sJa1SZXttWznqzE51khzqJIamQZ6LLvCKfCrYk4ytrIMWuBbYJB0cprSBNoHOZXgG+
-         P1k2QSG39plouO4N+mB6JE87snf8Ao3ZPD/UF3kPEBYRzovlzL/T6j59Oz4rSWZ2InRe
-         zvfkbBoBIUzHaGr//GWT6EDQmBNxVl1FOc4IpKvKe6SeBdCQUNz+6kk+lx9mxS2Tj+GS
-         uofHrr5TX4bcVfQYlvnBD6IOz2y0LEi7/WHH3qHzJ9O0rzzThdroUHGYQFdeYOl9pf80
-         q74/ohJMoDnZZWjMcXPc+KB5ozReybkQzdQRbVmfKmcmgtFr/jxq5QOSOzam4+jgjCNq
-         J/jQ==
-X-Gm-Message-State: AOAM532ZS6a164pAE1WrBKqcUErAvgG1QYvKdmlzeh0WY5bl0Zm9LXQH
-        N+GL0i9q1ygc/02aMoCz72HHpFeRtwAegpkvDlE=
-X-Google-Smtp-Source: ABdhPJyZgdjJcZNgecDr3UiTzEn5aQy+0LYKn3Ej4qIsX1xwC3PrG7l2IDzKFUt1pE1eWuX67nXFBj1sKlB/v8+4iqU=
+        b=eOQCwzAFNakgVMsKX35AlcQcye/BdbbChktK29EcOw9OKfnPqeiDAd/xttyP7Xlr2p
+         TLjQSt9iW5Tfsed34EBVEZbrGrJ26J8UKmE0DHpbQRamHkZls2yB+di53IGnqpiWyPu/
+         BPlstimzgX/aXpveX3sCmea79riU4gW4KLc56eFW2begWnf70PHUl6UGTJueyyVx/vc7
+         NoYJ32426yMnmTox4pMZi89TjfcjDZXXNc12OKfahBdYNMtt6qjSrP45FTAKB/O0KCeb
+         ZLAhptqY5WFavTXQh0GG7AETmvpGZ03DSDt6nW1D1pptYvjMOvmXBJoxny46dKbFbU6J
+         vPYg==
+X-Gm-Message-State: AOAM5335SW46tD+SbRrkyUqJlWsF7ac2vM96JF8Sq85f7vX2tmdq2vMU
+        7xznw0S3hxevQODre4A8ezeBdFLvcKYR0HnKMms=
+X-Google-Smtp-Source: ABdhPJzkO3H/IKD862kuXcVEH4xOvXmWJhAuD7nBvOpcRiMMFVRvYMEB2L86b1PuOaKUQ16K1EJg5SgYQUqKJi9hpgE=
 X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
- (user=ndesaulniers job=sendgmr) by 2002:a62:7c97:: with SMTP id
- x145mr8231879pfc.155.1598363935586; Tue, 25 Aug 2020 06:58:55 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 06:58:36 -0700
-Message-Id: <20200825135838.2938771-1-ndesaulniers@google.com>
+ (user=ndesaulniers job=sendgmr) by 2002:a17:902:8f82:: with SMTP id
+ z2mr7778537plo.177.1598364016898; Tue, 25 Aug 2020 07:00:16 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 07:00:00 -0700
+Message-Id: <20200825140001.2941001-1-ndesaulniers@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 Subject: [PATCH v3] lib/string.c: implement stpcpy
@@ -71,10 +71,11 @@ Cc:     clang-built-linux@googlegroups.com,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         Sami Tolvanen <samitolvanen@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Yury Norov <yury.norov@gmail.com>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
