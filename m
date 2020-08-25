@@ -2,233 +2,260 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2013CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D17C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDDC72071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8D82067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:57:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CH9DqgWz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgHYJ4e (ORCPT
+        id S1729618AbgHYJ5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:56:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:55038 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbgHYJ4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:56:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B095530E;
-        Tue, 25 Aug 2020 02:56:31 -0700 (PDT)
-Received: from localhost (unknown [10.1.199.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51D3B3F66B;
-        Tue, 25 Aug 2020 02:56:31 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 10:56:29 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Ben Segall <bsegall@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Puhov <peter.puhov@linaro.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>
-Subject: Re: [RFC 0/3] cpufreq: cppc: Add support for frequency invariance
-Message-ID: <20200825095629.GA15469@arm.com>
-References: <cover.1594289009.git.viresh.kumar@linaro.org>
- <20200709124349.GA15342@arm.com>
- <20200710030032.3yq3lqqybhy5m744@vireshk-i7>
- <CAKfTPtBpOdRSV0gb2CoC8J9GnuPiqZ+MbQLLc6NdSmjJhb0cgA@mail.gmail.com>
+        Tue, 25 Aug 2020 05:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729529AbgHYJ5b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:57:31 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40CC3C061574;
+        Tue, 25 Aug 2020 02:57:31 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id 145so3217014lfi.8;
+        Tue, 25 Aug 2020 02:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wEKBw3M389lIxYOx03rfrhKFmPG9fhLZHWOc6+bvMWE=;
+        b=CH9DqgWz6JIpRA+LVvmYQGUv4L0OM8jNzFLiF60A5MG/s026N+cxOtM3riTQchVoAv
+         j5mkSJNyVqUtQlD4ePWX4OfUKEHq5ZTV2k3XgewI/dN7Y6OkLTMaPF5PoO7Qw1CHsWIR
+         /jGXV7zPklnrXvKbtofYJh8H/bTZb+qSnRPKqhxqZaih/zsPXgOAfUQcZ8Sy5NfD073/
+         2+kc0i28CTrWD9+5+6Kd3uDQdxYl0b9MSm1fEW/bxd876AkwDmDXlP1adEX1K59vp9Sr
+         USugqEGf8HXUCwYSX5dj1i3v7443IaqxCvFJLPjfeJPGuYm8d1ci5NdJT5e33d0uSFJ4
+         7mmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wEKBw3M389lIxYOx03rfrhKFmPG9fhLZHWOc6+bvMWE=;
+        b=gIrFUw4o4eHxZW5WLbOlKats/EN1vqVyU3NSwj+YNoyNJLFS7G5TvmtL44p8b/p+Ja
+         39GgmOXTwZHOg3CLuyJmj9EHAmps3DM/J8DcHO6yGUTlUs7x0GT5ObDiUvwVFxhR6UB1
+         OoGzdEnTJ8lQfR9UjyqKYbPTJlvrhdUFX7qF4Ei3ytWl9hF4OZg0kwQAhtnUqEUVquan
+         7afl+AqMKBCcsS8Sc9UbxNGwhMyQ4lfv3ftJrvo8LN++n8MPLEp4PVbl/Tld7S+U5yJA
+         wbvjnziHbJxgTawclLMGdMt3BhsWmo9rpfUt+cLrv5dJUUf/T2ueXpb1E4MnPpmM0bBj
+         T8DA==
+X-Gm-Message-State: AOAM531W90S/TcHQmGpKButyaN3DCDZFCkuPk+A0PmYYiHaflrsp4Oxn
+        qAtJ+RDetZdPyjLbHEYmqOf53QCPDqo=
+X-Google-Smtp-Source: ABdhPJzbd+lIxQm9Nw2ZlRd+VhnHVPFZ3HHXOkmncxJnhKoFAzuCClvTtaWmxcbG/a62/g4odWKWuA==
+X-Received: by 2002:a19:c80b:: with SMTP id y11mr4517248lff.23.1598349449598;
+        Tue, 25 Aug 2020 02:57:29 -0700 (PDT)
+Received: from mobilestation ([95.79.127.85])
+        by smtp.gmail.com with ESMTPSA id o66sm1473024lff.76.2020.08.25.02.57.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 02:57:28 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 12:57:26 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Ding Tianhong <dingtianhong@huawei.com>
+Cc:     hoan@os.amperecomputing.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel.openeuler@huawei.com
+Subject: Re: [PATCH] gpio: dwapb: add support for new hisilicon ascend soc
+Message-ID: <20200825095726.yvg34q74xy57qhrx@mobilestation>
+References: <1598070473-46624-1-git-send-email-dingtianhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtBpOdRSV0gb2CoC8J9GnuPiqZ+MbQLLc6NdSmjJhb0cgA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1598070473-46624-1-git-send-email-dingtianhong@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys,
+Hello Ding,
+Thanks for the patch. My comments are below.
 
-On Friday 24 Jul 2020 at 11:38:59 (+0200), Vincent Guittot wrote:
-> On Fri, 10 Jul 2020 at 05:00, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > Thanks for the quick reply Ionela.
-> >
-> > On 09-07-20, 13:43, Ionela Voinescu wrote:
-> > > I'll put all my comments here for now, as they refer more to the design
-> > > of the solution.
-> > >
-> > > I hope it won't be too repetitive compared to what we previously discussed
-> > > offline.
-> >
-> > > I understand you want to get additional points of view.
-> >
-> > Not necessarily, I knew you would be one of the major reviewers here
-> > :)
-> >
-> > I posted so you don't need to review in private anymore and then the
-> > code is somewhat updated since the previous time.
-> >
-> > > On Thursday 09 Jul 2020 at 15:43:32 (+0530), Viresh Kumar wrote:
-> > > I believe the code is unnecessarily invasive for the functionality it
-> > > tries to introduce and it does break existing functionality.
-> > >
-> > >
-> > >  - (1) From code readability and design point of view, this switching
-> > >        between an architectural method and a driver method complicates
-> > >        an already complicated situation. We already have code that
-> > >        chooses between a cpufreq-based method and a counter based method
-> > >        for frequency invariance. This would basically introduce a choice
-> > >        between a cpufreq-based method through arch_set_freq_scale(), an
-> > >        architectural counter-based method through arch_set_freq_tick(),
-> > >        and another cpufreq-based method that piggy-backs on the
-> > >        architectural arch_set_freq_tick().
-> >
-> > I agree.
-> >
-> > >        As discussed offline, before I even try to begin accepting the
-> > >        possibility of this complicated mix, I would like to know why
-> > >        methods of obtaining the same thing by using the cpufreq
-> > >        arch_set_freq_scale()
-> >
-> > The problem is same as that was in case of x86, we don't know the real
-> > frequency the CPU may be running at and we need something that fires
-> > up periodically in a guaranteed way to capture the freq-scale.
+On Sat, Aug 22, 2020 at 12:27:53PM +0800, Ding Tianhong wrote:
+> The hisilicon ascend soc's gpio is based on the synopsys DW gpio,
+> and expand the register to support for INTCOMB_MASK, the new
+> register is used to enable/disable the interrupt combine features.
+
+I am wondering what does the "Interrupt Combine" feature do? Is it the same as
+the GPIO_INTR_IO pre-synthesize parameter of the DW_apb_gpio IP-core? Is it
+possible to tune the DW APB GPIO controller at runtime sending up to the IRQ
+controller either combined or individual interrupts?
+
+If the later is true, then probably having the "Interrupt Combine" feature
+enabled must depend on whether an individual or combined interrupts are supplied
+in dts, etc...
+
+Could you explain the way the feature works and the corresponding layout
+register in more details?
+
 > 
-> Yeah it's exactly the same behavior as x86 and re using the same
-> mechanism seems the  best solution
+> Both support for ACPI and Device Tree.
 > 
-> The main problem is that AMU currently assumes that it will be the
-> only to support such tick based mechanism whereas others like cppc can
-> provides similar information
+> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+> ---
+>  drivers/gpio/gpio-dwapb.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 > 
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index 1d8d55b..923b381 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -49,6 +49,8 @@
+>  #define GPIO_EXT_PORTC		0x58
+>  #define GPIO_EXT_PORTD		0x5c
 
-Yes, I agree that a similar method to the use of AMUs or APERF/MPERF would
-result in a more accurate frequency scale factor.
+>  
+> +#define GPIO_INTCOMB_MASK	0xffc
 
-> >
-> > Though I am thinking now if we can trust the target_index() helper and
-> > keep updating the freq-scale based on the delta between last call to
-> > it and the latest call. I am not sure if it will be sufficient.
-> >
-> > >        or even the more invasive wrapping of the
-> > >        counter read functions is not working.
-> >
-> > I am not sure I understood this one.
-> >
+If the register is the HiSilicon Ascend SoC specific, then I'd suggest to add
+the vendor-specific prefix like: GPIO_HS_INTCOMB_MASK.
 
-I've been putting some more thought/code into this one and I believe
-something as follows might look nicer as well as cover a few corner cases
-(ignore implementation details for now, they can be changed):
+Also pay attention to the register naming. Here you define it as "INTCOMB",
+later as "INT_COMB". It's better to have the same references everywhere: either
+with underscore or without it.
 
-- Have a per cpu value that marks the use of either AMUs, CPPC, or
-  cpufreq for freq invariance (can be done with per-cpu variable or with
-  cpumasks)
+Also please move the new register definition to be after the corresponding
+feature macro definition (see the next comment for detailts).
 
-- arch_topology.c: initialization code as follows:
+> +
+>  #define DWAPB_DRIVER_NAME	"gpio-dwapb"
+>  #define DWAPB_MAX_PORTS		4
+>  
+> @@ -58,6 +60,10 @@
+>  
+>  #define GPIO_REG_OFFSET_V2	1
 
-	for_each_present_cpu(cpu) {
-		if (freq_inv_amus_valid(cpu) &&
-		    !freq_inv_set_max_ratio(cpufreq_get_hw_max_freq(cpu) * 1000,
-					    arch_timer_get_rate(), cpu)) {
-			per_cpu(inv_source, cpu) = INV_AMU_COUNTERS;
-			continue;
-		}
-		if (freq_inv_cppc_counters_valid(cpu) &&
-		    !freq_inv_set_max_ratio(cppc_max_perf, cppc_ref_perf, cpu)) {
-			per_cpu(inv_source, cpu) = INV_CPPC_COUNTERS;
-			continue;
-		}
-		if (!cpufreq_supports_freq_invariance() ||
-		    freq_inv_set_max_ratio(cpufreq_get_hw_max_freq(cpu),
-					   1, cpu)) {
-			pr_info("FIE disabled: no valid source for CPU%d.", cpu);
-			return 0;
-		}
-	}
-  This would live in an equivalent of the init function we have now for
-  AMU counters only (init_amu_fie), made to handle more sources and moved
-  to arch_topology.c.
-  The freq_inv_set_max_ratio() would be a generic version of what is now
-  validate_cpu_freq_invariance_counters() (only the ratio computation and
-  setting).
+>  
+> +#define GPIO_REG_INT_COMB	2
 
- - Finally, 
-	void freq_inv_update_counter_refs(void)
-	{
-		this_cpu_write(arch_core_cycles_prev, read_corecnt());
-		this_cpu_write(arch_const_cycles_prev, read_constcnt());
-	}
-  This would be an equivalent of init_cpu_freq_invariance_counters().
-  There is the option of either read_{corecnt/constcnt}() to either do AMU
-  reads or CPPC counter reads depending on inv_source, or for either arm64
-  or cppc code to define the entire freq_inv_update_counter_refs().
+Please move this macro to be define after the "GPIO_PORTA_EOI_V2" one, so to
+make the blocked-like macro definitions order. Like this:
+	#define GPIO_REG_OFFSET_V2	BIT(0)	// Reg V2 Feature macro
 
- - Given all of the above, topology_scale_freq_tick() can then be made generic
+	#define GPIO_INTMASK_V2		0x44	// Reg V2-specific macro
+	...
+	#define GPIO_PORTA_EOI_V2	0x40	// Reg V2-specific macro
 
-	prev_const_cnt = this_cpu_read(arch_const_cycles_prev);
-	prev_core_cnt = this_cpu_read(arch_core_cycles_prev);
-	freq_inv_update_counter_refs();
-	const_cnt = this_cpu_read(arch_const_cycles_prev);
-	core_cnt = this_cpu_read(arch_core_cycles_prev);
+	+ #define GPIO_REG_HS_INTCOMB	BIT(1)	// HiSilicon Feature macro
+	+ 
+	+ #define GPIO_HS_INTCOMB_MASK	0xffc	// HiSilicon-specific macro
+	+ 
 
-I have some versions of code that do this generalisation for AMUs and cpufreq
-with a common topology_set_freq_scale() that is to be used for both
-arch_set_freq_scale() and arch_set_freq_tick(). But it's written with this
-usecase in mind so it can be extended to use CPPC counters as source as well,
-as detailed above.
+I missed that in my series, but having the flags defined as decimals isn't good.
+Could you convert GPIO_REG_HS_INTCOMB and GPIO_REG_OFFSET_V2 to be defined as BIT(x)?
 
-So, this is basically what I had in mind when recommending "wrapping of the
-counter read functions" :). This would basically reuse much of what is now
-the AMU invariance code while allowing for CPPC counters as a possible source.
+The same comment about HS_-prefixing. Perhaps GPIO_REG_HS_INTCOMB?
 
-I'll stop here for now to see what you guys think about this.
+> +#define ENABLE_INT_COMB		1
+> +#define DISABLE_INT_COMB	0
 
-Thanks,
-Ionela.
+I don't really see a point in having these two macros defined. They are basically
+just the boolean flags. Please see my next comment.
 
-> > >  - (2) For 1/3, the presence of AMU counters does not guarantee their
-> > >        usability for frequency invariance. I know you wanted to avoid
-> > >        the complications of AMUs being marked as supporting invariance
-> > >        after the cpufreq driver init function, but this breaks the
-> > >        scenario in which the maximum frequency is invalid.
-> >
-> > Is that really a scenario ? i.e. Invalid maximum frequency ? Why would
-> > that ever happen ?
-> >
-> > And I am not sure if this breaks anything which already exists,
-> > because all we are doing in this case now is not registering cppc for
-> > FI, which should be fine.
+> +
+>  #define GPIO_INTMASK_V2		0x44
+>  #define GPIO_INTTYPE_LEVEL_V2	0x34
+>  #define GPIO_INT_POLARITY_V2	0x38
+> @@ -354,6 +360,20 @@ static irqreturn_t dwapb_irq_handler_mfd(int irq, void *dev_id)
+>  	return IRQ_RETVAL(dwapb_do_irq(dev_id));
+>  }
+>  
+
+> +static void dwapb_enable_inq_combine(struct dwapb_gpio *gpio, unsigned int enable)
+
+inq_combine or int_combine?
+
+"enable" is used here as boolean, then it should be declared as one.
+
+> +{
+> +	u32 val;
+> +
+> +	if (gpio->flags & GPIO_REG_INT_COMB) {
+> +		val = dwapb_read(gpio, GPIO_INTCOMB_MASK);
+> +		if (enable)
+> +			val |= BIT(0);
+> +		else
+> +			val &= BIT(0);
+> +		dwapb_write(gpio, GPIO_INTCOMB_MASK, val);
+> +	}
+> +}
+> +
+
+Do you need to preserve the register content by using the read-modify-write procedure
+here? If not, then inlining something like this should be fine:
+	if (gpio->flags & GPIO_REG_HS_INTCOMB)
+		dwapb_write(gpio, GPIO_HS_INTCOMB_MASK, 1);
+
+>  static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+>  				 struct dwapb_gpio_port *port,
+>  				 struct dwapb_port_property *pp)
+> @@ -446,6 +466,8 @@ static void dwapb_configure_irqs(struct dwapb_gpio *gpio,
+>  		irq_create_mapping(gpio->domain, hwirq);
+>  
+>  	port->gc.to_irq = dwapb_gpio_to_irq;
+> +
+> +	dwapb_enable_inq_combine(gpio, ENABLE_INT_COMB);
+>  }
+>  
+>  static void dwapb_irq_teardown(struct dwapb_gpio *gpio)
+> @@ -618,6 +640,7 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
+>  static const struct of_device_id dwapb_of_match[] = {
+>  	{ .compatible = "snps,dw-apb-gpio", .data = (void *)0},
+>  	{ .compatible = "apm,xgene-gpio-v2", .data = (void *)GPIO_REG_OFFSET_V2},
+> +	{ .compatible = "hisi,ascend-gpio", .data = (void *)GPIO_REG_INT_COMB},
+>  	{ /* Sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, dwapb_of_match);
+> @@ -626,6 +649,7 @@ static struct dwapb_platform_data *dwapb_gpio_get_pdata(struct device *dev)
+>  	{"HISI0181", 0},
+>  	{"APMC0D07", 0},
+>  	{"APMC0D81", GPIO_REG_OFFSET_V2},
+> +	{"HISI19XX", GPIO_REG_INT_COMB},
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(acpi, dwapb_acpi_match);
+
+> @@ -713,6 +737,8 @@ static int dwapb_gpio_remove(struct platform_device *pdev)
+>  	reset_control_assert(gpio->rst);
+>  	clk_bulk_disable_unprepare(DWAPB_NR_CLOCKS, gpio->clks);
+>  
+> +	dwapb_enable_inq_combine(gpio, DISABLE_INT_COMB);
+> +
+>  	return 0;
+>  }
+
+Note the dwapb_gpio_remove method will be discarded from the driver in the framework
+of the next series: https://patchwork.ozlabs.org/project/linux-gpio/list/?series=193334
+
+So if you really need to revert the GPIO_HS_INTCOMB_MASK flag setting, then
+you'd need to create and register a dedicated devm-action (see 8 and 9 patch in
+my series for example).
+
+BTW Linus, could you take a look at my series? Andy and Rob have finished reviewing
+it almost a month ago.
+
+-Sergey
+
+>  
+> @@ -794,6 +820,8 @@ static int dwapb_gpio_resume(struct device *dev)
+>  			dwapb_write(gpio, GPIO_INTEN, ctx->int_en);
+>  			dwapb_write(gpio, GPIO_INTMASK, ctx->int_mask);
+>  
+> +			dwapb_enable_inq_combine(gpio, ENABLE_INT_COMB);
+> +
+>  			/* Clear out spurious interrupts */
+>  			dwapb_write(gpio, GPIO_PORTA_EOI, 0xffffffff);
+>  		}
+> -- 
+> 1.8.3.1
 > 
-> IIUC, AMU must wait for cpufreq drivers to be registered in order to
-> get the maximum freq and being able to enable its FIE support.
-> Could we have a sequence like:
-> cppc register its scale_freq_tick function
-> AMU can then override the tick function for cpu which supports AMU
-> 
-> >
-> > >  - (3) For 2/3, currently we support platforms that have partial support
-> > >        for AMUs, while this would not be supported here. The suggestions
-> > >        at (1) would give us this for free.
-> >
-> > As both were counter based mechanisms, I thought it would be better
-> > and more consistent if only one of them is picked. Though partial
-> > support of AMUs would still work without the CPPC driver.
-> >
-> > --
-> > viresh
