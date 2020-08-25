@@ -2,154 +2,107 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1544C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6928C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAD8720782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B925520782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598371608;
+	bh=8zmpHksz4OFu/h6PR7qcApCchuk+pUAcYARjrfwGk3s=;
+	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=xjq6+2ikvmppY2dGyWI4dI8T5T1TPHVievapCEj/U25GXF4/GE4399TzPr2OKOLms
+	 Q9qRtIMnKmy5su/xeOoLc00G9dU1u3W5eTMjKA5pldDYTBob9Mj0qx1CSaob/lJ+hs
+	 nlozTSOJax3mBnwsfl73KgagRcuK22Ha9o1sSObQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgHYQFH (ORCPT
+        id S1726723AbgHYQGr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:05:07 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60340 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726706AbgHYQFF (ORCPT
+        Tue, 25 Aug 2020 12:06:47 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44367 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgHYQGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:05:05 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 21141299AB4
-Received: by earth.universe (Postfix, from userid 1000)
-        id 830E73C0C82; Tue, 25 Aug 2020 18:05:00 +0200 (CEST)
-Date:   Tue, 25 Aug 2020 18:05:00 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Subject: Re: [PATCH] power: supply: bq2515x: Constify static variables
-Message-ID: <20200825160500.wxigzcoergyrqapj@earth.universe>
-References: <20200824232228.38423-1-rikard.falkeborn@gmail.com>
+        Tue, 25 Aug 2020 12:06:43 -0400
+Received: by mail-io1-f66.google.com with SMTP id v6so13016562iow.11;
+        Tue, 25 Aug 2020 09:06:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FcGWZ2U1TK3jm7niFe702isUINLMowDtiawDKgg8fkA=;
+        b=gdFGOK+x31x/LOzlZZIhUrpsfxFE8QiL5C4oMPn/+9mF4uTwv/gmsGSsMRNaQYhgaI
+         hmYYCgsaG+65bAxYGsvhsrDZdAOSS2LviGEsYPi9FwgsIuPI57FqXqyoDQ8ZLnU6Hm8y
+         BZTJdQ2DZKe9MSZfDCWx1InTDZ9EMBHPCOv4PFCim7Lh8vIL+QZxKm6cbzbAdBXT4aYe
+         5g4IT35F//JQ/neubdZWZmzVEkfLX5ewCjja8Q2Z2uWpGJFF/3mhtNSQ1K6nPMmxzn/T
+         aULsqe0cRgVMGv2HBs23cIqF/pfISuhDJWLv2U58MWNont6J9OOagUWUgPYauZKFYykq
+         SCKg==
+X-Gm-Message-State: AOAM530UibIkzXimSRJTQimHEv6JBzIYzm+py3VfOZEJUv/SMCBuxlki
+        uOGlyUtGwNHD67CFe6jz7A==
+X-Google-Smtp-Source: ABdhPJx0h9k3JUbzENgSVuwUkvdI2/jgdzcczgNdiO3Aryf/zAQG4NWt/tLA6YUIQe1N2QCEJWnU3A==
+X-Received: by 2002:a5e:930d:: with SMTP id k13mr9528967iom.40.1598371602507;
+        Tue, 25 Aug 2020 09:06:42 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id m15sm3896884ioh.24.2020.08.25.09.06.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 09:06:41 -0700 (PDT)
+Received: (nullmailer pid 864451 invoked by uid 1000);
+        Tue, 25 Aug 2020 16:06:40 -0000
+Date:   Tue, 25 Aug 2020 10:06:40 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        SoC Team <soc@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v5 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller
+ bindings
+Message-ID: <20200825160640.GA863416@bogus>
+References: <20200825081357.32354-1-lars.povlsen@microchip.com>
+ <20200825081357.32354-2-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qi5obm626a6gxj6s"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824232228.38423-1-rikard.falkeborn@gmail.com>
+In-Reply-To: <20200825081357.32354-2-lars.povlsen@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---qi5obm626a6gxj6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Aug 25, 2020 at 01:22:28AM +0200, Rikard Falkeborn wrote:
-> Constify a number of static variables that are not modified to allow the
-> compiler to put them in read-only memory.
->=20
-> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+On Tue, 25 Aug 2020 10:13:55 +0200, Lars Povlsen wrote:
+> The Sparx5 SDHCI controller is based on the Designware controller IP.
+> 
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 > ---
+>  .../mmc/microchip,dw-sparx5-sdhci.yaml        | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+> 
 
-Thanks, queued.
 
--- Sebastian
+My bot found errors running 'make dt_binding_check' on your patch:
 
->  drivers/power/supply/bq2515x_charger.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/power/supply/bq2515x_charger.c b/drivers/power/suppl=
-y/bq2515x_charger.c
-> index 36b0c8c98d40..9dcb61ea4cf2 100644
-> --- a/drivers/power/supply/bq2515x_charger.c
-> +++ b/drivers/power/supply/bq2515x_charger.c
-> @@ -188,7 +188,7 @@ struct bq2515x_device {
->  	struct bq2515x_init_data init_data;
->  };
-> =20
-> -static struct reg_default bq25150_reg_defaults[] =3D {
-> +static const struct reg_default bq25150_reg_defaults[] =3D {
->  	{BQ2515X_FLAG0, 0x0},
->  	{BQ2515X_FLAG1, 0x0},
->  	{BQ2515X_FLAG2, 0x0},
-> @@ -227,7 +227,7 @@ static struct reg_default bq25150_reg_defaults[] =3D {
->  	{BQ2515X_DEVICE_ID, 0x20},
->  };
-> =20
-> -static struct reg_default bq25155_reg_defaults[] =3D {
-> +static const struct reg_default bq25155_reg_defaults[] =3D {
->  	{BQ2515X_FLAG0, 0x0},
->  	{BQ2515X_FLAG1, 0x0},
->  	{BQ2515X_FLAG2, 0x0},
-> @@ -886,14 +886,14 @@ static int bq2515x_battery_get_property(struct powe=
-r_supply *psy,
->  	return 0;
->  }
-> =20
-> -static enum power_supply_property bq2515x_battery_properties[] =3D {
-> +static const enum power_supply_property bq2515x_battery_properties[] =3D=
- {
->  	POWER_SUPPLY_PROP_VOLTAGE_NOW,
->  	POWER_SUPPLY_PROP_CURRENT_NOW,
->  	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
->  	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
->  };
-> =20
-> -static enum power_supply_property bq2515x_mains_properties[] =3D {
-> +static const enum power_supply_property bq2515x_mains_properties[] =3D {
->  	POWER_SUPPLY_PROP_ONLINE,
->  	POWER_SUPPLY_PROP_STATUS,
->  	POWER_SUPPLY_PROP_HEALTH,
-> @@ -905,7 +905,7 @@ static enum power_supply_property bq2515x_mains_prope=
-rties[] =3D {
->  	POWER_SUPPLY_PROP_PRECHARGE_CURRENT,
->  };
-> =20
-> -static struct power_supply_desc bq2515x_mains_desc =3D {
-> +static const struct power_supply_desc bq2515x_mains_desc =3D {
->  	.name			=3D "bq2515x-mains",
->  	.type			=3D POWER_SUPPLY_TYPE_MAINS,
->  	.get_property		=3D bq2515x_mains_get_property,
-> @@ -915,7 +915,7 @@ static struct power_supply_desc bq2515x_mains_desc =
-=3D {
->  	.property_is_writeable	=3D bq2515x_power_supply_property_is_writeable,
->  };
-> =20
-> -static struct power_supply_desc bq2515x_battery_desc =3D {
-> +static const struct power_supply_desc bq2515x_battery_desc =3D {
->  	.name			=3D "bq2515x-battery",
->  	.type			=3D POWER_SUPPLY_TYPE_BATTERY,
->  	.get_property		=3D bq2515x_battery_get_property,
-> --=20
-> 2.28.0
->=20
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml: mmc0@600800000: $nodename:0: 'mmc0@600800000' does not match '^mmc(@.*)?$'
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
 
---qi5obm626a6gxj6s
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+See https://patchwork.ozlabs.org/patch/1350851
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9FNqIACgkQ2O7X88g7
-+ppT7hAAkzQO5mGX9BUXEjs4drahR2s3CGaToZ4uHFLxPruncGAO6FRiNeXbSCxF
-GDl2O6Bv2oDSX7vKQqs0KgVE3VB+SiWj8OV9aNhTbAqjJQR587qnagBB7p0UZg3l
-uHUMSJAVy8YOyx2AOUuVovqX9FsRoKcg3QhpH/dNGCxiM+Lpps1H2lHllH5fNSZV
-St8grBKX2NG1Azgnr2CG2TS3lnNL5bmJt1AdpPduR0KmHSFjXz/VgPmmQjdsxo91
-2i+r2B4Re/UZ+EEIMRp0vzSm/Ak08aGkIsJTYi9MtIRx8aBUnOm6wNP7lZCkNeuZ
-LkqFVuOnZDbAOYTuRTTeVX/zbddJNuVf/yNTzMm+rA4At2s9rO5eoi533Bz8/+8w
-qhBrpXSj2Nr65FATcm6x6WKDSX4F1LV6yXWuYu3PYNEVEkxKlKTYSYaqCwFOI0pD
-LpCRYFCsz8qBmW9AOY0eyDPY1aXNKJ7cuNALh8oYM48P1e/zaLxICLBEr3fZzojk
-4sokMfNUr5yc4U0T1GY5SIFP5Hj50Z/c6Q+o/Wr+RCQk+dh/UnDccDcMHckFufNK
-3/jWZFmtxWNheQflCzesx9oBaU6ukmO9DEPeqPLC6Uu5HRP/aZGo6NuMvjUHKHBL
-GGhGR1C0L539j4RqO0k2u91pvWnjvd8CSjP31AT5KBonMnwJv0E=
-=DTzh
------END PGP SIGNATURE-----
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
 
---qi5obm626a6gxj6s--
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
