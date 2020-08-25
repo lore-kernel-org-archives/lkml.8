@@ -2,155 +2,104 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAF7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F4220706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598354496;
-	bh=gKhV2+vHVml11hPxpE6g99RzbP9Ikk/XDV6czeRZWJo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1V9LFlMY4DAMEZ9R1CNC4a/bkLz83iPQC4O9ftej5PCarvnP/TitKgXbMf4dibpuc
-	 Pc6B8OP5vfpKuIfjK2OrmBMakFVg5GHNgk3rn5rH1Nk4AGG3VRaR1k5sYysrgeWc9E
-	 3Q3Ud8FxAIUN1pHhYBy56mZCDodIe+gPSkhWx2K4=
+	by mail.kernel.org (Postfix) with ESMTP id D8CF820715
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:22:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FRemqu5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbgHYLVb (ORCPT
+        id S1729996AbgHYLWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 07:21:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgHYLVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 07:21:12 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 25 Aug 2020 07:22:20 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:31104 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729985AbgHYLWK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 07:22:10 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598354525; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=tSSVfiXd88xOCldtXCPlDzzLEK3G+8ztMfhhhwwpA+c=; b=FRemqu5qiN0t+CgKRwuUWe2s50ZvEU/zKpYu6HX5M9BeMWDCPNwRLzFCvwAF43znO7dupll6
+ SNfHLzjXZn3SHSnOEwl6rQ/uRhR69DLYjUdQycA5JhtUIL+stwN0wIESLtvlxTzFfRjxHxCz
+ d0eG6DMoP3a3G94+JApKDH2zdR0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5f44f445e2d4d29fc8378e18 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Aug 2020 11:21:41
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6F609C433CA; Tue, 25 Aug 2020 11:21:41 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7453620706;
-        Tue, 25 Aug 2020 11:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598354471;
-        bh=gKhV2+vHVml11hPxpE6g99RzbP9Ikk/XDV6czeRZWJo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OCD70bXXXE8HaVxTxmOEEB9JAODla8x0GLBHcc8xWxwI02RUalAKVJxwLxBmmWh7m
-         1TQ+h6jpA0MJf+IRcq0coHh5oZEzJ0NONB4pAWqvf91AXH11SBjufk2+h3yqHJco24
-         4Ccq49oBxjrZz7zFX9DMvhGMIVfjXb5fVadAZrYk=
-Date:   Tue, 25 Aug 2020 16:51:07 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Cc:     Rob Herring <robh@kernel.org>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
-        malliamireddy009@gmail.com
-Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
-Message-ID: <20200825112107.GN2639@vkoul-mobl>
-References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <20200814203222.GA2674896@bogus>
- <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C463BC433C6;
+        Tue, 25 Aug 2020 11:21:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C463BC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     bjorn.andersson@linaro.org, andy.gross@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        ulf.hansson@linaro.org, swboyd@chromium.org, dianders@chromium.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: [PATCH v2 0/2] Modularize RPMH driver
+Date:   Tue, 25 Aug 2020 16:51:20 +0530
+Message-Id: <1598354482-15491-1-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-08-20, 15:00, Reddy, MallikarjunaX wrote:
+Changes in v2:
+- Update commit message in patch 1
+- send [4] again instead of revert's revert in patch 2.
 
-> > > +
-> > > +            intel,chans:
-> > > +              $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +              description:
-> > > +                 The channels included on this port. Format is channel start
-> > > +                 number and how many channels on this port.
-> > Why does this need to be in DT? This all seems like it can be in the dma
-> > cells for each client.
-> (*ABC)
-> Yes. We need this.
-> for dma0(lgm-cdma) old SOC supports 16 channels and the new SOC supports 22
-> channels. and the logical channel mapping for the peripherals also differ
-> b/w old and new SOCs.
-> 
-> Because of this hardware limitation we are trying to configure the total
-> channels and port-channel mapping dynamically from device tree.
-> 
-> based on port name we are trying to configure the default values for
-> different peripherals(ports).
-> Example: burst length is not same for all ports, so using port name to do
-> default configurations.
+This series is to modularize RPMH driver
 
-Sorry that does not make sense to me, why not specify the values to be
-used here instead of defining your own name scheme!
+The tracepoint in RPMH driver was changed to _rcuidle variant based on the
+test results of unmerged series [1] where .power_off callback from genpd
+reported RCU warnings. 
 
-Only older soc it should create 16 channels and new 22 (hint this is hw
-description so perfectly okay to specify in DT or in using driver_data
-and compatible for each version
+The series which finally got merged [2] uses CPU PM notifications
+and genpd .power_off callback is not implemented in RPMH driver to invoke
+rpmh_flush(). The CPU PM notifications are done with RCU non idle in kernel
+(see cpu_pm_notify() uses rcu_irq_enter_irqson() before notifications)
 
-> > 
-> > > +
-> > > +          required:
-> > > +            - reg
-> > > +            - intel,name
-> > > +            - intel,chans
-> > > +
-> > > +
-> > > + ldma-channels:
-> > > +    type: object
-> > > +    description:
-> > > +       This sub-node must contain a sub-node for each DMA channel.
-> > > +    properties:
-> > > +      '#address-cells':
-> > > +        const: 1
-> > > +      '#size-cells':
-> > > +        const: 0
-> > > +
-> > > +    patternProperties:
-> > > +      "^ldma-channels@[0-15]+$":
-> > > +          type: object
-> > > +
-> > > +          properties:
-> > > +            reg:
-> > > +              items:
-> > > +                - enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-> > > +              description:
-> > > +                 Which channel this node refers to.
-> > > +
-> > > +            intel,desc_num:
-> > > +              $ref: /schemas/types.yaml#/definitions/uint32
-> > > +              description:
-> > > +                 Per channel maximum descriptor number. The max value is 255.
-> > > +
-> > > +            intel,hdr-mode:
-> > > +              $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +              description:
-> > > +                 The first parameter is header mode size, the second
-> > > +                 parameter is checksum enable or disable. If enabled,
-> > > +                 header mode size is ignored. If disabled, header mode
-> > > +                 size must be provided.
-> > > +
-> > > +            intel,hw-desc:
-> > > +              $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +              description:
-> > > +                 Per channel dma hardware descriptor configuration.
-> > > +                 The first parameter is descriptor physical address and the
-> > > +                 second parameter hardware descriptor number.
-> > Again, this all seems like per client information for dma cells.
->  Ok, if we move all these attributes to 'dmas' then 'dma-channels' child
-> node is not needed in dtsi.
-> #dma-cells number i am already using 7. If we move all these attributes to
-> 'dmas' then integer cells will increase.
-> 
-> Is there any limitation in using a number of integer cells & as determined
-> by the #dma-cells property?
+However using _rcuidle variant prevented RPMH driver to compile as module
+since these _rcuidle are not exported symbols for tracepoints.
 
-No I dont think there is but it needs to make sense :-)
+This seris reverts the change [3] to remove _rcuidle variant for tracepoint
+as its no more valid test case (genpd .power_off is not implemented)
+and bring backs the change [4] that was reverted due to _rcuidle preventing
+to become modular.
+
+[1] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=243931
+[2] https://patchwork.kernel.org/project/linux-arm-msm/list/?series=269733
+[3] https://lore.kernel.org/r/20200115013751.249588-1-swboyd@chromium.org 
+[4] https://lore.kernel.org/r/20200326224459.105170-3-john.stultz@linaro.org 
+
+John Stultz (1):
+  soc: qcom: rpmh: Allow RPMH driver to be loaded as a module
+
+Maulik Shah (1):
+  Revert "drivers: qcom: rpmh-rsc: Use rcuidle tracepoints for rpmh"
+
+ drivers/soc/qcom/Kconfig    | 2 +-
+ drivers/soc/qcom/rpmh-rsc.c | 7 ++++++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
 -- 
-~Vinod
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
