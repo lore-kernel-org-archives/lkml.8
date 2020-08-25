@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E230FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E858C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C34C3204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BFE7204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgHYCvW (ORCPT
+        id S1728501AbgHYCv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:51:22 -0400
+        Mon, 24 Aug 2020 22:51:26 -0400
 Received: from mga18.intel.com ([134.134.136.126]:37741 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728475AbgHYCvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 22:51:17 -0400
-IronPort-SDR: /wrYvFq5HJpKV1kueaSDIupd25D0JCEocSk0Il/7Sg/phjkVgk6ZpenBr7G2AauscTHtAj9la2
- eDLXC216usHQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="143690822"
+        id S1728475AbgHYCvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 22:51:23 -0400
+IronPort-SDR: aNNy+fTas+FfhelcOkhKa8/pauwNQWILD5v5v8c+Q6D8RDGGWRVamZ5Wh+iP3spisuVRXUOuYa
+ iRczT4P79e3w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="143690836"
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="143690822"
+   d="scan'208";a="143690836"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 19:51:15 -0700
-IronPort-SDR: 7IWqB2Phs74SVmqmpMNXjckljljuWuJZ+/Qs4LSV/YGBdCs+V+P8o7GStwzcBGvkgyGZT1rjVI
- ZqlDiUBFibKw==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 19:51:22 -0700
+IronPort-SDR: Hbsc/DNgUbWexPZ4WZm8kTgoqvObw+oSaAC7YhC3NmWvkyjkJuTf226MmSvl5jrnamSEmoTTRQ
+ otTZf6Dm/VLw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="312409849"
+   d="scan'208";a="312409865"
 Received: from shsi6026.sh.intel.com ([10.239.147.135])
-  by orsmga002.jf.intel.com with ESMTP; 24 Aug 2020 19:51:12 -0700
+  by orsmga002.jf.intel.com with ESMTP; 24 Aug 2020 19:51:19 -0700
 From:   shuo.a.liu@intel.com
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Shuo Liu <shuo.a.liu@intel.com>,
         Zhi Wang <zhi.a.wang@intel.com>,
         Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH 11/17] virt: acrn: Introduce interfaces for PCI device passthrough
-Date:   Tue, 25 Aug 2020 10:45:11 +0800
-Message-Id: <20200825024516.16766-12-shuo.a.liu@intel.com>
+Subject: [PATCH 13/17] virt: acrn: Introduce interfaces to query C-states and P-states allowed by hypervisor
+Date:   Tue, 25 Aug 2020 10:45:13 +0800
+Message-Id: <20200825024516.16766-14-shuo.a.liu@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200825024516.16766-1-shuo.a.liu@intel.com>
 References: <20200825024516.16766-1-shuo.a.liu@intel.com>
@@ -63,29 +63,14 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shuo Liu <shuo.a.liu@intel.com>
 
-PCI device passthrough enables an OS in a virtual machine to directly
-access a PCI device in the host. It promises almost the native
-performance, which is required in performance-critical scenarios of
-ACRN.
+The C-states and P-states data are used to support CPU power management.
+The hypervisor controls C-states and P-states for a User VM.
 
-HSM provides the following ioctls:
- - Assign - ACRN_IOCTL_ASSIGN_PCIDEV
-   Pass data struct acrn_pcidev from userspace to the hypervisor, and
-   inform the hypervisor to assign a PCI device to a User VM.
+ACRN userspace need to query the data from the hypervisor to build ACPI
+tables for a User VM.
 
- - De-assign - ACRN_IOCTL_DEASSIGN_PCIDEV
-   Pass data struct acrn_pcidev from userspace to the hypervisor, and
-   inform the hypervisor to de-assign a PCI device from a User VM.
-
- - Set a interrupt of a passthrough device - ACRN_IOCTL_SET_PTDEV_INTR
-   Pass data struct acrn_ptdev_irq from userspace to the hypervisor,
-   and inform the hypervisor to map a INTx interrupt of passthrough
-   device of User VM.
-
- - Reset passthrough device interrupt - ACRN_IOCTL_RESET_PTDEV_INTR
-   Pass data struct acrn_ptdev_irq from userspace to the hypervisor,
-   and inform the hypervisor to unmap a INTx interrupt of passthrough
-   device of User VM.
+HSM provides ioctls for ACRN userspace to query C-states and P-states
+data obtained from the hypervisor.
 
 Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
 Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
@@ -93,225 +78,184 @@ Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Cc: Zhi Wang <zhi.a.wang@intel.com>
 Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
 Cc: Yu Wang <yu1.wang@intel.com>
-Cc: Reinette Chatre <reinette.chatre@intel.com>
+CC: Reinette Chatre <reinette.chatre@intel.com>
 ---
- drivers/virt/acrn/hsm.c       | 46 +++++++++++++++++++++++++
- drivers/virt/acrn/hypercall.h | 54 ++++++++++++++++++++++++++++++
- include/uapi/linux/acrn.h     | 63 +++++++++++++++++++++++++++++++++++
- 3 files changed, 163 insertions(+)
+ drivers/virt/acrn/hsm.c       | 69 +++++++++++++++++++++++++++++++++++
+ drivers/virt/acrn/hypercall.h | 12 ++++++
+ include/uapi/linux/acrn.h     | 35 ++++++++++++++++++
+ 3 files changed, 116 insertions(+)
 
 diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
-index 3c7bea54e476..ab2a052900e8 100644
+index 11369fb2d1c5..c0f33bc505e2 100644
 --- a/drivers/virt/acrn/hsm.c
 +++ b/drivers/virt/acrn/hsm.c
-@@ -50,7 +50,9 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
- 	struct acrn_vm_creation *vm_param;
- 	struct acrn_vcpu_regs *cpu_regs;
- 	struct acrn_ioreq_notify notify;
-+	struct acrn_ptdev_irq *irq_info;
- 	struct acrn_vm_memmap memmap;
-+	struct acrn_pcidev *pcidev;
+@@ -43,6 +43,67 @@ static int acrn_dev_open(struct inode *inode, struct file *filp)
+ 	return 0;
+ }
+ 
++static int pmcmd_ioctl(u64 cmd, void __user *uptr)
++{
++	struct acrn_pstate_data *px_data;
++	struct acrn_cstate_data *cx_data;
++	u64 *pm_info;
++	int ret = 0;
++
++	switch (cmd & PMCMD_TYPE_MASK) {
++	case ACRN_PMCMD_GET_PX_CNT:
++	case ACRN_PMCMD_GET_CX_CNT:
++		pm_info = kmalloc(sizeof(u64), GFP_KERNEL);
++		if (!pm_info)
++			return -ENOMEM;
++
++		ret = hcall_get_cpu_state(cmd, virt_to_phys(pm_info));
++		if (ret < 0) {
++			kfree(pm_info);
++			break;
++		}
++
++		if (copy_to_user(uptr, pm_info, sizeof(u64)))
++			ret = -EFAULT;
++		kfree(pm_info);
++		break;
++	case ACRN_PMCMD_GET_PX_DATA:
++		px_data = kmalloc(sizeof(*px_data), GFP_KERNEL);
++		if (!px_data)
++			return -ENOMEM;
++
++		ret = hcall_get_cpu_state(cmd, virt_to_phys(px_data));
++		if (ret < 0) {
++			kfree(px_data);
++			break;
++		}
++
++		if (copy_to_user(uptr, px_data, sizeof(*px_data)))
++			ret = -EFAULT;
++		kfree(px_data);
++		break;
++	case ACRN_PMCMD_GET_CX_DATA:
++		cx_data = kmalloc(sizeof(*cx_data), GFP_KERNEL);
++		if (!cx_data)
++			return -ENOMEM;
++
++		ret = hcall_get_cpu_state(cmd, virt_to_phys(cx_data));
++		if (ret < 0) {
++			kfree(cx_data);
++			break;
++		}
++
++		if (copy_to_user(uptr, cx_data, sizeof(*cx_data)))
++			ret = -EFAULT;
++		kfree(cx_data);
++		break;
++	default:
++		break;
++	}
++
++	return ret;
++}
++
+ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+ 			   unsigned long ioctl_param)
+ {
+@@ -55,6 +116,7 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+ 	struct acrn_msi_entry *msi;
+ 	struct acrn_pcidev *pcidev;
+ 	struct page *page;
++	u64 cstate_cmd;
  	int ret = 0;
  
  	if (cmd == ACRN_IOCTL_GET_API_VERSION) {
-@@ -130,6 +132,50 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
- 
- 		ret = acrn_vm_memseg_unmap(vm, &memmap);
+@@ -234,6 +296,13 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+ 	case ACRN_IOCTL_CLEAR_VM_IOREQ:
+ 		acrn_ioreq_request_clear(vm);
  		break;
-+	case ACRN_IOCTL_ASSIGN_PCIDEV:
-+		pcidev = memdup_user((void __user *)ioctl_param,
-+				     sizeof(struct acrn_pcidev));
-+		if (IS_ERR(pcidev))
-+			return PTR_ERR(pcidev);
++	case ACRN_IOCTL_PM_GET_CPU_STATE:
++		if (copy_from_user(&cstate_cmd, (void *)ioctl_param,
++				   sizeof(cstate_cmd)))
++			return -EFAULT;
 +
-+		ret = hcall_assign_pcidev(vm->vmid, virt_to_phys(pcidev));
-+		if (ret < 0)
-+			pr_err("Failed to assign pci device!\n");
-+		kfree(pcidev);
++		ret = pmcmd_ioctl(cstate_cmd, (void __user *)ioctl_param);
 +		break;
-+	case ACRN_IOCTL_DEASSIGN_PCIDEV:
-+		pcidev = memdup_user((void __user *)ioctl_param,
-+				     sizeof(struct acrn_pcidev));
-+		if (IS_ERR(pcidev))
-+			return PTR_ERR(pcidev);
-+
-+		ret = hcall_deassign_pcidev(vm->vmid, virt_to_phys(pcidev));
-+		if (ret < 0)
-+			pr_err("Failed to deassign pci device!\n");
-+		kfree(pcidev);
-+		break;
-+	case ACRN_IOCTL_SET_PTDEV_INTR:
-+		irq_info = memdup_user((void __user *)ioctl_param,
-+				       sizeof(struct acrn_ptdev_irq));
-+		if (IS_ERR(irq_info))
-+			return PTR_ERR(irq_info);
-+
-+		ret = hcall_set_ptdev_intr(vm->vmid, virt_to_phys(irq_info));
-+		if (ret < 0)
-+			pr_err("Failed to configure intr for ptdev!\n");
-+		kfree(irq_info);
-+		break;
-+	case ACRN_IOCTL_RESET_PTDEV_INTR:
-+		irq_info = memdup_user((void __user *)ioctl_param,
-+				       sizeof(struct acrn_ptdev_irq));
-+		if (IS_ERR(irq_info))
-+			return PTR_ERR(irq_info);
-+
-+		ret = hcall_reset_ptdev_intr(vm->vmid, virt_to_phys(irq_info));
-+		if (ret < 0)
-+			pr_err("Failed to reset intr for ptdev!\n");
-+		kfree(irq_info);
-+		break;
- 	case ACRN_IOCTL_CREATE_IOREQ_CLIENT:
- 		if (vm->default_client)
- 			return -EEXIST;
+ 	default:
+ 		pr_warn("Unknown IOCTL 0x%x!\n", cmd);
+ 		ret = -EINVAL;
 diff --git a/drivers/virt/acrn/hypercall.h b/drivers/virt/acrn/hypercall.h
-index d85dbcdb9f00..41409df943a2 100644
+index f220358633ab..ce8fdca76394 100644
 --- a/drivers/virt/acrn/hypercall.h
 +++ b/drivers/virt/acrn/hypercall.h
-@@ -31,6 +31,12 @@
- #define HC_ID_MEM_BASE			0x40UL
- #define HC_VM_SET_MEMORY_REGIONS	_HC_ID(HC_ID, HC_ID_MEM_BASE + 0x02)
+@@ -42,6 +42,9 @@
+ #define HC_ASSIGN_PCIDEV		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x05)
+ #define HC_DEASSIGN_PCIDEV		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x06)
  
-+#define HC_ID_PCI_BASE			0x50UL
-+#define HC_SET_PTDEV_INTR		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x03)
-+#define HC_RESET_PTDEV_INTR		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x04)
-+#define HC_ASSIGN_PCIDEV		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x05)
-+#define HC_DEASSIGN_PCIDEV		_HC_ID(HC_ID, HC_ID_PCI_BASE + 0x06)
++#define HC_ID_PM_BASE			0x80UL
++#define HC_PM_GET_CPU_STATE		_HC_ID(HC_ID, HC_ID_PM_BASE + 0x00)
 +
  /**
   * hcall_get_api_version() - Get API version from hypervisor
   * @api_version:	Service VM GPA of version info
-@@ -144,4 +150,52 @@ static inline long hcall_set_memory_regions(u64 regions_pa)
- 	return acrn_hypercall1(HC_VM_SET_MEMORY_REGIONS, regions_pa);
+@@ -239,4 +242,13 @@ static inline long hcall_reset_ptdev_intr(u64 vmid, u64 irq)
+ 	return acrn_hypercall2(HC_RESET_PTDEV_INTR, vmid, irq);
  }
  
-+/**
-+ * hcall_assign_pcidev() - Assign a PCI device to a User VM
-+ * @vmid:	User VM ID
-+ * @addr:	Service VM GPA of the &struct acrn_pcidev
-+ *
-+ * Return: 0 on success, <0 on failure
++/*
++ * hcall_get_cpu_state() - Get P-states and C-states info from the hypervisor
++ * @state:	Service VM GPA of buffer of P-states and C-states
 + */
-+static inline long hcall_assign_pcidev(u64 vmid, u64 addr)
++static inline long hcall_get_cpu_state(u64 cmd, u64 state)
 +{
-+	return acrn_hypercall2(HC_ASSIGN_PCIDEV, vmid, addr);
-+}
-+
-+/**
-+ * hcall_deassign_pcidev() - De-assign a PCI device from a User VM
-+ * @vmid:	User VM ID
-+ * @addr:	Service VM GPA of the &struct acrn_pcidev
-+ *
-+ * Return: 0 on success, <0 on failure
-+ */
-+static inline long hcall_deassign_pcidev(u64 vmid, u64 addr)
-+{
-+	return acrn_hypercall2(HC_DEASSIGN_PCIDEV, vmid, addr);
-+}
-+
-+/**
-+ * hcall_set_ptdev_intr() - Configure an interrupt for an assigned PCI device.
-+ * @vmid:	User VM ID
-+ * @irq:	Service VM GPA of the &struct acrn_ptdev_irq
-+ *
-+ * Return: 0 on success, <0 on failure
-+ */
-+static inline long hcall_set_ptdev_intr(u64 vmid, u64 irq)
-+{
-+	return acrn_hypercall2(HC_SET_PTDEV_INTR, vmid, irq);
-+}
-+
-+/**
-+ * hcall_reset_ptdev_intr() - Reset an interrupt for an assigned PCI device.
-+ * @vmid:	User VM ID
-+ * @irq:	Service VM GPA of the &struct acrn_ptdev_irq
-+ *
-+ * Return: 0 on success, <0 on failure
-+ */
-+static inline long hcall_reset_ptdev_intr(u64 vmid, u64 irq)
-+{
-+	return acrn_hypercall2(HC_RESET_PTDEV_INTR, vmid, irq);
++	return acrn_hypercall2(HC_PM_GET_CPU_STATE, cmd, state);
 +}
 +
  #endif /* __ACRN_HSM_HYPERCALL_H */
 diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
-index c8bb71a1cef7..45891da3d8a1 100644
+index a20bee88cf9a..d5bd2b7dfd85 100644
 --- a/include/uapi/linux/acrn.h
 +++ b/include/uapi/linux/acrn.h
-@@ -299,6 +299,60 @@ struct acrn_vm_memmap {
- 	__u32	attr;
- } __attribute__((aligned(8)));
+@@ -363,6 +363,38 @@ struct acrn_msi_entry {
+ 	__u64	msi_data;
+ };
  
-+/* Type of interrupt of a passthrough device */
-+#define ACRN_PTDEV_IRQ_INTX	0
-+#define ACRN_PTDEV_IRQ_MSI	1
-+#define ACRN_PTDEV_IRQ_MSIX	2
-+/**
-+ * struct acrn_ptdev_irq - Interrupt data of a passthrough device.
-+ * @type:		Type (ACRN_PTDEV_IRQ_*)
-+ * @virt_bdf:		Virtual Bus/Device/Function
-+ * @phys_bdf:		Physical Bus/Device/Function
-+ * @intx:		Info of interrupt
-+ * @intx.virt_pin:	Virtual IOAPIC pin
-+ * @intx.phys_pin:	Physical IOAPIC pin
-+ * @intx.is_pic_pin:	Is PIC pin or not
-+ *
-+ * This structure will be passed to hypervisor directly.
-+ */
-+struct acrn_ptdev_irq {
-+	__u32	type;
-+	__u16	virt_bdf;
-+	__u16	phys_bdf;
++struct acrn_acpi_generic_address {
++	__u8	space_id;
++	__u8	bit_width;
++	__u8	bit_offset;
++	__u8	access_size;
++	__u64	address;
++} __attribute__ ((__packed__));
 +
-+	struct {
-+		__u32	virt_pin;
-+		__u32	phys_pin;
-+		__u32	is_pic_pin;
-+	} intx;
++struct acrn_cstate_data {
++	struct acrn_acpi_generic_address	cx_reg;
++	__u8					type;
++	__u32					latency;
++	__u64					power;
 +} __attribute__((aligned(8)));
 +
-+/* Type of PCI device assignment */
-+#define ACRN_PTDEV_QUIRK_ASSIGN	(1U << 0)
-+
-+#define ACRN_PCI_NUM_BARS	6
-+/**
-+ * struct acrn_pcidev - Info for assigning or de-assigning a PCI device
-+ * @type:	Type of the assignment
-+ * @virt_bdf:	Virtual Bus/Device/Function
-+ * @phys_bdf:	Physical Bus/Device/Function
-+ * @intr_line:	PCI interrupt line
-+ * @intr_pin:	PCI interrupt pin
-+ * @bar:	PCI BARs.
-+ * @reserved:	Reserved.
-+ *
-+ * This structure will be passed to hypervisor directly.
-+ */
-+struct acrn_pcidev {
-+	__u32	type;
-+	__u16	virt_bdf;
-+	__u16	phys_bdf;
-+	__u8	intr_line;
-+	__u8	intr_pin;
-+	__u32	bar[ACRN_PCI_NUM_BARS];
-+	__u32	reserved[6];
++struct acrn_pstate_data {
++	__u64	core_frequency;
++	__u64	power;
++	__u64	transition_latency;
++	__u64	bus_master_latency;
++	__u64	control;
++	__u64	status;
 +} __attribute__((aligned(8)));
++
++#define PMCMD_TYPE_MASK		0x000000ff
++enum acrn_pm_cmd_type {
++	ACRN_PMCMD_GET_PX_CNT,
++	ACRN_PMCMD_GET_PX_DATA,
++	ACRN_PMCMD_GET_CX_CNT,
++	ACRN_PMCMD_GET_CX_DATA,
++};
 +
  /* The ioctl type, documented in ioctl-number.rst */
  #define ACRN_IOCTL_TYPE			0xA2
  
-@@ -337,4 +391,13 @@ struct acrn_vm_memmap {
- #define ACRN_IOCTL_UNSET_MEMSEG		\
- 	_IOW(ACRN_IOCTL_TYPE, 0x42, struct acrn_vm_memmap)
+@@ -417,4 +449,7 @@ struct acrn_msi_entry {
+ #define ACRN_IOCTL_DEASSIGN_PCIDEV	\
+ 	_IOW(ACRN_IOCTL_TYPE, 0x56, struct acrn_pcidev)
  
-+#define ACRN_IOCTL_SET_PTDEV_INTR	\
-+	_IOW(ACRN_IOCTL_TYPE, 0x53, struct acrn_ptdev_irq)
-+#define ACRN_IOCTL_RESET_PTDEV_INTR	\
-+	_IOW(ACRN_IOCTL_TYPE, 0x54, struct acrn_ptdev_irq)
-+#define ACRN_IOCTL_ASSIGN_PCIDEV	\
-+	_IOW(ACRN_IOCTL_TYPE, 0x55, struct acrn_pcidev)
-+#define ACRN_IOCTL_DEASSIGN_PCIDEV	\
-+	_IOW(ACRN_IOCTL_TYPE, 0x56, struct acrn_pcidev)
++#define ACRN_IOCTL_PM_GET_CPU_STATE	\
++	_IOWR(ACRN_IOCTL_TYPE, 0x60, __u64)
 +
  #endif /* _UAPI_ACRN_H */
 -- 
