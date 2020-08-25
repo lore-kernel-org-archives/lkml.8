@@ -2,128 +2,120 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36948C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA88C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1175920782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553C020782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="QpnaK3Zu"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gs1qaOpX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgHYPjy (ORCPT
+        id S1726786AbgHYPkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:39:54 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:16385 "EHLO smtp1.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgHYPjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:39:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=2177; q=dns/txt; s=axis-central1;
-  t=1598369992; x=1629905992;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4ZlMcg4Ilu92hAGYdNwpPVPQERB0KU5QHaM832tUSMk=;
-  b=QpnaK3ZuliZc7kWA3Ry06+iNt8bW8aNlhpYs9WO34LHzpxj2FjFMsIGd
-   MqYwvKVJ5KLQRIyIRJA8pMdz1ybj78vJfmUvXnE5574AZKRlPNuh/QUD+
-   sakNceQluVgkNO/ruIQH5mepCAYeLkoTP884EEl9gmboCFQUCuJRgA6RG
-   dMJ9K6aCzs0zbtOdQV6U4QBP8J2BI8EZ4zclacSaKAKHRX4h7gQhnGREh
-   0xxWqNv67dE0BJBdhal4eqoTr3XHFFjvy2EQmrcyrcXNGVEsD7MiRlZr5
-   KeAbAyDArw/2GsCnam/YOV4pqThWKHtd7BcVOr0oh8C7PNEKYqswUUbyd
-   A==;
-IronPort-SDR: GicodpmnvNdbSYQufObWJs/0uPHoR7NL5lyFo5bVpCT8MHriZ3wFNSXTMuF7A85iCEPOKCcKCY
- hH6IBvCC8BzDZX2b6F5uX/AWjowGVMmgBW8ySHNDmDqwJpCWbG0RzZXlLs32GRxDymJzWBnM7N
- gHSjHLnidMd2Wpn2ix2JRrn7GOLX4jOXkl3mHmnOLfReMvMoYOL3EJtNso0RX8K+Ma/CsEJ8E5
- PRLbDuKo7QuEWAADogXvatgHZE+3sqJPNwJMmSTxomU9BgcVYzUzzk02l9rcTsHj4ZHYoLtI2u
- R0k=
-X-IronPort-AV: E=Sophos;i="5.76,353,1592863200"; 
-   d="scan'208";a="12200131"
-Date:   Tue, 25 Aug 2020 17:39:50 +0200
-From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     "jbaron@akamai.com" <jbaron@akamai.com>,
-        "mingo@redhat.com" <mingo@redhat.com>, kernel <kernel@axis.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "pmladek@suse.com" <pmladek@suse.com>,
-        "sergey.senozhatsky@gmail.com" <sergey.senozhatsky@gmail.com>,
-        "john.ogness@linutronix.de" <john.ogness@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] dynamic debug: allow printing to trace event
-Message-ID: <20200825153950.zza53vsl6wsehgh2@axis.com>
-References: <20200814133151.7759-1-vincent.whitchurch@axis.com>
- <20200814131531.01b43c91@oasis.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200814131531.01b43c91@oasis.local.home>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Tue, 25 Aug 2020 11:40:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45510 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725998AbgHYPkl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 11:40:41 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PFXQ0U074972;
+        Tue, 25 Aug 2020 11:40:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=yMwbzI8DRQBhwKsLR3tDH4EBDq3DYbqddm2fcfs2stY=;
+ b=gs1qaOpXwCoRLJYPUasHUPKNgeEvBc4nTuoqTkYPYQO8GQjZVfgakx1Ib3gRzaSAfBQB
+ /AXw62eFumZHayBlTIdPNx/igqu7rCeVQg0Jy0cLd9e6YRFvcFiM6Nm3mwyHcF2lVdYc
+ rldfMcWLygj64pVKliErC6nLdTuSeOG3Rv/iPyrJ2B29yhNwBa8gNzelpWTrJUaUr0kq
+ Fl+hyzHabMdd8GNUfYzyP/WOdGETjAU3uET2xvZXrOLkQPJ/gKxl/F7bAbMxZDZA6Y7V
+ u9iSXMBVMXwCbvWKrh0ZRxESxZUbedm0LRE/92F9X3txd++53gnxo4EXrErEEIA5b8Wj ew== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3355bh0ef1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 11:40:35 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07PFXewI076532;
+        Tue, 25 Aug 2020 11:40:35 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3355bh0ee2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 11:40:34 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07PFSBnS003009;
+        Tue, 25 Aug 2020 15:40:32 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 33498u9gxj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 15:40:32 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07PFeTCg24576316
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Aug 2020 15:40:30 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D66AEA405B;
+        Tue, 25 Aug 2020 15:40:29 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8EEF7A4065;
+        Tue, 25 Aug 2020 15:40:27 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.103.4])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Aug 2020 15:40:27 +0000 (GMT)
+Message-ID: <a7ea2da1f895ee3db4697c00804160acb6db656e.camel@linux.ibm.com>
+Subject: Re: [PATCH] IMA: Handle early boot data measurement
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        stephen.smalley.work@gmail.com, casey@schaufler-ca.com
+Cc:     tyhicks@linux.microsoft.com, tusharsu@linux.microsoft.com,
+        sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 25 Aug 2020 11:40:26 -0400
+In-Reply-To: <20200821231230.20212-1-nramas@linux.microsoft.com>
+References: <20200821231230.20212-1-nramas@linux.microsoft.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_05:2020-08-25,2020-08-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ mlxscore=0 mlxlogscore=931 bulkscore=0 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 spamscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008250114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 07:15:31PM +0200, Steven Rostedt wrote:
-> On Fri, 14 Aug 2020 15:31:51 +0200
-> Vincent Whitchurch <vincent.whitchurch@axis.com> wrote:
-> > index aa9ff9e1c0b3..f599ed21ecc5 100644
-> > --- a/include/linux/dynamic_debug.h
-> > +++ b/include/linux/dynamic_debug.h
-> > @@ -27,13 +27,16 @@ struct _ddebug {
-> >  	 * writes commands to <debugfs>/dynamic_debug/control
-> >  	 */
-> >  #define _DPRINTK_FLAGS_NONE	0
-> > -#define _DPRINTK_FLAGS_PRINT	(1<<0) /* printk() a message using the format */
-> > +#define _DPRINTK_FLAGS_PRINTK	(1<<0) /* printk() a message using the format */
+On Fri, 2020-08-21 at 16:12 -0700, Lakshmi Ramasubramanian wrote:
+> The current implementation of early boot measurement in
+> the IMA subsystem is very specific to asymmetric keys. It does not
+> handle early boot measurement of data from other subsystems such as
+> Linux Security Module (LSM), Device-Mapper, etc. As a result data,
+> provided by these subsystems during system boot are not measured by IMA.
 > 
-> The above looks like a cleanup unrelated to this patch, and probably
-> should be on its own.
-
-I've moved this and the other renaming hunk out to a separate patch.
-
-> >  #define _DPRINTK_FLAGS_INCL_MODNAME	(1<<1)
-> >  #define _DPRINTK_FLAGS_INCL_FUNCNAME	(1<<2)
-> >  #define _DPRINTK_FLAGS_INCL_LINENO	(1<<3)
-> >  #define _DPRINTK_FLAGS_INCL_TID		(1<<4)
-> > +#define _DPRINTK_FLAGS_TRACE		(1<<5)	
-> > +#define _DPRINTK_FLAGS_PRINT		(_DPRINTK_FLAGS_PRINTK | \
-> > +					 _DPRINTK_FLAGS_TRACE)
-> >  #if defined DEBUG
-> > -#define _DPRINTK_FLAGS_DEFAULT _DPRINTK_FLAGS_PRINT
-> > +#define _DPRINTK_FLAGS_DEFAULT _DPRINTK_FLAGS_PRINTK
-> >  #else
-> >  #define _DPRINTK_FLAGS_DEFAULT 0
-> >  #endif
-> > diff --git a/include/trace/events/printk.h b/include/trace/events/printk.h
-> > index 13d405b2fd8b..6c89121a1669 100644
-> > --- a/include/trace/events/printk.h
-> > +++ b/include/trace/events/printk.h
-> > @@ -7,7 +7,7 @@
-> >  
-> >  #include <linux/tracepoint.h>
-> >  
-> > -TRACE_EVENT(console,
-> > +DECLARE_EVENT_CLASS(printk,
-> >  	TP_PROTO(const char *text, size_t len),
-> >  
-> >  	TP_ARGS(text, len),
-> > @@ -31,6 +31,16 @@ TRACE_EVENT(console,
-> >  
-> >  	TP_printk("%s", __get_str(msg))
-> >  );
-> > +
-> > +DEFINE_EVENT(printk, console,
-> > +	TP_PROTO(const char *text, size_t len),
-> > +	TP_ARGS(text, len)
-> > +);
-> > +
-> > +DEFINE_EVENT(printk, dynamic,
+> Update the early boot key measurement to handle any early boot data.
+> Refactor the code from ima_queue_keys.c to a new file ima_queue_data.c.
+> Rename the kernel configuration CONFIG_IMA_QUEUE_EARLY_BOOT_KEYS to
+> CONFIG_IMA_QUEUE_EARLY_BOOT_DATA so it can be used for enabling any
+> early boot data measurement. Since measurement of asymmetric keys is
+> the first consumer of early boot measurement, this kernel configuration
+> is enabled if IMA_MEASURE_ASYMMETRIC_KEYS and SYSTEM_TRUSTED_KEYRING are
+> both enabled.
 > 
-> Can we call this "dynamic_printk" or "printk_dynamic", as
-> trace_dynamic() is too generic.
+> Update the IMA hook ima_measure_critical_data() to utilize early boot
+> measurement support.
 
-I went for "dyndbg" (printk:dyndbg / trace_dyndbg()) which is the
-documented name of the infrastructure.
+Please limit the changes in this patch to renaming the functions and/or
+files.  For example, adding "measure_payload_hash" should be a separate
+patch, not hidden here.
+
+Mimi
+
