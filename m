@@ -2,209 +2,95 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3D7C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3876F2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598370413;
-	bh=2igqG3uEPzuUzdqIXSzponq3YT5GudO3Gm4HYkcRAIM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ReHIHuIWoQZklKVpPLcbxaj4mi/74/QpiIIJ020MdjQT7MXj3K+baEZOYZnGXH/+8
-	 om3pGu8m5vVlFJHWZ8ZXRzXqWyexCG/ek/+3EaU8I06BHYmI7VzMazJClr8xeIiAXJ
-	 yq+OmM7TvmACHP6W6/Px/1HJMvxtYzHGjO6r3kyE=
+	by mail.kernel.org (Postfix) with ESMTP id 85E9C207BC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:47:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mSj8+R+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbgHYPqn (ORCPT
+        id S1726739AbgHYPrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:46:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbgHYPqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:46:21 -0400
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 925F92076C;
-        Tue, 25 Aug 2020 15:46:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598370380;
-        bh=2igqG3uEPzuUzdqIXSzponq3YT5GudO3Gm4HYkcRAIM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m3lGya4cWZj7kD5PKWQK7urXVreNHeORDEhN7lv7Geec1Kv/7wlFgq/SCoT086bXM
-         fx29PdOnOXfRVPH0QWFqjiIe76/4Z9Cka4rCUQ1nW15ORTHT5yGWPc3E54EPu6NSS+
-         2yKnOjF0EpCcJDaJHVG18RlyrZEYzoPGtZ4n5oL0=
-Received: by mail-oi1-f178.google.com with SMTP id v13so11991529oiv.13;
-        Tue, 25 Aug 2020 08:46:20 -0700 (PDT)
-X-Gm-Message-State: AOAM531g7X+Q1evM2iQM4Mo1DeKuXW1WhMQRxRUxeMvJEmqfW63wtFkF
-        DlDDIPzNZjaiLDv62TOE8VtphP5IoVkST/IHLQ==
-X-Google-Smtp-Source: ABdhPJzZUSVbY/c/oz2V3IJntQFHRss+WSxDpGuds7ZpZ7vy9EXlYkoPxM8dJAFy6Rn+JihsN1yHkr5GmU1Rae9WK+0=
-X-Received: by 2002:aca:90a:: with SMTP id 10mr1406037oij.106.1598370379890;
- Tue, 25 Aug 2020 08:46:19 -0700 (PDT)
+        Tue, 25 Aug 2020 11:47:03 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:41560 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727011AbgHYPq5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 11:46:57 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id B6F5220B4908;
+        Tue, 25 Aug 2020 08:46:55 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B6F5220B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598370415;
+        bh=cG0PU1AiCXqIk4eMHJUWBNM5pgMeFVP8Pc2YAFUO1Lo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mSj8+R+HyTWTccdCmaX3nwvs/qC1Imig3edjrJgu4HulycBCUbGm+F3HHf/nae1yY
+         IHq+ic0DuDVeei+Ezy6lmnMP89du0Dok1QeKMez78ncPIJYfxf3WGtCc88IlTa4RAE
+         /IzxlHbvHQp02qxCLmLTQfN2YaXczm/r9xcZei0g=
+Subject: Re: [PATCH] IMA: Handle early boot data measurement
+To:     Mimi Zohar <zohar@linux.ibm.com>, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com
+Cc:     tyhicks@linux.microsoft.com, tusharsu@linux.microsoft.com,
+        sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200821231230.20212-1-nramas@linux.microsoft.com>
+ <a7ea2da1f895ee3db4697c00804160acb6db656e.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <307617de-b42d-ac52-6e9e-9e0d16bbc20e@linux.microsoft.com>
+Date:   Tue, 25 Aug 2020 08:46:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200812202018.49046-1-alcooperx@gmail.com> <20200812202018.49046-2-alcooperx@gmail.com>
- <20200824233040.GA3532378@bogus> <CAOGqxeXWXkRD=agGL45D0sGe64TUBBq=OtibkX8AkiC5g0sWww@mail.gmail.com>
-In-Reply-To: <CAOGqxeXWXkRD=agGL45D0sGe64TUBBq=OtibkX8AkiC5g0sWww@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 25 Aug 2020 09:46:08 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLvDq1L1BZKfgobfhe7UEqbkGtXXfHzUwfo36m4MCARhw@mail.gmail.com>
-Message-ID: <CAL_JsqLvDq1L1BZKfgobfhe7UEqbkGtXXfHzUwfo36m4MCARhw@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: Add support for Broadcom USB pin map driver
-To:     Alan Cooper <alcooperx@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     ": Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        USB list <linux-usb@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a7ea2da1f895ee3db4697c00804160acb6db656e.camel@linux.ibm.com>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Linus W
+On 8/25/20 8:40 AM, Mimi Zohar wrote:
+> On Fri, 2020-08-21 at 16:12 -0700, Lakshmi Ramasubramanian wrote:
+>> The current implementation of early boot measurement in
+>> the IMA subsystem is very specific to asymmetric keys. It does not
+>> handle early boot measurement of data from other subsystems such as
+>> Linux Security Module (LSM), Device-Mapper, etc. As a result data,
+>> provided by these subsystems during system boot are not measured by IMA.
+>>
+>> Update the early boot key measurement to handle any early boot data.
+>> Refactor the code from ima_queue_keys.c to a new file ima_queue_data.c.
+>> Rename the kernel configuration CONFIG_IMA_QUEUE_EARLY_BOOT_KEYS to
+>> CONFIG_IMA_QUEUE_EARLY_BOOT_DATA so it can be used for enabling any
+>> early boot data measurement. Since measurement of asymmetric keys is
+>> the first consumer of early boot measurement, this kernel configuration
+>> is enabled if IMA_MEASURE_ASYMMETRIC_KEYS and SYSTEM_TRUSTED_KEYRING are
+>> both enabled.
+>>
+>> Update the IMA hook ima_measure_critical_data() to utilize early boot
+>> measurement support.
+> 
+> Please limit the changes in this patch to renaming the functions and/or
+> files.  For example, adding "measure_payload_hash" should be a separate
+> patch, not hidden here.
+> 
 
-On Tue, Aug 25, 2020 at 6:26 AM Alan Cooper <alcooperx@gmail.com> wrote:
->
-> On Mon, Aug 24, 2020 at 7:30 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Wed, Aug 12, 2020 at 04:20:16PM -0400, Al Cooper wrote:
-> > > Add DT bindings for the Broadcom USB pin map driver. This driver allows
-> > > some USB input and output signals to be mapped to any GPIO instead
-> > > of the normal dedicated pins to/from the XHCI controller.
-> >
-> > Is this a driver or h/w block because bindings are for h/w blocks?
->
-> This is a hardware block. I'll remove "driver" from the description.
+Thanks for the feedback Mimi.
 
-Another question, this kind of looks like a pin mux controller. Is
-that not a fit for this? If not, why?
+I'll split this into 2 patches:
 
-> > > Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> > > ---
-> > >  .../bindings/usb/brcm,usb-pinmap.yaml         | 63 +++++++++++++++++++
-> > >  1 file changed, 63 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml b/Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-> > > new file mode 100644
-> > > index 000000000000..19cf6ad36373
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/usb/brcm,usb-pinmap.yaml
-> > > @@ -0,0 +1,63 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/usb/brcm,usb-pinmap.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Broadcom USB pin map Controller Device Tree Bindings
-> > > +
-> > > +maintainers:
-> > > +  - Al Cooper <alcooperx@gmail.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +      items:
-> > > +          - const: brcm,usb-pinmap
-> >
-> > 2 space indentation please.
->
-> Fixed.
->
-> >
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +    description: Must be defined if any out-gpios are specified.
-> >
-> > 'dependencies' can express this in schema.
->
-> Okay.
->
-> >
-> > > +
-> > > +  in-gpios:
-> > > +    description: Array of one or more GPIO pins used for input signals.
-> >
-> > You need to define how many GPIOs are valid.
->
-> I tried to avoid doing this because there is a possibility that future
-> chips will have a few more signals added and the driver was written so
-> new signals can be added entirely in device tree without any changes
-> to the driver. If this is unacceptable, I can add the current max in
-> and out valid gpios.
+PATCH 1: Rename files + rename CONFIG
+PATCH 2: Update IMA hook to utilize early boot data measurement.
 
-A 'should be enough for a while' value is fine. The driver doesn't
-have to have a max. I'd expect the binding to be updated for new SoCs
-anyways.
+  -lakshmi
 
-> >
-> > > +
-> > > +  in-names:
-> > > +    description: Array of input signal names, one per gpio in in-gpios.
-> >
-> > No, this isn't how we name GPIOs. The part before '-gpios' is how.
->
-> This is the meant to be a description of how each gpio is being used
-> to help with error messages in the driver.
-> What if I use "brcmstb,in-functions" instead?
 
-'brcmstb' is not a vendor. But brcm,in-functions is fine.
 
-> > > +
-> > > +  in-masks:
-> > > +    description: Array of enable and mask pairs, one per gpio in-gpios.
-> >
-> > Needs a vendor prefix.
->
-> I'll change it to "brcmstb,in-masks"
->
-> >
-> > > +
-> > > +  out-gpios:
-> > > +    description: Array of one or more GPIO pins used for output signals.
-> > > +
-> > > +  out-names:
-> > > +    description: Array of output signal names, one per gpio in out-gpios.
-> > > +
-> > > +  out-masks:
-> > > +    description: Array of enable, value, changed and clear masks, one
-> > > +      per gpio in out-gpios.
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    usb_pinmap: usb-pinmap@22000d0 {
-> > > +        compatible = "brcm,usb-pinmap";
-> > > +        reg = <0x22000d0 0x4>;
-> > > +        in-gpios = <&gpio 18 0>, <&gpio 19 0>;
-> > > +        in-names = "VBUS", "PWRFLT";
-> > > +        in-masks = <0x8000 0x40000 0x10000 0x80000>;
-> > > +        out-gpios = <&gpio 20 0>;
-> > > +        out-names = "PWRON";
-> > > +        out-masks = <0x20000 0x800000 0x400000 0x200000>;
-> > > +        interrupts = <0x0 0xb2 0x4>;
-> > > +    };
-> > > +
-> > > +...
-> > > --
-> > > 2.17.1
-> > >
