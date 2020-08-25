@@ -2,195 +2,110 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B513C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD360C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 589A320767
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598387064;
-	bh=ySOkd6aDLwyhEWNu5XId2t2Myh+7GbuDeWGuL4FyNs4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=SkrKMay3jmkiFsxA/ez1ISDhEH8P5VZhEurFj7s2wKXxJTVYlbnfVjeoshv6sa2zB
-	 3VBimnntvLa5doZCnMgqp+LDO5P2kUdoikxUQo4VsVWtszVF7lu3PnAVgM0/14EjTf
-	 vmA88/zRJ4xACwjuQTzfJa0On4J6V05FBY+fkVMU=
+	by mail.kernel.org (Postfix) with ESMTP id 9386520665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:26:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvyGmsYJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgHYUYX (ORCPT
+        id S1726610AbgHYU0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgHYUYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:24:21 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23A772074D;
-        Tue, 25 Aug 2020 20:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598387060;
-        bh=ySOkd6aDLwyhEWNu5XId2t2Myh+7GbuDeWGuL4FyNs4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=E5SctpDfmJVH3GOS41BdxD1KAKCCgLGp5cRY/d4s5Iaw4NV/9UXP/0IZXYISEg/D5
-         7jTqAEVySonTUr8pSMzETXyOu0kEsTuPgpG2nWnP9vXaG+N4MEWZk+TCj7M2xX2ukA
-         qdRiLK425Y+fBMqVUhac3FmUSyR6dzlO73HmofKg=
-Date:   Tue, 25 Aug 2020 15:24:19 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 34/38] x86/msi: Let pci_msi_prepare() handle non-PCI
- MSI
-Message-ID: <20200825202419.GA1925250@bjorn-Precision-5520>
+        Tue, 25 Aug 2020 16:26:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYU0v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 16:26:51 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6D5EC061574;
+        Tue, 25 Aug 2020 13:26:50 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id v15so7611445pgh.6;
+        Tue, 25 Aug 2020 13:26:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hViqvBMVikZrtzrVDOIX1RxTOt+cw+ucTuPZjUrSRMo=;
+        b=CvyGmsYJE8o29oOkb16rdJUytyHwpjTL1ouL7mheA5ViFyotFWyMuusPvKOVIzBbao
+         HN1Ig6W+VoQ7ji2J5SeTMm9hgcmbJGc974ulDXgx5Cu5KtSkkeFVuRWgpfBuOG9L5Inq
+         SSuCNeAm67gf3igbQQwKf2DGmEFDS6hemU2rSlNvD7NYXFUMYqXTTedtriqLwljgcA7m
+         nPHZIIFT7+9I2t85zlwF5+FrQLikhSIbSnacdWTSbVy8Drlv/Rq1VTHBytSUOsCcJpPT
+         2TfQY0CnhmLmeH8JmHNmTA6lyAMr1ZFUn9cW9yaswKbCXx2xA4Bu/fTIU/lv14A92s4q
+         VKTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hViqvBMVikZrtzrVDOIX1RxTOt+cw+ucTuPZjUrSRMo=;
+        b=G5Sh4SmITtEsIR7nd7T+JnvNSuBKXLWmfuygTpu5eCfF3lGaksRe+8APuUN/FJyrja
+         rvlmroH+KHIw83Z+Fdxs87lzA4PwcF6sFknHMMr/2gGN200g+MshfcXcRZJ8/+mYtCcd
+         Qh/QEOEHb6Jf47xAE8SFT4geWa1BBd161mkCfd4eTYP2UDhrcRPK15K5JqAXvfvtVt89
+         H342QxezhRx8XxITEF++sFZNsNcmBJr7bJgvzOaOfLWyVmV7/aTswA1K5RatxixLXZVq
+         X4FT7d9IksZRHBtw0L8Fwz11q8LGQhja46zMA7PUqAfdNwgv55S2jR/6tOzGHgry8EoL
+         Gzxg==
+X-Gm-Message-State: AOAM533CLC1Mx5SyoEgEVNY/Gtr7Rn9+yWSwhfGv+U2+SdPCsavY3Aqz
+        87poku292zd8X1dEEy9vQ10=
+X-Google-Smtp-Source: ABdhPJzQ5pw3dFa8nSlHXAXCWo8jZx7k/xr4WSZtGq0OJpfhKUc1gXp8HphomS3PeFnoTJql1GICUw==
+X-Received: by 2002:a63:7e55:: with SMTP id o21mr8126549pgn.5.1598387210237;
+        Tue, 25 Aug 2020 13:26:50 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id x15sm82677pfr.208.2020.08.25.13.26.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 13:26:49 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 13:26:43 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Patrick Williams <patrick@stwcx.xyz>
+Cc:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Subject: Re: [PATCH 4/5] ARM: dts: aspeed: minipack: Update 64MB FMC flash
+ layout
+Message-ID: <20200825202642.GA23335@taoren-ubuntu-R90MNF91>
+References: <20200824211948.12852-1-rentao.bupt@gmail.com>
+ <20200824211948.12852-5-rentao.bupt@gmail.com>
+ <20200825141808.GH3532@heinlein>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200821002948.664301259@linutronix.de>
+In-Reply-To: <20200825141808.GH3532@heinlein>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 02:24:58AM +0200, Thomas Gleixner wrote:
-> Rename it to x86_msi_prepare() and handle the allocation type setup
-> depending on the device type.
+On Tue, Aug 25, 2020 at 09:18:08AM -0500, Patrick Williams wrote:
+> On Mon, Aug 24, 2020 at 02:19:47PM -0700, rentao.bupt@gmail.com wrote:
+> > From: Tao Ren <rentao.bupt@gmail.com>
+> > 
+> > Set 64Mb FMC flash layout in Minipack device tree explicitly because the
+> > flash layout was removed from "ast2500-facebook-netbmc-common.dtsi".
+> > 
+> > Please note "data0" partition' size is updated to 4MB to be consistent
+> > with other Facebook OpenBMC platforms.
+> > 
+> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> > ---
+> >  .../boot/dts/aspeed-bmc-facebook-minipack.dts | 47 ++++++++++++++++++-
+> >  1 file changed, 45 insertions(+), 2 deletions(-)
+> > 
+> 
+> Reviewed-by: Patrick Williams <patrick@stwcx.xyz>
 
-I see what you're doing, but the subject reads a little strangely
-("pci_msi_prepare() handling non-PCI" stuff) since it doesn't mention
-the rename.  Maybe not practical or worthwhile to split into a rename
-+ make generic, I dunno.
+Thanks for the review, Patrick.
 
-> Add a new arch_msi_prepare define which will be utilized by the upcoming
-> device MSI support. Define it to NULL if not provided by an architecture in
-> the generic MSI header.
-> 
-> One arch specific function for MSI support is truly enough.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-hyperv@vger.kernel.org
-> ---
->  arch/x86/include/asm/msi.h          |    4 +++-
->  arch/x86/kernel/apic/msi.c          |   27 ++++++++++++++++++++-------
->  drivers/pci/controller/pci-hyperv.c |    2 +-
->  include/linux/msi.h                 |    4 ++++
->  4 files changed, 28 insertions(+), 9 deletions(-)
-> 
-> --- a/arch/x86/include/asm/msi.h
-> +++ b/arch/x86/include/asm/msi.h
-> @@ -6,7 +6,9 @@
->  
->  typedef struct irq_alloc_info msi_alloc_info_t;
->  
-> -int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
-> +int x86_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
->  		    msi_alloc_info_t *arg);
->  
-> +#define arch_msi_prepare		x86_msi_prepare
-> +
->  #endif /* _ASM_X86_MSI_H */
-> --- a/arch/x86/kernel/apic/msi.c
-> +++ b/arch/x86/kernel/apic/msi.c
-> @@ -182,26 +182,39 @@ static struct irq_chip pci_msi_controlle
->  	.flags			= IRQCHIP_SKIP_SET_WAKE,
->  };
->  
-> -int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
-> -		    msi_alloc_info_t *arg)
-> +static void pci_msi_prepare(struct device *dev, msi_alloc_info_t *arg)
->  {
-> -	struct pci_dev *pdev = to_pci_dev(dev);
-> -	struct msi_desc *desc = first_pci_msi_entry(pdev);
-> +	struct msi_desc *desc = first_msi_entry(dev);
->  
-> -	init_irq_alloc_info(arg, NULL);
->  	if (desc->msi_attrib.is_msix) {
->  		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSIX;
->  	} else {
->  		arg->type = X86_IRQ_ALLOC_TYPE_PCI_MSI;
->  		arg->flags |= X86_IRQ_ALLOC_CONTIGUOUS_VECTORS;
->  	}
-> +}
-> +
-> +static void dev_msi_prepare(struct device *dev, msi_alloc_info_t *arg)
-> +{
-> +	arg->type = X86_IRQ_ALLOC_TYPE_DEV_MSI;
-> +}
-> +
-> +int x86_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
-> +		    msi_alloc_info_t *arg)
-> +{
-> +	init_irq_alloc_info(arg, NULL);
-> +
-> +	if (dev_is_pci(dev))
-> +		pci_msi_prepare(dev, arg);
-> +	else
-> +		dev_msi_prepare(dev, arg);
->  
->  	return 0;
->  }
-> -EXPORT_SYMBOL_GPL(pci_msi_prepare);
-> +EXPORT_SYMBOL_GPL(x86_msi_prepare);
->  
->  static struct msi_domain_ops pci_msi_domain_ops = {
-> -	.msi_prepare	= pci_msi_prepare,
-> +	.msi_prepare	= x86_msi_prepare,
->  };
->  
->  static struct msi_domain_info pci_msi_domain_info = {
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -1532,7 +1532,7 @@ static struct irq_chip hv_msi_irq_chip =
->  };
->  
->  static struct msi_domain_ops hv_msi_ops = {
-> -	.msi_prepare	= pci_msi_prepare,
-> +	.msi_prepare	= arch_msi_prepare,
->  	.msi_free	= hv_msi_free,
->  };
->  
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -430,4 +430,8 @@ static inline struct irq_domain *pci_msi
->  }
->  #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
->  
-> +#ifndef arch_msi_prepare
-> +# define arch_msi_prepare	NULL
-> +#endif
-> +
->  #endif /* LINUX_MSI_H */
-> 
+
+Cheers,
+
+Tao
+
