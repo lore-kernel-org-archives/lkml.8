@@ -2,135 +2,218 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D47C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 489EAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 195F12076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598372195;
-	bh=b9V0dl1ko//ynuoPQLgyZStB0kjF6te3g3DejBWyIOA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=HPeZAy6KantgCPMhgOokYTdfd5xs47cRXAitRRW0WEnS4EBM26UZff3WbsUu6n+Hv
-	 5CMvGZxN2DcAOTSlG5JjKb8VQfyfenjYZJz2s0qg7TONY7ZZimzIVikkCmoXxVXCbQ
-	 /o6UWwgxLBdx+6c2zr0kdu3dYJ1R2t5nzWXq4Umc=
+	by mail.kernel.org (Postfix) with ESMTP id 2329B2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:17:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bXgxm7eT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgHYQQd (ORCPT
+        id S1727082AbgHYQQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbgHYQQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:16:29 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 25 Aug 2020 12:16:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:24131 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726593AbgHYQQy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 12:16:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598372212;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Q3HoWWtTXzG1DNyfWvPLzOd/wEe/1eM21yozmk7l7k0=;
+        b=bXgxm7eTWRlsdFY7fzUwoLG1G0f4HpNCB/+2ykkocT8YH5t7PEjpmYEBkC00dMF+knVEsG
+        1uECaZRRtB74+wnXCIsqBn1IRe6jdD/c3xVDnz2345fs/DUvLxHKqUpZenFvhhY+MMZTeh
+        ZVDSFfnRFSuNbbpISmqWrx2G0e9AUkY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-84-uIA61BQsMv-0LkTdrzDS3A-1; Tue, 25 Aug 2020 12:16:44 -0400
+X-MC-Unique: uIA61BQsMv-0LkTdrzDS3A-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 698902076C;
-        Tue, 25 Aug 2020 16:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598372189;
-        bh=b9V0dl1ko//ynuoPQLgyZStB0kjF6te3g3DejBWyIOA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=tFee8Fuy1b7bG+CojbKJ4OMiv7tcrY5PgH+LhfhLK6vwTFHml2Fs2rChkA/ljn0rP
-         dhviFYu+ie1wczZEX6vm37bv3XudHLWxWvQNHbLiY1PBrCQAb6pCxApYzJraSfF5oD
-         BTd7XtdV6A5XAx6B5CEym/Txdm0+5xynMhbjS598=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3CF7E35226AE; Tue, 25 Aug 2020 09:16:29 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 09:16:29 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu-tasks: Fix compilation warning with
- !CONFIG_TASKS_RCU and CONFIG_TINY_RCU
-Message-ID: <20200825161629.GS2855@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200823030405.22174-1-laurent.pinchart@ideasonboard.com>
- <20200825150222.GP2855@paulmck-ThinkPad-P72>
- <20200825152249.GF6767@pendragon.ideasonboard.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 40ED0800479;
+        Tue, 25 Aug 2020 16:16:42 +0000 (UTC)
+Received: from [10.10.114.28] (ovpn-114-28.rdu2.redhat.com [10.10.114.28])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 403AC5C1C2;
+        Tue, 25 Aug 2020 16:16:40 +0000 (UTC)
+Subject: Re: [PATCH v4 00/10] Function Granular KASLR
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>, Miroslav Benes <mbenes@suse.cz>,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com, live-patching@vger.kernel.org,
+        Hongjiu Lu <hongjiu.lu@intel.com>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
+ <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
+ <202007220738.72F26D2480@keescook> <20200722160730.cfhcj4eisglnzolr@treble>
+ <202007221241.EBC2215A@keescook>
+ <301c7fb7d22ad6ef97856b421873e32c2239d412.camel@linux.intel.com>
+ <20200722213313.aetl3h5rkub6ktmw@treble>
+ <46c49dec078cb8625a9c3a3cd1310a4de7ec760b.camel@linux.intel.com>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <a29e8960-916b-8a5b-f8ed-ec040eddbbde@redhat.com>
+Date:   Tue, 25 Aug 2020 12:16:39 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825152249.GF6767@pendragon.ideasonboard.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <46c49dec078cb8625a9c3a3cd1310a4de7ec760b.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 06:22:49PM +0300, Laurent Pinchart wrote:
-> Hi Paul,
+On 8/21/20 7:02 PM, Kristen Carlson Accardi wrote:
+> On Wed, 2020-07-22 at 16:33 -0500, Josh Poimboeuf wrote:
+>> On Wed, Jul 22, 2020 at 12:56:10PM -0700, Kristen Carlson Accardi
+>> wrote:
+>>> On Wed, 2020-07-22 at 12:42 -0700, Kees Cook wrote:
+>>>> On Wed, Jul 22, 2020 at 11:07:30AM -0500, Josh Poimboeuf wrote:
+>>>>> On Wed, Jul 22, 2020 at 07:39:55AM -0700, Kees Cook wrote:
+>>>>>> On Wed, Jul 22, 2020 at 11:27:30AM +0200, Miroslav Benes
+>>>>>> wrote:
+>>>>>>> Let me CC live-patching ML, because from a quick glance
+>>>>>>> this is
+>>>>>>> something
+>>>>>>> which could impact live patching code. At least it
+>>>>>>> invalidates
+>>>>>>> assumptions
+>>>>>>> which "sympos" is based on.
+>>>>>>
+>>>>>> In a quick skim, it looks like the symbol resolution is using
+>>>>>> kallsyms_on_each_symbol(), so I think this is safe? What's a
+>>>>>> good
+>>>>>> selftest for live-patching?
+>>>>>
+>>>>> The problem is duplicate symbols.  If there are two static
+>>>>> functions
+>>>>> named 'foo' then livepatch needs a way to distinguish them.
+>>>>>
+>>>>> Our current approach to that problem is "sympos".  We rely on
+>>>>> the
+>>>>> fact
+>>>>> that the second foo() always comes after the first one in the
+>>>>> symbol
+>>>>> list and kallsyms.  So they're referred to as foo,1 and foo,2.
+>>>>
+>>>> Ah. Fun. In that case, perhaps the LTO series has some solutions.
+>>>> I
+>>>> think builds with LTO end up renaming duplicate symbols like
+>>>> that, so
+>>>> it'll be back to being unique.
+>>>>
+>>>
+>>> Well, glad to hear there might be some precendence for how to solve
+>>> this, as I wasn't able to think of something reasonable off the top
+>>> of
+>>> my head. Are you speaking of the Clang LTO series?
+>>> https://lore.kernel.org/lkml/20200624203200.78870-1-samitolvanen@google.com/
+>>
+>> I'm not sure how LTO does it, but a few more (half-brained) ideas
+>> that
+>> could work:
+>>
+>> 1) Add a field in kallsyms to keep track of a symbol's original
+>> offset
+>>     before randomization/re-sorting.  Livepatch could use that field
+>> to
+>>     determine the original sympos.
+>>
+>> 2) In fgkaslr code, go through all the sections and mark the ones
+>> which
+>>     have duplicates (i.e. same name).  Then when shuffling the
+>> sections,
+>>     skip a shuffle if it involves a duplicate section.  That way all
+>> the
+>>     duplicates would retain their original sympos.
+>>
+>> 3) Livepatch could uniquely identify symbols by some feature other
+>> than
+>>     sympos.  For example:
+>>
+>>     Symbol/function size - obviously this would only work if
+>> duplicately
+>>     named symbols have different sizes.
+>>
+>>     Checksum - as part of a separate feature we're also looking at
+>> giving
+>>     each function its own checksum, calculated based on its
+>> instruction
+>>     opcodes.  Though calculating checksums at runtime could be
+>>     complicated by IP-relative addressing.
+>>
+>> I'm thinking #1 or #2 wouldn't be too bad.  #3 might be harder.
+>>
 > 
-> On Tue, Aug 25, 2020 at 08:02:22AM -0700, Paul E. McKenney wrote:
-> > On Sun, Aug 23, 2020 at 06:04:05AM +0300, Laurent Pinchart wrote:
-> > > Commit 8344496e8b49 ("rcu-tasks: Conditionally compile
-> > > show_rcu_tasks_gp_kthreads()") introduced conditional compilation of
-> > > several functions, but forgot one occurrence of
-> > > show_rcu_tasks_classic_gp_kthread() that causes the compiler to warn of
-> > > an unused static function. Fix it.
-> > > 
-> > > Fixes: 8344496e8b49 ("rcu-tasks: Conditionally compile show_rcu_tasks_gp_kthreads()")
-> > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > ---
-> > >  kernel/rcu/tasks.h | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-> > > index 835e2df8590a..bddf3968c1eb 100644
-> > > --- a/kernel/rcu/tasks.h
-> > > +++ b/kernel/rcu/tasks.h
-> > > @@ -590,7 +590,9 @@ void exit_tasks_rcu_finish(void) __releases(&tasks_rcu_exit_srcu)
-> > >  }
-> > >  
-> > >  #else /* #ifdef CONFIG_TASKS_RCU */
-> > > +#ifndef CONFIG_TINY_RCU
-> > >  static void show_rcu_tasks_classic_gp_kthread(void) { }
-> > > +#endif /* #ifndef CONFIG_TINY_RCU */
-> > >  void exit_tasks_rcu_start(void) { }
-> > >  void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
-> > >  #endif /* #else #ifdef CONFIG_TASKS_RCU */
-> > 
-> > Good catch!!!
-> > 
-> > But does the following addition of "static inline" work for you?
+> Hi there! I was trying to find a super easy way to address this, so I
+> thought the best thing would be if there were a compiler or linker
+> switch to just eliminate any duplicate symbols at compile time for
+> vmlinux. I filed this question on the binutils bugzilla looking to see
+> if there were existing flags that might do this, but H.J. Lu went ahead
+> and created a new one "-z unique", that seems to do what we would need
+> it to do.
 > 
-> They do. I initially added a static inline, and realized #ifdef was used
-> extensively when trying to find the proper Fixes: tag, so I went for
-> that. I don't mind either way, as long as this gets fixed :-)
-
-This is admittedly an odd .h file, given that it is included but once.
-
-I have applied the following patch with your Reported-by, cc-ing -stable
-for v5.8 and later.
-
-							Thanx, Paul
-
-> > ------------------------------------------------------------------------
-> > 
-> > diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
-> > index 835e2df..3dc3ffc 100644
-> > --- a/kernel/rcu/tasks.h
-> > +++ b/kernel/rcu/tasks.h
-> > @@ -590,9 +590,9 @@ void exit_tasks_rcu_finish(void) __releases(&tasks_rcu_exit_srcu)
-> >  }
-> >  
-> >  #else /* #ifdef CONFIG_TASKS_RCU */
-> > -static void show_rcu_tasks_classic_gp_kthread(void) { }
-> > -void exit_tasks_rcu_start(void) { }
-> > -void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
-> > +static inline void show_rcu_tasks_classic_gp_kthread(void) { }
-> > +static inline void exit_tasks_rcu_start(void) { }
-> > +static inline void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
-> >  #endif /* #else #ifdef CONFIG_TASKS_RCU */
-> >  
-> >  #ifdef CONFIG_TASKS_RUDE_RCU
+> https://sourceware.org/bugzilla/show_bug.cgi?id=26391
 > 
-> -- 
-> Regards,
+> When I use this option, it renames any duplicate symbols with an
+> extension - for example duplicatefunc.1 or duplicatefunc.2.
+
+I tried out H.J. Lu's branch and built some of the livepatch selftests 
+with -z unique-symbol and indeed observe the following pattern:
+
+  foo, foo.1, foo.2, etc.
+
+for homonym symbol names.
+
+ > You could
+> either match on the full unique name of the specific binary you are
+> trying to patch, or you match the base name and use the extension to
+> determine original position. Do you think this solution would work? 
+
+I think it could work for klp-relocations.
+
+As a quick test, I was able to hack the WIP klp-convert branch [1] to 
+generate klp-relocations with the following hack:
+
+   const char *foo(void) __asm__("foo.1");
+
+when building foo's target with -z unique-symbol.  (The target contained 
+two static foo() functions.)  The asm rename trick exercised the 
+klp-convert implicit conversion feature, as the symbol was now uniquely 
+named and included a non-valid C symbol character.  User-defined 
+klp-convert annotation support will require some refactoring, but 
+shouldn't be too difficult to support as well.
+
+> If
+> so, I can modify livepatch to refuse to patch on duplicated symbols if
+> CONFIG_FG_KASLR and when this option is merged into the tool chain I
+> can add it to KBUILD_LDFLAGS when CONFIG_FG_KASLR and livepatching
+> should work in all cases.
 > 
-> Laurent Pinchart
+
+I don't have a grasp on how complicated the alternatives might be, so 
+I'll let others comment on best paths forward.  I just wanted to note 
+that -z unique-symbol looks like it could reasonable work well for this 
+niche case.
+
+[1] 
+https://github.com/joe-lawrence/linux/tree/klp-convert-v5-expanded-v5.8 
+(not modified for -z unique-symbol, but noted for reference)
+
+-- Joe
+
