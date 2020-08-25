@@ -2,414 +2,168 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98546C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28D6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67E00207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896A5207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:09:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598339340;
+	bh=j9Ok1pDa9a4X8AxbR3AHCEtMYAXc6mFMtePKXbq3m1w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C7VVbuunJwiu0JTMuYV6oJncNrF4sMDoR5apaK5QxalqJSURSGY4LBk9sxrhf9GnN
+	 Y6qyiaTsFRxlPXHe89OXzxewOzFBx3Ton9QGW7rEXsaoa+Gy6WSVO2pcKXaFLp1+8a
+	 oZHLunelsLJeAqcEBOrgOAGyc/dA5GcrC6qjkZe0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbgHYHHM (ORCPT
+        id S1729315AbgHYHI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:07:12 -0400
-Received: from mga04.intel.com ([192.55.52.120]:40719 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729326AbgHYHHG (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:07:06 -0400
-IronPort-SDR: Hxb5NneO4G1TrSjv2+VhbWYxltmZFoCRRcdmBrh2udU7IAoqpgAZ34dT2m6i0jMChfWd+a4EVa
- 3ajrQ453oQaQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="153479782"
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="153479782"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 00:07:00 -0700
-IronPort-SDR: 6cd4zvTOfq3Ix+m8OQoyXECPd419lNsfynEd75rHalvmbZBTlCD0Ep/c8qWBlR/TsWzk7sSrPI
- XTWU4K/jGpkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="322655245"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.55])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Aug 2020 00:06:54 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v4 7/7] perf diff: Support hot streams comparison
-Date:   Tue, 25 Aug 2020 07:35:13 +0800
-Message-Id: <20200824233513.16930-8-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200824233513.16930-1-yao.jin@linux.intel.com>
-References: <20200824233513.16930-1-yao.jin@linux.intel.com>
+        Tue, 25 Aug 2020 03:08:59 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34705 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728936AbgHYHI4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 03:08:56 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f7so11614882wrw.1;
+        Tue, 25 Aug 2020 00:08:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l54b9M6lsfNgFjV5LriaXZxkCjRvfaXuheWXTmhA8H0=;
+        b=IhJpiKm5Vp3VzhjSJT571kVboqOooMmXwHKQfrJe0v5jcYoZJz7rmdoIugP8nLVVY4
+         vg9RUGaJYw2SrljnPJEtWjZRYziyBEPhRJOC4XXnxx4Vk7HTOFB6DZWPhhXekF9un+2B
+         VwXIrn6Pn3M/g7x1U7ktjlhhtnjkMsgQv8cU2dgwK8GNN62uco1YPUNIr0I9JUYVkvwf
+         IjXc6yx0F817c+m/n+bRScmigY9RCumpvnbwtz1Qhtoo9hMU7zX34WLt9PDMo+V/ZACn
+         jyYOghhxSYRIILxzX2UuJUT/h75RhjChvRLVoICg7zISWdeLAMvNOEY4yERqO/zp7DAL
+         1Gbg==
+X-Gm-Message-State: AOAM533YmdK5ORUcDXJ2Bh2wSimS/8BDJLipqZzbFpn/GeEaB/JkbGOA
+        t7459voHH9YXg04qQ5Ec0KE=
+X-Google-Smtp-Source: ABdhPJx6Y8Pp2Xu+VQIJdGvRDGKdAFvlXR7vDcNPN4yTT16XHARtlil/gzCAiQcAzCm0WH80KJ2xHQ==
+X-Received: by 2002:a5d:494b:: with SMTP id r11mr9680913wrs.419.1598339333020;
+        Tue, 25 Aug 2020 00:08:53 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id h11sm29004318wrb.68.2020.08.25.00.08.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 00:08:52 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:08:49 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v2 12/19] dt-bindings: mmc: fsl-imx-esdhc: Fix i.MX 8
+ compatible matching
+Message-ID: <20200825070849.GC3458@kozik-lap>
+References: <20200824162652.21047-1-krzk@kernel.org>
+ <20200824162652.21047-12-krzk@kernel.org>
+ <20200825023801.GA3835035@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200825023801.GA3835035@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables perf-diff with "--stream" option.
+On Mon, Aug 24, 2020 at 08:38:01PM -0600, Rob Herring wrote:
+> On Mon, Aug 24, 2020 at 06:26:45PM +0200, Krzysztof Kozlowski wrote:
+> > The i.MX 8 DTSes use two compatibles so update the binding to fix
+> > dtbs_check warnings like:
+> > 
+> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
+> >     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
+> >     From schema: Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> > 
+> >   arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: mmc@30b40000:
+> >     compatible: Additional items are not allowed ('fsl,imx7d-usdhc' was unexpected)
+> > 
+> >   arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: mmc@30b40000:
+> >     compatible: ['fsl,imx8mn-usdhc', 'fsl,imx7d-usdhc'] is too long
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > ---
+> > 
+> > Changes since v1:
+> > 1. Handle also fsl,imx8mm-usdhc and fsl,imx8qxp-usdhc
+> > ---
+> >  .../bindings/mmc/fsl-imx-esdhc.yaml           | 40 +++++++++++--------
+> >  1 file changed, 23 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> > index 10b45966f1b8..54f05e2a4246 100644
+> > --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> > +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
+> > @@ -21,23 +21,29 @@ description: |
+> >  
+> >  properties:
+> >    compatible:
+> > -    enum:
+> > -      - fsl,imx25-esdhc
+> > -      - fsl,imx35-esdhc
+> > -      - fsl,imx51-esdhc
+> > -      - fsl,imx53-esdhc
+> > -      - fsl,imx6q-usdhc
+> > -      - fsl,imx6sl-usdhc
+> > -      - fsl,imx6sx-usdhc
+> > -      - fsl,imx6ull-usdhc
+> > -      - fsl,imx7d-usdhc
+> > -      - fsl,imx7ulp-usdhc
+> > -      - fsl,imx8mq-usdhc
+> > -      - fsl,imx8mm-usdhc
+> > -      - fsl,imx8mn-usdhc
+> > -      - fsl,imx8mp-usdhc
+> > -      - fsl,imx8qm-usdhc
+> > -      - fsl,imx8qxp-usdhc
+> > +    oneOf:
+> > +      - enum:
+> > +          - fsl,imx25-esdhc
+> > +          - fsl,imx35-esdhc
+> > +          - fsl,imx51-esdhc
+> > +          - fsl,imx53-esdhc
+> > +          - fsl,imx6q-usdhc
+> > +          - fsl,imx6sl-usdhc
+> > +          - fsl,imx6sx-usdhc
+> > +          - fsl,imx6ull-usdhc
+> > +          - fsl,imx7d-usdhc
+> > +          - fsl,imx7ulp-usdhc
+> 
+> > +          - fsl,imx8mq-usdhc
+> > +          - fsl,imx8mm-usdhc
+> > +          - fsl,imx8qxp-usdhc
+> 
+> These should be dropped.
 
-"--stream": Enable hot streams comparison
+You're right, thanks.
 
-Now let's see examples.
-
-perf record -b ...      Generate perf.data.old with branch data
-perf record -b ...      Generate perf.data with branch data
-perf diff --stream
-
-[ Matched hot streams ]
-
-hot chain pair 1:
-            cycles: 1, hits: 27.77%                  cycles: 1, hits: 9.24%
-        ---------------------------              --------------------------
-                      main div.c:39                           main div.c:39
-                      main div.c:44                           main div.c:44
-
-hot chain pair 2:
-           cycles: 34, hits: 20.06%                cycles: 27, hits: 16.98%
-        ---------------------------              --------------------------
-          __random_r random_r.c:360               __random_r random_r.c:360
-          __random_r random_r.c:388               __random_r random_r.c:388
-          __random_r random_r.c:388               __random_r random_r.c:388
-          __random_r random_r.c:380               __random_r random_r.c:380
-          __random_r random_r.c:357               __random_r random_r.c:357
-              __random random.c:293                   __random random.c:293
-              __random random.c:293                   __random random.c:293
-              __random random.c:291                   __random random.c:291
-              __random random.c:291                   __random random.c:291
-              __random random.c:291                   __random random.c:291
-              __random random.c:288                   __random random.c:288
-                     rand rand.c:27                          rand rand.c:27
-                     rand rand.c:26                          rand rand.c:26
-                           rand@plt                                rand@plt
-                           rand@plt                                rand@plt
-              compute_flag div.c:25                   compute_flag div.c:25
-              compute_flag div.c:22                   compute_flag div.c:22
-                      main div.c:40                           main div.c:40
-                      main div.c:40                           main div.c:40
-                      main div.c:39                           main div.c:39
-
-hot chain pair 3:
-             cycles: 9, hits: 4.48%                  cycles: 6, hits: 4.51%
-        ---------------------------              --------------------------
-          __random_r random_r.c:360               __random_r random_r.c:360
-          __random_r random_r.c:388               __random_r random_r.c:388
-          __random_r random_r.c:388               __random_r random_r.c:388
-          __random_r random_r.c:380               __random_r random_r.c:380
-
-[ Hot streams in old perf data only ]
-
-hot chain 1:
-            cycles: 18, hits: 6.75%
-         --------------------------
-          __random_r random_r.c:360
-          __random_r random_r.c:388
-          __random_r random_r.c:388
-          __random_r random_r.c:380
-          __random_r random_r.c:357
-              __random random.c:293
-              __random random.c:293
-              __random random.c:291
-              __random random.c:291
-              __random random.c:291
-              __random random.c:288
-                     rand rand.c:27
-                     rand rand.c:26
-                           rand@plt
-                           rand@plt
-              compute_flag div.c:25
-              compute_flag div.c:22
-                      main div.c:40
-
-hot chain 2:
-            cycles: 29, hits: 2.78%
-         --------------------------
-              compute_flag div.c:22
-                      main div.c:40
-                      main div.c:40
-                      main div.c:39
-
-[ Hot streams in new perf data only ]
-
-hot chain 1:
-                                                     cycles: 4, hits: 4.54%
-                                                 --------------------------
-                                                              main div.c:42
-                                                      compute_flag div.c:28
-
-hot chain 2:
-                                                     cycles: 5, hits: 3.51%
-                                                 --------------------------
-                                                              main div.c:39
-                                                              main div.c:44
-                                                              main div.c:42
-                                                      compute_flag div.c:28
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- v4:
-   - Remove the "--before" and "--after" options since they are for
-     source line based comparison. In this patchset, we will not
-     support source line based comparison.
-
- tools/perf/Documentation/perf-diff.txt |   4 +
- tools/perf/builtin-diff.c              | 133 ++++++++++++++++++++++---
- 2 files changed, 124 insertions(+), 13 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
-index f50ca0fef0a4..be65bd55ab2a 100644
---- a/tools/perf/Documentation/perf-diff.txt
-+++ b/tools/perf/Documentation/perf-diff.txt
-@@ -182,6 +182,10 @@ OPTIONS
- --tid=::
- 	Only diff samples for given thread ID (comma separated list).
- 
-+--stream::
-+	Enable hot streams comparison. Stream can be a callchain which is
-+	aggregated by the branch records from samples.
-+
- COMPARISON
- ----------
- The comparison is governed by the baseline file. The baseline perf.data
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index f8c9bdd8269a..cfe26f0321f0 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -25,6 +25,7 @@
- #include "util/map.h"
- #include "util/spark.h"
- #include "util/block-info.h"
-+#include "util/stream.h"
- #include <linux/err.h>
- #include <linux/zalloc.h>
- #include <subcmd/pager.h>
-@@ -42,6 +43,7 @@ struct perf_diff {
- 	int				 range_size;
- 	int				 range_num;
- 	bool				 has_br_stack;
-+	bool				 stream;
- };
- 
- /* Diff command specific HPP columns. */
-@@ -72,6 +74,8 @@ struct data__file {
- 	struct perf_data	 data;
- 	int			 idx;
- 	struct hists		*hists;
-+	struct evsel_streams	*evsel_streams;
-+	int			 nr_evsel_streams;
- 	struct diff_hpp_fmt	 fmt[PERF_HPP_DIFF__MAX_INDEX];
- };
- 
-@@ -106,6 +110,7 @@ enum {
- 	COMPUTE_DELTA_ABS,
- 	COMPUTE_CYCLES,
- 	COMPUTE_MAX,
-+	COMPUTE_STREAM,	/* After COMPUTE_MAX to avoid use current compute arrays */
- };
- 
- const char *compute_names[COMPUTE_MAX] = {
-@@ -393,6 +398,11 @@ static int diff__process_sample_event(struct perf_tool *tool,
- 	struct perf_diff *pdiff = container_of(tool, struct perf_diff, tool);
- 	struct addr_location al;
- 	struct hists *hists = evsel__hists(evsel);
-+	struct hist_entry_iter iter = {
-+		.evsel	= evsel,
-+		.sample	= sample,
-+		.ops	= &hist_iter_normal,
-+	};
- 	int ret = -1;
- 
- 	if (perf_time__ranges_skip_sample(pdiff->ptime_range, pdiff->range_num,
-@@ -411,14 +421,8 @@ static int diff__process_sample_event(struct perf_tool *tool,
- 		goto out_put;
- 	}
- 
--	if (compute != COMPUTE_CYCLES) {
--		if (!hists__add_entry(hists, &al, NULL, NULL, NULL, sample,
--				      true)) {
--			pr_warning("problem incrementing symbol period, "
--				   "skipping event\n");
--			goto out_put;
--		}
--	} else {
-+	switch (compute) {
-+	case COMPUTE_CYCLES:
- 		if (!hists__add_entry_ops(hists, &block_hist_ops, &al, NULL,
- 					  NULL, NULL, sample, true)) {
- 			pr_warning("problem incrementing symbol period, "
-@@ -428,6 +432,23 @@ static int diff__process_sample_event(struct perf_tool *tool,
- 
- 		hist__account_cycles(sample->branch_stack, &al, sample, false,
- 				     NULL);
-+		break;
-+
-+	case COMPUTE_STREAM:
-+		if (hist_entry_iter__add(&iter, &al, PERF_MAX_STACK_DEPTH,
-+					 NULL)) {
-+			pr_debug("problem adding hist entry, skipping event\n");
-+			goto out_put;
-+		}
-+		break;
-+
-+	default:
-+		if (!hists__add_entry(hists, &al, NULL, NULL, NULL, sample,
-+				      true)) {
-+			pr_warning("problem incrementing symbol period, "
-+				   "skipping event\n");
-+			goto out_put;
-+		}
- 	}
- 
- 	/*
-@@ -996,6 +1017,50 @@ static void data_process(void)
- 	}
- }
- 
-+static int process_base_stream(struct data__file *data_base,
-+			       struct data__file *data_pair,
-+			       const char *title __maybe_unused)
-+{
-+	struct evlist *evlist_base = data_base->session->evlist;
-+	struct evlist *evlist_pair = data_pair->session->evlist;
-+	struct evsel *evsel_base, *evsel_pair;
-+	struct evsel_streams *es_base, *es_pair;
-+
-+	evlist__for_each_entry(evlist_base, evsel_base) {
-+		evsel_pair = evsel_match(evsel_base, evlist_pair);
-+		if (!evsel_pair)
-+			continue;
-+
-+		es_base = evsel_streams_get(data_base->evsel_streams,
-+					    data_base->nr_evsel_streams,
-+					    evsel_base->idx);
-+		if (!es_base)
-+			return -1;
-+
-+		es_pair = evsel_streams_get(data_pair->evsel_streams,
-+					    data_pair->nr_evsel_streams,
-+					    evsel_pair->idx);
-+		if (!es_pair)
-+			return -1;
-+
-+		match_evsel_streams(es_base, es_pair);
-+		evsel_streams_report(es_base, es_pair, STREAM_CALLCHAIN);
-+	}
-+
-+	return 0;
-+}
-+
-+static void stream_process(void)
-+{
-+	/*
-+	 * Stream comparison only supports two data files.
-+	 * perf.data.old and perf.data. data__files[0] is perf.data.old,
-+	 * data__files[1] is perf.data.
-+	 */
-+	process_base_stream(&data__files[0], &data__files[1],
-+			    "# Output based on old perf data:\n#\n");
-+}
-+
- static void data__free(struct data__file *d)
- {
- 	int col;
-@@ -1109,6 +1174,19 @@ static int check_file_brstack(void)
- 	return 0;
- }
- 
-+static struct evsel_streams *create_evsel_streams(struct evlist *evlist,
-+						  int nr_streams_max,
-+						  int *nr_evsel_streams)
-+{
-+	struct evsel_streams *es;
-+
-+	es = perf_evlist__create_streams(evlist, nr_streams_max,
-+					 STREAM_CALLCHAIN);
-+	*nr_evsel_streams = evlist->core.nr_entries;
-+
-+	return es;
-+}
-+
- static int __cmd_diff(void)
- {
- 	struct data__file *d;
-@@ -1153,9 +1231,21 @@ static int __cmd_diff(void)
- 
- 		if (pdiff.ptime_range)
- 			zfree(&pdiff.ptime_range);
-+
-+		if (compute == COMPUTE_STREAM) {
-+			d->evsel_streams = create_evsel_streams(
-+						d->session->evlist,
-+						5,
-+						&d->nr_evsel_streams);
-+			if (!d->evsel_streams)
-+				goto out_delete;
-+		}
- 	}
- 
--	data_process();
-+	if (compute == COMPUTE_STREAM)
-+		stream_process();
-+	else
-+		data_process();
- 
-  out_delete:
- 	data__for_each_file(i, d) {
-@@ -1228,6 +1318,8 @@ static const struct option options[] = {
- 		   "only consider symbols in these pids"),
- 	OPT_STRING(0, "tid", &symbol_conf.tid_list_str, "tid[,tid...]",
- 		   "only consider symbols in these tids"),
-+	OPT_BOOLEAN(0, "stream", &pdiff.stream,
-+		    "Enable hot streams comparison."),
- 	OPT_END()
- };
- 
-@@ -1887,6 +1979,9 @@ int cmd_diff(int argc, const char **argv)
- 	if (cycles_hist && (compute != COMPUTE_CYCLES))
- 		usage_with_options(diff_usage, options);
- 
-+	if (pdiff.stream)
-+		compute = COMPUTE_STREAM;
-+
- 	symbol__annotation_init();
- 
- 	if (symbol__init(NULL) < 0)
-@@ -1898,13 +1993,25 @@ int cmd_diff(int argc, const char **argv)
- 	if (check_file_brstack() < 0)
- 		return -1;
- 
--	if (compute == COMPUTE_CYCLES && !pdiff.has_br_stack)
-+	if ((compute == COMPUTE_CYCLES || compute == COMPUTE_STREAM)
-+	    && !pdiff.has_br_stack) {
- 		return -1;
-+	}
- 
--	if (ui_init() < 0)
--		return -1;
-+	if (compute == COMPUTE_STREAM) {
-+		symbol_conf.show_branchflag_count = true;
-+		callchain_param.mode = CHAIN_FLAT;
-+		callchain_param.key = CCKEY_SRCLINE;
-+		callchain_param.branch_callstack = 1;
-+		symbol_conf.use_callchain = true;
-+		callchain_register_param(&callchain_param);
-+		sort_order = "srcline,symbol,dso";
-+	} else {
-+		if (ui_init() < 0)
-+			return -1;
- 
--	sort__mode = SORT_MODE__DIFF;
-+		sort__mode = SORT_MODE__DIFF;
-+	}
- 
- 	if (setup_sorting(NULL) < 0)
- 		usage_with_options(diff_usage, options);
--- 
-2.17.1
+Best regards,
+Krzysztof
 
