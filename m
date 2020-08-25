@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE9BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE35FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84F8B207DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE92820786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgHYPUI (ORCPT
+        id S1727029AbgHYPUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:20:08 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:16344 "EHLO
+        Tue, 25 Aug 2020 11:20:13 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:22160 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726936AbgHYPTh (ORCPT
+        by vger.kernel.org with ESMTP id S1726953AbgHYPTi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:19:37 -0400
+        Tue, 25 Aug 2020 11:19:38 -0400
 Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PFAL2a027827;
-        Tue, 25 Aug 2020 11:19:22 -0400
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PFAG1B027799;
+        Tue, 25 Aug 2020 11:19:26 -0400
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 332w7622v3-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 332w7622ve-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 11:19:22 -0400
+        Tue, 25 Aug 2020 11:19:26 -0400
 Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07PFJLMl021604
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07PFJO7e021626
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 25 Aug 2020 11:19:21 -0400
+        Tue, 25 Aug 2020 11:19:24 -0400
 Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
  ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 25 Aug 2020 11:19:20 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
+ 15.1.1779.2; Tue, 25 Aug 2020 11:19:23 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
  ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 25 Aug 2020 11:19:20 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 25 Aug 2020 11:19:20 -0400
+ 15.1.1779.2; Tue, 25 Aug 2020 11:19:23 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 25 Aug 2020 11:19:23 -0400
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07PFJ9l1007670;
-        Tue, 25 Aug 2020 11:19:17 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07PFJ9l3007670;
+        Tue, 25 Aug 2020 11:19:20 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <vkoul@kernel.org>, <lars@metafoo.de>, <dan.j.williams@intel.com>,
         <ardeleanalex@gmail.com>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [RESEND PATCH v2 4/6] dmaengine: axi-dmac: wrap entire dt parse in a function
-Date:   Tue, 25 Aug 2020 18:19:48 +0300
-Message-ID: <20200825151950.57605-5-alexandru.ardelean@analog.com>
+Subject: [RESEND PATCH v2 6/6] dmaengine: axi-dmac: add support for reading bus attributes from registers
+Date:   Tue, 25 Aug 2020 18:19:50 +0300
+Message-ID: <20200825151950.57605-7-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200825151950.57605-1-alexandru.ardelean@analog.com>
 References: <20200825151950.57605-1-alexandru.ardelean@analog.com>
@@ -62,7 +62,7 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-25_05:2020-08-25,2020-08-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=8
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=25
  mlxlogscore=999 spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
  malwarescore=0 priorityscore=1501 bulkscore=0 clxscore=1015
  impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
@@ -72,40 +72,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All these attributes will be read from registers in newer core versions, so
-just wrap the logic into a function.
+Starting with core version 4.3.a the DMA bus attributes can (and should) be
+read from the INTERFACE_DESCRIPTION (0x10) register.
+
+For older core versions, this will still need to be provided from the
+device-tree.
+
+The bus-type values are identical to the ones stored in the device-trees,
+so we just need to read them. Bus-width values are stored in log2 values,
+so we just need to use them as shift values to make them equivalent to the
+current format.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/dma/dma-axi-dmac.c | 40 +++++++++++++++++++++++---------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ drivers/dma/dma-axi-dmac.c | 66 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 63 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index f4b17b5e3914..1a1e227fa935 100644
+index 7ee56ae60093..25442a437879 100644
 --- a/drivers/dma/dma-axi-dmac.c
 +++ b/drivers/dma/dma-axi-dmac.c
-@@ -774,6 +774,28 @@ static int axi_dmac_parse_chan_dt(struct device_node *of_chan,
+@@ -6,6 +6,7 @@
+  *  Author: Lars-Peter Clausen <lars@metafoo.de>
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/device.h>
+ #include <linux/dma-mapping.h>
+@@ -45,6 +46,16 @@
+  * there is no address than can or needs to be configured for the device side.
+  */
+ 
++#define AXI_DMAC_REG_INTERFACE_DESC	0x10
++#define   AXI_DMAC_DMA_SRC_TYPE_MSK	GENMASK(13, 12)
++#define   AXI_DMAC_DMA_SRC_TYPE_GET(x)	FIELD_GET(AXI_DMAC_DMA_SRC_TYPE_MSK, x)
++#define   AXI_DMAC_DMA_SRC_WIDTH_MSK	GENMASK(11, 8)
++#define   AXI_DMAC_DMA_SRC_WIDTH_GET(x)	FIELD_GET(AXI_DMAC_DMA_SRC_WIDTH_MSK, x)
++#define   AXI_DMAC_DMA_DST_TYPE_MSK	GENMASK(5, 4)
++#define   AXI_DMAC_DMA_DST_TYPE_GET(x)	FIELD_GET(AXI_DMAC_DMA_DST_TYPE_MSK, x)
++#define   AXI_DMAC_DMA_DST_WIDTH_MSK	GENMASK(3, 0)
++#define   AXI_DMAC_DMA_DST_WIDTH_GET(x)	FIELD_GET(AXI_DMAC_DMA_DST_WIDTH_MSK, x)
++
+ #define AXI_DMAC_REG_IRQ_MASK		0x80
+ #define AXI_DMAC_REG_IRQ_PENDING	0x84
+ #define AXI_DMAC_REG_IRQ_SOURCE		0x88
+@@ -801,6 +812,51 @@ static int axi_dmac_parse_dt(struct device *dev, struct axi_dmac *dmac)
  	return 0;
  }
  
-+static int axi_dmac_parse_dt(struct device *dev, struct axi_dmac *dmac)
++static int axi_dmac_read_chan_config(struct device *dev, struct axi_dmac *dmac)
 +{
-+	struct device_node *of_channels, *of_chan;
-+	int ret;
++	struct axi_dmac_chan *chan = &dmac->chan;
++	unsigned int val, desc;
 +
-+	of_channels = of_get_child_by_name(dev->of_node, "adi,channels");
-+	if (of_channels == NULL)
-+		return -ENODEV;
-+
-+	for_each_child_of_node(of_channels, of_chan) {
-+		ret = axi_dmac_parse_chan_dt(of_chan, &dmac->chan);
-+		if (ret) {
-+			of_node_put(of_chan);
-+			of_node_put(of_channels);
-+			return -EINVAL;
-+		}
++	desc = axi_dmac_read(dmac, AXI_DMAC_REG_INTERFACE_DESC);
++	if (desc == 0) {
++		dev_err(dev, "DMA interface register reads zero\n");
++		return -EFAULT;
 +	}
-+	of_node_put(of_channels);
++
++	val = AXI_DMAC_DMA_SRC_TYPE_GET(desc);
++	if (val > AXI_DMAC_BUS_TYPE_FIFO) {
++		dev_err(dev, "Invalid source bus type read: %d\n", val);
++		return -EINVAL;
++	}
++	chan->src_type = val;
++
++	val = AXI_DMAC_DMA_DST_TYPE_GET(desc);
++	if (val > AXI_DMAC_BUS_TYPE_FIFO) {
++		dev_err(dev, "Invalid destination bus type read: %d\n", val);
++		return -EINVAL;
++	}
++	chan->dest_type = val;
++
++	val = AXI_DMAC_DMA_SRC_WIDTH_GET(desc);
++	if (val == 0) {
++		dev_err(dev, "Source bus width is zero\n");
++		return -EINVAL;
++	}
++	/* widths are stored in log2 */
++	chan->src_width = 1 << val;
++
++	val = AXI_DMAC_DMA_DST_WIDTH_GET(desc);
++	if (val == 0) {
++		dev_err(dev, "Destination bus width is zero\n");
++		return -EINVAL;
++	}
++	chan->dest_width = 1 << val;
++
++	axi_dmac_adjust_chan_params(chan);
 +
 +	return 0;
 +}
@@ -113,39 +169,30 @@ index f4b17b5e3914..1a1e227fa935 100644
  static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
  {
  	struct axi_dmac_chan *chan = &dmac->chan;
-@@ -823,7 +845,6 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
- 
- static int axi_dmac_probe(struct platform_device *pdev)
- {
--	struct device_node *of_channels, *of_chan;
- 	struct dma_device *dma_dev;
- 	struct axi_dmac *dmac;
- 	struct resource *res;
-@@ -854,22 +875,9 @@ static int axi_dmac_probe(struct platform_device *pdev)
+@@ -880,7 +936,13 @@ static int axi_dmac_probe(struct platform_device *pdev)
  	if (ret < 0)
  		return ret;
  
--	of_channels = of_get_child_by_name(pdev->dev.of_node, "adi,channels");
--	if (of_channels == NULL) {
--		ret = -ENODEV;
-+	ret = axi_dmac_parse_dt(&pdev->dev, dmac);
-+	if (ret < 0)
+-	ret = axi_dmac_parse_dt(&pdev->dev, dmac);
++	version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
++
++	if (version >= ADI_AXI_PCORE_VER(4, 3, 'a'))
++		ret = axi_dmac_read_chan_config(&pdev->dev, dmac);
++	else
++		ret = axi_dmac_parse_dt(&pdev->dev, dmac);
++
+ 	if (ret < 0)
  		goto err_clk_disable;
--	}
+ 
+@@ -912,8 +974,6 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 	dmac->chan.vchan.desc_free = axi_dmac_desc_free;
+ 	vchan_init(&dmac->chan.vchan, dma_dev);
+ 
+-	version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
 -
--	for_each_child_of_node(of_channels, of_chan) {
--		ret = axi_dmac_parse_chan_dt(of_chan, &dmac->chan);
--		if (ret) {
--			of_node_put(of_chan);
--			of_node_put(of_channels);
--			ret = -EINVAL;
--			goto err_clk_disable;
--		}
--	}
--	of_node_put(of_channels);
- 
- 	INIT_LIST_HEAD(&dmac->chan.active_descs);
- 
+ 	ret = axi_dmac_detect_caps(dmac, version);
+ 	if (ret)
+ 		goto err_clk_disable;
 -- 
 2.17.1
 
