@@ -2,88 +2,92 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87778C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52872C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C9FB204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FEF7204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598321572;
+	bh=EYabL+cR1q0BhSQAaVx++XTBOOEfW4RAx2hWzm8LUo4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hzzM8EBzTD1VwK35inMmVaWRasXenvwC7+QTwfKyBbV1RJbyt+Qat2Ai/IzlyuOcE
+	 BIIiGpOOmfsJyxXo2NTR5LEyfMMjRra/pfrDxTEK+8Cm9kI2e6zTRQbAcNKsnyf96M
+	 Eyjm2Qkp//mIS+dfpYuUA/Iz7rIr2DaZL4fu1R6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgHYCLe (ORCPT
+        id S1727780AbgHYCMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:11:34 -0400
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:53914 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725850AbgHYCLd (ORCPT
+        Mon, 24 Aug 2020 22:12:51 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:39404 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbgHYCMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 22:11:33 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R321e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U6n3GN5_1598321489;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U6n3GN5_1598321489)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 25 Aug 2020 10:11:29 +0800
-Date:   Tue, 25 Aug 2020 10:11:29 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Baoquan He <bhe@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Subject: Re: [PATCH v2 02/10] mm/memory_hotplug: enforce section granularity
- when onlining/offlining
-Message-ID: <20200825021129.GA78808@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200819175957.28465-1-david@redhat.com>
- <20200819175957.28465-3-david@redhat.com>
- <20200824103917.GB6315@linux>
+        Mon, 24 Aug 2020 22:12:49 -0400
+Received: by mail-il1-f194.google.com with SMTP id f12so9112736ils.6;
+        Mon, 24 Aug 2020 19:12:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3nloTOrXY+VdXbMaAs1xkJlpZLEd/OL2atDgyYM+HrY=;
+        b=ouOvF2mZd5MzM6g85pgk5cKOvdWD86Fj4FasXtuH+qa6upqgiWp5sXuOk9Fh/F+TCr
+         wCBvvwXXiPJfNmNgUqNJLmU1yRGxjlP5jMm8dGRxftBvfHIum14pglAv3OwM9DGB3cfi
+         cSxMVT6vjtb/9FtAmMhJcxX4lrE+l2PGvBl9Lg7NcXom4cT4TbeIkH1Oiqmit64ZQIn+
+         owsV4KbBQSnFFH2yEY1NNN+Tsjtqi3W9hJwDWPGafQjPrtQ3Lpe/8xpMcK6JsGkObQcs
+         9H/iatBAUO02zzoHbcXaLzQmnrpc+WOgxdVOIdIpIcqh1E9QjfKEb3I7jmlkUqyTQvYM
+         0P4Q==
+X-Gm-Message-State: AOAM531l7UVQpTvw9OgZFCItLXiZXfEhP7sQlZ6T3YjIixKijtGk9/ns
+        kMyO0Jet1sdLMe5BXJ0HPQ==
+X-Google-Smtp-Source: ABdhPJzhTOb/YYKMebmePOL8eCdkTddl1osQhrsQdDZCr8NwQonHozFTxTzXQj36XazSDCyxjovZrw==
+X-Received: by 2002:a92:158c:: with SMTP id 12mr8049584ilv.102.1598321568014;
+        Mon, 24 Aug 2020 19:12:48 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id k18sm4422961ils.42.2020.08.24.19.12.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 19:12:47 -0700 (PDT)
+Received: (nullmailer pid 3794322 invoked by uid 1000);
+        Tue, 25 Aug 2020 02:12:44 -0000
+Date:   Mon, 24 Aug 2020 20:12:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Peng Fan <peng.fan@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Anson Huang <anson.huang@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 01/17] dt-bindings: clocks: imx8mp: Rename audiomix
+ ids clocks to audio_blk_ctrl
+Message-ID: <20200825021244.GA3794265@bogus>
+References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
+ <1597406966-13740-2-git-send-email-abel.vesa@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824103917.GB6315@linux>
+In-Reply-To: <1597406966-13740-2-git-send-email-abel.vesa@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 12:39:18PM +0200, Oscar Salvador wrote:
->On Wed, Aug 19, 2020 at 07:59:49PM +0200, David Hildenbrand wrote:
->> Already two people (including me) tried to offline subsections, because
->> the function looks like it can deal with it. But we really can only
->> online/offline full sections that are properly aligned (e.g., we can only
->> mark full sections online/offline via SECTION_IS_ONLINE).
->> 
->> Add a simple safety net to document the restriction now. Current users
->> (core and powernv/memtrace) respect these restrictions.
->
->It's been a while since I looked at sub-section handling stuff so sorry to ask
->this, but was it true that we can hot-{remove,add} sub-section granularity, while
->we can only online /offline on section granularity?
->
+On Fri, 14 Aug 2020 15:09:10 +0300, Abel Vesa wrote:
+> In the reference manual the actual name is Audio BLK_CTRL.
+> Lets make it more obvious here by renaming from audiomix to audio_blk_ctrl.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> ---
+>  include/dt-bindings/clock/imx8mp-clock.h | 120 +++++++++++++++----------------
+>  1 file changed, 60 insertions(+), 60 deletions(-)
+> 
 
-Seems you are right.
-
->> 
->> Acked-by: Michal Hocko <mhocko@suse.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
->> Cc: Baoquan He <bhe@redhat.com>
->> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->
->Reviewed-by: Oscar Salvador <osalvador@suse.de>
->
->
->-- 
->Oscar Salvador
->SUSE L3
-
--- 
-Wei Yang
-Help you, Help me
+Acked-by: Rob Herring <robh@kernel.org>
