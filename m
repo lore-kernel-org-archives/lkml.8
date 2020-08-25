@@ -2,183 +2,116 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEFCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70074C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAEFE20715
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598352407;
-	bh=A2g5oilIRlZrMle7ltlGm+gmrEyCPIBbijgQjXU/jDk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=e5a5mz4qilPqIUwT03GFebw0COTtASF52QInliFMUYIJvsjDkL3ztEE+B+zMSB6H2
-	 DDsYzRk4udkN9wEt/eYNOfzcrQMFeDhuOkKDwnh+V+fc2CSUHpA1QPJVnvtdoG8K+u
-	 E4OvkA10gvjaJhhVJfrGa9GgBmol/+W6otypP4Tk=
+	by mail.kernel.org (Postfix) with ESMTP id 4F0572068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:47:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RHPEP9kR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbgHYKqp (ORCPT
+        id S1729909AbgHYKrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:46:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729888AbgHYKqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:46:44 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E9052068E;
-        Tue, 25 Aug 2020 10:46:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598352403;
-        bh=A2g5oilIRlZrMle7ltlGm+gmrEyCPIBbijgQjXU/jDk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RQYFIU70fNrrKSv+aJ6VQbTUxdzzqI77VBhCdUSnroTC7Gmw+mw6VigQpjuMzTk6H
-         jrjrcemPcAHP/Uz0QkHSDG1jFrC0sLOVQ895+zatkTZSZ97q38+RVRFwjUf4eqtDL6
-         wAPrPSyYqhW4YH8U87syp3/1JH+iLRVjmjLaOZbQ=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kAWTR-006VZJ-JQ; Tue, 25 Aug 2020 11:46:41 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Frank Wunderlich <linux@fw-web.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        qiuguorui1 <qiuguorui1@huawei.com>,
-        Rob Herring <robh@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Suman Anna <s-anna@ti.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: [GIT PULL] irqchip fixes for 5.9, take #2
-Date:   Tue, 25 Aug 2020 11:45:57 +0100
-Message-Id: <20200825104557.1042702-1-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
+        Tue, 25 Aug 2020 06:47:21 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41486 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729827AbgHYKrU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 06:47:20 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PAjKVu136657;
+        Tue, 25 Aug 2020 10:47:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2020-01-29;
+ bh=yn0OmaXlVdIsJwcUdyYW+Kk02+g/l6M7ahIn4FwXthk=;
+ b=RHPEP9kRltu6yfez+jWi1UjXRi3pvfhA636WJj9aN3Uo5IAedNdNi6gzzU/DnXTTBtXS
+ X6s1KKzkKDLNpc0EHlImjWcHYSRHH57wD975Q790BZwBJ6ilAdqazL26isgMex7WvsbP
+ ChTbD/RqjD9N/hSjAmmGCkNgS/WoSu2GAhZESypO4fOuz5dURx5b5VmnzABzIOgu0jlJ
+ tAyVdQcrUpUrfDjzcQoZgwA2jTqggvV6pI7oUs54Ancx6NfVu/felzW2HNbbyNKjRGhg
+ Nd6efXC0QTc5IcRW26lhpPd779j2rLcLnEWLqehcfkmFcUfauG2yF29aLPLjk6SXA8Lq AA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 333w6tr991-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Aug 2020 10:47:16 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PAiaA3153129;
+        Tue, 25 Aug 2020 10:47:16 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 333rtxn0n3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Aug 2020 10:47:15 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07PAlEeV008592;
+        Tue, 25 Aug 2020 10:47:15 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 25 Aug 2020 03:47:14 -0700
+Date:   Tue, 25 Aug 2020 13:47:07 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jon Hunter <jon-hunter@ti.com>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] memory: omap-gpmc: Fix a couple off by ones
+Message-ID: <20200825104707.GB278587@mwanda>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, enric.balletbo@collabora.com, linux@fw-web.de, john.stultz@linaro.org, lokeshvutla@ti.com, nm@ti.com, paul@crapouillou.net, qiuguorui1@huawei.com, robh@kernel.org, saravanak@google.com, s-anna@ti.com, jason@lakedaemon.net, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=810 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250081
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ mlxlogscore=796 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 clxscore=1011 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008250081
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+These comparisons should be >= instead of > to prevent reading one
+element beyond the end of the gpmc_cs[] array.
 
-This is a combo pull request for the first two two batches of fixes
-for 5.9. The most important part is that the whole "let's build
-irqchips as platform devices" series has broken users' platforms as
-the end-points drivers are not equipped to deal with the semi-random
-probe ordering. There is work in progress to fix it, but in the
-meantime let's go back to something that doesn't set the world on
-fire. I have kept the helpers around to serve as a base for that
-future work, but the callers are now back to their original state.
+Fixes: cdd6928c589a ("ARM: OMAP2+: Add device-tree support for NOR flash")
+Fixes: f37e4580c409 ("ARM: OMAP2: Dynamic allocator for GPMC memory space")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/memory/omap-gpmc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-We also have two interesting fixes: one avoiding losing interrupts
-when there is more that a single one pending with STM32 exti, and a
-wakup interrupt issue with the Ingenic driver.
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index cd9e80748591..fd245b82163a 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -989,7 +989,7 @@ static int gpmc_cs_remap(int cs, u32 base)
+ 	int ret;
+ 	u32 old_base, size;
+ 
+-	if (cs > gpmc_cs_num) {
++	if (cs >= gpmc_cs_num) {
+ 		pr_err("%s: requested chip-select is disabled\n", __func__);
+ 		return -ENODEV;
+ 	}
+@@ -1024,7 +1024,7 @@ int gpmc_cs_request(int cs, unsigned long size, unsigned long *base)
+ 	struct resource *res = &gpmc->mem;
+ 	int r = -1;
+ 
+-	if (cs > gpmc_cs_num) {
++	if (cs >= gpmc_cs_num) {
+ 		pr_err("%s: requested chip-select is disabled\n", __func__);
+ 		return -ENODEV;
+ 	}
+-- 
+2.28.0
 
-The rest of it is what I was hinting at when I sent the original 5.9
-pull request, with a bunch of TI updates that deal with the change of
-their firmware interface. The handling of the dependencies was bad
-enough that I couldn't send it before -rc1 was out...
-
-Please pull,
-
-	M.
-
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
-
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git tags/irqchip-fixes-5.9-2
-
-for you to fetch changes up to 821fc9e261f3af235752f46e59084467cfd440c4:
-
-  irqchip/ingenic: Leave parent IRQ unmasked on suspend (2020-08-25 10:59:29 +0100)
-
-----------------------------------------------------------------
-irqchip fixes for Linux 5.9, take #2
-
-- Revert the wholesale conversion to platform drivers of the
-  pdc, sysirq and cirq drivers, as it breaks a number of
-  platforms even when the driver is built-in (probe ordering
-  bites you).
-
-- Prevent interrupt from being lost with the STM32 exti driver
-
-- Fix wake-up interrupts for the MIPS Ingenir driver
-
-irqchip fixes for Linux 5.9, take #1
-
-- Fix an embarassing typo in the new module helpers, leading
-  to the probe failing most of the time
-
-- The promised TI firmware rework that couldn't make it into
-  the merge window due to a very badly managed set of dependency
-
-----------------------------------------------------------------
-Lokesh Vutla (13):
-      firmware: ti_sci: Drop the device id to resource type translation
-      firmware: ti_sci: Drop unused structure ti_sci_rm_type_map
-      firmware: ti_sci: Add support for getting resource with subtype
-      dt-bindings: irqchip: ti, sci-intr: Update bindings to drop the usage of gic as parent
-      dt-bindings: irqchip: Convert ti, sci-intr bindings to yaml
-      irqchip/ti-sci-intr: Add support for INTR being a parent to INTR
-      dt-bindings: irqchip: ti, sci-inta: Update docs to support different parent.
-      dt-bindings: irqchip: Convert ti, sci-inta bindings to yaml
-      irqchip/ti-sci-inta: Do not store TISCI device id in platform device id field
-      irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
-      arm64: dts: k3-j721e: ti-sci-inta/intr: Update to latest bindings
-      arm64: dts: k3-am65: ti-sci-inta/intr: Update to latest bindings
-      arm64: dts: k3-am65: Update the RM resource types
-
-Marc Zyngier (2):
-      irqchip: Fix probing deferal when using IRQCHIP_PLATFORM_DRIVER helpers
-      irqchip: Revert modular support for drivers using IRQCHIP_PLATFORM_DRIVER helperse
-
-Paul Cercueil (1):
-      irqchip/ingenic: Leave parent IRQ unmasked on suspend
-
-qiuguorui1 (1):
-      irqchip/stm32-exti: Avoid losing interrupts due to clearing pending bits by mistake
-
- .../bindings/interrupt-controller/ti,sci-inta.txt  |  66 ---------
- .../bindings/interrupt-controller/ti,sci-inta.yaml |  98 +++++++++++++
- .../bindings/interrupt-controller/ti,sci-intr.txt  |  82 -----------
- .../bindings/interrupt-controller/ti,sci-intr.yaml | 102 ++++++++++++++
- MAINTAINERS                                        |   4 +-
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi           |  36 +++--
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi            |  12 +-
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi         |   8 +-
- arch/arm64/boot/dts/ti/k3-am654-base-board.dts     |   4 +-
- .../boot/dts/ti/k3-j721e-common-proc-board.dts     |  10 +-
- arch/arm64/boot/dts/ti/k3-j721e-main.dtsi          |  43 +++---
- arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi    |  12 +-
- drivers/firmware/ti_sci.c                          | 155 +++++++++------------
- drivers/irqchip/Kconfig                            |   2 +-
- drivers/irqchip/irq-ingenic.c                      |   2 +-
- drivers/irqchip/irq-mtk-cirq.c                     |   4 +-
- drivers/irqchip/irq-mtk-sysirq.c                   |   4 +-
- drivers/irqchip/irq-stm32-exti.c                   |  14 +-
- drivers/irqchip/irq-ti-sci-inta.c                  |  95 ++++++++++---
- drivers/irqchip/irq-ti-sci-intr.c                  | 152 ++++++++++++--------
- drivers/irqchip/irqchip.c                          |   2 +-
- drivers/irqchip/qcom-pdc.c                         |   8 +-
- include/linux/soc/ti/ti_sci_protocol.h             |  13 ++
- 23 files changed, 534 insertions(+), 394 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.yaml
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.yaml
