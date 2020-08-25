@@ -2,71 +2,71 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD13C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CCAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A269520738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D0F20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1quhfa+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHvDPOAG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHYULa (ORCPT
+        id S1726867AbgHYULb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:11:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58496 "EHLO
+        Tue, 25 Aug 2020 16:11:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbgHYULP (ORCPT
+        with ESMTP id S1726752AbgHYULO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:11:15 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B60CDC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:15 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id m7so12286468qki.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:15 -0700 (PDT)
+        Tue, 25 Aug 2020 16:11:14 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97475C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:13 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id k18so10003566qtm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PyW2J2UOhlxaTC3XuwkPuw7lgwu3wVys0aDNpB+jS1E=;
-        b=D1quhfa+3/XarwBootUNPPs3xIMwKxE+clw9r8WMdAtyLagB5rc2wey/aIFgiFf3UW
-         KZZBbSB6u8gV38ZO+oDHYxxg3MxyeGZdAk9pNmRtIiUZ1st37ZeKAKSWOJndc3ZqOToH
-         p4T+Ua44QzfsXotS3MKKga8LCf8zJPvO9sXeKOc+BIWi/xh3dIWjSFyXbfhjulRTOYbW
-         yp/wSLFA3+/rIIWnbPzkC2e47CfF1WSPQagC7KnNGPyfzcxRli35IIjkLKu77nDmItQ+
-         jSPn/JZ49yI3XsphNAnZyOL93WDVDub3AnlhvYf7EVCqNSNrJUzclcjGSanXVqUtIJTY
-         H72w==
+        bh=9TgWXV28I76gG2AFhIReW1P9TvZYA/5D7LqqwrdUako=;
+        b=DHvDPOAGkeVbVU/fbG5yj6JAtKaFvRNXXvRLHp+d+Y/B5f6jO0x0PYuXQpjceLX0h5
+         UXvfIWbWlOfqBFGrzcd6RAXQ6Trg5TdYQSvlrzKKH2sAOz0vD1u/FykueeFHl15831bi
+         1qpa68dqmU1lfIDHMWYskfK/4ozzheISXpq5fcLau09Zwbz1jgvf3kN2Y5e5a6OPViDa
+         g/8POLZuyW6fJFYHm+xf0esNa9WFgBfoyEh+oTMWYux0DxIxP0C+0ghEBt8GTh8bsmu7
+         PpLWP7PK8RjcXQmZ5P/JW8L/dgN3+dR/M83I8YKGcH9hXZmqHRB8my8O2rDb3BLFmT+C
+         HWPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PyW2J2UOhlxaTC3XuwkPuw7lgwu3wVys0aDNpB+jS1E=;
-        b=dDKgZEMHBShyRaP6TEEccYVTk93Q+EUO0BEUZnKZBFdr5elh0NmxTlHgI/UAJEe6y6
-         5/gj3KNTJYzr2o8dMwnxlUsX1tzWHP4LL8dmVCCXDStyMqeBoRKAVuireXHXNG9rwP1p
-         ZMnmhSnehhtlTgRqM+SoDlafMuCvNVmStgjWqamgBrQY6ThBxQEYezfIjNUuRXV00rdC
-         myY2dG9ueei0nlQFAW6o7coNpbrSNKE4r3QwrA1W6Aepx5s2gvOaoWAIG/SBT3+EVcth
-         0v2SOLN7MVKWujLxmB3hIFjz72H1/phXjQtHlzZfvvo6kJUnThIJQhTxVTTe9Oq1IxGa
-         JQZw==
-X-Gm-Message-State: AOAM531HlBb/OTARESDOgSvGQPVMycUfp0caN3JAicqKhEuu8mrAOHMp
-        dH8QYy04QXZBggn5TrRH7oA=
-X-Google-Smtp-Source: ABdhPJyIai6YUySonnwyqrcNXkTmlHnuSwrtBl+qQUd1H9q4nHBR7c/mnHZTN84Exf1Y4wVuJ7ocgA==
-X-Received: by 2002:a05:620a:48:: with SMTP id t8mr11120533qkt.474.1598386274815;
-        Tue, 25 Aug 2020 13:11:14 -0700 (PDT)
+        bh=9TgWXV28I76gG2AFhIReW1P9TvZYA/5D7LqqwrdUako=;
+        b=flj3w08+kijCix3nRs1a3NeG1QmPlOzXiepzjhuB7l/qzxkT26fq8UWK5xSg1zc9E1
+         M4MpARnPnqYAahfah4doYKhRzWySue5G3wWBJ3xzhH4leHJKjtyueP/9Z3oBzhbUHnOK
+         f+0O83pdX+G4Prm8e4C+KZFYFf1BwfL3QFpMHJAaejiZrm2vOJWF46ROVAOFsbX8Zskz
+         yOkCNVdFhBCUiud9lZVmVqNpNBvwGXy1Sevng+Wfq+O5cL51r9XlvBZcy/cpNQ/iynyD
+         0ls6iQwq74Uzf7OnqaGSjxea6cAKB6ikLfl1bA/LPSS8wEG1HYZolPELqWj5x5n8sk7e
+         QTiQ==
+X-Gm-Message-State: AOAM530eX4oU5OFSKn+BEF3g80inb5Q4UgvwRbCU0SUQqrHbHeMBx9wd
+        x4ytdV9QD/1S9G7djQCSS2C7K1ThzG4=
+X-Google-Smtp-Source: ABdhPJxb2ct9Yd7IZkbMjt9BAipry5tUSlKIDszcTzVspKwRazmcjoHbi+S9+CTLOjufweVnNmbVJw==
+X-Received: by 2002:ac8:450c:: with SMTP id q12mr10990089qtn.292.1598386272785;
+        Tue, 25 Aug 2020 13:11:12 -0700 (PDT)
 Received: from localhost.localdomain (cpe-71-65-111-223.cinci.res.rr.com. [71.65.111.223])
-        by smtp.googlemail.com with ESMTPSA id n23sm12453459qkk.105.2020.08.25.13.11.14
+        by smtp.googlemail.com with ESMTPSA id n23sm12453459qkk.105.2020.08.25.13.11.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 13:11:14 -0700 (PDT)
+        Tue, 25 Aug 2020 13:11:12 -0700 (PDT)
 From:   Connor McAdams <conmanx360@gmail.com>
 Cc:     conmanx360@gmail.com, Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/20] ALSA: hda/ca0132 - Add quirk output selection structures.
-Date:   Tue, 25 Aug 2020 16:10:27 -0400
-Message-Id: <20200825201040.30339-9-conmanx360@gmail.com>
+Subject: [PATCH v2 07/20] ALSA: hda/ca0132 - Clean up ca0132_alt_out_select.
+Date:   Tue, 25 Aug 2020 16:10:26 -0400
+Message-Id: <20200825201040.30339-8-conmanx360@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200825201040.30339-1-conmanx360@gmail.com>
 References: <20200825201040.30339-1-conmanx360@gmail.com>
@@ -78,389 +78,261 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add structures containing the changes that need to happen on output
-selection for each quirk. This should streamline the addition of new
-quirks.
+Remove the output structures that were in use before and instead set the
+DSP commands line by line. Now that the commands use is known, it makes
+the functionality more clear this way.
 
 Signed-off-by: Connor McAdams <conmanx360@gmail.com>
 ---
- sound/pci/hda/patch_ca0132.c | 336 +++++++++++++++++++++++++----------
- 1 file changed, 241 insertions(+), 95 deletions(-)
+ sound/pci/hda/patch_ca0132.c | 142 ++++++++++++++---------------------
+ 1 file changed, 57 insertions(+), 85 deletions(-)
 
 diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
-index 39e333866be3..ab84ea397552 100644
+index 5743bdd7cc88..39e333866be3 100644
 --- a/sound/pci/hda/patch_ca0132.c
 +++ b/sound/pci/hda/patch_ca0132.c
-@@ -1256,6 +1256,164 @@ static const struct snd_pci_quirk ca0132_quirks[] = {
- 	{}
+@@ -83,6 +83,7 @@ MODULE_FIRMWARE(R3DI_EFX_FILE);
+ static const char *const dirstr[2] = { "Playback", "Capture" };
+ 
+ #define NUM_OF_OUTPUTS 2
++static const char *const out_type_str[2] = { "Speakers", "Headphone" };
+ enum {
+ 	SPEAKER_OUT,
+ 	HEADPHONE_OUT,
+@@ -667,39 +668,6 @@ enum speaker_tuning_reqs {
+ 	SPEAKER_TUNING_MUTE                     = 0x3a,
  };
  
-+/* Output selection quirk info structures. */
-+#define MAX_QUIRK_MMIO_GPIO_SET_VALS 3
-+#define MAX_QUIRK_SCP_SET_VALS 2
-+struct ca0132_alt_out_set_info {
-+	unsigned int dac2port; /* ParamID 0x0d value. */
-+
-+	bool has_hda_gpio;
-+	char hda_gpio_pin;
-+	char hda_gpio_set;
-+
-+	unsigned int mmio_gpio_count;
-+	char mmio_gpio_pin[MAX_QUIRK_MMIO_GPIO_SET_VALS];
-+	char mmio_gpio_set[MAX_QUIRK_MMIO_GPIO_SET_VALS];
-+
-+	unsigned int scp_cmds_count;
-+	unsigned int scp_cmd_mid[MAX_QUIRK_SCP_SET_VALS];
-+	unsigned int scp_cmd_req[MAX_QUIRK_SCP_SET_VALS];
-+	unsigned int scp_cmd_val[MAX_QUIRK_SCP_SET_VALS];
-+
-+	bool has_chipio_write;
-+	unsigned int chipio_write_addr;
-+	unsigned int chipio_write_data;
-+};
-+
-+struct ca0132_alt_out_set_quirk_data {
-+	int quirk_id;
-+
-+	bool has_headphone_gain;
-+	bool is_ae_series;
-+
-+	struct ca0132_alt_out_set_info out_set_info[NUM_OF_OUTPUTS];
-+};
-+
-+static const struct ca0132_alt_out_set_quirk_data quirk_out_set_data[] = {
-+	{ .quirk_id = QUIRK_R3DI,
-+	  .has_headphone_gain = false,
-+	  .is_ae_series       = false,
-+	  .out_set_info = {
-+		/* Speakers. */
-+		{ .dac2port         = 0x24,
-+		  .has_hda_gpio     = true,
-+		  .hda_gpio_pin     = 2,
-+		  .hda_gpio_set     = 1,
-+		  .mmio_gpio_count  = 0,
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		},
-+		/* Headphones. */
-+		{ .dac2port         = 0x21,
-+		  .has_hda_gpio     = true,
-+		  .hda_gpio_pin     = 2,
-+		  .hda_gpio_set     = 0,
-+		  .mmio_gpio_count  = 0,
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		} },
-+	},
-+	{ .quirk_id = QUIRK_R3D,
-+	  .has_headphone_gain = false,
-+	  .is_ae_series       = false,
-+	  .out_set_info = {
-+		/* Speakers. */
-+		{ .dac2port         = 0x24,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 1,
-+		  .mmio_gpio_pin    = { 1 },
-+		  .mmio_gpio_set    = { 1 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		},
-+		/* Headphones. */
-+		{ .dac2port         = 0x21,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 1,
-+		  .mmio_gpio_pin    = { 1 },
-+		  .mmio_gpio_set    = { 0 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		} },
-+	},
-+	{ .quirk_id = QUIRK_SBZ,
-+	  .has_headphone_gain = false,
-+	  .is_ae_series       = false,
-+	  .out_set_info = {
-+		/* Speakers. */
-+		{ .dac2port         = 0x18,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 3,
-+		  .mmio_gpio_pin    = { 7, 4, 1 },
-+		  .mmio_gpio_set    = { 0, 1, 1 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false, },
-+		/* Headphones. */
-+		{ .dac2port         = 0x12,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 3,
-+		  .mmio_gpio_pin    = { 7, 4, 1 },
-+		  .mmio_gpio_set    = { 1, 1, 0 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		} },
-+	},
-+	{ .quirk_id = QUIRK_ZXR,
-+	  .has_headphone_gain = true,
-+	  .is_ae_series       = false,
-+	  .out_set_info = {
-+		/* Speakers. */
-+		{ .dac2port         = 0x24,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 3,
-+		  .mmio_gpio_pin    = { 2, 3, 5 },
-+		  .mmio_gpio_set    = { 1, 1, 0 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		},
-+		/* Headphones. */
-+		{ .dac2port         = 0x21,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 3,
-+		  .mmio_gpio_pin    = { 2, 3, 5 },
-+		  .mmio_gpio_set    = { 0, 1, 1 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		} },
-+	},
-+	{ .quirk_id = QUIRK_AE5,
-+	  .has_headphone_gain = true,
-+	  .is_ae_series       = true,
-+	  .out_set_info = {
-+		/* Speakers. */
-+		{ .dac2port          = 0xa4,
-+		  .has_hda_gpio      = false,
-+		  .mmio_gpio_count   = 0,
-+		  .scp_cmds_count    = 2,
-+		  .scp_cmd_mid       = { 0x96, 0x96 },
-+		  .scp_cmd_req       = { SPEAKER_TUNING_FRONT_LEFT_INVERT,
-+					 SPEAKER_TUNING_FRONT_RIGHT_INVERT },
-+		  .scp_cmd_val       = { FLOAT_ZERO, FLOAT_ZERO },
-+		  .has_chipio_write  = true,
-+		  .chipio_write_addr = 0x0018b03c,
-+		  .chipio_write_data = 0x00000012
-+		},
-+		/* Headphones. */
-+		{ .dac2port          = 0xa1,
-+		  .has_hda_gpio      = false,
-+		  .mmio_gpio_count   = 0,
-+		  .scp_cmds_count    = 2,
-+		  .scp_cmd_mid       = { 0x96, 0x96 },
-+		  .scp_cmd_req       = { SPEAKER_TUNING_FRONT_LEFT_INVERT,
-+					 SPEAKER_TUNING_FRONT_RIGHT_INVERT },
-+		  .scp_cmd_val       = { FLOAT_ONE, FLOAT_ONE },
-+		  .has_chipio_write  = true,
-+		  .chipio_write_addr = 0x0018b03c,
-+		  .chipio_write_data = 0x00000012
-+		} },
-+	}
-+};
-+
- /*
-  * CA0132 codec access
-  */
-@@ -3513,26 +3671,6 @@ static void r3di_gpio_mic_set(struct hda_codec *codec,
- 			    AC_VERB_SET_GPIO_DATA, cur_gpio);
+-/* DSP command sequences for ca0132_alt_select_out */
+-#define ALT_OUT_SET_MAX_COMMANDS 9 /* Max number of commands in sequence */
+-struct ca0132_alt_out_set {
+-	char *name; /*preset name*/
+-	unsigned char commands;
+-	unsigned int mids[ALT_OUT_SET_MAX_COMMANDS];
+-	unsigned int reqs[ALT_OUT_SET_MAX_COMMANDS];
+-	unsigned int vals[ALT_OUT_SET_MAX_COMMANDS];
+-};
+-
+-static const struct ca0132_alt_out_set alt_out_presets[] = {
+-	{ .name = "Line Out",
+-	  .commands = 7,
+-	  .mids = { 0x96, 0x96, 0x96, 0x8F,
+-		    0x96, 0x96, 0x96 },
+-	  .reqs = { 0x19, 0x17, 0x18, 0x01,
+-		    0x1F, 0x15, 0x3A },
+-	  .vals = { 0x3F000000, 0x42A00000, 0x00000000,
+-		    0x00000000, 0x00000000, 0x00000000,
+-		    0x00000000 }
+-	},
+-	{ .name = "Headphone",
+-	  .commands = 7,
+-	  .mids = { 0x96, 0x96, 0x96, 0x8F,
+-		    0x96, 0x96, 0x96 },
+-	  .reqs = { 0x19, 0x17, 0x18, 0x01,
+-		    0x1F, 0x15, 0x3A },
+-	  .vals = { 0x3F000000, 0x42A00000, 0x00000000,
+-		    0x00000000, 0x00000000, 0x00000000,
+-		    0x00000000 }
+-	},
+-};
+-
+ /* Surround output channel count configuration structures. */
+ #define SPEAKER_CHANNEL_CFG_COUNT 5
+ enum {
+@@ -4428,21 +4396,31 @@ static void ca0132_alt_select_out_quirk_handler(struct hda_codec *codec)
+ 	}
  }
  
--static void r3di_gpio_out_set(struct hda_codec *codec,
--		enum r3di_out_select cur_out)
--{
--	unsigned int cur_gpio;
--
--	/* Get the current GPIO Data setup */
--	cur_gpio = snd_hda_codec_read(codec, 0x01, 0, AC_VERB_GET_GPIO_DATA, 0);
--
--	switch (cur_out) {
--	case R3DI_HEADPHONE_OUT:
--		cur_gpio &= ~(1 << R3DI_OUT_SELECT_BIT);
--		break;
--	case R3DI_LINE_OUT:
--		cur_gpio |= (1 << R3DI_OUT_SELECT_BIT);
--		break;
--	}
--	snd_hda_codec_write(codec, codec->core.afg, 0,
--			    AC_VERB_SET_GPIO_DATA, cur_gpio);
--}
--
- static void r3di_gpio_dsp_status_set(struct hda_codec *codec,
- 		enum r3di_dsp_status dsp_status)
- {
-@@ -4314,86 +4452,93 @@ static int ca0132_alt_surround_set_bass_redirection(struct hda_codec *codec,
-  * These are the commands needed to setup output on each of the different card
-  * types.
-  */
--static void ca0132_alt_select_out_quirk_handler(struct hda_codec *codec)
-+static void ca0132_alt_select_out_get_quirk_data(struct hda_codec *codec,
-+		const struct ca0132_alt_out_set_quirk_data **quirk_data)
- {
- 	struct ca0132_spec *spec = codec->spec;
--	unsigned int tmp;
-+	int quirk = ca0132_quirk(spec);
-+	unsigned int i;
- 
--	switch (spec->cur_out_type) {
--	case SPEAKER_OUT:
--		switch (ca0132_quirk(spec)) {
--		case QUIRK_SBZ:
--			ca0113_mmio_gpio_set(codec, 7, false);
--			ca0113_mmio_gpio_set(codec, 4, true);
--			ca0113_mmio_gpio_set(codec, 1, true);
--			chipio_set_control_param(codec, 0x0d, 0x18);
--			break;
--		case QUIRK_ZXR:
--			ca0113_mmio_gpio_set(codec, 2, true);
--			ca0113_mmio_gpio_set(codec, 3, true);
--			ca0113_mmio_gpio_set(codec, 5, false);
--			zxr_headphone_gain_set(codec, 0);
--			chipio_set_control_param(codec, 0x0d, 0x24);
--			break;
--		case QUIRK_R3DI:
--			chipio_set_control_param(codec, 0x0d, 0x24);
--			r3di_gpio_out_set(codec, R3DI_LINE_OUT);
--			break;
--		case QUIRK_R3D:
--			chipio_set_control_param(codec, 0x0d, 0x24);
--			ca0113_mmio_gpio_set(codec, 1, true);
--			break;
--		case QUIRK_AE5:
--			ae5_mmio_select_out(codec);
--			ae5_headphone_gain_set(codec, 2);
--			tmp = FLOAT_ZERO;
--			dspio_set_uint_param(codec, 0x96, 0x29, tmp);
--			dspio_set_uint_param(codec, 0x96, 0x2a, tmp);
--			chipio_set_control_param(codec, 0x0d, 0xa4);
--			chipio_write(codec, 0x18b03c, 0x00000012);
--			break;
--		default:
--			break;
-+	*quirk_data = NULL;
-+	for (i = 0; i < ARRAY_SIZE(quirk_out_set_data); i++) {
-+		if (quirk_out_set_data[i].quirk_id == quirk) {
-+			*quirk_data = &quirk_out_set_data[i];
-+			return;
- 		}
--		break;
--	case HEADPHONE_OUT:
--		switch (ca0132_quirk(spec)) {
--		case QUIRK_SBZ:
--			ca0113_mmio_gpio_set(codec, 7, true);
--			ca0113_mmio_gpio_set(codec, 4, true);
--			ca0113_mmio_gpio_set(codec, 1, false);
--			chipio_set_control_param(codec, 0x0d, 0x12);
--			break;
--		case QUIRK_ZXR:
--			ca0113_mmio_gpio_set(codec, 2, false);
--			ca0113_mmio_gpio_set(codec, 3, false);
--			ca0113_mmio_gpio_set(codec, 5, true);
--			zxr_headphone_gain_set(codec, spec->zxr_gain_set);
--			chipio_set_control_param(codec, 0x0d, 0x21);
--			break;
--		case QUIRK_R3DI:
--			chipio_set_control_param(codec, 0x0d, 0x21);
--			r3di_gpio_out_set(codec, R3DI_HEADPHONE_OUT);
--			break;
--		case QUIRK_R3D:
--			chipio_set_control_param(codec, 0x0d, 0x21);
--			ca0113_mmio_gpio_set(codec, 0x1, false);
--			break;
--		case QUIRK_AE5:
--			ae5_mmio_select_out(codec);
--			ae5_headphone_gain_set(codec,
--					spec->ae5_headphone_gain_val);
--			tmp = FLOAT_ONE;
--			dspio_set_uint_param(codec, 0x96, 0x29, tmp);
--			dspio_set_uint_param(codec, 0x96, 0x2a, tmp);
--			chipio_set_control_param(codec, 0x0d, 0xa1);
--			chipio_write(codec, 0x18b03c, 0x00000012);
--			break;
--		default:
--			break;
-+	}
++static void ca0132_set_out_node_pincfg(struct hda_codec *codec, hda_nid_t nid,
++		bool out_enable, bool hp_enable)
++{
++	unsigned int pin_ctl;
++
++	pin_ctl = snd_hda_codec_read(codec, nid, 0,
++			AC_VERB_GET_PIN_WIDGET_CONTROL, 0);
++
++	pin_ctl = hp_enable ? pin_ctl | PIN_HP_AMP : pin_ctl & ~PIN_HP_AMP;
++	pin_ctl = out_enable ? pin_ctl | PIN_OUT : pin_ctl & ~PIN_OUT;
++	snd_hda_set_pin_ctl(codec, nid, pin_ctl);
 +}
 +
-+static int ca0132_alt_select_out_quirk_set(struct hda_codec *codec)
-+{
-+	const struct ca0132_alt_out_set_quirk_data *quirk_data;
-+	const struct ca0132_alt_out_set_info *out_info;
-+	struct ca0132_spec *spec = codec->spec;
-+	unsigned int i, gpio_data;
-+	int err;
-+
-+	ca0132_alt_select_out_get_quirk_data(codec, &quirk_data);
-+	if (!quirk_data)
-+		return 0;
-+
-+	out_info = &quirk_data->out_set_info[spec->cur_out_type];
-+	if (quirk_data->is_ae_series)
-+		ae5_mmio_select_out(codec);
-+
-+	if (out_info->has_hda_gpio) {
-+		gpio_data = snd_hda_codec_read(codec, codec->core.afg, 0,
-+				AC_VERB_GET_GPIO_DATA, 0);
-+
-+		if (out_info->hda_gpio_set)
-+			gpio_data |= (1 << out_info->hda_gpio_pin);
-+		else
-+			gpio_data &= ~(1 << out_info->hda_gpio_pin);
-+
-+		snd_hda_codec_write(codec, codec->core.afg, 0,
-+				    AC_VERB_SET_GPIO_DATA, gpio_data);
-+	}
-+
-+	if (out_info->mmio_gpio_count) {
-+		for (i = 0; i < out_info->mmio_gpio_count; i++) {
-+			ca0113_mmio_gpio_set(codec, out_info->mmio_gpio_pin[i],
-+					out_info->mmio_gpio_set[i]);
- 		}
--		break;
- 	}
-+
-+	if (out_info->scp_cmds_count) {
-+		for (i = 0; i < out_info->scp_cmds_count; i++) {
-+			err = dspio_set_uint_param(codec,
-+					out_info->scp_cmd_mid[i],
-+					out_info->scp_cmd_req[i],
-+					out_info->scp_cmd_val[i]);
-+			if (err < 0)
-+				return err;
-+		}
-+	}
-+
-+	chipio_set_control_param(codec, 0x0d, out_info->dac2port);
-+
-+	if (out_info->has_chipio_write) {
-+		chipio_write(codec, out_info->chipio_write_addr,
-+				out_info->chipio_write_data);
-+	}
-+
-+	if (quirk_data->has_headphone_gain) {
-+		if (spec->cur_out_type != HEADPHONE_OUT) {
-+			if (quirk_data->is_ae_series)
-+				ae5_headphone_gain_set(codec, 2);
-+			else
-+				zxr_headphone_gain_set(codec, 0);
-+		} else {
-+			if (quirk_data->is_ae_series)
-+				ae5_headphone_gain_set(codec,
-+						spec->ae5_headphone_gain_val);
-+			else
-+				zxr_headphone_gain_set(codec,
-+						spec->zxr_gain_set);
-+		}
-+	}
-+
-+	return 0;
- }
+ /*
+  * This function behaves similarly to the ca0132_select_out funciton above,
+  * except with a few differences. It adds the ability to select the current
+  * output with an enumerated control "output source" if the auto detect
+  * mute switch is set to off. If the auto detect mute switch is enabled, it
+  * will detect either headphone or lineout(SPEAKER_OUT) from jack detection.
+- * It also adds the ability to auto-detect the front headphone port. The only
+- * way to select surround is to disable auto detect, and set Surround with the
+- * enumerated control.
++ * It also adds the ability to auto-detect the front headphone port.
+  */
+ static int ca0132_alt_select_out(struct hda_codec *codec)
+ {
+ 	struct ca0132_spec *spec = codec->spec;
+-	unsigned int tmp, outfx_set, i;
+-	unsigned int pin_ctl;
++	unsigned int tmp, outfx_set;
+ 	int jack_present;
+ 	int auto_jack;
+ 	int err;
+@@ -4473,9 +4451,8 @@ static int ca0132_alt_select_out(struct hda_codec *codec)
  
- static void ca0132_set_out_node_pincfg(struct hda_codec *codec, hda_nid_t nid,
-@@ -4456,7 +4601,8 @@ static int ca0132_alt_select_out(struct hda_codec *codec)
+ 	outfx_set = spec->effects_switch[PLAY_ENHANCEMENT - EFFECT_START_NID];
+ 
+-	/* Begin DSP output switch */
+-	tmp = FLOAT_ONE;
+-	err = dspio_set_uint_param(codec, 0x96, 0x3A, tmp);
++	/* Begin DSP output switch, mute DSP volume. */
++	err = dspio_set_uint_param(codec, 0x96, SPEAKER_TUNING_MUTE, FLOAT_ONE);
  	if (err < 0)
  		goto exit;
  
--	ca0132_alt_select_out_quirk_handler(codec);
-+	if (ca0132_alt_select_out_quirk_set(codec) < 0)
-+		goto exit;
- 
- 	switch (spec->cur_out_type) {
+@@ -4485,31 +4462,18 @@ static int ca0132_alt_select_out(struct hda_codec *codec)
  	case SPEAKER_OUT:
+ 		codec_dbg(codec, "%s speaker\n", __func__);
+ 
+-		/* disable headphone node */
+-
+-		pin_ctl = snd_hda_codec_read(codec, spec->out_pins[1], 0,
+-					AC_VERB_GET_PIN_WIDGET_CONTROL, 0);
+-		snd_hda_set_pin_ctl(codec, spec->out_pins[1],
+-				    pin_ctl & ~PIN_HP);
+-		/* enable line-out node */
+-		pin_ctl = snd_hda_codec_read(codec, spec->out_pins[0], 0,
+-				AC_VERB_GET_PIN_WIDGET_CONTROL, 0);
+-		snd_hda_set_pin_ctl(codec, spec->out_pins[0],
+-				    pin_ctl | PIN_OUT);
+ 		/* Enable EAPD */
+ 		snd_hda_codec_write(codec, spec->out_pins[0], 0,
+ 			AC_VERB_SET_EAPD_BTLENABLE, 0x01);
+ 
+-		/* enable center/lfe out node */
+-		pin_ctl = snd_hda_codec_read(codec, spec->out_pins[2], 0,
+-				AC_VERB_GET_PIN_WIDGET_CONTROL, 0);
+-		snd_hda_set_pin_ctl(codec, spec->out_pins[2],
+-				pin_ctl | PIN_OUT);
+-		/* Now set rear surround node as out. */
+-		pin_ctl = snd_hda_codec_read(codec, spec->out_pins[3], 0,
+-				AC_VERB_GET_PIN_WIDGET_CONTROL, 0);
+-		snd_hda_set_pin_ctl(codec, spec->out_pins[3],
+-				pin_ctl | PIN_OUT);
++		/* Disable headphone node. */
++		ca0132_set_out_node_pincfg(codec, spec->out_pins[1], 0, 0);
++		/* Set front L-R to output. */
++		ca0132_set_out_node_pincfg(codec, spec->out_pins[0], 1, 0);
++		/* Set Center/LFE to output. */
++		ca0132_set_out_node_pincfg(codec, spec->out_pins[2], 1, 0);
++		/* Set rear surround to output. */
++		ca0132_set_out_node_pincfg(codec, spec->out_pins[3], 1, 0);
+ 
+ 		/*
+ 		 * Without PlayEnhancement being enabled, if we've got a 2.0
+@@ -4531,11 +4495,10 @@ static int ca0132_alt_select_out(struct hda_codec *codec)
+ 		snd_hda_codec_write(codec, spec->out_pins[0], 0,
+ 			AC_VERB_SET_EAPD_BTLENABLE, 0x00);
+ 
+-		/* disable speaker*/
+-		pin_ctl = snd_hda_codec_read(codec, spec->out_pins[0], 0,
+-					AC_VERB_GET_PIN_WIDGET_CONTROL, 0);
+-		snd_hda_set_pin_ctl(codec, spec->out_pins[0],
+-				pin_ctl & ~PIN_HP);
++		/* Disable all speaker nodes. */
++		ca0132_set_out_node_pincfg(codec, spec->out_pins[0], 0, 0);
++		ca0132_set_out_node_pincfg(codec, spec->out_pins[2], 0, 0);
++		ca0132_set_out_node_pincfg(codec, spec->out_pins[3], 0, 0);
+ 
+ 		/* enable headphone, either front or rear */
+ 		if (snd_hda_jack_detect(codec, spec->unsol_tag_front_hp))
+@@ -4543,15 +4506,15 @@ static int ca0132_alt_select_out(struct hda_codec *codec)
+ 		else if (snd_hda_jack_detect(codec, spec->unsol_tag_hp))
+ 			headphone_nid = spec->out_pins[1];
+ 
+-		pin_ctl = snd_hda_codec_read(codec, headphone_nid, 0,
+-					AC_VERB_GET_PIN_WIDGET_CONTROL, 0);
+-		snd_hda_set_pin_ctl(codec, headphone_nid,
+-				    pin_ctl | PIN_HP);
++		ca0132_set_out_node_pincfg(codec, headphone_nid, 1, 1);
+ 
+ 		if (outfx_set)
+-			dspio_set_uint_param(codec, 0x80, 0x04, FLOAT_ONE);
++			err = dspio_set_uint_param(codec, 0x80, 0x04, FLOAT_ONE);
+ 		else
+-			dspio_set_uint_param(codec, 0x80, 0x04, FLOAT_ZERO);
++			err = dspio_set_uint_param(codec, 0x80, 0x04, FLOAT_ZERO);
++
++		if (err < 0)
++			goto exit;
+ 		break;
+ 	}
+ 	/*
+@@ -4563,29 +4526,38 @@ static int ca0132_alt_select_out(struct hda_codec *codec)
+ 		ca0132_effects_set(codec, X_BASS,
+ 			spec->effects_switch[X_BASS - EFFECT_START_NID]);
+ 
++	/* Set speaker EQ bypass attenuation to 0. */
++	err = dspio_set_uint_param(codec, 0x8f, 0x01, FLOAT_ZERO);
++	if (err < 0)
++		goto exit;
++
++	/*
++	 * Although unused on all cards but the AE series, this is always set
++	 * to zero when setting the output.
++	 */
++	err = dspio_set_uint_param(codec, 0x96,
++			SPEAKER_TUNING_USE_SPEAKER_EQ, FLOAT_ZERO);
++	if (err < 0)
++		goto exit;
++
+ 	if (spec->cur_out_type == SPEAKER_OUT)
+ 		err = ca0132_alt_surround_set_bass_redirection(codec,
+ 				spec->bass_redirection_val);
+ 	else
+ 		err = ca0132_alt_surround_set_bass_redirection(codec, 0);
+ 
++	/* Unmute DSP now that we're done with output selection. */
++	err = dspio_set_uint_param(codec, 0x96,
++			SPEAKER_TUNING_MUTE, FLOAT_ZERO);
+ 	if (err < 0)
+ 		goto exit;
+ 
+-	/* run through the output dsp commands for the selected output. */
+-	for (i = 0; i < alt_out_presets[spec->cur_out_type].commands; i++) {
+-		err = dspio_set_uint_param(codec,
+-		alt_out_presets[spec->cur_out_type].mids[i],
+-		alt_out_presets[spec->cur_out_type].reqs[i],
+-		alt_out_presets[spec->cur_out_type].vals[i]);
+-
++	if (spec->cur_out_type == SPEAKER_OUT) {
++		err = ca0132_alt_set_full_range_speaker(codec);
+ 		if (err < 0)
+ 			goto exit;
+ 	}
+ 
+-	if (spec->cur_out_type == SPEAKER_OUT)
+-		err = ca0132_alt_set_full_range_speaker(codec);
+-
+ exit:
+ 	snd_hda_power_down_pm(codec);
+ 
+@@ -5659,7 +5631,7 @@ static int ca0132_alt_output_select_get_info(struct snd_kcontrol *kcontrol,
+ 	if (uinfo->value.enumerated.item >= NUM_OF_OUTPUTS)
+ 		uinfo->value.enumerated.item = NUM_OF_OUTPUTS - 1;
+ 	strcpy(uinfo->value.enumerated.name,
+-			alt_out_presets[uinfo->value.enumerated.item].name);
++			out_type_str[uinfo->value.enumerated.item]);
+ 	return 0;
+ }
+ 
+@@ -5686,7 +5658,7 @@ static int ca0132_alt_output_select_put(struct snd_kcontrol *kcontrol,
+ 		return 0;
+ 
+ 	codec_dbg(codec, "ca0132_alt_output_select: sel=%d, preset=%s\n",
+-		    sel, alt_out_presets[sel].name);
++		    sel, out_type_str[sel]);
+ 
+ 	spec->out_enum_val = sel;
+ 
 -- 
 2.20.1
 
