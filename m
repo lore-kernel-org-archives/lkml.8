@@ -2,68 +2,141 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69672C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42C8620738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39F582075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:56:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="uUs54mDs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgHYSx2 (ORCPT
+        id S1726633AbgHYSz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 14:53:28 -0400
-Received: from mga06.intel.com ([134.134.136.31]:16450 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbgHYSx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 14:53:26 -0400
-IronPort-SDR: +30W4RogLoAFfgJs5u01pbFVs+vbGTlNOPo2T64DRNY9lQHUgE9Eoelhhuynnxs/R5bRhryFdP
- YxPUwcG0ypiw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="217729489"
-X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
-   d="scan'208";a="217729489"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 11:53:23 -0700
-IronPort-SDR: 4BHPj+CdBNJj1OcZhZceUOeJli0U4JoHzTZk7WHsBGIRqqnq1oSLDMKa7WRHeL34Q6cIplwAFe
- wgCpOw2SHr9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
-   d="scan'208";a="328960106"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2020 11:53:23 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id B3985301C53; Tue, 25 Aug 2020 10:40:43 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 10:40:43 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Al Grant <al.grant@foss.arm.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acme@redhat.com
-Subject: Re: [PATCH] perf: correct SNOOPX field offset
-Message-ID: <20200825174043.GQ1509399@tassilo.jf.intel.com>
-References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+        Tue, 25 Aug 2020 14:55:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726119AbgHYSz5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 14:55:57 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44C99C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 11:55:56 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id u126so13561213iod.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 11:55:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=w9uk4AMLpvzRAgzq0rqHpsTXVWbRiA2GeYuDtu/sc0s=;
+        b=uUs54mDsCzNMq6oM+OHwokxMNdLcMeL723VOZvI9OBiLh6Uganid+kexMgqvabfxm5
+         icbGpodVRZgsqpBW8/ccZxX9Xwoq1+J+7ar/QWmxgjKhTUR96ejFDrEjy/aO15wNZglD
+         XxGIV7rCwfG4Sw3IrnyC3l7AVwlITjxNZDKaXet5eogwSjqgcheDVZeunE+xopwwyOnf
+         wzQLgYrJ0kZ5XZHgJwLyJUVvA/UwHztMVYDso7KZSlFUsFBYJKN7wPZXFIEOD8g6n6f6
+         ClETrR+hQVjbWIdTrzvUxKcn7BG8eiVhydS1prRnL6BXJam6k1gu1SiIKXt6rc3hv5me
+         VfeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=w9uk4AMLpvzRAgzq0rqHpsTXVWbRiA2GeYuDtu/sc0s=;
+        b=d2669ms1fQp7CdcZ/O/j0D6oE4gX3YVvZX97wB2FYIT2TuTFG8iGz1m4U1Rzsety2u
+         WPFZFOrAmJ+8YW40Av5w95i6HXnveuQX8c9OtetBPfyYaL1lYu7NbMtWCm31wBQsNO5E
+         +ALvNDz7vr7SauS8mJqN8h6YpaJIx2JHVz5LSMBxzJLKh0fsWWRUICff26dIfI+I5isi
+         Zs+/bI4dgwJ0xPeRfurFSeg4oF5dvKnW81zvj+QZlZbdRi/kJJVsxbVfBKytyEJ/LEhP
+         C4QPfwvSf7tfjNRrZd5iYnaZ3qgc/OfV0WmAh8zSNBey+vmBmsDqP3yLzyzjiDg8jrh6
+         X0Pg==
+X-Gm-Message-State: AOAM530Xa4Ikw4SzsHOq522BI+mR8P9mbdhH3O2tvTxbxF3/vXYRKJ1s
+        idqo7NrKxfeuSeZvJgDmsn0s9MfJpeLesOBwJtZD3A==
+X-Google-Smtp-Source: ABdhPJx+ob/M28pOeAl3kt6mLnGqklY78HLbZa/gq1HlEJ8Yxtco7WcCkPUTffmLLFlreoxix4kFWnNHV3it3rBtNl4=
+X-Received: by 2002:a6b:6204:: with SMTP id f4mr9990861iog.56.1598381755631;
+ Tue, 25 Aug 2020 11:55:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+References: <20200821151544.1211989-1-nicolas.rybowski@tessares.net> <20200824220100.y33yza2sbd7sgemh@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20200824220100.y33yza2sbd7sgemh@ast-mbp.dhcp.thefacebook.com>
+From:   Nicolas Rybowski <nicolas.rybowski@tessares.net>
+Date:   Tue, 25 Aug 2020 20:55:43 +0200
+Message-ID: <CACXrtpQCE-Yp9=7fbH9sB7-4k-OO12JD18JU=9GL_sYHcmnDtA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 0/3] bpf: add MPTCP subflow support
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mptcp@lists.01.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:28:34AM +0100, Al Grant wrote:
-> perf_event.h has macros that define the field offsets in the
-> data_src bitmask in perf records. The SNOOPX and REMOTE offsets
-> were both 37. These are distinct fields, and the bitfield layout
-> in perf_mem_data_src confirms that SNOOPX should be at offset 38.
+Hi Alexei,
 
-Looks good.
+Thanks for the feedback!
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+On Tue, Aug 25, 2020 at 12:01 AM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Fri, Aug 21, 2020 at 05:15:38PM +0200, Nicolas Rybowski wrote:
+> > Previously it was not possible to make a distinction between plain TCP
+> > sockets and MPTCP subflow sockets on the BPF_PROG_TYPE_SOCK_OPS hook.
+> >
+> > This patch series now enables a fine control of subflow sockets. In its
+> > current state, it allows to put different sockopt on each subflow from a
+> > same MPTCP connection (socket mark, TCP congestion algorithm, ...) using
+> > BPF programs.
+> >
+> > It should also be the basis of exposing MPTCP-specific fields through BPF.
+>
+> Looks fine, but I'd like to see the full picture a bit better.
+> What's the point of just 'token' ? What can be done with it?
 
-Probably should have a Fixes: header
+The idea behind exposing only the token at the moment is that it is
+the strict minimum required to identify all subflows linked to a
+single MPTCP connection. Without that, each subflow is seen as a
+"normal" TCP connection and it is not possible to find a link between
+each other.
+In other words, it allows the collection of all the subflows of a
+MPTCP connection in a BPF map and then the application of per subflow
+specific policies. More concrete examples of its usage are available
+at [1].
 
--Andi
+We try to avoid exposing new fields without related use-cases, this is
+why it is the only one currently. And this one is very important to
+identify MPTCP connections and subflows.
+
+> What are you thinking to add later?
+
+The next steps would be the exposure of additional subflow context
+data like the backup bit or some path manager fields to allow more
+flexible / accurate BPF decisions.
+We are also looking at implementing Packet Schedulers [2] and Path
+Managers through BPF.
+The ability of collecting all the paths available for a given MPTCP
+connection - identified by its token - at the BPF level should help
+for such decisions but more data will need to be exposed later to take
+smart decisions or to analyse some situations.
+
+I hope it makes the overall idea clearer.
+
+> Also selftest for new feature is mandatory.
+
+I will work on the selftests to add them in a v2. I was not sure a new
+selftest was required when exposing a new field but now it is clear,
+thanks!
+
+
+[1] https://github.com/multipath-tcp/mptcp_net-next/tree/scripts/bpf/examples
+[2] https://datatracker.ietf.org/doc/draft-bonaventure-iccrg-schedulers/
