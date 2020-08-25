@@ -2,160 +2,108 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77931C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF9B20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFAB20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:14:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YtIqtANn"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lYVNsW7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgHYWNU (ORCPT
+        id S1726656AbgHYWO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:13:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgHYWNR (ORCPT
+        Tue, 25 Aug 2020 18:14:29 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:43344 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726471AbgHYWO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 18:13:17 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33406C061574;
-        Tue, 25 Aug 2020 15:13:15 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w25so28624ljo.12;
-        Tue, 25 Aug 2020 15:13:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HhJsKBW02BtS7ow2CWHt5zwUeBTuEgT+ywQPrRSabdI=;
-        b=YtIqtANnDHeWhG7NcT0yReoTOgBY4QboTpun67yZZHj9DyZHtMHpeAtWAPsc/DoMFx
-         7DSRf3AyaoCF+vLJ+iZGSE7UqoF1/26kmRJPkTru5oQ2J3Ydb1kErHH5tBOf8E4rLlnf
-         bREUQwadn7XR3FTbFjMF/eUo6YHJwC6DIoJ+0oJZ2Wc4rwZWAMa8AUTGQqvf2FNvEYte
-         Xb0kyIqdBqhp9OnierClYc10HO4XWvYjqncixoRV/5YnwNKsrXa1TBBuVGQIQQ1sJBLq
-         +TnrM8eIufvT+F9YJs3wkH2YLjQVg/RKO5LBzT+6D6sLkFA36T4TJEN4PQDVKwcJrcyP
-         IW/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HhJsKBW02BtS7ow2CWHt5zwUeBTuEgT+ywQPrRSabdI=;
-        b=c2h+x04OOlht3Y7BjVU/9XTmIGraLcRyc1P5C42OTLKG6wMUQ2JnCBie+DFEb79c1+
-         lsakFrr3q1xl/a21W2l1/yMD7Dff0dKoAqUKRDq5eiNqqOCZeEGyZONCu3cfczTgRYTn
-         QR4zPTx8eKFltw1lXKCIlZZ+KZCQF/bQ0Gn39ser42vdSf7lhuH3I/FsbnLCoqWA/7tq
-         cTWshF7Ez9Wa4HajjLLAVCPjqLCJWQViNQocKlHVtM89CxYsJIGKpD8t/o5a+mLrAXLW
-         ZrbSNUEbxRutJA2Qk5GQ+i7K7ZPfKmp9lAXaaSm8+7L4rxzpjNWM73htcZnzU4ZDAqOu
-         6rYg==
-X-Gm-Message-State: AOAM530nkN8isI6kFQ1pvvodgY3cgN4pqzZjAc/JlimUH/xjZci3qahO
-        h0/bT/u06HMFwYXLftXYpvvBFkoggte/99gdiHw=
-X-Google-Smtp-Source: ABdhPJzz2wF45wgf/FXw/JhSJGsQdVgdCOrsFVQh5ecXi7Q0ljP46EcESueuQP9ZLOVOkt2NOX+z6IHI8EEFINShqYg=
-X-Received: by 2002:a2e:4e09:: with SMTP id c9mr5968600ljb.283.1598393593961;
- Tue, 25 Aug 2020 15:13:13 -0700 (PDT)
+        Tue, 25 Aug 2020 18:14:27 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PM9nN5171494;
+        Tue, 25 Aug 2020 22:14:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=n+SDM3E28nCnOj/ZIdYxllNKqwlO0WVL977/aXzCToM=;
+ b=lYVNsW7bRgguHLyVdZRvbHXMwu8efoU7zXQ4RCyySuj1uHi21FUYr8brkWIgSRe2dwqe
+ o6Vfz6U006JdqRAiS/8CySQBaXR+rM3xiNwOVnIZk7KZOkHEy9j+NUjb7W8Ua7nMK8k6
+ X/mkGh8cK7lVJ9GoMCemSwGdwzolgXDMN8Tk43iyJpL1kIvgEhvhU8Wt2y4D9UvKytN+
+ kGifzHOwQ+TifMMygaqqkgReDs6cA1gJj5A0nwivtp4AsPllQAC/HTCe2O3UL/5rKliz
+ wFORPcFoC3kFuvwY4dTqf6CjE1CyJGDOsg0geDjvc6Qh4iDFrXB12eJ0qJ7IzKd7nnnr Ew== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 333dbrw6y6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Aug 2020 22:14:21 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PMAbwF110146;
+        Tue, 25 Aug 2020 22:14:21 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 333rtyccw0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Aug 2020 22:14:21 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07PMEHkx010818;
+        Tue, 25 Aug 2020 22:14:17 GMT
+Received: from localhost (/10.159.234.29)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 25 Aug 2020 15:14:17 -0700
+Date:   Tue, 25 Aug 2020 15:14:16 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] iomap: Convert read_count to byte count
+Message-ID: <20200825221416.GK6096@magnolia>
+References: <20200824145511.10500-1-willy@infradead.org>
+ <20200824145511.10500-7-willy@infradead.org>
+ <20200825000902.GG12131@dread.disaster.area>
 MIME-Version: 1.0
-References: <20200825182919.1118197-1-kpsingh@chromium.org> <CAADnVQJG+vMTyuNGjWTYnWX11ZqJU-EE30UC5KPJtpv1MC78cw@mail.gmail.com>
-In-Reply-To: <CAADnVQJG+vMTyuNGjWTYnWX11ZqJU-EE30UC5KPJtpv1MC78cw@mail.gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 25 Aug 2020 15:13:02 -0700
-Message-ID: <CAADnVQK0sKWa-XMUR9y28KEqMCOQhnRcAu=MDv4rU8iPwLBW1w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v10 0/7] Generalizing bpf_local_storage
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825000902.GG12131@dread.disaster.area>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 adultscore=0
+ phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250166
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=1
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 2:05 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Tue, Aug 25, 2020 at 11:29 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > # v9 -> v10
-> >
-> > - Added NULL check for inode_storage_ptr before calling
-> >   bpf_local_storage_update
-> > - Removed an extraneous include
-> > - Rebased and added Acks / Signoff.
->
-> Hmm. Though it looks good I cannot apply it, because
-> test_progs -t map_ptr
-> is broken:
-> 2225: (18) r2 = 0xffffc900004e5004
-> 2227: (b4) w1 = 58
-> 2228: (63) *(u32 *)(r2 +0) = r1
->  R0=map_value(id=0,off=0,ks=4,vs=4,imm=0) R1_w=inv58
-> R2_w=map_value(id=0,off=4,ks=4,vs=8,imm=0) R3=inv49 R4=inv63
-> R5=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6_w=inv0
-> R7=invP8 R8=map_ptr(id=0,off=0,ks=4,vs=4,imm=0) R10=?
-> ; VERIFY_TYPE(BPF_MAP_TYPE_SK_STORAGE, check_sk_storage);
-> 2229: (18) r1 = 0xffffc900004e5000
-> 2231: (b4) w3 = 24
-> 2232: (63) *(u32 *)(r1 +0) = r3
->  R0=map_value(id=0,off=0,ks=4,vs=4,imm=0)
-> R1_w=map_value(id=0,off=0,ks=4,vs=8,imm=0)
-> R2_w=map_value(id=0,off=4,ks=4,vs=8,imm=0) R3_w=inv24 R4=inv63
-> R5=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6_w=inv0
-> R7=invP8 R8=map_pt?
-> 2233: (18) r3 = 0xffff8881f03f7000
-> ; VERIFY(indirect->map_type == direct->map_type);
-> 2235: (85) call unknown#195896080
-> invalid func unknown#195896080
-> processed 4678 insns (limit 1000000) max_states_per_insn 9
-> total_states 240 peak_states 178 mark_read 11
->
-> libbpf: -- END LOG --
-> libbpf: failed to load program 'cgroup_skb/egress'
-> libbpf: failed to load object 'map_ptr_kern'
-> libbpf: failed to load BPF skeleton 'map_ptr_kern': -4007
-> test_map_ptr:FAIL:skel_open_load open_load failed
-> #43 map_ptr:FAIL
->
-> Above 'invalid func unknown#195896080' happens
-> when libbpf fails to do a relocation at runtime.
-> Please debug.
-> It's certainly caused by this set, but not sure why.
+On Tue, Aug 25, 2020 at 10:09:02AM +1000, Dave Chinner wrote:
+> On Mon, Aug 24, 2020 at 03:55:07PM +0100, Matthew Wilcox (Oracle) wrote:
+> > Instead of counting bio segments, count the number of bytes submitted.
+> > This insulates us from the block layer's definition of what a 'same page'
+> > is, which is not necessarily clear once THPs are involved.
+> 
+> I'd like to see a comment on the definition of struct iomap_page to
+> indicate that read_count (and write count) reflect the byte count of
+> IO currently in flight on the page, not an IO count, because THP
+> makes tracking this via bio state hard. Otherwise it is not at all
+> obvious why it is done and why it is intentional...
 
-So I've ended up bisecting and debugging it.
-It turned out that the patch 1 was responsible.
-I've added the following hunk to fix it:
-diff --git a/tools/testing/selftests/bpf/progs/map_ptr_kern.c
-b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
-index 473665cac67e..982a2d8aa844 100644
---- a/tools/testing/selftests/bpf/progs/map_ptr_kern.c
-+++ b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
-@@ -589,7 +589,7 @@ static inline int check_stack(void)
-        return 1;
- }
+Agreed. :)
 
--struct bpf_sk_storage_map {
-+struct bpf_local_storage_map {
-        struct bpf_map map;
- } __attribute__((preserve_access_index));
+--D
 
-@@ -602,8 +602,8 @@ struct {
-
- static inline int check_sk_storage(void)
- {
--       struct bpf_sk_storage_map *sk_storage =
--               (struct bpf_sk_storage_map *)&m_sk_storage;
-+       struct bpf_local_storage_map *sk_storage =
-+               (struct bpf_local_storage_map *)&m_sk_storage;
-        struct bpf_map *map = (struct bpf_map *)&m_sk_storage;
-
-and pushed the whole set.
-In the future please always run test_progs and test_progs-no_alu32
-for every patch and submit patches only if _all_ tests are passing.
-Do not assume that your change is not responsible for breakage.
+> Otherwise the code looks OK.
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
