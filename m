@@ -2,379 +2,115 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7E3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70584C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC8E2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5D520665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:03:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598364206;
+	bh=Hi87Dnni+zuNjEdDGPHH1MVoXgRvXXA82mSVAGXzYd8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2o5BhqYJUi3ru3+uWsnz4viCVOnqyrRtaZmSM8uIJ2jkL9/aPKgsRnZkWcfqAWc8p
+	 C6IerNd9U9zRPGDLI1MVx/gUJEXzvxrNg0FJ6g2SZ9OixYOFfV1s06nz5AgHzfbah2
+	 u2dR0rRMtttePGdCDQrAMyynXILwmsEjz2LzOV0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726483AbgHYOCy (ORCPT
+        id S1726429AbgHYODY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:02:54 -0400
-Received: from mga06.intel.com ([134.134.136.31]:59247 "EHLO mga06.intel.com"
+        Tue, 25 Aug 2020 10:03:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726633AbgHYOA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:00:27 -0400
-IronPort-SDR: fJPxjCYB6MjMxPaTT7uS0/QYmqrCsaTcwwhI5iPTD6v1iJgmwY9wTgxKGhC4K4Fe7aGBQZgudc
- qU2+izDtRMxg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="217659403"
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="217659403"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 07:00:02 -0700
-IronPort-SDR: fMHsK6yBLyD6mP0G1l/gxjvKnuCii4RNjnsOIVjhyJHSJtvOq/S5NKMk43FKZqMMSGDH0WbN8f
- QofaSH/+Ur2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="402725591"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Aug 2020 06:59:59 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH 3/3] usb: dwc3: pci: Register a software node for the dwc3 platform device
-Date:   Tue, 25 Aug 2020 16:59:51 +0300
-Message-Id: <20200825135951.53340-4-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200825135951.53340-1-heikki.krogerus@linux.intel.com>
-References: <20200825135951.53340-1-heikki.krogerus@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1726598AbgHYN76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:59:58 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A20D72076C;
+        Tue, 25 Aug 2020 13:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598363997;
+        bh=Hi87Dnni+zuNjEdDGPHH1MVoXgRvXXA82mSVAGXzYd8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vYUEXt2nYPzRxjb4lktLjiQQEwvXW+aDCR+BoAONSISl4cD4MAp/uWi17RUo23Xxz
+         klhbo4mLM1QcV3oOBZUjzBUUUE5GZZj0XJm7Zw8nFveG3IOwIqAoyAQSvUYYCXREjX
+         +SQBUjkHLkiIYLQCkmew42r/T2W8ao99HwQrskEc=
+Date:   Tue, 25 Aug 2020 22:59:54 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     peterz@infradead.org
+Cc:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function
+ entry is not optimized (trigger by int3 breakpoint)
+Message-Id: <20200825225954.2202d28b449f2354d5c88070@kernel.org>
+In-Reply-To: <20200825133005.GY1362448@hirez.programming.kicks-ass.net>
+References: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
+        <20200825005426.f592075d13be740cb3c9aa77@kernel.org>
+        <7396e7b2079644a6aafd9670a111232b@trendmicro.com>
+        <20200825151538.f856d701a34f4e0561a64932@kernel.org>
+        <20200825120911.GX1362448@hirez.programming.kicks-ass.net>
+        <20200825221555.a2d72c9754284feced6a8536@kernel.org>
+        <20200825133005.GY1362448@hirez.programming.kicks-ass.net>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By registering the software node directly instead of just
-the properties in it, the driver can take advantage of also
-the other features the software nodes have.
+On Tue, 25 Aug 2020 15:30:05 +0200
+peterz@infradead.org wrote:
 
-Initially using the nodes for isolating the Intel Broxton
-specific power management quirk by handling it in Broxton's
-very own power management operations (which are supplied as
-part of the software node) instead of the drivers generic
-ones.
+> On Tue, Aug 25, 2020 at 10:15:55PM +0900, Masami Hiramatsu wrote:
+> 
+> > > damn... one last problem is dangling instances.. so close.
+> > > We can apparently unregister a kretprobe while there's still active
+> > > kretprobe_instance's out referencing it.
+> > 
+> > Yeah, kretprobe already provided the per-instance data (as far as
+> > I know, only systemtap depends on it). We need to provide it for
+> > such users.
+> > But if we only have one lock, we can avoid checking NMI because
+> > we can check the recursion with trylock. It is needed only if the
+> > kretprobe uses per-instance data. Or we can just pass a dummy
+> > instance on the stack.
+> 
+> I think it is true in general, you can unregister a rp while tasks are
+> preempted.
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/usb/dwc3/dwc3-pci.c | 175 ++++++++++++++++++------------------
- 1 file changed, 86 insertions(+), 89 deletions(-)
+Would you mean the kretprobe handler (or trampoline handler) will be
+preempted? All kprobes (including kretprobe) handler is running in
+non-preemptive state, so it shouldn't happen...
 
-diff --git a/drivers/usb/dwc3/dwc3-pci.c b/drivers/usb/dwc3/dwc3-pci.c
-index 242b6210380a4..43cc0f602820d 100644
---- a/drivers/usb/dwc3/dwc3-pci.c
-+++ b/drivers/usb/dwc3/dwc3-pci.c
-@@ -54,17 +54,12 @@
-  * struct dwc3_pci - Driver private structure
-  * @dwc3: child dwc3 platform_device
-  * @pci: our link to PCI bus
-- * @guid: _DSM GUID
-- * @has_dsm_for_pm: true for devices which need to run _DSM on runtime PM
-  * @wakeup_work: work for asynchronous resume
-  */
- struct dwc3_pci {
- 	struct platform_device *dwc3;
- 	struct pci_dev *pci;
- 
--	guid_t guid;
--
--	unsigned int has_dsm_for_pm:1;
- 	struct work_struct wakeup_work;
- };
- 
-@@ -108,6 +103,50 @@ static int dwc3_byt_enable_ulpi_refclock(struct pci_dev *pci)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM
-+static int dwc3_pci_intel_pm_dsm(struct device *dev, int param)
-+{
-+	union acpi_object *obj;
-+	union acpi_object tmp;
-+	union acpi_object argv4 = ACPI_INIT_DSM_ARGV4(1, &tmp);
-+	guid_t guid;
-+	int ret;
-+
-+	ret = guid_parse(PCI_INTEL_BXT_DSM_GUID, &guid);
-+	if (ret)
-+		return ret;
-+
-+	tmp.type = ACPI_TYPE_INTEGER;
-+	tmp.integer.value = param;
-+
-+	obj = acpi_evaluate_dsm(ACPI_HANDLE(dev), &guid,
-+				1, PCI_INTEL_BXT_FUNC_PMU_PWR, &argv4);
-+	if (!obj) {
-+		dev_err(dev, "failed to evaluate _DSM\n");
-+		return -EIO;
-+	}
-+
-+	ACPI_FREE(obj);
-+
-+	return 0;
-+}
-+
-+static int dwc3_pci_intel_suspend(struct device *dev)
-+{
-+	return dwc3_pci_intel_pm_dsm(dev->parent, PCI_INTEL_BXT_STATE_D3);
-+}
-+
-+static int dwc3_pci_intel_resume(struct device *dev)
-+{
-+	return dwc3_pci_intel_pm_dsm(dev->parent, PCI_INTEL_BXT_STATE_D0);
-+}
-+#endif /* CONFIG_PM */
-+
-+static const struct dev_pm_ops dwc3_pci_intel_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(dwc3_pci_intel_suspend, dwc3_pci_intel_resume)
-+	SET_RUNTIME_PM_OPS(dwc3_pci_intel_suspend, dwc3_pci_intel_resume, NULL)
-+};
-+
- static const struct property_entry dwc3_pci_intel_properties[] = {
- 	PROPERTY_ENTRY_STRING("dr_mode", "peripheral"),
- 	PROPERTY_ENTRY_BOOL("linux,sysdev_is_parent"),
-@@ -141,18 +180,28 @@ static const struct property_entry dwc3_pci_amd_properties[] = {
- 	{}
- };
- 
-+static const struct software_node dwc3_pci_intel_swnode = {
-+	.properties = dwc3_pci_intel_properties,
-+};
-+
-+static const struct software_node dwc3_pci_intel_pm_swnode = {
-+	.properties = dwc3_pci_intel_properties,
-+	.pm = &dwc3_pci_intel_pm_ops,
-+};
-+
-+static const struct software_node dwc3_pci_intel_mrfld_swnode = {
-+	.properties = dwc3_pci_mrfld_properties,
-+};
-+
-+static const struct software_node dwc3_pci_amd_swnode = {
-+	.properties = dwc3_pci_amd_properties,
-+};
-+
- static int dwc3_pci_quirks(struct dwc3_pci *dwc)
- {
- 	struct pci_dev			*pdev = dwc->pci;
- 
- 	if (pdev->vendor == PCI_VENDOR_ID_INTEL) {
--		if (pdev->device == PCI_DEVICE_ID_INTEL_BXT ||
--		    pdev->device == PCI_DEVICE_ID_INTEL_BXT_M ||
--		    pdev->device == PCI_DEVICE_ID_INTEL_EHLLP) {
--			guid_parse(PCI_INTEL_BXT_DSM_GUID, &dwc->guid);
--			dwc->has_dsm_for_pm = true;
--		}
--
- 		if (pdev->device == PCI_DEVICE_ID_INTEL_BYT) {
- 			struct gpio_desc *gpio;
- 			int ret;
-@@ -221,7 +270,6 @@ static void dwc3_pci_resume_work(struct work_struct *work)
- 
- static int dwc3_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
- {
--	struct property_entry *p = (struct property_entry *)id->driver_data;
- 	struct dwc3_pci		*dwc;
- 	struct resource		res[2];
- 	int			ret;
-@@ -264,7 +312,7 @@ static int dwc3_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
- 	dwc->dwc3->dev.parent = dev;
- 	ACPI_COMPANION_SET(&dwc->dwc3->dev, ACPI_COMPANION(dev));
- 
--	ret = platform_device_add_properties(dwc->dwc3, p);
-+	ret = device_add_software_node(&dwc->dwc3->dev, (void *)id->driver_data);
- 	if (ret < 0)
- 		goto err;
- 
-@@ -287,6 +335,7 @@ static int dwc3_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
- 
- 	return 0;
- err:
-+	device_remove_software_node(&dwc->dwc3->dev);
- 	platform_device_put(dwc->dwc3);
- 	return ret;
- }
-@@ -303,121 +352,86 @@ static void dwc3_pci_remove(struct pci_dev *pci)
- #endif
- 	device_init_wakeup(&pci->dev, false);
- 	pm_runtime_get(&pci->dev);
-+	device_remove_software_node(&dwc->dwc3->dev);
- 	platform_device_unregister(dwc->dwc3);
- }
- 
- static const struct pci_device_id dwc3_pci_id_table[] = {
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_BSW),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_BYT),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MRFLD),
--	  (kernel_ulong_t) &dwc3_pci_mrfld_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_mrfld_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLLP),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLH),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_SPTLP),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_SPTH),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_BXT),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_pm_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_BXT_M),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_pm_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_APL),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_KBP),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_GLK),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CNPLP),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CNPH),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CNPV),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ICLLP),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_EHLLP),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_pm_swnode },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_TGPLP),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_TGPH),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_JSP),
--	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_intel_swnode, },
- 
- 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_NL_USB),
--	  (kernel_ulong_t) &dwc3_pci_amd_properties, },
-+	  (kernel_ulong_t) &dwc3_pci_amd_swnode, },
- 	{  }	/* Terminating Entry */
- };
- MODULE_DEVICE_TABLE(pci, dwc3_pci_id_table);
- 
--#if defined(CONFIG_PM) || defined(CONFIG_PM_SLEEP)
--static int dwc3_pci_dsm(struct dwc3_pci *dwc, int param)
--{
--	union acpi_object *obj;
--	union acpi_object tmp;
--	union acpi_object argv4 = ACPI_INIT_DSM_ARGV4(1, &tmp);
--
--	if (!dwc->has_dsm_for_pm)
--		return 0;
--
--	tmp.type = ACPI_TYPE_INTEGER;
--	tmp.integer.value = param;
--
--	obj = acpi_evaluate_dsm(ACPI_HANDLE(&dwc->pci->dev), &dwc->guid,
--			1, PCI_INTEL_BXT_FUNC_PMU_PWR, &argv4);
--	if (!obj) {
--		dev_err(&dwc->pci->dev, "failed to evaluate _DSM\n");
--		return -EIO;
--	}
--
--	ACPI_FREE(obj);
--
--	return 0;
--}
--#endif /* CONFIG_PM || CONFIG_PM_SLEEP */
--
- #ifdef CONFIG_PM
- static int dwc3_pci_runtime_suspend(struct device *dev)
- {
--	struct dwc3_pci		*dwc = dev_get_drvdata(dev);
--
--	if (device_can_wakeup(dev))
--		return dwc3_pci_dsm(dwc, PCI_INTEL_BXT_STATE_D3);
--
--	return -EBUSY;
-+	return device_can_wakeup(dev) ? 0 : -EBUSY;
- }
- 
- static int dwc3_pci_runtime_resume(struct device *dev)
- {
- 	struct dwc3_pci		*dwc = dev_get_drvdata(dev);
--	int			ret;
--
--	ret = dwc3_pci_dsm(dwc, PCI_INTEL_BXT_STATE_D0);
--	if (ret)
--		return ret;
- 
- 	queue_work(pm_wq, &dwc->wakeup_work);
- 
-@@ -425,24 +439,7 @@ static int dwc3_pci_runtime_resume(struct device *dev)
- }
- #endif /* CONFIG_PM */
- 
--#ifdef CONFIG_PM_SLEEP
--static int dwc3_pci_suspend(struct device *dev)
--{
--	struct dwc3_pci		*dwc = dev_get_drvdata(dev);
--
--	return dwc3_pci_dsm(dwc, PCI_INTEL_BXT_STATE_D3);
--}
--
--static int dwc3_pci_resume(struct device *dev)
--{
--	struct dwc3_pci		*dwc = dev_get_drvdata(dev);
--
--	return dwc3_pci_dsm(dwc, PCI_INTEL_BXT_STATE_D0);
--}
--#endif /* CONFIG_PM_SLEEP */
--
- static const struct dev_pm_ops dwc3_pci_dev_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(dwc3_pci_suspend, dwc3_pci_resume)
- 	SET_RUNTIME_PM_OPS(dwc3_pci_runtime_suspend, dwc3_pci_runtime_resume,
- 		NULL)
- };
+> 
+> Anyway,. I think I have a solution, just need to talk to paulmck for a
+> bit.
+
+Ah, you mentioned that the removing the kfree() from the trampline
+handler? I think we can make an rcu callback which will kfree() the
+given instances. (If it works in NMI)
+
+> 
+> > > Ignoring that issue for the moment, the below seems to actually work.
+> > 
+> > OK, this looks good to me too.
+> > I'll make a series to rewrite kretprobe based on this patch, OK?
+> 
+> Please, I'll send the fix along when I have it.
+
+OK, I'm planning to (1) add a generic trampoline code (2) cleanup per-arch
+trampoline to use generic one, (3) rewrite the generic trampoline to use
+lockless code. Then it will not break anything.
+
+Thank you,
+
 -- 
-2.28.0
-
+Masami Hiramatsu <mhiramat@kernel.org>
