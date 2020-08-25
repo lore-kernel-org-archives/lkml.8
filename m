@@ -5,71 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D12CC433E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E485C2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2DE4208A9
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:51:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P0krXA7B"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QNKskWGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgHYTva (ORCPT
+        id S1726939AbgHYTve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:51:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23762 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726303AbgHYTvX (ORCPT
+        Tue, 25 Aug 2020 15:51:34 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:51285 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726619AbgHYTvX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 15:51:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598385081;
+        s=mimecast20190719; t=1598385082;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5qlL+97KahrH0B6SLbdOoBXQZ6eFfCbB78u4YYEIMu8=;
-        b=P0krXA7BZGLJHv4c0HkmYYE9Dg1QgYj+eAAFXtRCvB51h0mlhJBvnu2SWdukallApZZxyo
-        hSKc7AGWt2rpfSg217SbdDFbIjCwj3CT8dBA2xO3/czu3/3mpeVd5/jyJY0PgCwgFSwHYM
-        2+XCTnDrHHz9g8+eaGncbXng8hRbTno=
+        bh=DjOACk7+sj9DOgLuw8r03ZTGhj9N7xxOv/mPD0g7leg=;
+        b=QNKskWGXtKlj3M4JRu/o4q6v4/8a+eFk0S1bf9hgZp+XI8h/RtelI8ok4N5hFCu4uRHvdq
+        ipMYNwPxEcUtBYwdKUmHPklMAoS6wXtAuUVmHaHa2le4zMnq8LE0DsoLoxDY7KBAj4HdfX
+        Nufgxc6tjpLjfVxckt4ydf9d+ETS13E=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-14-Z3XQ-ki_O2i5H2Q_hTP8ZA-1; Tue, 25 Aug 2020 15:51:17 -0400
-X-MC-Unique: Z3XQ-ki_O2i5H2Q_hTP8ZA-1
+ us-mta-152-QU7l26KmMSyEh_jOWaA2_A-1; Tue, 25 Aug 2020 15:51:18 -0400
+X-MC-Unique: QU7l26KmMSyEh_jOWaA2_A-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0DBE481F01D;
-        Tue, 25 Aug 2020 19:51:15 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 260BA80EF8C;
+        Tue, 25 Aug 2020 19:51:17 +0000 (UTC)
 Received: from Whitewolf.redhat.com (ovpn-120-227.rdu2.redhat.com [10.10.120.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 421C45D9D3;
-        Tue, 25 Aug 2020 19:51:13 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 694DC5D9D3;
+        Tue, 25 Aug 2020 19:51:16 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
         nouveau@lists.freedesktop.org
-Cc:     Sean Paul <sean@poorly.run>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v4 09/20] drm/i915/dp: Extract drm_dp_has_mst()
-Date:   Tue, 25 Aug 2020 15:50:16 -0400
-Message-Id: <20200825195027.74681-10-lyude@redhat.com>
+Subject: [RFC v4 11/20] drm/nouveau/kms: Move drm_dp_cec_unset_edid() into nouveau_connector_detect()
+Date:   Tue, 25 Aug 2020 15:50:18 -0400
+Message-Id: <20200825195027.74681-12-lyude@redhat.com>
 In-Reply-To: <20200825195027.74681-1-lyude@redhat.com>
 References: <20200825195027.74681-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -80,90 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just a tiny drive-by cleanup, we can consolidate i915's code for
-checking for MST support into a helper to be shared across drivers.
+For whatever reason we currently unset the EDID for DP CEC support when
+responding to the connector being unplugged, instead of just doing it in
+nouveau_connector_detect() where we set the CEC EDID. This isn't really
+needed and could even potentially cause us to forget to unset the EDID
+if the connector is removed without a corresponding hpd event, so let's
+fix that.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Sean Paul <sean@poorly.run>
+Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
 ---
- drivers/gpu/drm/i915/display/intel_dp.c | 18 ++----------------
- include/drm/drm_dp_mst_helper.h         | 22 ++++++++++++++++++++++
- 2 files changed, 24 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index 79c27f91f42c0..1e29d3a012856 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -4699,20 +4699,6 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
- 	return true;
- }
- 
--static bool
--intel_dp_sink_can_mst(struct intel_dp *intel_dp)
--{
--	u8 mstm_cap;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
+index b90591114faaf..4a29f691c08e4 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -633,10 +633,11 @@ nouveau_connector_detect(struct drm_connector *connector, bool force)
+ 			conn_status = connector_status_connected;
+ 			goto out;
+ 		}
 -
--	if (intel_dp->dpcd[DP_DPCD_REV] < 0x12)
--		return false;
--
--	if (drm_dp_dpcd_readb(&intel_dp->aux, DP_MSTM_CAP, &mstm_cap) != 1)
--		return false;
--
--	return mstm_cap & DP_MST_CAP;
--}
--
- static bool
- intel_dp_can_mst(struct intel_dp *intel_dp)
- {
-@@ -4720,7 +4706,7 @@ intel_dp_can_mst(struct intel_dp *intel_dp)
+ 	}
  
- 	return i915->params.enable_dp_mst &&
- 		intel_dp->can_mst &&
--		intel_dp_sink_can_mst(intel_dp);
-+		drm_dp_has_mst(&intel_dp->aux, intel_dp->dpcd);
- }
+  out:
++	if (!nv_connector->edid)
++		drm_dp_cec_unset_edid(&nv_connector->aux);
  
- static void
-@@ -4729,7 +4715,7 @@ intel_dp_configure_mst(struct intel_dp *intel_dp)
- 	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
- 	struct intel_encoder *encoder =
- 		&dp_to_dig_port(intel_dp)->base;
--	bool sink_can_mst = intel_dp_sink_can_mst(intel_dp);
-+	bool sink_can_mst = drm_dp_has_mst(&intel_dp->aux, intel_dp->dpcd);
+ 	pm_runtime_mark_last_busy(dev->dev);
+ 	pm_runtime_put_autosuspend(dev->dev);
+@@ -1174,8 +1175,6 @@ nouveau_connector_hotplug(struct nvif_notify *notify)
+ 		return NVIF_NOTIFY_DROP;
+ 	}
  
- 	drm_dbg_kms(&i915->drm,
- 		    "[ENCODER:%d:%s] MST support: port: %s, sink: %s, modparam: %s\n",
-diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
-index 8b9eb4db3381c..2d8983a713e8c 100644
---- a/include/drm/drm_dp_mst_helper.h
-+++ b/include/drm/drm_dp_mst_helper.h
-@@ -911,4 +911,26 @@ __drm_dp_mst_state_iter_get(struct drm_atomic_state *state,
- 	for ((__i) = 0; (__i) < (__state)->num_private_objs; (__i)++) \
- 		for_each_if(__drm_dp_mst_state_iter_get((__state), &(mgr), NULL, &(new_state), (__i)))
+-	if (!plugged)
+-		drm_dp_cec_unset_edid(&nv_connector->aux);
+ 	NV_DEBUG(drm, "%splugged %s\n", plugged ? "" : "un", name);
  
-+/**
-+ * drm_dp_has_mst() - check whether or not a sink supports MST
-+ * @aux: The DP AUX channel to use
-+ * @dpcd: A cached copy of the DPCD capabilities for this sink
-+ *
-+ * Returns: %True if the sink supports MST, %false otherwise
-+ */
-+static inline bool
-+drm_dp_has_mst(struct drm_dp_aux *aux,
-+	       const u8 dpcd[DP_RECEIVER_CAP_SIZE])
-+{
-+	u8 mstm_cap;
-+
-+	if (dpcd[DP_DPCD_REV] < DP_DPCD_REV_12)
-+		return false;
-+
-+	if (drm_dp_dpcd_readb(aux, DP_MSTM_CAP, &mstm_cap) != 1)
-+		return false;
-+
-+	return !!(mstm_cap & DP_MST_CAP);
-+}
-+
- #endif
+ 	drm_helper_hpd_irq_event(connector->dev);
 -- 
 2.26.2
 
