@@ -2,99 +2,168 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D250C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4472074A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:01:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E222072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:03:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598385717;
-	bh=9BFGQrBVGwKkcS5++4f44QQmctuXCZMD3MvnoANhqaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=If5OEXMpPTmhsccIDcwXPFK4iAucyE7256UBakFQzrxzhXa2kxCCJGyWF/r3Wgpiu
-	 Ib71xva0TzWXEN462ExYqNTNwiieNz5eV/14eHwIKlNFWG3vNIx/JR3Pd318KulrE6
-	 h90/deuiA4UnekPpneOTc32IuwffXEgRFyyCylf4=
+	s=default; t=1598385814;
+	bh=bLQ/6Ns9xbbW32dBksiiwUFLCmw1usZgfNu6wzOIRRA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=GS9i159SQT5fIg8TujaWVSESAvnaA4lPYx26Uw5DXmysCX/Yqbd+q2pd0wHE+uIqm
+	 BS8wm4LLJaaRB2SOBR0TiphIVw/00ZPlVfT1NJdCuISuvuQSCCLLiZH+dQRCnqC1TQ
+	 uNkjiN08I0OR/k0/RNtLCqStz1HJ8NRSHf5heLyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgHYUB4 (ORCPT
+        id S1726593AbgHYUDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:01:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43372 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 16:03:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726158AbgHYUB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:01:56 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1726090AbgHYUDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 16:03:31 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEE442072D;
-        Tue, 25 Aug 2020 20:01:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADB662072D;
+        Tue, 25 Aug 2020 20:03:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598385715;
-        bh=9BFGQrBVGwKkcS5++4f44QQmctuXCZMD3MvnoANhqaE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GAySD+XMelBy6xMUpOIqw4YpRkgDbT4b4mDBDHcmzKzdvZoX1y8uMEkmJRnt9M/3J
-         vUUbAchCmMJyuGVSIpK3iw5IDCGbLy5HNFw3elDGvG1F2CTvLsPTAbz/HNhbVUeqG6
-         dxoQLX56Im+R5kSZilq/m0C+5rYKGuN8/wuS1am0=
-Date:   Tue, 25 Aug 2020 21:01:19 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Srinivasa Rao <srivasam@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
-        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
-        rohitkr@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, vsujithk <vsujithk@codeaurora.org>
-Subject: Re: [PATCH 5/5] Optimise lpass variant structure
-Message-ID: <20200825200119.GJ5379@sirena.org.uk>
-References: <1598375788-1882-1-git-send-email-srivasam@codeaurora.org>
- <1598375788-1882-6-git-send-email-srivasam@codeaurora.org>
+        s=default; t=1598385811;
+        bh=bLQ/6Ns9xbbW32dBksiiwUFLCmw1usZgfNu6wzOIRRA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=l4bpkPmXM7023mZgcud7LiuXiDySo6mIf1kjucmaMFMfdwWuxCgjMXMMeZWTQlTNZ
+         S8ccFLX7/o+uLWvZssFvEMAlrztDO4R5uWWMK5/l+J5KEs2v6I2ftwQ6ue1mdzaRhM
+         G1nZBjJwkbjF80aF+i2KZjX8PiAMGCDb4+gafrqQ=
+Date:   Tue, 25 Aug 2020 15:03:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        linux-pci@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch RFC 13/38] PCI: MSI: Rework pci_msi_domain_calc_hwirq()
+Message-ID: <20200825200329.GA1923406@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0FRtVia6Q6lt+M0P"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1598375788-1882-6-git-send-email-srivasam@codeaurora.org>
-X-Cookie: Don't get to bragging.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200821002946.594509001@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 21, 2020 at 02:24:37AM +0200, Thomas Gleixner wrote:
+> Retrieve the PCI device from the msi descriptor instead of doing so at the
+> call sites.
 
---0FRtVia6Q6lt+M0P
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'd like it *better* with "PCI/MSI: " in the subject (to match history
+and other patches in this series) and "MSI" here in the commit log,
+but nice cleanup and:
 
-On Tue, Aug 25, 2020 at 10:46:28PM +0530, Srinivasa Rao wrote:
-> From: vsujithk <vsujithk@codeaurora.org>
->=20
-> lpass variant structure has I2S and HDMI register fields, which are used
-> exclusively. To optimize memory, replace with union to select either
-> I2S or HDMI register fields.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Please submit patches using subject lines reflecting the style for the
-subsystem, this makes it easier for people to identify relevant patches.
-Look at what existing commits in the area you're changing are doing and
-make sure your subject lines visually resemble what they're doing.
-There's no need to resubmit to fix this alone.
+Minor comments below.
 
---0FRtVia6Q6lt+M0P
-Content-Type: application/pgp-signature; name="signature.asc"
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-pci@vger.kernel.org
+> ---
+>  arch/x86/kernel/apic/msi.c |    2 +-
+>  drivers/pci/msi.c          |   13 ++++++-------
+>  include/linux/msi.h        |    3 +--
+>  3 files changed, 8 insertions(+), 10 deletions(-)
+> 
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -232,7 +232,7 @@ EXPORT_SYMBOL_GPL(pci_msi_prepare);
+>  
+>  void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
+>  {
+> -	arg->msi_hwirq = pci_msi_domain_calc_hwirq(arg->msi_dev, desc);
+> +	arg->msi_hwirq = pci_msi_domain_calc_hwirq(desc);
 
------BEGIN PGP SIGNATURE-----
+I guess it's safe to assume that "arg->msi_dev ==
+msi_desc_to_pci_dev(desc)"?  I didn't try to verify that.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9Fbg8ACgkQJNaLcl1U
-h9ALOgf/Q++4zJDPt4TU4W9oHkQIZCvfQJMKc660SOgV0anLwXafEPGpcSmNY3zu
-5D2MW7A+6NBByXFp0BBGwqjlzOTKK71zef/OxrHl+suzaW/XWe2rDb3AF5oQU01i
-/jPDI0aGAZ7+4yR23sEVtgGb++1yTXTNIbBQWRxKSxC+cQaj0dsP8KfIJZGf2PO9
-67Exr6RYsqID8IoFuFXSnux1FiCVzzGLgejwfnkH5baqGmA7/ck7H3ehIavVWed4
-AxF30mewbt4QOlghFcCtFQwgZqDCE1fD/OUxO0GW+Sf9i6BGW4P3G3qXYOVGpXL9
-RluWkG1MsxgEcVsF59UP9OHeFAn1SQ==
-=8Cu3
------END PGP SIGNATURE-----
+>  }
+>  EXPORT_SYMBOL_GPL(pci_msi_set_desc);
+>  
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -1346,17 +1346,17 @@ void pci_msi_domain_write_msg(struct irq
+>  
+>  /**
+>   * pci_msi_domain_calc_hwirq - Generate a unique ID for an MSI source
+> - * @dev:	Pointer to the PCI device
+>   * @desc:	Pointer to the MSI descriptor
+>   *
+>   * The ID number is only used within the irqdomain.
+>   */
+> -irq_hw_number_t pci_msi_domain_calc_hwirq(struct pci_dev *dev,
+> -					  struct msi_desc *desc)
+> +irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc)
+>  {
+> +	struct pci_dev *pdev = msi_desc_to_pci_dev(desc);
 
---0FRtVia6Q6lt+M0P--
+If you named this "struct pci_dev *dev" (not "pdev"), the diff would
+be a little smaller and it would match other usage in the file.
+
+>  	return (irq_hw_number_t)desc->msi_attrib.entry_nr |
+> -		pci_dev_id(dev) << 11 |
+> -		(pci_domain_nr(dev->bus) & 0xFFFFFFFF) << 27;
+> +		pci_dev_id(pdev) << 11 |
+> +		(pci_domain_nr(pdev->bus) & 0xFFFFFFFF) << 27;
+>  }
+>  
+>  static inline bool pci_msi_desc_is_multi_msi(struct msi_desc *desc)
+> @@ -1406,8 +1406,7 @@ static void pci_msi_domain_set_desc(msi_
+>  				    struct msi_desc *desc)
+>  {
+>  	arg->desc = desc;
+> -	arg->hwirq = pci_msi_domain_calc_hwirq(msi_desc_to_pci_dev(desc),
+> -					       desc);
+> +	arg->hwirq = pci_msi_domain_calc_hwirq(desc);
+>  }
+>  #else
+>  #define pci_msi_domain_set_desc		NULL
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -369,8 +369,7 @@ void pci_msi_domain_write_msg(struct irq
+>  struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
+>  					     struct msi_domain_info *info,
+>  					     struct irq_domain *parent);
+> -irq_hw_number_t pci_msi_domain_calc_hwirq(struct pci_dev *dev,
+> -					  struct msi_desc *desc);
+> +irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc);
+>  int pci_msi_domain_check_cap(struct irq_domain *domain,
+>  			     struct msi_domain_info *info, struct device *dev);
+>  u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
+> 
