@@ -2,64 +2,136 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F07FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D68FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38E2620738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:46:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BhWogwVt"
+	by mail.kernel.org (Postfix) with ESMTP id 3F2BE20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:49:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598381365;
+	bh=lITIec98eJSFfEE7jsKrx3X/MFZJs2LmC/S3QiRCqnY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A4iPKBF6dcxVdGD1tcU0QfvXVty6MNHzqAlxuIedGcU9VRb9saGq1O9vYl+3GFzpz
+	 n8nH3IP56+xqRB5Hmx8U6l9WEgxaPOCgE/7ooMEt6SiRlUOtvLwRt0QZJjuWeUdeTz
+	 Z+W84TKyvcyplkS8DAyUojhkVUfm0CA9FxlVXOFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHYSq0 (ORCPT
+        id S1726666AbgHYStX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 14:46:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:57671 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726119AbgHYSqY (ORCPT
+        Tue, 25 Aug 2020 14:49:23 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52937 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgHYStU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 14:46:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598381183;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=EX4xXGP362ALPv/lOdd4O23mdmXEiwTrEdzpI5x9aws=;
-        b=BhWogwVtQxZlZv3MqNCI+eyh21Y48K7IBOp+qqIt65ZTeSdMYwzWzriNXGysFGy7Iz+Tt9
-        Lo9R7P3DtMQsiZzk2V9oIbVP3IGisdnukfqeQsAvhNHh9i5JpBuLgs+hUo71uATLtnHb6s
-        fIbwfhVIzY6Z2yD3z9AlDo3AAZk+3ng=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-66-a0wkXCM_NpOun_-f3qblyA-1; Tue, 25 Aug 2020 14:46:21 -0400
-X-MC-Unique: a0wkXCM_NpOun_-f3qblyA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1DC41008550;
-        Tue, 25 Aug 2020 18:46:20 +0000 (UTC)
-Received: from fuller.cnet (ovpn-112-10.gru2.redhat.com [10.97.112.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C29760C0F;
-        Tue, 25 Aug 2020 18:46:20 +0000 (UTC)
-Received: by fuller.cnet (Postfix, from userid 1000)
-        id 319E6409D738; Tue, 25 Aug 2020 15:44:50 -0300 (-03)
-Message-ID: <20200825184147.948670309@fuller.cnet>
-User-Agent: quilt/0.66
-Date:   Tue, 25 Aug 2020 15:41:47 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [patch 0/2] posix-timers: avoid nohz_full= IPIs via task cpu masks
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Tue, 25 Aug 2020 14:49:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x5so3660175wmi.2;
+        Tue, 25 Aug 2020 11:49:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=lwlHflOE4Bg8GdD7kpfA2k4MUUB6oSMZ6rjs7tdlxjk=;
+        b=GQh/5LNNwwYo3RfuGclP9MKz1aWiNI/txOSQ7ntjEyRCTM40Isw+DKTpfuEhAwfOK4
+         qT1cBkGfQfJsfB21vwAToXgEb+NWa/sJXJb4uy45hyYbFBf7s8+5k6ImE+VkSBXDRcml
+         SWhqEv1FMBDXQY5LdoUCKZEDm/s778dqHxsi4AROYzkYzvjKqjvNfeh/veUwO3v467NQ
+         wCYVx2J/+nuvxf0zq3ZIv3uv4xLHelkB9UCmPF7Tkzb5hMbJCJ+DqLq/R8WNHZD2xW2X
+         pBDNQxIWicXuPUyFTbYEiYTCFC2CD/iZadcMUWHV5Pw92C+RdHfe/U+tWe3INTk/oDKD
+         sb9A==
+X-Gm-Message-State: AOAM533nVnRU85PDgqLuCJuVsnZYw/Qy1Brtcmaa1jlrM8y/YVlqhECe
+        2v6Ix6hvYS58EAo3LVP6qpE9z9tYMPI=
+X-Google-Smtp-Source: ABdhPJy+C0eo7c2RxD1Gpi+NLpYBFVtKtj9PQvX0Zbfdy+e8F4TgRXykHdY/YRcIvDVUJ/iHHC4h3A==
+X-Received: by 2002:a1c:1fcb:: with SMTP id f194mr3434635wmf.28.1598381357412;
+        Tue, 25 Aug 2020 11:49:17 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id y142sm8270483wmd.3.2020.08.25.11.49.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 11:49:16 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 20:49:14 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com
+Subject: Re: [PATCH 2/3] ARM: dts: Add ethernet
+Message-ID: <20200825184914.GB2693@kozik-lap>
+References: <20200825170311.24886-1-l.stelmach@samsung.com>
+ <CGME20200825170323eucas1p2d299a6ac365e6a70d802757d439bc77c@eucas1p2.samsung.com>
+ <20200825170311.24886-2-l.stelmach@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200825170311.24886-2-l.stelmach@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset avoids IPIs to nohz_full= CPUs when the intersection 
-between the set of nohz_full CPUs and task allowed cpus is null.
+On Tue, Aug 25, 2020 at 07:03:10PM +0200, Łukasz Stelmach wrote:
+> Add node for ax88796c ethernet chip.
 
-See individual patches for details.
+Subject
+  ARM: dts: exynos: Add Ethernet to Artik 5 board
 
+> 
+> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos3250-artik5-eval.dts | 21 ++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos3250-artik5-eval.dts b/arch/arm/boot/dts/exynos3250-artik5-eval.dts
+> index 20446a846a98..44151a2cb35d 100644
+> --- a/arch/arm/boot/dts/exynos3250-artik5-eval.dts
+> +++ b/arch/arm/boot/dts/exynos3250-artik5-eval.dts
+> @@ -37,3 +37,24 @@ &mshc_2 {
+>  &serial_2 {
+>  	status = "okay";
+>  };
+> +
+> +&spi_0 {
+> +		status = "okay";
+> +		cs-gpios = <&gpx3 4 GPIO_ACTIVE_LOW>, <0>;
+> +
+> +		assigned-clocks        = <&cmu CLK_MOUT_MPLL>, <&cmu CLK_DIV_MPLL_PRE>, <&cmu CLK_MOUT_SPI0>,    <&cmu CLK_DIV_SPI0>,  <&cmu CLK_DIV_SPI0_PRE>, <&cmu CLK_SCLK_SPI0>;
+> +		assigned-clock-parents = <&cmu CLK_FOUT_MPLL>, <&cmu CLK_MOUT_MPLL>,    <&cmu CLK_DIV_MPLL_PRE>, <&cmu CLK_MOUT_SPI0>, <&cmu CLK_DIV_SPI0>,     <&cmu CLK_DIV_SPI0_PRE>;
+> +
+> +		ax88796c@0 {
+> +			compatible = "asix,ax88796c";
 
+Isn't checkpatch complaining about undocumented compatible? I didn't see
+a binding here.
+
+> +			interrupt-parent = <&gpx2>;
+> +			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +			spi-max-frequency = <40000000>;
+> +			reg = <0x0>;
+> +			reset-gpios = <&gpe0 2 GPIO_ACTIVE_LOW>;
+
+One line break.
+
+> +			controller-data {
+> +				samsung,spi-feedback-delay = <2>;
+> +				samsung,spi-chip-select-mode;
+
+What does samsung,spi-chip-select-mode mean? git grep does not find a binding.
+
+> +		};
+> +	};
+
+Whatever formatting you used here, it is not Linux coding style. Please
+fix indentation, linewrapping.
+
+Best regards,
+Krzysztof
