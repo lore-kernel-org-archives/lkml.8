@@ -2,235 +2,172 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D99C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 880DC2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:51:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598338282;
-	bh=dLhL6dPmhERcMqlQBLbhE8LoE6W9RMctbOefccjpeJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AkSaU1WSgHtvcEgc3nhj9UbPM/jyyWJPqyZLpKHmY2n6/8NLugOa28ELQ3Bn3hv9v
-	 EMnlzRw5WIatWsNp9tIc0CeaaSEDCRcKfSyvFkJuvIZofr+hJD9t6q6SW/G2iKBYcs
-	 mMmj2MCJI1Wdf/5Z+eT2EOqc20gP5Ou0/Y6Lct38=
+	by mail.kernel.org (Postfix) with ESMTP id 1F0BC2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:51:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rohmsemiconductoreurope.onmicrosoft.com header.i=@rohmsemiconductoreurope.onmicrosoft.com header.b="MhiVp2uq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgHYGvV (ORCPT
+        id S1729247AbgHYGvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:51:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729111AbgHYGvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:51:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 844DD2076C;
-        Tue, 25 Aug 2020 06:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598338279;
-        bh=dLhL6dPmhERcMqlQBLbhE8LoE6W9RMctbOefccjpeJs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wTPIXq+tDZCBqLY5h9jg2VnuZ4W6dejTDyTQZ6V8yeAfPL+HhWqNyaEMeWLheOU7p
-         fIzIiXphma4cMbcK1ZxogyvXf2KTXrrX51oKtVhvDIGpyJMObN96lHo+40ljiPlkIh
-         DK/5v5M/v8DEKqeiZStB8blwXcGygdNSPBnitwsc=
-Date:   Tue, 25 Aug 2020 08:51:35 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Himadri Pandya <himadrispandya@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        USB list <linux-usb@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH] net: usb: Fix uninit-was-stored issue in asix_read_cmd()
-Message-ID: <20200825065135.GA1316856@kroah.com>
-References: <20200823082042.20816-1-himadrispandya@gmail.com>
- <CACT4Y+Y1TpqYowNXj+OTcQwH-7T4n6PtPPa4gDWkV-np5KhKAQ@mail.gmail.com>
- <20200823101924.GA3078429@kroah.com>
- <CACT4Y+YbDODLRFn8M5QcY4CazhpeCaunJnP_udXtAs0rYoASSg@mail.gmail.com>
- <20200823105808.GB87391@kroah.com>
- <CACT4Y+ZiZQK8WBre9E4777NPaRK4UDOeZOeMZOQC=5tDsDu23A@mail.gmail.com>
+        Tue, 25 Aug 2020 02:51:40 -0400
+Received: from mail-db8eur05on2065.outbound.protection.outlook.com ([40.107.20.65]:35680
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729238AbgHYGvh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 02:51:37 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LtFmm2GUa0NqhF5/y0iASz4j2WXGw7+aAwUQ81rtwnkyMHJrCZKVd6Ahij568OAj+V4cA4w6y/coR5aucs8NJlZc32F1hdBzdbjUEEX4y1F2k4qke2p6l74At+KLFICZ/uq6YHqKIJy15zWYJ71xcp8g8dsFoBMKmRciYmfQobB44bFmJWAyG5wcPao/NtDSl3Am9I2kuQPjaBqgvn5BjyqZpoUHjieR3ybbom6RHHMhpirGA9T92pjh+saJAKKX3B2ijNKzgQiLCTOIrZU0gHdMyhjxQo0I/ksURKcoHolu4BZnhtwMoZdvhXqOoodutzBRo5HEEz3SNkpzpdBodg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ImM6DIYX0r2z9CmaNABp/M4Z9LB7QUB+e993laO9wfo=;
+ b=mW4EN36S2aMyAH4Xnx2JbeGMHeBbMtq8qecjakNVtSkvg7e2wosaSf38aeHobwriMc0xIrzZt0kAo7NEJuVjTXG+Qve7R5ma2dbEs4tB2msreC0BJTTiIoyEu6P016eYuKxbxRhX78Z3bqFvEmE8LC+egF5Dx+2JSAiwPjS22FqoXMnC8cOMJDFgXpMkQVfMrqaUOU2kjhroIba2orxACVeQOAPOTrZlt4baFA5ynv3CyDojsDknGGp8oz1YBmFeearDBuZPXdbRPBp6SYzYXkntY11Sw5FdqKVP/ES7jh3ACp53F2V4W7eTs9G1zTtW1kLmvI2V8lqVhaTuPVrq+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fi.rohmeurope.com; dmarc=pass action=none
+ header.from=fi.rohmeurope.com; dkim=pass header.d=fi.rohmeurope.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=rohmsemiconductoreurope.onmicrosoft.com;
+ s=selector1-rohmsemiconductoreurope-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ImM6DIYX0r2z9CmaNABp/M4Z9LB7QUB+e993laO9wfo=;
+ b=MhiVp2uqPzcD8v7JpqJGZlKglCoauMKQtd2nqtH4zDUlLNGavrbBHpZo+FRpr81q/Ru7KW/GGO7Vo+wZc3xFEzC/z1VuWwZ6rIWgwk+LcFPzfUJvwPSBjm5OHnrodcjeJklsvS2aQZQoyVwj387TUEvE1angIIJ8N6SuScGj8Vk=
+Received: from HE1PR03MB3162.eurprd03.prod.outlook.com (2603:10a6:7:55::20) by
+ HE1PR0302MB2761.eurprd03.prod.outlook.com (2603:10a6:3:f0::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3305.25; Tue, 25 Aug 2020 06:51:33 +0000
+Received: from HE1PR03MB3162.eurprd03.prod.outlook.com
+ ([fe80::3d81:df5c:63de:a527]) by HE1PR03MB3162.eurprd03.prod.outlook.com
+ ([fe80::3d81:df5c:63de:a527%6]) with mapi id 15.20.3305.031; Tue, 25 Aug 2020
+ 06:51:33 +0000
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "han.xu@nxp.com" <han.xu@nxp.com>,
+        "Anson.Huang@nxp.com" <Anson.Huang@nxp.com>,
+        "yibin.gong@nxp.com" <yibin.gong@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "aford173@gmail.com" <aford173@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "richard@nod.at" <richard@nod.at>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "jun.li@nxp.com" <jun.li@nxp.com>
+Subject: Re: [PATCH 03/16] arm64: dts: imx8mm-beacon-som.dtsi: Align regulator
+ names with schema
+Thread-Topic: [PATCH 03/16] arm64: dts: imx8mm-beacon-som.dtsi: Align
+ regulator names with schema
+Thread-Index: AQHWeknSKDZwJ6TG4kKPN+CgQ8rFoqlIY7aA
+Date:   Tue, 25 Aug 2020 06:51:33 +0000
+Message-ID: <fa042a4f670775f340e88fca8f363252112fd538.camel@fi.rohmeurope.com>
+References: <20200824190701.8447-1-krzk@kernel.org>
+         <20200824190701.8447-3-krzk@kernel.org>
+In-Reply-To: <20200824190701.8447-3-krzk@kernel.org>
+Reply-To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Accept-Language: fi-FI, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: bootlin.com; dkim=none (message not signed)
+ header.d=none;bootlin.com; dmarc=none action=none
+ header.from=fi.rohmeurope.com;
+x-originating-ip: [62.78.225.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 20fefdd0-5d9c-4aab-0c80-08d848c34dcb
+x-ms-traffictypediagnostic: HE1PR0302MB2761:
+x-microsoft-antispam-prvs: <HE1PR0302MB2761DA9CB3D3BF9F08886E8AAD570@HE1PR0302MB2761.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: AiiuacgEG8yezxCtc+tbuMa5XHTLXD3UZ7yigD2JF9Q6YG632oSVGG62pMKnO/xvg/HPbZ/L87FL6atSj+RsES33gtbh3RLPD0K1ynQ7oVzRifyFZlLgIlBTkdmfbvgsYr87xfzdFLZL8piOoSQtwnrMAqV70w7f0UxFMJ6ysgau0mn45ZQ3DdwDm2T/Ce4zC2G6LZNFrV7OtY5iaUYWezN4pqt6i5gf2oQWSGNyNNY/6X2UOesDDtvPDNwHkaKsQR1Ao9HF2QQC9ZMPIYPYhvWvwuLRSOlSK6R4vp50GJzkIUet9q9XEc/M/qOriau+wd5xwm/ID6zLaxdc8W7ngWqrf9PgIHek5h1mJFYeg4gDfLleQ/zWTmN0tv8A3atUXUfnIbDEgWzk4cL+DPPGHw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR03MB3162.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(346002)(376002)(39850400004)(396003)(6486002)(478600001)(2616005)(86362001)(186003)(26005)(5660300002)(7416002)(6506007)(316002)(8936002)(66556008)(3450700001)(6512007)(71200400001)(66446008)(64756008)(66476007)(66946007)(76116006)(8676002)(110136005)(83380400001)(2906002)(921003)(32563001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: JFMoHjX2V0MQcuYDMClJzXBrOj0rmEraW+GdDwQcWqjdX/WXxBq4Q/qlLEAW++WvzK/ShP1VUx/kQbkfgAkBENjxuiPOmspiftQ+YOoKCPc7YiOTln1jjImZEotNzQPFqWz67yyvUYE+wRKXSnKrldLDUu1tbDMIWaYwQ0Itjh5uGXaIuPQE1L7w9m9EnP/fPaOocV8PsBqAES2FRrtU4bxAq/MN6b7ABxbxt6BayoE5KkXnO67YpcV0bHm5fepr6VwbwgWsvtBXocj3lckrsc1yy3ftZJaQtSiS70Ln7GiiiDTEs3124rMKFCLyA/LPWt6BTof3ZlgSVeoSrihAni+ickIpYgvMb8AR+pWKAks6Bu8yO3060NKesEtgNCUkf16GfXBPArRERAwuoTradnl93eO3f3Rq1AxvEEK1uW3QjOsB3+ERfZ2MByJLEMD1bKqyJVeMosqJSJuY79oca146rnVLnSTIO7/VeDzUhlPUHJ8GqP9/tEl3QZsCT2d2D4XE7+CWEa8UNS3kush1jwqlmpG73gnUvh7Cno5rZpnmmFEWgKyYo3b2/uswuiLUdLvtCcMlXsMzrjGmRDsmI+wRKlonRirEUUHtiOwtwEm/CYFsb6gGg4CXR00RQ9ci/SqGjeD75BXf4OvV3Gi1Mw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A58FAF577ED39742859C2E9D3C43271D@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+ZiZQK8WBre9E4777NPaRK4UDOeZOeMZOQC=5tDsDu23A@mail.gmail.com>
+X-OriginatorOrg: fi.rohmeurope.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR03MB3162.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 20fefdd0-5d9c-4aab-0c80-08d848c34dcb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Aug 2020 06:51:33.0922
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 94f2c475-a538-4112-b5dd-63f17273d67a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4kbNBjPfE/CitspfST5gxk3HXyVvMycEdp0jRz+Ss0x6ybhOGC0lH6s9neqlqJTdsvGE+1gdl6cxUroHkmzHU9/TWQ07r8G8hICiuBplRGWKftnHIai5sX8T0NtC3WQ2
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0302MB2761
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:55:28AM +0200, Dmitry Vyukov wrote:
-> On Sun, Aug 23, 2020 at 12:57 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Sun, Aug 23, 2020 at 12:31:03PM +0200, Dmitry Vyukov wrote:
-> > > On Sun, Aug 23, 2020 at 12:19 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Sun, Aug 23, 2020 at 11:26:27AM +0200, Dmitry Vyukov wrote:
-> > > > > On Sun, Aug 23, 2020 at 10:21 AM Himadri Pandya
-> > > > > <himadrispandya@gmail.com> wrote:
-> > > > > >
-> > > > > > Initialize the buffer before passing it to usb_read_cmd() function(s) to
-> > > > > > fix the uninit-was-stored issue in asix_read_cmd().
-> > > > > >
-> > > > > > Fixes: KMSAN: kernel-infoleak in raw_ioctl
-> > > > > > Reported by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
-> > > > > >
-> > > > > > Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
-> > > > > > ---
-> > > > > >  drivers/net/usb/asix_common.c | 2 ++
-> > > > > >  1 file changed, 2 insertions(+)
-> > > > > >
-> > > > > > diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
-> > > > > > index e39f41efda3e..a67ea1971b78 100644
-> > > > > > --- a/drivers/net/usb/asix_common.c
-> > > > > > +++ b/drivers/net/usb/asix_common.c
-> > > > > > @@ -17,6 +17,8 @@ int asix_read_cmd(struct usbnet *dev, u8 cmd, u16 value, u16 index,
-> > > > > >
-> > > > > >         BUG_ON(!dev);
-> > > > > >
-> > > > > > +       memset(data, 0, size);
-> > > > >
-> > > > > Hi Himadri,
-> > > > >
-> > > > > I think the proper fix is to check
-> > > > > usbnet_read_cmd/usbnet_read_cmd_nopm return value instead.
-> > > > > Memsetting data helps to fix the warning at hand, but the device did
-> > > > > not send these 0's and we use them as if the device did send them.
-> > > >
-> > > > But, for broken/abusive devices, that really is the safest thing to do
-> > > > here.  They are returning something that is obviously not correct, so
-> > > > either all callers need to check the size received really is the size
-> > > > they asked for, or we just plod onward with a 0 value like this.  Or we
-> > > > could pick some other value, but that could cause other problems if it
-> > > > is treated as an actual value.
-> > >
-> > > Do we want callers to do at least some error check (e.g. device did
-> > > not return anything at all, broke, hang)?
-> > > If yes, then with a separate helper function that fails on short
-> > > reads, we can get both benefits at no additional cost. User code will
-> > > say "I want 4 bytes, anything that is not 4 bytes is an error" and
-> > > then 1 error check will do. In fact, it seems that that was the
-> > > intention of whoever wrote this code (they assumed no short reads),
-> > > it's just they did not actually implement that "anything that is not 4
-> > > bytes is an error" part.
-> > >
-> > >
-> > > > > Perhaps we need a separate helper function (of a bool flag) that will
-> > > > > fail on incomplete reads. Maybe even in the common USB layer because I
-> > > > > think we've seen this type of bug lots of times and I guess there are
-> > > > > dozens more.
-> > > >
-> > > > It's not always a failure, some devices have protocols that are "I could
-> > > > return up to a max X bytes but could be shorter" types of messages, so
-> > > > it's up to the caller to check that they got what they really asked for.
-> > >
-> > > Yes, that's why I said _separate_ helper function. There seems to be
-> > > lots of callers that want exactly this -- "I want 4 bytes, anything
-> > > else is an error". With the current API it's harder to do - you need
-> > > additional checks, additional code, maybe even additional variables to
-> > > store the required size. APIs should make correct code easy to write.
-> >
-> > I guess I already answered both of these in my previous email...
-> >
-> > > > Yes, it's more work to do this checking.  However converting the world
-> > > > over to a "give me an error value if you don't read X number of bytes"
-> > > > function would also be the same amount of work, right?
-> > >
-> > > Should this go into the common USB layer then?
-> > > It's weird to have such a special convention on the level of a single
-> > > driver. Why are rules for this single driver so special?...
-> >
-> > They aren't special at all, so yes, we should be checking for a short
-> > read everywhere.  That would be the "correct" thing to do, I was just
-> > suggesting a "quick fix" here, sorry.
-> 
-> Re quick fix, I guess it depends on the amount of work for the larger
-> fix and if we can find volunteers (thanks Himadri!). We need to be
-> practical as well.
-> 
-> Re:
->         retval = usb_control_msg(....., data, data_size, ...);
->         if (retval < buf_size) {
-> 
-> There may be a fine line between interfaces and what code they
-> provoke. Let me describe my reasoning.
-> 
-> Yes, the current interface allows writing correct code with moderate
-> amount of effort. Yet we see cases where it's used incorrectly, maybe
-> people were just a little bit lazy, or maybe they did not understand
-> how to use it properly (nobody reads the docs, and it's also
-> reasonable to assume that if you ask for N bytes and the function does
-> not fail, then you get N bytes).
-
-I did a quick scan of the tree, and in short, I think it's worse than we
-both imagined, more below...
-
-> Currently to write correct code (1) we need a bit of duplication,
-> which gets worse if data_size is actually some lengthy expression
-> (X+Y*Z), maybe one will need an additional variable to use it
-> correctly.
-> (2) one needs to understand the contract;
-> (3) may be subject to the following class of bugs (after some copy-paste:
->         retval = usb_control_msg(....., data, 4, ...);
->         if (retval < 2) {
-> This class of bugs won't be necessary immediately caught by kernel
-> testing systems (can have long life-time).
-> 
-> I would add a "default" function (with shorter name) that does full read:
-> 
-> if (!usb_control_msg(, ...., data, 4))
-> 
-> and a function with longer name to read variable-size data:
-> 
-> n = usb_control_msg_variable_length(, ...., data, sizeof(data)));
-> 
-> The full read should be "the default" (shorter name), because if you
-> need full read and use the wrong function, it won't be caught by
-> testing (most likely long-lived bug). Whereas if you use full read for
-> lengthy variable size data read, this will be immediately caught
-> during any testing (even manual) -- you ask for 4K, you get fewer
-> bytes, all your reads fail.
-> So having "full read" easier to spell will lead to fewer bugs by design.
-
-Originally I would sick to my first proposal that "all is fine" and the
-api is "easy enough", but in auditing the tree, it's horrid.
-
-The error checking for this function call is almost non-existant.  And,
-to make things more difficult, this is a bi-directional call, it is a
-read or write call, depending on what USB endpoint the user asks for (or
-both for some endpoints.)  So trying to automatically scan the tree for
-valid error handling is really really hard.
-
-Combine that with the need of many subsystems to "wrap" this function in
-a helper call, because the USB core isn't providing a useful call it
-could call directly, and we have a total mess.
-
-At first glance, I think this can all be cleaned up, but it will take a
-bit of tree-wide work.  I agree, we need a "read this message and error
-if the whole thing is not there", as well as a "send this message and
-error if the whole thing was not sent", and also a way to handle
-stack-provided data, which seems to be the primary reason subsystems
-wrap this call (they want to make it easier on their drivers to use it.)
-
-Let me think about this in more detail, but maybe something like:
-	usb_control_msg_read()
-	usb_control_msg_send()
-is a good first step (as the caller knows this) and stack provided data
-would be allowed, and it would return an error if the whole message was
-not read/sent properly.  That way we can start converting everything
-over to a sane, and checkable, api and remove a bunch of wrapper
-functions as well.
-
-thanks,
-
-greg k-h
+SGVsbG8gS3J6eXN6dG9mLA0KDQpKdXN0IHNvbWUgcXVlc3Rpb25zIC0gcGxlYXNlIGlnbm9yZSBp
+ZiBJIG1pc3VuZGVyc3Rvb2QgdGhlIGltcGFjdCBvZg0KdGhlIGNoYW5nZS4NCg0KT24gTW9uLCAy
+MDIwLTA4LTI0IGF0IDIxOjA2ICswMjAwLCBLcnp5c3p0b2YgS296bG93c2tpIHdyb3RlOg0KPiBE
+ZXZpY2UgdHJlZSBzY2hlbWEgZXhwZWN0cyByZWd1bGF0b3IgbmFtZXMgdG8gYmUgbG93ZXJjYXNl
+LiAgVGhpcw0KPiBmaXhlcw0KPiBkdGJzX2NoZWNrIHdhcm5pbmdzIGxpa2U6DQo+IA0KPiAgICAg
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1uLWRkcjQtZXZrLmR0LnlhbWw6IHBt
+aWNANGI6DQo+IHJlZ3VsYXRvcnM6TERPMTpyZWd1bGF0b3ItbmFtZTowOiAnTERPMScgZG9lcyBu
+b3QgbWF0Y2ggJ15sZG9bMS02XSQnDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBLcnp5c3p0b2YgS296
+bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+DQo+IC0tLQ0KPiAgLi4uL2Jvb3QvZHRzL2ZyZWVzY2Fs
+ZS9pbXg4bW4tZGRyNC1ldmsuZHRzICAgIHwgMjIgKysrKysrKysrLS0tLS0tDQo+IC0tLS0NCj4g
+IDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCj4gDQo+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW4tZGRyNC1l
+dmsuZHRzDQo+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1uLWRkcjQtZXZr
+LmR0cw0KPiBpbmRleCBhMWU1NDgzZGJiYmUuLjI5OWNhZWQ1ZDQ2ZSAxMDA2NDQNCj4gLS0tIGEv
+YXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1uLWRkcjQtZXZrLmR0cw0KPiArKysg
+Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bW4tZGRyNC1ldmsuZHRzDQo+IEBA
+IC02MCw3ICs2MCw3IEBADQo+ICANCj4gIAkJcmVndWxhdG9ycyB7DQo+ICAJCQlidWNrMV9yZWc6
+IEJVQ0sxIHsNCj4gLQkJCQlyZWd1bGF0b3ItbmFtZSA9ICJCVUNLMSI7DQo+ICsJCQkJcmVndWxh
+dG9yLW5hbWUgPSAiYnVjazEiOw0KDQpJIGFtIG5vdCBhZ2FpbnN0IHRoaXMgY2hhbmdlIGJ1dCBJ
+IHdvdWxkIGV4cGVjdCBzZWVpbmcgc29tZSBvdGhlcg0KcGF0Y2hlcyB0b28/IEkgZ3Vlc3MgdGhp
+cyB3aWxsIGNoYW5nZSB0aGUgcmVndWxhdG9yIG5hbWUgaW4gcmVndWxhdG9yDQpjb3JlLCByaWdo
+dD8gU28gbWF5YmUgSSBhbSBtaXN0YWtlbiBidXQgaXQgbG9va3MgdG8gbWUgdGhpcyBjaGFuZ2Ug
+aXMNCnZpc2libGUgaW4gc3VwcGxpZXJzLCBzeXNmcyBhbmQgZGVidWdmcyB0b28/IFRodXMgY2hh
+bmdpbmcgdGhpcyBzb3VuZHMNCmEgYml0IGxpa2UgYXNraW5nIGZvciBhIG5vc2UgYmxlZWQgOikg
+QW0gSSByaWdodCB0aGF0IHRoZSBpbXBhY3Qgb2YNCnRoaXMgY2hhbmdlIGhhcyBiZWVuIHRob3Jv
+dWdobHkgdGVzdGVkPyBBcmUgdGhlcmUgYW55IG90aGVyIHBhdGNoZXMNCih0aGF0IEkgaGF2ZSBu
+b3Qgc2VlbikgcmVsYXRlZCB0byB0aGlzIGNoYW5nZT8NCg0KPiAgCQkJCXJlZ3VsYXRvci1taW4t
+bWljcm92b2x0ID0gPDcwMDAwMD47DQo+ICAJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8
+MTMwMDAwMD47DQo+ICAJCQkJcmVndWxhdG9yLWJvb3Qtb247DQo+IEBAIC02OSw3ICs2OSw3IEBA
+DQo+ICAJCQl9Ow0KPiAgDQo+ICAJCQlidWNrMl9yZWc6IEJVQ0syIHsNCj4gLQkJCQlyZWd1bGF0
+b3ItbmFtZSA9ICJCVUNLMiI7DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAiYnVjazIiOw0KPiAg
+CQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDcwMDAwMD47DQo+ICAJCQkJcmVndWxhdG9y
+LW1heC1taWNyb3ZvbHQgPSA8MTMwMDAwMD47DQo+ICAJCQkJcmVndWxhdG9yLWJvb3Qtb247DQo+
+IEBAIC03OSwxNCArNzksMTQgQEANCj4gIA0KPiAgCQkJYnVjazNfcmVnOiBCVUNLMyB7DQo+ICAJ
+CQkJLy8gQlVDSzUgaW4gZGF0YXNoZWV0DQo+IC0JCQkJcmVndWxhdG9yLW5hbWUgPSAiQlVDSzMi
+Ow0KPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gImJ1Y2szIjsNCj4gIAkJCQlyZWd1bGF0b3ItbWlu
+LW1pY3Jvdm9sdCA9IDw3MDAwMDA+Ow0KPiAgCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0g
+PDEzNTAwMDA+Ow0KPiAgCQkJfTsNCj4gIA0KPiAgCQkJYnVjazRfcmVnOiBCVUNLNCB7DQo+ICAJ
+CQkJLy8gQlVDSzYgaW4gZGF0YXNoZWV0DQo+IC0JCQkJcmVndWxhdG9yLW5hbWUgPSAiQlVDSzQi
+Ow0KPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gImJ1Y2s0IjsNCj4gIAkJCQlyZWd1bGF0b3ItbWlu
+LW1pY3Jvdm9sdCA9IDwzMDAwMDAwPjsNCj4gIAkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9
+IDwzMzAwMDAwPjsNCj4gIAkJCQlyZWd1bGF0b3ItYm9vdC1vbjsNCj4gQEAgLTk1LDcgKzk1LDcg
+QEANCj4gIA0KPiAgCQkJYnVjazVfcmVnOiBCVUNLNSB7DQo+ICAJCQkJLy8gQlVDSzcgaW4gZGF0
+YXNoZWV0DQo+IC0JCQkJcmVndWxhdG9yLW5hbWUgPSAiQlVDSzUiOw0KPiArCQkJCXJlZ3VsYXRv
+ci1uYW1lID0gImJ1Y2s1IjsNCg0KV2hhdCBJIHNlZSBpbiBiZDcxOHg3LXJlZ3VsYXRvci5jIGZv
+ciBMRE82IGRlc2MgaXM6DQoNCiAgICAgICAgICAgICAgICAgICAgICAgIC8qIExETzYgaXMgc3Vw
+cGxpZWQgYnkgYnVjazUgKi8NCiAgICAgICAgICAgICAgICAgICAgICAgIC5zdXBwbHlfbmFtZSA9
+ICJidWNrNSIsDQoNClNvLCBpcyB0aGlzIGNoYW5nZSBnb2luZyB0byBjaGFuZ2UgdGhlIHN1cHBs
+eS1jaGFpbiBmb3IgdGhlIGJvYXJkPyBJcw0KdGhpcyBpbnRlbmRlZD8gKE9yIGFtIEkgbWlzdGFr
+ZW4gb24gd2hhdCBpcyB0aGUgaW1wYWN0IG9mIHJlZ3VsYXRvci0NCm5hbWUgcHJvcGVydHk/KQ0K
+DQpCZXN0IFJlZ2FyZHMNCglNYXR0aSBWYWl0dGluZW4NCg==
