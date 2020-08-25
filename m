@@ -2,153 +2,352 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6B9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EECC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC8F20782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D35820786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:16:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="NBH/ZiIH"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UfHkoXBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgHYQN0 (ORCPT
+        id S1726664AbgHYQQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:13:26 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.119]:23366 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726466AbgHYQNY (ORCPT
+        Tue, 25 Aug 2020 12:16:15 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:47773 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726094AbgHYQQM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:13:24 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id DCCC96EC52
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 11:13:19 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id AbZXkLuUbdbRzAbZXkCvRO; Tue, 25 Aug 2020 11:13:19 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:Subject:From:References:Cc:To:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zRcUZk0FbZItivluILvSCwbMxqJLNDQ9MNKks1E4NzY=; b=NBH/ZiIHLzDLxAIWa68ddoB+08
-        r9yYXlJWKF4E0JX+xfwq0H7lc5kizf4Mx+GByP0UgXAP9S1OaGbKzdfrd3Pjd5ND1VLo9MK06tMyb
-        Bt1Mp2ANuN2WEpMnNZiF7Grw8+zMgH4M5OF71/dVoTHysAGoPANlX6MaatGnbeCuaLKFk2DeNMvSx
-        78+tWXW5pm7CID70jzgIkmgjfR+RqwHCEXMorjG35qzzR5gRFbBPl2QzUEFGkoLwI0AFzhmVfS6YP
-        CZLaToIKV996ZTZXqGVLNIKQoIggW/vcdh3Gl+K2Vo/FdOcbx1F809Va44DfFpYkzZg8uBmADybFj
-        mxth+kcQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:57972 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1kAbZX-000dj8-FM; Tue, 25 Aug 2020 11:13:19 -0500
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roland Dreier <roland@purestorage.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200825155142.349651-1-alex.dewar90@gmail.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Subject: Re: [PATCH] IB/qib: remove superfluous fallthrough statements
-Message-ID: <4877c3a5-365e-4500-43c0-4a4361e2cda3@embeddedor.com>
-Date:   Tue, 25 Aug 2020 11:19:18 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 25 Aug 2020 12:16:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598372171; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=+pAZ+GZwg+dyHEK9ty9PV7fNDRVaLYxMaLMuViXVx20=; b=UfHkoXBVCj62QCL4xeg+d14cR9z2olk10CQgWPZ7HJuxHBYA6HCvhUs6Fay1fkQ/ehAekoE0
+ nRyFFY3LRH6CrzPFXaojpvHYeQIkzvgz8gIGoZLXxL0nRPuCaDD9saYg3TdEQhlubxfsXew9
+ Ii1tPZgk8W9t3KRpScO7q9yOGT0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f453945053b5de0bb30568d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Aug 2020 16:16:05
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BE8C4C433C6; Tue, 25 Aug 2020 16:16:04 +0000 (UTC)
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4E236C433CA;
+        Tue, 25 Aug 2020 16:16:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4E236C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Tue, 25 Aug 2020 10:16:02 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>, linux-pm@vger.kernel.org,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] PM / Domains: Add support for PM domain on/off
+ notifiers for genpd
+Message-ID: <20200825161602.GE12523@codeaurora.org>
+References: <20200819104057.318230-1-ulf.hansson@linaro.org>
+ <20200819104057.318230-4-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200825155142.349651-1-alex.dewar90@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1kAbZX-000dj8-FM
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:57972
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200819104057.318230-4-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 19 2020 at 04:41 -0600, Ulf Hansson wrote:
+>A device may have specific HW constraints that must be obeyed to, before
+>its corresponding PM domain (genpd) can be powered off - and vice verse at
+>power on. These constraints can't be managed through the regular runtime PM
+>based deployment for a device, because the access pattern for it, isn't
+>always request based. In other words, using the runtime PM callbacks to
+>deal with the constraints doesn't work for these cases.
+>
+>For these reasons, let's instead add a PM domain power on/off notification
+>mechanism to genpd. To add/remove a notifier for a device, the device must
+>already have been attached to the genpd, which also means that it needs to
+>be a part of the PM domain topology.
+>
+>To add/remove a notifier, let's introduce two genpd specific functions:
+> - dev_pm_genpd_add|remove_notifier()
+>
+>Note that, to further clarify when genpd power on/off notifiers may be
+>used, one can compare with the existing CPU_CLUSTER_PM_ENTER|EXIT
+>notifiers. In the long run, the genpd power on/off notifiers should be able
+>to replace them, but that requires additional genpd based platform support
+>for the current users.
+>
+>Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+>---
+> drivers/base/power/domain.c | 130 ++++++++++++++++++++++++++++++++++--
+> include/linux/pm_domain.h   |  15 +++++
+> 2 files changed, 141 insertions(+), 4 deletions(-)
+>
+>diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+>index 4b787e1ff188..9cb85a5e8342 100644
+>--- a/drivers/base/power/domain.c
+>+++ b/drivers/base/power/domain.c
+>@@ -545,13 +545,21 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+> 	if (!genpd->gov)
+> 		genpd->state_idx = 0;
+>
+>+	/* Notify consumers that we are about to power off. */
+>+	ret = raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_OFF,
+>+				      NULL);
+>+	if (ret)
+>+		return ret;
+>+
+> 	/* Don't power off, if a child domain is waiting to power on. */
+>-	if (atomic_read(&genpd->sd_count) > 0)
+>-		return -EBUSY;
+>+	if (atomic_read(&genpd->sd_count) > 0) {
+>+		ret = -EBUSY;
+>+		goto busy;
+>+	}
+>
+> 	ret = _genpd_power_off(genpd, true);
+> 	if (ret)
+>-		return ret;
+>+		goto busy;
+>
+> 	genpd->status = GENPD_STATE_OFF;
+> 	genpd_update_accounting(genpd);
+>@@ -564,6 +572,9 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+> 	}
+>
+> 	return 0;
+>+busy:
+>+	raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_ON, NULL);
+It would be helpful to abstract these notification related calls into
+functions of their own. So, for CPU PM domains, it would help to add
+RCU_NONIDLE() around the notifiers, allowing the callbacks to add trace
+functions.
 
+--Lina
 
-On 8/25/20 10:51, Alex Dewar wrote:
-> Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
-> erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
-> were later converted to fallthrough statements by commit df561f6688fe
-> ("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
-> warning about unreachable code.
-> 
-> Remove the fallthrough statements and replace the mass of gotos with
-> simple return statements to make the code terser and less bug-prone.
-> 
-
-This should be split up into two separate patches: one to address the
-fallthrough markings, and another one for the gotos.
-
-Thanks
---
-Gustavo
-
+>+	return ret;
+> }
+>
+> /**
+>@@ -606,6 +617,9 @@ static int genpd_power_on(struct generic_pm_domain *genpd, unsigned int depth)
+> 	if (ret)
+> 		goto err;
+>
+>+	/* Inform consumers that we have powered on. */
+>+	raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_ON, NULL);
+>+
+> 	genpd->status = GENPD_STATE_ON;
+> 	genpd_update_accounting(genpd);
+>
+>@@ -948,9 +962,18 @@ static void genpd_sync_power_off(struct generic_pm_domain *genpd, bool use_lock,
+>
+> 	/* Choose the deepest state when suspending */
+> 	genpd->state_idx = genpd->state_count - 1;
+>-	if (_genpd_power_off(genpd, false))
+>+
+>+	/* Notify consumers that we are about to power off. */
+>+	if (raw_notifier_call_chain(&genpd->power_notifiers,
+>+				    GENPD_STATE_OFF, NULL))
+> 		return;
+>
+>+	if (_genpd_power_off(genpd, false)) {
+>+		raw_notifier_call_chain(&genpd->power_notifiers,
+>+					GENPD_STATE_ON, NULL);
+>+		return;
+>+	}
+>+
+> 	genpd->status = GENPD_STATE_OFF;
+>
+> 	list_for_each_entry(link, &genpd->child_links, child_node) {
+>@@ -998,6 +1021,9 @@ static void genpd_sync_power_on(struct generic_pm_domain *genpd, bool use_lock,
+>
+> 	_genpd_power_on(genpd, false);
+>
+>+	/* Inform consumers that we have powered on. */
+>+	raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_ON, NULL);
+>+
+> 	genpd->status = GENPD_STATE_ON;
+> }
+>
+>@@ -1593,6 +1619,101 @@ int pm_genpd_remove_device(struct device *dev)
+> }
+> EXPORT_SYMBOL_GPL(pm_genpd_remove_device);
+>
+>+/**
+>+ * dev_pm_genpd_add_notifier - Add a genpd power on/off notifier for @dev
+>+ *
+>+ * @dev: Device that should be associated with the notifier
+>+ * @nb: The notifier block to register
+>+ *
+>+ * Users may call this function to add a genpd power on/off notifier for an
+>+ * attached @dev. Only one notifier per device is allowed. The notifier is
+>+ * sent when genpd is powering on/off the PM domain.
+>+ *
+>+ * It is assumed that the user guarantee that the genpd wouldn't be detached
+>+ * while this routine is getting called.
+>+ *
+>+ * Returns 0 on success and negative error values on failures.
+>+ */
+>+int dev_pm_genpd_add_notifier(struct device *dev, struct notifier_block *nb)
+>+{
+>+	struct generic_pm_domain *genpd;
+>+	struct generic_pm_domain_data *gpd_data;
+>+	int ret;
+>+
+>+	genpd = dev_to_genpd_safe(dev);
+>+	if (!genpd)
+>+		return -ENODEV;
+>+
+>+	if (WARN_ON(!dev->power.subsys_data ||
+>+		     !dev->power.subsys_data->domain_data))
+>+		return -EINVAL;
+>+
+>+	gpd_data = to_gpd_data(dev->power.subsys_data->domain_data);
+>+	if (gpd_data->power_nb)
+>+		return -EEXIST;
+>+
+>+	genpd_lock(genpd);
+>+	ret = raw_notifier_chain_register(&genpd->power_notifiers, nb);
+>+	genpd_unlock(genpd);
+>+
+>+	if (ret) {
+>+		dev_warn(dev, "failed to add notifier for PM domain %s\n",
+>+			 genpd->name);
+>+		return ret;
+>+	}
+>+
+>+	gpd_data->power_nb = nb;
+>+	return 0;
+>+}
+>+EXPORT_SYMBOL_GPL(dev_pm_genpd_add_notifier);
+>+
+>+/**
+>+ * dev_pm_genpd_remove_notifier - Remove a genpd power on/off notifier for @dev
+>+ *
+>+ * @dev: Device that is associated with the notifier
+>+ *
+>+ * Users may call this function to remove a genpd power on/off notifier for an
+>+ * attached @dev.
+>+ *
+>+ * It is assumed that the user guarantee that the genpd wouldn't be detached
+>+ * while this routine is getting called.
+>+ *
+>+ * Returns 0 on success and negative error values on failures.
+>+ */
+>+int dev_pm_genpd_remove_notifier(struct device *dev)
+>+{
+>+	struct generic_pm_domain *genpd;
+>+	struct generic_pm_domain_data *gpd_data;
+>+	int ret;
+>+
+>+	genpd = dev_to_genpd_safe(dev);
+>+	if (!genpd)
+>+		return -ENODEV;
+>+
+>+	if (WARN_ON(!dev->power.subsys_data ||
+>+		     !dev->power.subsys_data->domain_data))
+>+		return -EINVAL;
+>+
+>+	gpd_data = to_gpd_data(dev->power.subsys_data->domain_data);
+>+	if (!gpd_data->power_nb)
+>+		return -ENODEV;
+>+
+>+	genpd_lock(genpd);
+>+	ret = raw_notifier_chain_unregister(&genpd->power_notifiers,
+>+					    gpd_data->power_nb);
+>+	genpd_unlock(genpd);
+>+
+>+	if (ret) {
+>+		dev_warn(dev, "failed to remove notifier for PM domain %s\n",
+>+			 genpd->name);
+>+		return ret;
+>+	}
+>+
+>+	gpd_data->power_nb = NULL;
+>+	return 0;
+>+}
+>+EXPORT_SYMBOL_GPL(dev_pm_genpd_remove_notifier);
+>+
+> static int genpd_add_subdomain(struct generic_pm_domain *genpd,
+> 			       struct generic_pm_domain *subdomain)
+> {
+>@@ -1763,6 +1884,7 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
+> 	INIT_LIST_HEAD(&genpd->parent_links);
+> 	INIT_LIST_HEAD(&genpd->child_links);
+> 	INIT_LIST_HEAD(&genpd->dev_list);
+>+	RAW_INIT_NOTIFIER_HEAD(&genpd->power_notifiers);
+> 	genpd_lock_init(genpd);
+> 	genpd->gov = gov;
+> 	INIT_WORK(&genpd->power_off_work, genpd_power_off_work_fn);
+>diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+>index 66f3c5d64d81..3b2b561ce846 100644
+>--- a/include/linux/pm_domain.h
+>+++ b/include/linux/pm_domain.h
+>@@ -112,6 +112,7 @@ struct generic_pm_domain {
+> 	cpumask_var_t cpus;		/* A cpumask of the attached CPUs */
+> 	int (*power_off)(struct generic_pm_domain *domain);
+> 	int (*power_on)(struct generic_pm_domain *domain);
+>+	struct raw_notifier_head power_notifiers; /* Power on/off notifiers */
+> 	struct opp_table *opp_table;	/* OPP table of the genpd */
+> 	unsigned int (*opp_to_performance_state)(struct generic_pm_domain *genpd,
+> 						 struct dev_pm_opp *opp);
+>@@ -178,6 +179,7 @@ struct generic_pm_domain_data {
+> 	struct pm_domain_data base;
+> 	struct gpd_timing_data td;
+> 	struct notifier_block nb;
+>+	struct notifier_block *power_nb;
+> 	int cpu;
+> 	unsigned int performance_state;
+> 	void *data;
+>@@ -204,6 +206,8 @@ int pm_genpd_init(struct generic_pm_domain *genpd,
+> 		  struct dev_power_governor *gov, bool is_off);
+> int pm_genpd_remove(struct generic_pm_domain *genpd);
+> int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state);
+>+int dev_pm_genpd_add_notifier(struct device *dev, struct notifier_block *nb);
+>+int dev_pm_genpd_remove_notifier(struct device *dev);
+>
+> extern struct dev_power_governor simple_qos_governor;
+> extern struct dev_power_governor pm_domain_always_on_gov;
+>@@ -251,6 +255,17 @@ static inline int dev_pm_genpd_set_performance_state(struct device *dev,
+> 	return -ENOTSUPP;
+> }
+>
+>+static inline int dev_pm_genpd_add_notifier(struct device *dev,
+>+					    struct notifier_block *nb)
+>+{
+>+	return -ENOTSUPP;
+>+}
+>+
+>+static inline int dev_pm_genpd_remove_notifier(struct device *dev)
+>+{
+>+	return -ENOTSUPP;
+>+}
+>+
+> #define simple_qos_governor		(*(struct dev_power_governor *)(NULL))
+> #define pm_domain_always_on_gov		(*(struct dev_power_governor *)(NULL))
+> #endif
+>-- 
+>2.25.1
+>
