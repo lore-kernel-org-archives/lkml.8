@@ -2,106 +2,109 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C2FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C15C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A5320767
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274D220767
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:50:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h5SnBLxY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgHYMt7 (ORCPT
+        id S1729680AbgHYMuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:49:59 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:17934 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728946AbgHYMsY (ORCPT
+        Tue, 25 Aug 2020 08:50:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42800 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728586AbgHYMrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:48:24 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PCe9iN017665;
-        Tue, 25 Aug 2020 08:48:10 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 332w761k6g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 08:48:10 -0400
-Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07PCm82W017030
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 25 Aug 2020 08:48:08 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 25 Aug
- 2020 05:48:07 -0700
-Received: from zeus.spd.analog.com (10.66.68.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 25 Aug 2020 05:48:06 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07PCm0jJ001781;
-        Tue, 25 Aug 2020 08:48:04 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <vkoul@kernel.org>, <lars@metafoo.de>, <dan.j.williams@intel.com>,
-        <ardeleanalex@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 2/6] dmaengine: axi-dmac: move active_descs list init after device-tree init
-Date:   Tue, 25 Aug 2020 15:48:29 +0300
-Message-ID: <20200825124840.43664-3-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200825124840.43664-1-alexandru.ardelean@analog.com>
-References: <20200825124840.43664-1-alexandru.ardelean@analog.com>
+        Tue, 25 Aug 2020 08:47:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598359672;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aLpiPZxsqM3g0W5LjWpYmN4ZvZtyTkOjbomSMgIs/1o=;
+        b=h5SnBLxYbk3OBTFoWNbIb/HlkOcuvNgH+zQsNLjDxz3SXTx4x2QeFrPZeikW65Btroivym
+        tYZiOiLZ6zJ9y86mfWmgNwb9jDFyu/XMUvzhHaSA7sSDWvxQFHwSJgIK38lGR+6VKCm0IP
+        NsDsX36I3qbzXI00Zk3NCsAqHAfVmsU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-7-1-yPINjzP5yOm7j4D7PUTg-1; Tue, 25 Aug 2020 08:47:50 -0400
+X-MC-Unique: 1-yPINjzP5yOm7j4D7PUTg-1
+Received: by mail-wm1-f69.google.com with SMTP id g79so419799wmg.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 05:47:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aLpiPZxsqM3g0W5LjWpYmN4ZvZtyTkOjbomSMgIs/1o=;
+        b=WtUymr1rRQYt2x534peQ82KozAu1UnP/QE5WsP5PZ8acLgqk2Z6RR8l1KjqegEXSIl
+         CQn3mCjyoDXNkpwRkpc9zHg9EclOLXLtr+F6yEzv0sRP7wW5FkynWUoTRH3whatB+6DZ
+         RbCnkX0JNpNGZFU+oVeE3eCKtbUP+tke0tqxmr59OXvHsZ3CoE6thyr5aUQ8Mmae+D2x
+         YfYrVuU/mRx4HG5OeL41NvNhyJc7CgreX8cKjiMv76XGb8vLfexLVfy811B5uWaY6p3K
+         sLwdqYAjUu82ps8KDQ6v7AFhCcpa/04UlPq3xNA6gJW7HTZshTAIkjDyBC5BShKi5Por
+         KfTg==
+X-Gm-Message-State: AOAM533p9dEIf9E6oA+qEzMtLN5CBJ8N9tGOK9zlxcReCibfnslMcOIw
+        V2trgf64h+TGL8EBIMyZi08j5YHcQeustJuXYiHrRr0PRo29sFsWNozqzwvAoJGflgXzNRB8Kgm
+        Op/q+7r1M1xqbQLxUk36BHVZ3
+X-Received: by 2002:a5d:4c83:: with SMTP id z3mr10752479wrs.359.1598359668897;
+        Tue, 25 Aug 2020 05:47:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy5IWslteQWtM63O6QJ6FmCHlzFwS4rya6A3uEqVde/ijAKZQN6jjfkV80riZasUytYvoGcWA==
+X-Received: by 2002:a5d:4c83:: with SMTP id z3mr10752468wrs.359.1598359668686;
+        Tue, 25 Aug 2020 05:47:48 -0700 (PDT)
+Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
+        by smtp.gmail.com with ESMTPSA id u6sm27469306wrn.95.2020.08.25.05.47.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 05:47:47 -0700 (PDT)
+From:   Julien Thierry <jthierry@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
+        benh@kernel.crashing.org, Julien Thierry <jthierry@redhat.com>
+Subject: [PATCH v4 3/4] objtool: orc: Skip setting orc_entry for non-text sections
+Date:   Tue, 25 Aug 2020 13:47:41 +0100
+Message-Id: <20200825124742.29782-4-jthierry@redhat.com>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200825124742.29782-1-jthierry@redhat.com>
+References: <20200825124742.29782-1-jthierry@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-25_04:2020-08-25,2020-08-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=8
- mlxlogscore=929 spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
- malwarescore=0 priorityscore=1501 bulkscore=0 clxscore=1015
- impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008250096
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We want to enable the clock right after it is obtained. Then later we'll
-want to read the core version via register-access (which requires the clock
-to be enabled).
+Orc generation is only done for text sections, but some instructions
+can be found in non-text sections (e.g. .discard.text sections).
 
-The initialization of the active_descs list can be postponed after reading
-from registers (or reading the device-tree).
+Skip setting their orc sections since their whole sections will be
+skipped for orc generation.
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- drivers/dma/dma-axi-dmac.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/objtool/orc_gen.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index 088c79137398..90a99bdffa2b 100644
---- a/drivers/dma/dma-axi-dmac.c
-+++ b/drivers/dma/dma-axi-dmac.c
-@@ -850,8 +850,6 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 	if (IS_ERR(dmac->clk))
- 		return PTR_ERR(dmac->clk);
+diff --git a/tools/objtool/orc_gen.c b/tools/objtool/orc_gen.c
+index 968f55e6dd94..66fd56c33303 100644
+--- a/tools/objtool/orc_gen.c
++++ b/tools/objtool/orc_gen.c
+@@ -18,6 +18,9 @@ int create_orc(struct objtool_file *file)
+ 		struct cfi_reg *cfa = &insn->cfi.cfa;
+ 		struct cfi_reg *bp = &insn->cfi.regs[CFI_BP];
  
--	INIT_LIST_HEAD(&dmac->chan.active_descs);
--
- 	of_channels = of_get_child_by_name(pdev->dev.of_node, "adi,channels");
- 	if (of_channels == NULL)
- 		return -ENODEV;
-@@ -866,6 +864,8 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 	}
- 	of_node_put(of_channels);
- 
-+	INIT_LIST_HEAD(&dmac->chan.active_descs);
++		if (!insn->sec->text)
++			continue;
 +
- 	pdev->dev.dma_parms = &dmac->dma_parms;
- 	dma_set_max_seg_size(&pdev->dev, UINT_MAX);
+ 		orc->end = insn->cfi.end;
  
+ 		if (cfa->base == CFI_UNDEFINED) {
 -- 
-2.17.1
+2.21.3
 
