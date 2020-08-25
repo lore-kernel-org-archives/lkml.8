@@ -2,134 +2,200 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2E4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D80C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995D02074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66D02074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:01:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lsWgElMB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cQO9Rzum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgHYTAa (ORCPT
+        id S1726698AbgHYTBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726119AbgHYTA3 (ORCPT
+        Tue, 25 Aug 2020 15:01:43 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:26152 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726336AbgHYTBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:00:29 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 619BEC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:00:28 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f26so15039015ljc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:00:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IIZWu3166pXihdAEpw+Mp3W7uVSGrl+5DTpGsRd8suw=;
-        b=lsWgElMBWLnmMhFudG5zPSTYJbQ/5EhklPtOF3MT+YYIJ2ltRqVueDGqSVXyuEp5l0
-         4Fr/+4qaRi9d8qFy0aSaQoWL83iGLpaCbztACHZkNIVZGr5XeP2X9SE/mPsM0Pyw3Obj
-         /AI28oA7vpsLnZgCp0GuSFsun9X2dMJUOx12jC7SC5ZdEEjmfOETQ92Dq1wKeLyTsEgG
-         qV83/bSX0KsK1hrT8JRpybLwa32pPGaOpbVPwpSJldw0FmZ9r4pArY81G37TFDNnl4Wx
-         klELNKwfXEIqzc18TPNPXeYsHjPN5IsvTwy6e5oLO3Na/4RvLcEAyrFoE2MZWrIEuLYr
-         J70g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IIZWu3166pXihdAEpw+Mp3W7uVSGrl+5DTpGsRd8suw=;
-        b=XubHSmKeWo1e2V8Ea/hh1byO+FFK6z3BBbgfwW3yC8WkaoHZ4C9Uc0WUtNCiIaySg8
-         BdOm2jerjMgqwFW6/oKS+us5ruzwCYl2NeVZ3vJH6JSlN54teFc6jwPtmJvYBxXYTHJc
-         qgwtvn0ohLnfI6qFARIe7sV+G3AGHgmywqjXXP7GMEsEnbFwwzVtZpZkkziwBNYlEVCe
-         wd/jMMyop3+YfQsRIaBXZq1+qMV4akqz2D8HDPskjRq7ugVh3AzmgYjlyW/cLBFdAHyH
-         l+/4SxnToGaseiXC8yTfDg7QwiBYvvIEFY8kaUOscvTonwcGGOrBbmPpc8Pc2yCFsRpN
-         mwaQ==
-X-Gm-Message-State: AOAM530usE0FUq+oeqksMhkolrVrLtlpDY7BHsHM/QdRGj+8n75STIqq
-        CsHvyK293Z9BN3A1KgnWipU3+SGEg4A0aZhlRHAjGw==
-X-Google-Smtp-Source: ABdhPJzy0DbyVXrksmXBq429f3AEhs6iVcJCCucbg6NfOX6mgM9neMfFrPgpmXYuf2xLf50xjDWsZXuqT+BnUXud0Cg=
-X-Received: by 2002:a05:651c:330:: with SMTP id b16mr5536957ljp.77.1598382026379;
- Tue, 25 Aug 2020 12:00:26 -0700 (PDT)
+        Tue, 25 Aug 2020 15:01:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598382100; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=TRQuySeZQtx9Xu8p/LTvIapZAq6d9k1oOwhDjvqNYBE=;
+ b=cQO9RzumGOWVgOunAh5GNwjDhFjFfyjtE4PDmfElfEtdE3OvItnxgRgd5mXSPJ6j7w0DVlpt
+ hLvV4IQghTG0zFNPAm0CKsIYNNHYMrogZDdS1MGVdSqXrwUh7a0lK+MHNDNxt55VD+6I8edg
+ DmbukbNLlCDdJf2zQUdGrq33Lso=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 5f455fd776c283d04f167cf5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Aug 2020 19:00:39
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3B1BDC433CB; Tue, 25 Aug 2020 19:00:39 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 142A3C433CB;
+        Tue, 25 Aug 2020 19:00:38 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200821150134.2581465-1-guro@fb.com> <20200821150134.2581465-3-guro@fb.com>
-In-Reply-To: <20200821150134.2581465-3-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 25 Aug 2020 12:00:15 -0700
-Message-ID: <CALvZod625bjHHpDUVYXCZ1hCqyVy133g5cSv2+bhTK_9YfR6KA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 02/30] bpf: memcg-based memory accounting for
- bpf progs
-To:     Roman Gushchin <guro@fb.com>
-Cc:     bpf@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Kernel Team <kernel-team@fb.com>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 26 Aug 2020 00:30:38 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        iommu@lists.linux-foundation.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Subject: Re: [PATCH] iommu: Add support to filter non-strict/lazy mode based
+ on device names
+In-Reply-To: <CAD=FV=XK3Xa3rRWvuSA_jA+5_1XYBmHEX2B2XSb8h3oOe1PHLw@mail.gmail.com>
+References: <20200825154249.20011-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=XK3Xa3rRWvuSA_jA+5_1XYBmHEX2B2XSb8h3oOe1PHLw@mail.gmail.com>
+Message-ID: <3df7edd53ebca00be288e69b92b8d4b9@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 8:01 AM Roman Gushchin <guro@fb.com> wrote:
->
-> Include memory used by bpf programs into the memcg-based accounting.
-> This includes the memory used by programs itself, auxiliary data
-> and statistics.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> ---
->  kernel/bpf/core.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-> index ed0b3578867c..021fff2df81b 100644
-> --- a/kernel/bpf/core.c
-> +++ b/kernel/bpf/core.c
-> @@ -77,7 +77,7 @@ void *bpf_internal_load_pointer_neg_helper(const struct sk_buff *skb, int k, uns
->
->  struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int size, gfp_t gfp_extra_flags)
->  {
-> -       gfp_t gfp_flags = GFP_KERNEL | __GFP_ZERO | gfp_extra_flags;
-> +       gfp_t gfp_flags = GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
->         struct bpf_prog_aux *aux;
->         struct bpf_prog *fp;
->
-> @@ -86,7 +86,7 @@ struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int size, gfp_t gfp_extra_flag
->         if (fp == NULL)
->                 return NULL;
->
-> -       aux = kzalloc(sizeof(*aux), GFP_KERNEL | gfp_extra_flags);
-> +       aux = kzalloc(sizeof(*aux), GFP_KERNEL_ACCOUNT | gfp_extra_flags);
->         if (aux == NULL) {
->                 vfree(fp);
->                 return NULL;
-> @@ -104,7 +104,7 @@ struct bpf_prog *bpf_prog_alloc_no_stats(unsigned int size, gfp_t gfp_extra_flag
->
->  struct bpf_prog *bpf_prog_alloc(unsigned int size, gfp_t gfp_extra_flags)
->  {
-> -       gfp_t gfp_flags = GFP_KERNEL | __GFP_ZERO | gfp_extra_flags;
-> +       gfp_t gfp_flags = GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
->         struct bpf_prog *prog;
->         int cpu;
->
-> @@ -217,7 +217,7 @@ void bpf_prog_free_linfo(struct bpf_prog *prog)
->  struct bpf_prog *bpf_prog_realloc(struct bpf_prog *fp_old, unsigned int size,
->                                   gfp_t gfp_extra_flags)
->  {
-> -       gfp_t gfp_flags = GFP_KERNEL | __GFP_ZERO | gfp_extra_flags;
-> +       gfp_t gfp_flags = GFP_KERNEL_ACCOUNT | __GFP_ZERO | gfp_extra_flags;
->         struct bpf_prog *fp;
->         u32 pages, delta;
->         int ret;
-> --
-> 2.26.2
->
+Hi,
 
-What about prog->aux->jited_linfo in bpf_prog_alloc_jited_linfo()?
+On 2020-08-25 21:40, Doug Anderson wrote:
+> Hi,
+> 
+> On Tue, Aug 25, 2020 at 8:43 AM Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>> 
+>> Currently the non-strict or lazy mode of TLB invalidation can only be 
+>> set
+>> for all or no domains. This works well for development platforms where
+>> setting to non-strict/lazy mode is fine for performance reasons but on
+>> production devices, we need a more fine grained control to allow only
+>> certain peripherals to support this mode where we can be sure that it 
+>> is
+>> safe. So add support to filter non-strict/lazy mode based on the 
+>> device
+>> names that are passed via cmdline parameter "iommu.nonstrict_device".
+>> 
+>> Example: 
+>> iommu.nonstrict_device="7c4000.sdhci,a600000.dwc3,6048000.etr"
+> 
+> I have an inherent dislike of jamming things like this onto the
+> command line.  IMHO the command line is the last resort for specifying
+> configuration and generally should be limited to some specialized
+> debug options and cases where the person running the kernel needs to
+> override a config that was set by the person (or company) compiling
+> the kernel.  Specifically, having a long/unwieldy command line makes
+> it harder to use for the case when an end user actually wants to use
+> it to override something.  It's also just another place to look for
+> config.
+> 
+
+Good thing about command line parameters are that they are optional, 
+they do
+not specify any default behaviour (I mean they are not mandatory to be 
+set
+for the system to be functional), so I would like to view it as an 
+optional
+config. And this command line parameter (nonstrict_device) is strictly 
+optional
+with default being strict already set in the driver.
+
+They can be passed from the bootloader via chosen node for DT platforms 
+or choose
+a new *bootconfig* as a way to pass the cmdline but finally it does boil 
+down to
+just another config.
+
+I agree with general boolean or single value command line parameters 
+being just
+more messy which could just be Kconfigs instead but for multiple value 
+parameters
+like these do not fit in Kconfig.
+
+As you might already know, command line also gives an advantage to the 
+end user
+to configure system without building kernel, for this specific command 
+line its
+very useful because the performance bump is quite noticeable when the 
+iommu.strict
+is off. Now for end user who would not be interested in building entire 
+kernel(majority)
+and just cares about good speeds or throughput can find this very 
+beneficial.
+I am not talking about one specific OS usecase here but more in general 
+term.
+
+> The other problem is that this doesn't necessarily scale very well.
+> While it works OK for embedded cases it doesn't work terribly well for
+> distributions.  I know that in an out-of-band thread you indicated
+> that it doesn't break anything that's not already broken (AKA this
+> doesn't fix the distro case but it doesn't make it worse), it would be
+> better to come up with a more universal solution.
+> 
+
+Is the universal solution here referring to fix all the command line 
+parameters
+in the kernel or this specific command line? Are we going to remove any 
+more
+addition to the cmdline ;)
+
+So possible other solution is the *bootconfig* which is again just 
+another place
+to look for a config. So thing is that this universal solution would 
+result in
+just more new fancy ways of passing configs or adding such configs to 
+the drivers
+or subsystems in kernel which is pretty much similar to implementing 
+policy in
+kernel which I think is frowned upon and mentioned in the other thread.
+
+> Ideally it feels like we should figure out how to tag devices in a
+> generic manner automatically (hardcode at the driver or in the device
+> tree).  I think the out-of-band discussions talked about "external
+> facing" and the like.  We could also, perhaps, tag devices that have
+> "binary blob" firmware if we wanted.  Then we'd have a policy (set by
+> Kconfig, perhaps overridable via commandline) that indicated the
+> strictness level for the various classes of devices.  So policy would
+> be decided by KConfig and/or command line.
+> 
+
+How is tagging in driver or device tree better than the simple command 
+line
+approach to pass the same list of devices which otherwise you would 
+hardcode
+in the corresponding drivers and device tree all over the kernel other 
+than
+the scalability part for command line? IMHO it is too much churn.
+
+Device tree could be used but then we have a problem with it being for 
+only
+describing hardware and it doesn't work for ACPI based systems.
+
+Command line approach works for all systems (both DT and ACPI) without 
+having
+to add too much churn to drivers. Lastly, I think we can have both 
+options, it
+doesn't hurt to add command line parameter since it is optional.
+
+Thanks,
+Sai
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
