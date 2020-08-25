@@ -2,116 +2,251 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39040C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FBDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBD32075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F272076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tB7mY0ZO"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f61pGcyw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726826AbgHYPLL (ORCPT
+        id S1726874AbgHYPLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40124 "EHLO
+        Tue, 25 Aug 2020 11:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgHYPLE (ORCPT
+        with ESMTP id S1726823AbgHYPL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:11:04 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0CAC061755;
-        Tue, 25 Aug 2020 08:11:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=LPG5Lc7nCg6NrS7ax+6DMhtaCUehIHNu6awjAcV2BcE=; b=tB7mY0ZOpnz4kAH3i8HK3Mu2Dr
-        KdjEI6mp7kDoq4wQGigAPa4qc5Uzr0yGhCJqcti2O8wuhkO6l6Y5mOSL5jBo8HryngLeovoPGDjvT
-        6NodraZ/TUTwHK4CD7ro8a1FOfHYzy0YSFWm5tmdL574Q81rla/G/tPLAgmKQmu9ZnQluf4rmyxgf
-        36SM1gZq65OUuvNaW1W4PtfWlUuVHkOZzx9ekjEmCBgdQC/lzKDU5CnupngOBr3GGGxzUhWMQ1ePt
-        szktTlwydy0dQUcdxA0P35WDPeRCbcYF+OC7Fbzc4p7owylhuQMtnZlwQAd780JWGROiokTNr5vxl
-        WvTtxoaA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAab6-0005G5-QJ; Tue, 25 Aug 2020 15:10:53 +0000
-Subject: Re: [PATCH v5 5/6] can: ctucanfd: CTU CAN FD open-source IP core -
- platform and next steps and mainlining chances
-To:     Pavel Pisa <pisa@cmp.felk.cvut.cz>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Drew Fustini <pdp7pdp7@gmail.com>
-Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        David Miller <davem@davemloft.net>, mark.rutland@arm.com,
-        Carsten Emde <c.emde@osadl.org>, armbru@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marin Jerabek <martin.jerabek01@gmail.com>,
-        Ondrej Ille <ondrej.ille@gmail.com>,
-        Jiri Novak <jnovak@fel.cvut.cz>,
-        Jaroslav Beran <jara.beran@gmail.com>,
-        Petr Porazil <porazil@pikron.com>, Pavel Machek <pavel@ucw.cz>
-References: <cover.1597518433.git.ppisa@pikron.com>
- <4ceda3a9d68263b4e0dfe66521a46f40b2e502f7.1597518433.git.ppisa@pikron.com>
- <73e3dad8-9ab7-2f8f-312c-1957b4572b08@infradead.org>
- <202008251125.41514.pisa@cmp.felk.cvut.cz>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <6f26127d-5403-3ea2-9b6d-11dc35b0d5c2@infradead.org>
-Date:   Tue, 25 Aug 2020 08:10:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 11:11:28 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D9DC061756
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:11:27 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id md23so16286943ejb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:11:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=kkcIDEMAHBCOzJLj2phW4jww4X/yisWa3CZ5tOxvSy4=;
+        b=f61pGcyw2k5WAoqjit//rvWYqG3FsaVEI4d9ZxtxKUV8x7SNaHgSg/hC+1348B6YxP
+         vnIo+SRGkPw8Hk+X9kOTKHE6bd0k75mgUBAHBeiT1FOSQi2QdVszrK2DqfZ1Xwg3onii
+         gXDq74poDGCTb29FvZ3BDeZzJWoOYlhy60S70=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=kkcIDEMAHBCOzJLj2phW4jww4X/yisWa3CZ5tOxvSy4=;
+        b=uiK3NpjQWbIgihNqIh48DcuM3qyeNcBSpgor1s1GdJ3nNPyIzwXu02oaRJMLBA6MYl
+         WN4Z48dkTKY+mV8flitFkv8SJXCx5lFkYfS+QiUcXOT4eOQ7TDctAEBdXnhjDnezt3I+
+         EDO+rsVl7HtcQYXCocZ0Fe8TBm73Vyz/Fa2bfaqI6Xj0NnVS3Vam9lOaRhc17W0mkMn9
+         Ew6LAbJyNBuf7Eu3hlNos9atiKjB0jkWkWZyOaCdLL+de4js89u/uubIufwlO/KtzBER
+         wh1P2khyg3ZXQ0gPgUBj/tlcl6WKB6IheIrlpeFTiPGzMrxJuzUwT9UhOzjv/Gd15pgh
+         2lbA==
+X-Gm-Message-State: AOAM530n14b9pEKFRfScza8ywgjWRFYZhMuizdd5bjPSQZo4gZOSHRXx
+        WKb9x3pfKY6HS3vAk8s01o/31uMGeT7DtA==
+X-Google-Smtp-Source: ABdhPJxa3ykm5NNStfcnyEpq3UTo7C588J6wuh0QEao65TXrHGD2G69tNVfmkkifwjY9g7k0artx5A==
+X-Received: by 2002:a17:906:b749:: with SMTP id fx9mr10852462ejb.186.1598368285610;
+        Tue, 25 Aug 2020 08:11:25 -0700 (PDT)
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com. [209.85.128.48])
+        by smtp.gmail.com with ESMTPSA id ar21sm6276962ejc.8.2020.08.25.08.11.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 08:11:24 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id o21so2446241wmc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:11:23 -0700 (PDT)
+X-Received: by 2002:a05:600c:4103:: with SMTP id j3mr2499533wmi.55.1598368283332;
+ Tue, 25 Aug 2020 08:11:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <202008251125.41514.pisa@cmp.felk.cvut.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CGME20200825090211eucas1p1b63191fa778a775e33169ba2c1d3b74b@eucas1p1.samsung.com>
+ <CAAFQd5ADym6YapCoJ8+fJbPjSestcD_2R8L5T8jAfO4c=GFQkA@mail.gmail.com> <dleftjk0xnw132.fsf%l.stelmach@samsung.com>
+In-Reply-To: <dleftjk0xnw132.fsf%l.stelmach@samsung.com>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Tue, 25 Aug 2020 17:11:09 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5C7Ysb2wnUhUcFZObuSSn4oW=e-oObO5Abat8rJRvqPqw@mail.gmail.com>
+Message-ID: <CAAFQd5C7Ysb2wnUhUcFZObuSSn4oW=e-oObO5Abat8rJRvqPqw@mail.gmail.com>
+Subject: Re: [PATCH v2 7/9] spi: spi-s3c64xx: Ensure cur_speed holds actual
+ clock value
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/25/20 2:25 AM, Pavel Pisa wrote:
-> Hello Randy and Rob,
-> 
-> thanks much for review, I have corrected FPGA spelling
-> and binding YAML license.
-> 
-> On Sunday 16 of August 2020 01:28:13 Randy Dunlap wrote:
->> On 8/15/20 12:43 PM, Pavel Pisa wrote:
->>> diff --git a/drivers/net/can/ctucanfd/Kconfig
->>> b/drivers/net/can/ctucanfd/Kconfig index e1636373628a..a8c9cc38f216
->>> 100644
->>> --- a/drivers/net/can/ctucanfd/Kconfig
->>> +++ b/drivers/net/can/ctucanfd/Kconfig
->>> @@ -21,4 +21,15 @@ config CAN_CTUCANFD_PCI
->>>  	  PCIe board with PiKRON.com designed transceiver riser shield is
->>> available at https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd .
->>>
->>> +config CAN_CTUCANFD_PLATFORM
->>> +	tristate "CTU CAN-FD IP core platform (FPGA, SoC) driver"
->>> +	depends on OF
->>
->> Can this be
->> 	depends on OF || COMPILE_TEST
->> ?
-> 
-> I am not sure for this change. Is it ensured/documented somewhere that
-> header files provide dummy definition such way, that OF drivers builds
-> even if OF support is disabled? If I remember well, CTU CAN FD OF
-> module build fails if attempted in the frame of native x86_64
-> build where OF has been disabled. Does COMPILE_TEST ensure that
-> such build succeeds.
-> 
+On Tue, Aug 25, 2020 at 11:02 AM Lukasz Stelmach <l.stelmach@samsung.com> w=
+rote:
+>
+> It was <2020-08-24 pon 15:21>, when Tomasz Figa wrote:
+> > On Mon, Aug 24, 2020 at 3:17 PM Lukasz Stelmach <l.stelmach@samsung.com=
+> wrote:
+> >>
+> >> It was <2020-08-22 sob 14:43>, when Krzysztof Kozlowski wrote:
+> >> > On Fri, Aug 21, 2020 at 06:13:59PM +0200, =C5=81ukasz Stelmach wrote=
+:
+> >> >> cur_speed is used to calculate transfer timeout and needs to be
+> >> >> set to the actual value of (half) the clock speed for precise
+> >> >> calculations.
+> >> >
+> >> > If you need this only for timeout calculation just divide it in
+> >> > s3c64xx_wait_for_dma().
+> >>
+> >> I divide it here to keep the relationship between the value the variab=
+le
+> >> holds and the one that is inside clk_* (See? It's multiplied 3 lines
+> >> above). If you look around every single clk_get_rate() call in the fil=
+e is
+> >> divided by two.
+> >>
+> >> > Otherwise why only if (cmu) case is updated?
+> >>
+> >> You are righ I will update that too.
+> >>
+> >> However, I wonder if it is even possible that the value read from
+> >> S3C64XX_SPI_CLK_CFG would be different than the one written to it?
+> >>
+> >
+> > It is not possible for the register itself, but please see my other
+> > reply, where I explained the integer rounding error which can happen
+> > when calculating the value to write to the register.
+>
+> I don't have any board to test it and Marek says there is only one that
+> doesn't use cmu *and* has an SPI device attached.
+>
+> Here is what I think should work for the !cmu case.
+>
+> --8<---------------cut here---------------start------------->8---
+> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> index 18b89e53ceda..5ebb1caade4d 100644
+> --- a/drivers/spi/spi-s3c64xx.c
+> +++ b/drivers/spi/spi-s3c64xx.c
+> @@ -655,13 +655,18 @@ static int s3c64xx_spi_config(struct
+> s3c64xx_spi_driver_data *sdd)
+>                         return ret;
+>                 sdd->cur_speed =3D clk_get_rate(sdd->src_clk) / 2;
+>         } else {
+> +               int src_clk_rate =3D clk_get_rate(sdd->src_clk);
 
-COMPILE_TEST won't ensure anything.
-OTOH, <linux/of.h> has lots of stubs for handling the case of
-CONFIG_OF not being enabled.
+The return value of clk_get_rate() is unsigned long.
 
--- 
-~Randy
+> +               int clk_val =3D (src_clk_rate / sdd->cur_speed / 2 - 1);
 
+Perhaps u32, since this is a value to be written to a 32-bit register.
+Also if you could add a comment explaining that a negative overflow is
+impossible:
+
+/* s3c64xx_spi_setup() ensures that sdd->cur_speed <=3D src_clk_rate / 2. *=
+/
+
+But actually, unless my lack of sleep is badly affecting my brain
+processes, the original computation was completely wrong. Let's
+consider the scenario below:
+
+src_clk_rate =3D 8000000
+sdd->cur_speed =3D 2500000
+
+clk_val =3D 8000000 / 2500000 / 2 - 1 =3D 3 / 2 - 1 =3D 1 - 1 =3D 0
+[...]
+sdd->cur_speed =3D 8000000 / (2 * (0 + 1)) =3D 8000000 / (2 * 1) =3D 800000=
+0
+/ 2 =3D 4000000
+
+So a request for 2.5 MHz ends up with 4 MHz, which could actually be
+above the client device or link spec.
+
+I believe the right thing to do would be DIV_ROUND_UP(src_clk_rate /
+2, sdd->cur_speed) - 1. It's safe to divide src_clk_rate directly,
+because those are normally high rates divisible by two without much
+precision loss.
+
+> +
+>                 /* Configure Clock */
+>                 val =3D readl(regs + S3C64XX_SPI_CLK_CFG);
+>                 val &=3D ~S3C64XX_SPI_PSR_MASK;
+> -               val |=3D ((clk_get_rate(sdd->src_clk) / sdd->cur_speed / =
+2 - 1)
+> -                               & S3C64XX_SPI_PSR_MASK);
+> +               val |=3D (clk_val & S3C64XX_SPI_PSR_MASK);
+>                 writel(val, regs + S3C64XX_SPI_CLK_CFG);
+>
+> +               /* Keep the actual value */
+> +               sdd->cur_speed =3D src_clk_rate / (2 * (clk_val + 1));
+
+Also need to consider S3C64XX_SPI_PSR_MASK here, because clk_val could
+actually be > S3C64XX_SPI_PSR_MASK.
+
+Best regards,
+Tomasz
+
+> +
+>                 /* Enable Clock */
+>                 val =3D readl(regs + S3C64XX_SPI_CLK_CFG);
+>                 val |=3D S3C64XX_SPI_ENCLK_ENABLE;
+> --8<---------------cut here---------------end--------------->8---
+>
+>
+> >> > You are also affecting here not only timeout but
+> >> > s3c64xx_enable_datapath() which is not mentioned in commit log. In o=
+ther
+> >> > words, this looks wrong.
+> >>
+> >> Indeed, there is a reference too. I've corrected the message.
+> >>
+> >
+> > Thanks!
+> >
+> > Best regards,
+> > Tomasz
+> >
+> >> >>
+> >> >> Cc: Tomasz Figa <tfiga@chromium.org>
+> >> >> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+> >> >> ---
+> >> >>  drivers/spi/spi-s3c64xx.c | 1 +
+> >> >>  1 file changed, 1 insertion(+)
+> >> >>
+> >> >> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> >> >> index 02de734b8ab1..89c162efe355 100644
+> >> >> --- a/drivers/spi/spi-s3c64xx.c
+> >> >> +++ b/drivers/spi/spi-s3c64xx.c
+> >> >> @@ -626,6 +626,7 @@ static int s3c64xx_spi_config(struct s3c64xx_sp=
+i_driver_data *sdd)
+> >> >>              ret =3D clk_set_rate(sdd->src_clk, sdd->cur_speed * 2)=
+;
+> >> >>              if (ret)
+> >> >>                      return ret;
+> >> >> +            sdd->cur_speed =3D clk_get_rate(sdd->src_clk) / 2;
+> >> >>      } else {
+> >> >>              /* Configure Clock */
+> >> >>              val =3D readl(regs + S3C64XX_SPI_CLK_CFG);
+> >> >> --
+> >> >> 2.26.2
+> >> >>
+> >> >
+> >> >
+> >>
+> >> --
+> >> =C5=81ukasz Stelmach
+> >> Samsung R&D Institute Poland
+> >> Samsung Electronics
+> >
+> >
+>
+> --
+> =C5=81ukasz Stelmach
+> Samsung R&D Institute Poland
+> Samsung Electronics
