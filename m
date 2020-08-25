@@ -2,115 +2,195 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35071C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5D8C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E1EF20782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE1320782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:58:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0YvEwzl"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ADy/ab3j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgHYQ6Z (ORCPT
+        id S1726611AbgHYQ6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHYQ6S (ORCPT
+        Tue, 25 Aug 2020 12:58:32 -0400
+Received: from mail.efficios.com ([167.114.26.124]:54230 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726580AbgHYQ62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:58:18 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A9CDC061574;
-        Tue, 25 Aug 2020 09:58:17 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id z9so2794353wmk.1;
-        Tue, 25 Aug 2020 09:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=T+c10JcfrGS91lxh/Fs8oD61/KkVCBP1xSQwLONf2xk=;
-        b=N0YvEwzlNfbv2ENgL708TbnvP9W81MevHjVtFu+NP93kKyt6gaXF4nvCwRulA6qdYS
-         EGuZcZPK10qzjBLB+JUs1ceVwimkfdkA5oajbeDDkrzBo108k2ckJ+7ndSHpFDVDavN3
-         +q+7V1TMns5/aSHhT8lywhtCkqRjGgfMyPpPdMsiGpoY3QG+EXhoqckMOv6eIfidseBB
-         z2Wrflu4Nb6GWTwUj2x2Pr/nugNVVx0+OYrfkgbQzvgkOiH/iaAan1JvsoaClXAc6b7N
-         CcIV+Vqsklj9xtei+cFySXpGnKOt+m6knCouiJZ1yPRXL9mKag7FIXGrKBe0q/DQBtE7
-         NQMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=T+c10JcfrGS91lxh/Fs8oD61/KkVCBP1xSQwLONf2xk=;
-        b=EOWhI93AJ9UXGttLLzSUL641BwCDCylQzwXjBVocpgN81ecodVOCKREBmqhVQ76vvG
-         XXNbkh71f4K3pHiac5TXD8gi2qGlPDf4dJbCWHIYoLj3WM+jirlXQ6DdzWAXtUO1adHr
-         kNDEOrCnTU6z4btHSdHZfbuGQn7pxzC1JB6cAc4r+gC0exhtEYprvk/TtUP7bMEeNYK3
-         vFfrIfrlESllfm+PI/bipkI5clu1oHdb+ept3KVta7w/RqWrZLzUFAIpYpah7jjuAura
-         KDQT5D5kGKdlCfhcDrXjMMdnCUV62qgYTTgnMIfbGUmUU3SV2FnFzhESazEMaLXeAcNV
-         RQzw==
-X-Gm-Message-State: AOAM533H8MTld/AcNLHYm8SSAq84iT+lNqTN8dipeQRq5lIdBIg3OMg7
-        gvp+PWZ19/zoY16TYKCcH/bExX3zCKIohzBv
-X-Google-Smtp-Source: ABdhPJwk4nCd+wELim1WQCEsIcsR75mFn2eHpPfK0DSyrZDt5cesw/ZpuOk9voWBRXZPYqMxFddXGA==
-X-Received: by 2002:a1c:a984:: with SMTP id s126mr3062109wme.163.1598374695222;
-        Tue, 25 Aug 2020 09:58:15 -0700 (PDT)
-Received: from [192.168.0.16] (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id i22sm33277241wrb.45.2020.08.25.09.58.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 09:58:14 -0700 (PDT)
-Subject: Re: [PATCH] IB/qib: remove superfluous fallthrough statements
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Joe Perches <joe@perches.com>
-Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roland Dreier <roland@purestorage.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200825155142.349651-1-alex.dewar90@gmail.com>
- <4877c3a5-365e-4500-43c0-4a4361e2cda3@embeddedor.com>
- <086ee29ef75f657dcf45e92d4ebfdf2b3f4fcab8.camel@perches.com>
- <da65ca20-49cb-2940-76d6-7e341687a9e2@embeddedor.com>
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Message-ID: <64d7e1c9-9c6a-93f3-ce0a-c24b1c236071@gmail.com>
-Date:   Tue, 25 Aug 2020 17:58:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 12:58:28 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id F41EB25E13D;
+        Tue, 25 Aug 2020 12:58:21 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id ddEiH_vdZ8LL; Tue, 25 Aug 2020 12:58:21 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 834F825DE54;
+        Tue, 25 Aug 2020 12:58:21 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 834F825DE54
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1598374701;
+        bh=8pMBOx23pCf5NPePNYDHmUZ9AoEDhBHlY2NFid2+VHU=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=ADy/ab3jRq6H7i/k9KwCApzr/+L46USCep1xAaAOZAwMlaiqaPHFobZ6fcMjZ3D2Q
+         q9F4MiDMBRBjFr6+YDUCRLL2v0z/DgHoHiTNDHvSPt2fyV9tfcpLFBJiMTGOue4Q8L
+         ufV2D2etAJUeI4mJh5Ow/ol4Ro5W2Y1iq++LFNcQ2W8q4zl7JwsrX4Zmv9HMRMcasH
+         Nw9hW9t2b2NRpzKwDkb/0UJoLw2DaJpWX40k5Sv5/C1f4NdgC+OtG319AvE71AmMdy
+         xuZkcaWirWirakU75EFZLeQJwIy8F9yDjiOGg3Zhn5b7uUySk/vitfVY8ssFsDQokE
+         Zg8XrO5g5XmAw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 0y5gHkg6pdUQ; Tue, 25 Aug 2020 12:58:21 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 73A5F25DE53;
+        Tue, 25 Aug 2020 12:58:21 -0400 (EDT)
+Date:   Tue, 25 Aug 2020 12:58:21 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Oskolkov <posk@posk.io>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Peter Oskolkov <posk@google.com>, paulmck <paulmck@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Turner <pjt@google.com>,
+        Chris Kennelly <ckennelly@google.com>
+Message-ID: <1336467655.17779.1598374701401.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CAFTs51Uwf7+Vs+Mbf=LZxoytFA+3WEtRB5zUanatxgk272MP7Q@mail.gmail.com>
+References: <20200811000959.2486636-1-posk@google.com> <20200811062733.GP3982@worktop.programming.kicks-ass.net> <CAFTs51XK0HLwCCvXCcfE5P7a4ExANPNPw7UvNigwHZ8sZVP+nQ@mail.gmail.com> <1003774683.6088.1597257002027.JavaMail.zimbra@efficios.com> <CAFTs51XJhKXn7M2U2dZpFRsTrog4juy=UQfbtcdJfOj5TUSbqQ@mail.gmail.com> <1477195446.6156.1597261492255.JavaMail.zimbra@efficios.com> <CAFTs51Uwf7+Vs+Mbf=LZxoytFA+3WEtRB5zUanatxgk272MP7Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v3] rseq/membarrier: add
+ MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
 MIME-Version: 1.0
-In-Reply-To: <da65ca20-49cb-2940-76d6-7e341687a9e2@embeddedor.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF79 (Linux)/8.8.15_GA_3953)
+Thread-Topic: rseq/membarrier: add MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
+Thread-Index: /ve+w4rUgTPRRwn+aSBECFJ4/3Rgfw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/08/2020 17:49, Gustavo A. R. Silva wrote:
->
-> On 8/25/20 11:26, Joe Perches wrote:
->> On Tue, 2020-08-25 at 11:19 -0500, Gustavo A. R. Silva wrote:
->>> On 8/25/20 10:51, Alex Dewar wrote:
->>>> Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
->>>> erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
->>>> were later converted to fallthrough statements by commit df561f6688fe
->>>> ("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
->>>> warning about unreachable code.
->>>>
->>>> Remove the fallthrough statements and replace the mass of gotos with
->>>> simple return statements to make the code terser and less bug-prone.
->>>>
->>> This should be split up into two separate patches: one to address the
->>> fallthrough markings, and another one for the gotos.
->> I don't think it's necessary to break this into multiple patches.
->> Logical changes in a single patch are just fine, micro patches
->> aren't that useful.
+----- On Aug 20, 2020, at 1:42 PM, Peter Oskolkov posk@posk.io wrote:
+
+> On Wed, Aug 12, 2020 at 12:44 PM Mathieu Desnoyers
+> <mathieu.desnoyers@efficios.com> wrote:
 >>
-> There is a reason for this. Read the changelog text and review the patch.
->
-> Thanks
-> --
-> Gustavo
-I think it probably does make sense as two patches. I'll do a resend.
+> [...]
+>>
+>> > One way of doing what you suggest is to allow some commands to be bitwise-ORed.
+>> >
+>> > So, for example, the user could call
+>> >
+>> > membarrier(CMD_PRIVATE_EXPEDITED_SYNC_CORE | CMD_PRIVATE_EXPEDITED_RSEQ, cpu_id)
+>> >
+>> > Is this what you have in mind?
+>>
+>> Not really. This would not take care of the fact that we would end up
+>> multiplying
+>> the number of commands as we allow combinations. E.g. if we ever want to have
+>> RSEQ
+>> work in private and global, and in non-expedited and expedited, we end up
+>> needing:
+>>
+>> - CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ
+>> - CMD_PRIVATE_EXPEDITED_RSEQ
+>> - CMD_PRIVATE_RSEQ
+>> - CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ
+>> - CMD_GLOBAL_EXPEDITED_RSEQ
+>> - CMD_GLOBAL_RSEQ
+>>
+>> The only thing we would save by OR'ing it with the SYNC_CORE command is the
+>> additional
+>> list:
+>>
+>> - CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ_SYNC_CORE
+>> - CMD_PRIVATE_EXPEDITED_RSEQ_SYNC_CORE
+>> - CMD_PRIVATE_RSEQ_SYNC_CORE
+>> - CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ_SYNC_CORE
+>> - CMD_GLOBAL_EXPEDITED_RSEQ_SYNC_CORE
+>> - CMD_GLOBAL_RSEQ_SYNC_CORE
+>>
+>> But unless we receive feedback that doing a membarrier with RSEQ+sync_core all
+>> in
+>> one go is a significant use-case, I am tempted to leave out that scenario for
+>> now.
+>> If we go for new commands, this means we could add (for private-expedited-rseq):
+>>
+>> - MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ,
+>> - MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ,
+>>
+>> I do however have use-cases for using RSEQ across shared memory (between
+>> processes). Not currently for a rseq-fence, but for rseq acting as per-cpu
+>> atomic operations. If I ever end up needing rseq-fence across shared memory,
+>> that would result in the following new commands:
+>>
+>> - MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ,
+>> - MEMBARRIER_CMD_GLOBAL_EXPEDITED_RSEQ,
+>>
+>> The remaining open question is whether it would be OK to define a new
+>> membarrier flag=MEMBARRIER_FLAG_CPU, which would expect an additional
+>> @cpu parameter.
+> 
+> Hi  Mathieu,
+> 
+> I do not think there is any reason to wait for additional feedback, so I believe
+> we should finalize the API/ABI.
+> 
+> I see two issues to resolve:
+> 1: how to combine commands:
+>  - you do not like adding new commands that are combinations of existing ones;
+>  - you do not like ORing.
+> => I'm not sure what other options we have here?
+
+Concretely speaking, let's just add a new membarrier command for the use-case
+at hand. All other ways of doing things we have discussed are tricky to expose
+in a way that is discoverable by user-space through the QUERY command. (using
+a flag, or OR'ing many commands together)
+
+> 
+> 2: should @flags be repurposed for cpu_id, or MEMBARRIER_FLAG_CPU
+>   added with a new syscall parameter.
+> => I'm still not sure a new parameter can be cleanly added, but I can try
+>   it in the next patchset if you prefer it this way.
+
+Yes please, it's easy to implement and we'll quickly see if anyone yells. If
+it turns out to be a bad idea, you can always blame me. ;-)
+
+In summary:
+
+- We add 2 new membarrier commands:
+  - MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ
+  - MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
+
+- We reserve a membarrier flag:
+
+enum membarrier_flag {
+  MEMBARRIER_FLAG_CPU = (1 << 0),
+}
+
+So for CMD_PRIVATE_EXPEDITED_RSEQ, if flags & MEMBARRIER_FLAG_CPU is true,
+then we expect the additional "int cpu" parameter (3rd parameter). Else the cpu
+parameter is unused.
+
+Are you OK with this approach ?
+
+Thanks,
+
+Mathieu
+
+> 
+> Please let me know your thoughts.
+> 
+> Thanks,
+> Peter
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
