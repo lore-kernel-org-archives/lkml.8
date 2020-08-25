@@ -2,180 +2,121 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024C9C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E33C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C09232074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E4D92074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:52:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NrXlumne"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="mg8NEeHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726578AbgHYQwb (ORCPT
+        id S1726664AbgHYQwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:52:31 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25018 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725947AbgHYQwP (ORCPT
+        Tue, 25 Aug 2020 12:52:45 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:14880 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726257AbgHYQwW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:52:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598374333;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GH3XQPFWbt0lqGRNQZepy/lyen7L04oI1NtwwdbRf3c=;
-        b=NrXlumnecMEHxwDwn5rsp9Ui8UGR+Qz/VL2uyOKCAPTxCpKnAktJCLNa1uYWTACXU3Cjfj
-        FBIDQwDatcXhkFtRYfHFf/YAQH9fL3gDrD1OXX5mvuj9YPG63R1ZZVap1pwtBkTESFYwh9
-        YeE1CgnRV9XeAAEUX90m4d1rvGbqRIc=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-159-l_VdJnjNOFeSdR2bdQk5Dg-1; Tue, 25 Aug 2020 12:52:07 -0400
-X-MC-Unique: l_VdJnjNOFeSdR2bdQk5Dg-1
-Received: by mail-qt1-f200.google.com with SMTP id c8so3174571qtp.6
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:52:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
-         :in-reply-to:references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=GH3XQPFWbt0lqGRNQZepy/lyen7L04oI1NtwwdbRf3c=;
-        b=QhOFNfQTwSxbYDPHsky/TU0cC8MeN9YzIin+d6Po+M+GYGhCIeb0FsMjh2xe4K/f9E
-         DZKz/50yokE5SOYYFypgq1xbh7t/PiHMqKcaGivPGxLJ8rxgpa8GoQerwy7XfCt+ZRrg
-         hZ3NyRooNjlDiGENmWf0j4rlvxjm0zFHVzBCPRqNjRcuJGLjPCxSiTJn4uo3UUL8aXJO
-         aB6zluOa2S75AeXTtA3xeMcL2UbllePjlhI8JTABJ1CQCzpfLXuY89aDg5FTKKO5DaRF
-         wUzuPzvwc1DzkAbVZHMNOGvai0+fw+Y7pJTjohi8tpma//yo7Y/Yh3u5Jadgp5CE3ayo
-         a3FQ==
-X-Gm-Message-State: AOAM532t/Mjk9ZZetG5MUHYJwhW8ENCBWP8CNPFmKC2MAPgnzVYke3Sy
-        z4HMyp8lF21K/dEt5YtIi2bSFDQbe0Crzv2jPnNQd/HpVyzPJeUBflCF9a4gpIKOnbHuKt5pO2O
-        eMDZKAyLF4KMC7FP6X7YAcset
-X-Received: by 2002:ac8:1773:: with SMTP id u48mr9877466qtk.259.1598374327296;
-        Tue, 25 Aug 2020 09:52:07 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzPR44U8niNebYvUrKITYg+kbJjP80i+hSedazIwkyueDHLFtKe3ByC0Rxwfw2DlIYaJ18R6g==
-X-Received: by 2002:ac8:1773:: with SMTP id u48mr9877443qtk.259.1598374326949;
-        Tue, 25 Aug 2020 09:52:06 -0700 (PDT)
-Received: from Whitewolf.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
-        by smtp.gmail.com with ESMTPSA id k3sm12047360qkb.95.2020.08.25.09.52.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 09:52:06 -0700 (PDT)
-Message-ID: <76392bff28359a88fbdf0857f011e0ed9f666dc4.camel@redhat.com>
-Subject: Re: [Nouveau] [PATCH 1/2] drm/nouveau/kms/nv50-: Program notifier
- offset before requesting disp caps
-From:   Lyude Paul <lyude@redhat.com>
-Reply-To: lyude@redhat.com
-To:     Ben Skeggs <skeggsb@gmail.com>
-Cc:     ML nouveau <nouveau@lists.freedesktop.org>,
-        Sasha Levin <sashal@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <dri-devel@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>, stable@vger.kernel.org
-Date:   Tue, 25 Aug 2020 12:52:05 -0400
-In-Reply-To: <CACAvsv6hymdcGkEcigL3fWACZ_1POpB+aefq9d9ChnYv_dHnVg@mail.gmail.com>
-References: <20200824183253.826343-1-lyude@redhat.com>
-         <20200824183253.826343-2-lyude@redhat.com>
-         <CACAvsv6hymdcGkEcigL3fWACZ_1POpB+aefq9d9ChnYv_dHnVg@mail.gmail.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        Tue, 25 Aug 2020 12:52:22 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PGma4t019638;
+        Tue, 25 Aug 2020 18:52:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=0GCBgslDZw0GYxmu1/0QyIojItqk9H/Ui6PIwaiTKBw=;
+ b=mg8NEeHWeIDRhaYlBKOrdtT6jbEVUimzAHa2GzUgIJpxgEIndV1wt6cKtQrVEqgsrLQD
+ Vc6WsdsxIidudWCXIb1HkomJPGPY9RRDEyfZvuKxcbGV6OyC6HimW6rkrE1z5seZxPBL
+ gQQ7oIQ9wm4fGL2CCMKM4ptDCG4FxYgUGD3XDY4oENheEmk4+xnOIff7IMq2ivZZ15zk
+ 52lQWN300HuMf+FihCjHSf/5nz70OSn0Bmjx03tmvBRnPfaBC7mMl1jfm44g6tl8ncQ0
+ uMwNJEhV5uGp3y+UFtHZg8gTrIeSZpx+Y2sswwiHfSr92tTS1ti4MEplGXVNjbyjEWim Jw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 333b6x405v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 18:52:17 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5CDBB10002A;
+        Tue, 25 Aug 2020 18:52:17 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4E9872AE6AA;
+        Tue, 25 Aug 2020 18:52:17 +0200 (CEST)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE1.st.com (10.75.127.7)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Aug 2020 18:52:16
+ +0200
+From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <arnaud.pouliquen@st.com>
+Subject: [PATCH v2 4/8] rpmsg: define the name service announcement as reserved address
+Date:   Tue, 25 Aug 2020 18:49:03 +0200
+Message-ID: <20200825164907.3642-5-arnaud.pouliquen@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200825164907.3642-1-arnaud.pouliquen@st.com>
+References: <20200825164907.3642-1-arnaud.pouliquen@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_06:2020-08-25,2020-08-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-25 at 08:28 +1000, Ben Skeggs wrote:
-> On Tue, 25 Aug 2020 at 04:33, Lyude Paul <lyude@redhat.com> wrote:
-> > Not entirely sure why this never came up when I originally tested this
-> > (maybe some BIOSes already have this setup?) but the ->caps_init vfunc
-> > appears to cause the display engine to throw an exception on driver
-> > init, at least on my ThinkPad P72:
-> > 
-> > nouveau 0000:01:00.0: disp: chid 0 mthd 008c data 00000000 0000508c 0000102b
-> > 
-> > This is magic nvidia speak for "You need to have the DMA notifier offset
-> > programmed before you can call NV507D_GET_CAPABILITIES." So, let's fix
-> > this by doing that, and also perform an update afterwards to prevent
-> > racing with the GPU when reading capabilities.
-> > 
-> > Changes since v1:
-> > * Don't just program the DMA notifier offset, make sure to actually
-> >   perform an update
-> I'm not sure there's a need to send an Update() method here, I believe
-> GetCapabilities() is an action method on its own right?
-> 
+The address 53 is reserved for the dynamic RPMsg device management
+on name service announcement.
+Define this address in a reserved enum list.
 
-I'm not entirely sure about this part tbh. I do know that we need to call
-GetCapabilities() _after_ the DMA notifier offset is programmed. But, my
-assumption was that if GetCapabilities() requires a DMA notifier offset to store
-its results in, we'd probably want to fire an update or something to make sure
-that we're not reading before it finishes writing capabilities?
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+---
+ drivers/rpmsg/virtio_rpmsg_bus.c | 3 ---
+ include/linux/rpmsg.h            | 9 +++++++++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-> Ben.
-> 
-> > Signed-off-by: Lyude Paul <lyude@redhat.com>
-> > Fixes: 4a2cb4181b07 ("drm/nouveau/kms/nv50-: Probe SOR and PIOR caps for DP
-> > interlacing support")
-> > Cc: <stable@vger.kernel.org> # v5.8+
-> > ---
-> >  drivers/gpu/drm/nouveau/dispnv50/core507d.c | 25 ++++++++++++++++-----
-> >  1 file changed, 19 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-> > b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-> > index e341f572c2696..5e86feec3b720 100644
-> > --- a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-> > +++ b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-> > @@ -65,13 +65,26 @@ core507d_ntfy_init(struct nouveau_bo *bo, u32 offset)
-> >  int
-> >  core507d_caps_init(struct nouveau_drm *drm, struct nv50_disp *disp)
-> >  {
-> > -       u32 *push = evo_wait(&disp->core->chan, 2);
-> > +       struct nv50_core *core = disp->core;
-> > +       u32 interlock[NV50_DISP_INTERLOCK__SIZE] = {0};
-> > +       u32 *push;
-> > 
-> > -       if (push) {
-> > -               evo_mthd(push, 0x008c, 1);
-> > -               evo_data(push, 0x0);
-> > -               evo_kick(push, &disp->core->chan);
-> > -       }
-> > +       core->func->ntfy_init(disp->sync, NV50_DISP_CORE_NTFY);
-> > +
-> > +       push = evo_wait(&core->chan, 4);
-> > +       if (!push)
-> > +               return 0;
-> > +
-> > +       evo_mthd(push, 0x0084, 1);
-> > +       evo_data(push, 0x80000000 | NV50_DISP_CORE_NTFY);
-> > +       evo_mthd(push, 0x008c, 1);
-> > +       evo_data(push, 0x0);
-> > +       evo_kick(push, &core->chan);
-> > +
-> > +       core->func->update(core, interlock, false);
-> > +       if (core->func->ntfy_wait_done(disp->sync, NV50_DISP_CORE_NTFY,
-> > +                                      core->chan.base.device))
-> > +               NV_ERROR(drm, "core notifier timeout\n");
-> > 
-> >         return 0;
-> >  }
-> > --
-> > 2.26.2
-> > 
-> > _______________________________________________
-> > Nouveau mailing list
-> > Nouveau@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/nouveau
+diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+index 910d30818901..b2927661868c 100644
+--- a/drivers/rpmsg/virtio_rpmsg_bus.c
++++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+@@ -162,9 +162,6 @@ struct virtio_rpmsg_channel {
+  */
+ #define RPMSG_RESERVED_ADDRESSES	(1024)
+ 
+-/* Address 53 is reserved for advertising remote services */
+-#define RPMSG_NS_ADDR			(53)
+-
+ static void virtio_rpmsg_destroy_ept(struct rpmsg_endpoint *ept);
+ static int virtio_rpmsg_send(struct rpmsg_endpoint *ept, void *data, int len);
+ static int virtio_rpmsg_sendto(struct rpmsg_endpoint *ept, void *data, int len,
+diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+index 9fe156d1c018..5496d27c6f8c 100644
+--- a/include/linux/rpmsg.h
++++ b/include/linux/rpmsg.h
+@@ -20,6 +20,15 @@
+ 
+ #define RPMSG_ADDR_ANY		0xFFFFFFFF
+ 
++/**
++ * enum rpmsg_ns_flags - List of reserved RPMsg addresses
++ *
++ * @RPMSG_NS_ADDR: remote services advertising for dynamic allocation
++ */
++enum rpmsg_reserved_addr {
++	RPMSG_NS_ADDR		= 53,
++};
++
+ struct rpmsg_device;
+ struct rpmsg_endpoint;
+ struct rpmsg_device_ops;
 -- 
-Sincerely,
-      Lyude Paul (she/her)
-      Software Engineer at Red Hat
+2.17.1
 
