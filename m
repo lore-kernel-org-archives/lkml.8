@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD64C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86950C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 132782072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5202072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbgHYCvj (ORCPT
+        id S1728543AbgHYCvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:51:39 -0400
-Received: from mga18.intel.com ([134.134.136.126]:37761 "EHLO mga18.intel.com"
+        Mon, 24 Aug 2020 22:51:42 -0400
+Received: from mga18.intel.com ([134.134.136.126]:37741 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728523AbgHYCvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 22:51:36 -0400
-IronPort-SDR: CtBn19lOj+n++kyumNlnMmXpAUmQ+SpBrwjD4DdUd954+S6uVWGFEss/jqpUmnN/0qLvBpLcZW
- 5UHKdgN2zUng==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="143690861"
+        id S1728495AbgHYCv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 22:51:26 -0400
+IronPort-SDR: rqVmJdbKGzS+NkTe17M0PF8B691mj1X5fZEcl/HczmUBL8nFm58k/imyIMJkmiIkZDGpwRqb1Q
+ nk/q9RNJMkxA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="143690840"
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="143690861"
+   d="scan'208";a="143690840"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 19:51:35 -0700
-IronPort-SDR: ciVVabXF0bQq7erfIZjbfFM8lY1Ct+AQ1llv7yRbzKRd7btxkNERBQHB6mFSg4aF9hU2l+6G/E
- ECCW/rkgnyDQ==
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 19:51:25 -0700
+IronPort-SDR: 4WESpQwx7vD3oN+IVcvHiC3Q/rV9VOZDL5csPVOEbEiWJDHqWbEccCmSOtxvk06p8i0J2+AYOV
+ 5ty7K/N5mL6w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="312409898"
+   d="scan'208";a="312409876"
 Received: from shsi6026.sh.intel.com ([10.239.147.135])
-  by orsmga002.jf.intel.com with ESMTP; 24 Aug 2020 19:51:32 -0700
+  by orsmga002.jf.intel.com with ESMTP; 24 Aug 2020 19:51:22 -0700
 From:   shuo.a.liu@intel.com
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Shuo Liu <shuo.a.liu@intel.com>,
         Zhi Wang <zhi.a.wang@intel.com>,
         Zhenyu Wang <zhenyuw@linux.intel.com>
-Subject: [PATCH 17/17] virt: acrn: Introduce an interface for Service VM to control vCPU
-Date:   Tue, 25 Aug 2020 10:45:17 +0800
-Message-Id: <20200825024516.16766-18-shuo.a.liu@intel.com>
+Subject: [PATCH 14/17] virt: acrn: Introduce I/O ranges operation interfaces
+Date:   Tue, 25 Aug 2020 10:45:14 +0800
+Message-Id: <20200825024516.16766-15-shuo.a.liu@intel.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200825024516.16766-1-shuo.a.liu@intel.com>
 References: <20200825024516.16766-1-shuo.a.liu@intel.com>
@@ -63,138 +63,109 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shuo Liu <shuo.a.liu@intel.com>
 
-ACRN supports partition mode to achieve real-time requirements. In
-partition mode, a CPU core can be dedicated to a vCPU of User VM. The
-local APIC of the dedicated CPU core can be passthrough to the User VM.
-The Service VM controls the assignment of the CPU cores.
+An I/O request of a User VM, which is constructed by hypervisor, is
+distributed by the ACRN Hypervisor Service Module to an I/O client
+corresponding to the address range of the I/O request.
 
-Introduce an interface for the Service VM to remove the control of CPU
-core from hypervisor perspective so that the CPU core can be a dedicated
-CPU core of User VM.
+I/O client maintains a list of address ranges. Introduce
+acrn_ioreq_range_{add,del}() to manage these address ranges.
 
 Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
-Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
 Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
 Cc: Zhi Wang <zhi.a.wang@intel.com>
 Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
 Cc: Yu Wang <yu1.wang@intel.com>
 Cc: Reinette Chatre <reinette.chatre@intel.com>
 ---
- drivers/virt/acrn/hsm.c       | 49 +++++++++++++++++++++++++++++++++++
- drivers/virt/acrn/hypercall.h | 12 +++++++++
- 2 files changed, 61 insertions(+)
+ drivers/virt/acrn/acrn_drv.h |  4 +++
+ drivers/virt/acrn/ioreq.c    | 59 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
 
-diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
-index 81300ea19dc9..b1e87684701c 100644
---- a/drivers/virt/acrn/hsm.c
-+++ b/drivers/virt/acrn/hsm.c
-@@ -11,6 +11,7 @@
+diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+index c08235ba21fc..05836dcefbd6 100644
+--- a/drivers/virt/acrn/acrn_drv.h
++++ b/drivers/virt/acrn/acrn_drv.h
+@@ -195,6 +195,10 @@ struct acrn_ioreq_client *acrn_ioreq_client_create(struct acrn_vm *vm,
+ 						   void *data, bool is_default,
+ 						   const char *name);
+ void acrn_ioreq_client_destroy(struct acrn_ioreq_client *client);
++int acrn_ioreq_range_add(struct acrn_ioreq_client *client,
++			 u32 type, u64 start, u64 end);
++void acrn_ioreq_range_del(struct acrn_ioreq_client *client,
++			  u32 type, u64 start, u64 end);
  
- #define pr_fmt(fmt) "acrn: " fmt
+ int acrn_msi_inject(u16 vmid, u64 msi_addr, u64 msi_data);
  
-+#include <linux/cpu.h>
- #include <linux/io.h>
- #include <linux/miscdevice.h>
- #include <linux/mm.h>
-@@ -348,6 +349,47 @@ static struct miscdevice acrn_dev = {
- 	.fops	= &acrn_fops,
- };
- 
-+static ssize_t remove_cpu_store(struct device *dev,
-+				struct device_attribute *attr,
-+				const char *buf, size_t count)
-+{
-+	u64 cpu, lapicid;
-+	int ret;
-+
-+	if (kstrtoull(buf, 0, &cpu) < 0)
-+		return -EINVAL;
-+
-+	if (cpu >= num_possible_cpus() || cpu == 0 || !cpu_is_hotpluggable(cpu))
-+		return -EINVAL;
-+
-+	if (cpu_online(cpu))
-+		remove_cpu(cpu);
-+
-+	lapicid = cpu_data(cpu).apicid;
-+	pr_debug("Try to remove cpu %lld with lapicid %lld\n", cpu, lapicid);
-+	ret = hcall_sos_remove_cpu(lapicid);
-+	if (ret < 0) {
-+		pr_err("Failed to remove cpu %lld!\n", cpu);
-+		goto fail_remove;
-+	}
-+
-+	return count;
-+
-+fail_remove:
-+	add_cpu(cpu);
-+	return ret;
-+}
-+static DEVICE_ATTR_WO(remove_cpu);
-+
-+static struct attribute *acrn_attrs[] = {
-+	&dev_attr_remove_cpu.attr,
-+	NULL
-+};
-+
-+static struct attribute_group acrn_attr_group = {
-+	.attrs = acrn_attrs,
-+};
-+
- static int __init hsm_init(void)
- {
- 	int ret;
-@@ -373,13 +415,20 @@ static int __init hsm_init(void)
- 		return ret;
- 	}
- 
-+	if (sysfs_create_group(&acrn_dev.this_device->kobj, &acrn_attr_group)) {
-+		pr_warn("sysfs create failed\n");
-+		misc_deregister(&acrn_dev);
-+		return -EINVAL;
-+	}
- 	acrn_ioreq_intr_setup();
-+
- 	return 0;
- }
- 
- static void __exit hsm_exit(void)
- {
- 	acrn_ioreq_intr_remove();
-+	sysfs_remove_group(&acrn_dev.this_device->kobj, &acrn_attr_group);
- 	misc_deregister(&acrn_dev);
- }
- module_init(hsm_init);
-diff --git a/drivers/virt/acrn/hypercall.h b/drivers/virt/acrn/hypercall.h
-index ce8fdca76394..04121223ff8d 100644
---- a/drivers/virt/acrn/hypercall.h
-+++ b/drivers/virt/acrn/hypercall.h
-@@ -15,6 +15,7 @@
- 
- #define HC_ID_GEN_BASE			0x0UL
- #define HC_GET_API_VERSION		_HC_ID(HC_ID, HC_ID_GEN_BASE + 0x00)
-+#define HC_SOS_REMOVE_CPU		_HC_ID(HC_ID, HC_ID_GEN_BASE + 0x01)
- 
- #define HC_ID_VM_BASE			0x10UL
- #define HC_CREATE_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x00)
-@@ -56,6 +57,17 @@ static inline long hcall_get_api_version(u64 api_version)
- 	return acrn_hypercall1(HC_GET_API_VERSION, api_version);
+diff --git a/drivers/virt/acrn/ioreq.c b/drivers/virt/acrn/ioreq.c
+index 7e312b8e5edd..48ce6955699e 100644
+--- a/drivers/virt/acrn/ioreq.c
++++ b/drivers/virt/acrn/ioreq.c
+@@ -102,6 +102,65 @@ int acrn_ioreq_request_default_complete(struct acrn_vm *vm, u16 vcpu)
+ 	return ret;
  }
  
 +/**
-+ * hcall_sos_remove_cpu() - Remove a vCPU of Service VM
-+ * @cpu: The vCPU to be removed
++ * acrn_ioreq_range_add() - Add an iorange monitored by an ioreq client
++ * @client:	The ioreq client
++ * @type:	Type (ACRN_IOREQ_TYPE_MMIO or ACRN_IOREQ_TYPE_PORTIO)
++ * @start:	Start address of iorange
++ * @end:	End address of iorange
 + *
-+ * Return: 0 on success, <0 on failure
++ * Return: 0 on success, <0 on error
 + */
-+static inline long hcall_sos_remove_cpu(u64 cpu)
++int acrn_ioreq_range_add(struct acrn_ioreq_client *client,
++			 u32 type, u64 start, u64 end)
 +{
-+	return acrn_hypercall1(HC_SOS_REMOVE_CPU, cpu);
++	struct acrn_ioreq_range *range;
++
++	if (end < start) {
++		pr_err("Invalid IO range [0x%llx,0x%llx]\n", start, end);
++		return -EFAULT;
++	}
++
++	range = kzalloc(sizeof(*range), GFP_KERNEL);
++	if (!range)
++		return -ENOMEM;
++
++	range->type = type;
++	range->start = start;
++	range->end = end;
++
++	write_lock_bh(&client->range_lock);
++	list_add(&range->list, &client->range_list);
++	write_unlock_bh(&client->range_lock);
++
++	return 0;
 +}
 +
- /**
-  * hcall_create_vm() - Create a User VM
-  * @vminfo:	Service VM GPA of info of User VM creation
++/**
++ * acrn_ioreq_range_del() - Del an iorange monitored by an ioreq client
++ * @client:	The ioreq client
++ * @type:	Type (ACRN_IOREQ_TYPE_MMIO or ACRN_IOREQ_TYPE_PORTIO)
++ * @start:	Start address of iorange
++ * @end:	End address of iorange
++ */
++void acrn_ioreq_range_del(struct acrn_ioreq_client *client,
++			  u32 type, u64 start, u64 end)
++{
++	struct acrn_ioreq_range *range;
++
++	write_lock_bh(&client->range_lock);
++	list_for_each_entry(range, &client->range_list, list) {
++		if (type == range->type &&
++		    start == range->start &&
++		    end == range->end) {
++			list_del(&range->list);
++			kfree(range);
++			break;
++		}
++	}
++	write_unlock_bh(&client->range_lock);
++}
++
+ /*
+  * ioreq_task() is the execution entity of handler thread of an I/O client.
+  * The handler callback of the I/O client is called within the handler thread.
 -- 
 2.28.0
 
