@@ -2,86 +2,107 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9DFC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B322AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 841062076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:44:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598384679;
-	bh=9Go/Zhclcce+flMww2sY3aWDPzUfYx7gBKodCIGY8g0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=I0dHPdLoke9aiRIhR8nW/kAVcdijZHnaSROgX1jFcYZF646tTEI+j+H8+A/5005jy
-	 Bzi+3VcQTE2/8BkkqvSbdqpFueDrrtLf9S890Rfol8w3Jw7Y/Vkpw/JNnIqk2qJCq6
-	 lIV7xe8g/xsg2GG98uR85kS8ZlSBkGyi1wuvCEeE=
+	by mail.kernel.org (Postfix) with ESMTP id 992012074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:46:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgHYToi (ORCPT
+        id S1726750AbgHYTqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:44:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52380 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgHYTo2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:44:28 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21F262076C;
-        Tue, 25 Aug 2020 19:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598384668;
-        bh=9Go/Zhclcce+flMww2sY3aWDPzUfYx7gBKodCIGY8g0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mRgqK9U0so7TKb9tGf3mKjc7Qoz7L+zuD1nCa1PUm/ZFAF9ZHedfsXfQsk1+aEBPQ
-         vg9s5BZxQMIvvV3xlL+/+9XNZq+FOIvz4GkSoGzk7UW9t/FEYVV8PTl8yW/yepF1Rc
-         0EFukoesUcYCzzrC1VevYPkEYDz86gtpVyXMPxpk=
-Date:   Tue, 25 Aug 2020 14:44:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: Re: [PATCH 3/9] PCI/MSI: Provide default retrigger callback
-Message-ID: <20200825194426.GA1922753@bjorn-Precision-5520>
+        Tue, 25 Aug 2020 15:46:24 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:47524 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYTqX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 15:46:23 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 7BCE71C0BB9; Tue, 25 Aug 2020 21:46:21 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 21:46:21 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        JiangYu <lnsyyj@hotmail.com>,
+        Daniel Meyerholt <dxm523@gmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 22/71] scsi: target: tcmu: Fix crash in
+ tcmu_flush_dcache_range on ARM
+Message-ID: <20200825194621.GA27453@duo.ucw.cz>
+References: <20200824082355.848475917@linuxfoundation.org>
+ <20200824082356.994960635@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
 Content-Disposition: inline
-In-Reply-To: <20200824102317.1038259-4-maz@kernel.org>
+In-Reply-To: <20200824082356.994960635@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 11:23:11AM +0100, Marc Zyngier wrote:
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  drivers/pci/msi.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 30ae4ffda5c1..c4d31ce2d951 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -1446,6 +1446,8 @@ static void pci_msi_domain_update_chip_ops(struct msi_domain_info *info)
->  		chip->irq_mask = pci_msi_mask_irq;
->  	if (!chip->irq_unmask)
->  		chip->irq_unmask = pci_msi_unmask_irq;
-> +	if (!chip->irq_retrigger)
-> +		chip->irq_retrigger = irq_chip_retrigger_hierarchy;
->  }
->  
->  /**
-> -- 
-> 2.27.0
-> 
+Hi!
+
+> From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+>=20
+> [ Upstream commit 3145550a7f8b08356c8ff29feaa6c56aca12901d ]
+>=20
+> This patch fixes the following crash (see
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D208045)
+>=20
+>  Process iscsi_trx (pid: 7496, stack limit =3D 0x0000000010dd111a)
+>  CPU: 0 PID: 7496 Comm: iscsi_trx Not tainted 4.19.118-0419118-generic
+>         #202004230533
+>  Hardware name: Greatwall QingTian DF720/F601, BIOS 601FBE20 Sep 26 2019
+>  pstate: 80400005 (Nzcv daif +PAN -UAO)
+=2E..
+> The solution is based on patch:
+>=20
+>   "scsi: target: tcmu: Optimize use of flush_dcache_page"
+>=20
+> which restricts the use of tcmu_flush_dcache_range() to addresses from
+> vmalloc'ed areas only.
+
+Yeah, but the patch mentioned is not queued for 4.19, so we should not
+be simply applying this to 4.19. Does it need to be cherry-picked,
+too?
+
+commit 3c58f737231e2c8cbf543a09d84d8c8e80e05e43
+Author: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+
+    scsi: target: tcmu: Optimize use of flush_dcache_page
+   =20
+    (scatter|gather)_data_area() need to flush dcache after writing data to=
+ or
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX0VqjQAKCRAw5/Bqldv6
+8vu/AJ9YX4Il9EcjOVNDspPm4O+tbFt5CgCgjktotSacjmX7kU0hdJ1wf/l4LM8=
+=+yPH
+-----END PGP SIGNATURE-----
+
+--45Z9DzgjV8m4Oswq--
