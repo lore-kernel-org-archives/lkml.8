@@ -2,145 +2,109 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B492AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 962EAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A21720639
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:16:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hwc0ZlwI"
+	by mail.kernel.org (Postfix) with ESMTP id 5DAE520639
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgHYNQw (ORCPT
+        id S1726672AbgHYNSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:16:52 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58166 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYNQs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:16:48 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07PDGao5036885;
-        Tue, 25 Aug 2020 08:16:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598361396;
-        bh=N96D9x+cfIc6e+cmK+tbORS+cMhXtDcJGJh2vSD1HVM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hwc0ZlwIAArDgY+jcQb7oQndBlwK8+IYrRiK4TSycH8VnKeNOsVNow6LvoRFbRZY+
-         inPZL9g1LKHVfBuwYalVw5hEdsUAwxQ+UAquGhpCCvPZx7iztfLtirwOyUck8Wel9k
-         SoWBQszbIi8TBfWQEE9/oVF9T9jwireqh0FLapik=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07PDGZ8S124249
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 08:16:36 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 25
- Aug 2020 08:16:35 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 25 Aug 2020 08:16:35 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07PDGXLR033440;
-        Tue, 25 Aug 2020 08:16:34 -0500
-Subject: Re: [REGRESSION] omapdrm/N900 display broken
-To:     Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
-CC:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200728181412.GA49617@darkstar.musicnaut.iki.fi>
- <660b2fe1-343d-b83e-11d2-5a5eb530b83f@ti.com>
- <448c1441-2cac-44ef-95ef-bb28b512297b@ti.com>
- <20200823162625.GC4313@darkstar.musicnaut.iki.fi>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <ac42f7f9-2ac2-246e-69c1-3d56cea7e59b@ti.com>
-Date:   Tue, 25 Aug 2020 16:16:33 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 25 Aug 2020 09:18:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:58534 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbgHYNS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:18:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D16C11FB;
+        Tue, 25 Aug 2020 06:18:16 -0700 (PDT)
+Received: from [172.16.1.113] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C14F93F66B;
+        Tue, 25 Aug 2020 06:18:15 -0700 (PDT)
+Subject: Re: [EXT] Re: [PATCH] edac: nxp: Add L1 and L2 error detection for
+ A53 and A72 cores
+To:     Alison Wang <alison.wang@nxp.com>, "bp@alien8.de" <bp@alien8.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>
+Cc:     "mchehab@kernel.org" <mchehab@kernel.org>,
+        "rrichter@marvell.com" <rrichter@marvell.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200709082215.12829-1-alison.wang@nxp.com>
+ <92811e33-2f57-244b-4b50-c2831b09b835@arm.com>
+ <VI1PR04MB4062A3BF31A7002AD45E5200F4570@VI1PR04MB4062.eurprd04.prod.outlook.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <f962eb83-da13-a5de-9f06-b1b987f1e621@arm.com>
+Date:   Tue, 25 Aug 2020 14:18:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200823162625.GC4313@darkstar.musicnaut.iki.fi>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <VI1PR04MB4062A3BF31A7002AD45E5200F4570@VI1PR04MB4062.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+Hi Alison,
 
-On 23/08/2020 19:26, Aaro Koskinen wrote:
-> Hi,
-> 
-> On Tue, Aug 04, 2020 at 03:39:37PM +0300, Tomi Valkeinen wrote:
->> On 04/08/2020 15:13, Tomi Valkeinen wrote:
-> 
->>> Can you try to pinpoint a bit where the hang happens? Maybe add
->>> DRM/omapdrm debug prints, or perhaps sysrq works and it shows a lock
->>> that's in deadlock.
+On 25/08/2020 03:31, Alison Wang wrote:
+>> On 09/07/2020 09:22, Alison Wang wrote:
+>>> Add error detection for A53 and A72 cores. Hardware error injection is
+>>> supported on A53. Software error injection is supported on both.
 >>
->> Also, one data point would be to disable venc, e.g. set venc status to
->> "disabled" in dts.
-> 
-> Disabling venc makes no difference.
-> 
-> The hang happens in drm_fb_helper_initial_config(). I followed the
-> "HANG DEBUGGING" tips in the function comment text and enabled
-> fb.lockless_register_fb=1 to get more (serial) console output.
-> 
-> Now I get this:
-> 
-> [    6.514739] omapdss_dss 48050000.dss: supply vdda_video not found, using dummy regulator
-> [    6.566375] DSS: OMAP DSS rev 2.0
-> [    6.571807] omapdss_dss 48050000.dss: bound 48050400.dispc (ops dispc_component_ops)
-> [    6.580749] omapdrm omapdrm.0: DMM not available, disable DMM support
-> [    6.587982] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> [    6.626617] ------------[ cut here ]------------
-> [    6.631774] WARNING: CPU: 0 PID: 18 at drivers/gpu/drm/drm_bridge.c:708 drm_atomic_helper_commit_modeset_enables+0x134/0x268
-> [    6.643768] Modules linked in:
-> [    6.647033] CPU: 0 PID: 18 Comm: kworker/0:1 Tainted: G     U            5.8.0-omap3-los_16068+-00004-g2e7d4a7efefd-dirty #2
-> [    6.658966] Hardware name: Nokia RX-51 board
-> [    6.663635] Workqueue: events deferred_probe_work_func
-> [    6.669097] [<c010bf18>] (unwind_backtrace) from [<c010a0f4>] (show_stack+0x10/0x14)
-> [    6.677429] [<c010a0f4>] (show_stack) from [<c0124f18>] (__warn+0xbc/0xd4)
-> [    6.684844] [<c0124f18>] (__warn) from [<c0124f90>] (warn_slowpath_fmt+0x60/0xb8)
-> [    6.692901] [<c0124f90>] (warn_slowpath_fmt) from [<c040c0e8>] (drm_atomic_helper_commit_modeset_enables+0x134/0x268)
-> [    6.704254] [<c040c0e8>] (drm_atomic_helper_commit_modeset_enables) from [<c045442c>] (omap_atomic_commit_tail+0xb4/0xc0)
-> [    6.715972] [<c045442c>] (omap_atomic_commit_tail) from [<c040d1b4>] (commit_tail+0x9c/0x1a8)
-> [    6.725128] [<c040d1b4>] (commit_tail) from [<c040de70>] (drm_atomic_helper_commit+0x134/0x158)
-> [    6.734466] [<c040de70>] (drm_atomic_helper_commit) from [<c043b204>] (drm_client_modeset_commit_atomic+0x16c/0x208)
-> [    6.745727] [<c043b204>] (drm_client_modeset_commit_atomic) from [<c043b2f8>] (drm_client_modeset_commit_locked+0x58/0x184)
-> [    6.757629] [<c043b2f8>] (drm_client_modeset_commit_locked) from [<c043b448>] (drm_client_modeset_commit+0x24/0x40)
-> [    6.768798] [<c043b448>] (drm_client_modeset_commit) from [<c0412778>] (__drm_fb_helper_restore_fbdev_mode_unlocked+0xa0/0xc8)
-> [    6.780975] [<c0412778>] (__drm_fb_helper_restore_fbdev_mode_unlocked) from [<c0412808>] (drm_fb_helper_set_par+0x38/0x64)
-> [    6.792785] [<c0412808>] (drm_fb_helper_set_par) from [<c03a9b24>] (fbcon_init+0x3d4/0x568)
-> [    6.801757] [<c03a9b24>] (fbcon_init) from [<c03eaab0>] (visual_init+0xb8/0xfc)
-> [    6.809631] [<c03eaab0>] (visual_init) from [<c03ec070>] (do_bind_con_driver+0x1e0/0x3bc)
-> [    6.818267] [<c03ec070>] (do_bind_con_driver) from [<c03ec59c>] (do_take_over_console+0x138/0x1d8)
-> [    6.827880] [<c03ec59c>] (do_take_over_console) from [<c03a856c>] (do_fbcon_takeover+0x74/0xd4)
-> [    6.837219] [<c03a856c>] (do_fbcon_takeover) from [<c03a22e0>] (register_framebuffer+0x204/0x2d8)
-> [    6.846740] [<c03a22e0>] (register_framebuffer) from [<c0412228>] (__drm_fb_helper_initial_config_and_unlock+0x3a4/0x554)
-> [    6.858459] [<c0412228>] (__drm_fb_helper_initial_config_and_unlock) from [<c045c230>] (omap_fbdev_init+0x84/0xbc)
-> [    6.869537] [<c045c230>] (omap_fbdev_init) from [<c04549b8>] (pdev_probe+0x580/0x7d8)
-> [    6.877807] [<c04549b8>] (pdev_probe) from [<c04669b4>] (platform_drv_probe+0x48/0x98)
+> <snip>
+>>
+>> As we can't safely write to these registers from linux, so I think this means all
+>> the error injection and maybe SMC stuff can disappear.
 
-Laurent, does this ring any bells? The WARN comes in drm_atomic_bridge_chain_enable() when
-drm_atomic_get_old_bridge_state() returns null for (presumably) sdi bridge.
+> I agreed with your opinion that CPUACTLR_EL1 and L2ACTLR can't be written in Linux.
 
-I'm not sure why the bridge state would not be there.
+Well, we can't do what the TRM tells us we must before writing to that register.
 
-Aaro, you can probably debug easier if you disable CONFIG_FRAMEBUFFER_CONSOLE, or even
-CONFIG_DRM_FBDEV_EMULATION.
 
- Tomi
+> So the error injection can't be done in Linux. Do you mean the error injection can
+> only be done in firmware before Linux boots up? If so, the system is running with error
+> injection enabled all the time, it may be not a good idea too. Any suggestion?
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+These registers are expected to have one value, forever. The errata document sometimes
+tells us to to set or clear one of these bits to workaround an issue. Because they can
+only be written to when the system is idle, typically during boot, this is firmware's
+responsibility.
+
+I expect firmware to set the bits in ACTLR_EL3, to prevent lower exception levels from
+touching any of these registers.
+
+
+I don't know how the error injection on A53 or A72 works, so I don't know if you can leave
+it enabled all the time. The bit you are setting is described as RES0 by the A53 and A72
+TRMs. I suspect I had the wrong TRM open, as my 'L1DEIEN' comment seems to be what your
+CPUACTLR_EL1[6] is called on A35. (35, 53? Guess how that happened!)
+
+A35's error injection says:
+| While this bit is set, double-bit errors are injected on all writes to the L1 D-cache
+| data RAMs for the first word of each 32-byte region.
+
+You certainly can't leave this sort of thing enabled! And you can't change it at runtime,
+so we can't use it.
+
+
+I think features like this are intended to be used to check the integration, not to test
+the software.
+
+
+After I sent the original comments on this, I found Sascha's version, which has these
+issues resolved:
+https://lore.kernel.org/linux-arm-kernel/20200813075721.27981-1-s.hauer@pengutronix.de/
+
+I think this version should work on your platform too.
+
+
+Thanks,
+
+James
