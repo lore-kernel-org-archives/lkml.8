@@ -2,190 +2,107 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE39EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E41120706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:26:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TWYP0KD8"
+	by mail.kernel.org (Postfix) with ESMTP id 0D6952068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:26:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598347588;
+	bh=T2kSGOuK3m8k7gWo3P5HzQK2jaRznKuC20hjtiRBOjg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NTO7BHNnMbL9MlHP9dVCa4cRKVdbpuAYKVy8t4zCk0Q0FmvGroMwkp5kctOA92fgl
+	 jndCu8idvVr0EQWqekVdNpPhLircUeLMsZ7jyj6nLdGbZ7AooZeGh4ZpHtn+FgNxhs
+	 Ul4Enij9VrN1JID/0KLP6XKOhf0lsCfCLrhCQvys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgHYJ0W (ORCPT
+        id S1729023AbgHYJ0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:26:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbgHYJ0R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:26:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbgHYJ0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 05:26:17 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8645C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 02:26:16 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id u131so3398829vsu.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 02:26:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XXBH4sOkqPl9zJcXTUASMt/Fu8TtonsFgui8Kl7kFVY=;
-        b=TWYP0KD8mtsXXsDXuppZAwQQ67rPdc4tICCU7GvKYEWHxBchEiOadVBDgc3Z8BF4XO
-         jgTMzMeNoBBJVXZQfk3AMdbGvkgTBbqlpoiA7C9nNtGeaBxLnx3jEK/vv9nFlnPh9/DJ
-         TgJ990nDyVQNC1Kk3CDHNeM0HolTeK2JGc+JeKc0Asg0tf53T/j0z1oYXEUe3TmHHahK
-         DMXwFbejlBBLFqp1266S1YpJxC8PokIgG47WLH6Q6IrqGhqIXC4/t/ES0j/TyzAtHMVh
-         qHLuYP8F/xPcgPYas5khMHfmzHbhhXfPMw8lKgklue4eg9EkJZXUlSnL6zfYM93OJ86S
-         K39Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XXBH4sOkqPl9zJcXTUASMt/Fu8TtonsFgui8Kl7kFVY=;
-        b=X81zL8HFa1VwnnAD9n2VXXHEqLdQdqO4k3ni4GjiP4oRue6AVKqiVlyN7zk4w0sraH
-         U3QSVyl9y5iL6Ley0YnLXRbFxrVqJJg2a6A9FnDNeL3xmVDytqtsD0ecYbRqSpwPdUSt
-         UrkrEH1pO+24AL7RG777gAPdIVYfZ98iA8USlf36DfKyeHHntR4mKsMJtz5CnYheHnpB
-         Fwk5gvRvQqmTsTgEOFrY2p0bGd1HzsowFnqvnIVFxu/XS2aP6rI6S7avKSS8StvgJy7M
-         uJuWAhDryNpTh21MCHcmff6D7tcZqGltXM+pBYyWdwdkbD5FXVyewHTSPk1BxXC00apN
-         ek3Q==
-X-Gm-Message-State: AOAM532Ni1+4VDlQ4uQGWlZcLkig17sHaiHpAxWyL/qdo4PkDidaFB5L
-        GSQ1q9o/FON+KMyhnBZc98tPmkjML2P/jAGtmnpVYQ==
-X-Google-Smtp-Source: ABdhPJzPB9driK8H4qkeuT9S/aH4aByKHE7EXpTg6JCgldVacqxODAO1rUsFRonHGhpGwdxbkweJVIM8uPGeKAfsn/U=
-X-Received: by 2002:a67:8c06:: with SMTP id o6mr5214822vsd.200.1598347574303;
- Tue, 25 Aug 2020 02:26:14 -0700 (PDT)
+Received: from localhost (p54b333df.dip0.t-ipconnect.de [84.179.51.223])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0A7D2068F;
+        Tue, 25 Aug 2020 09:26:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598347576;
+        bh=T2kSGOuK3m8k7gWo3P5HzQK2jaRznKuC20hjtiRBOjg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1LEMhQv5WeJFL2nBK/MIhnwi+Rsmd2rP6kyGFal1Ibj3oyVyP6QTmZf8b9QFO0cJe
+         BOWHPOJ1C5ucLNpfSrD7Sms7JRo6XyJ/1V3tOJAl42iMk6thRjCYB8x52DwZEbl8rp
+         iN0ZN0aZZbWdNq+xFA2WhMg3kLeOITGjURJwyiuI=
+Date:   Tue, 25 Aug 2020 11:26:13 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Cc:     gregory.clement@bootlin.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] i2c: mv64xxx: Add bus error recovery
+Message-ID: <20200825092613.GJ1861@ninjato>
+References: <20200824225254.1114-1-mark.tomlinson@alliedtelesis.co.nz>
 MIME-Version: 1.0
-References: <20200824151035.31093-1-lars.povlsen@microchip.com>
- <20200824151035.31093-2-lars.povlsen@microchip.com> <CAPDyKFoBom1n4AHniiukPiE_szskHrhcmVXfMpKTvNo9Xw9v0w@mail.gmail.com>
- <20200825084752.GD2389103@piout.net>
-In-Reply-To: <20200825084752.GD2389103@piout.net>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 25 Aug 2020 11:25:37 +0200
-Message-ID: <CAPDyKFrCxmpfH9DQNyeWdGEgRVpB9B9qdowpTgSvF+f+MgQeSA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller bindings
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="aznLbwQ42o7LEaqN"
+Content-Disposition: inline
+In-Reply-To: <20200824225254.1114-1-mark.tomlinson@alliedtelesis.co.nz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 at 10:47, Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> On 25/08/2020 09:33:45+0200, Ulf Hansson wrote:
-> > On Mon, 24 Aug 2020 at 17:10, Lars Povlsen <lars.povlsen@microchip.com> wrote:
-> > >
-> > > The Sparx5 SDHCI controller is based on the Designware controller IP.
-> > >
-> > > Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> > > ---
-> > >  .../mmc/microchip,dw-sparx5-sdhci.yaml        | 65 +++++++++++++++++++
-> > >  1 file changed, 65 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml b/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
-> > > new file mode 100644
-> > > index 0000000000000..55883290543b9
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
-> > > @@ -0,0 +1,65 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/mmc/microchip,dw-sparx5-sdhci.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Microchip Sparx5 Mobile Storage Host Controller Binding
-> > > +
-> > > +allOf:
-> > > +  - $ref: "mmc-controller.yaml"
-> > > +
-> > > +maintainers:
-> > > +  - Lars Povlsen <lars.povlsen@microchip.com>
-> > > +
-> > > +# Everything else is described in the common file
-> > > +properties:
-> > > +  compatible:
-> > > +    const: microchip,dw-sparx5-sdhci
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  interrupts:
-> > > +    maxItems: 1
-> > > +
-> > > +  clocks:
-> > > +    maxItems: 1
-> > > +    description:
-> > > +      Handle to "core" clock for the sdhci controller.
-> > > +
-> > > +  clock-names:
-> > > +    items:
-> > > +      - const: core
-> > > +
-> > > +  microchip,clock-delay:
-> > > +    description: Delay clock to card to meet setup time requirements.
-> > > +      Each step increase by 1.25ns.
-> > > +    $ref: "/schemas/types.yaml#/definitions/uint32"
-> > > +    minimum: 1
-> > > +    maximum: 15
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - reg
-> > > +  - interrupts
-> > > +  - clocks
-> > > +  - clock-names
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > > +    #include <dt-bindings/clock/microchip,sparx5.h>
-> > > +    sdhci0: mmc@600800000 {
-> >
-> > Nitpick:
-> >
-> > I think we should use solely "mmc[n]" here. So:
-> >
-> > mmc0@600800000 {
-> >
-> > Please update patch3/3 accordingly as well.
->
-> This is not what the devicetree specification says. 2.2.2 says that the
-> generic name is mmc, not mmc[n]. Since there is a proper unit-address, I
-> don't see the need for an index here.
 
-You are absolutely right, thanks!
+--aznLbwQ42o7LEaqN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My apologies for the noise!
+On Tue, Aug 25, 2020 at 10:52:54AM +1200, Mark Tomlinson wrote:
+> This adds i2c bus recovery to the mv64xxx driver.
+>=20
+> Implement bus recovery to recover from SCL/SDA stuck low.
+>=20
+> This uses the generic recovery function, setting the clock/data lines as
+> GPIO pins, and sending 9 clocks to try and recover the bus.
+>=20
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+> ---
+> Changes in v2:
+>  - use generic GPIO recovery function.
 
->
-> >
-> > > +        compatible = "microchip,dw-sparx5-sdhci";
-> > > +        reg = <0x00800000 0x1000>;
-> > > +        pinctrl-0 = <&emmc_pins>;
-> > > +        pinctrl-names = "default";
-> > > +        clocks = <&clks CLK_ID_AUX1>;
-> > > +        clock-names = "core";
-> > > +        assigned-clocks = <&clks CLK_ID_AUX1>;
-> > > +        assigned-clock-rates = <800000000>;
-> > > +        interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> > > +        bus-width = <8>;
-> > > +        microchip,clock-delay = <10>;
-> > > +    };
+Thank you for doing that! Glad to see the new helper function works for
+you as well. The initialization code is all well, but I wonder about the
+use of i2c_recover_bus(). Recovery should be tried only if it is
+detected that SDA is pulled low when the bus should be free. So, you
+shouldn't call i2c_recover_bus() in unconditionally in probe(). Can your
+HW detect if SDA is stuck low?
 
 
+--aznLbwQ42o7LEaqN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Kind regards
-Uffe
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9E2TEACgkQFA3kzBSg
+KbY5iQ//XCFBdzw1bllHv/Z/puDG8CmCq+PfsS+u1FqRaxrqC88T0/dBq04kbWVP
+wa/mERJ6NjSJAHG3BYrV3zeGxlKw/60XV9gLeycj+Q9Xq+xCnPbXh5cAfDoGoJL9
+GhKso1gfhpA8YtCN+6NpG6S6mRMLSaW2XfLEw4n7A+LHAVROzA7Hp+payFWyn5zm
+3ic9Lrdnqay/7CtuaCLmcauIb5jlixEwcuLdlvHKrxYZ13/7iSFnLNj62308lCwj
+8I0ykEbviIhyDzAHvqe4DhyghFBK2QKuTg0q3rxHWq8jKcWicPpp+qqCqVI1Ugab
+oKFzbuuXS8/nP551WkvOA7Hqwc7YI6HlrH+LYUxJllLTvL+O8UpDM3Jgv6U+Csvo
+omNAPXOfZVbOtrpfRbLudHWWdhNdwB1+YDtEcy+Kw9fhTADapDgEQmaiXMt5IRMU
+dP4bcxPswhg5y11fcRbhJM9tiHyTA3kz0Fch516CTLhRZP4C9FkZZ7Wip0aHHtCZ
+nVxmdGRPN+AnzQd+fOHGs8W/8iXY5H+x/OIzC7KKllq8Al6CZ4xGwh2dUCFB4DaD
+WRbtsUFyRuLMbK7phO+PLoxk+Dm16z2yZRW1uV5b9916myM2iNS1VVUrFfotVyLH
+tZqK9o9eKPzQy31xcpgCCFYnlrMf71VQNhshRSlUxI4Zo4z9b6I=
+=Rz8g
+-----END PGP SIGNATURE-----
+
+--aznLbwQ42o7LEaqN--
