@@ -2,130 +2,182 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76100C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D96DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30AE12075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B70D2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:22:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EeLbwrDx"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="XD+Xf2uf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgHYWWE (ORCPT
+        id S1726784AbgHYWW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbgHYWWD (ORCPT
+        Tue, 25 Aug 2020 18:22:29 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:58920 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbgHYWW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 18:22:03 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E4BC061574;
-        Tue, 25 Aug 2020 15:22:02 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y3so368808wrl.4;
-        Tue, 25 Aug 2020 15:22:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MjB8SE3dapmOewYm9leYc+Bg7VM5DP81gEa/d9Q95BQ=;
-        b=EeLbwrDxVvap7CAAaQtDZIzUiPc92K6b/P54Fl4vvL74IbS7hOKS427Ckg38QqqCKn
-         7/C8ZhL6sTBrbkthlLsRt5n25tm5KXlj6uDAAKnH/rm+nD0wmLKvPXLFDkAIZdC8lxCk
-         8sBfeUu3mcCWbzB0U7KI6qeS6T3zTZsgmAR4mSJltdEseWuKxr4UdlmrXFaki4DX7EuK
-         ORvNmjzu5bDtpo3dUmfWpEQQ6e+Xg5Hf8mjoCUZGSucMo/rECo4s+/bTU8JmjEqStKf/
-         qe6SbSp0MnQzjKjTEQ+oeXOSUIiChnDVq32DBbLFYgEqL/fVOD+Ay6fhEcw8OfzoH9i+
-         LSCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MjB8SE3dapmOewYm9leYc+Bg7VM5DP81gEa/d9Q95BQ=;
-        b=t1Xwv4H7i+Wumdt893sU4CI/+Ik4enUgbYW+fD/3bLoO7ctkdkvca0QByg+ct7DcPV
-         AHMsoyqXHVmw0LNytjZUCaZsxC8ZvLJw0ShkP0VATD4tVJdoyllNxRYkN5C+3HIIYswu
-         nAeY6UF0hTPxUWySLHgdECXFd2spClldZZdIkBHD8EEcFXUaRYE2Nbdb9pU/7/DxbPpX
-         P7Mb4sdREF3QBk6xomRVOh55+Cq5MwBj2YtU68M3Sm/QE2od5B3miVx5S2dnoRHCpBb/
-         /NymkT7aBZXS7zxwVjjnnMKdjVQSjsC3R6dhmWD2x9a0gDoon9sFvBj+jgiqxvsZ5eZh
-         dUdg==
-X-Gm-Message-State: AOAM532GvNPMnxrQHF5fuzNrF8nm5HW/eePWIng4py8PmwDUbYQIdAX+
-        PuL76KEWinUa9hjTOzOVPRtVe6v1yNFifeyBXCs=
-X-Google-Smtp-Source: ABdhPJy77vbwGSBhIlrLbvHPIFwefR/X6zsRY84grxWrjRfrTFT2zNNGbF5VeAv/7CTZMUaBZRCez2dNrjf4vMNw2nw=
-X-Received: by 2002:a5d:574a:: with SMTP id q10mr11680563wrw.147.1598394120864;
- Tue, 25 Aug 2020 15:22:00 -0700 (PDT)
+        Tue, 25 Aug 2020 18:22:28 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 25A798066C;
+        Wed, 26 Aug 2020 10:22:23 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1598394143;
+        bh=txgr+HWFTXiMGfvnsvIrOEATORmNGcS3KEA7Im9+DJg=;
+        h=From:To:CC:Subject:Date:In-Reply-To;
+        b=XD+Xf2uf56iDBSz163/qHibLMx/CmVB3YrWGZ8O3uJqow92w3cYJyXmKpG8dtu+tN
+         A8QA335zJ5f5r7o7FcQ007WCrsad0M45ehKXq4csBu3XS4+go1XzXYyf3QPphk/edy
+         pd6UsedaX77AFh542ouNs2ffQ0fbP0Tvqmc0VtqHzRRt6BICJ6qKuwhIk4O3PV0o10
+         45X8j8aPud4jRuiV7Gqo2EXcELYFuPoz4C8DqclXKO9TrJ8VLicxyUmWaJtdebijfm
+         Mm34AYBMmM5tNIMzW2TqBlLz35x8RyfB4o6maBzY7JD9Fmb4P54zGMU8xaTvGtdTwc
+         PVyQiK25ydKwA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f458f1f0001>; Wed, 26 Aug 2020 10:22:23 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 26 Aug 2020 10:22:22 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 26 Aug 2020 10:22:22 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Heiner Kallweit <hkallweit1@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "paulus@samba.org" <paulus@samba.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: fsl_espi errors on v5.7.15
+Thread-Topic: fsl_espi errors on v5.7.15
+Thread-Index: AQHWceVnik7XsBYbp0S+yHVGh1hdQak2WMaAgAQdSwCAAz9MAIAAfdcAgAD5u4CAB+sMAIAAYfwAgAA6JQCAAPtUgA==
+Date:   Tue, 25 Aug 2020 22:22:21 +0000
+Message-ID: <31e91237-4f87-66da-dac3-2304779e5749@alliedtelesis.co.nz>
+In-Reply-To: <f97dc3af-d1f0-6974-ec2d-ace8d7e73993@gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <DD6E89351CA59E48A9BFF5130A4A7D27@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200825003341.1797322-1-robdclark@gmail.com> <159834727050.334488.84544239322533805@swboyd.mtv.corp.google.com>
-In-Reply-To: <159834727050.334488.84544239322533805@swboyd.mtv.corp.google.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 25 Aug 2020 15:22:47 -0700
-Message-ID: <CAF6AEGvNKhFMtMkqS8STaUTcw7z6-NsHROeydWnx-=2=UG357A@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180-trogdor: add initial trogdor and
- lazor dt
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Atul Dhudase <adhudase@codeaurora.org>,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Ajit Pandey <ajitp@codeaurora.org>,
-        Alexandru Stan <amstan@chromium.org>,
-        Sujit Kautkar <sujitka@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 2:21 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Rob Clark (2020-08-24 17:33:39)
-> > diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
-> > new file mode 100644
-> > index 000000000000..b04987ab6c22
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
-> > @@ -0,0 +1,1364 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> [...]
-> > +
-> > +       gpio_keys: gpio-keys {
-> > +               compatible = "gpio-keys";
-> > +               status = "disabled";
-> > +               pinctrl-names = "default";
-> > +               pinctrl-0 = <&pen_pdct_l>;
-> > +
-> > +               pen-insert {
-> > +                       label = "Pen Insert";
-> > +
-> > +                       /* Insert = low, eject = high */
-> > +                       gpios = <&tlmm 52 GPIO_ACTIVE_LOW>;
-> > +                       linux,code = <SW_PEN_INSERTED>;
-> > +                       linux,input-type = <EV_SW>;
-> > +                       wakeup-source;
-> > +               };
-> > +       };
-> > +
-> > +       max98357a: max98357a {
->
-> Maybe node name should be 'audio-codec' or 'dac' or 'amp' or 'speaker'
-> or 'codec'?
-
-looking at other boards, it looks like 2 votes for "audio-codec-0",
-one vote for "codec0", and 2 votes for "max98357a"..  so seems to be a
-codec rather than amp/speaker.. and "audio-codec" seems to be the
-popular choice..
-
-BR,
--R
+T24gMjUvMDgvMjAgNzoyMiBwbSwgSGVpbmVyIEthbGx3ZWl0IHdyb3RlOg0KDQo8c25pcD4NCj4g
+SSd2ZSBiZWVuIHN0YXJpbmcgYXQgc3BpLWZzbC1lc3BpLmMgZm9yIHdoaWxlIG5vdyBhbmQgSSB0
+aGluayBJJ3ZlDQo+PiBpZGVudGlmaWVkIGEgY291cGxlIG9mIGRlZmljaWVuY2llcyB0aGF0IG1h
+eSBvciBtYXkgbm90IGJlIHJlbGF0ZWQgdG8gbXkNCj4+IGlzc3VlLg0KPj4NCj4+IEZpcnN0IEkg
+dGhpbmsgdGhlICdUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQnIG1lc3NhZ2Ug
+Y2FuIGJlDQo+PiBnZW5lcmF0ZWQgc3B1cmlvdXNseS4gSW4gZnNsX2VzcGlfaXJxKCkgd2UgcmVh
+ZCB0aGUgRVNQSV9TUElFIHJlZ2lzdGVyLg0KPj4gV2UgYWxzbyB3cml0ZSBiYWNrIHRvIGl0IHRv
+IGNsZWFyIHRoZSBjdXJyZW50IGV2ZW50cy4gV2UgcmUtcmVhZCBpdCBpbg0KPj4gZnNsX2VzcGlf
+Y3B1X2lycSgpIGFuZCBjb21wbGFpbiB3aGVuIFNQSUVfRE9OIGlzIG5vdCBzZXQuIEJ1dCB3ZSBj
+YW4NCj4+IG5hdHVyYWxseSBlbmQgdXAgaW4gdGhhdCBzaXR1YXRpb24gaWYgd2UncmUgZG9pbmcg
+YSBsYXJnZSByZWFkLiBDb25zaWRlcg0KPj4gdGhlIG1lc3NhZ2VzIGZvciByZWFkaW5nIGEgYmxv
+Y2sgb2YgZGF0YSBmcm9tIGEgc3BpLW5vciBjaGlwDQo+Pg0KPj4gICDCoHR4ID0gUkVBRF9PUCAr
+IEFERFINCj4+ICAgwqByeCA9IGRhdGENCj4+DQo+PiBXZSBzZXR1cCB0aGUgdHJhbnNmZXIgYW5k
+IHB1bXAgb3V0IHRoZSB0eF9idWYuIFRoZSBmaXJzdCBpbnRlcnJ1cHQgZ29lcw0KPj4gb2ZmIGFu
+ZCBFU1BJX1NQSUUgaGFzIFNQSU1fRE9OIGFuZCBTUElNX1JYVCBzZXQuIFdlIGVtcHR5IHRoZSBy
+eCBmaWZvLA0KPj4gY2xlYXIgRVNQSV9TUElFIGFuZCB3YWl0IGZvciB0aGUgbmV4dCBpbnRlcnJ1
+cHQuIFRoZSBuZXh0IGludGVycnVwdA0KPj4gZmlyZXMgYW5kIHRoaXMgdGltZSB3ZSBoYXZlIEVT
+UElfU1BJRSB3aXRoIGp1c3QgU1BJTV9SWFQgc2V0LiBUaGlzDQo+PiBjb250aW51ZXMgdW50aWwg
+d2UndmUgcmVjZWl2ZWQgYWxsIHRoZSBkYXRhIGFuZCB3ZSBmaW5pc2ggd2l0aCBFU1BJX1NQSUUN
+Cj4+IGhhdmluZyBvbmx5IFNQSU1fUlhUIHNldC4gV2hlbiB3ZSByZS1yZWFkIGl0IHdlIGNvbXBs
+YWluIHRoYXQgU1BJRV9ET04NCj4+IGlzbid0IHNldC4NCj4+DQo+PiBUaGUgb3RoZXIgZGVmaWNp
+ZW5jeSBpcyB0aGF0IHdlIG9ubHkgZ2V0IGFuIGludGVycnVwdCB3aGVuIHRoZSBhbW91bnQgb2YN
+Cj4+IGRhdGEgaW4gdGhlIHJ4IGZpZm8gaXMgYWJvdmUgRlNMX0VTUElfUlhUSFIuIElmIHRoZXJl
+IGFyZSBmZXdlciB0aGFuDQo+PiBGU0xfRVNQSV9SWFRIUiBsZWZ0IHRvIGJlIHJlY2VpdmVkIHdl
+IHdpbGwgbmV2ZXIgcHVsbCB0aGVtIG91dCBvZiB0aGUgZmlmby4NCj4+DQo+IFNQSU1fRE9OIHdp
+bGwgdHJpZ2dlciBhbiBpbnRlcnJ1cHQgb25jZSB0aGUgbGFzdCBjaGFyYWN0ZXJzIGhhdmUgYmVl
+bg0KPiB0cmFuc2ZlcnJlZCwgYW5kIHJlYWQgdGhlIHJlbWFpbmluZyBjaGFyYWN0ZXJzIGZyb20g
+dGhlIEZJRk8uDQoNClRoZSBUMjA4MFJNIHRoYXQgSSBoYXZlIHNheXMgdGhlIGZvbGxvd2luZyBh
+Ym91dCB0aGUgRE9OIGJpdA0KDQoiTGFzdCBjaGFyYWN0ZXIgd2FzIHRyYW5zbWl0dGVkLiBUaGUg
+bGFzdCBjaGFyYWN0ZXIgd2FzIHRyYW5zbWl0dGVkIGFuZCANCmEgbmV3IGNvbW1hbmQgY2FuIGJl
+IHdyaXR0ZW4gZm9yIHRoZSBuZXh0IGZyYW1lLiINCg0KVGhhdCBkb2VzIGF0IGxlYXN0IHNlZW0g
+dG8gZml0IHdpdGggbXkgYXNzZXJ0aW9uIHRoYXQgaXQncyBhbGwgYWJvdXQgdGhlIA0KVFggZGly
+ZWN0aW9uLiBCdXQgdGhlIGZhY3QgdGhhdCBpdCBkb2Vzbid0IGhhcHBlbiBhbGwgdGhlIHRpbWUg
+dGhyb3dzIA0Kc29tZSBkb3VidCBvbiBpdC4NCg0KPiBJIHRoaW5rIHRoZSByZWFzb24gSSdtIHNl
+ZWluZyBzb21lIHZhcmlhYmlsaXR5IGlzIGJlY2F1c2Ugb2YgaG93IGZhc3QNCj4+IChvciBzbG93
+KSB0aGUgaW50ZXJydXB0cyBnZXQgcHJvY2Vzc2VkIGFuZCBob3cgZmFzdCB0aGUgc3BpLW5vciBj
+aGlwIGNhbg0KPj4gZmlsbCB0aGUgQ1BVcyByeCBmaWZvLg0KPj4NCj4gVG8gcnVsZSBvdXQgdGlt
+aW5nIGlzc3VlcyBhdCBoaWdoIGJ1cyBmcmVxdWVuY2llcyBJIGluaXRpYWxseSBhc2tlZA0KPiBm
+b3IgcmUtdGVzdGluZyBhdCBsb3dlciBmcmVxdWVuY2llcy4gSWYgeW91IGUuZy4gbGltaXQgdGhl
+IGJ1cyB0byAxIE1Ieg0KPiBvciBldmVuIGxlc3MsIHRoZW4gdGltaW5nIHNob3VsZG4ndCBiZSBh
+biBpc3N1ZS4NClllcyBJJ3ZlIGN1cnJlbnRseSBnb3Qgc3BpLW1heC1mcmVxdWVuY3kgPSA8MTAw
+MDAwMD47IGluIG15IGR0cy4gSSB3b3VsZCANCmFsc28gZXhwZWN0IGEgc2xvd2VyIGZyZXF1ZW5j
+eSB3b3VsZCBmaXQgbXkgIkRPTiBpcyBmb3IgVFgiIG5hcnJhdGl2ZS4NCj4gTGFzdCByZWxldmFu
+dCBmdW5jdGlvbmFsIGNoYW5nZXMgaGF2ZSBiZWVuIGRvbmUgYWxtb3N0IDQgeWVhcnMgYWdvLg0K
+PiBBbmQgeW91cnMgaXMgdGhlIGZpcnN0IHN1Y2ggcmVwb3J0IEkgc2VlLiBTbyBxdWVzdGlvbiBp
+cyB3aGF0IGNvdWxkIGJlIHNvDQo+IHNwZWNpYWwgd2l0aCB5b3VyIHNldHVwIHRoYXQgaXQgc2Vl
+bXMgeW91J3JlIHRoZSBvbmx5IG9uZSBiZWluZyBhZmZlY3RlZC4NCj4gVGhlIHNjZW5hcmlvcyB5
+b3UgZGVzY3JpYmUgYXJlIHN0YW5kYXJkLCB0aGVyZWZvcmUgbXVjaCBtb3JlIHBlb3BsZQ0KPiBz
+aG91bGQgYmUgYWZmZWN0ZWQgaW4gY2FzZSBvZiBhIGRyaXZlciBidWcuDQpBZ3JlZWQuIEJ1dCBl
+dmVuIG9uIG15IGhhcmR3YXJlICh3aGljaCBtYXkgaGF2ZSBhIGxhdGVudCBpc3N1ZSBkZXNwaXRl
+IA0KYmVpbmcgaW4gdGhlIGZpZWxkIGZvciBnb2luZyBvbiA1IHllYXJzKSB0aGUgaXNzdWUgb25s
+eSB0cmlnZ2VycyB1bmRlciANCnNvbWUgZmFpcmx5IHNwZWNpZmljIGNpcmN1bXN0YW5jZXMuDQo+
+IFlvdSBzYWlkIHRoYXQga2VybmVsIGNvbmZpZyBpbXBhY3RzIGhvdyBmcmVxdWVudGx5IHRoZSBp
+c3N1ZSBoYXBwZW5zLg0KPiBUaGVyZWZvcmUgcXVlc3Rpb24gaXMgd2hhdCdzIHRoZSBkaWZmIGlu
+IGtlcm5lbCBjb25maWcsIGFuZCBob3cgY291bGQNCj4gdGhlIGRpZmZlcmVuY2VzIGJlIHJlbGF0
+ZWQgdG8gU1BJLg0KDQpJdCBkaWQgc2VlbSB0byBiZSBzb21ld2hhdCByYW5kb20uIFRoaW5ncyBs
+aWtlIENPTkZJR19QUkVFTVBUIGhhdmUgYW4gDQppbXBhY3QgYnV0IGV2ZXJ5IHRpbWUgSSBmb3Vu
+ZCBzb21ldGhpbmcgdGhhdCBzZWVtZWQgdG8gYmUgaGF2aW5nIGFuIA0KaW1wYWN0IEkndmUgYmVl
+biBhYmxlIHRvIGRpc3Byb3ZlIGl0LiBJIGFjdHVhbGx5IHRoaW5rIGl0cyBhYm91dCBob3cgDQpi
+dXN5IHRoZSBzeXN0ZW0gaXMgd2hpY2ggbWF5IG9yIG1heSBub3QgYWZmZWN0IHdoZW4gd2UgZ2V0
+IHJvdW5kIHRvIA0KcHJvY2Vzc2luZyB0aGUgaW50ZXJydXB0cy4NCg0KSSBoYXZlIG1hbmFnZWQg
+dG8gZ2V0IHRoZSAnVHJhbnNmZXIgZG9uZSBidXQgU1BJRV9ET04gaXNuJ3Qgc2V0IScgdG8gDQpv
+Y2N1ciBvbiB0aGUgVDIwODBSREIuDQoNCkkndmUgaGFkIHRvIGFkZCB0aGUgZm9sbG93aW5nIHRv
+IGV4cG9zZSB0aGUgZW52aXJvbm1lbnQgYXMgYSBtdGQgcGFydGl0aW9uDQoNCmRpZmYgLS1naXQg
+YS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDh4cmRiLmR0c2kgDQpiL2FyY2gvcG93ZXJw
+Yy9ib290L2R0cy9mc2wvdDIwOHhyZGIuZHRzaQ0KaW5kZXggZmY4N2U2N2M3MGRhLi5mYmY5NWZj
+MWZkNjggMTAwNjQ0DQotLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDh4cmRiLmR0
+c2kNCisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDIwOHhyZGIuZHRzaQ0KQEAgLTEx
+Niw2ICsxMTYsMTUgQEAgZmxhc2hAMCB7DQogwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJsZSA9ICJtaWNyb24sbjI1
+cTUxMmF4MyIsIA0KImplZGVjLHNwaS1ub3IiOw0KIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJlZyA9IDwwPjsNCiDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
+cGktbWF4LWZyZXF1ZW5jeSA9IDwxMDAwMDAwMD47IC8qIA0KaW5wdXQgY2xvY2sgKi8NCisNCivC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgcGFydGl0aW9uQHUtYm9vdCB7DQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJlZyA9IDwweDAw
+MDAwMDAwIDB4MDAxMDAwMDA+Ow0KK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBsYWJlbCA9ICJ1LWJv
+b3QiOw0KK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIH07DQorwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGFydGl0aW9uQHUtYm9vdC1lbnYgew0KK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCByZWcgPSA8MHgwMDEwMDAwMCAweDAwMDEwMDAwPjsNCivCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgbGFiZWwgPSAidS1ib290LWVudiI7DQorwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTsNCiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIH07DQogwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIH07DQoNCkFuZCBJJ20gdXNpbmcgdGhlIGZvbGxvd2luZyBzY3JpcHQg
+dG8gcG9rZSBhdCB0aGUgZW52aXJvbm1lbnQgKHdhcm5pbmcgDQppZiBhbnlvbmUgZG9lcyB0cnkg
+dGhpcyBhbmQgdGhlIGJ1ZyBoaXRzIGl0IGNhbiByZW5kZXIgeW91ciB1LWJvb3QgDQplbnZpcm9u
+bWVudCBpbnZhbGlkKS4NCg0KY2F0IGZsYXNoL2Z3X2Vudl90ZXN0LnNoDQojIS9iaW4vc2gNCg0K
+Z2VuZXJhdGVfZndfZW52X2NvbmZpZygpDQp7DQogwqAgY2F0IC9wcm9jL210ZCB8IHNlZCAncy9b
+OiJdLy9nJyB8IHdoaWxlIHJlYWQgZGV2IHNpemUgZXJhc2VzaXplIG5hbWUgOyBkbw0KIMKgwqDC
+oMKgIGVjaG8gIiRkZXYgJHNpemUgJGVyYXNlc2l6ZSAkbmFtZSINCiDCoMKgwqDCoCBbICIkbmFt
+ZSIgPSAidS1ib290LWVudiIgXSAmJiBlY2hvICIvZGV2LyRkZXYgMHgwMDAwIDB4MjAwMCANCiRl
+cmFzZXNpemUiID4vZmxhc2gvZndfZW52LmNvbmZpZw0KIMKgIGRvbmUNCn0NCg0KY3ljbGVzPTEw
+DQpbICQjIC1nZSAxIF0gJiYgY3ljbGVzPSQxDQoNCmdlbmVyYXRlX2Z3X2Vudl9jb25maWcNCg0K
+ZndfcHJpbnRlbnYgLWMgL2ZsYXNoL2Z3X2Vudi5jb25maWcNCg0KZG1lc2cgLWMgPi9kZXYvbnVs
+bA0KeD0wDQp3aGlsZSBbICR4IC1sdCAkY3ljbGVzIF07IGRvDQogwqDCoMKgIGZ3X3ByaW50ZW52
+IC1jIC9mbGFzaC9md19lbnYuY29uZmlnID4vZGV2L251bGwgfHwgYnJlYWsNCiDCoMKgwqAgZndf
+c2V0ZW52IC1jIC9mbGFzaC9md19lbnYuY29uZmlnIGZvbyAkUkFORE9NIHx8IGJyZWFrOw0KIMKg
+wqDCoCBkbWVzZyAtYyB8IGdyZXAgLXEgZnNsX2VzcGkgJiYgYnJlYWs7DQogwqDCoMKgIGxldCB4
+PXgrMQ0KZG9uZQ0KDQplY2hvICJSYW4gJHggY3ljbGVzIg0K
