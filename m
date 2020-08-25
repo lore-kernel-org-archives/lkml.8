@@ -2,59 +2,112 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8982AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E92BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCBF2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57DF620782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:56:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgHYO4M (ORCPT
+        id S1726995AbgHYOzI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:56:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbgHYOzU (ORCPT
+        Tue, 25 Aug 2020 10:55:08 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:47345 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726751AbgHYOw4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:55:20 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED29FC061574;
-        Tue, 25 Aug 2020 07:55:15 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 60BFA133F652E;
-        Tue, 25 Aug 2020 07:38:28 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 07:55:13 -0700 (PDT)
-Message-Id: <20200825.075513.1635570856037122037.davem@davemloft.net>
-To:     joe@perches.com
-Cc:     trivial@kernel.org, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 27/29] ipv6: fib6: Avoid comma separated statements
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <21b0a23daf050d522c5d49a908821ce280045207.1598331149.git.joe@perches.com>
-References: <cover.1598331148.git.joe@perches.com>
-        <21b0a23daf050d522c5d49a908821ce280045207.1598331149.git.joe@perches.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 25 Aug 2020 07:38:28 -0700 (PDT)
+        Tue, 25 Aug 2020 10:52:56 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-173-Wvx2BJGKOQiqJ5F1Fe8Fiw-1; Tue, 25 Aug 2020 15:52:51 +0100
+X-MC-Unique: Wvx2BJGKOQiqJ5F1Fe8Fiw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 25 Aug 2020 15:52:51 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 25 Aug 2020 15:52:51 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>,
+        'Catalin Marinas' <catalin.marinas@arm.com>,
+        "'kent.overstreet@gmail.com'" <kent.overstreet@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "'Neil Horman'" <nhorman@tuxdriver.com>
+Subject: [PATCH 09/13] lib/generic-radix-tree: Check sizeof(_type) when
+ defining a tree.
+Thread-Topic: [PATCH 09/13] lib/generic-radix-tree: Check sizeof(_type) when
+ defining a tree.
+Thread-Index: AdZ672a1FEFrjN29SvWEbOsXPPX6cQ==
+Date:   Tue, 25 Aug 2020 14:52:50 +0000
+Message-ID: <9ddf843612ea429682b68d5747bd93d8@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.002
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
-Date: Mon, 24 Aug 2020 21:56:24 -0700
+Move the check for the structure type being larger than PAGE_SIZE from every
+use to the definition of a tree.
 
-> Use semicolons and braces.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
+Signed-off-by: David Laight <david.laight@aculab.com>
+---
+ include/linux/generic-radix-tree.h | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Applied.
+diff --git a/include/linux/generic-radix-tree.h b/include/linux/generic-radix-tree.h
+index bfd00320c7f3..53149bc1b92a 100644
+--- a/include/linux/generic-radix-tree.h
++++ b/include/linux/generic-radix-tree.h
+@@ -64,12 +64,14 @@ struct __genradix {
+  * to it for casts/sizeof - we also force the alignment so that storing a type
+  * with a ridiculous alignment doesn't blow up the alignment or size of the
+  * genradix.
++ *
++ * Generates a compile-time error if the item is too large.
+  */
+ 
+ #define GENRADIX(_type)						\
+ struct {							\
+ 	struct __genradix	tree;				\
+-	_type			type[0] __aligned(1);		\
++	_type type[sizeof (_type) <= PAGE_SIZE ? 0 : -1] __aligned(1);	\
+ }
+ 
+ #define DEFINE_GENRADIX(_name, _type)				\
+@@ -98,11 +100,6 @@ void __genradix_free(struct __genradix *);
+ 
+ static inline size_t __idx_to_offset(size_t idx, size_t obj_size)
+ {
+-	if (__builtin_constant_p(obj_size))
+-		BUILD_BUG_ON(obj_size > PAGE_SIZE);
+-	else
+-		BUG_ON(obj_size > PAGE_SIZE);
+-
+ 	if (!is_power_of_2(obj_size)) {
+ 		size_t objs_per_page = PAGE_SIZE / obj_size;
+ 
+-- 
+2.25.1
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
