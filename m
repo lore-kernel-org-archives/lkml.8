@@ -2,244 +2,141 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F384BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8166BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5D7C2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F5862075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:26:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xHgPNBM/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="fOK1Krh7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgHYWYG (ORCPT
+        id S1726711AbgHYW0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:24:06 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36794 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726471AbgHYWYF (ORCPT
+        Tue, 25 Aug 2020 18:26:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbgHYW0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 18:24:05 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PM9F6M152383;
-        Tue, 25 Aug 2020 22:23:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=oeKJZmmYR5uMQ5BCN6pmoROIcHs/c+lN/lZTS/iI3aw=;
- b=xHgPNBM/tXzqFEXOXJ1PdoMNsD3RpLtGKA2eLTAcqps33vmj44wVAurox4de08xBUvUV
- RKs3G8sD0ijRTWdo8zYoJzh+kc6fvqF9OOdz49BtwOlDZi5D4gPlirkLlvIJ+y/UhFtr
- 6fSUeGywJ2OE3v2BJYH1uUJ0S16f4cjcE+HGGU1CCc+2fGGecbU047LBgIvwhD9TGzy7
- zWOwSAnvE9+8ABCF12vrXlsFGJvPaXkMTtCpYzHhx5Y5k0OXK+vm07JNoEq8myeLfNe+
- /sXhhKD2uW3k7kCJwJ5Qju0f2h1AMmFemeBTmUW8ah+EI+EPf4h7WGdCnlRfUMUKtXVE 8w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 333w6tusfs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 22:23:59 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PMACVc058270;
-        Tue, 25 Aug 2020 22:23:59 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 333ru8n88f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 22:23:58 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07PMNvr9015301;
-        Tue, 25 Aug 2020 22:23:57 GMT
-Received: from localhost (/10.159.234.29)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Aug 2020 15:23:56 -0700
-Date:   Tue, 25 Aug 2020 15:23:55 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 9/9] iomap: Change calling convention for zeroing
-Message-ID: <20200825222355.GL6096@magnolia>
-References: <20200824145511.10500-1-willy@infradead.org>
- <20200824145511.10500-10-willy@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824145511.10500-10-willy@infradead.org>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250166
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008250166
+        Tue, 25 Aug 2020 18:26:02 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC9F6C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 15:26:01 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id s29so51954qtc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 15:26:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=FW2LrTzzEQgbMzq3tJHO9RKBRPjxertl4+WTZokfJYo=;
+        b=fOK1Krh7WNbRfwoDQK+/SD0jQQyr0PSMvwUQCD6tAzCs+A3rB/iQPEEGpJBUn9yRkl
+         avnu+n5QnU9pInub5wiqGm/9g2/+lQm4GD55/GcD211tA9+DHFmBlQAk+XTr3Lqe65Sx
+         Juae8uK5syhRfAapQbT5aqIWxTK+7rdDCch0/70gxF1BBfCk6o3tkfpku50rWqc3PqQa
+         F6ELQkeluiUnEBjW+X/PZSkYC2zLwK+c+GXoFCxS6LvmWPAQ7p53cJ9OLMDQvNhJtqzV
+         2DmrzSdWEbZbpyu9FpZ6VEE8THXZZLckNDIvcFgmSETKsbz5gDBcyD9R1Id2w3RP+dMD
+         3RfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=FW2LrTzzEQgbMzq3tJHO9RKBRPjxertl4+WTZokfJYo=;
+        b=lEuoT6NhnhfgzHNqJY3RzhL9iOLGRCbt/Z1h8fYttj2ipGED9d389mGHBqoEXG5794
+         paettLVXQZspF9Ga+Q8hl/LGKsvit7OZZSzOQgB+k95gQcNuc9HNPEaInlPLi23LvcpH
+         rJdlWIj/BWHXHkN9NpMquZ5DT+mIjr7b4neVTEBdpkOQi1bGZGD22yZH7L9b1pVNun9Z
+         dvSD3vZyrDjJDcaDbm011ow3nVKtp1JIcFtAS0oltorQo1IvMHnC+Koah8HWmnIph0T3
+         yJmzrPexYIWLR2ibKw6TBZaPoWltqGMpL0IJkQ825VqYDUSaRiuwCMCS/hzICvGH3wg5
+         KnLA==
+X-Gm-Message-State: AOAM533pKZtSvtIGiTSn/Ke4nGE5M9hLKwEprBdWfKDLrYWwlsyT4K5U
+        aATqttlly1E33ZNzPILwaI7z6QE3XiP2qYfWgDk=
+X-Google-Smtp-Source: ABdhPJxjEG9J8LsOt3eGnk+oh0vR4LuJImhCl2b2a7k2KSxcCkF/a/1kJo9E1rkfUUX8pr1WRtNDi/fWecByGG+g12M=
+X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
+ (user=ndesaulniers job=sendgmr) by 2002:a05:6214:1086:: with SMTP id
+ o6mr11029155qvr.41.1598394359323; Tue, 25 Aug 2020 15:25:59 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 15:25:51 -0700
+Message-Id: <20200825222552.3113760-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH] Documentation: add minimum clang/llvm version
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Kees Cook <keescook@chromium.org>,
+        Will Deacon <will@kernel.org>, Borislav Petkov <bp@suse.de>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:55:10PM +0100, Matthew Wilcox (Oracle) wrote:
-> Pass the full length to iomap_zero() and dax_iomap_zero(), and have
-> them return how many bytes they actually handled.  This is preparatory
-> work for handling THP, although it looks like DAX could actually take
-> advantage of it if there's a larger contiguous area.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  fs/dax.c               | 13 ++++++-------
->  fs/iomap/buffered-io.c | 33 +++++++++++++++------------------
->  include/linux/dax.h    |  3 +--
->  3 files changed, 22 insertions(+), 27 deletions(-)
-> 
-> diff --git a/fs/dax.c b/fs/dax.c
-> index 95341af1a966..f2b912cb034e 100644
-> --- a/fs/dax.c
-> +++ b/fs/dax.c
-> @@ -1037,18 +1037,18 @@ static vm_fault_t dax_load_hole(struct xa_state *xas,
->  	return ret;
->  }
->  
-> -int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
-> -		   struct iomap *iomap)
-> +loff_t dax_iomap_zero(loff_t pos, u64 length, struct iomap *iomap)
+Based on a vote at the LLVM BoF at Plumbers 2020, we decided to start
+small, supporting just one formal upstream release of LLVM for now.
 
-Sorry for my ultra-slow response to this.  The u64 length seems ok to me
-(or uint64_t, I don't care all /that/ much), but using loff_t as a
-return type bothers me because I see that and think that this function
-is returning a new file offset, e.g. (pos + number of bytes zeroed).
+We can probably widen the support window of supported versions over
+time.  Also, note that LLVM's release process is different than GCC's.
+GCC tends to have 1 major release per year while releasing minor updates
+to the past 3 major versions.  LLVM tends to support one major release
+and one minor release every six months.
 
-So please, let's use s64 or something that isn't so misleading.
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Note to reviewers: working remote, I'm having trouble testing/verifying
+that I have the RST links wired up correctly; I would appreciate it if
+someone is able to `make htmldocs` and check
+Documentation/output/process/changes.html properly links to
+Documentation/output/kbuild/llvm.html.
 
-FWIW, Linus also[0] doesn't[1] like using loff_t for the number of bytes
-copied.
+ Documentation/kbuild/llvm.rst     |  2 ++
+ Documentation/process/changes.rst | 10 ++++++++++
+ 2 files changed, 12 insertions(+)
 
---D
+diff --git a/Documentation/kbuild/llvm.rst b/Documentation/kbuild/llvm.rst
+index 2aac50b97921..70ec6e9a183b 100644
+--- a/Documentation/kbuild/llvm.rst
++++ b/Documentation/kbuild/llvm.rst
+@@ -1,3 +1,5 @@
++.. _kbuild_llvm:
++
+ ==============================
+ Building Linux with Clang/LLVM
+ ==============================
+diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
+index ee741763a3fc..6c580ef9f2a3 100644
+--- a/Documentation/process/changes.rst
++++ b/Documentation/process/changes.rst
+@@ -30,6 +30,7 @@ you probably needn't concern yourself with pcmciautils.
+         Program        Minimal version       Command to check the version
+ ====================== ===============  ========================================
+ GNU C                  4.9              gcc --version
++Clang/LLVM (optional)  10.0.1           clang --version
+ GNU make               3.81             make --version
+ binutils               2.23             ld -v
+ flex                   2.5.35           flex --version
+@@ -68,6 +69,15 @@ GCC
+ The gcc version requirements may vary depending on the type of CPU in your
+ computer.
+ 
++Clang/LLVM (optional)
++---------------------
++
++The latest formal release of clang and LLVM utils (according to
++`releases.llvm.org <https://releases.llvm.org>`_) are supported for building
++kernels. Older releases aren't gauranteed to work, and we may drop workarounds
++from the kernel that were used to support older versions. Please see additional
++docs on :ref:`Building Linux with Clang/LLVM <kbuild_llvm>`.
++
+ Make
+ ----
+ 
+-- 
+2.28.0.297.g1956fa8f8d-goog
 
-[0] https://lore.kernel.org/linux-fsdevel/CAHk-=wgcPAfOSigMf0xwaGfVjw413XN3UPATwYWHrss+QuivhQ@mail.gmail.com/
-[1] https://lore.kernel.org/linux-fsdevel/CAHk-=wgvROUnrEVADVR_zTHY8NmYo-_jVjV37O1MdDm2de+Lmw@mail.gmail.com/
-
->  {
->  	sector_t sector = iomap_sector(iomap, pos & PAGE_MASK);
->  	pgoff_t pgoff;
->  	long rc, id;
->  	void *kaddr;
->  	bool page_aligned = false;
-> -
-> +	unsigned offset = offset_in_page(pos);
-> +	unsigned size = min_t(u64, PAGE_SIZE - offset, length);
->  
->  	if (IS_ALIGNED(sector << SECTOR_SHIFT, PAGE_SIZE) &&
-> -	    IS_ALIGNED(size, PAGE_SIZE))
-> +	    (size == PAGE_SIZE))
->  		page_aligned = true;
->  
->  	rc = bdev_dax_pgoff(iomap->bdev, sector, PAGE_SIZE, &pgoff);
-> @@ -1058,8 +1058,7 @@ int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
->  	id = dax_read_lock();
->  
->  	if (page_aligned)
-> -		rc = dax_zero_page_range(iomap->dax_dev, pgoff,
-> -					 size >> PAGE_SHIFT);
-> +		rc = dax_zero_page_range(iomap->dax_dev, pgoff, 1);
->  	else
->  		rc = dax_direct_access(iomap->dax_dev, pgoff, 1, &kaddr, NULL);
->  	if (rc < 0) {
-> @@ -1072,7 +1071,7 @@ int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
->  		dax_flush(iomap->dax_dev, kaddr + offset, size);
->  	}
->  	dax_read_unlock(id);
-> -	return 0;
-> +	return size;
->  }
->  
->  static loff_t
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index 7f618ab4b11e..2dba054095e8 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -901,11 +901,13 @@ iomap_file_unshare(struct inode *inode, loff_t pos, loff_t len,
->  }
->  EXPORT_SYMBOL_GPL(iomap_file_unshare);
->  
-> -static int iomap_zero(struct inode *inode, loff_t pos, unsigned offset,
-> -		unsigned bytes, struct iomap *iomap, struct iomap *srcmap)
-> +static loff_t iomap_zero(struct inode *inode, loff_t pos, u64 length,
-> +		struct iomap *iomap, struct iomap *srcmap)
->  {
->  	struct page *page;
->  	int status;
-> +	unsigned offset = offset_in_page(pos);
-> +	unsigned bytes = min_t(u64, PAGE_SIZE - offset, length);
->  
->  	status = iomap_write_begin(inode, pos, bytes, 0, &page, iomap, srcmap);
->  	if (status)
-> @@ -917,38 +919,33 @@ static int iomap_zero(struct inode *inode, loff_t pos, unsigned offset,
->  	return iomap_write_end(inode, pos, bytes, bytes, page, iomap, srcmap);
->  }
->  
-> -static loff_t
-> -iomap_zero_range_actor(struct inode *inode, loff_t pos, loff_t count,
-> -		void *data, struct iomap *iomap, struct iomap *srcmap)
-> +static loff_t iomap_zero_range_actor(struct inode *inode, loff_t pos,
-> +		loff_t length, void *data, struct iomap *iomap,
-> +		struct iomap *srcmap)
->  {
->  	bool *did_zero = data;
->  	loff_t written = 0;
-> -	int status;
->  
->  	/* already zeroed?  we're done. */
->  	if (srcmap->type == IOMAP_HOLE || srcmap->type == IOMAP_UNWRITTEN)
-> -		return count;
-> +		return length;
->  
->  	do {
-> -		unsigned offset, bytes;
-> -
-> -		offset = offset_in_page(pos);
-> -		bytes = min_t(loff_t, PAGE_SIZE - offset, count);
-> +		loff_t bytes;
->  
->  		if (IS_DAX(inode))
-> -			status = dax_iomap_zero(pos, offset, bytes, iomap);
-> +			bytes = dax_iomap_zero(pos, length, iomap);
->  		else
-> -			status = iomap_zero(inode, pos, offset, bytes, iomap,
-> -					srcmap);
-> -		if (status < 0)
-> -			return status;
-> +			bytes = iomap_zero(inode, pos, length, iomap, srcmap);
-> +		if (bytes < 0)
-> +			return bytes;
->  
->  		pos += bytes;
-> -		count -= bytes;
-> +		length -= bytes;
->  		written += bytes;
->  		if (did_zero)
->  			*did_zero = true;
-> -	} while (count > 0);
-> +	} while (length > 0);
->  
->  	return written;
->  }
-> diff --git a/include/linux/dax.h b/include/linux/dax.h
-> index 6904d4e0b2e0..80f17946f940 100644
-> --- a/include/linux/dax.h
-> +++ b/include/linux/dax.h
-> @@ -214,8 +214,7 @@ vm_fault_t dax_finish_sync_fault(struct vm_fault *vmf,
->  int dax_delete_mapping_entry(struct address_space *mapping, pgoff_t index);
->  int dax_invalidate_mapping_entry_sync(struct address_space *mapping,
->  				      pgoff_t index);
-> -int dax_iomap_zero(loff_t pos, unsigned offset, unsigned size,
-> -			struct iomap *iomap);
-> +loff_t dax_iomap_zero(loff_t pos, u64 length, struct iomap *iomap);
->  static inline bool dax_mapping(struct address_space *mapping)
->  {
->  	return mapping->host && IS_DAX(mapping->host);
-> -- 
-> 2.28.0
-> 
