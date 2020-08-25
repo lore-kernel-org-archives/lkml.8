@@ -2,71 +2,73 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0BACC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B36C2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95CA22076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:20:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UFYOs0nS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgHYQRn (ORCPT
+        id S1726856AbgHYQUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:17:43 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:51630 "EHLO mail5.wrs.com"
+        Tue, 25 Aug 2020 12:20:09 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:45084 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726457AbgHYQRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:17:41 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id 07PGGq4Z005452
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 09:17:13 -0700
-Received: from pek-lpggp1.wrs.com (128.224.153.74) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.40) with Microsoft SMTP Server id 14.3.487.0; Tue, 25 Aug 2020
- 09:17:01 -0700
-From:   <yanfei.xu@windriver.com>
-To:     <gregkh@linuxfoundation.org>
-CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] USB: core: limit access to rawdescriptors which were not allocated
-Date:   Wed, 26 Aug 2020 00:16:59 +0800
-Message-ID: <20200825161659.19008-1-yanfei.xu@windriver.com>
-X-Mailer: git-send-email 2.18.2
+        id S1726094AbgHYQUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 12:20:04 -0400
+Received: from zn.tnic (p200300ec2f0c5a009557515e5e730b1a.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:5a00:9557:515e:5e73:b1a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6AEA81EC02F2;
+        Tue, 25 Aug 2020 18:20:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598372402;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=5IBziXPpKvbhhwgqPns5G/U34kVP+yhkOY8NKitEfqY=;
+        b=UFYOs0nSLheWet86YKFgFmeHP+EMoJimZ0vnWmXbT1qWa8UsoTHbee/zvk/w0UlO9/ceSw
+        BfUOS4IJxsClx3SFCN8Gf/TvVSyB9KRmuqIkj967x8OTtgTPd62rRRNr4hCqJxLECSPXnr
+        s4TsdOj8jF4pcoCnx7YaLlUqeRfplAE=
+Date:   Tue, 25 Aug 2020 18:19:58 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     yash.shah@sifive.com, robh+dt@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, mchehab@kernel.org,
+        tony.luck@intel.com, aou@eecs.berkeley.edu, james.morse@arm.com,
+        rrichter@marvell.com, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, sachin.ghadi@sifive.com
+Subject: Re: [PATCH 0/3] SiFive DDR controller and EDAC support
+Message-ID: <20200825161958.GE12107@zn.tnic>
+References: <1598357182-4226-1-git-send-email-yash.shah@sifive.com>
+ <mhng-eeb15e05-0af6-42bd-8c35-0b7e9bbedba7@palmerdabbelt-glaptop1>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <mhng-eeb15e05-0af6-42bd-8c35-0b7e9bbedba7@palmerdabbelt-glaptop1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yanfei Xu <yanfei.xu@windriver.com>
+On Tue, Aug 25, 2020 at 09:02:54AM -0700, Palmer Dabbelt wrote:
+> Thanks.  These look good to me and I'm happy to take them through the RISC-V
+> tree, but I'm going to wait for a bit to see if there are any comments from the
+> maintainers of the various subsystems before doing so.
 
-When using systemcall to read the rawdescriptors, make sure we won't
-access to the rawdescriptors never allocated, which are number
-exceed the USB_MAXCONFIG.
+I'll have a look at the EDAC bits these days and give you an ACK if
+they're ok.
 
-Reported-by: syzbot+256e56ddde8b8957eabd@syzkaller.appspotmail.com
-Signed-off-by: Yanfei Xu <yanfei.xu@windriver.com>
----
- drivers/usb/core/sysfs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thx.
 
-diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
-index a2ca38e25e0c..1a7a625e5f55 100644
---- a/drivers/usb/core/sysfs.c
-+++ b/drivers/usb/core/sysfs.c
-@@ -895,7 +895,8 @@ read_descriptors(struct file *filp, struct kobject *kobj,
- 	 * configurations (config plus subsidiary descriptors).
- 	 */
- 	for (cfgno = -1; cfgno < udev->descriptor.bNumConfigurations &&
--			nleft > 0; ++cfgno) {
-+			nleft > 0 &&
-+			cfgno < USB_MAXCONFIG; ++cfgno) {
- 		if (cfgno < 0) {
- 			src = &udev->descriptor;
- 			srclen = sizeof(struct usb_device_descriptor);
 -- 
-2.18.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
