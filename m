@@ -2,237 +2,101 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5839CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3075EC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 253442068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 097B920706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:21:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kSjlVWgo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AklZ0aZu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgHYJVQ (ORCPT
+        id S1729253AbgHYJVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:21:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40800 "EHLO
+        Tue, 25 Aug 2020 05:21:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728475AbgHYJVN (ORCPT
+        with ESMTP id S1728475AbgHYJVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:21:13 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233D4C0613ED
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 02:21:13 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x25so6839670pff.4
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 02:21:13 -0700 (PDT)
+        Tue, 25 Aug 2020 05:21:17 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D6AC061574;
+        Tue, 25 Aug 2020 02:21:17 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id v2so9819879ilq.4;
+        Tue, 25 Aug 2020 02:21:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=CabenADhkeDmn9ATtQd7NLLVZBNFWUdF1srj48ypUAI=;
-        b=kSjlVWgouzQuBvJvV62xPzMHc4Vj3H4P2jq5sEj88IFUueTeSlgbZJQQNE3NPTOaIv
-         AUFfCzVN60vZgbqISgmmC4fDhSRw0k+/pe+jV/GUy7I2Czq2iQctt613YQmZPS5WbSj/
-         7Z92ZI2S3kDbhgkMw9zM0X/7FiWzayW+Uocbo=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=O5ZePddE7+2hNWWo8aSkH/TkS7aUaHrfFN3bU8JewnQ=;
+        b=AklZ0aZuCA3+GJ0XJ+PRbCWWB0W1arHTu7OZqdh5V49EiqOpO0rOB/mGE7iOY1tLfb
+         hoiKGScSflRxbFxkm4pzX7YttP3A7ZcwYsr2L0CB0foOE3EF0WoHGdj/ilpgJM2dnDOr
+         ju1wdEHTC4t/lfElQ9XC2D6AP7CU0uJoXECSmqjfa7fyGiWm8UHHVCuGi9Mog6GRbzS3
+         2UOPsIhvT2h8BykHwMAxlXr7cPoYsiUxyrWjbztXm+sHk/n8rO8W1MAyTaslSOO7oW/p
+         +wPobgqN4vA5xD60ZVvrS19F2UkiDxFBZIqmPG9OPi7NpElliZpEK6ZGBEpdg8Icy7Q6
+         A8hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=CabenADhkeDmn9ATtQd7NLLVZBNFWUdF1srj48ypUAI=;
-        b=Hdablb1b70jGyS5MBxJ8ADcK4qtARGJnYTLQA1o9hPMOBGOez8jEHianzwD49ngICz
-         4NFxP9Tpl+RUeC+97Bj2a7XSHPcY2okYzBRztlRveSIZGjHsYYrM5QDvwVvwPKj1xFME
-         RUCWj0EvXRCHjSLsCV4gmzSOHWqWwHgsSkDwppkjdnGN0CcEhxKgyMvyOVZkBFGVvQfD
-         /4FzWQkeqajbCy2V8/C3jdeagoVHNkjp3e+1FpkElxj0dxC8/JQNPozwIQtV6UCqX7QO
-         J2J5hrd1tll4cLiACmcd34dBMG+84yjV4f5dHoPchGV9EZuj56MiqjWZ0eM/SH33Z8UD
-         ZGmQ==
-X-Gm-Message-State: AOAM531nDM6imipP3cbjnWEkkdmmRAwq92odypiuhpzrPzC1Ua4yheRu
-        B1zHMpmE3Ag80aejd6zyLakdKw==
-X-Google-Smtp-Source: ABdhPJxdwZWXCwKiihvkw3GaI/1XdPFEcf/CzYv8zUyN/gMdBfFcd2+g74fujhZp9Fj7e9zwfmwJng==
-X-Received: by 2002:a17:902:b681:: with SMTP id c1mr7154572pls.10.1598347272513;
-        Tue, 25 Aug 2020 02:21:12 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id s125sm14294117pfb.125.2020.08.25.02.21.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 02:21:11 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=O5ZePddE7+2hNWWo8aSkH/TkS7aUaHrfFN3bU8JewnQ=;
+        b=qRfXbsyIqhuJ0STjvx9QPZjnV3VGqRbOk9RRvXEGrMLR31tvnW7XTn4pD1A2Ngg+Ml
+         PiJKFBjrb6EsrDxgNTkSjtuOU0lt62EhH6TfEjV37/9E9CF+xZ+bdTx2KLecOLfEnflV
+         34HXHuq3mgJ8wgynHKTN2HTJiLkFfSIwfr0cFRMY7Ji11bSHosXJmdH/IcL11+hOEXR0
+         NM4WqXUQu72EXTXsNEDmFBfpdfoGOH8mBzOstreAxbvYByYDC2Cz3lTaMyeNrSVS/TbZ
+         gkQZetesKDodJEHseUIlgmi+QqIKVCfOSnK5nsAAOymLr47N3WzR40MpOjr7Zmg+Lqxq
+         /7ag==
+X-Gm-Message-State: AOAM533et9HsBj4Nq1CpIXIHt2yIkDOTspnv7ZyYRwNSjVCdkkQYgc7j
+        EC5juV7bEtm1s/uWbdLB/FAjTlANcY3AQ1A2Io1XfIvSUCM=
+X-Google-Smtp-Source: ABdhPJwUTHNJrsritlvIyqvwywRovUNlslidY5JbPeOUgN5sF/K+k8KoxiM3CYAkzCB6ZeH4UcpQc/ljrwCFnEkzwbA=
+X-Received: by 2002:a92:d386:: with SMTP id o6mr8517221ilo.292.1598347277087;
+ Tue, 25 Aug 2020 02:21:17 -0700 (PDT)
 MIME-Version: 1.0
+References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1597910022-22617-3-git-send-email-gene.chen.richtek@gmail.com>
+ <20200820113015.GB5854@sirena.org.uk> <CAE+NS36C0AwbrFJdYGY6_n_g3DVitp_e1GfZUxjMbKu1bJ_t4w@mail.gmail.com>
+ <20200824194840.GF4676@sirena.org.uk>
+In-Reply-To: <20200824194840.GF4676@sirena.org.uk>
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+Date:   Tue, 25 Aug 2020 17:21:06 +0800
+Message-ID: <CAE+NS37p38dAN1bAi_VvEYYGNiWDVFKrdHL-hTgi2nim_7Zvqw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] regulator: mt6360: Add DT binding documentation
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Gene Chen <gene_chen@richtek.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200825003341.1797322-1-robdclark@gmail.com>
-References: <20200825003341.1797322-1-robdclark@gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180-trogdor: add initial trogdor and lazor dt
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Atul Dhudase <adhudase@codeaurora.org>,
-        Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        Ajit Pandey <ajitp@codeaurora.org>,
-        Alexandru Stan <amstan@chromium.org>,
-        Sujit Kautkar <sujitka@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     Rob Clark <robdclark@gmail.com>, linux-arm-msm@vger.kernel.org
-Date:   Tue, 25 Aug 2020 02:21:10 -0700
-Message-ID: <159834727050.334488.84544239322533805@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Rob Clark (2020-08-24 17:33:39)
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/bo=
-ot/dts/qcom/sc7180-trogdor.dtsi
-> new file mode 100644
-> index 000000000000..b04987ab6c22
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
-> @@ -0,0 +1,1364 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-[...]
-> +
-> +       gpio_keys: gpio-keys {
-> +               compatible =3D "gpio-keys";
-> +               status =3D "disabled";
-> +               pinctrl-names =3D "default";
-> +               pinctrl-0 =3D <&pen_pdct_l>;
-> +
-> +               pen-insert {
-> +                       label =3D "Pen Insert";
-> +
-> +                       /* Insert =3D low, eject =3D high */
-> +                       gpios =3D <&tlmm 52 GPIO_ACTIVE_LOW>;
-> +                       linux,code =3D <SW_PEN_INSERTED>;
-> +                       linux,input-type =3D <EV_SW>;
-> +                       wakeup-source;
-> +               };
-> +       };
-> +
-> +       max98357a: max98357a {
+Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8825=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=883:49=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Mon, Aug 24, 2020 at 03:21:57PM +0800, Gene Chen wrote:
+> > > On Thu, Aug 20, 2020 at 03:53:42PM +0800, Gene Chen wrote:
+>
+> > > > +  LDO_VIN3-supply:
+> > > > +    description: Input supply phandle(s) for LDO3
+>
+> > > Only LDO3 needs a supply?
+>
+> > LDO_VIN1/LDO_VIN2 is real MT6360 pin supply from VSYS to LDO1/2/3/5
+> > LDO_VIN3 is also real pin supply from BUCK2 to LDO6/7
+>
+> So shouldn't there be a documented LDO_VIN1/2 then?
 
-Maybe node name should be 'audio-codec' or 'dac' or 'amp' or 'speaker'
-or 'codec'?
-
-> +               compatible =3D "maxim,max98357a";
-> +               pinctrl-names =3D "default";
-> +               pinctrl-0 =3D <&amp_en>;
-> +               sdmode-gpios =3D <&tlmm 23 GPIO_ACTIVE_HIGH>;
-> +               #sound-dai-cells =3D <0>;
-> +       };
-> +
-> +       pwmleds {
-> +               compatible =3D "pwm-leds";
-> +               keyboard_backlight: keyboard-backlight {
-> +                       status =3D "disabled";
-> +                       label =3D "cros_ec::kbd_backlight";
-> +                       pwms =3D <&cros_ec_pwm 0>;
-> +                       max-brightness =3D <1023>;
-> +               };
-> +       };
-> +};
-> +
-> +&qfprom {
-> +       vcc-supply =3D <&pp1800_l11a>;
-> +};
-> +
-> +
-
-Drop double newline?
-
-> +&qspi {
-> +       status =3D "okay";
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&qspi_clk>, <&qspi_cs0>, <&qspi_data01>;
-> +
-> +       flash@0 {
-> +               compatible =3D "jedec,spi-nor";
-> +               reg =3D <0>;
-> +
-> +               /* TODO: Increase frequency after testing */
-
-Maybe drop this TODO? I don't see it being too meaningful.
-
-> +               spi-max-frequency =3D <25000000>;
-> +               spi-tx-bus-width =3D <2>;
-> +               spi-rx-bus-width =3D <2>;
-> +       };
-> +};
-> +
-> +
-
-Drop double newline?
-
-> +&apps_rsc {
-> +       pm6150-rpmh-regulators {
-> +               compatible =3D "qcom,pm6150-rpmh-regulators";
-> +
-> +&wifi {
-> +       status =3D "okay";
-> +       vdd-0.8-cx-mx-supply =3D <&vdd_cx_wlan>;
-> +       vdd-1.8-xo-supply =3D <&pp1800_l1c>;
-> +       vdd-1.3-rfa-supply =3D <&pp1300_l2c>;
-> +
-> +       /*
-> +        * TODO: Put ch1 supply in its rightful place, rather than in ch0=
-'s
-> +        * spot. Channel 0 is held open by bluetooth for now.
-> +        */
-> +       vdd-3.3-ch0-supply =3D <&pp3300_l11c>;
-> +       wifi-firmware {
-> +               iommus =3D <&apps_smmu 0xc2 0x1>;
-> +       };
-> +};
-> +
-> +/* PINCTRL - additions to nodes defined in sdm845.dtsi */
-
-Oops, that should be sc7180.dtsi
-
-> +
-> +&qspi_cs0 {
-> +       pinconf {
-> +               pins =3D "gpio68";
-> +               bias-disable;
-> +       };
-[...]
-> +/* PINCTRL - board-specific pinctrl */
-> +
-> +&pm6150_gpio {
-> +       status =3D "disabled"; /* No GPIOs are connected */
-> +};
-> +
-> +&pm6150l_gpio {
-> +       gpio-line-names =3D "AP_SUSPEND",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "",
-> +                         "";
-> +};
-> +
-> +&tlmm {
-[...]
-> +
-> +&venus {
-> +       video-firmware {
-> +               iommus =3D <&apps_smmu 0x0c42 0x0>;
-> +       };
-> +};
-
-I believe this node should come before the PINCTRL comment above and be
-sorted alphabetically by node name.
-
- +/* PINCTRL - additions to nodes defined in sdm845.dtsi */
+LDO_VINx is HW design layout, so actually it can't be changed by device tre=
+e.
+LDO_VIN1/LDO_VIN2 supply from VSYS, not regulator, so I think usually
+not to show the supply from in device tree.
+or I should declare a dummy reference to system power like "*-supply =3D
+<&system_power>;"?
