@@ -2,98 +2,152 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD14DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C4820882
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8537C2087D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:54:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="o+AIoN/p";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="PE6u8S2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgHYAyF (ORCPT
+        id S1728369AbgHYAyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 20:54:05 -0400
-Received: from mga07.intel.com ([134.134.136.100]:44396 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728324AbgHYAyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 20:54:02 -0400
-IronPort-SDR: VvvM+0L8VGw3xHnsYiMuOB10wfJP2+OocV8pTYyzmQP3gbdrEjqMW4jY2wSd5E8b+LZiy2RTHD
- uowByHh5yNbw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="220284916"
-X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="220284916"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:54:02 -0700
-IronPort-SDR: LLvBxzWhq25bkfXbFZVAzsoS6K+kmlkkiBeJ32HBDUnIVB596K7Tkalkp+Brgga3IuQliKmDeW
- WVSd/+KMtAuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="281351941"
-Received: from unknown (HELO localhost.localdomain.bj.intel.com) ([10.238.156.127])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Aug 2020 17:53:57 -0700
-From:   Cathy Zhang <cathy.zhang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        tony.luck@intel.com, dave.hansen@intel.com,
-        kyung.min.park@intel.com, ricardo.neri-calderon@linux.intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        jpoimboe@redhat.com, ak@linux.intel.com, ravi.v.shankar@intel.com,
-        Cathy Zhang <cathy.zhang@intel.com>
-Subject: [PATCH v4 2/2] x86/kvm: Expose TSX Suspend Load Tracking feature
-Date:   Tue, 25 Aug 2020 08:47:58 +0800
-Message-Id: <1598316478-23337-3-git-send-email-cathy.zhang@intel.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1598316478-23337-1-git-send-email-cathy.zhang@intel.com>
-References: <1598316478-23337-1-git-send-email-cathy.zhang@intel.com>
+        Mon, 24 Aug 2020 20:54:36 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:8024 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728352AbgHYAyd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 20:54:33 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07P0sGwJ031408;
+        Mon, 24 Aug 2020 17:54:16 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=yVsu0D1kvRRrOrKbGKWqqRmUhcBGwvbkNoqpFULAnFk=;
+ b=o+AIoN/pQrbf+PrO9n72/oZ/dsBYrIkpq3fiQON+a4QkV/nQ6pFG6pDc77xEoByLYll6
+ 4OLn+EVqCNdiuLMmeE+dSlSF2qCAPXTaQZ1EksqrWbU1Kk1nzUlwY4tBtb/G4OgsVI5N
+ 5digEAmzOKWVUa0+KsK+8MVQmPqSeRCwMuE= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 333kmmyys5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 24 Aug 2020 17:54:16 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 24 Aug 2020 17:53:53 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YS32WxbRhZWAph6DcKYgJ2HU0JGcbLqM6xrERzh/qcJ+GMehRbwlUuufkll3Tr3OsLFIfCAkNGdNkv+9QCQYzZeuWSs1vPKClYTkVpqTxJONMf3I8wHtWHwcL3lEhv5DZOrRA1DnSvruDeOc7yFx5vQK2jRTF8eG8A3Uv6GOUtpJYScKdckXujkGGjIcgGiNLLme4q1brf4q0W3/C/xKk+1CLQ03J4pX9IuyyE3E3MCoRYB4lE/EudXEPJw0vkcz5PGm9RQYGNFspmj09VUeoTzjZCkPeAolZeMDrRW8hkUfxEeyqzEu0H9dve3AtxuJX5lHhp9ZbnXxi8dpnGO/Ig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yVsu0D1kvRRrOrKbGKWqqRmUhcBGwvbkNoqpFULAnFk=;
+ b=Hg9NVGel3FuHZvS/IAjAnr88P5+OuxORvwioBDx9oEMNElSoFJTNzXj9+j5luEUhs3VQRh6cK+fFDoZPp4osclKNSkdO7Bz1pMNthNXtXoxftXI4KW4x7LN18i6HOp3o5AC1Y9f9l25owwc5cCqUxbtQ/jz6RShlt7BxZlEMj/Z0K+v9UG2QnGPTyexKj+UXQLm3EaIH9kdJ+xLD0MuE5iZcVr59JZuQ5TXBlsw1bJqh1kL9sP1av93kKOb23bdZNzn9wENa1NuGvblnGdHHpJWwln5u/JbQPioC22DoOKJOWuwcgdazugMYty0ggm6jPL2vQlqbT3lHifyz/hUyxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yVsu0D1kvRRrOrKbGKWqqRmUhcBGwvbkNoqpFULAnFk=;
+ b=PE6u8S2femgAaS2P8PJp+RX/r7UnEok/tE/LQkQQaLXaIe34Fqzpu5wxoqZuCjDv9JwIUWgFkWqCyinNUKIKRW1kza3KcgK++Yo/HLaXBIStwxU7H6ZwU1vQuwTXJ0xFOGOGqotpa9JfKiYuTI5T1wTzVXhH1P1ULkjAVuw9qgs=
+Authentication-Results: chromium.org; dkim=none (message not signed)
+ header.d=none;chromium.org; dmarc=none action=none header.from=fb.com;
+Received: from BY5PR15MB3571.namprd15.prod.outlook.com (2603:10b6:a03:1f6::32)
+ by BYAPR15MB3207.namprd15.prod.outlook.com (2603:10b6:a03:101::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Tue, 25 Aug
+ 2020 00:53:52 +0000
+Received: from BY5PR15MB3571.namprd15.prod.outlook.com
+ ([fe80::c13c:fca9:5e04:9bfb]) by BY5PR15MB3571.namprd15.prod.outlook.com
+ ([fe80::c13c:fca9:5e04:9bfb%3]) with mapi id 15.20.3305.026; Tue, 25 Aug 2020
+ 00:53:52 +0000
+Date:   Mon, 24 Aug 2020 17:53:47 -0700
+From:   Martin KaFai Lau <kafai@fb.com>
+To:     KP Singh <kpsingh@chromium.org>
+CC:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
+Subject: Re: [PATCH bpf-next v9 3/7] bpf: Generalize bpf_sk_storage
+Message-ID: <20200825005347.6bslsr3jfayuce5q@kafai-mbp.dhcp.thefacebook.com>
+References: <20200823165612.404892-1-kpsingh@chromium.org>
+ <20200823165612.404892-4-kpsingh@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200823165612.404892-4-kpsingh@chromium.org>
+X-ClientProxiedBy: BYAPR04CA0014.namprd04.prod.outlook.com
+ (2603:10b6:a03:40::27) To BY5PR15MB3571.namprd15.prod.outlook.com
+ (2603:10b6:a03:1f6::32)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by BYAPR04CA0014.namprd04.prod.outlook.com (2603:10b6:a03:40::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Tue, 25 Aug 2020 00:53:52 +0000
+X-Originating-IP: [2620:10d:c090:400::5:87f3]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a2ae8a9c-86ce-4ff7-1538-08d8489155f8
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3207:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB320771A3547B05FB25698670D5570@BYAPR15MB3207.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PHH+GojeCOTzcJI4sffJjc+QIbXhFQ5brmLX1rEy3d/KDFNuqp0vuncTV9oY19HkiDSDyuqhbo52zKST+gEFwQC7m+w5BnSeuQovOU1cFpPdygPMq7ClJGVzJVcPQ+0mOrO6qd8TA657mAL613cV5xnwrfSw7MqDo5r5DlnJj91UeERbkLvE8GV4uzf/bfCLklg05v/6UaiWvat2QD+QWmrVO37h+nlsZYwdAY2FClPXKUUjDg7NpUXdoNgo0o5eTvp1NIjYIE/ZMDpqCAmn5BH5eYJH7E9jkEEBVwPwtnxlz8cTkPq8v26SPNm7/spS92PJh0ufVslZ2lFzhbL5ICIN2XrxR6HDrkGOfFxAIvKCMr470VMdpX0SRJRCIgLfNfh3znaMY0Tiiv1F7NHU6w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3571.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(136003)(39860400002)(346002)(366004)(376002)(6486002)(186003)(5660300002)(6916009)(52116002)(956004)(86362001)(4326008)(66946007)(16576012)(66556008)(9686003)(6666004)(966005)(8676002)(316002)(8936002)(2906002)(66476007)(54906003)(1076003)(478600001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: atADlOajkXJsmH9wodxpiP+couu7i+7wzWtRp7xLXVb7EXhA3FPCujyRH25JnZD9Bcj9dMXOGru7x4Ftr+UHmjuC5Hpif4TDzdFvy/BoEmKYobLLOeUmNottCCcz589x/b3lTtYJuD7VX2xq3aMIDlGbgTGrRK1wKLkbvcsuKSQPq84EXrFiXfB1GvrfDX4B2uvPbC28CXFtc7dTfzRWkb9tg+92Dl3DnJ3COlda5K0SNLKX1dmGdOIzeyX4n34uwdDCaXrGFisUeY0SSLTWL/EBRoujxOtxENAQD77oinW6iJog3NTwW05N3TxkhL9nLIqLwfeQED2nUVxxWNfMvW86WUcZnoP2bPAa4+6btAdCI+avYGNnyHNQf/5CS/U/DoCRZYJwmNOQOgQhtM2+HfiRSE6/rrEOFCXIJX1WBZeuZC3ELI/FkFjVQCTQrbsfHK3lDC5XmlZamn+1qur2LAoU8C4DbAVBNP9MYy5km9s+4vq0BTTESwUPVYreJZPeoH94EApw1iTB6EwqD7xZzXi05zVYhBU/Nq2ZO2/0GsU3M/6//fmH1SV/sI2LjxdKTyygMO82q7bzCLXDfiloGV+x1ARIsnYxu8uoVQRDCz7se3dMqd73VDZVpVM80xU5jX4Eu0p5C2VzsodefBvApGjIU1eVgO08OVzTH6X4QoM=
+X-MS-Exchange-CrossTenant-Network-Message-Id: a2ae8a9c-86ce-4ff7-1538-08d8489155f8
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3571.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2020 00:53:52.4643
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 1ecm9XGoR1UblTgbE/WZ2/wDTfk/m8G+EARJjGtVwe6pCvDbQ9D4StsLz+L9Iy8c
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3207
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 adultscore=0
+ bulkscore=0 lowpriorityscore=0 impostorscore=0 malwarescore=0
+ mlxlogscore=821 phishscore=0 clxscore=1015 spamscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250005
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TSX suspend load tracking instruction is supported by
-Intel processor, Sapphire Rapids. It aims to give a
-way to choose which memory accesses do not need to be
-tracked in the TSX read set. It's availability is indicated
-as CPUID.(EAX=7,ECX=0):EDX[bit 16].
-
-Expose TSX Suspend Load Address Tracking feature in KVM
-CPUID, so KVM could pass this information to guests and
-they can make use of this feature accordingly.
-
-Signed-off-by: Cathy Zhang <cathy.zhang@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
-Changes since v3:
- * Remove SERIALIZE part and refactor commit message..
-
-Changes since v2:
- * Merge two patches into a single one. (Luck, Tony)
- * Add overview introduction for features. (Sean Christopherson)
- * Refactor commit message to explain why expose feature bits. (Luck, Tony)
----
- arch/x86/kvm/cpuid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 3fd6eec..7456f9a 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -371,7 +371,7 @@ void kvm_set_cpu_caps(void)
- 		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
- 		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
- 		F(MD_CLEAR) | F(AVX512_VP2INTERSECT) | F(FSRM) |
--		F(SERIALIZE)
-+		F(SERIALIZE) | F(TSXLDTRK)
- 	);
- 
- 	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
--- 
-1.8.3.1
-
+On Sun, Aug 23, 2020 at 06:56:08PM +0200, KP Singh wrote:
+> From: KP Singh <kpsingh@google.com>
+> 
+> Refactor the functionality in bpf_sk_storage.c so that concept of
+> storage linked to kernel objects can be extended to other objects like
+> inode, task_struct etc.
+> 
+> Each new local storage will still be a separate map and provide its own
+> set of helpers. This allows for future object specific extensions and
+> still share a lot of the underlying implementation.
+> 
+> This includes the changes suggested by Martin in:
+> 
+>   https://lore.kernel.org/bpf/20200725013047.4006241-1-kafai@fb.com/
+> 
+> adding new map operations to support bpf_local_storage maps:
+> 
+> * storages for different kernel objects to optionally have different
+>   memory charging strategy (map_local_storage_charge,
+>   map_local_storage_uncharge)
+> * Functionality to extract the storage pointer from a pointer to the
+>   owning object (map_owner_storage_ptr)
+> 
+> Co-developed-by: Martin KaFai Lau <kafai@fb.com>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+Signed-off-by: Martin KaFai Lau <kafai@fb.com>
