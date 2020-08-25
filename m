@@ -2,140 +2,113 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:49:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C5CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE1A82076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598338157;
-	bh=5FFhlV+WeJfn1l/c2VSEo8l5it+HZbGXLtCi0d0pxFs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QqHBm1IojJHnaulJ/TbUgV4vU0a0KVsjuNlUSdSIA7UibB+e+UvzvqGCU57RrclYs
-	 TqCUs7vfKpK94leaROJLGYzjpHXoJxRCP3CPP+3fN0d3JyB3sfd4u8E3Xz4pRi5ikW
-	 1rRTpFjRahCXwZ6hNv2Y5DmQlPR5lGxEqtx+iOIM=
+	by mail.kernel.org (Postfix) with ESMTP id E99902076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729200AbgHYGtQ (ORCPT
+        id S1729205AbgHYGta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:49:16 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51081 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbgHYGtO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:49:14 -0400
-Received: by mail-wm1-f65.google.com with SMTP id t2so1282326wma.0;
-        Mon, 24 Aug 2020 23:49:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xu5xGZSY+yFQgovcXhMUWgqGOjtkm3hsvCXY91EThRQ=;
-        b=gZ2jkEhXAvtvYP27MMIyFV5/J0HVbGIs74uKZvOriMsWEQu6LYcwXom0OosN7q5FFU
-         tUJ3LPJMNighSsaoApLiXek0CUy+YsYS5GUf0jnT2EdUalpfsthvS20XQLTuS941eCVA
-         CQxREM1rw0eWSd8cc553cTYo5NbI7+mYUAZCUvLS4Vd9Hv/wNlhSHQc5cdnoyQ0eylAa
-         rvoBCdFwZl+qCtkgtJ0/OoLM79ZHUT6+cSlZ4zQ/HAQtPg+UVrlF8UDPQf5xSFfcR3d2
-         aA6c7xlLAeuN+ANYX+QD8lAiHcUrYUutsa7IddTRd1VyjmVsW5noUZVgvEwwClAomfwV
-         s+gA==
-X-Gm-Message-State: AOAM5316ADPVifGp3E+YGa74XaffAEg8uiuTCe7O37VW4EO7ztkwDD5P
-        x7sbFFDT2Vz5bPJ+2HQfNj4=
-X-Google-Smtp-Source: ABdhPJzyAcY2Bw92cGcbfsJuTBwKqDGqGkJGMxEMpfhNk68WOOIS/f1lMDDS8tqHLpAt+d0YVzNPiA==
-X-Received: by 2002:a1c:24d5:: with SMTP id k204mr505723wmk.159.1598338152035;
-        Mon, 24 Aug 2020 23:49:12 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id y10sm283662wro.50.2020.08.24.23.49.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 24 Aug 2020 23:49:11 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 08:49:08 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Adam Ford <aford173@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>, Li Jun <jun.li@nxp.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Han Xu <han.xu@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 02/16] dt-bindings: mtd: gpmi-nand: Fix matching of
- clocks on different SoCs
-Message-ID: <20200825064908.GA3458@kozik-lap>
-References: <20200824190701.8447-1-krzk@kernel.org>
- <20200824190701.8447-2-krzk@kernel.org>
- <20200825064020.GM13023@pengutronix.de>
+        Tue, 25 Aug 2020 02:49:30 -0400
+Received: from mga06.intel.com ([134.134.136.31]:30123 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729079AbgHYGt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 02:49:29 -0400
+IronPort-SDR: CVEweMkr9tTQ0BzzouaKKZ2s2alpAVNTrfJxkN8LR4WjwiI06JFCZfRvoXevm04wAguN1y6sD0
+ mASGsGEgPzAQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="217606813"
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="217606813"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 23:49:29 -0700
+IronPort-SDR: V5mWwFtmttc0oEsWfhmDgvgOsHb7rREsw6RKkwLs5R8c5LOYQFJJ/w6ytddXRu/MWuQ/W+OCLA
+ 2/b3NG4oJOaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="338698437"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by orsmga007.jf.intel.com with ESMTP; 24 Aug 2020 23:49:26 -0700
+Date:   Tue, 25 Aug 2020 14:49:26 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Borislav Petkov <bp@suse.de>, "Luck, Tony" <tony.luck@intel.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
+ -14.1% regression
+Message-ID: <20200825064926.GB83850@shbuild999.sh.intel.com>
+References: <20200425114414.GU26573@shao2-debian>
+ <20200425130136.GA28245@zn.tnic>
+ <20200818082943.GA65567@shbuild999.sh.intel.com>
+ <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
+ <20200819020437.GA2605@shbuild999.sh.intel.com>
+ <20200821020259.GA90000@shbuild999.sh.intel.com>
+ <20200824151425.GF4794@zn.tnic>
+ <20200824153300.GA56944@shbuild999.sh.intel.com>
+ <20200824161238.GI4794@zn.tnic>
+ <20200824165653.GQ2976@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825064020.GM13023@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200824165653.GQ2976@suse.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 08:40:20AM +0200, Sascha Hauer wrote:
-> On Mon, Aug 24, 2020 at 09:06:47PM +0200, Krzysztof Kozlowski wrote:
-> > Driver requires different amount of clocks for different SoCs.  Describe
-> > these requirements properly to fix dtbs_check warnings like:
+On Mon, Aug 24, 2020 at 05:56:53PM +0100, Mel Gorman wrote:
+> On Mon, Aug 24, 2020 at 06:12:38PM +0200, Borislav Petkov wrote:
 > > 
-> >     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
+> > > :)  Right, this is what I'm doing right now. Some test job is queued on
+> > > the test box, and it may needs some iterations of new patch. Hopefully we
+> > > can isolate some specific variable given some luck.
 > > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../devicetree/bindings/mtd/gpmi-nand.yaml    | 76 +++++++++++++++----
-> >  1 file changed, 61 insertions(+), 15 deletions(-)
+> > ... yes, exactly, you need to identify the contention where this
+> > happens,
+> > causing a cacheline to bounce or a variable straddles across a
+> > cacheline boundary, causing the read to fetch two cachelines and thus
+> > causes that slowdown. And then align that var to the beginning of a
+> > cacheline.
 > > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > index 28ff8c581837..9d764e654e1d 100644
-> > --- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > +++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - fsl,imx6q-gpmi-nand
-> > +              - fsl,imx6sx-gpmi-nand
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          items:
-> > +            - description: SoC gpmi io clock
-> > +            - description: SoC gpmi apb clock
-> > +            - description: SoC gpmi bch clock
-> > +            - description: SoC gpmi bch apb clock
-> > +            - description: SoC per1 bch clock
-> > +        clock-names:
-> > +          items:
-> > +            - const: gpmi_io
-> > +            - const: gpmi_apb
-> > +            - const: gpmi_bch
-> > +            - const: gpmi_bch_apb
-> > +            - const: per1_bch
 > 
-> This enforces this specific order of the clocks given in the dts. The
-> clock binding itself doesn't require any specific order, that's what we
-> have the names array for.
+> Given the test is malloc1, it *may* be struct per_cpu_pages embedded within
+> per_cpu_pageset. The cache characteristics of per_cpu_pageset are terrible
+> because of how it mixes up zone counters and per-cpu lists. However, if
+> the first per_cpu_pageset is cache-aligned then every second per_cpu_pages
+> will be cache-aligned and half of the lists will fit in one cache line. If
+> the whole structure gets pushed out of alignment then all per_cpu_pages
+> straddle cache lines, increase the overall cache footprint and potentially
+> cause problems if the cache is not large enough to hold hot structures.
 > 
-> Is this really what we want?
+> The misses could potentially be inferred without c2c from looking at
+> perf -e cache-misses on a good and bad kernel and seeing if there is a
+> noticable increase in misses in mm/page_alloc.c with a focus on anything
+> using per-cpu lists.
+ 
+Thanks for the tip, which is useful for Xeon-Phi. I ran it with 'cache-misses'
+instead of default 'cycles', and the 2 versions of perf data show similar hotspots:
 
-Indeed but have in mind that the specific order was there already. This
-patch does not address that part, only number of clocks.
+    92.62%    92.62%  [kernel.kallsyms]   [k] native_queued_spin_lock_slowpath              -      -            
+46.20% native_queued_spin_lock_slowpath;_raw_spin_lock_irqsave;release_pages;tlb_flush_mmu;tlb_finish_mmu;unmap_region;__do_munmap;__vm_munmap;__x64_sys_munmap;do_syscall_64;entry_SYSCALL_64_after_hwframe;munmap
+46.13% native_queued_spin_lock_slowpath;_raw_spin_lock_irqsave;pagevec_lru_move_fn;lru_add_drain_cpu;lru_add_drain;unmap_region;__do_munmap;__vm_munmap;__x64_sys_munmap;do_syscall_64;entry_SYSCALL_64_after_hwframe;munmap
+ 
+> Whether the problem is per_cpu_pages or some other structure, it's not
+> struct mce's fault in all likelihood -- it's just the messenger.
 
-Fixing this for any order could be done with patterns. I can work on
-that.
+Agreed. The mce patch itself is innocent, it just changes other domains'
+variables' alignment indeliberately. 
 
-Best regards,
-Krzysztof
+Thanks,
+Feng
+
+> -- 
+> Mel Gorman
+> SUSE Labs
