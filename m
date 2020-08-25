@@ -2,136 +2,153 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E472C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACFDF2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DFF2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:44:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=popple.id.au header.i=@popple.id.au header.b="Sl6HnPeF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fWkqe7h2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgHYGnT (ORCPT
+        id S1729171AbgHYGoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:43:19 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43199 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729074AbgHYGnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:43:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BbKFG6w2bz9sTg;
-        Tue, 25 Aug 2020 16:43:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=popple.id.au;
-        s=202006; t=1598337795;
-        bh=Sj46gycTZgpbO+qnDzJk+GkyULtzfVTSJY3XqVv4wBk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sl6HnPeF9b+3VaBws8Pbzu+/2SveSr2RUMDdlLJ1rp/tIB7/NhESW8q7xHu4UnG3+
-         dyBpdqE1G/KFNbtz3N7yDL/74VJgTzbGUBGDxlK2pHVhSJyrJZn0xN+veKqQpYuNGb
-         atJHD8hrDQosK6//AgWADTybAiuKcX3MwbBL/ohsUQx3eHz1KTc5IIEG4Js35Ay0a6
-         VZGpV5IWKFnDiyZHLyt/6Wr62R1tui2nEcCA5xXHDAm8Xn0I2AD4oLS2kyBsfxSCli
-         ocCYp6UZ/wL9cLX1Cl0ZqswYRnXofhgj3VP9K5VbgbBPo7YUQGLDkffOfzx6HWo7hW
-         CX0eTU9yaV6XQ==
-From:   Alistair Popple <alistair@popple.id.au>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Alistair Popple <alistair@popple.id.au>, stable@vger.kernel.org
-Subject: [PATCH v2 2/2] mm/rmap: Fixup copying of soft dirty and uffd ptes
-Date:   Tue, 25 Aug 2020 16:42:32 +1000
-Message-Id: <20200825064232.10023-2-alistair@popple.id.au>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200825064232.10023-1-alistair@popple.id.au>
-References: <20200825064232.10023-1-alistair@popple.id.au>
+        Tue, 25 Aug 2020 02:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44620 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729079AbgHYGoU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 02:44:20 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 194C6C061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:44:20 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id x2so2571396vkd.8
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:44:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XJAMoTU8iPJ2XHvID+aYODKfhNhGKA98hb1eoQOOBaY=;
+        b=fWkqe7h2JlXjqCBifsBo1DomqyFcxD+MwZ64RmxkM3ByyKCVfF9elGSBuoMHyCcYS2
+         UBFKwj7oQqabnf5QdJMBg0f5GAJ6FwQnfiak89uIJm1t+JNeQblGGufYjQ80PPqMsKEo
+         lL1x7n/UwbjttP1Jy8jahAMssBJYJVA+5Qc7RsKvuXbccBeJK0wszJi70P2A5pclYVSR
+         PcA3bTxqE9kVnIz8YndYmtQ/PmmNACGwmSBny44NBdm0yMHag/Fr8LCbcPqVqd3RVb3L
+         crWd1nkGx9CbX6JZ44OMVT/pKD5PX79JDc+sHU03ACLJPDt7AAeevgp7IyWYcdJ96y0N
+         Eslg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XJAMoTU8iPJ2XHvID+aYODKfhNhGKA98hb1eoQOOBaY=;
+        b=f5t4vRjZ8qEoREdHNQLiPgqVUmEiFsgr5hgEPr4bC8qJijCdSqHVSOi7eqiOre47sv
+         dLdbmiUTxjtpFZr5PDkh0VOecJjVJjZ4ziJkAb54mE12gx/Cw8VHuhERbys2WesIE87K
+         nZ96qYfexKXjuY7Q7IbfLiV3pAx4hlV/Py+rnnvY2ifmI9LqZPw1165c2FVZOCmdJxiI
+         Qj0tek+fhthbincEjpOlQd+LiEsls55C+ha6zY71XLJJxi/Y+hdMpmmRAyaUkJzyG5CU
+         6p9ydzBRzPtsLo8FKoLh+SdK/h/g+sqaH2wX0OZU1BW5HweVcEeqxws4iyorJUxZFZ3f
+         MXKA==
+X-Gm-Message-State: AOAM530BPorECjSfm/+K/aRrHgrEACbrqlxB6STO/Nhx7rx3LHJ3H5fr
+        /xPUWr7CCFX8fxIW5REWi7wmFDeJSGgdsbzWIYWD1Q==
+X-Google-Smtp-Source: ABdhPJzKdRlKnr0X6BmbjTIZvsC9IPRFVtH+69UI+kMPkRKZFeq0AzmE4bQnjN3zfh/5kBle3QGy1jR+/FwARY/V9iQ=
+X-Received: by 2002:a1f:2cd0:: with SMTP id s199mr4733615vks.25.1598337859183;
+ Mon, 24 Aug 2020 23:44:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200730080146.25185-1-stephan@gerhold.net> <20200730080146.25185-4-stephan@gerhold.net>
+ <20200824112744.jsyaxrfbybyjpwex@vireshk-i7> <20200824115549.GB208090@gerhold.net>
+ <CAPDyKFojtArMRfO+Z8YaWCWw2fFYcO62x3eL1paNi5pKRg3Jww@mail.gmail.com>
+ <20200824150831.GA842@gerhold.net> <20200825044308.4y3w2urcikban7if@vireshk-i7>
+In-Reply-To: <20200825044308.4y3w2urcikban7if@vireshk-i7>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 25 Aug 2020 08:43:42 +0200
+Message-ID: <CAPDyKFp+71_WGwvdZ6DYamsDjgoRk57H5MjDAdQUtCtJpEHp2Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] opp: Power on (virtual) power domains managed by
+ the OPP core
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Niklas Cassel <nks@flawful.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During memory migration a pte is temporarily replaced with a migration
-swap pte. Some pte bits from the existing mapping such as the soft-dirty
-and uffd write-protect bits are preserved by copying these to the
-temporary migration swap pte.
+On Tue, 25 Aug 2020 at 06:43, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 24-08-20, 17:08, Stephan Gerhold wrote:
+> > On Mon, Aug 24, 2020 at 04:36:57PM +0200, Ulf Hansson wrote:
+> > > That said, perhaps should rely on the consumer to deploy runtime PM
+> > > support, but let the OPP core to set up the device links for the genpd
+> > > virtual devices!?
+> > >
+> >
+> > Yes, that would be the alternative option.
+>
+> That is the right option IMO.
+>
+> > I would be fine with it as long as it also works for the CPUfreq case.
+> >
+> > I don't think anything manages runtime PM for the CPU device, just
+> > like no-one calls dev_pm_opp_set_rate(cpu_dev, 0). So with my patch the
+> > power domain is essentially kept always-on (except for system suspend).
+> > At least in my case this is intended.
+> >
+> > If device links also keep the power domains on if the consumer device
+> > does not make use of runtime PM it should work fine for my case.
+>
+> With device link, you only need to do rpm enable/disable on the consumer device
+> and it will get propagated by itself.
 
-However these bits are not stored at the same location for swap and
-non-swap ptes. Therefore testing these bits requires using the
-appropriate helper function for the given pte type.
+Note that the default state for the genpd virtual device(s) is that
+runtime PM has been enabled for them. This means it's left in runtime
+suspended state, which allows its PM domain to be powered off (if all
+other devices and child domains for it allow that too, of course).
 
-Unfortunately several code locations were found where the wrong helper
-function is being used to test soft_dirty and uffd_wp bits which leads
-to them getting incorrectly set or cleared during page-migration.
+>
+> > Personally, I think my original patch (without device links) fits better
+> > into the OPP API, for the following two reasons.
+> >
+> > With device links:
+> >
+> >   1. Unlike regulators/interconnects, attached power domains would be
+> >      controlled by runtime PM instead of dev_pm_opp_set_rate(opp_dev, 0).
+> >
+> >   2. ... some driver using OPP tables might not make use of runtime PM.
+> >      In that case, the power domains would stay on the whole time,
+> >      even if dev_pm_opp_set_rate(opp_dev, 0) was called.
+> >
+> > With my patch, the power domain state is directly related to the
+> > dev_pm_opp_set_rate(opp_dev, 0) call, which is more intuitive than
+> > relying on the runtime PM state in my opinion.
+>
+> So opp-set-rate isn't in the best of shape TBH, some things are left for the
+> drivers while other are done by it. Regulator-enable/disable was moved to it
+> some time back as people needed something like that. While on the other hand,
+> clk_enable/disable doesn't happen there, nor does rpm enable/disable.
+>
+> Maybe one day we may want to do that, but lets make sure someone wants to do
+> that first.
+>
+> Anyway, even in that case both of the changes would be required. We must make
+> device links nevertheless first. And later on if required, we may want to do rpm
+> enable/disable on the consumer device itself.
 
-Fix these by using the correct tests based on pte type.
+This sounds like a reasonable step-by-step approach.
 
-Fixes: a5430dda8a3a ("mm/migrate: support un-addressable ZONE_DEVICE page in migration")
-Fixes: 8c3328f1f36a ("mm/migrate: migrate_vma() unmap page from vma while collecting pages")
-Fixes: f45ec5ff16a7 ("userfaultfd: wp: support swap and page migration")
-Signed-off-by: Alistair Popple <alistair@popple.id.au>
-Cc: stable@vger.kernel.org
----
- mm/migrate.c | 15 +++++++++++----
- mm/rmap.c    |  9 +++++++--
- 2 files changed, 18 insertions(+), 6 deletions(-)
+Then, to create the device links, we should use DL_FLAG_PM_RUNTIME,
+DL_FLAG_STATELESS.
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index ddb64253fe3e..12f63806d0ac 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2427,10 +2427,17 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
- 			entry = make_migration_entry(page, mpfn &
- 						     MIGRATE_PFN_WRITE);
- 			swp_pte = swp_entry_to_pte(entry);
--			if (pte_soft_dirty(pte))
--				swp_pte = pte_swp_mksoft_dirty(swp_pte);
--			if (pte_uffd_wp(pte))
--				swp_pte = pte_swp_mkuffd_wp(swp_pte);
-+			if (pte_present(pte)) {
-+				if (pte_soft_dirty(pte))
-+					swp_pte = pte_swp_mksoft_dirty(swp_pte);
-+				if (pte_uffd_wp(pte))
-+					swp_pte = pte_swp_mkuffd_wp(swp_pte);
-+			} else {
-+				if (pte_swp_soft_dirty(pte))
-+					swp_pte = pte_swp_mksoft_dirty(swp_pte);
-+				if (pte_swp_uffd_wp(pte))
-+					swp_pte = pte_swp_mkuffd_wp(swp_pte);
-+			}
- 			set_pte_at(mm, addr, ptep, swp_pte);
- 
- 			/*
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 83cc459edc40..9425260774a1 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1511,9 +1511,14 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 			 */
- 			entry = make_migration_entry(page, 0);
- 			swp_pte = swp_entry_to_pte(entry);
--			if (pte_soft_dirty(pteval))
-+
-+			/*
-+			 * pteval maps a zone device page and is therefore
-+			 * a swap pte.
-+			 */
-+			if (pte_swp_soft_dirty(pteval))
- 				swp_pte = pte_swp_mksoft_dirty(swp_pte);
--			if (pte_uffd_wp(pteval))
-+			if (pte_swp_uffd_wp(pteval))
- 				swp_pte = pte_swp_mkuffd_wp(swp_pte);
- 			set_pte_at(mm, pvmw.address, pvmw.pte, swp_pte);
- 			/*
--- 
-2.20.1
+But whether we should use DL_FLAG_RPM_ACTIVE as well, to initially
+runtime resume the supplier (the genpd virtual device), is harder to
+know - as that kind of depends on expectations by the consumer device
+driver.
 
+Kind regards
+Uffe
