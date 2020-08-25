@@ -2,105 +2,71 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F85C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 542E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3CE2068E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:55:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598352954;
-	bh=sG5sWRvSzPP9GgzIjue9lvipcy0Ffb/6EEMGfIMIqX4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=efFCq6RkVt9hb3EiFAvdolU1+2TvvCvzt9QpDfB6Js+BX7XHfN8V9KtZFIhsIgF2P
-	 nq8pkyxZsDnL/JLBxnuMvunTJ1cB2oAZd5ZA/3GuxE2zD+4uu13JM8QEXHpyN1wc8f
-	 R11G3HKgESfyWYvILJGBoMJLOwgGjsHTJKAHzZSg=
+	by mail.kernel.org (Postfix) with ESMTP id 2F8BF2068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:58:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729897AbgHYKzw (ORCPT
+        id S1729885AbgHYK6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:55:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53696 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 06:58:49 -0400
+Received: from sym2.noone.org ([178.63.92.236]:33364 "EHLO sym2.noone.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgHYKzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:55:50 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F25FC2068E;
-        Tue, 25 Aug 2020 10:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598352949;
-        bh=sG5sWRvSzPP9GgzIjue9lvipcy0Ffb/6EEMGfIMIqX4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H+2d6Bz0nXKJEoMURRW/D9yY4cAw4E5liHVuWIok6ae6LlFvqCwamFk+XOnGZc1Eb
-         fQyA+rdOd7ivu99Y98A6pxrI+7+RO8V8xQZ4H6DclFp2cTZJzv0E2EmwvUyQXWQaAd
-         WAl0JrY4s8JyiL4+qhz27TsGJNjmBEXxAMEvaOyw=
-Date:   Tue, 25 Aug 2020 11:55:13 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] regulator: Add regulator driver for ATC260x PMICs
-Message-ID: <20200825105513.GE5379@sirena.org.uk>
-References: <cover.1598043782.git.cristian.ciocaltea@gmail.com>
- <8da70f0b19de17fb8edead7ff06461ae2451b0e9.1598043782.git.cristian.ciocaltea@gmail.com>
- <20200824110045.GA4676@sirena.org.uk>
- <20200824232310.GA2301286@BV030612LT>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J4XPiPrVK1ev6Sgr"
-Content-Disposition: inline
-In-Reply-To: <20200824232310.GA2301286@BV030612LT>
-X-Cookie: Don't get to bragging.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726149AbgHYK6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 06:58:48 -0400
+Received: by sym2.noone.org (Postfix, from userid 1002)
+        id 4BbQw63TxPzvjcX; Tue, 25 Aug 2020 12:58:46 +0200 (CEST)
+From:   Tobias Klauser <tklauser@distanz.ch>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+Subject: [PATCH] ipc: adjust proc_ipc_sem_dointvec definition to match prototype
+Date:   Tue, 25 Aug 2020 12:58:46 +0200
+Message-Id: <20200825105846.5193-1-tklauser@distanz.ch>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
+changed ctl_table.proc_handler to take a kernel pointer. Adjust the
+signature of proc_ipc_sem_dointvec to match ctl_table.proc_handler which
+fixes the following sparse error/warning:
 
---J4XPiPrVK1ev6Sgr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ipc/ipc_sysctl.c:94:47: warning: incorrect type in argument 3 (different address spaces)
+ipc/ipc_sysctl.c:94:47:    expected void *buffer
+ipc/ipc_sysctl.c:94:47:    got void [noderef] __user *buffer
+ipc/ipc_sysctl.c:194:35: warning: incorrect type in initializer (incompatible argument 3 (different address spaces))
+ipc/ipc_sysctl.c:194:35:    expected int ( [usertype] *proc_handler )( ... )
+ipc/ipc_sysctl.c:194:35:    got int ( * )( ... )
 
-On Tue, Aug 25, 2020 at 02:23:10AM +0300, Cristian Ciocaltea wrote:
-> On Mon, Aug 24, 2020 at 12:00:45PM +0100, Mark Brown wrote:
+Fixes: 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+---
+ ipc/ipc_sysctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> > Please write normal conditional statements to make things easier to
-> > read.  It also looks like this would be more robustly written by just
-> > having separate ops for DCDCs and LDOs, this could easily break if
-> > another device is supported in the driver.
+diff --git a/ipc/ipc_sysctl.c b/ipc/ipc_sysctl.c
+index d1b8644bfb88..3f312bf2b116 100644
+--- a/ipc/ipc_sysctl.c
++++ b/ipc/ipc_sysctl.c
+@@ -85,7 +85,7 @@ static int proc_ipc_auto_msgmni(struct ctl_table *table, int write,
+ }
+ 
+ static int proc_ipc_sem_dointvec(struct ctl_table *table, int write,
+-	void __user *buffer, size_t *lenp, loff_t *ppos)
++	void *buffer, size_t *lenp, loff_t *ppos)
+ {
+ 	int ret, semmni;
+ 	struct ipc_namespace *ns = current->nsproxy->ipc_ns;
+-- 
+2.27.0
 
-> Sure, I can provide separate ops, but in this case we duplicate almost
-> all of them. If this is not acceptable, then I will just rewrite the
-> conditional statement.
-
-That's fine, it's just a fairly small struct that's being duplicated not
-code.
-
---J4XPiPrVK1ev6Sgr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9E7hEACgkQJNaLcl1U
-h9Df2wgAhaKs443tKsiDZZ8WadCi+JBgtmmpe6/05aaejbq3Nn4RXhrEDvX/T65I
-SNnwAjQuMoWveIJyW/e/Cw5/M9E+0pE55HJ6XG8yXvSs6nnd8XNgNwqQNIz7EC5s
-qRMoneTdQLpF1ehrgf8zzuvEtwTK9nQ0EfGam7Hy0kLjJgTU+cRziiXnj8sWN8Hm
-t6DbJYJwoS5fP1dBZ6OHeaPVW4ke8ioc5KFXkJasHPdyuMuwzsOHQ79zA4DqT9tz
-tBlPp+S74k8jiPPO88gr88Zyfy2THWdJgzzaJtgM4Qxne8XKlFrADDzLOohfsi7i
-7MQ6Z6DdX9PLBC3CA7miaoTjus/FFQ==
-=ZIz+
------END PGP SIGNATURE-----
-
---J4XPiPrVK1ev6Sgr--
