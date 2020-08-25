@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8889C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1396C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE6E20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C4A20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:11:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHbWJG4Q"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gNLeaYTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726878AbgHYULf (ORCPT
+        id S1726904AbgHYULj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58508 "EHLO
+        Tue, 25 Aug 2020 16:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726793AbgHYULT (ORCPT
+        with ESMTP id S1726798AbgHYULT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 16:11:19 -0400
 Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 664ADC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:18 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id 92so4610370qtb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9738EC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:19 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id x12so10044590qtp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:11:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vCrVUPubKOzmsdqyXoYpMT9N+gSsM1Nu0aoYNMzgvlk=;
-        b=jHbWJG4QHgXXcAfc7xHWIpHF5DVgvMiRVC9da6Kgd0NdObYx3HZPrpSUbIFVds0IFv
-         uTZjNDebfKRN1wxj33CQyZgnWfnKt8qg4dnkOGFNskezVTwEXMbHqXm7A2g2eP6kAsbU
-         SS6OgGODKIeRna7UwfxWP3/ivBp1VQBqDOH3lyIE2K5IDXiaLeGBqhY2XtLXkLaupHO8
-         2NoAKnKLlTzzgR6SsVc+3C0363ROxHjUX/sT6U05sfOIN7zIGlHRMo9azRe84LBmDwJc
-         Wfz5TXOiHzPclnpmbB7nPjAjUdnDYLGS1vHUkIro+cM9PrGy9hHmKvTWLIOsSkTLJRpK
-         AzPQ==
+        bh=7joicHzwupdYBnuFsGJaO4mRul/OCWauur3CmqWFnlc=;
+        b=gNLeaYTRkbkiGNwcpJ/dLe+Nu+nCW7Kp//N3Eue87gEpNJNAmbBPDmVTQZh0mxzkZa
+         sb/8GQ41ja4dRa6OLkCHFGRpYljQdQR4ksG5DAvvUrweW+mDtA0T6jczrWZNTK1iV4/F
+         GMyZwOIHhNB4lOonbVb6s499AFHFJfwyPsRsu0jH95zI5rvR1oJ6zxxnxjuqN9UcAmVe
+         FqKCQMGcr34ZW2Quxzg6NFSnWZihVtXOjN2ug91xQ7Onr+ZZEuMUlsrqPASuKbcd3smW
+         G48NEGaKR2PpfouzbIp8tSXfoJi/W2Zu7QquqcX8gRT2l0jqimI8vIH99bSGKJkivS5a
+         KfGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vCrVUPubKOzmsdqyXoYpMT9N+gSsM1Nu0aoYNMzgvlk=;
-        b=IhHXjHrOu+xYESCXH9LwgMjURWnZUUB9uP5QeuqBMVUPk8Wnp7yI7zvgplNzRpVXNn
-         1a5vCS8Els1ujAOY1R49cOoeNpVS8VW1A5hTadpI5vGRawVDhsT6opYm06iixxCc/Hhc
-         HbWViNFoWWxMPN7qd9LrxWnM+goeO1efVDaQ0zcuk2wMO7wVCaQL9Q7fFHFtlu47y4PX
-         HXjaprsdJKWHV4Opte8VuBq1/qV3OsHu6keFrOaLQF3MTidaUg0N7ba0La4hEcphAIfp
-         nyGkouE8lo11GJPkxIWdoqQeCY9UnQsy6cLasrxb3XSSGw08lgLy1wkXd19jgGFfmgjn
-         myXA==
-X-Gm-Message-State: AOAM533SABvMXtZHEX9CAFwbGz5ggDP6IccP+Hn+JfyXyltBHWcBvb0s
-        ncUJtWrS7PEZODDipJNsYHVq5mv6dy8=
-X-Google-Smtp-Source: ABdhPJwTUl2JA8SbH+g9Zk3uvbAxTLrc+xHotqnRzH0Qvz8Iq23zz+uGyVNCLWJzuJMUTBlFBSUlzQ==
-X-Received: by 2002:ac8:4f02:: with SMTP id b2mr2658390qte.44.1598386276821;
-        Tue, 25 Aug 2020 13:11:16 -0700 (PDT)
+        bh=7joicHzwupdYBnuFsGJaO4mRul/OCWauur3CmqWFnlc=;
+        b=Vr+6kk8eS6NJnNj6oRDbrO2tsHDnuTSqshW39vBzOvRUAq6zzzIIkrx0F0vTTYYvW1
+         CYv/qzH6CaOAtUqisXuo5BcV/mnv38FPXjbaSxM7R6W7zgj2uRfgbdrLdGV6X04+LeP9
+         CmLK9Wk+Ir70qEChd4tKJshTAsUQboU4vAVwjJmGXk0Z1VtyyjbnrQB95c8R6MGcy6y0
+         wrPe1ax7TfljZha1BFJRdT8YRi6ZRdR1g8sMZLEcUCoWT8UdoMvCRHkHrft6vxWaYyE6
+         cGwKKOvItFZPsCpVcoVi3Toh4NKVxPFHVdgLJF0xFpumhiM8qf9mZ9Ke8tPJoU2k8lBI
+         ZlFg==
+X-Gm-Message-State: AOAM5302EWLXoeH+fFlkElwBO6xIIL/OchbiJiitaOjl+T4mvSmEYKvc
+        y2gqiqPenwnZgVCqw/Dqe1U=
+X-Google-Smtp-Source: ABdhPJwPdoVRrJGRGUCyc1XJ80M70LBeUzfXqDK2XWbHzhrVHb5ZRn3WvirC2StImSW8jmoBgNxKmw==
+X-Received: by 2002:ac8:7774:: with SMTP id h20mr10585454qtu.331.1598386278755;
+        Tue, 25 Aug 2020 13:11:18 -0700 (PDT)
 Received: from localhost.localdomain (cpe-71-65-111-223.cinci.res.rr.com. [71.65.111.223])
-        by smtp.googlemail.com with ESMTPSA id n23sm12453459qkk.105.2020.08.25.13.11.16
+        by smtp.googlemail.com with ESMTPSA id n23sm12453459qkk.105.2020.08.25.13.11.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 13:11:16 -0700 (PDT)
+        Tue, 25 Aug 2020 13:11:18 -0700 (PDT)
 From:   Connor McAdams <conmanx360@gmail.com>
 Cc:     conmanx360@gmail.com, Jaroslav Kysela <perex@perex.cz>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/20] ALSA: hda/ca0132 - Fix Recon3D Center/LFE output.
-Date:   Tue, 25 Aug 2020 16:10:28 -0400
-Message-Id: <20200825201040.30339-10-conmanx360@gmail.com>
+Subject: [PATCH v2 10/20] ALSA: hda/ca0132 - Add new quirk ID for SoundBlaster AE-7.
+Date:   Tue, 25 Aug 2020 16:10:29 -0400
+Message-Id: <20200825201040.30339-11-conmanx360@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200825201040.30339-1-conmanx360@gmail.com>
 References: <20200825201040.30339-1-conmanx360@gmail.com>
@@ -78,31 +78,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Properly set the GPIO pin to un-mute the Center/LFE channel on the
-Recon3D.
+Add a new PCI subsystem ID for the SoundBlaster AE-7 card.
 
 Signed-off-by: Connor McAdams <conmanx360@gmail.com>
 ---
- sound/pci/hda/patch_ca0132.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ sound/pci/hda/patch_ca0132.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
-index ab84ea397552..138403fd1639 100644
+index 138403fd1639..284f63dc2749 100644
 --- a/sound/pci/hda/patch_ca0132.c
 +++ b/sound/pci/hda/patch_ca0132.c
-@@ -7819,6 +7819,12 @@ static void r3d_setup_defaults(struct hda_codec *codec)
- 	if (ca0132_quirk(spec) == QUIRK_R3DI)
- 		r3di_gpio_dsp_status_set(codec, R3DI_DSP_DOWNLOADED);
+@@ -1134,6 +1134,7 @@ enum {
+ 	QUIRK_R3DI,
+ 	QUIRK_R3D,
+ 	QUIRK_AE5,
++	QUIRK_AE7,
+ };
  
-+	/* Disable mute on Center/LFE. */
-+	if (ca0132_quirk(spec) == QUIRK_R3D) {
-+		ca0113_mmio_gpio_set(codec, 2, false);
-+		ca0113_mmio_gpio_set(codec, 4, true);
-+	}
-+
- 	/* Setup effect defaults */
- 	num_fx = OUT_EFFECTS_COUNT + IN_EFFECTS_COUNT + 1;
- 	for (idx = 0; idx < num_fx; idx++) {
+ #ifdef CONFIG_PCI
+@@ -1253,6 +1254,7 @@ static const struct snd_pci_quirk ca0132_quirks[] = {
+ 	SND_PCI_QUIRK(0x1102, 0x0013, "Recon3D", QUIRK_R3D),
+ 	SND_PCI_QUIRK(0x1102, 0x0018, "Recon3D", QUIRK_R3D),
+ 	SND_PCI_QUIRK(0x1102, 0x0051, "Sound Blaster AE-5", QUIRK_AE5),
++	SND_PCI_QUIRK(0x1102, 0x0081, "Sound Blaster AE-7", QUIRK_AE7),
+ 	{}
+ };
+ 
 -- 
 2.20.1
 
