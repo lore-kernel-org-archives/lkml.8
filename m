@@ -2,211 +2,138 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB98C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449E4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:01:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D43620665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:00:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="aKhnLnCz"
+	by mail.kernel.org (Postfix) with ESMTP id 24E5620665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:01:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgHYOAy (ORCPT
+        id S1726713AbgHYOBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:00:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726570AbgHYOAR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:00:17 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E02C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:00:17 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id gl22so1883215pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=Us+zKhWOc0nF2Stw/sjqwIYhi1P3cVkrUO+fKBNUwt4=;
-        b=aKhnLnCz8EWY/O9EwQPxzUF7jffQUPREucAEu/8yKU3QJT4H7vWbyhQ79WNhCjEevC
-         EWdjs6sr3iSqinEvLhq3LQjeiCyov9YbtBKKZdSDwNMNa01kfboS+9K1y9YJBIDd7/3b
-         DcfN94LhoDlCUDPYrhKYXqRX/KEyuLJnzYMRpqotPiVTboFLvnuKf4Vy2Bwr5fkLVSX4
-         QRftCpolQAJIyqqfLeDkCj2PVgFBxu2bTT/WQhuoS+HZ5+4PUMI9Vl1XUUCmD4QCipG9
-         OgJ/KdWNJBMVquN4Gm5pJpD16KJvtnAB2fsC1H/gpgTZ3Dnz/I7ucCh9Uxr7yUC3LBtl
-         517A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=Us+zKhWOc0nF2Stw/sjqwIYhi1P3cVkrUO+fKBNUwt4=;
-        b=eOQCwzAFNakgVMsKX35AlcQcye/BdbbChktK29EcOw9OKfnPqeiDAd/xttyP7Xlr2p
-         TLjQSt9iW5Tfsed34EBVEZbrGrJ26J8UKmE0DHpbQRamHkZls2yB+di53IGnqpiWyPu/
-         BPlstimzgX/aXpveX3sCmea79riU4gW4KLc56eFW2begWnf70PHUl6UGTJueyyVx/vc7
-         NoYJ32426yMnmTox4pMZi89TjfcjDZXXNc12OKfahBdYNMtt6qjSrP45FTAKB/O0KCeb
-         ZLAhptqY5WFavTXQh0GG7AETmvpGZ03DSDt6nW1D1pptYvjMOvmXBJoxny46dKbFbU6J
-         vPYg==
-X-Gm-Message-State: AOAM5335SW46tD+SbRrkyUqJlWsF7ac2vM96JF8Sq85f7vX2tmdq2vMU
-        7xznw0S3hxevQODre4A8ezeBdFLvcKYR0HnKMms=
-X-Google-Smtp-Source: ABdhPJzkO3H/IKD862kuXcVEH4xOvXmWJhAuD7nBvOpcRiMMFVRvYMEB2L86b1PuOaKUQ16K1EJg5SgYQUqKJi9hpgE=
-X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
- (user=ndesaulniers job=sendgmr) by 2002:a17:902:8f82:: with SMTP id
- z2mr7778537plo.177.1598364016898; Tue, 25 Aug 2020 07:00:16 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 07:00:00 -0700
-Message-Id: <20200825140001.2941001-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH v3] lib/string.c: implement stpcpy
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        stable@vger.kernel.org, Andy Lavr <andy.lavr@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Joe Perches <joe@perches.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Aug 2020 10:01:39 -0400
+Received: from mga06.intel.com ([134.134.136.31]:59248 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726617AbgHYOAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:00:00 -0400
+IronPort-SDR: XPE+FM/tUJ+s1G5arXB+/fVUovOenPFgla/Aq32wKMQYMz2YKrlIm/2PR4soHpTCTzmjC8az4X
+ kFupwjGB3Hmg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="217659393"
+X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
+   d="scan'208";a="217659393"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 06:59:59 -0700
+IronPort-SDR: pDQXdFwToNlKkfdblllbE+aoEzT+aMTv9gRygqxsV/hlIxVFKPzG9hQ0Boa00BqvIfPOwMUsiQ
+ OY4WjPvF6d2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
+   d="scan'208";a="402725580"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Aug 2020 06:59:57 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH 2/3] software node: Introduce device_add_software_node()
+Date:   Tue, 25 Aug 2020 16:59:50 +0300
+Message-Id: <20200825135951.53340-3-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200825135951.53340-1-heikki.krogerus@linux.intel.com>
+References: <20200825135951.53340-1-heikki.krogerus@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LLVM implemented a recent "libcall optimization" that lowers calls to
-`sprintf(dest, "%s", str)` where the return value is used to
-`stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-in parsing format strings.  `stpcpy` is just like `strcpy` except it
-returns the pointer to the new tail of `dest`.  This optimization was
-introduced into clang-12.
+This helper will register a software node and then assign
+it to device at the same time. The function will also make
+sure that the device can't have more than one software node.
 
-Implement this so that we don't observe linkage failures due to missing
-symbol definitions for `stpcpy`.
-
-Similar to last year's fire drill with:
-commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
-
-The kernel is somewhere between a "freestanding" environment (no full libc)
-and "hosted" environment (many symbols from libc exist with the same
-type, function signature, and semantics).
-
-As H. Peter Anvin notes, there's not really a great way to inform the
-compiler that you're targeting a freestanding environment but would like
-to opt-in to some libcall optimizations (see pr/47280 below), rather than
-opt-out.
-
-Arvind notes, -fno-builtin-* behaves slightly differently between GCC
-and Clang, and Clang is missing many __builtin_* definitions, which I
-consider a bug in Clang and am working on fixing.
-
-Masahiro summarizes the subtle distinction between compilers justly:
-  To prevent transformation from foo() into bar(), there are two ways in
-  Clang to do that; -fno-builtin-foo, and -fno-builtin-bar.  There is
-  only one in GCC; -fno-buitin-foo.
-
-(Any difference in that behavior in Clang is likely a bug from a missing
-__builtin_* definition.)
-
-Masahiro also notes:
-  We want to disable optimization from foo() to bar(),
-  but we may still benefit from the optimization from
-  foo() into something else. If GCC implements the same transform, we
-  would run into a problem because it is not -fno-builtin-bar, but
-  -fno-builtin-foo that disables that optimization.
-
-  In this regard, -fno-builtin-foo would be more future-proof than
-  -fno-built-bar, but -fno-builtin-foo is still potentially overkill. We
-  may want to prevent calls from foo() being optimized into calls to
-  bar(), but we still may want other optimization on calls to foo().
-
-It seems that compilers today don't quite provide the fine grain control
-over which libcall optimizations pseudo-freestanding environments would
-prefer.
-
-Finally, Kees notes that this interface is unsafe, so we should not
-encourage its use.  As such, I've removed the declaration from any
-header, but it still needs to be exported to avoid linkage errors in
-modules.
-
-Cc: stable@vger.kernel.org
-Link: https://bugs.llvm.org/show_bug.cgi?id=47162
-Link: https://bugs.llvm.org/show_bug.cgi?id=47280
-Link: https://github.com/ClangBuiltLinux/linux/issues/1126
-Link: https://man7.org/linux/man-pages/man3/stpcpy.3.html
-Link: https://pubs.opengroup.org/onlinepubs/9699919799/functions/stpcpy.html
-Link: https://reviews.llvm.org/D85963
-Suggested-by: Andy Lavr <andy.lavr@gmail.com>
-Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
-Suggested-by: Joe Perches <joe@perches.com>
-Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Reported-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 ---
-Changes V3:
-* Drop Sami's Tested by tag; newer patch.
-* Add EXPORT_SYMBOL as per Andy.
-* Rewrite commit message, rewrote part of what Masahiro said to be
-  generic in terms of foo() and bar().
-* Prefer %NUL-terminated to NULL terminated. NUL is the ASCII character
-  '\0', as per Arvind and Rasmus.
+ drivers/base/swnode.c    | 45 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/property.h |  3 +++
+ 2 files changed, 48 insertions(+)
 
-Changes V2:
-* Added Sami's Tested by; though the patch changed implementation, the
-  missing symbol at link time was the problem Sami was observing.
-* Fix __restrict -> __restrict__ typo as per Joe.
-* Drop note about restrict from commit message as per Arvind.
-* Fix NULL -> NUL as per Arvind; NUL is ASCII '\0'. TIL
-* Fix off by one error as per Arvind; I had another off by one error in
-  my test program that was masking this.
-
- lib/string.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/lib/string.c b/lib/string.c
-index 6012c385fb31..6bd0cf0fb009 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -272,6 +272,30 @@ ssize_t strscpy_pad(char *dest, const char *src, size_t count)
+diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+index 9a13a61a2f0bb..ec14f02565a65 100644
+--- a/drivers/base/swnode.c
++++ b/drivers/base/swnode.c
+@@ -1356,6 +1356,51 @@ void fwnode_remove_software_node(struct fwnode_handle *fwnode)
  }
- EXPORT_SYMBOL(strscpy_pad);
+ EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
  
 +/**
-+ * stpcpy - copy a string from src to dest returning a pointer to the new end
-+ *          of dest, including src's %NUL-terminator. May overrun dest.
-+ * @dest: pointer to end of string being copied into. Must be large enough
-+ *        to receive copy.
-+ * @src: pointer to the beginning of string being copied from. Must not overlap
-+ *       dest.
++ * device_add_software_node - Assign software node to a device
++ * @dev: The device the software node is meant for.
++ * @swnode: The software node.
 + *
-+ * stpcpy differs from strcpy in a key way: the return value is the new
-+ * %NUL-terminated character. (for strcpy, the return value is a pointer to
-+ * src. This interface is considered unsafe as it doesn't perform bounds
-+ * checking of the inputs. As such it's not recommended for usage. Instead,
-+ * its definition is provided in case the compiler lowers other libcalls to
-+ * stpcpy.
++ * This function will register @swnode and make it the secondary firmware node
++ * pointer of @dev. If @dev has no primary node, then @swnode will become the primary
++ * node.
 + */
-+char *stpcpy(char *__restrict__ dest, const char *__restrict__ src);
-+char *stpcpy(char *__restrict__ dest, const char *__restrict__ src)
++int device_add_software_node(struct device *dev, const struct software_node *swnode)
 +{
-+	while ((*dest++ = *src++) != '\0')
-+		/* nothing */;
-+	return --dest;
-+}
-+EXPORT_SYMBOL(stpcpy);
++	int ret;
 +
- #ifndef __HAVE_ARCH_STRCAT
- /**
-  * strcat - Append one %NUL-terminated string to another
++	/* Only one software node per device. */
++	if (dev_to_swnode(dev))
++		return -EBUSY;
++
++	ret = software_node_register(swnode);
++	if (ret)
++		return ret;
++
++	set_secondary_fwnode(dev, software_node_fwnode(swnode));
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(device_add_software_node);
++
++/**
++ * device_remove_software_node - Remove device's software node
++ * @dev: The device with the software node.
++ *
++ * This function will unregister the software node of @dev.
++ */
++void device_remove_software_node(struct device *dev)
++{
++	struct swnode *swnode;
++
++	swnode = dev_to_swnode(dev);
++	if (!swnode)
++		return;
++
++	kobject_put(&swnode->kobj);
++}
++EXPORT_SYMBOL_GPL(device_remove_software_node);
++
+ int software_node_notify(struct device *dev, unsigned long action)
+ {
+ 	struct swnode *swnode;
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 4a2e0edb78275..5f84286183f9a 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -468,4 +468,7 @@ fwnode_create_software_node(const struct property_entry *properties,
+ 			    const struct fwnode_handle *parent);
+ void fwnode_remove_software_node(struct fwnode_handle *fwnode);
+ 
++int device_add_software_node(struct device *dev, const struct software_node *swnode);
++void device_remove_software_node(struct device *dev);
++
+ #endif /* _LINUX_PROPERTY_H_ */
 -- 
-2.28.0.297.g1956fa8f8d-goog
+2.28.0
 
