@@ -2,79 +2,103 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A35C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8246C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB8B7207D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF600206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:12:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgHYAJX (ORCPT
+        id S1726947AbgHYAMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 20:09:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:65187 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726189AbgHYAJW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 20:09:22 -0400
-IronPort-SDR: in6mQyaE3lxWCYtRDXPWM6P4GGEKYWJCFKDgTEk2WgUS4sOkZKc1/on3YEaQs9QD8vFVgG/120
- 1a4yRG9JIcdQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="155266726"
-X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="155266726"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:09:21 -0700
-IronPort-SDR: 8YS13PJ3V8TKh9YR7Yhpg2pMk3nq/iOi8BK+54EBEiC07H5IaJaawmddGdUrWtpr6gKiVj2mZp
- SpWR03Ye0FAA==
-X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="443424528"
-Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:09:21 -0700
-Date:   Mon, 24 Aug 2020 17:09:20 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] KVM: VMX: fix crash cleanup when KVM wasn't used
-Message-ID: <20200825000920.GB15046@sjchrist-ice>
-References: <20200401081348.1345307-1-vkuznets@redhat.com>
- <CALMp9eROXAOg_g=R8JRVfywY7uQXzBtVxKJYXq0dUcob-BfR-g@mail.gmail.com>
- <20200822034046.GE4769@sjchrist-ice>
- <CALMp9eRHh9KXO12k4GaoenSJazFnSaN68FTVxOGhE9Mxw-hf2A@mail.gmail.com>
- <CALMp9eS1HusEZvzLShuuuxQnReKgTtunsKLoy+2GMVJAaTrZ7A@mail.gmail.com>
+        Mon, 24 Aug 2020 20:12:30 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:34433 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726041AbgHYAM3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 20:12:29 -0400
+Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 9335D1091CA;
+        Tue, 25 Aug 2020 10:12:23 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1kAMZb-0005kb-4O; Tue, 25 Aug 2020 10:12:23 +1000
+Date:   Tue, 25 Aug 2020 10:12:23 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/9] iomap: Convert iomap_write_end types
+Message-ID: <20200825001223.GH12131@dread.disaster.area>
+References: <20200824145511.10500-1-willy@infradead.org>
+ <20200824145511.10500-9-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALMp9eS1HusEZvzLShuuuxQnReKgTtunsKLoy+2GMVJAaTrZ7A@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200824145511.10500-9-willy@infradead.org>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0 cx=a_idp_d
+        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
+        a=Jc2B04GcgJ8hC2UcC2sA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:45:26PM -0700, Jim Mattson wrote:
-> On Mon, Aug 24, 2020 at 11:57 AM Jim Mattson <jmattson@google.com> wrote:
-> >
-> > On Fri, Aug 21, 2020 at 8:40 PM Sean Christopherson
-> > <sean.j.christopherson@intel.com> wrote:
-> > > I agree the code is a mess (kvm_init() and kvm_exit() included), but I'm
-> > > pretty sure hardware_disable_nolock() is guaranteed to be a nop as it's
-> > > impossible for kvm_usage_count to be non-zero if vmx_init() hasn't
-> > > finished.
-> >
-> > Unless I'm missing something, there's no check for a non-zero
-> > kvm_usage_count on this path. There is such a check in
-> > hardware_disable_all_nolock(), but not in hardware_disable_nolock().
+On Mon, Aug 24, 2020 at 03:55:09PM +0100, Matthew Wilcox (Oracle) wrote:
+> iomap_write_end cannot return an error, so switch it to return
+> size_t instead of int and remove the error checking from the callers.
+> Also convert the arguments to size_t from unsigned int, in case anyone
+> ever wants to support a page size larger than 2GB.
 > 
-> However, cpus_hardware_enabled shouldn't have any bits set, so
-> everything's fine. Nothing to see here, after all.
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  fs/iomap/buffered-io.c | 31 ++++++++++++-------------------
+>  1 file changed, 12 insertions(+), 19 deletions(-)
+> 
+> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+> index 8c6187a6f34e..7f618ab4b11e 100644
+> --- a/fs/iomap/buffered-io.c
+> +++ b/fs/iomap/buffered-io.c
+> @@ -666,9 +666,8 @@ iomap_set_page_dirty(struct page *page)
+>  }
+>  EXPORT_SYMBOL_GPL(iomap_set_page_dirty);
+>  
+> -static int
+> -__iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
+> -		unsigned copied, struct page *page)
+> +static size_t __iomap_write_end(struct inode *inode, loff_t pos, size_t len,
+> +		size_t copied, struct page *page)
+>  {
 
-Ugh, I forgot that hardware_disable_all_nolock() does a BUG_ON() instead of
-bailing on !kvm_usage_count.
+Please leave the function declarations formatted the same way as
+they currently are. They are done that way intentionally so it is
+easy to grep for function definitions. Not to mention is't much
+easier to read than when the function name is commingled into the
+multiline paramener list like...
+
+> -static int
+> -iomap_write_end(struct inode *inode, loff_t pos, unsigned len, unsigned copied,
+> -		struct page *page, struct iomap *iomap, struct iomap *srcmap)
+> +/* Returns the number of bytes copied.  May be 0.  Cannot be an errno. */
+> +static size_t iomap_write_end(struct inode *inode, loff_t pos, size_t len,
+> +		size_t copied, struct page *page, struct iomap *iomap,
+> +		struct iomap *srcmap)
+
+... this.
+
+Otherwise the code looks fine.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
