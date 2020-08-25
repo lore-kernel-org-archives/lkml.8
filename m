@@ -2,104 +2,69 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAE3C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFA9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B165207DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:52:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="saPe2SMH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OlmbOjhD"
+	by mail.kernel.org (Postfix) with ESMTP id 9A02B2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbgHYJwC (ORCPT
+        id S1729591AbgHYJxz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:52:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728377AbgHYJwB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:52:01 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5E4AC061574;
-        Tue, 25 Aug 2020 02:52:00 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598349119;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qi88rJ2mAeMyhee0eT9kDZfffU9Q0nWkBLlAEntSw8w=;
-        b=saPe2SMHs4fxaHPtIfmZINCVtmade/IUdScDTrTE56bKhbWhWWPmlrhyuwQwbPnFdv02n1
-        qRKHY6+Fao2onQFOAz/d63P6+2VnSYMbUC+pcft0s0SMwT2vV9us/1npGja2X+2tYSpscB
-        iPJsYuS2FMf/1nMuwC8vtsuYf/y0bjbBwKrk2/0oTU5egQm1Ek/7EUMyQDShnlbtAcdbLe
-        JE09lOMIrym7gVQeJa9rILtA3RsQfKKlIKniu0Z45R81ceeja+uMDPulnSnTEjTA49o3W7
-        SMaqJJyWq0AnhRrTNSiWKeKyPcK0S21cZa7G3cB+Y0b9eRpBKdLEAoz+GdDGSg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598349119;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qi88rJ2mAeMyhee0eT9kDZfffU9Q0nWkBLlAEntSw8w=;
-        b=OlmbOjhDdhkNmF8xd3M7JINOojGOBGj4UhpScwvT1dHOdNPkfP2dB8Acep6NLHMEEgMoKl
-        YoToi1lJLBSp6rDQ==
-To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Tue, 25 Aug 2020 05:53:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50584 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726000AbgHYJxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:53:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id CC3FDAD1B;
+        Tue, 25 Aug 2020 09:54:22 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 11:53:42 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 24/38] x86/xen: Consolidate XEN-MSI init
-In-Reply-To: <fb4e3d13-18c8-a425-19a8-975fda80d411@suse.com>
-References: <20200821002424.119492231@linutronix.de> <20200821002947.667887608@linutronix.de> <5caec213-8f56-9f12-34db-a29de8326f95@suse.com> <87tuwr68q8.fsf@nanos.tec.linutronix.de> <fb4e3d13-18c8-a425-19a8-975fda80d411@suse.com>
-Date:   Tue, 25 Aug 2020 11:51:58 +0200
-Message-ID: <87d03f59z5.fsf@nanos.tec.linutronix.de>
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>,
+        Tomoya MORINAGA <tomoya.rohm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Jean Delvare <jdelvare@suse.com>
+Subject: Re: [PATCH v2 2/2] i2c: eg20t: use generic power management
+Message-ID: <20200825115342.16ab9004@endymion>
+In-Reply-To: <20200807202321.GA753887@bjorn-Precision-5520>
+References: <20200805193616.384313-3-vaibhavgupta40@gmail.com>
+        <20200807202321.GA753887@bjorn-Precision-5520>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25 2020 at 06:21, J=C3=BCrgen Gro=C3=9F wrote:
-> On 24.08.20 23:21, Thomas Gleixner wrote:
->> I still think it does the right thing depending on the place it is
->> called from, but even if so, it's completely unreadable gunk. I'll fix
->> that proper.
->
-> The main issue is that xen_initial_domain() and xen_pv_domain() are
-> orthogonal to each other. So xen_initial_domain() can either be true
-> for xen_pv_domain() (the "classic" pv dom0) or for xen_hvm_domain()
-> (the new PVH dom0).
+Hi Bjorn, Vaibhav,
 
-Fair enough. My limited XENology striked again.
+On Fri, 07 Aug 2020 15:23:21 -0500, Bjorn Helgaas wrote:
+> Also, i801_suspend() looks suspicious because it writes SMBHSTCFG, but
+> I don't see anything corresponding in i801_resume().
+
+You're right, it's buggy. Volker Rümelin's patch at:
+
+https://patchwork.ozlabs.org/project/linux-i2c/patch/a2fc5a6d-a3bf-eaf0-bb75-1521be346333@googlemail.com/
+
+should fix it. I was supposed to review it but did not, shame on me.
+I'll do it today.
+
+-- 
+Jean Delvare
+SUSE L3 Support
