@@ -2,117 +2,115 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C989C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA932076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:00:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CehPsFgN"
+	by mail.kernel.org (Postfix) with ESMTP id 501302075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598367746;
+	bh=EWXCfn+yLhyBqO/zrO7TUrH2Em82II3ljBHbuhdiox4=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=VLi078Kiqc0yWAx1o7crYx/kgemVVcO4utnlkfoRQzltXVFi2/avRWG2Q4q55uou1
+	 BOZsaNexS4RZ0nfiMmCj+8oLpsuMVi6U9TAREeD3uVOvhaCRWH3ai6In7sShvnCK0v
+	 R9jmTszNQZp5E6Z874FRFtGmgMBDqnX4u+vuobQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgHYPAb (ORCPT
+        id S1726633AbgHYPCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:00:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgHYO7D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:59:03 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D94D1C061574;
-        Tue, 25 Aug 2020 07:59:02 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d22so7562934pfn.5;
-        Tue, 25 Aug 2020 07:59:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Gv+PP/wjBFW/QutbN7MDl66u1IlF9/srIH5l1WMUz8Y=;
-        b=CehPsFgNdfZPYRARvszK0iCwlAZvJIxorhXqUBbsMR1owd1LyaUhv6KkQvkxGhxABE
-         h3c8oVY4EFa6rJUgIrnLjCkRStwzaM9eK3BEMzyYASBFUKLmA+35vORx8gBhNYtW5z1x
-         3s4yU9gOSNIa2NA3S2uwFMPR+o6NS9XnTAPYFEUJ/a2tvEAtbBjA1Mmp8fT2zjJBaCkA
-         4TWe+7FbzU6KUDpftLPy16UTk04L6fVCaWwJOTS0ymSpOh99vhufmMr4F4IOV+GRRGFF
-         GHMVyMWmrmX2CZxkpNlbupR524BD2hb59sZczST12PHUj62mzy25W0DZVP/E9GAWUSNh
-         X5zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Gv+PP/wjBFW/QutbN7MDl66u1IlF9/srIH5l1WMUz8Y=;
-        b=ukiYdhGW/sOewdeJKYq3R8zgqIM1N7Dna6indcMTFfewEe3n29ddMl8zRDZDngOE5X
-         K4GtvWnwNWfjVuhJ05OghN7q+hVA2PpaugJJCmvDNstuudm0ULKR/BqmWxh08eW8zDoQ
-         FmG4Vg5VSbU0984EXbRxMuVik9la+qhZFKifk2HH/IlGs/Rj21uCZkb3et+tJxZefRrh
-         iGVilGLxMljtvHa4IEpCv8li09UDmXTtsmZy58UeRrqUd1cTrbiYtQDaCBBXLevjq1Yw
-         T65q94uaOa48NaTUYm9w1CSA6BwAXa6CncfE7xSoUCIqx+LcSunxzIVpybPDJA5TgDsm
-         zcHw==
-X-Gm-Message-State: AOAM532O7E2rGJtZZ3eJUXITOPVah03tfo7/e0VXW2fVaI7KuCsGhOBu
-        wo19elqqs0QSR4GUvi8z+b8=
-X-Google-Smtp-Source: ABdhPJw/xmLmJIGKGVYgH1x/f+iaOst/Nn2dxedzrtxUqC/Tzcj9oxAGZQvDlxbNYOCi6LTdFZvEGg==
-X-Received: by 2002:a62:6582:: with SMTP id z124mr7599734pfb.250.1598367542459;
-        Tue, 25 Aug 2020 07:59:02 -0700 (PDT)
-Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
-        by smtp.gmail.com with ESMTPSA id e29sm15755956pfj.92.2020.08.25.07.58.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 07:59:02 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Zefan Li <lizefan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v7 12/12] powerpc/64s/radix: Enable huge vmalloc mappings
-Date:   Wed, 26 Aug 2020 00:57:53 +1000
-Message-Id: <20200825145753.529284-13-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200825145753.529284-1-npiggin@gmail.com>
-References: <20200825145753.529284-1-npiggin@gmail.com>
+        Tue, 25 Aug 2020 11:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbgHYPCX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 11:02:23 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE7D92076C;
+        Tue, 25 Aug 2020 15:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598367743;
+        bh=EWXCfn+yLhyBqO/zrO7TUrH2Em82II3ljBHbuhdiox4=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=l27BGtTIplay4T0/9noTF3u6YB/jYAvvJFn16+pBpAZMXQcxApR7w7d2jGohGB9E8
+         iNtvHTTwZTcQd59ZwwRHQmKaogS7yys0bSEcX7TY5tZjLRkda/jRUqKnHRmzD+Q0zI
+         GwlAfNYLN6s42+Uwfd4j02wrpD7fbuxDmDQokwr0=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id B9F4235226AE; Tue, 25 Aug 2020 08:02:22 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 08:02:22 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu-tasks: Fix compilation warning with
+ !CONFIG_TASKS_RCU and CONFIG_TINY_RCU
+Message-ID: <20200825150222.GP2855@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200823030405.22174-1-laurent.pinchart@ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200823030405.22174-1-laurent.pinchart@ideasonboard.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
- Documentation/admin-guide/kernel-parameters.txt | 2 ++
- arch/powerpc/Kconfig                            | 1 +
- 2 files changed, 3 insertions(+)
+On Sun, Aug 23, 2020 at 06:04:05AM +0300, Laurent Pinchart wrote:
+> Commit 8344496e8b49 ("rcu-tasks: Conditionally compile
+> show_rcu_tasks_gp_kthreads()") introduced conditional compilation of
+> several functions, but forgot one occurrence of
+> show_rcu_tasks_classic_gp_kthread() that causes the compiler to warn of
+> an unused static function. Fix it.
+> 
+> Fixes: 8344496e8b49 ("rcu-tasks: Conditionally compile show_rcu_tasks_gp_kthreads()")
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  kernel/rcu/tasks.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+> index 835e2df8590a..bddf3968c1eb 100644
+> --- a/kernel/rcu/tasks.h
+> +++ b/kernel/rcu/tasks.h
+> @@ -590,7 +590,9 @@ void exit_tasks_rcu_finish(void) __releases(&tasks_rcu_exit_srcu)
+>  }
+>  
+>  #else /* #ifdef CONFIG_TASKS_RCU */
+> +#ifndef CONFIG_TINY_RCU
+>  static void show_rcu_tasks_classic_gp_kthread(void) { }
+> +#endif /* #ifndef CONFIG_TINY_RCU */
+>  void exit_tasks_rcu_start(void) { }
+>  void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
+>  #endif /* #else #ifdef CONFIG_TASKS_RCU */
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index bdc1f33fd3d1..6f0b41289a90 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3190,6 +3190,8 @@
- 
- 	nohugeiomap	[KNL,X86,PPC] Disable kernel huge I/O mappings.
- 
-+	nohugevmalloc	[PPC] Disable kernel huge vmalloc mappings.
-+
- 	nosmt		[KNL,S390] Disable symmetric multithreading (SMT).
- 			Equivalent to smt=1.
- 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 1f48bbfb3ce9..9171d25ad7dc 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -175,6 +175,7 @@ config PPC
- 	select GENERIC_TIME_VSYSCALL
- 	select HAVE_ARCH_AUDITSYSCALL
- 	select HAVE_ARCH_HUGE_VMAP		if PPC_BOOK3S_64 && PPC_RADIX_MMU
-+	select HAVE_ARCH_HUGE_VMALLOC		if HAVE_ARCH_HUGE_VMAP
- 	select HAVE_ARCH_JUMP_LABEL
- 	select HAVE_ARCH_KASAN			if PPC32 && PPC_PAGE_SHIFT <= 14
- 	select HAVE_ARCH_KASAN_VMALLOC		if PPC32 && PPC_PAGE_SHIFT <= 14
--- 
-2.23.0
+Good catch!!!
 
+But does the following addition of "static inline" work for you?
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+index 835e2df..3dc3ffc 100644
+--- a/kernel/rcu/tasks.h
++++ b/kernel/rcu/tasks.h
+@@ -590,9 +590,9 @@ void exit_tasks_rcu_finish(void) __releases(&tasks_rcu_exit_srcu)
+ }
+ 
+ #else /* #ifdef CONFIG_TASKS_RCU */
+-static void show_rcu_tasks_classic_gp_kthread(void) { }
+-void exit_tasks_rcu_start(void) { }
+-void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
++static inline void show_rcu_tasks_classic_gp_kthread(void) { }
++static inline void exit_tasks_rcu_start(void) { }
++static inline void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
+ #endif /* #else #ifdef CONFIG_TASKS_RCU */
+ 
+ #ifdef CONFIG_TASKS_RUDE_RCU
