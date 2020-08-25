@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F40C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C2FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF47020767
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70A5320767
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgHYMty (ORCPT
+        id S1726838AbgHYMt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:49:54 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:19564 "EHLO
+        Tue, 25 Aug 2020 08:49:59 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:17934 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729040AbgHYMsY (ORCPT
+        by vger.kernel.org with ESMTP id S1728946AbgHYMsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 08:48:24 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PCmA63018883;
-        Tue, 25 Aug 2020 08:48:12 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3330951ggh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 08:48:12 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07PCmA7R034798
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PCe9iN017665;
         Tue, 25 Aug 2020 08:48:10 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 25 Aug 2020 08:48:10 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 25 Aug 2020 08:48:09 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 25 Aug 2020 08:48:09 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 332w761k6g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 08:48:10 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07PCm82W017030
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 25 Aug 2020 08:48:08 -0400
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 25 Aug
+ 2020 05:48:07 -0700
+Received: from zeus.spd.analog.com (10.66.68.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 25 Aug 2020 05:48:06 -0700
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07PCm0jL001781;
-        Tue, 25 Aug 2020 08:48:07 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07PCm0jJ001781;
+        Tue, 25 Aug 2020 08:48:04 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <vkoul@kernel.org>, <lars@metafoo.de>, <dan.j.williams@intel.com>,
         <ardeleanalex@gmail.com>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 4/6] dmaengine: axi-dmac: wrap entire dt parse in a function
-Date:   Tue, 25 Aug 2020 15:48:31 +0300
-Message-ID: <20200825124840.43664-5-alexandru.ardelean@analog.com>
+Subject: [PATCH v2 2/6] dmaengine: axi-dmac: move active_descs list init after device-tree init
+Date:   Tue, 25 Aug 2020 15:48:29 +0300
+Message-ID: <20200825124840.43664-3-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200825124840.43664-1-alexandru.ardelean@analog.com>
 References: <20200825124840.43664-1-alexandru.ardelean@analog.com>
@@ -62,89 +58,49 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-25_04:2020-08-25,2020-08-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- phishscore=0 mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
- suspectscore=8 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250097
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=8
+ mlxlogscore=929 spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 clxscore=1015
+ impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008250096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All these attributes will be read from registers in newer core versions, so
-just wrap the logic into a function.
+We want to enable the clock right after it is obtained. Then later we'll
+want to read the core version via register-access (which requires the clock
+to be enabled).
+
+The initialization of the active_descs list can be postponed after reading
+from registers (or reading the device-tree).
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/dma/dma-axi-dmac.c | 40 +++++++++++++++++++++++---------------
- 1 file changed, 24 insertions(+), 16 deletions(-)
+ drivers/dma/dma-axi-dmac.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-index f4b17b5e3914..1a1e227fa935 100644
+index 088c79137398..90a99bdffa2b 100644
 --- a/drivers/dma/dma-axi-dmac.c
 +++ b/drivers/dma/dma-axi-dmac.c
-@@ -774,6 +774,28 @@ static int axi_dmac_parse_chan_dt(struct device_node *of_chan,
- 	return 0;
- }
+@@ -850,8 +850,6 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dmac->clk))
+ 		return PTR_ERR(dmac->clk);
  
-+static int axi_dmac_parse_dt(struct device *dev, struct axi_dmac *dmac)
-+{
-+	struct device_node *of_channels, *of_chan;
-+	int ret;
-+
-+	of_channels = of_get_child_by_name(dev->of_node, "adi,channels");
-+	if (of_channels == NULL)
-+		return -ENODEV;
-+
-+	for_each_child_of_node(of_channels, of_chan) {
-+		ret = axi_dmac_parse_chan_dt(of_chan, &dmac->chan);
-+		if (ret) {
-+			of_node_put(of_chan);
-+			of_node_put(of_channels);
-+			return -EINVAL;
-+		}
-+	}
-+	of_node_put(of_channels);
-+
-+	return 0;
-+}
-+
- static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
- {
- 	struct axi_dmac_chan *chan = &dmac->chan;
-@@ -823,7 +845,6 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
- 
- static int axi_dmac_probe(struct platform_device *pdev)
- {
--	struct device_node *of_channels, *of_chan;
- 	struct dma_device *dma_dev;
- 	struct axi_dmac *dmac;
- 	struct resource *res;
-@@ -854,22 +875,9 @@ static int axi_dmac_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
--	of_channels = of_get_child_by_name(pdev->dev.of_node, "adi,channels");
--	if (of_channels == NULL) {
--		ret = -ENODEV;
-+	ret = axi_dmac_parse_dt(&pdev->dev, dmac);
-+	if (ret < 0)
- 		goto err_clk_disable;
--	}
+-	INIT_LIST_HEAD(&dmac->chan.active_descs);
 -
--	for_each_child_of_node(of_channels, of_chan) {
--		ret = axi_dmac_parse_chan_dt(of_chan, &dmac->chan);
--		if (ret) {
--			of_node_put(of_chan);
--			of_node_put(of_channels);
--			ret = -EINVAL;
--			goto err_clk_disable;
--		}
--	}
--	of_node_put(of_channels);
+ 	of_channels = of_get_child_by_name(pdev->dev.of_node, "adi,channels");
+ 	if (of_channels == NULL)
+ 		return -ENODEV;
+@@ -866,6 +864,8 @@ static int axi_dmac_probe(struct platform_device *pdev)
+ 	}
+ 	of_node_put(of_channels);
  
- 	INIT_LIST_HEAD(&dmac->chan.active_descs);
++	INIT_LIST_HEAD(&dmac->chan.active_descs);
++
+ 	pdev->dev.dma_parms = &dmac->dma_parms;
+ 	dma_set_max_seg_size(&pdev->dev, UINT_MAX);
  
 -- 
 2.17.1
