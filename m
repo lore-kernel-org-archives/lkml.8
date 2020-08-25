@@ -2,150 +2,136 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C13C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3287C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9223C2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11FD2065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbgHYIyj (ORCPT
+        id S1729451AbgHYIyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:54:39 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:45345 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725916AbgHYIyj (ORCPT
+        Tue, 25 Aug 2020 04:54:46 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:16524 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725916AbgHYIyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:54:39 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U6oygkt_1598345661;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6oygkt_1598345661)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 25 Aug 2020 16:54:24 +0800
-Subject: Re: [PATCH v18 00/32] per memcg lru_lock
-To:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        mgorman@techsingularity.net, tj@kernel.org,
-        khlebnikov@yandex-team.ru, willy@infradead.org, hannes@cmpxchg.org,
-        lkp@intel.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
-        kirill@shutemov.name, alexander.duyck@gmail.com,
-        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
-        shy828301@gmail.com
-References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
- <alpine.LSU.2.11.2008241231460.1065@eggly.anvils>
- <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <4cc9f54a-9eda-9966-df9a-a00bc9e88f4c@linux.alibaba.com>
-Date:   Tue, 25 Aug 2020 16:52:54 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+        Tue, 25 Aug 2020 04:54:45 -0400
+X-IronPort-AV: E=Sophos;i="5.76,351,1592838000"; 
+   d="scan'208";a="55250272"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 25 Aug 2020 17:54:42 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 254EC4261C31;
+        Tue, 25 Aug 2020 17:54:40 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-renesas-soc@vger.kernel.or, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2] ARM: dts: r8a7742-iwg21m: Add SPI NOR support
+Date:   Tue, 25 Aug 2020 09:54:35 +0100
+Message-Id: <20200825085435.8744-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add support for the SPI NOR device used to boot up the system
+to the System on Module DT.
 
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+---
+Hi all,
 
-ÔÚ 2020/8/25 ÉÏÎç9:56, Daniel Jordan Ð´µÀ:
-> On Mon, Aug 24, 2020 at 01:24:20PM -0700, Hugh Dickins wrote:
->> On Mon, 24 Aug 2020, Andrew Morton wrote:
->>> On Mon, 24 Aug 2020 20:54:33 +0800 Alex Shi <alex.shi@linux.alibaba.com> wrote:
->> Andrew demurred on version 17 for lack of review.  Alexander Duyck has
->> been doing a lot on that front since then.  I have intended to do so,
->> but it's a mirage that moves away from me as I move towards it: I have
-> 
-> Same, I haven't been able to keep up with the versions or the recent review
-> feedback.  I got through about half of v17 last week and hope to have more time
-> for the rest this week and beyond.
-> 
->>>> Following Daniel Jordan's suggestion, I have run 208 'dd' with on 104
->>>> containers on a 2s * 26cores * HT box with a modefied case:
-> 
-> Alex, do you have a pointer to the modified readtwice case?
-> 
+This patch is part of series [1], since rest of the patches have been
+acked I am just resending patch 3/3 from the series.
 
-Hi Daniel,
+[1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=333197
 
-my readtwice modification like below.
+v1->v2
+* Dropped #address-cells/#size-cells from flash node.
+* Added partitions for flash node.
+---
+ arch/arm/boot/dts/r8a7742-iwg21m.dtsi | 51 +++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/case-lru-file-readtwice b/case-lru-file-readtwice
-index 85533b248634..57cb97d121ae 100755
---- a/case-lru-file-readtwice
-+++ b/case-lru-file-readtwice
-@@ -15,23 +15,30 @@
-
- . ./hw_vars
-
--for i in `seq 1 $nr_task`
--do
--       create_sparse_file $SPARSE_FILE-$i $((ROTATE_BYTES / nr_task))
--       timeout --foreground -s INT ${runtime:-600} dd bs=4k if=$SPARSE_FILE-$i of=/dev/null > $TMPFS_MNT/dd-output-1-$i 2>&1 &
--       timeout --foreground -s INT ${runtime:-600} dd bs=4k if=$SPARSE_FILE-$i of=/dev/null > $TMPFS_MNT/dd-output-2-$i 2>&1 &
--done
-+OUT_DIR=$(hostname)-${nr_task}c-$(((mem + (1<<29))>>30))g
-+TEST_CASES=${@:-$(echo case-*)}
+diff --git a/arch/arm/boot/dts/r8a7742-iwg21m.dtsi b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+index 0f26807f92b8..5621c9ed698f 100644
+--- a/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
++++ b/arch/arm/boot/dts/r8a7742-iwg21m.dtsi
+@@ -35,6 +35,16 @@
+ 	clock-frequency = <20000000>;
+ };
+ 
++&gpio0 {
++	/* GP0_18 set low to select QSPI. Doing so will disable VIN2 */
++	qspi_en {
++		gpio-hog;
++		gpios = <18 GPIO_ACTIVE_HIGH>;
++		output-low;
++		line-name = "QSPI_EN";
++	};
++};
 +
-+echo $((1<<30)) > /proc/sys/vm/max_map_count
-+echo $((1<<20)) > /proc/sys/kernel/threads-max
-+echo 1 > /proc/sys/vm/overcommit_memory
-+#echo 3 > /proc/sys/vm/drop_caches
+ &i2c0 {
+ 	pinctrl-0 = <&i2c0_pins>;
+ 	pinctrl-names = "default";
+@@ -70,4 +80,45 @@
+ 		groups = "mmc1_data4", "mmc1_ctrl";
+ 		function = "mmc1";
+ 	};
 +
++	qspi_pins: qspi {
++		groups = "qspi_ctrl", "qspi_data2";
++		function = "qspi";
++	};
++};
 +
-+i=1
++&qspi {
++	pinctrl-0 = <&qspi_pins>;
++	pinctrl-names = "default";
 +
-+if [ "$1" == "m" ];then
-+       mount_tmpfs
-+       create_sparse_root
-+       create_sparse_file $SPARSE_FILE-$i $((ROTATE_BYTES))
-+       exit
-+fi
++	status = "okay";
 +
++	flash: flash@0 {
++		compatible = "sst,sst25vf016b", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++		m25p,fast-read;
++		spi-cpol;
++		spi-cpha;
 +
-+if [ "$1" == "r" ];then
-+       (timeout --foreground -s INT ${runtime:-300} dd bs=4k if=$SPARSE_FILE-$i of=/dev/null > $TMPFS_MNT/dd-output-1-$i 2>&1)&
-+       (timeout --foreground -s INT ${runtime:-300} dd bs=4k if=$SPARSE_FILE-$i of=/dev/null > $TMPFS_MNT/dd-output-2-$i 2>&1)&
-+fi
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "bootloader";
++				reg = <0x00000000 0x000c0000>;
++				read-only;
++			};
++			partition@c0000 {
++				label = "env";
++				reg = <0x000c0000 0x00002000>;
++			};
++			partition@c2000 {
++				label = "user";
++				reg = <0x000c2000 0x0013e000>;
++			};
++		};
++	};
+ };
+-- 
+2.17.1
 
- wait
- sleep 1
-
--for file in $TMPFS_MNT/dd-output-*
--do
--       [ -s "$file" ] || {
--               echo "dd output file empty: $file" >&2
--       }
--       cat $file
--       rm  $file
--done
--
--rm `seq -f $SPARSE_FILE-%g 1 $nr_task`
-diff --git a/hw_vars b/hw_vars
-index 8731cefb9f57..ceeaa9f17c0b 100755
---- a/hw_vars
-+++ b/hw_vars
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/sh -ex
-
- if [ -n "$runtime" ]; then
-        USEMEM="$CMD ./usemem --runtime $runtime"
-@@ -43,7 +43,7 @@ create_loop_devices()
-        modprobe loop 2>/dev/null
-        [ -e "/dev/loop0" ] || modprobe loop 2>/dev/null
-
--       for i in $(seq 0 8)
-+       for i in $(seq 0 104)
-        do
-                [ -e "/dev/loop$i" ] && continue
-                mknod /dev/loop$i b 7 $i
