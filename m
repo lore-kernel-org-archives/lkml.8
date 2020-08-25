@@ -2,148 +2,199 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80604C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69F5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6934520706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB3420706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:04:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p6T3Focr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725792AbgHYGDZ (ORCPT
+        id S1729003AbgHYGED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:03:25 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:39588 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728920AbgHYGDV (ORCPT
+        Tue, 25 Aug 2020 02:04:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728126AbgHYGEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:03:21 -0400
-Received: by mail-io1-f72.google.com with SMTP id v10so7932655iot.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:03:20 -0700 (PDT)
+        Tue, 25 Aug 2020 02:04:02 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFCDC061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:04:02 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id g6so673747pjl.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:04:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j6FEjnx7PaimSRrvrozgKYaPtn/SFhcnkbYcPW36XLg=;
+        b=p6T3Focr93ouZkmdLVz/SoOb0+bPLw1NHJB09nzp0GY4q40NpzUs7tJvMy0+PKhiMJ
+         LnJ9l/p6zB3J6wvU715eAWiJLvLwWYskvSd3upNiPNFBbRvixg/m3pCHWOyLGcKnU7k4
+         nvZGTw30p6IsdJ9W1UNw8+BkiBczelkgNf+S10SXKFTqbIR3e32QqIkbJKetHDsZZmGC
+         ++5/JUNJ5sE674VUVsUrXLotNFqT6gkXNJFCpdBIAFpmII8xm22OtWmmWxlKDCNMTD55
+         GwXqlIaVxGgYHufBeL3mG2OOUtDyWiELn3fC9QCt41AWXj/PiMnc5qvdqKCtt25msY31
+         KyPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=17xNZ3vnGxrE2hDz45jTCe7zoYPZXJ1dqr7yf+KWimw=;
-        b=JJXkxOVvQtoqK0xyqzWK6yGAfhHjrMD4N8W8hCLBvYC2TfEp6pPnXCPCet1U4HjGhM
-         n0RABbvM6G2dzWl0S/jTd/zm1+XG6UHTCWUYRLgaOc2DSWeLass9syRI3ZKKV2r20HMx
-         Lwi21uJfbPqH4+O5dUfgS7IK5aqDCsmzbF8zCeQENhciVu3lhaP+nM+EqlJKH9SMHCve
-         RrpV2RpDmMmUiL/TNw/tCVP2JNPxzgKLt8YwvTcsnPjjJd05KAUG5o56L57VJkB1t+hp
-         xvy9a8qnAAZiKXtd+isUJ/iKD5vzez5Hki8gd4j80kIwofciDa/b9RT1AUBzJaYLv8py
-         miJg==
-X-Gm-Message-State: AOAM532pC3ou5qmPqjH6ObH0WWy6gNfUPJQhgn9ZKfKFQx7jQbCAWoWZ
-        C1EeUPASBXfSG+D7nH03JbiOVDfjF4KfkqVtA15EdJgpDAol
-X-Google-Smtp-Source: ABdhPJxZYqtuRP/BYxt/Fz6d80GNgy8Vw7ytoc/4EptZSHYEDB2g7sQpdAHgh4PMv2XnkLKhxpvlxmGCoqG47Esid1JtefV/KLUp
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j6FEjnx7PaimSRrvrozgKYaPtn/SFhcnkbYcPW36XLg=;
+        b=g/WFJoEMP42b4imH/lPCQMmW3Vojr1HlLB7RCQaSQrtaHsFqcyXEVOTYcuAHHrxlFB
+         cxbw44+Ty7abqF8DMvyUIC0WtMHOhNKR7tdf5AZTw6buNQ5Qn6fSgK9ggRRjWRDhrtfA
+         9vSNGRxHD+EV4a+Kol6lAmz8MmdmqeHh1DrZq4Ff9Drf5hu/I1ajs+p+rbxcYw1UVQGi
+         XMjwinItar3ogtSN8zHE2eGvl5vN9fWoDmwnmH86ky8pv7r5gOV9I1TuXR3pBSolMjDF
+         o5ZI4dfTUEUCpcl9gMYmeq8K1mNGq+WlD5HacIZJoFV2DYRkW03HFVKTylZXcPEj7Bmx
+         KRIQ==
+X-Gm-Message-State: AOAM533nZ0b5HLIrbeZQPzWsFUinoI6VlKNy2FM3S5oTbnJxSXmRIqFU
+        h+bQUZAQb+w+/iJJxCK3Q/Aj+992bPQLnQ==
+X-Google-Smtp-Source: ABdhPJyZ+OEKLubiI1wEvFDF9H9Vf+Wr3UBGzlkTTh7kt7lwA9ceWdtWRoYesX7q9QVxmW8MDraiXg==
+X-Received: by 2002:a17:90a:9c3:: with SMTP id 61mr304355pjo.191.1598335441898;
+        Mon, 24 Aug 2020 23:04:01 -0700 (PDT)
+Received: from localhost ([122.172.43.13])
+        by smtp.gmail.com with ESMTPSA id q5sm11548209pgv.1.2020.08.24.23.04.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Aug 2020 23:04:01 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 11:33:59 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
+        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
+        valentin.schneider@arm.com, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] cpufreq: move invariance setter calls in cpufreq
+ core
+Message-ID: <20200825060359.mrhou4pwrzmfq23n@vireshk-i7>
+References: <20200824210252.27486-1-ionela.voinescu@arm.com>
+ <20200824210252.27486-3-ionela.voinescu@arm.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:15c1:: with SMTP id 184mr7620531iov.130.1598335400096;
- Mon, 24 Aug 2020 23:03:20 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 23:03:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c139e505adad7558@google.com>
-Subject: KASAN: slab-out-of-bounds Read in read_descriptors (2)
-From:   syzbot <syzbot+256e56ddde8b8957eabd@syzkaller.appspotmail.com>
-To:     chenqiwu@xiaomi.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824210252.27486-3-ionela.voinescu@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 24-08-20, 22:02, Ionela Voinescu wrote:
+> To properly scale its per-entity load-tracking signals, the task scheduler
+> needs to be given a frequency scale factor, i.e. some image of the current
+> frequency the CPU is running at. Currently, this scale can be computed
+> either by using counters (APERF/MPERF on x86, AMU on arm64), or by
+> piggy-backing on the frequency selection done by cpufreq.
+> 
+> For the latter, drivers have to explicitly set the scale factor
+> themselves, despite it being purely boiler-plate code: the required
+> information depends entirely on the kind of frequency switch callback
+> implemented by the driver, i.e. either of: target_index(), target(),
+> fast_switch() and setpolicy().
+> 
+> The fitness of those callbacks with regard to driving the Frequency
+> Invariance Engine (FIE) is studied below:
+> 
+> target_index()
+> ==============
+> Documentation states that the chosen frequency "must be determined by
+> freq_table[index].frequency". It isn't clear if it *has* to be that
+> frequency, or if it can use that frequency value to do some computation
+> that ultimately leads to a different frequency selection. All drivers
+> go for the former, while the vexpress-spc-cpufreq has an atypical
+> implementation which is handled separately.
+> 
+> Therefore, the hook works on the assumption the core can use
+> freq_table[index].frequency.
+> 
+> target()
+> =======
+> This has been flagged as deprecated since:
+> 
+>   commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
+> 
+> It also doesn't have that many users:
+> 
+>   gx-suspmod.c:439:       .target = cpufreq_gx_target,
+>   s3c24xx-cpufreq.c:428:  .target = s3c_cpufreq_target,
+>   intel_pstate.c:2528:    .target = intel_cpufreq_target,
+>   cppc_cpufreq.c:401:     .target = cppc_cpufreq_set_target,
+>   cpufreq-nforce2.c:371:  .target = nforce2_target,
+>   sh-cpufreq.c:163:       .target = sh_cpufreq_target,
+>   pcc-cpufreq.c:573:      .target = pcc_cpufreq_target,
+> 
+> Similarly to the path taken for target_index() calls in the cpufreq core
+> during a frequency change, all of the drivers above will mark the end of a
+> frequency change by a call to cpufreq_freq_transition_end().
+> 
+> Therefore, cpufreq_freq_transition_end() can be used as the location for
+> the arch_set_freq_scale() call to potentially inform the scheduler of the
+> frequency change.
+> 
+> This change maintains the previous functionality for the drivers that
+> implement the target_index() callback, while also adding support for the
+> few drivers that implement the deprecated target() callback.
+> 
+> fast_switch()
+> =============
+> This callback *has* to return the frequency that was selected.
+> 
+> setpolicy()
+> ===========
+> This callback does not have any designated way of informing what was the
+> end choice. But there are only two drivers using setpolicy(), and none
+> of them have current FIE support:
+> 
+>   drivers/cpufreq/longrun.c:281:	.setpolicy	= longrun_set_policy,
+>   drivers/cpufreq/intel_pstate.c:2215:	.setpolicy	= intel_pstate_set_policy,
+> 
+> The intel_pstate is known to use counter-driven frequency invariance.
+> 
+> Conclusion
+> ==========
+> 
+> Given that the significant majority of current FIE enabled drivers use
+> callbacks that lend themselves to triggering the setting of the FIE scale
+> factor in a generic way, move the invariance setter calls to cpufreq core.
+> 
+> As a result of setting the frequency scale factor in cpufreq core, after
+> callbacks that lend themselves to trigger it, remove this functionality
+> from the driver side.
+> 
+> To be noted that despite marking a successful frequency change, many
+> cpufreq drivers will consider the new frequency as the requested
+> frequency, although this is might not be the one granted by the hardware.
+> 
+> Therefore, the call to arch_set_freq_scale() is a "best effort" one, and
+> it is up to the architecture if the new frequency is used in the new
+> frequency scale factor setting (determined by the implementation of
+> arch_set_freq_scale()) or eventually used by the scheduler (determined
+> by the implementation of arch_scale_freq_capacity()). The architecture
+> is in a better position to decide if it has better methods to obtain
+> more accurate information regarding the current frequency and use that
+> information instead (for example, the use of counters).
+> 
+> Also, the implementation to arch_set_freq_scale() will now have to handle
+> error conditions (current frequency == 0) in order to prevent the
+> overhead in cpufreq core when the default arch_set_freq_scale()
+> implementation is used.
+> 
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Suggested-by: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/cpufreq/cpufreq-dt.c           | 10 +---------
+>  drivers/cpufreq/cpufreq.c              | 12 +++++++++++-
+>  drivers/cpufreq/qcom-cpufreq-hw.c      |  9 +--------
+>  drivers/cpufreq/scmi-cpufreq.c         | 12 ++----------
+>  drivers/cpufreq/scpi-cpufreq.c         |  6 +-----
+>  drivers/cpufreq/vexpress-spc-cpufreq.c | 12 ++----------
+>  6 files changed, 18 insertions(+), 43 deletions(-)
 
-syzbot found the following issue on:
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-HEAD commit:    da2968ff Merge tag 'pci-v5.9-fixes-1' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=153afba6900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a0437fdd630bee11
-dashboard link: https://syzkaller.appspot.com/bug?extid=256e56ddde8b8957eabd
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+256e56ddde8b8957eabd@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: slab-out-of-bounds in read_descriptors+0x25f/0x280 drivers/usb/core/sysfs.c:903
-Read of size 8 at addr ffff88809100b848 by task systemd-udevd/22769
-
-CPU: 1 PID: 22769 Comm: systemd-udevd Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- read_descriptors+0x25f/0x280 drivers/usb/core/sysfs.c:903
- sysfs_kf_bin_read+0x196/0x270 fs/sysfs/file.c:99
- kernfs_file_direct_read fs/kernfs/file.c:213 [inline]
- kernfs_fop_read+0x2eb/0x590 fs/kernfs/file.c:253
- vfs_read+0x1df/0x5a0 fs/read_write.c:479
- ksys_read+0x12d/0x250 fs/read_write.c:607
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7f6f8ba80210
-Code: 73 01 c3 48 8b 0d 98 7d 20 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d b9 c1 20 00 00 75 10 b8 00 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 4e fc ff ff 48 89 04 24
-RSP: 002b:00007ffecd2e3168 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 00005600a56b04a0 RCX: 00007f6f8ba80210
-RDX: 0000000000010011 RSI: 00007ffecd2e3190 RDI: 0000000000000007
-RBP: 0000000000000000 R08: 00005600a56b5d00 R09: 0000000000000001
-R10: 0000000000000073 R11: 0000000000000246 R12: 00005600a56a6690
-R13: 0000000000000007 R14: 00007ffecd2e3190 R15: 0000000000000000
-
-Allocated by task 29772:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- __do_kmalloc mm/slab.c:3655 [inline]
- __kmalloc+0x1a8/0x320 mm/slab.c:3664
- kmalloc include/linux/slab.h:559 [inline]
- kzalloc include/linux/slab.h:666 [inline]
- usb_get_configuration+0x186/0x3840 drivers/usb/core/config.c:887
- usb_enumerate_device drivers/usb/core/hub.c:2387 [inline]
- usb_new_device+0x387/0x6d0 drivers/usb/core/hub.c:2523
- hub_port_connect drivers/usb/core/hub.c:5208 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x2033/0x3e40 drivers/usb/core/hub.c:5576
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-The buggy address belongs to the object at ffff88809100b840
- which belongs to the cache kmalloc-32 of size 32
-The buggy address is located 8 bytes inside of
- 32-byte region [ffff88809100b840, ffff88809100b860)
-The buggy address belongs to the page:
-page:00000000227ef938 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88809100bfc1 pfn:0x9100b
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00015c1948 ffffea00007fcd88 ffff8880aa040100
-raw: ffff88809100bfc1 ffff88809100b000 000000010000003f 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88809100b700: 05 fc fc fc fc fc fc fc fa fb fb fb fc fc fc fc
- ffff88809100b780: 05 fc fc fc fc fc fc fc fa fb fb fb fc fc fc fc
->ffff88809100b800: 06 fc fc fc fc fc fc fc 00 fc fc fc fc fc fc fc
-                                              ^
- ffff88809100b880: 00 00 00 fc fc fc fc fc 00 04 fc fc fc fc fc fc
- ffff88809100b900: 00 05 fc fc fc fc fc fc 05 fc fc fc fc fc fc fc
-==================================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+viresh
