@@ -2,93 +2,108 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2029EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE323C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAACB20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92C4220678
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vh5+Nkg0"
+	dkim=pass (2048-bit key) header.d=popple.id.au header.i=@popple.id.au header.b="vVvt4BaZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgHYFQV (ORCPT
+        id S1727097AbgHYFT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 01:16:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59256 "EHLO
+        Tue, 25 Aug 2020 01:19:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYFQU (ORCPT
+        with ESMTP id S1726149AbgHYFT4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 01:16:20 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 045BBC061574;
-        Mon, 24 Aug 2020 22:16:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=xhDgPX+EVP/VZeAa1RZSKBXxeYZKcsfe0/2ZFV2ql3M=; b=Vh5+Nkg0B/ScBSgyRNLtjkDoe9
-        05pe7uvNv+5Zgg+0RDtoIlczwe1cH205wu3iCW/gl1W7AQlNX8QecNysRefz79Aub5wu+SZr2iTAd
-        K322+B2VbO5iGcRng/ixbH1RyHmUSazZha9cbwwogyN3PJ4upGWmGpaibL6cPRz60jxV4WWRFsrSr
-        0GLoC6C11IKFpoLaBCrAs3vCXJipschSIFpnFFmzFy4DksgbAamSVTn2S/vh854p5bWLV49ZP6Ajr
-        M9YceCptUstR939a+3OERBc96wvqwRTAcQxeiwONpiPRJbIOewN9vTJ2CUPIGaLI1/yUj/n5ui42C
-        8xZdxxrA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kARJh-000533-0e; Tue, 25 Aug 2020 05:16:17 +0000
-Subject: Re: [PATCH 07/14 v1] usb: typec: tcpci_maxim: Chip level TCPC driver
-To:     Badhri Jagan Sridharan <badhri@google.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200825042210.300632-1-badhri@google.com>
- <20200825042210.300632-8-badhri@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <fb1a7030-2649-c0cf-dd2a-651516333da7@infradead.org>
-Date:   Mon, 24 Aug 2020 22:16:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 01:19:56 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12FEEC061574;
+        Mon, 24 Aug 2020 22:19:56 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BbHP51BCKz9sR4;
+        Tue, 25 Aug 2020 15:19:53 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=popple.id.au;
+        s=202006; t=1598332793;
+        bh=MTpbfNAqvTkG6db77/xvLASym21B8CMhGSXqP1HtlLQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vVvt4BaZ4udfjy1JvLdr5LEsLneBTrDH7xEb+XK7APb2XjAbB3c/sxw7XDM9pqRCB
+         PKkRSiXGt+ltunZg2XsWCDZsOL0mQ4I10rvltxgYyzVPCrimigfHxhSRbSalPomE57
+         f4PiBC++1UnPlyf/iyNxfa1+wjQQZENoxbWKsCislDZ287zE01dHlPq95Tmq22c+KR
+         4D5MH7aMnsbiSC14g0F3rhy/erRARyVv6MVgiezViwp9QBarQ4B8Go/CjI9tAhiUr/
+         KnvTIt287HS4LMzX/yhsLGwqG35AeBoWdd+xt5eUc2fMm8Z4Yr2ryznl+xUFmQbY0F
+         MHJv+ae/xyu1Q==
+From:   Alistair Popple <alistair@popple.id.au>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] mm/rmap: Fixup copying of soft dirty and uffd ptes
+Date:   Tue, 25 Aug 2020 15:19:50 +1000
+Message-ID: <1650521.I2r5EI4MMx@cleo>
+In-Reply-To: <20200824154359.GA8605@xz-x1>
+References: <20200824083128.12684-1-alistair@popple.id.au> <20200824083128.12684-2-alistair@popple.id.au> <20200824154359.GA8605@xz-x1>
 MIME-Version: 1.0
-In-Reply-To: <20200825042210.300632-8-badhri@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/24/20 9:22 PM, Badhri Jagan Sridharan wrote:
-> diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
-> index fa3f39336246..7c9722b02afe 100644
-> --- a/drivers/usb/typec/tcpm/Kconfig
-> +++ b/drivers/usb/typec/tcpm/Kconfig
-> @@ -27,6 +27,12 @@ config TYPEC_RT1711H
->  	  Type-C Port Controller Manager to provide USB PD and USB
->  	  Type-C functionalities.
->  
-> +config TYPEC_TCPCI_MAXIM
-> +	tristate "Maxim TCPCI based Type-C chip driver"
-> +	select USB_PSY
+On Tuesday, 25 August 2020 1:43:59 AM AEST Peter Xu wrote:
+> > --- a/mm/migrate.c
+> > +++ b/mm/migrate.c
+> > @@ -2427,9 +2427,11 @@ static int migrate_vma_collect_pmd(pmd_t *pmdp,
+> > 
+> >  			entry = make_migration_entry(page, mpfn &
+> >  			
+> >  						     MIGRATE_PFN_WRITE);
+> >  			
+> >  			swp_pte = swp_entry_to_pte(entry);
+> > 
+> > -			if (pte_soft_dirty(pte))
+> > +			if ((is_swap_pte(pte) && pte_swp_soft_dirty(pte))
+> > +				|| (!is_swap_pte(pte) && pte_soft_dirty(pte)))
+> > 
+> >  				swp_pte = pte_swp_mksoft_dirty(swp_pte);
+> > 
+> > -			if (pte_uffd_wp(pte))
+> > +			if ((is_swap_pte(pte) && pte_swp_uffd_wp(pte))
+> > +				|| (!is_swap_pte(pte) && pte_uffd_wp(pte)))
+> > 
+> >  				swp_pte = pte_swp_mkuffd_wp(swp_pte);
+> >  			
+> >  			set_pte_at(mm, addr, ptep, swp_pte);
+> 
+> The worst case is we'll call is_swap_pte() four times for each entry. Also
+> considering we know it's not a pte_none() when reach here, how about:
+> 
+>   if (pte_present(pte)) {
+>     // pte handling of both soft dirty and uffd-wp
+>   } else {
+>     // swap handling of both soft dirty and uffd-wp
+>   }
+> 
+> ?
 
-is that        USB_PHY
-?
+Works for me, I'd missed we knew it was not a pte_none() so will respin. 
+Thanks!
 
-> +	help
-> +	  MAXIM TCPCI based Type-C chip driver
-
-end that with '.' please.
-
-> +
->  endif # TYPEC_TCPCI
->  
->  config TYPEC_FUSB302
+ - Alistair
+ 
+> Thanks,
 
 
--- 
-~Randy
+
 
