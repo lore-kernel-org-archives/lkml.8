@@ -2,93 +2,99 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8241CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F195C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 560442067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598344191;
-	bh=0Pja9Pl58vSv4Xj3ePSQToQCG2OjZ4CUiuvoFXfrQ+U=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=rWwdPe0VAAF5ulefeutjtUpSe3rTTcizOaXHaWwOSpNhl3YgeSf/hyfpFk8HiZttr
-	 e921HH0/9lMJHKUAv5cujAFZ3H7ioE0y8pcvqF7LVHuX80g+hsGt5aQr6+5oFEBX0c
-	 7k1C0/w8pM1dfvmJb7WRbcCbGusnOjsiu4am9lXQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7FA9A20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgHYI3s (ORCPT
+        id S1729125AbgHYIan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:29:48 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51197 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbgHYI3r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:29:47 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t2so1544653wma.0;
-        Tue, 25 Aug 2020 01:29:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HkVGZDX8kJI9mI1G++5UxoqItzmkNicQe/GJs1RM9xw=;
-        b=GQdATXdzIx/wDTfKHLjQWZZiCS/UNragrmuNSvhWq66KgK0U1kf2InULpc0/RhKI83
-         cGsFH9vFgFTMBMtYdXmFlwjvN6e+v8N2/jg1+EVhkjBr82qRxNZqqKQtqshKU7kGoBI9
-         ooeQz8Pl56yPa/d/Ry5WkPY4evEYWxeoeVCy2ZVBln/BOtVTGPDQvRkoDaj3BmJELNL4
-         j6qe8iM3Cx+niXE8+eQ32yyV8K1xtzj8rkj8xjXvg9iHQN09aOfAdoipq6PwH3VB/mke
-         cUw86Wv0l16xrOBu5fh9qd22IUJz4/ilicBvs4hgt3hqptr5dyGaW2oafAqFpH8vF9x5
-         k85g==
-X-Gm-Message-State: AOAM532xmEIgsVlCskeskzaHVFm0Q5eXqBgnEC1+ehqCm0lfgvMIVzi1
-        OcEK6DD8HIzrqhnys7ATRDs=
-X-Google-Smtp-Source: ABdhPJyGZYBTYvBnIb1U6Pi6IZyfXdLtVJVjvq4o+WqdI5gMCjQzeo/6wd0xJgWYZ/5Vtdr46sQ3cw==
-X-Received: by 2002:a1c:5f06:: with SMTP id t6mr940487wmb.54.1598344185330;
-        Tue, 25 Aug 2020 01:29:45 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id k204sm4973101wma.21.2020.08.25.01.29.43
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Aug 2020 01:29:44 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 10:29:42 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Adam Ford <aford173@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>, Li Jun <jun.li@nxp.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Han Xu <han.xu@nxp.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 03/16] arm64: dts: imx8mm-beacon-som.dtsi: Align
- regulator names with schema
-Message-ID: <20200825082942.GB12902@kozik-lap>
-References: <20200824190701.8447-1-krzk@kernel.org>
- <20200824190701.8447-3-krzk@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824190701.8447-3-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 25 Aug 2020 04:30:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59538 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725936AbgHYIam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 04:30:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 75CBAB5FE;
+        Tue, 25 Aug 2020 08:31:10 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 10:30:39 +0200
+Message-ID: <s5h4kor6sb4.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>, <stable@vger.kernel.org>
+Subject: Re: [PATCH] Revert "ALSA: hda: Add support for Loongson 7A1000 controller"
+In-Reply-To: <1598343903-2372-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1598343903-2372-1-git-send-email-yangtiezhu@loongson.cn>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 09:06:48PM +0200, Krzysztof Kozlowski wrote:
-> Device tree schema expects regulator names to be lowercase.  This fixes
-> dtbs_check warnings like:
+On Tue, 25 Aug 2020 10:25:03 +0200,
+Tiezhu Yang wrote:
+> 
+> This reverts commit 61eee4a7fc40 ("ALSA: hda: Add support for Loongson
+> 7A1000 controller").
+> 
+> With this patch, there exists the following error on the Loongson LS7A
+> platform:
+> 
+> [  216.639938] rcu: INFO: rcu_preempt self-detected stall on CPU
+> [  216.645685] rcu:     0-....: (1 GPs behind) idle=d5a/1/0x4000000000000004 softirq=562/563 fqs=16476
+> [  216.654565]  (t=53772 jiffies g=-463 q=11976)
+> [  216.658923] NMI backtrace for cpu 0
+> [  216.662417] CPU: 0 PID: 68 Comm: kworker/0:2 Not tainted 5.8.0+ #3
+> [  216.668587] Hardware name:  , BIOS
+> [  216.672174] Workqueue: events azx_probe_work [snd_hda_intel]
+> [  216.677829] Stack : 0000000000000000 0000000000000000 ffffffff95004ce0 d786f9efa2288403
+> [  216.685848]         d786f9efa2288403 0000000000000000 98000001102638c8 ffffffff80cee270
+> [  216.693866]         0000000000000000 0000000000000000 0000000000000000 00000000000002b4
+> [  216.701883]         206b726f775f6562 0000000000000001 0000000000000000 ffffffff80f30000
+> [  216.709902]         ffffffff80f30000 ffffffff80d90000 0000000000000000 0000000000000000
+> [  216.717919]         0000000000000000 0000000000000000 0000000000000000 ffffffff80d90000
+> [  216.725937]         ffffffff80d90000 0000000000000007 ffffffff806aff18 0000000000000000
+> [  216.733955]         ffffffff80f00000 9800000110cc4000 98000001102638c0 ffffffff80d9db80
+> [  216.741974]         ffffffff8065a740 0000000000000000 0000000000000000 0000000000000000
+> [  216.749991]         000073746e657665 0000000000000000 ffffffff80211a64 d786f9efa2288403
+> [  216.758009]         ...
+> [  216.760464] Call Trace:
+> [  216.762920] [<ffffffff80211a64>] show_stack+0x9c/0x130
+> [  216.768058] [<ffffffff8065a740>] dump_stack+0xb0/0xf0
+> [  216.773110] [<ffffffff80665774>] nmi_cpu_backtrace+0x134/0x140
+> [  216.778939] [<ffffffff80665910>] nmi_trigger_cpumask_backtrace+0x190/0x200
+> [  216.785805] [<ffffffff802b1abc>] rcu_dump_cpu_stacks+0x12c/0x190
+> [  216.791806] [<ffffffff802b08cc>] rcu_sched_clock_irq+0xa2c/0xfc8
+> [  216.797808] [<ffffffff802b91d4>] update_process_times+0x2c/0xb8
+> [  216.803724] [<ffffffff802cad80>] tick_sched_timer+0x40/0xb8
+> [  216.809293] [<ffffffff802ba5f0>] __hrtimer_run_queues+0x118/0x1d0
+> [  216.815380] [<ffffffff802bab74>] hrtimer_interrupt+0x12c/0x2d8
+> [  216.821208] [<ffffffff8021547c>] c0_compare_interrupt+0x74/0xa0
+> [  216.827124] [<ffffffff80296bd0>] __handle_irq_event_percpu+0xa8/0x198
+> [  216.833558] [<ffffffff80296cf0>] handle_irq_event_percpu+0x30/0x90
+> [  216.839732] [<ffffffff8029d958>] handle_percpu_irq+0x88/0xb8
+> [  216.845388] [<ffffffff80296124>] generic_handle_irq+0x44/0x60
+> [  216.851131] [<ffffffff80b3cfd0>] do_IRQ+0x18/0x28
+> [  216.855838] [<ffffffff8067ace4>] plat_irq_dispatch+0x64/0x100
+> [  216.861579] [<ffffffff80209a20>] handle_int+0x140/0x14c
+> [  216.866802] [<ffffffff802402e8>] irq_exit+0xf8/0x100
 
-The subject here is not correct. Copy/paste error. I'll fix it up.
+Could you edit the Oops message to drop unnecessary hex numbers,
+timestamps, and whatever redundant for readers?
 
-Best regards,
-Krzysztof
 
+thanks,
+
+Takashi
