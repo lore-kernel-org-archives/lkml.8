@@ -2,185 +2,159 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03369C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D35C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D147620639
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F40B120639
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aw+fUe6n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HX/N1OKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726303AbgHYBnu (ORCPT
+        id S1726593AbgHYBoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 21:43:50 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:50659 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725838AbgHYBnu (ORCPT
+        Mon, 24 Aug 2020 21:44:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725924AbgHYBoR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 21:43:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598319829; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=MhOn/FuuO1NIeV+HcgL78Gl6N1WTliqDO0oEmRfGfgo=;
- b=aw+fUe6npQe+M2SCd0d38pif9baNJNT4e+tu2O5ExI+4//b1uqeISRtMb/4KcADnsCDfQUXa
- dAV2xT0sRV9jyJ1guwrRbqD9IJloTXywiFCi2vB4ltVo6SPM5XbUlCAPcMp/Y6eUD42RNOTu
- jpvTKEz1Lb+r4wEJtauoO2cMwxE=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f446cc476c283d04f5420d5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Aug 2020 01:43:32
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 04113C43387; Tue, 25 Aug 2020 01:43:32 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: mansur)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4428BC433CA;
-        Tue, 25 Aug 2020 01:43:31 +0000 (UTC)
+        Mon, 24 Aug 2020 21:44:17 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC469C061574;
+        Mon, 24 Aug 2020 18:44:16 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id p25so9650662qkp.2;
+        Mon, 24 Aug 2020 18:44:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fe927XpL2PIePdhPHFFj/u8541ev56/XnVnreXE8fcA=;
+        b=HX/N1OKrA8nEMk3KbUEGSvsgJXZ66O7ArZQanOXFOKHFH8g7LzDX5NWzYGBbnI4zqb
+         wP/IPSnUx2tg3MWVN4Ne+z9knP4ww4AEfToG0KsNZ97q2dlx8nXbeMGKb4YPhBF0A0Ll
+         LT95u8c0hezhD1w3n4NBTdZBIxX+JLWz61pYBjdJbCQWKRYaQpTZPiZb3BwAFQYjGy8F
+         9vnLIe/apvqKzKbtJ9u1PxCsJR6PkpL/Ci3pseZ+uf10Aud4uHGG2YmfMnDbcwh6rslx
+         7ZMxPfKPfG++eIn2HooOWbMIz4qZg+r5jrRN9f5c/pYpbM/6iW59prbe2M1dzF0qfPMi
+         9rog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fe927XpL2PIePdhPHFFj/u8541ev56/XnVnreXE8fcA=;
+        b=okw+rdYvEitv9/FgNwTV8oIOHA7PkcWQDE7d03dpC5HulcZTxZNjDK3YeMeDhOEUQB
+         E2VpiEoS43udaZDEzDHLhYlppg32+wti4wBcSJ6FZuheI5lttAk7+hNsRopJKkevXWg/
+         xvHQv/PyRGA0sGy1TvXiozzEgJ84UTLhXBWay7ulAkhBtb/dnSMzuHjyKyT0A2S/iPF/
+         6ArkcsQiaJ3lakag2SL4K91YIa3cNqpuFt9r2wJLfX5CkLh7LLYHgrTYCCTrphu6i67Y
+         Z7tUSyYQHUMVEFvoCSJHiBsSre2TbBi9WCSTHcMMEFpy6GaEkn6jMb97I8vGDHpiuLCe
+         J2uQ==
+X-Gm-Message-State: AOAM530c6oZblmXoTWbCL7dGo8mthBCsp9VtqFdAZ3J5JUP918zETObP
+        9H0H0iDWo5Ircthdth98LK9x9eNE7qHwGQ==
+X-Google-Smtp-Source: ABdhPJxfn+TI8Y9xjJ/3Gk+yyNnj1KyvdpFFZDtO8DBbk/jj8iJP37pLpb5GHc24Due3eBVDeYBEQA==
+X-Received: by 2002:a37:98d:: with SMTP id 135mr7246102qkj.384.1598319856217;
+        Mon, 24 Aug 2020 18:44:16 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id u16sm6625694qkm.121.2020.08.24.18.44.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Aug 2020 18:44:15 -0700 (PDT)
+Subject: Re: [RFC PATCH v2 0/3] mikroBUS driver for add-on boards
+To:     Vaishnav M A <vaishnav@beagleboard.org>,
+        greybus-dev@lists.linaro.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, arnd@arndb.de, johan@kernel.org,
+        elder@kernel.org,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc:     robh@kernel.org, mchehab+huawei@kernel.org, davem@davemloft.net,
+        jkridner@beagleboard.org, drew@beagleboard.org,
+        robertcnelson@beagleboard.org, rajkovic@mikroe.com,
+        chrisfriedt@gmail.com, zoran.stojsavljevic@gmail.com
+References: <20200818124815.11029-1-vaishnav@beagleboard.org>
+ <d53f0014-db7c-902c-70c7-eacac41cc6ed@gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <cc4fc632-caf0-93d8-804f-431ec053133d@gmail.com>
+Date:   Mon, 24 Aug 2020 20:44:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <d53f0014-db7c-902c-70c7-eacac41cc6ed@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 25 Aug 2020 07:13:31 +0530
-From:   mansur@codeaurora.org
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org
-Subject: Re: [RESEND 1/3] venus: core: handle race condititon for core ops
-In-Reply-To: <ef0d6eb2-1834-f4de-7eb2-aad665fc69e4@linaro.org>
-References: <1596781478-12216-1-git-send-email-mansur@codeaurora.org>
- <1596781478-12216-2-git-send-email-mansur@codeaurora.org>
- <dc1f37ed-3786-5bb2-3763-368b0165478b@linaro.org>
- <ef0d6eb2-1834-f4de-7eb2-aad665fc69e4@linaro.org>
-Message-ID: <688d0983201d7426fa4c9409914b7e0b@codeaurora.org>
-X-Sender: mansur@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-21 16:29, Stanimir Varbanov wrote:
-> Hi Mansur,
-> 
-> On 8/10/20 12:50 PM, Stanimir Varbanov wrote:
->> Hi Mansur,
->> 
->> Thanks for the patches!
->> 
->> On 8/7/20 9:24 AM, Mansur Alisha Shaik wrote:
->>> For core ops we are having only write protect but there
->>> is no read protect, because of this in multthreading
->>> and concurrency, one CPU core is reading without wait
->>> which is causing the NULL pointer dereferece crash.
->>> 
->>> one such scenario is as show below, where in one
->>> core core->ops becoming NULL and in another core
->>> calling core->ops->session_init().
->>> 
->>> CPU: core-7:
->>> Call trace:
->>>  hfi_session_init+0x180/0x1dc [venus_core]
->>>  vdec_queue_setup+0x9c/0x364 [venus_dec]
->>>  vb2_core_reqbufs+0x1e4/0x368 [videobuf2_common]
->>>  vb2_reqbufs+0x4c/0x64 [videobuf2_v4l2]
->>>  v4l2_m2m_reqbufs+0x50/0x84 [v4l2_mem2mem]
->>>  v4l2_m2m_ioctl_reqbufs+0x2c/0x38 [v4l2_mem2mem]
->>>  v4l_reqbufs+0x4c/0x5c
->>> __video_do_ioctl+0x2b0/0x39c
->>> 
->>> CPU: core-0:
->>> Call trace:
->>>  venus_shutdown+0x98/0xfc [venus_core]
->>>  venus_sys_error_handler+0x64/0x148 [venus_core]
->>>  process_one_work+0x210/0x3d0
->>>  worker_thread+0x248/0x3f4
->>>  kthread+0x11c/0x12c
->>> 
->>> Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
->>> ---
->>>  drivers/media/platform/qcom/venus/core.c | 2 +-
->>>  drivers/media/platform/qcom/venus/hfi.c  | 5 ++++-
->>>  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> See below comment, otherwise:
-> 
-> Acked-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> 
->>> 
->>> diff --git a/drivers/media/platform/qcom/venus/core.c 
->>> b/drivers/media/platform/qcom/venus/core.c
->>> index 203c653..fe99c83 100644
->>> --- a/drivers/media/platform/qcom/venus/core.c
->>> +++ b/drivers/media/platform/qcom/venus/core.c
->>> @@ -64,8 +64,8 @@ static void venus_sys_error_handler(struct 
->>> work_struct *work)
->>>  	pm_runtime_get_sync(core->dev);
->>> 
->>>  	hfi_core_deinit(core, true);
->>> -	hfi_destroy(core);
->>>  	mutex_lock(&core->lock);
->>> +	hfi_destroy(core);
->> 
->> As my recovery fixes [1] touches this part also, could you please 
->> apply
->> them on top of yours and re-test?
-> 
-> I'll drop above chunk from the patch because it is already taken into
-> account in my recovery fixes series and queue up the patch for v5.10.
-> 
-yes, you can drop. I have validated these patches on top of your 
-recovery patch
-series. I will push V2 with dependency on "venus - recovery from 
-frimware crash"
-series 
-(https://lore.kernel.org/patchwork/project/lkml/list/?series=455962)
+Hi Vaishnav,
 
->> 
->> Otherwise this patch looks good to me.
->> 
->> [1] https://www.spinics.net/lists/linux-arm-msm/msg70092.html
->> 
->>>  	venus_shutdown(core);
->>> 
->>>  	pm_runtime_put_sync(core->dev);
->>> diff --git a/drivers/media/platform/qcom/venus/hfi.c 
->>> b/drivers/media/platform/qcom/venus/hfi.c
->>> index a211eb9..2eeb31f 100644
->>> --- a/drivers/media/platform/qcom/venus/hfi.c
->>> +++ b/drivers/media/platform/qcom/venus/hfi.c
->>> @@ -195,7 +195,7 @@ EXPORT_SYMBOL_GPL(hfi_session_create);
->>>  int hfi_session_init(struct venus_inst *inst, u32 pixfmt)
->>>  {
->>>  	struct venus_core *core = inst->core;
->>> -	const struct hfi_ops *ops = core->ops;
->>> +	const struct hfi_ops *ops;
->>>  	int ret;
->>> 
->>>  	if (inst->state != INST_UNINIT)
->>> @@ -204,10 +204,13 @@ int hfi_session_init(struct venus_inst *inst, 
->>> u32 pixfmt)
->>>  	inst->hfi_codec = to_codec_type(pixfmt);
->>>  	reinit_completion(&inst->done);
->>> 
->>> +	mutex_lock(&core->lock);
->>> +	ops = core->ops;
->>>  	ret = ops->session_init(inst, inst->session_type, inst->hfi_codec);
->>>  	if (ret)
->>>  		return ret;
->>> 
->>> +	mutex_unlock(&core->lock);
->>>  	ret = wait_session_msg(inst);
->>>  	if (ret)
->>>  		return ret;
->>> 
->> 
+Apologies in advance -- I expect to be very slow in responding this
+week.  Linux Plumbers will take some of my time and I am moving to
+a new home.
+
+-Frank
+
+
+On 2020-08-18 15:38, Frank Rowand wrote:
+> Hi Vaishnav,
+> 
+> +me +devicetree
+> 
+> Please add these two recipients to future versions.
+> 
+> I will comment more after reading the first version and v2.
+> 
+> -Frank
+> 
+> 
+> On 2020-08-18 07:48, Vaishnav M A wrote:
+>> Hi,
+>>
+>> This Patch series is an update to the mikroBUS driver
+>> RFC v1 Patch : https://lkml.org/lkml/2020/7/24/518 .
+>> The mikrobus driver is updated to add mikrobus ports from device-tree
+>> overlays, the debug interfaces for adding mikrobus ports through sysFS
+>> is removed, and the driver considers the extended usage of mikrobus
+>> port pins from their standard purposes.
+>>
+>> change log:
+>>         v2: support for adding mikroBUS ports from DT overlays,
+>>         remove debug sysFS interface for adding mikrobus ports,
+>>         consider extended pin usage/deviations from mikrobus standard
+>>         specifications,
+>>         use greybus CPort protocol enum instead of new protcol enums
+>>         Fix cases of wrong indendation, ignoring return values, freeing
+>>         allocated resources in case of errors and other style suggestions
+>>         in v1 review.
+>>
+>> Vaishnav M A (3):
+>>   add mikrobus descriptors to greybus_manifest
+>>   mikroBUS driver for add-on boards on mikrobus ports
+>>   Add Device Tree Bindings for mikroBUS port
+>>
+>>  .../bindings/misc/linux,mikrobus.txt          |  81 ++
+>>  MAINTAINERS                                   |   6 +
+>>  drivers/misc/Kconfig                          |   1 +
+>>  drivers/misc/Makefile                         |   1 +
+>>  drivers/misc/mikrobus/Kconfig                 |  16 +
+>>  drivers/misc/mikrobus/Makefile                |   7 +
+>>  drivers/misc/mikrobus/mikrobus_core.c         | 692 ++++++++++++++++++
+>>  drivers/misc/mikrobus/mikrobus_core.h         | 191 +++++
+>>  drivers/misc/mikrobus/mikrobus_manifest.c     | 444 +++++++++++
+>>  drivers/misc/mikrobus/mikrobus_manifest.h     |  21 +
+>>  drivers/misc/mikrobus/mikrobus_port.c         | 171 +++++
+>>  include/linux/greybus/greybus_manifest.h      |  47 ++
+>>  12 files changed, 1678 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/misc/linux,mikrobus.txt
+>>  create mode 100644 drivers/misc/mikrobus/Kconfig
+>>  create mode 100644 drivers/misc/mikrobus/Makefile
+>>  create mode 100644 drivers/misc/mikrobus/mikrobus_core.c
+>>  create mode 100644 drivers/misc/mikrobus/mikrobus_core.h
+>>  create mode 100644 drivers/misc/mikrobus/mikrobus_manifest.c
+>>  create mode 100644 drivers/misc/mikrobus/mikrobus_manifest.h
+>>  create mode 100644 drivers/misc/mikrobus/mikrobus_port.c
+>>
+> 
+
