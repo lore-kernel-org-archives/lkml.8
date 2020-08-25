@@ -2,89 +2,125 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04489C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F463C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDE1F2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598347061;
-	bh=9QeGB1fXHAQSQh1eR70hPqgCS2Tc/JeiZO9IWAi9qPI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=JSmwn7oMBnUKilUk0R9NykyRTLekt8uuE0OJmfumaH+OKFJPQBQXVNKsiG6mo7EbN
-	 XttZcZiPp8Hb0uvPqddZAK3Fbk+enJ9xleEpX+NEhJ5MNQsGNOZ5iTVd4wkPHjRRrc
-	 mLduUGNz6gZIoYpgWaadMEUCWir3o8O/HxnpUhlc=
+	by mail.kernel.org (Postfix) with ESMTP id 53D732068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbgHYJRk (ORCPT
+        id S1729433AbgHYJRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729200AbgHYJRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:17:38 -0400
-Received: from coco.lan (ip5f5ad5a4.dynamic.kabel-deutschland.de [95.90.213.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6BD92068F;
-        Tue, 25 Aug 2020 09:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598347058;
-        bh=9QeGB1fXHAQSQh1eR70hPqgCS2Tc/JeiZO9IWAi9qPI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QG7lkNYwhNzmsuyMt4/05k2/nQtRbBggtJoeFDNh43HKu1cyq/RW+kDL/sSos3BjP
-         10aD46wy0Ay6dlEnwr/KfVlcIXcJCt/eFBMr4imMKhwDAYwvnausAPPsO+CYy7mlV/
-         ZQHB0va3N/VTA1WXmQtBZoSLZIgS74HDyhUHkGwI=
-Date:   Tue, 25 Aug 2020 11:17:34 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] staging: spmi: hisi-spmi-controller: fix spelling
- mistake "controlller" -> "controller"
-Message-ID: <20200825111734.40c13380@coco.lan>
-In-Reply-To: <20200820075136.186199-1-colin.king@canonical.com>
-References: <20200820075136.186199-1-colin.king@canonical.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 25 Aug 2020 05:17:51 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:45318 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728245AbgHYJRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:17:49 -0400
+Received: from localhost.localdomain (unknown [10.20.41.73])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxf8cs10RfZ78NAA--.460S3;
+        Tue, 25 Aug 2020 17:17:33 +0800 (CST)
+Subject: Re: [PATCH] Revert "ALSA: hda: Add support for Loongson 7A1000
+ controller"
+To:     Takashi Iwai <tiwai@suse.de>
+References: <1598343903-2372-1-git-send-email-yangtiezhu@loongson.cn>
+ <s5h4kor6sb4.wl-tiwai@suse.de>
+Cc:     Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>, stable@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <35883e9a-9d2a-624a-66c8-cace17ae6673@loongson.cn>
+Date:   Tue, 25 Aug 2020 17:17:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <s5h4kor6sb4.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf9Dxf8cs10RfZ78NAA--.460S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFy3GFyrGry3Jryftw1DZFb_yoW5uw4Dpr
+        y8Jr4UCw40qr17Gr1Yyrs8Jr97Kr4UA3WUJ348trn8ZF1UWr17Jw1UtFWUKr1DJr15try7
+        J39rAF4rKryUG3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvS14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+        IcxG8wCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
+        IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
+        6r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
+        IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280
+        aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43
+        ZEXa7VUbKsjUUUUUU==
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 20 Aug 2020 08:51:36 +0100
-Colin King <colin.king@canonical.com> escreveu:
+On 08/25/2020 04:30 PM, Takashi Iwai wrote:
+> On Tue, 25 Aug 2020 10:25:03 +0200,
+> Tiezhu Yang wrote:
+>> This reverts commit 61eee4a7fc40 ("ALSA: hda: Add support for Loongson
+>> 7A1000 controller").
+>>
+>> With this patch, there exists the following error on the Loongson LS7A
+>> platform:
+>>
+>> [  216.639938] rcu: INFO: rcu_preempt self-detected stall on CPU
+>> [  216.645685] rcu:     0-....: (1 GPs behind) idle=d5a/1/0x4000000000000004 softirq=562/563 fqs=16476
+>> [  216.654565]  (t=53772 jiffies g=-463 q=11976)
+>> [  216.658923] NMI backtrace for cpu 0
+>> [  216.662417] CPU: 0 PID: 68 Comm: kworker/0:2 Not tainted 5.8.0+ #3
+>> [  216.668587] Hardware name:  , BIOS
+>> [  216.672174] Workqueue: events azx_probe_work [snd_hda_intel]
+>> [  216.677829] Stack : 0000000000000000 0000000000000000 ffffffff95004ce0 d786f9efa2288403
+>> [  216.685848]         d786f9efa2288403 0000000000000000 98000001102638c8 ffffffff80cee270
+>> [  216.693866]         0000000000000000 0000000000000000 0000000000000000 00000000000002b4
+>> [  216.701883]         206b726f775f6562 0000000000000001 0000000000000000 ffffffff80f30000
+>> [  216.709902]         ffffffff80f30000 ffffffff80d90000 0000000000000000 0000000000000000
+>> [  216.717919]         0000000000000000 0000000000000000 0000000000000000 ffffffff80d90000
+>> [  216.725937]         ffffffff80d90000 0000000000000007 ffffffff806aff18 0000000000000000
+>> [  216.733955]         ffffffff80f00000 9800000110cc4000 98000001102638c0 ffffffff80d9db80
+>> [  216.741974]         ffffffff8065a740 0000000000000000 0000000000000000 0000000000000000
+>> [  216.749991]         000073746e657665 0000000000000000 ffffffff80211a64 d786f9efa2288403
+>> [  216.758009]         ...
+>> [  216.760464] Call Trace:
+>> [  216.762920] [<ffffffff80211a64>] show_stack+0x9c/0x130
+>> [  216.768058] [<ffffffff8065a740>] dump_stack+0xb0/0xf0
+>> [  216.773110] [<ffffffff80665774>] nmi_cpu_backtrace+0x134/0x140
+>> [  216.778939] [<ffffffff80665910>] nmi_trigger_cpumask_backtrace+0x190/0x200
+>> [  216.785805] [<ffffffff802b1abc>] rcu_dump_cpu_stacks+0x12c/0x190
+>> [  216.791806] [<ffffffff802b08cc>] rcu_sched_clock_irq+0xa2c/0xfc8
+>> [  216.797808] [<ffffffff802b91d4>] update_process_times+0x2c/0xb8
+>> [  216.803724] [<ffffffff802cad80>] tick_sched_timer+0x40/0xb8
+>> [  216.809293] [<ffffffff802ba5f0>] __hrtimer_run_queues+0x118/0x1d0
+>> [  216.815380] [<ffffffff802bab74>] hrtimer_interrupt+0x12c/0x2d8
+>> [  216.821208] [<ffffffff8021547c>] c0_compare_interrupt+0x74/0xa0
+>> [  216.827124] [<ffffffff80296bd0>] __handle_irq_event_percpu+0xa8/0x198
+>> [  216.833558] [<ffffffff80296cf0>] handle_irq_event_percpu+0x30/0x90
+>> [  216.839732] [<ffffffff8029d958>] handle_percpu_irq+0x88/0xb8
+>> [  216.845388] [<ffffffff80296124>] generic_handle_irq+0x44/0x60
+>> [  216.851131] [<ffffffff80b3cfd0>] do_IRQ+0x18/0x28
+>> [  216.855838] [<ffffffff8067ace4>] plat_irq_dispatch+0x64/0x100
+>> [  216.861579] [<ffffffff80209a20>] handle_int+0x140/0x14c
+>> [  216.866802] [<ffffffff802402e8>] irq_exit+0xf8/0x100
+> Could you edit the Oops message to drop unnecessary hex numbers,
+> timestamps, and whatever redundant for readers?
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in the MODULE_ALIAS, fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-> ---
->  drivers/staging/hikey9xx/hisi-spmi-controller.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-> index 66a0b296e06f..b132b2a5d939 100644
-> --- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
-> +++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-> @@ -354,4 +354,4 @@ module_exit(spmi_controller_exit);
->  
->  MODULE_LICENSE("GPL v2");
->  MODULE_VERSION("1.0");
-> -MODULE_ALIAS("platform:spmi_controlller");
-> +MODULE_ALIAS("platform:spmi_controller");
-
-
+OK, thanks for your reply.
+I will do it and then send v2 soon.
 
 Thanks,
-Mauro
+Tiezhu
+
+>
+>
+> thanks,
+>
+> Takashi
+
