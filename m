@@ -5,120 +5,174 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8798AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B84AFC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E6CA2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8185520767
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:21:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gS6L/Rjl"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ZZUjbEkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726880AbgHYXVQ (ORCPT
+        id S1726894AbgHYXVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:21:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26754 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726856AbgHYXVJ (ORCPT
+        Tue, 25 Aug 2020 19:21:30 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:8734 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726751AbgHYXUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:21:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598397667;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=xNdewgWH8gCx0lJ9ZMNVoHAdBDGRlASSw/JoCtrkyuQ=;
-        b=gS6L/RjlUrQFmw6/x7+bKXc9iuR77y3mv9W9QQOHNqSmbR0yYHZ1KnArcdc+1ZmcmPtbfX
-        O5yiNPzBSIka1nqv7uVhNjgqrj8RzvvySDsuDhnozCDE8AuF9M5IiyCye1suuJ6fereMJU
-        MGRTLVWXeW5IBgBctvS51MgPei7AYVU=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-562-IXargCX3PeiR3-rlPZnnTA-1; Tue, 25 Aug 2020 19:21:05 -0400
-X-MC-Unique: IXargCX3PeiR3-rlPZnnTA-1
-Received: by mail-qv1-f72.google.com with SMTP id y7so47500qvj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:21:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=xNdewgWH8gCx0lJ9ZMNVoHAdBDGRlASSw/JoCtrkyuQ=;
-        b=BkDCihUvU75WmpLJ+28E+hy6qf3CM41/ROjo7RX4/MQ0YDU6s1GDeS/0x7B6TsbSHP
-         Xqkwb6MbMm3mVAoALFNrmCStuILeGK2EOF9WHQamo6Pd7afTpVa+19Sj1Ozo5bSyl2m9
-         WBvSZ2bGnZuHQMB+ZsdRu63aClwGYlSh5v7Dr8AFWDqRP36p8TmwCgZBnPLjtEAEfN8g
-         9NvsCyQFL/TOpsaln/F8zkg4kuXypplW65GSddktAVd999iYP0ePAJ5CPoOagRUk/IZ2
-         TaDOuivzd8fNUCsjxSEeMRwfG8wBGW+xbcicsug6KgGoVstBdq8BX2Swnbv+aDqYFYve
-         q0rQ==
-X-Gm-Message-State: AOAM531qieig42b7NGNWt+8BxhA8oQxbADbjUkBeSKgWCcmm7PUyhJEc
-        hV+Gncz8IRksMJ4lt7qBUWg2zrXOkiGusdfqxNq6wGUXS3627Q37IgzyqB0+wFNP6EI2oHm0ux7
-        SL1IPCTO9Q8QsK9Tww/t8wNLU
-X-Received: by 2002:ac8:17f1:: with SMTP id r46mr5963452qtk.135.1598397664838;
-        Tue, 25 Aug 2020 16:21:04 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJx8I7EJn0X+Y1AjXauBs3W/d3tk01cGPGwK4MefHhs4PA5UeDTE8BAPGY84Kz1xBSI26HkGwA==
-X-Received: by 2002:ac8:17f1:: with SMTP id r46mr5963432qtk.135.1598397664642;
-        Tue, 25 Aug 2020 16:21:04 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id g55sm494590qta.94.2020.08.25.16.21.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 16:21:04 -0700 (PDT)
-From:   trix@redhat.com
-To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        jose.souza@intel.com, matthew.d.roper@intel.com,
-        anusha.srivatsa@intel.com, pankaj.laxminarayan.bharadiya@intel.com,
-        wambui.karugax@gmail.com, vivek.kasireddy@intel.com
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
-Subject: [PATCH] drm/i915/display: fix uninitialized variable
-Date:   Tue, 25 Aug 2020 16:20:57 -0700
-Message-Id: <20200825232057.31601-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Tue, 25 Aug 2020 19:20:52 -0400
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PNHJcm016374
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:20:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=gHRsN4yg6VWCazPfiN3ZDsGxHrKWI0qlbo1YebDXZV0=;
+ b=ZZUjbEkAvsanzKD+Z4ButmM3NXVKUGuo01SKsEvW39nds+3gCw1lmiVK6Zic4ERN2+xm
+ CbmZlYNXOw9ft75XuA8/e1eRQ2Fxa+nUzbFFWf9VP4jjb08MkpHiRjU0NN44s0gghLfG
+ aLkdSVa4HLUiCwvgRUZ76Us/h8BVZvSIguM= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 333jv9x0tv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:20:51 -0700
+Received: from intmgw002.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 25 Aug 2020 16:20:50 -0700
+Received: by devbig218.frc2.facebook.com (Postfix, from userid 116055)
+        id A2B9620785A; Tue, 25 Aug 2020 16:20:48 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Udip Pant <udippant@fb.com>
+Smtp-Origin-Hostname: devbig218.frc2.facebook.com
+To:     Udip Pant <udippant@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Smtp-Origin-Cluster: frc2c02
+Subject: [PATCH bpf-next v3 3/4] selftests/bpf: test for checking return code for the extended prog
+Date:   Tue, 25 Aug 2020 16:20:02 -0700
+Message-ID: <20200825232003.2877030-4-udippant@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200825232003.2877030-1-udippant@fb.com>
+References: <20200825232003.2877030-1-udippant@fb.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_10:2020-08-25,2020-08-25 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
+ suspectscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1015 mlxscore=0
+ spamscore=0 adultscore=0 impostorscore=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250173
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+This adds test to enforce same check for the return code for the extended=
+ prog
+as it is enforced for the target program. It asserts failure for a
+return code, which is permitted without the patch in this series, while
+it is restricted after the application of this patch.
 
-clang static analysis flags this error
-
-intel_combo_phy.c:268:7: warning: The left expression of the
-  compound assignment is an uninitialized value.
-  The computed value will also be garbage
-                ret &= check_phy_reg(...
-                ~~~ ^
-
-ret has no initial values, in icl_combo_phy_verify_state() ret is
-set by the next statment and then updated by similar &= logic.
-
-Because the check_phy_req() are only register reads, reorder the
-statements.
-
-Fixes: 239bef676d8e ("drm/i915/display: Implement new combo phy initialization step")
-Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Udip Pant <udippant@fb.com>
 ---
- drivers/gpu/drm/i915/display/intel_combo_phy.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../selftests/bpf/prog_tests/fexit_bpf2bpf.c  | 40 +++++++++++++++++++
+ .../bpf/progs/freplace_connect_v4_prog.c      | 19 +++++++++
+ 2 files changed, 59 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/progs/freplace_connect_v4=
+_prog.c
 
-diff --git a/drivers/gpu/drm/i915/display/intel_combo_phy.c b/drivers/gpu/drm/i915/display/intel_combo_phy.c
-index 6968de4f3477..7622ef66c987 100644
---- a/drivers/gpu/drm/i915/display/intel_combo_phy.c
-+++ b/drivers/gpu/drm/i915/display/intel_combo_phy.c
-@@ -264,6 +264,8 @@ static bool icl_combo_phy_verify_state(struct drm_i915_private *dev_priv,
- 	if (!icl_combo_phy_enabled(dev_priv, phy))
- 		return false;
- 
-+	ret = cnl_verify_procmon_ref_values(dev_priv, phy);
+diff --git a/tools/testing/selftests/bpf/prog_tests/fexit_bpf2bpf.c b/too=
+ls/testing/selftests/bpf/prog_tests/fexit_bpf2bpf.c
+index 7c7168963d52..d295ca9bbf96 100644
+--- a/tools/testing/selftests/bpf/prog_tests/fexit_bpf2bpf.c
++++ b/tools/testing/selftests/bpf/prog_tests/fexit_bpf2bpf.c
+@@ -142,10 +142,50 @@ static void test_func_replace_verify(void)
+ 				  prog_name, false);
+ }
+=20
++static void test_func_replace_return_code(void)
++{
++	/*
++	 * standalone test that asserts failure to load freplace prog
++	 * because of invalid return code.
++	 */
++	struct bpf_object *obj =3D NULL, *pkt_obj;
++	int err, pkt_fd;
++	__u32 duration =3D 0;
++	const char *target_obj_file =3D "./connect4_prog.o";
++	const char *obj_file =3D "./freplace_connect_v4_prog.o";
 +
- 	if (INTEL_GEN(dev_priv) >= 12) {
- 		ret &= check_phy_reg(dev_priv, phy, ICL_PORT_TX_DW8_LN0(phy),
- 				     ICL_PORT_TX_DW8_ODCC_CLK_SEL |
-@@ -276,8 +278,6 @@ static bool icl_combo_phy_verify_state(struct drm_i915_private *dev_priv,
- 				     DCC_MODE_SELECT_CONTINUOSLY);
- 	}
- 
--	ret = cnl_verify_procmon_ref_values(dev_priv, phy);
--
- 	if (phy_is_master(dev_priv, phy)) {
- 		ret &= check_phy_reg(dev_priv, phy, ICL_PORT_COMP_DW8(phy),
- 				     IREFGEN, IREFGEN);
--- 
-2.18.1
++	err =3D bpf_prog_load(target_obj_file, BPF_PROG_TYPE_UNSPEC,
++			    &pkt_obj, &pkt_fd);
++	/* the target prog should load fine */
++	if (CHECK(err, "tgt_prog_load", "file %s err %d errno %d\n",
++		  target_obj_file, err, errno))
++		return;
++	DECLARE_LIBBPF_OPTS(bpf_object_open_opts, opts,
++			    .attach_prog_fd =3D pkt_fd,
++			   );
++
++	obj =3D bpf_object__open_file(obj_file, &opts);
++	if (CHECK(IS_ERR_OR_NULL(obj), "obj_open",
++		  "failed to open %s: %ld\n", obj_file,
++		  PTR_ERR(obj)))
++		goto close_prog;
++
++	/* It should fail to load the program */
++	err =3D bpf_object__load(obj);
++	if (CHECK(!err, "bpf_obj_load should fail", "err %d\n", err))
++		goto close_prog;
++
++close_prog:
++	if (!IS_ERR_OR_NULL(obj))
++		bpf_object__close(obj);
++	bpf_object__close(pkt_obj);
++}
++
+ void test_fexit_bpf2bpf(void)
+ {
+ 	test_target_no_callees();
+ 	test_target_yes_callees();
+ 	test_func_replace();
+ 	test_func_replace_verify();
++	test_func_replace_return_code();
+ }
+diff --git a/tools/testing/selftests/bpf/progs/freplace_connect_v4_prog.c=
+ b/tools/testing/selftests/bpf/progs/freplace_connect_v4_prog.c
+new file mode 100644
+index 000000000000..544e5ac90461
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/freplace_connect_v4_prog.c
+@@ -0,0 +1,19 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2020 Facebook
++
++#include <linux/stddef.h>
++#include <linux/ipv6.h>
++#include <linux/bpf.h>
++#include <linux/in.h>
++#include <sys/socket.h>
++#include <bpf/bpf_helpers.h>
++#include <bpf/bpf_endian.h>
++
++SEC("freplace/connect_v4_prog")
++int new_connect_v4_prog(struct bpf_sock_addr *ctx)
++{
++	// return value thats in invalid range
++	return 255;
++}
++
++char _license[] SEC("license") =3D "GPL";
+--=20
+2.24.1
 
