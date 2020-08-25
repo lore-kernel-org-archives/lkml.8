@@ -2,248 +2,325 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5875CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E768C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBF520738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:48:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fn1R1h9N"
+	by mail.kernel.org (Postfix) with ESMTP id 5619120738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:50:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598327441;
+	bh=/qaH/Df2BjIuDnX7glMJFXv/aDKx+6dGkNKeusDOWLk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=C3sgMg9SsX0cIsXxoNh7wIyqFr24nShP42C8fnEGVvvrt93lGLaCbLDmE0WVchWGg
+	 GaX8D9lrUltH7Nn/JIUni6L8lmib2O1KXgCC9M4UFPsIEyt1IB4zjk/00bgTLdYGqX
+	 dKMKQBqZfAyYEWC3akWYUZNA6bnY6rBfRKt4M5xg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgHYDsz (ORCPT
+        id S1728524AbgHYDuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 23:48:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728080AbgHYDsw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 23:48:52 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A7BC0613ED
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 20:48:52 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id v15so5857065pgh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 20:48:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=aYCn5QzgD8cBzr9wMS/HNmt2b1qxEaqPTWvWzDbRA+8=;
-        b=Fn1R1h9NXvFEDBjED+T+U09XJsCGUH7Qru9WsZ+Dcjw4lo7YD8BSz5I5y42FVIxwkR
-         8wvJTZuv+uphBrJhVqBLcvT4K0lUymIVcQ3ZEwHAAfjbVaN/HAH/x/QXk0GUNWs0nUr0
-         8SH+lobmWvB3XaJJwxp0yYdqBRMQIL8MeCm3VHXjbpIsTVm4UVVlsxaLfZ5VstjMDg0R
-         JEKDRN1E7s3GTvcAh8ANZRjbKZW2q+8ujSADRB++jPThc9wZswv0+wzXhlBVlMfrTMlH
-         WZBdrcrGSVvnBD6bO710fnzKcbh3lWEFYHUp06juJUn0pmlmBAoXZ1k1AEmdlsQZ3dwO
-         NJlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=aYCn5QzgD8cBzr9wMS/HNmt2b1qxEaqPTWvWzDbRA+8=;
-        b=gQw06YAO4Pl0gqgnxTEd13ZLRI6y5Xpkh+muCpW1ylcbEJnThC2/zHyjgUA1PxTtbF
-         gaIlfArrs33eevsgIQkKFS8BT4oC3T2ic4AGS5aSq6ySYTpzrvNDr/+JbwtL9skV0klD
-         10kIGMfALU44s4KPJa+q1FpwDOHp0Mli//IOvUEvk/c2Ndr3SUocrO/V3TTtwypg7EZb
-         0ho9rxLukT7PHzBYKjBirPzbMWo+BPSIc2HF/VSLxzjxHG+WJH41B0YT7QF1ps2inybi
-         HyKu8qbWQ7KPHeT5UCR8mchvpHRPI9iBp0GY69jzf2pYWThiYLCGAeKC+21qEaGKwe1o
-         QVsw==
-X-Gm-Message-State: AOAM533IY598vg02WVigFgw9vadpPg3fDDhCPFJYsyNkSEV8/v00l3ob
-        a52yEc8Bd0CHnmejIXayXmnd
-X-Google-Smtp-Source: ABdhPJxPZ3y+C1GEKw/JDVnyXmX1Cpe0y/2M+T6mT6GubLJdX6NbiXts0PgV5/WPV1WZ9E5aKMtNfA==
-X-Received: by 2002:a17:902:aa89:: with SMTP id d9mr5032347plr.192.1598327331970;
-        Mon, 24 Aug 2020 20:48:51 -0700 (PDT)
-Received: from ?IPv6:2409:4072:514:1a63:11c2:1447:3b94:7811? ([2409:4072:514:1a63:11c2:1447:3b94:7811])
-        by smtp.gmail.com with ESMTPSA id ce8sm951978pjb.24.2020.08.24.20.48.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 20:48:51 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 09:18:43 +0530
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200822232405.GA2261833@BV030612LT>
-References: <cover.1598043782.git.cristian.ciocaltea@gmail.com> <20200821222653.GA2255465@BV030612LT> <20200822131343.GA5954@Mani-XPS-13-9360> <20200822232405.GA2261833@BV030612LT>
+        Mon, 24 Aug 2020 23:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728080AbgHYDuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 23:50:39 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF55420665;
+        Tue, 25 Aug 2020 03:50:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598327438;
+        bh=/qaH/Df2BjIuDnX7glMJFXv/aDKx+6dGkNKeusDOWLk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Pqhw2dYFDJDJ4xe2JZ/DeHzdi72rteajBIf3gFrGLdbChFC1WT6kbSCwJJz7jwy/M
+         vT5/SQf8EHg4ZOfVVX4PLiECRO0ikm6uKB1Dh+QMq69GDdE28NwK9oRxj6x5rXkaNx
+         k9ea63AnL4lck3rLkMpzQ+JYcNe6ljtw0E3tj2Qg=
+Date:   Mon, 24 Aug 2020 20:50:36 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Lokesh Gidra <lokeshgidra@google.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        James Morris <jmorris@namei.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Daniel Colascione <dancol@dancol.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        KP Singh <kpsingh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Thomas Cedeno <thomascedeno@google.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Aaron Goidel <acgoide@tycho.nsa.gov>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Adrian Reber <areber@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        kaleshsingh@google.com, calin@google.com, surenb@google.com,
+        nnk@google.com, jeffv@google.com, kernel-team@android.com,
+        Daniel Colascione <dancol@google.com>
+Subject: Re: [PATCH v7 1/3] Add a new LSM-supporting anonymous inode interface
+Message-ID: <20200825035036.GC810@sol.localdomain>
+References: <20200821185645.801971-1-lokeshgidra@google.com>
+ <20200821185645.801971-2-lokeshgidra@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 0/6] Add initial support for ATC260x PMICs
-To:     Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>,
-        linux-actions@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-pm@vger.kernel.org
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Message-ID: <0AD08A2D-9058-4CEF-ACE0-7E8DB1015400@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821185645.801971-2-lokeshgidra@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 21, 2020 at 11:56:43AM -0700, Lokesh Gidra wrote:
+> From: Daniel Colascione <dancol@google.com>
+> 
+> This change adds a new function, anon_inode_getfd_secure, that creates
+> anonymous-node file with individual non-S_PRIVATE inode to which security
+> modules can apply policy. Existing callers continue using the original
+> singleton-inode kind of anonymous-inode file. We can transition anonymous
+> inode users to the new kind of anonymous inode in individual patches for
+> the sake of bisection and review.
+> 
+> The new function accepts an optional context_inode parameter that
+> callers can use to provide additional contextual information to
+> security modules for granting/denying permission to create an anon inode
+> of the same type.
+> 
+> For example, in case of userfaultfd, the created inode is a
+> 'logical child' of the context_inode (userfaultfd inode of the
+> parent process) in the sense that it provides the security context
+> required during creation of the child process' userfaultfd inode.
+> 
+> Signed-off-by: Daniel Colascione <dancol@google.com>
+> 
+> [Fix comment documenting return values of inode_init_security_anon()]
+> [Add context_inode description in comments to anon_inode_getfd_secure()]
+> [Remove definition of anon_inode_getfile_secure() as there are no callers]
+> [Make _anon_inode_getfile() static]
+> [Use correct error cast in _anon_inode_getfile()]
+> 
+> Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
+> ---
+>  fs/anon_inodes.c              | 148 ++++++++++++++++++++++++----------
+>  include/linux/anon_inodes.h   |  13 +++
+>  include/linux/lsm_hook_defs.h |   2 +
+>  include/linux/lsm_hooks.h     |   7 ++
+>  include/linux/security.h      |   3 +
+>  security/security.c           |   9 +++
+>  6 files changed, 141 insertions(+), 41 deletions(-)
+> 
+> diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
+> index 89714308c25b..2aa8b57be895 100644
+> --- a/fs/anon_inodes.c
+> +++ b/fs/anon_inodes.c
+> @@ -55,61 +55,78 @@ static struct file_system_type anon_inode_fs_type = {
+>  	.kill_sb	= kill_anon_super,
+>  };
+>  
+> -/**
+> - * anon_inode_getfile - creates a new file instance by hooking it up to an
+> - *                      anonymous inode, and a dentry that describe the "class"
+> - *                      of the file
+> - *
+> - * @name:    [in]    name of the "class" of the new file
+> - * @fops:    [in]    file operations for the new file
+> - * @priv:    [in]    private data for the new file (will be file's private_data)
+> - * @flags:   [in]    flags
+> - *
+> - * Creates a new file by hooking it on a single inode. This is useful for files
+> - * that do not need to have a full-fledged inode in order to operate correctly.
+> - * All the files created with anon_inode_getfile() will share a single inode,
+> - * hence saving memory and avoiding code duplication for the file/inode/dentry
+> - * setup.  Returns the newly created file* or an error pointer.
+> - */
+> -struct file *anon_inode_getfile(const char *name,
+> -				const struct file_operations *fops,
+> -				void *priv, int flags)
+> +static struct inode *anon_inode_make_secure_inode(
+> +	const char *name,
+> +	const struct inode *context_inode)
+> +{
+> +	struct inode *inode;
+> +	const struct qstr qname = QSTR_INIT(name, strlen(name));
+> +	int error;
+> +
+> +	inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
+> +	if (IS_ERR(inode))
+> +		return inode;
+> +	inode->i_flags &= ~S_PRIVATE;
+> +	error =	security_inode_init_security_anon(
+> +		inode, &qname, context_inode);
 
+Weird indentation here.  The call to security_inode_init_security_anon() fits on
+one line.
 
-On 23 August 2020 4:54:05 AM IST, Cristian Ciocaltea <cristian=2Eciocaltea=
-@gmail=2Ecom> wrote:
->Hi Mani,
->
->On Sat, Aug 22, 2020 at 06:43:43PM +0530, Manivannan Sadhasivam wrote:
->> Hi Cristi,
->>=20
->> Thanks for the series! I'll take a look soon but there is a quick
->comment
->> below=2E
->>=20
->> On Sat, Aug 22, 2020 at 01:26:53AM +0300, Cristian Ciocaltea wrote:
->> > I have just realized I had omitted the changelog - sorry:
->> >=20
->> > Changes in v2:
->> > - Reworked MFD core & I2C driver
->> >   * Integrated Lee's feedback
->> >   * Added support for using the regmap within atomic contexts
->> >   * Added support for ATC2603C chip variant
->> >   * Reorganized KConfig entries
->> > - Improved regulator driver
->> >   * Added support for ATC2603C variant
->> >   * Used helper macros for more compact specification of
->regulator_desc items
->> >   * Added more regulator capabilities
->> > - Added power controller driver
->> >   * Provides system poweroff/reboot functionalities
->> >   * Requires support for I2C Atomic transfers in the Owl driver
->(already submitted)
->> > - Added onkey driver: exposes the power button as an input device
->> > - Added yaml binding doc
->> > - Rebased patchset on kernel v5=2E9-rc1
->> >=20
->> > Kind regards,
->> > Cristi
->> >=20
->> > On Sat, Aug 22, 2020 at 01:19:46AM +0300, Cristian Ciocaltea wrote:
->> > > This is re-spin of the patch series submitted some time ago by
->Mani,
->> > > who added initial support (MFD core and regulators) for the
->Actions
->> > > Semi ATC260x PMICs:
->> > >
->https://lore=2Ekernel=2Eorg/lkml/20190617155011=2E15376-1-manivannan=2Esa=
-dhasivam@linaro=2Eorg/
->> > >=20
->> > > The ATC260x family of PMICs integrates Audio Codec, Power
->management,
->> > > Clock generation and GPIO controller blocks=2E There are currently
->3
->> > > variants: ATC2603A, ATC2603C and ATC2609A=2E
->> > >=20
->> > > In addition to the ATC2609A regulator functionality provided that
->time,
->> > > this patchset adds support for the ATC2603C variant, together
->with some
->> > > new functionalities for both chips: power controller and onkey
->input=2E
->> > > The ATC2603A variant remains unsupported for the moment=2E
->> > >=20
->> > > This has been tested on RoseapplePi, a SBC based on the Action
->Semi S500
->> > > SoC, which integrates ATC2603C PMIC=2E An initial support for this
->board
->> > > has been already submitted:
->> > >
->https://lore=2Ekernel=2Eorg/lkml/cover=2E1592123160=2Egit=2Ecristian=2Eci=
-ocaltea@gmail=2Ecom/
->> > >=20
->> > > Please note that enabling the ATC260x PMICs on the compatible
->Actions
->> > > Semi Owl SoC based boards depends on the following:
->> > >=20
->> > > * Actions Semi SIRQ driver (for PMIC DTS setup):
->> > > =20
->https://lore=2Ekernel=2Eorg/lkml/cover=2E1597852360=2Egit=2Ecristian=2Eci=
-ocaltea@gmail=2Ecom/
->> > >=20
->> > > * I2C Atomic transfers in Actions Semi Owl driver (for proper
->operation
->> > >   of the power controller driver):
->> > > =20
->https://lore=2Ekernel=2Eorg/lkml/b086ef6d355d9730c839359e15eb06175283e323=
-=2E1596485741=2Egit=2Ecristian=2Eciocaltea@gmail=2Ecom/
->> > >  =20
->> > > Thanks,
->> > > Cristi
->> > >=20
->> > > Cristian Ciocaltea (6):
->> > >   dt-bindings: mfd: Add Actions Semi ATC260x PMIC binding
->> > >   mfd: Add MFD driver for ATC260x PMICs
->> > >   regulator: Add regulator driver for ATC260x PMICs
->>=20
->> You need to preserve my authorship for above two patches=2E Adding the
->signed-off-by
->> is not enough=2E
->
->I'm very sorry for the mistake, I was not aware of the correct
->reposting
->procedure=2E Should I resend the series now or could we handle a first
->round
->of review before?
->
+> +	if (error) {
+> +		iput(inode);
+> +		return ERR_PTR(error);
+> +	}
+> +	return inode;
+> +}
+> +
+> +static struct file *_anon_inode_getfile(const char *name,
+> +					const struct file_operations *fops,
+> +					void *priv, int flags,
+> +					const struct inode *context_inode,
+> +					bool secure)
+>  {
+> +	struct inode *inode;
+>  	struct file *file;
+>  
+> -	if (IS_ERR(anon_inode_inode))
+> -		return ERR_PTR(-ENODEV);
+> +	if (secure) {
+> +		inode =	anon_inode_make_secure_inode(
+> +			name, context_inode);
 
-You can wait to get review comments=2E=20
+Likewise here.  The call to anon_inode_make_secure_inode() fits on one line.
 
-Thanks,=20
-Mani=20
+> +		if (IS_ERR(inode))
+> +			return ERR_CAST(inode);
+> +	} else {
+> +		inode =	anon_inode_inode;
+> +		if (IS_ERR(inode))
+> +			return ERR_PTR(-ENODEV);
+> +		/*
+> +		 * We know the anon_inode inode count is always
+> +		 * greater than zero, so ihold() is safe.
+> +		 */
+> +		ihold(inode);
+> +	}
+>  
+> -	if (fops->owner && !try_module_get(fops->owner))
+> -		return ERR_PTR(-ENOENT);
+> +	if (fops->owner && !try_module_get(fops->owner)) {
+> +		file = ERR_PTR(-ENOENT);
+> +		goto err;
+> +	}
 
->Thanks,
->Cristi
->
->> > >   power: reset: Add poweroff driver for ATC260x PMICs
->> > >   input: atc260x: Add onkey driver for ATC260x PMICs
->> > >   MAINTAINERS: Add entry for ATC260x PMIC
->>=20
->> I think this one too=2E
->>=20
->> Thanks,
->> Mani
->>=20
->> > >=20
->> > >  =2E=2E=2E/bindings/mfd/actions,atc260x=2Eyaml         | 221 ++++++=
-++
->> > >  MAINTAINERS                                   |  12 +
->> > >  drivers/input/misc/Kconfig                    |  11 +
->> > >  drivers/input/misc/Makefile                   |   2 +-
->> > >  drivers/input/misc/atc260x-onkey=2Ec            | 304 +++++++++++
->> > >  drivers/mfd/Kconfig                           |  18 +
->> > >  drivers/mfd/Makefile                          |   3 +
->> > >  drivers/mfd/atc260x-core=2Ec                    | 290 ++++++++++
->> > >  drivers/mfd/atc260x-i2c=2Ec                     |  73 +++
->> > >  drivers/power/reset/Kconfig                   |   8 +-
->> > >  drivers/power/reset/Makefile                  |   1 +
->> > >  drivers/power/reset/atc260x-poweroff=2Ec        | 274 ++++++++++
->> > >  drivers/regulator/Kconfig                     |   8 +
->> > >  drivers/regulator/Makefile                    |   1 +
->> > >  drivers/regulator/atc260x-regulator=2Ec         | 511
->++++++++++++++++++
->> > >  include/linux/mfd/atc260x/atc2603c=2Eh          | 281 ++++++++++
->> > >  include/linux/mfd/atc260x/atc2609a=2Eh          | 308 +++++++++++
->> > >  include/linux/mfd/atc260x/core=2Eh              |  86 +++
->> > >  18 files changed, 2410 insertions(+), 2 deletions(-)
->> > >  create mode 100644
->Documentation/devicetree/bindings/mfd/actions,atc260x=2Eyaml
->> > >  create mode 100644 drivers/input/misc/atc260x-onkey=2Ec
->> > >  create mode 100644 drivers/mfd/atc260x-core=2Ec
->> > >  create mode 100644 drivers/mfd/atc260x-i2c=2Ec
->> > >  create mode 100644 drivers/power/reset/atc260x-poweroff=2Ec
->> > >  create mode 100644 drivers/regulator/atc260x-regulator=2Ec
->> > >  create mode 100644 include/linux/mfd/atc260x/atc2603c=2Eh
->> > >  create mode 100644 include/linux/mfd/atc260x/atc2609a=2Eh
->> > >  create mode 100644 include/linux/mfd/atc260x/core=2Eh
->> > >=20
->> > > --=20
->> > > 2=2E28=2E0
->> > >=20
+The error path here does module_put(fops->owner), even though a reference wasn't
+acquired.
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+> +
+> +/**
+> + * anon_inode_getfd - creates a new file instance by hooking it up to
+> + *                    an anonymous inode and a dentry that describe
+> + *                    the "class" of the file
+> + *
+> + * @name:    [in]    name of the "class" of the new file
+> + * @fops:    [in]    file operations for the new file
+> + * @priv:    [in]    private data for the new file (will be file's private_data)
+> + * @flags:   [in]    flags
+> + *
+> + * Creates a new file by hooking it on a single inode. This is
+> + * useful for files that do not need to have a full-fledged inode in
+> + * order to operate correctly.  All the files created with
+> + * anon_inode_getfile() will use the same singleton inode, reducing
+
+This should say anon_inode_getfd(), not anon_inode_getfile().
+
+> +/**
+> + * Like anon_inode_getfd(), but adds the @context_inode argument to
+> + * allow security modules to control creation of the new file. Once the
+> + * security module makes the decision, this inode is no longer needed
+> + * and hence reference to it is not held.
+> + */
+> +int anon_inode_getfd_secure(const char *name, const struct file_operations *fops,
+> +			    void *priv, int flags,
+> +			    const struct inode *context_inode)
+> +{
+> +	return _anon_inode_getfd(name, fops, priv, flags,
+> +				 context_inode, true);
+> +}
+
+Weird indentation here again.  The call to _anon_inode_getfd() fits on one line.
+
+> @@ -162,4 +229,3 @@ static int __init anon_inode_init(void)
+>  }
+>  
+>  fs_initcall(anon_inode_init);
+> -
+
+Unnecessary whitespace change.
+
+> diff --git a/include/linux/anon_inodes.h b/include/linux/anon_inodes.h
+> index d0d7d96261ad..67bd85d92dca 100644
+> --- a/include/linux/anon_inodes.h
+> +++ b/include/linux/anon_inodes.h
+> @@ -10,12 +10,25 @@
+>  #define _LINUX_ANON_INODES_H
+>  
+>  struct file_operations;
+> +struct inode;
+> +
+> +struct file *anon_inode_getfile_secure(const char *name,
+> +				       const struct file_operations *fops,
+> +				       void *priv, int flags,
+> +				       const struct inode *context_inode);
+
+This function isn't defined anywhere.
+
+> + * @inode_init_security_anon:
+> + *      Set up a secure anonymous inode.
+> + *      @inode contains the inode structure
+> + *      @name name of the anonymous inode class
+> + *      @context_inode optional related inode
+> + *	Returns 0 on success, -EACCESS if the security module denies the
+> + *	creation of this inode, or another -errno upon other errors.
+
+Is there a better name for this than "secure anonymous inode"?
+(What is meant by "secure"?)
+
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index 0a0a03b36a3b..95c133a8f8bb 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -322,6 +322,9 @@ void security_inode_free(struct inode *inode);
+>  int security_inode_init_security(struct inode *inode, struct inode *dir,
+>  				 const struct qstr *qstr,
+>  				 initxattrs initxattrs, void *fs_data);
+> +int security_inode_init_security_anon(struct inode *inode,
+> +				      const struct qstr *name,
+> +				      const struct inode *context_inode);
+>  int security_old_inode_init_security(struct inode *inode, struct inode *dir,
+>  				     const struct qstr *qstr, const char **name,
+>  				     void **value, size_t *len);
+
+This patch doesn't compile when !CONFIG_SECURITY because this file is missing a
+!CONFIG_SECURITY stub for security_inode_init_security_anon().
+
+> diff --git a/security/security.c b/security/security.c
+> index 70a7ad357bc6..149b3f024e2d 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -1057,6 +1057,15 @@ int security_inode_init_security(struct inode *inode, struct inode *dir,
+>  }
+>  EXPORT_SYMBOL(security_inode_init_security);
+>  
+> +int
+> +security_inode_init_security_anon(struct inode *inode,
+> +				  const struct qstr *name,
+> +				  const struct inode *context_inode)
+> +{
+> +	return call_int_hook(inode_init_security_anon, 0, inode, name,
+> +			     context_inode);
+> +}
+
+Nit: everything else in this file has 'int' on the same line as the function
+name.
+
+- Eric
