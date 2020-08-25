@@ -2,115 +2,160 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BFCAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2B5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BED820738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF9B20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:13:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="wOuZYuoG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YtIqtANn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgHYWLM (ORCPT
+        id S1726709AbgHYWNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:11:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48792 "EHLO
+        Tue, 25 Aug 2020 18:13:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726759AbgHYWLA (ORCPT
+        with ESMTP id S1726466AbgHYWNR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 18:11:00 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F020C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 15:11:00 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id d26so180667ejr.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 15:10:59 -0700 (PDT)
+        Tue, 25 Aug 2020 18:13:17 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33406C061574;
+        Tue, 25 Aug 2020 15:13:15 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w25so28624ljo.12;
+        Tue, 25 Aug 2020 15:13:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hMfzJvb3bssyfQ37ul9l9iixA3MkT5QgL2oMa2TRSL0=;
-        b=wOuZYuoGCNRPZWHbOUu2+fJA0720LZyvSQZAsvdzHmozYqvx9gqy+y56yhGetak1hY
-         0ZpH0AN34afF7sCXBNX1za3bo6VEv3zzifTgXX6NktsIb0KMECsyDGKURfkIGuHDYP7l
-         2vNjvK5GRzzMhw930qnNFvFLO4U+OoPZL5m094zS+p1VYWRjrDEHbGSxNNj51Zz6WO1s
-         ZiyoZK6bgROAVt3z1Eypl5YBuBJKIuUzkS8dmSmAYl3uXYnqEPUbHwQEx6RaRV+0lQWl
-         BFyqbd0cR+wbFcr/X9k1q9CCWjlO/In+tr2E/EZFQcMhKqrQoeKYsWdzeLcVrkf5mvdH
-         KzRg==
+        bh=HhJsKBW02BtS7ow2CWHt5zwUeBTuEgT+ywQPrRSabdI=;
+        b=YtIqtANnDHeWhG7NcT0yReoTOgBY4QboTpun67yZZHj9DyZHtMHpeAtWAPsc/DoMFx
+         7DSRf3AyaoCF+vLJ+iZGSE7UqoF1/26kmRJPkTru5oQ2J3Ydb1kErHH5tBOf8E4rLlnf
+         bREUQwadn7XR3FTbFjMF/eUo6YHJwC6DIoJ+0oJZ2Wc4rwZWAMa8AUTGQqvf2FNvEYte
+         Xb0kyIqdBqhp9OnierClYc10HO4XWvYjqncixoRV/5YnwNKsrXa1TBBuVGQIQQ1sJBLq
+         +TnrM8eIufvT+F9YJs3wkH2YLjQVg/RKO5LBzT+6D6sLkFA36T4TJEN4PQDVKwcJrcyP
+         IW/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hMfzJvb3bssyfQ37ul9l9iixA3MkT5QgL2oMa2TRSL0=;
-        b=ZNMSufVLDW0y6ylBa+TlR9p6lQnF/asGKm3gS9qaXQ3J7dJaJMFII1Vq5WpDZ6Uxh4
-         61uRIEbX/2lFmQjRslTS55yDLxYiDFklutDU2pljHMLsmsax2KZ65ty6l3X6W+MZnmsI
-         nxvF2eGh1zHDy3PlkLO8Eg+f6973cc8nASNmeEiLbPVY8ywYXcj6yyyWpo7EGOXvo7eZ
-         YclsZg38D2lQQSeRSARkUtP6O712XY+AJAX96t+LQwNKMrW/Ph0dHBcuGWaU6epO5UVt
-         7oo1/j4+MXRA+hxt7vw2AyBSkrzEAwk5gWRWFr92yCREr+ulM2fkJLHGhmwaERjpCBN7
-         zThQ==
-X-Gm-Message-State: AOAM533Hhh9+l9uHwUTBoWixNY1ihQjDQtAr6tI8tpimmJdkyLAZZWgi
-        UouUQ9IJ47S1/U+R1qLqJa5SfL76txAGAhG1tq//Rw==
-X-Google-Smtp-Source: ABdhPJx4LA5bEbVNRkF5QKu0Ea3A4Jn3y6fRrWhFi3M9+6OzYNhiTovXthqJYi2GFnhSh/cNpK6ycu1jKn8rhuKDP48=
-X-Received: by 2002:a17:906:813:: with SMTP id e19mr9245378ejd.141.1598393458608;
- Tue, 25 Aug 2020 15:10:58 -0700 (PDT)
+        bh=HhJsKBW02BtS7ow2CWHt5zwUeBTuEgT+ywQPrRSabdI=;
+        b=c2h+x04OOlht3Y7BjVU/9XTmIGraLcRyc1P5C42OTLKG6wMUQ2JnCBie+DFEb79c1+
+         lsakFrr3q1xl/a21W2l1/yMD7Dff0dKoAqUKRDq5eiNqqOCZeEGyZONCu3cfczTgRYTn
+         QR4zPTx8eKFltw1lXKCIlZZ+KZCQF/bQ0Gn39ser42vdSf7lhuH3I/FsbnLCoqWA/7tq
+         cTWshF7Ez9Wa4HajjLLAVCPjqLCJWQViNQocKlHVtM89CxYsJIGKpD8t/o5a+mLrAXLW
+         ZrbSNUEbxRutJA2Qk5GQ+i7K7ZPfKmp9lAXaaSm8+7L4rxzpjNWM73htcZnzU4ZDAqOu
+         6rYg==
+X-Gm-Message-State: AOAM530nkN8isI6kFQ1pvvodgY3cgN4pqzZjAc/JlimUH/xjZci3qahO
+        h0/bT/u06HMFwYXLftXYpvvBFkoggte/99gdiHw=
+X-Google-Smtp-Source: ABdhPJzz2wF45wgf/FXw/JhSJGsQdVgdCOrsFVQh5ecXi7Q0ljP46EcESueuQP9ZLOVOkt2NOX+z6IHI8EEFINShqYg=
+X-Received: by 2002:a2e:4e09:: with SMTP id c9mr5968600ljb.283.1598393593961;
+ Tue, 25 Aug 2020 15:13:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200825145556.637323-1-gnurou@gmail.com>
-In-Reply-To: <20200825145556.637323-1-gnurou@gmail.com>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Tue, 25 Aug 2020 19:10:47 -0300
-Message-ID: <CAAEAJfBbxExQP7cAQnsAE1_Zh-onBKPt8is3S9qBEpx6MAywRg@mail.gmail.com>
-Subject: Re: [PATCH 0/2] media: v4l2-mem2mem: fix poll() bug
-To:     Alexandre Courbot <gnurou@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200825182919.1118197-1-kpsingh@chromium.org> <CAADnVQJG+vMTyuNGjWTYnWX11ZqJU-EE30UC5KPJtpv1MC78cw@mail.gmail.com>
+In-Reply-To: <CAADnVQJG+vMTyuNGjWTYnWX11ZqJU-EE30UC5KPJtpv1MC78cw@mail.gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 25 Aug 2020 15:13:02 -0700
+Message-ID: <CAADnVQK0sKWa-XMUR9y28KEqMCOQhnRcAu=MDv4rU8iPwLBW1w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v10 0/7] Generalizing bpf_local_storage
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Alex,
+On Tue, Aug 25, 2020 at 2:05 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Tue, Aug 25, 2020 at 11:29 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > # v9 -> v10
+> >
+> > - Added NULL check for inode_storage_ptr before calling
+> >   bpf_local_storage_update
+> > - Removed an extraneous include
+> > - Rebased and added Acks / Signoff.
+>
+> Hmm. Though it looks good I cannot apply it, because
+> test_progs -t map_ptr
+> is broken:
+> 2225: (18) r2 = 0xffffc900004e5004
+> 2227: (b4) w1 = 58
+> 2228: (63) *(u32 *)(r2 +0) = r1
+>  R0=map_value(id=0,off=0,ks=4,vs=4,imm=0) R1_w=inv58
+> R2_w=map_value(id=0,off=4,ks=4,vs=8,imm=0) R3=inv49 R4=inv63
+> R5=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6_w=inv0
+> R7=invP8 R8=map_ptr(id=0,off=0,ks=4,vs=4,imm=0) R10=?
+> ; VERIFY_TYPE(BPF_MAP_TYPE_SK_STORAGE, check_sk_storage);
+> 2229: (18) r1 = 0xffffc900004e5000
+> 2231: (b4) w3 = 24
+> 2232: (63) *(u32 *)(r1 +0) = r3
+>  R0=map_value(id=0,off=0,ks=4,vs=4,imm=0)
+> R1_w=map_value(id=0,off=0,ks=4,vs=8,imm=0)
+> R2_w=map_value(id=0,off=4,ks=4,vs=8,imm=0) R3_w=inv24 R4=inv63
+> R5=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6_w=inv0
+> R7=invP8 R8=map_pt?
+> 2233: (18) r3 = 0xffff8881f03f7000
+> ; VERIFY(indirect->map_type == direct->map_type);
+> 2235: (85) call unknown#195896080
+> invalid func unknown#195896080
+> processed 4678 insns (limit 1000000) max_states_per_insn 9
+> total_states 240 peak_states 178 mark_read 11
+>
+> libbpf: -- END LOG --
+> libbpf: failed to load program 'cgroup_skb/egress'
+> libbpf: failed to load object 'map_ptr_kern'
+> libbpf: failed to load BPF skeleton 'map_ptr_kern': -4007
+> test_map_ptr:FAIL:skel_open_load open_load failed
+> #43 map_ptr:FAIL
+>
+> Above 'invalid func unknown#195896080' happens
+> when libbpf fails to do a relocation at runtime.
+> Please debug.
+> It's certainly caused by this set, but not sure why.
 
-Thanks for the patch.
+So I've ended up bisecting and debugging it.
+It turned out that the patch 1 was responsible.
+I've added the following hunk to fix it:
+diff --git a/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+index 473665cac67e..982a2d8aa844 100644
+--- a/tools/testing/selftests/bpf/progs/map_ptr_kern.c
++++ b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+@@ -589,7 +589,7 @@ static inline int check_stack(void)
+        return 1;
+ }
 
-On Tue, Aug 25, 2020, 11:56 AM Alexandre Courbot <gnurou@gmail.com> wrote:
->
-> This addresses a very corner case that probably nobody ever encounters,
-> but I have hit it when playing with vicoded so here is a tentative fix.
->
+-struct bpf_sk_storage_map {
++struct bpf_local_storage_map {
+        struct bpf_map map;
+ } __attribute__((preserve_access_index));
 
-I'll try to make a more complete review soon, but meanwhile
-I was thinking if it was possible to include a little kselftest program
-for this issue, something CIs can pick-up and test corner cases like this,
-making sure we don't regress on the issue.
+@@ -602,8 +602,8 @@ struct {
 
-(Or alternatively, v4l2-compliance?)
+ static inline int check_sk_storage(void)
+ {
+-       struct bpf_sk_storage_map *sk_storage =
+-               (struct bpf_sk_storage_map *)&m_sk_storage;
++       struct bpf_local_storage_map *sk_storage =
++               (struct bpf_local_storage_map *)&m_sk_storage;
+        struct bpf_map *map = (struct bpf_map *)&m_sk_storage;
 
-Thanks!
-Ezequiel
-
-> Patch 1/2 addresses the issue that when the last buffer of a m2m device
-> has been dequeued, any attempt to poll with EPOLLOUT will result in only
-> EPOLLIN being returned, even if OUTPUT buffers are still pending. The
-> issue stems from the fact that the last buffer check if done first, and
-> returns immediately if true.
->
-> Patch 2/2 builds on the first one to (hopefully) clean up the code a bit
-> and make the function flow easier to follow. Functionally speaking it is
-> supposed to be a no-op and it can safely be dropped if the former code
-> is preferred - the actual fix is in 1/2.
->
-> Alexandre Courbot (2):
->   media: v4l2-mem2mem: consider OUTPUT queue first when polling
->   media: v4l2-mem2mem: simplify poll logic a bit
->
->  drivers/media/v4l2-core/v4l2-mem2mem.c | 42 +++++++++++---------------
->  1 file changed, 18 insertions(+), 24 deletions(-)
->
-> --
-> 2.28.0
->
+and pushed the whole set.
+In the future please always run test_progs and test_progs-no_alu32
+for every patch and submit patches only if _all_ tests are passing.
+Do not assume that your change is not responsible for breakage.
