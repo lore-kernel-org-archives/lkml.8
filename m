@@ -2,91 +2,156 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECBAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD222C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF6F720786
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827DD20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:21:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fdQK1ZhN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fm2c3icd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHYPUm (ORCPT
+        id S1727790AbgHYPVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:20:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbgHYPUj (ORCPT
+        Tue, 25 Aug 2020 11:21:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:24894 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726723AbgHYPU6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:20:39 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0DCC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:20:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=ENFgYq2det3TbaKrOxz6iT496d9fQlJUs9aH/gy1mek=; b=fdQK1ZhNC+bUU186LjBNw/dv/S
-        6tuWfa8JvNSy62lFo1WGM0FKljnJGeAka02oLi2Y9Db9NkDbWZC6FLFOYb8udjMYWhLw/8gihhDdb
-        +ieOqpgxAsaLJEcWGLr1QzooQG38jz7fkeKAb0Ov+NSmBl0j6TpcvbQ332PriZ9eny3AmkLhi1rB5
-        QN8JT+ZpsJo0K4dfV09m1DVHYd4EOpJMNNx6OWPDWxmiojhjBBeoyF4yoTYBOBdGlNCyln20Sal0V
-        LcjXU++nZNE6bd4OSXe3YDMz0/GYCq0XaUJUR8S1NrN3sYk9LABcXpb12ztwA+aWpx8p4YAFGD88Q
-        r9QHSocA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAakR-0007Uv-Qu; Tue, 25 Aug 2020 15:20:32 +0000
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Dan Williams <dan.j.williams@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH mmotm] x86/numa: fix build when CONFIG_ACPI is not set
-Message-ID: <70e5ee34-9809-a997-7b49-499e4be61307@infradead.org>
-Date:   Tue, 25 Aug 2020 08:20:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 11:20:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598368857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/ww29tGGGCJNK0uYcOWj2E3kj6GiHCX868VNsZmxKCg=;
+        b=Fm2c3icduIh6sNT+N6QXVPZC/1xvJ1HQ2+ZAkb8XiRCOV6CXx13O6jNZeYTpvMqdUyPQ57
+        orDg9ucOtwj2MQHhYPtibNaJN8BT6wzm5LuNhcGh6fnR7J5jqIfYDANVkXslIoVewYq/4M
+        AZ/fOP+9A2yVPwZNemCwNJ9FPvdUCVs=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-j0bULRSUMqGBb4-qXTLhBw-1; Tue, 25 Aug 2020 11:20:49 -0400
+X-MC-Unique: j0bULRSUMqGBb4-qXTLhBw-1
+Received: by mail-wr1-f71.google.com with SMTP id p16so94089wrf.16
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:20:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/ww29tGGGCJNK0uYcOWj2E3kj6GiHCX868VNsZmxKCg=;
+        b=c+YFSD5kOlttONiOXhU4Rp1jbCRu7NrVzfE9+CJQoFFMSjCBBafPjgdlNsJbd8Hgdt
+         1plZOuz0UCWt4pI2E3gqLrRgWTVHTTzka11KN24oNS25iQVkK5GAZidUbTtYOqwWiOBF
+         bWVjwacD6f0qii6XLt9CNO2l9WfTXguokdo7zegAymEls8vdui8I5uwOPMOc/D0Ypppo
+         1eZ7H4lDfdL4+Sbvd+q7+BySvqrKZYw8R8sLJrcXvVJ8blyHJ9/W/MlgPvvsbdNUnPJy
+         7OsKPW2S8DxGZ7A9l6i0S9ha9i9ucBFG0dOxKOqyjHDEg1iWCuBMfWPUax1uhBoNBOe3
+         r+Ig==
+X-Gm-Message-State: AOAM532BYskoGfpxMZHIz+snxmytoAAfM44Rbvjsl4rABsb+EcXU0jnm
+        GFZeatMzVuuOrmYCErTr9PdXfqN3r3EOSeCQ+0pZvtYGEvHrBVwzFhrdVIjUjWvhuJEO7q2Gn1Q
+        gUCheXC34tDgG9ZpBTm1h+Zuz
+X-Received: by 2002:adf:f149:: with SMTP id y9mr10788349wro.93.1598368848123;
+        Tue, 25 Aug 2020 08:20:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxFcOj3KLiVhLrb5kKPj9J8yKhtonxgeHvdnpuzUycgw3vzeJpSYbKYVTAeVF3IvMjryZZqFg==
+X-Received: by 2002:adf:f149:: with SMTP id y9mr10788321wro.93.1598368847815;
+        Tue, 25 Aug 2020 08:20:47 -0700 (PDT)
+Received: from steredhat (host-79-51-197-141.retail.telecomitalia.it. [79.51.197.141])
+        by smtp.gmail.com with ESMTPSA id v20sm3575043wra.72.2020.08.25.08.20.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 08:20:47 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 17:20:44 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Kees Cook <keescook@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        io-uring <io-uring@vger.kernel.org>
+Subject: Re: [PATCH v4 0/3] io_uring: add restrictions to support untrusted
+ applications and guests
+Message-ID: <CAGxU2F55zzMzc043P88TWJNr2poUTVwrRmu86qyh0uM-8gimng@mail.gmail.com>
+References: <20200813153254.93731-1-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813153254.93731-1-sgarzare@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+Hi Jens,
+this is a gentle ping.
 
-Fix build errors when CONFIG_ACPI is not set/enabled by adding
-<acpi/acpi_numa.h> in the #else (!CONFIG_ACPI) block.
+I'll respin, using memdup_user() for restriction registration.
+I'd like to get some feedback to see if I should change anything else.
 
-../arch/x86/mm/numa.c: In function ‘numa_setup’:
-../arch/x86/mm/numa.c:43:3: error: implicit declaration of function ‘disable_srat’; did you mean ‘disable_irq’? [-Werror=implicit-function-declaration]
-   disable_srat();
-   ^~~~~~~~~~~~
-../arch/x86/mm/numa.c:45:3: error: implicit declaration of function ‘disable_hmat’; did you mean ‘disable_dma’? [-Werror=implicit-function-declaration]
-   disable_hmat();
-   ^~~~~~~~~~~~
+Do you think it's in good shape?
 
+Thanks,
+Stefano
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
----
- include/linux/acpi.h |    2 ++
- 1 file changed, 2 insertions(+)
-
---- mmotm-2020-0824-1606.orig/include/linux/acpi.h
-+++ mmotm-2020-0824-1606/include/linux/acpi.h
-@@ -709,6 +709,8 @@ static inline u64 acpi_arch_get_root_poi
- #define ACPI_HANDLE_FWNODE(fwnode)	(NULL)
- #define ACPI_DEVICE_CLASS(_cls, _msk)	.cls = (0), .cls_msk = (0),
- 
-+#include <acpi/acpi_numa.h>
-+
- struct fwnode_handle;
- 
- static inline bool acpi_dev_found(const char *hid)
+On Thu, Aug 13, 2020 at 5:34 PM Stefano Garzarella <sgarzare@redhat.com> wrote:
+>
+> v4:
+>  - rebased on top of io_uring-5.9
+>  - fixed io_uring_enter() exit path when ring is disabled
+>
+> v3: https://lore.kernel.org/io-uring/20200728160101.48554-1-sgarzare@redhat.c=
+> om/
+> RFC v2: https://lore.kernel.org/io-uring/20200716124833.93667-1-sgarzare@redh=
+> at.com
+> RFC v1: https://lore.kernel.org/io-uring/20200710141945.129329-1-sgarzare@red=
+> hat.com
+>
+> Following the proposal that I send about restrictions [1], I wrote this series
+> to add restrictions in io_uring.
+>
+> I also wrote helpers in liburing and a test case (test/register-restrictions.=
+> c)
+> available in this repository:
+> https://github.com/stefano-garzarella/liburing (branch: io_uring_restrictions)
+>
+> Just to recap the proposal, the idea is to add some restrictions to the
+> operations (sqe opcode and flags, register opcode) to safely allow untrusted
+> applications or guests to use io_uring queues.
+>
+> The first patch changes io_uring_register(2) opcodes into an enumeration to
+> keep track of the last opcode available.
+>
+> The second patch adds IOURING_REGISTER_RESTRICTIONS opcode and the code to
+> handle restrictions.
+>
+> The third patch adds IORING_SETUP_R_DISABLED flag to start the rings disabled,
+> allowing the user to register restrictions, buffers, files, before to start
+> processing SQEs.
+>
+> Comments and suggestions are very welcome.
+>
+> Thank you in advance,
+> Stefano
+>
+> [1] https://lore.kernel.org/io-uring/20200609142406.upuwpfmgqjeji4lc@steredha=
+> t/
+>
+> Stefano Garzarella (3):
+>   io_uring: use an enumeration for io_uring_register(2) opcodes
+>   io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
+>   io_uring: allow disabling rings during the creation
+>
+>  fs/io_uring.c                 | 160 ++++++++++++++++++++++++++++++++--
+>  include/uapi/linux/io_uring.h |  60 ++++++++++---
+>  2 files changed, 203 insertions(+), 17 deletions(-)
+>
+> --=20
+> 2.26.2
+>
 
