@@ -2,220 +2,132 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0247C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A367CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C127B20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:51:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ghGTgj4N"
+	by mail.kernel.org (Postfix) with ESMTP id 834BD20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598381520;
+	bh=IM+WjaxlwYgA4ma3JXCH7AtY5a4Oak5kNVAeYYapVqw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fA6yWymMURWNECKaLd9GEP0MnvV3pAZbOIk0DOss/z9b2iycisKqfgUYur24aWkjr
+	 CpXRhutAIVMubm4szV/1D4q/ayFyIOGLJtGtnQDxM1i9C+pxEMXaA6c8zBj7BC2Wfo
+	 UW1b6GYRFZEo3dlDtASG0Dmwn8se7fUH97zy0KH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgHYSv2 (ORCPT
+        id S1726836AbgHYSv7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 14:51:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgHYSvZ (ORCPT
+        Tue, 25 Aug 2020 14:51:59 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44420 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726066AbgHYSv5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 14:51:25 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CE01C061574;
-        Tue, 25 Aug 2020 11:51:25 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id i20so12030244qkk.8;
-        Tue, 25 Aug 2020 11:51:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6x0iz9JUsWXmCzILUsCg/89oPKkQvuUuZ5mSr/G7CCc=;
-        b=ghGTgj4Nu47q9B5RTknR8QOLlVRGwQKsRF4h60+v59AdwRLeWtRni/4llQCoxt4n0m
-         v0xZ+78rKDEx4vhho4cTxEFc2uzldInEdxoLfx+wwfs3mN5OIVCub+TKHjdDWSLdxZIE
-         cNKvtgQvA7as/hKzdTDPwgEJAUeJBPYVN/7lWLTlAoz+RxorL+Ws3YQh4dh5ALeMBoRx
-         yr5hzqdCPYjQ61P4MVr3e4fYr8sdtxPv7WxV/ATS+9joExTLkkMj0AL8xw5dYs1nv86d
-         vAlEqZUBbqDnZLD8uXPx9kaFB6Lk9yYKW53H2GbGT2vcy7OWXSY7JOUF5K7MuvXE/f+m
-         MqNQ==
+        Tue, 25 Aug 2020 14:51:57 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c15so13869274wrs.11;
+        Tue, 25 Aug 2020 11:51:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6x0iz9JUsWXmCzILUsCg/89oPKkQvuUuZ5mSr/G7CCc=;
-        b=qSj5WfCaOO0M0Wr5oYbcB011lt2jZHq4m1OZ5n+MifytGadhmbRqWD/zHCblSckCgg
-         wht7onq8B/csrpnXOA+8M5TpZX/hIZ87e39qVwYb97V/ubN5BUpkDtXTMOw2jY5duBJ8
-         xGt/gw0q8xGwccWcLBqr9asZVmJ2yxg5hQ4A37VxUph/ksnDwCEEwqHVUDmDeaFsadQ6
-         oqlR7qEQgSW8PlzsAhqXqmOJnTniIAfnDv2eL8ospFuXFVFvGs/729VA51MhlXVNooE1
-         +2ZQh6A4vrAafrz7HS2BXov9LvXUhSFL/arvc6lhoXTH+6euq6AxYwiQSbh7n78uWeDR
-         Jp0w==
-X-Gm-Message-State: AOAM5329Cn7bTT4OGt0uWWUuqpvC6n7EHikvnpjJ8Jza4yr+OUA7A+Vk
-        IFw9SZtG41nmc160IvicuQU=
-X-Google-Smtp-Source: ABdhPJyzaWhn7iXWu/e6eMxG4wr1Xi1OEWmXBPDTIUpJN/oWNMEdX1hHR+VF3B1LC8+FgGykLM7v8w==
-X-Received: by 2002:ae9:e507:: with SMTP id w7mr10448078qkf.264.1598381484105;
-        Tue, 25 Aug 2020 11:51:24 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id o72sm12491217qka.113.2020.08.25.11.51.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 11:51:23 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 11:51:21 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>, h@ubuntu-n2-xlarge-x86
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        clang-built-linux@googlegroups.com, stable@vger.kernel.org,
-        Andy Lavr <andy.lavr@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Joe Perches <joe@perches.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
-Message-ID: <20200825185121.GA602430@ubuntu-n2-xlarge-x86>
-References: <20200825135838.2938771-1-ndesaulniers@google.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=s+W3uZAiMBwphjOUwnUhUmXvFq4VneY/X9nTgR/gPEA=;
+        b=sDpuwQM4lDS6vfPvTemu+m4Nnz8Ap14xTfES6oXmwtiAt4b1Y/mF9+gsZj3EsUaWKA
+         7o7b0ts0nIuT5yWzxjX/CJ79JYObWBR3iG7Y4NW7WgHLB6ZJplCeOmPquR3TX9zNYDiM
+         544LTBvxMxdtFe4nRDzBr2SpF9/ou23TxKGU0HRFij7rRWb8gFVDRbHOMxHV6Lu6gQB3
+         2mRnHwkouPUC31OEZzAyfQdZ/BTOeYPUy5FU74QXzvkHzzvmkLbj5i0E1p9BOSmLJ8fC
+         doNSaQ9EkIubMXSBq/v4c/X/exK8kKbVX+1Z3S2rbCFnjjcGq6wcu/TxUBMn2uboE16h
+         sCkw==
+X-Gm-Message-State: AOAM531+ADuKIyk+fh/RfJkVvpSwN10zS4B4jKFlU+2gUM/o4HvgQulb
+        2nU80AMWNhXtSF22AFXNTPzQ3bZe3cE=
+X-Google-Smtp-Source: ABdhPJzytjwQc52wqXSoHZIMC+5o5R4ToV/YTFKD/hV5Um+1DtUtblRCRmADb29VS4xbe5eEy8OF+Q==
+X-Received: by 2002:a5d:674d:: with SMTP id l13mr11939696wrw.151.1598381515086;
+        Tue, 25 Aug 2020 11:51:55 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id c10sm7839767wmk.30.2020.08.25.11.51.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 11:51:54 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 20:51:52 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com
+Subject: Re: [PATCH 3/3] ARM: defconfig: Enable ax88796c driver
+Message-ID: <20200825185152.GC2693@kozik-lap>
+References: <20200825170311.24886-1-l.stelmach@samsung.com>
+ <CGME20200825170323eucas1p15f2bbfa460f7ef787069dd3459dd77b3@eucas1p1.samsung.com>
+ <20200825170311.24886-3-l.stelmach@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200825135838.2938771-1-ndesaulniers@google.com>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200825170311.24886-3-l.stelmach@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 06:58:36AM -0700, Nick Desaulniers wrote:
-> LLVM implemented a recent "libcall optimization" that lowers calls to
-> `sprintf(dest, "%s", str)` where the return value is used to
-> `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
-> in parsing format strings.  `stpcpy` is just like `strcpy` except it
-> returns the pointer to the new tail of `dest`.  This optimization was
-> introduced into clang-12.
+On Tue, Aug 25, 2020 at 07:03:11PM +0200, Łukasz Stelmach wrote:
+> Enable ax88796c driver for the ethernet chip on Exynos3250-based
+> ARTIK5 boards.
 > 
-> Implement this so that we don't observe linkage failures due to missing
-> symbol definitions for `stpcpy`.
-> 
-> Similar to last year's fire drill with:
-> commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
-> 
-> The kernel is somewhere between a "freestanding" environment (no full libc)
-> and "hosted" environment (many symbols from libc exist with the same
-> type, function signature, and semantics).
-> 
-> As H. Peter Anvin notes, there's not really a great way to inform the
-> compiler that you're targeting a freestanding environment but would like
-> to opt-in to some libcall optimizations (see pr/47280 below), rather than
-> opt-out.
-> 
-> Arvind notes, -fno-builtin-* behaves slightly differently between GCC
-> and Clang, and Clang is missing many __builtin_* definitions, which I
-> consider a bug in Clang and am working on fixing.
-> 
-> Masahiro summarizes the subtle distinction between compilers justly:
->   To prevent transformation from foo() into bar(), there are two ways in
->   Clang to do that; -fno-builtin-foo, and -fno-builtin-bar.  There is
->   only one in GCC; -fno-buitin-foo.
-> 
-> (Any difference in that behavior in Clang is likely a bug from a missing
-> __builtin_* definition.)
-> 
-> Masahiro also notes:
->   We want to disable optimization from foo() to bar(),
->   but we may still benefit from the optimization from
->   foo() into something else. If GCC implements the same transform, we
->   would run into a problem because it is not -fno-builtin-bar, but
->   -fno-builtin-foo that disables that optimization.
-> 
->   In this regard, -fno-builtin-foo would be more future-proof than
->   -fno-built-bar, but -fno-builtin-foo is still potentially overkill. We
->   may want to prevent calls from foo() being optimized into calls to
->   bar(), but we still may want other optimization on calls to foo().
-> 
-> It seems that compilers today don't quite provide the fine grain control
-> over which libcall optimizations pseudo-freestanding environments would
-> prefer.
-> 
-> Finally, Kees notes that this interface is unsafe, so we should not
-> encourage its use.  As such, I've removed the declaration from any
-> header, but it still needs to be exported to avoid linkage errors in
-> modules.
-> 
-> Cc: stable@vger.kernel.org
-> Link: https://bugs.llvm.org/show_bug.cgi?id=47162
-> Link: https://bugs.llvm.org/show_bug.cgi?id=47280
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1126
-> Link: https://man7.org/linux/man-pages/man3/stpcpy.3.html
-> Link: https://pubs.opengroup.org/onlinepubs/9699919799/functions/stpcpy.html
-> Link: https://reviews.llvm.org/D85963
-> Suggested-by: Andy Lavr <andy.lavr@gmail.com>
-> Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Suggested-by: Joe Perches <joe@perches.com>
-> Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
-> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Reported-by: Sami Tolvanen <samitolvanen@google.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-
+> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
 > ---
-> Changes V3:
-> * Drop Sami's Tested by tag; newer patch.
-> * Add EXPORT_SYMBOL as per Andy.
-> * Rewrite commit message, rewrote part of what Masahiro said to be
->   generic in terms of foo() and bar().
-> * Prefer %NUL-terminated to NULL terminated. NUL is the ASCII character
->   '\0', as per Arvind and Rasmus.
+>  arch/arm/configs/exynos_defconfig   | 2 ++
+>  arch/arm/configs/multi_v7_defconfig | 2 ++
+>  2 files changed, 4 insertions(+)
 > 
-> Changes V2:
-> * Added Sami's Tested by; though the patch changed implementation, the
->   missing symbol at link time was the problem Sami was observing.
-> * Fix __restrict -> __restrict__ typo as per Joe.
-> * Drop note about restrict from commit message as per Arvind.
-> * Fix NULL -> NUL as per Arvind; NUL is ASCII '\0'. TIL
-> * Fix off by one error as per Arvind; I had another off by one error in
->   my test program that was masking this.
+> Please DO NOT merge before these two
+
+Sure, it can wait but shouldn't actually DT wait? It's only defconfig so
+it does not change anything except automated systems booting these
+defconfigs... The boards might be broken by DT.
+
+Best regards,
+Krzysztof
+
 > 
->  lib/string.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>   https://lore.kernel.org/lkml/20200821161401.11307-2-l.stelmach@samsung.com/
+>   https://lore.kernel.org/lkml/20200821161401.11307-3-l.stelmach@samsung.com/
 > 
-> diff --git a/lib/string.c b/lib/string.c
-> index 6012c385fb31..6bd0cf0fb009 100644
-> --- a/lib/string.c
-> +++ b/lib/string.c
-> @@ -272,6 +272,30 @@ ssize_t strscpy_pad(char *dest, const char *src, size_t count)
->  }
->  EXPORT_SYMBOL(strscpy_pad);
->  
-> +/**
-> + * stpcpy - copy a string from src to dest returning a pointer to the new end
-> + *          of dest, including src's %NUL-terminator. May overrun dest.
-> + * @dest: pointer to end of string being copied into. Must be large enough
-> + *        to receive copy.
-> + * @src: pointer to the beginning of string being copied from. Must not overlap
-> + *       dest.
-> + *
-> + * stpcpy differs from strcpy in a key way: the return value is the new
-> + * %NUL-terminated character. (for strcpy, the return value is a pointer to
-> + * src. This interface is considered unsafe as it doesn't perform bounds
-> + * checking of the inputs. As such it's not recommended for usage. Instead,
-> + * its definition is provided in case the compiler lowers other libcalls to
-> + * stpcpy.
-> + */
-> +char *stpcpy(char *__restrict__ dest, const char *__restrict__ src);
-> +char *stpcpy(char *__restrict__ dest, const char *__restrict__ src)
-> +{
-> +	while ((*dest++ = *src++) != '\0')
-> +		/* nothing */;
-> +	return --dest;
-> +}
-> +EXPORT_SYMBOL(stpcpy);
-> +
->  #ifndef __HAVE_ARCH_STRCAT
->  /**
->   * strcat - Append one %NUL-terminated string to another
+> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+> index 6e8b5ff0859c..82480b2bf545 100644
+> --- a/arch/arm/configs/exynos_defconfig
+> +++ b/arch/arm/configs/exynos_defconfig
+> @@ -107,6 +107,8 @@ CONFIG_MD=y
+>  CONFIG_BLK_DEV_DM=y
+>  CONFIG_DM_CRYPT=m
+>  CONFIG_NETDEVICES=y
+> +CONFIG_NET_VENDOR_ASIX=y
+> +CONFIG_SPI_AX88796C=y
+>  CONFIG_SMSC911X=y
+>  CONFIG_USB_RTL8150=m
+>  CONFIG_USB_RTL8152=y
+> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+> index e9e76e32f10f..a8b4e95d4148 100644
+> --- a/arch/arm/configs/multi_v7_defconfig
+> +++ b/arch/arm/configs/multi_v7_defconfig
+> @@ -241,6 +241,8 @@ CONFIG_SATA_HIGHBANK=y
+>  CONFIG_SATA_MV=y
+>  CONFIG_SATA_RCAR=y
+>  CONFIG_NETDEVICES=y
+> +CONFIG_NET_VENDOR_ASIX=y
+> +CONFIG_SPI_AX88796C=m
+>  CONFIG_VIRTIO_NET=y
+>  CONFIG_B53_SPI_DRIVER=m
+>  CONFIG_B53_MDIO_DRIVER=m
 > -- 
-> 2.28.0.297.g1956fa8f8d-goog
+> 2.26.2
 > 
