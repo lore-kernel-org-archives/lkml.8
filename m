@@ -2,118 +2,116 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E90BC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD07C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 332B92075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:37:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TmI3nIyR"
+	by mail.kernel.org (Postfix) with ESMTP id 2072A207DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598384262;
+	bh=0k6vgSKAVff6Efz20oLlcyZ3f09Mw5A8acbLpSprSBQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NFteiGEuPWwip+CccqtvTy4cDtvyL5huHTvCEvmgZcJ5jO32c7EsykrbMRZ6x4ssj
+	 BegT6hcLaT+Qd69N9Vy0EKX30HdDm1eYJDh2yyoN8tgdFPKgcu63N64gL0dY8P9S4X
+	 yGrsj9rFy+8f8SipbonoYPiqBDlqRSKapz2ucf0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgHYThh (ORCPT
+        id S1727073AbgHYThk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 25 Aug 2020 15:37:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42814 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726894AbgHYThh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 15:37:37 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33376 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHYThd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:37:33 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PJZRxx087365;
-        Tue, 25 Aug 2020 19:37:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : content-type :
- content-transfer-encoding : mime-version : subject : message-id : date :
- cc : to; s=corp-2020-01-29;
- bh=nz+vs61Nuq5CIPrLplvM9HKtYzJlZ7en1yfmlfAsdrI=;
- b=TmI3nIyRChhEJAnXX+UO+DoM12Vb0QRcM8H/qKCOp+ZccrP2WVVh0WORtCn9HwDIovhe
- ot85G675OkEUV4nwrPs2rtbyaGz3BJuaxgWu15i3dh77wD7EoxMTpZCZqPigye7Fhc46
- MWSJZOw3KtRzjvqM9/7erqj/TWTQnHRe/wo61ZyRvrg1ig2xDJLlUVVi+84BjRILKBUa
- 00XfP5Y86A6rm8d0xmQiq8Duvi967eAIw7Tmc0tf4cbs5zWleoahzKGQ6vcXS/T8zmks
- hT5SKis8sDr1cABwAOiXrljphPnE39OpLDms/j6qSyhjX5Mw3YbQCl2Yjj8WaLV6cUV7 FA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 333w6tu2mt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 19:37:31 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PJZJST133721;
-        Tue, 25 Aug 2020 19:37:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 333r9jyv50-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 19:37:31 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07PJbUT6007877;
-        Tue, 25 Aug 2020 19:37:30 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Aug 2020 12:37:29 -0700
-From:   Chuck Lever <chuck.lever@oracle.com>
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Please pull NFS server fixes for v5.9
-Message-Id: <374E25EA-2EFE-4E68-BCBD-880E25ADAF8C@oracle.com>
-Date:   Tue, 25 Aug 2020 15:37:29 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=994 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- mlxlogscore=977 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008250146
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 288E02075F;
+        Tue, 25 Aug 2020 19:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598384255;
+        bh=0k6vgSKAVff6Efz20oLlcyZ3f09Mw5A8acbLpSprSBQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sI9b4hVtoAhaou26vaGEAaTLpgYpyC285o2iSdgx62fHrM1NGci2u+v+AU+Oq0Ppn
+         WfumFHMaBUEXRgYg0wwrMjBGbI1KxmtiEKVcdVkfwWFR/Nk7erVO9HTBErIK5EcUhz
+         z5rvEttr3E7Jpoy7zep+7OiEuKqke5uCh41/GoQU=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 11/19] dt-bindings: thermal: imx8mm-thermal: Add i.MX 8M Nano compatible
+Date:   Tue, 25 Aug 2020 21:35:28 +0200
+Message-Id: <20200825193536.7332-12-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200825193536.7332-1-krzk@kernel.org>
+References: <20200825193536.7332-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus -
+DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
+to fix dtbs_check warnings like:
 
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: tmu@30260000:
+    compatible:0: 'fsl,imx8mn-tmu' is not one of ['fsl,imx8mm-tmu', 'fsl,imx8mp-tmu']
+    From schema: Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
 
- Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: tmu@30260000:
+    compatible: ['fsl,imx8mn-tmu', 'fsl,imx8mm-tmu'] is too long
 
-are available in the Git repository at:
+  arch/arm64/boot/dts/freescale/imx8mn-evk.dt.yaml: tmu@30260000:
+    compatible: Additional items are not allowed ('fsl,imx8mm-tmu' was unexpected)
 
- git://git.linux-nfs.org/projects/cel/cel-2.6.git tags/nfsd-5.9-1
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/thermal/imx8mm-thermal.yaml    | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-for you to fetch changes up to ad112aa8b1ac4bf5e8da67734fcb535fd3cd564e:
-
- SUNRPC: remove duplicate include (2020-08-19 13:19:42 -0400)
-
-----------------------------------------------------------------
-Fixes:
-
-- Eliminate an oops introduced in v5.8
-- Remove a duplicate #include added by nfsd-5.9
-
-----------------------------------------------------------------
-J. Bruce Fields (1):
-     nfsd: fix oops on mixed NFSv4/NFSv3 client access
-
-Wang Hai (1):
-     SUNRPC: remove duplicate include
-
-fs/nfsd/nfs4state.c         | 2 ++
-net/sunrpc/auth_gss/trace.c | 1 -
-2 files changed, 2 insertions(+), 1 deletion(-)
-
---
-Chuck Lever
-
-
+diff --git a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+index 38852877b8e3..89c54e08ee61 100644
+--- a/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
++++ b/Documentation/devicetree/bindings/thermal/imx8mm-thermal.yaml
+@@ -18,9 +18,13 @@ description: |
+ 
+ properties:
+   compatible:
+-    enum:
+-      - fsl,imx8mm-tmu
+-      - fsl,imx8mp-tmu
++    oneOf:
++      - enum:
++          - fsl,imx8mm-tmu
++          - fsl,imx8mp-tmu
++      - items:
++          - const: fsl,imx8mn-tmu
++          - const: fsl,imx8mm-tmu
+ 
+   reg:
+     maxItems: 1
+-- 
+2.17.1
 
