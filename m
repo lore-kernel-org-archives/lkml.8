@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC4FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97468C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A86D520706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F4520706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgHYRSR (ORCPT
+        id S1726763AbgHYRS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:18:17 -0400
-Received: from mga17.intel.com ([192.55.52.151]:23070 "EHLO mga17.intel.com"
+        Tue, 25 Aug 2020 13:18:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:23068 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbgHYRRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726225AbgHYRRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 13:17:21 -0400
-IronPort-SDR: aYkaR6G/lgfW3OwDb7sTnBUi0fBwPy69H5Ff5RObUy/VjuKy+F0t5RPJyjXHfYmBvsVhiZIKO6
- avG26Y7gRSwQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136221327"
+IronPort-SDR: jQeRja6yCj+MnlmJoAS1GRQFOuzGViKDfGDXkviMmurUIHrPl/oHP8tzDb6h38zdJxa3AkVszI
+ kMtTfrnx5Ouw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136221315"
 X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
-   d="scan'208";a="136221327"
+   d="scan'208";a="136221315"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 10:17:15 -0700
-IronPort-SDR: +p7QzQSPau+jUe91o0Ol3KCjxRpoabbyf+Tp8Zh2nlhiJT03kk/g9uIUINRok0LEu1s0rGKgTi
- Bc79uxsgUwlg==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 10:17:13 -0700
+IronPort-SDR: d3NZa9SV0Erea1YTulYBLN0sGbqCPfb1OHXJZ1polaNzEvInVIOYHnBaL3ccwUU0BvnRDoH1cA
+ zd5liRfe9T7A==
 X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
-   d="scan'208";a="331478437"
+   d="scan'208";a="331478421"
 Received: from bgarring-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.212.4.243])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 10:17:14 -0700
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 10:17:12 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
         Kai Vehmanen <kai.vehmanen@linux.intel.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH 2/4] regmap: sdw: add required header files
-Date:   Tue, 25 Aug 2020 12:16:54 -0500
-Message-Id: <20200825171656.75836-3-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 1/4] regmap: sdw: move to -EOPNOTSUPP
+Date:   Tue, 25 Aug 2020 12:16:53 -0500
+Message-Id: <20200825171656.75836-2-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200825171656.75836-1-pierre-louis.bossart@linux.intel.com>
 References: <20200825171656.75836-1-pierre-louis.bossart@linux.intel.com>
@@ -61,32 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Explicitly add header files used by regmap SoundWire support.
+-ENOTSUPP is not a valid error code, use recommended value instead.
 
-Suggested-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
 Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
 Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
 Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/base/regmap/regmap-sdw.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/base/regmap/regmap-sdw.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/base/regmap/regmap-sdw.c b/drivers/base/regmap/regmap-sdw.c
-index 89d3856f5890..29edbb6da48f 100644
+index 50a66382d87d..89d3856f5890 100644
 --- a/drivers/base/regmap/regmap-sdw.c
 +++ b/drivers/base/regmap/regmap-sdw.c
-@@ -2,8 +2,10 @@
- // Copyright(c) 2015-17 Intel Corporation.
+@@ -40,14 +40,14 @@ static int regmap_sdw_config_check(const struct regmap_config *config)
+ {
+ 	/* All register are 8-bits wide as per MIPI Soundwire 1.0 Spec */
+ 	if (config->val_bits != 8)
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
  
- #include <linux/device.h>
-+#include <linux/errno.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-+#include <linux/regmap.h>
- #include <linux/soundwire/sdw.h>
- #include "internal.h"
+ 	/* Registers are 32 bits wide */
+ 	if (config->reg_bits != 32)
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
  
+ 	if (config->pad_bits != 0)
+-		return -ENOTSUPP;
++		return -EOPNOTSUPP;
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
