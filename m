@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8EEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A83C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39395204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB0C204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:37:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="r0pR9XAO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="ZpOvEJ+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgHYHgt (ORCPT
+        id S1729585AbgHYHhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:36:49 -0400
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.120]:22066 "EHLO
+        Tue, 25 Aug 2020 03:37:04 -0400
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.121]:25363 "EHLO
         mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729301AbgHYHge (ORCPT
+        with ESMTP id S1729528AbgHYHgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:36:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598340988;
+        Tue, 25 Aug 2020 03:36:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598340994;
         s=strato-dkim-0002; d=chronox.de;
         h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=FylwbsoRc8YAPnjWRxFB9vS/7W/T+xjE16Ru+zQWYso=;
-        b=r0pR9XAOqstugF/z5JgW30I1DQA1nY9V3U4JMCEHhR7+DJXenPT+o4Gz9A0z0nMZpG
-        aQWIFwpFoSALNOMK9kfEisysJ6ljD8NL3syptUtmGgpXZ+oxfpeVUXcZe//jEmDw+Pim
-        x+sA8GBBlEoCy3ZwyP3JP1DrLz6cbV8CWAxe4s9CysCpJMwCgYso5zdfIi5WdXnQML4J
-        5CPyFjxErHBtamHwVT8MSMQCNh3y0f8/8MMxC0Iqo9cJJ+CMf3+I0G0ByXwLM5HINKzK
-        IeNzNpchix5jB2iDteyFndL1zk5umjFJJcV9hl0itORZZUMigYthfOhNLbOPl7ZDqm57
-        +7pQ==
+        bh=lPCGqpAj9btDOboOCtgyMx9ydHKjLifCJ74WWzaZL7I=;
+        b=ZpOvEJ+HNlmqAWbAjOvKTlLhPaywa8tUJ7nxtaRZBQsQLdgy4o6Mye5sdAi3nSRqyz
+        kGuQslJG2pa6Mcn8H9azHCiakMwUXUvDmfgYgowNRqpI52VjX4+yDOxuX0mDsJ1vamy5
+        lQMkqBYXTNenD3FJOOEz/X3WnxNphKIV8ZHj1qFWwakVSD0L3sKxkOiIfMfDd2XqkcQ7
+        PPorsCFqFSlK9cD0rOvUsC+5Y4py8obXgsEXomaND/MYCU5F+qYaimJmQAoy3pTqEl0s
+        cUtptd2KiTGuEjdjU/AZTCgvtN2uTQpPaciE9yRfX2TX6mLPdiWRWoNEXEA/z2qKgiG3
+        GHXw==
 X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDaIvSXRbo="
 X-RZG-CLASS-ID: mo00
 Received: from positron.chronox.de
         by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id 002e9aw7P7ZIZGQ
+        with ESMTPSA id 002e9aw7P7ZOZGV
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-        Tue, 25 Aug 2020 09:35:18 +0200 (CEST)
+        Tue, 25 Aug 2020 09:35:24 +0200 (CEST)
 From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
 To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -69,9 +69,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Julia Lawall <julia.lawall@inria.fr>,
         Dan Carpenter <dan.carpenter@oracle.com>,
         Andy Lavr <andy.lavr@gmail.com>
-Subject: [PATCH v34 07/12] LRNG - add kernel crypto API PRNG extension
-Date:   Tue, 25 Aug 2020 09:25:36 +0200
-Message-ID: <9813416.nUPlyArG6x@positron.chronox.de>
+Subject: [PATCH v34 02/12] LRNG - allocate one DRNG instance per NUMA node
+Date:   Tue, 25 Aug 2020 09:23:09 +0200
+Message-ID: <4318343.LvFx2qVVIh@positron.chronox.de>
 In-Reply-To: <11649613.O9o76ZdvQC@positron.chronox.de>
 References: <2544450.mvXUDI8C0e@positron.chronox.de> <5532247.MhkbZ0Pkbq@positron.chronox.de> <11649613.O9o76ZdvQC@positron.chronox.de>
 MIME-Version: 1.0
@@ -82,18 +82,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add runtime-pluggable support for all PRNGs that are accessible via
-the kernel crypto API, including hardware PRNGs. The PRNG is selected
-with the module parameter drng_name where the name must be one that the
-kernel crypto API can resolve into an RNG.
+In order to improve NUMA-locality when serving getrandom(2) requests,
+allocate one DRNG instance per node.
 
-This allows using of the kernel crypto API PRNG implementations that
-provide an interface to hardware PRNGs. Using this extension,
-the LRNG uses the hardware PRNGs to generate random numbers. An
-example is the S390 CPACF support providing such a PRNG.
+The DRNG instance that is present right from the start of the kernel is
+reused as the first per-NUMA-node DRNG. For all remaining online NUMA
+nodes a new DRNG instance is allocated.
 
-The hash is provided by a kernel crypto API SHASH whose digest size
-complies with the seedsize of the PRNG.
+During boot time, the multiple DRNG instances are seeded sequentially.
+With this, the first DRNG instance (referenced as the initial DRNG
+in the code) is completely seeded with 256 bits of entropy before the
+next DRNG instance is completely seeded.
+
+When random numbers are requested, the NUMA-node-local DRNG is checked
+whether it has been already fully seeded. If this is not the case, the
+initial DRNG is used to serve the request.
 
 CC: "Eric W. Biederman" <ebiederm@xmission.com>
 CC: "Alexander E. Patrakov" <patrakov@gmail.com>
@@ -118,379 +121,149 @@ Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
 Tested-by: Neil Horman <nhorman@redhat.com>
 Signed-off-by: Stephan Mueller <smueller@chronox.de>
 =2D--
- drivers/char/lrng/Kconfig      |  12 ++
- drivers/char/lrng/Makefile     |   1 +
- drivers/char/lrng/lrng_kcapi.c | 321 +++++++++++++++++++++++++++++++++
- 3 files changed, 334 insertions(+)
- create mode 100644 drivers/char/lrng/lrng_kcapi.c
+ drivers/char/lrng/Makefile        |   2 +
+ drivers/char/lrng/lrng_internal.h |   5 ++
+ drivers/char/lrng/lrng_numa.c     | 101 ++++++++++++++++++++++++++++++
+ 3 files changed, 108 insertions(+)
+ create mode 100644 drivers/char/lrng/lrng_numa.c
 
-diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
-index 4f2b757a8962..c89de14d173a 100644
-=2D-- a/drivers/char/lrng/Kconfig
-+++ b/drivers/char/lrng/Kconfig
-@@ -82,6 +82,18 @@ config LRNG_DRBG
- 	  Enable the SP800-90A DRBG support for the LRNG. Once the
- 	  module is loaded, output from /dev/random, /dev/urandom,
- 	  getrandom(2), or get_random_bytes_full is provided by a DRBG.
-+
-+config LRNG_KCAPI
-+	tristate "Kernel Crypto API support for the LRNG"
-+	depends on CRYPTO
-+	depends on !LRNG_DRBG
-+	select CRYPTO_RNG
-+	help
-+	  Enable the support for generic pseudo-random number
-+	  generators offered by the kernel crypto API with the
-+	  LRNG. Once the module is loaded, output from /dev/random,
-+	  /dev/urandom, getrandom(2), or get_random_bytes is
-+	  provided by the selected kernel crypto API RNG.
- endif # LRNG_DRNG_SWITCH
-=20
- endif # LRNG
 diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
-index 0d320fcb7b9e..94b2dfb2dfdb 100644
+index 1d2a0211973d..0a32f22c2c1a 100644
 =2D-- a/drivers/char/lrng/Makefile
 +++ b/drivers/char/lrng/Makefile
-@@ -12,3 +12,4 @@ obj-$(CONFIG_NUMA)		+=3D lrng_numa.o
- obj-$(CONFIG_SYSCTL)		+=3D lrng_proc.o
- obj-$(CONFIG_LRNG_DRNG_SWITCH)	+=3D lrng_switch.o
- obj-$(CONFIG_LRNG_DRBG)		+=3D lrng_drbg.o
-+obj-$(CONFIG_LRNG_KCAPI)	+=3D lrng_kcapi.o
-diff --git a/drivers/char/lrng/lrng_kcapi.c b/drivers/char/lrng/lrng_kcapi.c
+@@ -7,3 +7,5 @@ obj-y				+=3D lrng_pool.o lrng_aux.o \
+ 				   lrng_sw_noise.o lrng_archrandom.o \
+ 				   lrng_drng.o lrng_chacha20.o \
+ 				   lrng_interfaces.o \
++
++obj-$(CONFIG_NUMA)		+=3D lrng_numa.o
+diff --git a/drivers/char/lrng/lrng_internal.h b/drivers/char/lrng/lrng_int=
+ernal.h
+index f86afe8d2612..de034260c323 100644
+=2D-- a/drivers/char/lrng/lrng_internal.h
++++ b/drivers/char/lrng/lrng_internal.h
+@@ -256,8 +256,13 @@ int lrng_drng_get_sleep(u8 *outbuf, u32 outbuflen);
+ void lrng_drng_force_reseed(void);
+ void lrng_drng_seed_work(struct work_struct *dummy);
+=20
++#ifdef CONFIG_NUMA
++struct lrng_drng **lrng_drng_instances(void);
++void lrng_drngs_numa_alloc(void);
++#else	/* CONFIG_NUMA */
+ static inline struct lrng_drng **lrng_drng_instances(void) { return NULL; }
+ static inline void lrng_drngs_numa_alloc(void) { return; }
++#endif /* CONFIG_NUMA */
+=20
+ /************************** Health Test linking code *********************=
+*****/
+=20
+diff --git a/drivers/char/lrng/lrng_numa.c b/drivers/char/lrng/lrng_numa.c
 new file mode 100644
-index 000000000000..b71092605e6b
+index 000000000000..947c5b3ed517
 =2D-- /dev/null
-+++ b/drivers/char/lrng/lrng_kcapi.c
-@@ -0,0 +1,321 @@
++++ b/drivers/char/lrng/lrng_numa.c
+@@ -0,0 +1,101 @@
 +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
 +/*
-+ * Backend for the LRNG providing the cryptographic primitives using the
-+ * kernel crypto API.
++ * LRNG NUMA support
 + *
-+ * Copyright (C) 2018 - 2020, Stephan Mueller <smueller@chronox.de>
++ * Copyright (C) 2016 - 2020, Stephan Mueller <smueller@chronox.de>
 + */
 +
 +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 +
-+#include <crypto/hash.h>
-+#include <crypto/rng.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
 +#include <linux/lrng.h>
++#include <linux/slab.h>
 +
-+static char *drng_name =3D NULL;
-+module_param(drng_name, charp, 0444);
-+MODULE_PARM_DESC(drng_name, "Kernel crypto API name of DRNG");
++#include "lrng_internal.h"
 +
-+static char *pool_hash =3D "sha512";
-+module_param(pool_hash, charp, 0444);
-+MODULE_PARM_DESC(pool_hash,
-+		 "Kernel crypto API name of hash or keyed message digest to read the ent=
-ropy pool");
++static struct lrng_drng **lrng_drng __read_mostly =3D NULL;
 +
-+static char *seed_hash =3D NULL;
-+module_param(seed_hash, charp, 0444);
-+MODULE_PARM_DESC(seed_hash,
-+		 "Kernel crypto API name of hash with output size equal to seedsize of D=
-RNG to bring seed string to the size required by the DRNG");
-+
-+struct lrng_hash_info {
-+	struct shash_desc shash;
-+	char ctx[];
-+};
-+
-+struct lrng_drng_info {
-+	struct crypto_rng *kcapi_rng;
-+	struct lrng_hash_info *lrng_hash;
-+};
-+
-+static struct lrng_hash_info *_lrng_kcapi_hash_alloc(const char *name)
++struct lrng_drng **lrng_drng_instances(void)
 +{
-+	struct lrng_hash_info *lrng_hash;
-+	struct crypto_shash *tfm;
-+	int size;
-+
-+	if (!name) {
-+		pr_err("Hash name missing\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	tfm =3D crypto_alloc_shash(name, 0, 0);
-+	if (IS_ERR(tfm)) {
-+		pr_err("could not allocate hash %s\n", name);
-+		return ERR_CAST(tfm);
-+	}
-+
-+	size =3D sizeof(struct lrng_hash_info) + crypto_shash_descsize(tfm);
-+	lrng_hash =3D kmalloc(size, GFP_KERNEL);
-+	if (!lrng_hash) {
-+		crypto_free_shash(tfm);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	lrng_hash->shash.tfm =3D tfm;
-+
-+	return lrng_hash;
++	return lrng_drng;
 +}
 +
-+static inline u32 _lrng_kcapi_hash_digestsize(struct lrng_hash_info *lrng_=
-hash)
++/* Allocate the data structures for the per-NUMA node DRNGs */
++static void _lrng_drngs_numa_alloc(struct work_struct *work)
 +{
-+	struct shash_desc *shash =3D &lrng_hash->shash;
-+	struct crypto_shash *tfm =3D shash->tfm;
++	struct lrng_drng **drngs;
++	struct lrng_drng *lrng_drng_init =3D lrng_drng_init_instance();
++	u32 node;
++	bool init_drng_used =3D false;
 +
-+	return crypto_shash_digestsize(tfm);
-+}
++	mutex_lock(&lrng_crypto_cb_update);
 +
-+static inline void _lrng_kcapi_hash_free(struct lrng_hash_info *lrng_hash)
-+{
-+	struct shash_desc *shash =3D &lrng_hash->shash;
-+	struct crypto_shash *tfm =3D shash->tfm;
++	/* per-NUMA-node DRNGs are already present */
++	if (lrng_drng)
++		goto unlock;
 +
-+	crypto_free_shash(tfm);
-+	kfree(lrng_hash);
-+}
++	drngs =3D kcalloc(nr_node_ids, sizeof(void *), GFP_KERNEL|__GFP_NOFAIL);
++	for_each_online_node(node) {
++		struct lrng_drng *drng;
 +
-+static void *lrng_kcapi_hash_alloc(const u8 *key, u32 keylen)
-+{
-+	struct lrng_hash_info *lrng_hash;
-+	int ret;
-+
-+	lrng_hash =3D _lrng_kcapi_hash_alloc(pool_hash);
-+	if (IS_ERR(lrng_hash))
-+		return ERR_CAST(lrng_hash);
-+
-+	/* If the used hash is no MAC, ignore the ENOSYS return code */
-+	ret =3D crypto_shash_setkey(lrng_hash->shash.tfm, key, keylen);
-+	if (ret && ret !=3D -ENOSYS) {
-+		pr_err("could not set the key for MAC\n");
-+		_lrng_kcapi_hash_free(lrng_hash);
-+		return ERR_PTR(ret);
-+	}
-+
-+	pr_info("Hash %s allocated\n", pool_hash);
-+
-+	return lrng_hash;
-+}
-+
-+static void lrng_kcapi_hash_dealloc(void *hash)
-+{
-+	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
-+
-+	_lrng_kcapi_hash_free(lrng_hash);
-+	pr_info("Hash %s deallocated\n", pool_hash);
-+}
-+
-+static u32 lrng_kcapi_hash_digestsize(void *hash)
-+{
-+	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
-+
-+	return _lrng_kcapi_hash_digestsize(lrng_hash);
-+}
-+
-+static int lrng_kcapi_hash_buffer(void *hash, const u8 *inbuf, u32 inbufle=
-n,
-+				  u8 *digest)
-+{
-+	struct lrng_hash_info *lrng_hash =3D (struct lrng_hash_info *)hash;
-+	struct shash_desc *shash =3D &lrng_hash->shash;
-+
-+	return crypto_shash_digest(shash, inbuf, inbuflen, digest);
-+}
-+
-+static int lrng_kcapi_drng_seed_helper(void *drng, const u8 *inbuf,
-+				       u32 inbuflen)
-+{
-+	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
-+	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
-+	struct lrng_hash_info *lrng_hash =3D lrng_drng_info->lrng_hash;
-+
-+	if (lrng_hash) {
-+		struct shash_desc *shash =3D &lrng_hash->shash;
-+		u32 digestsize =3D _lrng_kcapi_hash_digestsize(lrng_hash);
-+		u8 digest[64] __aligned(8);
-+		int ret;
-+
-+		BUG_ON(digestsize > sizeof(digest));
-+
-+		ret =3D crypto_shash_digest(shash, inbuf, inbuflen, digest);
-+		if (ret)
-+			return ret;
-+
-+		ret =3D crypto_rng_reset(kcapi_rng, digest, digestsize);
-+		if (ret)
-+			return ret;
-+
-+		memzero_explicit(digest, digestsize);
-+
-+		return 0;
-+	} else {
-+		return crypto_rng_reset(kcapi_rng, inbuf, inbuflen);
-+	}
-+}
-+
-+static int lrng_kcapi_drng_generate_helper(void *drng, u8 *outbuf,
-+					   u32 outbuflen)
-+{
-+	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
-+	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
-+	int ret =3D crypto_rng_get_bytes(kcapi_rng, outbuf, outbuflen);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return outbuflen;
-+}
-+
-+static void *lrng_kcapi_drng_alloc(u32 sec_strength)
-+{
-+	struct lrng_drng_info *lrng_drng_info;
-+	struct crypto_rng *kcapi_rng;
-+	int seedsize;
-+	void *ret =3D  ERR_PTR(-ENOMEM);
-+
-+	if (!drng_name) {
-+		pr_err("DRNG name missing\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (!memcmp(drng_name, "drbg", 4)) {
-+		pr_err("SP800-90A DRBG cannot be allocated using lrng_kcapi backend, use=
- lrng_drbg backend instead\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	if (!memcmp(drng_name, "stdrng", 6)) {
-+		pr_err("stdrng cannot be allocated using lrng_kcapi backend, it is too u=
-nspecific and potentially may allocate the DRBG\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	lrng_drng_info =3D kmalloc(sizeof(*lrng_drng_info), GFP_KERNEL);
-+	if (!lrng_drng_info)
-+		return ERR_PTR(-ENOMEM);
-+
-+	kcapi_rng =3D crypto_alloc_rng(drng_name, 0, 0);
-+	if (IS_ERR(kcapi_rng)) {
-+		pr_err("DRNG %s cannot be allocated\n", drng_name);
-+		ret =3D ERR_CAST(kcapi_rng);
-+		goto free;
-+	}
-+	lrng_drng_info->kcapi_rng =3D kcapi_rng;
-+
-+	seedsize =3D  crypto_rng_seedsize(kcapi_rng);
-+
-+	if (sec_strength > seedsize)
-+		pr_info("Seedsize DRNG (%u bits) lower than security strength of LRNG no=
-ise source (%u bits)\n",
-+			crypto_rng_seedsize(kcapi_rng) * 8, sec_strength * 8);
-+
-+	if (seedsize) {
-+		struct lrng_hash_info *lrng_hash;
-+
-+		if (!seed_hash) {
-+			switch (seedsize) {
-+			case 32:
-+				seed_hash =3D "sha256";
-+				break;
-+			case 48:
-+				seed_hash =3D "sha384";
-+				break;
-+			case 64:
-+				seed_hash =3D "sha512";
-+				break;
-+			default:
-+				pr_err("Seed size %d cannot be processed\n",
-+				       seedsize);
-+				goto dealloc;
-+				break;
-+			}
++		if (!init_drng_used) {
++			drngs[node] =3D lrng_drng_init;
++			init_drng_used =3D true;
++			continue;
 +		}
 +
-+		lrng_hash =3D _lrng_kcapi_hash_alloc(seed_hash);
-+		if (IS_ERR(lrng_hash)) {
-+			ret =3D ERR_CAST(lrng_hash);
-+			goto dealloc;
++		drng =3D kmalloc_node(sizeof(struct lrng_drng),
++				     GFP_KERNEL|__GFP_NOFAIL, node);
++		memset(drng, 0, sizeof(lrng_drng));
++
++		drng->crypto_cb =3D lrng_drng_init->crypto_cb;
++		drng->drng =3D drng->crypto_cb->lrng_drng_alloc(
++					LRNG_DRNG_SECURITY_STRENGTH_BYTES);
++		if (IS_ERR(drng->drng)) {
++			kfree(drng);
++			goto err;
 +		}
 +
-+		if (seedsize !=3D _lrng_kcapi_hash_digestsize(lrng_hash)) {
-+			pr_err("Seed hash output size not equal to DRNG seed size\n");
-+			_lrng_kcapi_hash_free(lrng_hash);
-+			ret =3D ERR_PTR(-EINVAL);
-+			goto dealloc;
++		mutex_init(&drng->lock);
++		spin_lock_init(&drng->spin_lock);
++
++		/*
++		 * No reseeding of NUMA DRNGs from previous DRNGs as this
++		 * would complicate the code. Let it simply reseed.
++		 */
++		lrng_drng_reset(drng);
++		drngs[node] =3D drng;
++
++		lrng_pool_inc_numa_node();
++		pr_info("DRNG for NUMA node %d allocated\n", node);
++	}
++
++	/* Ensure that all NUMA nodes receive changed memory here. */
++	mb();
++
++	if (!cmpxchg(&lrng_drng, NULL, drngs))
++		goto unlock;
++
++err:
++	for_each_online_node(node) {
++		struct lrng_drng *drng =3D drngs[node];
++
++		if (drng =3D=3D lrng_drng_init)
++			continue;
++
++		if (drng) {
++			drng->crypto_cb->lrng_drng_dealloc(drng->drng);
++			kfree(drng);
 +		}
-+
-+		lrng_drng_info->lrng_hash =3D lrng_hash;
-+
-+		pr_info("Seed hash %s allocated\n", seed_hash);
-+	} else {
-+		lrng_drng_info->lrng_hash =3D NULL;
 +	}
++	kfree(drngs);
 +
-+	pr_info("Kernel crypto API DRNG %s allocated\n", drng_name);
-+
-+	return lrng_drng_info;
-+
-+dealloc:
-+	crypto_free_rng(kcapi_rng);
-+free:
-+	kfree(lrng_drng_info);
-+	return ret;
++unlock:
++	mutex_unlock(&lrng_crypto_cb_update);
 +}
 +
-+static void lrng_kcapi_drng_dealloc(void *drng)
++static DECLARE_WORK(lrng_drngs_numa_alloc_work, _lrng_drngs_numa_alloc);
++
++void lrng_drngs_numa_alloc(void)
 +{
-+	struct lrng_drng_info *lrng_drng_info =3D (struct lrng_drng_info *)drng;
-+	struct crypto_rng *kcapi_rng =3D lrng_drng_info->kcapi_rng;
-+	struct lrng_hash_info *lrng_hash =3D lrng_drng_info->lrng_hash;
-+
-+	crypto_free_rng(kcapi_rng);
-+	if (lrng_hash) {
-+		_lrng_kcapi_hash_free(lrng_hash);
-+		pr_info("Seed hash %s deallocated\n", seed_hash);
-+	}
-+	kfree(lrng_drng_info);
-+	pr_info("DRNG %s deallocated\n", drng_name);
++	schedule_work(&lrng_drngs_numa_alloc_work);
 +}
-+
-+static const char *lrng_kcapi_drng_name(void)
-+{
-+	return drng_name;
-+}
-+
-+static const char *lrng_kcapi_pool_hash(void)
-+{
-+	return pool_hash;
-+}
-+
-+static const struct lrng_crypto_cb lrng_kcapi_crypto_cb =3D {
-+	.lrng_drng_name			=3D lrng_kcapi_drng_name,
-+	.lrng_hash_name			=3D lrng_kcapi_pool_hash,
-+	.lrng_drng_alloc		=3D lrng_kcapi_drng_alloc,
-+	.lrng_drng_dealloc		=3D lrng_kcapi_drng_dealloc,
-+	.lrng_drng_seed_helper		=3D lrng_kcapi_drng_seed_helper,
-+	.lrng_drng_generate_helper	=3D lrng_kcapi_drng_generate_helper,
-+	.lrng_hash_alloc		=3D lrng_kcapi_hash_alloc,
-+	.lrng_hash_dealloc		=3D lrng_kcapi_hash_dealloc,
-+	.lrng_hash_digestsize		=3D lrng_kcapi_hash_digestsize,
-+	.lrng_hash_buffer		=3D lrng_kcapi_hash_buffer,
-+};
-+
-+static int __init lrng_kcapi_init(void)
-+{
-+	return lrng_set_drng_cb(&lrng_kcapi_crypto_cb);
-+}
-+static void __exit lrng_kcapi_exit(void)
-+{
-+	lrng_set_drng_cb(NULL);
-+}
-+
-+late_initcall(lrng_kcapi_init);
-+module_exit(lrng_kcapi_exit);
-+MODULE_LICENSE("Dual BSD/GPL");
-+MODULE_AUTHOR("Stephan Mueller <smueller@chronox.de>");
-+MODULE_DESCRIPTION("Linux Random Number Generator - kernel crypto API DRNG=
- backend");
 =2D-=20
 2.26.2
 
