@@ -2,243 +2,152 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-18.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 111A4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBEBC2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED1BF2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rVw7/Nyu"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZDyXrwy3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbgHYTec (ORCPT
+        id S1726709AbgHYTfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:34:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52852 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHYTeb (ORCPT
+        Tue, 25 Aug 2020 15:35:25 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:55714 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYTfZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:34:31 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44ADBC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:34:31 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id m12so9815vko.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:34:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=BQ4KIMH6bpVBil/lNaFIbPRlFtnPXVOZm83SMiDhoQI=;
-        b=rVw7/NyuusmnircLWvIRovIMZ5uyp6WV2j/YnD+0ZfJ+KPPV6B5HJUi3KcdCe6x3V0
-         /I4+iGyQFnD2LWz7ZXL4rDGJ4qdh8AilsSloCqAtC7+PXvjRF4z/uMOk5yIto2XaOVbC
-         lBCm0qcSzVxGSW+cRpXrD1fFnuZfhaKQoDY/4n+HzhHn/3bqRj6JgTWtgFYPUfXH3LC/
-         LraS/Bo7F3qyqeq2F6WMVHyotaOf2vXvjBL4+OO9q7OmCPSoY1Knr9J+PfMfMeBYQlDd
-         kvPO8w7cOCF4ieOpUjGGef7K2t8nKD7x/CxANINL/KBDO566VkvGFIhh3sE5UPU3bsB2
-         aSAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=BQ4KIMH6bpVBil/lNaFIbPRlFtnPXVOZm83SMiDhoQI=;
-        b=JzOa6XYGf8ebBQvSBCEokh6vBWiC9vsZMoIUkkyMA8nsTqAp6pfI6QO6JJGtq1SLGr
-         3dzehknjfjVmTZT+i7EYOitVMiQTD2TQ1sgI+f4qFOXlpyyjkSKcqwzWT2zvcCTgCcKf
-         Owz/spMmJFNscGChqb8iQyJ6HDIroP3wPqMpFkUfdsB9+vKbLaJP++2qyfL3HOHP1zso
-         YjVHxH+C+idae5qpvdcHMfLDG3NtXnb9iCRi79zFPnch5TAXAudSw2E5ROkbGUT5Py6L
-         JU0SFG5J+qVtNZLQceTTSFvwbjoPzTlqE32HX93uIsV9xs0LtdPJsX50UjVn0zGkHVRz
-         eEig==
-X-Gm-Message-State: AOAM530iZA7x/CDHjj165TNUbU5upXiOv7USwyNxKqQMYKx1TL+dvaL9
-        kEM5Ve3k1cBORSD/3Lf6PoGM5o2pidq101s7mYnagg==
-X-Google-Smtp-Source: ABdhPJxOWqT5nCbzLtfj7ovQ7rnSnbtUPkNVEXd9T66zzCVi3sxbDoElawZrChROYnAY99tZ7lC6BZHXltftFs+eiEI=
-X-Received: by 2002:a1f:eac1:: with SMTP id i184mr7128999vkh.66.1598384067827;
- Tue, 25 Aug 2020 12:34:27 -0700 (PDT)
+        Tue, 25 Aug 2020 15:35:25 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id D0AF520B4908;
+        Tue, 25 Aug 2020 12:35:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D0AF520B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598384124;
+        bh=Fw5PHt/J5OR4kflOPB4F5zZgn2LUaRRDHppz3JIp4NI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZDyXrwy3YN/YeW8PWs7m5W4puC1eAAXy+vwudsE6S2eIXh+TqCTS7KKQz0YoM23ZJ
+         JEaghXk+Cud0NSADOA/C4fbFfieGQaYdhesKFMuFk9fGwnO2B6aHMupx6r9xyUf0Ge
+         BQXmszEqRkhNhzqQH41ReyNkKLLjHLgnjyFI4jX4=
+Subject: Re: [PATCH] IMA: Handle early boot data measurement
+To:     Mimi Zohar <zohar@linux.ibm.com>, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com
+Cc:     tyhicks@linux.microsoft.com, tusharsu@linux.microsoft.com,
+        sashal@kernel.org, jmorris@namei.org,
+        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200821231230.20212-1-nramas@linux.microsoft.com>
+ <a7ea2da1f895ee3db4697c00804160acb6db656e.camel@linux.ibm.com>
+ <307617de-b42d-ac52-6e9e-9e0d16bbc20e@linux.microsoft.com>
+ <49f8a616d80344c539b512f8b83590ea281ee54d.camel@linux.ibm.com>
+ <52d2204b-5b6e-e13f-d0dd-192a776812bc@linux.microsoft.com>
+ <805e35d6835df219b5836e8159742bed086e0554.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <958853ec-5354-fbcb-3fa0-2002954c3e40@linux.microsoft.com>
+Date:   Tue, 25 Aug 2020 12:35:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 26 Aug 2020 01:04:16 +0530
-Message-ID: <CA+G9fYu6OiLPb3CNCZmKYVqY-vd2-KU7tHNMmFuwpUaWTGb-xQ@mail.gmail.com>
-Subject: WARNING: at kernel/trace/ftrace.c:2425 ftrace_get_addr_new
-To:     X86 ML <x86@kernel.org>, open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, LTP List <ltp@lists.linux.it>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>, Ingo Molnar <mingo@redhat.com>,
-        Sean Paul <sean@poorly.run>,
-        Sami Tolvanen <samitolvanen@google.com>, masahiroy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <805e35d6835df219b5836e8159742bed086e0554.camel@linux.ibm.com>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While running LTP tracing tests on qemu_i386 running mainline linux master
-branch kernel the kernel warning continuously popped up on console.
+On 8/25/20 11:03 AM, Mimi Zohar wrote:
+> On Tue, 2020-08-25 at 10:55 -0700, Lakshmi Ramasubramanian wrote:
+>> On 8/25/20 10:42 AM, Mimi Zohar wrote:
+>>
+>>>>> Please limit the changes in this patch to renaming the functions and/or
+>>>>> files.  For example, adding "measure_payload_hash" should be a separate
+>>>>> patch, not hidden here.
+>>>>>
+>>>>
+>>>> Thanks for the feedback Mimi.
+>>>>
+>>>> I'll split this into 2 patches:
+>>>>
+>>>> PATCH 1: Rename files + rename CONFIG
+>>>> PATCH 2: Update IMA hook to utilize early boot data measurement.
+>>>
+>>> I'm referring to introducing the "measure_payload_hash" flag.  I assume
+>>> this is to indicate whether the buffer should be hashed or not.
+>>>
+>>> Example 1: ima_alloc_key_entry() and ima_alloc_data_entry(0 comparison
+>>>> -static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
+>>>> -                                                const void *payload,
+>>>> -                                                size_t payload_len)
+>>>> -{
+>>>> +static struct ima_data_entry *ima_alloc_data_entry(const char *event_name,
+>>>> +                                                  const void *payload,
+>>>> +                                                  size_t payload_len,
+>>>> +                                                  const char *event_data,
+>>>> +                                                  enum ima_hooks func,
+>>>> +                                                  bool measure_payload_hash)  <====
+>>>> +{
+>>>
+>>> Example 2:
+>>> diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+>>> index a74095793936..65423754765f 100644
+>>> --- a/security/integrity/ima/ima_asymmetric_keys.c
+>>> +++ b/security/integrity/ima/ima_asymmetric_keys.c
+>>> @@ -37,9 +37,10 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+>>>           if (!payload || (payload_len == 0))
+>>>                   return;
+>>>    
+>>> -       if (ima_should_queue_key())
+>>> -               queued = ima_queue_key(keyring, payload, payload_len);
+>>> -
+>>> +       if (ima_should_queue_data())
+>>> +               queued = ima_queue_data(keyring->description, payload,
+>>> +                                       payload_len, keyring->description,
+>>> +                                       KEY_CHECK, false);   <===
+>>>           if (queued)
+>>>                   return;
+>>>
+>>> But in general, as much as possible function and file name changes
+>>> should be done independently of other changes.
+>>>
+>>> thanks,
+>>
+>> I agree - but in this case, Tushar's patch series on adding support for
+>> "Critical Data" measurement has already introduced
+>> "measure_payload_hash" flag. His patch updates
+>> "process_buffer_measurement()" to take this new flag and measure hash of
+>> the given data.
+>>
+>> My patches extend that to queuing the early boot requests and processing
+>> them after a custom IMA policy is loaded.
+>>
+>> If you still think "measure_payload_hash" flag should be introduced in
+>> the queuing change as a separate patch I'll split the patches further.
+>> Please let me know.
+> 
+> There's a major problem if his changes add new function arguments
+> without modifying all the callers of the function.  I assume the kernel
+> would fail to compile properly.
 
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-  git commit: 6a9dc5fd6170d0a41c8a14eb19e63d94bea5705a
-  git describe: v5.9-rc2-42-g6a9dc5fd6170
-  make_kernelversion: 5.9.0-rc2
-  kernel-config:
-https://builds.tuxbuild.com/xpCK22s8vIl8tmDm4G8wVw/kernel.config
+Tushar's patch series does update all the existing callers of 
+process_buffer_measurement() to handle the new arguments. His patch 
+series is self contained, and builds and works fine.
 
-steps to reproduce:
-# Boot qemu i386 with trace configs enabled.
-# cd /opt/ltp
-# ./runltp -f tracing
+> 
+> Changing the function parameters to include "measure_payload_hash"
+> needs to be a separate patch, whether it is part of his patch set or
+> yours.
+> 
 
-ftrace-stress-test 1 TINFO: killing 694
-/opt/ltp/testcases/bin/ftrace_stress_test.sh: line 73:   694 Killed
-              sh ftrace_${target}.sh
-ftrace-stress-test 1 TINFO: Finished running the test. Run dmesg to
-double-check for bugs
-[  151.266804] ------------[ cut here ]------------
-[  151.268375] WARNING: CPU: 0 PID: 654 at kernel/trace/ftrace.c:2425
-ftrace_get_addr_new+0x8a/0xf0
-[  151.270337] Modules linked in:
-[  151.271117] CPU: 0 PID: 654 Comm: ftrace_stress_t Not tainted 5.9.0-rc2 #1
-[  151.272718] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[  151.274600] EIP: ftrace_get_addr_new+0x8a/0xf0
-[  151.275694] Code: 8b 3b 8b 35 48 6b 50 d4 8b 46 30 8b 48 04 8b 10
-89 f8 e8 09 df ff ff 84 c0 75 55 8b 76 04 85 f6 74 08 81 fe 60 6b 50
-d4 75 de <0f> 0b c7 05 54 6b 50 d4 00 00 00 00 c7 05 44 6b 50 d4 f0 ca
-2c d3
-[  151.279628] EAX: 00000000 EBX: f4c40000 ECX: 00000000 EDX: 00000000
-[  151.280844] ESI: d4507040 EDI: d32002e8 EBP: f32ddea0 ESP: f32dde94
-[  151.281737] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010246
-[  151.282762] CR0: 80050033 CR2: 0a0849e0 CR3: 328bd000 CR4: 003506d0
-[  151.283725] Call Trace:
-[  151.284148]  ftrace_replace_code+0x12f/0x150
-[  151.284791]  ftrace_modify_all_code+0xba/0x170
-[  151.285531]  arch_ftrace_update_code+0x8/0x10
-[  151.286158]  ftrace_run_update_code+0x16/0x80
-[  151.286808]  ftrace_startup_enable+0x30/0x40
-[  151.287550]  ftrace_enable_sysctl+0x124/0x15e
-[  151.288173]  ? ftrace_is_dead+0x10/0x10
-[  151.288781]  proc_sys_call_handler+0x11f/0x150
-[  151.289502]  ? proc_sys_call_handler+0x150/0x150
-[  151.290170]  proc_sys_write+0x12/0x20
-[  151.290741]  vfs_write+0xb3/0x200
-[  151.291393]  ksys_write+0x58/0xd0
-[  151.291885]  __ia32_sys_write+0x15/0x20
-[  151.292476]  __do_fast_syscall_32+0x3f/0x70
-[  151.293090]  do_fast_syscall_32+0x29/0x60
-[  151.293739]  do_SYSENTER_32+0x15/0x20
-[  151.294357]  entry_SYSENTER_32+0x9f/0xf2
-[  151.294955] EIP: 0xb7f85549
-[  151.295450] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01
-10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f
-34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-8d 76
-[  151.298035] EAX: ffffffda EBX: 00000001 ECX: 0a08b9f0 EDX: 00000002
-[  151.299024] ESI: 0a08b9f0 EDI: 00000002 EBP: b7f4ed80 ESP: bf8f9e90
-[  151.299992] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
-[  151.301039] ---[ end trace 13d91cd42a9362c2 ]---
-[  151.301820] Bad trampoline accounting at: 97ee436a
-(sanitize_boot_params.constprop.0+0x0/0xa8) (10000001)
-[  151.303214] ------------[ cut here ]------------
-[  151.303985] WARNING: CPU: 0 PID: 654 at kernel/trace/ftrace.c:2425
-ftrace_get_addr_new+0x8a/0xf0
-[  151.305246] Modules linked in:
-[  151.305768] CPU: 0 PID: 654 Comm: ftrace_stress_t Tainted: G
-W         5.9.0-rc2 #1
-[  151.306984] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[  151.308241] EIP: ftrace_get_addr_new+0x8a/0xf0
-[  151.308964] Code: 8b 3b 8b 35 48 6b 50 d4 8b 46 30 8b 48 04 8b 10
-89 f8 e8 09 df ff ff 84 c0 75 55 8b 76 04 85 f6 74 08 81 fe 60 6b 50
-d4 75 de <0f> 0b c7 05 54 6b 50 d4 00 00 00 00 c7 05 44 6b 50 d4 f0 ca
-2c d3
-[  151.311612] EAX: 00000000 EBX: f4c40008 ECX: 00000000 EDX: 00000000
-[  151.312594] ESI: d4507040 EDI: d3200390 EBP: f32ddea0 ESP: f32dde94
-[  151.313544] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010246
-[  151.314544] CR0: 80050033 CR2: 0a0849e0 CR3: 328bd000 CR4: 003506d0
-[  151.315543] Call Trace:
-[  151.315947]  ftrace_replace_code+0x12f/0x150
-[  151.316589]  ftrace_modify_all_code+0xba/0x170
-[  151.317325]  arch_ftrace_update_code+0x8/0x10
-[  151.317948]  ftrace_run_update_code+0x16/0x80
-[  151.318626]  ftrace_startup_enable+0x30/0x40
-[  151.319367]  ftrace_enable_sysctl+0x124/0x15e
-[  151.320025]  ? ftrace_is_dead+0x10/0x10
-[  151.320613]  proc_sys_call_handler+0x11f/0x150
-[  151.321346]  ? proc_sys_call_handler+0x150/0x150
-[  151.322042]  proc_sys_write+0x12/0x20
-[  151.322639]  vfs_write+0xb3/0x200
-[  151.323192]  ksys_write+0x58/0xd0
-[  151.323748]  __ia32_sys_write+0x15/0x20
-[  151.324386]  __do_fast_syscall_32+0x3f/0x70
-[  151.324991]  do_fast_syscall_32+0x29/0x60
-[  151.325597]  do_SYSENTER_32+0x15/0x20
-[  151.326170]  entry_SYSENTER_32+0x9f/0xf2
-[  151.326774] EIP: 0xb7f85549
-[  151.327209] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01
-10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f
-34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-8d 76
-[  151.329767] EAX: ffffffda EBX: 00000001 ECX: 0a08b9f0 EDX: 00000002
-[  151.330777] ESI: 0a08b9f0 EDI: 00000002 EBP: b7f4ed80 ESP: bf8f9e90
-[  151.331762] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
-[  151.332774] ---[ end trace 13d91cd42a9362c3 ]---
-[  151.333520] Bad trampoline accounting at: f22f519e
-(trace_initcall_finish_cb+0x0/0x40) (10000001)
-[  151.334788] ------------[ cut here ]------------
-[  151.335586] WARNING: CPU: 0 PID: 654 at kernel/trace/ftrace.c:2425
-ftrace_get_addr_new+0x8a/0xf0
-[  151.336843] Modules linked in:
-[  151.337358] CPU: 0 PID: 654 Comm: ftrace_stress_t Tainted: G
-W         5.9.0-rc2 #1
-[  151.338541] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[  151.339826] EIP: ftrace_get_addr_new+0x8a/0xf0
-[  151.340547] Code: 8b 3b 8b 35 48 6b 50 d4 8b 46 30 8b 48 04 8b 10
-89 f8 e8 09 df ff ff 84 c0 75 55 8b 76 04 85 f6 74 08 81 fe 60 6b 50
-d4 75 de <0f> 0b c7 05 54 6b 50 d4 00 00 00 00 c7 05 44 6b 50 d4 f0 ca
-2c d3
-[  151.343103] EAX: 00000000 EBX: f4c40010 ECX: 00000000 EDX: 00000000
-[  151.344098] ESI: d4507040 EDI: d32007c0 EBP: f32ddea0 ESP: f32dde94
-[  151.345026] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010246
-[  151.346078] CR0: 80050033 CR2: 0a0849e0 CR3: 328bd000 CR4: 003506d0
-[  151.346987] Call Trace:
-[  151.347447]  ftrace_replace_code+0x12f/0x150
-[  151.348075]  ftrace_modify_all_code+0xba/0x170
-[  151.348745]  arch_ftrace_update_code+0x8/0x10
-[  151.349501]  ftrace_run_update_code+0x16/0x80
-[  151.350175]  ftrace_startup_enable+0x30/0x40
-[  151.350845]  ftrace_enable_sysctl+0x124/0x15e
-[  151.351605]  ? ftrace_is_dead+0x10/0x10
-[  151.352170]  proc_sys_call_handler+0x11f/0x150
-[  151.352832]  ? proc_sys_call_handler+0x150/0x150
-[  151.353599]  proc_sys_write+0x12/0x20
-[  151.354163]  vfs_write+0xb3/0x200
-[  151.354694]  ksys_write+0x58/0xd0
-[  151.355237]  __ia32_sys_write+0x15/0x20
-[  151.355848]  __do_fast_syscall_32+0x3f/0x70
-[  151.356525]  do_fast_syscall_32+0x29/0x60
-[  151.357106]  do_SYSENTER_32+0x15/0x20
-[  151.357675]  entry_SYSENTER_32+0x9f/0xf2
-[  151.358391] EIP: 0xb7f85549
-[  151.358821] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01
-10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f
-34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90
-8d 76
-[  151.361407] EAX: ffffffda EBX: 00000001 ECX: 0a08b9f0 EDX: 00000002
-[  151.362434] ESI: 0a08b9f0 EDI: 00000002 EBP: b7f4ed80 ESP: bf8f9e90
-[  151.363367] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000246
-[  151.364402] ---[ end trace 13d91cd42a9362c4 ]---
-[  151.365082] Bad trampoline accounting at: f89b861d
-(initcall_blacklisted+0x0/0xd0) (10000001)
-[  151.366309] ------------[ cut here ]------------
-[  151.367062] WARNING: CPU: 0 PID: 654 at kernel/trace/ftrace.c:2425
-ftrace_get_addr_new+0x8a/0xf0
+ok - I'll split the queuing patch to include "measure_payload_hash" in a 
+separate patch.
 
-ref:
-https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.9-rc2-42-g6a9dc5fd6170/testrun/3113849/suite/linux-log-parser/test/check-kernel-exception-1707157/log
+thanks,
+  -lakshmi
 
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
