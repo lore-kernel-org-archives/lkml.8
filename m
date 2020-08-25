@@ -2,84 +2,326 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F59FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:45:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBA3C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCEDC2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598370350;
-	bh=J9j8I9e1vUqi85jVzVhKCQp3T2bITZExUCsPWzEeIMs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yJVyJ7V4wtJbYO11I8POpOPxhZsxaaqVHLguE/v73rM8+RkIeS8E32yxak5UlXLEt
-	 DFS/qQd8Au6VlxLQOSdoWojV38+ij62k418/d3aAcAQGE6MMb1Lzb/w62t4YvKhRqG
-	 0j8eb4x3gW6FWgyZ/rR4nkNZTBpgzeX0S9dW7Y0o=
+	by mail.kernel.org (Postfix) with ESMTP id EEBBA2067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:46:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qmnB80HC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbgHYPpt (ORCPT
+        id S1726990AbgHYPqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:45:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbgHYPpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:45:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BE0B2067C;
-        Tue, 25 Aug 2020 15:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598370332;
-        bh=J9j8I9e1vUqi85jVzVhKCQp3T2bITZExUCsPWzEeIMs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gG9TpcopdDPeldxrfc0Zu7ErcQ5JJWy+leFqtjDc70tZWHAi5s+8DFQXXAsjz773L
-         wERo5NQnTdjXgOQq98zX+bvyzyTHDrzvasAanvQi8RcWgkc+16TbKS44Kgava5ZhPf
-         ZdDKV43+uH7FmJaCWC55FS1sggD3EclaIyA6Urpc=
-Date:   Tue, 25 Aug 2020 17:45:48 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Qu Wenruo <quwenruo.btrfs@gmx.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v2] kobject: Restore old behaviour of kobject_del(NULL)
-Message-ID: <20200825154548.GA1514525@kroah.com>
-References: <20200803082706.65347-1-andriy.shevchenko@linux.intel.com>
- <20200803094659.GB635660@kroah.com>
- <20200825144109.GN1891694@smile.fi.intel.com>
+        Tue, 25 Aug 2020 11:46:17 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:44602 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbgHYPqP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 11:46:15 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200825154612euoutp02a1324257945c84dd0891fe4906e9bfe6~ujWKlbA1c2475624756euoutp02S;
+        Tue, 25 Aug 2020 15:46:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200825154612euoutp02a1324257945c84dd0891fe4906e9bfe6~ujWKlbA1c2475624756euoutp02S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598370372;
+        bh=FtOSd+33zO9H2gbhYyEI6+LIXU6Ebz09N+WK8v5l3Qk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qmnB80HCRpTIJN61GzGyqARX44nnSNahAAHw35wpk/zfjUEnSsVXgEKOrDsC/pAj6
+         symrWfoqT2uLNBmBmOayRHvbeydTwjTB0FvjzcSqpr3zsZH7eW52evQ4fUpIKxoRMU
+         4tAaqw3yZ4Ag+Ct8RREOmcU+ioAKJgYFow3Cvng8=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200825154612eucas1p162a61a2c552e7fc9559c24eb882da3bb~ujWKJU5A90093800938eucas1p10;
+        Tue, 25 Aug 2020 15:46:12 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id BC.49.06456.442354F5; Tue, 25
+        Aug 2020 16:46:12 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200825154611eucas1p284be8779ab484e675af071afef28376b~ujWJwJyL42186421864eucas1p2h;
+        Tue, 25 Aug 2020 15:46:11 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200825154611eusmtrp106fcb37d935e266647dfb1dbf967a749~ujWJvb_bw1643516435eusmtrp1f;
+        Tue, 25 Aug 2020 15:46:11 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-0c-5f453244bba5
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 87.5B.06314.342354F5; Tue, 25
+        Aug 2020 16:46:11 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200825154611eusmtip1a6d020326370241cf5c2de6f0d73a9c0~ujWJjmsc12952829528eusmtip1z;
+        Tue, 25 Aug 2020 15:46:11 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
+        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        "list\@263.net\:IOMMU DRIVERS \<iommu\@lists.linux-foundation.org\>\,
+        Joerg Roedel \<joro\@8bytes.org\>\," 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v2 7/9] spi: spi-s3c64xx: Ensure cur_speed holds actual
+ clock value
+Date:   Tue, 25 Aug 2020 17:45:57 +0200
+In-Reply-To: <CAAFQd5C7Ysb2wnUhUcFZObuSSn4oW=e-oObO5Abat8rJRvqPqw@mail.gmail.com>
+        (Tomasz Figa's message of "Tue, 25 Aug 2020 17:11:09 +0200")
+Message-ID: <dleftj5z96wwy2.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825144109.GN1891694@smile.fi.intel.com>
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfSyUcRzvd89zzz2uzn6O5hvN6kYTQ8ryqKtFbNfaWktrpcKVZxh37B70
+        sha9Tpcw5v2SZJHymmR6mcnrbrrSkpaXCVGphsrRRs5zNv99vp+X78tvP5qQ9gnt6Eh1HKtR
+        K6NllJisb5s1uPlvDQjZ0lohZO4ZxwRMTW6VkMkaGqGYtOHvBGMwVIuY2uEeIfOuUUcxuYaX
+        AubS5EcRU9HSL2Kmr81Te1YrCpLekooPJVOEorb8BqV4XJKoSK0rR4rpWoeDVJBYHsZGRyaw
+        Go/doeKIlL++sVe8z77KaaKSkNZFiyxowF5weaGA0iIxLcVlCDoWLgn44jeCR6M3RXwxjaC9
+        ZQwtR65+7DULpQhmmifNxRiC921VpBbRNIXdoaLiqClggx3hX2fu0gwCF5PwdKBcaBKs8THQ
+        z/eQJkxiJ8geuiw0mSxwOoKJmTHKJEiwN0xn6JbwWuwDdeODIp63gs68kaUwgVWQZ5hApjDg
+        SRFUTySL+F394UlhiYDH1vCtvc7Mrwd9ZsrSpoATITNjO59NQVCvM5K8Zyf0vZ6jeOwLxgGt
+        gPdbQu8PK36uJWTU5xA8LYHk61Le7QiVac/NXezg1rcy88sp4IGug+AfqwSBrq6LSEcb8lec
+        k7/inPzFtgTeDFWNHjztCvfvfid4vAsqK3+RRUhYjmzZeE4VznKeavaMO6dUcfHqcPfTMapa
+        tPjP9PPtUw3oT/epZoRpJFsjKaICQqRCZQJ3TtWMHBc7fa5++AbZkeoYNSuzkfh16YOlkjDl
+        ufOsJiZEEx/Ncs3IniZltpJtxV9PSnG4Mo6NYtlYVrOsCmgLuyQkP1Qz6L3O3vdPNDXXLx9v
+        48gio4NzlkaQErRxX7HVG31q+PtU3apHVaWjk7uyfHYEt4SKsXPBs4v7dzxslbslykMCsy+g
+        gonIbq+oUb8ycDUcb2w6YRSUfrINSm10en5V8sX3695NZT1pFqWjs5rAvsO3jwwQXS9+KiMO
+        NNwp1MtILkLp6UJoOOV/yjYu2m8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEIsWRmVeSWpSXmKPExsVy+t/xu7rORq7xBq9+qlgs/vGcyWLjjPWs
+        FlMfPmGz6H/8mtni/PkN7BabHl9jtbi8aw6bxYzz+5gsGj/eZLdYe+Quu8Xn1n9sDtwesxsu
+        snhcX/KJ2WPTqk42j81L6j36tqxi9Pi8SS6ALUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jE
+        Us/Q2DzWyshUSd/OJiU1J7MstUjfLkEvo+ebY0GzecXh6QfYGhi7tLoYOTkkBEwkWm7eYO9i
+        5OIQEljKKHH25WPmLkYOoISUxMq56RA1whJ/rnWxQdQ8ZZRYcuoiE0gNm4CexNq1ESA1IgIq
+        Er9PzmADsZkFJrNIPFtiCGILC4RL3Fn6jBnEFhIIkJjw6AaYzSKgKjHtYRMryExOgQmMEm++
+        Pwdr5hUwl/g8aQ6YLSpgKbHlxX12iLigxMmZT1ggFmRLfF39nHkCo8AsJKlZSFKzgM5jFtCU
+        WL9LHyKsLbFs4WtmCNtWYt269ywLGFlXMYqklhbnpucWG+oVJ+YWl+al6yXn525iBMbhtmM/
+        N+9gvLQx+BCjAAejEg/vAjbXeCHWxLLiytxDjCpAYx5tWH2BUYolLz8vVUmE1+ns6Tgh3pTE
+        yqrUovz4otKc1OJDjKZAj05klhJNzgemjrySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp
+        2ampBalFMH1MHJxSDYwTfnTKPV/Y1f9N2G7dp++hfy33Kbpsm83n2v6O2Sh6UrDW9notxU07
+        gzQ3sBw4VHlqV+CvaTfK43sv3mRvUNp5RO9pSblMXm64UHdJ4hOrnv45e349eqO/6fzJUEvf
+        /Bz1WW2n5m96bqjwddGHxwsvfDjn+mGnnhp/7dXrOxRs/R1vnQ1TcL2vxFKckWioxVxUnAgA
+        OkS2P+UCAAA=
+X-CMS-MailID: 20200825154611eucas1p284be8779ab484e675af071afef28376b
+X-Msg-Generator: CA
+X-RootMTR: 20200825154611eucas1p284be8779ab484e675af071afef28376b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200825154611eucas1p284be8779ab484e675af071afef28376b
+References: <CAAFQd5C7Ysb2wnUhUcFZObuSSn4oW=e-oObO5Abat8rJRvqPqw@mail.gmail.com>
+        <CGME20200825154611eucas1p284be8779ab484e675af071afef28376b@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 05:41:09PM +0300, Andy Shevchenko wrote:
-> On Mon, Aug 03, 2020 at 11:46:59AM +0200, Greg Kroah-Hartman wrote:
-> > On Mon, Aug 03, 2020 at 11:27:06AM +0300, Andy Shevchenko wrote:
-> > > The commit 079ad2fb4bf9 ("kobject: Avoid premature parent object freeing in
-> > > kobject_cleanup()") inadvertently dropped a possibility to call kobject_del()
-> > > with NULL pointer. Restore the old behaviour.
-> > > 
-> > > Fixes: 079ad2fb4bf9 ("kobject: Avoid premature parent object freeing in kobject_cleanup()")
-> > > Reported-by: Qu Wenruo <quwenruo.btrfs@gmx.com>
-> > > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > ---
-> > > v2: replaced ?: with plain conditional (Greg)
-> > >  lib/kobject.c | 6 +++++-
-> > >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > Thanks, much better, will queue up after -rc1 is out.
-> 
-> Shouldn't be this taken care of?
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Yes, will get to it soon, after -rc1 is tough, combined with Plumbers...
+It was <2020-08-25 wto 17:11>, when Tomasz Figa wrote:
+> On Tue, Aug 25, 2020 at 11:02 AM Lukasz Stelmach <l.stelmach@samsung.com>=
+ wrote:
+>>
+>> It was <2020-08-24 pon 15:21>, when Tomasz Figa wrote:
+>> > On Mon, Aug 24, 2020 at 3:17 PM Lukasz Stelmach <l.stelmach@samsung.co=
+m> wrote:
+>> >>
+>> >> It was <2020-08-22 sob 14:43>, when Krzysztof Kozlowski wrote:
+>> >> > On Fri, Aug 21, 2020 at 06:13:59PM +0200, =C5=81ukasz Stelmach wrot=
+e:
+>> >> >> cur_speed is used to calculate transfer timeout and needs to be
+>> >> >> set to the actual value of (half) the clock speed for precise
+>> >> >> calculations.
+>> >> >
+>> >> > If you need this only for timeout calculation just divide it in
+>> >> > s3c64xx_wait_for_dma().
+>> >>
+>> >> I divide it here to keep the relationship between the value the varia=
+ble
+>> >> holds and the one that is inside clk_* (See? It's multiplied 3 lines
+>> >> above). If you look around every single clk_get_rate() call in the fi=
+le is
+>> >> divided by two.
+>> >>
+>> >> > Otherwise why only if (cmu) case is updated?
+>> >>
+>> >> You are righ I will update that too.
+>> >>
+>> >> However, I wonder if it is even possible that the value read from
+>> >> S3C64XX_SPI_CLK_CFG would be different than the one written to it?
+>> >>
+>> >
+>> > It is not possible for the register itself, but please see my other
+>> > reply, where I explained the integer rounding error which can happen
+>> > when calculating the value to write to the register.
+>>
+>> I don't have any board to test it and Marek says there is only one that
+>> doesn't use cmu *and* has an SPI device attached.
+>>
+>> Here is what I think should work for the !cmu case.
+>>
+>> --8<---------------cut here---------------start------------->8---
+>> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+>> index 18b89e53ceda..5ebb1caade4d 100644
+>> --- a/drivers/spi/spi-s3c64xx.c
+>> +++ b/drivers/spi/spi-s3c64xx.c
+>> @@ -655,13 +655,18 @@ static int s3c64xx_spi_config(struct
+>> s3c64xx_spi_driver_data *sdd)
+>>                         return ret;
+>>                 sdd->cur_speed =3D clk_get_rate(sdd->src_clk) / 2;
+>>         } else {
+>> +               int src_clk_rate =3D clk_get_rate(sdd->src_clk);
+>
+> The return value of clk_get_rate() is unsigned long.
+>
+>> +               int clk_val =3D (src_clk_rate / sdd->cur_speed / 2 - 1);
+>
+> Perhaps u32, since this is a value to be written to a 32-bit register.
+> Also if you could add a comment explaining that a negative overflow is
+> impossible:
+>
+> /* s3c64xx_spi_setup() ensures that sdd->cur_speed <=3D src_clk_rate / 2.=
+ */
 
-greg k-h
+OK.
+
+> But actually, unless my lack of sleep is badly affecting my brain
+> processes, the original computation was completely wrong. Let's
+> consider the scenario below:
+>
+> src_clk_rate =3D 8000000
+> sdd->cur_speed =3D 2500000
+>
+> clk_val =3D 8000000 / 2500000 / 2 - 1 =3D 3 / 2 - 1 =3D 1 - 1 =3D 0
+> [...]
+> sdd->cur_speed =3D 8000000 / (2 * (0 + 1)) =3D 8000000 / (2 * 1) =3D 8000=
+000
+> / 2 =3D 4000000
+>
+> So a request for 2.5 MHz ends up with 4 MHz, which could actually be
+> above the client device or link spec.
+>
+> I believe the right thing to do would be DIV_ROUND_UP(src_clk_rate /
+> 2, sdd->cur_speed) - 1. It's safe to divide src_clk_rate directly,
+> because those are normally high rates divisible by two without much
+> precision loss.
+
+This makes sense.
+
+>> +
+>>                 /* Configure Clock */
+>>                 val =3D readl(regs + S3C64XX_SPI_CLK_CFG);
+>>                 val &=3D ~S3C64XX_SPI_PSR_MASK;
+>> -               val |=3D ((clk_get_rate(sdd->src_clk) / sdd->cur_speed /=
+ 2 - 1)
+>> -                               & S3C64XX_SPI_PSR_MASK);
+>> +               val |=3D (clk_val & S3C64XX_SPI_PSR_MASK);
+>>                 writel(val, regs + S3C64XX_SPI_CLK_CFG);
+>>
+>> +               /* Keep the actual value */
+>> +               sdd->cur_speed =3D src_clk_rate / (2 * (clk_val + 1));
+>
+> Also need to consider S3C64XX_SPI_PSR_MASK here, because clk_val could
+> actually be > S3C64XX_SPI_PSR_MASK.
+
+Good point, but this
+
+    clk_val =3D clk_val < 127 ? clk_val : 127;
+
+seems more appropriate since masking may give very bogus value. Eg.
+
+    src_clk_rate =3D 80000000 // 80 MHz
+    cur_speed =3D 300000 // 300 kHz
+
+    clk_val =3D 80000000/300000/2-1        =3D> 132
+    clk_val &=3D S3C64XX_SPI_PSR_MASK      =3D> 4
+    cur_speed =3D 80000000 / (2 * (4 + 1)) =3D> 8000000 // 8 MHz
+
+
+>> +
+>>                 /* Enable Clock */
+>>                 val =3D readl(regs + S3C64XX_SPI_CLK_CFG);
+>>                 val |=3D S3C64XX_SPI_ENCLK_ENABLE;
+>> --8<---------------cut here---------------end--------------->8---
+>>
+>>
+>> >> > You are also affecting here not only timeout but
+>> >> > s3c64xx_enable_datapath() which is not mentioned in commit log. In =
+other
+>> >> > words, this looks wrong.
+>> >>
+>> >> Indeed, there is a reference too. I've corrected the message.
+>> >>
+>> >
+>> > Thanks!
+>> >
+>> > Best regards,
+>> > Tomasz
+>> >
+>> >> >>
+>> >> >> Cc: Tomasz Figa <tfiga@chromium.org>
+>> >> >> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+>> >> >> ---
+>> >> >>  drivers/spi/spi-s3c64xx.c | 1 +
+>> >> >>  1 file changed, 1 insertion(+)
+>> >> >>
+>> >> >> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+>> >> >> index 02de734b8ab1..89c162efe355 100644
+>> >> >> --- a/drivers/spi/spi-s3c64xx.c
+>> >> >> +++ b/drivers/spi/spi-s3c64xx.c
+>> >> >> @@ -626,6 +626,7 @@ static int s3c64xx_spi_config(struct s3c64xx_s=
+pi_driver_data *sdd)
+>> >> >>              ret =3D clk_set_rate(sdd->src_clk, sdd->cur_speed * 2=
+);
+>> >> >>              if (ret)
+>> >> >>                      return ret;
+>> >> >> +            sdd->cur_speed =3D clk_get_rate(sdd->src_clk) / 2;
+>> >> >>      } else {
+>> >> >>              /* Configure Clock */
+>> >> >>              val =3D readl(regs + S3C64XX_SPI_CLK_CFG);
+>> >> >> --
+>> >> >> 2.26.2
+>> >> >>
+>> >> >
+>> >> >
+>> >>
+>> >> --
+>> >> =C5=81ukasz Stelmach
+>> >> Samsung R&D Institute Poland
+>> >> Samsung Electronics
+>> >
+>> >
+>>
+>> --
+>> =C5=81ukasz Stelmach
+>> Samsung R&D Institute Poland
+>> Samsung Electronics
+>
+
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl9FMjYACgkQsK4enJil
+gBBNNQf/ckOf5i5waSDTupH7mWGPQ5C4nH/KjRRr7UprzlQ00ktUqbleMte392r7
+ndugky+h63kYtJYUHTKxOgoq2ZQOaeqc7+kyqgPc7Ln+rNaknlPesYiQeNlNNiEV
+B6iH74vZn2yEMSujXvCSwl7rapKJPoT2sv7It/zhKGe43V72FrVw61CYImAJnpIs
+A2nIINsfGjUntWQ6kczTB4Cv93pv54sPj4CAJXbI4MMYbqf7laiveqhvSjGbzSOO
+zrcdBTmjSj3vsjbV56MUWdRNYmaWrk9TUBzoMhgGIUPWkc67FrJNi0NWq/+Givbn
+BElTd0mc5NMp0PM79Yt2MFbB+Ga1Cw==
+=O1Qp
+-----END PGP SIGNATURE-----
+--=-=-=--
