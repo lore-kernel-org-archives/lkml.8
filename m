@@ -4,42 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1431DC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E603C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1DE62072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 004362072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbgHYE5D (ORCPT
+        id S1729025AbgHYE7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:57:03 -0400
-Received: from smtprelay0022.hostedemail.com ([216.40.44.22]:33344 "EHLO
+        Tue, 25 Aug 2020 00:59:02 -0400
+Received: from smtprelay0217.hostedemail.com ([216.40.44.217]:59196 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728559AbgHYE46 (ORCPT
+        by vger.kernel.org with ESMTP id S1728715AbgHYE5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:56:58 -0400
+        Tue, 25 Aug 2020 00:57:03 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 4185D181D330D;
-        Tue, 25 Aug 2020 04:56:56 +0000 (UTC)
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 7303412C8;
+        Tue, 25 Aug 2020 04:57:01 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: queen35_181117e27059
-X-Filterd-Recvd-Size: 1682
+X-HE-Tag: tooth95_1d0aaa027059
+X-Filterd-Recvd-Size: 3852
 Received: from joe-laptop.perches.com (unknown [47.151.133.149])
         (Authenticated sender: joe@perches.com)
         by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 25 Aug 2020 04:56:54 +0000 (UTC)
+        Tue, 25 Aug 2020 04:56:58 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     Jiri Kosina <trivial@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 08/29] dma-buf: Avoid comma separated statements
-Date:   Mon, 24 Aug 2020 21:56:05 -0700
-Message-Id: <990bf6f33ccaf73ad56eb4bea8bd2c0db5e90a31.1598331148.git.joe@perches.com>
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 10/29] drm/i915: Avoid comma separated statements
+Date:   Mon, 24 Aug 2020 21:56:07 -0700
+Message-Id: <d687691df8f9978c7b2362c18d77a16b49be76b0.1598331148.git.joe@perches.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.1598331148.git.joe@perches.com>
 References: <cover.1598331148.git.joe@perches.com>
@@ -54,27 +56,83 @@ Use semicolons and braces.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/dma-buf/st-dma-fence.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/gt/gen8_ppgtt.c           | 8 +++++---
+ drivers/gpu/drm/i915/gt/intel_gt_requests.c    | 6 ++++--
+ drivers/gpu/drm/i915/gt/selftest_workarounds.c | 6 ++++--
+ drivers/gpu/drm/i915/intel_runtime_pm.c        | 6 ++++--
+ 4 files changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma-buf/st-dma-fence.c b/drivers/dma-buf/st-dma-fence.c
-index e593064341c8..c8a12d7ad71a 100644
---- a/drivers/dma-buf/st-dma-fence.c
-+++ b/drivers/dma-buf/st-dma-fence.c
-@@ -471,8 +471,11 @@ static int thread_signal_callback(void *arg)
- 			dma_fence_signal(f1);
+diff --git a/drivers/gpu/drm/i915/gt/gen8_ppgtt.c b/drivers/gpu/drm/i915/gt/gen8_ppgtt.c
+index 699125928272..114c13285ff1 100644
+--- a/drivers/gpu/drm/i915/gt/gen8_ppgtt.c
++++ b/drivers/gpu/drm/i915/gt/gen8_ppgtt.c
+@@ -323,10 +323,12 @@ static int __gen8_ppgtt_alloc(struct i915_address_space * const vm,
+ 			}
  
- 		smp_store_mb(cb.seen, false);
--		if (!f2 || dma_fence_add_callback(f2, &cb.cb, simple_callback))
--			miss++, cb.seen = true;
-+		if (!f2 ||
-+		    dma_fence_add_callback(f2, &cb.cb, simple_callback)) {
-+			miss++;
-+			cb.seen = true;
+ 			spin_lock(&pd->lock);
+-			if (likely(!pd->entry[idx]))
++			if (likely(!pd->entry[idx])) {
+ 				set_pd_entry(pd, idx, pt);
+-			else
+-				alloc = pt, pt = pd->entry[idx];
++			} else {
++				alloc = pt;
++				pt = pd->entry[idx];
++			}
+ 		}
+ 
+ 		if (lvl) {
+diff --git a/drivers/gpu/drm/i915/gt/intel_gt_requests.c b/drivers/gpu/drm/i915/gt/intel_gt_requests.c
+index 66fcbf9d0fdd..54408d0b5e6e 100644
+--- a/drivers/gpu/drm/i915/gt/intel_gt_requests.c
++++ b/drivers/gpu/drm/i915/gt/intel_gt_requests.c
+@@ -139,8 +139,10 @@ long intel_gt_retire_requests_timeout(struct intel_gt *gt, long timeout)
+ 	LIST_HEAD(free);
+ 
+ 	interruptible = true;
+-	if (unlikely(timeout < 0))
+-		timeout = -timeout, interruptible = false;
++	if (unlikely(timeout < 0)) {
++		timeout = -timeout;
++		interruptible = false;
++	}
+ 
+ 	flush_submission(gt, timeout); /* kick the ksoftirqd tasklets */
+ 	spin_lock(&timelines->lock);
+diff --git a/drivers/gpu/drm/i915/gt/selftest_workarounds.c b/drivers/gpu/drm/i915/gt/selftest_workarounds.c
+index febc9e6692ba..3e4cbeed20bd 100644
+--- a/drivers/gpu/drm/i915/gt/selftest_workarounds.c
++++ b/drivers/gpu/drm/i915/gt/selftest_workarounds.c
+@@ -521,8 +521,10 @@ static int check_dirty_whitelist(struct intel_context *ce)
+ 
+ 		srm = MI_STORE_REGISTER_MEM;
+ 		lrm = MI_LOAD_REGISTER_MEM;
+-		if (INTEL_GEN(engine->i915) >= 8)
+-			lrm++, srm++;
++		if (INTEL_GEN(engine->i915) >= 8) {
++			lrm++;
++			srm++;
 +		}
  
- 		if (!t->before)
- 			dma_fence_signal(f1);
+ 		pr_debug("%s: Writing garbage to %x\n",
+ 			 engine->name, reg);
+diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i915/intel_runtime_pm.c
+index 153ca9e65382..f498f1c80755 100644
+--- a/drivers/gpu/drm/i915/intel_runtime_pm.c
++++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
+@@ -201,8 +201,10 @@ __print_intel_runtime_pm_wakeref(struct drm_printer *p,
+ 		unsigned long rep;
+ 
+ 		rep = 1;
+-		while (i + 1 < dbg->count && dbg->owners[i + 1] == stack)
+-			rep++, i++;
++		while (i + 1 < dbg->count && dbg->owners[i + 1] == stack) {
++			rep++;
++			i++;
++		}
+ 		__print_depot_stack(stack, buf, PAGE_SIZE, 2);
+ 		drm_printf(p, "Wakeref x%lu taken at:\n%s", rep, buf);
+ 	}
 -- 
 2.26.0
 
