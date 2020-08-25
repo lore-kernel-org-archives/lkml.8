@@ -2,243 +2,125 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AA0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 414E720706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C64220706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:32:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oLwpQPlw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X9RY+o6s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbgHYIcE (ORCPT
+        id S1729271AbgHYIcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:32:04 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33004 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725936AbgHYIcB (ORCPT
+        Tue, 25 Aug 2020 04:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729165AbgHYIcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:32:01 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07P83DZY035721;
-        Tue, 25 Aug 2020 04:31:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=ul3LRDqOL5AX8hqIlLs89geF2pzCuEqTWsrxPKxeck8=;
- b=oLwpQPlwULQbO3ay8NLk0mAsq1cLc9yRWU0SbeUHAeOY3wNOuII7tHv/eXzSJTgQHZVw
- xpkeZENO46eXDU7fe6ePz73g9MEfFBnZfL9cv8beHSnEIJmC+nCv3/ByvkGNYRtj1HC2
- diAnlAG2jHb6OeMsnbBgt7Z8HanwReiy+Td5YRFuY+IKQrX9U6dl/+Le79g3q2nK9jN9
- 2+kj4/RRFHv6dTBv2o8I4X5hDp7d0KJfJ0CYSuu2Qr8xa2Z3NKrZlInjB3vaPZ2nnIPP
- FdgZsFb0620VzakMxjiueGg2G1T7HAXhyJGrvHUWOPm/XVn/1ijqivZjqe0oNc9TX7TK tQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 334xb91hc0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 04:31:28 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07P8VSFQ131986;
-        Tue, 25 Aug 2020 04:31:28 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 334xb91han-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 04:31:28 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07P8Rdci026137;
-        Tue, 25 Aug 2020 08:31:25 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-        by ppma04ams.nl.ibm.com with ESMTP id 33498u94j3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 08:31:25 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07P8TrEM39059726
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 08:29:53 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 238D852051;
-        Tue, 25 Aug 2020 08:31:23 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.145.152.21])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 3EAE05204E;
-        Tue, 25 Aug 2020 08:31:21 +0000 (GMT)
-Date:   Tue, 25 Aug 2020 11:31:19 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LTP List <ltp@lists.linux.it>, Arnd Bergmann <arnd@arndb.de>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Xu <peterx@redhat.com>, opendmb@gmail.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        afzal.mohd.ma@gmail.com, Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: BUG: Bad page state in process true pfn:a8fed on arm
-Message-ID: <20200825083119.GA69694@linux.ibm.com>
-References: <CA+G9fYt=oYWHEG6VNkfEh8+UxbReS6_+9hnz+1bOYZHj5j1F_Q@mail.gmail.com>
- <20200824110645.GC17456@casper.infradead.org>
- <CA+G9fYvjKGF3HZXyd=JQHzRG=r=bmD0hYQn02VL4Y=5y57OgaA@mail.gmail.com>
+        Tue, 25 Aug 2020 04:32:10 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0410C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 01:32:08 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id x64so5007916lff.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 01:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8VBcmM6sRKWlq0/anJb0wKs91ISNtH5ktL2MLmE99og=;
+        b=X9RY+o6sC9Ppm0S92JcWuGapwVP6vGdg7BjmyO+bVW0rj1WTbhhQsV4pHkqkwAjjaN
+         8H/JJC5//XVna28iO68xRVOv9wU5x6YXvvotlGw4lLejKAMz/7Q00mTo0f967W4aMtUw
+         fPiG3HQHt/fd2KN89nN8sEf0oVh56pcOds4wS0HQdO+5Lb+PNySRcvEGwgy4lHZefIy5
+         rpPA57c8RiRxZCxSfGlU1duSCLz3LMQ8/pSg+8uvHvNSWoz0nBeDuyncKVeR1U7EwtMq
+         czWKRkH2JC3rN+Vs1JuY98vwSztqYkw2+2QSwv4wCzy/Zrvk0+76s1xbiZ0f2HRzJS2N
+         lsAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8VBcmM6sRKWlq0/anJb0wKs91ISNtH5ktL2MLmE99og=;
+        b=Y//GTeNLTRpAPYetutPiqMC/JavDP5vSWmdN7u3GfnLybNG1B4m8YE/0EcXPloRdNH
+         5r5qWoi/yRil543NUiu9/de2cEZq6siPOx0QUnRH06SjHi86KGRZ6qrzxQ/6fzyIfDW2
+         Kamm5FcBiP5b16cBawmCeJzIzJluyugZ28nvimYleS2II7T10JvA/OM2pJGbJvRXdSPm
+         MfITl1WmdYj57UnKwI7thTwfsJvhPS+ULlLGkw7F/RVLtuwyizxREgjIafUURACszwcB
+         +jEuqlYgblpTHf9YfEt0m5KNrcrxgWxOZdUEZnqZzOgf4g7/7hZIWSFyZG4eif1R0/Py
+         X9UQ==
+X-Gm-Message-State: AOAM5301h1ieeQs2JCoqKwZNhA4vw9u4U7Q/p8k7oyDsW4vKbpuUn940
+        dJq2WiFev3RvTZGbWfr+5FwtnQ==
+X-Google-Smtp-Source: ABdhPJyvP5CCC/9K1+399P66A5Xf4E5azNewtsF/LKST22V5Yw1PmUGF53lGY/lu2kWSsQNejxGZUA==
+X-Received: by 2002:ac2:4570:: with SMTP id k16mr4396381lfm.60.1598344327410;
+        Tue, 25 Aug 2020 01:32:07 -0700 (PDT)
+Received: from jade (h-249-223.A175.priv.bahnhof.se. [98.128.249.223])
+        by smtp.gmail.com with ESMTPSA id f14sm2666979ljp.138.2020.08.25.01.32.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 01:32:06 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 10:32:04 +0200
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+List-Id: <soc.lore.kernel.org>
+Cc:     arm@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, olof@lixom.net, soc@kernel.org,
+        tee-dev@lists.linaro.org, Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v3] tee: convert convert get_user_pages() -->
+ pin_user_pages()
+Message-ID: <20200825083204.GA2068961@jade>
+References: <CAHUa44FrxidzSUOM_JchOTa5pF6P+j8uZJA5DpKfGLWaS6tCcw@mail.gmail.com>
+ <20200824211125.1867329-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYvjKGF3HZXyd=JQHzRG=r=bmD0hYQn02VL4Y=5y57OgaA@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=7
- priorityscore=1501 impostorscore=0 adultscore=0 clxscore=1011 bulkscore=0
- lowpriorityscore=0 phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008250057
+In-Reply-To: <20200824211125.1867329-1-jhubbard@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 01:03:53PM +0530, Naresh Kamboju wrote:
-> On Mon, 24 Aug 2020 at 16:36, Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > On Mon, Aug 24, 2020 at 03:14:55PM +0530, Naresh Kamboju wrote:
-> > > [   67.545247] BUG: Bad page state in process true  pfn:a8fed
-> > > [   67.550767] page:9640c0ab refcount:0 mapcount:-1024
-> >
-> > Somebody freed a page table without calling __ClearPageTable() on it.
+On Mon, Aug 24, 2020 at 02:11:25PM -0700, John Hubbard wrote:
+> This code was using get_user_pages*(), in a "Case 2" scenario
+> (DMA/RDMA), using the categorization from [1]. That means that it's
+> time to convert the get_user_pages*() + put_page() calls to
+> pin_user_pages*() + unpin_user_pages() calls.
 > 
-> After running git bisect on this problem,
-> The first suspecting of this problem on arm architecture this patch.
-> 424efe723f7717430bec7c93b4d28bba73e31cf6
-> ("mm: account PMD tables like PTE tables ")
+> Factor out a new, small release_registered_pages() function, in
+> order to consolidate the logic for discerning between
+> TEE_SHM_USER_MAPPED and TEE_SHM_KERNEL_MAPPED pages. This also
+> absorbs the kfree() call that is also required there.
 > 
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Reported-by: Anders Roxell <anders.roxell@linaro.org>
- 
-Can you please check if this fix helps?
+> There is some helpful background in [2]: basically, this is a small
+> part of fixing a long-standing disconnect between pinning pages, and
+> file systems' use of those pages.
+> 
+> [1] Documentation/core-api/pin_user_pages.rst
+> 
+> [2] "Explicit pinning of user-space pages":
+>     https://lwn.net/Articles/807108/
+> 
+> Cc: Jens Wiklander <jens.wiklander@linaro.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: tee-dev@lists.linaro.org
+> Cc: linux-media@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linaro-mm-sig@lists.linaro.org
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+> 
+> OK, one more try, this time actually handling the _USER_MAPPED vs.
+> _KERNEL_MAPPED pages!
+> 
+> thanks,
+> John Hubbard
+> NVIDIA
 
-diff --git a/arch/arm/include/asm/tlb.h b/arch/arm/include/asm/tlb.h
-index 9415222b49ad..b8cbe03ad260 100644
---- a/arch/arm/include/asm/tlb.h
-+++ b/arch/arm/include/asm/tlb.h
-@@ -59,6 +59,7 @@ __pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmdp, unsigned long addr)
- #ifdef CONFIG_ARM_LPAE
- 	struct page *page = virt_to_page(pmdp);
- 
-+	pgtable_pmd_page_dtor(page);
- 	tlb_remove_table(tlb, page);
- #endif
- }
+Looks good and it works too! :-) I've tested it on my Hikey board with
+the OP-TEE test suite.
+I'm picking this up.
 
-> Additional information:
-> We have tested linux next by reverting this patch and confirmed
-> that the reported BUG is not reproduced.
-> 
-> These configs enabled on the running device,
-> 
-> CONFIG_TRANSPARENT_HUGEPAGE=y
-> CONFIG_TRANSPARENT_HUGEPAGE_MADVISE=y
-> 
-> 
-> -- Suspecting patch --
-> commit 424efe723f7717430bec7c93b4d28bba73e31cf6
-> Author: Matthew Wilcox <willy@infradead.org>
-> Date:   Thu Aug 20 10:01:30 2020 +1000
-> 
->     mm: account PMD tables like PTE tables
-> 
->     We account the PTE level of the page tables to the process in order to
->     make smarter OOM decisions and help diagnose why memory is fragmented.
->     For these same reasons, we should account pages allocated for PMDs.  With
->     larger process address spaces and ASLR, the number of PMDs in use is
->     higher than it used to be so the inaccuracy is starting to matter.
-> 
->     Link: http://lkml.kernel.org/r/20200627184642.GF25039@casper.infradead.org
->     Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
->     Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
->     Cc: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
->     Cc: Andy Lutomirski <luto@kernel.org>
->     Cc: Arnd Bergmann <arnd@arndb.de>
->     Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
->     Cc: Joerg Roedel <joro@8bytes.org>
->     Cc: Max Filippov <jcmvbkbc@gmail.com>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
->     Cc: Stafford Horne <shorne@gmail.com>
->     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
->     Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index b0a15ee77b8a..a4e5b806347c 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2239,7 +2239,7 @@ static inline spinlock_t *pmd_lockptr(struct
-> mm_struct *mm, pmd_t *pmd)
->   return ptlock_ptr(pmd_to_page(pmd));
->  }
-> 
-> -static inline bool pgtable_pmd_page_ctor(struct page *page)
-> +static inline bool pmd_ptlock_init(struct page *page)
->  {
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->   page->pmd_huge_pte = NULL;
-> @@ -2247,7 +2247,7 @@ static inline bool pgtable_pmd_page_ctor(struct
-> page *page)
->   return ptlock_init(page);
->  }
-> 
-> -static inline void pgtable_pmd_page_dtor(struct page *page)
-> +static inline void pmd_ptlock_free(struct page *page)
->  {
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->   VM_BUG_ON_PAGE(page->pmd_huge_pte, page);
-> @@ -2264,8 +2264,8 @@ static inline spinlock_t *pmd_lockptr(struct
-> mm_struct *mm, pmd_t *pmd)
->   return &mm->page_table_lock;
->  }
-> 
-> -static inline bool pgtable_pmd_page_ctor(struct page *page) { return true; }
-> -static inline void pgtable_pmd_page_dtor(struct page *page) {}
-> +static inline bool pmd_ptlock_init(struct page *page) { return true; }
-> +static inline void pmd_ptlock_free(struct page *page) {}
-> 
->  #define pmd_huge_pte(mm, pmd) ((mm)->pmd_huge_pte)
-> 
-> @@ -2278,6 +2278,22 @@ static inline spinlock_t *pmd_lock(struct
-> mm_struct *mm, pmd_t *pmd)
->   return ptl;
->  }
-> 
-> +static inline bool pgtable_pmd_page_ctor(struct page *page)
-> +{
-> + if (!pmd_ptlock_init(page))
-> + return false;
-> + __SetPageTable(page);
-> + inc_zone_page_state(page, NR_PAGETABLE);
-> + return true;
-> +}
-> +
-> +static inline void pgtable_pmd_page_dtor(struct page *page)
-> +{
-> + pmd_ptlock_free(page);
-> + __ClearPageTable(page);
-> + dec_zone_page_state(page, NR_PAGETABLE);
-> +}
-> +
->  /*
->   * No scalability reason to split PUD locks yet, but follow the same pattern
->   * as the PMD locks to make it easier if we decide to.  The VM should not be
-> 
-> 
-> 
-> 
-> - Naresh
-
--- 
-Sincerely yours,
-Mike.
+Thanks,
+Jens
