@@ -2,128 +2,89 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BDAC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F6FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:55:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02017207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E5A207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:55:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k3t5RucN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kWlKX1Yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgHYRxx (ORCPT
+        id S1726580AbgHYRzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:53:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37144 "EHLO
+        Tue, 25 Aug 2020 13:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgHYRxt (ORCPT
+        with ESMTP id S1726104AbgHYRzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:53:49 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7044CC061756
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:53:49 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id l13so716932otp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:53:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=C1x1jyjBhFzCQy8a0EbMsi3qjsuzPMNqfqLhlXLSl7A=;
-        b=k3t5RucNoAwMD2XGqRLYQNKFhfSn1C0q4rGtp52+V7O6X/6WeDPvz2lk7ykbKchVOJ
-         kPCDzRJEovZZRaWBYKOZ/dGYhQ3tvXlh4IelW4WQAJEgZo4RP12M8sTKFFGxEQuMoxFQ
-         80sJYM2wFiGa55KienyTFIuZkrOZn2IPbVq5bd1X4wviQrMZmvMrrYpGp/GrXocAJYyN
-         wK27QECJDk71rlAOvF9ZNCkCTD2Tp3+Eypex5mWXwf/lOH+LZQ1gT1T3JCyYq1rjf0Oy
-         g3Uu6LEGQzfu0o/h01UYs6YqslQvZqhW4AqNXUPIoKn98U1VHlUsuLpR/2g7Mx1YMC7F
-         BpVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C1x1jyjBhFzCQy8a0EbMsi3qjsuzPMNqfqLhlXLSl7A=;
-        b=mNXIp2moAX7AcKWA0l6o/JOrHdl/bOQsD/tTA1vsR/+8fkVXVnpqKCpa3CvwNrFjjD
-         vM0ypkWyurUKKzPq6LlW0AfxzAFYe/NgRIbO1uqY0b5sbAjX3k9OutLVlEHoQDBDd2ce
-         cDQV3rqO7+SJPWvOL6tY3cekWKccoR2mS2UN3G9/KXJijA3WUX5h/NMb4O+k8dL2uZjZ
-         a1cFemfi4Xz8VlKcTIV07yzS9GXxDy73eUAte40jEjuvyTci2LMClZIK1+S4+1KJd6dq
-         qBCyD6Az+wIN1k7qjCk1UpehaIhTZ5CvCmTId2rFVe3FxqdpyxbFksS/Xd92IYw3SsPh
-         S6pA==
-X-Gm-Message-State: AOAM533VmmvwzURv/hDjamW93XFm79w/DvKew5I2GdC5cUOK1o3ZILDB
-        04Sgcu/vS4Dk38ibdtpz3M5R1Q==
-X-Google-Smtp-Source: ABdhPJz82wuG/Ujs87c1fACgiNfpycutLB/WbcCGDf6CJAe7OGmHiti1fhnkkMUkGutRcWom15/OCA==
-X-Received: by 2002:a9d:27e7:: with SMTP id c94mr1043336otb.360.1598378028593;
-        Tue, 25 Aug 2020 10:53:48 -0700 (PDT)
-Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
-        by smtp.gmail.com with ESMTPSA id b10sm418053oiy.7.2020.08.25.10.53.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 10:53:47 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 12:53:45 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Sibi Sankar <sibis@codeaurora.org>, khilman@kernel.org,
-        ulf.hansson@linaro.org, rjw@rjwysocki.net, agross@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, pavel@ucw.cz,
-        len.brown@intel.com, rnayak@codeaurora.org, dianders@chromium.org,
-        mka@chromium.org
-Subject: Re: [PATCH v2 1/2] PM / Domains: Add GENPD_FLAG_NO_SUSPEND/RESUME
- flags
-Message-ID: <20200825175345.GC3715@yoga>
-References: <20200821204921.32536-1-sibis@codeaurora.org>
- <159804608868.334488.2486130699850456264@swboyd.mtv.corp.google.com>
- <20200824164212.GA3715@yoga>
- <159834001729.334488.11862381163144726708@swboyd.mtv.corp.google.com>
+        Tue, 25 Aug 2020 13:55:36 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7710C061574;
+        Tue, 25 Aug 2020 10:55:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=13q0yU/4W+VWpJEEdUThAvzf3bI1pgdy0BRgeQelX+A=; b=kWlKX1YrWrdR9fwDglszc5bQml
+        esDRvCt2b8TJ/PpEZbhQ3yELpWLbecx60YAwyFq6rqxbWqkeqOgSTjj+Nynqo993f6Xqs15kL5koH
+        llQ3HU7hPLTiE/zVNDsZo99p8BY7W4+se4rOnwPF7ET4FdmPc6ErFT7T70ZdpqCsFlQo3lyazxrRr
+        VSiGixEg8MiErB+DwhuqpCVSinS9v6hPLt5YOYmhBwjFNvYf8/aIbDVIN9eMohNkrpuDN3ElmlBIb
+        7FcatTwcvg3/AFCgArZ3qKdez7NqQP2g1AkPCHwQoIX/GG6vsCTVTA6VIfVDI4qXM2UYVaDimj5tK
+        JUJSKu6g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAdAS-00040v-VR; Tue, 25 Aug 2020 17:55:33 +0000
+Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
+ Driver
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com
+References: <6062dc73-99bc-cde0-26a1-5c40ea1447bd@infradead.org>
+ <CGME20200825173041eucas1p29cb450a15648e0ecb1e896fcbe0f9126@eucas1p2.samsung.com>
+ <dleftjr1ruvdjd.fsf%l.stelmach@samsung.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <dae861c2-71c8-093b-74a6-68cf5c5ae744@infradead.org>
+Date:   Tue, 25 Aug 2020 10:55:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159834001729.334488.11862381163144726708@swboyd.mtv.corp.google.com>
+In-Reply-To: <dleftjr1ruvdjd.fsf%l.stelmach@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 25 Aug 02:20 CDT 2020, Stephen Boyd wrote:
-> Quoting Bjorn Andersson (2020-08-24 09:42:12)
-> > On Fri 21 Aug 14:41 PDT 2020, Stephen Boyd wrote:
-[..]
-> > > I find it odd that this is modeled as a power domain instead of some
-> > > Qualcomm specific message that the remoteproc driver sends to AOSS. Is
-> > > there some sort of benefit the driver gets from using the power domain
-> > > APIs for this vs. using a custom API?
-> > 
-> > We need to send "up" and "down" notifications and this needs to happen
-> > at the same time as other standard resources are enabled/disabled.
-> > 
-> > Further more, at the time the all resources handled by the downstream
-> > driver was either power-domains (per above understanding) or clocks, so
-> > it made sense to me not to spin up a custom API.
-> > 
->  
-> So the benefit is not spinning up a custom API? I'm not Ulf, but it
-> looks like this is hard to rationalize about as a power domain. It
-> doesn't have any benefit to model it this way besides to make it
-> possible to turn on with other power domains.
+
+>>> +if NET_VENDOR_ASIX
+>>> +
+>>> +config SPI_AX88796C
+>>> +	tristate "Asix AX88796C-SPI support"
+>>> +	depends on SPI
+>>
+>> That line is redundant (but not harmful).
 > 
-> This modem remoteproc drivers isn't SoC agnostic anyway, it relies on
-> SMEM APIs, so standing up another small qmp_remoteproc_booted() and
-> qmp_remoteproc_shutdown() API would avoid adding a genpd flag here that
-> probably will never be used outside of this corner-case. There is also
-> some get/put EPROBE_DEFER sort of logic to implement, but otherwise it
-> would be possible to do this outside of power domains, and that seems
-> better given that this isn't really a power domain to start with.
+> Why? Is it because NET_VENDOR_ASIX depends on SPI? Probably it
+> shouldn't. Thanks for spotting.
 
-In later platforms a few new users of the AOSS communication interface
-is introduced that certainly doesn't fit any existing API/framework in
-the kernel. So the plan was to pretty much expose qmp_send() to these
-drivers.
+Yes, that.
 
-My worry with using this interface is that we'll probably have to come
-up with some DT binding pieces and probably we'll end up adding yet
-another piece of hard coded information in the remoteproc drivers.
 
-But I'm not against us doing this work in favor of not having to
-introduce a one-off for this corner case.
+-- 
+~Randy
 
-Regards,
-Bjorn
