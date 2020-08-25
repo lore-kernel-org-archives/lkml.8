@@ -2,105 +2,75 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E29C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8423BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0835920866
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F39D206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:40:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598355610;
+	bh=yNIMwl6uvri7N2ll7f4m+zITfNm3Kuck7YUP3TIn73o=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=H8X/EKYx97ZAr5691hhO1GchykK1OYnFpmmxI2dm4G4rYwDcdySPgtbGNMDOofrwH
+	 gA7j5Cnd+z60jJD1PxABJmCGcXkbCf1BMVuXPfb1r0w08rJaeUhT6qOVj+br84fCtM
+	 Nxc48FLxoDIvJqtHEyBqgOIpS+bNiIQxSqY1GNrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730034AbgHYLhp (ORCPT
+        id S1730072AbgHYLjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 07:37:45 -0400
-Received: from mga12.intel.com ([192.55.52.136]:22623 "EHLO mga12.intel.com"
+        Tue, 25 Aug 2020 07:39:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729922AbgHYLgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 07:36:33 -0400
-IronPort-SDR: 0N08EGjPgl3UeHDBT5dOrHfMS80y/fZv/7K3D3lvLDI6tisDn1qpF1/32yXSvV8+GP+EhhLGXB
- l9ywlGMiTxQg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="135636937"
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="135636937"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 04:36:32 -0700
-IronPort-SDR: IM7/iMbO6x32zcZVy1wLv15VTUDoppFVniq6THKiFu4g35nsZt4PUVUsF/HGSwhtLXh5uO154z
- ROvN51sruulw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="328839867"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2020 04:36:26 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kAXBK-00BJR9-Ss; Tue, 25 Aug 2020 14:32:02 +0300
-Date:   Tue, 25 Aug 2020 14:32:02 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH v1] sched/topology: Make compiler happy about unused
- constant definitions
-Message-ID: <20200825113202.GX1891694@smile.fi.intel.com>
-References: <20200824153902.57875-1-andriy.shevchenko@linux.intel.com>
- <jhjeenwdl7u.mognet@arm.com>
- <20200825082636.GQ1891694@smile.fi.intel.com>
- <jhjd03fdrn3.mognet@arm.com>
- <jhjblizdofu.mognet@arm.com>
- <20200825112405.GU1891694@smile.fi.intel.com>
- <20200825112605.GV1891694@smile.fi.intel.com>
+        id S1725893AbgHYLho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 07:37:44 -0400
+Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6CA52068E;
+        Tue, 25 Aug 2020 11:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598355449;
+        bh=yNIMwl6uvri7N2ll7f4m+zITfNm3Kuck7YUP3TIn73o=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=tL1qdHEZIxJolhzMSGSsEaDgqvM3wzHaXqPcaNzv1p0P47UZuecgWvzw1ugvapXh+
+         dqqLpMvN6M2q27R6Bhnef10RW3Kc3cEX99wJmrBo8L0PMpH78GMMMC9/ehUgPT/ejx
+         OwP+/H/dy+M2wEHBZ/XzkPkS2qgkf+3TgaIJ6+Oo=
+Date:   Tue, 25 Aug 2020 13:37:26 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     =?ISO-2022-JP?Q?=1B$BWE9=40=1B=28J?= <penghao@uniontech.com>
+cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "benjamin.tissoires " <benjamin.tissoires@redhat.com>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re:Re: [PATCH] USB HID: Add disabled wakeup from s3 by touchpad on
+ bydzhaoxin notebook
+In-Reply-To: <285385314.979590.1597840631436.JavaMail.xmail@bj-wm-cp-2>
+Message-ID: <nycvar.YFH.7.76.2008251334460.27422@cbobk.fhfr.pm>
+References: <20200819115101.22532-1-penghao@uniontech.com>, <20200819120856.GA931936@kroah.com> <285385314.979590.1597840631436.JavaMail.xmail@bj-wm-cp-2>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200825112605.GV1891694@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 02:26:05PM +0300, Andy Shevchenko wrote:
-> On Tue, Aug 25, 2020 at 02:24:05PM +0300, Andy Shevchenko wrote:
-> > On Tue, Aug 25, 2020 at 11:12:21AM +0100, Valentin Schneider wrote:
-> > > On 25/08/20 10:03, Valentin Schneider wrote:
-> > > > On 25/08/20 09:26, Andy Shevchenko wrote:
-> > > >> On Mon, Aug 24, 2020 at 06:09:41PM +0100, Valentin Schneider wrote:
-> > > >>> On 24/08/20 16:39, Andy Shevchenko wrote:
-> > > >>> > Compilation of almost each file ends up with
-> > > >>> >
-> > > >>> >  In file included from .../include/linux/energy_model.h:10,
-> > > >>> >                 from .../include/linux/device.h:16,
-> > > >>> >                 from .../drivers/spi/spi.c:8:
-> > > >>> >  .../include/linux/sched/topology.h:30:27: warning: ‘SD_DEGENERATE_GROUPS_MASK’ defined but not used [-Wunused-const-variable=]
-> > > >>> >     30 | static const unsigned int SD_DEGENERATE_GROUPS_MASK =
-> > > >>> >        |                           ^~~~~~~~~~~~~~~~~~~~~~~~~
-> > > >>> >  ...
-> > > >>> >
-> > > >>> > Make compiler happy by annotating the static constants with __maybwe_unused.
-> > > 
-> > > > Sorry, that's what I get for trying to be too succinct; what I tried to say
-> > > > was that SD_DEGENERATE_GROUPS_MASK should very much be used for SMP. If the
-> > > > build is !SMP, it shouldn't even be defined, IOW I'm perplexed as to where
-> > > > this is coming from.
-> > > 
-> > > So I see how having this as a constvar rather than a constexpr is somewhat
-> > > daft (we get an instance per compilation unit), but none of my compilers
-> > > seem to complain (even with W=1). AFAIA the kernelbot didn't catch any of
-> > > it either.
+On Wed, 19 Aug 2020, 彭浩 wrote:
 
-And even without compiler or any other analyzer / bot I can 100% sure tell that
-spi.c does *not* use that symbol.
+> Thank you for your guidance, can you tell me how to improve ?
+
+Please take a look at drivers/hid/hid-quirks.c, that's where all the 
+device-specific quirks are initialized (in the hid_quirks[] array) and 
+then handled where needed according to the quirk flag in ->driver_data.
+
+Thanks,
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Jiri Kosina
+SUSE Labs
 
