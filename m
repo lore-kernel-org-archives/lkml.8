@@ -2,175 +2,232 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBCFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0238A206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:33:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="c4ZZgQ2Y"
+	by mail.kernel.org (Postfix) with ESMTP id 67540206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:33:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728727AbgHYAdN (ORCPT
+        id S1728736AbgHYAde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 20:33:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728204AbgHYA3f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 20:29:35 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56906C061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 17:29:34 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id m8so5935538pfh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 17:29:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rK9hGhgXVC8NPfqVY3Kpb9dQwJZSivpy8q2Mup6dtSM=;
-        b=c4ZZgQ2YaOyAq7e5T+tyFU0xqMufACY+Y4SnbIlMwiY/5sKjRW9L+obI/uA+5stwVq
-         JHkc5gnYKmKcZpu+NiFL8tXyLRyHW51aSKG5zmYRQHrPXaVIuq5NgouoW4qDOmWehjqd
-         zj16E4/59kSSYwyPHHVeVxpg9v3KtL3+FOfjWUB1RdcCArxJqS3i1lVzSKgQ3yw2YL9M
-         Z6pcqkvhHkvgQgG7oLp3n1p0Syg9AhEy+QWNtmtUU3R1boenHXU67c55myRV+Wm8XHos
-         McZfUvW3KGoL+k2BVCKHx3Y3+49MLogFiC5xStqzaBZh/NGJ2gpPhZWsGXD2nq0l5LFg
-         wLxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=rK9hGhgXVC8NPfqVY3Kpb9dQwJZSivpy8q2Mup6dtSM=;
-        b=djxRcZv58Ij8kz7xCrElXzZFputcQIGU8vwybsy09G6udjMQdIByX3WNGwMuAtTrnn
-         5+V/rYRVliV0q3TeSgcbPegSPwIJwbMLcgG2mHz4d3p/h0RDPLV2DWs0gijGBzKCNxTr
-         T0Sfd6dTqemawIorB8xZ1/Itrd03HVuGYG9aPcpgaJmUCduh4i0JHdR1KsG0LcRt9BbO
-         qAck14JrlC+s7wSFF0UrNcbUkeXQwM/aLJwQ4VHxrcx5Z/U0GB5qIN6jLN+GFtuEOOdf
-         KDcdGUMZRtG5z4X7lEfSgrQGrnYnxBBNsbcvVSYGyq86ZOKDZ30UQnk8yymcOyI8M/I8
-         XVDw==
-X-Gm-Message-State: AOAM530JIaTWOoP1oW4R94qd0EO9lmysAFIrlYACWcSzqOoAYGBpsTEq
-        y8j5PeDUZaPp3mfQiYy5CALjqA==
-X-Google-Smtp-Source: ABdhPJw/jqpwfLOw3R6pkLUIZZ4Ecso+LA6G75jVVfmfWTR2dmWId+wwLT6HnFSbtT7bjTfvJeyROw==
-X-Received: by 2002:aa7:9aa2:: with SMTP id x2mr6097798pfi.318.1598315373559;
-        Mon, 24 Aug 2020 17:29:33 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id w130sm12707231pfd.104.2020.08.24.17.29.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 17:29:32 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 17:29:32 -0700 (PDT)
-X-Google-Original-Date: Mon, 24 Aug 2020 17:29:28 PDT (-0700)
-Subject:     Re: [PATCH] ftrace: Fixup lockdep assert held of text_mutex
-In-Reply-To: <20200813113743.001b6c31@oasis.local.home>
-CC:     guoren@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        mingo@redhat.com, linux-kernel@vger.kernel.org,
-        linux-csky@vger.kernel.org, guoren@linux.alibaba.com,
-        linux-riscv@lists.infradead.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     rostedt@goodmis.org
-Message-ID: <mhng-5de4c6ca-7e77-4b55-9097-59296872e6de@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 24 Aug 2020 20:33:34 -0400
+Received: from mga17.intel.com ([192.55.52.151]:12292 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728082AbgHYA3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 20:29:33 -0400
+IronPort-SDR: fZvqMSrMNM7dpac9scFT7rRw0jz7y407w0W3kkYSKjsmcNsQDZrv1gM57ekMNKIHGjNDWuB1JK
+ Zw2RZVvILgUA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136075260"
+X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
+   d="scan'208";a="136075260"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:29:31 -0700
+IronPort-SDR: favj2E9b8nA5uKGkkmwaKujg3pgnHR5nwgizYOPuiislUvm2DprYYa5y56zQEwkc2DRAZjgOoZ
+ PZQTE+TskdaQ==
+X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
+   d="scan'208";a="474134939"
+Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:29:31 -0700
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: [PATCH v11 04/25] x86/cet: Add control-protection fault handler
+Date:   Mon, 24 Aug 2020 17:25:19 -0700
+Message-Id: <20200825002540.3351-5-yu-cheng.yu@intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Aug 2020 08:37:43 PDT (-0700), rostedt@goodmis.org wrote:
-> On Wed, 12 Aug 2020 22:13:19 -0700 (PDT)
-> Palmer Dabbelt <palmer@dabbelt.com> wrote:
->
->> Sorry, I'm not really sure what's going on here.  I'm not really seeing code
->> that matches this in our port right now, so maybe this is aginst some other
->> tree?  If it's the RISC-V kprobes patch set then I was hoping to take a look at
->> that tomorrow (or I guess a bit earlier this week, but I had some surprise work
->> stuff to do).  IIRC there were a handful of races in the last patch set I saw,
->> but it's been a while so I don't remember for sure.
->>
->> That said, I certainly wouldn't be surprised if there's a locking bug in our
->> ftrace stuff.  It'd be way easier for me to figure out what's going on if you
->> have a concrete suggestion as to how to fix the issues -- even if it's just a
->> workaround.
->
-> The issue is actually quite basic.
->
-> ftrace_init_nop() is called quite early in boot up and never called
-> again. It's called before SMP is set up, so it's on a single CPU, and
-> no worries about synchronization with other CPUs is needed.
->
-> On x86, it is called before text_poke() is initialized (which is used
-> to synchronize code updates across CPUs), and thus can't be called.
-> There's a "text_poke_early()" that is used instead, which is basically
-> just a memcpy().
->
-> Now, if ftrace_init_nop() is not defined by the architecture, it is a
-> simple call to ftrace_make_nop(), which is also used to disable ftrace
-> callbacks.
->
-> The issue is that we have the following path on riscv:
->
->  ftrace_init_nop()
->    ftrace_make_nop()
->      __ftrace_modify_call()
->        patch_text_nosync()
->          patch_insn_write()
->            lockdep_assert_held(&text_mutex);
->
-> Boom! text_mutex is not held, and lockdep complains.
->
->
-> The difference between ftrace_make_nop() being called by
-> ftrace_init_nop() and being called later to disable function tracing is
-> that the latter will have:
->
->
-> 	ftrace_arch_code_modify_prepare();
-> 	[..]
-> 	ftrace_make_nop();
-> 	[..]
-> 	ftrace_arch_code_modify_post_process();
->
-> and the former will not have those called.
->
-> On x86, we handle the two different cases with:
->
->
-> static int ftrace_poke_late = 0;
->
-> int ftrace_arch_code_modify_prepare(void)
-> {
-> 	mutex_lock(&text_mutex);
-> 	ftrace_poke_late = 1;
-> 	return 0;
-> }
->
-> int ftrace_arch_code_modify_post_process(void)
-> {
-> 	text_poke_finish();
-> 	ftrace_poke_late = 0;
-> 	mutex_unlock(&text_mutex);
-> }
->
-> Although, the post_process() probably doesn't even need to set
-> ftrace_poke_late back to zero.
->
-> Then in ftrace_make_nop(), we have:
->
->   ftrace_make_nop()
->     ftrace_modify_code_direct()
->       if (ftrace_poke_late)
->         text_poke_queue(...); // this checks if text_mutex is held
->       else
->         text_poke_early(...); // is basically just memcpy, no test on text_mutex.
->
-> The two solutions for riscv, is either to implement the same thing as
-> above, or you can create your own ftrace_init_nop() to take the
-> text_mutex before calling ftrace_make_nop(), and that should work too.
+A control-protection fault is triggered when a control-flow transfer
+attempt violates Shadow Stack or Indirect Branch Tracking constraints.
+For example, the return address for a RET instruction differs from the copy
+on the Shadow Stack; or an indirect JMP instruction, without the NOTRACK
+prefix, arrives at a non-ENDBR opcode.
 
-Ya, thanks, that's a pretty straight-forward issue.  I've To'd you on a patch,
-but it's essentially just exactly what you suggested so I doubt it's that
-interesting.
+The control-protection fault handler works in a similar way as the general
+protection fault handler.  It provides the si_code SEGV_CPERR to the signal
+handler.
 
-I pointed out in the patch notes that it seems reasonable to have the generic
-code handle this case, would you be opposed to doing it that way?
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+---
+v10:
+- Change CONFIG_X86_64 to CONFIG_X86_INTEL_CET.
+
+v9:
+- Add Shadow Stack pointer to the fault printout.
+
+ arch/x86/include/asm/idtentry.h    |  4 ++
+ arch/x86/kernel/idt.c              |  4 ++
+ arch/x86/kernel/signal_compat.c    |  2 +-
+ arch/x86/kernel/traps.c            | 59 ++++++++++++++++++++++++++++++
+ include/uapi/asm-generic/siginfo.h |  3 +-
+ 5 files changed, 70 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/include/asm/idtentry.h b/arch/x86/include/asm/idtentry.h
+index a43366191212..47ffdb658867 100644
+--- a/arch/x86/include/asm/idtentry.h
++++ b/arch/x86/include/asm/idtentry.h
+@@ -532,6 +532,10 @@ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_SS,	exc_stack_segment);
+ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_GP,	exc_general_protection);
+ DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_AC,	exc_alignment_check);
+ 
++#ifdef CONFIG_X86_INTEL_CET
++DECLARE_IDTENTRY_ERRORCODE(X86_TRAP_CP, exc_control_protection);
++#endif
++
+ /* Raw exception entries which need extra work */
+ DECLARE_IDTENTRY_RAW(X86_TRAP_UD,		exc_invalid_op);
+ DECLARE_IDTENTRY_RAW(X86_TRAP_BP,		exc_int3);
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 7ecf9babf0cb..395c34fd201a 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -112,6 +112,10 @@ static const __initconst struct idt_data def_idts[] = {
+ #elif defined(CONFIG_X86_32)
+ 	SYSG(IA32_SYSCALL_VECTOR,	entry_INT80_32),
+ #endif
++
++#ifdef CONFIG_X86_INTEL_CET
++	INTG(X86_TRAP_CP,		asm_exc_control_protection),
++#endif
+ };
+ 
+ /*
+diff --git a/arch/x86/kernel/signal_compat.c b/arch/x86/kernel/signal_compat.c
+index 9ccbf0576cd0..c572a3de1037 100644
+--- a/arch/x86/kernel/signal_compat.c
++++ b/arch/x86/kernel/signal_compat.c
+@@ -27,7 +27,7 @@ static inline void signal_compat_build_tests(void)
+ 	 */
+ 	BUILD_BUG_ON(NSIGILL  != 11);
+ 	BUILD_BUG_ON(NSIGFPE  != 15);
+-	BUILD_BUG_ON(NSIGSEGV != 7);
++	BUILD_BUG_ON(NSIGSEGV != 8);
+ 	BUILD_BUG_ON(NSIGBUS  != 5);
+ 	BUILD_BUG_ON(NSIGTRAP != 5);
+ 	BUILD_BUG_ON(NSIGCHLD != 6);
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 1f66d2d1e998..dca6fdc829f2 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -597,6 +597,65 @@ DEFINE_IDTENTRY_ERRORCODE(exc_general_protection)
+ 	cond_local_irq_disable(regs);
+ }
+ 
++#ifdef CONFIG_X86_INTEL_CET
++static const char * const control_protection_err[] = {
++	"unknown",
++	"near-ret",
++	"far-ret/iret",
++	"endbranch",
++	"rstorssp",
++	"setssbsy",
++};
++
++/*
++ * When a control protection exception occurs, send a signal
++ * to the responsible application.  Currently, control
++ * protection is only enabled for the user mode.  This
++ * exception should not come from the kernel mode.
++ */
++DEFINE_IDTENTRY_ERRORCODE(exc_control_protection)
++{
++	struct task_struct *tsk;
++
++	if (notify_die(DIE_TRAP, "control protection fault", regs,
++		       error_code, X86_TRAP_CP, SIGSEGV) == NOTIFY_STOP)
++		return;
++	cond_local_irq_enable(regs);
++
++	if (!user_mode(regs))
++		die("kernel control protection fault", regs, error_code);
++
++	if (!static_cpu_has(X86_FEATURE_SHSTK) &&
++	    !static_cpu_has(X86_FEATURE_IBT))
++		WARN_ONCE(1, "CET is disabled but got control protection fault\n");
++
++	tsk = current;
++	tsk->thread.error_code = error_code;
++	tsk->thread.trap_nr = X86_TRAP_CP;
++
++	if (show_unhandled_signals && unhandled_signal(tsk, SIGSEGV) &&
++	    printk_ratelimit()) {
++		unsigned int max_err;
++		unsigned long ssp;
++
++		max_err = ARRAY_SIZE(control_protection_err) - 1;
++		if ((error_code < 0) || (error_code > max_err))
++			error_code = 0;
++		rdmsrl(MSR_IA32_PL3_SSP, ssp);
++		pr_info("%s[%d] control protection ip:%lx sp:%lx ssp:%lx error:%lx(%s)",
++			tsk->comm, task_pid_nr(tsk),
++			regs->ip, regs->sp, ssp, error_code,
++			control_protection_err[error_code]);
++		print_vma_addr(KERN_CONT " in ", regs->ip);
++		pr_cont("\n");
++	}
++
++	force_sig_fault(SIGSEGV, SEGV_CPERR,
++			(void __user *)uprobe_get_trap_addr(regs));
++	cond_local_irq_disable(regs);
++}
++#endif
++
+ static bool do_int3(struct pt_regs *regs)
+ {
+ 	int res;
+diff --git a/include/uapi/asm-generic/siginfo.h b/include/uapi/asm-generic/siginfo.h
+index cb3d6c267181..91e10cbe3bb0 100644
+--- a/include/uapi/asm-generic/siginfo.h
++++ b/include/uapi/asm-generic/siginfo.h
+@@ -229,7 +229,8 @@ typedef struct siginfo {
+ #define SEGV_ACCADI	5	/* ADI not enabled for mapped object */
+ #define SEGV_ADIDERR	6	/* Disrupting MCD error */
+ #define SEGV_ADIPERR	7	/* Precise MCD exception */
+-#define NSIGSEGV	7
++#define SEGV_CPERR	8	/* Control protection fault */
++#define NSIGSEGV	8
+ 
+ /*
+  * SIGBUS si_codes
+-- 
+2.21.0
+
