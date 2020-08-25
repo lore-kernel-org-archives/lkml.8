@@ -4,42 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC41FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E4FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C58812072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07BC2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:59:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbgHYE7N (ORCPT
+        id S1728433AbgHYE7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:59:13 -0400
-Received: from smtprelay0207.hostedemail.com ([216.40.44.207]:50258 "EHLO
+        Tue, 25 Aug 2020 00:59:20 -0400
+Received: from smtprelay0235.hostedemail.com ([216.40.44.235]:59174 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728666AbgHYE4y (ORCPT
+        by vger.kernel.org with ESMTP id S1728565AbgHYE4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:56:54 -0400
+        Tue, 25 Aug 2020 00:56:53 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id E4F91100E7B40;
-        Tue, 25 Aug 2020 04:56:52 +0000 (UTC)
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 0B8231E04;
+        Tue, 25 Aug 2020 04:56:51 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: shoes50_100f5dc27059
-X-Filterd-Recvd-Size: 1584
+X-HE-Tag: fan66_0f1652527059
+X-Filterd-Recvd-Size: 2259
 Received: from joe-laptop.perches.com (unknown [47.151.133.149])
         (Authenticated sender: joe@perches.com)
         by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 25 Aug 2020 04:56:51 +0000 (UTC)
+        Tue, 25 Aug 2020 04:56:49 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     Jiri Kosina <trivial@kernel.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 06/29] drbd: Avoid comma separated statements
-Date:   Mon, 24 Aug 2020 21:56:03 -0700
-Message-Id: <1c8081264d82101d7837220c5ee221c307da5d91.1598331148.git.joe@perches.com>
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 05/29] ata: Avoid comma separated statements
+Date:   Mon, 24 Aug 2020 21:56:02 -0700
+Message-Id: <2a3979b0eab31224e53553ca01759eb072790a65.1598331148.git.joe@perches.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.1598331148.git.joe@perches.com>
 References: <cover.1598331148.git.joe@perches.com>
@@ -54,26 +53,41 @@ Use semicolons and braces.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/block/drbd/drbd_receiver.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/ata/pata_icside.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 422363daa618..87f732fb5456 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -111,8 +111,10 @@ static struct page *page_chain_tail(struct page *page, int *len)
- {
- 	struct page *tmp;
- 	int i = 1;
--	while ((tmp = page_chain_next(page)))
--		++i, page = tmp;
-+	while ((tmp = page_chain_next(page))) {
-+		++i;
-+		page = tmp;
+diff --git a/drivers/ata/pata_icside.c b/drivers/ata/pata_icside.c
+index 08543aeb0093..498383cb6e29 100644
+--- a/drivers/ata/pata_icside.c
++++ b/drivers/ata/pata_icside.c
+@@ -202,14 +202,19 @@ static void pata_icside_set_dmamode(struct ata_port *ap, struct ata_device *adev
+ 	 * Choose the IOMD cycle timing which ensure that the interface
+ 	 * satisfies the measured active, recovery and cycle times.
+ 	 */
+-	if (t.active <= 50 && t.recover <= 375 && t.cycle <= 425)
+-		iomd_type = 'D', cycle = 187;
+-	else if (t.active <= 125 && t.recover <= 375 && t.cycle <= 500)
+-		iomd_type = 'C', cycle = 250;
+-	else if (t.active <= 200 && t.recover <= 550 && t.cycle <= 750)
+-		iomd_type = 'B', cycle = 437;
+-	else
+-		iomd_type = 'A', cycle = 562;
++	if (t.active <= 50 && t.recover <= 375 && t.cycle <= 425) {
++		iomd_type = 'D';
++		cycle = 187;
++	} else if (t.active <= 125 && t.recover <= 375 && t.cycle <= 500) {
++		iomd_type = 'C';
++		cycle = 250;
++	} else if (t.active <= 200 && t.recover <= 550 && t.cycle <= 750) {
++		iomd_type = 'B';
++		cycle = 437;
++	} else {
++		iomd_type = 'A';
++		cycle = 562;
 +	}
- 	if (len)
- 		*len = i;
- 	return page;
+ 
+ 	ata_dev_info(adev, "timings: act %dns rec %dns cyc %dns (%c)\n",
+ 		     t.active, t.recover, t.cycle, iomd_type);
 -- 
 2.26.0
 
