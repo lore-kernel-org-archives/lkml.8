@@ -2,133 +2,200 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A65C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61E2F2075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:28:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="REJluwrn"
+	by mail.kernel.org (Postfix) with ESMTP id 9530C2074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598358599;
+	bh=5/xJB4fbpQRXrU82ykLHnJ4QCGEYTfQbwz4FwUUEDwc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=v+U8r64CyL2IaFV6REp79gxjZWZdWpognBQg2uhyKI3vORaDUJONOjCQmTBX/t8LL
+	 gD0K0P6ROpqVSuMO4RujSWQOpoVTokGmFoz7Briph4e0eBA4HV3S7FGbis2VncknQJ
+	 WDLQqUzVn+ENTmllGFRuW/7ctdlFyVAcUJ06ECm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgHYM16 (ORCPT
+        id S1726952AbgHYM34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgHYM14 (ORCPT
+        Tue, 25 Aug 2020 08:29:56 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:48393 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgHYM3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:27:56 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE93C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 05:27:56 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id s29so3655763uae.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 05:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xXAcAxTseaWXVy3WA8AWto61i26TH0B4opiA6dfddGw=;
-        b=REJluwrnwOyg2hOD/lgPsJOFIGqFpdv0IKUZme3doE38OQXHd0VIfkGsPuCEJexbGa
-         D7Zqyh9JY1pB44T3q6baobQJZELLWRWxUll8aWStnKMK+5Wql1/P8qxFDbzVWFhYReHX
-         fUpvoxH54sYVH9KWUy1Rm/VoVLYTo/pJiKPlu3gIN4nRhNgEUOv2YBZXHmjSTn5+ovP6
-         tI6shmuCor8/eCccyme5YdprEPlu+8wY11x2XUVV5PiPCDp9adu++Yoov4ddxNimGwcO
-         jjynYMs3NCUlyFRiVXSaPY4ar5vsla0daVD0BACONpDT0FQXD5Qu/1TmA3k0IVMYLyzx
-         BZkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xXAcAxTseaWXVy3WA8AWto61i26TH0B4opiA6dfddGw=;
-        b=krYXCCF7d6Bp3fS5rsTTesG8QtSmrT/8wwdmwoP0sgKmijQPbcz3d/cQXrDOPUaIHn
-         EtXECtHJ6Un6HYarYN3N1WQK10p94oPXPn87Khl4OQq9e1RaXnirkHdwt8if/6CNbT1h
-         ML1ladpIiKNgRg1pUBXtYVPiBhUzLVwAQCPfzUDQBpqkXYePxw0CZdpscf4rLGfFWN6Q
-         fs/5EVL3nhEpWwnknBr7KI+nBPInuANbRf7s8RW+91qf45MGb3HST8H0m8i7jU6XmgPy
-         igaQrKEi5sie/NTCUoHqNwN405ABPTqrjnASTdMKlbJShJesdOlHiq33Iau6HsAF1HG2
-         houA==
-X-Gm-Message-State: AOAM533qHNFk7/mk+THR16B8K7AndLUYAB2eBpBEsDUvAeQbC9C1k8DA
-        WOKuNS/5khD5vmxFmQAskobO6WleK4yb9fS4TvCvxA==
-X-Google-Smtp-Source: ABdhPJyLD5TMe3bvBPeNhQui6keXl4ZOWJKGePb3ny5juTl/wKzNH4RrbWJFDr6RTwjFtF6g6pilavh9D7uTVri/BRc=
-X-Received: by 2002:ab0:3a85:: with SMTP id r5mr5450357uaw.100.1598358475874;
- Tue, 25 Aug 2020 05:27:55 -0700 (PDT)
+        Tue, 25 Aug 2020 08:29:52 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 07PCTVki021974;
+        Tue, 25 Aug 2020 21:29:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 07PCTVki021974
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1598358573;
+        bh=fWDEMSaOrPS74dlXpFO19QBM3u09HqUhQUZB2brSdsY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fOxcwLtgxKIPR8hbtZKkbMiRjJ2Aqr4TlwxTj4ubxNpD2txA5BHxg6KAQPsgXUldU
+         MpJOiZ4YGDiPs9RFKoAiLlAW/mAgpfnyAEz0a0/g6shhkRwRf0gHDxSWmNHhaLyvn1
+         kJa2Ip51JlytlW/TZumMYEP5WZM6Kol30Y/ezYGCRGJ+W/XKHJ1OwQ09Aq44O3qCnI
+         E3ofcAElvx9Woo/XQSE7C4VNnPVa+r/K442fyv8fpmNjr9139ggNgmwSXQKyKS4rh6
+         tlZuO0sM6KJfyjcQZRjfek8cCuYM5qaUnjR8+zxm6SnB74hxlNfEzNmbT0Y1St3PNa
+         WW2VbtkFCy5qw==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id e14so6215737vsa.9;
+        Tue, 25 Aug 2020 05:29:32 -0700 (PDT)
+X-Gm-Message-State: AOAM5315vA0a42hdsf7wqGyqwxCD73iA5Hcjb3vVBEHLDBWuvs7TdUwI
+        C+D15IeOiqeWR18StXchxuKax9pDnqAi1zX6BgI=
+X-Google-Smtp-Source: ABdhPJyIs8Whq8eByRuYrPFEYB0rQzL0fX4J9QQ+NaRlsfdCpvIiae7R+ZUfqK/NgN1ob6KxzLkuKR0sk2tFUVY+/JQ=
+X-Received: by 2002:a05:6102:7ac:: with SMTP id x12mr5038553vsg.181.1598358571195;
+ Tue, 25 Aug 2020 05:29:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200820075949.19133-1-matthias.schiffer@ew.tq-group.com>
- <CAPDyKFoi7KghuBqu7YVS4GH4Bp1puhgb=PcwBVDvaTesLujrrw@mail.gmail.com>
- <548605506aa2e73afafdc228263da04585871e0b.camel@ew.tq-group.com> <11654b05dd8fb87e195aed20cbdaa22d8856b072.camel@ew.tq-group.com>
-In-Reply-To: <11654b05dd8fb87e195aed20cbdaa22d8856b072.camel@ew.tq-group.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 25 Aug 2020 14:27:19 +0200
-Message-ID: <CAPDyKFrBj2RO3jqgrQ5qhYpMOFfjufBnr2y8McdgJXR-Z_618g@mail.gmail.com>
-Subject: Re: (EXT) Re: [PATCH mmc-next v2] mmc: allow setting slot index via
- device tree alias
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
+ <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
+ <20200818202407.GA3143683@rani.riverdale.lan> <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
+ <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
+ <20200818214146.GA3196105@rani.riverdale.lan> <CAK7LNAQmWBPV4nZ0xPdSHEt=DipHmR40co827voGOFN=2j47BQ@mail.gmail.com>
+ <20200824173450.GA4157679@rani.riverdale.lan> <CAKwvOd=BEwuHFeuskJ4gPOGLoXm98oXA18U=tTw981g+HdVz-w@mail.gmail.com>
+In-Reply-To: <CAKwvOd=BEwuHFeuskJ4gPOGLoXm98oXA18U=tTw981g+HdVz-w@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 25 Aug 2020 21:28:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQynuqqjhL1rqMf0YnRpQ0jsWrJ7fy51FM7d0xdxws5wQ@mail.gmail.com>
+Message-ID: <CAK7LNAQynuqqjhL1rqMf0YnRpQ0jsWrJ7fy51FM7d0xdxws5wQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 at 14:00, Matthias Schiffer
-<matthias.schiffer@ew.tq-group.com> wrote:
+On Tue, Aug 25, 2020 at 4:10 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
 >
-> On Tue, 2020-08-25 at 11:39 +0200, Matthias Schiffer wrote:
-> > On Tue, 2020-08-25 at 11:14 +0200, Ulf Hansson wrote:
-> > > On Thu, 20 Aug 2020 at 09:59, Matthias Schiffer
-> > > <matthias.schiffer@ew.tq-group.com> wrote:
-> > > > --- a/drivers/mmc/core/host.c
-> > > > +++ b/drivers/mmc/core/host.c
-> > > > @@ -387,6 +387,7 @@ struct mmc_host *mmc_alloc_host(int extra,
-> > > > struct device *dev)
-> > > >  {
-> > > >         int err;
-> > > >         struct mmc_host *host;
-> > > > +       int alias_id, min_idx, max_idx;
-> > > >
-> > > >         host = kzalloc(sizeof(struct mmc_host) + extra,
-> > > > GFP_KERNEL);
-> > > >         if (!host)
-> > > > @@ -395,7 +396,18 @@ struct mmc_host *mmc_alloc_host(int extra,
-> > > > struct device *dev)
-> > > >         /* scanning will be enabled when we're ready */
-> > > >         host->rescan_disable = 1;
-> > > >
-> > > > -       err = ida_simple_get(&mmc_host_ida, 0, 0, GFP_KERNEL);
-> > > > +       host->parent = dev;
-> > > > +
-> > > > +       alias_id = mmc_get_reserved_index(host);
-> > > > +       if (alias_id >= 0) {
-> > > > +               min_idx = alias_id;
-> > > > +               max_idx = alias_id + 1;
-> > > > +       } else {
-> > > > +               min_idx = mmc_first_nonreserved_index();
-> > > > +               max_idx = 0;
-> > > > +       }
-> > > > +
-> > > > +       err = ida_simple_get(&mmc_host_ida, min_idx, max_idx,
-> > > > GFP_KERNEL);
+> On Mon, Aug 24, 2020 at 10:34 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Tue, Aug 25, 2020 at 12:57:22AM +0900, Masahiro Yamada wrote:
+> > >
+> > >
+> > > To prevent transformation from foo() into bar(),
+> > > there are two ways in Clang to do that;
+> > > -fno-builtin-foo, and -fno-builtin-bar.
+> > > There is only one in GCC; -fno-buitin-foo.
+> > >
+> > > Is this correct?
+> > >
+> >
+> > It looked that way from previous experimentation, but...
+> >
+> > >
+> > >
+> > > I just played the optimization
+> > > from printf("helloworld\n") to puts("helloworld").
+> > >
+> > > https://godbolt.org/z/5s4ded
+> > >
+> > >
+> > > -fno-builtin-puts cannot prevent clang
+> > > from emitting puts.
+> > > Is it because clang does not support
+> > > -fno-builtin-puts?
+> >
+> > Ugh. clang doesn't have __builtin_puts() but it optimizes printf() into
+> > puts(). It doesn't have __builtin_putchar() but will optimize
+> > printf("c") into putchar('c').
 >
+> Bah, merely a <strikethrough>flesh
+> wound</strikethrough><strikethrough>compiler bug</strikethrough>rather
+> long TODO in the compiler.
+> https://github.com/llvm/llvm-project/blob/be2bc7d4cef2edd66c7fb74b70adf62fc68754db/clang/include/clang/Basic/Builtins.def#L943
 >
-> One more question I came across when reworking my patch: Do we need a
-> fallback here for the case where the reserved index is already taken?
-> To handle an SD card being replaced while still mounted?
+> Anyways, give me a week and I'll hack through the rest of them
+> https://reviews.llvm.org/D86508.  Certainly made HPA's point hit home,
+> that's a lot of functionality to implement or disable in an
+> environment.
+>
+> Masahiro, are you implying that we shouldn't take the
+> -fno-builtin-stpcpy patch, because Clang is inconsistent? (That can be
+> fixed.) Even though -fno-builtin-stpcpy works here as intended?
+> https://lore.kernel.org/lkml/20200817220212.338670-2-ndesaulniers@google.com/
+>
+> Otherwise we need to provide an implementation of this symbol in the kernel.
+> https://lore.kernel.org/lkml/20200815020946.1538085-1-ndesaulniers@google.com/
+>
+> Please, pick your poison.
 
-Removal/insertion of an SD card should be fine, as that doesn't mean
-that the host is removed. In other words, host->index remains the
-same.
 
-Although, for a bad DT configuration, where for example the same
-aliases id is used twice, a fallback could make sense. On the other
-hand, as such configuration would be wrong, we might as well just
-print a message and return an error.
 
-[...]
+I am not a compiler expert.
 
-Kind regards
-Uffe
+Nor am I sure if I am the right person who makes this decision.
+But, if so, I would choose the latter.
+(implement stpcpy() in the kernel)
+
+I was addressed last night, so
+I should write up my thoughts.
+
+I do not think -fno-builtin-stpcpy is a
+general solution.
+
+-fno-builtin-stpcpy will work for now
+because only Clang implements the transformation
+from 'sprintf(dest, "%s", str)' into
+'stpcpy(dest, str) - dest'.
+
+If GCC implements it some day,
+we would run into a problem because
+in GCC, it is not -fno-builtin-stpcpy, but
+-fno-builtin-sprintf that disables that optimization.
+
+In this regard, 'KBUILD_CFLAGS += -fno-builtin-sprintf'
+would be more future-proof, but it is potentially
+an overkill.
+We want to disable optimization from sprintf() to stpcpy(),
+but we may still benefit from the optimization from
+sprintf() into something else.
+
+
+Linus is uncomfortable with this kind of compiler magic.
+If we take compiler's freedom away,
+-ffreestanding is a big hammer to solve this problem.
+
+If we welcome the compiler's optimization,
+we should implement stpcpy(), bcmp(), and whatever
+until we solve all link errors.
+
+
+
+--
+Best Regards
+Masahiro Yamada
