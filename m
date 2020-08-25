@@ -2,182 +2,66 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25686C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1F320786
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598372552;
-	bh=Ob6Ya4sG/9TFYtRrP6g9VXPseZ2X38wAlcrlrPayfhY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=HHwRfT4CRwTZe6Jm5Tfw8oD7YrhFeKuaYRn6jLkdkLZRwjIr+B7mfmEXdszuGEI5N
-	 SeQO+8kGuzHA6goYukWUc/ZvdiiwDrRhtOMENP6jIoeDufAvTyDAp/dAAQwqcjOm2l
-	 fb0Epjabcl5LX8GrqXcBc3kFseJnF9v/K0whNjBQ=
+	by mail.kernel.org (Postfix) with ESMTP id DDD5F2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727104AbgHYQWZ (ORCPT
+        id S1727012AbgHYQXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:22:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725805AbgHYQWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:22:21 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 204672076C;
-        Tue, 25 Aug 2020 16:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598372540;
-        bh=Ob6Ya4sG/9TFYtRrP6g9VXPseZ2X38wAlcrlrPayfhY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=yj+xSLQWrJYsteoxUDzI4203SRM4N7vwTUF/ZLxu3kZZTD61PsVNefCJ2heTYdXez
-         ZjUPhgm7YB7fwVIZoz++Avg+NgquXhY3ARdasGto7IuSRSJT7cNRqt1af9BdF/Zw0o
-         sQQn//fM6Q7RI/4QY5VStkEfy1CYo69EUGd8g2to=
-Message-ID: <578fb1e557d1990f768b7fdf5c6e4505db4c24e6.camel@kernel.org>
-Subject: Re: [PATCH v2] fs/ceph: use pipe_get_pages_alloc() for pipe
-From:   Jeff Layton <jlayton@kernel.org>
-To:     John Hubbard <jhubbard@nvidia.com>, willy@infradead.org
-Cc:     akpm@linux-foundation.org, axboe@kernel.dk,
-        ceph-devel@vger.kernel.org, hch@infradead.org, idryomov@gmail.com,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, viro@zeniv.linux.org.uk,
-        "Yan, Zheng" <ukernel@gmail.com>
-Date:   Tue, 25 Aug 2020 12:22:17 -0400
-In-Reply-To: <20200825012034.1962362-1-jhubbard@nvidia.com>
-References: <20200824185400.GE17456@casper.infradead.org>
-         <20200825012034.1962362-1-jhubbard@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
-MIME-Version: 1.0
+        Tue, 25 Aug 2020 12:23:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgHYQXN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 12:23:13 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A2C6C061574;
+        Tue, 25 Aug 2020 09:23:13 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 97E661349BAC2;
+        Tue, 25 Aug 2020 09:06:25 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:23:08 -0700 (PDT)
+Message-Id: <20200825.092308.1226928074491426275.davem@davemloft.net>
+To:     ahabdels@gmail.com
+Cc:     kuba@kernel.org, corbet@lwn.net, netdev@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andrea.mayer@uniroma2.it
+Subject: Re: [net-next v5 2/2] seg6: Add documentation for
+ seg6_inherit_inner_ipv4_dscp sysctl
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <ad5dfe4a-da8e-aed2-4a32-cd617ad795b2@gmail.com>
+References: <20200825121844.1576-1-ahabdels@gmail.com>
+        <20200825085127.50ba9c82@kicinski-fedora-PC1C0HJN>
+        <ad5dfe4a-da8e-aed2-4a32-cd617ad795b2@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 25 Aug 2020 09:06:25 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-24 at 18:20 -0700, John Hubbard wrote:
-> This reduces, by one, the number of callers of iov_iter_get_pages().
-> That's helpful because these calls are being audited and converted over
-> to use iov_iter_pin_user_pages(), where applicable. And this one here is
-> already known by the caller to be only for ITER_PIPE, so let's just
-> simplify it now.
-> 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
-> 
-> OK, here's a v2 that does EXPORT_SYMBOL_GPL, instead of EXPORT_SYMBOL,
-> that's the only change from v1. That should help give this patch a
-> clear bill of passage. :)
-> 
-> thanks,
-> John Hubbard
-> NVIDIA
-> 
->  fs/ceph/file.c      | 3 +--
->  include/linux/uio.h | 3 ++-
->  lib/iov_iter.c      | 6 +++---
->  3 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> index d51c3f2fdca0..d3d7dd957390 100644
-> --- a/fs/ceph/file.c
-> +++ b/fs/ceph/file.c
-> @@ -879,8 +879,7 @@ static ssize_t ceph_sync_read(struct kiocb *iocb, struct iov_iter *to,
->  		more = len < iov_iter_count(to);
->  
->  		if (unlikely(iov_iter_is_pipe(to))) {
-> -			ret = iov_iter_get_pages_alloc(to, &pages, len,
-> -						       &page_off);
-> +			ret = pipe_get_pages_alloc(to, &pages, len, &page_off);
->  			if (ret <= 0) {
->  				ceph_osdc_put_request(req);
->  				ret = -ENOMEM;
-> diff --git a/include/linux/uio.h b/include/linux/uio.h
-> index 3835a8a8e9ea..270a4dcf5453 100644
-> --- a/include/linux/uio.h
-> +++ b/include/linux/uio.h
-> @@ -226,7 +226,8 @@ ssize_t iov_iter_get_pages(struct iov_iter *i, struct page **pages,
->  ssize_t iov_iter_get_pages_alloc(struct iov_iter *i, struct page ***pages,
->  			size_t maxsize, size_t *start);
->  int iov_iter_npages(const struct iov_iter *i, int maxpages);
-> -
-> +ssize_t pipe_get_pages_alloc(struct iov_iter *i, struct page ***pages,
-> +			     size_t maxsize, size_t *start);
->  const void *dup_iter(struct iov_iter *new, struct iov_iter *old, gfp_t flags);
->  
->  static inline size_t iov_iter_count(const struct iov_iter *i)
-> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-> index 5e40786c8f12..6290998df480 100644
-> --- a/lib/iov_iter.c
-> +++ b/lib/iov_iter.c
-> @@ -1355,9 +1355,8 @@ static struct page **get_pages_array(size_t n)
->  	return kvmalloc_array(n, sizeof(struct page *), GFP_KERNEL);
->  }
->  
-> -static ssize_t pipe_get_pages_alloc(struct iov_iter *i,
-> -		   struct page ***pages, size_t maxsize,
-> -		   size_t *start)
-> +ssize_t pipe_get_pages_alloc(struct iov_iter *i, struct page ***pages,
-> +			     size_t maxsize, size_t *start)
->  {
->  	struct page **p;
->  	unsigned int iter_head, npages;
-> @@ -1387,6 +1386,7 @@ static ssize_t pipe_get_pages_alloc(struct iov_iter *i,
->  		kvfree(p);
->  	return n;
->  }
-> +EXPORT_SYMBOL_GPL(pipe_get_pages_alloc);
->  
->  ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
->  		   struct page ***pages, size_t maxsize,
+From: Ahmed Abdelsalam <ahabdels@gmail.com>
+Date: Tue, 25 Aug 2020 18:01:01 +0200
 
-Thanks. I've got a v1 of this in the ceph-client/testing branch and it
-seems fine so far.
+> patch fixed and resent.
 
-I'd prefer an ack from Al on one or the other though, since I'm not sure
-he wants to expose this primitive, and in the past he hasn't been
-enamored with EXPORT_SYMBOL_GPL, because its meaning wasn't well
-defined. Maybe that's changed since.
+You must resubmit the entire patch series when you update any
+patch in the series.
 
-As a side note, Al also asked privately why ceph special cases
-ITER_PIPE. I wasn't sure either, so I did a bit of git-archaeology. The
-change was added here:
+You should also provide a proper header "[PATCH 0/N]" posting
+for your series which explains what the series does, how does
+it do it, and why does it do it that way.
 
----------------------------8<---------------------------
-commit
-7ce469a53e7106acdaca2e25027941d0f7c12a8e
-Author: Yan, Zheng <zyan@redhat.com>
-Date:   Tue Nov 8 21:54:34 2016 +0800
-
-    ceph: fix splice read for no Fc capability case
-    
-    When iov_iter type is ITER_PIPE, copy_page_to_iter() increases
-    the page's reference and add the page to a pipe_buffer. It also
-    set the pipe_buffer's ops to page_cache_pipe_buf_ops. The comfirm
-    callback in page_cache_pipe_buf_ops expects the page is from page
-    cache and uptodate, otherwise it return error.
-    
-    For ceph_sync_read() case, pages are not from page cache. So we
-    can't call copy_page_to_iter() when iov_iter type is ITER_PIPE.
-    The fix is using iov_iter_get_pages_alloc() to allocate pages
-    for the pipe. (the code is similar to default_file_splice_read)
-    
-    Signed-off-by: Yan, Zheng <zyan@redhat.com>
----------------------------8<---------------------------
-
-If we don't have Fc (FILE_CACHE) caps then the client's not allowed to
-cache data and so we can't use the pagecache. I'm not certain special
-casing pipes in ceph, is the best approach to handle that, but the
-confirm callback still seems to work the same way today.
-
-Cheers,
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Thank you.
