@@ -2,272 +2,154 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79668C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1544C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50A0120786
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:03:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="hXOK3FZK"
+	by mail.kernel.org (Postfix) with ESMTP id BAD8720782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgHYQDz (ORCPT
+        id S1727060AbgHYQFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:03:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727042AbgHYQDC (ORCPT
+        Tue, 25 Aug 2020 12:05:07 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60340 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726706AbgHYQFF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:03:02 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 597AFC061796
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:02:54 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id kx11so1028640pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:02:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8dg/pzOfoX090vr3MKkHjKruXnSLmOH8ps44bLz/Dy8=;
-        b=hXOK3FZKFyQj/sHxEuzwTLPUAfnjY4BAK3nuyhFK3MF88zZxMd+AM8t0VCZQIN0m6G
-         eMTZg8PnWcTQzr8VXu7dWK/B74r6Amm0iz8hSl9QMjOjTM26S3fLC/XVdt5Df4f2ieYK
-         +C7wqXIJZYyobUZfK4XfTvBUt0g9uhkaYqQcQOrXaG6m3oww8yqsO26jkL250zgfD+Ib
-         dGIJ0rVowMRkkbcrIav0O244s0Gc4ORvkNwWW2yLLmQgwtimRx/JdnEwy5baDxz8n84X
-         jzsCF5JmhhBBz9N7MXaIGQ9szn9SDO5UDCzqOi8ktSUTFEtmRm5hYXLeeedt+y1dgqm3
-         WPtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=8dg/pzOfoX090vr3MKkHjKruXnSLmOH8ps44bLz/Dy8=;
-        b=oqvqerDASnmJAH4wbunkeAuo0BeNXBxgYPcS7gUuFfPwP56appm7TMAdvWRtpYkrRr
-         1O/LP3imw3ObA5V9wKzzFgXy2OkLGi3kug4k+6HVcOO+Ez6JWYz16PhUzxXIPMKvmfAG
-         0Rfkmyk2M+WFedL4eGSOTgW+unvITgSqMu9D06OUefMHiog2rQG9ox9UwxEboXVdCuLQ
-         deUHg7nqgJyPaBQTk59vA63cRVQAWvZFHIYbZdm336owWtZ20xfM7oiQm5lTyf+6ot1H
-         f9fk+RJX6KZ+YJCP/7Mo4LsjumNi3CZCASgLhdDepKuBXI9biqBeMEcsGFrkUe+qm/Gb
-         7EmA==
-X-Gm-Message-State: AOAM531/syM1RmIq1ZxVryEjPzYaj05fK3fib0+DFDq7cGX0zERZEd8b
-        KJsS/XCBGz/GY4W2imeE4vpXmQ==
-X-Google-Smtp-Source: ABdhPJw0IKBPCBHyT7FsIFni4cECCusosYELl80aL9fXYDOXbNFYC5Ncy0w6whnQ0XoeA0abk/V0qg==
-X-Received: by 2002:a17:90a:9405:: with SMTP id r5mr2240530pjo.74.1598371373730;
-        Tue, 25 Aug 2020 09:02:53 -0700 (PDT)
-Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id d4sm3078303pju.56.2020.08.25.09.02.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 09:02:53 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 09:02:53 -0700 (PDT)
-X-Google-Original-Date: Tue, 25 Aug 2020 08:49:54 PDT (-0700)
-Subject:     Re: [PATCH 3/3] edac: sifive: Add EDAC support for Memory Controller in SiFive SoCs
-In-Reply-To: <1598357182-4226-4-git-send-email-yash.shah@sifive.com>
-CC:     robh+dt@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
-        aou@eecs.berkeley.edu, james.morse@arm.com, rrichter@marvell.com,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        sachin.ghadi@sifive.com, yash.shah@sifive.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     yash.shah@sifive.com
-Message-ID: <mhng-42bbb651-211f-4899-8839-5b6bc8e3db78@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 25 Aug 2020 12:05:05 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 21141299AB4
+Received: by earth.universe (Postfix, from userid 1000)
+        id 830E73C0C82; Tue, 25 Aug 2020 18:05:00 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 18:05:00 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Subject: Re: [PATCH] power: supply: bq2515x: Constify static variables
+Message-ID: <20200825160500.wxigzcoergyrqapj@earth.universe>
+References: <20200824232228.38423-1-rikard.falkeborn@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qi5obm626a6gxj6s"
+Content-Disposition: inline
+In-Reply-To: <20200824232228.38423-1-rikard.falkeborn@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 05:06:22 PDT (-0700), yash.shah@sifive.com wrote:
-> Add Memory controller EDAC support in exisiting SiFive platform EDAC
-> driver. It registers for notifier events from the SiFive DDR controller
-> driver for DDR ECC events.
->
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  drivers/edac/Kconfig       |   2 +-
->  drivers/edac/sifive_edac.c | 117 +++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 118 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index 7b6ec30..f8b3b53 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -462,7 +462,7 @@ config EDAC_ALTERA_SDMMC
->
->  config EDAC_SIFIVE
->  	bool "Sifive platform EDAC driver"
-> -	depends on EDAC=y && SIFIVE_L2
-> +	depends on EDAC=y && (SIFIVE_L2 || SIFIVE_DDR)
->  	help
->  	  Support for error detection and correction on the SiFive SoCs.
->
-> diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
-> index 3a3dcb1..cf032685 100644
-> --- a/drivers/edac/sifive_edac.c
-> +++ b/drivers/edac/sifive_edac.c
-> @@ -11,14 +11,120 @@
->  #include <linux/platform_device.h>
->  #include "edac_module.h"
->  #include <soc/sifive/sifive_l2_cache.h>
-> +#include <soc/sifive/sifive_ddr.h>
->
->  #define DRVNAME "sifive_edac"
-> +#define SIFIVE_EDAC_MOD_NAME "Sifive ECC Manager"
->
->  struct sifive_edac_priv {
->  	struct notifier_block notifier;
->  	struct edac_device_ctl_info *dci;
->  };
->
-> +struct sifive_edac_mc_priv {
-> +	struct notifier_block notifier;
-> +	struct mem_ctl_info *mci;
-> +};
-> +
-> +/**
-> + * EDAC MC error callback
-> + *
-> + * @event: non-zero if unrecoverable.
-> + */
-> +static
-> +int ecc_mc_err_event(struct notifier_block *this, unsigned long event, void *ptr)
-> +{
-> +	struct sifive_ddr_priv *priv = ptr;
-> +	struct sifive_edac_mc_priv *p;
-> +
-> +	p = container_of(this, struct sifive_edac_mc_priv, notifier);
-> +	if (event == SIFIVE_DDR_ERR_TYPE_UE) {
-> +		edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, p->mci,
-> +				     priv->error_count, priv->page_frame_number,
-> +				     priv->offset_in_page, priv->syndrome,
-> +				     priv->top_layer, priv->mid_layer,
-> +				     priv->low_layer, p->mci->ctl_name, "");
-> +	} else if (event == SIFIVE_DDR_ERR_TYPE_CE) {
-> +		edac_mc_handle_error(HW_EVENT_ERR_CORRECTED, p->mci,
-> +				     priv->error_count, priv->page_frame_number,
-> +				     priv->offset_in_page, priv->syndrome,
-> +				     priv->top_layer, priv->mid_layer,
-> +				     priv->low_layer, p->mci->ctl_name, "");
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static int ecc_mc_register(struct platform_device *pdev)
-> +{
-> +	struct sifive_edac_mc_priv *p;
-> +	struct edac_mc_layer layers[1];
-> +	int ret;
-> +
-> +	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
-> +	if (!p)
-> +		return -ENOMEM;
-> +
-> +	p->notifier.notifier_call = ecc_mc_err_event;
-> +	platform_set_drvdata(pdev, p);
-> +
-> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
-> +	layers[0].size = 1;
-> +	layers[0].is_virt_csrow = true;
-> +
-> +	p->mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, 0);
-> +	if (!p->mci) {
-> +		dev_err(&pdev->dev, "Failed mem allocation for mc instance\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	p->mci->pdev = &pdev->dev;
-> +	/* Initialize controller capabilities */
-> +	p->mci->mtype_cap = MEM_FLAG_DDR4;
-> +	p->mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
-> +	p->mci->edac_cap = EDAC_FLAG_SECDED;
-> +	p->mci->scrub_cap = SCRUB_UNKNOWN;
-> +	p->mci->scrub_mode = SCRUB_HW_PROG;
-> +	p->mci->ctl_name = dev_name(&pdev->dev);
-> +	p->mci->dev_name = dev_name(&pdev->dev);
-> +	p->mci->mod_name = SIFIVE_EDAC_MOD_NAME;
-> +	p->mci->ctl_page_to_phys = NULL;
-> +
-> +	/* Interrupt feature is supported by cadence mc */
-> +	edac_op_state = EDAC_OPSTATE_INT;
-> +
-> +	ret = edac_mc_add_mc(p->mci);
-> +	if (ret) {
-> +		edac_printk(KERN_ERR, SIFIVE_EDAC_MOD_NAME,
-> +			    "Failed to register with EDAC core\n");
-> +		goto err;
-> +	}
-> +
-> +#ifdef CONFIG_SIFIVE_DDR
-> +	register_sifive_ddr_error_notifier(&p->notifier);
-> +#endif
-> +
-> +	return 0;
-> +
-> +err:
-> +	edac_mc_free(p->mci);
-> +
-> +	return -ENXIO;
-> +}
-> +
-> +static int ecc_mc_unregister(struct platform_device *pdev)
-> +{
-> +	struct sifive_edac_mc_priv *p = platform_get_drvdata(pdev);
-> +
-> +#ifdef CONFIG_SIFIVE_DDR
-> +	unregister_sifive_ddr_error_notifier(&p->notifier);
-> +#endif
-> +	edac_mc_del_mc(&pdev->dev);
-> +	edac_mc_free(p->mci);
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * EDAC error callback
->   *
-> @@ -67,7 +173,9 @@ static int ecc_register(struct platform_device *pdev)
->  		goto err;
->  	}
->
-> +#ifdef CONFIG_SIFIVE_L2
->  	register_sifive_l2_error_notifier(&p->notifier);
-> +#endif
->
->  	return 0;
->
-> @@ -81,7 +189,9 @@ static int ecc_unregister(struct platform_device *pdev)
->  {
->  	struct sifive_edac_priv *p = platform_get_drvdata(pdev);
->
-> +#ifdef CONFIG_SIFIVE_L2
->  	unregister_sifive_l2_error_notifier(&p->notifier);
-> +#endif
->  	edac_device_del_device(&pdev->dev);
->  	edac_device_free_ctl_info(p->dci);
->
-> @@ -102,12 +212,19 @@ static int __init sifive_edac_init(void)
->  	if (ret)
->  		platform_device_unregister(sifive_pdev);
->
-> +	ret = ecc_mc_register(sifive_pdev);
-> +	if (ret) {
-> +		ecc_unregister(sifive_pdev);
-> +		platform_device_unregister(sifive_pdev);
-> +	}
-> +
->  	return ret;
->  }
->
->  static void __exit sifive_edac_exit(void)
->  {
->  	ecc_unregister(sifive_pdev);
-> +	ecc_mc_unregister(sifive_pdev);
->  	platform_device_unregister(sifive_pdev);
->  }
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+--qi5obm626a6gxj6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Aug 25, 2020 at 01:22:28AM +0200, Rikard Falkeborn wrote:
+> Constify a number of static variables that are not modified to allow the
+> compiler to put them in read-only memory.
+>=20
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> ---
+
+Thanks, queued.
+
+-- Sebastian
+
+>  drivers/power/supply/bq2515x_charger.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/bq2515x_charger.c b/drivers/power/suppl=
+y/bq2515x_charger.c
+> index 36b0c8c98d40..9dcb61ea4cf2 100644
+> --- a/drivers/power/supply/bq2515x_charger.c
+> +++ b/drivers/power/supply/bq2515x_charger.c
+> @@ -188,7 +188,7 @@ struct bq2515x_device {
+>  	struct bq2515x_init_data init_data;
+>  };
+> =20
+> -static struct reg_default bq25150_reg_defaults[] =3D {
+> +static const struct reg_default bq25150_reg_defaults[] =3D {
+>  	{BQ2515X_FLAG0, 0x0},
+>  	{BQ2515X_FLAG1, 0x0},
+>  	{BQ2515X_FLAG2, 0x0},
+> @@ -227,7 +227,7 @@ static struct reg_default bq25150_reg_defaults[] =3D {
+>  	{BQ2515X_DEVICE_ID, 0x20},
+>  };
+> =20
+> -static struct reg_default bq25155_reg_defaults[] =3D {
+> +static const struct reg_default bq25155_reg_defaults[] =3D {
+>  	{BQ2515X_FLAG0, 0x0},
+>  	{BQ2515X_FLAG1, 0x0},
+>  	{BQ2515X_FLAG2, 0x0},
+> @@ -886,14 +886,14 @@ static int bq2515x_battery_get_property(struct powe=
+r_supply *psy,
+>  	return 0;
+>  }
+> =20
+> -static enum power_supply_property bq2515x_battery_properties[] =3D {
+> +static const enum power_supply_property bq2515x_battery_properties[] =3D=
+ {
+>  	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+>  	POWER_SUPPLY_PROP_CURRENT_NOW,
+>  	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT_MAX,
+>  	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE_MAX,
+>  };
+> =20
+> -static enum power_supply_property bq2515x_mains_properties[] =3D {
+> +static const enum power_supply_property bq2515x_mains_properties[] =3D {
+>  	POWER_SUPPLY_PROP_ONLINE,
+>  	POWER_SUPPLY_PROP_STATUS,
+>  	POWER_SUPPLY_PROP_HEALTH,
+> @@ -905,7 +905,7 @@ static enum power_supply_property bq2515x_mains_prope=
+rties[] =3D {
+>  	POWER_SUPPLY_PROP_PRECHARGE_CURRENT,
+>  };
+> =20
+> -static struct power_supply_desc bq2515x_mains_desc =3D {
+> +static const struct power_supply_desc bq2515x_mains_desc =3D {
+>  	.name			=3D "bq2515x-mains",
+>  	.type			=3D POWER_SUPPLY_TYPE_MAINS,
+>  	.get_property		=3D bq2515x_mains_get_property,
+> @@ -915,7 +915,7 @@ static struct power_supply_desc bq2515x_mains_desc =
+=3D {
+>  	.property_is_writeable	=3D bq2515x_power_supply_property_is_writeable,
+>  };
+> =20
+> -static struct power_supply_desc bq2515x_battery_desc =3D {
+> +static const struct power_supply_desc bq2515x_battery_desc =3D {
+>  	.name			=3D "bq2515x-battery",
+>  	.type			=3D POWER_SUPPLY_TYPE_BATTERY,
+>  	.get_property		=3D bq2515x_battery_get_property,
+> --=20
+> 2.28.0
+>=20
+
+--qi5obm626a6gxj6s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9FNqIACgkQ2O7X88g7
++ppT7hAAkzQO5mGX9BUXEjs4drahR2s3CGaToZ4uHFLxPruncGAO6FRiNeXbSCxF
+GDl2O6Bv2oDSX7vKQqs0KgVE3VB+SiWj8OV9aNhTbAqjJQR587qnagBB7p0UZg3l
+uHUMSJAVy8YOyx2AOUuVovqX9FsRoKcg3QhpH/dNGCxiM+Lpps1H2lHllH5fNSZV
+St8grBKX2NG1Azgnr2CG2TS3lnNL5bmJt1AdpPduR0KmHSFjXz/VgPmmQjdsxo91
+2i+r2B4Re/UZ+EEIMRp0vzSm/Ak08aGkIsJTYi9MtIRx8aBUnOm6wNP7lZCkNeuZ
+LkqFVuOnZDbAOYTuRTTeVX/zbddJNuVf/yNTzMm+rA4At2s9rO5eoi533Bz8/+8w
+qhBrpXSj2Nr65FATcm6x6WKDSX4F1LV6yXWuYu3PYNEVEkxKlKTYSYaqCwFOI0pD
+LpCRYFCsz8qBmW9AOY0eyDPY1aXNKJ7cuNALh8oYM48P1e/zaLxICLBEr3fZzojk
+4sokMfNUr5yc4U0T1GY5SIFP5Hj50Z/c6Q+o/Wr+RCQk+dh/UnDccDcMHckFufNK
+3/jWZFmtxWNheQflCzesx9oBaU6ukmO9DEPeqPLC6Uu5HRP/aZGo6NuMvjUHKHBL
+GGhGR1C0L539j4RqO0k2u91pvWnjvd8CSjP31AT5KBonMnwJv0E=
+=DTzh
+-----END PGP SIGNATURE-----
+
+--qi5obm626a6gxj6s--
