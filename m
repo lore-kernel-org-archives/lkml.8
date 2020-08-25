@@ -2,94 +2,109 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC78C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 307D0C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 008E52075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F36F2224D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgHYOyF (ORCPT
+        id S1726836AbgHYOxH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:54:05 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9716 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726870AbgHYOxc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:53:32 -0400
-IronPort-SDR: /ZOqXDBxpJwnSy8dGfpUCmE5+yaeX8fzIk+Yf5cunU2Q+eUYuf8UwM3W0Co2GYdix/Tt5+2WaY
- rVlD1R8keqpQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136186106"
-X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
-   d="scan'208";a="136186106"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 07:53:09 -0700
-IronPort-SDR: xCZBWAHDQ9DlZgfqRKEq91dH84AR5+7XOPIRJz9/YCnm8w0/mdgG9O4Qcprtk22atB+MCNEpIk
- Gf9IhagL3igA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="328886276"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2020 07:53:07 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kAa7C-00BLT0-Tn; Tue, 25 Aug 2020 17:39:58 +0300
-Date:   Tue, 25 Aug 2020 17:39:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 0/3] PM operations for software nodes
-Message-ID: <20200825143958.GM1891694@smile.fi.intel.com>
-References: <20200825135951.53340-1-heikki.krogerus@linux.intel.com>
+        Tue, 25 Aug 2020 10:53:07 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:26156 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726763AbgHYOwo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:52:44 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-79-zk8xmwPXOHmEFa64UqMB8Q-1; Tue, 25 Aug 2020 15:52:40 +0100
+X-MC-Unique: zk8xmwPXOHmEFa64UqMB8Q-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 25 Aug 2020 15:52:38 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 25 Aug 2020 15:52:38 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>,
+        'Catalin Marinas' <catalin.marinas@arm.com>,
+        "'kent.overstreet@gmail.com'" <kent.overstreet@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "'Neil Horman'" <nhorman@tuxdriver.com>
+Subject: [PATCH 13/13] lib/generic-radix-tree: Simplify __genradix_ptr()
+Thread-Topic: [PATCH 13/13] lib/generic-radix-tree: Simplify __genradix_ptr()
+Thread-Index: AdZ6719rWD9U8XgbSzKIbUgnCK1q2w==
+Date:   Tue, 25 Aug 2020 14:52:38 +0000
+Message-ID: <35b7ab36369249d8bf17a04f58a0f337@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825135951.53340-1-heikki.krogerus@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.002
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 04:59:48PM +0300, Heikki Krogerus wrote:
-> Hi guys,
-> 
-> Unfortunately the last patch depends on this:
-> https://lore.kernel.org/linux-usb/20200821131101.81915-1-heikki.krogerus@linux.intel.com/
-> 
-> Would it be easiest that Felipe took care of these (assuming they are
-> acceptable)?
+Now that requests for small trees are inlined there is no need
+to aggressively optimise for them in __genradix_ptr().
 
-LGTM, FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: David Laight <david.laight@aculab.com>
+---
+ lib/generic-radix-tree.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-> thanks,
-> 
-> Heikki Krogerus (3):
->   software node: Power management operations for software nodes
->   software node: Introduce device_add_software_node()
->   usb: dwc3: pci: Register a software node for the dwc3 platform device
-> 
->  drivers/base/power/common.c |   8 +-
->  drivers/base/swnode.c       | 569 +++++++++++++++++++++++++++++++++++-
->  drivers/usb/dwc3/dwc3-pci.c | 175 ++++++-----
->  include/linux/property.h    |  13 +
->  4 files changed, 666 insertions(+), 99 deletions(-)
-> 
-> -- 
-> 2.28.0
-> 
-
+diff --git a/lib/generic-radix-tree.c b/lib/generic-radix-tree.c
+index 7029a14eed97..497ac5effda0 100644
+--- a/lib/generic-radix-tree.c
++++ b/lib/generic-radix-tree.c
+@@ -45,9 +45,6 @@ void *__genradix_ptr(struct genradix_root *r, size_t offset)
+ 	unsigned int shift = __genradix_root_to_shift(r);
+ 	unsigned int idx;
+ 
+-	if (likely(shift == GENRADIX_ROOT_SHIFT))
+-		return offset < PAGE_SIZE ? n->data + offset : NULL;
+-
+ 	if (unlikely(!shift))
+ 		return NULL;
+ 
+@@ -56,13 +53,13 @@ void *__genradix_ptr(struct genradix_root *r, size_t offset)
+ 		return NULL;
+ 
+ 	for (;;) {
++		if (likely(shift == GENRADIX_ROOT_SHIFT))
++			return n->data + (offset % PAGE_SIZE);
++
+ 		n = READ_ONCE(n->children[idx]);
+ 		if (unlikely(!n))
+ 			return NULL;
+ 
+-		if (shift == PAGE_SHIFT)
+-			return n->data + (offset % PAGE_SIZE);
+-
+ 		shift -= GENRADIX_ARY_SHIFT;
+ 		idx = (offset >> shift) % GENRADIX_ARY;
+ 	}
 -- 
-With Best Regards,
-Andy Shevchenko
+2.25.1
 
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
