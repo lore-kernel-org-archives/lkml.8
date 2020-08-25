@@ -2,88 +2,210 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64ADC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3814C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F7020738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715A120738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:59:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="kChPl54d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgHYN7D (ORCPT
+        id S1726347AbgHYN7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:59:03 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59124 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHYN6z (ORCPT
+        Tue, 25 Aug 2020 09:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbgHYN64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:58:55 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id BB4CB293A98
-Received: by earth.universe (Postfix, from userid 1000)
-        id 516003C0C82; Tue, 25 Aug 2020 15:58:50 +0200 (CEST)
-Date:   Tue, 25 Aug 2020 15:58:50 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     David Lechner <david@lechnology.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>,
-        Bartosz Go??aszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH] power: supply: Add dependency to lego-ev3-battery
- Kconfig options
-Message-ID: <20200825135850.4ryqn53hacvor3tm@earth.universe>
-References: <20200809185444.54247-1-alex.dewar90@gmail.com>
- <d6c98ee6-f2f3-c55a-be16-3794ccf30a28@lechnology.com>
- <20200812133711.ddwhxypmvr27pxdu@lenovo-laptop>
- <ce0ae241-10e1-de5c-e694-2c00dc01a2c4@lechnology.com>
- <20200812190253.zewvdfvyu6cnggcl@lenovo-laptop>
- <0927eaf0-62d6-adaf-c4b0-89d7f4cc7b4a@lechnology.com>
- <20200817174344.lxuzlly4it5vpfmz@lenovo-laptop>
- <dc296c76-b997-c711-7f60-a7a993601443@lechnology.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="e7bkr3oqpz5rqps6"
-Content-Disposition: inline
-In-Reply-To: <dc296c76-b997-c711-7f60-a7a993601443@lechnology.com>
+        Tue, 25 Aug 2020 09:58:56 -0400
+Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5098FC061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 06:58:56 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id g6so8705230pfi.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 06:58:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=Us+zKhWOc0nF2Stw/sjqwIYhi1P3cVkrUO+fKBNUwt4=;
+        b=kChPl54dn9ymEmCalokFzgP0MuYBhYIUai4sfhGRDTh7cmSDYrE9/f2w2wlzy79P1U
+         odUElDEA6bydiFE9ZvHxHgUU1DeCZfPfixc+QnXh6sqh3mCROa7cWR80GWycaCUfb4IF
+         UBKXlwIVApSR31H2zG7ZxWF6WxQTdY9nQlI9tLzJ7tq7xXyPlCbj3ruaO4VmIFc2t8FP
+         u5EoeZ4mdLG9kegCOTiKILj3FbecfJPwMC/TsHIbN2mbiBeuIHnoLEgj58tO1/iziyT3
+         ZHyFWI96H8MuXgxec7wRTEFCpZDQz1eBjJcUj1sj21HyfKjhnsCK5NAQONRKGgGjyfaK
+         ImQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=Us+zKhWOc0nF2Stw/sjqwIYhi1P3cVkrUO+fKBNUwt4=;
+        b=sJa1SZXttWznqzE51khzqJIamQZ6LLvCKfCrYk4ytrIMWuBbYJB0cprSBNoHOZXgG+
+         P1k2QSG39plouO4N+mB6JE87snf8Ao3ZPD/UF3kPEBYRzovlzL/T6j59Oz4rSWZ2InRe
+         zvfkbBoBIUzHaGr//GWT6EDQmBNxVl1FOc4IpKvKe6SeBdCQUNz+6kk+lx9mxS2Tj+GS
+         uofHrr5TX4bcVfQYlvnBD6IOz2y0LEi7/WHH3qHzJ9O0rzzThdroUHGYQFdeYOl9pf80
+         q74/ohJMoDnZZWjMcXPc+KB5ozReybkQzdQRbVmfKmcmgtFr/jxq5QOSOzam4+jgjCNq
+         J/jQ==
+X-Gm-Message-State: AOAM532ZS6a164pAE1WrBKqcUErAvgG1QYvKdmlzeh0WY5bl0Zm9LXQH
+        N+GL0i9q1ygc/02aMoCz72HHpFeRtwAegpkvDlE=
+X-Google-Smtp-Source: ABdhPJyZgdjJcZNgecDr3UiTzEn5aQy+0LYKn3Ej4qIsX1xwC3PrG7l2IDzKFUt1pE1eWuX67nXFBj1sKlB/v8+4iqU=
+X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
+ (user=ndesaulniers job=sendgmr) by 2002:a62:7c97:: with SMTP id
+ x145mr8231879pfc.155.1598363935586; Tue, 25 Aug 2020 06:58:55 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 06:58:36 -0700
+Message-Id: <20200825135838.2938771-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH v3] lib/string.c: implement stpcpy
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org, Andy Lavr <andy.lavr@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Joe Perches <joe@perches.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+LLVM implemented a recent "libcall optimization" that lowers calls to
+`sprintf(dest, "%s", str)` where the return value is used to
+`stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+in parsing format strings.  `stpcpy` is just like `strcpy` except it
+returns the pointer to the new tail of `dest`.  This optimization was
+introduced into clang-12.
 
---e7bkr3oqpz5rqps6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Implement this so that we don't observe linkage failures due to missing
+symbol definitions for `stpcpy`.
 
-Hi,
+Similar to last year's fire drill with:
+commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
 
-On Mon, Aug 17, 2020 at 01:25:45PM -0500, David Lechner wrote:
-> Acked-by: David Lechner <david@lechnology.com>
+The kernel is somewhere between a "freestanding" environment (no full libc)
+and "hosted" environment (many symbols from libc exist with the same
+type, function signature, and semantics).
 
-Thanks, queued.
+As H. Peter Anvin notes, there's not really a great way to inform the
+compiler that you're targeting a freestanding environment but would like
+to opt-in to some libcall optimizations (see pr/47280 below), rather than
+opt-out.
 
--- Sebastian
+Arvind notes, -fno-builtin-* behaves slightly differently between GCC
+and Clang, and Clang is missing many __builtin_* definitions, which I
+consider a bug in Clang and am working on fixing.
 
---e7bkr3oqpz5rqps6
-Content-Type: application/pgp-signature; name="signature.asc"
+Masahiro summarizes the subtle distinction between compilers justly:
+  To prevent transformation from foo() into bar(), there are two ways in
+  Clang to do that; -fno-builtin-foo, and -fno-builtin-bar.  There is
+  only one in GCC; -fno-buitin-foo.
 
------BEGIN PGP SIGNATURE-----
+(Any difference in that behavior in Clang is likely a bug from a missing
+__builtin_* definition.)
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9FGQMACgkQ2O7X88g7
-+poC/RAAgbWtpuuazZqMmp/RL4+F60nh/UTLSn0PevcfDdmaM2zTmz8w5mM+WyM0
-0o3etP3j64iAVZoAdmsCbj6wHrrdcE2PqjKHcKD9uXpK8CmWot3L1tlQEXJBaKFr
-exbvszE/5fKjYBlIvdgh1wKzhqbr0F2/KevJOM3ZU3f/P2orNihQ6lJe2bmoiBDs
-gU8uyPOYBnfucR6iYXlJIMcKYVulDFnexoXlGjJh2MPZmycfF4ByL3zCho2ISTW8
-PQ2HlcFgtDCr0bgIxy6W0vmy82jB0Sj9bEz7TC9JqHzGZqdDjgFeFMuq5vO9XeCp
-u4MnauXMlaSxoSV6dM6saRIUdPkradH/4k+Nf02a2vbcRD28ZK9DVFTVCYMFjw35
-RoCYmkgz9CKNK82iM2JGRe8ct8X1nNW/HMdwJjjkXt83QL8Av+6ZZb/676hIngIh
-vhKoASKPy2NQmKE//Ornkd+/TzBgcLzFnsRqJCENGeu2T1hUmqhyfJuA75pB84vX
-+Vz6gJbnlIKYuKLfD6pTHktUdlsFx/iaHKpm/ykdXFeFrV9FlW8PWYEWu/LTFzoH
-QLuBftfiVUAbhpPqYdXZ9NzG1MZ+VjhoaTP/XiY+8b5oJwO3c2MaAvpRr8ixOEM9
-H+FPOTewMuJYZfdFuyeF1DnV6kNp7DxZNK61svLTZxdu7ees/3g=
-=ybwy
------END PGP SIGNATURE-----
+Masahiro also notes:
+  We want to disable optimization from foo() to bar(),
+  but we may still benefit from the optimization from
+  foo() into something else. If GCC implements the same transform, we
+  would run into a problem because it is not -fno-builtin-bar, but
+  -fno-builtin-foo that disables that optimization.
 
---e7bkr3oqpz5rqps6--
+  In this regard, -fno-builtin-foo would be more future-proof than
+  -fno-built-bar, but -fno-builtin-foo is still potentially overkill. We
+  may want to prevent calls from foo() being optimized into calls to
+  bar(), but we still may want other optimization on calls to foo().
+
+It seems that compilers today don't quite provide the fine grain control
+over which libcall optimizations pseudo-freestanding environments would
+prefer.
+
+Finally, Kees notes that this interface is unsafe, so we should not
+encourage its use.  As such, I've removed the declaration from any
+header, but it still needs to be exported to avoid linkage errors in
+modules.
+
+Cc: stable@vger.kernel.org
+Link: https://bugs.llvm.org/show_bug.cgi?id=47162
+Link: https://bugs.llvm.org/show_bug.cgi?id=47280
+Link: https://github.com/ClangBuiltLinux/linux/issues/1126
+Link: https://man7.org/linux/man-pages/man3/stpcpy.3.html
+Link: https://pubs.opengroup.org/onlinepubs/9699919799/functions/stpcpy.html
+Link: https://reviews.llvm.org/D85963
+Suggested-by: Andy Lavr <andy.lavr@gmail.com>
+Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
+Suggested-by: Joe Perches <joe@perches.com>
+Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
+Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Reported-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Changes V3:
+* Drop Sami's Tested by tag; newer patch.
+* Add EXPORT_SYMBOL as per Andy.
+* Rewrite commit message, rewrote part of what Masahiro said to be
+  generic in terms of foo() and bar().
+* Prefer %NUL-terminated to NULL terminated. NUL is the ASCII character
+  '\0', as per Arvind and Rasmus.
+
+Changes V2:
+* Added Sami's Tested by; though the patch changed implementation, the
+  missing symbol at link time was the problem Sami was observing.
+* Fix __restrict -> __restrict__ typo as per Joe.
+* Drop note about restrict from commit message as per Arvind.
+* Fix NULL -> NUL as per Arvind; NUL is ASCII '\0'. TIL
+* Fix off by one error as per Arvind; I had another off by one error in
+  my test program that was masking this.
+
+ lib/string.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/lib/string.c b/lib/string.c
+index 6012c385fb31..6bd0cf0fb009 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -272,6 +272,30 @@ ssize_t strscpy_pad(char *dest, const char *src, size_t count)
+ }
+ EXPORT_SYMBOL(strscpy_pad);
+ 
++/**
++ * stpcpy - copy a string from src to dest returning a pointer to the new end
++ *          of dest, including src's %NUL-terminator. May overrun dest.
++ * @dest: pointer to end of string being copied into. Must be large enough
++ *        to receive copy.
++ * @src: pointer to the beginning of string being copied from. Must not overlap
++ *       dest.
++ *
++ * stpcpy differs from strcpy in a key way: the return value is the new
++ * %NUL-terminated character. (for strcpy, the return value is a pointer to
++ * src. This interface is considered unsafe as it doesn't perform bounds
++ * checking of the inputs. As such it's not recommended for usage. Instead,
++ * its definition is provided in case the compiler lowers other libcalls to
++ * stpcpy.
++ */
++char *stpcpy(char *__restrict__ dest, const char *__restrict__ src);
++char *stpcpy(char *__restrict__ dest, const char *__restrict__ src)
++{
++	while ((*dest++ = *src++) != '\0')
++		/* nothing */;
++	return --dest;
++}
++EXPORT_SYMBOL(stpcpy);
++
+ #ifndef __HAVE_ARCH_STRCAT
+ /**
+  * strcat - Append one %NUL-terminated string to another
+-- 
+2.28.0.297.g1956fa8f8d-goog
+
