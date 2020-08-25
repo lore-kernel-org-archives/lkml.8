@@ -2,135 +2,112 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2389C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4348C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F2E720706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:17:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598339862;
-	bh=wLdHygwvaiYBk/F4V/2+fKbs30aTabWqtLDHuUd5Kj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ajIWPM+W7uZbDYh0J6WNacT6KcjBYgEPWIhVVZP+89LH0kJJo8tyo9vPuhtaF5Czf
-	 EocKsxEdpMksr4gP+ULtrX3F+mVzPoXjupUFYMvP008yr8zhvS4AkCJ2JqnifE48Fk
-	 IUjGHv0ANA0pzOw2WK40o9ZMl86MuQXVJX95Zemc=
+	by mail.kernel.org (Postfix) with ESMTP id 993FF20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:19:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FNBSbR20"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbgHYHRl (ORCPT
+        id S1729357AbgHYHTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:17:41 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44519 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbgHYHRi (ORCPT
+        Tue, 25 Aug 2020 03:19:09 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14261 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbgHYHTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:17:38 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c15so11570333wrs.11;
-        Tue, 25 Aug 2020 00:17:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VUO6i/U3AVhRZX9XkX8wTuXOsuDoxa3aV3dAz0woA4o=;
-        b=B5MJrhLrcQOv6vRhgOJDKnTX6i2punZBmlED4d9nHBgO4GDgjRlXucq8UVrIk/Hs0u
-         KxOCtmKrmiukHNUkrco6xa0Idv0062LAodAWPgcLXNOZe6UPcOkG5uA6HpgGzUoTUxRQ
-         bVs0TXd1toasqxcoFwCsbmkCa7D/Cbw4EGa5tDd/khQvV2i3d76+1WfPqE0SNp0+/vRT
-         bZkDdW7lutuovzf1UphK6AYlwhSd/eg9vQ2+kQ0Mk+7JVr9jJD6nQIzenAVnN0Dk8IDc
-         WBni8SPBdi26MqRYWRcPvQ1OlVD0PJtCGaa1aHgUTLNE8/BKuACYwCPuupE4tx9iVYTU
-         kndQ==
-X-Gm-Message-State: AOAM533rXg3WB00+MNa0CB+S+sh2T8LirELK547/L2c3u8/saju7/EbJ
-        hOJ7UCyUkHNZBWvj9rW9PNY=
-X-Google-Smtp-Source: ABdhPJzJYPNbntZuVXqhHtMzbv8B44RjyoelOfsWDije4BgkxJQBl+U8ambvcHbMGJuX5NndB1iaIw==
-X-Received: by 2002:adf:fd84:: with SMTP id d4mr8719602wrr.243.1598339855693;
-        Tue, 25 Aug 2020 00:17:35 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id y3sm20848575wrs.36.2020.08.25.00.17.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Aug 2020 00:17:35 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 09:17:32 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 13/19] dt-bindings: nvmem: imx-ocotp: Update i.MX 8M
- compatibles
-Message-ID: <20200825071732.GD3458@kozik-lap>
-References: <20200824162652.21047-1-krzk@kernel.org>
- <20200824162652.21047-13-krzk@kernel.org>
- <20200825044653.GK13023@pengutronix.de>
+        Tue, 25 Aug 2020 03:19:08 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f44bb5d0002>; Tue, 25 Aug 2020 00:18:53 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 25 Aug 2020 00:19:07 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 25 Aug 2020 00:19:07 -0700
+Received: from [10.25.97.151] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Aug
+ 2020 07:19:01 +0000
+Subject: Re: [PATCH v2 3/9] ASoC: audio-graph: Identify 'no_pcm' DAI links for
+ DPCM
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+CC:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <atalambedu@nvidia.com>, <nwartikar@nvidia.com>,
+        <swarren@nvidia.com>, <nicoleotsuka@gmail.com>
+References: <1596605064-27748-1-git-send-email-spujar@nvidia.com>
+ <1596605064-27748-4-git-send-email-spujar@nvidia.com>
+ <87pn7ofs19.wl-kuninori.morimoto.gx@renesas.com>
+ <97f325a6-96cc-11c5-8027-8c0a159e3da0@nvidia.com>
+ <2d3aa11e-3c56-1f7a-3d41-2457f973d55b@nvidia.com>
+ <87sgcbwcnf.wl-kuninori.morimoto.gx@renesas.com>
+ <14691a05-cb29-a030-0e72-eca900d8eb7e@nvidia.com>
+ <87o8mzwajg.wl-kuninori.morimoto.gx@renesas.com>
+ <e9698ac3-0a2e-08a2-3f78-b0be0069d6ee@nvidia.com>
+ <87lfi3w7hj.wl-kuninori.morimoto.gx@renesas.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <f3724be2-c79d-0815-6ff5-460a4f6c10cc@nvidia.com>
+Date:   Tue, 25 Aug 2020 12:48:58 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200825044653.GK13023@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <87lfi3w7hj.wl-kuninori.morimoto.gx@renesas.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598339933; bh=PT6WTDioQCPbdq/KOc0iRkwH1Ym5t9uF4Cc1BSATpZg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=FNBSbR20FJjYN36jhj3xpPjRHmqNM7nWGKauDua6IkLSLhNKPdgvuM/uoUFedegK7
+         gzOipcya4eeDda0nXog91znM2v0+H7z7wIfgrKeM6GzYmF2SFyLdFQ1baAF6HrAEZp
+         k9aRvwS1FHBvDJHq+ybXvm/K5r66l4gF/1gP95mKdMNVJ3SCJ6DgGSJvZi3Ia98mmW
+         nnobrWsOkbAXtJWjfDH5rfi52oxByhdpjoqsQfxnFme67iDBID4GBKVAXn0fv5cqSp
+         1TIrSZCtQ7Mc5fp75aYgGQQnXBOg6Lw8GybFr+LSr7mGoW1Z3wd5ssPw0EJPA82lC+
+         xYaUkAUFneZrw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 06:46:53AM +0200, Sascha Hauer wrote:
-> On Mon, Aug 24, 2020 at 06:26:46PM +0200, Krzysztof Kozlowski wrote:
-> > +    oneOf:
-> > +      - items:
-> > +          - enum:
-> > +              - fsl,imx6q-ocotp
-> > +              - fsl,imx6sl-ocotp
-> > +              - fsl,imx6sx-ocotp
-> > +              - fsl,imx6ul-ocotp
-> > +              - fsl,imx6ull-ocotp
-> > +              - fsl,imx7d-ocotp
-> > +              - fsl,imx6sll-ocotp
-> > +              - fsl,imx7ulp-ocotp
-> > +              - fsl,imx8mq-ocotp
-> > +              - fsl,imx8mm-ocotp
-> > +              - fsl,imx8mn-ocotp
-> > +              - fsl,imx8mp-ocotp
-> > +          - const: syscon
-> > +      - items:
-> > +          # The devices are not really compatible with fsl,imx8mm-ocotp, however
-> > +          # the code for getting SoC revision depends on fsl,imx8mm-ocotp compatible.
-> 
-> Shouldn't this be fixed? It seems strange to justify a binding with
-> existing code.
+Hi Morimoto-san,
 
-The fsl,imx8mn-ocotp is actually compatible with "mm", only the
-fsl,imx8mp-ocotp is not (although someone might argue that subset of
-"mp" falls into "mn").
+>>> Other solution is create both snd_soc_find_dai_with_mutex()/without_mutex().
+>>> I'm not sure which style is best.
+>> I don't know how complex it is to have a unified solution. But if we
+>> can protect snd_soc_find_dai() itself, things would be simpler may be
+>> in long term. Right now there are separate source files for soc-core,
+>> soc-dai and soc-component, but because of two approaches looks like
+>> the function need to be moved around and need to be placed in
+>> soc-core. Also the issue might go unnoticed if LOCKDEP is not enabled.
+>>
+>> May be start with a wrapper for now and eventually unify?
+> Yeah, it seems has _with_mutex() can be better idea.
+> I'm posting patch, but I noticed that Mark's branch vs Linus branch
+> have some mismatch (?), and now I'm asking it to him.
+> I can post _with_mutex() version as v2 if I could get answer.
+> After that I'm happy your next patch can re-use it.
+>
 
-The problem is that drivers/soc/imx/soc-imx8m.c checks revision only
-against the fsl,imx8mm-ocotp compatible, not the others. It's the
-pattern used in that driver also for other i.MX 8. Therefore it is a
-binding implemented and actually used, regardless whether it is correct
-from hardware point of view or not.
+Sure. BTW, there are more such candidates which require 'lock' version 
+of these helpers.
+For example: soc_find_component(), snd_soc_add/remove_pcm_runtime() and 
+snd_soc_register_dai().
 
-If that's preferred, I could adjust the drivers/soc/imx/soc-imx8m.c for
-the incompatible "mp". It should not break anything.
-
-Best regards,
-Krzysztof
+Thank you for the feedback.
 
