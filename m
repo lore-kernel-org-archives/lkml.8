@@ -7,56 +7,57 @@ X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7608C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8240C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:51:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4568208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E08B2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:51:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ayg9z1qF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P1RiKAHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgHYTu4 (ORCPT
+        id S1726723AbgHYTuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:50:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:58174 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726444AbgHYTuw (ORCPT
+        Tue, 25 Aug 2020 15:50:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33671 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726149AbgHYTuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:50:52 -0400
+        Tue, 25 Aug 2020 15:50:51 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598385051;
+        s=mimecast20190719; t=1598385050;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qfLxCMnsO7JIC/eaKaw8p9wTENERe+wpNdDpM58At2g=;
-        b=ayg9z1qF7lP1zvr1aPU2CEz+4t4y0jZC6tELsAH0EHAJOnnaR1R41gargURaxBgCHfb/rT
-        d2rRMU576dKYqfrFoOmHDSOh7KSMXC93PyPfz+n4PFjaIkhw7gB7RCvLptoJIQRNIAolsV
-        JpI3hWBK6K9jwccsr7WbWEbD6XI+D50=
+        bh=+wo54Fztl+nW8iXS4XGGsRse4eb/aZW2O/0PU/MC/eQ=;
+        b=P1RiKAHtFPIjOC+7VAdo/cRdndN1wfaF0K3zy4KzWsNTA1z7Ru46ABQWFqHyLJomihpD9D
+        IYSWPNFS4VK1kbJmR6r5CHuTwwOLqMSC/+8q9Y8rpCeSzRhImvso5rkDCMesYmD3QRyu51
+        D3vw8NSr2gauV3g9nlXdOUXtFM7PACw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-uFUVSosFNqashnZ4lCz8gg-1; Tue, 25 Aug 2020 15:50:48 -0400
-X-MC-Unique: uFUVSosFNqashnZ4lCz8gg-1
+ us-mta-480-tYLJsDoWN7Kh_i5pZEyqew-1; Tue, 25 Aug 2020 15:50:48 -0400
+X-MC-Unique: tYLJsDoWN7Kh_i5pZEyqew-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3EC5F81F024;
-        Tue, 25 Aug 2020 19:50:46 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53D7C18B9F00;
+        Tue, 25 Aug 2020 19:50:47 +0000 (UTC)
 Received: from Whitewolf.redhat.com (ovpn-120-227.rdu2.redhat.com [10.10.120.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7DC005D9D3;
-        Tue, 25 Aug 2020 19:50:45 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F8115D9D3;
+        Tue, 25 Aug 2020 19:50:46 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
         nouveau@lists.freedesktop.org
 Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v4 02/20] drm/nouveau/kms/nv50-: Remove open-coded drm_dp_read_desc()
-Date:   Tue, 25 Aug 2020 15:50:09 -0400
-Message-Id: <20200825195027.74681-3-lyude@redhat.com>
+Subject: [RFC v4 03/20] drm/nouveau/kms/nv50-: Just use drm_dp_dpcd_read() in nouveau_dp.c
+Date:   Tue, 25 Aug 2020 15:50:10 -0400
+Message-Id: <20200825195027.74681-4-lyude@redhat.com>
 In-Reply-To: <20200825195027.74681-1-lyude@redhat.com>
 References: <20200825195027.74681-1-lyude@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,111 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Noticed this while going through our DP code - we use an open-coded
-version of drm_dp_read_desc() instead of just using the helper, so
-change that. This will also let us use quirks in the future if we end up
-needing them.
+Since this actually logs accesses, we should probably always be using
+this imho…
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
 ---
- drivers/gpu/drm/nouveau/nouveau_connector.c |  3 ++-
- drivers/gpu/drm/nouveau/nouveau_dp.c        | 30 +++++++--------------
- drivers/gpu/drm/nouveau/nouveau_encoder.h   |  4 ++-
- 3 files changed, 14 insertions(+), 23 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_dp.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-index 7674025a4bfe8..e12957e6faa7c 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-@@ -435,7 +435,8 @@ nouveau_connector_ddc_detect(struct drm_connector *connector)
- 
- 		switch (nv_encoder->dcb->type) {
- 		case DCB_OUTPUT_DP:
--			ret = nouveau_dp_detect(nv_encoder);
-+			ret = nouveau_dp_detect(nouveau_connector(connector),
-+						nv_encoder);
- 			if (ret == NOUVEAU_DP_MST)
- 				return NULL;
- 			else if (ret == NOUVEAU_DP_SST)
 diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
-index ee778ddc95fae..c4e9c21d4dd2b 100644
+index c4e9c21d4dd2b..8db9216d52c69 100644
 --- a/drivers/gpu/drm/nouveau/nouveau_dp.c
 +++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
-@@ -36,27 +36,9 @@ MODULE_PARM_DESC(mst, "Enable DisplayPort multi-stream (default: enabled)");
- static int nouveau_mst = 1;
- module_param_named(mst, nouveau_mst, int, 0400);
- 
--static void
--nouveau_dp_probe_oui(struct drm_device *dev, struct nvkm_i2c_aux *aux, u8 *dpcd)
--{
--	struct nouveau_drm *drm = nouveau_drm(dev);
--	u8 buf[3];
--
--	if (!(dpcd[DP_DOWN_STREAM_PORT_COUNT] & DP_OUI_SUPPORT))
--		return;
--
--	if (!nvkm_rdaux(aux, DP_SINK_OUI, buf, 3))
--		NV_DEBUG(drm, "Sink OUI: %02hx%02hx%02hx\n",
--			     buf[0], buf[1], buf[2]);
--
--	if (!nvkm_rdaux(aux, DP_BRANCH_OUI, buf, 3))
--		NV_DEBUG(drm, "Branch OUI: %02hx%02hx%02hx\n",
--			     buf[0], buf[1], buf[2]);
--
--}
--
- int
--nouveau_dp_detect(struct nouveau_encoder *nv_encoder)
-+nouveau_dp_detect(struct nouveau_connector *nv_connector,
-+		  struct nouveau_encoder *nv_encoder)
+@@ -42,16 +42,12 @@ nouveau_dp_detect(struct nouveau_connector *nv_connector,
  {
  	struct drm_device *dev = nv_encoder->base.base.dev;
  	struct nouveau_drm *drm = nouveau_drm(dev);
-@@ -89,7 +71,13 @@ nouveau_dp_detect(struct nouveau_encoder *nv_encoder)
- 	NV_DEBUG(drm, "maximum: %dx%d\n",
- 		 nv_encoder->dp.link_nr, nv_encoder->dp.link_bw);
+-	struct nvkm_i2c_aux *aux;
+-	u8 dpcd[8];
++	struct drm_dp_aux *aux = &nv_connector->aux;
++	u8 dpcd[DP_RECEIVER_CAP_SIZE];
+ 	int ret;
  
--	nouveau_dp_probe_oui(dev, aux, dpcd);
-+	ret = drm_dp_read_desc(&nv_connector->aux, &nv_encoder->dp.desc,
-+			       drm_dp_is_branch(dpcd));
-+	if (ret) {
-+		NV_ERROR(drm, "Failed to read DP descriptor on %s: %d\n",
-+			 nv_connector->base.name, ret);
-+		return ret;
-+	}
+-	aux = nv_encoder->aux;
+-	if (!aux)
+-		return -ENODEV;
+-
+-	ret = nvkm_rdaux(aux, DP_DPCD_REV, dpcd, sizeof(dpcd));
+-	if (ret)
++	ret = drm_dp_dpcd_read(aux, DP_DPCD_REV, dpcd, DP_RECEIVER_CAP_SIZE);
++	if (ret != sizeof(dpcd))
+ 		return ret;
  
- 	ret = nv50_mstm_detect(nv_encoder->dp.mstm, dpcd, nouveau_mst);
- 	if (ret == 1)
-diff --git a/drivers/gpu/drm/nouveau/nouveau_encoder.h b/drivers/gpu/drm/nouveau/nouveau_encoder.h
-index a72c412ac8b14..6424cdcb4913f 100644
---- a/drivers/gpu/drm/nouveau/nouveau_encoder.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_encoder.h
-@@ -33,6 +33,7 @@
- #include <drm/drm_dp_mst_helper.h>
- #include "dispnv04/disp.h"
- struct nv50_head_atom;
-+struct nouveau_connector;
- 
- #define NV_DPMS_CLEARED 0x80
- 
-@@ -64,6 +65,7 @@ struct nouveau_encoder {
- 			struct nv50_mstm *mstm;
- 			int link_nr;
- 			int link_bw;
-+			struct drm_dp_desc desc;
- 		} dp;
- 	};
- 
-@@ -104,7 +106,7 @@ enum nouveau_dp_status {
- 	NOUVEAU_DP_MST,
- };
- 
--int nouveau_dp_detect(struct nouveau_encoder *);
-+int nouveau_dp_detect(struct nouveau_connector *, struct nouveau_encoder *);
- enum drm_mode_status nv50_dp_mode_valid(struct drm_connector *,
- 					struct nouveau_encoder *,
- 					const struct drm_display_mode *,
+ 	nv_encoder->dp.link_bw = 27000 * dpcd[1];
 -- 
 2.26.2
 
