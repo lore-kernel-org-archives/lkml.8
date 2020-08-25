@@ -2,53 +2,67 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC723C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35071C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A57862075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E1EF20782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="paFBZrWc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N0YvEwzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgHYQ4B (ORCPT
+        id S1726581AbgHYQ6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:56:01 -0400
-Received: from gateway31.websitewelcome.com ([192.185.144.97]:37272 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726104AbgHYQz7 (ORCPT
+        Tue, 25 Aug 2020 12:58:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYQ6S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:55:59 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id 5C1AE10CF2F
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 11:55:56 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id AcEmk2amAXp2AAcEmkISIv; Tue, 25 Aug 2020 11:55:56 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=PwMvq76VkVm+YFP4hRF2ZHZjf29hDPQQHuAOuOwY1Mc=; b=paFBZrWcJPpGO94QN+GaDCX5Bl
-        bSUVHJOtIOPwV6d+7LoFOHXu/PbcWArFGHII8TDRl6zWoI31X589d7CiRzc8IWRLVoP+6OPUlW1XJ
-        bsUQKw3icHR9ARTClytXZ/3JtBRc6/NSzhYsgjAeaqBZrLu97CszbwsEL5lO0g8yHg21f2AJZiTYp
-        6hfXoAHoHWnr0ZZXDfoI55x/23uh4NfDXtm86wSu6lN3saVCLpTCPDiKW6onO3ig35XzDZNxtQ5h9
-        fLn68qkVy9WdZ8teSae4dd8+JyKFWW3XOqGEwyrTqUpqJxLAoAUy+uDDhrluER6j9ttYN5cQcXu3w
-        OcqRuGog==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:58848 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1kAcEl-0012jd-Uk; Tue, 25 Aug 2020 11:55:55 -0500
+        Tue, 25 Aug 2020 12:58:18 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A9CDC061574;
+        Tue, 25 Aug 2020 09:58:17 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id z9so2794353wmk.1;
+        Tue, 25 Aug 2020 09:58:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=T+c10JcfrGS91lxh/Fs8oD61/KkVCBP1xSQwLONf2xk=;
+        b=N0YvEwzlNfbv2ENgL708TbnvP9W81MevHjVtFu+NP93kKyt6gaXF4nvCwRulA6qdYS
+         EGuZcZPK10qzjBLB+JUs1ceVwimkfdkA5oajbeDDkrzBo108k2ckJ+7ndSHpFDVDavN3
+         +q+7V1TMns5/aSHhT8lywhtCkqRjGgfMyPpPdMsiGpoY3QG+EXhoqckMOv6eIfidseBB
+         z2Wrflu4Nb6GWTwUj2x2Pr/nugNVVx0+OYrfkgbQzvgkOiH/iaAan1JvsoaClXAc6b7N
+         CcIV+Vqsklj9xtei+cFySXpGnKOt+m6knCouiJZ1yPRXL9mKag7FIXGrKBe0q/DQBtE7
+         NQMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=T+c10JcfrGS91lxh/Fs8oD61/KkVCBP1xSQwLONf2xk=;
+        b=EOWhI93AJ9UXGttLLzSUL641BwCDCylQzwXjBVocpgN81ecodVOCKREBmqhVQ76vvG
+         XXNbkh71f4K3pHiac5TXD8gi2qGlPDf4dJbCWHIYoLj3WM+jirlXQ6DdzWAXtUO1adHr
+         kNDEOrCnTU6z4btHSdHZfbuGQn7pxzC1JB6cAc4r+gC0exhtEYprvk/TtUP7bMEeNYK3
+         vFfrIfrlESllfm+PI/bipkI5clu1oHdb+ept3KVta7w/RqWrZLzUFAIpYpah7jjuAura
+         KDQT5D5kGKdlCfhcDrXjMMdnCUV62qgYTTgnMIfbGUmUU3SV2FnFzhESazEMaLXeAcNV
+         RQzw==
+X-Gm-Message-State: AOAM533H8MTld/AcNLHYm8SSAq84iT+lNqTN8dipeQRq5lIdBIg3OMg7
+        gvp+PWZ19/zoY16TYKCcH/bExX3zCKIohzBv
+X-Google-Smtp-Source: ABdhPJwk4nCd+wELim1WQCEsIcsR75mFn2eHpPfK0DSyrZDt5cesw/ZpuOk9voWBRXZPYqMxFddXGA==
+X-Received: by 2002:a1c:a984:: with SMTP id s126mr3062109wme.163.1598374695222;
+        Tue, 25 Aug 2020 09:58:15 -0700 (PDT)
+Received: from [192.168.0.16] (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id i22sm33277241wrb.45.2020.08.25.09.58.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 09:58:14 -0700 (PDT)
 Subject: Re: [PATCH] IB/qib: remove superfluous fallthrough statements
-To:     Joe Perches <joe@perches.com>, Alex Dewar <alex.dewar90@gmail.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joe Perches <joe@perches.com>
 Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
         Mike Marciniszyn <mike.marciniszyn@intel.com>,
         Doug Ledford <dledford@redhat.com>,
@@ -59,121 +73,44 @@ References: <20200825155142.349651-1-alex.dewar90@gmail.com>
  <4877c3a5-365e-4500-43c0-4a4361e2cda3@embeddedor.com>
  <086ee29ef75f657dcf45e92d4ebfdf2b3f4fcab8.camel@perches.com>
  <da65ca20-49cb-2940-76d6-7e341687a9e2@embeddedor.com>
- <777e01f8dc9bd35e8b7bdf1b5181d0d13b86d8b9.camel@perches.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <36066d75-899e-c9ca-835e-0040659c914b@embeddedor.com>
-Date:   Tue, 25 Aug 2020 12:01:55 -0500
+From:   Alex Dewar <alex.dewar90@gmail.com>
+Message-ID: <64d7e1c9-9c6a-93f3-ce0a-c24b1c236071@gmail.com>
+Date:   Tue, 25 Aug 2020 17:58:13 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <777e01f8dc9bd35e8b7bdf1b5181d0d13b86d8b9.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <da65ca20-49cb-2940-76d6-7e341687a9e2@embeddedor.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1kAcEl-0012jd-Uk
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:58848
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 26
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/25/20 11:47, Joe Perches wrote:
-> On Tue, 2020-08-25 at 11:49 -0500, Gustavo A. R. Silva wrote:
->>
->> On 8/25/20 11:26, Joe Perches wrote:
->>> On Tue, 2020-08-25 at 11:19 -0500, Gustavo A. R. Silva wrote:
->>>> On 8/25/20 10:51, Alex Dewar wrote:
->>>>> Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
->>>>> erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
->>>>> were later converted to fallthrough statements by commit df561f6688fe
->>>>> ("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
->>>>> warning about unreachable code.
->>>>>
->>>>> Remove the fallthrough statements and replace the mass of gotos with
->>>>> simple return statements to make the code terser and less bug-prone.
->>>>>
+On 25/08/2020 17:49, Gustavo A. R. Silva wrote:
+>
+> On 8/25/20 11:26, Joe Perches wrote:
+>> On Tue, 2020-08-25 at 11:19 -0500, Gustavo A. R. Silva wrote:
+>>> On 8/25/20 10:51, Alex Dewar wrote:
+>>>> Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
+>>>> erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
+>>>> were later converted to fallthrough statements by commit df561f6688fe
+>>>> ("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
+>>>> warning about unreachable code.
 >>>>
->>>> This should be split up into two separate patches: one to address the
->>>> fallthrough markings, and another one for the gotos.
->>>
->>> I don't think it's necessary to break this into multiple patches.
->>> Logical changes in a single patch are just fine, micro patches
->>> aren't that useful.
->>>
+>>>> Remove the fallthrough statements and replace the mass of gotos with
+>>>> simple return statements to make the code terser and less bug-prone.
+>>>>
+>>> This should be split up into two separate patches: one to address the
+>>> fallthrough markings, and another one for the gotos.
+>> I don't think it's necessary to break this into multiple patches.
+>> Logical changes in a single patch are just fine, micro patches
+>> aren't that useful.
 >>
->> There is a reason for this. Read the changelog text and review the patch.
-> 
-> What makes you think I didn't already do that?
-> 
-
-You would have noticed this should be two patches.
-
-> I think your desire for micropatches is unnecessary.
-> 
-
-You might be generalizing. My 'desire' here is justified and specific.
-
-Thanks
---
-Gustavo
+> There is a reason for this. Read the changelog text and review the patch.
+>
+> Thanks
+> --
+> Gustavo
+I think it probably does make sense as two patches. I'll do a resend.
