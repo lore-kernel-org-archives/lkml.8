@@ -2,144 +2,93 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD69C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8241CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD532071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:29:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Gdzk9RCX"
+	by mail.kernel.org (Postfix) with ESMTP id 560442067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598344191;
+	bh=0Pja9Pl58vSv4Xj3ePSQToQCG2OjZ4CUiuvoFXfrQ+U=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=rWwdPe0VAAF5ulefeutjtUpSe3rTTcizOaXHaWwOSpNhl3YgeSf/hyfpFk8HiZttr
+	 e921HH0/9lMJHKUAv5cujAFZ3H7ioE0y8pcvqF7LVHuX80g+hsGt5aQr6+5oFEBX0c
+	 7k1C0/w8pM1dfvmJb7WRbcCbGusnOjsiu4am9lXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbgHYI3P (ORCPT
+        id S1729117AbgHYI3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:29:15 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55872 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726795AbgHYI3P (ORCPT
+        Tue, 25 Aug 2020 04:29:48 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51197 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726795AbgHYI3r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:29:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07P8OaBO071042;
-        Tue, 25 Aug 2020 08:28:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=zsVr/kYMIf3SLLq2u408XY0W8r5T8vXpbbk/uBAcC4E=;
- b=Gdzk9RCXyCt2RNl7kiGev1Wr/i9jKxRWQb3uJNPNq5OVq8BuJ3BAdQ9ymwjNEkj8hluw
- KmFHYIxumLKsYd5SjVoGT2cFwZgqOcSheWH0ChNsmUbxCapvphlesad2ynbaktadHAIA
- uvLBa8AUjEKkkbLwyBCM0ss92qp02htXH3gi5HuaffT0aNYadQuwalSXnClFA73sHcTm
- kIUz2k/5SIX0TZVsJP5Chak0bcAouEkZLMyP5qhuiiVxA8KhvmEYoM3EDS94ff5hktmE
- 0t9ERdN912+HrWNVwGRmHOPgvHo0zDCQP2bDHrMLresSRIgoAf+QJKzqpnZQ+TvdK0j+ GQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 333csj123e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 08:28:57 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07P8OaCC166178;
-        Tue, 25 Aug 2020 08:28:56 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 333rtxgj3q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 08:28:56 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07P8Stfa011533;
-        Tue, 25 Aug 2020 08:28:55 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Aug 2020 01:28:54 -0700
-Date:   Tue, 25 Aug 2020 11:28:46 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     devel@driverdev.osuosl.org,
-        Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        Magnus Damm <damm+renesas@opensource.se>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org,
-        "Javier F. Arias" <jarias.linux@gmail.com>,
-        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
-        Simon Horman <horms+renesas@verge.net.au>
-Subject: Re: [PATCH] staging: emxx_udc: Fix passing of NULL to
- dma_alloc_coherent()
-Message-ID: <20200825082846.GR5493@kadam>
-References: <20200824142118.GA223827@mwanda>
- <20200824151920.251446-1-alex.dewar90@gmail.com>
- <20200824155712.4kgxwqiufm2ieboz@medion>
- <20200825073713.GR1793@kadam>
- <20200825081459.qfvswtep5fkaqai2@lenovo-laptop>
+        Tue, 25 Aug 2020 04:29:47 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t2so1544653wma.0;
+        Tue, 25 Aug 2020 01:29:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HkVGZDX8kJI9mI1G++5UxoqItzmkNicQe/GJs1RM9xw=;
+        b=GQdATXdzIx/wDTfKHLjQWZZiCS/UNragrmuNSvhWq66KgK0U1kf2InULpc0/RhKI83
+         cGsFH9vFgFTMBMtYdXmFlwjvN6e+v8N2/jg1+EVhkjBr82qRxNZqqKQtqshKU7kGoBI9
+         ooeQz8Pl56yPa/d/Ry5WkPY4evEYWxeoeVCy2ZVBln/BOtVTGPDQvRkoDaj3BmJELNL4
+         j6qe8iM3Cx+niXE8+eQ32yyV8K1xtzj8rkj8xjXvg9iHQN09aOfAdoipq6PwH3VB/mke
+         cUw86Wv0l16xrOBu5fh9qd22IUJz4/ilicBvs4hgt3hqptr5dyGaW2oafAqFpH8vF9x5
+         k85g==
+X-Gm-Message-State: AOAM532xmEIgsVlCskeskzaHVFm0Q5eXqBgnEC1+ehqCm0lfgvMIVzi1
+        OcEK6DD8HIzrqhnys7ATRDs=
+X-Google-Smtp-Source: ABdhPJyGZYBTYvBnIb1U6Pi6IZyfXdLtVJVjvq4o+WqdI5gMCjQzeo/6wd0xJgWYZ/5Vtdr46sQ3cw==
+X-Received: by 2002:a1c:5f06:: with SMTP id t6mr940487wmb.54.1598344185330;
+        Tue, 25 Aug 2020 01:29:45 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id k204sm4973101wma.21.2020.08.25.01.29.43
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 01:29:44 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 10:29:42 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Adam Ford <aford173@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>, Li Jun <jun.li@nxp.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Han Xu <han.xu@nxp.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 03/16] arm64: dts: imx8mm-beacon-som.dtsi: Align
+ regulator names with schema
+Message-ID: <20200825082942.GB12902@kozik-lap>
+References: <20200824190701.8447-1-krzk@kernel.org>
+ <20200824190701.8447-3-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200825081459.qfvswtep5fkaqai2@lenovo-laptop>
+In-Reply-To: <20200824190701.8447-3-krzk@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 adultscore=0
- phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250065
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 clxscore=1015
- spamscore=0 priorityscore=1501 impostorscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=2 mlxlogscore=999 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 09:14:59AM +0100, Alex Dewar wrote:
-> On Tue, Aug 25, 2020 at 10:37:13AM +0300, Dan Carpenter wrote:
-> > On Mon, Aug 24, 2020 at 04:57:12PM +0100, Alex Dewar wrote:
-> > > On Mon, Aug 24, 2020 at 04:19:17PM +0100, Alex Dewar wrote:
-> > > > In nbu2ss_eq_queue() memory is allocated with dma_alloc_coherent(),
-> > > > though, strangely, NULL is passed as the struct device* argument. Pass
-> > > > the UDC's device instead.
-> > 
-> > I think passing NULL was always wrong, but it used to not cause an Oops.
-> > This was changed a year or two ago.
-> > 
-> > > > 
-> > > > Build-tested on x86 only.
-> > > > 
-> > > > Fixes: 33aa8d45a4fe ("staging: emxx_udc: Add Emma Mobile USB Gadget driver")
-> > > > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> > > > ---
-> > > > 
-> > > > So I *think* this is the right fix, but I don't have the hardware so
-> > > > I've only been able to build-test it. My worry is that I could be
-> > > > passing in the wrong struct device* here, which would squelch the
-> > > > warning without fixing the breakage.
-> > > > 
-> > > > Can someone cleverer than me tell me if this makes sense?
-> > > > 
-> > > > - Alex
-> > > 
-> > > PS -- I meant to put an RFC in the subject line and an extra tag:
-> > > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > > 
-> > 
-> > I don't know which dev pointer we're supposed to pass...  It would be
-> > good to find someone to test the patch but if not then applying your
-> > patch is reasonable.
-> > 
-> > But could you search through the file and update the rest as well.
-> > The dma_free_coherent() needs to be updated and there was a second
-> > dma_alloc_coherent() in the bug report.
-> > 
-> > regards,
-> > dan carpenter
-> > 
-> 
-> I can only find the one instance of dma_alloc_coherent(). Was it by any
-> chance a different warning about the same call....?
+On Mon, Aug 24, 2020 at 09:06:48PM +0200, Krzysztof Kozlowski wrote:
+> Device tree schema expects regulator names to be lowercase.  This fixes
+> dtbs_check warnings like:
 
-Ah....  It was warning about the dma_free_coherent().
+The subject here is not correct. Copy/paste error. I'll fix it up.
 
-regards,
-dan carpenter
+Best regards,
+Krzysztof
 
