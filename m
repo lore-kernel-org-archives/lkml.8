@@ -2,111 +2,77 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D7BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DA8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFE8F207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAB52083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgHYDSj (ORCPT
+        id S1728528AbgHYDVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 23:18:39 -0400
-Received: from mga05.intel.com ([192.55.52.43]:27223 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726532AbgHYDSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 23:18:38 -0400
-IronPort-SDR: 9HHBntzfR+XkoY/LMmn1QL6hRuUEkk6Z1ddq0MTeRmsDwKFM7BBPFMccnd1HI1NglWbcjBHJvc
- c+hPZGG3/I8g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="240850035"
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="240850035"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 20:18:36 -0700
-IronPort-SDR: JAxBwfPxBJxqHiuWgjooPlP0PKKHpV1jccNd0dqL8Y1KDhRFDcblAA1ocnzcCLuPd8yErURvlh
- BIByxsbA6JjA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="322591044"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Aug 2020 20:18:34 -0700
-Cc:     baolu.lu@linux.intel.com, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, kevin.tian@intel.com,
-        jamessewart@arista.com, tmurphy@arista.com, dima@arista.com,
-        sai.praneeth.prakhya@intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 07/15] iommu/vt-d: Delegate the dma domain to upper
- layer
-To:     Chris Wilson <chris@chris-wilson.co.uk>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20190525054136.27810-1-baolu.lu@linux.intel.com>
- <20190525054136.27810-8-baolu.lu@linux.intel.com>
- <159803479017.29194.1359332295829225843@build.alporthouse.com>
- <65125687-14ae-182f-da07-7d29b4910364@linux.intel.com>
- <159825811140.30134.5347490249201789397@build.alporthouse.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <a6288e81-76de-956a-77e9-bccbcbba366f@linux.intel.com>
-Date:   Tue, 25 Aug 2020 11:13:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 24 Aug 2020 23:21:49 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34686 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728039AbgHYDVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 23:21:48 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 819D2C7853B8487B524F;
+        Tue, 25 Aug 2020 11:21:45 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Tue, 25 Aug 2020
+ 11:21:37 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH v2] net: gain ipv4 mtu when mtu is not locked
+Date:   Mon, 24 Aug 2020 23:20:28 -0400
+Message-ID: <20200825032028.50760-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <159825811140.30134.5347490249201789397@build.alporthouse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+When mtu is locked, we should not obtain ipv4 mtu as we return immediately
+in this case and leave acquired ipv4 mtu unused.
 
-On 8/24/20 4:35 PM, Chris Wilson wrote:
-> Quoting Lu Baolu (2020-08-24 07:31:23)
->> Hi Chris,
->>
->> On 2020/8/22 2:33, Chris Wilson wrote:
->>> Quoting Lu Baolu (2019-05-25 06:41:28)
->>>> This allows the iommu generic layer to allocate a dma domain and
->>>> attach it to a device through the iommu api's. With all types of
->>>> domains being delegated to upper layer, we can remove an internal
->>>> flag which was used to distinguish domains mananged internally or
->>>> externally.
->>>
->>> I'm seeing some really strange behaviour with this patch on a 32b
->>> Skylake system (and still present on mainline). Before this patch
->>> everything is peaceful and appears to work correctly. Applying this patch,
->>> and we fail to initialise the GPU with a few DMAR errors reported, e.g.
->>>
->>> [   20.279445] DMAR: DRHD: handling fault status reg 3
->>> [   20.279508] DMAR: [DMA Read] Request device [00:02.0] fault addr 8900a000 [fault reason 05] PTE Write access is not set
->>>
->>> Setting an identity map for the igfx made the DMAR errors disappear, but
->>> the GPU still failed to initialise.
->>>
->>> There's no difference in the DMAR configuration dmesg between working and
->>> the upset patch. And the really strange part is that switching to a 64b
->>> kernel with this patch, it's working.
->>>
->>> Any suggestions on what I should look for?
->>
->> Can the patch titled "[PATCH] iommu/intel: Handle 36b addressing for
->> x86-32" solve this problem?
-> 
-> It does. Not sure why, but that mystery I can leave for others.
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ net/ipv4/route.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-It's caused by left switching 36 bits operation against a 32-bit
-integer. Your patch fixes this by converting the integer from unsigned
-long to u64. It looks good to me. Thanks!
+diff --git a/net/ipv4/route.c b/net/ipv4/route.c
+index 8ca6bcab7b03..18c8baf32de5 100644
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1013,13 +1013,14 @@ out:	kfree_skb(skb);
+ static void __ip_rt_update_pmtu(struct rtable *rt, struct flowi4 *fl4, u32 mtu)
+ {
+ 	struct dst_entry *dst = &rt->dst;
+-	u32 old_mtu = ipv4_mtu(dst);
+ 	struct fib_result res;
+ 	bool lock = false;
++	u32 old_mtu;
+ 
+ 	if (ip_mtu_locked(dst))
+ 		return;
+ 
++	old_mtu = ipv4_mtu(dst);
+ 	if (old_mtu < mtu)
+ 		return;
+ 
+-- 
+2.19.1
 
-> -Chris
-> 
-
-Best regards,
-baolu
