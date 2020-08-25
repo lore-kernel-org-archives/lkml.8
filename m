@@ -2,127 +2,119 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4479C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7730C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F93020665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8192074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rQQMWS26";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hWC9wT9/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vKEqLu4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgHYVL7 (ORCPT
+        id S1726610AbgHYVMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:11:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39616 "EHLO
+        Tue, 25 Aug 2020 17:12:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYVL7 (ORCPT
+        with ESMTP id S1726149AbgHYVMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 17:11:59 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD9D7C061574;
-        Tue, 25 Aug 2020 14:11:58 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598389916;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1frHZHutANeGhNvELKAlZV7ZBIw0Dqsl4tEEvrOnRU4=;
-        b=rQQMWS26Jt5LaZuxdrMUZgNfuNew2mCXTFepS37C35I6xAhJ3rEo9Nx2wJCVYo9FS/Pgcj
-        zMK/jubxjmgOMukHjD1+whg0AyErL8YAwjSJxzS+B1PMq4RdTvHJO6lnQ8zCroL34GT5hw
-        5/rfeY4s2ADMm35tAfb/mXN9dBB+PDzSGhJTbYCAYlaBzlpg8xMguI6MXbjreLqFtXNCau
-        bsIWnmpXS6t/YonQ/7LmA5QV8SpSh4TrFs2TkYIhUy6U4rcc0A8vIF1QUkDGf2mbfLYdBM
-        gsUXIxYqmPwtfL3S4OeTd+L815+ua7i1Gq/tsUgXEKLDUxlqgI3fswjFMqzoNQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598389916;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1frHZHutANeGhNvELKAlZV7ZBIw0Dqsl4tEEvrOnRU4=;
-        b=hWC9wT9/QuU4/otH2U3KHZ3pSL+StkJoqjJVoH3bzCOAJhuscP4cb126Q52YIHKMSI5RAk
-        NlcAG4imPXq613BA==
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        linux-pci@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 13/38] PCI: MSI: Rework pci_msi_domain_calc_hwirq()
-In-Reply-To: <20200825200329.GA1923406@bjorn-Precision-5520>
-References: <20200825200329.GA1923406@bjorn-Precision-5520>
-Date:   Tue, 25 Aug 2020 23:11:56 +0200
-Message-ID: <87d03exwf7.fsf@nanos.tec.linutronix.de>
+        Tue, 25 Aug 2020 17:12:32 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FBD5C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 14:12:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=1A/TzOrLz4/HTnGjqf5Jh0MWwKNMrSR3L1Aa04htfVs=; b=vKEqLu4uoyKAw9/vd4pI59Beoy
+        Sbp0UbruoWDQ7onQ50L6HYl9YSSd40nz5S6KVpMC68c17NYmUd4TQJW+lRkWDxKm8wkdA5+ZFw3tL
+        V/TnzS/y7Q2Yj6jHzU6AK8jT3QIudpdsebRx9/Z++VeZTw1fEFCVp6risVH7mSTu3p7Bo/llBlXzb
+        zqYc705xzVDVXfQDBwRInhoT+TrNhU0WoD96WFvI2BKw2+NtaPWovfVmMLGC5uz+mwtGIy6SLHrx5
+        BDjrYCUrytRPVvbJFhVBpTsYsI2keHdEvHdseMCN8D4yRP54tceJQfCDHkdzAp5YpVXOYRdxNZWzn
+        wctFIGHA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAgEx-00034W-CP; Tue, 25 Aug 2020 21:12:23 +0000
+Subject: Re: localmodconfig - "intel_rapl_perf config not found!!"
+To:     Nathan Royce <nroycea+kernel@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Changbin Du <changbin.du@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <CALaQ_hqgnPGx2A8XxE+CHxYqGK1z4_hfzo-g-HHbVpLGeOAZ4w@mail.gmail.com>
+ <9ec12e0d-9d07-8c1b-6efc-c3e8cfae409c@infradead.org>
+ <CALaQ_hr-xuLJ3ZYHuvCaY7jLm7od1bgGQvgT0c6N16xTtdAD0g@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <55b09be8-5bb2-60e3-8386-05bc9f6fd854@infradead.org>
+Date:   Tue, 25 Aug 2020 14:12:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CALaQ_hr-xuLJ3ZYHuvCaY7jLm7od1bgGQvgT0c6N16xTtdAD0g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25 2020 at 15:03, Bjorn Helgaas wrote:
-> On Fri, Aug 21, 2020 at 02:24:37AM +0200, Thomas Gleixner wrote:
->> Retrieve the PCI device from the msi descriptor instead of doing so at the
->> call sites.
->
-> I'd like it *better* with "PCI/MSI: " in the subject (to match history
+> On Tue, Aug 25, 2020 at 2:13 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> so intel_rapl_perf is listed in your lsmod.cfg file:
+>> intel_rapl_perf        16384  2
+>>
+>> You say Linux 5.8.3.  I'm guessing that your "make localmodconfig" tree
+>> is Linux 5.8.3 (?).  What kernel version are you running?
+>> I think that it's older, and some file/module names have changed since then.
 
-Duh, yes.
+On 8/25/20 1:34 PM, Nathan Royce wrote:
+> Correct. I'm building for 5.8.3 and I'm currently on 5.7.4 (1 month
+> doesn't seem particularly old).
 
-> and other patches in this series) and "MSI" here in the commit log,
-> but nice cleanup and:
->> --- a/arch/x86/kernel/apic/msi.c
->> +++ b/arch/x86/kernel/apic/msi.c
->> @@ -232,7 +232,7 @@ EXPORT_SYMBOL_GPL(pci_msi_prepare);
->>  
->>  void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
->>  {
->> -	arg->msi_hwirq = pci_msi_domain_calc_hwirq(arg->msi_dev, desc);
->> +	arg->msi_hwirq = pci_msi_domain_calc_hwirq(desc);
->
-> I guess it's safe to assume that "arg->msi_dev ==
-> msi_desc_to_pci_dev(desc)"?  I didn't try to verify that.
+Yes, things can change quickly.
 
-It is.
 
->> +irq_hw_number_t pci_msi_domain_calc_hwirq(struct msi_desc *desc)
->>  {
->> +	struct pci_dev *pdev = msi_desc_to_pci_dev(desc);
->
-> If you named this "struct pci_dev *dev" (not "pdev"), the diff would
-> be a little smaller and it would match other usage in the file.
+I don't see any support in streamline_config.pl for Kconfig symbols
+and/or modules whose names have changed.  Trying to do something
+like that would be a never-ending job (a la job security).
 
-Ok. I'm always happy to see pdev because that doesn't make me wonder
-which type of dev it is :) But, yeah lets keep it consistent.
+At least it gave you a warning that it couldn't find a Kconfig symbol
+for that module.
 
-Thanks,
 
-        tglx
+From your original email:
+| I'm going to assume it has something to do with the naming and it's
+| supposed to be associated with "Intel/AMD rapl performance events
+| (CONFIG_PERF_EVENTS_INTEL_RAPL)" which I already have set to 'Y'.
+
+Yes, commit fd3ae1e1587d64ef8cc8e361903d33625458073e changed the module name
+since it now supports both Intel and AMD.
+
+
+| Right below that, I also get 'Use of uninitialized value
+| $ENV{"LMC_KEEP"} in split at ./scripts/kconfig/streamline_config.pl
+| line 596.', but again that is the sort of thing that may warrant a new
+| email specific to localmodconfig author(s). But again maybe not
+| because I take it more as a warning given I don't make use of
+| LMC_KEEP.
+
+
+@Changbin: can you fix this little bug in streamline_config.pl, please? ^^^^^
+
+
+-- 
+~Randy
+
