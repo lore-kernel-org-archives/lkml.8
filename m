@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77235C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD31C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49F3020782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916292076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:59:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="2DAymgT9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="uhQprA4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgHYG7X (ORCPT
+        id S1729281AbgHYG7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:59:23 -0400
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:9418 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729254AbgHYG7U (ORCPT
+        Tue, 25 Aug 2020 02:59:25 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:48281 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729271AbgHYG7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:59:20 -0400
+        Tue, 25 Aug 2020 02:59:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1598338760; x=1629874760;
+  t=1598338763; x=1629874763;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=HgjEgkiKGTzhHa9dedX7zLtx+BB912JMHCVfd4RNaDc=;
-  b=2DAymgT9JQbFzU8M2MW7cBIUZZbhtM9OBKJuttv/jwBFhx7gnlTWFgLl
-   FlIoiiQzt5kEoW4mVst467I+R/JSvQjOo1u8OD0paGZotni81DtxG3GtK
-   yqP1sulkgR497zmIXByGE4l81v8aHjISP/XMzAGkBdIQThWZPl4TShTYV
-   nVnX4DMZKXESdRYrVTDpEpCNTClLOX4PMsAULUVApMfPy9VrrBT1l+vdS
-   OpWS+ZGQEo5TkggMnFocHK58HX1rb7JTMVTZv+e32FxWcr7ybD2/Z7faS
-   grJJGMiQkPxa6X9jUd9lvpIilxZBjwkAVMnM3PRAeEyydvGclEv4R8Hx3
+  bh=YLBI2VSPJLXETAxNgEX17p7s44o5bRsrSACE1OZwLZI=;
+  b=uhQprA4soWwFKYA8WukEbty85hnZ4Zbnz+v1WG7rF/77u9UGJJhU/jXB
+   tcVDyV24EY0XXPHPi7DrcLl1a1cOpuxKFaXvZhqK2ztZIskV8OWRyhaM5
+   aYOo9hQDzfE7j7QkkfUEZ+f+DQhpqgjF3UxXZeVaie5cygbawOKRi0o8H
+   PFG9CRYYgxFV7B7z+T7U9z3bz+vp9sLIoezHQdHkclqn1y4/g94tW+Pdw
+   2CmKPebSKkf8K3ibEp/yPv6Ztu+ueKzJZK3Rzdl3Q0h9BVXTqTBu0ZS6D
+   CpWW6cKwpTWQuLqe/RxVthy6C8c9xKZRO3PzgVoi0OUEA3sTDtB03Zl4/
    w==;
-IronPort-SDR: RurX8EOmBuNyZZun6JOWBMi1UJoatI1WaYIR/o8QQiPLgTJ/TdLqoSK14cnfBSgwokGNiuOI/I
- r5ONgtF+uZN+L/sZY4pv4frutkTOkMwGnZvaTbe++PO17im1i0DJnJtgZncF5cYUazHU777RKb
- jD0IIKg1lwfSBO0VNpIAoeeRJPZDACHWmOJ35nHy5gkRVKltwZFv80nP3pjcA9ZwYNEypN1g0w
- ydbqwY3+doLgr6Iwasau+mtioGwuHCcyDbkFNDEWHnI1yeKTw/BvzLE2QPK7w/KNDKWzHKBH5c
- 8Vg=
+IronPort-SDR: sm2A0RzpQIxvooQwr2CT1B5KUIYFkmxp2PHcr0kQ0fRbm573/k/k9MhfpzAiibjqlKUNm6QbtA
+ M6jMOsRm3qpcd+K4XT+w9WttPOW4BBXjVN19w1j9rI9VJJiTFB6jmYWZ1Jn/hnkOSg67PrOvia
+ ry+esOR9m7A5IXU/KqaF3vzH/luqOOhcQI8nJJ9NxyMTHmGnPZ7jQ71mPw+rseQOPT2j5gkmu9
+ tP9KDsfVVbTnshPuTZjpVY8vvWz1fs4AWIx7oUVMp9GZa0g2hjZMo+m/tFIOIvcsTDc0fJMPJh
+ p4s=
 X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="93013760"
+   d="scan'208";a="84625126"
 Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Aug 2020 23:59:19 -0700
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Aug 2020 23:59:22 -0700
 Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 24 Aug 2020 23:59:18 -0700
+ 15.1.1979.3; Mon, 24 Aug 2020 23:59:21 -0700
 Received: from m18063-ThinkPad-T460p.microchip.com (10.10.115.15) by
  chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Mon, 24 Aug 2020 23:59:16 -0700
+ 15.1.1979.3 via Frontend Transport; Mon, 24 Aug 2020 23:59:19 -0700
 From:   Claudiu Beznea <claudiu.beznea@microchip.com>
 To:     <mturquette@baylibre.com>, <sboyd@kernel.org>,
         <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
@@ -60,9 +60,9 @@ CC:     <bbrezillon@kernel.org>, <linux-clk@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
         Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 1/3] clk: at91: remove the checking of parent_name
-Date:   Tue, 25 Aug 2020 09:59:09 +0300
-Message-ID: <1598338751-20607-2-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH v2 2/3] clk: at91: clk-main: update key before writing AT91_CKGR_MOR
+Date:   Tue, 25 Aug 2020 09:59:10 +0300
+Message-ID: <1598338751-20607-3-git-send-email-claudiu.beznea@microchip.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1598338751-20607-1-git-send-email-claudiu.beznea@microchip.com>
 References: <1598338751-20607-1-git-send-email-claudiu.beznea@microchip.com>
@@ -73,32 +73,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to check parent_name variable while assigning it to
-init.parent_names. parent_name variable is already checked at
-the beginning of at91_clk_register_peripheral() function.
+SAMA5D2 datasheet specifies on chapter 33.22.8 (PMC Clock Generator
+Main Oscillator Register) that writing any value other than
+0x37 on KEY field aborts the write operation. Use the key when
+selecting main clock parent.
 
-Fixes: 6114067e437eb ("clk: at91: add PMC peripheral clocks")
+Fixes: 27cb1c2083373 ("clk: at91: rework main clk implementation")
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clk/at91/clk-peripheral.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/at91/clk-main.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/at91/clk-peripheral.c b/drivers/clk/at91/clk-peripheral.c
-index 7867eaf0447f..7a27ba8e0577 100644
---- a/drivers/clk/at91/clk-peripheral.c
-+++ b/drivers/clk/at91/clk-peripheral.c
-@@ -112,8 +112,8 @@ at91_clk_register_peripheral(struct regmap *regmap, const char *name,
+diff --git a/drivers/clk/at91/clk-main.c b/drivers/clk/at91/clk-main.c
+index 5c83e899084f..cfae2f59df66 100644
+--- a/drivers/clk/at91/clk-main.c
++++ b/drivers/clk/at91/clk-main.c
+@@ -437,12 +437,17 @@ static int clk_sam9x5_main_set_parent(struct clk_hw *hw, u8 index)
+ 		return -EINVAL;
  
- 	init.name = name;
- 	init.ops = &peripheral_ops;
--	init.parent_names = (parent_name ? &parent_name : NULL);
--	init.num_parents = (parent_name ? 1 : 0);
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
- 	init.flags = 0;
+ 	regmap_read(regmap, AT91_CKGR_MOR, &tmp);
+-	tmp &= ~MOR_KEY_MASK;
  
- 	periph->id = id;
+ 	if (index && !(tmp & AT91_PMC_MOSCSEL))
+-		regmap_write(regmap, AT91_CKGR_MOR, tmp | AT91_PMC_MOSCSEL);
++		tmp = AT91_PMC_MOSCSEL;
+ 	else if (!index && (tmp & AT91_PMC_MOSCSEL))
+-		regmap_write(regmap, AT91_CKGR_MOR, tmp & ~AT91_PMC_MOSCSEL);
++		tmp = 0;
++	else
++		return 0;
++
++	regmap_update_bits(regmap, AT91_CKGR_MOR,
++			   AT91_PMC_MOSCSEL | MOR_KEY_MASK,
++			   tmp | AT91_PMC_KEY);
+ 
+ 	while (!clk_sam9x5_main_ready(regmap))
+ 		cpu_relax();
 -- 
 2.7.4
 
