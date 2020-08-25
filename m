@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D63C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B891DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B568A20838
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2E4120866
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:29:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgHYA3s (ORCPT
+        id S1728373AbgHYA34 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 20:29:48 -0400
+        Mon, 24 Aug 2020 20:29:56 -0400
 Received: from mga17.intel.com ([192.55.52.151]:12300 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728255AbgHYA3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 20:29:39 -0400
-IronPort-SDR: NTeBTATGTDpmBFbflc77PI1q5XME6f5+DPkeCYd9XI1receD65AighJLvVATlhi7OOKKEH86Gz
- LI3hhI5Y7BYg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136075289"
+        id S1728312AbgHYA3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 20:29:48 -0400
+IronPort-SDR: gTKWExgthYu5jLkfqxfCH7BdIs7wN0RAZW7PTB1D3oHmnZbPVxJ0s2MpheKUEB+5mg0OazDd92
+ XvRnCergXGvw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136075304"
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="136075289"
+   d="scan'208";a="136075304"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:29:37 -0700
-IronPort-SDR: d1EfFxe85+4cInBbr4i5psOpTmlLClZXL+buEQDddkYhHxWKLs6TCRKmt3rsr7l6jq94lgfeji
- oaoxmeTPeBiA==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:29:39 -0700
+IronPort-SDR: ImGOLQcTSsZKHqrNuXXAiFacd1lAl5GqfBl/eKiS3sJo3nKhmeh7hOcDC+xBM8TDvofjyNNq3y
+ JirNgz2TlPjw==
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="474134984"
+   d="scan'208";a="474135001"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:29:36 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:29:39 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -62,9 +62,9 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Dave Martin <Dave.Martin@arm.com>,
         Weijiang Yang <weijiang.yang@intel.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v11 12/25] mm: Introduce VM_SHSTK for shadow stack memory
-Date:   Mon, 24 Aug 2020 17:25:27 -0700
-Message-Id: <20200825002540.3351-13-yu-cheng.yu@intel.com>
+Subject: [PATCH v11 16/25] mm: Add guard pages around a shadow stack.
+Date:   Mon, 24 Aug 2020 17:25:31 -0700
+Message-Id: <20200825002540.3351-17-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200825002540.3351-1-yu-cheng.yu@intel.com>
 References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
@@ -75,81 +75,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A Shadow Stack PTE must be read-only and have _PAGE_DIRTY set.  However,
-read-only and Dirty PTEs also exist for copy-on-write (COW) pages.  These
-two cases are handled differently for page faults.  Introduce VM_SHSTK to
-track shadow stack VMAs.
+INCSSP(Q/D) increments shadow stack pointer and 'pops and discards' the
+first and the last elements in the range, effectively touches those memory
+areas.
+
+The maximum moving distance by INCSSPQ is 255 * 8 = 2040 bytes and
+255 * 4 = 1020 bytes by INCSSPD.  Both ranges are far from PAGE_SIZE.
+Thus, putting a gap page on both ends of a shadow stack prevents INCSSP,
+CALL, and RET from going beyond.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
-v9:
-- Add VM_SHSTK case to arch_vma_name().
-- Revise the commit log to explain why adding a new VM flag.
+v10:
+- Define ARCH_SHADOW_STACK_GUARD_GAP.
 
- arch/x86/mm/mmap.c | 2 ++
- fs/proc/task_mmu.c | 3 +++
- include/linux/mm.h | 8 ++++++++
- 3 files changed, 13 insertions(+)
+ arch/x86/include/asm/processor.h | 10 ++++++++++
+ include/linux/mm.h               | 24 ++++++++++++++++++++----
+ 2 files changed, 30 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/mm/mmap.c b/arch/x86/mm/mmap.c
-index c90c20904a60..a22c6b6fc607 100644
---- a/arch/x86/mm/mmap.c
-+++ b/arch/x86/mm/mmap.c
-@@ -165,6 +165,8 @@ unsigned long get_mmap_base(int is_legacy)
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 97143d87994c..01acbd63cad8 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -840,6 +840,16 @@ static inline void spin_lock_prefetch(const void *x)
+ #define STACK_TOP		TASK_SIZE_LOW
+ #define STACK_TOP_MAX		TASK_SIZE_MAX
  
- const char *arch_vma_name(struct vm_area_struct *vma)
- {
-+	if (vma->vm_flags & VM_SHSTK)
-+		return "[shadow stack]";
- 	return NULL;
++/*
++ * Shadow stack pointer is moved by CALL, JMP, and INCSSP(Q/D).  INCSSPQ
++ * moves shadow stack pointer up to 255 * 8 = ~2 KB (~1KB for INCSSPD) and
++ * touches the first and the last element in the range, which triggers a
++ * page fault if the range is not in a shadow stack.  Because of this,
++ * creating 4-KB guard pages around a shadow stack prevents these
++ * instructions from going beyond.
++ */
++#define ARCH_SHADOW_STACK_GUARD_GAP PAGE_SIZE
++
+ #define INIT_THREAD  {						\
+ 	.addr_limit		= KERNEL_DS,			\
  }
- 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 5066b0251ed8..682ea6f95fa4 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -663,6 +663,9 @@ static void show_smap_vma_flags(struct seq_file *m, struct vm_area_struct *vma)
- 		[ilog2(VM_PKEY_BIT4)]	= "",
- #endif
- #endif /* CONFIG_ARCH_HAS_PKEYS */
-+#ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-+		[ilog2(VM_SHSTK)]	= "ss",
-+#endif
- 	};
- 	size_t i;
- 
 diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 1983e08f5906..62f5f496a6d1 100644
+index 9c2efefb9281..d437ce0c85ac 100644
 --- a/include/linux/mm.h
 +++ b/include/linux/mm.h
-@@ -299,11 +299,13 @@ extern unsigned int kobjsize(const void *objp);
- #define VM_HIGH_ARCH_BIT_2	34	/* bit only usable on 64-bit architectures */
- #define VM_HIGH_ARCH_BIT_3	35	/* bit only usable on 64-bit architectures */
- #define VM_HIGH_ARCH_BIT_4	36	/* bit only usable on 64-bit architectures */
-+#define VM_HIGH_ARCH_BIT_5	37	/* bit only usable on 64-bit architectures */
- #define VM_HIGH_ARCH_0	BIT(VM_HIGH_ARCH_BIT_0)
- #define VM_HIGH_ARCH_1	BIT(VM_HIGH_ARCH_BIT_1)
- #define VM_HIGH_ARCH_2	BIT(VM_HIGH_ARCH_BIT_2)
- #define VM_HIGH_ARCH_3	BIT(VM_HIGH_ARCH_BIT_3)
- #define VM_HIGH_ARCH_4	BIT(VM_HIGH_ARCH_BIT_4)
-+#define VM_HIGH_ARCH_5	BIT(VM_HIGH_ARCH_BIT_5)
- #endif /* CONFIG_ARCH_USES_HIGH_VMA_FLAGS */
+@@ -2608,6 +2608,10 @@ extern vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf);
+ int __must_check write_one_page(struct page *page);
+ void task_dirty_inc(struct task_struct *tsk);
  
- #ifdef CONFIG_ARCH_HAS_PKEYS
-@@ -335,6 +337,12 @@ extern unsigned int kobjsize(const void *objp);
- # define VM_MAPPED_COPY	VM_ARCH_1	/* T if mapped copy of data (nommu mmap) */
- #endif
- 
-+#ifdef CONFIG_X86_INTEL_SHADOW_STACK_USER
-+# define VM_SHSTK	VM_HIGH_ARCH_5
-+#else
-+# define VM_SHSTK	VM_NONE
++#ifndef ARCH_SHADOW_STACK_GUARD_GAP
++#define ARCH_SHADOW_STACK_GUARD_GAP 0
 +#endif
 +
- #ifndef VM_GROWSUP
- # define VM_GROWSUP	VM_NONE
- #endif
+ extern unsigned long stack_guard_gap;
+ /* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */
+ extern int expand_stack(struct vm_area_struct *vma, unsigned long address);
+@@ -2640,9 +2644,15 @@ static inline struct vm_area_struct * find_vma_intersection(struct mm_struct * m
+ static inline unsigned long vm_start_gap(struct vm_area_struct *vma)
+ {
+ 	unsigned long vm_start = vma->vm_start;
++	unsigned long gap = 0;
+ 
+-	if (vma->vm_flags & VM_GROWSDOWN) {
+-		vm_start -= stack_guard_gap;
++	if (vma->vm_flags & VM_GROWSDOWN)
++		gap = stack_guard_gap;
++	else if (vma->vm_flags & VM_SHSTK)
++		gap = ARCH_SHADOW_STACK_GUARD_GAP;
++
++	if (gap != 0) {
++		vm_start -= gap;
+ 		if (vm_start > vma->vm_start)
+ 			vm_start = 0;
+ 	}
+@@ -2652,9 +2662,15 @@ static inline unsigned long vm_start_gap(struct vm_area_struct *vma)
+ static inline unsigned long vm_end_gap(struct vm_area_struct *vma)
+ {
+ 	unsigned long vm_end = vma->vm_end;
++	unsigned long gap = 0;
++
++	if (vma->vm_flags & VM_GROWSUP)
++		gap = stack_guard_gap;
++	else if (vma->vm_flags & VM_SHSTK)
++		gap = ARCH_SHADOW_STACK_GUARD_GAP;
+ 
+-	if (vma->vm_flags & VM_GROWSUP) {
+-		vm_end += stack_guard_gap;
++	if (gap != 0) {
++		vm_end += gap;
+ 		if (vm_end < vma->vm_end)
+ 			vm_end = -PAGE_SIZE;
+ 	}
 -- 
 2.21.0
 
