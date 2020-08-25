@@ -2,159 +2,118 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F67C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BE9C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8F920665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:02:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="g9q+BfCD"
+	by mail.kernel.org (Postfix) with ESMTP id 5F8F92074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbgHYVCK (ORCPT
+        id S1726711AbgHYVEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:02:10 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40118 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726222AbgHYVCJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 17:02:09 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PKxGYe043437;
-        Tue, 25 Aug 2020 21:02:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=HFiP3ElMqXpazB4S8Vqol6QjJN2M93nsVrh0yeuWLCk=;
- b=g9q+BfCDQfKaBRnvSC3MuF/2OSTy8R1znYeiI8apQ+dkhMotedhXENH444+nQ8oWJINR
- 4diRhKJPEr5eqyuC5XGkQwBTaG+XU2KSCKq57LiTVnDzoKivlaL/DipJFHzsDJPYL1Tu
- g84Ph9+LeVOPqPQxpbaS4DqM5iQacKUWmBe50O5V8lCk7H9qhMm40iwIRWON0tn+5RY9
- U2VnSqNDixBfdypPqkYC1owXco2M2917S47joXJRtj/T1oGN5zVGQh9tXn7M2xUwkYN0
- QdCAZyh11AW6WcMhs89/Csx6PIyTpqUdiZFONaOk0cJM6wvB3MPBlMo6smVcE/ZxkhtQ 2g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 333w6tufjq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 21:02:05 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PL0CHr173802;
-        Tue, 25 Aug 2020 21:02:04 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 333ru8fv9h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 21:02:04 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07PL24ge013167;
-        Tue, 25 Aug 2020 21:02:04 GMT
-Received: from localhost (/10.159.234.29)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Aug 2020 14:02:04 -0700
-Date:   Tue, 25 Aug 2020 14:02:03 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/9] iomap: Support arbitrarily many blocks per page
-Message-ID: <20200825210203.GJ6096@magnolia>
-References: <20200824145511.10500-1-willy@infradead.org>
- <20200824145511.10500-6-willy@infradead.org>
+        Tue, 25 Aug 2020 17:04:04 -0400
+Received: from mga09.intel.com ([134.134.136.24]:21941 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726149AbgHYVED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 17:04:03 -0400
+IronPort-SDR: r/MA08np3fu6fS50FTj6C0nofkAHd5JqEwR3Du7vbNXPkdLENTy30e+J23ACPvNGSfE96CFRw5
+ nE44u+/H1WtA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="157238490"
+X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
+   d="scan'208";a="157238490"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 14:04:03 -0700
+IronPort-SDR: WoRGvY0PoRGbOXpqpJzl8Xjzeiomd80lkvcS9rWmmRwQORlx7kbHU7liFPi0L8I1jnFtU4A5EK
+ gSD7dSjmypQQ==
+X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
+   d="scan'208";a="474507675"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.213.162.112]) ([10.213.162.112])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 14:04:01 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+ <20200825002540.3351-26-yu-cheng.yu@intel.com>
+ <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
+ <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
+ <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+Date:   Tue, 25 Aug 2020 14:04:00 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824145511.10500-6-willy@infradead.org>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- bulkscore=0 suspectscore=1 spamscore=0 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250159
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=1 phishscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008250159
+In-Reply-To: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:55:06PM +0100, Matthew Wilcox (Oracle) wrote:
-> Size the uptodate array dynamically to support larger pages in the
-> page cache.  With a 64kB page, we're only saving 8 bytes per page today,
-> but with a 2MB maximum page size, we'd have to allocate more than 4kB
-> per page.  Add a few debugging assertions.
+On 8/25/2020 12:19 PM, Dave Hansen wrote:
+> On 8/25/20 11:43 AM, Yu, Yu-cheng wrote:
+>>>> arch_prctl(ARCH_X86_CET_MMAP_SHSTK, u64 *args)
+>>>>       Allocate a new shadow stack.
+>>>>
+>>>>       The parameter 'args' is a pointer to a user buffer.
+>>>>
+>>>>       *args = desired size
+>>>>       *(args + 1) = MAP_32BIT or MAP_POPULATE
+>>>>
+>>>>       On returning, *args is the allocated shadow stack address.
+>>>
+>>> This is hideous.  Would this be better as a new syscall?
+>>
+>> Could you point out why this is hideous, so that I can modify the
+>> arch_prctl?
 > 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  fs/iomap/buffered-io.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+> Passing values in memory is hideous when we don't have to.  A syscall
+> would let you have separate arguments for size and flags and would also
+> let you have a nice return value instead of needing to do that in memory
+> too.
+
+That is a good justification.
+
 > 
-> diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-> index dbf9572dabe9..844e95cacea8 100644
-> --- a/fs/iomap/buffered-io.c
-> +++ b/fs/iomap/buffered-io.c
-> @@ -22,18 +22,19 @@
->  #include "../internal.h"
->  
->  /*
-> - * Structure allocated for each page when block size < PAGE_SIZE to track
-> + * Structure allocated for each page when block size < page size to track
->   * sub-page uptodate status and I/O completions.
-
-"for each regular page or head page of a huge page"?  Or whatever we're
-calling them nowadays?
-
---D
-
->   */
->  struct iomap_page {
->  	atomic_t		read_count;
->  	atomic_t		write_count;
->  	spinlock_t		uptodate_lock;
-> -	DECLARE_BITMAP(uptodate, PAGE_SIZE / 512);
-> +	unsigned long		uptodate[];
->  };
->  
->  static inline struct iomap_page *to_iomap_page(struct page *page)
->  {
-> +	VM_BUG_ON_PGFLAGS(PageTail(page), page);
->  	if (page_has_private(page))
->  		return (struct iomap_page *)page_private(page);
->  	return NULL;
-> @@ -45,11 +46,13 @@ static struct iomap_page *
->  iomap_page_create(struct inode *inode, struct page *page)
->  {
->  	struct iomap_page *iop = to_iomap_page(page);
-> +	unsigned int nr_blocks = i_blocks_per_page(inode, page);
->  
-> -	if (iop || i_blocks_per_page(inode, page) <= 1)
-> +	if (iop || nr_blocks <= 1)
->  		return iop;
->  
-> -	iop = kzalloc(sizeof(*iop), GFP_NOFS | __GFP_NOFAIL);
-> +	iop = kzalloc(struct_size(iop, uptodate, BITS_TO_LONGS(nr_blocks)),
-> +			GFP_NOFS | __GFP_NOFAIL);
->  	spin_lock_init(&iop->uptodate_lock);
->  	attach_page_private(page, iop);
->  	return iop;
-> @@ -59,11 +62,14 @@ static void
->  iomap_page_release(struct page *page)
->  {
->  	struct iomap_page *iop = detach_page_private(page);
-> +	unsigned int nr_blocks = i_blocks_per_page(page->mapping->host, page);
->  
->  	if (!iop)
->  		return;
->  	WARN_ON_ONCE(atomic_read(&iop->read_count));
->  	WARN_ON_ONCE(atomic_read(&iop->write_count));
-> +	WARN_ON_ONCE(bitmap_full(iop->uptodate, nr_blocks) !=
-> +			PageUptodate(page));
->  	kfree(iop);
->  }
->  
-> -- 
-> 2.28.0
+>> I think this is more arch-specific.  Even if it becomes a new syscall,
+>> we still need to pass the same parameters.
 > 
+> Right, but without the copying in and out of memory.
+> 
+Linux-api is already on the Cc list.  Do we need to add more people to 
+get some agreements for the syscall?
