@@ -2,110 +2,145 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB0BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 799C2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0FD220706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D56C2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgHYE1T (ORCPT
+        id S1728555AbgHYE1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:27:19 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:51151 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725900AbgHYE1Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:27:16 -0400
-Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 349066AC401;
-        Tue, 25 Aug 2020 14:27:12 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kAQYB-0006L5-Ky; Tue, 25 Aug 2020 14:27:11 +1000
-Date:   Tue, 25 Aug 2020 14:27:11 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Andreas Dilger <adilger@dilger.ca>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 9/9] iomap: Change calling convention for zeroing
-Message-ID: <20200825042711.GL12131@dread.disaster.area>
-References: <20200824145511.10500-1-willy@infradead.org>
- <20200824145511.10500-10-willy@infradead.org>
- <20200825002735.GI12131@dread.disaster.area>
- <20200825032603.GL17456@casper.infradead.org>
- <E47B2C68-43F2-496F-AA91-A83EB3D91F28@dilger.ca>
+        Tue, 25 Aug 2020 00:27:51 -0400
+Received: from mga14.intel.com ([192.55.52.115]:9875 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725900AbgHYE1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 00:27:50 -0400
+IronPort-SDR: 7l0vMn7HOlvjNM7FrZXgXMe3rH3xPaV5G3KuH+kmOOWX5vDsDZ7HXYAptk97pT0X9DPUBY7RaV
+ 1AtKleVoIK2Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="155298961"
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="155298961"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 21:27:49 -0700
+IronPort-SDR: F4Y1iPanVoCpVDL+8UTBQa6AMueNRRfZN53Hio0LiXEay0M7VaF8nUzPhdyo1G2F5FX0hZmJ6Z
+ PiUwz5GuoUIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="499168171"
+Received: from lkp-server01.sh.intel.com (HELO 4f455964fc6c) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 24 Aug 2020 21:27:48 -0700
+Received: from kbuild by 4f455964fc6c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kAQYl-00006D-C0; Tue, 25 Aug 2020 04:27:47 +0000
+Date:   Tue, 25 Aug 2020 12:27:27 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/fsgsbase] BUILD SUCCESS
+ 5f1dd4dda5c8796c405e856aaa11e187f6885924
+Message-ID: <5f44932f.DEi+U1sStWmjQbZS%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E47B2C68-43F2-496F-AA91-A83EB3D91F28@dilger.ca>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QKgWuTDL c=1 sm=1 tr=0 cx=a_idp_d
-        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
-        a=Avm1FSHoLamJ-oWrJvIA:9 a=fEKI0cE5RSuP_qZy:21 a=LEqab9mPDQQxAqv4:21
-        a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22 a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 09:35:59PM -0600, Andreas Dilger wrote:
-> On Aug 24, 2020, at 9:26 PM, Matthew Wilcox <willy@infradead.org> wrote:
-> > 
-> > On Tue, Aug 25, 2020 at 10:27:35AM +1000, Dave Chinner wrote:
-> >>> 	do {
-> >>> -		unsigned offset, bytes;
-> >>> -
-> >>> -		offset = offset_in_page(pos);
-> >>> -		bytes = min_t(loff_t, PAGE_SIZE - offset, count);
-> >>> +		loff_t bytes;
-> >>> 
-> >>> 		if (IS_DAX(inode))
-> >>> -			status = dax_iomap_zero(pos, offset, bytes, iomap);
-> >>> +			bytes = dax_iomap_zero(pos, length, iomap);
-> >> 
-> >> Hmmm. everything is loff_t here, but the callers are defining length
-> >> as u64, not loff_t. Is there a potential sign conversion problem
-> >> here? (sure 64 bit is way beyond anything we'll pass here, but...)
-> > 
-> > I've gone back and forth on the correct type for 'length' a few times.
-> > size_t is too small (not for zeroing, but for seek()).  An unsigned type
-> > seems right -- a length can't be negative, and we don't want to give
-> > the impression that it can.  But the return value from these functions
-> > definitely needs to be signed so we can represent an error.  So a u64
-> > length with an loff_t return type feels like the best solution.  And
-> > the upper layers have to promise not to pass in a length that's more
-> > than 2^63-1.
-> 
-> The problem with allowing a u64 as the length is that it leads to the
-> possibility of an argument value that cannot be returned.  Checking
-> length < 0 is not worse than checking length > 0x7ffffffffffffff,
-> and has the benefit of consistency with the other argument types and
-> signs...
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/fsgsbase
+branch HEAD: 5f1dd4dda5c8796c405e856aaa11e187f6885924  x86/fsgsbase: Replace static_cpu_has() with boot_cpu_has()
 
-I think the problem here is that we have no guaranteed 64 bit size
-type. when that was the case with off_t, we created loff_t to always
-represent a 64 bit offset value. However, we never created one for
-the count/size that is passed alongside loff_t in many places - it
-was said that "syscalls are limited to 32 bit sizes" and
-"size_t is 64 bit on 64 bit platforms" and so on and so we still
-don't have a clean way to pass 64 bit sizes through the IO path.
+elapsed time: 721m
 
-We've been living with this shitty situation for a long time now, so
-perhaps it's time for us to define lsize_t for 64 bit lengths and
-start using that everywhere that needs a 64 bit clean path
-through the code, regardless of whether the arch is 32 or 64 bit...
+configs tested: 74
+configs skipped: 52
 
-Thoughts?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
--Dave.
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                            zeus_defconfig
+arm                              zx_defconfig
+arc                              alldefconfig
+arm                          badge4_defconfig
+sh                          sdk7780_defconfig
+sh                          r7785rp_defconfig
+arm                             rpc_defconfig
+h8300                    h8300h-sim_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a002-20200824
+i386                 randconfig-a004-20200824
+i386                 randconfig-a005-20200824
+i386                 randconfig-a003-20200824
+i386                 randconfig-a006-20200824
+i386                 randconfig-a001-20200824
+x86_64               randconfig-a015-20200824
+x86_64               randconfig-a016-20200824
+x86_64               randconfig-a012-20200824
+x86_64               randconfig-a014-20200824
+x86_64               randconfig-a011-20200824
+x86_64               randconfig-a013-20200824
+i386                 randconfig-a013-20200824
+i386                 randconfig-a012-20200824
+i386                 randconfig-a011-20200824
+i386                 randconfig-a016-20200824
+i386                 randconfig-a015-20200824
+i386                 randconfig-a014-20200824
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
--- 
-Dave Chinner
-david@fromorbit.com
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
