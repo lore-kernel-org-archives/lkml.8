@@ -2,200 +2,141 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26C1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3672BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9530C2074A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598358599;
-	bh=5/xJB4fbpQRXrU82ykLHnJ4QCGEYTfQbwz4FwUUEDwc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=v+U8r64CyL2IaFV6REp79gxjZWZdWpognBQg2uhyKI3vORaDUJONOjCQmTBX/t8LL
-	 gD0K0P6ROpqVSuMO4RujSWQOpoVTokGmFoz7Briph4e0eBA4HV3S7FGbis2VncknQJ
-	 WDLQqUzVn+ENTmllGFRuW/7ctdlFyVAcUJ06ECm8=
+	by mail.kernel.org (Postfix) with ESMTP id 092662075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:31:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=fooishbar-org.20150623.gappssmtp.com header.i=@fooishbar-org.20150623.gappssmtp.com header.b="wEO9WqPQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgHYM34 (ORCPT
+        id S1726964AbgHYMbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:29:56 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:48393 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbgHYM3w (ORCPT
+        Tue, 25 Aug 2020 08:31:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbgHYMba (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:29:52 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 07PCTVki021974;
-        Tue, 25 Aug 2020 21:29:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 07PCTVki021974
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598358573;
-        bh=fWDEMSaOrPS74dlXpFO19QBM3u09HqUhQUZB2brSdsY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fOxcwLtgxKIPR8hbtZKkbMiRjJ2Aqr4TlwxTj4ubxNpD2txA5BHxg6KAQPsgXUldU
-         MpJOiZ4YGDiPs9RFKoAiLlAW/mAgpfnyAEz0a0/g6shhkRwRf0gHDxSWmNHhaLyvn1
-         kJa2Ip51JlytlW/TZumMYEP5WZM6Kol30Y/ezYGCRGJ+W/XKHJ1OwQ09Aq44O3qCnI
-         E3ofcAElvx9Woo/XQSE7C4VNnPVa+r/K442fyv8fpmNjr9139ggNgmwSXQKyKS4rh6
-         tlZuO0sM6KJfyjcQZRjfek8cCuYM5qaUnjR8+zxm6SnB74hxlNfEzNmbT0Y1St3PNa
-         WW2VbtkFCy5qw==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id e14so6215737vsa.9;
-        Tue, 25 Aug 2020 05:29:32 -0700 (PDT)
-X-Gm-Message-State: AOAM5315vA0a42hdsf7wqGyqwxCD73iA5Hcjb3vVBEHLDBWuvs7TdUwI
-        C+D15IeOiqeWR18StXchxuKax9pDnqAi1zX6BgI=
-X-Google-Smtp-Source: ABdhPJyIs8Whq8eByRuYrPFEYB0rQzL0fX4J9QQ+NaRlsfdCpvIiae7R+ZUfqK/NgN1ob6KxzLkuKR0sk2tFUVY+/JQ=
-X-Received: by 2002:a05:6102:7ac:: with SMTP id x12mr5038553vsg.181.1598358571195;
- Tue, 25 Aug 2020 05:29:31 -0700 (PDT)
+        Tue, 25 Aug 2020 08:31:30 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B7C5C061757
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 05:31:30 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b18so1862135wrs.7
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 05:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fooishbar-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+HLPhy+qXHIinU4+E7TS6jEdPNtNrgqFPzcA0O6t5kU=;
+        b=wEO9WqPQBcLwZUKcvqXvWeTQyatZBnoj8MNgvqBl3wXtPJizAT/oQ/SdGZfZ4EMq/E
+         eyFKyYTJISm+DV330UA3npw7Dk0YMydTsCuYN9jpA+MHjIs/adfjauEBoaNXRZ0HI9Le
+         JDdxy0U/s9OnS3u2btlKuWA8skzmnHXl+FdDvALKESloVFY3kHERMGM8vAtLPvLngs7q
+         pN4QuFCkbyvSu3wmqoe19Atprq/sp9hCBmKWOpw9qfETRsv0KPDoH2X3ZJsbn1hKBRKu
+         pSMBFzyQPBylG6jIRY2gLJ9lFIrCS6nd9xiUy1RuilZMNT57weEJFi5aBrdPQmLzGZTH
+         70ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+HLPhy+qXHIinU4+E7TS6jEdPNtNrgqFPzcA0O6t5kU=;
+        b=e8ND4S3QjyYCI8yfoog41xP2znZFebMccNaPdpxIyysKwvRSSbDZoVrvf/1l5HVD0k
+         LgjJZITkjeCX5yXPTCnt2sRYPmUo1q2tkTr6U4GQ+jIWXMuNMtBa/3KIM3MWUIS5vE19
+         d39vrjNpSHaxSzu//qpYwz24vh7bOmWeVR7OgihrKPa6ypv+YAee48BptLAM/w2NSpZ9
+         NqGge4fQfz+L1Jn9ytfxkcsXaDBYO7HzpeOOAsSD1GNO4FhT41KTY5J03Hnt8V9vWZAA
+         2R+Q9gpzPSs3qQlfmvHqDT3WSEzNnZdqe7InMzii81Acj2awjJkh54Qd7wsc4u18885p
+         7RbQ==
+X-Gm-Message-State: AOAM533/J4ULvMTkzKbGvbt9VMSmO1yRKSAm0YqeYuKby8/6c6glXG8H
+        jK6uZI/+QpLgHnIXlth72LRCfyKWAQZMz703q8Qpzg==
+X-Google-Smtp-Source: ABdhPJz1mB4Fdo1aDIpEuz/ea4FV6oUPMILZjNgY202nHhhVQ2y6zu7/a0D9cIzuEsl4KQKXulFb7/NPn2fB9IdTTE0=
+X-Received: by 2002:a5d:644b:: with SMTP id d11mr10206039wrw.373.1598358688698;
+ Tue, 25 Aug 2020 05:31:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
- <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
- <20200818202407.GA3143683@rani.riverdale.lan> <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
- <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
- <20200818214146.GA3196105@rani.riverdale.lan> <CAK7LNAQmWBPV4nZ0xPdSHEt=DipHmR40co827voGOFN=2j47BQ@mail.gmail.com>
- <20200824173450.GA4157679@rani.riverdale.lan> <CAKwvOd=BEwuHFeuskJ4gPOGLoXm98oXA18U=tTw981g+HdVz-w@mail.gmail.com>
-In-Reply-To: <CAKwvOd=BEwuHFeuskJ4gPOGLoXm98oXA18U=tTw981g+HdVz-w@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 25 Aug 2020 21:28:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQynuqqjhL1rqMf0YnRpQ0jsWrJ7fy51FM7d0xdxws5wQ@mail.gmail.com>
-Message-ID: <CAK7LNAQynuqqjhL1rqMf0YnRpQ0jsWrJ7fy51FM7d0xdxws5wQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+ <20200819152120.GA106437@ravnborg.org> <20200819153045.GA18469@pendragon.ideasonboard.com>
+ <CALAqxLUXnPRec3UYbMKge8yNKBagLOatOeRCagF=JEyPEfWeKA@mail.gmail.com>
+ <20200820090326.3f400a15@coco.lan> <20200820100205.GA5962@pendragon.ideasonboard.com>
+ <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com> <20200825133025.13f047f0@coco.lan>
+In-Reply-To: <20200825133025.13f047f0@coco.lan>
+From:   Daniel Stone <daniel@fooishbar.org>
+Date:   Tue, 25 Aug 2020 13:31:16 +0100
+Message-ID: <CAPj87rNkqp0hDEv63jhJsMzsQ0qMLucjWE4KVByCFoMRrnfUKA@mail.gmail.com>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Dave Airlie <airlied@gmail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liuyao An <anliuyao@huawei.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 4:10 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Mon, Aug 24, 2020 at 10:34 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Tue, Aug 25, 2020 at 12:57:22AM +0900, Masahiro Yamada wrote:
-> > >
-> > >
-> > > To prevent transformation from foo() into bar(),
-> > > there are two ways in Clang to do that;
-> > > -fno-builtin-foo, and -fno-builtin-bar.
-> > > There is only one in GCC; -fno-buitin-foo.
-> > >
-> > > Is this correct?
-> > >
-> >
-> > It looked that way from previous experimentation, but...
-> >
-> > >
-> > >
-> > > I just played the optimization
-> > > from printf("helloworld\n") to puts("helloworld").
-> > >
-> > > https://godbolt.org/z/5s4ded
-> > >
-> > >
-> > > -fno-builtin-puts cannot prevent clang
-> > > from emitting puts.
-> > > Is it because clang does not support
-> > > -fno-builtin-puts?
-> >
-> > Ugh. clang doesn't have __builtin_puts() but it optimizes printf() into
-> > puts(). It doesn't have __builtin_putchar() but will optimize
-> > printf("c") into putchar('c').
->
-> Bah, merely a <strikethrough>flesh
-> wound</strikethrough><strikethrough>compiler bug</strikethrough>rather
-> long TODO in the compiler.
-> https://github.com/llvm/llvm-project/blob/be2bc7d4cef2edd66c7fb74b70adf62fc68754db/clang/include/clang/Basic/Builtins.def#L943
->
-> Anyways, give me a week and I'll hack through the rest of them
-> https://reviews.llvm.org/D86508.  Certainly made HPA's point hit home,
-> that's a lot of functionality to implement or disable in an
-> environment.
->
-> Masahiro, are you implying that we shouldn't take the
-> -fno-builtin-stpcpy patch, because Clang is inconsistent? (That can be
-> fixed.) Even though -fno-builtin-stpcpy works here as intended?
-> https://lore.kernel.org/lkml/20200817220212.338670-2-ndesaulniers@google.com/
->
-> Otherwise we need to provide an implementation of this symbol in the kernel.
-> https://lore.kernel.org/lkml/20200815020946.1538085-1-ndesaulniers@google.com/
->
-> Please, pick your poison.
+Hi Mauro,
 
+On Tue, 25 Aug 2020 at 12:30, Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+> Sorry, but I can't agree that review is more important than to be able
+> to properly indicate copyrights in a valid way at the legal systems that
+> it would apply ;-)
 
+The way to properly indicate copyright coverage is to insert a
+copyright statement in the file. This has been the accepted way of
+communicating copyright notices since approximately the dawn of time.
+The value of the 'author' field within a chain of git commits does not
+have privileged legal value.
 
-I am not a compiler expert.
+If what you were saying is true, it would be impossible for any
+project to copy code from any other project, unless they did git
+filter-branch and made sure to follow renames too. As others have
+noted, it would also be impossible for any patches to be developed
+collaboratively by different copyright holders, or for maintainers to
+apply changes.
 
-Nor am I sure if I am the right person who makes this decision.
-But, if so, I would choose the latter.
-(implement stpcpy() in the kernel)
+This is accepted community practice and has passed signoffs from a
+million different lawyers and copyright holders. If you wish to break
+with this and do something different, the onus is on you to provide
+the community with _specific_ legal advice; if this is accepted, the
+development model would have to drastically change in the presence of
+single pieces of code developed by multiple distinct copyright
+holders.
 
-I was addressed last night, so
-I should write up my thoughts.
-
-I do not think -fno-builtin-stpcpy is a
-general solution.
-
--fno-builtin-stpcpy will work for now
-because only Clang implements the transformation
-from 'sprintf(dest, "%s", str)' into
-'stpcpy(dest, str) - dest'.
-
-If GCC implements it some day,
-we would run into a problem because
-in GCC, it is not -fno-builtin-stpcpy, but
--fno-builtin-sprintf that disables that optimization.
-
-In this regard, 'KBUILD_CFLAGS += -fno-builtin-sprintf'
-would be more future-proof, but it is potentially
-an overkill.
-We want to disable optimization from sprintf() to stpcpy(),
-but we may still benefit from the optimization from
-sprintf() into something else.
-
-
-Linus is uncomfortable with this kind of compiler magic.
-If we take compiler's freedom away,
--ffreestanding is a big hammer to solve this problem.
-
-If we welcome the compiler's optimization,
-we should implement stpcpy(), bcmp(), and whatever
-until we solve all link errors.
-
-
-
---
-Best Regards
-Masahiro Yamada
+Cheers,
+Daniel
