@@ -2,140 +2,121 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A442AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D64C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6E62075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:25:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598354731;
-	bh=ddQB2CTZx6e755kz/OZHNFbEB2IUK2yHj/0OYJmg+Eo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RHSJ7D+gA1U803EWVgEv67HI1pUh6uY1mcnt1WUGWksSv3gGYJqkoYIUI+xj1dtHm
-	 S2/Vec6Y65AWt8dUy9RNEmwinklbSsMEOlt29hWvJZqytv0j3vkYeDdT4+WJmlUkPa
-	 Y7wHoJh9usHiKrhXD6FrKvdJhhLwth74BJwkkUHs=
+	by mail.kernel.org (Postfix) with ESMTP id 14C9820715
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730012AbgHYLZ3 (ORCPT
+        id S1729985AbgHYL0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 07:25:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38758 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 07:26:36 -0400
+Received: from mga03.intel.com ([134.134.136.65]:21487 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729962AbgHYLZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 07:25:21 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 224732075B;
-        Tue, 25 Aug 2020 11:25:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598354721;
-        bh=ddQB2CTZx6e755kz/OZHNFbEB2IUK2yHj/0OYJmg+Eo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dksMgW1cPTKSHSSoky6BMBqulBBF4IH/7mW6rhuJC9jTkbacZEKdAkHYwx19hbugR
-         9QwBoR3q9KCcMpQ8bha+e0Gn8UIlsL6tpgc6gBhF7so5ML9anF0XNjGEaMiMzmo+ub
-         ttOkqxPQPXEbgNiOO33LjQ0GM+P1o9vB+VP3Kt6o=
-Date:   Tue, 25 Aug 2020 16:55:17 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lars@metafoo.de, dan.j.williams@intel.com, ardeleanalex@gmail.com
-Subject: Re: [PATCH 3/5] dmaengine: axi-dmac: wrap entire dt parse in a
- function
-Message-ID: <20200825112517.GP2639@vkoul-mobl>
-References: <20200819071633.76494-1-alexandru.ardelean@analog.com>
- <20200819071633.76494-3-alexandru.ardelean@analog.com>
+        id S1729878AbgHYL0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 07:26:20 -0400
+IronPort-SDR: TAZ2jWpt8aSi+c7bhltOxbnpOox+QQ1ayN0d9zceJu6EAlfcYdOPnSe0Xv3mtpRA7VzjI2h2ja
+ 4dGoZEwUGXLQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="156081716"
+X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
+   d="scan'208";a="156081716"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 04:26:10 -0700
+IronPort-SDR: 6njZOvBY1izLogjrobnUCx6enPHeHsLp5OjBK/HwLAvABspPgPwJ5lMJ9vQlcpjPct+HnP9Vmc
+ hdhUmn5SVMaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
+   d="scan'208";a="328838043"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2020 04:26:07 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kAX5Z-00BJNP-2l; Tue, 25 Aug 2020 14:26:05 +0300
+Date:   Tue, 25 Aug 2020 14:26:05 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH v1] sched/topology: Make compiler happy about unused
+ constant definitions
+Message-ID: <20200825112605.GV1891694@smile.fi.intel.com>
+References: <20200824153902.57875-1-andriy.shevchenko@linux.intel.com>
+ <jhjeenwdl7u.mognet@arm.com>
+ <20200825082636.GQ1891694@smile.fi.intel.com>
+ <jhjd03fdrn3.mognet@arm.com>
+ <jhjblizdofu.mognet@arm.com>
+ <20200825112405.GU1891694@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200819071633.76494-3-alexandru.ardelean@analog.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200825112405.GU1891694@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-08-20, 10:16, Alexandru Ardelean wrote:
-> All these attributes will be read from registers in newer core versions, so
-> just wrap the logic into a function.
+On Tue, Aug 25, 2020 at 02:24:05PM +0300, Andy Shevchenko wrote:
+> On Tue, Aug 25, 2020 at 11:12:21AM +0100, Valentin Schneider wrote:
+> > On 25/08/20 10:03, Valentin Schneider wrote:
+> > > On 25/08/20 09:26, Andy Shevchenko wrote:
+> > >> On Mon, Aug 24, 2020 at 06:09:41PM +0100, Valentin Schneider wrote:
+> > >>> On 24/08/20 16:39, Andy Shevchenko wrote:
+> > >>> > Compilation of almost each file ends up with
+> > >>> >
+> > >>> >  In file included from .../include/linux/energy_model.h:10,
+> > >>> >                 from .../include/linux/device.h:16,
+> > >>> >                 from .../drivers/spi/spi.c:8:
+> > >>> >  .../include/linux/sched/topology.h:30:27: warning: ‘SD_DEGENERATE_GROUPS_MASK’ defined but not used [-Wunused-const-variable=]
+> > >>> >     30 | static const unsigned int SD_DEGENERATE_GROUPS_MASK =
+> > >>> >        |                           ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > >>> >  ...
+> > >>> >
+> > >>> > Make compiler happy by annotating the static constants with __maybwe_unused.
+> > 
+> > > Sorry, that's what I get for trying to be too succinct; what I tried to say
+> > > was that SD_DEGENERATE_GROUPS_MASK should very much be used for SMP. If the
+> > > build is !SMP, it shouldn't even be defined, IOW I'm perplexed as to where
+> > > this is coming from.
+> > 
+> > So I see how having this as a constvar rather than a constexpr is somewhat
+> > daft (we get an instance per compilation unit), but none of my compilers
+> > seem to complain (even with W=1). AFAIA the kernelbot didn't catch any of
+> > it either.
+> > 
+> > Out of curiosity, what's your compiler & compiler version?
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/dma/dma-axi-dmac.c | 39 ++++++++++++++++++++++++--------------
->  1 file changed, 25 insertions(+), 14 deletions(-)
+> % gcc --version
+> gcc (Debian 10.2.0-5) 10.2.0
 > 
-> diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
-> index 07665c60c21b..473c4a159c89 100644
-> --- a/drivers/dma/dma-axi-dmac.c
-> +++ b/drivers/dma/dma-axi-dmac.c
-> @@ -774,6 +774,28 @@ static int axi_dmac_parse_chan_dt(struct device_node *of_chan,
->  	return 0;
->  }
->  
-> +static int axi_dmac_parse_dt(struct device *dev, struct axi_dmac *dmac)
-> +{
-> +	struct device_node *of_channels, *of_chan;
-> +	int ret;
-> +
-> +	of_channels = of_get_child_by_name(dev->of_node, "adi,channels");
-> +	if (of_channels == NULL)
-> +		return -ENODEV;
-> +
-> +	for_each_child_of_node(of_channels, of_chan) {
-> +		ret = axi_dmac_parse_chan_dt(of_chan, &dmac->chan);
-> +		if (ret) {
-> +			of_node_put(of_chan);
-> +			of_node_put(of_channels);
-> +			return -EINVAL;
-> +		}
-> +	}
-> +	of_node_put(of_channels);
-> +
-> +	return 0;
-> +}
-> +
->  static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
->  {
->  	struct axi_dmac_chan *chan = &dmac->chan;
-> @@ -823,7 +845,6 @@ static int axi_dmac_detect_caps(struct axi_dmac *dmac, unsigned int version)
->  
->  static int axi_dmac_probe(struct platform_device *pdev)
->  {
-> -	struct device_node *of_channels, *of_chan;
->  	struct dma_device *dma_dev;
->  	struct axi_dmac *dmac;
->  	struct resource *res;
-> @@ -856,19 +877,9 @@ static int axi_dmac_probe(struct platform_device *pdev)
->  
->  	INIT_LIST_HEAD(&dmac->chan.active_descs);
->  
-> -	of_channels = of_get_child_by_name(pdev->dev.of_node, "adi,channels");
-> -	if (of_channels == NULL)
-> -		return -ENODEV;
-> -
-> -	for_each_child_of_node(of_channels, of_chan) {
-> -		ret = axi_dmac_parse_chan_dt(of_chan, &dmac->chan);
-> -		if (ret) {
-> -			of_node_put(of_chan);
-> -			of_node_put(of_channels);
-> -			return -EINVAL;
-> -		}
-> -	}
-> -	of_node_put(of_channels);
-> +	ret = axi_dmac_parse_dt(&pdev->dev, dmac);
-> +	if (ret < 0)
+> % make O=... W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
+> 
+> > Alternatively we can make this a "proper" constant expression with the
+> > below.
+> 
+> It doesn't fix another static const in the same file, though that one requires
+> DEBUG_SCHED to be enabled.
+> 
+> Do you want me to split this fix and fix only the other case?
 
-this need to jump to err_clk_disable
+Just checked and the other case has been brought by
 
-> +		return ret;
->  
->  	pdev->dev.dma_parms = &dmac->dma_parms;
->  	dma_set_max_seg_size(&pdev->dev, UINT_MAX);
-> -- 
-> 2.17.1
+b6e862f38672 ("sched/topology: Define and assign sched_domain flag metadata")
+
+with your authorship.
 
 -- 
-~Vinod
+With Best Regards,
+Andy Shevchenko
+
+
