@@ -2,117 +2,182 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F24920786
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F1F320786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598372511;
-	bh=PoI9JF5btHk5sSTw0bcJpdoiKWYA/9tmzXn+FNP0WxI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EERE796prbgeRHZtmD8rSJBuWL2nwkYL+xjMRhA18IunD7dAtAit3/vmgjUFtaKHA
-	 lxZFvvJJWBXX7uXzyWlZD0M+qy4Tpit0tuoFBiM9mnCiIMIt0UroIvY22Id3z7kHYZ
-	 kCbDLp9ue++RaJ1wrtRL3PD9u39xm8170YrEKmr0=
+	s=default; t=1598372552;
+	bh=Ob6Ya4sG/9TFYtRrP6g9VXPseZ2X38wAlcrlrPayfhY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=HHwRfT4CRwTZe6Jm5Tfw8oD7YrhFeKuaYRn6jLkdkLZRwjIr+B7mfmEXdszuGEI5N
+	 SeQO+8kGuzHA6goYukWUc/ZvdiiwDrRhtOMENP6jIoeDufAvTyDAp/dAAQwqcjOm2l
+	 fb0Epjabcl5LX8GrqXcBc3kFseJnF9v/K0whNjBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgHYQVs (ORCPT
+        id S1727104AbgHYQWZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:21:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52622 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 12:22:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726878AbgHYQVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:21:25 -0400
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725805AbgHYQWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 12:22:21 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF16920866;
-        Tue, 25 Aug 2020 16:21:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 204672076C;
+        Tue, 25 Aug 2020 16:22:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598372476;
-        bh=PoI9JF5btHk5sSTw0bcJpdoiKWYA/9tmzXn+FNP0WxI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0ufv1R6f98uidMZFudDJ8MTfpbqeHXQrWZGk9/QedpzZuvlM0UPwbt0hgfL48dfqZ
-         scO2df1aOvVhBo7drveZAJd3yqqxhWHzwJKtRlQgImvQcFH5NzR/pbmCr6OyNmwcp1
-         DhYvoOXlfXSW/00+rsrIqYg5xhe4Vy5Q9zWScBwk=
-Received: by mail-oo1-f46.google.com with SMTP id u28so2830810ooe.12;
-        Tue, 25 Aug 2020 09:21:15 -0700 (PDT)
-X-Gm-Message-State: AOAM531erWDC7PYzJ1+4F/XQpuA0r+Afp3yGEKtGNdsSu1XhqanRX6UC
-        uB5EydXsqIwbgosRZMa59/vQCMTxNalkQuichQ==
-X-Google-Smtp-Source: ABdhPJzxUfkNriotpHAGv5AQAyBKuk14XowJiqNyCzseH1wr+QZWzE8abqHiFPx6mMQ/UOoJUCGoJ/0E0Jxv6EzFixo=
-X-Received: by 2002:a4a:330b:: with SMTP id q11mr7411742ooq.50.1598372475009;
- Tue, 25 Aug 2020 09:21:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <1598255421-8274-1-git-send-email-sagar.kadam@sifive.com>
- <1598255421-8274-2-git-send-email-sagar.kadam@sifive.com> <20200824173539.GA2939042@bogus>
- <DM6PR13MB3451089239FDA8F87BA6410497570@DM6PR13MB3451.namprd13.prod.outlook.com>
-In-Reply-To: <DM6PR13MB3451089239FDA8F87BA6410497570@DM6PR13MB3451.namprd13.prod.outlook.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 25 Aug 2020 10:21:03 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+AfvgpXDt4vQmg2UcV7ARYKPw6hxJvuLotJH5xApz6cw@mail.gmail.com>
-Message-ID: <CAL_Jsq+AfvgpXDt4vQmg2UcV7ARYKPw6hxJvuLotJH5xApz6cw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] dt-bindings: riscv: sifive-l2-cache: convert bindings
- to json-schema
-To:     Sagar Kadam <sagar.kadam@openfive.com>
-Cc:     "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>,
-        Yash Shah <yash.shah@openfive.com>,
-        "palmer@dabbelt.com" <palmer@dabbelt.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
+        s=default; t=1598372540;
+        bh=Ob6Ya4sG/9TFYtRrP6g9VXPseZ2X38wAlcrlrPayfhY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=yj+xSLQWrJYsteoxUDzI4203SRM4N7vwTUF/ZLxu3kZZTD61PsVNefCJ2heTYdXez
+         ZjUPhgm7YB7fwVIZoz++Avg+NgquXhY3ARdasGto7IuSRSJT7cNRqt1af9BdF/Zw0o
+         sQQn//fM6Q7RI/4QY5VStkEfy1CYo69EUGd8g2to=
+Message-ID: <578fb1e557d1990f768b7fdf5c6e4505db4c24e6.camel@kernel.org>
+Subject: Re: [PATCH v2] fs/ceph: use pipe_get_pages_alloc() for pipe
+From:   Jeff Layton <jlayton@kernel.org>
+To:     John Hubbard <jhubbard@nvidia.com>, willy@infradead.org
+Cc:     akpm@linux-foundation.org, axboe@kernel.dk,
+        ceph-devel@vger.kernel.org, hch@infradead.org, idryomov@gmail.com,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, viro@zeniv.linux.org.uk,
+        "Yan, Zheng" <ukernel@gmail.com>
+Date:   Tue, 25 Aug 2020 12:22:17 -0400
+In-Reply-To: <20200825012034.1962362-1-jhubbard@nvidia.com>
+References: <20200824185400.GE17456@casper.infradead.org>
+         <20200825012034.1962362-1-jhubbard@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 2:47 AM Sagar Kadam <sagar.kadam@openfive.com> wrote:
->
-> Hello Rob,
->
-> > -----Original Message-----
-> > From: Rob Herring <robh@kernel.org>
-> > Sent: Monday, August 24, 2020 11:06 PM
-> > To: Sagar Kadam <sagar.kadam@openfive.com>
-> > Cc: aou@eecs.berkeley.edu; devicetree@vger.kernel.org; Paul Walmsley (
-> > Sifive) <paul.walmsley@sifive.com>; robh+dt@kernel.org; Yash Shah
-> > <yash.shah@openfive.com>; palmer@dabbelt.com; linux-
-> > kernel@vger.kernel.org; linux-riscv@lists.infradead.org
-> > Subject: Re: [PATCH 1/1] dt-bindings: riscv: sifive-l2-cache: convert bindings
-> > to json-schema
-> >
-> > [External Email] Do not click links or attachments unless you recognize the
-> > sender and know the content is safe
-> >
-> > On Mon, 24 Aug 2020 13:20:21 +0530, Sagar Kadam wrote:
-> > > Convert the device tree bindings for the SiFive's FU540-C000 SoC's L2
-> > > Cache controller to YAML format.
-> > >
-> > > Signed-off-by: Sagar Kadam <sagar.kadam@sifive.com>
-> > > ---
-> > >  .../devicetree/bindings/riscv/sifive-l2-cache.txt  | 51 ------------
-> > > .../devicetree/bindings/riscv/sifive-l2-cache.yaml | 93
-> > > ++++++++++++++++++++++
-> > >  2 files changed, 93 insertions(+), 51 deletions(-)  delete mode
-> > > 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
-> > >  create mode 100644
-> > > Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-> > >
-> >
-> >
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> >
->
-> I had checked using DT_SCHEMA_FILES option due to which it didn't catch any error on other
-> schemas. Without this I could regenerate the error you mentioned.
-> I will fix it and update. Sorry for the error.
+On Mon, 2020-08-24 at 18:20 -0700, John Hubbard wrote:
+> This reduces, by one, the number of callers of iov_iter_get_pages().
+> That's helpful because these calls are being audited and converted over
+> to use iov_iter_pin_user_pages(), where applicable. And this one here is
+> already known by the caller to be only for ITER_PIPE, so let's just
+> simplify it now.
+> 
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+> 
+> OK, here's a v2 that does EXPORT_SYMBOL_GPL, instead of EXPORT_SYMBOL,
+> that's the only change from v1. That should help give this patch a
+> clear bill of passage. :)
+> 
+> thanks,
+> John Hubbard
+> NVIDIA
+> 
+>  fs/ceph/file.c      | 3 +--
+>  include/linux/uio.h | 3 ++-
+>  lib/iov_iter.c      | 6 +++---
+>  3 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index d51c3f2fdca0..d3d7dd957390 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -879,8 +879,7 @@ static ssize_t ceph_sync_read(struct kiocb *iocb, struct iov_iter *to,
+>  		more = len < iov_iter_count(to);
+>  
+>  		if (unlikely(iov_iter_is_pipe(to))) {
+> -			ret = iov_iter_get_pages_alloc(to, &pages, len,
+> -						       &page_off);
+> +			ret = pipe_get_pages_alloc(to, &pages, len, &page_off);
+>  			if (ret <= 0) {
+>  				ceph_osdc_put_request(req);
+>  				ret = -ENOMEM;
+> diff --git a/include/linux/uio.h b/include/linux/uio.h
+> index 3835a8a8e9ea..270a4dcf5453 100644
+> --- a/include/linux/uio.h
+> +++ b/include/linux/uio.h
+> @@ -226,7 +226,8 @@ ssize_t iov_iter_get_pages(struct iov_iter *i, struct page **pages,
+>  ssize_t iov_iter_get_pages_alloc(struct iov_iter *i, struct page ***pages,
+>  			size_t maxsize, size_t *start);
+>  int iov_iter_npages(const struct iov_iter *i, int maxpages);
+> -
+> +ssize_t pipe_get_pages_alloc(struct iov_iter *i, struct page ***pages,
+> +			     size_t maxsize, size_t *start);
+>  const void *dup_iter(struct iov_iter *new, struct iov_iter *old, gfp_t flags);
+>  
+>  static inline size_t iov_iter_count(const struct iov_iter *i)
+> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+> index 5e40786c8f12..6290998df480 100644
+> --- a/lib/iov_iter.c
+> +++ b/lib/iov_iter.c
+> @@ -1355,9 +1355,8 @@ static struct page **get_pages_array(size_t n)
+>  	return kvmalloc_array(n, sizeof(struct page *), GFP_KERNEL);
+>  }
+>  
+> -static ssize_t pipe_get_pages_alloc(struct iov_iter *i,
+> -		   struct page ***pages, size_t maxsize,
+> -		   size_t *start)
+> +ssize_t pipe_get_pages_alloc(struct iov_iter *i, struct page ***pages,
+> +			     size_t maxsize, size_t *start)
+>  {
+>  	struct page **p;
+>  	unsigned int iter_head, npages;
+> @@ -1387,6 +1386,7 @@ static ssize_t pipe_get_pages_alloc(struct iov_iter *i,
+>  		kvfree(p);
+>  	return n;
+>  }
+> +EXPORT_SYMBOL_GPL(pipe_get_pages_alloc);
+>  
+>  ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
+>  		   struct page ***pages, size_t maxsize,
 
-Update your kernel. DT_SCHEMA_FILES setting no longer matters on
-current tree. It only affects 'dtbs_check' now.
+Thanks. I've got a v1 of this in the ceph-client/testing branch and it
+seems fine so far.
 
-Rob
+I'd prefer an ack from Al on one or the other though, since I'm not sure
+he wants to expose this primitive, and in the past he hasn't been
+enamored with EXPORT_SYMBOL_GPL, because its meaning wasn't well
+defined. Maybe that's changed since.
+
+As a side note, Al also asked privately why ceph special cases
+ITER_PIPE. I wasn't sure either, so I did a bit of git-archaeology. The
+change was added here:
+
+---------------------------8<---------------------------
+commit
+7ce469a53e7106acdaca2e25027941d0f7c12a8e
+Author: Yan, Zheng <zyan@redhat.com>
+Date:   Tue Nov 8 21:54:34 2016 +0800
+
+    ceph: fix splice read for no Fc capability case
+    
+    When iov_iter type is ITER_PIPE, copy_page_to_iter() increases
+    the page's reference and add the page to a pipe_buffer. It also
+    set the pipe_buffer's ops to page_cache_pipe_buf_ops. The comfirm
+    callback in page_cache_pipe_buf_ops expects the page is from page
+    cache and uptodate, otherwise it return error.
+    
+    For ceph_sync_read() case, pages are not from page cache. So we
+    can't call copy_page_to_iter() when iov_iter type is ITER_PIPE.
+    The fix is using iov_iter_get_pages_alloc() to allocate pages
+    for the pipe. (the code is similar to default_file_splice_read)
+    
+    Signed-off-by: Yan, Zheng <zyan@redhat.com>
+---------------------------8<---------------------------
+
+If we don't have Fc (FILE_CACHE) caps then the client's not allowed to
+cache data and so we can't use the pagecache. I'm not certain special
+casing pipes in ceph, is the best approach to handle that, but the
+confirm callback still seems to work the same way today.
+
+Cheers,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
