@@ -4,56 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A49C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:52:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7221EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 560282074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:52:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B15C2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:52:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d4qTKKQp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZcJRGGKi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbgHYTwL (ORCPT
+        id S1727073AbgHYTwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:52:11 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44869 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726946AbgHYTvj (ORCPT
+        Tue, 25 Aug 2020 15:52:17 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46297 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726882AbgHYTv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:51:39 -0400
+        Tue, 25 Aug 2020 15:51:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598385097;
+        s=mimecast20190719; t=1598385087;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QCjr+uByIBfL0haFw4aKDUBmX5sSqlZyqM7i/4LR6I4=;
-        b=d4qTKKQpUIgq9NO1ZRCPXccww/lywY21a4q+oZcgLVelKW6GipfTj5ixkIFIunDKwtI6zr
-        5nRYo/wQjOj9qZAtS0dG9ANHe5/sdSaCFK7icwPJAeNdplolScXon+GC+x/tzoHk7ZA0xo
-        k+WTwzSm7LuMqyGA32mFsxnX8Al/MuU=
+        bh=2jiIwkGxd1SkTj+7Kxsf1Q7jJ88Dgi0wGUnLUOVCoFQ=;
+        b=ZcJRGGKih1pl5GFeLFbOPYeNMVfw8m2N9WHYjbVsb4EZezoRhZko+ksKdpQ9zVu3Cb2GZS
+        tCY34Ye+Svxf57Jvfb8S9VCqyVvmvokQX5wd+DxXIh9uCuTrJvFwwkXYRAIYHuzqRbZ7R0
+        zto5iWVZvfnFDRDjO7sAjV52dnqcWcs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-dZePTfZuOJOl-KndB0GLKQ-1; Tue, 25 Aug 2020 15:51:35 -0400
-X-MC-Unique: dZePTfZuOJOl-KndB0GLKQ-1
+ us-mta-418-4CF-8dtsNOKEmjQ5BzCTeA-1; Tue, 25 Aug 2020 15:51:25 -0400
+X-MC-Unique: 4CF-8dtsNOKEmjQ5BzCTeA-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 392851005E5C;
-        Tue, 25 Aug 2020 19:51:34 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1E6C8030B2;
+        Tue, 25 Aug 2020 19:51:22 +0000 (UTC)
 Received: from Whitewolf.redhat.com (ovpn-120-227.rdu2.redhat.com [10.10.120.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D9EC5D9D3;
-        Tue, 25 Aug 2020 19:51:33 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D53B75D9D3;
+        Tue, 25 Aug 2020 19:51:20 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
         nouveau@lists.freedesktop.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+Cc:     Sean Paul <sean@poorly.run>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v4 17/20] drm/nouveau/kms/nv50-: Add support for DP_SINK_COUNT
-Date:   Tue, 25 Aug 2020 15:50:24 -0400
-Message-Id: <20200825195027.74681-18-lyude@redhat.com>
+Subject: [RFC v4 13/20] drm/i915/dp: Extract drm_dp_downstream_read_info()
+Date:   Tue, 25 Aug 2020 15:50:20 -0400
+Message-Id: <20200825195027.74681-14-lyude@redhat.com>
 In-Reply-To: <20200825195027.74681-1-lyude@redhat.com>
 References: <20200825195027.74681-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -64,153 +80,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is another bit that we never implemented for nouveau: dongle
-detection. When a "dongle", e.g. an active display adaptor, is hooked up
-to the system and causes an HPD to be fired, we don't actually know
-whether or not there's anything plugged into the dongle without checking
-the sink count. As a result, plugging in a dongle without anything
-plugged into it currently results in a bogus EDID retrieval error in the kernel log.
+We're going to be doing the same probing process in nouveau for
+determining downstream DP port capabilities, so let's deduplicate the
+work by moving i915's code for handling this into a shared helper:
+drm_dp_downstream_read_info().
 
-Additionally, most dongles won't send another long HPD signal if the
-user suddenly plugs something in, they'll only send a short HPD IRQ with
-the expectation that the source will check the sink count and reprobe
-the connector if it's changed - something we don't actually do. As a
-result, nothing will happen if the user plugs the dongle in before
-plugging something into the dongle.
+Note that when we do this, we also do make some functional changes while
+we're at it:
+* We always clear the downstream port info before trying to read it,
+  just to make things easier for the caller
+* We skip reading downstream port info if the DPCD indicates that we
+  don't support downstream port info
+* We only read as many bytes as needed for the reported number of
+  downstream ports, no sense in reading the whole thing every time
 
-So, let's fix this by checking the sink count in both
-nouveau_dp_probe_dpcd() and nouveau_dp_irq(), and reprobing the
-connector if things change.
+v2:
+* Fixup logic for calculating the downstream port length to account for
+  the fact that downstream port caps can be either 1 byte or 4 bytes
+  long. We can actually skip fixing the max_clock/max_bpc helpers here
+  since they all check for DP_DETAILED_CAP_INFO_AVAILABLE anyway.
+* Fix ret code check for drm_dp_dpcd_read
 
+Reviewed-by: Sean Paul <sean@poorly.run>
 Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
 ---
- drivers/gpu/drm/nouveau/nouveau_dp.c      | 54 ++++++++++++++++++++---
- drivers/gpu/drm/nouveau/nouveau_encoder.h |  2 +
- 2 files changed, 51 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/drm_dp_helper.c         | 46 +++++++++++++++++++++++++
+ drivers/gpu/drm/i915/display/intel_dp.c | 14 ++------
+ include/drm/drm_dp_helper.h             |  3 ++
+ 3 files changed, 51 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
-index c200f197083f9..89afc97ee2591 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dp.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
-@@ -36,12 +36,22 @@ MODULE_PARM_DESC(mst, "Enable DisplayPort multi-stream (default: enabled)");
- static int nouveau_mst = 1;
- module_param_named(mst, nouveau_mst, int, 0400);
+diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
+index 4c21cf69dad5a..4f845995f1f66 100644
+--- a/drivers/gpu/drm/drm_dp_helper.c
++++ b/drivers/gpu/drm/drm_dp_helper.c
+@@ -423,6 +423,52 @@ bool drm_dp_send_real_edid_checksum(struct drm_dp_aux *aux,
+ }
+ EXPORT_SYMBOL(drm_dp_send_real_edid_checksum);
  
-+static bool
-+nouveau_dp_has_sink_count(struct drm_connector *connector,
-+			  struct nouveau_encoder *outp)
++static u8 drm_dp_downstream_port_count(const u8 dpcd[DP_RECEIVER_CAP_SIZE])
 +{
-+	return drm_dp_has_sink_count(connector, outp->dp.dpcd,
-+				     &outp->dp.desc);
++	u8 port_count = dpcd[DP_DOWN_STREAM_PORT_COUNT] & DP_PORT_COUNT_MASK;
++
++	if (dpcd[DP_DOWNSTREAMPORT_PRESENT] & DP_DETAILED_CAP_INFO_AVAILABLE && port_count > 4)
++		port_count = 4;
++
++	return port_count;
 +}
 +
- static enum drm_connector_status
- nouveau_dp_probe_dpcd(struct nouveau_connector *nv_connector,
- 		      struct nouveau_encoder *outp)
- {
-+	struct drm_connector *connector = &nv_connector->base;
- 	struct drm_dp_aux *aux = &nv_connector->aux;
- 	struct nv50_mstm *mstm = NULL;
-+	enum drm_connector_status status = connector_status_disconnected;
- 	int ret;
- 	u8 *dpcd = outp->dp.dpcd;
- 
-@@ -50,9 +60,9 @@ nouveau_dp_probe_dpcd(struct nouveau_connector *nv_connector,
- 		ret = drm_dp_read_desc(aux, &outp->dp.desc,
- 				       drm_dp_is_branch(dpcd));
- 		if (ret < 0)
--			return connector_status_disconnected;
-+			goto out;
- 	} else {
--		return connector_status_disconnected;
-+		goto out;
- 	}
- 
- 	if (nouveau_mst) {
-@@ -61,12 +71,33 @@ nouveau_dp_probe_dpcd(struct nouveau_connector *nv_connector,
- 			mstm->can_mst = drm_dp_has_mst(aux, dpcd);
- 	}
- 
-+	if (nouveau_dp_has_sink_count(connector, outp)) {
-+		ret = drm_dp_get_sink_count(aux);
-+		if (ret < 0)
-+			goto out;
-+
-+		outp->dp.sink_count = ret;
-+
-+		/*
-+		 * Dongle connected, but no display. Don't bother reading
-+		 * downstream port info
-+		 */
-+		if (!outp->dp.sink_count)
-+			return connector_status_disconnected;
-+	}
-+
- 	ret = drm_dp_downstream_read_info(aux, dpcd,
- 					  outp->dp.downstream_ports);
- 	if (ret < 0)
--		return connector_status_disconnected;
-+		goto out;
- 
--	return connector_status_connected;
-+	status = connector_status_connected;
-+out:
-+	if (status != connector_status_connected) {
-+		/* Clear any cached info */
-+		outp->dp.sink_count = 0;
-+	}
-+	return status;
- }
- 
- int
-@@ -159,6 +190,8 @@ void nouveau_dp_irq(struct nouveau_drm *drm,
- 	struct drm_connector *connector = &nv_connector->base;
- 	struct nouveau_encoder *outp = find_encoder(connector, DCB_OUTPUT_DP);
- 	struct nv50_mstm *mstm;
++/**
++ * drm_dp_downstream_read_info() - read DPCD downstream port info if available
++ * @aux: DisplayPort AUX channel
++ * @dpcd: A cached copy of the port's DPCD
++ * @downstream_ports: buffer to store the downstream port info in
++ *
++ * Returns: 0 if either the downstream port info was read successfully or
++ * there was no downstream info to read, or a negative error code otherwise.
++ */
++int drm_dp_downstream_read_info(struct drm_dp_aux *aux,
++				const u8 dpcd[DP_RECEIVER_CAP_SIZE],
++				u8 downstream_ports[DP_MAX_DOWNSTREAM_PORTS])
++{
 +	int ret;
-+	bool send_hpd = false;
- 
- 	if (!outp)
- 		return;
-@@ -170,12 +203,23 @@ void nouveau_dp_irq(struct nouveau_drm *drm,
- 
- 	if (mstm && mstm->is_mst) {
- 		if (!nv50_mstm_service(drm, nv_connector, mstm))
--			nouveau_connector_hpd(connector);
-+			send_hpd = true;
- 	} else {
- 		drm_dp_cec_irq(&nv_connector->aux);
++	u8 len;
 +
-+		if (nouveau_dp_has_sink_count(connector, outp)) {
-+			ret = drm_dp_get_sink_count(&nv_connector->aux);
-+			if (ret != outp->dp.sink_count)
-+				send_hpd = true;
-+			if (ret >= 0)
-+				outp->dp.sink_count = ret;
-+		}
++	memset(downstream_ports, 0, DP_MAX_DOWNSTREAM_PORTS);
++
++	/* No downstream info to read */
++	if (!drm_dp_is_branch(dpcd) ||
++	    dpcd[DP_DPCD_REV] < DP_DPCD_REV_10 ||
++	    !(dpcd[DP_DOWNSTREAMPORT_PRESENT] & DP_DWN_STRM_PORT_PRESENT))
++		return 0;
++
++	len = drm_dp_downstream_port_count(dpcd);
++	if (dpcd[DP_DOWNSTREAMPORT_PRESENT] & DP_DETAILED_CAP_INFO_AVAILABLE)
++		len *= 4;
++
++	ret = drm_dp_dpcd_read(aux, DP_DOWNSTREAM_PORT_0, downstream_ports, len);
++	if (ret < 0)
++		return ret;
++
++	return ret == len ? 0 : -EIO;
++}
++EXPORT_SYMBOL(drm_dp_downstream_read_info);
++
+ /**
+  * drm_dp_downstream_max_clock() - extract branch device max
+  *                                 pixel rate for legacy VGA
+diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+index 1e29d3a012856..984e49194ca31 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp.c
++++ b/drivers/gpu/drm/i915/display/intel_dp.c
+@@ -4685,18 +4685,8 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
+ 			return false;
  	}
  
- 	mutex_unlock(&outp->dp.hpd_irq_lock);
-+
-+	if (send_hpd)
-+		nouveau_connector_hpd(connector);
+-	if (!drm_dp_is_branch(intel_dp->dpcd))
+-		return true; /* native DP sink */
+-
+-	if (intel_dp->dpcd[DP_DPCD_REV] == 0x10)
+-		return true; /* no per-port downstream info */
+-
+-	if (drm_dp_dpcd_read(&intel_dp->aux, DP_DOWNSTREAM_PORT_0,
+-			     intel_dp->downstream_ports,
+-			     DP_MAX_DOWNSTREAM_PORTS) < 0)
+-		return false; /* downstream port status fetch failed */
+-
+-	return true;
++	return drm_dp_downstream_read_info(&intel_dp->aux, intel_dp->dpcd,
++					   intel_dp->downstream_ports) == 0;
  }
  
- /* TODO:
-diff --git a/drivers/gpu/drm/nouveau/nouveau_encoder.h b/drivers/gpu/drm/nouveau/nouveau_encoder.h
-index c1924a4529a7b..21937f1c7dd90 100644
---- a/drivers/gpu/drm/nouveau/nouveau_encoder.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_encoder.h
-@@ -74,6 +74,8 @@ struct nouveau_encoder {
- 			u8 dpcd[DP_RECEIVER_CAP_SIZE];
- 			u8 downstream_ports[DP_MAX_DOWNSTREAM_PORTS];
- 			struct drm_dp_desc desc;
-+
-+			u8 sink_count;
- 		} dp;
- 	};
+ static bool
+diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+index 5c28199248626..1349f16564ace 100644
+--- a/include/drm/drm_dp_helper.h
++++ b/include/drm/drm_dp_helper.h
+@@ -1613,6 +1613,9 @@ int drm_dp_dpcd_read_link_status(struct drm_dp_aux *aux,
+ bool drm_dp_send_real_edid_checksum(struct drm_dp_aux *aux,
+ 				    u8 real_edid_checksum);
  
++int drm_dp_downstream_read_info(struct drm_dp_aux *aux,
++				const u8 dpcd[DP_RECEIVER_CAP_SIZE],
++				u8 downstream_ports[DP_MAX_DOWNSTREAM_PORTS]);
+ int drm_dp_downstream_max_clock(const u8 dpcd[DP_RECEIVER_CAP_SIZE],
+ 				const u8 port_cap[4]);
+ int drm_dp_downstream_max_bpc(const u8 dpcd[DP_RECEIVER_CAP_SIZE],
 -- 
 2.26.2
 
