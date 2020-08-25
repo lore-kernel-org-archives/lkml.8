@@ -4,116 +4,119 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EDBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AC5C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 309722075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D42C2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:40:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="BAO/udpJ";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PTp5v662"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="eK9D0Nd5";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gDXbpy3J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgHYNjj (ORCPT
+        id S1727036AbgHYNkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:39:39 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:44865 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726449AbgHYNgN (ORCPT
+        Tue, 25 Aug 2020 09:40:05 -0400
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:50467 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726374AbgHYNgK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:36:13 -0400
+        Tue, 25 Aug 2020 09:36:10 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id EB839CE3;
-        Tue, 25 Aug 2020 09:36:11 -0400 (EDT)
+        by mailnew.west.internal (Postfix) with ESMTP id 6E67ACC1;
+        Tue, 25 Aug 2020 09:36:09 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:12 -0400
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:36:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
         date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=W20LfYmY/jq/r96+vAKE5otdRCg
-        5oUAy53ig3vgXUYk=; b=BAO/udpJGYYKlpoiXR7z1KvcH3kzYZOu/9U37p4piqb
-        EIpqZkorX/aNnW81KgeOxjy+FRP9GTmMSqOadDxJjonzmfTtfXym9xrmCqNBxnET
-        6Bd3jEnZk8PxHP8xhIPYNVbambJr9eKkMAT5D6eNVDocFtzvw//yR2lxPM7SRB4n
-        rb7KaK85PcLJZ7ghHIjwa0eoBlUkPDTr49DSCetSmY8bVb4eLj4yhFVQelJidyZm
-        EdmiX2UOjYVwIR3bEt34cMCWKzxURXZXYID3CWUqtRY8UY2Kvi7z2GfVpBdVowzw
-        bo7eesrZxwoinvcFUR3VePg358E/CiOE4GJvY49HePQ==
+        :content-type:in-reply-to; s=fm3; bh=5Pncf8+79KIbCdN+npAcSw2WlNr
+        zFF6U/pUENKFgIl8=; b=eK9D0Nd5H9laRnDihIy6NQHYhAc58O6B7pLdZ+Wkjto
+        I3BR9voC15hwWdY7fWUCnDglZ8dmu1B+YxRjI2pgDGYcADUdsqwBiNuuqn1J63Dq
+        fd+EyIsZWPJJnOEw2yAd5ddj9iHtfrPlNkNgX8JgeTJypdYJox6BrTTiTwcGvT7A
+        6de614Fzv+chIChMBJzJS7EYkhspp/6roKUhsVC4aFfXMxnpvSPJCz7dQtDaAsVl
+        TdKPUOH8gP5d/e2Kwy1MM2ZSL33o/7xloXX/QzCxu+IBrtT7ts/qCGAiYXCpBF3C
+        iRLWWVQDJatZw64+EaeLmC1ULXvWgmu3sR0YVTNcnjQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-type:date:from:in-reply-to
         :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=W20LfY
-        mY/jq/r96+vAKE5otdRCg5oUAy53ig3vgXUYk=; b=PTp5v662xCZueI+Y2wq88n
-        pRmFfLNMVNpNR/Ss+hPDTCIzpW5cLCUuvDzjzg2M5J9TPBHVfS6msPuo4CGHqEXW
-        0uZqFgoRsvTvXGd/Ft76p6GvYTdSG/xqTTt4KOQa7YoGqxGsxdF8v+YSczqGPbTx
-        FRdZzZvN0Nt8hGMjEF9LAVdezh0D2l/98dRVc783HhtVdSEkqqDydMB8kO3WSF5i
-        9oZnkAhKINFEBDxkLYHDwnHfm6cGHrCBYyQRwyTx2E19TUBVu9VpEF5YI6njB9r4
-        oTkvXtwDFMPpJpM8mIsPyvYk7khl3NIh6hDTaYdnv/kmFUACvObxRVER5KeZJbnw
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=5Pncf8
+        +79KIbCdN+npAcSw2WlNrzFF6U/pUENKFgIl8=; b=gDXbpy3JA8Zsj+BxVWKKXa
+        MdBjRkCqtbkiuSXk9T5HiroG4ziuvkxHWM/I5ZKZcT8DCyieDZhkFu5lNrywtkvv
+        PasQHBJM+qgirAl+yUqugqJ/oKunHTdxuR67YN4d2G6KG7Cg3+SAaxJ0aHQBSVd9
+        FhxC448mQ86nefP/BzId6NJjudAxyFxAXDmRh9St9fHlf2gwVL6oI/DuB5Vy4bae
+        CYYBJqSO6kpZEr1SQItq5VqsHgh0wjBF+7OSwcMF4eOFKcAIb3ROm2UX04hAHbUP
+        ddLLuk6WvMIXZC5d6wOgBRfu3wdXXPwv0+/EXLct1YRpCbUkSYXkKUQkThcDpASQ
         ==
-X-ME-Sender: <xms:yxNFXz9DrfW4lixUrqRy8odedgf4IE9r4IwjZrV1JBWNnqn0WJuOsw>
+X-ME-Sender: <xms:yBNFX2wrWHMw_jJGyx0EGlYa7PVwZxy_0grW8xHtcBp5T4ik2IDz2g>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
     vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
     htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudekne
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgepudegne
     curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:yxNFX_tXOi1dyJyjqVdEXtuKiK-ODI2MeedO0JKA4Tg-pNiYeKlUMw>
-    <xmx:yxNFXxBQp2nCsufYgvojUp0mvpovhdl52cccGmnrRJpHPdZ2bMkFKQ>
-    <xmx:yxNFX_fizkFnmVL6msLX6qWnz69SxXXpSsscv-gvT_LcIvZa8pgk7A>
-    <xmx:yxNFX32SoVjkDjsg50E3MzoBeb9QNjEjenrQR7aKHec3SLoGMJVryA>
+X-ME-Proxy: <xmx:yBNFXyShE0sgyb5W6xhqStBA1xLf7-tKVEkh-nQVugeKE58BNsbhGA>
+    <xmx:yBNFX4VMsla9DLvKXYiB0c06G105ttH48i_A80E5uViZJ-FkJuXvnw>
+    <xmx:yBNFX8h-KUCLE7rFk0SwkTxcPBmJj-IAzVm5PHwBbFNXUJle9fqj2w>
+    <xmx:yRNFX4vhOy0E9uvw6TtLoBviLOE28wFVGLZ7vAMq0Rbu8DRvNfMcsYTBZJY>
 Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 350193280068;
-        Tue, 25 Aug 2020 09:36:11 -0400 (EDT)
-Date:   Tue, 25 Aug 2020 10:50:20 +0200
+        by mail.messagingengine.com (Postfix) with ESMTPA id 527E03280066;
+        Tue, 25 Aug 2020 09:36:08 -0400 (EDT)
+Date:   Tue, 25 Aug 2020 10:49:19 +0200
 From:   Maxime Ripard <maxime@cerno.tech>
 To:     Frank Lee <frank@allwinnertech.com>
-Cc:     robh+dt@kernel.org, wens@csie.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+Cc:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
+        robh+dt@kernel.org, wens@csie.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         tiny.windzz@gmail.com, huangshuosheng@allwinnertech.com,
-        liyong@allwinnertech.com
-Subject: Re: [PATCH v5 14/16] arm64: allwinner: A100: add the basical
- Allwinner A100 DTSI file
-Message-ID: <20200825085020.h5xbvcwhxios2pks@gilmour.lan>
+        liyong@allwinnertech.com, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 11/16] dt-bindings: irq: sun7i-nmi: fix dt-binding for
+ a80 nmi
+Message-ID: <20200825084919.y5kp5telhrg7v43j@gilmour.lan>
 References: <cover.1595572867.git.frank@allwinnertech.com>
- <815a458de74b79eb649972de786e647be3846424.1595572867.git.frank@allwinnertech.com>
+ <fb081585c4fedcb9b8b95e5f16879dff482c9717.1595572867.git.frank@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pu6nfz4n2q2sbo4w"
+        protocol="application/pgp-signature"; boundary="byyatgm2s2dabaqh"
 Content-Disposition: inline
-In-Reply-To: <815a458de74b79eb649972de786e647be3846424.1595572867.git.frank@allwinnertech.com>
+In-Reply-To: <fb081585c4fedcb9b8b95e5f16879dff482c9717.1595572867.git.frank@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---pu6nfz4n2q2sbo4w
+--byyatgm2s2dabaqh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 24, 2020 at 03:18:24PM +0800, Frank Lee wrote:
+On Fri, Jul 24, 2020 at 03:14:48PM +0800, Frank Lee wrote:
 > From: Yangtao Li <frank@allwinnertech.com>
 >=20
-> Allwinner A100 is a new SoC with Cortex-A53 cores, this commit adds
-> the basical DTSI file of it, including the clock, i2c, pins, sid, ths,
-> nmi, and UART support.
+> There is no one use "allwinner,sun9i-a80-sc-nmi". The A80 uses
+> "allwinner,sun9i-a80-nmi".
+>=20
+> Let's fix it.
 >=20
 > Signed-off-by: Yangtao Li <frank@allwinnertech.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
 Applied, thanks!
 Maxime
 
---pu6nfz4n2q2sbo4w
+--byyatgm2s2dabaqh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TQywAKCRDj7w1vZxhR
-xQuSAPwPAmxC1bfc73TvEjyu1guct31XNdPAC3s15JE1h8RtZwEAlBbbaKt7V3Xl
-3WoVFI6ZQWIdjhXX5FlJvs325lS4ZwU=
-=/g2y
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0TQjwAKCRDj7w1vZxhR
+xXiVAQDOAeUj4JX86Yrk4ExZjAfyFTXiIerWr7jVkVGTqIM/6gEAviD6il2NwCaR
+ly3k6tae3dCGUvQGwV3GgmhsplJ0pgM=
+=CwzG
 -----END PGP SIGNATURE-----
 
---pu6nfz4n2q2sbo4w--
+--byyatgm2s2dabaqh--
