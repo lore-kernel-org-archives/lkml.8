@@ -2,95 +2,103 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD2BC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4302075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0BFD20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598392176;
-	bh=9BrDq6Gjq/Y77i7qs+NbOYbjNIjZinMPZkwE9YvtUjI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rtvI34XAiUUwFERMOsWFBc3xeS1KlI9e4BxmKrWm55Dp0rydWNJxM1bq78AO46rfq
-	 gs/wtjiBze4BYckZx+782YoXEQhLWIp7VstapHblJ+jizYJEp4Hko3DbaILR/0uxhl
-	 agKAm2R+NBcoQPkXVIEEQB/uWl80b/UPIgkRBApk=
+	s=default; t=1598392249;
+	bh=gW+Kyw7s85pdMJPiT0EVkW6Spjh+vc5Xsc9aIaZqua4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=D4gs1BcMryz5Zi6bp2/xqRWhcDt1nM3j6Jq63swuhzMwKcWogZ7T84hW5779cyVBK
+	 ZuNOFLSJylEJYt6qXXp/PJSAK3EiwhwX2OAe2jy8A5apkAPoExXEfqTQnxfeaHyh1h
+	 7Qcxz/yCyzGqV+lsrEZTqt1mKVowNRZ5Y2ectBl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbgHYVtf (ORCPT
+        id S1726704AbgHYVus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:49:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48020 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 17:50:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726303AbgHYVte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 17:49:34 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1726303AbgHYVuq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 17:50:46 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACFAA2071E;
-        Tue, 25 Aug 2020 21:49:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A15A52071E;
+        Tue, 25 Aug 2020 21:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598392174;
-        bh=9BrDq6Gjq/Y77i7qs+NbOYbjNIjZinMPZkwE9YvtUjI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AVppPwLq36+HSZ5f14EL8j46bG9IbZ0AJSo/oTViYnbKjmzg3aM/nWhvjH7S+Nuzk
-         DOQ3h1H2OIJ3ngRNujyjDsESlFtSSlyTdb1oHtZO/Rz3XCjO7X/Cgq6j/Xma0xhrPV
-         eaCdA+pSkcGdyRZj8IeDDvcehjTMr9gLnQyWmeKA=
-Date:   Tue, 25 Aug 2020 22:48:58 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, vkoul@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 1/4] regmap: sdw: move to -EOPNOTSUPP
-Message-ID: <20200825214858.GK5379@sirena.org.uk>
-References: <20200825171656.75836-2-pierre-louis.bossart@linux.intel.com>
+        s=default; t=1598392246;
+        bh=gW+Kyw7s85pdMJPiT0EVkW6Spjh+vc5Xsc9aIaZqua4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=0BQ40nfdAlXqJPs3OOuI8Ssn8Z2O1utLGfnyOGGfrGgtMOdZwjF6A6hpeJPR5QK8L
+         zHVj7bNvVxIRWyAC7LyGPDLGu28DQvzx2X5ca5Y+ZPQYMZcIW5UFyhZSPDO/puDRNo
+         h4qQTdX65oO39OhH+kTAORXVv3Ory/yw/07uwYPU=
+Date:   Tue, 25 Aug 2020 16:50:44 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch RFC 34/38] x86/msi: Let pci_msi_prepare() handle non-PCI
+ MSI
+Message-ID: <20200825215044.GA1932869@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DfnuYBTqzt7sVGu3"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825171656.75836-2-pierre-louis.bossart@linux.intel.com>
-X-Cookie: Don't get to bragging.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <877dtmxvjy.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 25, 2020 at 11:30:41PM +0200, Thomas Gleixner wrote:
+> On Tue, Aug 25 2020 at 15:24, Bjorn Helgaas wrote:
+> > On Fri, Aug 21, 2020 at 02:24:58AM +0200, Thomas Gleixner wrote:
+> >> Rename it to x86_msi_prepare() and handle the allocation type setup
+> >> depending on the device type.
+> >
+> > I see what you're doing, but the subject reads a little strangely
+> 
+> Yes :(
+> 
+> > ("pci_msi_prepare() handling non-PCI" stuff) since it doesn't mention
+> > the rename.  Maybe not practical or worthwhile to split into a rename
+> > + make generic, I dunno.
+> 
+> What about
+> 
+> x86/msi: Rename and rework pci_msi_prepare() to cover non-PCI MSI
 
---DfnuYBTqzt7sVGu3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Aug 25, 2020 at 12:16:53PM -0500, Pierre-Louis Bossart wrote:
-> -ENOTSUPP is not a valid error code, use recommended value instead.
-
-What makes you say this - it's what regmap uses internally for
-unsupported operations?
-
---DfnuYBTqzt7sVGu3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9Fh0kACgkQJNaLcl1U
-h9D4Vgf7BdFX5Dbcg2/N9Rn0iKz9WFK0Q8Wf7j3HHZ9+IFyb7s1woC1ODAYmdK4V
-exXPOHHe/01Wchdbbd285hFg9dmvi0LrIgck3vu0g9RsiUu9xIKcE+WlUOJWXyKq
-0FvkMXGZA+WM4h85C9IAXgghI3aTX+rLZX0eASivujZu4m8SCii2g+oD2crk7e+5
-SBzKjm3QR7bWSSgJmhrlFFVF2gUaTLVlLiM80dymV9rS6+OtDyyptl/586owjA9q
-I9Y7II+RCy9ZeDeVjsgBcxFXsu8+MlnUd9QLT7uzqzNRBcl1jWFCLTg0bRzKq2Zx
-Au0AkyS+sLDojGFTaWGPJnECuZ4QzA==
-=Hv01
------END PGP SIGNATURE-----
-
---DfnuYBTqzt7sVGu3--
+Perfect!
