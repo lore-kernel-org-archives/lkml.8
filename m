@@ -2,223 +2,130 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1F9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E41EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD492207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 339662083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598339436;
-	bh=pQeWltEcxvf6xblO4Zb7iBrXXzII7g6ooH3nnM5Con4=;
+	s=default; t=1598339444;
+	bh=FWfgAaWELOpnq9T2ZqffNJ7A9qnO3QfKuIy+OMg+Nkc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dik6/hMaL21hA+TwTco6UGv5r2pJ2YhuSRztmQWXIh2GNAW1lt9T3Nh2lm2TTrPOU
-	 TPaEP+5r0zxYMSG5UjJ0F1BcJDucvponMj0WboRlBfrZ7NOVd7fF2LNcWoUJTmnmAr
-	 WaweHp/vaBm4AqUYRFAYVw8+CrpxfNgdMGeL6zAA=
+	b=0yQRiIy8UGX7Mzp2EEoEen6gnw9JuSvfhywi3HmcqWKB6SGlqB3eVWcCFkOk4yRpZ
+	 k2kRGjROWxoKvCcG1hP2aWMe98VbWDvtmA8zuOLu8lQaz5vGzctt8S6khTSFqcL4zn
+	 RE6XL5z3sCD3ka1copkm4DjkeJhaajZD/kZeiM9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgHYHKe (ORCPT
+        id S1729409AbgHYHKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:10:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37976 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 03:10:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729276AbgHYHK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:10:28 -0400
-Received: from localhost (unknown [122.171.38.130])
+        id S1729362AbgHYHKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 03:10:37 -0400
+Received: from localhost (p54b333df.dip0.t-ipconnect.de [84.179.51.223])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61839207FB;
-        Tue, 25 Aug 2020 07:10:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C35662074D;
+        Tue, 25 Aug 2020 07:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598339427;
-        bh=pQeWltEcxvf6xblO4Zb7iBrXXzII7g6ooH3nnM5Con4=;
+        s=default; t=1598339436;
+        bh=FWfgAaWELOpnq9T2ZqffNJ7A9qnO3QfKuIy+OMg+Nkc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HlbfwRIhKHwI1y2UfxPiiQRFZXwPOHcB6//DIy2uD++z6SUYwv/8SPqV4pIkaxsI8
-         CYtrbWIoJGTI3133l6BYjcT6Fs7s3BTfU3s5p4oXT7Hupxmxw+V4zueQBab35arMVE
-         Mt+dDAmNs4MbMGqc0qzVym6Z4/c0bGBG6sf4/g6g=
-Date:   Tue, 25 Aug 2020 12:40:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/3] dmaengine: add peripheral configuration
-Message-ID: <20200825071023.GB2639@vkoul-mobl>
-References: <20200824084712.2526079-1-vkoul@kernel.org>
- <20200824084712.2526079-3-vkoul@kernel.org>
- <50ed780f-4c1a-2da2-71e4-423f3b224e25@ti.com>
+        b=f3Wq0A6wK+XyCx0NdyaVbiOp2OMrI3KPwj1V3RQ/NOii/Sv8XJMYsbLmiBZPZxHLr
+         0oPOxmO4ZW2uxwUXqLpZCKZIApP5fRkbLXbO9bWzKlL5g/hG5Vx0qfVAI9CAKfOqMV
+         tmM358uBo/FCFQE7cpCl+yIXbi94y/ptPbOUqIoI=
+Date:   Tue, 25 Aug 2020 09:10:33 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-spi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-media@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Whitespace clean-ups in schema files
+Message-ID: <20200825071033.GB1861@ninjato>
+References: <20200812203618.2656699-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="JYK4vJDZwFMowpUq"
 Content-Disposition: inline
-In-Reply-To: <50ed780f-4c1a-2da2-71e4-423f3b224e25@ti.com>
+In-Reply-To: <20200812203618.2656699-1-robh@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Peter,
 
-On 25-08-20, 09:52, Peter Ujfalusi wrote:
-> Hi Vinod,
-> 
-> On 24/08/2020 11.47, Vinod Koul wrote:
-> > Some complex dmaengine controllers have capability to program the
-> > peripheral device, so pass on the peripheral configuration as part of
-> > dma_slave_config
-> > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  include/linux/dmaengine.h | 75 +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 75 insertions(+)
-> > 
-> > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> > index 6fbd5c99e30c..264643ca9209 100644
-> > --- a/include/linux/dmaengine.h
-> > +++ b/include/linux/dmaengine.h
-> > @@ -380,6 +380,73 @@ enum dma_slave_buswidth {
-> >  	DMA_SLAVE_BUSWIDTH_64_BYTES = 64,
-> >  };
-> >  
-> > +/**
-> > + * enum spi_transfer_cmd - spi transfer commands
-> > + */
-> > +enum spi_transfer_cmd {
-> > +	SPI_TX = 1,
-> > +	SPI_RX,
-> > +	SPI_DUPLEX,
-> > +};
-> > +
-> > +/**
-> > + * struct dmaengine_spi_config - spi config for peripheral
-> > + *
-> > + * @loopback_en: spi loopback enable when set
-> > + * @clock_pol: clock polarity
-> > + * @data_pol: data polarity
-> > + * @pack_en: process tx/rx buffers as packed
-> > + * @word_len: spi word length
-> > + * @clk_div: source clock divider
-> > + * @clk_src: serial clock
-> > + * @cmd: spi cmd
-> > + * @cs: chip select toggle
-> > + * @rx_len: receive length for spi buffer
-> > + */
-> > +struct dmaengine_spi_config {
-> > +	u8 loopback_en;
-> > +	u8 clock_pol;
-> > +	u8 data_pol;
-> > +	u8 pack_en;
-> > +	u8 word_len;
-> > +	u32 clk_div;
-> > +	u32 clk_src;
-> > +	u8 fragmentation;
-> > +	enum spi_transfer_cmd cmd;
-> > +	u8 cs;
-> > +	u32 rx_len;
-> > +};
-> > +
-> > +/**
-> > + * struct dmaengine_i2c_config - i2c config for peripheral
-> > + *
-> > + * @pack_enable: process tx/rx buffers as packed
-> > + * @cycle_count: clock cycles to be sent
-> > + * @high_count: high period of clock
-> > + * @low_count: low period of clock
-> > + * @clk_div: source clock divider
-> > + * @addr: i2c bus address
-> > + * @strech: strech the clock at eot
-> > + * @op: i2c cmd
-> > + */
-> > +struct dmaengine_i2c_config {
-> > +	u8 pack_enable;
-> > +	u8 cycle_count;
-> > +	u8 high_count;
-> > +	u8 low_count;
-> > +	u16 clk_div;
-> > +	u8 addr;
-> > +	u8 strech;
-> > +	u8 op;
-> > +};
-> > +
-> > +enum dmaengine_peripheral {
-> > +	DMAENGINE_PERIPHERAL_SPI,
-> > +	DMAENGINE_PERIPHERAL_I2C,
-> > +	DMAENGINE_PERIPHERAL_UART,
-> > +	DMAENGINE_PERIPHERAL_LAST = DMAENGINE_PERIPHERAL_UART,
-> > +};
-> > +
-> >  /**
-> >   * struct dma_slave_config - dma slave channel runtime config
-> >   * @direction: whether the data shall go in or out on this slave
-> > @@ -418,6 +485,10 @@ enum dma_slave_buswidth {
-> >   * @slave_id: Slave requester id. Only valid for slave channels. The dma
-> >   * slave peripheral will have unique id as dma requester which need to be
-> >   * pass as slave config.
-> > + * @peripheral: type of peripheral to DMA to/from
-> > + * @set_config: set peripheral config
-> > + * @spi: peripheral config for spi
-> > + * @:i2c peripheral config for i2c
-> >   *
-> >   * This struct is passed in as configuration data to a DMA engine
-> >   * in order to set up a certain channel for DMA transport at runtime.
-> > @@ -443,6 +514,10 @@ struct dma_slave_config {
-> >  	u32 dst_port_window_size;
-> >  	bool device_fc;
-> >  	unsigned int slave_id;
-> > +	enum dmaengine_peripheral peripheral;
-> > +	u8 set_config;
-> > +	struct dmaengine_spi_config spi;
-> > +	struct dmaengine_i2c_config i2c;
-> 
-> Would it be possible to reuse one of the existing feature already
-> supported by DMAengine?
-> We have DMA_PREP_CMD to give a command instead of a real transfer:
-> dmaengine_prep_slave_single(tx_chan, config_data, config_len,
-> 			    DMA_MEM_TO_DEV, DMA_PREP_CMD);
-> dmaengine_prep_slave_single(tx_chan, tx_buff, tx_len, DMA_MEM_TO_DEV,
-> 			    DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-> dma_async_issue_pending(tx_chan);
-> 
-> or the metadata support:
-> tx = dmaengine_prep_slave_single(tx_chan, tx_buff, tx_len,
-> 				 DMA_MEM_TO_DEV,
-> 				 DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-> dmaengine_desc_attach_metadata(tx, config_data, config_len);
-> dma_async_issue_pending(tx_chan);
-> 
-> By reading the driver itself, it is not clear if you always need to send
-> the config for TX, or only when the config is changing and what happens
-> if the first transfer (for SPI, since that is the only implemented one)
-> is RX, when you don't send config at all...
+--JYK4vJDZwFMowpUq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So this config is sent to driver everytime before the prep call (can be
-optimized to once if we have similar transfers in queue).
+On Wed, Aug 12, 2020 at 02:36:18PM -0600, Rob Herring wrote:
+> Clean-up incorrect indentation, extra spaces, long lines, and missing
+> EOF newline in schema files. Most of the clean-ups are for list
+> indentation which should always be 2 spaces more than the preceding
+> keyword.
+>=20
+> Found with yamllint (which I plan to integrate into the checks).
+>=20
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-spi@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-remoteproc@vger.kernel.org
+> Cc: linux-hwmon@vger.kernel.org
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linux-iio@vger.kernel.org
+> Cc: linux-input@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: linux-mtd@lists.infradead.org
+> Cc: netdev@vger.kernel.org
+> Cc: linux-rtc@vger.kernel.org
+> Cc: linux-serial@vger.kernel.org
+> Cc: linux-usb@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-This config is used to create the configuration passed to dmaengine
-which is used to actually program both dmaengine as well as peripheral
-registers (i2c/spi/etc), so we need a way to pass the spi/i2c config.
+I trust you guys in figuring out the details, so for touching I2C:
 
-I think prep cmd can be used to send this data, I do not see any issues
-with that, it would work if we want to go that route.
+Acked-by: Wolfram Sang <wsa@kernel.org>
 
-I did have a prototype with metadata but didnt work very well, the
-problem is it assumes metadata for tx/rx but here i send the data
-everytime from client data.
 
-> I'm concerned about the size increase of dma_slave_config (it grows by
-> >30 bytes) and for DMAs with hundreds of channels (UDMA) it will add up
-> to a sizeable amount.
+--JYK4vJDZwFMowpUq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I agree that is indeed a valid concern, that is the reason I tagged this
-as a RFC patch ;-)
+-----BEGIN PGP SIGNATURE-----
 
-I see the prep_cmd is a better approach for this, anyone else has better
-suggestions?
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9EuWkACgkQFA3kzBSg
+KbZbPA/+MqNMzGTVXT++2afD+v/Qkum1LRbeldro+e0ewQSps4tnW/eHg9RaemYr
+BwxfsOZA+EJp0lGOnRM5/vhPMoInlSEwJSBlxtjratUScfPiR7D4ljKXGaUQv4IV
+l9cXBZuOeLnSerxdYsuGrs8M0uqe4rAc3jt/FGD4rSgawNTN1HieFaQ0vq/0I5Gi
+pyJv09alaosBuqNYc37Gqm9Ddk6xEJb8lvwrVqeS2ZGMFmfJuFlsuLKhwdgen/og
+Wik6VZEjyUHJbyZgkcwMn6rTVTnopK7E0RYmdap35Bh6MAZ3auQ4eQU2tktY3L0G
++NL/ah9FAvmPH1RAR7KmXzZxVYX2ZoWm3AJVpCIvlc9toZI5NdOwdruT+KlTLHIY
+T0vs7B3wqsrD4pHputHdDtf9iSZDB0FiTi44yJjReI72Yb47gDXXK7tOcewvq33Y
+J9dv/HeT85ER8dZ3fCssLdOsIVSE5ZGaDGjP9M4hPo5ZqM5WlMcqW13gmBsEaY3W
+quFFx4pgOXFmnO+7fCb0OIoySeTtgCMNqSwekaNsrbK8dBsFhMx62IzUwwCwL8ST
+clLrMsK81BA4v5hiU1SXC5zAJJG1W0FEpGvIuQRa5YxW8goqwIJrEuvy8jWLhg1x
+kB4BNFdQdBMg8xw0GSHGDhOZhIxgC5t/fvrbiLmqazzmbfCE1i8=
+=71f2
+-----END PGP SIGNATURE-----
 
-Thanks for looking in.
-
--- 
-~Vinod
+--JYK4vJDZwFMowpUq--
