@@ -2,97 +2,201 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64965C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536A8C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3778520706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD1120706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:44:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rXlaG4lB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgHYJno (ORCPT
+        id S1729583AbgHYJoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:43:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45586 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728059AbgHYJno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:43:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 92048AF33;
-        Tue, 25 Aug 2020 09:44:12 +0000 (UTC)
-Subject: Re: [PATCH for v5.9] mm/page_alloc: handle a missing case for
- memalloc_nocma_{save/restore} APIs
-To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Michal Hocko <mhocko@kernel.org>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        kernel-team@lge.com, Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <1598331582-19923-1-git-send-email-iamjoonsoo.kim@lge.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <e83100ae-d687-3b4e-8256-aee242191ada@suse.cz>
-Date:   Tue, 25 Aug 2020 11:43:37 +0200
+        Tue, 25 Aug 2020 05:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729544AbgHYJof (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:44:35 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E85FC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 02:44:34 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f7so12074579wrw.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 02:44:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ujkEUSo+hKd0F+n+n+4eow5fQiAPWkhZFl/qY+hEm7I=;
+        b=rXlaG4lBk/9ZFQ80LD+zjXCgcILpe2q3j7aSpFOOGyjedptgjQU5mRZrzy6a23UqiI
+         bnM4EzVnnxX90gRM6vUv2uga1xs3JH3eXF+My1IkgkO5PR7XUki0KTgOHXQBPBoZON01
+         6wPPHiMKU7a2l1F1ZU0T63cr8N908vdaFBBKmpSuf7nmcI1gkdfeM4AfJB+qFW8P0bMM
+         lTuNAH9Csf5IeDvgHVHClgVHGNIHDQRvMPYoI3MSFBFun8+oUAU3tv+5pj8m7LnQvig0
+         kFrauL6FQC6Z9r25I0NbgRbrNjlHCBlQdUkGyf096c+NA6ai0+EGhV4+PDy0ZteQdrFh
+         AsKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ujkEUSo+hKd0F+n+n+4eow5fQiAPWkhZFl/qY+hEm7I=;
+        b=ZK/Oq81KkZI2BVJz4GaNea+xVFM+n5aih5xAuFUqqJmMPLgi0Pf0rx6X2Qdn6RnLY9
+         0m41V0AtyRkC4zKo54wElBvrQQ664KmpLnqnYAzOqDhQvbukgpRZt7Hu6PsfHT8bPZpA
+         O8FSyyxeasaWSRL/fabMxXIUf6ujVSctooZYpZjrAowmgzZqClOo0W6EQJzIIxmMNO2o
+         1EXIA+EsA/Z+oHkKVZA2UWDgZ4LZKF0VgTmBOTSvSlsHLEwME3PyAHVLFjdV+72oiKJH
+         t9g5q9RoKtTeCMr2W3t5lsn3UjlVKpgdbF9fDrxZ7qHGbLfZ9czfYVhFIowSigwn+nQb
+         /trQ==
+X-Gm-Message-State: AOAM531+1x5odA+7jtkdtqcz4mrU3obCXOBYVyjLK3rGolp0pL8Lk9PE
+        5W8tzB4i4HVZj3ZJeSQ56Y12nPXpRo/cGQ==
+X-Google-Smtp-Source: ABdhPJz7G7kxb5c0oWnqP8sVrGmfNv6GBtMKj9praqksNl3MmSemmfB6dRZWvkyjd6gM3062nySHqw==
+X-Received: by 2002:a05:6000:124f:: with SMTP id j15mr9545856wrx.287.1598348673000;
+        Tue, 25 Aug 2020 02:44:33 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:30ce:e04c:9454:bbf8? ([2a01:e34:ed2f:f020:30ce:e04c:9454:bbf8])
+        by smtp.googlemail.com with ESMTPSA id z8sm4516749wmf.10.2020.08.25.02.44.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 02:44:32 -0700 (PDT)
+Subject: Re: [PATCH v1] thermal/of: Introduce k-po, k-pu and k-i for a thermal
+ zone
+To:     Lukasz Luba <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>
+Cc:     Finley Xiao <finley.xiao@rock-chips.com>, heiko@sntech.de,
+        rui.zhang@intel.com, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, huangtao@rock-chips.com,
+        tony.xie@rock-chips.com, cl@rock-chips.com
+References: <20200811123115.8144-1-finley.xiao@rock-chips.com>
+ <20200824230956.GA3500214@bogus>
+ <c3f54e18-8683-8bd9-90fa-e3465cddf8e8@arm.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <13b84e7e-adfe-5939-e78d-0a20fce0a92e@linaro.org>
+Date:   Tue, 25 Aug 2020 11:44:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <1598331582-19923-1-git-send-email-iamjoonsoo.kim@lge.com>
+In-Reply-To: <c3f54e18-8683-8bd9-90fa-e3465cddf8e8@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 8/25/20 6:59 AM, js1304@gmail.com wrote:
-> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+On 25/08/2020 10:25, Lukasz Luba wrote:
+> Hi Rob,
 > 
-> memalloc_nocma_{save/restore} APIs can be used to skip page allocation
-> on CMA area, but, there is a missing case and the page on CMA area could
-> be allocated even if APIs are used. This patch handles this case to fix
-> the potential issue.
+> On 8/25/20 12:09 AM, Rob Herring wrote:
+>> On Tue, Aug 11, 2020 at 08:31:15PM +0800, Finley Xiao wrote:
+>>> The default value for k_pu is:
+>>>      2 * sustainable_power / (desired_temperature - switch_on_temp)
+>>> The default value for k_po is:
+>>>      sustainable_power / (desired_temperature - switch_on_temp)
+>>> The default value for k_i is 10.
+>>>
+>>> Even though these parameters of the PID controller can be changed
+>>> by the following sysfs files:
+>>>      /sys/class/thermal/thermal_zoneX/k_pu
+>>>      /sys/class/thermal/thermal_zoneX/k_po
+>>>      /sys/class/thermal/thermal_zoneX/k_i
+>>>
+>>> But it's still more convenient to change the default values by
+>>> devicetree,
+>>> so introduce these three optional properties. If provided these
+>>> properties,
+>>> they will be parsed and associated with the thermal zone via the thermal
+>>> zone parameters.
+>>>
+>>> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/thermal/thermal.txt | 14
+>>> ++++++++++++++
+>>
+>> Bindings should be a separate file and this one is a DT schema now.
+>>
+>>>   drivers/thermal/thermal_of.c                          |  7 +++++++
+>>>   2 files changed, 21 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> b/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> index f78bec19ca35..ebe936b57ded 100644
+>>> --- a/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> +++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+>>> @@ -165,6 +165,20 @@ Optional property:
+>>>               2000mW, while on a 10'' tablet is around
+>>>               4500mW.
+>>>   +- k-po:            Proportional parameter of the PID controller when
+>>> +            current temperature is above the target.
+>>> +  Type: signed
+>>> +  Size: one cell
+>>> +
+>>> +- k-pu:            Proportional parameter of the PID controller when
+>>> +            current temperature is below the target.
+>>> +  Type: signed
+>>> +  Size: one cell
+>>> +
+>>> +- k-i:            Integral parameter of the PID controller.
+>>> +  Type: signed
+>>> +  Size: one cell
+>>
+>> What's PID?
+>>
+>> I know nothing about the sysfs params, but the binding needs to stand on
+>> it's own and needs enough detail to educate me.
+> Sorry for the delay, I missed that patch.
+> These parameters are the coefficients for the
+> Proportional-Integral-Derivative (PID) controller [1], which is the
+> core of the Intelligent Power Allocation (IPA) thermal governor.
+
+Just a few words to elaborate a bit for Rob who may not have time to
+digest the whole concept from Wikipedia :)
+
+The PID is an regulation loop where the input is compared to the output.
+
+For example when driving a car and you aim a speed cruise of 90km/h. You
+press the accelerator and watch the current speed. The smaller the
+current speed is, the stronger you will push the accelerator. And the
+closer to the cruise speed the car is, the lesser you push the
+accelerator until the car stabilize to the cruise to speed.
+
+The k-* describes how strong you push the accelerator and release it.
+
+In the thermal framework, that has an impact on how brutal the
+mitigation acts and depending on them it results in a flat temperature
+curve or a sawtooth aspect.
+
+These coefficient depends on the ambient temperature (casing, room
+temperature), the heat sink and the load. Depending on the use cases,
+you may want to change their values at runtime.
+
+From my POV, setting these values in the DT does not really make sense.
+
+It would make much more sense to have the thermal specifications of the
+board (heat sink capacity, resistivity, max temperature or TDP), so from
+there we should be able to compute anything related to the thermal
+profile and configure from the kernel.
+
+
+> Only IPA uses them, thus I don't think the governors parameters:
+> k-po, k-pu, k-i
+> should be part of the DeviceTree. I haven't seen such governors
+> tunnables in the DT, please point me if they exist somewhere.
 > 
-> Missing case is an allocation from the pcplist. MIGRATE_MOVABLE pcplist
-> could have the pages on CMA area so we need to skip it if ALLOC_CMA isn't
-> specified.
+> Do you think Rob they might be specified in the DT?
 > 
-> This patch implements this behaviour by checking allocated page from
-> the pcplist rather than skipping an allocation from the pcplist entirely.
-> Skipping the pcplist entirely would result in a mismatch between watermark
-> check and actual page allocation.
+> Regards,
+> Lukasz
+> 
+> [1] https://en.wikipedia.org/wiki/PID_controller
 
-Are you sure? I think a mismatch exists already. Pages can be on the pcplist but
-they are not considered as free in the watermark check. So passing watermark
-check means there should be also pages on free lists. So skipping pcplists would
-be safe, no?
 
-> And, it requires to break current code
-> layering that order-0 page is always handled by the pcplist. I'd prefer
-> to avoid it so this patch uses different way to skip CMA page allocation
-> from the pcplist.
+-- 
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Well it would be much simpler and won't affect most of allocations. Better than
-flushing pcplists IMHO.
-
-Something like this?
-----8<----
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 0e2bab486fea..15787ffb1708 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3361,7 +3361,10 @@ struct page *rmqueue(struct zone *preferred_zone,
-        unsigned long flags;
-        struct page *page;
- 
--       if (likely(order == 0)) {
-+       if (likely(order == 0) &&
-+                       (!IS_ENABLED(CONFIG_CMA) ||
-+                        migratetype != MIGRATE_MOVABLE ||
-+                        alloc_flags & ALLOC_CMA)) {
-                page = rmqueue_pcplist(preferred_zone, zone, gfp_flags,
-                                        migratetype, alloc_flags);
-                goto out;
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
