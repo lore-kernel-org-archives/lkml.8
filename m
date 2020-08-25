@@ -2,120 +2,95 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA88C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B3BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 553C020782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E607A20782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:41:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gs1qaOpX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnbIHLdz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgHYPkn (ORCPT
+        id S1726799AbgHYPlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:40:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45510 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725998AbgHYPkl (ORCPT
+        Tue, 25 Aug 2020 11:41:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgHYPld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:40:41 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PFXQ0U074972;
-        Tue, 25 Aug 2020 11:40:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=yMwbzI8DRQBhwKsLR3tDH4EBDq3DYbqddm2fcfs2stY=;
- b=gs1qaOpXwCoRLJYPUasHUPKNgeEvBc4nTuoqTkYPYQO8GQjZVfgakx1Ib3gRzaSAfBQB
- /AXw62eFumZHayBlTIdPNx/igqu7rCeVQg0Jy0cLd9e6YRFvcFiM6Nm3mwyHcF2lVdYc
- rldfMcWLygj64pVKliErC6nLdTuSeOG3Rv/iPyrJ2B29yhNwBa8gNzelpWTrJUaUr0kq
- Fl+hyzHabMdd8GNUfYzyP/WOdGETjAU3uET2xvZXrOLkQPJ/gKxl/F7bAbMxZDZA6Y7V
- u9iSXMBVMXwCbvWKrh0ZRxESxZUbedm0LRE/92F9X3txd++53gnxo4EXrErEEIA5b8Wj ew== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3355bh0ef1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 11:40:35 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07PFXewI076532;
-        Tue, 25 Aug 2020 11:40:35 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3355bh0ee2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 11:40:34 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07PFSBnS003009;
-        Tue, 25 Aug 2020 15:40:32 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04ams.nl.ibm.com with ESMTP id 33498u9gxj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 15:40:32 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07PFeTCg24576316
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 15:40:30 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D66AEA405B;
-        Tue, 25 Aug 2020 15:40:29 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8EEF7A4065;
-        Tue, 25 Aug 2020 15:40:27 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.103.4])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Aug 2020 15:40:27 +0000 (GMT)
-Message-ID: <a7ea2da1f895ee3db4697c00804160acb6db656e.camel@linux.ibm.com>
-Subject: Re: [PATCH] IMA: Handle early boot data measurement
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        stephen.smalley.work@gmail.com, casey@schaufler-ca.com
-Cc:     tyhicks@linux.microsoft.com, tusharsu@linux.microsoft.com,
-        sashal@kernel.org, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 25 Aug 2020 11:40:26 -0400
-In-Reply-To: <20200821231230.20212-1-nramas@linux.microsoft.com>
-References: <20200821231230.20212-1-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-25_05:2020-08-25,2020-08-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- mlxscore=0 mlxlogscore=931 bulkscore=0 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 adultscore=0 malwarescore=0 spamscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008250114
+        Tue, 25 Aug 2020 11:41:33 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44ACAC061574;
+        Tue, 25 Aug 2020 08:41:32 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b14so11317759qkn.4;
+        Tue, 25 Aug 2020 08:41:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=oingoz6Frqg2SQRAjjCpZonRfq5vy9M9TOZAsFU+QTQ=;
+        b=HnbIHLdznZEhj5FyyQQtndeXrdnwHnv+24GTDPoTYMpFbo6q86P02qs6c5vCxCm0tI
+         xhW8JMR45zXRL5TpMnepCjbWZH1c3WHpWVYfkuLtI2ZeNUJOtrThuk00rc2LrnqM2PFR
+         yh2VUfSUNvzAudIwDA2s3AsgkwcDv67xfJJ3pgNEaa3yu3Xqg/OhS3RbPWAdvxIW94Q7
+         NsBArqOH4KfMUTVq+i37Y6uMHVea8YeTtwiDmXO9fSK1xs0dQqT4374porZN3HAjZj6p
+         F0ybDjVe9BCt6quZNAnL7LHm+DxfRhFQoe5NrRr0/3aVD/6ZH9lgmF/lEYjP+RZbjbp0
+         bSew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oingoz6Frqg2SQRAjjCpZonRfq5vy9M9TOZAsFU+QTQ=;
+        b=rXn3iTXOJ2cNJBL28LQ3vRIhjqW2inRS7tdq51wX1Xd+lHQXoF3h+thIetL1C7QW1B
+         u5DOVy0ZsadNpMzvCAYKn2KL5Pna3ZwbEZ9rI7j0COIAcm7B9P476H+iQLPaROc1U27e
+         x0OTrX3swR3PFYiwxtKmwdy/9EyxgMKSVAyHn1pOlTaBaQx2suRub0i0ZiXMywZgSizY
+         ujCPLSKF5yJ22UgaXN+mOBAJVebfCwuqH+5xqxbQJuiw7KPe/HZG2OSDs8+MkaxZ/2iR
+         CidxaaprpvPAnKiL4LCZcqMseIjv4zYZHa+hMHjvDnCibCCWxg1wgNP8n6w7C4qrH45c
+         TkHQ==
+X-Gm-Message-State: AOAM530wRw440HmXwDNzcjsEF8PIAeWmAV1pYddlpfwaznMz5g7vjNsO
+        hVLMqh3RlrZSZ1sOLMoxaiw=
+X-Google-Smtp-Source: ABdhPJxGM3dreknMCsSUoQUGt4iji2RSu+2ULCfK+U+iIMegceSfZvMPRBtgDvJSrOC+fhnHdMbVCw==
+X-Received: by 2002:a37:8b01:: with SMTP id n1mr7072338qkd.62.1598370091385;
+        Tue, 25 Aug 2020 08:41:31 -0700 (PDT)
+Received: from localhost.localdomain ([177.220.172.63])
+        by smtp.gmail.com with ESMTPSA id r6sm13827277qtu.93.2020.08.25.08.41.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 08:41:30 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id B3A12C4BDE; Tue, 25 Aug 2020 12:41:27 -0300 (-03)
+Date:   Tue, 25 Aug 2020 12:41:27 -0300
+From:   'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        'Catalin Marinas' <catalin.marinas@arm.com>,
+        "'kent.overstreet@gmail.com'" <kent.overstreet@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        'Neil Horman' <nhorman@tuxdriver.com>
+Subject: Re: [PATCH 00/13] lib/generic-radix-tree: genradix bug fix and
+ optimisations.
+Message-ID: <20200825154127.GB2444@localhost.localdomain>
+References: <21289d79b0474811b21ed8478c465159@AcuMS.aculab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <21289d79b0474811b21ed8478c465159@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-08-21 at 16:12 -0700, Lakshmi Ramasubramanian wrote:
-> The current implementation of early boot measurement in
-> the IMA subsystem is very specific to asymmetric keys. It does not
-> handle early boot measurement of data from other subsystems such as
-> Linux Security Module (LSM), Device-Mapper, etc. As a result data,
-> provided by these subsystems during system boot are not measured by IMA.
-> 
-> Update the early boot key measurement to handle any early boot data.
-> Refactor the code from ima_queue_keys.c to a new file ima_queue_data.c.
-> Rename the kernel configuration CONFIG_IMA_QUEUE_EARLY_BOOT_KEYS to
-> CONFIG_IMA_QUEUE_EARLY_BOOT_DATA so it can be used for enabling any
-> early boot data measurement. Since measurement of asymmetric keys is
-> the first consumer of early boot measurement, this kernel configuration
-> is enabled if IMA_MEASURE_ASYMMETRIC_KEYS and SYSTEM_TRUSTED_KEYRING are
-> both enabled.
-> 
-> Update the IMA hook ima_measure_critical_data() to utilize early boot
-> measurement support.
+On Tue, Aug 25, 2020 at 02:52:34PM +0000, David Laight wrote:
+> The genradix code is used by SCTP for accessing per-stream data.
+> This means there are quite a lot of lookups but the code wasn't
+> really optimised at all.
 
-Please limit the changes in this patch to renaming the functions and/or
-files.  For example, adding "measure_payload_hash" should be a separate
-patch, not hidden here.
+My test box is down for the moment and will bring it on later today or
+tomorrow, so I can't test it yet. What should we expect as performance
+gains here?
 
-Mimi
-
+  Marcelo
