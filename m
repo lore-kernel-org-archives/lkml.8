@@ -2,56 +2,65 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98343C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6952068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DDED2068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598347588;
-	bh=T2kSGOuK3m8k7gWo3P5HzQK2jaRznKuC20hjtiRBOjg=;
+	s=default; t=1598347601;
+	bh=xjRUlLJiGzDBfJ7+riJgK5GH7YnvOwbUoZtfaHvq9m0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NTO7BHNnMbL9MlHP9dVCa4cRKVdbpuAYKVy8t4zCk0Q0FmvGroMwkp5kctOA92fgl
-	 jndCu8idvVr0EQWqekVdNpPhLircUeLMsZ7jyj6nLdGbZ7AooZeGh4ZpHtn+FgNxhs
-	 Ul4Enij9VrN1JID/0KLP6XKOhf0lsCfCLrhCQvys=
+	b=J4f3MDxFo+e4MRqdKn3tgtb6gwjfBH97FBs1W3Fy4/xdhmOsx/isPyD4m5VWVnHs5
+	 xU7nKWK1YW0mED5vWqnH2tlPTbG3TXJCvu/z14SIHiWW0C7zgZwXTHE3UvhzE/iuDY
+	 aJMIzfEgc/uRykCG0QG07k98beZxbcPKkBQohXUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgHYJ0V (ORCPT
+        id S1729298AbgHYJ0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:26:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58446 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 05:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725936AbgHYJ0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:26:17 -0400
-Received: from localhost (p54b333df.dip0.t-ipconnect.de [84.179.51.223])
+        id S1729048AbgHYJ0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:26:37 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0A7D2068F;
-        Tue, 25 Aug 2020 09:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10BF02074D;
+        Tue, 25 Aug 2020 09:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598347576;
-        bh=T2kSGOuK3m8k7gWo3P5HzQK2jaRznKuC20hjtiRBOjg=;
+        s=default; t=1598347597;
+        bh=xjRUlLJiGzDBfJ7+riJgK5GH7YnvOwbUoZtfaHvq9m0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1LEMhQv5WeJFL2nBK/MIhnwi+Rsmd2rP6kyGFal1Ibj3oyVyP6QTmZf8b9QFO0cJe
-         BOWHPOJ1C5ucLNpfSrD7Sms7JRo6XyJ/1V3tOJAl42iMk6thRjCYB8x52DwZEbl8rp
-         iN0ZN0aZZbWdNq+xFA2WhMg3kLeOITGjURJwyiuI=
-Date:   Tue, 25 Aug 2020 11:26:13 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Cc:     gregory.clement@bootlin.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] i2c: mv64xxx: Add bus error recovery
-Message-ID: <20200825092613.GJ1861@ninjato>
-References: <20200824225254.1114-1-mark.tomlinson@alliedtelesis.co.nz>
+        b=WRavcvUv7eOhBnb8hi8CS7GITp1H59HeJh1ddaYOVbCy65qJuN8J/LYy7j2gUkqkz
+         Zh6TiUnjR6b4ZpwfS6oxvmO0bVWNnvCUTzhyu4UI+M8xcKhgFig8Jf8X276o1Kvonb
+         ZVeTg/9DI3JKU7BnJWF0LAB4i2rsaw59lpZ9Xw3s=
+Date:   Tue, 25 Aug 2020 10:26:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Gene Chen <gene_chen@richtek.com>
+Subject: Re: [PATCH v3 1/2] regulator: mt6360: Add support for MT6360
+ regulator
+Message-ID: <20200825092602.GA5379@sirena.org.uk>
+References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1597910022-22617-2-git-send-email-gene.chen.richtek@gmail.com>
+ <20200820114524.GC5854@sirena.org.uk>
+ <CAE+NS34WuWnT7zvsHhaciWVLT2y0wpwt0wXAp3UmjEuJ2its6A@mail.gmail.com>
+ <20200824110458.GB4676@sirena.org.uk>
+ <CAE+NS36ZK2pq8CAcmiqiUf6Ph5RET5aO4nUPFUd-EDHVEuharA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="aznLbwQ42o7LEaqN"
+        protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
 Content-Disposition: inline
-In-Reply-To: <20200824225254.1114-1-mark.tomlinson@alliedtelesis.co.nz>
+In-Reply-To: <CAE+NS36ZK2pq8CAcmiqiUf6Ph5RET5aO4nUPFUd-EDHVEuharA@mail.gmail.com>
+X-Cookie: Don't get to bragging.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,50 +68,31 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---aznLbwQ42o7LEaqN
+--tKW2IUtsqtDRztdT
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 25, 2020 at 10:52:54AM +1200, Mark Tomlinson wrote:
-> This adds i2c bus recovery to the mv64xxx driver.
->=20
-> Implement bus recovery to recover from SCL/SDA stuck low.
->=20
-> This uses the generic recovery function, setting the clock/data lines as
-> GPIO pins, and sending 9 clocks to try and recover the bus.
->=20
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-> ---
-> Changes in v2:
->  - use generic GPIO recovery function.
+On Tue, Aug 25, 2020 at 05:13:43PM +0800, Gene Chen wrote:
 
-Thank you for doing that! Glad to see the new helper function works for
-you as well. The initialization code is all well, but I wonder about the
-use of i2c_recover_bus(). Recovery should be tried only if it is
-detected that SDA is pulled low when the bus should be free. So, you
-shouldn't call i2c_recover_bus() in unconditionally in probe(). Can your
-HW detect if SDA is stuck low?
+> Should I use dev->parent->of_node and set
+> regulator_desc.regulator_node to parse each regulator definition in
+> device tree?
 
+Yes.
 
---aznLbwQ42o7LEaqN
+--tKW2IUtsqtDRztdT
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9E2TEACgkQFA3kzBSg
-KbY5iQ//XCFBdzw1bllHv/Z/puDG8CmCq+PfsS+u1FqRaxrqC88T0/dBq04kbWVP
-wa/mERJ6NjSJAHG3BYrV3zeGxlKw/60XV9gLeycj+Q9Xq+xCnPbXh5cAfDoGoJL9
-GhKso1gfhpA8YtCN+6NpG6S6mRMLSaW2XfLEw4n7A+LHAVROzA7Hp+payFWyn5zm
-3ic9Lrdnqay/7CtuaCLmcauIb5jlixEwcuLdlvHKrxYZ13/7iSFnLNj62308lCwj
-8I0ykEbviIhyDzAHvqe4DhyghFBK2QKuTg0q3rxHWq8jKcWicPpp+qqCqVI1Ugab
-oKFzbuuXS8/nP551WkvOA7Hqwc7YI6HlrH+LYUxJllLTvL+O8UpDM3Jgv6U+Csvo
-omNAPXOfZVbOtrpfRbLudHWWdhNdwB1+YDtEcy+Kw9fhTADapDgEQmaiXMt5IRMU
-dP4bcxPswhg5y11fcRbhJM9tiHyTA3kz0Fch516CTLhRZP4C9FkZZ7Wip0aHHtCZ
-nVxmdGRPN+AnzQd+fOHGs8W/8iXY5H+x/OIzC7KKllq8Al6CZ4xGwh2dUCFB4DaD
-WRbtsUFyRuLMbK7phO+PLoxk+Dm16z2yZRW1uV5b9916myM2iNS1VVUrFfotVyLH
-tZqK9o9eKPzQy31xcpgCCFYnlrMf71VQNhshRSlUxI4Zo4z9b6I=
-=Rz8g
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9E2SYACgkQJNaLcl1U
+h9BTvAf/SKwBThcS5qz2q647IodkHIleD2IJYA6d9KuYw6T2O4sywHAL61N8i8rS
+rYc/hL7MKpp4IuOQ5+jAmS4WhfMrzY9azyZJFtPkcGgs7JioJRT/VoiX8lvr77qP
+75NOm9lmwqChKhRvkB0JWcnfDtLvQmY+Iw33HKOHcOPDifnyNtdpGN/oaPVkADvy
+vH9MiSFgFumGInyev7zRGedPv0F2EnTD5S3sN0LchDPX8RZYV1ZRNN5mqaPOFxr1
+hWZvqoRurKjSL9fCYNZvAc373RwfO9OfaDag/qrPe8f1b3cXxcou8spim5EofU2v
+UsmwKIggTpgrLuXqu6tvFiw56F4TxQ==
+=IKjm
 -----END PGP SIGNATURE-----
 
---aznLbwQ42o7LEaqN--
+--tKW2IUtsqtDRztdT--
