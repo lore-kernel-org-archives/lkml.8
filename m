@@ -2,195 +2,101 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C254C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:14:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40C312074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 794D220767
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:14:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NLxzxEei"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ApI4LAKW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgHYHOZ (ORCPT
+        id S1729352AbgHYHOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:14:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbgHYHOZ (ORCPT
+        Tue, 25 Aug 2020 03:14:53 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25970 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729194AbgHYHOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:14:25 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D965AC061574;
-        Tue, 25 Aug 2020 00:14:24 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id p4so10098199qkf.0;
-        Tue, 25 Aug 2020 00:14:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=EM/9NVrmvXUFHUFdTlwMkxMxioJofdUIxRyHRgsK3Z8=;
-        b=NLxzxEeiO4+AZhC2eQ3YTH+YmUbHpNJDFHqvh5LgtsiAOh8/pf+T7/5gnFMdgA3bSJ
-         sdjmbiMwKl0ksKwpGJP4nJ+LmH6jz+ibNlTErodqD5ssIbeVpRnDQP//3SvVbThTG8cy
-         HhaTggw+95cgNZWgOe7BurbJLRBVdL0PkIvO38BQ83BWB4snLFdpAMvFBGnIfc5bXl2m
-         3tU/QCsCxQA8V4cEdwBYkwfpei2U3WAnJS4a806QnfvwPFsJkOtQk5blDBDPt9NIWaAO
-         uDnfxZazpbr1F0v2qOgGKSSoTFEaTw/cwkYaU+pK3VA0hLdmhVMKEgp53A89Hlhj/ZVL
-         v5uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EM/9NVrmvXUFHUFdTlwMkxMxioJofdUIxRyHRgsK3Z8=;
-        b=okRgMlCzR7XvzavCLQdTBanfb2u3p4opoM4R1FeDLagf/+ci0jl20XaJ9lNMVbqFTt
-         /zTYJTwcHkBqkAzCuJrRZ9pLQzPAqqQgxnvYpzf6mJ1K217Ho19Y24TKah+s+h+Mk0MC
-         ExI7Y6F5nU3Qmq1pXdM3vovTSfNQFy3YyxrOWJidvOowzoL62L4xIY0DgZDCIsyrZppP
-         HtxpUkUC5S+FuuUJ6aYxfly7rdwiP00n+0miB1aY0r9KfLR2VJtFvyWttwtpmLHg8yXm
-         UWLLqzNPhxitXbiTsnCmw3xIK6tltH8f4eEBzePdnVFKwRo6ctb/0JgpSllLhihCuJt3
-         4gLQ==
-X-Gm-Message-State: AOAM530/0ceKABYj2OaQzXLJD1GyIzw+xUwa+ObVHziOLqNDWTyhh/lO
-        YhRfqhwKov1L0K0IUr9oGQAd1Dk3rmdbokOtZrI=
-X-Google-Smtp-Source: ABdhPJz3gbXaBvdrdhHYipKiFWAOdiazLMLbsG7bjfsvnshjEdgujhC89BlYhCnSO+2jLGo7qt4ericSFJxGTTvaf7A=
-X-Received: by 2002:a37:a3d4:: with SMTP id m203mr4278032qke.91.1598339664083;
- Tue, 25 Aug 2020 00:14:24 -0700 (PDT)
+        Tue, 25 Aug 2020 03:14:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598339691;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7CGiZUpznt8czjyijhEZ2iwwf6+J+XWv1uneauIOwPc=;
+        b=ApI4LAKWLLAIHQBBqtvFxBY96om16/EioGOaTkeyyleckh93b6ifUPcyEQPB1PDaAKriFG
+        TZKKVlSQQw8aYH2BICToDV0dvKK8YSOV+l/saq52G7ZlkfA7XAsE34CBcrdvH8KIjrdHMx
+        6Xwn9mkp/JyXCVgowKy2ZHuq4qHTqqo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-476-GHaOImuoP9ujey8EeJ-vqg-1; Tue, 25 Aug 2020 03:14:46 -0400
+X-MC-Unique: GHaOImuoP9ujey8EeJ-vqg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D4341007467;
+        Tue, 25 Aug 2020 07:14:45 +0000 (UTC)
+Received: from krava (unknown [10.40.192.4])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A96575C1CF;
+        Tue, 25 Aug 2020 07:14:43 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 09:14:42 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
+        sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
+Subject: Re: [PATCH] perf stat: Fix s390x compile error on F32
+ utils/stat-display.c
+Message-ID: <20200825071442.GB631468@krava>
+References: <20200825063304.77733-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
- <20200623134259.8197-1-mzhivich@akamai.com> <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
- <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
- <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
- <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com> <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
- <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com> <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
- <20200822032800.16296-1-hdanton@sina.com> <CACS=qqKhsu6waaXndO5tQL_gC9TztuUQpqQigJA2Ac0y12czMQ@mail.gmail.com>
- <20200825032312.11776-1-hdanton@sina.com>
-In-Reply-To: <20200825032312.11776-1-hdanton@sina.com>
-From:   Fengkehuan Feng <kehuan.feng@gmail.com>
-Date:   Tue, 25 Aug 2020 15:14:12 +0800
-Message-ID: <CACS=qqK-5g-QM_vczjY+A=3fi3gChei4cAkKweZ4Sn2L537DQA@mail.gmail.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Jike Song <albcamus@gmail.com>, Josh Hunt <johunt@akamai.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jonas Bonn <jonas.bonn@netrounds.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825063304.77733-1-tmricht@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hillf,
+On Tue, Aug 25, 2020 at 08:33:04AM +0200, Thomas Richter wrote:
 
-I just tried the updated version and the system can boot up now.
-It does mitigate the issue a lot but still couldn't get rid of it
-thoroughly. It seems to me like the effect of Cong's patch.
+SNIP
 
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 57d0706e1330..cbe836649f84 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -117,12 +117,11 @@ static void aggr_printout(struct perf_stat_config *config,
+>  				cpu_map__id_to_die(id),
+>  				config->csv_output ? 0 : -3,
+>  				cpu_map__id_to_cpu(id), config->csv_sep);
+> -		} else {
+> +		} else if (id > -1)
+>  			fprintf(config->output, "CPU%*d%s",
+>  				config->csv_output ? 0 : -7,
+>  				evsel__cpus(evsel)->map[id],
+>  				config->csv_sep);
+> -		}
 
-Hillf Danton <hdanton@sina.com> =E4=BA=8E2020=E5=B9=B48=E6=9C=8825=E6=97=A5=
-=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=8811:23=E5=86=99=E9=81=93=EF=BC=9A
->
->
-> Hi Feng,
->
-> On Tue, 25 Aug 2020 10:18:05 +0800 Fengkehuan Feng wrote:
-> > Hillf,
-> >
-> > With the latest version (attached what I have changed on my tree), the
-> > system failed to start up with cpu stalled.
->
-> My fault.
->
-> There is a missing break while running qdisc and it's fixed
-> in the diff below for Linux-5.x.
->
-> If it is Linux-4.x in your testing, running qdisc looks a bit
-> different based on your diff(better if it's in the message body):
->
->  static inline void qdisc_run(struct Qdisc *q)
->  {
-> -       if (qdisc_run_begin(q)) {
-> +       while (qdisc_run_begin(q)) {
-> +               int seq =3D q->pkt_seq;
->                 __qdisc_run(q);
->                 qdisc_run_end(q);
-> +
-> +               /* go another round if there are pkts enqueued after
-> +                * taking seq_lock
-> +                */
-> +               if (seq !=3D q->pkt_seq)
-> +                       continue;
-> +               else
-> +                       return;
->         }
->  }
->
->
-> Hillf
->
-> --- a/include/net/sch_generic.h
-> +++ b/include/net/sch_generic.h
-> @@ -79,6 +79,7 @@ struct Qdisc {
->  #define TCQ_F_INVISIBLE                0x80 /* invisible by default in d=
-ump */
->  #define TCQ_F_NOLOCK           0x100 /* qdisc does not require locking *=
-/
->  #define TCQ_F_OFFLOADED                0x200 /* qdisc is offloaded to HW=
- */
-> +       int                     pkt_seq;
->         u32                     limit;
->         const struct Qdisc_ops  *ops;
->         struct qdisc_size_table __rcu *stab;
-> --- a/net/sched/sch_generic.c
-> +++ b/net/sched/sch_generic.c
-> @@ -631,6 +631,7 @@ static int pfifo_fast_enqueue(struct sk_
->                         return qdisc_drop(skb, qdisc, to_free);
->         }
->
-> +       qdisc->pkt_seq++;
->         qdisc_update_stats_at_enqueue(qdisc, pkt_len);
->         return NET_XMIT_SUCCESS;
->  }
-> --- a/include/net/pkt_sched.h
-> +++ b/include/net/pkt_sched.h
-> @@ -117,14 +117,27 @@ void __qdisc_run(struct Qdisc *q);
->
->  static inline void qdisc_run(struct Qdisc *q)
->  {
-> -       if (qdisc_run_begin(q)) {
-> +       while (qdisc_run_begin(q)) {
-> +               int seq =3D q->pkt_seq;
-> +               bool check_seq =3D false;
-> +
->                 /* NOLOCK qdisc must check 'state' under the qdisc seqloc=
-k
->                  * to avoid racing with dev_qdisc_reset()
->                  */
->                 if (!(q->flags & TCQ_F_NOLOCK) ||
-> -                   likely(!test_bit(__QDISC_STATE_DEACTIVATED, &q->state=
-)))
-> +                   likely(!test_bit(__QDISC_STATE_DEACTIVATED, &q->state=
-))) {
->                         __qdisc_run(q);
-> +                       check_seq =3D true;
-> +               }
->                 qdisc_run_end(q);
-> +
-> +               /* go another round if there are pkts enqueued after
-> +                * taking seq_lock
-> +                */
-> +               if (check_seq && seq !=3D q->pkt_seq)
-> +                       continue;
-> +               else
-> +                       return;
->         }
->  }
->
-> --
->
+I think we want multiple if lines within  { } but
+scripts/checkpatch.pl does not scream about this,
+so leaving this to Arnaldo ;-)
+
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+
+thanks,
+jirka
+
+>  		break;
+>  	case AGGR_THREAD:
+>  		fprintf(config->output, "%*s-%*d%s",
+> -- 
+> 2.26.2
+> 
+
