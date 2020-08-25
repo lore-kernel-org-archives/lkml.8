@@ -2,106 +2,143 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE4BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2AF20782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1718D20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:02:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pnkRHHhj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OmgvobhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbgHYQB3 (ORCPT
+        id S1726818AbgHYQC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:01:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47822 "EHLO
+        Tue, 25 Aug 2020 12:02:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbgHYQBH (ORCPT
+        with ESMTP id S1726351AbgHYQCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:01:07 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC66FC061574;
-        Tue, 25 Aug 2020 09:01:06 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id z9so2593812wmk.1;
-        Tue, 25 Aug 2020 09:01:06 -0700 (PDT)
+        Tue, 25 Aug 2020 12:02:15 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5145C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:02:14 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id t2so3002855wma.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:02:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GqlIVjTW1iaRrj2Ldn6FQUjE2Jdk0+FHiegdjOOHybA=;
-        b=pnkRHHhjAEBgWY5x+eFMW0t4S3RoXd5RHnqQGlhZoXxep60UGQHt7wTohTUiQsPki0
-         X8cDYP4xt9w6NvEx73OjO4kL1scbrZ0ZZxvqoC475VSDoWUe1Wz32ocDVhc7tuVcL5oJ
-         Ui9OHteyR8XB+qvfjZWVzDrTrvPgM8dI4A1XL916iY3N6OZidPQ0neqBYePhHiF6OCpR
-         JojLpl9eNGX4VxU9pZOO2FyyhqOXE5h6wZJXyQXZpRwIxZMFmipmBMpuyOuFjEc2TgnK
-         fpeSbb+v1L8rALNpGZfIShoW6t3wKqoZTtggAJK8fPXvNotwJw6m4Hh1XcEKwc5eX7em
-         Omww==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tTxeNahv5q1FXtG4qVWxMsRTv7XdCLwkd20q56V8+2I=;
+        b=OmgvobhW1+4wUwztCxo9jyR+SPzYBjWffxCQjTAXmY7Mj0rcbvtXLh0GIJ2zAFgTR4
+         424w8VwynEJM9uR+bqi5cYA1ACQ2ToMXh+b9qRPrEzhINMIQcnZKvNoEAss8S52OPNGr
+         Pa9o3yVGOSOy5wKaRSbGxkA0c0wrQPQv+T+iuIwdv5umPngXd5hGdpAG+Q7FI6xH35gg
+         EuHgSLDjEGOJanVZf9591vSeH7uQTzsp+I7mxxBUleeb7NnZIZ1edyWm/b71BB3eguMB
+         tOcsgkWAuc36az2J9dgSwe/kn3mE8jZMmseO98jEgzUYqCcljKBTgLIeQHFQnPuDJRi0
+         QU4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GqlIVjTW1iaRrj2Ldn6FQUjE2Jdk0+FHiegdjOOHybA=;
-        b=eaDQkLeM7BQTd37cU68rXiuUnrFRe7vefWC5IGnu86ZOFZCn45VuVHyEqDhmnhl/+z
-         AenhjyulOZGkydZqm4w0G77M1IgGUzGZVpyo2LHxBhGthEcfwn/zOudWt0EHrJircy7H
-         9BHIfqAjgeD9qf/bxgrYbBiLIIy4/0UDkD31lTOXWCbhxpdnZXjtPT7IkI9iCzd+/o+z
-         IwYVepY/7KiqGNHauCU8ZNcOEHzLFiLWY0u+kBJ6Hk6Sft+3Azu0lxvJO9R4BJVzqgCv
-         uj1lkU/41ro6j7J25lMeFqt5a3dhfwXb5d9KXIj/m1MAFoV69fpvJljMpYLsWTFwxS3A
-         scOg==
-X-Gm-Message-State: AOAM531QAks9TliJ7LDhRj6dwZaJ2/FgNRihrFtMboNny6d+M6OEDqE5
-        mfaHkC1bJPGALcifsCiBDZCPkl1wTLcNqw==
-X-Google-Smtp-Source: ABdhPJyr+wKSpdwL2axhfuYsxNLZXt1R/iWLIuhO2Upcy75aWXozRyxdK/K2P9E7GQ0stfcziCvOFg==
-X-Received: by 2002:a05:600c:514:: with SMTP id i20mr2762605wmc.102.1598371263990;
-        Tue, 25 Aug 2020 09:01:03 -0700 (PDT)
-Received: from [10.55.3.147] ([173.38.220.45])
-        by smtp.gmail.com with ESMTPSA id y26sm6672788wmj.23.2020.08.25.09.01.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 09:01:03 -0700 (PDT)
-Subject: Re: [net-next v5 2/2] seg6: Add documentation for
- seg6_inherit_inner_ipv4_dscp sysctl
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrea.mayer@uniroma2.it
-References: <20200825121844.1576-1-ahabdels@gmail.com>
- <20200825085127.50ba9c82@kicinski-fedora-PC1C0HJN>
-From:   Ahmed Abdelsalam <ahabdels@gmail.com>
-Message-ID: <ad5dfe4a-da8e-aed2-4a32-cd617ad795b2@gmail.com>
-Date:   Tue, 25 Aug 2020 18:01:01 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tTxeNahv5q1FXtG4qVWxMsRTv7XdCLwkd20q56V8+2I=;
+        b=oPvkmzGm6ppozrN88oS8Noawzg7yHjZ+MEdR+XTj0oc820x2T+3KCWoalWJqeLgtk7
+         yVhkGXpJOoBDMrFAhlKryFat0I6I8FSEsYiQrJ+JT0fc5aVQzV8N5k2ODZPhsYm3Cnbb
+         H0DigSpj+Jn91iUgfbt2gMeyzuZUxP2HS5qxwtRh+ZllFtf/yQQ5PQ/4BG/kn61pw68x
+         ShO5NDb7FxTT4RQ9uCd6Q7ZA0nttRosegyNSzyOdwN9GnuyXwXbj40pq769XdG2lSCdU
+         TELPZ8roY72knus8elYqLmMIGNMLnSY9SN11l0gOQUQv1QYspmu/eak57BF3zHCInVfx
+         4yAQ==
+X-Gm-Message-State: AOAM532sh4GyzoxlCz9l74jB5tDGZ3Z4Vt4CHCwIucaFc5WgRc0Oy6nu
+        ILC7odwqVluDYHJVMXbzIrM=
+X-Google-Smtp-Source: ABdhPJxATi2/nACkk9huMF7nAKfQT11rcTxjVkx+7ijD2XDfrF49ww0RbwnuIie3KoZRrhmScvMytw==
+X-Received: by 2002:a1c:7902:: with SMTP id l2mr2695006wme.101.1598371333323;
+        Tue, 25 Aug 2020 09:02:13 -0700 (PDT)
+Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
+        by smtp.gmail.com with ESMTPSA id g18sm32633985wru.27.2020.08.25.09.02.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 09:02:12 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 13:02:06 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Simon Ser <contact@emersion.fr>,
+        Leandro Ribeiro <leandro.ribeiro@collabora.com>,
+        daniels@collabora.com, Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH v5 0/3] drm/vkms: Introduces writeback support
+Message-ID: <20200825160206.jpdxrdbswaogayzu@smtp.gmail.com>
+References: <20200825023142.2561220-1-rodrigosiqueiramelo@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200825085127.50ba9c82@kicinski-fedora-PC1C0HJN>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825023142.2561220-1-rodrigosiqueiramelo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rodrigo,
 
+Nice work!
 
-On 25/08/2020 17:51, Jakub Kicinski wrote:
-> On Tue, 25 Aug 2020 12:18:44 +0000 Ahmed Abdelsalam wrote:
->> +	Enable the SRv6 encapsulation to inherit the DSCP value of the inner IPv4 packet.
->> +
->> +	Default: FALSE (Do not inherit DSCP)
->> +
->>   ``conf/default/*``:
->>   	Change the interface-specific default settings.
->>   
-> 
-> Checkpatch complains about whitespace:
-> 
-> ERROR: trailing whitespace
-> #24: FILE: Documentation/networking/ip-sysctl.rst:1802:
-> +seg6_inherit_inner_ipv4_dscp - BOOLEAN                                                                                                                                                                                                                                                                                                        $
-> 
-sorry forgot to run checkpatch on this one before sending.
+I tested this on the kms_writeback set of subtests and works fine.
 
-patch fixed and resent.
+I have also checked it on the other IGT tests that I usually uses:
+- kms_cursor_crc/cursor-alpha-transparent was affected by a small
+  problem in the bitmap_clear of the get_pixel_from_buffer function,
+  that I pointed out inline. Please, check it.
+- kms_flip and kms_pipe_crc_basic works as expected (was not affected).
+
+Best regards,
+
+Melissa Wen
+
+On 08/24, Rodrigo Siqueira wrote:
+> This is the V5 version of a series that introduces the writeback support
+> to VKMS. The first two patches of this series are a pre-work for the
+> latest patch that adds the writeback connector, this patchset can be seen
+> in two parts: 
+> 
+> * A pre-work that aims to make vkms composer operations a little bit more
+>   generic; these patches try to centralize the vkms framebuffer operations.
+> * The final patch enables the support for writeback in vkms.
+> 
+> In the previous review, Emil suggested multiple changes in the series. I
+> tried to apply most of the recommendations except for some suggestions
+> which I was not able to incorporate due to compilation issues, or other
+> suggestions that may complicate this series review. I left some changes
+> for future patches for keeping this patchset simple with the hope of
+> landing this feature soon in order to support VKMS user's requirements.
+> Emil, let me know if you want me to change any other thing.
+> 
+> It is important to highlight that from the previous series to the
+> current version of this patchset we had some changes in the VKMS that
+> made it unstable.  In particular, our previous writeback series stopped
+> working properly due to changes in our commit tail.  Thanks to Melissa
+> working in the instability issue and her latest fixes to VKMS, I finally
+> could update writeback and make it work again. The main update in the
+> latest patch is the use of vkms_set_composer when the writeback work
+> starts (enable composer) and after the writeback end (disable composer).
+> 
+> Best Regard
+> 
+> Rodrigo Siqueira (3):
+>   drm/vkms: Decouple crc operations from composer
+>   drm/vkms: Compute CRC without change input data
+>   drm/vkms: Add support for writeback
+> 
+>  drivers/gpu/drm/vkms/Makefile         |   9 +-
+>  drivers/gpu/drm/vkms/vkms_composer.c  | 102 +++++++++++-------
+>  drivers/gpu/drm/vkms/vkms_drv.h       |  11 +-
+>  drivers/gpu/drm/vkms/vkms_output.c    |   4 +
+>  drivers/gpu/drm/vkms/vkms_writeback.c | 143 ++++++++++++++++++++++++++
+>  5 files changed, 231 insertions(+), 38 deletions(-)
+>  create mode 100644 drivers/gpu/drm/vkms/vkms_writeback.c
+> 
+> -- 
+> 2.28.0
+> 
