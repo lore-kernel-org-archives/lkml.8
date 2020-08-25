@@ -2,355 +2,96 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49679C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3292075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:52:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hJEwzpNy"
+	by mail.kernel.org (Postfix) with ESMTP id 2D27B2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgHYTwX (ORCPT
+        id S1726541AbgHYT40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:52:23 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48182 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726871AbgHYTv0 (ORCPT
+        Tue, 25 Aug 2020 15:56:26 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48858 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYT4X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:51:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598385084;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rSe2STeJN/VQk299U6GdY2sy2HaDdveKDfR6OrqqUwA=;
-        b=hJEwzpNy9tBJgVJWzVz/ZiA6gfqVefWER8lHcBcUicHTPbsVne+jiQUI2RlyUJkdlF73CL
-        wVIIdpU8Ik/5eJ0mhriPnFmcRjCSOFyiplN+85q0Au5Lm2K8ii2qslOiCM2p1GhusFOxab
-        YFZ6MhTHzYFDBQLFpkQx4AfS9GQTEss=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-zs0BhRXtOfapJG3OFZuHzw-1; Tue, 25 Aug 2020 15:51:20 -0400
-X-MC-Unique: zs0BhRXtOfapJG3OFZuHzw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A56B510ABDB2;
-        Tue, 25 Aug 2020 19:51:18 +0000 (UTC)
-Received: from Whitewolf.redhat.com (ovpn-120-227.rdu2.redhat.com [10.10.120.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E9D895D9D3;
-        Tue, 25 Aug 2020 19:51:17 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v4 12/20] drm/nouveau/kms: Only use hpd_work for reprobing in HPD paths
-Date:   Tue, 25 Aug 2020 15:50:19 -0400
-Message-Id: <20200825195027.74681-13-lyude@redhat.com>
-In-Reply-To: <20200825195027.74681-1-lyude@redhat.com>
-References: <20200825195027.74681-1-lyude@redhat.com>
+        Tue, 25 Aug 2020 15:56:23 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 1BFCD1C0BB9; Tue, 25 Aug 2020 21:56:21 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 21:56:20 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH 4.19 65/71] powerpc/pseries: Do not initiate shutdown
+ when system is running on UPS
+Message-ID: <20200825195620.GB27453@duo.ucw.cz>
+References: <20200824082355.848475917@linuxfoundation.org>
+ <20200824082359.202438041@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
+Content-Disposition: inline
+In-Reply-To: <20200824082359.202438041@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently we perform both short IRQ handling for DP, and connector
-reprobing in the HPD IRQ handler. However since we need to grab
-connection_mutex in order to reprobe a connector, in theory we could
-accidentally block ourselves from handling any short IRQs until after a
-modeset completes if a connector hotplug happens to occur in parallel
-with a modeset.
 
-I haven't seen this actually happen yet, but since we're cleaning up
-nouveau's hotplug handling code anyway and we already have a hpd worker,
-we can simply fix this by only relying on the HPD worker to actually
-reprobe connectors when we receive a HPD IRQ. We also add a mask to
-nouveau_drm to keep track of which connectors are waiting to be reprobed
-in response to an HPD IRQ.
+--uZ3hkaAS1mZxFaxD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
----
- drivers/gpu/drm/nouveau/nouveau_connector.c | 42 +++++--------
- drivers/gpu/drm/nouveau/nouveau_connector.h |  1 +
- drivers/gpu/drm/nouveau/nouveau_display.c   | 70 ++++++++++++++++++---
- drivers/gpu/drm/nouveau/nouveau_display.h   |  1 +
- drivers/gpu/drm/nouveau/nouveau_dp.c        |  2 +-
- drivers/gpu/drm/nouveau/nouveau_drm.c       |  4 +-
- drivers/gpu/drm/nouveau/nouveau_drv.h       |  2 +
- 7 files changed, 86 insertions(+), 36 deletions(-)
+Hi!
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-index 4a29f691c08e4..637e91594fbe8 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-@@ -1138,6 +1138,20 @@ nouveau_connector_funcs_lvds = {
- 	.early_unregister = nouveau_connector_early_unregister,
- };
- 
-+void
-+nouveau_connector_hpd(struct drm_connector *connector)
-+{
-+	struct nouveau_drm *drm = nouveau_drm(connector->dev);
-+	u32 mask = drm_connector_mask(connector);
-+
-+	mutex_lock(&drm->hpd_lock);
-+	if (!(drm->hpd_pending & mask)) {
-+		drm->hpd_pending |= mask;
-+		schedule_work(&drm->hpd_work);
-+	}
-+	mutex_unlock(&drm->hpd_lock);
-+}
-+
- static int
- nouveau_connector_hotplug(struct nvif_notify *notify)
- {
-@@ -1147,8 +1161,6 @@ nouveau_connector_hotplug(struct nvif_notify *notify)
- 	struct drm_device *dev = connector->dev;
- 	struct nouveau_drm *drm = nouveau_drm(dev);
- 	const struct nvif_notify_conn_rep_v0 *rep = notify->data;
--	const char *name = connector->name;
--	int ret;
- 	bool plugged = (rep->mask != NVIF_NOTIFY_CONN_V0_UNPLUG);
- 
- 	if (rep->mask & NVIF_NOTIFY_CONN_V0_IRQ) {
-@@ -1156,31 +1168,9 @@ nouveau_connector_hotplug(struct nvif_notify *notify)
- 		return NVIF_NOTIFY_KEEP;
- 	}
- 
--	ret = pm_runtime_get(drm->dev->dev);
--	if (ret == 0) {
--		/* We can't block here if there's a pending PM request
--		 * running, as we'll deadlock nouveau_display_fini() when it
--		 * calls nvif_put() on our nvif_notify struct. So, simply
--		 * defer the hotplug event until the device finishes resuming
--		 */
--		NV_DEBUG(drm, "Deferring HPD on %s until runtime resume\n",
--			 name);
--		schedule_work(&drm->hpd_work);
--
--		pm_runtime_put_noidle(drm->dev->dev);
--		return NVIF_NOTIFY_KEEP;
--	} else if (ret != 1 && ret != -EACCES) {
--		NV_WARN(drm, "HPD on %s dropped due to RPM failure: %d\n",
--			name, ret);
--		return NVIF_NOTIFY_DROP;
--	}
--
--	NV_DEBUG(drm, "%splugged %s\n", plugged ? "" : "un", name);
--
--	drm_helper_hpd_irq_event(connector->dev);
-+	NV_DEBUG(drm, "%splugged %s\n", plugged ? "" : "un", connector->name);
-+	nouveau_connector_hpd(connector);
- 
--	pm_runtime_mark_last_busy(drm->dev->dev);
--	pm_runtime_put_autosuspend(drm->dev->dev);
- 	return NVIF_NOTIFY_KEEP;
- }
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.h b/drivers/gpu/drm/nouveau/nouveau_connector.h
-index d6de5cb8e2238..d0b859c4a80ea 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.h
-@@ -187,6 +187,7 @@ nouveau_crtc_connector_get(struct nouveau_crtc *nv_crtc)
- 
- struct drm_connector *
- nouveau_connector_create(struct drm_device *, const struct dcb_output *);
-+void nouveau_connector_hpd(struct drm_connector *connector);
- 
- extern int nouveau_tv_disable;
- extern int nouveau_ignorelid;
-diff --git a/drivers/gpu/drm/nouveau/nouveau_display.c b/drivers/gpu/drm/nouveau/nouveau_display.c
-index 13016769a194b..bceb48a2dfca6 100644
---- a/drivers/gpu/drm/nouveau/nouveau_display.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_display.c
-@@ -457,16 +457,70 @@ static struct nouveau_drm_prop_enum_list dither_depth[] = {
- 	}                                                                      \
- } while(0)
- 
-+void
-+nouveau_display_hpd_resume(struct drm_device *dev)
-+{
-+	struct nouveau_drm *drm = nouveau_drm(dev);
-+
-+	mutex_lock(&drm->hpd_lock);
-+	drm->hpd_pending = ~0;
-+	mutex_unlock(&drm->hpd_lock);
-+
-+	schedule_work(&drm->hpd_work);
-+}
-+
- static void
- nouveau_display_hpd_work(struct work_struct *work)
- {
- 	struct nouveau_drm *drm = container_of(work, typeof(*drm), hpd_work);
-+	struct drm_device *dev = drm->dev;
-+	struct drm_connector *connector;
-+	struct drm_connector_list_iter conn_iter;
-+	u32 pending;
-+	bool changed = false;
-+
-+	pm_runtime_get_sync(dev->dev);
- 
--	pm_runtime_get_sync(drm->dev->dev);
-+	mutex_lock(&drm->hpd_lock);
-+	pending = drm->hpd_pending;
-+	drm->hpd_pending = 0;
-+	mutex_unlock(&drm->hpd_lock);
- 
--	drm_helper_hpd_irq_event(drm->dev);
-+	/* Nothing to do, exit early without updating the last busy counter */
-+	if (!pending)
-+		goto noop;
-+
-+	mutex_lock(&dev->mode_config.mutex);
-+	drm_connector_list_iter_begin(dev, &conn_iter);
-+
-+	nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
-+		enum drm_connector_status old_status = connector->status;
-+		u64 old_epoch_counter = connector->epoch_counter;
-+
-+		if (!(pending & drm_connector_mask(connector)))
-+			continue;
-+
-+		connector->status = drm_helper_probe_detect(connector, NULL,
-+							    false);
-+		if (old_epoch_counter == connector->epoch_counter)
-+			continue;
-+
-+		changed = true;
-+		drm_dbg_kms(dev, "[CONNECTOR:%d:%s] status updated from %s to %s (epoch counter %llu->%llu)\n",
-+			    connector->base.id, connector->name,
-+			    drm_get_connector_status_name(old_status),
-+			    drm_get_connector_status_name(connector->status),
-+			    old_epoch_counter, connector->epoch_counter);
-+	}
-+
-+	drm_connector_list_iter_end(&conn_iter);
-+	mutex_unlock(&dev->mode_config.mutex);
-+
-+	if (changed)
-+		drm_kms_helper_hotplug_event(dev);
- 
- 	pm_runtime_mark_last_busy(drm->dev->dev);
-+noop:
- 	pm_runtime_put_sync(drm->dev->dev);
- }
- 
-@@ -490,12 +544,11 @@ nouveau_display_acpi_ntfy(struct notifier_block *nb, unsigned long val,
- 				 */
- 				pm_runtime_put_autosuspend(drm->dev->dev);
- 			} else if (ret == 0) {
--				/* This may be the only indication we receive
--				 * of a connector hotplug on a runtime
--				 * suspended GPU, schedule hpd_work to check.
-+				/* We've started resuming the GPU already, so
-+				 * it will handle scheduling a full reprobe
-+				 * itself
- 				 */
- 				NV_DEBUG(drm, "ACPI requested connector reprobe\n");
--				schedule_work(&drm->hpd_work);
- 				pm_runtime_put_noidle(drm->dev->dev);
- 			} else {
- 				NV_WARN(drm, "Dropped ACPI reprobe event due to RPM error: %d\n",
-@@ -686,6 +739,7 @@ nouveau_display_create(struct drm_device *dev)
- 	}
- 
- 	INIT_WORK(&drm->hpd_work, nouveau_display_hpd_work);
-+	mutex_init(&drm->hpd_lock);
- #ifdef CONFIG_ACPI
- 	drm->acpi_nb.notifier_call = nouveau_display_acpi_ntfy;
- 	register_acpi_notifier(&drm->acpi_nb);
-@@ -705,9 +759,10 @@ void
- nouveau_display_destroy(struct drm_device *dev)
- {
- 	struct nouveau_display *disp = nouveau_display(dev);
-+	struct nouveau_drm *drm = nouveau_drm(dev);
- 
- #ifdef CONFIG_ACPI
--	unregister_acpi_notifier(&nouveau_drm(dev)->acpi_nb);
-+	unregister_acpi_notifier(&drm->acpi_nb);
- #endif
- 
- 	drm_kms_helper_poll_fini(dev);
-@@ -719,6 +774,7 @@ nouveau_display_destroy(struct drm_device *dev)
- 	nvif_disp_dtor(&disp->disp);
- 
- 	nouveau_drm(dev)->display = NULL;
-+	mutex_destroy(&drm->hpd_lock);
- 	kfree(disp);
- }
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_display.h b/drivers/gpu/drm/nouveau/nouveau_display.h
-index 76ba93e01aff4..616c434270594 100644
---- a/drivers/gpu/drm/nouveau/nouveau_display.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_display.h
-@@ -45,6 +45,7 @@ nouveau_display(struct drm_device *dev)
- int  nouveau_display_create(struct drm_device *dev);
- void nouveau_display_destroy(struct drm_device *dev);
- int  nouveau_display_init(struct drm_device *dev, bool resume, bool runtime);
-+void nouveau_display_hpd_resume(struct drm_device *dev);
- void nouveau_display_fini(struct drm_device *dev, bool suspend, bool runtime);
- int  nouveau_display_suspend(struct drm_device *dev, bool runtime);
- void nouveau_display_resume(struct drm_device *dev, bool runtime);
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
-index 201c0b4335563..71d095409c90d 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dp.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
-@@ -165,7 +165,7 @@ void nouveau_dp_irq(struct nouveau_drm *drm,
- 
- 	if (mstm && mstm->is_mst) {
- 		if (!nv50_mstm_service(drm, nv_connector, mstm))
--			schedule_work(&drm->hpd_work);
-+			nouveau_connector_hpd(connector);
- 	} else {
- 		drm_dp_cec_irq(&nv_connector->aux);
- 	}
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index 22d246acc5e52..42fc5c813a9bb 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -953,7 +953,7 @@ nouveau_pmops_resume(struct device *dev)
- 	ret = nouveau_do_resume(drm_dev, false);
- 
- 	/* Monitors may have been connected / disconnected during suspend */
--	schedule_work(&nouveau_drm(drm_dev)->hpd_work);
-+	nouveau_display_hpd_resume(drm_dev);
- 
- 	return ret;
- }
-@@ -1036,7 +1036,7 @@ nouveau_pmops_runtime_resume(struct device *dev)
- 	drm_dev->switch_power_state = DRM_SWITCH_POWER_ON;
- 
- 	/* Monitors may have been connected / disconnected during suspend */
--	schedule_work(&nouveau_drm(drm_dev)->hpd_work);
-+	nouveau_display_hpd_resume(drm_dev);
- 
- 	return ret;
- }
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
-index f63ac72aa556f..73ebf5fba2fcd 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drv.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
-@@ -198,6 +198,8 @@ struct nouveau_drm {
- 	struct nvbios vbios;
- 	struct nouveau_display *display;
- 	struct work_struct hpd_work;
-+	struct mutex hpd_lock;
-+	u32 hpd_pending;
- 	struct work_struct fbcon_work;
- 	int fbcon_new_state;
- #ifdef CONFIG_ACPI
--- 
-2.26.2
+> We have a user space tool (rtas_errd) on LPAR to monitor for
+> EPOW_SHUTDOWN_ON_UPS. Once it gets an event it initiates shutdown
+> after predefined time. It also starts monitoring for any new EPOW
 
+Yeah, so there's userspace tool, and currently systems _with_ that
+tool work poorly with UPS.
+
+So you have fixed that, and now, systems _without_ that tool will work
+poorly.
+
+That's not a fix for serious bug, that's behaviour change. You are
+fixing one set of systems and breaking another.
+
+I don't believe it is suitable for stable.
+
+								Pavel
+
+> @@ -118,7 +118,6 @@ static void handle_system_shutdown(char
+>  	case EPOW_SHUTDOWN_ON_UPS:
+>  		pr_emerg("Loss of system power detected. System is running on"
+>  			 " UPS/battery. Check RTAS error log for details\n");
+> -		orderly_poweroff(true);
+>  		break;
+> =20
+>  	case EPOW_SHUTDOWN_LOSS_OF_CRITICAL_FUNCTIONS:
+>=20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--uZ3hkaAS1mZxFaxD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX0Vs5AAKCRAw5/Bqldv6
+8lOOAJ4n0Ishqs/WgvEdZcbqzcFgzjVtbQCfTrF16PSpZ4y473rFXdbzTTGTELw=
+=yuvK
+-----END PGP SIGNATURE-----
+
+--uZ3hkaAS1mZxFaxD--
