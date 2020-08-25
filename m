@@ -2,123 +2,100 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D09C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1501E20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:45:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5O/tZUp"
+	by mail.kernel.org (Postfix) with ESMTP id 4D6122075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:46:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598366791;
+	bh=phIsJ/MZshaAlE7qLzNtXsogO0cQbIqmLvgOTmSUSss=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KoWOu/VXr9h3dlPRnmGNlamaCAWOCYErnjjDhxeqRC0oQyENvJNNNjc/WUPwH9IdR
+	 kJ0xd9ywNrgqH3mDkW4OoDST4x4EN1lcnNIeFTDB30F3pdAJ7vXByV2KU65lLAprUp
+	 k6/k1ZTxs+SUzxY1JHrfIH7IitndyeV6dXZxPLEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgHYOpx (ORCPT
+        id S1726711AbgHYOq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:45:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHYOpx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:45:53 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22A01C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:45:53 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id h3so11812382oie.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=VTr+UBTs8M83B6cwmjPIyb1RPvibp4IuDq2rGpbu+JE=;
-        b=T5O/tZUp+lYaSBiQmWvop8RewiuyH9rZZFLeiYNmnxy+nO2npT3cCPAGOIQmOWwYDu
-         FqcE2cD8M6/WcZwfiffethd0UodvN9WYZQtBGJBBt4s2SpxKupl5ZCRFWr3wd9JjGtDJ
-         MvUZ1MvGTMNRAFhUJJyKWxAMesWLSUpEqOUb0/GUJdexrHvxlKxBIYWqMQaHpM+uxI0f
-         DLFHTvPWZYICuDwOCaVFlO0pT3quj0E+yJCnvdf3V+gjGytGdt1+Q38sn86iaEivlOnB
-         7DbpN/1PktDbLTEVqES/iNDJwx026o4iUxAFL1RrF9nB845F+Fzd5YbrLsyNo3RP0FV4
-         eFgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=VTr+UBTs8M83B6cwmjPIyb1RPvibp4IuDq2rGpbu+JE=;
-        b=O7kK8O0reXdoKTpT6y/EklggpxjbkgmjB0BbLontYs4tcOHv087wmBWEJWPYZI0eKD
-         etCjgNek/NbvvGaJrX6/u/YeJIlPbuH3ux40kUUNdSjMU2rOJzxAoAPcfjsqG+ef/MIg
-         h5HBKSKwHeqtQy3W3UiVwf0ll8tnPOAiiIRRe9HZYpgJ52LFn5X8Yws0YI/u5o1o0Djg
-         FGoSxE3M/mLUmbmwBmmJnlaK9u2TBg0PQWoMRLIE4nIeh6Naw9knwUSTsj7CYzxSIHRj
-         WqMJCCwwOCylHVfuddkI5XjOLZ15ES/uNskfKuGweKrL4+v/Ss5y+jcOxKtUQXe9elWQ
-         f9qg==
-X-Gm-Message-State: AOAM531isdQ1VDD1d8lJx3ZCmzSOvThVOdkqmOPLpduVN9ZCxO6sJlcJ
-        TSigoQviqjXl08fuCwOvhzezx3naloB2Jev/JoQ=
-X-Google-Smtp-Source: ABdhPJyQu+oGC+8t3DwICtYWsqdZqeQr2c24pHoLgUtv3lH9lAxkgZJP8ccZ+ojSOOybLxP+LEzuIrAsHvmsysPwlgg=
-X-Received: by 2002:aca:acd5:: with SMTP id v204mr1196935oie.35.1598366752520;
- Tue, 25 Aug 2020 07:45:52 -0700 (PDT)
+        Tue, 25 Aug 2020 10:46:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57818 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbgHYOq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:46:26 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 974EB20782;
+        Tue, 25 Aug 2020 14:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598366785;
+        bh=phIsJ/MZshaAlE7qLzNtXsogO0cQbIqmLvgOTmSUSss=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SRGf5E4eKTD9RhFmfUB66zeCi2Ide/AgEYRHSPsOek5yAe83ekR/2mSvo8JavyyHQ
+         1zH0c6aN3f2ZhOox3VOLsAA9SkpZ2wHJRAzFlxIZQBeRmDHX91C3CPWYtPTJ9ljkgj
+         +WE5+K8H2BW4bWaSIn0aPMRU8H4fumeyzg4YTsHU=
+Date:   Tue, 25 Aug 2020 20:16:19 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lars@metafoo.de, dan.j.williams@intel.com, ardeleanalex@gmail.com
+Subject: Re: [PATCH v2 0/6] dmaengine: axi-dmac: add support for reading bus
+ attributes from register
+Message-ID: <20200825144619.GR2639@vkoul-mobl>
+References: <20200825124840.43664-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-References: <20200825143540.2948637-1-ndesaulniers@google.com>
-In-Reply-To: <20200825143540.2948637-1-ndesaulniers@google.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 25 Aug 2020 16:45:40 +0200
-Message-ID: <CA+icZUXt4F76TaOxSc1=pVunguxqvYWe7+ypwsS4f=uwc7A=EA@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: add LLVM maintainers
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825124840.43664-1-alexandru.ardelean@analog.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 4:35 PM 'Nick Desaulniers' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> Nominate Nathan and myself to be point of contact for clang/LLVM related
-> support, after a poll at the LLVM BoF at Linux Plumbers Conf 2020.
->
-> While corporate sponsorship is beneficial, its important to not entrust
-> the keys to the nukes with any one entity. Should Nathan and I find
-> ourselves at the same employer, I would gladly step down.
->
-> Cc: clang-built-linux@googlegroups.com
-> Cc: Nathan Chancellor <natechancellor@gmail.com>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
->  MAINTAINERS | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 33aab0c88118..0cbb24753153 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4249,6 +4249,8 @@ S:        Maintained
->  F:     .clang-format
->
->  CLANG/LLVM BUILD SUPPORT
+On 25-08-20, 15:48, Alexandru Ardelean wrote:
+> The series adds support for reading the DMA bus attributes from the
+> INTERFACE_DESCRIPTION (0x10) register.
+> 
+> The first 5 changes are a bit of rework prior to adding the actual
+> change in patch 6, as things need to be shifted around a bit, to enable 
+> the clock to be enabled earlier, to be able to read the version
+> register.
 
-Congrats!
+Not sure what happened, I see two sets of patches in this series, maybe
+duplicate..? Better to resend a clean version..
 
-Thanks, this was overdue and requested at ClangBuiltLinux Meetup in
-Zurich in February.
+Even PW shows 12 patches https://patchwork.kernel.org/project/linux-dmaengine/list/
 
-Reviewed-by: Sedat Dilek <sedat.dilek@gmail.com>
+Thanks
 
-- Sedat -
+> 
+> Changelog v1 -> v2:
+> * fixed error-exit paths for the clock move patch
+>   i.e. 'dmaengine: axi-dmac: move clock enable earlier'
+> * fixed error-exit path for patch
+>   'axi-dmac: wrap channel parameter adjust into function'
+> * added patch 'dmaengine: axi-dmac: move active_descs list init after device-tree init'
+>   the list of active_descs can be moved a bit lower in the init/probe
+> 
+> Alexandru Ardelean (6):
+>   dmaengine: axi-dmac: move version read in probe
+>   dmaengine: axi-dmac: move active_descs list init after device-tree
+>     init
+>   dmaengine: axi-dmac: move clock enable earlier
+>   dmaengine: axi-dmac: wrap entire dt parse in a function
+>   dmaengine: axi-dmac: wrap channel parameter adjust into function
+>   dmaengine: axi-dmac: add support for reading bus attributes from
+>     registers
+> 
+>  drivers/dma/dma-axi-dmac.c | 138 ++++++++++++++++++++++++++++---------
+>  1 file changed, 107 insertions(+), 31 deletions(-)
+> 
+> -- 
+> 2.17.1
 
-> +M:     Nathan Chancellor <natechancellor@gmail.com>
-> +M:     Nick Desaulniers <ndesaulniers@google.com>
->  L:     clang-built-linux@googlegroups.com
->  S:     Supported
->  W:     https://clangbuiltlinux.github.io/
-> --
-> 2.28.0.297.g1956fa8f8d-goog
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200825143540.2948637-1-ndesaulniers%40google.com.
+-- 
+~Vinod
