@@ -2,140 +2,183 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 620F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E48CBC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 464172076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19EB207BC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:14:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L7n2r6PM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgHYROC (ORCPT
+        id S1726752AbgHYROI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:14:02 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:57268 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726497AbgHYRNZ (ORCPT
+        Tue, 25 Aug 2020 13:14:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59162 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgHYRNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:13:25 -0400
-Received: by mail-il1-f197.google.com with SMTP id x2so9396797ilm.23
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:13:24 -0700 (PDT)
+        Tue, 25 Aug 2020 13:13:53 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FE78C061755;
+        Tue, 25 Aug 2020 10:13:52 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id s20so3286391wmj.1;
+        Tue, 25 Aug 2020 10:13:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Riny6p9pEfEbUEaJydyX6asNeCvKfEsCe02s6uvHVuY=;
+        b=L7n2r6PMY7XKRAv85llMXUyXYNZfRdoE5QPoVPrFzUqAEGtoKH67JxkL0n+V405EXC
+         igS73bqxFSuqkn59kWh6WpoRPEB3dxTXKPbQtVqGbJ0CX2VngKjGuKVL5a74OWf+svH4
+         21CvYLZAWY8c9caYLkrP+WjkRO8qUqBix98uaKRDvaFeQSTtLq/5yQ7CwsWq+gbm5K7T
+         aWeSp1NKgncnA/0GYph66p8FXu6uSHQDKXBCmqF9NoHmHAb3lY89jm+1hZRnepPRhol4
+         G59dUtgzCHYZccTOu93aG5h2zqkU9eto5ZB26jYsKcqVLb8hWY/bq5D3kaZxoCA1EnIG
+         xn2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ep+DsuyAmWsazblTEOVrewteCHG+sHXnccEH6Iu0R/c=;
-        b=M+KXZOG2M8DnFVL+mkpu0MHKckKCoausxitp9mtG2RXSXrlQESt3ptSGYIQloXuPiy
-         PMyOeVF3HqYYemJIRhV2SoiJkFxSamYBuYkzZzT4XUfDU8MhFYap1wKuGXdPBJdv+ftA
-         q60B4SuNOWXNNq1eFtRw1soAFSLtptLpCFkGwGGy+QyyE7FGap317TC6TCVRq5WomEcA
-         F92aNkcdmm8In8SxgjIT0H9gWGNLk0fA9US9gsJEy/i9E9EIOUj11yFw8GTkKFh56pZw
-         FDLAabsqZEgGhunAEkqwQCl6elBD4kl7a4pVys2zg/qUF2V2f/Jgfozyfo4E8dMAHvbw
-         p/pQ==
-X-Gm-Message-State: AOAM531mNwHEffAR9luD86I0Ut1vBNtl5zirhny8Hf/8Fd9pQNt7iRGi
-        wnGZqy7qGoIxDqSmLkAHt0lHursikrqOq10e6dI/DXcylBj7
-X-Google-Smtp-Source: ABdhPJy4rZok+wcE1queuo86SuHNhGp4mUTkPPKETthZwliyP7AUH5bEvlP5H8dqW85tdV8DLUWWyfIPuDrpQ7M9l6XIR27RRUUC
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Riny6p9pEfEbUEaJydyX6asNeCvKfEsCe02s6uvHVuY=;
+        b=OoTZpiuGR8TPQnS8LAX1ra9Lvg1yhoVGn382kkl5+bU2lyseOB6/iXGipqfTra7BBS
+         pfSBifQ2I5KiRk7U3sAzS/PRInn98l6krnJa0cvwkNP/pXqBiJD8F5WWZLjmSh4MM36w
+         H9JioIbuXC6WY0OzlCEfH25f8F76fS/53Dk+VOzut3Bk16Q6EcCGN1xa7Ev+BtA1zpjl
+         0hEKdH3f6oiy+l20O1KR/qISTDxsKnh5X9dM+qGNUpmhYoUJxSvnzuU4y4GxwSo+lNfA
+         wDvoT+yvrNkx/LQRGGx9dmdVRT5ElA33X/YYtG0aV7fB+QyTTgtjYqwqEiWxT0qsPvzw
+         AWQg==
+X-Gm-Message-State: AOAM532iDjvM+HEO4D4AHbB6CADD2nVLtp21vUirreYBi1VwWbL/1S/x
+        LqXFjo1vfQ7pvfC0MM+h2og=
+X-Google-Smtp-Source: ABdhPJyCwwprTPUNi+5DZtz2fU/Y/szoI5vPcNV6HnTgpbPBndJXrU1MQ5kSAbjTaYbFG3uLUJgB7g==
+X-Received: by 2002:a1c:7203:: with SMTP id n3mr2776863wmc.149.1598375630849;
+        Tue, 25 Aug 2020 10:13:50 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id v11sm33135194wrr.10.2020.08.25.10.13.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 10:13:50 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     alex.dewar90@gmail.com
+Cc:     dennis.dalessandro@intel.com, dledford@redhat.com,
+        gustavo@embeddedor.com, jgg@ziepe.ca, joe@perches.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        mike.marciniszyn@intel.com, roland@purestorage.com
+Subject: [PATCH v2 2/2] IB/qib: tidy up process_cc()
+Date:   Tue, 25 Aug 2020 18:12:44 +0100
+Message-Id: <20200825171242.448447-2-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <64d7e1c9-9c6a-93f3-ce0a-c24b1c236071@gmail.com>
+References: <64d7e1c9-9c6a-93f3-ce0a-c24b1c236071@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:9a94:: with SMTP id c20mr8972530ill.37.1598375603959;
- Tue, 25 Aug 2020 10:13:23 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 10:13:23 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000177d5605adb6d2c7@google.com>
-Subject: general protection fault in addrconf_notify
-From:   syzbot <syzbot+8f00ab65043d135664b9@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This function has a lot of gotos which could be replaced by simple
+returns, making the function tidier and less bug prone.
 
-syzbot found the following issue on:
-
-HEAD commit:    494d311a Add linux-next specific files for 20200821
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=170c9051900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a61d44f28687f508
-dashboard link: https://syzkaller.appspot.com/bug?extid=8f00ab65043d135664b9
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8f00ab65043d135664b9@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc00e0dffffe: 0000 [#1] PREEMPT SMP KASAN
-KASAN: probably user-memory-access in range [0x0000000706fffff0-0x0000000706fffff7]
-CPU: 1 PID: 19287 Comm: syz-executor.3 Not tainted 5.9.0-rc1-next-20200821-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:addrconf_ifdown.isra.0+0x33b/0x1570 net/ipv6/addrconf.c:3743
-Code: 84 d2 01 00 00 e8 25 80 88 fa 48 81 eb 48 01 00 00 0f 84 c0 01 00 00 e8 13 80 88 fa 48 8d bb 38 01 00 00 48 89 f8 48 c1 e8 03 <80> 3c 28 00 0f 85 62 05 00 00 4c 39 bb 38 01 00 00 75 9b e8 ed 7f
-RSP: 0018:ffffc900188cf8e0 EFLAGS: 00010202
-RAX: 00000000e0dffffe RBX: 0000000706fffeb8 RCX: ffffffff815b5270
-RDX: ffff8881f7dfa3c0 RSI: ffffffff86ebf2ad RDI: 0000000706fffff0
-RBP: dffffc0000000000 R08: 0000000000000001 R09: 0000000000000003
-R10: fffff52003119f0e R11: 0000000000000001 R12: 0000000000000054
-R13: ffff8881f5370328 R14: 0000000000000000 R15: ffff88809a0d5800
-FS:  000000000271d940(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b30d2c000 CR3: 00000001f4c2b000 CR4: 00000000001526e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- addrconf_notify+0x55c/0x2310 net/ipv6/addrconf.c:3627
- notifier_call_chain+0xb5/0x200 kernel/notifier.c:83
- call_netdevice_notifiers_info+0xb5/0x130 net/core/dev.c:2033
- call_netdevice_notifiers_extack net/core/dev.c:2045 [inline]
- call_netdevice_notifiers net/core/dev.c:2059 [inline]
- dev_close_many+0x30b/0x650 net/core/dev.c:1634
- rollback_registered_many+0x3a8/0x1210 net/core/dev.c:9260
- rollback_registered net/core/dev.c:9328 [inline]
- unregister_netdevice_queue+0x2dd/0x570 net/core/dev.c:10409
- unregister_netdevice include/linux/netdevice.h:2774 [inline]
- __tun_detach+0xff6/0x1310 drivers/net/tun.c:673
- tun_detach drivers/net/tun.c:690 [inline]
- tun_chr_close+0xd9/0x180 drivers/net/tun.c:3390
- __fput+0x285/0x920 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:141
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:139 [inline]
- exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:166
- syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:241
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x416e21
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffd36a5d3b0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000006 RCX: 0000000000416e21
-RDX: 0000000000000000 RSI: 0000000000000eff RDI: 0000000000000005
-RBP: 0000000000000001 R08: 00000000f18eaf02 R09: 0000000000000000
-R10: 00007ffd36a5d4a0 R11: 0000000000000293 R12: 000000000118d940
-R13: 000000000118d940 R14: ffffffffffffffff R15: 000000000118d08c
-Modules linked in:
----[ end trace 46271974e693cee0 ]---
-RIP: 0010:addrconf_ifdown.isra.0+0x33b/0x1570 net/ipv6/addrconf.c:3743
-Code: 84 d2 01 00 00 e8 25 80 88 fa 48 81 eb 48 01 00 00 0f 84 c0 01 00 00 e8 13 80 88 fa 48 8d bb 38 01 00 00 48 89 f8 48 c1 e8 03 <80> 3c 28 00 0f 85 62 05 00 00 4c 39 bb 38 01 00 00 75 9b e8 ed 7f
-RSP: 0018:ffffc900188cf8e0 EFLAGS: 00010202
-RAX: 00000000e0dffffe RBX: 0000000706fffeb8 RCX: ffffffff815b5270
-RDX: ffff8881f7dfa3c0 RSI: ffffffff86ebf2ad RDI: 0000000706fffff0
-RBP: dffffc0000000000 R08: 0000000000000001 R09: 0000000000000003
-R10: fffff52003119f0e R11: 0000000000000001 R12: 0000000000000054
-R13: ffff8881f5370328 R14: 0000000000000000 R15: ffff88809a0d5800
-FS:  000000000271d940(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b30d2c000 CR3: 00000001f4c2b000 CR4: 00000000001526e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/infiniband/hw/qib/qib_mad.c | 50 ++++++++---------------------
+ 1 file changed, 13 insertions(+), 37 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/infiniband/hw/qib/qib_mad.c b/drivers/infiniband/hw/qib/qib_mad.c
+index f972e559a8a7..f83e331977f8 100644
+--- a/drivers/infiniband/hw/qib/qib_mad.c
++++ b/drivers/infiniband/hw/qib/qib_mad.c
+@@ -2293,74 +2293,50 @@ static int process_cc(struct ib_device *ibdev, int mad_flags,
+ 			struct ib_mad *out_mad)
+ {
+ 	struct ib_cc_mad *ccp = (struct ib_cc_mad *)out_mad;
+-	int ret;
+-
+ 	*out_mad = *in_mad;
+ 
+ 	if (ccp->class_version != 2) {
+ 		ccp->status |= IB_SMP_UNSUP_VERSION;
+-		ret = reply((struct ib_smp *)ccp);
+-		goto bail;
++		return reply((struct ib_smp *)ccp);
+ 	}
+ 
+ 	switch (ccp->method) {
+ 	case IB_MGMT_METHOD_GET:
+ 		switch (ccp->attr_id) {
+ 		case IB_CC_ATTR_CLASSPORTINFO:
+-			ret = cc_get_classportinfo(ccp, ibdev);
+-			goto bail;
+-
++			return cc_get_classportinfo(ccp, ibdev);
+ 		case IB_CC_ATTR_CONGESTION_INFO:
+-			ret = cc_get_congestion_info(ccp, ibdev, port);
+-			goto bail;
+-
++			return cc_get_congestion_info(ccp, ibdev, port);
+ 		case IB_CC_ATTR_CA_CONGESTION_SETTING:
+-			ret = cc_get_congestion_setting(ccp, ibdev, port);
+-			goto bail;
+-
++			return cc_get_congestion_setting(ccp, ibdev, port);
+ 		case IB_CC_ATTR_CONGESTION_CONTROL_TABLE:
+-			ret = cc_get_congestion_control_table(ccp, ibdev, port);
+-			goto bail;
+-
++			return cc_get_congestion_control_table(ccp, ibdev, port);
+ 		default:
+ 			ccp->status |= IB_SMP_UNSUP_METH_ATTR;
+-			ret = reply((struct ib_smp *) ccp);
+-			goto bail;
++			return reply((struct ib_smp *) ccp);
+ 		}
+-
+ 	case IB_MGMT_METHOD_SET:
+ 		switch (ccp->attr_id) {
+ 		case IB_CC_ATTR_CA_CONGESTION_SETTING:
+-			ret = cc_set_congestion_setting(ccp, ibdev, port);
+-			goto bail;
+-
++			return cc_set_congestion_setting(ccp, ibdev, port);
+ 		case IB_CC_ATTR_CONGESTION_CONTROL_TABLE:
+-			ret = cc_set_congestion_control_table(ccp, ibdev, port);
+-			goto bail;
+-
++			return cc_set_congestion_control_table(ccp, ibdev, port);
+ 		default:
+ 			ccp->status |= IB_SMP_UNSUP_METH_ATTR;
+-			ret = reply((struct ib_smp *) ccp);
+-			goto bail;
++			return reply((struct ib_smp *) ccp);
+ 		}
+-
+ 	case IB_MGMT_METHOD_GET_RESP:
+ 		/*
+ 		 * The ib_mad module will call us to process responses
+ 		 * before checking for other consumers.
+ 		 * Just tell the caller to process it normally.
+ 		 */
+-		ret = IB_MAD_RESULT_SUCCESS;
+-		goto bail;
+-
+-	case IB_MGMT_METHOD_TRAP:
+-	default:
+-		ccp->status |= IB_SMP_UNSUP_METHOD;
+-		ret = reply((struct ib_smp *) ccp);
++		return IB_MAD_RESULT_SUCCESS;
+ 	}
+ 
+-bail:
+-	return ret;
++	/* method is unsupported */
++	ccp->status |= IB_SMP_UNSUP_METHOD;
++	return reply((struct ib_smp *) ccp);
+ }
+ 
+ /**
+-- 
+2.28.0
+
