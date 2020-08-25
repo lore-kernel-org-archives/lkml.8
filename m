@@ -2,164 +2,226 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D28ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC3FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEB0A20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D75620706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fRFpmnqd"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="n3XzR9wj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbgHYQnY (ORCPT
+        id S1727073AbgHYQoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:43:24 -0400
-Received: from gateway34.websitewelcome.com ([192.185.149.13]:40783 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725936AbgHYQnU (ORCPT
+        Tue, 25 Aug 2020 12:44:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgHYQoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:43:20 -0400
-Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id E69AB86EAB0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 11:43:17 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id Ac2Xk48AtLFNkAc2XkYVEl; Tue, 25 Aug 2020 11:43:17 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cOGcQuNcgu27ssRe7+iEilXICwkaDhh0xHUhsfky6/A=; b=fRFpmnqdD+FV804lUWuyvAZWBn
-        X4dF1aIY3v3YTV0F+UJuTPHXi6WvGPmwCRi4qh4bbjlMcUBZJYX4jJb8tdD+o3m6UWuAe7yo+r5Zs
-        obIUsnhWJ33DeeIc16B9xOVd7ioOInz5s0vcrRCWgrORSU4RWYMowBDr+COgroKxen4E8pNCtmFR5
-        2n5C5sBchDXyzeAZXXt+Dr1dOuolMFUszSqBrQBOV7+5Hd8V/laHZqXYrvHqEKBfEELVVq+ciHYbJ
-        C93vdYvzgpYMuETgWOp04+omT/m6jjxxSOWPP3FSVWdAmdlTjpFC8TjG9WbXGzChZD2bvtlosLOl8
-        xC45sjSQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:58602 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1kAc2X-000vvH-4N; Tue, 25 Aug 2020 11:43:17 -0500
-Subject: Re: [PATCH] IB/qib: remove superfluous fallthrough statements
-To:     Joe Perches <joe@perches.com>, Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roland Dreier <roland@purestorage.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200825155142.349651-1-alex.dewar90@gmail.com>
- <4877c3a5-365e-4500-43c0-4a4361e2cda3@embeddedor.com>
- <086ee29ef75f657dcf45e92d4ebfdf2b3f4fcab8.camel@perches.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- AP7RWS474w==
-Message-ID: <da65ca20-49cb-2940-76d6-7e341687a9e2@embeddedor.com>
-Date:   Tue, 25 Aug 2020 11:49:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 25 Aug 2020 12:44:23 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 209CFC061574;
+        Tue, 25 Aug 2020 09:44:23 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0c5a009557515e5e730b1a.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:5a00:9557:515e:5e73:b1a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0475A1EC02F2;
+        Tue, 25 Aug 2020 18:44:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598373856;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=UbGRBBMOM4Q+XbRJRW9yoJJWM1PqXnrPAdAFhJ8j8HI=;
+        b=n3XzR9wjuhdBeQAChl71tjSERzGHM/7ChjhMLTpdK0tjwwXSW7ZSaBUPzhMRAF+t37OVsZ
+        pbqX76gRFEZlONdkGnDHJVQfVFuGc1kZk8gG7HHsXP6hHxdTwG1ycidTBcirjy3HJJ4zkB
+        FDspO26JvSPEAuNQvaEZcICBzHoID2c=
+Date:   Tue, 25 Aug 2020 18:44:12 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Haitao Huang <haitao.huang@linux.intel.com>,
+        Chunyang Hui <sanqian.hcy@antfin.com>,
+        Jordan Hand <jorhand@linux.microsoft.com>,
+        Nathaniel McCallum <npmccallum@redhat.com>,
+        Seth Moore <sethmo@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Suresh Siddha <suresh.b.siddha@intel.com>,
+        andriy.shevchenko@linux.intel.com, asapek@google.com,
+        cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
+        tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v36 11/24] x86/sgx: Add SGX enclave driver
+Message-ID: <20200825164412.GF12107@zn.tnic>
+References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+ <20200716135303.276442-12-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <086ee29ef75f657dcf45e92d4ebfdf2b3f4fcab8.camel@perches.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1kAc2X-000vvH-4N
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.8]) [187.162.31.110]:58602
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 17
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Disposition: inline
+In-Reply-To: <20200716135303.276442-12-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jul 16, 2020 at 04:52:50PM +0300, Jarkko Sakkinen wrote:
 
+Just minor things below - I'm not even going to pretend I fully
+understand what's going on but FWICT, it looks non-threateningly ok to
+me.
 
-On 8/25/20 11:26, Joe Perches wrote:
-> On Tue, 2020-08-25 at 11:19 -0500, Gustavo A. R. Silva wrote:
->>
->> On 8/25/20 10:51, Alex Dewar wrote:
->>> Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
->>> erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
->>> were later converted to fallthrough statements by commit df561f6688fe
->>> ("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
->>> warning about unreachable code.
->>>
->>> Remove the fallthrough statements and replace the mass of gotos with
->>> simple return statements to make the code terser and less bug-prone.
->>>
->>
->> This should be split up into two separate patches: one to address the
->> fallthrough markings, and another one for the gotos.
-> 
-> I don't think it's necessary to break this into multiple patches.
-> Logical changes in a single patch are just fine, micro patches
-> aren't that useful.
-> 
+> diff --git a/arch/x86/kernel/cpu/sgx/driver.c b/arch/x86/kernel/cpu/sgx/driver.c
+> new file mode 100644
+> index 000000000000..b52520407f5b
+> --- /dev/null
+> +++ b/arch/x86/kernel/cpu/sgx/driver.c
+> @@ -0,0 +1,177 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> +// Copyright(c) 2016-18 Intel Corporation.
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/miscdevice.h>
+> +#include <linux/mman.h>
+> +#include <linux/security.h>
+> +#include <linux/suspend.h>
+> +#include <asm/traps.h>
+> +#include "driver.h"
+> +#include "encl.h"
+> +
+> +MODULE_DESCRIPTION("Intel SGX Enclave Driver");
+> +MODULE_AUTHOR("Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>");
+> +MODULE_LICENSE("Dual BSD/GPL");
 
-There is a reason for this. Read the changelog text and review the patch.
+That boilerplate stuff usually goes to the end of the file.
 
-Thanks
---
-Gustavo
+...
+
+> +static struct sgx_encl_page *sgx_encl_load_page(struct sgx_encl *encl,
+> +						unsigned long addr)
+> +{
+> +	struct sgx_encl_page *entry;
+> +	unsigned int flags;
+> +
+> +	/* If process was forked, VMA is still there but vm_private_data is set
+> +	 * to NULL.
+> +	 */
+> +	if (!encl)
+> +		return ERR_PTR(-EFAULT);
+> +
+> +	flags = atomic_read(&encl->flags);
+> +
+
+^ Superfluous newline.
+
+> +	if ((flags & SGX_ENCL_DEAD) || !(flags & SGX_ENCL_INITIALIZED))
+> +		return ERR_PTR(-EFAULT);
+> +
+> +	entry = xa_load(&encl->page_array, PFN_DOWN(addr));
+> +	if (!entry)
+> +		return ERR_PTR(-EFAULT);
+> +
+> +	/* Page is already resident in the EPC. */
+> +	if (entry->epc_page)
+> +		return entry;
+> +
+> +	return ERR_PTR(-EFAULT);
+> +}
+> +
+> +static void sgx_mmu_notifier_release(struct mmu_notifier *mn,
+> +				     struct mm_struct *mm)
+> +{
+> +	struct sgx_encl_mm *encl_mm =
+> +		container_of(mn, struct sgx_encl_mm, mmu_notifier);
+
+Just let it stick out.
+
+> +	struct sgx_encl_mm *tmp = NULL;
+> +
+> +	/*
+> +	 * The enclave itself can remove encl_mm.  Note, objects can't be moved
+> +	 * off an RCU protected list, but deletion is ok.
+> +	 */
+> +	spin_lock(&encl_mm->encl->mm_lock);
+> +	list_for_each_entry(tmp, &encl_mm->encl->mm_list, list) {
+> +		if (tmp == encl_mm) {
+> +			list_del_rcu(&encl_mm->list);
+> +			break;
+> +		}
+> +	}
+> +	spin_unlock(&encl_mm->encl->mm_lock);
+> +
+> +	if (tmp == encl_mm) {
+> +		synchronize_srcu(&encl_mm->encl->srcu);
+> +		mmu_notifier_put(mn);
+> +	}
+> +}
+> +
+> +static void sgx_mmu_notifier_free(struct mmu_notifier *mn)
+> +{
+> +	struct sgx_encl_mm *encl_mm =
+> +		container_of(mn, struct sgx_encl_mm, mmu_notifier);
+
+Ditto.
+
+...
+
+> +/**
+> + * sgx_encl_may_map() - Check if a requested VMA mapping is allowed
+> + * @encl:		an enclave
+> + * @start:		lower bound of the address range, inclusive
+> + * @end:		upper bound of the address range, exclusive
+> + * @vm_prot_bits:	requested protections of the address range
+> + *
+> + * Iterate through the enclave pages contained within [@start, @end) to verify
+> + * the permissions requested by @vm_prot_bits do not exceed that of any enclave
+> + * page to be mapped.
+> + *
+> + * Return:
+> + *   0 on success,
+> + *   -EACCES if VMA permissions exceed enclave page permissions
+> + */
+> +int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
+> +		     unsigned long end, unsigned long vm_flags)
+> +{
+> +	unsigned long vm_prot_bits = vm_flags & (VM_READ | VM_WRITE | VM_EXEC);
+> +	unsigned long idx_start = PFN_DOWN(start);
+> +	unsigned long idx_end = PFN_DOWN(end - 1);
+> +	struct sgx_encl_page *page;
+> +	XA_STATE(xas, &encl->page_array, idx_start);
+> +
+> +	/*
+> +	 * Disallow RIE tasks as their VMA permissions might conflict with the
+
+"RIE", hmm what is that?
+
+/me looks at the test
+
+Aaah, READ_IMPLIES_EXEC. Is "RIE" some widely accepted acronym I'm not
+aware of?
+
+> +	 * enclave page permissions.
+> +	 */
+> +	if (!!(current->personality & READ_IMPLIES_EXEC))
+
+The "!!" is not really needed - you're in boolean context.
+
+...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
