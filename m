@@ -2,169 +2,106 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E625C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C20DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5628B2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05D42071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:11:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nmmegrVv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+lbKQ8Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730179AbgHYMLf (ORCPT
+        id S1730191AbgHYMLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:11:35 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35882 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729051AbgHYMLe (ORCPT
+        Tue, 25 Aug 2020 08:11:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729051AbgHYMLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:11:34 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07PC1ASu022670;
-        Tue, 25 Aug 2020 07:01:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598356870;
-        bh=nZf8uuMxaL10/OqfPfcuo5MhsldrclyKP8O5HMXbXtU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=nmmegrVvUzAIZLonej0MLHSgqK0JwzS4rVjuOCbMdd1nMMUNsd4PLucLmzVjPQAdj
-         GiN9NEIB6kohXI7E3pmA/05pXgC2K0unP0dgQBLyyxP7MkT9NnquwIVaNsmuvCOkoS
-         gM0DVKz3MaKFh/ZqJ9SYI3Oevw7Tjha4OfMi4ogI=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07PC1Aix015138
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 07:01:10 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 25
- Aug 2020 07:01:10 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 25 Aug 2020 07:01:10 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07PC10LD024089;
-        Tue, 25 Aug 2020 07:01:08 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <balbi@kernel.org>
-CC:     <pawell@cadence.com>, <kurahul@cadence.com>, <nsekhar@ti.com>,
-        <vigneshr@ti.com>, <robh+dt@kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 3/3] usb: cdns3: Enable workaround for USB2.0 PHY Rx compliance test PHY lockup
-Date:   Tue, 25 Aug 2020 15:00:59 +0300
-Message-ID: <20200825120059.12436-4-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200825120059.12436-1-rogerq@ti.com>
-References: <20200825120059.12436-1-rogerq@ti.com>
+        Tue, 25 Aug 2020 08:11:36 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5ABC061574;
+        Tue, 25 Aug 2020 05:11:35 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id e11so10164244ils.10;
+        Tue, 25 Aug 2020 05:11:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y0fqJAi2q1wLdvWz2fG2+Ma0IiMVbAmyb/CXLp46wV4=;
+        b=J+lbKQ8ZWXW+rZRvfI0n3+KbSsRmAQiWkv4Q0JtH2LcPvtJx/FaQlbnZqhY6vZkVM6
+         zpkNW+fpbwGHhSYAmUcQFwBvrzvbxs+iuOAY+ZbHdmAbnJaUfh72Key3s8Y2Tsy/Doe7
+         1acNNB5bLjwpS4+OnuQkyOiltLS0ruy7wYM7s74NbMNylzrX9dcHPGhTJb5erEWxR209
+         kJMoCDzdw4SjO9ysuZf75VZOLfgt/C6fxlIpJkvpW2hq4o3Wp45AeMhiuXEEtljuRjVg
+         mQvRKtuoD4RpOrS2atQMK1UX+7d4FPJII4PzV6M7BdTDPp7rRAE5UQFjJer8OtfmtQ28
+         +D3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y0fqJAi2q1wLdvWz2fG2+Ma0IiMVbAmyb/CXLp46wV4=;
+        b=ELpJHIT20DJHHZE4oIf7sbYRcxJRFe8fq90Y/069K8QauOLzxQuFGYW/dLKxD5/39M
+         7ddCou5lwaS9n0rQWKPIxULs6Q/0iYSGRWt0HR96zd/N90YkzuwiPQro9IYyKPsWvGoB
+         ZHNEBTalqMKQMb7ubO56fkHF2jO7uG84oi+Uco4VmNdLms/D0YWUxm94iptVVfaZeNcA
+         IVU14ZCOMgheRblwy9jDRyRyIar8F8hUIOPa3tNM42l73nPnAIL35Ns/blTUHu+YolqP
+         rWuHrVxCv7+9qoBvHJB0jity0H3tfPso7N+ACvL8iIn8iEbM1h9A+8FVi68+IUPzHs1g
+         5Lcw==
+X-Gm-Message-State: AOAM530RJ4j+psQuxuyFtbN9R48xJH6zz3PncvGLVFB+CAVpP5lY1pqN
+        +kP8zYLdPkPw1qQGOQ9LJK+emLF/GnoZ6+NScZXuMXKPdZ8Y
+X-Google-Smtp-Source: ABdhPJw1wsBg30NMrUWDxgSVJ06a4iXUNVqdmIBtQII2d10y4Id3bTjHiUJHWlyU+nUBrC+CAOUV4AcEleFyg4koMKk=
+X-Received: by 2002:a92:5a8c:: with SMTP id b12mr8199951ilg.27.1598357494861;
+ Tue, 25 Aug 2020 05:11:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200821105229.18938-1-pbonzini@redhat.com> <20200821142152.GA6330@sjchrist-ice>
+ <CAMzpN2h79bi5dd7PxjY45xYy71UdYomKa1t2gNxLtRpDkMs+Lw@mail.gmail.com> <874kor57jm.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <874kor57jm.fsf@nanos.tec.linutronix.de>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Tue, 25 Aug 2020 08:11:23 -0400
+Message-ID: <CAMzpN2jQofGQ18PsEobeqfGX6ux=xuun_SQZhY=E3n1pzvEoAQ@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/entry/64: Do not use RDPID in paranoid entry to
+ accomodate KVM
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Chang Seok Bae <chang.seok.bae@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Andy Lutomirski <luto@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawel Laszczak <pawell@cadence.com>
+On Tue, Aug 25, 2020 at 6:44 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Fri, Aug 21 2020 at 11:35, Brian Gerst wrote:
+> > On Fri, Aug 21, 2020 at 10:22 AM Sean Christopherson
+> >> >  .macro GET_PERCPU_BASE reg:req
+> >> > -     ALTERNATIVE \
+> >> > -             "LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
+> >> > -             "RDPID  \reg", \
+> >>
+> >> This was the only user of the RDPID macro, I assume we want to yank that out
+> >> as well?
+> >
+> > No.  That one should be kept until the minimum binutils version is
+> > raised to one that supports the RDPID opcode.
+>
+> The macro is unused and nothing in the kernel can use RDPID as we just
+> established.
 
-USB2.0 PHY hangs in Rx Compliance test when the incoming packet
-amplitude is varied below and above the Squelch Level of
-Receiver during the active packet multiple times.
+It is opencoded in vdso_read_cpunode(), but the RDPID macro can't be
+used there.  So you are correct, it can be removed.
 
-Version 1 of the controller allows PHY to be reset when RX fail condition
-is detected to work around the above issue. This feature is
-disabled by default and needs to be enabled using a bit from
-the newly added PHYRST_CFG register. This patch enables the workaround.
-
-As there is no way to distinguish between the controller version
-before the device controller is started we need to rely on a
-DT property to decide when to apply the workaround.
-
-Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/usb/cdns3/core.c |  2 ++
- drivers/usb/cdns3/core.h |  1 +
- drivers/usb/cdns3/drd.c  | 12 ++++++++++++
- drivers/usb/cdns3/drd.h  |  5 ++++-
- 4 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
-index 5c1586ec7824..34b36487682b 100644
---- a/drivers/usb/cdns3/core.c
-+++ b/drivers/usb/cdns3/core.c
-@@ -443,6 +443,8 @@ static int cdns3_probe(struct platform_device *pdev)
- 		return -ENXIO;
- 	}
- 
-+	cdns->phyrst_a_enable = device_property_read_bool(dev, "cdns,phyrst-a-enable");
-+
- 	cdns->otg_res = *res;
- 
- 	mutex_init(&cdns->mutex);
-diff --git a/drivers/usb/cdns3/core.h b/drivers/usb/cdns3/core.h
-index 1ad1f1fe61e9..24cf0f1b5726 100644
---- a/drivers/usb/cdns3/core.h
-+++ b/drivers/usb/cdns3/core.h
-@@ -76,6 +76,7 @@ struct cdns3 {
- #define CDNS3_CONTROLLER_V0	0
- #define CDNS3_CONTROLLER_V1	1
- 	u32				version;
-+	bool				phyrst_a_enable;
- 
- 	int				otg_irq;
- 	int				dev_irq;
-diff --git a/drivers/usb/cdns3/drd.c b/drivers/usb/cdns3/drd.c
-index 6234bcd6158a..b74803e9703d 100644
---- a/drivers/usb/cdns3/drd.c
-+++ b/drivers/usb/cdns3/drd.c
-@@ -42,6 +42,18 @@ int cdns3_set_mode(struct cdns3 *cdns, enum usb_dr_mode mode)
- 			reg = readl(&cdns->otg_v1_regs->override);
- 			reg |= OVERRIDE_IDPULLUP;
- 			writel(reg, &cdns->otg_v1_regs->override);
-+
-+			/*
-+			 * Enable work around feature built into the
-+			 * controller to address issue with RX Sensitivity
-+			 * est (EL_17) for USB2 PHY. The issue only occures
-+			 * for 0x0002450D controller version.
-+			 */
-+			if (cdns->phyrst_a_enable) {
-+				reg = readl(&cdns->otg_v1_regs->phyrst_cfg);
-+				reg |= PHYRST_CFG_PHYRST_A_ENABLE;
-+				writel(reg, &cdns->otg_v1_regs->phyrst_cfg);
-+			}
- 		} else {
- 			reg = readl(&cdns->otg_v0_regs->ctrl1);
- 			reg |= OVERRIDE_IDPULLUP_V0;
-diff --git a/drivers/usb/cdns3/drd.h b/drivers/usb/cdns3/drd.h
-index 7e7cf7fa2dd3..f1ccae285a16 100644
---- a/drivers/usb/cdns3/drd.h
-+++ b/drivers/usb/cdns3/drd.h
-@@ -31,7 +31,7 @@ struct cdns3_otg_regs {
- 	__le32 simulate;
- 	__le32 override;
- 	__le32 susp_ctrl;
--	__le32 reserved4;
-+	__le32 phyrst_cfg;
- 	__le32 anasts;
- 	__le32 adp_ramp_time;
- 	__le32 ctrl1;
-@@ -153,6 +153,9 @@ struct cdns3_otg_common_regs {
- /* Only for CDNS3_CONTROLLER_V0 version */
- #define OVERRIDE_IDPULLUP_V0		BIT(24)
- 
-+/* PHYRST_CFG - bitmasks */
-+#define PHYRST_CFG_PHYRST_A_ENABLE     BIT(0)
-+
- #define CDNS3_ID_PERIPHERAL		1
- #define CDNS3_ID_HOST			0
- 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+--
+Brian Gerst
