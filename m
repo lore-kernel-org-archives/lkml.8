@@ -2,116 +2,110 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 114C6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D585A2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9B2F20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbgHYNyI (ORCPT
+        id S1726303AbgHYNyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:54:08 -0400
-Received: from goliath.siemens.de ([192.35.17.28]:42198 "EHLO
-        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726051AbgHYNyH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:54:07 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id 07PDrBcT024230
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 15:53:12 +0200
-Received: from [167.87.131.58] ([167.87.131.58])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 07PDr3ue002994;
-        Tue, 25 Aug 2020 15:53:05 +0200
-Subject: Re: [PATCH 0/2][next] update gdb scripts for lockless printk
- ringbuffer
-To:     Petr Mladek <pmladek@suse.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org
-References: <20200814212525.6118-1-john.ogness@linutronix.de>
- <20200821080813.GM4353@alley>
- <d81e8b0d-fa7f-1da1-671f-0541b94ad349@siemens.com>
- <a5f4c178-9b3c-6ccd-9ea1-24d8fdc13273@kernel.org>
- <20200825123542.GU4353@alley>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <24cb943d-bbd2-9a09-1470-e0771d4624ec@siemens.com>
-Date:   Tue, 25 Aug 2020 15:53:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200825123542.GU4353@alley>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Aug 2020 09:54:23 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:37114 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726051AbgHYNyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:54:10 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BbVpQ6gSHz9txlh;
+        Tue, 25 Aug 2020 15:54:06 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ZFV0vU3mTpAd; Tue, 25 Aug 2020 15:54:06 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BbVpQ5rr9z9txlf;
+        Tue, 25 Aug 2020 15:54:06 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4CAD38B827;
+        Tue, 25 Aug 2020 15:54:08 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id QsCZbnIpDs1q; Tue, 25 Aug 2020 15:54:08 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1FA078B81F;
+        Tue, 25 Aug 2020 15:54:01 +0200 (CEST)
+Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 38C9C65D3E; Tue, 25 Aug 2020 13:54:01 +0000 (UTC)
+Message-Id: <7a2db17f2ffe902620554b9fde0349b4cf0dc051.1598363608.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <df48ed76cf8a756a7f97ed42a1a39d0a404014bc.1598363608.git.christophe.leroy@csgroup.eu>
+References: <df48ed76cf8a756a7f97ed42a1a39d0a404014bc.1598363608.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v1 3/9] powerpc/vdso: Remove NULL termination element in
+ vdso_pagelist
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue, 25 Aug 2020 13:54:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.08.20 14:35, Petr Mladek wrote:
-> On Mon 2020-08-24 10:20:53, Kieran Bingham wrote:
->> Hi Petr,
->>
->> On 21/08/2020 09:55, Jan Kiszka wrote:
->>> On 21.08.20 10:08, Petr Mladek wrote:
->>>> On Fri 2020-08-14 23:31:23, John Ogness wrote:
->>>>> Hi,
->>>>>
->>>>> When we brought in the new lockless printk ringbuffer, we overlooked the gdb
->>>>> scripts. Here are a set of patches to implement gdb support for the new
->>>>> ringbuffer.
->>>>>
->>>>> John Ogness (2):
->>>>>   scripts/gdb: add utils.read_ulong()
->>>>>   scripts/gdb: update for lockless printk ringbuffer
->>>>
->>>> I am not fluent in the gdb macros and python so I did not try any
->>>> deep review. But both patches work for me:
->>>>
->>>> Tested-by: Petr Mladek <pmladek@suse.com>
->>>>
->>>> I am going to give it few more days before pushing just in case there is
->>>> another feedback.
->>
->> Before 'pushing' ?
->>
->> What context do you mean here? These patches go through AKPM don't they?
->> Did I miss some update to procedures?
-> 
-> Both patches should go into mainline together with the lockless printk
-> ring buffer. It is already in linux-next via printk/linux.git,
-> branch printk-rework.
-> 
-> The plan is to get it into mainline when pr_cont() handling is solved.
-> It is more complicated than we hoped for, see
-> https://lore.kernel.org/r/20200824103538.31446-1-john.ogness@linutronix.de
-> It is still not clear whether it will be ready for 5.10.
-> 
-> Andrew, would you mind when I take the three gdb/lockless-printk
-> related changes via printk tree to avoid synchronization problems?
+No need of a NULL last element in pagelists, install_special_mapping()
+knows how long the list is.
 
-From my POV, that would be best in this case - but actually also in
-other cases where developers happen to notice the dependency between
-their refactorings and gdb scripts.
+Remove that element.
 
-Jan
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/kernel/vdso.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
+diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
+index 3bc4d5b1980b..daef14a284a3 100644
+--- a/arch/powerpc/kernel/vdso.c
++++ b/arch/powerpc/kernel/vdso.c
+@@ -752,7 +752,7 @@ static int __init vdso_init(void)
+ 
+ #ifdef CONFIG_VDSO32
+ 	/* Make sure pages are in the correct state */
+-	vdso32_pagelist = kcalloc(vdso32_pages + 2, sizeof(struct page *),
++	vdso32_pagelist = kcalloc(vdso32_pages + 1, sizeof(struct page *),
+ 				  GFP_KERNEL);
+ 	if (!vdso32_pagelist)
+ 		goto alloc_failed;
+@@ -760,12 +760,11 @@ static int __init vdso_init(void)
+ 	for (i = 0; i < vdso32_pages; i++)
+ 		vdso32_pagelist[i] = virt_to_page(vdso32_kbase + i * PAGE_SIZE);
+ 
+-	vdso32_pagelist[i++] = virt_to_page(vdso_data);
+-	vdso32_pagelist[i] = NULL;
++	vdso32_pagelist[i] = virt_to_page(vdso_data);
+ #endif
+ 
+ #ifdef CONFIG_PPC64
+-	vdso64_pagelist = kcalloc(vdso64_pages + 2, sizeof(struct page *),
++	vdso64_pagelist = kcalloc(vdso64_pages + 1, sizeof(struct page *),
+ 				  GFP_KERNEL);
+ 	if (!vdso64_pagelist)
+ 		goto alloc_failed;
+@@ -773,8 +772,7 @@ static int __init vdso_init(void)
+ 	for (i = 0; i < vdso64_pages; i++)
+ 		vdso64_pagelist[i] = virt_to_page(vdso64_kbase + i * PAGE_SIZE);
+ 
+-	vdso64_pagelist[i++] = virt_to_page(vdso_data);
+-	vdso64_pagelist[i] = NULL;
++	vdso64_pagelist[i] = virt_to_page(vdso_data);
+ #endif /* CONFIG_PPC64 */
+ 
+ 	smp_wmb();
 -- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+2.25.0
+
