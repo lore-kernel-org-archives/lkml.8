@@ -2,149 +2,87 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC90C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:17:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EB5C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7618C20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:17:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Y4v/IpFN"
+	by mail.kernel.org (Postfix) with ESMTP id 550C620706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgHYRRk (ORCPT
+        id S1726783AbgHYRR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:17:40 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:23617 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726630AbgHYRRO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:17:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598375834; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=YYsGW89VSOJPl2rRXD3Jg5UkBGJkDM8ZNokckaK0LRk=; b=Y4v/IpFN7aygg0hdH8ykazbh2PZHG6dsOa1Osn5hiXpkHBj2RUEy+34APavujg1PWM2mnQda
- M0wDI5GLrm0dJSyCxE7RiRUUye5XMDjhMWWWVO0yaKsvKGZsQ7w/uQCikPR3jJydRcc8wsSw
- /+IOpwqGuoVmR4pErj7OweuQVw4=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5f4547994413b7d5db297493 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Aug 2020 17:17:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2D96BC433A0; Tue, 25 Aug 2020 17:17:13 +0000 (UTC)
-Received: from hyd-lnxbld210.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: srivasam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 91792C433C6;
-        Tue, 25 Aug 2020 17:17:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 91792C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
-From:   Srinivasa Rao <srivasam@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        srinivas.kandagatla@linaro.org, rohitkr@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     vsujithk <vsujithk@codeaurora.org>,
-        Srinivasa Rao <srivasam@codeaurora.org>
-Subject: [PATCH 2/5] dt-bindings: Add dts entry for lpass-hdmi dp audio
-Date:   Tue, 25 Aug 2020 22:46:25 +0530
-Message-Id: <1598375788-1882-3-git-send-email-srivasam@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598375788-1882-1-git-send-email-srivasam@codeaurora.org>
-References: <1598375788-1882-1-git-send-email-srivasam@codeaurora.org>
+        Tue, 25 Aug 2020 13:17:59 -0400
+Received: from mga17.intel.com ([192.55.52.151]:23064 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726664AbgHYRRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 13:17:19 -0400
+IronPort-SDR: kRqIpSnhXWQcofIeM1V4mQrxUB29X9hpSBgRxiLiBev+MLakKiLK5SMTtpQxi5zqo2RBpRYg4/
+ 35sMQxY+lTBQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136221306"
+X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
+   d="scan'208";a="136221306"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 10:17:12 -0700
+IronPort-SDR: 3J5sB4kkc2mN1d+nqB4YZ35SH7MpSKKoj/cNPuNppRPv27Ipcoqi3wILTGipjJ7zwU5QWHYHcY
+ ZOSzYywA4m9A==
+X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
+   d="scan'208";a="331478405"
+Received: from bgarring-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.212.4.243])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 10:17:10 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 0/4] regmap: add SoundWire 1.2 MBQ support
+Date:   Tue, 25 Aug 2020 12:16:52 -0500
+Message-Id: <20200825171656.75836-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: vsujithk <vsujithk@codeaurora.org>
+In preparation of the upstream contribution of SDCA (SoundWire Device
+Class for Audio) ASoC codec drivers [1] [2], add regmap support
+SoundWire 1.2 MBQ support. The MBQ (Multi-Byte Quantity) registers
+need to be handled in a different way from regular 8-bit SoundWire
+registers, their main application is going to be for volume/gain
+controls.
 
-Includes dts file entries for supporting lpass-hdmi
-audio driver over dp port in yaml format
+The 3rd patch was initially suggested for inclusion in the SoundWire
+tree, and was modified to add more background information in the
+commit message as requested by Vinod Koul.
 
-Signed-off-by: Srinivasa Rao <srivasam@codeaurora.org>
----
- .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Pierre-Louis Bossart (4):
+  regmap: sdw: move to -EOPNOTSUPP
+  regmap: sdw: add required header files
+  soundwire: SDCA: add helper macro to access controls
+  regmap: sdw: add support for SoundWire 1.2 MBQ
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-index 09c9bd2..2029325 100644
---- a/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-+++ b/Documentation/devicetree/bindings/sound/qcom,lpass-cpu.yaml
-@@ -22,6 +22,7 @@ properties:
-       - qcom,lpass-cpu
-       - qcom,apq8016-lpass-cpu
-       - qcom,sc7180-lpass-cpu
-+      - qcom,sc7180-lpass-hdmi
- 
-   reg:
-     maxItems: 1
-@@ -145,6 +146,23 @@ allOf:
-         - iommus
-         - power-domains
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: qcom,sc7180-lpass-hdmi
-+
-+    then:
-+      properties:
-+        clock-names:
-+          items:
-+            - const: pcnoc-sway-clk
-+            - const: audio-core
-+            - const: pcnoc-mport-clk
-+      required:
-+        - iommus
-+        - power-domains
-+
- examples:
-   - |
-     #include <dt-bindings/sound/sc7180-lpass.h>
-@@ -184,6 +202,30 @@ examples:
-                 qcom,capture-sd-lines = <0>;
-             };
-         };
-+
-+        lpassh@62d87000 {
-+            compatible = "qcom,sc7180-lpass-hdmi";
-+
-+            reg = <0 0x62d87000 0 0x68000>;
-+
-+            iommus = <&apps_smmu 0x1032 0>;
-+
-+            power-domains = <&lpass_hm 0>;
-+
-+            clocks = <&gcc 131>,
-+                 <&lpasscc 6>,
-+                 <&lpasscc 10>;
-+
-+            clock-names = "pcnoc-sway-clk", "audio-core",
-+                          "pcnoc-mport-clk";
-+
-+            #sound-dai-cells = <1>;
-+
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            interrupts = <0 268 1>;
-+        };
-     };
- 
- ...
+ drivers/base/regmap/Kconfig             |   6 +-
+ drivers/base/regmap/Makefile            |   1 +
+ drivers/base/regmap/regmap-sdw-mbq.c    | 102 ++++++++++++++++++++++++
+ drivers/base/regmap/regmap-sdw.c        |   8 +-
+ include/linux/regmap.h                  |  20 +++++
+ include/linux/soundwire/sdw_registers.h |  13 +++
+ 6 files changed, 146 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/base/regmap/regmap-sdw-mbq.c
+
+
+base-commit: 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
 -- 
-2.7.4
+2.25.1
 
