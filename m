@@ -2,251 +2,557 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45FBDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85526C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12F272076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f61pGcyw"
+	by mail.kernel.org (Postfix) with ESMTP id 548942075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgHYPLc (ORCPT
+        id S1726886AbgHYPMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:11:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40190 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbgHYPL2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:11:28 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D9DC061756
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:11:27 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id md23so16286943ejb.6
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:11:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kkcIDEMAHBCOzJLj2phW4jww4X/yisWa3CZ5tOxvSy4=;
-        b=f61pGcyw2k5WAoqjit//rvWYqG3FsaVEI4d9ZxtxKUV8x7SNaHgSg/hC+1348B6YxP
-         vnIo+SRGkPw8Hk+X9kOTKHE6bd0k75mgUBAHBeiT1FOSQi2QdVszrK2DqfZ1Xwg3onii
-         gXDq74poDGCTb29FvZ3BDeZzJWoOYlhy60S70=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kkcIDEMAHBCOzJLj2phW4jww4X/yisWa3CZ5tOxvSy4=;
-        b=uiK3NpjQWbIgihNqIh48DcuM3qyeNcBSpgor1s1GdJ3nNPyIzwXu02oaRJMLBA6MYl
-         WN4Z48dkTKY+mV8flitFkv8SJXCx5lFkYfS+QiUcXOT4eOQ7TDctAEBdXnhjDnezt3I+
-         EDO+rsVl7HtcQYXCocZ0Fe8TBm73Vyz/Fa2bfaqI6Xj0NnVS3Vam9lOaRhc17W0mkMn9
-         Ew6LAbJyNBuf7Eu3hlNos9atiKjB0jkWkWZyOaCdLL+de4js89u/uubIufwlO/KtzBER
-         wh1P2khyg3ZXQ0gPgUBj/tlcl6WKB6IheIrlpeFTiPGzMrxJuzUwT9UhOzjv/Gd15pgh
-         2lbA==
-X-Gm-Message-State: AOAM530n14b9pEKFRfScza8ywgjWRFYZhMuizdd5bjPSQZo4gZOSHRXx
-        WKb9x3pfKY6HS3vAk8s01o/31uMGeT7DtA==
-X-Google-Smtp-Source: ABdhPJxa3ykm5NNStfcnyEpq3UTo7C588J6wuh0QEao65TXrHGD2G69tNVfmkkifwjY9g7k0artx5A==
-X-Received: by 2002:a17:906:b749:: with SMTP id fx9mr10852462ejb.186.1598368285610;
-        Tue, 25 Aug 2020 08:11:25 -0700 (PDT)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com. [209.85.128.48])
-        by smtp.gmail.com with ESMTPSA id ar21sm6276962ejc.8.2020.08.25.08.11.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 08:11:24 -0700 (PDT)
-Received: by mail-wm1-f48.google.com with SMTP id o21so2446241wmc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:11:23 -0700 (PDT)
-X-Received: by 2002:a05:600c:4103:: with SMTP id j3mr2499533wmi.55.1598368283332;
- Tue, 25 Aug 2020 08:11:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20200825090211eucas1p1b63191fa778a775e33169ba2c1d3b74b@eucas1p1.samsung.com>
- <CAAFQd5ADym6YapCoJ8+fJbPjSestcD_2R8L5T8jAfO4c=GFQkA@mail.gmail.com> <dleftjk0xnw132.fsf%l.stelmach@samsung.com>
-In-Reply-To: <dleftjk0xnw132.fsf%l.stelmach@samsung.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 25 Aug 2020 17:11:09 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5C7Ysb2wnUhUcFZObuSSn4oW=e-oObO5Abat8rJRvqPqw@mail.gmail.com>
-Message-ID: <CAAFQd5C7Ysb2wnUhUcFZObuSSn4oW=e-oObO5Abat8rJRvqPqw@mail.gmail.com>
-Subject: Re: [PATCH v2 7/9] spi: spi-s3c64xx: Ensure cur_speed holds actual
- clock value
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+        Tue, 25 Aug 2020 11:12:15 -0400
+Received: from mga17.intel.com ([192.55.52.151]:11547 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726673AbgHYPMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 11:12:10 -0400
+IronPort-SDR: UFXd8xJ2a/e69RsTXe9lJh/+yloy76bkUtHrTRxzTQfe69hkYpWQGQ5mJH6ZtVwlKYsMGs6zAy
+ IVfCYjXiF7ZA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136191158"
+X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
+   d="scan'208";a="136191158"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 08:11:54 -0700
+IronPort-SDR: uvR6zCLMdAk2LJ51webBU5H9odU+fT7f0cGUCpaLI7k+n3vyxlKmPF/riiHNDfBYnMl0Q+XP06
+ HIZbnWbNXUeg==
+X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
+   d="scan'208";a="474383039"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.251.25.243])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 08:11:54 -0700
+Message-ID: <d07cd980439d999b060dccdd16cb44c390cbf66d.camel@linux.intel.com>
+Subject: Re: [PATCH v2 0/5] cpufreq: intel_pstate: Address some HWP-related
+ oddities
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Doug Smythies <dsmythies@telus.net>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+Cc:     'LKML' <linux-kernel@vger.kernel.org>,
+        'Linux PM' <linux-pm@vger.kernel.org>
+Date:   Tue, 25 Aug 2020 08:11:53 -0700
+In-Reply-To: <002001d67a7b$2b46e1c0$81d4a540$@net>
+References: <4169555.5IIHXK4Dsd@kreacher>
+         <5cf44a75c9f73740d2a22dbfc5c7a57489b1a3ca.camel@linux.intel.com>
+         <002001d67a7b$2b46e1c0$81d4a540$@net>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 11:02 AM Lukasz Stelmach <l.stelmach@samsung.com> w=
-rote:
->
-> It was <2020-08-24 pon 15:21>, when Tomasz Figa wrote:
-> > On Mon, Aug 24, 2020 at 3:17 PM Lukasz Stelmach <l.stelmach@samsung.com=
-> wrote:
-> >>
-> >> It was <2020-08-22 sob 14:43>, when Krzysztof Kozlowski wrote:
-> >> > On Fri, Aug 21, 2020 at 06:13:59PM +0200, =C5=81ukasz Stelmach wrote=
-:
-> >> >> cur_speed is used to calculate transfer timeout and needs to be
-> >> >> set to the actual value of (half) the clock speed for precise
-> >> >> calculations.
-> >> >
-> >> > If you need this only for timeout calculation just divide it in
-> >> > s3c64xx_wait_for_dma().
-> >>
-> >> I divide it here to keep the relationship between the value the variab=
-le
-> >> holds and the one that is inside clk_* (See? It's multiplied 3 lines
-> >> above). If you look around every single clk_get_rate() call in the fil=
-e is
-> >> divided by two.
-> >>
-> >> > Otherwise why only if (cmu) case is updated?
-> >>
-> >> You are righ I will update that too.
-> >>
-> >> However, I wonder if it is even possible that the value read from
-> >> S3C64XX_SPI_CLK_CFG would be different than the one written to it?
-> >>
-> >
-> > It is not possible for the register itself, but please see my other
-> > reply, where I explained the integer rounding error which can happen
-> > when calculating the value to write to the register.
->
-> I don't have any board to test it and Marek says there is only one that
-> doesn't use cmu *and* has an SPI device attached.
->
-> Here is what I think should work for the !cmu case.
->
-> --8<---------------cut here---------------start------------->8---
-> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-> index 18b89e53ceda..5ebb1caade4d 100644
-> --- a/drivers/spi/spi-s3c64xx.c
-> +++ b/drivers/spi/spi-s3c64xx.c
-> @@ -655,13 +655,18 @@ static int s3c64xx_spi_config(struct
-> s3c64xx_spi_driver_data *sdd)
->                         return ret;
->                 sdd->cur_speed =3D clk_get_rate(sdd->src_clk) / 2;
->         } else {
-> +               int src_clk_rate =3D clk_get_rate(sdd->src_clk);
+Hi Doug,
 
-The return value of clk_get_rate() is unsigned long.
+On Mon, 2020-08-24 at 18:00 -0700, Doug Smythies wrote:
+> Hi Srinivas,
+> 
+> I think there is a disconnect between your written
+> description of what is going on and your supporting MSR reads.
+> 
+I reproduced again.
+I see the copy paste individual at the first place swapped.
+I pasted the full output by direct copy - paste from the screen.
 
-> +               int clk_val =3D (src_clk_rate / sdd->cur_speed / 2 - 1);
+But the issues are still there.
 
-Perhaps u32, since this is a value to be written to a 32-bit register.
-Also if you could add a comment explaining that a negative overflow is
-impossible:
+[labuser@otcpl-perf-test-skx-i9 ~]$ sudo -s
+[root@otcpl-perf-test-skx-i9 labuser]# rdmsr -a 0x774
+80002b0c
+80002b0c
+80002b0c
+80002d0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002d0c
+80002b0c
+80002b0c
+80002b0c
+80002d0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002d0d
+[root@otcpl-perf-test-skx-i9 labuser]# cd /sys/devices/system/cpu/cpu1
+[root@otcpl-perf-test-skx-i9 cpu1]# cd cpufreq/
+[root@otcpl-perf-test-skx-i9 cpufreq]# echo 127 >
+energy_performance_preference 
+[root@otcpl-perf-test-skx-i9 cpufreq]# cat
+energy_performance_preference 
+127
+[root@otcpl-perf-test-skx-i9 cpufreq]# rdmsr -a 0x774
+80002b0c
+7f002b0c
+80002b0c
+80002d0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002d0c
+80002b0c
+80002b0c
+80002b0c
+80002d0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002d0d
+[root@otcpl-perf-test-skx-i9 cpufreq]# echo 0 >
+/sys/devices/system/cpu/cpu1/online 
+[root@otcpl-perf-test-skx-i9 cpufreq]# echo 1 >
+/sys/devices/system/cpu/cpu1/online 
+[root@otcpl-perf-test-skx-i9 cpufreq]# rdmsr -a 0x774
+80002b0c
+80002b0c
+80002d0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002d0c
+80002b0c
+80002b0c
+80002b0c
+80002d0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002b0c
+80002d0d
+7f002b0c
+[root@otcpl-perf-test-skx-i9 cpufreq]# rdmsr -p 1 0x774
+7f002b0c
+[root@otcpl-perf-test-skx-i9 cpufreq]# rdmsr -p 19 0x774
+80002d0d
+[root@otcpl-perf-test-skx-i9 cpufreq]# rtcwake -m mem -s 10
+rtcwake: wakeup from "mem" using /dev/rtc0 at Tue Aug 25 15:04:02 2020
+[root@otcpl-perf-test-skx-i9 cpufreq]# rdmsr -a 0x774
+80002b0c
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+8000ff00
+[root@otcpl-perf-test-skx-i9 cpufreq]# dmesg > ~/temp/dmesg.txt
+[root@otcpl-perf-test-skx-i9 cpufreq]# cat
+energy_performance_preference 
+127
+[root@otcpl-perf-test-skx-i9 cpufreq]# rdmsr -p 1 0x774
+8000ff00
+[root@otcpl-perf-test-skx-i9 cpufreq]# echo passive >
+/sys/devices/system/
+clockevents/  clocksource/  container/    cpu/          edac/         m
+achinecheck/ memory/       node/         
+[root@otcpl-perf-test-skx-i9 cpufreq]# echo passive >
+/sys/devices/system/cpu/intel_pstate/status 
+[root@otcpl-perf-test-skx-i9 cpufreq]# rdmsr -a 0x774
+80002b0c
+7f000000
+80000000
+80002d0c
+80002b0c
+80000000
+80000000
+80002b0c
+80000000
+80002d0c
+80000000
+80002b0c
+80002b0d
+80002d0c
+80000000
+80000000
+80000000
+80002b0d
+80000000
+80000000
+[root@otcpl-perf-test-skx-i9 cpufreq]# rdmsr -a 0x774
+80002b0c
+7f000000
+80000000
+80002d0c
+80002b0c
+80000000
+80000000
+80002b0c
+80000000
+80002d0c
+80000000
+80002b0c
+80002b0d
+80002d0c
+80000000
+80002b0c
+80000000
+80002b0d
+80000000
+80000000
 
-/* s3c64xx_spi_setup() ensures that sdd->cur_speed <=3D src_clk_rate / 2. *=
-/
+> On 2020.08.24 16:56 Srinivas Pandruvada wrote:
+> > On Mon, 2020-08-24 at 19:39 +0200, Rafael J. Wysocki wrote:
+> > > Hi All,
+> > > 
+> > > The v2 is here to address feedback from Doug and one issue found
+> > > by
+> > > me.
+> > > 
+> > > The purpose of this series is to address some peculiarities
+> > > related
+> > > to
+> > > taking CPUs offline/online and switching between different
+> > > operation
+> > > modes with HWP enabled that have become visible after allowing
+> > > the
+> > > driver to work in the passive mode with HWP enabled in 5.9-rc1
+> > > (and
+> > > one that was there earlier, but can be addressed easily after the
+> > > changes madein 5.9-rc1).
+> > > 
+> > > Please refer to the patch changelogs for details.
+> > > 
+> > > For easier testing/review, the series is available from the git
+> > > branch at:
+> > > 
+> > >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-
+> > > pm.git \
+> > >  intel_pstate-testing
+> > > 
+> > 
+> > Applied these patches to 5.9-rc2
+> 
+> So did I, and the issues I reported the other day are fine now.
+> I did try a few of the things you were doing.
+> 
+> > - After s3  limits got messed up.
+> >  # cat /sys/power/mem_sleep
+> > s2idle [deep]
+> > 
+> > - In the dmesg unchecked MSR for HWP register
+> > 
+> > 1.
+> > Before test
+> > 
+> > sudo rdmsr -a 0x774
+> > 80002b0c
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0d
+> > 7f002b0c
+> 
+> ?? This looks like the MSR
+> read for further below, and for 
+> CPU 19 instead of 1.
+> 
+> > cd /sys/devices/system/cpu/intel_pstate/
+> > [root@otcpl-perf-test-skx-i9 intel_pstate]# grep . *
+> > hwp_dynamic_boost:0
+> > max_perf_pct:100
+> > min_perf_pct:27
+> > no_turbo:0
+> > num_pstates:32
+> > status:active
+> > turbo_pct:32
+> > 
+> > cd ../cpu1/cpufreq/
+> > [root@otcpl-perf-test-skx-i9 cpufreq]# grep . *
+> > affected_cpus:1
+> > base_frequency:3300000
+> > cpuinfo_max_freq:4300000
+> > cpuinfo_min_freq:1200000
+> > cpuinfo_transition_latency:0
+> > energy_performance_available_preferences:default performance
+> > balance_performance balance_power power
+> > energy_performance_preference:balance_performance
+> > related_cpus:1
+> > scaling_available_governors:performance powersave
+> > scaling_cur_freq:1200000
+> > scaling_driver:intel_pstate
+> > scaling_governor:powersave
+> > scaling_max_freq:4300000
+> > scaling_min_freq:1200000
+> > scaling_setspeed:<unsupported>
+> > 
+> > 
+> > 2. Now change the EPP
+> > 
+> > # echo 127 > energy_performance_preference
+> > sudo rdmsr -a 0x774
+> > 80002b0c
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0d
+> 
+> This looks like the original MSR read.
+> 
+> > Good here
+> > 
+> > 3. Offline/online good
+> > 
+> > [root@otcpl-perf-test-skx-i9 cpufreq]# echo 0 >
+> > /sys/devices/system/cpu/cpu1/online
+> > [root@otcpl-perf-test-skx-i9 cpufreq]# echo ` >
+> > /sys/devices/system/cpu/cpu1/online
+> > > echo ` > /sys/devices/system/cpu/cpu1/online ^C
+> > [root@otcpl-perf-test-skx-i9 cpufreq]# echo 1 >
+> > /sys/devices/system/cpu/cpu1/online
+> > 
+> >  sudo rdmsr -a 0x774
+> > 80002b0c
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0d
+> > 7f002b0c
+> 
+> O.K.
+> 
+> > Good. Online restored the setting
+> > 
+> > 4. Now S3
+> > 
+> > rtcwake -m mem -s 10
+> 
+> Cool command. I did not know about it.
+> I tried it.
+> > All limits are now messed up
+> > 
+> > sudo rdmsr -a 0x774
+> > 80002b0c
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 
+> 
+> Yes, I got the same:
+> 
+> # /home/doug/c/msr-decoder (edited)
+> 6.) 0x774: IA32_HWP_REQUEST:    CPU 0-5 :
+>     raw: 80002E08 : 8000FF01 : 8000FF01 : 8000FF01 : 8000FF01 :
+> 8000FF01 :
+>     min:        8 :        1 :        1 :        1 :        1
+> :        1 :
+>     max:       46 :      255 :      255 :      255 :      255
+> :      255 :
+>     des:        0 :        0 :        0 :        0 :        0
+> :        0 :
+>     epp:      128 :      128 :      128 :      128 :      128
+> :      128 :
+>     act:        0 :        0 :        0 :        0 :        0
+> :        0 :
+> 
+> > 5. Now switch to passive
+> > Again bad, some CPU max/min is 0
+> > 
+> > sudo rdmsr -a 0x774
+> > 80002b0d
+> > 7f002b0f
+> 
+> Hmmm... Now seems to be CPU 1
+> 
+> > 80002b0c
+> > 80002d0e
+> > 80002b0c
+> > 80002b0d
+> > 80002b0f
+> > 80002b2b
+> > 80002b0c
+> > 80002d1d
+> > 80000000
+> > 80002b0c
+> > 80002b0c
+> > 80000000
+> > 80000000
+> > 80000000
+> > 80000000
+> > 80000000
+> > 80000000
+> > 80000000
+> 
+> MSR 774 was good for me, but in general my decoder was having
+> troubles.
+> 
+> 0x774: IA32_HWP_REQUEST:    CPU 0-5 :
+> sh: 0: getcwd() failed: No such file or directory
+>     raw: 80002E2E : 7F002E2E : 80002E2E : 80002E2E : 80002E2E :
+> 80002E2E :
+>     min:       46 :       46 :       46 :       46 :       46
+> :       46 :
+>     max:       46 :       46 :       46 :       46 :       46
+> :       46 :
+>     des:        0 :        0 :        0 :        0 :        0
+> :        0 :
+>     epp:      128 :      127 :      128 :      128 :      128
+> :      128 :
+>     act:        0 :        0 :        0 :        0 :        0
+> :        0 : 
+> 
+> > 6.
+> > Switched back to active to restore back
+> > 
+> > Lost EPP setting but rest are good.
+> > 
+> > sudo rdmsr -a 0x774
+> > 80002b0c
+> > 7f002b0c
+> 
+> And again, now seems to be CPU1.
+> 
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002b0c
+> > 80002d0d
+> > 
+> > 7. S3 again
+> > 
+> > rtcwake -m mem -s 10
+> > 
+> > Again messed up
+> > 
+> >  sudo rdmsr -a 0x774
+> > 80002b0c
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 8000ff00
+> > 
+> > This time dmesg didn't have unchecked MSR in dmesg (I think because
+> > I
+> > didn't change EPP before)
+> > 
+> > Thanks,
+> > Srinivas
+> > 
+> > > Thanks,
+> > > Rafael
+> > > 
+> > > 
+> > > 
 
-But actually, unless my lack of sleep is badly affecting my brain
-processes, the original computation was completely wrong. Let's
-consider the scenario below:
-
-src_clk_rate =3D 8000000
-sdd->cur_speed =3D 2500000
-
-clk_val =3D 8000000 / 2500000 / 2 - 1 =3D 3 / 2 - 1 =3D 1 - 1 =3D 0
-[...]
-sdd->cur_speed =3D 8000000 / (2 * (0 + 1)) =3D 8000000 / (2 * 1) =3D 800000=
-0
-/ 2 =3D 4000000
-
-So a request for 2.5 MHz ends up with 4 MHz, which could actually be
-above the client device or link spec.
-
-I believe the right thing to do would be DIV_ROUND_UP(src_clk_rate /
-2, sdd->cur_speed) - 1. It's safe to divide src_clk_rate directly,
-because those are normally high rates divisible by two without much
-precision loss.
-
-> +
->                 /* Configure Clock */
->                 val =3D readl(regs + S3C64XX_SPI_CLK_CFG);
->                 val &=3D ~S3C64XX_SPI_PSR_MASK;
-> -               val |=3D ((clk_get_rate(sdd->src_clk) / sdd->cur_speed / =
-2 - 1)
-> -                               & S3C64XX_SPI_PSR_MASK);
-> +               val |=3D (clk_val & S3C64XX_SPI_PSR_MASK);
->                 writel(val, regs + S3C64XX_SPI_CLK_CFG);
->
-> +               /* Keep the actual value */
-> +               sdd->cur_speed =3D src_clk_rate / (2 * (clk_val + 1));
-
-Also need to consider S3C64XX_SPI_PSR_MASK here, because clk_val could
-actually be > S3C64XX_SPI_PSR_MASK.
-
-Best regards,
-Tomasz
-
-> +
->                 /* Enable Clock */
->                 val =3D readl(regs + S3C64XX_SPI_CLK_CFG);
->                 val |=3D S3C64XX_SPI_ENCLK_ENABLE;
-> --8<---------------cut here---------------end--------------->8---
->
->
-> >> > You are also affecting here not only timeout but
-> >> > s3c64xx_enable_datapath() which is not mentioned in commit log. In o=
-ther
-> >> > words, this looks wrong.
-> >>
-> >> Indeed, there is a reference too. I've corrected the message.
-> >>
-> >
-> > Thanks!
-> >
-> > Best regards,
-> > Tomasz
-> >
-> >> >>
-> >> >> Cc: Tomasz Figa <tfiga@chromium.org>
-> >> >> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
-> >> >> ---
-> >> >>  drivers/spi/spi-s3c64xx.c | 1 +
-> >> >>  1 file changed, 1 insertion(+)
-> >> >>
-> >> >> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-> >> >> index 02de734b8ab1..89c162efe355 100644
-> >> >> --- a/drivers/spi/spi-s3c64xx.c
-> >> >> +++ b/drivers/spi/spi-s3c64xx.c
-> >> >> @@ -626,6 +626,7 @@ static int s3c64xx_spi_config(struct s3c64xx_sp=
-i_driver_data *sdd)
-> >> >>              ret =3D clk_set_rate(sdd->src_clk, sdd->cur_speed * 2)=
-;
-> >> >>              if (ret)
-> >> >>                      return ret;
-> >> >> +            sdd->cur_speed =3D clk_get_rate(sdd->src_clk) / 2;
-> >> >>      } else {
-> >> >>              /* Configure Clock */
-> >> >>              val =3D readl(regs + S3C64XX_SPI_CLK_CFG);
-> >> >> --
-> >> >> 2.26.2
-> >> >>
-> >> >
-> >> >
-> >>
-> >> --
-> >> =C5=81ukasz Stelmach
-> >> Samsung R&D Institute Poland
-> >> Samsung Electronics
-> >
-> >
->
-> --
-> =C5=81ukasz Stelmach
-> Samsung R&D Institute Poland
-> Samsung Electronics
