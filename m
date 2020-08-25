@@ -2,77 +2,80 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17B4C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 228A62076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937F8207BC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:35:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgHYReT (ORCPT
+        id S1726784AbgHYRfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:34:19 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45944 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbgHYReD (ORCPT
+        Tue, 25 Aug 2020 13:35:36 -0400
+Received: from mailoutvs35.siol.net ([185.57.226.226]:60419 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726257AbgHYRfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:34:03 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1kAcpa-0003xk-Fg; Tue, 25 Aug 2020 17:33:59 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     alexander.deucher@amd.com, christian.koenig@amd.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/radeon: Prefer lower feedback dividers
-Date:   Wed, 26 Aug 2020 01:33:48 +0800
-Message-Id: <20200825173349.24580-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 25 Aug 2020 13:35:34 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 9FD295247BB;
+        Tue, 25 Aug 2020 19:35:31 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 7CVdfufbXldm; Tue, 25 Aug 2020 19:35:31 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 39FEC5247D2;
+        Tue, 25 Aug 2020 19:35:31 +0200 (CEST)
+Received: from localhost.localdomain (89-212-178-211.dynamic.t-2.net [89.212.178.211])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id 909865247CD;
+        Tue, 25 Aug 2020 19:35:30 +0200 (CEST)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org, paul.kocialkowski@bootlin.com
+Cc:     mchehab@kernel.org, robh+dt@kernel.org, gregkh@linuxfoundation.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-sunxi@googlegroups.com
+Subject: [PATCH 0/5] ARM: dts: sun8i: r40: Enable video decoder
+Date:   Tue, 25 Aug 2020 19:35:18 +0200
+Message-Id: <20200825173523.1289379-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 2e26ccb119bd ("drm/radeon: prefer lower reference dividers")
-fixed screen flicker for HP Compaq nx9420 but breaks other laptops like
-Asus X50SL.
+Allwinner R40 SoC contains video engine very similar to that in A33.
 
-Turns out we also need to favor lower feedback dividers.
+First two patches add system controller nodes and the rest of them
+add support for Cedrus VPU.
 
-Users confirmed this change fixes the regression and doesn't regress the
-original fix.
+Please take a look.
 
-Fixes: 2e26ccb119bd ("drm/radeon: prefer lower reference dividers")
-BugLink: https://bugs.launchpad.net/bugs/1791312
-BugLink: https://bugs.launchpad.net/bugs/1861554
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/gpu/drm/radeon/radeon_display.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Best regards,
+Jernej
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index e0ae911ef427..7b69d6dfe44a 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -933,7 +933,7 @@ static void avivo_get_fb_ref_div(unsigned nom, unsigned den, unsigned post_div,
- 
- 	/* get matching reference and feedback divider */
- 	*ref_div = min(max(den/post_div, 1u), ref_div_max);
--	*fb_div = DIV_ROUND_CLOSEST(nom * *ref_div * post_div, den);
-+	*fb_div = max(nom * *ref_div * post_div / den, 1u);
- 
- 	/* limit fb divider to its maximum */
- 	if (*fb_div > fb_div_max) {
--- 
-2.17.1
+Jernej Skrabec (5):
+  dt-bindings: sram: allwinner,sun4i-a10-system-control: Add R40
+    compatibles
+  ARM: dts: sun8i: r40: Add node for system controller
+  dt-bindings: media: allwinner,sun4i-a10-video-engine: Add R40
+    compatible
+  media: cedrus: Add support for R40
+  ARM: dts: sun8i: r40: Add video engine node
+
+ .../allwinner,sun4i-a10-video-engine.yaml     |  1 +
+ .../allwinner,sun4i-a10-system-control.yaml   |  6 ++++
+ arch/arm/boot/dts/sun8i-r40.dtsi              | 34 +++++++++++++++++++
+ drivers/staging/media/sunxi/cedrus/cedrus.c   |  9 +++++
+ 4 files changed, 50 insertions(+)
+
+--=20
+2.28.0
 
