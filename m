@@ -2,116 +2,154 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E37C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6359B205CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0144D2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:20:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EKJtguj1"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dJbhxmWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgHYBUZ (ORCPT
+        id S1728413AbgHYBUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 21:20:25 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36021 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbgHYBUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 21:20:25 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BbB4j2jnnz9sR4;
-        Tue, 25 Aug 2020 11:20:20 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598318422;
-        bh=orACE8XNdpPQLCVIZOOLkMoBz3O9kQEbyhusfiLC9xc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EKJtguj1OCroNAGgeZScq2ozqizEFYE7f0IEdeZQlzkkgzNnEGPNxq3o3VfPcpfxT
-         KccJgBn0Hc5wavGjzPrMQ2gb/jscycu7EmGypFhou9sWDLF8erVI36b8q0MxCdw8Ke
-         86TZJAyUgTDvkG9lXIRBs/TLRvmuZi7w5W+e//b16kKlpeMkaWGFjUHF1jjdJ8sAdH
-         iQdP2GGdSWJdbu4R5ha7kwZKBVNXRpeu+p8indD5JMbIfeN3SNHTJXLUl4UqnuHFKk
-         UJZheIKDNIsZ5RQfSbJj1Q7dTr7Ll+NJaX/Bqu1vFxjpDt5ZjPsYyf94kRcGtpr9p9
-         A/QgZy3/zdDww==
-Date:   Tue, 25 Aug 2020 11:20:20 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Subject: Re: linux-next: build failure after merge of the bpf-next tree
-Message-ID: <20200825112020.43ce26bb@canb.auug.org.au>
-In-Reply-To: <20200821111111.6c04acd6@canb.auug.org.au>
-References: <20200821111111.6c04acd6@canb.auug.org.au>
+        Mon, 24 Aug 2020 21:20:41 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:5098 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbgHYBUj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 21:20:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4466ef0000>; Mon, 24 Aug 2020 18:18:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 24 Aug 2020 18:20:38 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 24 Aug 2020 18:20:38 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Aug
+ 2020 01:20:38 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 25 Aug 2020 01:20:38 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.53.36]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f4467660001>; Mon, 24 Aug 2020 18:20:38 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     <willy@infradead.org>, <jlayton@kernel.org>
+CC:     <akpm@linux-foundation.org>, <axboe@kernel.dk>,
+        <ceph-devel@vger.kernel.org>, <hch@infradead.org>,
+        <idryomov@gmail.com>, <jhubbard@nvidia.com>,
+        <linux-block@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-xfs@vger.kernel.org>, <viro@zeniv.linux.org.uk>
+Subject: [PATCH v2] fs/ceph: use pipe_get_pages_alloc() for pipe
+Date:   Mon, 24 Aug 2020 18:20:34 -0700
+Message-ID: <20200825012034.1962362-1-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200824185400.GE17456@casper.infradead.org>
+References: <20200824185400.GE17456@casper.infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uEGnJE3mnFVYeu_NbTaCo41";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598318319; bh=LeU6AwNAplziQ2ZfUIYvJCauSoR/ekxkghoX0Pth920=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=dJbhxmWVHB+ywuKvGhuzf3w1LZCEDf94YUwqDRfe9Q2Hr5/ds8ADrW5U+JzneKhXj
+         npXXJ055Qgt5hE0X44gz/QtrW2vXHRX9yuixWIiZnaM1olwc9O8Yj5U/4KTZmfiHeY
+         L/FC1LzwJsP6oTtzCYXH7Db7JrI54OthDvtnrk9EEJyg0tFZEpjiCU63NhQ/VmmuLE
+         uBZO7o5iBq6kpernShLqsNSEUmioemlhLvSfLCu2/2OAFEmodXF1Hn3H8cJaiEzrOx
+         OJWeBkzB6k6g6xYbUbzW/gBylQgHQAh367suhEv6p2S93O5intO7INmut3vnXhXTAp
+         IMSDCnFxRuYcw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uEGnJE3mnFVYeu_NbTaCo41
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+This reduces, by one, the number of callers of iov_iter_get_pages().
+That's helpful because these calls are being audited and converted over
+to use iov_iter_pin_user_pages(), where applicable. And this one here is
+already known by the caller to be only for ITER_PIPE, so let's just
+simplify it now.
 
-Hi all,
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
 
-On Fri, 21 Aug 2020 11:11:11 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi all,
->=20
-> After merging the bpf-next tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->=20
-> Auto-detecting system features:
-> ...                        libelf: [ =1B[31mOFF=1B[m ]
-> ...                          zlib: [ =1B[31mOFF=1B[m ]
-> ...                           bpf: [ =1B[32mon=1B[m  ]
->=20
-> No libelf found
-> make[5]: *** [Makefile:284: elfdep] Error 1
->=20
-> Caused by commit
->=20
->   d71fa5c9763c ("bpf: Add kernel module with user mode driver that popula=
-tes bpffs.")
->=20
-> [For a start, can we please *not* add this verbose feature detection
-> output to the nrormal build?]
->=20
-> This is a PowerPC hosted cross build.
->=20
-> I have marked BPF_PRELOAD as BROKEN for now.
+OK, here's a v2 that does EXPORT_SYMBOL_GPL, instead of EXPORT_SYMBOL,
+that's the only change from v1. That should help give this patch a
+clear bill of passage. :)
 
-Still getting this failure ...
+thanks,
+John Hubbard
+NVIDIA
 
+ fs/ceph/file.c      | 3 +--
+ include/linux/uio.h | 3 ++-
+ lib/iov_iter.c      | 6 +++---
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index d51c3f2fdca0..d3d7dd957390 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -879,8 +879,7 @@ static ssize_t ceph_sync_read(struct kiocb *iocb, struc=
+t iov_iter *to,
+ 		more =3D len < iov_iter_count(to);
+=20
+ 		if (unlikely(iov_iter_is_pipe(to))) {
+-			ret =3D iov_iter_get_pages_alloc(to, &pages, len,
+-						       &page_off);
++			ret =3D pipe_get_pages_alloc(to, &pages, len, &page_off);
+ 			if (ret <=3D 0) {
+ 				ceph_osdc_put_request(req);
+ 				ret =3D -ENOMEM;
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index 3835a8a8e9ea..270a4dcf5453 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -226,7 +226,8 @@ ssize_t iov_iter_get_pages(struct iov_iter *i, struct p=
+age **pages,
+ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i, struct page ***pages,
+ 			size_t maxsize, size_t *start);
+ int iov_iter_npages(const struct iov_iter *i, int maxpages);
+-
++ssize_t pipe_get_pages_alloc(struct iov_iter *i, struct page ***pages,
++			     size_t maxsize, size_t *start);
+ const void *dup_iter(struct iov_iter *new, struct iov_iter *old, gfp_t fla=
+gs);
+=20
+ static inline size_t iov_iter_count(const struct iov_iter *i)
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index 5e40786c8f12..6290998df480 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -1355,9 +1355,8 @@ static struct page **get_pages_array(size_t n)
+ 	return kvmalloc_array(n, sizeof(struct page *), GFP_KERNEL);
+ }
+=20
+-static ssize_t pipe_get_pages_alloc(struct iov_iter *i,
+-		   struct page ***pages, size_t maxsize,
+-		   size_t *start)
++ssize_t pipe_get_pages_alloc(struct iov_iter *i, struct page ***pages,
++			     size_t maxsize, size_t *start)
+ {
+ 	struct page **p;
+ 	unsigned int iter_head, npages;
+@@ -1387,6 +1386,7 @@ static ssize_t pipe_get_pages_alloc(struct iov_iter *=
+i,
+ 		kvfree(p);
+ 	return n;
+ }
++EXPORT_SYMBOL_GPL(pipe_get_pages_alloc);
+=20
+ ssize_t iov_iter_get_pages_alloc(struct iov_iter *i,
+ 		   struct page ***pages, size_t maxsize,
 --=20
-Cheers,
-Stephen Rothwell
+2.28.0
 
---Sig_/uEGnJE3mnFVYeu_NbTaCo41
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9EZ1QACgkQAVBC80lX
-0GwyJgf/bj4gNDDE+5OrWbGr507qbRKe2x2YNr+32yK902+Cj9i7wVVZ6cMfF4S9
-2B8w8rMfgMDgFZlS5f1WMTj4jYPbiVGGkfI8sCBzRqEyI32GVEH+Sslgcpb/Mn37
-bSexlHPlqsLejK2Ti/EKRLyQm89yOSsSMslET7B/D5thxOwFNn+QD3c9ftine3sf
-jrvke0EnRKWU6L1wX8J+ANcr3meHnS4XPe3mGDVttOGkf1LCW3KzxoptVD8VAmiY
-LtKKBBibv6Rcsc5cRL08g5UDr/kcd7OaTwTvaB4duul4cV/Osupr3NDJeZdqUTk5
-1Z7j7xtW2DZmX4oRjeLDeN7pExIy9w==
-=FP6q
------END PGP SIGNATURE-----
-
---Sig_/uEGnJE3mnFVYeu_NbTaCo41--
