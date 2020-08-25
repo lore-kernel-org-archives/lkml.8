@@ -2,117 +2,180 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1643C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6163FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC7262072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NooWtfxj"
+	by mail.kernel.org (Postfix) with ESMTP id 3ADBA2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598370799;
+	bh=uxClgsMpZ/f1uV8sO18pJNa0TRA4SK5H3rgB5XemEus=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SRh0vFIU2M9JCTzlQkjN71nZVfCUr1xLaRTlMu3s2hlkIBulyDvXw/xkCTxgf1v9/
+	 e/is2Y64X0ZqDxWfZ1BUbZOYWJETGqAew+207dof/VMs/seNeSZA1+LJndvSoIYkQ5
+	 8iJ1azQv4t/6PfNumUmFs6HP+ecdxW/I3+/pBElY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgHYPww (ORCPT
+        id S1726952AbgHYPxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:52:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYPwv (ORCPT
+        Tue, 25 Aug 2020 11:53:17 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46350 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgHYPxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:52:51 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407C7C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:52:51 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id f26so14367116ljc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rHSFQrjZHAaK6c2r2wcs6JOsgCtrTLBeAvyy7LBBQW4=;
-        b=NooWtfxjikEFUBZ0gKwgvN1NRpBmGRbeeNzrO/+tkaSRBCJ0vKgjh4rx0jE1c+5a+l
-         6fFTRPm4m0oRNEbmMXCe2V8KLIhgRZbp4ZshbJ4NZLAnoxfemb/RfQKjX13N+cA3n0To
-         CCM6JQp9tVXhvphsqCogPbsliHDRjyD4cOIhCJSDSo0oJXCJrXYWEh5qtP4V0bDQYu5C
-         tHllRcZygSRpM1I7/YhhlObAWR4miqPgA9eNca5noAHD0TgnpZqSmP/jFKASuibRMsbq
-         i+5KZOARgzhTjIFdVCs3BVNCTMezrlhuFVICrBvKrYVde/QrA+u6ZO1+ZymVmS6c6MiH
-         Zq9g==
+        Tue, 25 Aug 2020 11:53:14 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v13so12012190oiv.13;
+        Tue, 25 Aug 2020 08:53:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rHSFQrjZHAaK6c2r2wcs6JOsgCtrTLBeAvyy7LBBQW4=;
-        b=pfUzho3CRm4/40Ztkh75yWtNUeKreINkcMzZ6bcT3lG/HerUO66FApYjko3pGAj/8C
-         2x7uzf4/C9VQTVFcm1r+NXt0eyIKOH3p0PChdSJLdqQH47WPzOGg8uzAS7heahjD41rh
-         wMtVQiAMN1RGNPqDwTYHFkZkQUcvFY7ao46AMHQcUDc+aYlJgI/Mh6bz/ZfZblqShqqX
-         Uwl/tTzv+/w/DJMqvrac1Xd5Oort1ar/ulsuRfCmrQlaqybaW1PIvCGtUteFK3mfnmHh
-         gRvi9pB2ab4FCu+Cj1jkhQsZHNVpTNZZ6C4ZdsORx2ONjUssqjzFUM1uBkf8jpAARoya
-         k1+A==
-X-Gm-Message-State: AOAM53146dhNsDcqbIhBYvFF8or0Os8IHWKbAACj2iqWzNzVMG6+9ju2
-        Pl9fBcdBdvG1zPfEAnbYfeb2fEqgTJTfkjJviURiPQSDEeY=
-X-Google-Smtp-Source: ABdhPJwdAb40aUYvsW3uCcBqK7XgBG/A3oSnYmuI/jvqjdbNSI2GdjS0lVAW1jrJVTYlb35qTwua+vVISbVNeS26kEQ=
-X-Received: by 2002:a2e:b045:: with SMTP id d5mr5474069ljl.111.1598370769636;
- Tue, 25 Aug 2020 08:52:49 -0700 (PDT)
+        bh=+EXZxt6bvtlHUS5SX4TpE5JhZOZFVfpCdsIvD6bUnoY=;
+        b=eBmQIPNECVy2CcgxQa/Y2XX4GSt7flZYz7lCx87e3ZF4uodPYtfTPrJgEFrmKdbG4Y
+         2pRCoN5KS7EIUGgv6oCf2zwGr4xkExkZ8r3lBcBRTYC1QwxFnr1B3G1HnPibe8DSwZqk
+         E6L5oDtBaMXVN937jFaaT0zX7NqK01TtQIUV0JHshBDIniZ7Az200CXwkYnsaNA5z1YR
+         uvrR0FuiwzW9dSRo3xhzE7g5BCP75V9tvY8jU5Wocm2e87K5i3fyx0Ya4Ez+Ggihhcvp
+         VMqEDfEwKkJfwgNgFCiJQOPJPMpxvScUpoN4hU5vNAQKVRDYh7uZlMdMQseS8LZ20e4v
+         dYMA==
+X-Gm-Message-State: AOAM531/401z5c0eUBBU29lk04O7cF5S0iy/gYXGykslLWghMEEh/7QB
+        oMhO0RJY+edr9UaOv7Nz12D6nWgEccQiRiyWg9o=
+X-Google-Smtp-Source: ABdhPJy0oxG3uzafUkAVrJQWE3ctgSPczZK9J9ZrAMpOIHMXOa0SFzh/Aa7gCYme+Job4EiPtI7eVf58hi5FOcjim8A=
+X-Received: by 2002:a05:6808:3d5:: with SMTP id o21mr1468912oie.110.1598370793137;
+ Tue, 25 Aug 2020 08:53:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200825121818.30260-1-vincent.guittot@linaro.org> <20200825135841.GC3033@suse.de>
-In-Reply-To: <20200825135841.GC3033@suse.de>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 25 Aug 2020 17:52:38 +0200
-Message-ID: <CAKfTPtBfb25L4J2tF-XOXVJSu8-N-dzU3mBdTPVxAtCnUZNfLA@mail.gmail.com>
-Subject: Re: [PATCH] sched/numa: use runnable_avg to classify node
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4169555.5IIHXK4Dsd@kreacher> <2064342.aRc67yb0pC@kreacher>
+ <61ea43fce7dd8700d94f12236a86ffec6f76a898.camel@gmail.com>
+ <CAJZ5v0hkmcAuCsnfjCSWTarr4pkQry2VCtk2aWM74fOW2guzmg@mail.gmail.com>
+ <1341038e00d965e913ee9f0c7a1e739eadef42f7.camel@linux.intel.com>
+ <CAJZ5v0gf9WCwm8Bdzo02Jfbz5vgdH8c_T9y89SaVvTNXH7p4hA@mail.gmail.com> <bb272be6e251129d0ec248ab53b8515907340e7a.camel@linux.intel.com>
+In-Reply-To: <bb272be6e251129d0ec248ab53b8515907340e7a.camel@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 25 Aug 2020 17:53:02 +0200
+Message-ID: <CAJZ5v0hLMboPt7jti5GZXgus2jbQ5z-9-NGwKiQjYbnu9mcA6A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] cpufreq: intel_pstate: Always return last EPP
+ value from sysfs
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Doug Smythies <dsmythies@telus.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 at 15:58, Mel Gorman <mgorman@suse.de> wrote:
+On Tue, Aug 25, 2020 at 5:27 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
 >
-> On Tue, Aug 25, 2020 at 02:18:18PM +0200, Vincent Guittot wrote:
-> > Use runnable_avg to classify numa node state similarly to what is done for
-> > normal load balancer. This helps to ensure that numa and normal balancers
-> > use the same view of the state of the system.
+> On Tue, 2020-08-25 at 17:14 +0200, Rafael J. Wysocki wrote:
+> > On Tue, Aug 25, 2020 at 5:06 PM Srinivas Pandruvada
+> > <srinivas.pandruvada@linux.intel.com> wrote:
+> > > On Tue, 2020-08-25 at 16:51 +0200, Rafael J. Wysocki wrote:
+> > > > On Tue, Aug 25, 2020 at 8:20 AM Artem Bityutskiy <
+> > > > dedekind1@gmail.com
+> > > > > wrote:
+> > > > > On Mon, 2020-08-24 at 19:42 +0200, Rafael J. Wysocki wrote:
+> > > > > > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> > > > > >
+> > > > > > Make the energy_performance_preference policy attribute in
+> > > > > > sysfs
+> > > > > > always return the last EPP value written to it instead of the
+> > > > > > one
+> > > > > > currently in the HWP Request MSR to avoid possible confusion
+> > > > > > when
+> > > > > > the performance scaling algorithm is used in the active mode
+> > > > > > with
+> > > > > > HWP enabled (in which case the EPP is forced to 0 regardless
+> > > > > > of
+> > > > > > what value it has been set to via sysfs).
+> > > > >
+> > > > > Why is this a good idea, I wonder. If there was a prior
+> > > > > discussion,
+> > > > > please, point to it.
+> > > > >
+> > > > > The general approach to changing settings via sysfs is often
+> > > > > like
+> > > > > this:
+> > > > >
+> > > > > 1. Write new value.
+> > > > > 2. Read it back and verify that it is the same. Because there
+> > > > > is no
+> > > > > better way to verify that the kernel "accepted" the value.
+> > > >
+> > > > If the write is successful (ie. no errors returned and the value
+> > > > returned is equal to the number of written characters), the
+> > > > kernel
+> > > > *has* accepted the written value, but it may not have taken
+> > > > effect.
+> > > > These are two different things.
+> > > >
+> > > > The written value may take an effect immediately or it may take
+> > > > an
+> > > > effect later, depending on the current configuration etc.  If you
+> > > > don't see the effect of it immediately, it doesn't matter that
+> > > > there
+> > > > was a failure of some sort.
+> > > >
+> > > > > Let's say I write 'balanced' to energy_performance_preference.
+> > > > > I
+> > > > > read
+> > > > > it back, and it contains 'balanced', so I am happy, I trust the
+> > > > > kernel
+> > > > > changed EPP to "balanced".
+> > > > >
+> > > > > If the kernel, in fact, uses something else, I want to know
+> > > > > about
+> > > > > it
+> > > > > and have my script fail.
+> > > >
+> > > > Why do you want it to fail then?
+> > > >
+> > > > > Why caching the value and making my script _think_ it succeeded
+> > > > > is
+> > > > > a good idea.
+> > > >
+> > > > Because when you change the scaling algorithm or the driver's
+> > > > operation mode, the value you have written will take effect.
+> > > >
+> > > > In this particular case it is explained in the driver
+> > > > documentation
+> > > > that the performance scaling algorithm in the active mode
+> > > > overrides
+> > > > the sysfs value and that's the only case when it can be
+> > > > overridden.
+> > > > So whatever you write to this attribute will not take effect
+> > > > immediately anyway, but it may take an effect later.
+> > >
+> > > In some cases without even changing active/passive this is
+> > > happening
+> > > when there was some error previously. For example:
+> > >
+> > > #cat energy_performance_preference
+> > > 127
+> > > [root@otcpl-perf-test-skx-i9 cpufreq]# rdmsr -p 1 0x774
+> > > 8000ff00
+> > >
+> > > I think we should show reality. In mode change can be a special
+> > > case
+> > > and use the stored value to restore in new mode.
 > >
-> > - large arm64system: 2 nodes / 224 CPUs
-> > hackbench -l (256000/#grp) -g #grp
+> > OK, so I'll make it fail on attempts to change the EPP from 0
+> > (performance) in the active mode with the performance "governor".
 > >
-> > grp    tip/sched/core         +patchset              improvement
-> > 1      14,008(+/- 4,99 %)     13,800(+/- 3.88 %)     1,48 %
-> > 4       4,340(+/- 5.35 %)      4.283(+/- 4.85 %)     1,33 %
-> > 16      3,357(+/- 0.55 %)      3.359(+/- 0.54 %)    -0,06 %
-> > 32      3,050(+/- 0.94 %)      3.039(+/- 1,06 %)     0,38 %
-> > 64      2.968(+/- 1,85 %)      3.006(+/- 2.92 %)    -1.27 %
-> > 128     3,290(+/-12.61 %)      3,108(+/- 5.97 %)     5.51 %
-> > 256     3.235(+/- 3.95 %)      3,188(+/- 2.83 %)     1.45 %
-> >
+> Here the scaling governor is powersave.
 >
-> Intuitively the patch makes sense but I'm not a fan of using hackbench
-> for evaluating NUMA balancing. The tasks are too short-lived and it's
-> not sensitive enough to data placement because of the small footprint
-> and because hackbench tends to saturate a machine.
->
-> As predicting NUMA balancing behaviour in your head can be difficult, I've
-> queued up a battery of tests on a few different NUMA machines and will see
-> what falls out. It'll take a few days as some of the tests are long-lived.
+> # cat scaling_governor
+> powersave
 
-Thanks for testing Mel
+What I'm saying is that reads from energy_performance_preference will
+still return the register value, but writes to it will fail on
+attempts to change to anything different from "performance" when in
+the active mode and the current governor is "performance".
 
->
-> Baseline will be 5.9-rc2 as I haven't looked at the topology rework in
-> tip/sched/core and this patch should not be related to it.
-
-looks fine to me
-
->
-> --
-> Mel Gorman
-> SUSE Labs
+Cheers!
