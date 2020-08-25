@@ -2,69 +2,85 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B465AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67042C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 960D82075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD6D206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:06:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gw+T08pM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgHYBEo (ORCPT
+        id S1728329AbgHYBGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 21:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48358 "EHLO
+        Mon, 24 Aug 2020 21:06:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbgHYBEo (ORCPT
+        with ESMTP id S1726041AbgHYBGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 21:04:44 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F3B4C061574;
-        Mon, 24 Aug 2020 18:04:44 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1B307129553A3;
-        Mon, 24 Aug 2020 17:47:57 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 18:04:42 -0700 (PDT)
-Message-Id: <20200824.180442.1290741945932081611.davem@davemloft.net>
-To:     sylphrenadin@gmail.com
-Cc:     Julia.Lawall@lip6.fr, UNGLinuxDriver@microchip.com,
-        vladimir.oltean@nxp.com, claudiu.manoil@nxp.com,
-        alexandre.belloni@bootlin.com, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: ocelot: Add of_node_put() before return statement
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200823135245.5857-1-sylphrenadin@gmail.com>
-References: <20200823135245.5857-1-sylphrenadin@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 24 Aug 2020 17:47:57 -0700 (PDT)
+        Mon, 24 Aug 2020 21:06:09 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25A50C061574;
+        Mon, 24 Aug 2020 18:06:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xzdunZmDdu/tuWxDqIrXIq5mvQShEvSrh2WBDyB9JHs=; b=Gw+T08pM8yf5l2lRbR+PV/GPw3
+        a6J9xQN1X7CiVASDZBWQD8ZppaZXqkQmDbsY581gBBycjBYuteqT7aX3oPt0ssNMy+zftlITNbp+P
+        ITlxwxxr9UGu+F9v2lAfvo5b2ObAkB3iIZ22h+r8F0dwJMaHQWi6kxy9YTjhtbUxsaLVjVgklnglb
+        NELmocqxLdHU+OcFcUVu4XvPPRjS0TB3CcOWM0qqvDwxP4nQ5RsHj5EQAxVxyD+Ows1Y9RwbcphjD
+        ZijhXNt5TQr9INGaJI6KBsKOO5ZSsAzSWygUjx7nkf06fpYBpEAViN0kTIPfg3jlRVePv7iGpfItQ
+        31Y9Ay2Q==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kANPZ-00088W-KT; Tue, 25 Aug 2020 01:06:05 +0000
+Date:   Tue, 25 Aug 2020 02:06:05 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 8/9] iomap: Convert iomap_write_end types
+Message-ID: <20200825010605.GJ17456@casper.infradead.org>
+References: <20200824145511.10500-1-willy@infradead.org>
+ <20200824145511.10500-9-willy@infradead.org>
+ <20200825001223.GH12131@dread.disaster.area>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825001223.GH12131@dread.disaster.area>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumera Priyadarsini <sylphrenadin@gmail.com>
-Date: Sun, 23 Aug 2020 19:22:45 +0530
+On Tue, Aug 25, 2020 at 10:12:23AM +1000, Dave Chinner wrote:
+> > -static int
+> > -__iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
+> > -		unsigned copied, struct page *page)
+> > +static size_t __iomap_write_end(struct inode *inode, loff_t pos, size_t len,
+> > +		size_t copied, struct page *page)
+> >  {
+> 
+> Please leave the function declarations formatted the same way as
+> they currently are. They are done that way intentionally so it is
+> easy to grep for function definitions. Not to mention is't much
+> easier to read than when the function name is commingled into the
+> multiline paramener list like...
 
-> Every iteration of for_each_available_child_of_node() decrements
-> the reference count of the previous node, however when control
-> is transferred from the middle of the loop, as in the case of
-> a return or break or goto, there is no decrement thus ultimately
-> resulting in a memory leak.
-> 
-> Fix a potential memory leak in felix.c by inserting of_node_put()
-> before the return statement.
-> 
-> Issue found with Coccinelle.
-> 
-> Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+I understand that's true for XFS, but it's not true throughout the
+rest of the kernel.  This file isn't even consistent:
 
-Applied.
+buffered-io.c:static inline struct iomap_page *to_iomap_page(struct page *page)
+buffered-io.c:static inline bool iomap_block_needs_zeroing(struct inode
+buffered-io.c:static int iomap_zero(struct inode *inode, loff_t pos, unsigned offset,
+buffered-io.c:static void iomap_writepage_end_bio(struct bio *bio)
+buffered-io.c:static int __init iomap_init(void)
+
+(i just grepped for ^static so there're other functions not covered by this)
+
+The other fs/iomap/ files are equally inconsistent.
+
