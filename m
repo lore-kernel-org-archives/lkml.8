@@ -2,152 +2,55 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B208EC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B093206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:51:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cUVxWd5Y"
+	by mail.kernel.org (Postfix) with ESMTP id 020C52071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbgHYHvC (ORCPT
+        id S1728272AbgHYHxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:51:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55058 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbgHYHvB (ORCPT
+        Tue, 25 Aug 2020 03:53:42 -0400
+Received: from out28-220.mail.aliyun.com ([115.124.28.220]:46857 "EHLO
+        out28-220.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgHYHxl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:51:01 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC1EC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 00:51:00 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q93so464602pjq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 00:51:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mCcFd+Ib+D6NrRVBcY3zB0ASaxSirffeaKtrRg05oPg=;
-        b=cUVxWd5YAFtVgmxWog/tnuEbxeMvYWs96FCO8CWBQmTDbXPISCaykrwOFmDu95K18q
-         4jtUPFXHnAMTpBcqoX320no4HwcQcdddT/Ats8ziLGPfaNiTUwTpD/xs3Mp7YCNBcg7E
-         k7rOhB33YG18rRnvnU1nBkLLb+M3Pyf9Ft8Fn0vGnKtAtfTx8liLtZnZ/OCR0MlTN2Om
-         8hohoQi+EzKFk6wCeYIK7QMoDPWDmmDl4tpp5SWTxxsNgTZAwvJnEA5ay/MkUDa8T8xA
-         R1mExTRjWlQqt1GOuR4xb/Pdlw7titRqOEkOyCWLZ+a4uU+XDWIt0DGfVBM9vhUaJrA4
-         /Z7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mCcFd+Ib+D6NrRVBcY3zB0ASaxSirffeaKtrRg05oPg=;
-        b=HVLhIVWA4BLFyXNAWlpS4D+GuCe62TPcVyoegQoHFF5Q8vglttTnkvVCBgG7+0q2Gp
-         5gDhtL0AdtYG0mfhzibivQHmbfAKUocSKP4zWSgnJBXc6LbqZ4E4tOyogbaS53h43oQC
-         ngvq8oAvMLvb6uRO8i8nmGTN6Q2UaS5cU2UBMfQaM6TztDzG2btm5TKq3crzG5FQyBSL
-         SnhYZ/k0nNyxtPECmMv35vgU8wEZlRe7wy52NF8mNFz8uuTVZ4jjfgIzbQ26cj3XmCI1
-         2MhZSb53aZBcVkLfXxIW3o+7vF1iJz+DELLUzex3YjKl+qnT+Sr2vsAl7zWLhl6PEe2I
-         h4tg==
-X-Gm-Message-State: AOAM532JgJG3f0yMOqZRighyytYIGheQnZ9yQzH8Ctlh22lw5yDwckdG
-        vrYoNgJ5/nlRI7KS+Gyxr0Ml2w==
-X-Google-Smtp-Source: ABdhPJwNEYPlzbhGOubSsxb+BsVE+Afz7ijxDKwxJjN6y2MlrRDMZI/5cg5muv/8e4oEFOQiQy7j9A==
-X-Received: by 2002:a17:90a:4214:: with SMTP id o20mr588108pjg.232.1598341860202;
-        Tue, 25 Aug 2020 00:51:00 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id n72sm9788264pfd.93.2020.08.25.00.50.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 25 Aug 2020 00:50:59 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 13:20:57 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
-        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
-        valentin.schneider@arm.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] arch_topology, arm, arm64: define
- arch_scale_freq_invariant()
-Message-ID: <20200825075057.rpeg6d6uziqzogsa@vireshk-i7>
-References: <20200824210252.27486-1-ionela.voinescu@arm.com>
- <20200824210252.27486-6-ionela.voinescu@arm.com>
+        Tue, 25 Aug 2020 03:53:41 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2716255|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_news_journal|0.0264806-0.00131182-0.972208;FP=0|0|0|0|0|-1|-1|-1;HT=e01l04362;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.INWxsBw_1598342001;
+Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.INWxsBw_1598342001)
+          by smtp.aliyun-inc.com(10.147.42.198);
+          Tue, 25 Aug 2020 15:53:37 +0800
+From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
+        <zhouyanjie@wanyeetech.com>
+To:     tsbogend@alpha.franken.de
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, zhenwenjin@gmail.com,
+        sernia.zhou@foxmail.com, yanfei.li@ingenic.com,
+        rick.tyliu@ingenic.com, aric.pzqi@ingenic.com,
+        dongsheng.qiu@ingenic.com, krzk@kernel.org, hns@goldelico.com,
+        ebiederm@xmission.com, paul@crapouillou.net
+Subject: [PATCH 0/1] MIPS: CI20: Update defconfig for EFUSE.
+Date:   Tue, 25 Aug 2020 15:52:38 +0800
+Message-Id: <20200825075239.17133-1-zhouyanjie@wanyeetech.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824210252.27486-6-ionela.voinescu@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-08-20, 22:02, Ionela Voinescu wrote:
-> From: Valentin Schneider <valentin.schneider@arm.com>
-> 
-> arch_scale_freq_invariant() is used by schedutil to determine whether
-> the scheduler's load-tracking signals are frequency invariant. Its
-> definition is overridable, though by default it is hardcoded to 'true'
-> if arch_scale_freq_capacity() is defined ('false' otherwise).
-> 
-> This behaviour is not overridden on arm, arm64 and other users of the
-> generic arch topology driver, which is somewhat precarious:
-> arch_scale_freq_capacity() will always be defined, yet not all cpufreq
-> drivers are guaranteed to drive the frequency invariance scale factor
-> setting. In other words, the load-tracking signals may very well *not*
-> be frequency invariant.
-> 
-> Now that cpufreq can be queried on whether the current driver is driving
-> the Frequency Invariance (FI) scale setting, the current situation can
-> be improved. This combines the query of whether cpufreq supports the
-> setting of the frequency scale factor, with whether all online CPUs are
-> counter-based FI enabled.
-> 
-> While cpufreq FI enablement applies at system level, for all CPUs,
-> counter-based FI support could also be used for only a subset of CPUs to
-> set the invariance scale factor. Therefore, if cpufreq-based FI support
-> is present, we consider the system to be invariant. If missing, we
-> require all online CPUs to be counter-based FI enabled in order for the
-> full system to be considered invariant.
-> 
-> If the system ends up not being invariant, a new condition is needed in
-> the counter initialization code that disables all scale factor setting
-> based on counters.
-> 
-> Precedence of counters over cpufreq use is not important here. The
-> invariant status is only given to the system if all CPUs have at least
-> one method of setting the frequency scale factor.
-> 
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  arch/arm/include/asm/topology.h   | 1 +
->  arch/arm64/include/asm/topology.h | 1 +
->  arch/arm64/kernel/topology.c      | 7 +++++++
->  drivers/base/arch_topology.c      | 6 ++++++
->  include/linux/arch_topology.h     | 2 ++
->  5 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm/include/asm/topology.h b/arch/arm/include/asm/topology.h
-> index e0593cf095d0..9219e67befbe 100644
-> --- a/arch/arm/include/asm/topology.h
-> +++ b/arch/arm/include/asm/topology.h
-> @@ -9,6 +9,7 @@
->  
->  /* Replace task scheduler's default frequency-invariant accounting */
->  #define arch_scale_freq_capacity topology_get_freq_scale
-> +#define arch_scale_freq_invariant topology_scale_freq_invariant
+周琰杰 (Zhou Yanjie) (1):
+  MIPS: CI20: Update defconfig for EFUSE.
 
-Maybe this macro should have been named arch_is_freq_invariant as all other ones
-are actually getting us a scaled number and this one is just a flag. But yeah,
-that is out of this series's scope, but maybe you should name
-topology_scale_freq_invariant() to topology_is_freq_invariant() or something
-else on those lines ? Anyway:
-
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+ arch/mips/configs/ci20_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
 -- 
-viresh
+2.11.0
+
