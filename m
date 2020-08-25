@@ -2,90 +2,113 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9695AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:10:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A244C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60AFE204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:10:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598321433;
-	bh=JCFtA9tnbCQHmIlTZs2D1yz4cCXy+LBWbmdV2Pio5KY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gYXwRroJ+IADmHl2+qXhjAZcroWxptDsXTVU/JY/yQ8U8D8Z80D1FUsnJHg5e6ilU
-	 apuW1mN9W2dyvkmnHxTqCmmhPaIc7LW4YNRbvsLKfD4hcfqW+qF6vjCbnNM60RkmGs
-	 KPEeuT4D97KcHMCbyO3SEBYUn2lJB1k6U5o19ZQ8=
+	by mail.kernel.org (Postfix) with ESMTP id 31F7920578
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgHYCKb (ORCPT
+        id S1726818AbgHYCL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:10:31 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46532 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725921AbgHYCK2 (ORCPT
+        Mon, 24 Aug 2020 22:11:27 -0400
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:54715 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725850AbgHYCL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 22:10:28 -0400
-Received: by mail-io1-f66.google.com with SMTP id d18so1577765iop.13;
-        Mon, 24 Aug 2020 19:10:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0NCf2jzpvO50ZBYV+xUfgsYo+rTvPJ7p5RL+1hviLCg=;
-        b=QNn0LfxekxzJct63wXMglbIuiyvab85s/3OMKG+Ssq+Y03tHQ1zPK8pW1QnQsPHyKi
-         IjmR6+JaMMFgwm0ew+Lf5Hc6RXaOHewV1ia0wSIGsY0uO54dHZVVk131NP/WYTFU1Du6
-         q4gpqBz5JzQHjdypDi7GlvnYIj9yTjrErWlbnCKEUmf2TFqD95YODyLQmnT9TzZZXtIZ
-         RfjxVsOAfN0SzkEHb9qaBXD/U8RPw66jlmFiz7Ym7ngOD4azRkBM64LbB7pywastwgoG
-         TWyfIPH65qtpchWqVrDhFQ2TZ1qqWuNqk21y3EDD3WSk2jpGvFPhwxYfo4piKJW+05k6
-         jyqg==
-X-Gm-Message-State: AOAM533HSv2J+hy9SfVq/kClJ7Sf6bOqA4dhoHVLdL7TQc04TtyilKWO
-        uzQGNm2WGWmpyEtHwwaRoQ==
-X-Google-Smtp-Source: ABdhPJzwoCXparZ+wj/JNF060uCIEoiWundaqqJqmPyBvhYxGjrIe4CRdUuRkjWfmB6Bed8d2zX+pQ==
-X-Received: by 2002:a02:95ae:: with SMTP id b43mr8253473jai.19.1598321427874;
-        Mon, 24 Aug 2020 19:10:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id e1sm8256532ilq.40.2020.08.24.19.10.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 19:10:27 -0700 (PDT)
-Received: (nullmailer pid 3790321 invoked by uid 1000);
-        Tue, 25 Aug 2020 02:10:24 -0000
-Date:   Mon, 24 Aug 2020 20:10:24 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Xingyu Wu <wuxy@bitland.com.cn>
-Cc:     mchehab@kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org,
-        darfur_liu@gcoreinc.com, linux-kernel@vger.kernel.org,
-        dongchun.zhu@mediatek.com, linux-media@vger.kernel.org,
-        hao.he@bitland.com.cn, bingbu.cao@intel.com, drinkcat@chromium.org,
-        davem@davemloft.net, hao.he7@gmail.com,
-        dave.stevenson@raspberrypi.com, sj.huang@mediatek.com,
-        hverkuil-cisco@xs4all.nl, shawnx.tu@intel.com, tfiga@chromium.org,
-        sakari.ailus@linux.intel.com, manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH V3 1/3] dt-bindings: vendor-prefixes: Add GalaxyCore
-Message-ID: <20200825021024.GA3790288@bogus>
-References: <1597380295-6297-1-git-send-email-wuxy@bitland.com.cn>
- <1597380295-6297-3-git-send-email-wuxy@bitland.com.cn>
+        Mon, 24 Aug 2020 22:11:27 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U6n3eMK_1598321483;
+Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U6n3eMK_1598321483)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 25 Aug 2020 10:11:24 +0800
+Reply-To: xlpang@linux.alibaba.com
+Subject: Re: [PATCH] sched/fair: Fix wrong cpu selecting from isolated domain
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Wetp Zhang <wetp.zy@linux.alibaba.com>,
+        linux-kernel@vger.kernel.org
+References: <1598272219-43040-1-git-send-email-xlpang@linux.alibaba.com>
+ <20200824133820.GA31355@linux.vnet.ibm.com>
+From:   xunlei <xlpang@linux.alibaba.com>
+Message-ID: <b84b9194-b79e-a708-6151-1bbb0826b70e@linux.alibaba.com>
+Date:   Tue, 25 Aug 2020 10:11:24 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597380295-6297-3-git-send-email-wuxy@bitland.com.cn>
+In-Reply-To: <20200824133820.GA31355@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020 12:44:53 +0800, Xingyu Wu wrote:
-> From: Hao He <hao.he@bitland.com.cn>
+On 2020/8/24 PM9:38, Srikar Dronamraju wrote:
+> * Xunlei Pang <xlpang@linux.alibaba.com> [2020-08-24 20:30:19]:
 > 
-> Add vendor prefix for GalaxyCore, Inc.
+>> We've met problems that occasionally tasks with full cpumask
+>> (e.g. by putting it into a cpuset or setting to full affinity)
+>> were migrated to our isolated cpus in production environment.
+>>
+>> After some analysis, we found that it is due to the current
+>> select_idle_smt() not considering the sched_domain mask.
+>>
+>> Fix it by checking the valid domain mask in select_idle_smt().
+>>
+>> Fixes: 10e2f1acd010 ("sched/core: Rewrite and improve select_idle_siblings())
+>> Reported-by: Wetp Zhang <wetp.zy@linux.alibaba.com>
+>> Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
+>> ---
+>>  kernel/sched/fair.c | 9 +++++----
+>>  1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 1a68a05..fa942c4 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -6075,7 +6075,7 @@ static int select_idle_core(struct task_struct *p, struct sched_domain *sd, int
+>>  /*
+>>   * Scan the local SMT mask for idle CPUs.
+>>   */
+>> -static int select_idle_smt(struct task_struct *p, int target)
+>> +static int select_idle_smt(struct task_struct *p, struct sched_domain *sd, int target)
+>>  {
+>>  	int cpu;
+>>  
+>> @@ -6083,7 +6083,8 @@ static int select_idle_smt(struct task_struct *p, int target)
+>>  		return -1;
+>>  
+>>  	for_each_cpu(cpu, cpu_smt_mask(target)) {
+>> -		if (!cpumask_test_cpu(cpu, p->cpus_ptr))
+>> +		if (!cpumask_test_cpu(cpu, p->cpus_ptr) ||
+>> +		    !cpumask_test_cpu(cpu, sched_domain_span(sd)))
+>>  			continue;
 > 
-> Signed-off-by: Hao He <hao.he@bitland.com.cn>
-> Signed-off-by: Xingyu Wu <wuxy@bitland.com.cn>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> Don't think this is right thing to do.  What if this task had set a cpumask
+> that doesn't cover all the cpus in this sched_domain_span(sd)
+
+It doesn't matter, without this patch, it selects an idle cpu from:
+"cpu_smt_mask(target) and p->cpus_ptr"
+
+with this patch, it selects an idle cpu from:
+"cpu_smt_mask(target) and p->cpus_ptr and sched_domain_span(sd)"
+
+> 
+> cpu_smt_mask(target) would already limit to the sched_domain_span(sd) so I
+> am not sure how this can help?
+> 
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Here is an example:
+CPU0 and CPU16 are hyper-thread pair, CPU16 is domain isolated. So its
+sd_llc doesn't contain CPU16, and cpu_smt_mask(0) is 0 and 16.
+
+Then we have @target is 0, select_idle_smt() may return the isolated(and
+idle) CPU16 without this patch.
