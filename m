@@ -2,158 +2,236 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A89C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8E1C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 267202065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE33E2065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:53:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hg6Syniz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgHYIr5 (ORCPT
+        id S1728528AbgHYIxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:47:57 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:52657 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728124AbgHYIr5 (ORCPT
+        Tue, 25 Aug 2020 04:53:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36520 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725916AbgHYIxf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:47:57 -0400
-X-Originating-IP: 90.66.108.79
-Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 2CD061C0011;
-        Tue, 25 Aug 2020 08:47:53 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 10:47:52 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-List-Id: <soc.lore.kernel.org>
-Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller
- bindings
-Message-ID: <20200825084752.GD2389103@piout.net>
-References: <20200824151035.31093-1-lars.povlsen@microchip.com>
- <20200824151035.31093-2-lars.povlsen@microchip.com>
- <CAPDyKFoBom1n4AHniiukPiE_szskHrhcmVXfMpKTvNo9Xw9v0w@mail.gmail.com>
+        Tue, 25 Aug 2020 04:53:35 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17470C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 01:53:34 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h19so12873043ljg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 01:53:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EtDubTWcya3bFNIMWt5cpovVHx+/aPFuncLPAlV9+q8=;
+        b=hg6SynizBYW+QsJT+XYq5YMt+Nz9cUWGDuKfmhI4lW4tNZLzeavZKk99fUlOfxyi3K
+         Xpd9KmZG48QT9+r1neCW3o7qMudIsjtFIcM+bIzkTcE0TIoXL7AZY/DZKfPQR6q4aStp
+         Aw+O8kqksFZnlvLi/ts/FSdbod4DZn/D/i4Qc69TTNj3r3FB9Qm9KBePALuNWpXltBOL
+         JMeBNp+Td70msn2CiW6D4fci8cxU8LWo/wVPF7q5RLXfyryBurHJYXOfm0AZ/jKgjGtO
+         DfnjUAUme1d/Scto+d5AOyLGFXsAirGuVKhAWnINjL+U6DbWPP2d6wikmR8RyiRxUw40
+         imMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EtDubTWcya3bFNIMWt5cpovVHx+/aPFuncLPAlV9+q8=;
+        b=QmsegusZPv1kSBR74eLZ9wphSlLxtEsfZflX9sepIElDDWfMz9EdxgKYnatnq2yjQk
+         s+oQCQ8nq0eVfhMXOfz+mhjw8C9Otu8IZWB3m+g8IABzHdRjwzMZnVkmK36M9gYaIjql
+         2zmXknUKdFeu28qFLewmK157X6PacEPMiddbC74O3Y6rJZdTuf28P3ngP6sT9355/1Lm
+         ByVyu7h1WLASfBSrzQ7L81+R5PTNiiE4AGut2Nun/Mn+dXy6LUkr0tHuO4aKFO4R54nP
+         dSw1SP8fvY5bzINVzlYdRnKKzMFq+WasBcKYWhbP9uLcGzmstaPl5a9nuBVw54Jum9LN
+         CI2A==
+X-Gm-Message-State: AOAM531gljSaNuj6Zm8Faaj2Q19oJ+WN6XdS7kqlM3mkep3hcF1qqN2v
+        0eo2E98YTQniY5JxhG/Mhm5PnQwWzs7cSEeEVzghqQ==
+X-Google-Smtp-Source: ABdhPJzgd8VhaITc7beto8F5Oa1lQp4WYJZVsedInRAxlBWhJv7ZxzqrbHw+79LvHxCSjX2KcL7GkSO6u2tVrErxAxM=
+X-Received: by 2002:a2e:920c:: with SMTP id k12mr4632919ljg.29.1598345613076;
+ Tue, 25 Aug 2020 01:53:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFoBom1n4AHniiukPiE_szskHrhcmVXfMpKTvNo9Xw9v0w@mail.gmail.com>
+References: <CA+G9fYt=oYWHEG6VNkfEh8+UxbReS6_+9hnz+1bOYZHj5j1F_Q@mail.gmail.com>
+ <20200824110645.GC17456@casper.infradead.org> <CA+G9fYvjKGF3HZXyd=JQHzRG=r=bmD0hYQn02VL4Y=5y57OgaA@mail.gmail.com>
+ <20200825083119.GA69694@linux.ibm.com>
+In-Reply-To: <20200825083119.GA69694@linux.ibm.com>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Tue, 25 Aug 2020 10:53:22 +0200
+Message-ID: <CADYN=9+2RDeUdbNT+XT6WgTW70UCdsARqaAL7PQ0+OPLvrkNng@mail.gmail.com>
+Subject: Re: BUG: Bad page state in process true pfn:a8fed on arm
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LTP List <ltp@lists.linux.it>, Arnd Bergmann <arnd@arndb.de>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Xu <peterx@redhat.com>, opendmb@gmail.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        afzal.mohd.ma@gmail.com, Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/08/2020 09:33:45+0200, Ulf Hansson wrote:
-> On Mon, 24 Aug 2020 at 17:10, Lars Povlsen <lars.povlsen@microchip.com> wrote:
+On Tue, 25 Aug 2020 at 10:32, Mike Rapoport <rppt@linux.ibm.com> wrote:
+>
+> On Tue, Aug 25, 2020 at 01:03:53PM +0530, Naresh Kamboju wrote:
+> > On Mon, 24 Aug 2020 at 16:36, Matthew Wilcox <willy@infradead.org> wrote:
+> > >
+> > > On Mon, Aug 24, 2020 at 03:14:55PM +0530, Naresh Kamboju wrote:
+> > > > [   67.545247] BUG: Bad page state in process true  pfn:a8fed
+> > > > [   67.550767] page:9640c0ab refcount:0 mapcount:-1024
+> > >
+> > > Somebody freed a page table without calling __ClearPageTable() on it.
 > >
-> > The Sparx5 SDHCI controller is based on the Designware controller IP.
+> > After running git bisect on this problem,
+> > The first suspecting of this problem on arm architecture this patch.
+> > 424efe723f7717430bec7c93b4d28bba73e31cf6
+> > ("mm: account PMD tables like PTE tables ")
 > >
-> > Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> > ---
-> >  .../mmc/microchip,dw-sparx5-sdhci.yaml        | 65 +++++++++++++++++++
-> >  1 file changed, 65 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+> > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > Reported-by: Anders Roxell <anders.roxell@linaro.org>
+>
+> Can you please check if this fix helps?
+
+That fixed the problem.
+
+Cheers,
+Anders
+
+>
+> diff --git a/arch/arm/include/asm/tlb.h b/arch/arm/include/asm/tlb.h
+> index 9415222b49ad..b8cbe03ad260 100644
+> --- a/arch/arm/include/asm/tlb.h
+> +++ b/arch/arm/include/asm/tlb.h
+> @@ -59,6 +59,7 @@ __pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmdp, unsigned long addr)
+>  #ifdef CONFIG_ARM_LPAE
+>         struct page *page = virt_to_page(pmdp);
+>
+> +       pgtable_pmd_page_dtor(page);
+>         tlb_remove_table(tlb, page);
+>  #endif
+>  }
+>
+> > Additional information:
+> > We have tested linux next by reverting this patch and confirmed
+> > that the reported BUG is not reproduced.
 > >
-> > diff --git a/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml b/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
-> > new file mode 100644
-> > index 0000000000000..55883290543b9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
-> > @@ -0,0 +1,65 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mmc/microchip,dw-sparx5-sdhci.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > These configs enabled on the running device,
+> >
+> > CONFIG_TRANSPARENT_HUGEPAGE=y
+> > CONFIG_TRANSPARENT_HUGEPAGE_MADVISE=y
+> >
+> >
+> > -- Suspecting patch --
+> > commit 424efe723f7717430bec7c93b4d28bba73e31cf6
+> > Author: Matthew Wilcox <willy@infradead.org>
+> > Date:   Thu Aug 20 10:01:30 2020 +1000
+> >
+> >     mm: account PMD tables like PTE tables
+> >
+> >     We account the PTE level of the page tables to the process in order to
+> >     make smarter OOM decisions and help diagnose why memory is fragmented.
+> >     For these same reasons, we should account pages allocated for PMDs.  With
+> >     larger process address spaces and ASLR, the number of PMDs in use is
+> >     higher than it used to be so the inaccuracy is starting to matter.
+> >
+> >     Link: http://lkml.kernel.org/r/20200627184642.GF25039@casper.infradead.org
+> >     Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> >     Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+> >     Cc: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+> >     Cc: Andy Lutomirski <luto@kernel.org>
+> >     Cc: Arnd Bergmann <arnd@arndb.de>
+> >     Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+> >     Cc: Joerg Roedel <joro@8bytes.org>
+> >     Cc: Max Filippov <jcmvbkbc@gmail.com>
+> >     Cc: Peter Zijlstra <peterz@infradead.org>
+> >     Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+> >     Cc: Stafford Horne <shorne@gmail.com>
+> >     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> >     Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> >
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index b0a15ee77b8a..a4e5b806347c 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -2239,7 +2239,7 @@ static inline spinlock_t *pmd_lockptr(struct
+> > mm_struct *mm, pmd_t *pmd)
+> >   return ptlock_ptr(pmd_to_page(pmd));
+> >  }
+> >
+> > -static inline bool pgtable_pmd_page_ctor(struct page *page)
+> > +static inline bool pmd_ptlock_init(struct page *page)
+> >  {
+> >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> >   page->pmd_huge_pte = NULL;
+> > @@ -2247,7 +2247,7 @@ static inline bool pgtable_pmd_page_ctor(struct
+> > page *page)
+> >   return ptlock_init(page);
+> >  }
+> >
+> > -static inline void pgtable_pmd_page_dtor(struct page *page)
+> > +static inline void pmd_ptlock_free(struct page *page)
+> >  {
+> >  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> >   VM_BUG_ON_PAGE(page->pmd_huge_pte, page);
+> > @@ -2264,8 +2264,8 @@ static inline spinlock_t *pmd_lockptr(struct
+> > mm_struct *mm, pmd_t *pmd)
+> >   return &mm->page_table_lock;
+> >  }
+> >
+> > -static inline bool pgtable_pmd_page_ctor(struct page *page) { return true; }
+> > -static inline void pgtable_pmd_page_dtor(struct page *page) {}
+> > +static inline bool pmd_ptlock_init(struct page *page) { return true; }
+> > +static inline void pmd_ptlock_free(struct page *page) {}
+> >
+> >  #define pmd_huge_pte(mm, pmd) ((mm)->pmd_huge_pte)
+> >
+> > @@ -2278,6 +2278,22 @@ static inline spinlock_t *pmd_lock(struct
+> > mm_struct *mm, pmd_t *pmd)
+> >   return ptl;
+> >  }
+> >
+> > +static inline bool pgtable_pmd_page_ctor(struct page *page)
+> > +{
+> > + if (!pmd_ptlock_init(page))
+> > + return false;
+> > + __SetPageTable(page);
+> > + inc_zone_page_state(page, NR_PAGETABLE);
+> > + return true;
+> > +}
 > > +
-> > +title: Microchip Sparx5 Mobile Storage Host Controller Binding
+> > +static inline void pgtable_pmd_page_dtor(struct page *page)
+> > +{
+> > + pmd_ptlock_free(page);
+> > + __ClearPageTable(page);
+> > + dec_zone_page_state(page, NR_PAGETABLE);
+> > +}
 > > +
-> > +allOf:
-> > +  - $ref: "mmc-controller.yaml"
-> > +
-> > +maintainers:
-> > +  - Lars Povlsen <lars.povlsen@microchip.com>
-> > +
-> > +# Everything else is described in the common file
-> > +properties:
-> > +  compatible:
-> > +    const: microchip,dw-sparx5-sdhci
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +    description:
-> > +      Handle to "core" clock for the sdhci controller.
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: core
-> > +
-> > +  microchip,clock-delay:
-> > +    description: Delay clock to card to meet setup time requirements.
-> > +      Each step increase by 1.25ns.
-> > +    $ref: "/schemas/types.yaml#/definitions/uint32"
-> > +    minimum: 1
-> > +    maximum: 15
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts
-> > +  - clocks
-> > +  - clock-names
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    #include <dt-bindings/clock/microchip,sparx5.h>
-> > +    sdhci0: mmc@600800000 {
-> 
-> Nitpick:
-> 
-> I think we should use solely "mmc[n]" here. So:
-> 
-> mmc0@600800000 {
-> 
-> Please update patch3/3 accordingly as well.
-
-This is not what the devicetree specification says. 2.2.2 says that the
-generic name is mmc, not mmc[n]. Since there is a proper unit-address, I
-don't see the need for an index here.
-
-> 
-> > +        compatible = "microchip,dw-sparx5-sdhci";
-> > +        reg = <0x00800000 0x1000>;
-> > +        pinctrl-0 = <&emmc_pins>;
-> > +        pinctrl-names = "default";
-> > +        clocks = <&clks CLK_ID_AUX1>;
-> > +        clock-names = "core";
-> > +        assigned-clocks = <&clks CLK_ID_AUX1>;
-> > +        assigned-clock-rates = <800000000>;
-> > +        interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> > +        bus-width = <8>;
-> > +        microchip,clock-delay = <10>;
-> > +    };
-> 
-> Kind regards
-> Uffe
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> >  /*
+> >   * No scalability reason to split PUD locks yet, but follow the same pattern
+> >   * as the PMD locks to make it easier if we decide to.  The VM should not be
+> >
+> >
+> >
+> >
+> > - Naresh
+>
+> --
+> Sincerely yours,
+> Mike.
