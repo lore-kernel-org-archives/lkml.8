@@ -2,121 +2,230 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D64C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 784ACC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14C9820715
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5120320767
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598355042;
+	bh=hS8MOXkGn7JYwFlDKqfpgI96hhlOO6z5RGuYqJxyWNk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=r2d2GS3lP8zVkGFbMvh+kYcuMrZkSqinbajTRnTSZk032aKjnriAzRfcBNa98IBni
+	 RacuBI2NQLeGON+XwAxEBZ1eqPSSXNDgrgxRnJpSL7k+WlQUtHvNYe2lYQSt/wUrgP
+	 XUOj7mJ+J0b+aZzDmROXP+QzKLiXfaT7N4TXJdzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729985AbgHYL0g (ORCPT
+        id S1729985AbgHYLak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 07:26:36 -0400
-Received: from mga03.intel.com ([134.134.136.65]:21487 "EHLO mga03.intel.com"
+        Tue, 25 Aug 2020 07:30:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729878AbgHYL0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 07:26:20 -0400
-IronPort-SDR: TAZ2jWpt8aSi+c7bhltOxbnpOox+QQ1ayN0d9zceJu6EAlfcYdOPnSe0Xv3mtpRA7VzjI2h2ja
- 4dGoZEwUGXLQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="156081716"
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="156081716"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 04:26:10 -0700
-IronPort-SDR: 6njZOvBY1izLogjrobnUCx6enPHeHsLp5OjBK/HwLAvABspPgPwJ5lMJ9vQlcpjPct+HnP9Vmc
- hdhUmn5SVMaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="328838043"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2020 04:26:07 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kAX5Z-00BJNP-2l; Tue, 25 Aug 2020 14:26:05 +0300
-Date:   Tue, 25 Aug 2020 14:26:05 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
-Subject: Re: [PATCH v1] sched/topology: Make compiler happy about unused
- constant definitions
-Message-ID: <20200825112605.GV1891694@smile.fi.intel.com>
-References: <20200824153902.57875-1-andriy.shevchenko@linux.intel.com>
- <jhjeenwdl7u.mognet@arm.com>
- <20200825082636.GQ1891694@smile.fi.intel.com>
- <jhjd03fdrn3.mognet@arm.com>
- <jhjblizdofu.mognet@arm.com>
- <20200825112405.GU1891694@smile.fi.intel.com>
+        id S1729710AbgHYLai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 07:30:38 -0400
+Received: from coco.lan (ip5f5ad5a4.dynamic.kabel-deutschland.de [95.90.213.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B53082068E;
+        Tue, 25 Aug 2020 11:30:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598355037;
+        bh=hS8MOXkGn7JYwFlDKqfpgI96hhlOO6z5RGuYqJxyWNk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vjYUYXjEaXVD3eAv3vZmxrvIuLgKkLKqMeS9kLfzQ69qD0P0HbZowGUT/hmAmwffm
+         yhiHRysfyy1aN6khI/k+KqtD8yKFr0XivtzoBQzJmSmoZhDkN4wwHZH+fXlz9L07Pt
+         MOWyOw/24QeMx5Wugndtf9E49WkpaoSdesV/9YFE=
+Date:   Tue, 25 Aug 2020 13:30:25 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liuyao An <anliuyao@huawei.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+Message-ID: <20200825133025.13f047f0@coco.lan>
+In-Reply-To: <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+        <20200819152120.GA106437@ravnborg.org>
+        <20200819153045.GA18469@pendragon.ideasonboard.com>
+        <CALAqxLUXnPRec3UYbMKge8yNKBagLOatOeRCagF=JEyPEfWeKA@mail.gmail.com>
+        <20200820090326.3f400a15@coco.lan>
+        <20200820100205.GA5962@pendragon.ideasonboard.com>
+        <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200825112405.GU1891694@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 02:24:05PM +0300, Andy Shevchenko wrote:
-> On Tue, Aug 25, 2020 at 11:12:21AM +0100, Valentin Schneider wrote:
-> > On 25/08/20 10:03, Valentin Schneider wrote:
-> > > On 25/08/20 09:26, Andy Shevchenko wrote:
-> > >> On Mon, Aug 24, 2020 at 06:09:41PM +0100, Valentin Schneider wrote:
-> > >>> On 24/08/20 16:39, Andy Shevchenko wrote:
-> > >>> > Compilation of almost each file ends up with
-> > >>> >
-> > >>> >  In file included from .../include/linux/energy_model.h:10,
-> > >>> >                 from .../include/linux/device.h:16,
-> > >>> >                 from .../drivers/spi/spi.c:8:
-> > >>> >  .../include/linux/sched/topology.h:30:27: warning: ‘SD_DEGENERATE_GROUPS_MASK’ defined but not used [-Wunused-const-variable=]
-> > >>> >     30 | static const unsigned int SD_DEGENERATE_GROUPS_MASK =
-> > >>> >        |                           ^~~~~~~~~~~~~~~~~~~~~~~~~
-> > >>> >  ...
-> > >>> >
-> > >>> > Make compiler happy by annotating the static constants with __maybwe_unused.
-> > 
-> > > Sorry, that's what I get for trying to be too succinct; what I tried to say
-> > > was that SD_DEGENERATE_GROUPS_MASK should very much be used for SMP. If the
-> > > build is !SMP, it shouldn't even be defined, IOW I'm perplexed as to where
-> > > this is coming from.
-> > 
-> > So I see how having this as a constvar rather than a constexpr is somewhat
-> > daft (we get an instance per compilation unit), but none of my compilers
-> > seem to complain (even with W=1). AFAIA the kernelbot didn't catch any of
-> > it either.
-> > 
-> > Out of curiosity, what's your compiler & compiler version?
-> 
-> % gcc --version
-> gcc (Debian 10.2.0-5) 10.2.0
-> 
-> % make O=... W=1 C=1 CF=-D__CHECK_ENDIAN__ -j64
-> 
-> > Alternatively we can make this a "proper" constant expression with the
-> > below.
-> 
-> It doesn't fix another static const in the same file, though that one requires
-> DEBUG_SCHED to be enabled.
-> 
-> Do you want me to split this fix and fix only the other case?
+Em Tue, 25 Aug 2020 05:29:29 +1000
+Dave Airlie <airlied@gmail.com> escreveu:
 
-Just checked and the other case has been brought by
+> On Thu, 20 Aug 2020 at 20:02, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > Hi Mauro,
+> >
+> > On Thu, Aug 20, 2020 at 09:03:26AM +0200, Mauro Carvalho Chehab wrote: =
+=20
+> > > Em Wed, 19 Aug 2020 12:52:06 -0700 John Stultz escreveu: =20
+> > > > On Wed, Aug 19, 2020 at 8:31 AM Laurent Pinchart wrote: =20
+> > > > > On Wed, Aug 19, 2020 at 05:21:20PM +0200, Sam Ravnborg wrote: =20
+> > > > > > On Wed, Aug 19, 2020 at 01:45:28PM +0200, Mauro Carvalho Chehab=
+ wrote: =20
+> > > > > > > This patch series port the out-of-tree driver for Hikey 970 (=
+which
+> > > > > > > should also support Hikey 960) from the official 96boards tre=
+e:
+> > > > > > >
+> > > > > > >    https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+> > > > > > >
+> > > > > > > Based on his history, this driver seems to be originally writ=
+ten
+> > > > > > > for Kernel 4.4, and was later ported to Kernel 4.9. The origi=
+nal
+> > > > > > > driver used to depend on ION (from Kernel 4.4) and had its own
+> > > > > > > implementation for FB dev API.
+> > > > > > >
+> > > > > > > As I need to preserve the original history (with has patches =
+from
+> > > > > > > both HiSilicon and from Linaro),  I'm starting from the origi=
+nal
+> > > > > > > patch applied there. The remaining patches are incremental,
+> > > > > > > and port this driver to work with upstream Kernel.
+> > > > > > > =20
+> > > > ... =20
+> > > > > > > - Due to legal reasons, I need to preserve the authorship of
+> > > > > > >   each one responsbile for each patch. So, I need to start fr=
+om
+> > > > > > >   the original patch from Kernel 4.4; =20
+> > > > ... =20
+> > > > > > I do acknowledge you need to preserve history and all -
+> > > > > > but this patchset is not easy to review. =20
+> > > > >
+> > > > > Why do we need to preserve history ? Adding relevant Signed-off-b=
+y and
+> > > > > Co-developed-by should be enough, shouldn't it ? Having a public =
+branch
+> > > > > that contains the history is useful if anyone is interested, but =
+I don't
+> > > > > think it's required in mainline. =20
+> > > >
+> > > > Yea. I concur with Laurent here. I'm not sure what legal reasoning =
+you
+> > > > have on this but preserving the "absolute" history here is actively
+> > > > detrimental for review and understanding of the patch set.
+> > > >
+> > > > Preserving Authorship, Signed-off-by lines and adding Co-developed-=
+by
+> > > > lines should be sufficient to provide both atribution credit and DCO
+> > > > history. =20
+> > >
+> > > I'm not convinced that, from legal standpoint, folding things would
+> > > be enough. See, there are at least 3 legal systems involved here
+> > > among the different patch authors:
+> > >
+> > >       - civil law;
+> > >       - common law;
+> > >       - customary law + common law.
+> > >
+> > > Merging stuff altogether from different law systems can be problemati=
+c,
+> > > and trying to discuss this with experienced IP property lawyers will
+> > > for sure take a lot of time and efforts. I also bet that different
+> > > lawyers will have different opinions, because laws are subject to
+> > > interpretation. With that matter I'm not aware of any court rules
+> > > with regards to folded patches. So, it sounds to me that folding
+> > > patches is something that has yet to be proofed in courts around
+> > > the globe.
+> > >
+> > > At least for US legal system, it sounds that the Country of
+> > > origin of a patch is relevant, as they have a concept of
+> > > "national technology" that can be subject to export regulations.
+> > >
+> > > From my side, I really prefer to play safe and stay out of any such
+> > > legal discussions. =20
+> >
+> > Let's be serious for a moment. If you think there are legal issues in
+> > taking GPL-v2.0-only patches and squashing them while retaining
+> > authorship information through tags, the Linux kernel if *full* of that.
+> > You also routinely modify patches that you commit to the media subsystem
+> > to fix "small issues".
+> >
+> > The country of origin argument makes no sense either, the kernel code
+> > base if full of code coming from pretty much all country on the planet.
+> >
+> > Keeping the patches separate make this hard to review. Please squash
+> > them. =20
+>=20
+> I'm inclined to agree with Laurent here.
+>=20
+> Patches submitted as GPL-v2 with DCO lines and author names/companies
+> should be fine to be squashed and rearranged,
+> as long as the DCO and Authorship is kept somewhere in the new patch
+> that is applied.
+>=20
+> Review is more important here.
 
-b6e862f38672 ("sched/topology: Define and assign sched_domain flag metadata")
+Sorry, but I can't agree that review is more important than to be able
+to properly indicate copyrights in a valid way at the legal systems that
+it would apply ;-)
 
-with your authorship.
+In any case, there's an easy way to make the code easy to review:
+I can write the patches against staging (where it is OK to submit
+preserving the history) and then add a final patch moving it out
+of staging.
 
--- 
-With Best Regards,
-Andy Shevchenko
+You can then just review the last patch, as it will contain the
+entire code on it.
 
+Another alternative, as I'm already doing with Sam, is for me to
+submit the folded code as a reply to 00/xx. You can then just=20
+review the final code, without concerning about how the code reached
+there.
 
+=46rom review point of the view, this will be the same as reviewing
+a folded patch, but, from legal standpoint, the entire copyright
+chain will be preserved.
+
+Thanks,
+Mauro
