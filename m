@@ -7,37 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D8AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B1D2073A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C404D2073A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgHYE5F (ORCPT
+        id S1728822AbgHYE5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:57:05 -0400
-Received: from smtprelay0159.hostedemail.com ([216.40.44.159]:50270 "EHLO
+        Tue, 25 Aug 2020 00:57:12 -0400
+Received: from smtprelay0183.hostedemail.com ([216.40.44.183]:45624 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728691AbgHYE44 (ORCPT
+        by vger.kernel.org with ESMTP id S1728691AbgHYE5F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:56:56 -0400
+        Tue, 25 Aug 2020 00:57:05 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 6C9D2100E7B44;
-        Tue, 25 Aug 2020 04:56:54 +0000 (UTC)
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id D3900837F24C;
+        Tue, 25 Aug 2020 04:57:04 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: form52_130ff6727059
-X-Filterd-Recvd-Size: 1515
+X-HE-Tag: waste57_250ae2b27059
+X-Filterd-Recvd-Size: 1609
 Received: from joe-laptop.perches.com (unknown [47.151.133.149])
         (Authenticated sender: joe@perches.com)
         by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 25 Aug 2020 04:56:53 +0000 (UTC)
+        Tue, 25 Aug 2020 04:57:03 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     Jiri Kosina <trivial@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 07/29] lp: Avoid comma separated statements
-Date:   Mon, 24 Aug 2020 21:56:04 -0700
-Message-Id: <850c60ea44927e8cb7604d178c613ff8fc667984.1598331148.git.joe@perches.com>
+To:     Jiri Kosina <trivial@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 12/29] Input: MT - Avoid comma separated statements
+Date:   Mon, 24 Aug 2020 21:56:09 -0700
+Message-Id: <02cb394f8c305473c1a783a5ea8425de79fe0ec1.1598331149.git.joe@perches.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.1598331148.git.joe@perches.com>
 References: <cover.1598331148.git.joe@perches.com>
@@ -52,26 +53,32 @@ Use semicolons and braces.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/char/lp.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/input/input-mt.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/char/lp.c b/drivers/char/lp.c
-index 45932f05fd67..0ec73917d8dd 100644
---- a/drivers/char/lp.c
-+++ b/drivers/char/lp.c
-@@ -853,8 +853,10 @@ static void lp_console_write(struct console *co, const char *s,
- 			count--;
- 			do {
- 				written = parport_write(port, crlf, i);
--				if (written > 0)
--					i -= written, crlf += written;
-+				if (written > 0) {
-+					i -= written;
-+					crlf += written;
-+				}
- 			} while (i > 0 && (CONSOLE_LP_STRICT || written > 0));
- 		}
- 	} while (count > 0 && (CONSOLE_LP_STRICT || written > 0));
+diff --git a/drivers/input/input-mt.c b/drivers/input/input-mt.c
+index f699538bdac4..44fe6f2f063c 100644
+--- a/drivers/input/input-mt.c
++++ b/drivers/input/input-mt.c
+@@ -323,11 +323,14 @@ static int adjust_dual(int *begin, int step, int *end, int eq, int mu)
+ 	p = begin + step;
+ 	s = p == end ? f + 1 : *p;
+ 
+-	for (; p != end; p += step)
+-		if (*p < f)
+-			s = f, f = *p;
+-		else if (*p < s)
++	for (; p != end; p += step) {
++		if (*p < f) {
++			s = f;
++			f = *p;
++		} else if (*p < s) {
+ 			s = *p;
++		}
++	}
+ 
+ 	c = (f + s + 1) / 2;
+ 	if (c == 0 || (c > mu && (!eq || mu > 0)))
 -- 
 2.26.0
 
