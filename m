@@ -2,124 +2,84 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9E2C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE63C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A7B2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:16:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0FCE2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgHYIQo convert rfc822-to-8bit (ORCPT
+        id S1728373AbgHYIRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:16:44 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:43231 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbgHYIQn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:16:43 -0400
-Received: from [2001:67c:670:100:3ad5:47ff:feaf:1a17] (helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1kAU8B-0000Us-1j; Tue, 25 Aug 2020 10:16:35 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1kAU89-0002cv-D2; Tue, 25 Aug 2020 10:16:33 +0200
-Message-ID: <32b000b801202c3d6318da6c5bc52d47ab6947e0.camel@pengutronix.de>
-Subject: Re: [PATCH v1] ata: ahci_brcm: Fix use of BCM7216 reset controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Jim Quinlan <james.quinlan@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Tue, 25 Aug 2020 10:16:33 +0200
-In-Reply-To: <20200824204002.45500-1-james.quinlan@broadcom.com>
-References: <20200824204002.45500-1-james.quinlan@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 25 Aug 2020 04:17:35 -0400
+Received: from sym2.noone.org ([178.63.92.236]:33724 "EHLO sym2.noone.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbgHYIRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 04:17:35 -0400
+Received: by sym2.noone.org (Postfix, from userid 1002)
+        id 4BbML43wlbzvjc1; Tue, 25 Aug 2020 10:17:32 +0200 (CEST)
+From:   Tobias Klauser <tklauser@distanz.ch>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>
+Subject: [PATCH] ftrace: let ftrace_enable_sysctl take a kernel pointer buffer
+Date:   Tue, 25 Aug 2020 10:17:32 +0200
+Message-Id: <20200825081732.12061-1-tklauser@distanz.ch>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-24 at 16:40 -0400, Jim Quinlan wrote:
-> From: Jim Quinlan <jquinlan@broadcom.com>
-> 
-> A reset controller "rescal" is shared between the AHCI driver and the PCIe
-> driver for the BrcmSTB 7216 chip.  Use
-> devm_reset_control_get_optional_shared() to handle this sharing.
-> 
-> Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
-> Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller name")
-> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
-> ---
->  drivers/ata/ahci_brcm.c | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
-> index 6853dbb4131d..d6115bc04b09 100644
-> --- a/drivers/ata/ahci_brcm.c
-> +++ b/drivers/ata/ahci_brcm.c
-> @@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  {
->  	const struct of_device_id *of_id;
->  	struct device *dev = &pdev->dev;
-> -	const char *reset_name = NULL;
->  	struct brcm_ahci_priv *priv;
->  	struct ahci_host_priv *hpriv;
->  	struct resource *res;
-> @@ -452,11 +451,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  
->  	/* Reset is optional depending on platform and named differently */
->  	if (priv->version == BRCM_SATA_BCM7216)
-> -		reset_name = "rescal";
-> +		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
->  	else
-> -		reset_name = "ahci";
-> +		priv->rcdev = devm_reset_control_get_optional(&pdev->dev, "ahci");
+Commit 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
+changed ctl_table.proc_handler to take a kernel pointer. Adjust the
+signature of ftrace_enable_sysctl to match ctl_table.proc_handler which
+fixes the following sparse warning:
 
-I think it would be cleaner to use two separate reset control handles
-here. It is hard to reason about what the code does when the reset
-control is shared on one platform and exclusive on the other.
+kernel/trace/ftrace.c:7544:43: warning: incorrect type in argument 3 (different address spaces)
+kernel/trace/ftrace.c:7544:43:    expected void *
+kernel/trace/ftrace.c:7544:43:    got void [noderef] __user *buffer
 
-> -	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
->  	if (IS_ERR(priv->rcdev))
->  		return PTR_ERR(priv->rcdev);
->  
-> @@ -479,10 +477,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
->  		break;
->  	}
->  
-> -	if (priv->version == BRCM_SATA_BCM7216)
-> -		ret = reset_control_reset(priv->rcdev);
+Fixes: 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
+Cc: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
+---
+ include/linux/ftrace.h | 3 +--
+ kernel/trace/ftrace.c  | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-I think we might have a similar issue currently with
-"usb: dwc3: meson-g12a: fix shared reset control use", where two IP
-cores try to share a pulsed reset line.
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index ce2c06f72e86..e5c2d5cc6e6a 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -85,8 +85,7 @@ static inline int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *val
+ extern int ftrace_enabled;
+ extern int
+ ftrace_enable_sysctl(struct ctl_table *table, int write,
+-		     void __user *buffer, size_t *lenp,
+-		     loff_t *ppos);
++		     void *buffer, size_t *lenp, loff_t *ppos);
+ 
+ struct ftrace_ops;
+ 
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 275441254bb5..e9fa580f3083 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -7531,8 +7531,7 @@ static bool is_permanent_ops_registered(void)
+ 
+ int
+ ftrace_enable_sysctl(struct ctl_table *table, int write,
+-		     void __user *buffer, size_t *lenp,
+-		     loff_t *ppos)
++		     void *buffer, size_t *lenp, loff_t *ppos)
+ {
+ 	int ret = -ENODEV;
+ 
+-- 
+2.27.0
 
-> -	else
-> -		ret = reset_control_deassert(priv->rcdev);
-> +	ret = reset_control_deassert(priv->rcdev);
-
-Isn't the shared 'rescal' reset a triggered reset pulse? Looking at the
-reset-brcmstb-rescal reset controller driver, without reset line level
-control implemented, this will turn into a no-op for BCM7216. Yes, the
-reset line will be deasserted after this call, but there is no guarantee
-that the reset line was ever pulsed.
-
-regards
-Philipp
