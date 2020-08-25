@@ -2,112 +2,114 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454A9C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A61C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1713620578
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:31:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uExF6f5h"
+	by mail.kernel.org (Postfix) with ESMTP id 0313620578
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgHYHbu (ORCPT
+        id S1729490AbgHYHc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:31:50 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:47530 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbgHYHbt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:31:49 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07P7U0dS011173;
-        Tue, 25 Aug 2020 07:31:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=PvR618y3occtMaXXpEZj9xY/6rI5rWksmpkzYbPEAEA=;
- b=uExF6f5h2WYO9UTcuF07I5vPP2YUprSKE87WzWl38QJ9qBBILqjzRgQCOu4vY+030tcQ
- f6l6I4KTBSVHVl53SwCoVSCU7bdRB8MD05Dw+L2+57orqkKmzkaC2V4r/QRqHhX8v1E3
- x9KeKsHIw9MjXD2AMaQzAMS/6yZBiXkzjaSJLPOqertrjKIOpTc29uvrf63jlLNP4QjR
- 76vTg7yBCHoQ5E3ZoKYy1SNkvibBcOG/2prxYCn4a6JUY0NugAlHdGZHWTCcaJbopfLu
- aUmrR80J+/h/JJqciYFGUuQ2D6AgsAOiOHGyFwsFDwj3RKq8mLALYsjCsZX9PzqECOUe aw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 333dbrrr4h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 07:31:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07P7QArF030239;
-        Tue, 25 Aug 2020 07:29:15 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 333ru6u2mg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 07:29:14 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07P7TASV013136;
-        Tue, 25 Aug 2020 07:29:11 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Aug 2020 00:29:10 -0700
-Date:   Tue, 25 Aug 2020 10:29:03 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Walter Harms <wharms@bfs.de>
-Cc:     Stefan Achatz <erazor_de@users.sourceforge.net>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Tue, 25 Aug 2020 03:32:27 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:45522 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729194AbgHYHcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 03:32:24 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id C94C3FB03;
+        Tue, 25 Aug 2020 09:32:21 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jxse1rfQBwXr; Tue, 25 Aug 2020 09:32:19 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id 2B0CD4593E; Tue, 25 Aug 2020 09:32:19 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 09:32:19 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Swapnil Kashinath Jakhade <sjakhade@cadence.com>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "narmstrong@baylibre.com" <narmstrong@baylibre.com>,
+        "jonas@kwiboo.se" <jonas@kwiboo.se>,
+        "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH v2] HID: roccat: add bounds checking in
- kone_sysfs_write_settings()
-Message-ID: <20200825072903.GQ1793@kadam>
-References: <1597819984.4101.16.camel@web.de>
- <20200824085735.GA208317@mwanda>
- <ab4625b2b2ea41dd83ff9e192a027f41@bfs.de>
+        Milind Parab <mparab@cadence.com>,
+        Yuti Suresh Amonkar <yamonkar@cadence.com>,
+        "praneeth@ti.com" <praneeth@ti.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>, "jsarha@ti.com" <jsarha@ti.com>,
+        "sandor.yu@nxp.com" <sandor.yu@nxp.com>
+Subject: Re: [PATCH v8 0/3] drm: Add support for Cadence MHDP DPI/DP bridge
+ and J721E wrapper.
+Message-ID: <20200825073219.GA5528@bogon.m.sigxcpu.org>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+ <20200812083937.GA8816@bogon.m.sigxcpu.org>
+ <3bcbbb0b-ee04-0f1e-6c54-97b01c552d82@ti.com>
+ <20200812135637.GA107602@bogon.m.sigxcpu.org>
+ <DM6PR07MB61542D7CC2B319142CC5E0CAC5560@DM6PR07MB6154.namprd07.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ab4625b2b2ea41dd83ff9e192a027f41@bfs.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250055
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250056
+In-Reply-To: <DM6PR07MB61542D7CC2B319142CC5E0CAC5560@DM6PR07MB6154.namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 03:35:16PM +0000, Walter Harms wrote:
-> hello Dan, 
+Hi Swapnil,
+On Mon, Aug 24, 2020 at 07:16:31AM +0000, Swapnil Kashinath Jakhade wrote:
+[..snip..]
+> Following are the differences between MHDP IPs from Cadence for Rockchip, TI and NxP:
 > 
-> i notice that you can shorten the line to:
-> (line above checks for count==sizeof(struct kone_settings))
+> The Rockchip and NXP MHDP Core shares the same part (IP8501) which is DP v1.3 SST
+> Controller with HDCP 2.2/1.x. NXP's version additionally supports HDMI.
+> TI uses a different part (IP8546A), which is DP v1.4 with HDCP 2.2/1.x.
+> TI DP Controller adds support for additional features such as Multi Stream Support (MST),
+> Forward Error Correction (FEC) and Compression (DSC).
 > 
-> difference = memcmp(settings, &kone->settings, count);
+> Also, FW used for TI has significant differences than FW used for Rockchip or NXP.
+> NxP and TI firmware are developed and maintained separately by Cadence and are in
+> active support.
 > 
-> nothing special just to shorten the line and make use of count.
-> 
-> and just to save one indent level and because its  readabel nicely:
->     if ( ! difference ) 
->           goto unlock;
-> 
-> hope that helps
+> From the Linux driver perspective, given the differences, it would make sense to have
+> TI driver maintained separately.
 
-Yeah.  I wrote that version and I wanted to send it, but then I decided
-not to change the style too much.  I definitely agree with you, but I
-figured I would keep the patch less intrusive.
+Thanks for the clarification, that indeed helps a lot. So the rockchip
+and nxp drivers can be merged while the ti one should stay separate.
+Cheers,
+ -- Guido
 
-regards,
-dan carpenter
-
+> 
+> Thanks,
+> Swapnil
+> 
+> > 
+> > > I'm worried that if there are IP differences, even if not great ones,
+> > > and if the FWs are different and developed separately, it'll be a
+> > > constant "fix X for SoC A, and accidentally break Y for SoC B and C",
+> > especially if too much code is shared.
+> > >
+> > > In the long run I'm all for a single driver (or large shared parts),
+> > > but I'm not sure if we should start with that approach.
+> > 
+> > 
+> > 
+> > 
+> > >
+> > >  Tomi
+> > >
+> > > --
+> > > Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> > > Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> > >
+> 
