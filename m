@@ -7,36 +7,35 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80ED2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C52C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6241D20737
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A926F20737
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:57:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbgHYE5l (ORCPT
+        id S1728957AbgHYE5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:57:41 -0400
-Received: from smtprelay0096.hostedemail.com ([216.40.44.96]:59258 "EHLO
+        Tue, 25 Aug 2020 00:57:42 -0400
+Received: from smtprelay0199.hostedemail.com ([216.40.44.199]:59264 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728901AbgHYE52 (ORCPT
+        by vger.kernel.org with ESMTP id S1728908AbgHYE53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:57:28 -0400
+        Tue, 25 Aug 2020 00:57:29 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id D3A1D1E0A;
-        Tue, 25 Aug 2020 04:57:26 +0000 (UTC)
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 69C0F12C8;
+        Tue, 25 Aug 2020 04:57:28 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: guide76_470c28d27059
-X-Filterd-Recvd-Size: 3447
+X-HE-Tag: book86_4a00e1427059
+X-Filterd-Recvd-Size: 4582
 Received: from joe-laptop.perches.com (unknown [47.151.133.149])
         (Authenticated sender: joe@perches.com)
         by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 25 Aug 2020 04:57:25 +0000 (UTC)
+        Tue, 25 Aug 2020 04:57:27 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     reiserfs-devel@vger.kernel.org
-Subject: [PATCH 24/29] reiserfs: Avoid comma separated statements
-Date:   Mon, 24 Aug 2020 21:56:21 -0700
-Message-Id: <29b5ea94496d64e7a73af216b01f26d9ff7ac1fe.1598331149.git.joe@perches.com>
+Subject: [PATCH 25/29] lib/zlib: Avoid comma separated statements
+Date:   Mon, 24 Aug 2020 21:56:22 -0700
+Message-Id: <26b46a75251b8889a3c857461771f9a4115220e3.1598331149.git.joe@perches.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.1598331148.git.joe@perches.com>
 References: <cover.1598331148.git.joe@perches.com>
@@ -51,91 +50,115 @@ Use semicolons and braces.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- fs/reiserfs/fix_node.c | 36 ++++++++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+ lib/zlib_deflate/deftree.c | 49 +++++++++++++++++++++++++++-----------
+ 1 file changed, 35 insertions(+), 14 deletions(-)
 
-diff --git a/fs/reiserfs/fix_node.c b/fs/reiserfs/fix_node.c
-index fefe87e1c099..aea63e67a42b 100644
---- a/fs/reiserfs/fix_node.c
-+++ b/fs/reiserfs/fix_node.c
-@@ -235,8 +235,10 @@ static void check_left(struct tree_balance *tb, int h, int cur_free)
- 	d_size = 0, ih_size = IH_SIZE;
+diff --git a/lib/zlib_deflate/deftree.c b/lib/zlib_deflate/deftree.c
+index a4a34da512fe..e358053bdb15 100644
+--- a/lib/zlib_deflate/deftree.c
++++ b/lib/zlib_deflate/deftree.c
+@@ -217,10 +217,22 @@ static void tr_static_init(void)
+     /* Construct the codes of the static literal tree */
+     for (bits = 0; bits <= MAX_BITS; bits++) bl_count[bits] = 0;
+     n = 0;
+-    while (n <= 143) static_ltree[n++].Len = 8, bl_count[8]++;
+-    while (n <= 255) static_ltree[n++].Len = 9, bl_count[9]++;
+-    while (n <= 279) static_ltree[n++].Len = 7, bl_count[7]++;
+-    while (n <= 287) static_ltree[n++].Len = 8, bl_count[8]++;
++    while (n <= 143) {
++        static_ltree[n++].Len = 8;
++	bl_count[8]++;
++    }
++    while (n <= 255) {
++        static_ltree[n++].Len = 9;
++	bl_count[9]++;
++    }
++    while (n <= 279) {
++        static_ltree[n++].Len = 7;
++	bl_count[7]++;
++    }
++    while (n <= 287) {
++        static_ltree[n++].Len = 8;
++	bl_count[8]++;
++    }
+     /* Codes 286 and 287 do not exist, but we must include them in the
+      * tree construction to get a canonical Huffman tree (longest code
+      * all ones)
+@@ -378,7 +390,10 @@ static void gen_bitlen(
+     for (h = s->heap_max+1; h < HEAP_SIZE; h++) {
+         n = s->heap[h];
+         bits = tree[tree[n].Dad].Len + 1;
+-        if (bits > max_length) bits = max_length, overflow++;
++        if (bits > max_length) {
++            bits = max_length;
++	    overflow++;
++        }
+         tree[n].Len = (ush)bits;
+         /* We overwrite tree[n].Dad which is no longer needed */
  
- 	/* first item may be merge with last item in left neighbor */
--	if (vi->vi_type & VI_TYPE_LEFT_MERGEABLE)
--		d_size = -((int)IH_SIZE), ih_size = 0;
-+	if (vi->vi_type & VI_TYPE_LEFT_MERGEABLE) {
-+		d_size = -((int)IH_SIZE);
-+		ih_size = 0;
-+	}
+@@ -497,7 +512,7 @@ static void build_tree(
+      * heap[SMALLEST]. The sons of heap[n] are heap[2*n] and heap[2*n+1].
+      * heap[0] is not used.
+      */
+-    s->heap_len = 0, s->heap_max = HEAP_SIZE;
++    s->heap_len = 0; s->heap_max = HEAP_SIZE;
  
- 	tb->lnum[0] = 0;
- 	for (i = 0; i < vn->vn_nr_item;
-@@ -321,8 +323,10 @@ static void check_right(struct tree_balance *tb, int h, int cur_free)
- 	d_size = 0, ih_size = IH_SIZE;
+     for (n = 0; n < elems; n++) {
+         if (tree[n].Freq != 0) {
+@@ -583,7 +598,10 @@ static void scan_tree(
+     int max_count = 7;         /* max repeat count */
+     int min_count = 4;         /* min repeat count */
  
- 	/* last item may be merge with first item in right neighbor */
--	if (vi->vi_type & VI_TYPE_RIGHT_MERGEABLE)
--		d_size = -(int)IH_SIZE, ih_size = 0;
-+	if (vi->vi_type & VI_TYPE_RIGHT_MERGEABLE) {
-+		d_size = -(int)IH_SIZE;
-+		ih_size = 0;
-+	}
+-    if (nextlen == 0) max_count = 138, min_count = 3;
++    if (nextlen == 0) {
++        max_count = 138;
++	min_count = 3;
++    }
+     tree[max_code+1].Len = (ush)0xffff; /* guard */
  
- 	tb->rnum[0] = 0;
- 	for (i = vn->vn_nr_item - 1; i >= 0;
-@@ -1534,8 +1538,10 @@ static int ip_check_balance(struct tree_balance *tb, int h)
- 			nver1 = get_num_ver(vn->vn_mode, tb, h,
- 					    0, -1, 0, -1,
- 					    snum012 + NOTHING_SHIFT_FLOW, FLOW);
--			if (nver > nver1)
--				nset = NOTHING_SHIFT_FLOW, nver = nver1;
-+			if (nver > nver1) {
-+				nset = NOTHING_SHIFT_FLOW;
-+				nver = nver1;
-+			}
- 		}
+     for (n = 0; n <= max_code; n++) {
+@@ -602,11 +620,11 @@ static void scan_tree(
+         }
+         count = 0; prevlen = curlen;
+         if (nextlen == 0) {
+-            max_count = 138, min_count = 3;
++            max_count = 138; min_count = 3;
+         } else if (curlen == nextlen) {
+-            max_count = 6, min_count = 3;
++            max_count = 6; min_count = 3;
+         } else {
+-            max_count = 7, min_count = 4;
++            max_count = 7; min_count = 4;
+         }
+     }
+ }
+@@ -630,7 +648,10 @@ static void send_tree(
+     int min_count = 4;         /* min repeat count */
  
- 		/*
-@@ -1559,8 +1565,10 @@ static int ip_check_balance(struct tree_balance *tb, int h)
- 					     ((tb->lbytes != -1) ? 1 : 0),
- 					     tb->lbytes, 0, -1,
- 					     snum012 + LEFT_SHIFT_FLOW, FLOW);
--			if (lnver > lnver1)
--				lset = LEFT_SHIFT_FLOW, lnver = lnver1;
-+			if (lnver > lnver1) {
-+				lset = LEFT_SHIFT_FLOW;
-+				lnver = lnver1;
-+			}
- 		}
+     /* tree[max_code+1].Len = -1; */  /* guard already set */
+-    if (nextlen == 0) max_count = 138, min_count = 3;
++    if (nextlen == 0) {
++        max_count = 138;
++	min_count = 3;
++    }
  
- 		/*
-@@ -1590,8 +1598,10 @@ static int ip_check_balance(struct tree_balance *tb, int h)
- 					     tb->rbytes,
- 					     snum012 + RIGHT_SHIFT_FLOW, FLOW);
- 
--			if (rnver > rnver1)
--				rset = RIGHT_SHIFT_FLOW, rnver = rnver1;
-+			if (rnver > rnver1) {
-+				rset = RIGHT_SHIFT_FLOW;
-+				rnver = rnver1;
-+			}
- 		}
- 
- 		/*
-@@ -1622,8 +1632,10 @@ static int ip_check_balance(struct tree_balance *tb, int h)
- 					       ((tb->rbytes != -1) ? 1 : 0)),
- 					      tb->rbytes,
- 					      snum012 + LR_SHIFT_FLOW, FLOW);
--			if (lrnver > lrnver1)
--				lrset = LR_SHIFT_FLOW, lrnver = lrnver1;
-+			if (lrnver > lrnver1) {
-+				lrset = LR_SHIFT_FLOW;
-+				lrnver = lrnver1;
-+			}
- 		}
- 
- 		/*
+     for (n = 0; n <= max_code; n++) {
+         curlen = nextlen; nextlen = tree[n+1].Len;
+@@ -654,11 +675,11 @@ static void send_tree(
+         }
+         count = 0; prevlen = curlen;
+         if (nextlen == 0) {
+-            max_count = 138, min_count = 3;
++            max_count = 138; min_count = 3;
+         } else if (curlen == nextlen) {
+-            max_count = 6, min_count = 3;
++            max_count = 6; min_count = 3;
+         } else {
+-            max_count = 7, min_count = 4;
++            max_count = 7; min_count = 4;
+         }
+     }
+ }
 -- 
 2.26.0
 
