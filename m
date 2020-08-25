@@ -2,74 +2,75 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2484C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2426204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B38920737
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GghfrG7t"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gLMvKV5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbgHYFeq (ORCPT
+        id S1728808AbgHYFet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 01:34:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33862 "EHLO
+        Tue, 25 Aug 2020 01:34:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728598AbgHYFep (ORCPT
+        with ESMTP id S1728352AbgHYFet (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 01:34:45 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0CBDC061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:34:44 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id l13so4987601qvt.10
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:34:44 -0700 (PDT)
+        Tue, 25 Aug 2020 01:34:49 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B2BC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:34:48 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id d20so3350047ual.13
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:34:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=drVWXY4OrHwvooutCydMRH+dz0kOVIaWYVFSu5MyClQ=;
-        b=GghfrG7tHpB+RtuXLrsxXCN5gdU7IRtRyzu9aLirLBUqHoPc3rTHz9Stl1m/Nx9ap5
-         Zrdq4fi9e7MkfPZzNKmKr0ljezPD3NLkhGr5wCtzxmB+LqITLs8fQq3erGQU6bKDKoyu
-         owJxOO06fUOuMVEZGEjqOX+4/EpWaM0xHIfP1iRcOr0T1Iio4+cqc0LmtzwtaIDLzHl0
-         /xhHbgSbSBpbECob2ZJPyp5CR1UE7pZAIX1J52o7dT0bmCJnINsjvX+O7YvNWgm4HyiA
-         /Nb1qND2RH/p8Io1SXaKlWejMswiVhJX5YIBocoRcITp7LGfR1BQgh+2ObMKuT64s7IN
-         3xeA==
+        bh=PaekePd+GUMlAPVeDLs32NXzFqhLDy3um0wCpNnWIqQ=;
+        b=gLMvKV5VUClmPRVowS/5lsoz9LOpypjox+UFD9WhekvZBf1f0VOCcATYQdO4k6Jfty
+         vJwYK98syVOt/EOi1qB4DHItS8lG5NZXg3z6GMNjanP487OOdFAn5W6YlZewySLirD77
+         PpU9Gi2GjKWwJGE4s5Lm8//UpqHRoYeWQ79LAA8+suOKrzQW6CGHpulLzsMzgzR7byr3
+         oQ34XmCXBb97I1LPVisYPRWb6f5l5rTryHNpNf9u3n6y9hJNBJQWHYOhMisUePnqrNBT
+         eCHxpksSlIGenkyY1lHq9D1fEjuBnt3x0S7+RJxlqvuEp7lz/w1RtuD7075zwpzk4ztH
+         joKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=drVWXY4OrHwvooutCydMRH+dz0kOVIaWYVFSu5MyClQ=;
-        b=TgVpDqIUnikMLPQuOTHDGwS/Nj92gKOWydGpWSd2t6n1xbK+9+w1avFU2GxwRU7R09
-         kxRuyxBE++z5ON3VlRzh+q0SWbc/Qy85fqzN73k+a5bRb7kaN6m8QLGt85zoHO18pOhp
-         96EijAyzifLFYyHDBLXI2j/dI+sS+FU7FSKaHbVdJzjmZDKHHD30uuUYiOPB/BoRumdw
-         sudyVgw/acmRxGWlrVHiTLflv6oOhXEAs1YTsj+bk4IE+TVjxbscIZeNkZ6fFD0FoS9H
-         rr0wtDV8roBtvkgmAwoE/BjUd2N8RoRTokrXR0pNnfhfsZYbDmNYyzblWf/P5+sPmqbL
-         mX4g==
-X-Gm-Message-State: AOAM533BbY5pUYwzOyDr6Ye7s9ACZf7QbJXQMZAEOHIvsihDaxK1b8TW
-        gz7IyuY9LcaH2I8DwLLGgwIeg82JWnqAek+hWFpvD6BI
-X-Google-Smtp-Source: ABdhPJz5hlNJ2+Bk73J6dH+BmdAkYr0PO3lp+wYxQVw8uEn/erP6D8b0V7QtRTYGy5rYRXZ+meXdQa0mGcLhjLaInKE=
-X-Received: by 2002:a0c:ea8e:: with SMTP id d14mr7826970qvp.37.1598333683382;
- Mon, 24 Aug 2020 22:34:43 -0700 (PDT)
+        bh=PaekePd+GUMlAPVeDLs32NXzFqhLDy3um0wCpNnWIqQ=;
+        b=X3ZZopjkxKakpt2b81OvLoofU4HRDqdXr/oylzb3g6uMuxJsg6eG0q9XE+aTOYHe66
+         6EFILs1aVDtqnYUoNDoXecWXGUBYhRX9rXpFAP/k8QbcGhLidVYj6/ujTCEQmjXXubOB
+         lcstpw8HM3gM/830+OMcHz6j+KJ/Qfr/C4th3sXm3R+WdUqnSm0SvQEO4FYy8l6kVCrh
+         h5xeiIGp85QkpDpWJrtcfAl9Ehy+UiNXbvJJoTqhsg1F2tfxFsIQSHYO4rw5BK6iCvMA
+         7IWt+zDRR/4gR3AWELqn/wgr+NC5W/qX2cjgopxdKAmkpYFqYUx9iuR/y58mmt64agP1
+         4dng==
+X-Gm-Message-State: AOAM530PSUHH2HeomKSfHyul/EzYnlBKfmPyPo1v7c32Ol2JLL41u+UD
+        ZRZXmdj74IY8lXMi31Lzx1zjQAWoLpailfUA2w22K/zOu+QimJM1
+X-Google-Smtp-Source: ABdhPJzx9GhGTvLBPcfcsQiEXUwWu2GR2Cn1ZLdwtFitn7xbwXKBkM4XuFLoESC4Cp5edBA4JKh8Til1FTjjgl1a27o=
+X-Received: by 2002:ab0:142e:: with SMTP id b43mr4640459uae.7.1598333687686;
+ Mon, 24 Aug 2020 22:34:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <1598331582-19923-1-git-send-email-iamjoonsoo.kim@lge.com> <20200824221049.edb3c540bbfc859a6806600d@linux-foundation.org>
-In-Reply-To: <20200824221049.edb3c540bbfc859a6806600d@linux-foundation.org>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Tue, 25 Aug 2020 14:34:32 +0900
-Message-ID: <CAAmzW4MYQsRoR-q8tUmwPYLvCbiMq_zt19_AgorAQHnbwnu37g@mail.gmail.com>
-Subject: Re: [PATCH for v5.9] mm/page_alloc: handle a missing case for
- memalloc_nocma_{save/restore} APIs
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        kernel-team@lge.com, Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <20200824164741.748994020@linuxfoundation.org>
+In-Reply-To: <20200824164741.748994020@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 25 Aug 2020 11:04:36 +0530
+Message-ID: <CA+G9fYtCtXBXmUBBdy1kWa_fcs3jPVQm4UWwx=JTA8oVL1XdtQ@mail.gmail.com>
+Subject: Re: [PATCH 5.7 000/127] 5.7.18-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,83 +78,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 8=EC=9B=94 25=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 2:10, A=
-ndrew Morton <akpm@linux-foundation.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
+On Mon, 24 Aug 2020 at 22:18, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Tue, 25 Aug 2020 13:59:42 +0900 js1304@gmail.com wrote:
+> This is the start of the stable review cycle for the 5.7.18 release.
+> There are 127 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> >
-> > memalloc_nocma_{save/restore} APIs can be used to skip page allocation
-> > on CMA area, but, there is a missing case and the page on CMA area coul=
-d
-> > be allocated even if APIs are used. This patch handles this case to fix
-> > the potential issue.
-> >
-> > Missing case is an allocation from the pcplist. MIGRATE_MOVABLE pcplist
-> > could have the pages on CMA area so we need to skip it if ALLOC_CMA isn=
-'t
-> > specified.
-> >
-> > This patch implements this behaviour by checking allocated page from
-> > the pcplist rather than skipping an allocation from the pcplist entirel=
-y.
-> > Skipping the pcplist entirely would result in a mismatch between waterm=
-ark
-> > check and actual page allocation. And, it requires to break current cod=
-e
-> > layering that order-0 page is always handled by the pcplist. I'd prefer
-> > to avoid it so this patch uses different way to skip CMA page allocatio=
-n
-> > from the pcplist.
-> >
-> > ...
-> >
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -3341,6 +3341,22 @@ static struct page *rmqueue_pcplist(struct zone =
-*preferred_zone,
-> >       pcp =3D &this_cpu_ptr(zone->pageset)->pcp;
-> >       list =3D &pcp->lists[migratetype];
-> >       page =3D __rmqueue_pcplist(zone,  migratetype, alloc_flags, pcp, =
-list);
-> > +#ifdef CONFIG_CMA
-> > +     if (page) {
-> > +             int mt =3D get_pcppage_migratetype(page);
-> > +
-> > +             /*
-> > +              * pcp could have the pages on CMA area and we need to sk=
-ip it
-> > +              * when !ALLOC_CMA. Free all pcplist and retry allocation=
-.
-> > +              */
-> > +             if (is_migrate_cma(mt) && !(alloc_flags & ALLOC_CMA)) {
-> > +                     list_add(&page->lru, &pcp->lists[migratetype]);
-> > +                     pcp->count++;
-> > +                     free_pcppages_bulk(zone, pcp->count, pcp);
-> > +                     page =3D __rmqueue_pcplist(zone, migratetype, all=
-oc_flags, pcp, list);
-> > +             }
-> > +     }
-> > +#endif
-> >       if (page) {
-> >               __count_zid_vm_events(PGALLOC, page_zonenum(page), 1);
-> >               zone_statistics(preferred_zone, zone);
+> Responses should be made by Wed, 26 Aug 2020 16:47:07 +0000.
+> Anything received after that time might be too late.
 >
-> That's a bunch more code on a very hot path to serve an obscure feature
-> which has a single obscure callsite.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.7.18-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.7.y
+> and the diffstat can be found below.
 >
-> Can we instead put the burden on that callsite rather than upon
-> everyone?  For (dumb) example, teach __gup_longterm_locked() to put the
-> page back if it's CMA and go get another one?
+> thanks,
+>
+> greg k-h
+>
 
-Hmm... Unfortunately, it cannot ensure that we eventually get the non-CMA p=
-age.
-I think that the only way to ensure it is to implement the
-functionality here. We can
-use 'unlikely' or 'static branch' to reduce the overhead for a really
-rare case but
-for now I have no idea how to completely remove the overhead.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Thanks.
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.7.18-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.7.y
+git commit: f16d132bb2de3adb5e9470242c50c83b6d5d9a54
+git describe: v5.7.17-128-gf16d132bb2de
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
+ld/v5.7.17-128-gf16d132bb2de
+
+No regressions (compared to build v5.7.17)
+
+No fixes (compared to build v5.7.17)
+
+Ran 34887 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* igt-gpu-tools
+* install-android-platform-tools-r2600
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-tracing-tests
+* v4l2-compliance
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* ltp-commands-tests
+* ltp-controllers-tests
+* ltp-math-tests
+* perf
+* kselftest/net
+* libhugetlbfs
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-open-posix-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
