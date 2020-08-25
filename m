@@ -2,143 +2,146 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33253C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E454C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 186D82071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AEFE2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598342155;
+	bh=S5rlKBx7VFgdSrBKPZytFQQydfMl9pnBjLY78TfRSRo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LWdIphEmHpyI17DKL3HK96G3HPwbV4QTcSdQF3ZR5n5nshEwwA7Y23MGEPFpkRbLK
+	 TuZpBSkSkUXMk6zPSxjZu1Y0fC4OQzKYITWu46HXgpT5nvONsd+Lmw71AYssIuwtye
+	 FukQE6T6aKEiLdhcyIHdNu7hzwlyN20RiQlSvCLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgHYHyu (ORCPT
+        id S1729119AbgHYHzx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:54:50 -0400
-Received: from mga05.intel.com ([192.55.52.43]:45940 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbgHYHyt (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:54:49 -0400
-IronPort-SDR: rdTZaZ7NCphQ0r4r3D/sYMn2fh2BWjL6o65d/dpYjI0RIYC6gf0hbr/BflI4bniLHU+mlt34LS
- ayWwKkL0sD1A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="240884052"
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="240884052"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 00:54:43 -0700
-IronPort-SDR: hbr7OxG1onbyr6DEV/Fio2KK3zGcIVlC0rTP/tOJ9i7ZH/cPJn2KaHb4jTOs/kmGz2Dn2Py5XJ
- 8kTdRAzH8kYg==
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="474246202"
-Received: from yjin15-mobl1.ccr.corp.intel.com (HELO [10.238.5.239]) ([10.238.5.239])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 00:54:40 -0700
-Subject: Re: [PATCH v3] perf parse-events: Set exclude_guest=1 for user-space
- counting
-To:     Like Xu <like.xu@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
-References: <20200814012120.16647-1-yao.jin@linux.intel.com>
- <20200814124722.GG13995@kernel.org>
- <b061052d-592d-67d7-045f-481974b0687a@linux.intel.com>
- <3521b375-6f00-e815-94e5-49eae2a7c989@linux.intel.com>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <38922f67-9f99-7fdf-1c54-0980020cd111@linux.intel.com>
-Date:   Tue, 25 Aug 2020 15:54:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 03:55:53 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45806 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgHYHzv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 03:55:51 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h15so4958434wrt.12;
+        Tue, 25 Aug 2020 00:55:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aBjVw1JG0tpm4bk51wIknFht9NwTSZ65KB4U3gClblQ=;
+        b=pVQLT+8ijKQCPTJ9nJSzGdtsvR4/qHb2QG9MgKgdIdQ2hG1dj2KpBB8/UQzGdjBnrG
+         YyCru7GkjEW1Z2avQWxiG/fCrKBPJ8QLh7Ak9F4nZ797j6oRUqOhRDx1vcJ0Didy1eh4
+         pterNAMGOBwZ+SC1cypGNjD7gNwVaG1ORbIDM9wyKISr3dMwnhqVxIvWq+/cECtf1ZVT
+         i2nYue89aCsbjA1z3gQLqGHe7hFUPHIhQUW8NA+ARK/3s5DEwLOyri6XUavdKa7MBTJJ
+         yvhAgAaQK4/bMkq+sxNvowGly71mHlHX7xdg0tdijpLF57CchJpgSl+5bPAc9qDr96s5
+         bjIw==
+X-Gm-Message-State: AOAM531VaZJ9MZnL9VRgwXymUo0hQu1KXP7Pt3vjMMEplrw4cCwPLMhE
+        xhxP7RtNtC49OSmDbRJDYO8=
+X-Google-Smtp-Source: ABdhPJy11J0dvtltETiMUmgoqOGY5vwRYKznzFSM+Jn9Jhy70mulHl9VGChcIKqtFo0jH3ClWuVjng==
+X-Received: by 2002:adf:f5c7:: with SMTP id k7mr9247503wrp.230.1598342147767;
+        Tue, 25 Aug 2020 00:55:47 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id f9sm8049134wrm.5.2020.08.25.00.55.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 00:55:47 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:55:43 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v2 17/19] dt-bindings: serial: fsl-lpuart: Fix compatible
+ matching
+Message-ID: <20200825075543.GA10369@kozik-lap>
+References: <20200824162652.21047-1-krzk@kernel.org>
+ <20200824162652.21047-17-krzk@kernel.org>
+ <20200825024226.GA3843643@bogus>
 MIME-Version: 1.0
-In-Reply-To: <3521b375-6f00-e815-94e5-49eae2a7c989@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200825024226.GA3843643@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnaldo,
+On Mon, Aug 24, 2020 at 08:42:26PM -0600, Rob Herring wrote:
+> On Mon, Aug 24, 2020 at 06:26:50PM +0200, Krzysztof Kozlowski wrote:
+> > The i.MX 8QXP DTSes use two compatibles so update the binding to fix
+> > dtbs_check warnings like:
+> > 
+> >   arch/arm64/boot/dts/freescale/imx8qxp-mek.dt.yaml: serial@5a060000:
+> >     compatible: ['fsl,imx8qxp-lpuart', 'fsl,imx7ulp-lpuart'] is too long
+> >     From schema: Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
+> > 
+> >   arch/arm64/boot/dts/freescale/imx8qxp-mek.dt.yaml: serial@5a060000:
+> >     compatible: Additional items are not allowed ('fsl,imx7ulp-lpuart' was unexpected)
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > ---
+> > 
+> > Changes since v1:
+> > 1. New patch.
+> > ---
+> >  .../devicetree/bindings/serial/fsl-lpuart.yaml | 18 +++++++++++-------
+> >  1 file changed, 11 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml b/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
+> > index e82c2cf9fef7..8ee651f2ef0b 100644
+> > --- a/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
+> > +++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
+> > @@ -14,13 +14,17 @@ allOf:
+> >  
+> >  properties:
+> >    compatible:
+> > -    enum:
+> > -      - fsl,vf610-lpuart
+> > -      - fsl,ls1021a-lpuart
+> > -      - fsl,ls1028a-lpuart
+> > -      - fsl,imx7ulp-lpuart
+> > -      - fsl,imx8qxp-lpuart
+> > -      - fsl,imx8qm-lpuart
+> > +    oneOf:
+> > +      - enum:
+> > +          - fsl,vf610-lpuart
+> > +          - fsl,ls1021a-lpuart
+> > +          - fsl,ls1028a-lpuart
+> > +          - fsl,imx7ulp-lpuart
+> > +          - fsl,imx8qxp-lpuart
+> 
+> This should be dropped.
 
-On 8/19/2020 11:05 AM, Like Xu wrote:
-> Hi Arnaldo,
-> 
-> On 2020/8/17 10:32, Jin, Yao wrote:
->> Hi Arnaldo,
->>
->> On 8/14/2020 8:47 PM, Arnaldo Carvalho de Melo wrote:
->>> Em Fri, Aug 14, 2020 at 09:21:20AM +0800, Jin Yao escreveu:
->>>> Currently if we run 'perf record -e cycles:u', exclude_guest=0.
->>>>
->>>> But it doesn't make sense in most cases that we request for
->>>> user-space counting but we also get the guest report.
->>>>
->>>> Of course, we also need to consider perf kvm usage case that
->>>> authorized perf users on the host may only want to count guest
->>>> user space events. For example,
->>>>
->>>> perf kvm --guest record -e cycles:u
->>> Ok, probably this works, but what if I want to record guest user samples
->>> without using 'perf kvm'?
->>>
->>> Can we have a 'U' modifier, perhaps, for that?
->>>
->>> I.e.
->>>
->>> perf record -e cycles:uU would not set exclude_host not exclude_guest,
->>> cycles:u excludes guest user, cycles:U excludes host user, would that be
->>> possible?
->>>
->>> Anyway, I think that with what we have, your patch makes sense, having a
->>> way to, without using 'perf kvm' still be able to sample the guest can
->>> be done on top. of this.
->>>
->>> Xu, can we get your Reviewed-by if this addresses your concerns?
-> 
-> My concern is about do not break the perf kvm usages and Yao did it in v3.
-> 
-> Tested-by: Like Xu <like.xu@linux.intel.com>
-> 
+Right.
 
-Can this patch be accepted?
+Best regards,
+Krzysztof
 
->>>
->>> - Arnaldo
->>
->> Do you suggest we will create a new modifier 'U' as a follow-up patch?
->>
->> cycles:u - Count host user space but it doesn't count the guest user space (exclude_host = 0, 
->> exclude_guest = 1, exclude_kernel = 1, exclude_user = 0, exclude_hv = 1)
->>
->> cycles:U - Count the guest user space but it doesn't count the host user space (exclude_host = 1, 
->> exclude_guest = 0, exclude_kernel = 1, exclude_user = 0, exclude_hv = 1)
->>
->> Is above understanding correct?
-> 
-> Do we really need to support sample guests without using perf kvm?
-> 
-> If it's true, I would prefer "cycles:uG" to cover guest user space
-> events only, "cycles:kG" to cover guest kernel space events only,
-> and only host events are sampled without the ":G" modifier by default.
-> 
-> I am not sure if ":G" has been used in perf.
->
-
-That may be another good idea I think. :)
-
-Thanks
-Jin Yao
-
-> At the very least, this v3 patch may not
-> block the follow-up patch from Yao (if any).
-> 
-> Thanks,
-> Like Xu
-> 
->>
->> Thanks
->> Jin Yao
-> 
