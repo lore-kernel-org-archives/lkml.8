@@ -2,431 +2,115 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D078DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EF9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A86BA20767
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78BA82074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:10:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgHYNKQ (ORCPT
+        id S1727093AbgHYNKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:10:16 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:26386 "EHLO pegase1.c-s.fr"
+        Tue, 25 Aug 2020 09:10:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43026 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgHYNJ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:09:59 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BbTqR2QKhz9tyVc;
-        Tue, 25 Aug 2020 15:09:55 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 6054zB44d8Qv; Tue, 25 Aug 2020 15:09:55 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BbTqR1KwFz9tyVY;
-        Tue, 25 Aug 2020 15:09:55 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 98DFE8B81B;
-        Tue, 25 Aug 2020 15:09:56 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id RUcuHp-v-4v0; Tue, 25 Aug 2020 15:09:56 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3E23E8B812;
-        Tue, 25 Aug 2020 15:09:56 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 19FF665D37; Tue, 25 Aug 2020 13:09:56 +0000 (UTC)
-Message-Id: <53fd92b7250cbf5b14e8dafc3dda7bfb84a2eaf5.1598360789.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <cover.1598360789.git.christophe.leroy@csgroup.eu>
-References: <cover.1598360789.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v11 2/5] powerpc/vdso: Prepare for switching VDSO to generic C
- implementation.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, nathanl@linux.ibm.com,
-        anton@ozlabs.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
-        luto@kernel.org, linux-arch@vger.kernel.org
-Date:   Tue, 25 Aug 2020 13:09:56 +0000 (UTC)
+        id S1726609AbgHYNKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:10:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B3FD4B5DC;
+        Tue, 25 Aug 2020 13:11:12 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 15:10:41 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/5] printk: implement pr_cont_t
+Message-ID: <20200825131041.GV4353@alley>
+References: <20200819232632.13418-1-john.ogness@linutronix.de>
+ <20200819232632.13418-2-john.ogness@linutronix.de>
+ <20200820101625.GE4353@alley>
+ <fb47baa77ff940e99224feac85a2f2d7@AcuMS.aculab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fb47baa77ff940e99224feac85a2f2d7@AcuMS.aculab.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prepare for switching VDSO to generic C implementation in following
-patch. Here, we:
-- Prepare the helpers to call the C VDSO functions
-- Prepare the required callbacks for the C VDSO functions
-- Prepare the clocksource.h files to define VDSO_ARCH_CLOCKMODES
-- Add the C trampolines to the generic C VDSO functions
+On Thu 2020-08-20 12:33:23, David Laight wrote:
+> From: Petr Mladek
+> > Sent: 20 August 2020 11:16
+> ...
+> > Now that I think about it. This is the biggest problem with any temporary buffer
+> > for pr_cont() lines. I am more and more convinced that we should just
+> > _keep the current behavior_. It is not ideal. But sometimes mixed
+> > messages are always better than lost ones.
+> 
+> Maybe a marker to say 'more expected' might be useful.
+> OTOH lack of a trailing '\n' probably signifies that a
+> pr_cont() is likely to be next.
 
-powerpc is a bit special for VDSO as well as system calls in the
-way that it requires setting CR SO bit which cannot be done in C.
-Therefore, entry/exit needs to be performed in ASM.
+The problem is the "probably". Lack of trailing '\n' might also mean
+that the author did not care. Note that newline is not strictly
+required at the moment. The next message is concatenated only when
+pr_cont() is used from the same process.
 
-Implementing __arch_get_vdso_data() would clobber the link register,
-requiring the caller to save it. As the ASM calling function already
-has to set a stack frame and saves the link register before calling
-the C vdso function, retriving the vdso data pointer there is lighter.
+I would personally hate printk when I debugged some hard-to-reproduce
+bug, finally succeeded, and some message was missing just because
+of a missing newline.
 
-Implement __arch_vdso_capable() and:
-- When the timebase is used, make it always return true.
-- When the RTC clock is used, make it always return false.
 
-Provide vdso_shift_ns(), as the generic x >> s gives the following
-bad result:
+> Unexpected pr_cont() could be output with a leading "... "
+> to help indicate the message is a continuation.
 
-  18:	35 25 ff e0 	addic.  r9,r5,-32
-  1c:	41 80 00 10 	blt     2c <shift+0x14>
-  20:	7c 64 4c 30 	srw     r4,r3,r9
-  24:	38 60 00 00 	li      r3,0
-...
-  2c:	54 69 08 3c 	rlwinm  r9,r3,1,0,30
-  30:	21 45 00 1f 	subfic  r10,r5,31
-  34:	7c 84 2c 30 	srw     r4,r4,r5
-  38:	7d 29 50 30 	slw     r9,r9,r10
-  3c:	7c 63 2c 30 	srw     r3,r3,r5
-  40:	7d 24 23 78 	or      r4,r9,r4
+Interesting idea. It might help to catch broken code. Well, I am still
+not sure that people would appreciate this printk() behavior.
 
-In our case the shift is always <= 32. In addition,  the upper 32 bits
-of the result are likely nul. Lets GCC know it, it also optimises the
-following calculations.
 
-With the patch, we get:
-   0:	21 25 00 20 	subfic  r9,r5,32
-   4:	7c 69 48 30 	slw     r9,r3,r9
-   8:	7c 84 2c 30 	srw     r4,r4,r5
-   c:	7d 24 23 78 	or      r4,r9,r4
-  10:	7c 63 2c 30 	srw     r3,r3,r5
+> > That said, some printk() API using local buffer would be still
+> > valuable for pieces of code where people really want to avoid
+> > mixed lines. But it should be optional and people should be
+> > aware of the risks.
+> 
+> That could be very useful if it supported multi-line output.
+> Thing like the stack backtrace code could use it avoid
+> the mess that happens when multiple processes generate
+> tracebacks at the same time.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
-v11:
-- Changed of __arch_get_hw_counter() to adapt to 4c5a116ada95
-("vdso/treewide: Add vdso_data pointer argument to __arch_get_hw_counter()")
+Honestly, I am going to push against it. I agree that would be useful
+but it is an evil path.
 
-v10:
-- Added a comment to explain the reason for the two stack frames.
-- Moved back the .cfi_register next to mflr
+There has to be some limits. Backtraces are often printed in situation
+where the buffer could not get allocated dynamically. There always
+be a situation when a buffer will not be big enough.
 
-v9:
-- No more modification of __get_datapage(). Offset is added after.
-- Adding a second stack frame because the PPC VDSO ABI doesn't force
-the caller to set one.
+If we add this feature, people will want to use it also for other
+purposes that might need even bigger buffers and the size might
+be even harder to predict.
 
-v8:
-- New, splitted out of last patch of the series
+And the temporary buffer is only part of the problem. The message also
+has to be stored into the lockless ringbuffer, show on consoles, passed
+to userspace, stored during panic by pstore.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/include/asm/clocksource.h       |   7 +
- arch/powerpc/include/asm/vdso/clocksource.h  |   7 +
- arch/powerpc/include/asm/vdso/gettimeofday.h | 186 +++++++++++++++++++
- arch/powerpc/kernel/vdso32/vgettimeofday.c   |  29 +++
- arch/powerpc/kernel/vdso64/vgettimeofday.c   |  29 +++
- 5 files changed, 258 insertions(+)
- create mode 100644 arch/powerpc/include/asm/clocksource.h
- create mode 100644 arch/powerpc/include/asm/vdso/clocksource.h
- create mode 100644 arch/powerpc/include/asm/vdso/gettimeofday.h
- create mode 100644 arch/powerpc/kernel/vdso32/vgettimeofday.c
- create mode 100644 arch/powerpc/kernel/vdso64/vgettimeofday.c
+The printk() design already is very complicated. And multiple lines
+support would stretch it in yet another dimension.
 
-diff --git a/arch/powerpc/include/asm/clocksource.h b/arch/powerpc/include/asm/clocksource.h
-new file mode 100644
-index 000000000000..482185566b0c
---- /dev/null
-+++ b/arch/powerpc/include/asm/clocksource.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_CLOCKSOURCE_H
-+#define _ASM_CLOCKSOURCE_H
-+
-+#include <asm/vdso/clocksource.h>
-+
-+#endif
-diff --git a/arch/powerpc/include/asm/vdso/clocksource.h b/arch/powerpc/include/asm/vdso/clocksource.h
-new file mode 100644
-index 000000000000..ec5d672d2569
---- /dev/null
-+++ b/arch/powerpc/include/asm/vdso/clocksource.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_VDSOCLOCKSOURCE_H
-+#define __ASM_VDSOCLOCKSOURCE_H
-+
-+#define VDSO_ARCH_CLOCKMODES	VDSO_CLOCKMODE_ARCHTIMER
-+
-+#endif
-diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h b/arch/powerpc/include/asm/vdso/gettimeofday.h
-new file mode 100644
-index 000000000000..dce9d5051259
---- /dev/null
-+++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
-@@ -0,0 +1,186 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_VDSO_GETTIMEOFDAY_H
-+#define __ASM_VDSO_GETTIMEOFDAY_H
-+
-+#include <asm/ptrace.h>
-+
-+#ifdef __ASSEMBLY__
-+
-+/*
-+ * The macros sets two stack frames, one for the caller and one for the callee
-+ * because there are no requirement for the caller to set a stack frame when
-+ * calling VDSO so it may have omitted to set one, especially on PPC64
-+ */
-+
-+.macro cvdso_call funct
-+  .cfi_startproc
-+	PPC_STLU	r1, -STACK_FRAME_OVERHEAD(r1)
-+	mflr		r0
-+  .cfi_register lr, r0
-+	PPC_STLU	r1, -STACK_FRAME_OVERHEAD(r1)
-+	PPC_STL		r0, STACK_FRAME_OVERHEAD + PPC_LR_STKOFF(r1)
-+	get_datapage	r5, r0
-+	addi		r5, r5, VDSO_DATA_OFFSET
-+	bl		\funct
-+	PPC_LL		r0, STACK_FRAME_OVERHEAD + PPC_LR_STKOFF(r1)
-+	cmpwi		r3, 0
-+	mtlr		r0
-+  .cfi_restore lr
-+	addi		r1, r1, 2 * STACK_FRAME_OVERHEAD
-+	crclr		so
-+	beqlr+
-+	crset		so
-+	neg		r3, r3
-+	blr
-+  .cfi_endproc
-+.endm
-+
-+.macro cvdso_call_time funct
-+  .cfi_startproc
-+	PPC_STLU	r1, -STACK_FRAME_OVERHEAD(r1)
-+	mflr		r0
-+  .cfi_register lr, r0
-+	PPC_STLU	r1, -STACK_FRAME_OVERHEAD(r1)
-+	PPC_STL		r0, STACK_FRAME_OVERHEAD + PPC_LR_STKOFF(r1)
-+	get_datapage	r4, r0
-+	addi		r4, r4, VDSO_DATA_OFFSET
-+	bl		\funct
-+	PPC_LL		r0, STACK_FRAME_OVERHEAD + PPC_LR_STKOFF(r1)
-+	crclr		so
-+	mtlr		r0
-+  .cfi_restore lr
-+	addi		r1, r1, 2 * STACK_FRAME_OVERHEAD
-+	blr
-+  .cfi_endproc
-+.endm
-+
-+#else
-+
-+#include <asm/time.h>
-+#include <asm/unistd.h>
-+#include <uapi/linux/time.h>
-+
-+#define VDSO_HAS_CLOCK_GETRES		1
-+
-+#define VDSO_HAS_TIME			1
-+
-+static __always_inline int do_syscall_2(const unsigned long _r0, const unsigned long _r3,
-+					const unsigned long _r4)
-+{
-+	register long r0 asm("r0") = _r0;
-+	register unsigned long r3 asm("r3") = _r3;
-+	register unsigned long r4 asm("r4") = _r4;
-+	register int ret asm ("r3");
-+
-+	asm volatile(
-+		"       sc\n"
-+		"	bns+	1f\n"
-+		"	neg	%0, %0\n"
-+		"1:\n"
-+	: "=r" (ret), "+r" (r4), "+r" (r0)
-+	: "r" (r3)
-+	: "memory", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "cr0", "ctr");
-+
-+	return ret;
-+}
-+
-+static __always_inline
-+int gettimeofday_fallback(struct __kernel_old_timeval *_tv, struct timezone *_tz)
-+{
-+	return do_syscall_2(__NR_gettimeofday, (unsigned long)_tv, (unsigned long)_tz);
-+}
-+
-+static __always_inline
-+int clock_gettime_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-+{
-+	return do_syscall_2(__NR_clock_gettime, _clkid, (unsigned long)_ts);
-+}
-+
-+static __always_inline
-+int clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
-+{
-+	return do_syscall_2(__NR_clock_getres, _clkid, (unsigned long)_ts);
-+}
-+
-+#ifdef CONFIG_VDSO32
-+
-+#define BUILD_VDSO32		1
-+
-+static __always_inline
-+int clock_gettime32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-+{
-+	return do_syscall_2(__NR_clock_gettime, _clkid, (unsigned long)_ts);
-+}
-+
-+static __always_inline
-+int clock_getres32_fallback(clockid_t _clkid, struct old_timespec32 *_ts)
-+{
-+	return do_syscall_2(__NR_clock_getres, _clkid, (unsigned long)_ts);
-+}
-+#endif
-+
-+static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
-+						 const struct vdso_data *vd)
-+{
-+	return get_tb();
-+}
-+
-+const struct vdso_data *__arch_get_vdso_data(void);
-+
-+static inline bool vdso_clocksource_ok(const struct vdso_data *vd)
-+{
-+	return !__USE_RTC();
-+}
-+#define vdso_clocksource_ok vdso_clocksource_ok
-+
-+/*
-+ * powerpc specific delta calculation.
-+ *
-+ * This variant removes the masking of the subtraction because the
-+ * clocksource mask of all VDSO capable clocksources on powerpc is U64_MAX
-+ * which would result in a pointless operation. The compiler cannot
-+ * optimize it away as the mask comes from the vdso data and is not compile
-+ * time constant.
-+ */
-+static __always_inline u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
-+{
-+	return (cycles - last) * mult;
-+}
-+#define vdso_calc_delta vdso_calc_delta
-+
-+#ifndef __powerpc64__
-+static __always_inline u64 vdso_shift_ns(u64 ns, unsigned long shift)
-+{
-+	u32 hi = ns >> 32;
-+	u32 lo = ns;
-+
-+	lo >>= shift;
-+	lo |= hi << (32 - shift);
-+	hi >>= shift;
-+
-+	if (likely(hi == 0))
-+		return lo;
-+
-+	return ((u64)hi << 32) | lo;
-+}
-+#define vdso_shift_ns vdso_shift_ns
-+#endif
-+
-+#ifdef __powerpc64__
-+int __c_kernel_clock_gettime(clockid_t clock, struct __kernel_timespec *ts,
-+			     const struct vdso_data *vd);
-+int __c_kernel_clock_getres(clockid_t clock_id, struct __kernel_timespec *res,
-+			    const struct vdso_data *vd);
-+#else
-+int __c_kernel_clock_gettime(clockid_t clock, struct old_timespec32 *ts,
-+			     const struct vdso_data *vd);
-+int __c_kernel_clock_getres(clockid_t clock_id, struct old_timespec32 *res,
-+			    const struct vdso_data *vd);
-+#endif
-+int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz,
-+			    const struct vdso_data *vd);
-+__kernel_old_time_t __c_kernel_time(__kernel_old_time_t *time,
-+				    const struct vdso_data *vd);
-+#endif /* __ASSEMBLY__ */
-+
-+#endif /* __ASM_VDSO_GETTIMEOFDAY_H */
-diff --git a/arch/powerpc/kernel/vdso32/vgettimeofday.c b/arch/powerpc/kernel/vdso32/vgettimeofday.c
-new file mode 100644
-index 000000000000..0b9ab4c22ef2
---- /dev/null
-+++ b/arch/powerpc/kernel/vdso32/vgettimeofday.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Powerpc userspace implementations of gettimeofday() and similar.
-+ */
-+#include <linux/time.h>
-+#include <linux/types.h>
-+
-+int __c_kernel_clock_gettime(clockid_t clock, struct old_timespec32 *ts,
-+			     const struct vdso_data *vd)
-+{
-+	return __cvdso_clock_gettime32_data(vd, clock, ts);
-+}
-+
-+int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz,
-+			    const struct vdso_data *vd)
-+{
-+	return __cvdso_gettimeofday_data(vd, tv, tz);
-+}
-+
-+int __c_kernel_clock_getres(clockid_t clock_id, struct old_timespec32 *res,
-+			    const struct vdso_data *vd)
-+{
-+	return __cvdso_clock_getres_time32_data(vd, clock_id, res);
-+}
-+
-+__kernel_old_time_t __c_kernel_time(__kernel_old_time_t *time, const struct vdso_data *vd)
-+{
-+	return __cvdso_time_data(vd, time);
-+}
-diff --git a/arch/powerpc/kernel/vdso64/vgettimeofday.c b/arch/powerpc/kernel/vdso64/vgettimeofday.c
-new file mode 100644
-index 000000000000..5b5500058344
---- /dev/null
-+++ b/arch/powerpc/kernel/vdso64/vgettimeofday.c
-@@ -0,0 +1,29 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Powerpc userspace implementations of gettimeofday() and similar.
-+ */
-+#include <linux/time.h>
-+#include <linux/types.h>
-+
-+int __c_kernel_clock_gettime(clockid_t clock, struct __kernel_timespec *ts,
-+			     const struct vdso_data *vd)
-+{
-+	return __cvdso_clock_gettime_data(vd, clock, ts);
-+}
-+
-+int __c_kernel_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz,
-+			    const struct vdso_data *vd)
-+{
-+	return __cvdso_gettimeofday_data(vd, tv, tz);
-+}
-+
-+int __c_kernel_clock_getres(clockid_t clock_id, struct __kernel_timespec *res,
-+			    const struct vdso_data *vd)
-+{
-+	return __cvdso_clock_getres_data(vd, clock_id, res);
-+}
-+
-+__kernel_old_time_t __c_kernel_time(__kernel_old_time_t *time, const struct vdso_data *vd)
-+{
-+	return __cvdso_time_data(vd, time);
-+}
--- 
-2.25.0
+And it is going to be less important. We are going to always store the
+information about the printk caller. So that it will be much easier
+to grep related lines.
 
+Best Regards,
+Petr
