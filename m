@@ -2,268 +2,126 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B516CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E10812074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5A72071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="in178nvC"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NBko5bZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgHYSad (ORCPT
+        id S1726734AbgHYSee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 14:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42724 "EHLO
+        Tue, 25 Aug 2020 14:34:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbgHYS3h (ORCPT
+        with ESMTP id S1726611AbgHYSeI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 14:29:37 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56C1FC0617A2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 11:29:32 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id d11so17646244ejt.13
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 11:29:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=d10PijIPuG0Iy1sT+yUZyIWJTUgD/5/pscV7dWlrwCs=;
-        b=in178nvC/wWOGVHO8LUcePDeuaHSWE0dopDVO/ffY3s8OthG82JXPlnBj8RLjdt1Qt
-         0ypaEAUjtF1wbOEN9QvUyw96i7VvtuXL5DtdodzcH53cex1Xy+6YKLewuRBh0Br2RAUY
-         yVst+DKxCxEzEiKsnSeVwxWCudoySEz3A6kyU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=d10PijIPuG0Iy1sT+yUZyIWJTUgD/5/pscV7dWlrwCs=;
-        b=dww48o1PbR6x7E3VAvU/5UatDdW9xn1QFlQvjHmaREip5rNut1irfq45Hu4XN2v806
-         jAxh1dimy9cwuvUZKwndkaOU/lAnE2s4DcyawSGYe7LYV4njhUq5xStYTxRvxl2q4Gqw
-         O1UlK/tfCLgcIm+pBGOfgkgfSaZcKlAtmRoU3gPFnmaCgj9ZI9ecr99bNZLMS35v5dHC
-         jNjAcOB6R3gtCXyINvS/FjmJAnYEeUJH5pokzlNTrLjNSoOFH065s5i/OofpCas1YDQB
-         Rbr4ec4eNXcy9FyNTnm0dS1j+4ip7EANh5AMwx7ICa1bn0cexkgAGgMt6VOfoqxSgyPh
-         TQtw==
-X-Gm-Message-State: AOAM530vpInSaRy5UARIN7nKYuClRTouC4ihtJs5JRXTrb08EJzSmJGu
-        JEK69Idvv407vkmxrCd5soKEhbdkoP6fUA==
-X-Google-Smtp-Source: ABdhPJzpRkSaE0z8A85wKfv7Sqklv7tJuzfkaazGf1AfXeeuhe2y8k1c1zBOKZU4BiEkWGCdX+DKPw==
-X-Received: by 2002:a17:906:3a81:: with SMTP id y1mr11363532ejd.464.1598380169682;
-        Tue, 25 Aug 2020 11:29:29 -0700 (PDT)
-Received: from kpsingh.zrh.corp.google.com ([81.6.44.51])
-        by smtp.gmail.com with ESMTPSA id dr21sm15323286ejc.112.2020.08.25.11.29.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 11:29:28 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Martin KaFai Lau <kafai@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-Subject: [PATCH bpf-next v10 6/7] bpf: Allow local storage to be used from LSM programs
-Date:   Tue, 25 Aug 2020 20:29:18 +0200
-Message-Id: <20200825182919.1118197-7-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-In-Reply-To: <20200825182919.1118197-1-kpsingh@chromium.org>
-References: <20200825182919.1118197-1-kpsingh@chromium.org>
+        Tue, 25 Aug 2020 14:34:08 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12529C061755;
+        Tue, 25 Aug 2020 11:34:08 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0c5a00d84f58c2ae3e6e5d.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:5a00:d84f:58c2:ae3e:6e5d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 89BBB1EC02E6;
+        Tue, 25 Aug 2020 20:34:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598380446;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=fN7vONgRqJo+r0b+uDy2CQWm74Dp86pCAjGMuhbiocM=;
+        b=NBko5bZkTXSv/bmBQXlYSgBe6LFcnA2UbGexIL2FFNgTCuDFkXsTclzrqTHOnx3izvCE0P
+        g5s7MAX56sJ9jMCPCouTzyP7rUXOWWn4GgCQ/CNiHoJTQ11GcTi6ScEJO3lTuWkdWW/Xye
+        Wk79DNxtsnWl5yIB/n/yYToNx+nJh5g=
+Date:   Tue, 25 Aug 2020 20:34:02 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yazen Ghannam <yazen.ghannam@amd.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "Smita.KoralahalliChannabasappa@amd.com" 
+        <Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH] x86/mce: Increase maximum number of banks to 64
+Message-ID: <20200825183402.GG12107@zn.tnic>
+References: <20200820170624.1855825-1-Yazen.Ghannam@amd.com>
+ <20200820171518.GB17271@zn.tnic>
+ <20200820180054.GA2033274@yaz-nikka.amd.com>
+ <6ecac9c40d7b4491b9a87c8927a4aca6@intel.com>
+ <20200824151105.GA3478291@yaz-nikka.amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200824151105.GA3478291@yaz-nikka.amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On Mon, Aug 24, 2020 at 10:11:05AM -0500, Yazen Ghannam wrote:
+> Thanks. Yeah, they're identical:
+>    text    data     bss     dec     hex filename
+>    15710076        13519306        5398528 34627910        2106146   vmlinux-32banks
+>    15710076        13519306        5398528 34627910        2106146   vmlinux-64banks
 
-Adds support for both bpf_{sk, inode}_storage_{get, delete} to be used
-in LSM programs. These helpers are not used for tracing programs
-(currently) as their usage is tied to the life-cycle of the object and
-should only be used where the owning object won't be freed (when the
-owning object is passed as an argument to the LSM hook). Thus, they
-are safer to use in LSM hooks than tracing. Usage of local storage in
-tracing programs will probably follow a per function based whitelist
-approach.
+So I went crazy here and built allmodconfigs for hypothetical CPUs which
+support up to 4K MCA banks:
 
-Since the UAPI helper signature for bpf_sk_storage expect a bpf_sock,
-it, leads to a compilation warning for LSM programs, it's also updated
-to accept a void * pointer instead.
+   text    data     bss     dec     hex filename
+24618040        27211906        35409988        87239934        5332cfe vmlinux-32banks
+24618040        27211906        35409988        87239934        5332cfe vmlinux-64banks
+24618040        27211906        35409988        87239934        5332cfe vmlinux-128banks
 
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: KP Singh <kpsingh@google.com>
----
- include/net/bpf_sk_storage.h   |  2 ++
- include/uapi/linux/bpf.h       |  7 +++++--
- kernel/bpf/bpf_lsm.c           | 21 ++++++++++++++++++++-
- net/core/bpf_sk_storage.c      | 25 +++++++++++++++++++++++++
- tools/include/uapi/linux/bpf.h |  7 +++++--
- 5 files changed, 57 insertions(+), 5 deletions(-)
+For the first three - up to 128 banks, the sizes don't change.
 
-diff --git a/include/net/bpf_sk_storage.h b/include/net/bpf_sk_storage.h
-index 3c516dd07caf..119f4c9c3a9c 100644
---- a/include/net/bpf_sk_storage.h
-+++ b/include/net/bpf_sk_storage.h
-@@ -20,6 +20,8 @@ void bpf_sk_storage_free(struct sock *sk);
- 
- extern const struct bpf_func_proto bpf_sk_storage_get_proto;
- extern const struct bpf_func_proto bpf_sk_storage_delete_proto;
-+extern const struct bpf_func_proto sk_storage_get_btf_proto;
-+extern const struct bpf_func_proto sk_storage_delete_btf_proto;
- 
- struct bpf_local_storage_elem;
- struct bpf_sk_storage_diag;
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index b6bfcd085a76..0e1cdf806fe1 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -2808,7 +2808,7 @@ union bpf_attr {
-  *
-  *		**-ERANGE** if resulting value was out of range.
-  *
-- * void *bpf_sk_storage_get(struct bpf_map *map, struct bpf_sock *sk, void *value, u64 flags)
-+ * void *bpf_sk_storage_get(struct bpf_map *map, void *sk, void *value, u64 flags)
-  *	Description
-  *		Get a bpf-local-storage from a *sk*.
-  *
-@@ -2824,6 +2824,9 @@ union bpf_attr {
-  *		"type". The bpf-local-storage "type" (i.e. the *map*) is
-  *		searched against all bpf-local-storages residing at *sk*.
-  *
-+ *		*sk* is a kernel **struct sock** pointer for LSM program.
-+ *		*sk* is a **struct bpf_sock** pointer for other program types.
-+ *
-  *		An optional *flags* (**BPF_SK_STORAGE_GET_F_CREATE**) can be
-  *		used such that a new bpf-local-storage will be
-  *		created if one does not exist.  *value* can be used
-@@ -2836,7 +2839,7 @@ union bpf_attr {
-  *		**NULL** if not found or there was an error in adding
-  *		a new bpf-local-storage.
-  *
-- * long bpf_sk_storage_delete(struct bpf_map *map, struct bpf_sock *sk)
-+ * long bpf_sk_storage_delete(struct bpf_map *map, void *sk)
-  *	Description
-  *		Delete a bpf-local-storage from a *sk*.
-  *	Return
-diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-index fb278144e9fd..9cd1428c7199 100644
---- a/kernel/bpf/bpf_lsm.c
-+++ b/kernel/bpf/bpf_lsm.c
-@@ -11,6 +11,8 @@
- #include <linux/bpf_lsm.h>
- #include <linux/kallsyms.h>
- #include <linux/bpf_verifier.h>
-+#include <net/bpf_sk_storage.h>
-+#include <linux/bpf_local_storage.h>
- 
- /* For every LSM hook that allows attachment of BPF programs, declare a nop
-  * function where a BPF program can be attached.
-@@ -45,10 +47,27 @@ int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
- 	return 0;
- }
- 
-+static const struct bpf_func_proto *
-+bpf_lsm_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
-+{
-+	switch (func_id) {
-+	case BPF_FUNC_inode_storage_get:
-+		return &bpf_inode_storage_get_proto;
-+	case BPF_FUNC_inode_storage_delete:
-+		return &bpf_inode_storage_delete_proto;
-+	case BPF_FUNC_sk_storage_get:
-+		return &sk_storage_get_btf_proto;
-+	case BPF_FUNC_sk_storage_delete:
-+		return &sk_storage_delete_btf_proto;
-+	default:
-+		return tracing_prog_func_proto(func_id, prog);
-+	}
-+}
-+
- const struct bpf_prog_ops lsm_prog_ops = {
- };
- 
- const struct bpf_verifier_ops lsm_verifier_ops = {
--	.get_func_proto = tracing_prog_func_proto,
-+	.get_func_proto = bpf_lsm_func_proto,
- 	.is_valid_access = btf_ctx_access,
- };
-diff --git a/net/core/bpf_sk_storage.c b/net/core/bpf_sk_storage.c
-index f29d9a9b4ea4..55fae03b4cc3 100644
---- a/net/core/bpf_sk_storage.c
-+++ b/net/core/bpf_sk_storage.c
-@@ -12,6 +12,7 @@
- #include <net/sock.h>
- #include <uapi/linux/sock_diag.h>
- #include <uapi/linux/btf.h>
-+#include <linux/btf_ids.h>
- 
- DEFINE_BPF_STORAGE_CACHE(sk_cache);
- 
-@@ -377,6 +378,30 @@ const struct bpf_func_proto bpf_sk_storage_delete_proto = {
- 	.arg2_type	= ARG_PTR_TO_SOCKET,
- };
- 
-+BTF_ID_LIST(sk_storage_btf_ids)
-+BTF_ID_UNUSED
-+BTF_ID(struct, sock)
-+
-+const struct bpf_func_proto sk_storage_get_btf_proto = {
-+	.func		= bpf_sk_storage_get,
-+	.gpl_only	= false,
-+	.ret_type	= RET_PTR_TO_MAP_VALUE_OR_NULL,
-+	.arg1_type	= ARG_CONST_MAP_PTR,
-+	.arg2_type	= ARG_PTR_TO_BTF_ID,
-+	.arg3_type	= ARG_PTR_TO_MAP_VALUE_OR_NULL,
-+	.arg4_type	= ARG_ANYTHING,
-+	.btf_id		= sk_storage_btf_ids,
-+};
-+
-+const struct bpf_func_proto sk_storage_delete_btf_proto = {
-+	.func		= bpf_sk_storage_delete,
-+	.gpl_only	= false,
-+	.ret_type	= RET_INTEGER,
-+	.arg1_type	= ARG_CONST_MAP_PTR,
-+	.arg2_type	= ARG_PTR_TO_BTF_ID,
-+	.btf_id		= sk_storage_btf_ids,
-+};
-+
- struct bpf_sk_storage_diag {
- 	u32 nr_maps;
- 	struct bpf_map *maps[];
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index b6bfcd085a76..0e1cdf806fe1 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -2808,7 +2808,7 @@ union bpf_attr {
-  *
-  *		**-ERANGE** if resulting value was out of range.
-  *
-- * void *bpf_sk_storage_get(struct bpf_map *map, struct bpf_sock *sk, void *value, u64 flags)
-+ * void *bpf_sk_storage_get(struct bpf_map *map, void *sk, void *value, u64 flags)
-  *	Description
-  *		Get a bpf-local-storage from a *sk*.
-  *
-@@ -2824,6 +2824,9 @@ union bpf_attr {
-  *		"type". The bpf-local-storage "type" (i.e. the *map*) is
-  *		searched against all bpf-local-storages residing at *sk*.
-  *
-+ *		*sk* is a kernel **struct sock** pointer for LSM program.
-+ *		*sk* is a **struct bpf_sock** pointer for other program types.
-+ *
-  *		An optional *flags* (**BPF_SK_STORAGE_GET_F_CREATE**) can be
-  *		used such that a new bpf-local-storage will be
-  *		created if one does not exist.  *value* can be used
-@@ -2836,7 +2839,7 @@ union bpf_attr {
-  *		**NULL** if not found or there was an error in adding
-  *		a new bpf-local-storage.
-  *
-- * long bpf_sk_storage_delete(struct bpf_map *map, struct bpf_sock *sk)
-+ * long bpf_sk_storage_delete(struct bpf_map *map, void *sk)
-  *	Description
-  *		Delete a bpf-local-storage from a *sk*.
-  *	Return
+24618000        27216002        35401796        87235798        5331cd6 vmlinux-256banks
+
+Somewhere after 128 banks, it grows the data section but by exactly 4K,
+i.e., one more page:
+
+27216002 - 27211906 = 4096
+
+The last page is not full, of course.
+
+27216002 % 4096 = 2178
+27211906 % 4096 = 2178
+
+24618000        27220098        35401796        87239894        5332cd6 vmlinux-512banks
+
+The same happens here.
+
+27220098 - 27216002 = 4096
+27220098 % 4096 = 2178
+
+And so on:
+
+24618000        27228290        35393604        87239894        5332cd6 vmlinux-1024banks
+24618000        27244674        35377220        87239894        5332cd6 vmlinux-2048banks
+24618000        27277442        35344452        87239894        5332cd6 vmlinux-4Kbanks
+
+So what I think happens is, the first 128 banks fit within the same
+.data section page thus vmlinux doesn't increase.
+
+I guess there might be a .config which could cause that data increase
+when the 32->64 banks move won't fit in the last .data page. It depends
+on where those ~2K you computed and I snipped, land.
+
+But since most kernels are allmodconfig builds, I guess we should be
+fine.
+
+So yeah, I guess we can take this one after you summarize the findings
+of this thread in v2's commit message. :-)
+
+Thx.
+
 -- 
-2.28.0.297.g1956fa8f8d-goog
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
