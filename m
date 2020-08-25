@@ -2,175 +2,139 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13935C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C5FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEEE52068E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A1D2068E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:34:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bf/T+vWp"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Zp5It0Ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbgHYLcQ (ORCPT
+        id S1729990AbgHYLeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 07:32:16 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53586 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730015AbgHYLax (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 07:30:53 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200825113043euoutp01d0f5c3a4be9a22942d7ebb0e87428851~uf3GmFK8T3098530985euoutp01c
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 11:30:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200825113043euoutp01d0f5c3a4be9a22942d7ebb0e87428851~uf3GmFK8T3098530985euoutp01c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598355043;
-        bh=X8gDcs427W02/qFtPNsPSdmNDXjqciYwh7aa0XOpqik=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=bf/T+vWpq9orb92VKlt6rntA6M0vAXl4taqwUbJIAGHnDbeMzHeZRFEFmsAXDYrNq
-         Wr9AKv7vwxCWJ/Vo6hIhRgWr9K0GkTMScEkS+wDoQCoPXqBM2W4KpgH6J+25PIJB7S
-         XU9Qwn50dCGine2uiKApqXnlXT7+4oTjOnOc6UhQ=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200825113043eucas1p2a677e17885157748102be36111dd7cf0~uf3GIA3vS2151921519eucas1p2e;
-        Tue, 25 Aug 2020 11:30:43 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 2B.B0.06456.366F44F5; Tue, 25
-        Aug 2020 12:30:43 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200825113042eucas1p156019fa8529e69de368498a0a7b4279f~uf3FqdPEE0129601296eucas1p1w;
-        Tue, 25 Aug 2020 11:30:42 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200825113042eusmtrp2f1d062dd589e815ab44765282723204c~uf3FpmMBe1642116421eusmtrp26;
-        Tue, 25 Aug 2020 11:30:42 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-75-5f44f663c15d
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 45.58.06017.266F44F5; Tue, 25
-        Aug 2020 12:30:42 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200825113041eusmtip26d77690ed3da6b991eebf229d4dff802~uf3EXjFCA0971809718eusmtip2L;
-        Tue, 25 Aug 2020 11:30:41 +0000 (GMT)
-Subject: Re: a saner API for allocating DMA addressable pages
-To:     Christoph Hellwig <hch@lst.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Pawel Osciak <pawel@osciak.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        iommu@lists.linux-foundation.org
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, nouveau@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-mm@kvack.org,
-        alsa-devel@alsa-project.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <8fa1ce36-c783-1a02-6890-211eb504a33b@samsung.com>
-Date:   Tue, 25 Aug 2020 13:30:41 +0200
+        Tue, 25 Aug 2020 07:34:08 -0400
+Received: from mail-dm6nam11on2088.outbound.protection.outlook.com ([40.107.223.88]:30081
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725893AbgHYLeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 07:34:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TbCUBNSH50axq+yjXKWYl3QsywGGGbuT9Ekry2cSZvAWq79mGrpthVsrL+zoJrQPDdzX4Vp14rZ9QE3Hzurgv2Og0ZSgBXrJ4rUDkeN/CrM/EVmK7laI3xHL5gXUOYewv9f44Njyhdg1EyVP2Sg9doNZjPPll49kf6DcY6UTT7JNzEShlHHlDfAfRC1GjKJNEskzzDpZ/sch0OQR+GQjopmq2xnG/AO3UuoszA5vvk+1wLnT1dgMsumKPc0z407e4Jj5q8Ahzfw085erQLUBcp/IYPxulnyVWH4UUtzkkwugMGI4+DNQRSFqVIMIPwAp5/9kM1VEhM5M8fjdU3y7nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MsgYUm1SttPoXuoYXy+c9CP+h9MziHt/7U3f9XGzFvc=;
+ b=FH1tk/hjn/8WI6vCDXhrb1ozC/PqaZtCwndc+6vuGYpTozGdDGFJlSrlZ3ImB0a4TY0ORrEXf/e0bSsDhfwaHGaWtCZhkC5DW4rdZBV3e3M4d8B8PDEIUFChxVQUjIBjywokGPi3LzDLe0Kft5wMroMLvufcYHJFR07pcBOiFgo1inXKMzFu0GP0rE5qXy1pr0svUSfyjQKTBC72N54SxadfvdeL/ugMM4OVCO2jU01SyL6SSJxv4D9sOArWwcpY7pdlYY4hkh1twOnbnCiMHYjLCf7kVVdhQaNmmurHnWLLojcrh7xtLNzJkMddj0Ga1RImdH2/G2WzkYzOjOZCUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MsgYUm1SttPoXuoYXy+c9CP+h9MziHt/7U3f9XGzFvc=;
+ b=Zp5It0Ag6Aefb6J5DbgF5J3jmUvbFCWBOy2iLk59rafV+U1hDU2PnnWRWoAqGh7amWVjlG+6yXeFDtcl2su0lh5iH5fWHYNAUZaGFZ3/zvIIlUdwSDon8/+pkYM5zP0nGbxebwuDZajQNiFa9jTigYzXse6+zl3pAfolcQJaNy0=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3540.namprd12.prod.outlook.com (2603:10b6:408:6c::33)
+ by BN8PR12MB3073.namprd12.prod.outlook.com (2603:10b6:408:66::33) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Tue, 25 Aug
+ 2020 11:34:00 +0000
+Received: from BN8PR12MB3540.namprd12.prod.outlook.com
+ ([fe80::b5a6:78c7:bdd1:543]) by BN8PR12MB3540.namprd12.prod.outlook.com
+ ([fe80::b5a6:78c7:bdd1:543%7]) with mapi id 15.20.3305.026; Tue, 25 Aug 2020
+ 11:34:00 +0000
+Subject: Re: [PATCH v5 1/3] dmaengine: ptdma: Initial driver for the AMD PTDMA
+ controller
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Sanjay R Mehta <Sanju.Mehta@amd.com>, gregkh@linuxfoundation.org,
+        dan.j.williams@intel.com, Thomas.Lendacky@amd.com,
+        Shyam-sundar.S-k@amd.com, Nehal-bakulchandra.Shah@amd.com,
+        robh@kernel.org, mchehab+samsung@kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        Naveenkumar.YA@amd.com
+References: <1592356288-42064-1-git-send-email-Sanju.Mehta@amd.com>
+ <1592356288-42064-2-git-send-email-Sanju.Mehta@amd.com>
+ <20200703071841.GJ273932@vkoul-mobl>
+ <19b20b55-0748-fb3c-755d-87ee6bdccf48@amd.com>
+ <20200825111659.GM2639@vkoul-mobl>
+From:   Sanjay R Mehta <sanmehta@amd.com>
+Message-ID: <9f1abb41-84d3-4e8f-3efe-f708a33aec85@amd.com>
+Date:   Tue, 25 Aug 2020 17:03:48 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200819065555.1802761-1-hch@lst.de>
-Content-Transfer-Encoding: 7bit
+ Thunderbird/68.11.0
+In-Reply-To: <20200825111659.GM2639@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0yTZxT2/e6g1dd64QQX1C4Yt8RL1ZjXqHiN+UZm4g+XbMsG1vIFUC7a
-        ghf+WAsabsFZ0LLaBdgMzG6KfgMHGktEpSLhbkXxrvVSY1EpYkpUpHyg/HvOc55znuckR6DV
-        tVy4kJiSJhlSdEkaLpQ52xBonafvXx+7cKAXk+vt9RTxVmQjcuKfKxQprVtOzhwSyPN77Qxp
-        Nr/kifz4BkvKDh5nyOvsHpZ0nrNzJP90NUty5GpE7v07yJKS8ic8eXStjSLFrU6K5HXVcKRc
-        fk+RI63vaNJQOp28KyhgSZEvwJPiQi9HLhc5WXLJfJFeHS4e6KhgxNN+MzeEPnDiUcs1Tsx/
-        mcWKsiOHE+VeCy/ez3NR4n/H94mFNyuQeP6WiRMfD3g58ZXTzYkFVQ4k+uWITZN+Dl0RJyUl
-        7pIMC6K2hCbIXQ5qx7NJe7rP25EJeSbkohAB8BJoqm5kc1GooMZ/I7BVukeKPgTNOQEuqFJj
-        P4KTV5eNTtw5YaUUUQWCPFsNpxSvEPR9yEZB1RS8EnrkB8OrpuIuGkrsATrYoHErDZ7K8UHM
-        YS3k+nKHLVQ4CrL8Vj6IGRwJV+quMkE8DcdAtctNKZrJ0Pi7Z5gPwYvg2OWnvLJzJvzvs4/s
-        D4NuT8lwPMCDAvSdOcQoudfDbbOfV/AUeOGqGsFfwWDt6EAmgoctJ3mlyEfQaS5Gimo53GkZ
-        GIoqDFl8A5XnFij0GmioO8wEacAT4aZvshJiIljOWmmFVkH2QbWingM216nPthfbOujfkMY2
-        5jTbmHNsY86xffEtRYwDhUnpxuR4yahNkXbPN+qSjekp8fP1qckyGnropo+u3hr0tmNrPcIC
-        0kxQmZzrYtWsbpdxb3I9AoHWTFWtbW6KUavidHszJENqrCE9STLWoxkCowlTLf7T+6sax+vS
-        pO2StEMyjHYpISTchAx/lP1VGTVOdyGiMWdzgr7Wl7ZFu7Dq7oYLT3w/ZJS791szflzrjF7U
-        5o20buJ7ZiZ29s+aW7jUEmPVrirLN2daEtM7ZjuKrv/ydrM7YmP7gzf6rw07o+fGpUa3RA/+
-        NK972oHFge8zN3gj9f3bXuyhs56a7N/ZT+EVWcyxmK1z7nsYDWNM0Gm/pQ1G3SdTBG82zAMA
-        AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTcRTH+d3X7sThbWr9sqhYBVE523TuZ6VICd2CIOqfqHSuuqi1h+xu
-        kkE1zIVOs8d8lJkamqKV2E1TKpQ0M7UwzSwlzXKVi2YP6YllzhX434fzPZ9zOHBoXPqQDKKT
-        DGbOZNDqZJQP0fWnfTh477cYzZpBZzDq62nBkKsyA6CqK20YKm1eh66fotHYcA+BHqV9ECFh
-        tJ9El06UE+hTxjiJntwqolB2bT2JMoV6gIavTpGopOKNCL3ufIyhc91NGMp61kihCmESQ3nd
-        33F0v3Qu+p6TQ6Jc908ROudwUehebhOJWtPu4tFBrK23kmBrJ9KoafpNsflnOyk2+0M6yQrV
-        mRQrfDkrYl9mtWPsjfJjrON5JWBvD1gpdvSXi2I/Nj2l2Jy6asBOCIu2+e2SrzcZLWZuSaKR
-        N0fKdiuQUq6IQHJlWIRcEaqOXatUyUKi1u/ndEkpnCkkKl6eKDyrxpLf+R0avF0ErMDpawdi
-        GjJh8EVVAWYHPrSUuQygraEN8wYLYUe+lfSyP5zst1PeJjeA7v7juCfwZyLhuDBCeoIAZgCH
-        v93vCU+AM9047MxgvYYNwPeZZTOjKEYB7W7PKDEtYaJg+kSByMMEsxy2NT+YkQOZODh6cgr3
-        9syBHeedM3Uxo4QX7r0VeReEw+Ibr3AvL4YN7qJ/PA8OOkuw00BaOEsvnKUUzlIKZymlgKgG
-        AZyF1yfoeaWc1+p5iyFBvs+oF8D0J928/7OuEdjHd7QAhgYyX4m1aaNGSmpT+FR9C4A0LguQ
-        bHjUFSeV7NemHuZMRo3JouP4FqCaPu4MHhS4zzj9lwazRqFSqFGEQh2qDg1HsnmSDObuHimT
-        oDVzBzkumTP99zBaHGQF6s2TqrboElXxCnFsqs9YmGG5j41w1ehaG4bqv9kji5ZohyrT66aO
-        9LWmhuQ9HvG9ltxY9lXXt3OVaYE6PuxA8IPtJUcv/gjPn9+xbdzZW9Vscdx5GOiwXYqK2Cra
-        Ep8uf65Z6oifU9Ne23q5ZpO6Z3VMRU2cK7kXvzC2ZZly3WeRjOATtYqVuInX/gXVsGUeXwMA
-        AA==
-X-CMS-MailID: 20200825113042eucas1p156019fa8529e69de368498a0a7b4279f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200819065610eucas1p2fde88e81917071b1888e7cc01ba0f298
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200819065610eucas1p2fde88e81917071b1888e7cc01ba0f298
-References: <CGME20200819065610eucas1p2fde88e81917071b1888e7cc01ba0f298@eucas1p2.samsung.com>
-        <20200819065555.1802761-1-hch@lst.de>
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BM1PR0101CA0058.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:19::20) To BN8PR12MB3540.namprd12.prod.outlook.com
+ (2603:10b6:408:6c::33)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by BM1PR0101CA0058.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:19::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Tue, 25 Aug 2020 11:33:56 +0000
+X-Originating-IP: [165.204.159.242]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 9a8a4a91-ed05-42d8-76a5-08d848eac2e8
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3073:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR12MB3073089822C02EEC4379B19CE5570@BN8PR12MB3073.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8XvEBUwP3Rmgm3uOta+sW45AmUZ1K30jIOko+p4+bRuwAcinP9ODxC2MlfaIl+bv5Km7uYtEUJnOyQxsZDRrsrmQi4uwoXmnnMxmNntuBpQRI1Enmns3Uyc115CXuXilu9UqegPl4CtcYNAVWfMKB9irbe3UTe5XkwIoOWxmZgjNaiFH/eSX5+Lze+9KwrnpEpKm8HQN27ccJwJlRZTQO628H/CKvuVQQh8E3m2jbr4+S4knJCjr7hLzeslO3TjfP+vMJvuivEDzo6E1OAJ6Gcu1vk5XyzoEzyLI8Y7vHh5vCLfyzG+gMp/OsRqMWxgKujjLUByQqv4AyD2h9FXGtskUAfdqcIJcj7V3GDtIANwOwOWlHJ7hSUBGpFblzkv3
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3540.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(366004)(39860400002)(136003)(2616005)(5660300002)(6666004)(53546011)(186003)(8676002)(6916009)(26005)(316002)(2906002)(36756003)(6486002)(4744005)(478600001)(66556008)(66476007)(956004)(52116002)(31686004)(4326008)(8936002)(31696002)(16576012)(66946007)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: U8CUTRteTe6dMu5erUqfwIDumdmw6UsKZ8wudSm38uCAF8t2EaH5A0mHELJXcn9OE8xym3dSJ4hRytFTZDwq5SXeOZV6NIwF/jiaWVVCqdNprg6t66iyaQ7rzLudIUbItlyrls2aytnNKwvtOlLjSvfoIct9gjGQcd5QjGaXpqkdLxY6sl/eBvYMh+7v89de55xtes8VV0MbLRz4yrEmNuh+L8qtUyRXJguMoRXz4vOXdp0WGip2tWeQ5xxsO7F9ESmtOsMD5rliAf2F9Hg0Db2k+JnEaywYglqai3mLMxd2JJlWntL1IqPHC9awp9nnlMTpJSdLJ0vIn0pskeqlsqBUwpwjvRf09jhBjUzPc8ep0Fqy+iaky3ogypKTrvsMO7+lijBiB6uKOdu6J1HF101+9HiPl5blRXsXcN7BGqfiQBeuTu+IUnLG2HkNdfB2NA0PuN2PPvT603QL9CmUhYu/lLsXL3+oFe7uWg9UdqClkvUt3keGTWImSsNViIbb1Syb+hlFFh8FRV322j6YXsDJ/MlY+7XbReocTHkRUUL/SR4rB4sGKh48xzEuEh5qz3uQ38EbZoH3tDsReoGds+izLwYrDV5SGMt2tQgq206Bn1D/RlqV5yy2PuOU04VspV1H/6DXQarx14zjgu37rg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a8a4a91-ed05-42d8-76a5-08d848eac2e8
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3540.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2020 11:34:00.4675
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SFP0paTBj3VJJ53hIU6uOsKyX2e+eUe2LprnbxXKPrw1xvv506VuH0/o9X3qFL0NQTwJQKnB+cZSNy2iKz5QyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+> On 24-08-20, 13:11, Sanjay R Mehta wrote:
+>> Apologies for my delayed response.
+>>
+>> On 7/3/2020 12:48 PM, Vinod Koul wrote:
+>>> [CAUTION: External Email]
+>>>
+>>> On 16-06-20, 20:11, Sanjay R Mehta wrote:
+>>>
+>>>> +static int pt_core_execute_cmd(struct ptdma_desc *desc,
+>>>> +                            struct pt_cmd_queue *cmd_q)
+>>>> +{
+>>>> +     __le32 *mp;
+>>>> +     u32 *dp;
+>>>> +     u32 tail;
+>>>> +     int     i;
+>>>
+>>> no tabs, spaces pls
+>> Sure, will fix in the next version of patch.
+> 
+> Also, please make sure you run checkpatch.pl with --strict option, that
+> will help out reducing the churn here
+> 
+Thanks Vinod. Will make sure to run the checkpatch.pl with --strict option.
 
-On 19.08.2020 08:55, Christoph Hellwig wrote:
-> this series replaced the DMA_ATTR_NON_CONSISTENT flag to dma_alloc_attrs
-> with a separate new dma_alloc_pages API, which is available on all
-> platforms.  In addition to cleaning up the convoluted code path, this
-> ensures that other drivers that have asked for better support for
-> non-coherent DMA to pages with incurring bounce buffering over can finally
-> be properly supported.
->
-> I'm still a little unsure about the API naming, as alloc_pages sort of
-> implies a struct page return value, but we return a kernel virtual
-> address.  The other alternative would be to name the API
-> dma_alloc_noncoherent, but the whole non-coherent naming seems to put
-> people off.  As a follow up I plan to move the implementation of the
-> DMA_ATTR_NO_KERNEL_MAPPING flag over to this framework as well, given
-> that is also is a fundamentally non coherent allocation.  The replacement
-> for that flag would then return a struct page, as it is allowed to
-> actually return pages without a kernel mapping as the name suggested
-> (although most of the time they will actually have a kernel mapping..)
->
-> In addition to the conversions of the existing non-coherent DMA users
-> the last three patches also convert the DMA coherent allocations in
-> the NVMe driver to use this new framework through a dmapool addition.
-> This was both to give me a good testing vehicle, but also because it
-> should speed up the NVMe driver on platforms with non-coherent DMA
-> nicely, without a downside on platforms with cache coherent DMA.
+Also, please do let me know if I am missing anything else too.
+I will make sure to submit those changes too in the next version of patch series.
 
-I really wonder what is the difference between this new API and 
-alloc_pages(GFP_DMA, n). Is this API really needed? I thought that this 
-is legacy thing to be removed one day...
-
-Maybe it would make more sense to convert the few remaining drivers to 
-regular dma_map_page()/dma_sync_*()/dma_unmap_page() or have I missed 
-something?
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+> Thanks
+> --
+> ~Vinod
+> 
