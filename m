@@ -2,142 +2,111 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCE3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71B7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84BC220767
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:16:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598386599;
-	bh=D7Rw2PMoe8IDZOMsNEwXYiBG5PbxcS/orkj8Yivovec=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=xj/mIUrHGT8OdLmE8+g7F3rvYOmew2riFliotSD9mcd9JQWO8X43jZgi1mbHHz/Ig
-	 rECk0nAUQVW1Zcx3IC6nsHd/IbAO8oS5GaRwtYW8ECVx0hkbWBTMAQlWFs4gC5FfIr
-	 a4h9kvEWBQghe7RUUZmznjn3Qbm1Qo6WPJPtoIMQ=
+	by mail.kernel.org (Postfix) with ESMTP id A55A02075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:17:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZvJ/ufQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbgHYUQi (ORCPT
+        id S1726716AbgHYURS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:16:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbgHYUQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:16:37 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 067E02074D;
-        Tue, 25 Aug 2020 20:16:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598386596;
-        bh=D7Rw2PMoe8IDZOMsNEwXYiBG5PbxcS/orkj8Yivovec=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ov+X/vU+a12BRBzFUckIxiGJXa6k21v6DegMqYXhC5Zng0n4wC039Oo6Bh3gFLV6x
-         5vD3ZwCEzBTgAbeasiFHcdum1DtDxjLMC1uSLEqHlzqHo8MC0nxm4f0VoTgli+T0Qr
-         kEY+uzx7LZz3MSVAGwF8UOQyU/JHe/YeVdDsMVuw=
-Date:   Tue, 25 Aug 2020 15:16:34 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 21/38] PCI: MSI: Provide
- pci_dev_has_special_msi_domain() helper
-Message-ID: <20200825201634.GA1924972@bjorn-Precision-5520>
+        Tue, 25 Aug 2020 16:17:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59436 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgHYURP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 16:17:15 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05999C061574;
+        Tue, 25 Aug 2020 13:17:14 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id l23so12368632edv.11;
+        Tue, 25 Aug 2020 13:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=81t2aDI5v1x3cz6lfle+1PiUyFahp9ZjxTfV8FCX8Xo=;
+        b=IZvJ/ufQek750GeWPxk9BxabiDFeqIOQLeTijcyIhHyqigJDxAvuLEvssHqG0ByYzd
+         5RgULxsKaJVJ/ImRbHQoZ0UFLH/eHB+6QDVs9zdYHOdZ/ifdWTqet4IRO/hirzYDWmc8
+         QYM/voORlmaRa+9Y6b3zrNyVjezPqsZhWnlV94NsZVQZQCUy+GwJgJoU8B34nUaTX19c
+         5vRRdzc4eVIKv3TpU3AHGvc/SPWcLEu2oTxbjF/IXCE+Hd+O51/5Mebf1b8QraGMBCdX
+         xjOjs8dPxfFV5tu7xI1ApTxRqfNc8wv2eEiCSGkD7rQriK712jxAgx+hXIo5og/QWnbT
+         m5+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=81t2aDI5v1x3cz6lfle+1PiUyFahp9ZjxTfV8FCX8Xo=;
+        b=NoocFbsS/FtqVu9xQPx5Zy0j6B6BzkzKZNDiRNZ1UdwtPUzwQliSqERWv926Aw4e00
+         lb6kCeHdOv7WU3xKtAy4MoQMzD1MmCDp485aiWxTj2B4vsDUyE8BCUERciZb6Z9530mw
+         UePGeeJU/D/ZlEAtCBR/y2tbhoP0XtXVgYnMVs7EHykUHi6M1hDjJFK+ov5cd1gOv/UZ
+         BGaetOKV9PvElhPp4z9IAjG76swQcFzaGWDqcWpjxI2WZ4zRoIQ0AncZ9MMo1/PZj/HI
+         rPMrSOjl6yDS2VQbYJcQ2iS+QZLbu6U5Mas44r32rGRHF2H6Q8b13MQWd4WOyibe8XD2
+         bsxw==
+X-Gm-Message-State: AOAM533PenUw8vrYB1aJuiKz3dvcrneRHHd7nQNW70+IJaV47ZNJWSG6
+        kRl95b5E574i2VLRHzxzXyU=
+X-Google-Smtp-Source: ABdhPJzDMdTD0z69cJdwS/8jhUmd/UCBW5lo2GAsKIaEs4WrroEXT6CUJTbOoG5ZIVbA0v2Ssh5/Dw==
+X-Received: by 2002:a50:8709:: with SMTP id i9mr12236951edb.141.1598386632599;
+        Tue, 25 Aug 2020 13:17:12 -0700 (PDT)
+Received: from [192.168.2.202] (pd9ea301b.dip0.t-ipconnect.de. [217.234.48.27])
+        by smtp.gmail.com with ESMTPSA id sd17sm14506440ejb.93.2020.08.25.13.17.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 13:17:11 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Subject: Re: [PATCH net] mwifiex: Increase AES key storage size to 256 bits
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kaloyan Nikolov <konik98@gmail.com>,
+        Brian Norris <briannorris@chromium.org>
+References: <20200825153829.38043-1-luzmaximilian@gmail.com>
+ <20200825185151.GV5493@kadam>
+Message-ID: <54a785f9-d49e-354b-1430-8a854b4d36c5@gmail.com>
+Date:   Tue, 25 Aug 2020 22:17:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821002947.373714034@linutronix.de>
+In-Reply-To: <20200825185151.GV5493@kadam>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 02:24:45AM +0200, Thomas Gleixner wrote:
-> Provide a helper function to check whether a PCI device is handled by a
-> non-standard PCI/MSI domain. This will be used to exclude such devices
-> which hang of a special bus, e.g. VMD, to be excluded from the irq domain
-> override in irq remapping.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
+On 8/25/20 8:51 PM, Dan Carpenter wrote:
+> I sort of feel like the code was broken before I added the bounds
+> checking but it's also okay if the Fixes tag points to my change as
+> well just to make backporting easier.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+I'd argue the same. Any critical out-of-bounds access was just never
+discovered (at least for 256 bit keys) due to the struct containing the
+key being a union member, as Brian observed.
 
-s|PCI: MSI:|PCI/MSI:| in the subject if feasible.
+> Another question would be if it would be better to move the bounds
+> check after the "if (key_v2->key_param_set.key_type != KEY_TYPE_ID_AES)"
+> check?  Do we care if the length is invalid on the other paths?
 
-> ---
->  drivers/pci/msi.c   |   22 ++++++++++++++++++++++
->  include/linux/msi.h |    1 +
->  2 files changed, 23 insertions(+)
-> 
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -1553,4 +1553,26 @@ struct irq_domain *pci_msi_get_device_do
->  					     DOMAIN_BUS_PCI_MSI);
->  	return dom;
->  }
-> +
-> +/**
-> + * pci_dev_has_special_msi_domain - Check whether the device is handled by
-> + *				    a non-standard PCI-MSI domain
-> + * @pdev:	The PCI device to check.
-> + *
-> + * Returns: True if the device irqdomain or the bus irqdomain is
-> + * non-standard PCI/MSI.
-> + */
-> +bool pci_dev_has_special_msi_domain(struct pci_dev *pdev)
-> +{
-> +	struct irq_domain *dom = dev_get_msi_domain(&pdev->dev);
-> +
-> +	if (!dom)
-> +		dom = dev_get_msi_domain(&pdev->bus->dev);
-> +
-> +	if (!dom)
-> +		return true;
-> +
-> +	return dom->bus_token != DOMAIN_BUS_PCI_MSI;
-> +}
-> +
->  #endif /* CONFIG_PCI_MSI_IRQ_DOMAIN */
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -374,6 +374,7 @@ int pci_msi_domain_check_cap(struct irq_
->  			     struct msi_domain_info *info, struct device *dev);
->  u32 pci_msi_domain_get_msi_rid(struct irq_domain *domain, struct pci_dev *pdev);
->  struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev);
-> +bool pci_dev_has_special_msi_domain(struct pci_dev *pdev);
->  #else
->  static inline struct irq_domain *pci_msi_get_device_domain(struct pci_dev *pdev)
->  {
-> 
+Given that I have pretty much no knowledge of the driver, I
+unfortunately can't answer this. But I agree that this should be looked
+at. I think this has the potential to work now (as long as the maximum
+key size is 256 bit) but break in the future if the maximum key size
+ever gets larger and the check excludes some key types that would be
+valid in this context (if there are even any?).
+
+Regards,
+Max
