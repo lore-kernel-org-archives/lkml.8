@@ -2,103 +2,114 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7091C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CB9C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA7052074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:17:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FCE12074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:18:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bacm3EUT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rv4w+BsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgHYURm (ORCPT
+        id S1726783AbgHYUSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:17:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59502 "EHLO
+        Tue, 25 Aug 2020 16:18:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYURk (ORCPT
+        with ESMTP id S1726149AbgHYUSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:17:40 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3213C061574;
-        Tue, 25 Aug 2020 13:17:40 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d22so8217753pfn.5;
-        Tue, 25 Aug 2020 13:17:40 -0700 (PDT)
+        Tue, 25 Aug 2020 16:18:45 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 522B8C061574;
+        Tue, 25 Aug 2020 13:18:45 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id f24so10087472edw.10;
+        Tue, 25 Aug 2020 13:18:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kTTQkj1GrVnPq+Jl1z8GjL/Z8OGPiCHoo0nN5v+V4rY=;
-        b=Bacm3EUT/ArUc+tJ9DwRQAvy/UQanfr22vRs63UqaoZPXSzQYh/+7a0r6T0aQDh4uE
-         LzAPULF85HO+nfixAWfuBIZc/sPjruiwm7mOQtvzQDv0GVvB2+WFW0eX4PMqoKoTsov9
-         UpSUIHA+kv6ZN6VEmO8wmKc1cT6y2ChnuhrkU4QoBfUo0mvE64ZgjuEpj1Q8zO9WGL5x
-         UM+uc+DVQkom+H1zEKh1RyJOA/aVSCrecCoKUepBQScc3bJ1BFMQDefHrsqq66BBSvww
-         sLUFov/yW4z8jH4OEIClkRB3sRqS64/ayOG6XHYwJSqrkZVDT1uF75Kia/bBITKArVP4
-         QPNw==
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8k54/wE0SJdSYHFKB65kPT2GfYY/F68XNItC0ZawlMs=;
+        b=Rv4w+BsVBU9bQLlMX5nPmcv/iby7Atp6ZZWB8ouG2LBYQCQO6yK3bsOCRaDyo0fD2u
+         z9mvfWrDzWtn31JC7edW3JoTUVRsmcLVRWv0KqFtwGB54Mop9v5/IkA+0dSfl3zpVCqv
+         ukYUDPpLX4NrCWY36fBvJ0Gk1IpgbeDkXLPldeQ1+F27Yp0oC1XCDd6v/zL/V82b+ByN
+         MkZek+GZtchOBGt2lEkrS4ZdivRtPfSHCHtxJ1IMoI5oztjwEMMP3NlekvDiTfOmo2Y2
+         sMxaHNw4h65nSS0f+uiyIHOrYK0rOmgoHrvd4AuFoc3lFFDUUKoFZBLjxJ95PsQWMpSa
+         5XKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kTTQkj1GrVnPq+Jl1z8GjL/Z8OGPiCHoo0nN5v+V4rY=;
-        b=VUn/0zE1aJcXK77w6DHBl3Li1bm60MRurl/+Y2gxX05ehErhD0r0BWrEukv7K4RAc5
-         aRDARUXWcPbJU13zXU929/ai/hiFtGUhtqd1OXdIEy7fLxFo664ht5o4gpf8k0O+55y6
-         41PT7U3AIpy7HQp6J0ddMeKqo+TPmuWyLA4z0tH0nGym+4vRdyvQzyKslDl7ZenY074Q
-         lkfOVD+w1KBiI7NbU5ZPTEXwr4KA/n55yi+2xMxw2jP1dXeGANoS0EtTHNll4sz/1B2W
-         OPqSAnAfxjgnJ4NMz/ISsrz3h2iFmhtivnoZ6s401MpNhNuMJt5Z9rr9RTTeqqU8NljY
-         fXkw==
-X-Gm-Message-State: AOAM530zkvj7JsE6+lv+lz7KrgUFSTmqf4FDJ139sPW9km2DouKVoSOb
-        tyEBzip6jHDcRphy6yUF9C8=
-X-Google-Smtp-Source: ABdhPJy3+1AevdVVKZO0m/DyW+KokVwfuzGmzhV1klUpmR4e2P7ivu3hcck2+VYDCkh7E6/kPMLtLQ==
-X-Received: by 2002:a17:902:7605:: with SMTP id k5mr9428097pll.122.1598386660168;
-        Tue, 25 Aug 2020 13:17:40 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91 (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
-        by smtp.gmail.com with ESMTPSA id o192sm88628pfg.81.2020.08.25.13.17.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Aug 2020 13:17:39 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 13:17:37 -0700
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Tao Ren <taoren@fb.com>
-Subject: Re: [PATCH 5/5] ARM: dts: aspeed: Add Facebook Wedge400 BMC
-Message-ID: <20200825201736.GB22083@taoren-ubuntu-R90MNF91>
-References: <20200824211948.12852-1-rentao.bupt@gmail.com>
- <20200824211948.12852-6-rentao.bupt@gmail.com>
- <CACPK8XfbUt9W9xQ4Gxj0LMq=C99V1ExBbkOKvbOvCbJR4N_Bwg@mail.gmail.com>
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8k54/wE0SJdSYHFKB65kPT2GfYY/F68XNItC0ZawlMs=;
+        b=U+tJMUqjnziRCeMyDZf0ZO7QLd2crpM88kmJdRwOUy+rH5kbc6MvRAgG6PZ08+N6+e
+         buGU1gAQF7KhiyU3uOPWeffsztAIkREp05/B66X6PX9II+VWlcZbED2lll5DhQp4jNmj
+         2BphTGwl0GdXLf4MU1VOBcgybokLtI/vrJZn64lLd0QgzAoJswYYy5pqIUuTrbB36IzW
+         Xg5pgT743aobNw5EkFBlGeYTfUFF3+pxsfq7MUfZAC6qtFkXdqCeC0M691fMjv4pBnET
+         G/k69WuT3Q8jq+brQu1soqQKYlyVWVj5Bv1ZOaipMtD6g1ja4Bg0rgkQwbgP+GCLQ44z
+         XJyg==
+X-Gm-Message-State: AOAM532OoNpwdtHSciEOcoxZ7iYO+2FSTROojb/MsleCsmcUDmrffcUx
+        eTu4dujb500TL/ZCKeajGKyYghdcdfotHA==
+X-Google-Smtp-Source: ABdhPJwjRBjRSuLtemmLEN8j2cEzr4ZD1/ajIblLZhbYqPBNqz/8YT4tY6U4+d4dS25qBeJ7gxnJHg==
+X-Received: by 2002:a05:6402:74f:: with SMTP id p15mr10295040edy.377.1598386723973;
+        Tue, 25 Aug 2020 13:18:43 -0700 (PDT)
+Received: from [192.168.2.202] (pd9ea301b.dip0.t-ipconnect.de. [217.234.48.27])
+        by smtp.gmail.com with ESMTPSA id dr21sm15574816ejc.112.2020.08.25.13.18.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 13:18:43 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Subject: Re: [PATCH net] mwifiex: Increase AES key storage size to 256 bits
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Kaloyan Nikolov <konik98@gmail.com>
+References: <20200825153829.38043-1-luzmaximilian@gmail.com>
+ <CA+ASDXPoxdMb4b5d0Ayv=JFACHcq7EXub14pJtJfcCV2di95Rg@mail.gmail.com>
+Message-ID: <65b14706-321d-4025-f199-a89768815dfe@gmail.com>
+Date:   Tue, 25 Aug 2020 22:18:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACPK8XfbUt9W9xQ4Gxj0LMq=C99V1ExBbkOKvbOvCbJR4N_Bwg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CA+ASDXPoxdMb4b5d0Ayv=JFACHcq7EXub14pJtJfcCV2di95Rg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 04:07:56AM +0000, Joel Stanley wrote:
-> On Mon, 24 Aug 2020 at 21:20, <rentao.bupt@gmail.com> wrote:
-> >
-> > From: Tao Ren <rentao.bupt@gmail.com>
-> >
-> > Add initial version of device tree for Facebook Wedge400 (AST2500) BMC.
-> >
-> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> 
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
+On 8/25/20 9:30 PM, Brian Norris wrote:
+> Also, while technically the regressing commit (e18696786548 ("mwifiex:
+> Prevent memory corruption handling keys")) was fixing a potential
+> overflow, the encasing command structure (struct host_cmd_ds_command)
+> is a union of a ton of other command layouts, and likely had plenty of
+> padding at the end, which would at least explain why non-malicious
+> scenarios weren't problematic pre-commit-e18696786548.
 
-Thank you for the review, Joel.
+This is pretty much spot on, although as far as I can tell, the padding
+comes from struct mwifiex_ie_type_key_param_set_v2. That contains a
+key_params member, which is a union over all supported key types,
+including other 256 bit types (like struct mwifiex_wapi_param).
 
+I should also note that this fix also affects mwifiex_set_aes_key_v2(),
+where sizeof(struct mwifiex_aes_param) is used to calculate the command
+length of what looks like a command being sent to the chip. This should
+probably be reviewed by someone with a bit more inside knowledge about
+the driver, as this could potentially break something due to the commit
+changing it from 16 to 32. I think, however, that this might actually
+also fix a potential issue when setting 256 bit AES keys.
 
-Cheers,
-
-Tao
+Regards,
+Max
