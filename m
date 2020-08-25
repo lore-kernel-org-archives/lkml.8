@@ -2,91 +2,180 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6860CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:14:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1FF2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:14:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FAE20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:15:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M/PtUB4K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VlfJWsai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729824AbgHYKOy (ORCPT
+        id S1729735AbgHYKPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:14:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49346 "EHLO
+        Tue, 25 Aug 2020 06:15:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729628AbgHYKOu (ORCPT
+        with ESMTP id S1728117AbgHYKPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:14:50 -0400
+        Tue, 25 Aug 2020 06:15:47 -0400
 Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E47CC0613ED
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 03:14:50 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id t185so3850089pfd.13
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 03:14:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF9DBC061574;
+        Tue, 25 Aug 2020 03:15:46 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u20so6972693pfn.0;
+        Tue, 25 Aug 2020 03:15:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=7rwFpGB0jqzG4o75dmr4EB0rdrd4ZLlpij1Rdr6z7sQ=;
-        b=M/PtUB4KjjTHuTdSYpItjttdYYbS28ynKSnqFUSozz3H8OCLStD3jgywui+4gm+wu6
-         8tyfb0/nyW04muJVNiqXLIVBNZpSeQIo5xX5zQ3HzHXqO0Ms00OzVOAAq0lz57jI7VNS
-         vjUxHHG2zreutCgU9mn1cn7AJFZ26YUixAxo8=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bBeFjkrLRepO5x2t9jrG71rLIeewMCntWxdGnW+ePv4=;
+        b=VlfJWsaiucdUF5ERlNyTFu63QUTP06Pp6V2gndpFm+VDE0oiPrnPHH9iAS3AvQZczT
+         RRc7T5l1BJQIF5wtztEKjU9aOliQZdvhM3eQ/T0EPeaOznC1pviKYZgkkYhYu/9armCt
+         Q/2NPh2J+tX0e9uW5nRy8KdxDdJQTAuEvHDSZCppLJuue4dSOat7cLWxyQXIpm6EqhSw
+         jtY0PurvNqqBgyU+HlclnZv/xxu7wiJyT0Bx0qMs2OK0An+34zp0P+ZqcTod5fIDTX8t
+         JCJmTkzeSAoKBzP8ehbrjn9g0FJYCfErP2tK4kRtH4HyLepe0qiMqKBZ40jX1WKX1ZIM
+         AVhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=7rwFpGB0jqzG4o75dmr4EB0rdrd4ZLlpij1Rdr6z7sQ=;
-        b=jOE6byonNdSB5/N9OtHDaFJSYWljbjVlkt/Qon34G8OYxP/1MCfEf1WpH0bG8Sv+2d
-         9uS2j5XvFXB9wrHgf3DWgmQXQ+PVmWyPeS7WEbCLa0MeqKWj98iqhECJr48Pv3yTyHsl
-         rvyi3ydhKdMkDPXizms79wcJPQZfS+xSZcFG2LS9AgGQqxS+7xHBZgF6vTDsQrOa4yb1
-         1QvIjjUb/QQXU/e8gYcjt31hAqse4VE6PPkaQlIzuHTaOlfIShIEfSseu3RhUtV1s/5T
-         XOkhG8D1gol/MjUUcjrJNQ5FQLq3LcTr8iH6+e4H7pmCgAUdBlrVQuP4KXO9mMY6CW7S
-         CJ+Q==
-X-Gm-Message-State: AOAM530XxCrdGiFhk7uIpzA/HVcnfsfHcwpftXvq45YwdPIsFFWXWdJ0
-        AmXPC7ZI5wHQQJ0Lrj4+36ny84jAdffaFg==
-X-Google-Smtp-Source: ABdhPJz9AmR1krMoLgXTaINdzVk9Mmj7SkBUNtvH3DTsMz4galYrk+aWROWLBoUMdxiQdSEgiZiRGA==
-X-Received: by 2002:a17:902:b087:: with SMTP id p7mr7119096plr.28.1598350489931;
-        Tue, 25 Aug 2020 03:14:49 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id 37sm2385284pjo.8.2020.08.25.03.14.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 03:14:49 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bBeFjkrLRepO5x2t9jrG71rLIeewMCntWxdGnW+ePv4=;
+        b=tu8vcXADWWHeva04eUZxvwHGe/dxyZO2uQlP6feoqKKKpjD3uPiF50leEXf0PX/MKl
+         ZRMbK4JQeOW3Z21EtJ1HJfU3i3Nj9WfELvCe7GFulEoIiK2MJY89Uk15NpG4p0ocxkiz
+         kw+U3Kx5nzVVxv38bitJ5KHIFRtMbOq5mh0LKlajXuhEmeHn9y2cOHgCXjedDowk4WNm
+         NJdzy/MusttQ5uHbSvst/Hk/tGUaJpXKXF6royVaS2uKBuzZtlZ+rTdK8LKya5HF3rJE
+         2p6r/Lhz811ZrQJ1bYfXmzanyWP1J7BwW5SI+QNwSebaPwisq51uyhoaFbtZ0LRmmp1v
+         kHPg==
+X-Gm-Message-State: AOAM531vKpcCyiLJANFWNIRGXdVhZkRCoJjIjKMeHaKjCJ4KgZXTX8wk
+        6NkgE9+I2uY4BOaB1cSaoHapINHKEfI=
+X-Google-Smtp-Source: ABdhPJzaGkj6W5K8gbg8hr32bUIemOs+O0DozWPB5rVbhCxPqk8NcGrdL8aeWY8b4rEyec1WehR9fA==
+X-Received: by 2002:a65:4847:: with SMTP id i7mr6246219pgs.385.1598350546147;
+        Tue, 25 Aug 2020 03:15:46 -0700 (PDT)
+Received: from [192.168.1.200] (FL1-111-169-205-196.hyg.mesh.ad.jp. [111.169.205.196])
+        by smtp.gmail.com with ESMTPSA id g23sm14082776pfo.95.2020.08.25.03.15.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 03:15:45 -0700 (PDT)
+Subject: Re: [PATCH 2/2] exfat: unify name extraction
+To:     Sungjong Seo <sj1557.seo@samsung.com>
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        'Namjae Jeon' <namjae.jeon@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200806055653.9329-1-kohada.t2@gmail.com>
+ <CGME20200806055726epcas1p2f36810983abf14d3aa27f8a102bbbc4d@epcas1p2.samsung.com>
+ <20200806055653.9329-2-kohada.t2@gmail.com>
+ <000201d66da8$07a2c750$16e855f0$@samsung.com>
+ <bbd9355c-cd48-b961-0a91-771a702c03df@gmail.com>
+ <860b01d677a7$a62bf230$f283d690$@samsung.com>
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+Message-ID: <dea90cbc-9f72-6476-b2a9-10014c34042b@gmail.com>
+Date:   Tue, 25 Aug 2020 19:15:43 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1598113021-4149-5-git-send-email-mkshah@codeaurora.org>
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org> <1598113021-4149-5-git-send-email-mkshah@codeaurora.org>
-Subject: Re: [PATCH v5 4/6] pinctrl: qcom: Set IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-To:     Maulik Shah <mkshah@codeaurora.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Date:   Tue, 25 Aug 2020 03:14:48 -0700
-Message-ID: <159835048820.334488.6676713863169872150@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+In-Reply-To: <860b01d677a7$a62bf230$f283d690$@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Maulik Shah (2020-08-22 09:16:59)
-> Set IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag to enable/unmask the
-> wakeirqs during suspend entry.
->=20
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+>>>> +			exfat_free_dentry_set(es, false);
+>>>> +
+>>>> +			if (!exfat_uniname_ncmp(sb,
+>>>> +						p_uniname->name,
+>>>> +						uni_name.name,
+>>>> +						name_len)) {
+>>>> +				/* set the last used position as hint */
+>>>> +				hint_stat->clu = clu.dir;
+>>>> +				hint_stat->eidx = dentry;
+>>>
+>>> eidx and clu of hint_stat should have one for the next entry we'll
+>>> start looking for.
+>>> Did you intentionally change the concept?
+>>
+>> Yes, this is intentional.
+>> Essentially, the "Hint" concept is to reduce the next seek cost with
+>> minimal cost.
+>> There is a difference in the position of the hint, but the concept is the
+>> same.
+>> As you can see, the patched code strategy doesn't move from current
+>> position.
+>> Basically, the original code strategy is advancing only one dentry.(It's
+>> the "minimum cost") However, when it reaches the cluster boundary, it gets
+>> the next cluster and error handling.
+> 
+> I didn't get exactly what "original code" is.
+> Do you mean whole code lines for exfat_find_dir_entry()?
+> Or just only for handling the hint in it?
 
-maybe just squash this with the other patch in this area?
+My intention is the latter.
+
+
+> The strategy of original code for hint is advancing not one dentry but one dentry_set.
+
+That's the strategy as a whole code.
+But all it does to get a hint after "found" is to advance one entry.
+In the original code, the 'dentry' variable points to the end of the EntrySet when "found",
+so it can point to the next EntrySet by simply advancing one entry.
+(However, it may need to scan the cluster chain)
+
+
+> If a hint position is not moved to next like the patched code,
+> caller have to start at old dentry_set that could be already loaded on dentry cache.
+> 
+> Let's think the case of searching through all files sequentially.
+> The patched code should check twice per a file.
+
+This is the case when all requests find the specified file, right?
+
+Sure, the request will evaluate the same EntrySet as before found.
+However, the cost to spend is different from the last time.
+The current request looks for a different name than the last request.
+In most cases, length and hash are different from the last EntrySet.
+Therefore, the last EntrySet just skips dir-entries by num_ext.
+There is no string comparison with ignores cases. <- This cost is high
+The cost of skipping dir-entries is much less than the string comparison.
+
+> No better than the original policy.
+
+In this patch, when "found", the 'dentry' variable still points to the beginning of the EntrySet.
+In this case, I thought "stay here" was a very efficient hint at a minimal cost.
+As a whole, I think that the cost has been reduced...
+> 
+>> Getting the next cluster The error handling already exists at the end of
+>> the while loop, so the code is duplicated.
+>> These costs should be paid next time and are no longer the "minimum cost".
+> 
+> I agree with your words, "These costs should be paid next time".
+> If so, how about moving the cluster handling for a hint dentry to
+> the beginning of the function while keeping the original policy?
+
+My first idea was
+	hint_stat->eidx = dentry + 1 + num_ext;
+
+However, in the current hint, offset ((hint_stat->eidx) and cluster number (hint_stat->clu) in the directory are paired.
+It was difficult to change only one of values.
+So I'm trying to make a 'new hint' where the offset and cluster number aren't linked.
+
+
+> BTW, this patch is not related to the hint code.
+> I think it would be better to keep the original code in this patch and improve it with a separate patch.
+
+I think so, too.
+I'll try another patch.
+
+
+BR
+---
+Tetsuhiro Kohada <kohada.t2@gmail.com>
+> 
