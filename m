@@ -2,200 +2,108 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D80C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8270AC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B66D02074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:01:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="cQO9Rzum"
+	by mail.kernel.org (Postfix) with ESMTP id 68C49207DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598382145;
+	bh=UsX97ie3LWdOPxNzUYsEmiHiw19foauTYVSmUnWaSa8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FbHqZ4QdzvXdYEilovSh7D3Tg0ppLJimgqFMYzMDPfV1mZDqGjgY09zxiBVOYs1x6
+	 bJd5nHKVZaT19Ov3H4j6DeiRrIH7gtmfdP7kf8sogp8uDWmqi+Lz5iF9XxLodBzAiK
+	 PuXoopWhqA6SmJTPhMb60oMDXjGTl5qo8akpPkfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHYTBn (ORCPT
+        id S1726793AbgHYTCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:01:43 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:26152 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726336AbgHYTBm (ORCPT
+        Tue, 25 Aug 2020 15:02:23 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46549 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgHYTCX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:01:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598382100; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=TRQuySeZQtx9Xu8p/LTvIapZAq6d9k1oOwhDjvqNYBE=;
- b=cQO9RzumGOWVgOunAh5GNwjDhFjFfyjtE4PDmfElfEtdE3OvItnxgRgd5mXSPJ6j7w0DVlpt
- hLvV4IQghTG0zFNPAm0CKsIYNNHYMrogZDdS1MGVdSqXrwUh7a0lK+MHNDNxt55VD+6I8edg
- DmbukbNLlCDdJf2zQUdGrq33Lso=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f455fd776c283d04f167cf5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Aug 2020 19:00:39
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3B1BDC433CB; Tue, 25 Aug 2020 19:00:39 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 142A3C433CB;
-        Tue, 25 Aug 2020 19:00:38 +0000 (UTC)
+        Tue, 25 Aug 2020 15:02:23 -0400
+Received: by mail-il1-f195.google.com with SMTP id c6so11327734ilo.13;
+        Tue, 25 Aug 2020 12:02:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bCUdIkx3EH4ynR39zceLFnFiKqklMoIPLVpCbylMme0=;
+        b=DAlqAbcKwIPeZCDLhBKf1K6yqnjkEw1fqTHcDw+wUhkdH1oh9LPaZa+o+TjU0yyBZA
+         cszOwGoA4Vg4aHcdCPw+ShATWt50ZWUBfomqsfrM4Fmz2ISXLbr9FND9I6nyf9XMdYs5
+         cztev0ipwc+2jKm4YbA0k2xkHR+4BWrUpnPb4oaE1F/vtV/LqcsccEGvOR1LnV2ktEKt
+         p4lCDQ3jDoOq4w28SfznZ1pFtSWmIpW4xmXvzdpeI04vWocj5eiMIqlXH0hjSbxB8+7h
+         oEZaD+R7Jcd4Bw/n6uLmtNNt9iVzXMzQd3zLxRAARmbnpE8VeY3pxkt50tm/S9uWbI1p
+         KD3Q==
+X-Gm-Message-State: AOAM530nz78U/emWFzfhJKystyPTQtUbG4qSG32DVqJABsTFPSfNaPXD
+        ml7vmSivDrmooreWpkcgGzzfeLxH3kfw
+X-Google-Smtp-Source: ABdhPJyp2RzYq4kUaObuB2FkwOWJE9pU5Wa539AYxfYQlLjDNUgMTHsNlNcZd+0aqG3qq9CfEGuYjw==
+X-Received: by 2002:a92:8556:: with SMTP id f83mr10122295ilh.135.1598382141887;
+        Tue, 25 Aug 2020 12:02:21 -0700 (PDT)
+Received: from xps15 ([64.188.179.249])
+        by smtp.gmail.com with ESMTPSA id a11sm9505457ilh.74.2020.08.25.12.02.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 12:02:21 -0700 (PDT)
+Received: (nullmailer pid 1133284 invoked by uid 1000);
+        Tue, 25 Aug 2020 19:02:19 -0000
+Date:   Tue, 25 Aug 2020 13:02:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Crystal Guo <crystal.guo@mediatek.com>
+Cc:     p.zabel@pengutronix.de, matthias.bgg@gmail.com,
+        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, s-anna@ti.com, afd@ti.com,
+        seiya.wang@mediatek.com, stanley.chu@mediatek.com,
+        yingjoe.chen@mediatek.com, fan.chen@mediatek.com,
+        yong.liang@mediatek.com
+Subject: Re: [v4,2/4] dt-binding: reset-controller: ti: add
+ 'mediatek,infra-reset' to compatible
+Message-ID: <20200825190219.GA1125997@bogus>
+References: <20200817030324.5690-1-crystal.guo@mediatek.com>
+ <20200817030324.5690-3-crystal.guo@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Aug 2020 00:30:38 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Subject: Re: [PATCH] iommu: Add support to filter non-strict/lazy mode based
- on device names
-In-Reply-To: <CAD=FV=XK3Xa3rRWvuSA_jA+5_1XYBmHEX2B2XSb8h3oOe1PHLw@mail.gmail.com>
-References: <20200825154249.20011-1-saiprakash.ranjan@codeaurora.org>
- <CAD=FV=XK3Xa3rRWvuSA_jA+5_1XYBmHEX2B2XSb8h3oOe1PHLw@mail.gmail.com>
-Message-ID: <3df7edd53ebca00be288e69b92b8d4b9@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817030324.5690-3-crystal.guo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 2020-08-25 21:40, Doug Anderson wrote:
-> Hi,
+On Mon, Aug 17, 2020 at 11:03:22AM +0800, Crystal Guo wrote:
+> The TI syscon reset controller provides a common reset management,
+> and is suitable for MTK SoCs. Add compatible 'mediatek,infra-reset',
+> which denotes to use ti reset-controller driver directly.
 > 
-> On Tue, Aug 25, 2020 at 8:43 AM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> Currently the non-strict or lazy mode of TLB invalidation can only be 
->> set
->> for all or no domains. This works well for development platforms where
->> setting to non-strict/lazy mode is fine for performance reasons but on
->> production devices, we need a more fine grained control to allow only
->> certain peripherals to support this mode where we can be sure that it 
->> is
->> safe. So add support to filter non-strict/lazy mode based on the 
->> device
->> names that are passed via cmdline parameter "iommu.nonstrict_device".
->> 
->> Example: 
->> iommu.nonstrict_device="7c4000.sdhci,a600000.dwc3,6048000.etr"
+> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+> ---
+>  Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> I have an inherent dislike of jamming things like this onto the
-> command line.  IMHO the command line is the last resort for specifying
-> configuration and generally should be limited to some specialized
-> debug options and cases where the person running the kernel needs to
-> override a config that was set by the person (or company) compiling
-> the kernel.  Specifically, having a long/unwieldy command line makes
-> it harder to use for the case when an end user actually wants to use
-> it to override something.  It's also just another place to look for
-> config.
-> 
+> diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> index ab041032339b..5a0e9365b51b 100644
+> --- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> +++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> @@ -25,6 +25,7 @@ Required properties:
+>  			    "ti,k2l-pscrst"
+>  			    "ti,k2hk-pscrst"
+>  			    "ti,syscon-reset"
+> +			    "mediatek,infra-reset", "ti,syscon-reset"
 
-Good thing about command line parameters are that they are optional, 
-they do
-not specify any default behaviour (I mean they are not mandatory to be 
-set
-for the system to be functional), so I would like to view it as an 
-optional
-config. And this command line parameter (nonstrict_device) is strictly 
-optional
-with default being strict already set in the driver.
+You need your own binding doc. If you can use the same driver then fine, 
+but that's a separate issue. There's also reset-simple driver if you 
+have just array of 32-bit registers with a bit per reset.
 
-They can be passed from the bootloader via chosen node for DT platforms 
-or choose
-a new *bootconfig* as a way to pass the cmdline but finally it does boil 
-down to
-just another config.
+Don't repeat 'ti,reset-bits' either.
 
-I agree with general boolean or single value command line parameters 
-being just
-more messy which could just be Kconfigs instead but for multiple value 
-parameters
-like these do not fit in Kconfig.
-
-As you might already know, command line also gives an advantage to the 
-end user
-to configure system without building kernel, for this specific command 
-line its
-very useful because the performance bump is quite noticeable when the 
-iommu.strict
-is off. Now for end user who would not be interested in building entire 
-kernel(majority)
-and just cares about good speeds or throughput can find this very 
-beneficial.
-I am not talking about one specific OS usecase here but more in general 
-term.
-
-> The other problem is that this doesn't necessarily scale very well.
-> While it works OK for embedded cases it doesn't work terribly well for
-> distributions.  I know that in an out-of-band thread you indicated
-> that it doesn't break anything that's not already broken (AKA this
-> doesn't fix the distro case but it doesn't make it worse), it would be
-> better to come up with a more universal solution.
-> 
-
-Is the universal solution here referring to fix all the command line 
-parameters
-in the kernel or this specific command line? Are we going to remove any 
-more
-addition to the cmdline ;)
-
-So possible other solution is the *bootconfig* which is again just 
-another place
-to look for a config. So thing is that this universal solution would 
-result in
-just more new fancy ways of passing configs or adding such configs to 
-the drivers
-or subsystems in kernel which is pretty much similar to implementing 
-policy in
-kernel which I think is frowned upon and mentioned in the other thread.
-
-> Ideally it feels like we should figure out how to tag devices in a
-> generic manner automatically (hardcode at the driver or in the device
-> tree).  I think the out-of-band discussions talked about "external
-> facing" and the like.  We could also, perhaps, tag devices that have
-> "binary blob" firmware if we wanted.  Then we'd have a policy (set by
-> Kconfig, perhaps overridable via commandline) that indicated the
-> strictness level for the various classes of devices.  So policy would
-> be decided by KConfig and/or command line.
-> 
-
-How is tagging in driver or device tree better than the simple command 
-line
-approach to pass the same list of devices which otherwise you would 
-hardcode
-in the corresponding drivers and device tree all over the kernel other 
-than
-the scalability part for command line? IMHO it is too much churn.
-
-Device tree could be used but then we have a problem with it being for 
-only
-describing hardware and it doesn't work for ACPI based systems.
-
-Command line approach works for all systems (both DT and ACPI) without 
-having
-to add too much churn to drivers. Lastly, I think we can have both 
-options, it
-doesn't hurt to add command line parameter since it is optional.
-
-Thanks,
-Sai
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+>   - #reset-cells		: Should be 1. Please see the reset consumer node below
+>  			  for usage details
+>   - ti,reset-bits	: Contains the reset control register information
+> -- 
+> 2.18.0
