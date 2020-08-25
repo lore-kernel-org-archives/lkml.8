@@ -2,248 +2,199 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E316FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E24CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC3C12078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:42:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zRwZfxnk";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vEUF9wx6"
+	by mail.kernel.org (Postfix) with ESMTP id 2203020767
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598398933;
+	bh=CyQtlYDE+A8MG0JyxNX1QVig85hDl88iFa2qsrgexI0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=COcStWWfLlkuDp6dx4POS+xe+0/Kj7w+3q3T4TpZ7CjUbB3D7SLMehgRVKWLyO4Xh
+	 DOL5FL93ICmxAVs3x0RWLXvJY8ImI8pChbRIt8zG8FYVHdvnRw27H1mKwKMGmM/knY
+	 lHt3p4tm3SrriKjICbcK1RopAU57lvU0M/oiCI/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgHYXl7 (ORCPT
+        id S1727020AbgHYXmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgHYXlA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:41:00 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35B55C061574;
-        Tue, 25 Aug 2020 16:40:58 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 23:40:55 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598398856;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OAm2gwQBCMN34N1Ft2/JATCpbKr2DkyNkH4oZOWGKxA=;
-        b=zRwZfxnkIzuNYnIwENUN7/KNrLBhfWbjBiAgHeY7/SUbFr1jYvQLD1TiQ8ol3dtp3yi2Zh
-        mcqE+nR7OUc+y6+aGI7sB+ISavwOyzPJseOm5Mo6ZZbqMwrH0OygepGYWDGeRcAKamJkkF
-        vGrYSTOppiP+0hOjOwnAkc/HzNL2V/Pm2/myZ0eQUICvS8ZN3FCiCaoRpBSISOKbOLibyU
-        pNOf/iMkj1dP1O50J0+SgKItBOUdITT+hOwAeY3CQq4uDTX8j7lfr3msgEWFUw8T7B+/5o
-        kCZsVnrDLQUaRGKbM6esny2mBaciA4NYidyk63YPV/SQMD/BIR2iNqHO4ERXMQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598398856;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OAm2gwQBCMN34N1Ft2/JATCpbKr2DkyNkH4oZOWGKxA=;
-        b=vEUF9wx6HV3ZTglhSntoJ+E4oSjle0awOQEWUgdIA5jY+Czz/885BwidU4KRWGew03GAOX
-        k+fFVTjMRKkKx2AA==
-From:   "tip-bot2 for Lokesh Vutla" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] irqchip/ti-sci-inta: Add support for INTA directly
- connecting to GIC
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>, Marc Zyngier <maz@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200806074826.24607-11-lokeshvutla@ti.com>
-References: <20200806074826.24607-11-lokeshvutla@ti.com>
+        Tue, 25 Aug 2020 19:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726734AbgHYXlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 19:41:50 -0400
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9C7621775
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 23:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598398910;
+        bh=CyQtlYDE+A8MG0JyxNX1QVig85hDl88iFa2qsrgexI0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gx5ZsCuzH4ioCxetiD2y+vDwoxSZvhEsF7Y75vaMTQ31Zx2Pc7i8L0ab0V5om2kr2
+         356372LR7wlNGShYXgIo51ov/7n9BBGd4pZEl0ixshjyVVdqBdEqHTPdcSE7dNGJKP
+         BCmCCFOhrMdnaXxrUoK47jEzw6JP1t6ssDxFnh+U=
+Received: by mail-wr1-f54.google.com with SMTP id p17so495394wrj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:41:49 -0700 (PDT)
+X-Gm-Message-State: AOAM533T2NrM78sKWEC1N55b2U2zT8M8WSCq7i/vOuwp/qioQ8S7sZrC
+        xh2Q07fYlYQNzVOCYzhP5XsjStjZa3MzpRFKkdHcdg==
+X-Google-Smtp-Source: ABdhPJziIjnGOyouCp9gtTbUgUQ2Fpvm/xo4S/Yz68qNI2Xo0rcmdpT4fj8YTSQ4WNQrlkdF8f3yZXhj2uoNEGenMOo=
+X-Received: by 2002:a5d:4145:: with SMTP id c5mr12976959wrq.18.1598398908278;
+ Tue, 25 Aug 2020 16:41:48 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <159839885589.389.14204317812329951821.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20200521200513.656533920@linutronix.de> <20200521202118.796915981@linutronix.de>
+ <f0079706-4cb3-b3e3-9a5e-97aaba0aa0eb@amazon.com> <87a6yj58af.fsf@nanos.tec.linutronix.de>
+ <051182cc-6c90-e48b-d191-8ca004385261@amazon.com>
+In-Reply-To: <051182cc-6c90-e48b-d191-8ca004385261@amazon.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 25 Aug 2020 16:41:36 -0700
+X-Gmail-Original-Message-ID: <CALCETrXutDjE5Z6WR+47MJvp3xt4n=EGiF_oEYm88vGvCqUgHA@mail.gmail.com>
+Message-ID: <CALCETrXutDjE5Z6WR+47MJvp3xt4n=EGiF_oEYm88vGvCqUgHA@mail.gmail.com>
+Subject: Re: [patch V9 21/39] x86/irq: Convey vector as argument and not in ptregs
+To:     Alexander Graf <graf@amazon.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Avi Kivity <avi@scylladb.com>,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>, robketr@amazon.de,
+        amos@scylladb.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/urgent branch of tip:
+On Tue, Aug 25, 2020 at 4:18 PM Alexander Graf <graf@amazon.com> wrote:
+>
+> Hi Thomas,
+>
+> On 25.08.20 12:28, Thomas Gleixner wrote:
+> >void irq_complete_move(struct irq_cfg *cfg)
+{
+        __irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
+}
 
-Commit-ID:     5c4b585d29102c7e6a6217112bbf1be774795cd7
-Gitweb:        https://git.kernel.org/tip/5c4b585d29102c7e6a6217112bbf1be774795cd7
-Author:        Lokesh Vutla <lokeshvutla@ti.com>
-AuthorDate:    Thu, 06 Aug 2020 13:18:23 +05:30
-Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sun, 16 Aug 2020 22:01:19 +01:00
+> > Alex,
+> >
+> > On Mon, Aug 24 2020 at 19:29, Alexander Graf wrote:
+> >> I'm currently trying to understand a performance regression with
+> >> ScyllaDB on i3en.3xlarge (KVM based VM on Skylake) which we reliably
+> >> bisected down to this commit:
+> >>
+> >>     https://github.com/scylladb/scylla/issues/7036
+> >>
+> >> What we're seeing is that syscalls such as membarrier() take forever
+> >> (0-10 =C2=B5s would be normal):
+> > ...
+> >> That again seems to stem from a vastly slowed down
+> >> smp_call_function_many_cond():
+> >>
+> >> Samples: 218K of event 'cpu-clock', 4000 Hz
+> >> Overhead  Shared Object        Symbol
+> >>     94.51%  [kernel]             [k] smp_call_function_many_cond
+> >>      0.76%  [kernel]             [k] __do_softirq
+> >>      0.32%  [kernel]             [k] native_queued_spin_lock_slowpath
+> >> [...]
+> >>
+> >> which is stuck in
+> >>
+> >>          =E2=94=82     csd_lock_wait():
+> >>          =E2=94=82             smp_cond_load_acquire(&csd->flags, !(VA=
+L &
+> >>     0.00 =E2=94=82       mov    0x8(%rcx),%edx
+> >>     0.00 =E2=94=82       and    $0x1,%edx
+> >>          =E2=94=82     =E2=86=93 je     2b9
+> >>          =E2=94=82     rep_nop():
+> >>     0.70 =E2=94=822af:   pause
+> >>          =E2=94=82     csd_lock_wait():
+> >>    92.82 =E2=94=82       mov    0x8(%rcx),%edx
+> >>     6.48 =E2=94=82       and    $0x1,%edx
+> >>     0.00 =E2=94=82     =E2=86=91 jne    2af
+> >>     0.00 =E2=94=822b9: =E2=86=91 jmp    282
+> >>
+> >>
+> >> Given the patch at hand I was expecting lost IPIs, but I can't quite s=
+ee
+> >> anything getting lost.
+> >
+> > I have no idea how that patch should be related to IPI and smp function
+> > calls. It's changing the way how regular device interrupts and their
+> > spurious counterpart are handled and not the way how IPIs are
+> > handled. They are handled by direct vectors and do not go through
+> > do_IRQ() at all.
+> >
+> > Aside of that the commit just changes the way how the interrupt vector
+> > of a regular device interrupt is stored and conveyed. The extra read an=
+d
+> > write on the cache hot stack is hardly related to anything IPI.
+>
+> I am as puzzled as you are, but the bisect is very clear: 79b9c183021e
+> works fast and 633260fa1 (as well as mainline) shows the weird behavior
+> above.
+>
+> It gets even better. This small (demonstrative only, mangled) patch on
+> top of 633260fa1 also resolves the performance issue:
+>
+> diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+> index c766936..7e91e9a 100644
+> --- a/arch/x86/kernel/irq.c
+> +++ b/arch/x86/kernel/irq.c
+> @@ -239,6 +239,7 @@ __visible void __irq_entry do_IRQ(struct pt_regs
+> *regs, unsigned long vector)
+>          * lower 8 bits.
+>          */
+>         vector &=3D 0xFF;
+> +       regs->orig_ax =3D ~vector;
+>
+>         /* entering_irq() tells RCU that we're not quiescent.  Check it. =
+*/
+>         RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up RCU")=
+;
+>
+>
+> To me that sounds like some irq exit code somewhere must still be
+> looking at orig_ax to decide on something - and that something is wrong
+> now that we removed the negation of the vector. It also seems to have an
+> impact on remote function calls.
+>
+> I'll have a deeper look tomorrow again if I can find any such place, but
+> I wouldn't mind if anyone could point me into the right direction
+> earlier :).
 
-irqchip/ti-sci-inta: Add support for INTA directly connecting to GIC
+How about this:
 
-Driver assumes that Interrupt parent to Interrupt Aggregator is always
-Interrupt router. This is not true always and GIC can be a parent to
-Interrupt Aggregator. Update the driver to detect the parent and request
-the parent irqs accordingly.
+void irq_complete_move(struct irq_cfg *cfg)
+{
+        __irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
+}
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200806074826.24607-11-lokeshvutla@ti.com
----
- drivers/irqchip/irq-ti-sci-inta.c | 87 +++++++++++++++++++++++++-----
- 1 file changed, 74 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
-index fbfa1f4..d4e9760 100644
---- a/drivers/irqchip/irq-ti-sci-inta.c
-+++ b/drivers/irqchip/irq-ti-sci-inta.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/err.h>
- #include <linux/io.h>
-+#include <linux/irq.h>
- #include <linux/irqchip.h>
- #include <linux/irqdomain.h>
- #include <linux/interrupt.h>
-@@ -131,6 +132,37 @@ static void ti_sci_inta_irq_handler(struct irq_desc *desc)
- }
- 
- /**
-+ * ti_sci_inta_xlate_irq() - Translate hwirq to parent's hwirq.
-+ * @inta:	IRQ domain corresponding to Interrupt Aggregator
-+ * @irq:	Hardware irq corresponding to the above irq domain
-+ *
-+ * Return parent irq number if translation is available else -ENOENT.
-+ */
-+static int ti_sci_inta_xlate_irq(struct ti_sci_inta_irq_domain *inta,
-+				 u16 vint_id)
-+{
-+	struct device_node *np = dev_of_node(&inta->pdev->dev);
-+	u32 base, parent_base, size;
-+	const __be32 *range;
-+	int len;
-+
-+	range = of_get_property(np, "ti,interrupt-ranges", &len);
-+	if (!range)
-+		return vint_id;
-+
-+	for (len /= sizeof(*range); len >= 3; len -= 3) {
-+		base = be32_to_cpu(*range++);
-+		parent_base = be32_to_cpu(*range++);
-+		size = be32_to_cpu(*range++);
-+
-+		if (base <= vint_id && vint_id < base + size)
-+			return vint_id - base + parent_base;
-+	}
-+
-+	return -ENOENT;
-+}
-+
-+/**
-  * ti_sci_inta_alloc_parent_irq() - Allocate parent irq to Interrupt aggregator
-  * @domain:	IRQ domain corresponding to Interrupt Aggregator
-  *
-@@ -141,30 +173,52 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
- 	struct ti_sci_inta_irq_domain *inta = domain->host_data;
- 	struct ti_sci_inta_vint_desc *vint_desc;
- 	struct irq_fwspec parent_fwspec;
-+	struct device_node *parent_node;
- 	unsigned int parent_virq;
--	u16 vint_id;
-+	u16 vint_id, p_hwirq;
-+	int ret;
- 
- 	vint_id = ti_sci_get_free_resource(inta->vint);
- 	if (vint_id == TI_SCI_RESOURCE_NULL)
- 		return ERR_PTR(-EINVAL);
- 
-+	p_hwirq = ti_sci_inta_xlate_irq(inta, vint_id);
-+	if (p_hwirq < 0) {
-+		ret = p_hwirq;
-+		goto free_vint;
-+	}
-+
- 	vint_desc = kzalloc(sizeof(*vint_desc), GFP_KERNEL);
--	if (!vint_desc)
--		return ERR_PTR(-ENOMEM);
-+	if (!vint_desc) {
-+		ret = -ENOMEM;
-+		goto free_vint;
-+	}
- 
- 	vint_desc->domain = domain;
- 	vint_desc->vint_id = vint_id;
- 	INIT_LIST_HEAD(&vint_desc->list);
- 
--	parent_fwspec.fwnode = of_node_to_fwnode(of_irq_find_parent(dev_of_node(&inta->pdev->dev)));
--	parent_fwspec.param_count = 2;
--	parent_fwspec.param[0] = inta->ti_sci_id;
--	parent_fwspec.param[1] = vint_desc->vint_id;
-+	parent_node = of_irq_find_parent(dev_of_node(&inta->pdev->dev));
-+	parent_fwspec.fwnode = of_node_to_fwnode(parent_node);
-+
-+	if (of_device_is_compatible(parent_node, "arm,gic-v3")) {
-+		/* Parent is GIC */
-+		parent_fwspec.param_count = 3;
-+		parent_fwspec.param[0] = 0;
-+		parent_fwspec.param[1] = p_hwirq - 32;
-+		parent_fwspec.param[2] = IRQ_TYPE_LEVEL_HIGH;
-+	} else {
-+		/* Parent is Interrupt Router */
-+		parent_fwspec.param_count = 1;
-+		parent_fwspec.param[0] = p_hwirq;
-+	}
- 
- 	parent_virq = irq_create_fwspec_mapping(&parent_fwspec);
- 	if (parent_virq == 0) {
--		kfree(vint_desc);
--		return ERR_PTR(-EINVAL);
-+		dev_err(&inta->pdev->dev, "Parent IRQ allocation failed\n");
-+		ret = -EINVAL;
-+		goto free_vint_desc;
-+
- 	}
- 	vint_desc->parent_virq = parent_virq;
- 
-@@ -173,6 +227,11 @@ static struct ti_sci_inta_vint_desc *ti_sci_inta_alloc_parent_irq(struct irq_dom
- 					 ti_sci_inta_irq_handler, vint_desc);
- 
- 	return vint_desc;
-+free_vint_desc:
-+	kfree(vint_desc);
-+free_vint:
-+	ti_sci_release_resource(inta->vint, vint_id);
-+	return ERR_PTR(ret);
- }
- 
- /**
-@@ -555,15 +614,15 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	inta->vint = devm_ti_sci_get_of_resource(inta->sci, dev, inta->ti_sci_id,
--						 "ti,sci-rm-range-vint");
-+	inta->vint = devm_ti_sci_get_resource(inta->sci, dev, inta->ti_sci_id,
-+					      TI_SCI_RESASG_SUBTYPE_IA_VINT);
- 	if (IS_ERR(inta->vint)) {
- 		dev_err(dev, "VINT resource allocation failed\n");
- 		return PTR_ERR(inta->vint);
- 	}
- 
--	inta->global_event = devm_ti_sci_get_of_resource(inta->sci, dev, inta->ti_sci_id,
--							 "ti,sci-rm-range-global-event");
-+	inta->global_event = devm_ti_sci_get_resource(inta->sci, dev, inta->ti_sci_id,
-+						      TI_SCI_RESASG_SUBTYPE_GLOBAL_EVENT_SEVT);
- 	if (IS_ERR(inta->global_event)) {
- 		dev_err(dev, "Global event resource allocation failed\n");
- 		return PTR_ERR(inta->global_event);
-@@ -594,6 +653,8 @@ static int ti_sci_inta_irq_domain_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&inta->vint_list);
- 	mutex_init(&inta->vint_mutex);
- 
-+	dev_info(dev, "Interrupt Aggregator domain %d created\n", pdev->id);
-+
- 	return 0;
- }
- 
+in arch/x86/kernel/apic/vector.c.
