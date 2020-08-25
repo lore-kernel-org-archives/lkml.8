@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A49C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18632C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A45612065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF722065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgHYAcY (ORCPT
+        id S1728286AbgHYA3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 20:32:24 -0400
-Received: from mga17.intel.com ([192.55.52.151]:12299 "EHLO mga17.intel.com"
+        Mon, 24 Aug 2020 20:29:44 -0400
+Received: from mga17.intel.com ([192.55.52.151]:12289 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbgHYA3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 20:29:51 -0400
-IronPort-SDR: ZeLeKEpSPQgBSSF/lUpvs5tyH6r2Ytgx8CdaDulTTAXyYEAyMq0GLRx2QdbOBNp/22XN1blMoo
- LLRuvoQx/0TQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136075314"
+        id S1728141AbgHYA3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 20:29:33 -0400
+IronPort-SDR: DUEnXognHjTq9bTSNlSLN+Usi0DqU2+68tHXjMCO93sYsl/ogjVIDXEFW+CRsRzOK5eEVKoF9t
+ TxWdgRbWZvfA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136075267"
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="136075314"
+   d="scan'208";a="136075267"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:29:41 -0700
-IronPort-SDR: rSTwxk7XXewjizOXAq/AoJScn+WIy74vviqcj88Qqm3EojR+vV91fP/JA5UEbXfUF58n2LIyiC
- zSbPghq8DNPA==
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:29:33 -0700
+IronPort-SDR: OzUGVynLgsI5smQmPFBssZ+4O6PDVKyYId3qPiTZFSr3BYXkiOUQRwekTrEauQSpYVCyMMrT40
+ 6dhAfL7DzMYw==
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="474135014"
+   d="scan'208";a="474134951"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:29:41 -0700
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:29:32 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -62,11 +62,10 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Dave Martin <Dave.Martin@arm.com>,
         Weijiang Yang <weijiang.yang@intel.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v11 19/25] mm: Re-introduce do_mmap_pgoff()
-Date:   Mon, 24 Aug 2020 17:25:34 -0700
-Message-Id: <20200825002540.3351-20-yu-cheng.yu@intel.com>
+        Dave Hansen <dave.hansen@intel.com>
+Subject: [PATCH v11 06/25] x86/mm: Change _PAGE_DIRTY to _PAGE_DIRTY_HW
+Date:   Mon, 24 Aug 2020 17:25:21 -0700
+Message-Id: <20200825002540.3351-7-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200825002540.3351-1-yu-cheng.yu@intel.com>
 References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
@@ -77,246 +76,195 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There was no more caller passing vm_flags to do_mmap(), and vm_flags was
-removed from the function's input by:
-
-    commit 45e55300f114 ("mm: remove unnecessary wrapper function do_mmap_pgoff()").
-
-There is a new user now.  Shadow stack allocation passes VM_SHSTK to
-do_mmap().  Re-introduce the vm_flags and do_mmap_pgoff().
+Before introducing _PAGE_COW for non-hardware memory management purposes in
+the next patch, rename _PAGE_DIRTY to _PAGE_DIRTY_HW and _PAGE_BIT_DIRTY to
+_PAGE_BIT_DIRTY_HW to make meanings more clear.  There are no functional
+changes from this patch.
 
 Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
-Cc: Peter Collingbourne <pcc@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-mm@kvack.org
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
 ---
- fs/aio.c             |  6 +++---
- fs/hugetlbfs/inode.c |  2 +-
- include/linux/fs.h   |  2 +-
- include/linux/mm.h   | 12 +++++++++++-
- ipc/shm.c            |  2 +-
- mm/mmap.c            | 16 ++++++++--------
- mm/nommu.c           |  6 +++---
- mm/shmem.c           |  2 +-
- mm/util.c            |  4 ++--
- 9 files changed, 31 insertions(+), 21 deletions(-)
+v9:
+- At some places _PAGE_DIRTY were not changed to _PAGE_DIRTY_HW, because
+  they will be changed again in the next patch to _PAGE_DIRTY_BITS.
+  However, this causes compile issues if the next patch is not yet applied.
+  Fix it by changing all _PAGE_DIRTY to _PAGE_DRITY_HW.
 
-diff --git a/fs/aio.c b/fs/aio.c
-index 5736bff48e9e..91e7cc4a9f17 100644
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -525,9 +525,9 @@ static int aio_setup_ring(struct kioctx *ctx, unsigned int nr_events)
- 		return -EINTR;
- 	}
+ arch/x86/include/asm/pgtable.h       | 18 +++++++++---------
+ arch/x86/include/asm/pgtable_types.h | 11 +++++------
+ arch/x86/kernel/relocate_kernel_64.S |  2 +-
+ arch/x86/kvm/vmx/vmx.c               |  2 +-
+ 4 files changed, 16 insertions(+), 17 deletions(-)
+
+diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
+index b836138ce852..86b7acd221c1 100644
+--- a/arch/x86/include/asm/pgtable.h
++++ b/arch/x86/include/asm/pgtable.h
+@@ -124,7 +124,7 @@ extern pmdval_t early_pmd_flags;
+  */
+ static inline int pte_dirty(pte_t pte)
+ {
+-	return pte_flags(pte) & _PAGE_DIRTY;
++	return pte_flags(pte) & _PAGE_DIRTY_HW;
+ }
  
--	ctx->mmap_base = do_mmap(ctx->aio_ring_file, 0, ctx->mmap_size,
--				 PROT_READ | PROT_WRITE,
--				 MAP_SHARED, 0, &unused, NULL);
-+	ctx->mmap_base = do_mmap_pgoff(ctx->aio_ring_file, 0, ctx->mmap_size,
-+				       PROT_READ | PROT_WRITE,
-+				       MAP_SHARED, 0, &unused, NULL);
- 	mmap_write_unlock(mm);
- 	if (IS_ERR((void *)ctx->mmap_base)) {
- 		ctx->mmap_size = 0;
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index b5c109703daa..f936bcf02cce 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -140,7 +140,7 @@ static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
- 	 * already been checked by prepare_hugepage_range.  If you add
- 	 * any error returns here, do so after setting VM_HUGETLB, so
- 	 * is_vm_hugetlb_page tests below unmap_region go the right
--	 * way when do_mmap unwinds (may be important on powerpc
-+	 * way when do_mmap_pgoff unwinds (may be important on powerpc
- 	 * and ia64).
- 	 */
- 	vma->vm_flags |= VM_HUGETLB | VM_DONTEXPAND;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e019ea2f1347..75a98288e7c5 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -538,7 +538,7 @@ static inline int mapping_mapped(struct address_space *mapping)
+ 
+@@ -163,7 +163,7 @@ static inline int pte_young(pte_t pte)
+ 
+ static inline int pmd_dirty(pmd_t pmd)
+ {
+-	return pmd_flags(pmd) & _PAGE_DIRTY;
++	return pmd_flags(pmd) & _PAGE_DIRTY_HW;
+ }
+ 
+ static inline int pmd_young(pmd_t pmd)
+@@ -173,7 +173,7 @@ static inline int pmd_young(pmd_t pmd)
+ 
+ static inline int pud_dirty(pud_t pud)
+ {
+-	return pud_flags(pud) & _PAGE_DIRTY;
++	return pud_flags(pud) & _PAGE_DIRTY_HW;
+ }
+ 
+ static inline int pud_young(pud_t pud)
+@@ -334,7 +334,7 @@ static inline pte_t pte_clear_uffd_wp(pte_t pte)
+ 
+ static inline pte_t pte_mkclean(pte_t pte)
+ {
+-	return pte_clear_flags(pte, _PAGE_DIRTY);
++	return pte_clear_flags(pte, _PAGE_DIRTY_HW);
+ }
+ 
+ static inline pte_t pte_mkold(pte_t pte)
+@@ -354,7 +354,7 @@ static inline pte_t pte_mkexec(pte_t pte)
+ 
+ static inline pte_t pte_mkdirty(pte_t pte)
+ {
+-	return pte_set_flags(pte, _PAGE_DIRTY | _PAGE_SOFT_DIRTY);
++	return pte_set_flags(pte, _PAGE_DIRTY_HW | _PAGE_SOFT_DIRTY);
+ }
+ 
+ static inline pte_t pte_mkyoung(pte_t pte)
+@@ -435,7 +435,7 @@ static inline pmd_t pmd_mkold(pmd_t pmd)
+ 
+ static inline pmd_t pmd_mkclean(pmd_t pmd)
+ {
+-	return pmd_clear_flags(pmd, _PAGE_DIRTY);
++	return pmd_clear_flags(pmd, _PAGE_DIRTY_HW);
+ }
+ 
+ static inline pmd_t pmd_wrprotect(pmd_t pmd)
+@@ -445,7 +445,7 @@ static inline pmd_t pmd_wrprotect(pmd_t pmd)
+ 
+ static inline pmd_t pmd_mkdirty(pmd_t pmd)
+ {
+-	return pmd_set_flags(pmd, _PAGE_DIRTY | _PAGE_SOFT_DIRTY);
++	return pmd_set_flags(pmd, _PAGE_DIRTY_HW | _PAGE_SOFT_DIRTY);
+ }
+ 
+ static inline pmd_t pmd_mkdevmap(pmd_t pmd)
+@@ -489,7 +489,7 @@ static inline pud_t pud_mkold(pud_t pud)
+ 
+ static inline pud_t pud_mkclean(pud_t pud)
+ {
+-	return pud_clear_flags(pud, _PAGE_DIRTY);
++	return pud_clear_flags(pud, _PAGE_DIRTY_HW);
+ }
+ 
+ static inline pud_t pud_wrprotect(pud_t pud)
+@@ -499,7 +499,7 @@ static inline pud_t pud_wrprotect(pud_t pud)
+ 
+ static inline pud_t pud_mkdirty(pud_t pud)
+ {
+-	return pud_set_flags(pud, _PAGE_DIRTY | _PAGE_SOFT_DIRTY);
++	return pud_set_flags(pud, _PAGE_DIRTY_HW | _PAGE_SOFT_DIRTY);
+ }
+ 
+ static inline pud_t pud_mkdevmap(pud_t pud)
+diff --git a/arch/x86/include/asm/pgtable_types.h b/arch/x86/include/asm/pgtable_types.h
+index 816b31c68550..192e1326b3db 100644
+--- a/arch/x86/include/asm/pgtable_types.h
++++ b/arch/x86/include/asm/pgtable_types.h
+@@ -15,7 +15,7 @@
+ #define _PAGE_BIT_PWT		3	/* page write through */
+ #define _PAGE_BIT_PCD		4	/* page cache disabled */
+ #define _PAGE_BIT_ACCESSED	5	/* was accessed (raised by CPU) */
+-#define _PAGE_BIT_DIRTY		6	/* was written to (raised by CPU) */
++#define _PAGE_BIT_DIRTY_HW	6	/* was written to (raised by CPU) */
+ #define _PAGE_BIT_PSE		7	/* 4 MB (or 2MB) page */
+ #define _PAGE_BIT_PAT		7	/* on 4KB pages */
+ #define _PAGE_BIT_GLOBAL	8	/* Global TLB entry PPro+ */
+@@ -46,7 +46,7 @@
+ #define _PAGE_PWT	(_AT(pteval_t, 1) << _PAGE_BIT_PWT)
+ #define _PAGE_PCD	(_AT(pteval_t, 1) << _PAGE_BIT_PCD)
+ #define _PAGE_ACCESSED	(_AT(pteval_t, 1) << _PAGE_BIT_ACCESSED)
+-#define _PAGE_DIRTY	(_AT(pteval_t, 1) << _PAGE_BIT_DIRTY)
++#define _PAGE_DIRTY_HW	(_AT(pteval_t, 1) << _PAGE_BIT_DIRTY_HW)
+ #define _PAGE_PSE	(_AT(pteval_t, 1) << _PAGE_BIT_PSE)
+ #define _PAGE_GLOBAL	(_AT(pteval_t, 1) << _PAGE_BIT_GLOBAL)
+ #define _PAGE_SOFTW1	(_AT(pteval_t, 1) << _PAGE_BIT_SOFTW1)
+@@ -74,7 +74,7 @@
+ 			 _PAGE_PKEY_BIT3)
+ 
+ #if defined(CONFIG_X86_64) || defined(CONFIG_X86_PAE)
+-#define _PAGE_KNL_ERRATUM_MASK (_PAGE_DIRTY | _PAGE_ACCESSED)
++#define _PAGE_KNL_ERRATUM_MASK (_PAGE_DIRTY_HW | _PAGE_ACCESSED)
+ #else
+ #define _PAGE_KNL_ERRATUM_MASK 0
+ #endif
+@@ -126,7 +126,7 @@
+  * pte_modify() does modify it.
+  */
+ #define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
+-			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
++			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY_HW |	\
+ 			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP | _PAGE_ENC |  \
+ 			 _PAGE_UFFD_WP)
+ #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
+@@ -163,7 +163,7 @@ enum page_cache_mode {
+ #define __RW _PAGE_RW
+ #define _USR _PAGE_USER
+ #define ___A _PAGE_ACCESSED
+-#define ___D _PAGE_DIRTY
++#define ___D _PAGE_DIRTY_HW
+ #define ___G _PAGE_GLOBAL
+ #define __NX _PAGE_NX
+ 
+@@ -205,7 +205,6 @@ enum page_cache_mode {
+ #define __PAGE_KERNEL_IO		__PAGE_KERNEL
+ #define __PAGE_KERNEL_IO_NOCACHE	__PAGE_KERNEL_NOCACHE
+ 
+-
+ #ifndef __ASSEMBLY__
+ 
+ #define __PAGE_KERNEL_ENC	(__PAGE_KERNEL    | _ENC)
+diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
+index a4d9a261425b..e3bb4ff95523 100644
+--- a/arch/x86/kernel/relocate_kernel_64.S
++++ b/arch/x86/kernel/relocate_kernel_64.S
+@@ -17,7 +17,7 @@
+  */
+ 
+ #define PTR(x) (x << 3)
+-#define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY)
++#define PAGE_ATTR (_PAGE_PRESENT | _PAGE_RW | _PAGE_ACCESSED | _PAGE_DIRTY_HW)
  
  /*
-  * Might pages of this file have been modified in userspace?
-- * Note that i_mmap_writable counts all VM_SHARED vmas: do_mmap
-+ * Note that i_mmap_writable counts all VM_SHARED vmas: do_mmap_pgoff
-  * marks vma as VM_SHARED if it is shared, and the file was opened for
-  * writing i.e. vma may be mprotected writable even if now readonly.
-  *
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index d437ce0c85ac..36b239aa5aa7 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2553,13 +2553,23 @@ extern unsigned long mmap_region(struct file *file, unsigned long addr,
- 	struct list_head *uf);
- extern unsigned long do_mmap(struct file *file, unsigned long addr,
- 	unsigned long len, unsigned long prot, unsigned long flags,
--	unsigned long pgoff, unsigned long *populate, struct list_head *uf);
-+	vm_flags_t vm_flags, unsigned long pgoff, unsigned long *populate,
-+	struct list_head *uf);
- extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
- 		       struct list_head *uf, bool downgrade);
- extern int do_munmap(struct mm_struct *, unsigned long, size_t,
- 		     struct list_head *uf);
- extern int do_madvise(unsigned long start, size_t len_in, int behavior);
- 
-+static inline unsigned long
-+do_mmap_pgoff(struct file *file, unsigned long addr,
-+	unsigned long len, unsigned long prot, unsigned long flags,
-+	unsigned long pgoff, unsigned long *populate,
-+	struct list_head *uf)
-+{
-+	return do_mmap(file, addr, len, prot, flags, 0, pgoff, populate, uf);
-+}
-+
- #ifdef CONFIG_MMU
- extern int __mm_populate(unsigned long addr, unsigned long len,
- 			 int ignore_errors);
-diff --git a/ipc/shm.c b/ipc/shm.c
-index f1ed36e3ac9f..6cf24a5994ec 100644
---- a/ipc/shm.c
-+++ b/ipc/shm.c
-@@ -1556,7 +1556,7 @@ long do_shmat(int shmid, char __user *shmaddr, int shmflg,
- 			goto invalid;
- 	}
- 
--	addr = do_mmap(file, addr, size, prot, flags, 0, &populate, NULL);
-+	addr = do_mmap_pgoff(file, addr, size, prot, flags, 0, &populate, NULL);
- 	*raddr = addr;
- 	err = 0;
- 	if (IS_ERR_VALUE(addr))
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 574b3f273462..81d4a00092da 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1030,7 +1030,7 @@ static inline int is_mergeable_anon_vma(struct anon_vma *anon_vma1,
-  * anon_vmas, nor if same anon_vma is assigned but offsets incompatible.
-  *
-  * We don't check here for the merged mmap wrapping around the end of pagecache
-- * indices (16TB on ia32) because do_mmap() does not permit mmap's which
-+ * indices (16TB on ia32) because do_mmap_pgoff() does not permit mmap's which
-  * wrap, nor mmaps which cover the final page at index -1UL.
-  */
- static int
-@@ -1365,11 +1365,11 @@ static inline bool file_mmap_ok(struct file *file, struct inode *inode,
-  */
- unsigned long do_mmap(struct file *file, unsigned long addr,
- 			unsigned long len, unsigned long prot,
--			unsigned long flags, unsigned long pgoff,
--			unsigned long *populate, struct list_head *uf)
-+			unsigned long flags, vm_flags_t vm_flags,
-+			unsigned long pgoff, unsigned long *populate,
-+			struct list_head *uf)
- {
- 	struct mm_struct *mm = current->mm;
--	vm_flags_t vm_flags;
- 	int pkey = 0;
- 
- 	*populate = 0;
-@@ -1431,7 +1431,7 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
- 	 * to. we assume access permissions have been handled by the open
- 	 * of the memory object, so we don't do any here.
- 	 */
--	vm_flags = calc_vm_prot_bits(prot, pkey) | calc_vm_flag_bits(flags) |
-+	vm_flags |= calc_vm_prot_bits(prot, pkey) | calc_vm_flag_bits(flags) |
- 			mm->def_flags | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC;
- 
- 	if (flags & MAP_LOCKED)
-@@ -2233,7 +2233,7 @@ get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
- 		/*
- 		 * mmap_region() will call shmem_zero_setup() to create a file,
- 		 * so use shmem's get_unmapped_area in case it can be huge.
--		 * do_mmap() will clear pgoff, so match alignment.
-+		 * do_mmap_pgoff() will clear pgoff, so match alignment.
- 		 */
- 		pgoff = 0;
- 		get_area = shmem_get_unmapped_area;
-@@ -3006,7 +3006,7 @@ SYSCALL_DEFINE5(remap_file_pages, unsigned long, start, unsigned long, size,
- 	}
- 
- 	file = get_file(vma->vm_file);
--	ret = do_mmap(vma->vm_file, start, size,
-+	ret = do_mmap_pgoff(vma->vm_file, start, size,
- 			prot, flags, pgoff, &populate, NULL);
- 	fput(file);
- out:
-@@ -3226,7 +3226,7 @@ int insert_vm_struct(struct mm_struct *mm, struct vm_area_struct *vma)
- 	 * By setting it to reflect the virtual start address of the
- 	 * vma, merges and splits can happen in a seamless way, just
- 	 * using the existing file pgoff checks and manipulations.
--	 * Similarly in do_mmap and in do_brk.
-+	 * Similarly in do_mmap_pgoff and in do_brk.
- 	 */
- 	if (vma_is_anonymous(vma)) {
- 		BUG_ON(vma->anon_vma);
-diff --git a/mm/nommu.c b/mm/nommu.c
-index 75a327149af1..71a4ea828f06 100644
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -1078,6 +1078,7 @@ unsigned long do_mmap(struct file *file,
- 			unsigned long len,
- 			unsigned long prot,
- 			unsigned long flags,
-+			vm_flags_t vm_flags,
- 			unsigned long pgoff,
- 			unsigned long *populate,
- 			struct list_head *uf)
-@@ -1085,7 +1086,6 @@ unsigned long do_mmap(struct file *file,
- 	struct vm_area_struct *vma;
- 	struct vm_region *region;
- 	struct rb_node *rb;
--	vm_flags_t vm_flags;
- 	unsigned long capabilities, result;
- 	int ret;
- 
-@@ -1104,7 +1104,7 @@ unsigned long do_mmap(struct file *file,
- 
- 	/* we've determined that we can make the mapping, now translate what we
- 	 * now know into VMA flags */
--	vm_flags = determine_vm_flags(file, prot, flags, capabilities);
-+	vm_flags |= determine_vm_flags(file, prot, flags, capabilities);
- 
- 	/* we're going to need to record the mapping */
- 	region = kmem_cache_zalloc(vm_region_jar, GFP_KERNEL);
-@@ -1763,7 +1763,7 @@ EXPORT_SYMBOL_GPL(access_process_vm);
-  *
-  * Check the shared mappings on an inode on behalf of a shrinking truncate to
-  * make sure that any outstanding VMAs aren't broken and then shrink the
-- * vm_regions that extend beyond so that do_mmap() doesn't
-+ * vm_regions that extend beyond so that do_mmap_pgoff() doesn't
-  * automatically grant mappings that are too large.
-  */
- int nommu_shrink_inode_mappings(struct inode *inode, size_t size,
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 271548ca20f3..dea76ecc849b 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -4246,7 +4246,7 @@ EXPORT_SYMBOL_GPL(shmem_file_setup_with_mnt);
- 
- /**
-  * shmem_zero_setup - setup a shared anonymous mapping
-- * @vma: the vma to be mmapped is prepared by do_mmap
-+ * @vma: the vma to be mmapped is prepared by do_mmap_pgoff
-  */
- int shmem_zero_setup(struct vm_area_struct *vma)
- {
-diff --git a/mm/util.c b/mm/util.c
-index 5ef378a2a038..8d6280c05238 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -503,8 +503,8 @@ unsigned long vm_mmap_pgoff(struct file *file, unsigned long addr,
- 	if (!ret) {
- 		if (mmap_write_lock_killable(mm))
- 			return -EINTR;
--		ret = do_mmap(file, addr, len, prot, flag, pgoff, &populate,
--			      &uf);
-+		ret = do_mmap_pgoff(file, addr, len, prot, flag, pgoff,
-+				    &populate, &uf);
- 		mmap_write_unlock(mm);
- 		userfaultfd_unmap_complete(mm, &uf);
- 		if (populate)
+  * control_page + KEXEC_CONTROL_CODE_MAX_SIZE
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 46ba2e03a892..f5ec6dadca4f 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -3605,7 +3605,7 @@ static int init_rmode_identity_map(struct kvm *kvm)
+ 	/* Set up identity-mapping pagetable for EPT in real mode */
+ 	for (i = 0; i < PT32_ENT_PER_PAGE; i++) {
+ 		tmp = (i << 22) + (_PAGE_PRESENT | _PAGE_RW | _PAGE_USER |
+-			_PAGE_ACCESSED | _PAGE_DIRTY | _PAGE_PSE);
++			_PAGE_ACCESSED | _PAGE_DIRTY_HW | _PAGE_PSE);
+ 		r = kvm_write_guest_page(kvm, identity_map_pfn,
+ 				&tmp, i * sizeof(tmp), sizeof(tmp));
+ 		if (r < 0)
 -- 
 2.21.0
 
