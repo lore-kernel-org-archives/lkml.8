@@ -2,77 +2,156 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF142C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6A1C433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 972CF20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0C82078D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:51:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598363481;
+	bh=eIq1K4YwKevM0Z+xrupyI1e4rDXhwcMQbYLXwiGI9/k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s90DlqG4nU1iyM6z72nqnpCqK8lo/Ads1FYEcmsLLBh36Pt5WKLHkmq33xgcB9hvN
+	 mDcgU74R/qJmGGBUbFdYd8u5jRZi7CYziC8rA5thHFEgW+qwimvzedI6QpiQtvvNkz
+	 oYT6pU3ZhcRaAxQdT6RL24ZpjSMsTl4+c6J01PNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726432AbgHYNsi (ORCPT
+        id S1726230AbgHYNvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:48:38 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:7784 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725998AbgHYNsh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:48:37 -0400
-X-IronPort-AV: E=Sophos;i="5.76,352,1592838000"; 
-   d="scan'208";a="55270482"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie6.idc.renesas.com with ESMTP; 25 Aug 2020 22:48:35 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id BD02D4008C5D;
-        Tue, 25 Aug 2020 22:48:33 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Tue, 25 Aug 2020 09:51:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbgHYNvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:51:18 -0400
+Received: from localhost (p54b33ab6.dip0.t-ipconnect.de [84.179.58.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FC0920738;
+        Tue, 25 Aug 2020 13:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598363478;
+        bh=eIq1K4YwKevM0Z+xrupyI1e4rDXhwcMQbYLXwiGI9/k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=c/nEA1x+7z5tdSDCHfM2LAtZREXzJ6s4HkGFN6S67BQdim72iZxz/GpoalDTz3RwP
+         /j2Xzj35IPHY1BTNwALSCQWqDUO384Y8Jjs50Goj8hZJ2OfihVB+iKk1N/B+vIdClc
+         amqwfY1JgAc6wOJPiKHGo+g48C6r7/OieN3ZJsNc=
+Date:   Tue, 25 Aug 2020 15:51:13 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Frank Lee <tiny.windzz@gmail.com>,
+        Frank Lee <frank@allwinnertech.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
         Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-renesas-soc@vger.kernel.org
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH] clk: renesas: cpg-mssr: Add clk entry for VSPR
-Date:   Tue, 25 Aug 2020 14:48:06 +0100
-Message-Id: <20200825134806.25295-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
+        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "p.zabel" <p.zabel@pengutronix.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        clabbe@baylibre.com, bage@linutronix.de,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
+Message-ID: <20200825135113.GB1753@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Maxime Ripard <maxime@cerno.tech>, Lee Jones <lee.jones@linaro.org>,
+        Frank Lee <tiny.windzz@gmail.com>,
+        Frank Lee <frank@allwinnertech.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, gregory.clement@bootlin.com,
+        Thomas Gleixner <tglx@linutronix.de>, jason@lakedaemon.net,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        "p.zabel" <p.zabel@pengutronix.de>, Icenowy Zheng <icenowy@aosc.io>,
+        =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
+        clabbe@baylibre.com, bage@linutronix.de,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>, linux-i2c@vger.kernel.org,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+References: <cover.1595572867.git.frank@allwinnertech.com>
+ <CAEExFWsvScMgi_Dftfq06HZiF8CFAmym8Z_tgQoHHAfiGxWt0g@mail.gmail.com>
+ <CAEExFWuwjmqAh0c3kMLS3Gs6UC2A8TtY-9nJeWxFPRDugtR4pA@mail.gmail.com>
+ <20200824080327.GH3248864@dell>
+ <20200825085532.vv4dpuzmjnshm5qn@gilmour.lan>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
+Content-Disposition: inline
+In-Reply-To: <20200825085532.vv4dpuzmjnshm5qn@gilmour.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clock entry 130 for VSPR module, so that this module can be used
-on R8A7742 (RZ/G1H) SoC.
 
-Note: The entry for VSPR clock was accidentally dropped from RZ/G manual
-when all the information related to RT were removed.
+--xgyAXRrhYN0wYx8y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-Similar details can be seen in commit 79ea9934b8df ("ARM: shmobile:
-r8a7790: Rename VSP1_(SY|RT) clocks to VSP1_(S|R)") for R-Car H2
----
- drivers/clk/renesas/r8a7742-cpg-mssr.c | 1 +
- 1 file changed, 1 insertion(+)
+On Tue, Aug 25, 2020 at 10:55:32AM +0200, Maxime Ripard wrote:
+> On Mon, Aug 24, 2020 at 09:03:27AM +0100, Lee Jones wrote:
+> > On Mon, 24 Aug 2020, Frank Lee wrote:
+> >=20
+> > > ping......
+> >=20
+> > "Please don't send content free pings and please allow a reasonable
+> >  time for review.  People get busy, go on holiday, attend conferences
+> >  and so on so unless there is some reason for urgency (like critical
+> >  bug fixes) please allow at least a couple of weeks for review.  If
+> >  there have been review comments then people may be waiting for those
+> >  to be addressed.  Sending content free pings just adds to the mail
+> >  volume (if they are seen at all) and if something has gone wrong
+> >  you'll have to resend the patches anyway so [RESEND]ing with any
+> >  comments addressed is generally a much better approach."
+>=20
+> This is true to some extent, but pinging after a month doesn't seem
+> unreasonable either.
 
-diff --git a/drivers/clk/renesas/r8a7742-cpg-mssr.c b/drivers/clk/renesas/r8a7742-cpg-mssr.c
-index e919828668a4..28b24c4e9d7d 100644
---- a/drivers/clk/renesas/r8a7742-cpg-mssr.c
-+++ b/drivers/clk/renesas/r8a7742-cpg-mssr.c
-@@ -97,6 +97,7 @@ static const struct mssr_mod_clk r8a7742_mod_clks[] __initconst = {
- 	DEF_MOD("tmu0",			 125,	R8A7742_CLK_CP),
- 	DEF_MOD("vsp1du1",		 127,	R8A7742_CLK_ZS),
- 	DEF_MOD("vsp1du0",		 128,	R8A7742_CLK_ZS),
-+	DEF_MOD("vspr",			 130,	R8A7742_CLK_ZS),
- 	DEF_MOD("vsp1-sy",		 131,	R8A7742_CLK_ZS),
- 	DEF_MOD("scifa2",		 202,	R8A7742_CLK_MP),
- 	DEF_MOD("scifa1",		 203,	R8A7742_CLK_MP),
--- 
-2.17.1
+Especially if resending would mean up to 16 patches sent again.
 
+
+--xgyAXRrhYN0wYx8y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9FF00ACgkQFA3kzBSg
+KbaQCw/7B0HkLUNDaoRkScvwvMsZwnYphPCyyQwyYSGMOlmp9LUnRLs8wgHuKwvF
+U65QpySYVeF2oRjy1Q5u7oXEQUnprwXLXkVaHt832UpeCw6nvKs/i8Rs8H+0tWo9
+/O7pxPMFrUouMTUAkAqKuKsCOFRflr2R32JquWopYWi+MgzoPAWV1OAtOC0XHdqw
+lWnioiMvY3Japg4eaqxLWZ5nqp8XYy+qXGwJdtiWkFu8+LnTvTcK+stQqROhYlKm
+6Cm6Uy13ngTrnB4ait2I/+YKuwljumU6m8xuxyb7a/j2ZWO80LBwoCiRdGNE1A7V
+SEDzhfVmYNjeHqCBB3Vryx5N5Bkz4Be6paj8tthKHjAXxBbLYfheaXeO6aLpd4l0
+sshVn10Dv84yYcL8GR4baFQCrNiZivjEZiVFXeiA6ygkQeNkQPoT4jGVYiHiNzuO
+y2TAjUKypZ2Dst24Q+38o9HUTa38mSIKKcif0SwmbryPq6NL0elOgd2F68KQJzSk
+ob/zI8yw9nK9Kiz6JpjvKBv+Aaf25R1U7a/URD0VcgJVdUv3X0RJ0yk79HSNeP89
+fEz9mx9k6sK09qRFLZTcYJ/whlSa0SONFcfEma3W7iVmDzjFDW0ZftzMneSFVRbp
+HY/EadYE5G3VNklMSNhyT9Bf9ArEoxN9osMTzwSgpiHzAovoq+o=
+=iNuN
+-----END PGP SIGNATURE-----
+
+--xgyAXRrhYN0wYx8y--
