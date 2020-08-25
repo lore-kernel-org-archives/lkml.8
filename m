@@ -2,81 +2,70 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23992C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016EFC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2F3220782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:52:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598338334;
-	bh=ajZvLj9BjR77Id3A98oIhcvcaL+SUw6LfKF/69V/kLU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sKhonT5pVqzf0t3xH0H3SNmOKTcNRxrBMfcVCpdu0K3YhUP8OFVu+imxCffyoOOzs
-	 TwiDZPtYCoQG2TPSIpwOrCyfN1e1TCpBrVqaZLDJesjA+FzQN1L13fopKHPr1PWgqu
-	 ao9oUUHcv0am8SFpQk9g4sGJKr8zVEQ9fW3/e3uU=
+	by mail.kernel.org (Postfix) with ESMTP id BEEF12076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:52:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I1lZGQbd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgHYGwN (ORCPT
+        id S1729264AbgHYGwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:52:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729127AbgHYGwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:52:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 499412076C;
-        Tue, 25 Aug 2020 06:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598338332;
-        bh=ajZvLj9BjR77Id3A98oIhcvcaL+SUw6LfKF/69V/kLU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AN/lXcIxfDf5rJ39XYKzwtM/ZtuUuqNlw9WEZeCXlOiC9jx4t9aMg77SIGfl10uMU
-         ObFPWpLwJv5bhPB7R2iP4LeNNf7JDyEjiQC2oN8EotTe6EtwKeba74Go7XyM5zqMD2
-         aGjmG54a6XqEz1QwkWRq6eGNYuQuTecuhWBektsM=
-Date:   Tue, 25 Aug 2020 08:52:29 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Tomer Samara <tomersamara98@gmail.com>, devel@driverdev.osuosl.org,
-        Todd Kjos <tkjos@android.com>,
-        Riley Andrews <riandrews@android.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Suren Baghdasaryan <surenb@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Arve Hj?nnev?g <arve@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Martijn Coenen <maco@android.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [PATCH v4 0/2] staging: android: Remove BUG/BUG_ON from ion
-Message-ID: <20200825065229.GA1319770@kroah.com>
-References: <cover.1598023523.git.tomersamara98@gmail.com>
- <20200825064729.GA30014@infradead.org>
+        Tue, 25 Aug 2020 02:52:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729110AbgHYGwa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 02:52:30 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98DBAC061574;
+        Mon, 24 Aug 2020 23:52:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=armWkMQMHeWrynpzAyMGDG4PU5wuW/KKgxbsJRkV43I=; b=I1lZGQbd6rbpBgflacnAax4B0r
+        vbN7m8CVPH8CUuLie3QdwDiSFXvWUbAcHtlfU7zS7SW3k+9g0gO2EJAEGKN2VUQElPCexSD2MXBrL
+        i8q4QuNOyKwUIk1nE+lg0Fc3ezIRSTWBbRvcWgSu869Z/NyEEolBPQRGB/ZZ2msFNKoD08aLP7JQl
+        SlAVnjJzH3Qv9BCndirRZWXwUMkqhY0ZMeLZqzCKNI+3tg6KP84pevsKUF9glXL93hkC7vlXeYwYE
+        ae8SxS9nGxrj9V7/Ed/KT8cwErR+S2BDSGIg7QE8XuSi1xwogew3rPIu4dNT8xCNBN8DdmYE5ycQP
+        hRrkDqyA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kASoi-0000e9-Se; Tue, 25 Aug 2020 06:52:26 +0000
+Date:   Tue, 25 Aug 2020 07:52:24 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/msm: drop cache sync hack
+Message-ID: <20200825065224.GB30014@infradead.org>
+References: <20200822175254.1105377-1-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825064729.GA30014@infradead.org>
+In-Reply-To: <20200822175254.1105377-1-robdclark@gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 07:47:29AM +0100, Christoph Hellwig wrote:
-> On Fri, Aug 21, 2020 at 06:27:04PM +0300, Tomer Samara wrote:
-> > Remove BUG/BUG_ON from androind/ion
+On Sat, Aug 22, 2020 at 10:52:54AM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
 > 
-> Please just remove ion.  It has been rejected and we have developed
-> proper kernel subsystens to replace it.  Don't waste your time on it.
+> Now that it isn't causing problems to use dma_map/unmap, we can drop the
+> hack of using dma_sync in certain cases.
 
-It is going to be removed at the end of this year.  Why we keep it
-around until then, I really don't know, but John and Laura have this as
-the plan.
-
-thanks,
-
-greg k-h
+Great to see!  What did solve the problems?
