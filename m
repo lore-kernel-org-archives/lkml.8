@@ -2,201 +2,113 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 421ECC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5F7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:04:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E8A92068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47CCB2068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:04:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="BSD13bCE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XLdbJh5/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbgHYKEW (ORCPT
+        id S1729695AbgHYKEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:04:22 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:52713 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726000AbgHYKEV (ORCPT
+        Tue, 25 Aug 2020 06:04:51 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45959 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgHYKEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:04:21 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id AVoOkYOrquuXOAVoPk7QX1; Tue, 25 Aug 2020 12:04:18 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1598349858; bh=5CZunLEd5xnbFkpUz48qiQTHttRCVtgcuUVGBoE7kro=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=BSD13bCELTO0+DqrZut+HtzDsKSgizA6NSozwCTaZfkSKtNvXjKyXMZE8dtV+CUgQ
-         XnjAXzWZ87TL5j1e8PZeP23sm0ukDTg2DUXiwQGmcSEQ9PY6gUMRBYfubL5VncN9u9
-         57dnI5oQMCx+twgoNOV32k7jC4KMHv3DJ5WQB0QZ8df1zWNUQjs+T4YmlxHLxx/kQF
-         wK7F3x+Jtztb5FPRUYBVUkmzGukBjP5kDfOyfS9yfTGrTVy5l3LdzP8bZLylvTo1u5
-         yczYJy4qJXaqFZCLgaUcfZRuSSmC6clMWI1JzxQHRj5T7OUfRDS79RNfZ5QAtsKF2+
-         jEIswMo0fohDg==
-Subject: Re: [PATCH v2] media: v4l2-ctrl: add control for long term reference.
-To:     Dikshita Agarwal <dikshita@codeaurora.org>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Cc:     mchehab@kernel.org, nicolas@ndufresne.ca, majja@codeaurora.org,
-        stanimir.varbanov@linaro.org, vgarodia@codeaurora.org
-References: <1597382967-32729-1-git-send-email-dikshita@codeaurora.org>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <506c9e88-e54b-2534-0df9-f7855456dcd8@xs4all.nl>
-Date:   Tue, 25 Aug 2020 12:04:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 25 Aug 2020 06:04:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598349888;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1guKzsu1f7vE3cUpyLB5EkhBDdCRY0IBR0GpJ2ik82Y=;
+        b=XLdbJh5/XPCWJj2RZyEQvVL4DJNrQSeE/TdfsihjM1mvxWojbcFVdF2lErDOVfvzuB1xtw
+        QOlJCxhUqZqm4t/tI6n2RCpChgQ/iNTsOVHm+njKgpfBz7bxYN/sPr3xwq1q0lTC5QVNlo
+        yQucMC9kDgOlhxNiEhE2D8+Phjq289c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-gjMOj3BUPVuF33NDiuVR3w-1; Tue, 25 Aug 2020 06:04:46 -0400
+X-MC-Unique: gjMOj3BUPVuF33NDiuVR3w-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 732A2800050;
+        Tue, 25 Aug 2020 10:04:44 +0000 (UTC)
+Received: from gondolin (ovpn-112-248.ams2.redhat.com [10.36.112.248])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B8F1D5C1CF;
+        Tue, 25 Aug 2020 10:04:34 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 12:04:32 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v10 01/16] s390/vfio-ap: add version vfio_ap module
+Message-ID: <20200825120432.13a1b444.cohuck@redhat.com>
+In-Reply-To: <20200821195616.13554-2-akrowiak@linux.ibm.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+        <20200821195616.13554-2-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <1597382967-32729-1-git-send-email-dikshita@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDdiqtOo6GCNqu7J8S9J81dzKRyGJWwRTup/WEpb3WTphfrTWQ+rHNZvYdI8lycVuu1b1Ce98t4ppZFrYepQvav6ujHwxSPexMQqCvw8DdwRi/fBLJ5l
- QNqTj0pyZ/NWcdEkp4zn6E3uHv959/FPzZW0cfjJg3YSMGKxn1WixNBWQ2WxWGGihWiez/BVzSR2yvnzrTY0pzPQ8W0/zjL3hJH/kOdRDfM6ZAWXPm2R6t7F
- wVcrIHTkbb+JryRxrN1P85xBNRWJ+CjcI6Oz5R4O2xX4negHvSZho53z50myGsGLC8VVshqQ3kaO+OmCvjxg19VnUVGOvZmywXueyxpd2C4KYy8kt67q5Ryv
- 7DHv6JrItQ3/dqZz96ZGPJvtAH9OY6V7y6GHaNYiusCj0G44NjwC0G4FvAHtgCt/+WRdBdHgOnQPFkTd3mbg7NLSz7H0U8i7MEA27842ei53SxIvs3gvNnhC
- 4TpLzd1G70pml98F3MKJ0ncQt7pKyZ1OoVsJd8eVjU+crluIS/i9WC5ouCvrwJzkTJ8BcQFymDIqlY9PXzjRxXv5TquYSmrY5yKOYji+ugoxo/GEq3TWNgFS
- 3+8=
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/08/2020 07:29, Dikshita Agarwal wrote:
-> LTR (Long Term Reference) frames are the frames that are encoded
-> sometime in the past and stored in the DPB buffer list to be used
-> as reference to encode future frames.
-> This change adds controls to enable this feature.
+On Fri, 21 Aug 2020 15:56:01 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+
+> Let's set a version for the vfio_ap module so that automated regression
+> tests can determine whether dynamic configuration tests can be run or
+> not.
 > 
-> Signed-off-by: Dikshita Agarwal <dikshita@codeaurora.org>
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 > ---
->  .../userspace-api/media/v4l/ext-ctrls-codec.rst    | 23 ++++++++++++++++++++++
->  drivers/media/v4l2-core/v4l2-ctrls.c               |  6 ++++++
->  include/uapi/linux/v4l2-controls.h                 |  4 ++++
->  3 files changed, 33 insertions(+)
+>  drivers/s390/crypto/vfio_ap_drv.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index d0d506a..6d1b005 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -4272,3 +4272,26 @@ enum v4l2_mpeg_video_hevc_size_of_length_field -
->        - Selecting this value specifies that HEVC slices are expected
->          to be prefixed by Annex B start codes. According to :ref:`hevc`
->          valid start codes can be 3-bytes 0x000001 or 4-bytes 0x00000001.
-> +
-> +``V4L2_CID_MPEG_VIDEO_LTRCOUNT (enum)``
-
-I prefer _LTR_COUNT (same for the other control defines).
-
-I assume 'enum' is a mistake? This should be 'integer', right?
-
-> +	Specifies the number of Long Term Reference frames encoder needs to
-> +	generate or keep.
-> +	This control is used to query or configure the number of Long Term
-> +	Reference frames.
-
-Add something like: "Applicable to the H264 and HEVC encoder."
-
-> +
-> +``V4L2_CID_MPEG_VIDEO_MARKLTRFRAME (enum)``
-> +	This control is used to mark current frame as Long Term Reference
-> +	frame.
-
-enum -> integer
-_MARK_LTR_FRAME
-
-How about renaming this to: "_FRAME_LTR_INDEX"?
-
-I would also suggest having the range as 0..LTR_COUNT where 0 means that
-this is not a LTR frame. An alternative is to have two controls: one boolean
-that determines if the frame is a LTR frame or not, and one control containing
-the LTR index.
-
-Is the LTR index 0 or 1 based according to the standard? I think that if it is
-1 based you can use 0 to mean 'not an LTR frame'. If it is 0 based in the standard,
-then having two controls might be better.
-
-A third alternative might be to use -1 as the value to indicate that it is not
-an LTR frame, but it feels hackish. I'm not sure yet.
-
-> +	this provides a Long Term Reference index that ranges from 0
-> +	to LTR count-1 and then the particular frame will be marked with that
-> +	Long Term Reference index.
-
-Add something like: "Applicable to the H264 and HEVC encoder."
-
-This only makes sense when used with requests, right? Otherwise you cannot
-reliably associate this control with a frame. That should be mentioned here.
-
-> +
-> +``V4L2_CID_MPEG_VIDEO_USELTRFRAME (enum)``
-
-enum -> bitmask
-_USE_LTR_FRAMES
-
-> +	Specifies the Long Term Reference frame(s) to be used for encoding
-> +	the current frame.
-> +	This provides a bitmask which consists of bits [0, 15]. A total of N
-> +	LSB bits of this field are valid, where N is the maximum number of
-> +	Long Term Reference frames supported.
-> +	All the other bits are invalid and should be rejected.
-> +	The LSB corresponds to the Long Term Reference index 0. Bit N-1 from
-> +	the LSB corresponds to the Long Term Reference index max LTR count-1.
-
-Add something like: "Applicable to the H264 and HEVC encoder."
-
-This too only makes sense when using requests, correct? That should be mentioned
-here.
-
-I assume that this must be set to 0 for LTR frames? Or at least this control will
-be ignored for LTR frames.
-
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index 3f3fbcd..3138c72 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -991,6 +991,9 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_MPEG_VIDEO_HEVC_SLICE_PARAMS:		return "HEVC Slice Parameters";
->  	case V4L2_CID_MPEG_VIDEO_HEVC_DECODE_MODE:		return "HEVC Decode Mode";
->  	case V4L2_CID_MPEG_VIDEO_HEVC_START_CODE:		return "HEVC Start Code";
-> +	case V4L2_CID_MPEG_VIDEO_LTRCOUNT:		return "LTR Count";
-> +	case V4L2_CID_MPEG_VIDEO_MARKLTRFRAME:		return "Mark LTR";
-> +	case V4L2_CID_MPEG_VIDEO_USELTRFRAME:		return "Use LTR";
-
-"Use LTR Frames"
-
+> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+> index be2520cc010b..f4ceb380dd61 100644
+> --- a/drivers/s390/crypto/vfio_ap_drv.c
+> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+> @@ -17,10 +17,12 @@
 >  
->  	/* CAMERA controls */
->  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-> @@ -1224,6 +1227,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  		break;
->  	case V4L2_CID_MPEG_VIDEO_MV_H_SEARCH_RANGE:
->  	case V4L2_CID_MPEG_VIDEO_MV_V_SEARCH_RANGE:
-> +	case V4L2_CID_MPEG_VIDEO_LTRCOUNT:
-> +	case V4L2_CID_MPEG_VIDEO_MARKLTRFRAME:
-> +	case V4L2_CID_MPEG_VIDEO_USELTRFRAME:
->  		*type = V4L2_CTRL_TYPE_INTEGER;
->  		break;
->  	case V4L2_CID_MPEG_VIDEO_FORCE_KEY_FRAME:
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index 6227141..f2daa86 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -742,6 +742,10 @@ enum v4l2_cid_mpeg_video_hevc_size_of_length_field {
->  #define V4L2_CID_MPEG_VIDEO_HEVC_HIER_CODING_L6_BR	(V4L2_CID_MPEG_BASE + 642)
->  #define V4L2_CID_MPEG_VIDEO_REF_NUMBER_FOR_PFRAMES	(V4L2_CID_MPEG_BASE + 643)
->  #define V4L2_CID_MPEG_VIDEO_PREPEND_SPSPPS_TO_IDR	(V4L2_CID_MPEG_BASE + 644)
-> +#define V4L2_CID_MPEG_VIDEO_LTRCOUNT	(V4L2_CID_MPEG_BASE + 645)
-> +#define V4L2_CID_MPEG_VIDEO_MARKLTRFRAME	(V4L2_CID_MPEG_BASE + 646)
-> +#define V4L2_CID_MPEG_VIDEO_USELTRFRAME		(V4L2_CID_MPEG_BASE + 647)
-> +
+>  #define VFIO_AP_ROOT_NAME "vfio_ap"
+>  #define VFIO_AP_DEV_NAME "matrix"
+> +#define VFIO_AP_MODULE_VERSION "1.2.0"
 >  
->  /*  MPEG-class control IDs specific to the CX2341x driver as defined by V4L2 */
->  #define V4L2_CID_MPEG_CX2341X_BASE				(V4L2_CTRL_CLASS_MPEG | 0x1000)
-> 
+>  MODULE_AUTHOR("IBM Corporation");
+>  MODULE_DESCRIPTION("VFIO AP device driver, Copyright IBM Corp. 2018");
+>  MODULE_LICENSE("GPL v2");
+> +MODULE_VERSION(VFIO_AP_MODULE_VERSION);
+>  
+>  static struct ap_driver vfio_ap_drv;
+>  
 
-Regards,
+Setting a version manually has some drawbacks:
+- tools wanting to check for capabilities need to keep track which
+  versions support which features
+- you need to remember to actually bump the version when adding a new,
+  visible feature
+(- selective downstream backports may get into a pickle, but that's
+arguably not your problem)
 
-	Hans
+Is there no way for a tool to figure out whether this is supported?
+E.g., via existence of a sysfs file, or via a known error that will
+occur. If not, it's maybe better to expose known capabilities via a
+generic interface.
+
