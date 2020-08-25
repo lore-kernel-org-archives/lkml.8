@@ -8,202 +8,227 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF81C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 339D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B723D20767
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F302071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:49:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGFoEHga"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qCCWdvKc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbgHYLqn (ORCPT
+        id S1730027AbgHYLtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 07:46:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35580 "EHLO
+        Tue, 25 Aug 2020 07:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730018AbgHYLp5 (ORCPT
+        with ESMTP id S1728836AbgHYLsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 07:45:57 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0310C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 04:45:41 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id h15so5646921wrt.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 04:45:41 -0700 (PDT)
+        Tue, 25 Aug 2020 07:48:10 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 571F4C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 04:48:09 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id t74so2573814lff.6
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 04:48:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=Z4KyrBawh5I2x6NeIqjVgo7gnUcWLY3kFNO+RloeAYg=;
-        b=IGFoEHgaIPsX9CXu6OXIGlc65XiYPBOtJgKPZAGkiYf3hxvLYZzjcEj+u1mw/CCR/Z
-         aciCwtxxalXtYu9J/3oxzEQDNVJPNFt9o+JzrtROJKU+HsxcbOxxezLQxkhVxnwLlhW7
-         j+pdNg2eEpchO0gy09C+cS28y8WO/Jh2rJ1QfvftJF4/+kJPuTTO0KKel2fQJZOlo2md
-         mt+Sxk2+sWmqN7dDdXYW4tibOUl5WLhRV1W4agi64A0sLDGzM8nMOGem+qgI7wIQpj0u
-         BD4YB1DgLwUdrz+TCRuYuHW5zREnZuhxOEvZgV0PqxaRpcAsn2JZZ5pxMwnAFVZQq8cS
-         eY4w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yFuuy2ZDucKKeJ/aOHHfJBNxs6p6AUH2V+s9q4oBJ6k=;
+        b=qCCWdvKcg6Td6nhTc9ARhsNDt/+BogFS29YuKYIevjtVfq94EQF4p/IyUmtEtdtqNB
+         BxRrG9GzA29+e4vipOnU/J+MyF0YQV8EPnu5FcNuE1OaPKJ1HN0sEaToksMgCfZOf+Db
+         6AoNstMX4syVXWySWN+v3q0mRTfbVZ9aKIIVY2RPmAst39oJWsCiR1/YxQIj5C9+Cc9J
+         LuYksNZwLCGA5Og28tW02aWh6AjWUz2BQjkrA5aUcK1KJRKJyj9iAjrmUgyIxHS1fWc4
+         I539SgSSGAZVNOSu1aGlvpBbYMnQFWaVuNwFXKb3Z8V0h1TfvmMG8ORO7Zmz2PJ6efUx
+         7SHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=Z4KyrBawh5I2x6NeIqjVgo7gnUcWLY3kFNO+RloeAYg=;
-        b=Wam4H9UqYnvNlrLH0UUk6dWKpUxWTfIZXK0zAUthOtWl7VDHYvgpU9kCBrJCXnY7Rb
-         iQhc/NbHrrkijCT3Wglcs+IuRJ/N4AgKaBZ4BaLfD5e94sum0jaBhPJEKRwmqHJlnYuy
-         JXnThSiiq1xL8SMS1fP2sW8TaPvEW97sHbpmfvyxN5aE87OsuQB7Be+PnsO+NF6hcpmM
-         Z8a3kKFilptnkWclzvnTOqVLJ3S1/0if502jPHGxVgOUIlcg+/qwRdTOtKnDv0vI/Huc
-         yNVdptL40rZpIgckkP6UXJyDAMvJAgxMCpKWF0AtrcXTI5WPDbdKCzE4V3Sw/t4fJZkK
-         uSzA==
-X-Gm-Message-State: AOAM532hA5cJMn17inttFZPvWXZk19CA5GssgWzaZVjaKVxNRVtzHumF
-        g2sYRkjhQsQQuuTBY6SVBAI=
-X-Google-Smtp-Source: ABdhPJwA1geacmCXwy6uAKsMZ9o5Ac2JW6XM1SyfJ+UddpZGIjN2tx5d+0qDGoLY6mIhYBRhe/487A==
-X-Received: by 2002:adf:e411:: with SMTP id g17mr10985118wrm.77.1598355940308;
-        Tue, 25 Aug 2020 04:45:40 -0700 (PDT)
-Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
-        by smtp.gmail.com with ESMTPSA id 126sm5729268wme.42.2020.08.25.04.45.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 04:45:39 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 08:45:32 -0300
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yFuuy2ZDucKKeJ/aOHHfJBNxs6p6AUH2V+s9q4oBJ6k=;
+        b=UUfMH4nUHHRn3cwBDSTpAn/pRUr+/10IlTjQAYEbIDP0K7Y6Sjc8YH1VLhCgrotUDH
+         DVK+BmXx8wZILRQgBr8ToxMlrArapVRtlOkE46uh1SWfYyxexrYcTzM1/UYQiO0yU2Oh
+         O5+DwEWTH3+X9o+6v/N0lzs4F4+6rAROzJ09qDPid+cKDx+9B0uTDDHckBvLUUH64b8e
+         tNZUEdWyy2LMWM+jUJhQc/0u0zkYN0sHV9+pjNomYd7kzFkhEiqhTVy+12mayy+OaLhH
+         u8G9omrN/VHi4ssIpgo+2t/pKfZ53gEc4m6DIwRlJ0FJwvqtfI7Xgl+R/6It8sZTFfZu
+         KjIA==
+X-Gm-Message-State: AOAM532Qi0+i6CznmIMlYH/sTN1ByOz+1c+t+QwbXlg2GNBw0Ov99jsd
+        PoqPIYzr7FCruAQGs8qR1qUXWSj5D4qrMKB+8+Y=
+X-Google-Smtp-Source: ABdhPJx+Ob/DxLLUN7sb7xIDlh2g8C85fI0xJOfJUmPsQFkuBnviB5TiFpyhXvjtw/qfR3Ny3ENZ+t3Ab+yIwpKmdPM=
+X-Received: by 2002:ac2:5e75:: with SMTP id a21mr148102lfr.206.1598356086190;
+ Tue, 25 Aug 2020 04:48:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200819205336.fce24lioz34vbcd2@smtp.gmail.com> <20200825030404.htitgoy27nyhlezz@smtp.gmail.com>
+In-Reply-To: <20200825030404.htitgoy27nyhlezz@smtp.gmail.com>
 From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
+Date:   Tue, 25 Aug 2020 08:47:55 -0300
+Message-ID: <CAJeY4oEtxU1HyWW44J4TGwJpcVHK+gUAdsgpjJef+FKGUsrGcg@mail.gmail.com>
+Subject: Re: [PATCH] drm/vkms: add alpha-premultiplied color blending
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     Haneen Mohammed <hamohammed.sa@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>,
         David Airlie <airlied@linux.ie>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Cc:     twoerner@gmail.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
-Subject: [PATCH v2] drm/vkms: add alpha-premultiplied color blending
-Message-ID: <20200825114532.abzdooluny2ekzvm@smtp.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-usp@googlegroups.com,
+        Trevor Woerner <twoerner@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VKMS blend function was ignoring the alpha channel and just
-overwriting vaddr_src with vaddr_dst. This XRGB approach triggers a
-warning when running the kms_cursor_crc/cursor-alpha-transparent test
-case. In IGT, cairo_format_argb32 uses premultiplied alpha (according to
-documentation). Also current DRM assumption is that alpha is
-premultiplied. Therefore, this patch considers premultiplied alpha
-blending eq to compose vaddr_src with vaddr_dst.
+Hi Rodrigo,
 
-This change removes the following cursor-alpha-transparent warning:
-"Suspicious CRC: All values are 0."
+Thanks for the review!
+I just sent a v2 applying your suggestions.
 
---
+Best Regards,
 
-v2:
-- static for local functions
-- const for the read-only variable argb_src
-- replaces variable names
-- drops unnecessary comment
+Melissa Wen
 
---
+Melissa Wen
 
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
 
-Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
----
- drivers/gpu/drm/vkms/vkms_composer.c | 55 ++++++++++++++++++++--------
- 1 file changed, 39 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index 4f3b07a32b60..eaecc5a6c5db 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -32,8 +32,6 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
- 			src_offset = composer->offset
- 				     + (i * composer->pitch)
- 				     + (j * composer->cpp);
--			/* XRGB format ignores Alpha channel */
--			bitmap_clear(vaddr_out + src_offset, 24, 8);
- 			crc = crc32_le(crc, vaddr_out + src_offset,
- 				       sizeof(u32));
- 		}
-@@ -42,27 +40,51 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
- 	return crc;
- }
- 
-+static u8 blend_channel(u8 src, u8 dst, u8 alpha)
-+{
-+	u32 pre_blend;
-+	u8 new_color;
-+
-+	pre_blend = (src * 255 + dst * (255 - alpha));
-+
-+	/* Faster div by 255 */
-+	new_color = ((pre_blend + ((pre_blend + 257) >> 8)) >> 8);
-+
-+	return new_color;
-+}
-+
-+static void alpha_blending(const u8 *argb_src, u8 *argb_dst)
-+{
-+	u8 alpha;
-+
-+	alpha = argb_src[3];
-+	argb_dst[0] = blend_channel(argb_src[0], argb_dst[0], alpha);
-+	argb_dst[1] = blend_channel(argb_src[1], argb_dst[1], alpha);
-+	argb_dst[2] = blend_channel(argb_src[2], argb_dst[2], alpha);
-+	/* Opaque primary */
-+	argb_dst[3] = 0xFF;
-+}
-+
- /**
-  * blend - blend value at vaddr_src with value at vaddr_dst
-  * @vaddr_dst: destination address
-  * @vaddr_src: source address
-- * @dest_composer: destination framebuffer's metadata
-+ * @dst_composer: destination framebuffer's metadata
-  * @src_composer: source framebuffer's metadata
-  *
-- * Blend value at vaddr_src with value at vaddr_dst.
-- * Currently, this function write value of vaddr_src on value
-- * at vaddr_dst using buffer's metadata to locate the new values
-- * from vaddr_src and their destination at vaddr_dst.
-- *
-- * TODO: Use the alpha value to blend vaddr_src with vaddr_dst
-- *	 instead of overwriting it.
-+ * Blend the vaddr_src value with the vaddr_dst value using the pre-multiplied
-+ * alpha blending equation, since DRM currently assumes that the pixel color
-+ * values have already been pre-multiplied with the alpha channel values. See
-+ * more drm_plane_create_blend_mode_property(). This function uses buffer's
-+ * metadata to locate the new composite values at vaddr_dst.
-  */
- static void blend(void *vaddr_dst, void *vaddr_src,
--		  struct vkms_composer *dest_composer,
-+		  struct vkms_composer *dst_composer,
- 		  struct vkms_composer *src_composer)
- {
- 	int i, j, j_dst, i_dst;
- 	int offset_src, offset_dst;
-+	u8 *pixel_dst, *pixel_src;
- 
- 	int x_src = src_composer->src.x1 >> 16;
- 	int y_src = src_composer->src.y1 >> 16;
-@@ -77,15 +99,16 @@ static void blend(void *vaddr_dst, void *vaddr_src,
- 
- 	for (i = y_src, i_dst = y_dst; i < y_limit; ++i) {
- 		for (j = x_src, j_dst = x_dst; j < x_limit; ++j) {
--			offset_dst = dest_composer->offset
--				     + (i_dst * dest_composer->pitch)
--				     + (j_dst++ * dest_composer->cpp);
-+			offset_dst = dst_composer->offset
-+				     + (i_dst * dst_composer->pitch)
-+				     + (j_dst++ * dst_composer->cpp);
- 			offset_src = src_composer->offset
- 				     + (i * src_composer->pitch)
- 				     + (j * src_composer->cpp);
- 
--			memcpy(vaddr_dst + offset_dst,
--			       vaddr_src + offset_src, sizeof(u32));
-+			pixel_src = (u8 *)(vaddr_src + offset_src);
-+			pixel_dst = (u8 *)(vaddr_dst + offset_dst);
-+			alpha_blending(pixel_src, pixel_dst);
- 		}
- 		i_dst++;
- 	}
--- 
-2.28.0
-
+On Tue, Aug 25, 2020 at 12:04 AM Rodrigo Siqueira
+<rodrigosiqueiramelo@gmail.com> wrote:
+>
+> Hi Melissa,
+>
+> First of all, thanks a lot for your patch!
+>
+> Follows my inline comments.
+>
+> On 08/19, Melissa Wen wrote:
+> > The current VKMS blend function ignores alpha channel and just overwrites
+> > vaddr_src with vaddr_dst. This XRGB approach triggers a warning when
+> > running the kms_cursor_crc/cursor-alpha-transparent test case. In IGT
+> > tests, cairo_format_argb32 uses premultiplied alpha (according to
+> > documentation), so this patch considers premultiplied alpha colors to
+> > compose vaddr_src with vaddr_dst.
+> >
+> > This change removes the following cursor-alpha-transparent warning:
+> > Suspicious CRC: All values are 0.
+> >
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+> >
+> > Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+> > ---
+> >  drivers/gpu/drm/vkms/vkms_composer.c | 43 +++++++++++++++++++++-------
+> >  1 file changed, 33 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> > index 4f3b07a32b60..6aac962d3e2e 100644
+> > --- a/drivers/gpu/drm/vkms/vkms_composer.c
+> > +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> > @@ -32,8 +32,6 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
+> >                       src_offset = composer->offset
+> >                                    + (i * composer->pitch)
+> >                                    + (j * composer->cpp);
+> > -                     /* XRGB format ignores Alpha channel */
+> > -                     bitmap_clear(vaddr_out + src_offset, 24, 8);
+> >                       crc = crc32_le(crc, vaddr_out + src_offset,
+> >                                      sizeof(u32));
+> >               }
+> > @@ -42,6 +40,32 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
+> >       return crc;
+> >  }
+> >
+> > +u8 blend_channel(u8 c_src, u8 c_dst, u8 a_src)
+>
+> Use static here.
+>
+> Also, replace c_src to src, c_dst to dst, and a_src to alpha.
+>
+> > +{
+> > +     u32 pre_blend;
+> > +     u8 new_color;
+> > +
+> > +     /* Premultiplied alpha blending - IGT + cairo context */
+>
+> You can drop the part that says "IGT + cairo context", this explanation
+> better suit the commit message.
+>
+> > +     pre_blend = (c_src * 255 + c_dst * (255 - a_src));
+> > +
+> > +     /* Faster div by 255 */
+> > +     new_color = ((pre_blend + ((pre_blend + 257) >> 8)) >> 8);
+> > +
+> > +     return new_color;
+> > +}
+> > +
+> > +void alpha_blending(u8 *argb_src, u8 *argb_dst)
+>
+> Use static.
+>
+> Looks like that argb_src is a read-only variable, in this sense add
+> const.
+>
+> > +{
+> > +     u8 a_src;
+> > +
+> > +     a_src = argb_src[3];
+>
+> change a_src to alpha.
+>
+> > +     argb_dst[0] = blend_channel(argb_src[0], argb_dst[0], a_src);
+> > +     argb_dst[1] = blend_channel(argb_src[1], argb_dst[1], a_src);
+> > +     argb_dst[2] = blend_channel(argb_src[2], argb_dst[2], a_src);
+> > +     /* Opaque primary */
+> > +     argb_dst[3] = 0xFF;
+> > +}
+> > +
+> >  /**
+> >   * blend - blend value at vaddr_src with value at vaddr_dst
+> >   * @vaddr_dst: destination address
+> > @@ -50,12 +74,9 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_composer *composer)
+> >   * @src_composer: source framebuffer's metadata
+> >   *
+> >   * Blend value at vaddr_src with value at vaddr_dst.
+> > - * Currently, this function write value of vaddr_src on value
+> > - * at vaddr_dst using buffer's metadata to locate the new values
+> > - * from vaddr_src and their destination at vaddr_dst.
+> > - *
+> > - * TODO: Use the alpha value to blend vaddr_src with vaddr_dst
+> > - *    instead of overwriting it.
+> > + * Currently, this function considers premultiplied alpha for blending, as used
+> > + * by Cairo. It uses buffer's metadata to locate the new composite values at
+> > + * vaddr_dst.
+> >   */
+> >  static void blend(void *vaddr_dst, void *vaddr_src,
+> >                 struct vkms_composer *dest_composer,
+> > @@ -63,6 +84,7 @@ static void blend(void *vaddr_dst, void *vaddr_src,
+> >  {
+> >       int i, j, j_dst, i_dst;
+> >       int offset_src, offset_dst;
+> > +     u8 *p_dst, *p_src;
+>
+> I suppose that p stands for "pixel", right? In this case how about use
+> pixel?
+>
+> Best Regards
+> Rodrigo Siqueira
+>
+> >
+> >       int x_src = src_composer->src.x1 >> 16;
+> >       int y_src = src_composer->src.y1 >> 16;
+> > @@ -84,8 +106,9 @@ static void blend(void *vaddr_dst, void *vaddr_src,
+> >                                    + (i * src_composer->pitch)
+> >                                    + (j * src_composer->cpp);
+> >
+> > -                     memcpy(vaddr_dst + offset_dst,
+> > -                            vaddr_src + offset_src, sizeof(u32));
+> > +                     p_src = (u8 *)(vaddr_src + offset_src);
+> > +                     p_dst = (u8 *)(vaddr_dst + offset_dst);
+> > +                     alpha_blending(p_src, p_dst);
+> >               }
+> >               i_dst++;
+> >       }
+> > --
+> > 2.28.0
+> >
+>
+> --
+> Rodrigo Siqueira
+> https://siqueira.tech
