@@ -2,38 +2,39 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D5EC433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E859C433F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB1C32065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3FF206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:31:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbgHYAaw (ORCPT
+        id S1728545AbgHYAa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 20:30:52 -0400
-Received: from mga01.intel.com ([192.55.52.88]:28750 "EHLO mga01.intel.com"
+        Mon, 24 Aug 2020 20:30:59 -0400
+Received: from mga01.intel.com ([192.55.52.88]:28753 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728259AbgHYAad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 20:30:33 -0400
-IronPort-SDR: gkdM9hOxviYv5S2PRvDtZvzjDIIFKQqXtvni1clfxx+kf6AxaRK1qESdn+94Cle5RSHVQ8pjGJ
- x4mJ/pwiUJrw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="174053256"
+        id S1728238AbgHYAai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 20:30:38 -0400
+IronPort-SDR: i72NIM+bu4h6W69P2xI2mCKRUfca3lOH2fGeochdyo/eDPa7dxLxEEwBJ6QJy87YQ6zuzaflLo
+ hrcoJI0GQKuA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="174053264"
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="174053256"
+   d="scan'208";a="174053264"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:30:33 -0700
-IronPort-SDR: 67oZwxQgYdJmA+KUqL3mx/insEcOmQz8+Fw2zgB45hu4tE5sq6WVUE5kNs/tmLEdpDBb/61GGS
- r3onGRfXEP3g==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:30:35 -0700
+IronPort-SDR: V4+8RAz4lr57YJf6ppaQdnCN2Y+4ePc8I0Bx49RHfkv6ZLb0zEP9kczEe8WNzqeCpfswk8DtAh
+ lrHmlnLDKi3g==
 X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="443429289"
+   d="scan'208";a="443429307"
 Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:30:32 -0700
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 17:30:34 -0700
 From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
 To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -61,10 +62,12 @@ To:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
         Dave Martin <Dave.Martin@arm.com>,
         Weijiang Yang <weijiang.yang@intel.com>
 Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: [PATCH v11 0/9] Control-flow Enforcement: Indirect Branch Tracking, PTRACE
-Date:   Mon, 24 Aug 2020 17:26:35 -0700
-Message-Id: <20200825002645.3658-1-yu-cheng.yu@intel.com>
+Subject: [PATCH v11 3/9] x86/cet/ibt: Handle signals for Indirect Branch Tracking
+Date:   Mon, 24 Aug 2020 17:26:38 -0700
+Message-Id: <20200825002645.3658-4-yu-cheng.yu@intel.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200825002645.3658-1-yu-cheng.yu@intel.com>
+References: <20200825002645.3658-1-yu-cheng.yu@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,60 +75,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Control-flow Enforcement (CET) is a new Intel processor feature that blocks
-return/jump-oriented programming attacks.  Details are in "Intel 64 and
-IA-32 Architectures Software Developer's Manual" [1].
+An indirect CALL/JMP moves the indirect branch tracking (IBT) state machine
+to WAIT_ENDBR status until the instruction reaches an ENDBR opcode.  If the
+CALL/JMP does not reach an ENDBR opcode, the processor raises a control-
+protection fault.  WAIT_ENDBR status can be read from MSR_IA32_U_CET.
 
-This is the second part of CET and enables Indirect Branch Tracking (IBT).
-It is built on top of the shadow stack series.
+WAIT_ENDBR is cleared for signal handling, and restored for sigreturn.
 
-Changes from v9:
+IBT state machine is described in Intel SDM Vol. 1, Sec. 18.3.
 
-- Remove the legacy bitmap arch_prctl() as it is not used by GLIBC anymore.
-  Should it be needed in the future, I will re-post the patch separately.
+Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+---
+v9:
+- Fix missing WAIT_ENDBR in signal handling.
 
-[1] Intel 64 and IA-32 Architectures Software Developer's Manual:
+ arch/x86/kernel/cet.c        | 27 +++++++++++++++++++++++++--
+ arch/x86/kernel/fpu/signal.c |  8 +++++---
+ 2 files changed, 30 insertions(+), 5 deletions(-)
 
-    https://software.intel.com/en-us/download/intel-64-and-ia-32-
-    architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
-
-[2] Previous IBT patches v9:
-
-    https://lkml.kernel.org/r/20200205182308.4028-1-yu-cheng.yu@intel.com/
-
-    There have been no major changes since v9, and there is no IBT patches
-    v10.
-
-H.J. Lu (4):
-  x86/cet/ibt: Update arch_prctl functions for Indirect Branch Tracking
-  x86/vdso/32: Add ENDBR32 to __kernel_vsyscall entry point
-  x86/vdso: Insert endbr32/endbr64 to vDSO
-  x86: Disallow vsyscall emulation when CET is enabled
-
-Yu-cheng Yu (5):
-  x86/cet/ibt: Add Kconfig option for user-mode Indirect Branch Tracking
-  x86/cet/ibt: User-mode Indirect Branch Tracking support
-  x86/cet/ibt: Handle signals for Indirect Branch Tracking
-  x86/cet/ibt: ELF header parsing for Indirect Branch Tracking
-  x86/cet: Add PTRACE interface for CET
-
- arch/x86/Kconfig                              | 26 +++++++-
- arch/x86/entry/vdso/Makefile                  |  4 ++
- arch/x86/entry/vdso/vdso32/system_call.S      |  3 +
- arch/x86/include/asm/cet.h                    |  3 +
- arch/x86/include/asm/disabled-features.h      |  8 ++-
- arch/x86/include/asm/fpu/regset.h             |  7 ++-
- arch/x86/kernel/cet.c                         | 60 ++++++++++++++++++-
- arch/x86/kernel/cet_prctl.c                   |  8 ++-
- arch/x86/kernel/cpu/common.c                  | 17 ++++++
- arch/x86/kernel/fpu/regset.c                  | 44 ++++++++++++++
- arch/x86/kernel/fpu/signal.c                  |  8 ++-
- arch/x86/kernel/process_64.c                  |  8 +++
- arch/x86/kernel/ptrace.c                      | 16 +++++
- include/uapi/linux/elf.h                      |  1 +
- .../arch/x86/include/asm/disabled-features.h  |  8 ++-
- 15 files changed, 208 insertions(+), 13 deletions(-)
-
+diff --git a/arch/x86/kernel/cet.c b/arch/x86/kernel/cet.c
+index b1c122a5aef4..f783229460b6 100644
+--- a/arch/x86/kernel/cet.c
++++ b/arch/x86/kernel/cet.c
+@@ -309,6 +309,13 @@ void cet_restore_signal(struct sc_ext *sc_ext)
+ 		msr_val |= CET_SHSTK_EN;
+ 	}
+ 
++	if (cet->ibt_enabled) {
++		msr_val |= (CET_ENDBR_EN | CET_NO_TRACK_EN);
++
++		if (sc_ext->wait_endbr)
++			msr_val |= CET_WAIT_ENDBR;
++	}
++
+ 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+ 		cet_user_state->user_cet = msr_val;
+ 	else
+@@ -349,9 +356,25 @@ int cet_setup_signal(bool ia32, unsigned long rstor_addr, struct sc_ext *sc_ext)
+ 		sc_ext->ssp = new_ssp;
+ 	}
+ 
+-	if (ssp) {
++	if (ssp || cet->ibt_enabled) {
++
+ 		start_update_msrs();
+-		wrmsrl(MSR_IA32_PL3_SSP, ssp);
++
++		if (ssp)
++			wrmsrl(MSR_IA32_PL3_SSP, ssp);
++
++		if (cet->ibt_enabled) {
++			u64 r;
++
++			rdmsrl(MSR_IA32_U_CET, r);
++
++			if (r & CET_WAIT_ENDBR) {
++				sc_ext->wait_endbr = 1;
++				r &= ~CET_WAIT_ENDBR;
++				wrmsrl(MSR_IA32_U_CET, r);
++			}
++		}
++
+ 		end_update_msrs();
+ 	}
+ 
+diff --git a/arch/x86/kernel/fpu/signal.c b/arch/x86/kernel/fpu/signal.c
+index d02ea8c11128..a4d66fa69c1c 100644
+--- a/arch/x86/kernel/fpu/signal.c
++++ b/arch/x86/kernel/fpu/signal.c
+@@ -57,7 +57,8 @@ int save_cet_to_sigframe(int ia32, void __user *fp, unsigned long restorer)
+ {
+ 	int err = 0;
+ 
+-	if (!current->thread.cet.shstk_size)
++	if (!current->thread.cet.shstk_size &&
++	    !current->thread.cet.ibt_enabled)
+ 		return 0;
+ 
+ 	if (fp) {
+@@ -89,7 +90,8 @@ static int get_cet_from_sigframe(int ia32, void __user *fp, struct sc_ext *ext)
+ 
+ 	memset(ext, 0, sizeof(*ext));
+ 
+-	if (!current->thread.cet.shstk_size)
++	if (!current->thread.cet.shstk_size &&
++	    !current->thread.cet.ibt_enabled)
+ 		return 0;
+ 
+ 	if (fp) {
+@@ -577,7 +579,7 @@ static unsigned long fpu__alloc_sigcontext_ext(unsigned long sp)
+ 	 * sigcontext_ext is at: fpu + fpu_user_xstate_size +
+ 	 * FP_XSTATE_MAGIC2_SIZE, then aligned to 8.
+ 	 */
+-	if (cet->shstk_size)
++	if (cet->shstk_size || cet->ibt_enabled)
+ 		sp -= (sizeof(struct sc_ext) + 8);
+ 
+ 	return sp;
 -- 
 2.21.0
 
