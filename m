@@ -2,107 +2,96 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC83C20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D95C20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:17:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AXHm/dJ0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tE2luUpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbgHYRQZ (ORCPT
+        id S1726599AbgHYRQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:16:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHYRQT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:16:19 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57CCC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:16:17 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id i10so14711272ljn.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:16:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mo0Muk7fdL9/zKvFIFzgemUwwyHBnlsardInfQrXhhI=;
-        b=AXHm/dJ0rHd2TZInwSAMWT4xkULe3KuDv7PEy7Vmvg/70C93nEQmnBLnPpdCBjEU/a
-         LJpWzWoIZgMXXtaBkJKYQjGsN166f2E2VBNOpC5bVvUamarlECX/2LPLkbbcBPTwTvvE
-         qT1suASowH5CMkTUCLy+iBbc5oXs37/DBfN9KLkV3fR13Qj17TxGnzyjuaA1VYZAztPs
-         9JUjeZmcOpEbVMQO8+ALhLoqRhIqBdWw9dOvSSUX52BZ+DfxwRKcXxnwcQu/a2yx4OpK
-         jP0UXr2BNWAJsVwDVO2WsFf5U+hO4aKj+5xGQc+MsIS5bvDUhJZ88ujLF0S0/azfHkTb
-         Cjsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mo0Muk7fdL9/zKvFIFzgemUwwyHBnlsardInfQrXhhI=;
-        b=seDupLxQyjufGlM24NzkW4DXV8BpTN40bGbzOttrcXwMYPd8ZWbOafIKab/+ijtC3O
-         TvxU7F9194iab9skzPOlHFQGyEg3CoLLKDdXdhJ78iZhK7AfHb5bSWR5s6yekdNuHAZm
-         5fflnKkbQ9MZ4UCbNk1mNc7abjCZPEW0iLXFxxW1au9SgT2BbdAfMz4JsGnNLPv2bOZF
-         fXm2tUblCfekeduCQg4PVylh4QJM548Ezo8PITUVTNyL3xb6buRuIwTVpcjWy5Cp1rph
-         8lc+2t+Xadyy2tkEg7tMNgKhpSZRUzVqgjXTeLb/RDxMfFzZ/UF9iuL9Syrqy0upe4As
-         rpTA==
-X-Gm-Message-State: AOAM530M2JjnbtJAYRC1Kw0eJowIaj89KQ4KiY+GrthpCkiZAJUaqtRI
-        PKYQSENN59JEh7NUCglBmRNH2ZDfzj+0wZ/QtBS3po/YyIQ=
-X-Google-Smtp-Source: ABdhPJyl4eVEh3fx1XakUFyburv/u13PcRmesrkEZ5DyEj3uIY2alEfePNPmrcFzUWwlz8YZ9r6wJ12wLIIebJZhfuw=
-X-Received: by 2002:a2e:8ed4:: with SMTP id e20mr5672379ljl.403.1598375776209;
- Tue, 25 Aug 2020 10:16:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200824091013.20640-1-matthias.schiffer@ew.tq-group.com>
- <20200824091013.20640-2-matthias.schiffer@ew.tq-group.com>
- <CAOMZO5DSX1pf3xxo=CGvgPmHcjMJoWFx74grVJBckSmjtF-RGg@mail.gmail.com>
- <4b7d57738ce8e2130c4740a0f3f973fbaf60a7cf.camel@ew.tq-group.com>
- <CAOMZO5DYrkEb_G+EYAGrc+qjSsbjRdeBUU3tJUfkU6tjgNm_7g@mail.gmail.com> <7a59492e46f34d213b83f7182c7db73954c5a9c7.camel@ew.tq-group.com>
-In-Reply-To: <7a59492e46f34d213b83f7182c7db73954c5a9c7.camel@ew.tq-group.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 25 Aug 2020 14:16:05 -0300
-Message-ID: <CAOMZO5CP=wtJ5ZScyb0NrRMW0FR0FAGVKRFq9JpFcAoZppn_bA@mail.gmail.com>
-Subject: Re: (EXT) Re: (EXT) Re: [PATCH 2/2] ARM: dts: imx6qdl: tqma6: minor fixes
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Aug 2020 13:16:58 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:22536 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726225AbgHYRQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 13:16:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598375814; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=KLK4RTTuf3ksuy/5zrVG85yqJucbVICT8rtcZnGayM0=; b=tE2luUpLcW81GEoNjkugNl+8CKkXqVLDAtFTT8uxskHrnsNtpvJ8cBdh2MUFJi79ZTZX4bX9
+ D54FRrZOwOuNt+1IKLwEIWNXYPDtVTk2vqm27H+m9J8H8RtPPHHuyZhdmP8K8ufOf+5/oKwt
+ aLqCTW9UxfSN2uyfPNiNPvtlNAs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f454785f558dbf280451a79 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Aug 2020 17:16:53
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EEA04C43387; Tue, 25 Aug 2020 17:16:52 +0000 (UTC)
+Received: from hyd-lnxbld210.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: srivasam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C939FC433C6;
+        Tue, 25 Aug 2020 17:16:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C939FC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=srivasam@codeaurora.org
+From:   Srinivasa Rao <srivasam@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        srinivas.kandagatla@linaro.org, rohitkr@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Srinivasa Rao <srivasam@codeaurora.org>
+Subject: [PATCH 0/5]: Qualcomm's lpass-hdmi ASoC driver to support audio over dp port
+Date:   Tue, 25 Aug 2020 22:46:23 +0530
+Message-Id: <1598375788-1882-1-git-send-email-srivasam@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 11:40 AM Matthias Schiffer
-<matthias.schiffer@ew.tq-group.com> wrote:
+These patches are to support audio over DP port on Qualcomm's SC7180 LPASS Asoc.
+It includes machine driver, cpu driver, platform driver updates for HDMI path support, 
+device tree documention, lpass variant structure optimization and configuration changes.
+These patches depends on the DP patch series 
+https://patchwork.kernel.org/project/dri-devel/list/?series=332029
 
-> Makes sense. Does the following logic sound correct?
->
-> - If num-cs is set, use that (and add it to the docs)
+vsujithk (5):
+  dt-bindings: Add sc7180-lpass HDMI header define
+  dt-bindings: Add dts entry for lpass-hdmi dp audio
+  ASoC: qcom: add support for lpass hdmi driver
+  ASoC: qcom: Add support for audio over DP
+  Optimise lpass variant structure
 
-I would not add num-cs to the docs. As far as I can see there is no
-imx dts that uses num-cs currently.
+ .../devicetree/bindings/sound/qcom,lpass-cpu.yaml  |  42 ++
+ include/dt-bindings/sound/sc7180-lpass.h           |   1 +
+ sound/soc/qcom/Kconfig                             |   5 +
+ sound/soc/qcom/Makefile                            |   2 +
+ sound/soc/qcom/lpass-apq8016.c                     |  25 +-
+ sound/soc/qcom/lpass-cpu.c                         |  92 ++-
+ sound/soc/qcom/lpass-hdmi.c                        | 685 +++++++++++++++++++++
+ sound/soc/qcom/lpass-hdmi.h                        | 129 ++++
+ sound/soc/qcom/lpass-ipq806x.c                     |  25 +-
+ sound/soc/qcom/lpass-lpaif-reg.h                   |  51 +-
+ sound/soc/qcom/lpass-platform.c                    | 287 +++++++--
+ sound/soc/qcom/lpass-sc7180.c                      | 147 ++++-
+ sound/soc/qcom/lpass.h                             | 123 +++-
+ 13 files changed, 1467 insertions(+), 147 deletions(-)
+ create mode 100644 sound/soc/qcom/lpass-hdmi.c
+ create mode 100644 sound/soc/qcom/lpass-hdmi.h
 
-> - If num-cs is unset, use the number of cs-gpios
-> - If num-cs is unset and no cs-gpios are defined, use a driver-provided
-> default
->
->
-> I'm not sure if 3 is a particularly useful default either, but it seems
-> it was chosen to accommodate boards that previously set this via
-> platform data. All SoCs I've checked (i.MX6Q/DL, i.MX6UL, i.MX7) have 4
-> internal CS pins per ECSPI instance, so maybe the driver should use
-> that as its default instead?
+-- 
+2.7.4
 
-I think it is time to get rid of i.MX board files. I will try to work
-on this when I have a chance.
-
-bout using 4 as default chip select number, please also check some
-older SoCs like imx25, imx35, imx51, imx53, etc
