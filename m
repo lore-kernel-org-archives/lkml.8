@@ -2,101 +2,80 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EBAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7494C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D29F2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:11:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598357515;
-	bh=lLcZy5Wo6jWvC7rPiDhmximohADFk1jbAXM/KoH5hVQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ew+4xvpdWsRL6z645ciH1l2WLx5YbEQYOKuyAIeHwo27lcVRWn1p3g/xp1h7lYubx
-	 +wFtYnpTsaJJUEKmTTteMJ7V4WUEpFsXdK21O9GkjEMMalcIYgzILJv9L+U3eke9ll
-	 Nik8XWr0ubZjn/6FunPHPZfV8RGR0DSN/zUr+gr0=
+	by mail.kernel.org (Postfix) with ESMTP id 8B29E20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:12:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbgHYMLy (ORCPT
+        id S1730210AbgHYMMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:11:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730181AbgHYMLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:11:39 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B355920706;
-        Tue, 25 Aug 2020 12:11:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598357498;
-        bh=lLcZy5Wo6jWvC7rPiDhmximohADFk1jbAXM/KoH5hVQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NtoEFfPQ4QExLDKzsR29XM4M/Hv+Kf1cudKSei+JdGaz0fTh1snxnWmUmgHiCwQJi
-         WPgVVcN4Pu2OE2jRcg8B69zc0BULmNtSPu9Z/m7CPUYkS5AZ7faPAbV5PL4t7IyHXy
-         6yW0DhQ13Ay17zkd3EdsQTxsjBq5yQ242NBffaf4=
-Date:   Tue, 25 Aug 2020 13:11:02 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Yu Kuai <yukuai3@huawei.com>
-Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, shengjiu.wang@gmail.com, lgirdwood@gmail.com,
-        perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
-        xobs@kosagi.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        yukuai@huawei.com, yi.zhang@huawei.com
-Subject: Re: [PATCH 1/2] ASoC: fsl: imx-es8328: add missing kfree() call in
- imx_es8328_probe()
-Message-ID: <20200825121102.GF5379@sirena.org.uk>
-References: <20200825120531.1479304-1-yukuai3@huawei.com>
- <20200825120531.1479304-2-yukuai3@huawei.com>
+        Tue, 25 Aug 2020 08:12:14 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10263 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730181AbgHYML4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 08:11:56 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 73DCBBFAFAAE71C95194;
+        Tue, 25 Aug 2020 20:11:53 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Tue, 25 Aug 2020
+ 20:11:45 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] net: Remove duplicated midx check against 0
+Date:   Tue, 25 Aug 2020 08:10:37 -0400
+Message-ID: <20200825121037.10061-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="twz1s1Hj1O0rHoT0"
-Content-Disposition: inline
-In-Reply-To: <20200825120531.1479304-2-yukuai3@huawei.com>
-X-Cookie: Don't get to bragging.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Check midx against 0 is always equal to check midx against sk_bound_dev_if
+when sk_bound_dev_if is known not equal to 0 in these case.
 
---twz1s1Hj1O0rHoT0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ net/ipv4/ip_sockglue.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-On Tue, Aug 25, 2020 at 08:05:30PM +0800, Yu Kuai wrote:
-> If memory allocation for 'data' or 'comp' succeed, imx_es8328_probe()
-> doesn't have corresponding kfree() in exception handling. Thus add
-> kfree() for this function implementation.
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index d2c223554ff7..ec6036713e2c 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -1124,8 +1124,7 @@ static int do_ip_setsockopt(struct sock *sk, int level, int optname,
+ 		dev_put(dev);
+ 
+ 		err = -EINVAL;
+-		if (sk->sk_bound_dev_if &&
+-		    (!midx || midx != sk->sk_bound_dev_if))
++		if (sk->sk_bound_dev_if && midx != sk->sk_bound_dev_if)
+ 			break;
+ 
+ 		inet->uc_index = ifindex;
+@@ -1189,7 +1188,7 @@ static int do_ip_setsockopt(struct sock *sk, int level, int optname,
+ 		err = -EINVAL;
+ 		if (sk->sk_bound_dev_if &&
+ 		    mreq.imr_ifindex != sk->sk_bound_dev_if &&
+-		    (!midx || midx != sk->sk_bound_dev_if))
++		    midx != sk->sk_bound_dev_if)
+ 			break;
+ 
+ 		inet->mc_index = mreq.imr_ifindex;
+-- 
+2.19.1
 
-> @@ -151,7 +151,7 @@ static int imx_es8328_probe(struct platform_device *pdev)
->  	comp = devm_kzalloc(dev, 3 * sizeof(*comp), GFP_KERNEL);
->  	if (!comp) {
-
-The allocation is being done using devm_ which means no explicit kfree()
-is needed, the allocation will be automatically unwound when the device
-is unbound.
-
---twz1s1Hj1O0rHoT0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9E/9YACgkQJNaLcl1U
-h9By5wf9GsLAxwbWBAbrnKCxyu9PM9ucYMMERlrYpCaWXat0bBzG/zblA6fGcCVd
-UtSA/ON7K+KTqqXX7wYEK1HebOUSfemHcJDZ9OvUfpFkswXpZqkhAmcm4n4wZ0Jo
-ARFpyf9ifjltEU43SfqNs9iwVW6Dj/RXghoQ6/iTh4vzXokipE6IuXiPNnxsJ09g
-SjeN6JJJe0SLYLhPIcrPb7tSIv5ZB5no846dUSUdgpxKN7g0G3nGFeQjYjh63P1u
-ghEhEfq9nUvhjfMZmajC1CtiUjrgf+Y+3eXDByE0p/goE9PH/nQbgTYOsHoSEExC
-BviLGNDWPywLcqIgIv9fsj+ewCVfVg==
-=kko3
------END PGP SIGNATURE-----
-
---twz1s1Hj1O0rHoT0--
