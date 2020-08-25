@@ -2,198 +2,90 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF35FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCF2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 970C92076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210FD2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:21:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="dUzGSIj7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgHYQVZ (ORCPT
+        id S1727021AbgHYQVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:21:25 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60460 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgHYQVF (ORCPT
+        Tue, 25 Aug 2020 12:21:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726514AbgHYQVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:21:05 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 2409C29244F
-Received: by earth.universe (Postfix, from userid 1000)
-        id A3C303C0C82; Tue, 25 Aug 2020 18:21:01 +0200 (CEST)
-Date:   Tue, 25 Aug 2020 18:21:01 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Elliot Berman <eberman@codeaurora.org>
-Cc:     Andy Yan <andy.yan@rock-chips.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Trilok Soni <tsoni@codeaurora.org>,
-        Prasad Sodagudi <psodagud@codeaurora.org>
-Subject: Re: [RESEND PATCH v1 1/4] dt-bindings: power: reset: Convert
- reboot-mode to YAML
-Message-ID: <20200825162101.27ivwlxbby7q7hy6@earth.universe>
-References: <1597776856-12014-1-git-send-email-eberman@codeaurora.org>
- <1597776856-12014-2-git-send-email-eberman@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="svvw56udockwuh7v"
-Content-Disposition: inline
-In-Reply-To: <1597776856-12014-2-git-send-email-eberman@codeaurora.org>
+        Tue, 25 Aug 2020 12:21:11 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EC31C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:21:10 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id d19so7156374pgl.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:21:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=L2oKOEupV27qICvhHWyDiF7Etr6coIqCr/1x6dmqhP8=;
+        b=dUzGSIj7hwNgocfGDBX79TyuBWGD/fOm2Tg3Linokc59X0xu1MFMlmTbNgfGTy728H
+         BdFE9PK3BVmeSzVuTlgnN53gSvnKvh9fS3mj7jGA2iZOsU1hhN4pIXHGs/JHtEk9cTmE
+         FlEgt5s48sUOt/2X/olt0GRPSUg6ygVgvAiTmbiOEBpSP/a8sEbBASJ7otw07bfGV7gS
+         MVA4xqoviXvU7lGMR6R587gy4jgLUBV9M8QV3Lj14ZGlZURKsqJtP0qdU88/Q4teVjUi
+         Ie6nU3Zeq3C9ErwtB8wgQ5MxzDJQrcXiDyYuRHX76mNcCg+b2+icUn3keM2LOhjNxtQx
+         yLSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=L2oKOEupV27qICvhHWyDiF7Etr6coIqCr/1x6dmqhP8=;
+        b=rEePzNbtQaU6QG9s5u9qpTlFduBflUlYIR7cOK93HshlvQnY6upik3SPckC+3ToWd7
+         2XrQRe04ljYxLb69MbO3BkaZJmj6Tk3edijBThzSjco4S660DhDLfGZQWEkoMjMR0IFG
+         p7zr/mDwc73qe9uGrezVBrwg7bmFI778gUxlGug2h2M4rv165e7s/ldB0JFKnfcSjqaW
+         w+K6cHDc5ykED3wMwRZ66HaF7Exb5lQPScQR2nB2uBf3tGeVmiKTkLT7IyTewXrJJ0ME
+         nuzG/E2Aw+o8UrRFV5lzFsoTsvAeAJcVTzKvLFJV8c7hBBBoepJFbC2TiCZ3TKsnZvlG
+         a1fg==
+X-Gm-Message-State: AOAM531op/SQTirXQcWapRRaboO+eSF7eJgKydb20v899FyhqrVwcFST
+        IIlLGZm82euQUTFeLVW71dlyiA==
+X-Google-Smtp-Source: ABdhPJwebpb1N/6mwKYVqcIkEX1j6oogLtgxeUyZeXL3dpd734Qx9PxxGJc0uVXs+W09T/PfruA5eg==
+X-Received: by 2002:a17:902:16b:: with SMTP id 98mr8256384plb.23.1598372469704;
+        Tue, 25 Aug 2020 09:21:09 -0700 (PDT)
+Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
+        by smtp.gmail.com with ESMTPSA id d128sm15020864pfa.24.2020.08.25.09.21.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 09:21:09 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:21:09 -0700 (PDT)
+X-Google-Original-Date: Tue, 25 Aug 2020 09:21:08 PDT (-0700)
+Subject:     Re: [PATCH 0/3] SiFive DDR controller and EDAC support
+In-Reply-To: <20200825161958.GE12107@zn.tnic>
+CC:     yash.shah@sifive.com, robh+dt@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, mchehab@kernel.org,
+        tony.luck@intel.com, aou@eecs.berkeley.edu, james.morse@arm.com,
+        rrichter@marvell.com, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-edac@vger.kernel.org, sachin.ghadi@sifive.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     bp@alien8.de
+Message-ID: <mhng-a19106aa-1a18-4fe0-b8c1-9c765f03f73d@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 25 Aug 2020 09:19:58 PDT (-0700), bp@alien8.de wrote:
+> On Tue, Aug 25, 2020 at 09:02:54AM -0700, Palmer Dabbelt wrote:
+>> Thanks.  These look good to me and I'm happy to take them through the RISC-V
+>> tree, but I'm going to wait for a bit to see if there are any comments from the
+>> maintainers of the various subsystems before doing so.
+>
+> I'll have a look at the EDAC bits these days and give you an ACK if
+> they're ok.
 
---svvw56udockwuh7v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-Thanks, queued.
-
--- Sebastian
-
-On Tue, Aug 18, 2020 at 11:54:13AM -0700, Elliot Berman wrote:
-> Convert reboot-mode bindings to YAML.
->=20
-> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
-> ---
->  .../bindings/power/reset/reboot-mode.txt           | 25 ------------
->  .../bindings/power/reset/reboot-mode.yaml          | 47 ++++++++++++++++=
-++++++
->  2 files changed, 47 insertions(+), 25 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/reset/reboot-=
-mode.txt
->  create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-=
-mode.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.tx=
-t b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
-> deleted file mode 100644
-> index de34f27..0000000
-> --- a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
-> +++ /dev/null
-> @@ -1,25 +0,0 @@
-> -Generic reboot mode core map driver
-> -
-> -This driver get reboot mode arguments and call the write
-> -interface to store the magic value in special register
-> -or ram. Then the bootloader can read it and take different
-> -action according to the argument stored.
-> -
-> -All mode properties are vendor specific, it is a indication to tell
-> -the bootloader what to do when the system reboots, and should be named
-> -as mode-xxx =3D <magic> (xxx is mode name, magic should be a none-zero v=
-alue).
-> -
-> -For example modes common on Android platform:
-> -- mode-normal: Normal reboot mode, system reboot with command "reboot".
-> -- mode-recovery: Android Recovery mode, it is a mode to format the devic=
-e or update a new image.
-> -- mode-bootloader: Android fastboot mode, it's a mode to re-flash partit=
-ions on the Android based device.
-> -- mode-loader: A bootloader mode, it's a mode used to download image on =
-Rockchip platform,
-> -	       usually used in development.
-> -
-> -Example:
-> -	reboot-mode {
-> -		mode-normal =3D <BOOT_NORMAL>;
-> -		mode-recovery =3D <BOOT_RECOVERY>;
-> -		mode-bootloader =3D <BOOT_FASTBOOT>;
-> -		mode-loader =3D <BOOT_BL_DOWNLOAD>;
-> -	}
-> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.ya=
-ml b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
-> new file mode 100644
-> index 0000000..a6c9102
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.yaml
-> @@ -0,0 +1,47 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/reset/reboot-mode.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Generic reboot mode core map
-> +
-> +maintainers:
-> +  - Andy Yan <andy.yan@rock-chips.com>
-> +
-> +description: |
-> +  This driver get reboot mode arguments and call the write
-> +  interface to store the magic value in special register
-> +  or ram. Then the bootloader can read it and take different
-> +  action according to the argument stored.
-> +
-> +  All mode properties are vendor specific, it is a indication to tell
-> +  the bootloader what to do when the system reboots, and should be named
-> +  as mode-xxx =3D <magic> (xxx is mode name, magic should be a non-zero =
-value).
-> +
-> +  For example, modes common Android platform are:
-> +    - normal: Normal reboot mode, system reboot with command "reboot".
-> +    - recovery: Android Recovery mode, it is a mode to format the device=
- or update a new image.
-> +    - bootloader: Android fastboot mode, it's a mode to re-flash partiti=
-ons on the Android based device.
-> +    - loader: A bootloader mode, it's a mode used to download image on R=
-ockchip platform,
-> +              usually used in development.
-> +
-> +properties:
-> +  mode-normal:
-> +      $ref: /schemas/types.yaml#/definitions/uint32
-> +      description: |
-> +        Default value to set on a reboot if no command was provided.
-> +
-> +patternProperties:
-> +  "^mode-.*$":
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +examples:
-> +  - |
-> +    reboot-mode {
-> +      mode-normal =3D <0>;
-> +      mode-recovery =3D <1>;
-> +      mode-bootloader =3D <2>;
-> +      mode-loader =3D <3>;
-> +    };
-> +...
-> --=20
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->=20
-
---svvw56udockwuh7v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9FOl8ACgkQ2O7X88g7
-+ppIVA//Q7sFR8KWW2DLHJO66JM9waRoFhMR0niAYGKNORlj8MIbR5ruDIQ7iX2K
-E0Q+7igrfRF2nOxuVOEYD8dIS9PygAeLyiCY8u5gZorISVf2GveENkWSDGZeY//G
-nkoEjTFKI17uEmwgw5PO07xuHJvmhUJ3UvaA+gNHIWOrkO2P6zH4s4jEZsqGs1uu
-xJk+BFCVBjb7cX6cWZLyF1cgw660n3bNtF9iPjHnNLKpVxIwK+OEB/hCeatEayTh
-3jPeZ1zLtI3Umo3dhEo0H+s5Hjt/HIt/bQhuvirTTrDyDQF4n3gxWwIeRKUY3z8N
-jTw2esV/61m8ZpIX4cSuwoAroCUlK4jYRRdNDuCfwT07HbLiUs/YdC3KtZGXXrdn
-xacoaTXQWP/7FL7URwPEsc4KcRImU3sodyPs+ReXfk8DAQA2DjT95hSqLUaZvh8h
-1uilDsSLFJauzWR7hDGuhPyA/3qvm9AU2BrZ0ziskT7XoZ/hq0GB/Dtuuq+5lV8c
-dGMNmLIbMyXO+hGnIODXl5fxMiayEJ9mW3wN0P8ynTZ/2N7IKm3tTXeDGwHosd7Y
-M+d+JHY4p9T8tF84p9eqQf1CqFVLffZjnEfRTLMY60AJBdDHSp9SdjrdoYNs4/AH
-So9SKU3ssbJLe9c2Ea1DjQx773vfq1iFAFaS2WvWPX/Up8TXmyo=
-=33YO
------END PGP SIGNATURE-----
-
---svvw56udockwuh7v--
+Thanks!
