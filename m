@@ -2,386 +2,246 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C91CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1446FC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 706CD2067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D67D32071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:59:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXb6ckPF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729706AbgHYJ6A (ORCPT
+        id S1729663AbgHYJ7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:58:00 -0400
-Received: from mga04.intel.com ([192.55.52.120]:54424 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729529AbgHYJ56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:57:58 -0400
-IronPort-SDR: aUBqgb8qUyOO8IJHvCFMmfGJV0NnAwtd3jhQnAlMq6rx8FblX1zjV4ctUhD8rvRx7g8UlhVIf9
- MXGZs+m80dyQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="153501159"
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="153501159"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 02:57:43 -0700
-IronPort-SDR: ljnMQfGSIXmJOPPNJq7pRPcnFoVV9qIn3a7a1Rjou1Mcs5MdK6nrkKslC3sOLvMQkOaolBrw5b
- slkYosNjVmnw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="328814361"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2020 02:57:39 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1kAVhx-00BIT3-Cq; Tue, 25 Aug 2020 12:57:37 +0300
-Date:   Tue, 25 Aug 2020 12:57:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        lee.jones@linaro.org, thierry.reding@gmail.com,
-        p.zabel@pengutronix.de, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        rtanwar@maxlinear.com
-Subject: Re: [PATCH v11 2/2] Add PWM fan controller driver for LGM SoC
-Message-ID: <20200825095737.GS1891694@smile.fi.intel.com>
-References: <cover.1598331849.git.rahul.tanwar@linux.intel.com>
- <fb2f7632f79e2aaa99208f7c93cae2de3dee4dff.1598331849.git.rahul.tanwar@linux.intel.com>
+        Tue, 25 Aug 2020 05:59:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbgHYJ7W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:59:22 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F32C061574;
+        Tue, 25 Aug 2020 02:59:22 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id v15so6463888pgh.6;
+        Tue, 25 Aug 2020 02:59:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=WuOdQNvCjYwjeeuaYczsQ/P924POkklEK/vv0xfrg3U=;
+        b=lXb6ckPFahNycu6CtGG1p9wquWKSFOre6VDxCxEGjOmxt0n9nr2KiBW3wWI7qWPGZj
+         HrZ0IWgEVNx2jG0UtMovukKewnDnCLODATnCvmHNo1UFo5pLmwI35gu8YCqzzCeFRrkd
+         RnvjbGZdUvvOhE/zQbF3m4aZ+dDPSGyFF1/KASb36w7dSKOg7/AS4flOG+6nlMpfl8UL
+         h6vTcE0qSgOIFpfXSX5y2OXr2hvvTvykuKQ5Jsam6atKnfmiKkJEq7OUqMOCheuCzL6k
+         pxOTQikUUA/13oyToSNIB2/CGtB+wChbW7iaK7seCaBsDTOWOIBjCgDkc2cgOsjFxdbQ
+         3MKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=WuOdQNvCjYwjeeuaYczsQ/P924POkklEK/vv0xfrg3U=;
+        b=MgyHj9pbwLKjcp7lswhVTagNE9k29K4dzKgbhZUbezWxUE32peWij3ZT17Ha4Nr2dt
+         HiYoWuWVUbE4rfJhrKiq2UOJ0N1d851QPBZYZqx3HlV3NTwsX1IVjDtEi5Jhr+/AWqNj
+         HsNvVKpDiIDR13b56KIpKhCn9y33S8XTTtCfPiVqLqXKLtYOOQOWx+t+n6Vw9zmHon9r
+         v4meDN4CmzQvJq1T/Er7C53Nt9wwaaAVMQqTUfGCVESzxQyepmpecdBiI0vSX7J0etcK
+         4d0yPtMS5ClgM1N+30i9rxSPSrDYyIsshCzqEPinpdT+TcJAWezgnLkwKKnND1/Pj6dj
+         4Amg==
+X-Gm-Message-State: AOAM531r+5nli8SqvQ6sxKDaV+NHCV3R+q5Vwj8fMBFIUM3FlE1lKwRB
+        4pbQh7+GJwKD+jNP2VhqCf8=
+X-Google-Smtp-Source: ABdhPJzbut3aC8gHdJTxkZ42OLIA3m5jiNHvtlvcEkiWLF5SYUkaFovRawIucnrULxoml+nrQ8IQKA==
+X-Received: by 2002:a65:5c4c:: with SMTP id v12mr5866579pgr.95.1598349561945;
+        Tue, 25 Aug 2020 02:59:21 -0700 (PDT)
+Received: from eug-lubuntu (27-32-121-201.static.tpgi.com.au. [27.32.121.201])
+        by smtp.gmail.com with ESMTPSA id t10sm12426204pgp.15.2020.08.25.02.59.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 02:59:21 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 19:59:09 +1000
+From:   Eugene Lubarsky <elubarsky.linux@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, adobriyan@gmail.com,
+        avagin@gmail.com, dsahern@gmail.com
+Subject: Re: [RFC PATCH 0/5] Introduce /proc/all/ to gather stats from all
+ processes
+Message-ID: <20200825195909.1d1dcd72@eug-lubuntu>
+In-Reply-To: <20200810154132.GA4171851@kroah.com>
+References: <20200810145852.9330-1-elubarsky.linux@gmail.com>
+        <20200810150453.GB3962761@kroah.com>
+        <20200811012700.2c349082@eug-lubuntu>
+        <20200810154132.GA4171851@kroah.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb2f7632f79e2aaa99208f7c93cae2de3dee4dff.1598331849.git.rahul.tanwar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 01:07:06PM +0800, Rahul Tanwar wrote:
-> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-> This PWM controller does not have any other consumer, it is a
-> dedicated PWM controller for fan attached to the system. Add
-> driver for this PWM fan controller.
+On Mon, 10 Aug 2020 17:41:32 +0200
+Greg KH <gregkh@linuxfoundation.org> wrote:
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> On Tue, Aug 11, 2020 at 01:27:00AM +1000, Eugene Lubarsky wrote:
+> > On Mon, 10 Aug 2020 17:04:53 +0200
+> > Greg KH <gregkh@linuxfoundation.org> wrote: =20
+> And have you benchmarked any of this?  Try working with the common
+> tools that want this information and see if it actually is noticeable
+> (hint, I have been doing that with the readfile work and it's
+> surprising what the results are in places...)
 
-Uwe, there is still room to improve but it's in category of nit-picks, from my
-point of view code is okay to go.
+Apologies for the delay. Here are some benchmarks with atop.
 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  drivers/pwm/Kconfig         |  11 ++
->  drivers/pwm/Makefile        |   1 +
->  drivers/pwm/pwm-intel-lgm.c | 253 ++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 265 insertions(+)
->  create mode 100644 drivers/pwm/pwm-intel-lgm.c
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 7dbcf6973d33..4949c51fe90b 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -232,6 +232,17 @@ config PWM_IMX_TPM
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-imx-tpm.
->  
-> +config PWM_INTEL_LGM
-> +	tristate "Intel LGM PWM support"
-> +	depends on HAS_IOMEM
-> +	depends on (OF && X86) || COMPILE_TEST
-> +	select REGMAP_MMIO
-> +	help
-> +	  Generic PWM fan controller driver for LGM SoC.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-intel-lgm.
-> +
->  config PWM_IQS620A
->  	tristate "Azoteq IQS620A PWM support"
->  	depends on MFD_IQS62X || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 2c2ba0a03557..e9431b151694 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
->  obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
->  obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
->  obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-> +obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
->  obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
->  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
->  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
-> diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-> new file mode 100644
-> index 000000000000..8e9f8cd3b7fb
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-intel-lgm.c
-> @@ -0,0 +1,253 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2020 Intel Corporation.
-> + *
-> + * Limitations:
-> + * - The hardware supports fixed period which is dependent on 2/3 or 4
-> + *   wire fan mode.
-> + * - Supports normal polarity. Does not support changing polarity.
-> + * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
-> + *   keep track of running period.
-> + * - When duty cycle is changed, PWM output may be a mix of previous setting
-> + *   and new setting for the first period. From second period, the output is
-> + *   based on new setting.
-> + * - It is a dedicated PWM fan controller. There are no other consumers for
-> + *   this PWM controller.
-> + */
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +
-> +#define LGM_PWM_FAN_CON0		0x0
-> +#define LGM_PWM_FAN_EN_EN		BIT(0)
-> +#define LGM_PWM_FAN_EN_DIS		0x0
-> +#define LGM_PWM_FAN_EN_MSK		BIT(0)
-> +#define LGM_PWM_FAN_MODE_2WIRE		0x0
-> +#define LGM_PWM_FAN_MODE_MSK		BIT(1)
-> +#define LGM_PWM_FAN_DC_MSK		GENMASK(23, 16)
-> +
-> +#define LGM_PWM_FAN_CON1		0x4
-> +#define LGM_PWM_FAN_MAX_RPM_MSK		GENMASK(15, 0)
-> +
-> +#define LGM_PWM_MAX_RPM			(BIT(16) - 1)
-> +#define LGM_PWM_DEFAULT_RPM		4000
-> +#define LGM_PWM_MAX_DUTY_CYCLE		(BIT(8) - 1)
-> +
-> +#define LGM_PWM_DC_BITS			8
-> +
-> +#define LGM_PWM_PERIOD_2WIRE_NS		(40 * NSEC_PER_MSEC)
-> +
-> +struct lgm_pwm_chip {
-> +	struct pwm_chip chip;
-> +	struct regmap *regmap;
-> +	struct clk *clk;
-> +	struct reset_control *rst;
-> +	u32 period;
-> +};
-> +
-> +static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
-> +{
-> +	return container_of(chip, struct lgm_pwm_chip, chip);
-> +}
-> +
-> +static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
-> +{
-> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-> +	struct regmap *regmap = pc->regmap;
-> +
-> +	return regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_EN_MSK,
-> +				  enable ? LGM_PWM_FAN_EN_EN : LGM_PWM_FAN_EN_DIS);
-> +}
-> +
-> +static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			 const struct pwm_state *state)
-> +{
-> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-> +	u32 duty_cycle, val;
-> +	int ret;
-> +
-> +	/*
-> +	 * The hardware only supports
-> +	 * normal polarity and fixed period.
-> +	 */
-> +	if (state->polarity != PWM_POLARITY_NORMAL || state->period < pc->period)
-> +		return -EINVAL;
-> +
-> +	if (!state->enabled)
-> +		return lgm_pwm_enable(chip, 0);
-> +
-> +	duty_cycle = min_t(u64, state->duty_cycle, pc->period);
-> +	val = duty_cycle * LGM_PWM_MAX_DUTY_CYCLE / pc->period;
-> +
-> +	ret = regmap_update_bits(pc->regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_DC_MSK,
-> +				 FIELD_PREP(LGM_PWM_FAN_DC_MSK, val));
-> +	if (ret)
-> +		return ret;
-> +
-> +	return lgm_pwm_enable(chip, 1);
-> +}
-> +
-> +static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			      struct pwm_state *state)
-> +{
-> +	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-> +	u32 duty, val;
-> +
-> +	state->enabled = regmap_test_bits(pc->regmap, LGM_PWM_FAN_CON0,
-> +					  LGM_PWM_FAN_EN_EN);
-> +	state->polarity = PWM_POLARITY_NORMAL;
-> +	state->period = pc->period; /* fixed period */
-> +
-> +	regmap_read(pc->regmap, LGM_PWM_FAN_CON0, &val);
-> +	duty = FIELD_GET(LGM_PWM_FAN_DC_MSK, val);
-> +	state->duty_cycle = DIV_ROUND_UP(duty * pc->period, LGM_PWM_MAX_DUTY_CYCLE);
-> +}
-> +
-> +static const struct pwm_ops lgm_pwm_ops = {
-> +	.get_state = lgm_pwm_get_state,
-> +	.apply = lgm_pwm_apply,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static void lgm_pwm_init(struct lgm_pwm_chip *pc)
-> +{
-> +	struct regmap *regmap = pc->regmap;
-> +	u32 con0_val;
-> +
-> +	con0_val = FIELD_PREP(LGM_PWM_FAN_MODE_MSK, LGM_PWM_FAN_MODE_2WIRE);
-> +	pc->period = LGM_PWM_PERIOD_2WIRE_NS;
-> +	regmap_update_bits(regmap, LGM_PWM_FAN_CON1, LGM_PWM_FAN_MAX_RPM_MSK,
-> +			   LGM_PWM_DEFAULT_RPM);
-> +	regmap_update_bits(regmap, LGM_PWM_FAN_CON0, LGM_PWM_FAN_MODE_MSK,
-> +			   con0_val);
-> +}
-> +
-> +static const struct regmap_config lgm_pwm_regmap_config = {
-> +	.reg_bits = 32,
-> +	.reg_stride = 4,
-> +	.val_bits = 32,
-> +};
-> +
-> +static void lgm_clk_disable(void *data)
-> +{
-> +	struct lgm_pwm_chip *pc = data;
-> +
-> +	clk_disable_unprepare(pc->clk);
-> +}
-> +
-> +static int lgm_clk_enable(struct device *dev, struct lgm_pwm_chip *pc)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(pc->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_add_action_or_reset(dev, lgm_clk_disable, pc);
-> +}
-> +
-> +static void lgm_reset_control_assert(void *data)
-> +{
-> +	struct lgm_pwm_chip *pc = data;
-> +
-> +	reset_control_assert(pc->rst);
-> +}
-> +
-> +static int lgm_reset_control_deassert(struct device *dev, struct lgm_pwm_chip *pc)
-> +{
-> +	int ret;
-> +
-> +	ret = reset_control_deassert(pc->rst);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_add_action_or_reset(dev, lgm_reset_control_assert, pc);
-> +}
-> +
-> +static int lgm_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct lgm_pwm_chip *pc;
-> +	void __iomem *io_base;
-> +	int ret;
-> +
-> +	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-> +	if (!pc)
-> +		return -ENOMEM;
-> +
-> +	io_base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(io_base))
-> +		return PTR_ERR(io_base);
-> +
-> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
-> +	if (IS_ERR(pc->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(pc->regmap),
-> +				     "failed to init register map\n");
-> +
-> +	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(pc->rst))
-> +		return dev_err_probe(dev, PTR_ERR(pc->rst),
-> +				     "failed to get reset control\n");
-> +
-> +	ret = lgm_reset_control_deassert(dev, pc);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "cannot deassert reset control\n");
-> +
-> +	pc->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(pc->clk))
-> +		return dev_err_probe(dev, PTR_ERR(pc->clk), "failed to get clock\n");
-> +
-> +	ret = lgm_clk_enable(dev, pc);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable clock\n");
-> +		return ret;
-> +	}
-> +
-> +	pc->chip.dev = dev;
-> +	pc->chip.ops = &lgm_pwm_ops;
-> +	pc->chip.npwm = 1;
-> +
-> +	lgm_pwm_init(pc);
-> +
-> +	ret = pwmchip_add(&pc->chip);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, pc);
-> +	return 0;
-> +}
-> +
-> +static int lgm_pwm_remove(struct platform_device *pdev)
-> +{
-> +	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
-> +	int ret;
-> +
-> +	ret = pwmchip_remove(&pc->chip);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id lgm_pwm_of_match[] = {
-> +	{ .compatible = "intel,lgm-pwm" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
-> +
-> +static struct platform_driver lgm_pwm_driver = {
-> +	.driver = {
-> +		.name = "intel-pwm",
-> +		.of_match_table = lgm_pwm_of_match,
-> +	},
-> +	.probe = lgm_pwm_probe,
-> +	.remove = lgm_pwm_remove,
-> +};
-> +module_platform_driver(lgm_pwm_driver);
-> -- 
-> 2.11.0
-> 
+Patch to atop at: https://github.com/eug48/atop/commits/proc-all
+Patch to add /proc/all/schedstat & cpuset below.
+atop not collecting threads & cmdline as /proc/all/ doesn't support it.
+10,000 processes, kernel 5.8, nested KVM, 2 cores of i7-6700HQ @ 2.60GHz
 
--- 
-With Best Regards,
-Andy Shevchenko
+# USE_PROC_ALL=3D0 ./atop -w test 1 &
+# pidstat -p $(pidof atop) 1
 
+01:33:05   %usr %system  %guest   %wait    %CPU   CPU  Command
+01:33:06  33.66   33.66    0.00    0.99   67.33     1  atop
+01:33:07  33.00   32.00    0.00    2.00   65.00     0  atop
+01:33:08  34.00   31.00    0.00    1.00   65.00     0  atop
+...
+Average:  33.15   32.79    0.00    1.09   65.94     -  atop
+
+
+# USE_PROC_ALL=3D1 ./atop -w test 1 &
+# pidstat -p $(pidof atop) 1
+
+01:33:33   %usr %system  %guest   %wait    %CPU   CPU  Command
+01:33:34  28.00   14.00    0.00    1.00   42.00     1  atop
+01:33:35  28.00   14.00    0.00    0.00   42.00     1  atop
+01:33:36  26.00   13.00    0.00    0.00   39.00     1  atop
+...
+Average:  27.08   12.86    0.00    0.35   39.94     -  atop
+
+So CPU usage goes down from ~65% to ~40%.
+
+Data collection times in milliseconds are:
+
+# xsv cat columns proc.csv procall.csv \
+> | xsv stats \
+> | xsv select field,min,max,mean,stddev \
+> | xsv table
+field           min  max  mean     stddev
+/proc time      558  625  586.59   18.29
+/proc/all time  231  262  243.56   8.02
+
+Much performance optimisation can still be done, e.g. the modified atop
+uses fgets which is reading 1KB at a time, and seq_file seems to only
+return 4KB pages. task_diag should be much faster still.
+
+I'd imagine this sort of thing would be useful for daemons monitoring
+large numbers of processes. I don't run such systems myself; my initial
+motivation was frustration with the Kubernetes kubelet having ~2-4% CPU
+usage even with a couple of containers. Basic profiling suggests syscalls
+have a lot to do with it - it's actually reading loads of tiny cgroup files
+and enumerating many directories every 10 seconds, but /proc has similar
+issues and seemed easier to start with.
+
+Anyway, I've read that io_uring could also help here in the near future,
+which would be really cool especially if there was a way to enumerate
+directories and read many files regex-style in a single operation,
+e.g. /proc/[0-9].*/(stat|statm|io)
+
+> > Currently I'm trying to re-use the existing code in fs/proc that
+> > controls which PIDs are visible, but may well be missing
+> > something.. =20
+>=20
+> Try it out and see if it works correctly.  And pid namespaces are not
+> the only thing these days from what I call :)
+>=20
+I've tried `unshare --fork --pid --mount-proc cat /proc/all/stat`
+which seems to behave correctly. ptrace flags are handled by the
+existing code.
+
+
+Best Wishes,
+Eugene
+
+
+=46rom 2ffc2e388f7ce4e3f182c2442823e5f13bae03dd Mon Sep 17 00:00:00 2001
+From: Eugene Lubarsky <elubarsky.linux@gmail.com>
+Date: Tue, 25 Aug 2020 12:36:41 +1000
+Subject: [RFC PATCH] fs/proc: /proc/all: add schedstat and cpuset
+
+Signed-off-by: Eugene Lubarsky <elubarsky.linux@gmail.com>
+---
+ fs/proc/base.c | 42 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 0bba4b3a985e..44d73f1ade4a 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -3944,6 +3944,36 @@ static int proc_all_io(struct seq_file *m, void *v)
+ }
+ #endif
+=20
++#ifdef CONFIG_PROC_PID_CPUSET
++static int proc_all_cpuset(struct seq_file *m, void *v)
++{
++	struct all_iter *iter =3D (struct all_iter *) v;
++	struct pid_namespace *ns =3D iter->ns;
++	struct task_struct *task =3D iter->tgid_iter.task;
++	struct pid *pid =3D task->thread_pid;
++
++	seq_put_decimal_ull(m, "", pid_nr_ns(pid, ns));
++	seq_puts(m, " ");
++
++	return proc_cpuset_show(m, ns, pid, task);
++}
++#endif
++
++#ifdef CONFIG_SCHED_INFO
++static int proc_all_schedstat(struct seq_file *m, void *v)
++{
++	struct all_iter *iter =3D (struct all_iter *) v;
++	struct pid_namespace *ns =3D iter->ns;
++	struct task_struct *task =3D iter->tgid_iter.task;
++	struct pid *pid =3D task->thread_pid;
++
++	seq_put_decimal_ull(m, "", pid_nr_ns(pid, ns));
++	seq_puts(m, " ");
++
++	return proc_pid_schedstat(m, ns, pid, task);
++}
++#endif
++
+ static int proc_all_statx(struct seq_file *m, void *v)
+ {
+ 	struct all_iter *iter =3D (struct all_iter *) v;
+@@ -3990,6 +4020,12 @@ PROC_ALL_OPS(status);
+ #ifdef CONFIG_TASK_IO_ACCOUNTING
+ 	PROC_ALL_OPS(io);
+ #endif
++#ifdef CONFIG_SCHED_INFO
++	PROC_ALL_OPS(schedstat);
++#endif
++#ifdef CONFIG_PROC_PID_CPUSET
++	PROC_ALL_OPS(cpuset);
++#endif
+=20
+ #define PROC_ALL_CREATE(NAME) \
+ 	do { \
+@@ -4011,4 +4047,10 @@ void __init proc_all_init(void)
+ #ifdef CONFIG_TASK_IO_ACCOUNTING
+ 	PROC_ALL_CREATE(io);
+ #endif
++#ifdef CONFIG_SCHED_INFO
++	PROC_ALL_CREATE(schedstat);
++#endif
++#ifdef CONFIG_PROC_PID_CPUSET
++	PROC_ALL_CREATE(cpuset);
++#endif
+ }
+--=20
+2.25.1
 
