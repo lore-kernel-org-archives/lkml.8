@@ -2,101 +2,135 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:14:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2389C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 794D220767
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:14:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ApI4LAKW"
+	by mail.kernel.org (Postfix) with ESMTP id 6F2E720706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598339862;
+	bh=wLdHygwvaiYBk/F4V/2+fKbs30aTabWqtLDHuUd5Kj8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ajIWPM+W7uZbDYh0J6WNacT6KcjBYgEPWIhVVZP+89LH0kJJo8tyo9vPuhtaF5Czf
+	 EocKsxEdpMksr4gP+ULtrX3F+mVzPoXjupUFYMvP008yr8zhvS4AkCJ2JqnifE48Fk
+	 IUjGHv0ANA0pzOw2WK40o9ZMl86MuQXVJX95Zemc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbgHYHOx (ORCPT
+        id S1729355AbgHYHRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:14:53 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25970 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729194AbgHYHOv (ORCPT
+        Tue, 25 Aug 2020 03:17:41 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44519 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbgHYHRi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:14:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598339691;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7CGiZUpznt8czjyijhEZ2iwwf6+J+XWv1uneauIOwPc=;
-        b=ApI4LAKWLLAIHQBBqtvFxBY96om16/EioGOaTkeyyleckh93b6ifUPcyEQPB1PDaAKriFG
-        TZKKVlSQQw8aYH2BICToDV0dvKK8YSOV+l/saq52G7ZlkfA7XAsE34CBcrdvH8KIjrdHMx
-        6Xwn9mkp/JyXCVgowKy2ZHuq4qHTqqo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-476-GHaOImuoP9ujey8EeJ-vqg-1; Tue, 25 Aug 2020 03:14:46 -0400
-X-MC-Unique: GHaOImuoP9ujey8EeJ-vqg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D4341007467;
-        Tue, 25 Aug 2020 07:14:45 +0000 (UTC)
-Received: from krava (unknown [10.40.192.4])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A96575C1CF;
-        Tue, 25 Aug 2020 07:14:43 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 09:14:42 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, heiko.carstens@de.ibm.com
-Subject: Re: [PATCH] perf stat: Fix s390x compile error on F32
- utils/stat-display.c
-Message-ID: <20200825071442.GB631468@krava>
-References: <20200825063304.77733-1-tmricht@linux.ibm.com>
+        Tue, 25 Aug 2020 03:17:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c15so11570333wrs.11;
+        Tue, 25 Aug 2020 00:17:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VUO6i/U3AVhRZX9XkX8wTuXOsuDoxa3aV3dAz0woA4o=;
+        b=B5MJrhLrcQOv6vRhgOJDKnTX6i2punZBmlED4d9nHBgO4GDgjRlXucq8UVrIk/Hs0u
+         KxOCtmKrmiukHNUkrco6xa0Idv0062LAodAWPgcLXNOZe6UPcOkG5uA6HpgGzUoTUxRQ
+         bVs0TXd1toasqxcoFwCsbmkCa7D/Cbw4EGa5tDd/khQvV2i3d76+1WfPqE0SNp0+/vRT
+         bZkDdW7lutuovzf1UphK6AYlwhSd/eg9vQ2+kQ0Mk+7JVr9jJD6nQIzenAVnN0Dk8IDc
+         WBni8SPBdi26MqRYWRcPvQ1OlVD0PJtCGaa1aHgUTLNE8/BKuACYwCPuupE4tx9iVYTU
+         kndQ==
+X-Gm-Message-State: AOAM533rXg3WB00+MNa0CB+S+sh2T8LirELK547/L2c3u8/saju7/EbJ
+        hOJ7UCyUkHNZBWvj9rW9PNY=
+X-Google-Smtp-Source: ABdhPJzJYPNbntZuVXqhHtMzbv8B44RjyoelOfsWDije4BgkxJQBl+U8ambvcHbMGJuX5NndB1iaIw==
+X-Received: by 2002:adf:fd84:: with SMTP id d4mr8719602wrr.243.1598339855693;
+        Tue, 25 Aug 2020 00:17:35 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id y3sm20848575wrs.36.2020.08.25.00.17.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 00:17:35 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:17:32 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v2 13/19] dt-bindings: nvmem: imx-ocotp: Update i.MX 8M
+ compatibles
+Message-ID: <20200825071732.GD3458@kozik-lap>
+References: <20200824162652.21047-1-krzk@kernel.org>
+ <20200824162652.21047-13-krzk@kernel.org>
+ <20200825044653.GK13023@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200825063304.77733-1-tmricht@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200825044653.GK13023@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 08:33:04AM +0200, Thomas Richter wrote:
-
-SNIP
-
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 57d0706e1330..cbe836649f84 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -117,12 +117,11 @@ static void aggr_printout(struct perf_stat_config *config,
->  				cpu_map__id_to_die(id),
->  				config->csv_output ? 0 : -3,
->  				cpu_map__id_to_cpu(id), config->csv_sep);
-> -		} else {
-> +		} else if (id > -1)
->  			fprintf(config->output, "CPU%*d%s",
->  				config->csv_output ? 0 : -7,
->  				evsel__cpus(evsel)->map[id],
->  				config->csv_sep);
-> -		}
-
-I think we want multiple if lines within  { } but
-scripts/checkpatch.pl does not scream about this,
-so leaving this to Arnaldo ;-)
-
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
-
->  		break;
->  	case AGGR_THREAD:
->  		fprintf(config->output, "%*s-%*d%s",
-> -- 
-> 2.26.2
+On Tue, Aug 25, 2020 at 06:46:53AM +0200, Sascha Hauer wrote:
+> On Mon, Aug 24, 2020 at 06:26:46PM +0200, Krzysztof Kozlowski wrote:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - fsl,imx6q-ocotp
+> > +              - fsl,imx6sl-ocotp
+> > +              - fsl,imx6sx-ocotp
+> > +              - fsl,imx6ul-ocotp
+> > +              - fsl,imx6ull-ocotp
+> > +              - fsl,imx7d-ocotp
+> > +              - fsl,imx6sll-ocotp
+> > +              - fsl,imx7ulp-ocotp
+> > +              - fsl,imx8mq-ocotp
+> > +              - fsl,imx8mm-ocotp
+> > +              - fsl,imx8mn-ocotp
+> > +              - fsl,imx8mp-ocotp
+> > +          - const: syscon
+> > +      - items:
+> > +          # The devices are not really compatible with fsl,imx8mm-ocotp, however
+> > +          # the code for getting SoC revision depends on fsl,imx8mm-ocotp compatible.
 > 
+> Shouldn't this be fixed? It seems strange to justify a binding with
+> existing code.
+
+The fsl,imx8mn-ocotp is actually compatible with "mm", only the
+fsl,imx8mp-ocotp is not (although someone might argue that subset of
+"mp" falls into "mn").
+
+The problem is that drivers/soc/imx/soc-imx8m.c checks revision only
+against the fsl,imx8mm-ocotp compatible, not the others. It's the
+pattern used in that driver also for other i.MX 8. Therefore it is a
+binding implemented and actually used, regardless whether it is correct
+from hardware point of view or not.
+
+If that's preferred, I could adjust the drivers/soc/imx/soc-imx8m.c for
+the incompatible "mp". It should not break anything.
+
+Best regards,
+Krzysztof
 
