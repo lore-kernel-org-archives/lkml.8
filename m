@@ -2,701 +2,133 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD80C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8531D20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC002083B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHYOEB (ORCPT
+        id S1726187AbgHYOHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:04:01 -0400
-Received: from mga06.intel.com ([134.134.136.31]:59247 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726580AbgHYN75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:59:57 -0400
-IronPort-SDR: gZAegcvwM2Y37Zk+4E9d4H0V4Ttc52iJl03IqtHR5uwi2/A7CU0QIeGm4YXg1jveJlh2qlcX77
- 51UUPqsySYFg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="217659387"
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="217659387"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 06:59:57 -0700
-IronPort-SDR: twhmd9BCN45mDe6hCN28lryCLJ5t5Oz71YxOR3wFlk4/sFfb5UXdk44hCYxWzqWP8VBUJaXuGc
- kZyE2mvP11XA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="402725569"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Aug 2020 06:59:54 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH 1/3] software node: Power management operations for software nodes
-Date:   Tue, 25 Aug 2020 16:59:49 +0300
-Message-Id: <20200825135951.53340-2-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200825135951.53340-1-heikki.krogerus@linux.intel.com>
-References: <20200825135951.53340-1-heikki.krogerus@linux.intel.com>
+        Tue, 25 Aug 2020 10:07:08 -0400
+Received: from ec2-3-21-30-127.us-east-2.compute.amazonaws.com ([3.21.30.127]:59940
+        "EHLO www.teo-en-ming.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbgHYOHF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:07:05 -0400
+Received: from localhost (localhost [IPv6:::1])
+        by www.teo-en-ming.com (Postfix) with ESMTPA id 00186426B9B;
+        Tue, 25 Aug 2020 22:07:03 +0800 (+08)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date:   Tue, 25 Aug 2020 22:07:03 +0800
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ceo@teo-en-ming-corp.com
+Subject: Configuring Fortigate 60D Firewall SSL VPN with FortiToken 2FA
+ (Advanced Configuration)
+Message-ID: <fac273f8cd4cde443b1f9fdd047d208e@teo-en-ming.com>
+X-Sender: ceo@teo-en-ming.com
+User-Agent: Roundcube Webmail/1.2.3
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding separate PM operations vector for the software nodes.
-The software node specific PM operations make it possible to
-handle most PM related quirks separately in their own
-functions instead of conditionally in the device driver's
-generic PM functions (and in some cases all over the
-driver). The software node specific PM operations will also
-reduce the need to pass platform data in some cases, for
-example from a core MFD driver to the child device drivers,
-as from now on the core MFD driver will be able to implement
-the PM quirks directly for the child devices without the
-need to touch the drivers of those child devices.
+Subject: Configuring Fortigate 60D Firewall SSL VPN with FortiToken 2FA 
+(Advanced Configuration)
 
-If a software node includes the PM operations, those PM
-operations are always executed separately on top of the
-other PM operations of the device, so the software node will
-never replace any of the "normal" PM operations of the
-device (including the PM domain's operations, class's or
-bus's PM operations, the device drivers own operations, or
-any other).
+Author: Mr. Turritopsis Dohrnii Teo En Ming
+Country: Singapore
+Date: 25 August 2020 Tuesday Singapore Time
+Type of Publication: PDF Manual
+Document Version: 20200825.01
 
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/base/power/common.c |   8 +-
- drivers/base/swnode.c       | 524 +++++++++++++++++++++++++++++++++++-
- include/linux/property.h    |  10 +
- 3 files changed, 532 insertions(+), 10 deletions(-)
+INTRODUCTION
+============
 
-diff --git a/drivers/base/power/common.c b/drivers/base/power/common.c
-index bbddb267c2e69..b64cd4690ac63 100644
---- a/drivers/base/power/common.c
-+++ b/drivers/base/power/common.c
-@@ -109,8 +109,14 @@ int dev_pm_domain_attach(struct device *dev, bool power_on)
- 	ret = acpi_dev_pm_attach(dev, power_on);
- 	if (!ret)
- 		ret = genpd_dev_pm_attach(dev);
-+	if (ret < 0)
-+		return ret;
- 
--	return ret < 0 ? ret : 0;
-+	ret = software_node_dev_pm_attach(dev, power_on);
-+	if (ret)
-+		dev_pm_domain_detach(dev, power_on);
-+
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(dev_pm_domain_attach);
- 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index 010828fc785bc..9a13a61a2f0bb 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -8,6 +8,8 @@
- 
- #include <linux/device.h>
- #include <linux/kernel.h>
-+#include <linux/pm_domain.h>
-+#include <linux/pm_runtime.h>
- #include <linux/property.h>
- #include <linux/slab.h>
- 
-@@ -48,6 +50,19 @@ EXPORT_SYMBOL_GPL(is_software_node);
- 				     struct swnode, fwnode) : NULL;	\
- 	})
- 
-+static inline struct swnode *dev_to_swnode(struct device *dev)
-+{
-+	struct fwnode_handle *fwnode = dev_fwnode(dev);
-+
-+	if (!fwnode)
-+		return NULL;
-+
-+	if (!is_software_node(fwnode))
-+		fwnode = fwnode->secondary;
-+
-+	return to_swnode(fwnode);
-+}
-+
- static struct swnode *
- software_node_to_swnode(const struct software_node *node)
- {
-@@ -344,6 +359,504 @@ void property_entries_free(const struct property_entry *properties)
- }
- EXPORT_SYMBOL_GPL(property_entries_free);
- 
-+/* -------------------------------------------------------------------------- */
-+/* Power management operations */
-+
-+#ifdef CONFIG_PM
-+struct swnode_pm_domain {
-+	struct dev_pm_domain pm_domain;
-+	struct dev_pm_domain *primary;
-+};
-+
-+#define to_swnode_pm_domain(d) \
-+		container_of(d, struct swnode_pm_domain, pm_domain)
-+
-+static int software_node_runtime_suspend(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (domain->primary && domain->primary->ops.runtime_suspend)
-+		ret = domain->primary->ops.runtime_suspend(dev);
-+	else
-+		ret = pm_generic_runtime_suspend(dev);
-+
-+	if (ret || !swnode->node->pm->runtime_suspend)
-+		return ret;
-+
-+	return swnode->node->pm->runtime_suspend(dev);
-+}
-+
-+static int software_node_runtime_resume(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (swnode->node->pm->runtime_resume) {
-+		ret = swnode->node->pm->runtime_resume(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (domain->primary && domain->primary->ops.runtime_resume)
-+		ret = domain->primary->ops.runtime_resume(dev);
-+	else
-+		ret = pm_generic_runtime_resume(dev);
-+
-+	return ret;
-+}
-+
-+static int software_node_runtime_idle(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret = 0;
-+
-+	if (domain->primary && domain->primary->ops.runtime_idle)
-+		ret = domain->primary->ops.runtime_idle(dev);
-+
-+	if (ret || !swnode->node->pm->runtime_idle)
-+		return ret;
-+
-+	return swnode->node->pm->runtime_idle(dev);
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int software_node_prepare(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (domain->primary && domain->primary->ops.prepare)
-+		ret = domain->primary->ops.prepare(dev);
-+	else
-+		ret = pm_generic_prepare(dev);
-+
-+	if (ret || !swnode->node->pm->prepare)
-+		return ret;
-+
-+	return swnode->node->pm->prepare(dev);
-+}
-+
-+static void software_node_complete(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+
-+	if (swnode->node->pm->complete)
-+		swnode->node->pm->complete(dev);
-+
-+	if (domain->primary && domain->primary->ops.complete)
-+		domain->primary->ops.complete(dev);
-+	else
-+		pm_generic_complete(dev);
-+}
-+
-+static int software_node_suspend(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (domain->primary && domain->primary->ops.suspend)
-+		ret = domain->primary->ops.suspend(dev);
-+	else
-+		ret = pm_generic_suspend(dev);
-+
-+	if (ret || !swnode->node->pm->suspend)
-+		return ret;
-+
-+	return swnode->node->pm->suspend(dev);
-+}
-+
-+static int software_node_resume(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (swnode->node->pm->resume) {
-+		ret = swnode->node->pm->resume(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (domain->primary && domain->primary->ops.resume)
-+		ret = domain->primary->ops.resume(dev);
-+	else
-+		ret = pm_generic_resume(dev);
-+
-+	return ret;
-+}
-+
-+static int software_node_freeze(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (domain->primary && domain->primary->ops.freeze)
-+		ret = domain->primary->ops.freeze(dev);
-+	else
-+		ret = pm_generic_freeze(dev);
-+
-+	if (ret || !swnode->node->pm->freeze)
-+		return ret;
-+
-+	return swnode->node->pm->freeze(dev);
-+}
-+
-+static int software_node_thaw(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (swnode->node->pm->thaw) {
-+		ret = swnode->node->pm->thaw(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (domain->primary && domain->primary->ops.thaw)
-+		ret = domain->primary->ops.thaw(dev);
-+	else
-+		ret = pm_generic_thaw(dev);
-+
-+	return ret;
-+}
-+
-+static int software_node_poweroff(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (domain->primary && domain->primary->ops.poweroff)
-+		ret = domain->primary->ops.poweroff(dev);
-+	else
-+		ret = pm_generic_poweroff(dev);
-+
-+	if (ret || !swnode->node->pm->poweroff)
-+		return ret;
-+
-+	return swnode->node->pm->poweroff(dev);
-+}
-+
-+static int software_node_restore(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (swnode->node->pm->restore) {
-+		ret = swnode->node->pm->restore(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (domain->primary && domain->primary->ops.restore)
-+		ret = domain->primary->ops.restore(dev);
-+	else
-+		ret = pm_generic_restore(dev);
-+
-+	return ret;
-+}
-+
-+static int software_node_suspend_late(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (domain->primary && domain->primary->ops.suspend_late)
-+		ret = domain->primary->ops.suspend_late(dev);
-+	else
-+		ret = pm_generic_suspend_late(dev);
-+
-+	if (ret || !swnode->node->pm->suspend_late)
-+		return ret;
-+
-+	return swnode->node->pm->suspend_late(dev);
-+}
-+
-+static int software_node_resume_early(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (swnode->node->pm->resume_early) {
-+		ret = swnode->node->pm->resume_early(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (domain->primary && domain->primary->ops.resume_early)
-+		ret = domain->primary->ops.resume_early(dev);
-+	else
-+		pm_generic_resume_early(dev);
-+
-+	return 0;
-+}
-+
-+static int software_node_freeze_late(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (domain->primary && domain->primary->ops.freeze_late)
-+		ret = domain->primary->ops.freeze_late(dev);
-+	else
-+		ret = pm_generic_freeze_late(dev);
-+
-+	if (ret || !swnode->node->pm->freeze_late)
-+		return ret;
-+
-+	return swnode->node->pm->freeze_late(dev);
-+}
-+
-+static int software_node_thaw_early(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (swnode->node->pm->thaw_early) {
-+		ret = swnode->node->pm->thaw_early(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (domain->primary && domain->primary->ops.thaw_early)
-+		ret = domain->primary->ops.thaw_early(dev);
-+	else
-+		ret = pm_generic_thaw_early(dev);
-+
-+	return ret;
-+}
-+
-+static int software_node_poweroff_late(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (domain->primary && domain->primary->ops.poweroff_late)
-+		ret = domain->primary->ops.poweroff_late(dev);
-+	else
-+		ret = pm_generic_poweroff_late(dev);
-+
-+	if (ret || !swnode->node->pm->poweroff_late)
-+		return ret;
-+
-+	return swnode->node->pm->poweroff(dev);
-+}
-+
-+static int software_node_restore_early(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (swnode->node->pm->restore) {
-+		ret = swnode->node->pm->restore_early(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (domain->primary && domain->primary->ops.restore_early)
-+		ret = domain->primary->ops.restore_early(dev);
-+	else
-+		ret = pm_generic_restore_early(dev);
-+
-+	return ret;
-+}
-+
-+static int software_node_suspend_noirq(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (domain->primary && domain->primary->ops.suspend_noirq)
-+		ret = domain->primary->ops.suspend_noirq(dev);
-+	else
-+		ret = pm_generic_suspend_noirq(dev);
-+
-+	if (ret || !swnode->node->pm->suspend_noirq)
-+		return ret;
-+
-+	return swnode->node->pm->suspend_noirq(dev);
-+}
-+
-+static int software_node_resume_noirq(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (swnode->node->pm->resume_noirq) {
-+		ret = swnode->node->pm->resume_noirq(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (domain->primary && domain->primary->ops.resume_noirq)
-+		ret = domain->primary->ops.resume_noirq(dev);
-+	else
-+		ret = pm_generic_resume_noirq(dev);
-+
-+	return ret;
-+}
-+
-+static int software_node_freeze_noirq(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (domain->primary && domain->primary->ops.freeze_noirq)
-+		ret = domain->primary->ops.freeze_noirq(dev);
-+	else
-+		ret = pm_generic_freeze_noirq(dev);
-+
-+	if (ret || !swnode->node->pm->freeze_noirq)
-+		return ret;
-+
-+	return swnode->node->pm->freeze_noirq(dev);
-+}
-+
-+static int software_node_thaw_noirq(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (swnode->node->pm->thaw_noirq) {
-+		ret = swnode->node->pm->thaw_noirq(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (domain->primary && domain->primary->ops.thaw_noirq)
-+		ret = domain->primary->ops.thaw_noirq(dev);
-+	else
-+		ret = pm_generic_thaw_noirq(dev);
-+
-+	return ret;
-+}
-+
-+static int software_node_poweroff_noirq(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (domain->primary && domain->primary->ops.poweroff_noirq)
-+		ret = domain->primary->ops.poweroff_noirq(dev);
-+	else
-+		ret = pm_generic_poweroff_noirq(dev);
-+
-+	if (ret || !swnode->node->pm->poweroff)
-+		return ret;
-+
-+	return swnode->node->pm->poweroff_noirq(dev);
-+}
-+
-+static int software_node_restore_noirq(struct device *dev)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	int ret;
-+
-+	if (swnode->node->pm->restore_noirq) {
-+		ret = swnode->node->pm->restore_noirq(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (domain->primary && domain->primary->ops.restore_noirq)
-+		ret = domain->primary->ops.restore_noirq(dev);
-+	else
-+		ret = pm_generic_restore_noirq(dev);
-+
-+	return ret;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static const struct dev_pm_ops software_node_pm_ops = {
-+	.runtime_suspend = software_node_runtime_suspend,
-+	.runtime_resume = software_node_runtime_resume,
-+	.runtime_idle = software_node_runtime_idle,
-+#ifdef CONFIG_PM_SLEEP
-+	.prepare = software_node_prepare,
-+	.complete = software_node_complete,
-+	.suspend = software_node_suspend,
-+	.resume = software_node_resume,
-+	.freeze = software_node_freeze,
-+	.thaw = software_node_thaw,
-+	.poweroff = software_node_poweroff,
-+	.restore = software_node_restore,
-+	.suspend_late = software_node_suspend_late,
-+	.resume_early = software_node_resume_early,
-+	.freeze_late = software_node_freeze_late,
-+	.thaw_early = software_node_thaw_early,
-+	.poweroff_late = software_node_poweroff_late,
-+	.restore_early = software_node_restore_early,
-+	.suspend_noirq = software_node_suspend_noirq,
-+	.resume_noirq = software_node_resume_noirq,
-+	.freeze_noirq = software_node_freeze_noirq,
-+	.thaw_noirq = software_node_thaw_noirq,
-+	.poweroff_noirq = software_node_poweroff_noirq,
-+	.restore_noirq = software_node_restore_noirq,
-+#endif /* CONFIG_PM_SLEEP */
-+};
-+
-+static void software_node_dev_pm_detach(struct device *dev, bool power_off)
-+{
-+	struct swnode_pm_domain *domain = to_swnode_pm_domain(dev->pm_domain);
-+
-+	if (domain->primary && domain->primary->detach) {
-+		dev->pm_domain = domain->primary;
-+		domain->primary->detach(dev, power_off);
-+	} else {
-+		dev_pm_domain_set(dev, NULL);
-+	}
-+
-+	kfree(domain);
-+}
-+
-+int software_node_dev_pm_attach(struct device *dev, bool power_on)
-+{
-+	struct swnode *swnode = dev_to_swnode(dev);
-+	struct swnode_pm_domain *domain;
-+
-+	if (!swnode || !swnode->node->pm)
-+		return 0;
-+
-+	domain = kzalloc(sizeof(*domain), GFP_KERNEL);
-+	if (!domain)
-+		return -ENOMEM;
-+
-+	if (dev->pm_domain)
-+		domain->pm_domain = *dev->pm_domain;
-+
-+	domain->primary = dev->pm_domain;
-+	domain->pm_domain.ops = software_node_pm_ops;
-+	domain->pm_domain.detach = software_node_dev_pm_detach;
-+
-+	dev_pm_domain_set(dev, &domain->pm_domain);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(software_node_dev_pm_attach);
-+#endif /* CONFIG_PM */
-+
- /* -------------------------------------------------------------------------- */
- /* fwnode operations */
- 
-@@ -845,20 +1358,13 @@ EXPORT_SYMBOL_GPL(fwnode_remove_software_node);
- 
- int software_node_notify(struct device *dev, unsigned long action)
- {
--	struct fwnode_handle *fwnode = dev_fwnode(dev);
- 	struct swnode *swnode;
- 	int ret;
- 
--	if (!fwnode)
--		return 0;
--
--	if (!is_software_node(fwnode))
--		fwnode = fwnode->secondary;
--	if (!is_software_node(fwnode))
-+	swnode = dev_to_swnode(dev);
-+	if (!swnode)
- 		return 0;
- 
--	swnode = to_swnode(fwnode);
--
- 	switch (action) {
- 	case KOBJ_ADD:
- 		ret = sysfs_create_link(&dev->kobj, &swnode->kobj,
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 9f805c4428195..4a2e0edb78275 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -426,11 +426,13 @@ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
-  * @name: Name of the software node
-  * @parent: Parent of the software node
-  * @properties: Array of device properties
-+ * @pm: Power management operations
-  */
- struct software_node {
- 	const char *name;
- 	const struct software_node *parent;
- 	const struct property_entry *properties;
-+	const struct dev_pm_ops *pm;
- };
- 
- bool is_software_node(const struct fwnode_handle *fwnode);
-@@ -452,6 +454,14 @@ int software_node_register(const struct software_node *node);
- void software_node_unregister(const struct software_node *node);
- 
- int software_node_notify(struct device *dev, unsigned long action);
-+#ifdef CONFIG_PM
-+int software_node_dev_pm_attach(struct device *dev, bool power_on);
-+#else
-+static inline int software_node_dev_pm_attach(struct device *dev, bool power_on)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_PM */
- 
- struct fwnode_handle *
- fwnode_create_software_node(const struct property_entry *properties,
--- 
-2.28.0
+Fortigate firewall appliances are based on Linux Kernel and open source 
+software.
 
+In this PDF manual, I will show you how to:
+
+1.	Install Windows Server 2019 Standard as a virtual machine in Linux 
+KVM/QEMU Hypervisor
+2.	Install Active Directory Domain Services role/feature
+3.	Promote Windows Server 2019 Standard to Domain Controller
+4.	Create organizational units in Active Directory Users and Computers
+5.	Create Active Directory user
+6.	Create security group for SSL VPN users
+7.	Assign Active Directory user to the SSL VPN Users security group
+8.	Add LDAP server (Microsoft Active Directory/LDAP integration) in 
+Fortigate 60D firewall
+9.	Add user group from LDAP server in Fortigate 60D firewall (remember 
+to add members of the group as well)
+10.	Add LDAP user in Fortigate 60D firewall
+11.	Configure SSL VPN tunnel in Fortigate 60D firewall
+12.	Configure two firewall security policies to allow VPN users to 
+access the (a) internal network and the (b) internet
+13.	Assign FortiToken to LDAP user in Fortigate 60D firewall and turn on 
+2nd Factor Authentication (2FA)
+14.	Create VPN tunnel in FortiClient VPN on your Android phone and 
+connect to Fortigate 60D SSL VPN tunnel successfully
+15.	FortiClient VPN will now ask you for the token code
+
+Redundant Google Drive download links for my PDF manual
+=======================================================
+
+[1] 
+https://drive.google.com/file/d/1uhRWr8OXerCN30OeWhgFP8rG_4NlkHsa/view?usp=sharing
+
+[2] 
+https://drive.google.com/file/d/1mJ5m7zlPFLXuXfKgfLcq_nAGP1jC2QlC/view?usp=sharing
+
+[3] 
+https://drive.google.com/file/d/1ZU7aphOXIG3q8-1g6GSRXX2hXgG7AibU/view?usp=sharing
+
+[4] 
+https://drive.google.com/file/d/1IKVeGJZ5HPR6hAsRwxTHfABBLjKz9uyl/view?usp=sharing
+
+[5] 
+https://drive.google.com/file/d/1nwC7VlA3p0U2apmsOlH6mADrX84wxTNM/view?usp=sharing
+
+[6] 
+https://drive.google.com/file/d/1mXT3TdX8dtCDA1YeoX7oRxk3mSgcoN6P/view?usp=sharing
+
+
+
+
+
+
+
+
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link: 
+https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
+
+********************************************************************************************
+
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the 
+United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 
+2019) and Australia (25 Dec 2019 to 9 Jan 2020):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
