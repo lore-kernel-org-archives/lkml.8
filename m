@@ -2,106 +2,101 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C20DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F05D42071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:11:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+lbKQ8Z"
+	by mail.kernel.org (Postfix) with ESMTP id 9D29F2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598357515;
+	bh=lLcZy5Wo6jWvC7rPiDhmximohADFk1jbAXM/KoH5hVQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ew+4xvpdWsRL6z645ciH1l2WLx5YbEQYOKuyAIeHwo27lcVRWn1p3g/xp1h7lYubx
+	 +wFtYnpTsaJJUEKmTTteMJ7V4WUEpFsXdK21O9GkjEMMalcIYgzILJv9L+U3eke9ll
+	 Nik8XWr0ubZjn/6FunPHPZfV8RGR0DSN/zUr+gr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbgHYMLo (ORCPT
+        id S1729010AbgHYMLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:11:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39784 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729051AbgHYMLg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:11:36 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5ABC061574;
-        Tue, 25 Aug 2020 05:11:35 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id e11so10164244ils.10;
-        Tue, 25 Aug 2020 05:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y0fqJAi2q1wLdvWz2fG2+Ma0IiMVbAmyb/CXLp46wV4=;
-        b=J+lbKQ8ZWXW+rZRvfI0n3+KbSsRmAQiWkv4Q0JtH2LcPvtJx/FaQlbnZqhY6vZkVM6
-         zpkNW+fpbwGHhSYAmUcQFwBvrzvbxs+iuOAY+ZbHdmAbnJaUfh72Key3s8Y2Tsy/Doe7
-         1acNNB5bLjwpS4+OnuQkyOiltLS0ruy7wYM7s74NbMNylzrX9dcHPGhTJb5erEWxR209
-         kJMoCDzdw4SjO9ysuZf75VZOLfgt/C6fxlIpJkvpW2hq4o3Wp45AeMhiuXEEtljuRjVg
-         mQvRKtuoD4RpOrS2atQMK1UX+7d4FPJII4PzV6M7BdTDPp7rRAE5UQFjJer8OtfmtQ28
-         +D3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y0fqJAi2q1wLdvWz2fG2+Ma0IiMVbAmyb/CXLp46wV4=;
-        b=ELpJHIT20DJHHZE4oIf7sbYRcxJRFe8fq90Y/069K8QauOLzxQuFGYW/dLKxD5/39M
-         7ddCou5lwaS9n0rQWKPIxULs6Q/0iYSGRWt0HR96zd/N90YkzuwiPQro9IYyKPsWvGoB
-         ZHNEBTalqMKQMb7ubO56fkHF2jO7uG84oi+Uco4VmNdLms/D0YWUxm94iptVVfaZeNcA
-         IVU14ZCOMgheRblwy9jDRyRyIar8F8hUIOPa3tNM42l73nPnAIL35Ns/blTUHu+YolqP
-         rWuHrVxCv7+9qoBvHJB0jity0H3tfPso7N+ACvL8iIn8iEbM1h9A+8FVi68+IUPzHs1g
-         5Lcw==
-X-Gm-Message-State: AOAM530RJ4j+psQuxuyFtbN9R48xJH6zz3PncvGLVFB+CAVpP5lY1pqN
-        +kP8zYLdPkPw1qQGOQ9LJK+emLF/GnoZ6+NScZXuMXKPdZ8Y
-X-Google-Smtp-Source: ABdhPJw1wsBg30NMrUWDxgSVJ06a4iXUNVqdmIBtQII2d10y4Id3bTjHiUJHWlyU+nUBrC+CAOUV4AcEleFyg4koMKk=
-X-Received: by 2002:a92:5a8c:: with SMTP id b12mr8199951ilg.27.1598357494861;
- Tue, 25 Aug 2020 05:11:34 -0700 (PDT)
+        Tue, 25 Aug 2020 08:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730181AbgHYMLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 08:11:39 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B355920706;
+        Tue, 25 Aug 2020 12:11:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598357498;
+        bh=lLcZy5Wo6jWvC7rPiDhmximohADFk1jbAXM/KoH5hVQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NtoEFfPQ4QExLDKzsR29XM4M/Hv+Kf1cudKSei+JdGaz0fTh1snxnWmUmgHiCwQJi
+         WPgVVcN4Pu2OE2jRcg8B69zc0BULmNtSPu9Z/m7CPUYkS5AZ7faPAbV5PL4t7IyHXy
+         6yW0DhQ13Ay17zkd3EdsQTxsjBq5yQ242NBffaf4=
+Date:   Tue, 25 Aug 2020 13:11:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, shengjiu.wang@gmail.com, lgirdwood@gmail.com,
+        perex@perex.cz, tiwai@suse.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, linux-imx@nxp.com,
+        xobs@kosagi.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        yukuai@huawei.com, yi.zhang@huawei.com
+Subject: Re: [PATCH 1/2] ASoC: fsl: imx-es8328: add missing kfree() call in
+ imx_es8328_probe()
+Message-ID: <20200825121102.GF5379@sirena.org.uk>
+References: <20200825120531.1479304-1-yukuai3@huawei.com>
+ <20200825120531.1479304-2-yukuai3@huawei.com>
 MIME-Version: 1.0
-References: <20200821105229.18938-1-pbonzini@redhat.com> <20200821142152.GA6330@sjchrist-ice>
- <CAMzpN2h79bi5dd7PxjY45xYy71UdYomKa1t2gNxLtRpDkMs+Lw@mail.gmail.com> <874kor57jm.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <874kor57jm.fsf@nanos.tec.linutronix.de>
-From:   Brian Gerst <brgerst@gmail.com>
-Date:   Tue, 25 Aug 2020 08:11:23 -0400
-Message-ID: <CAMzpN2jQofGQ18PsEobeqfGX6ux=xuun_SQZhY=E3n1pzvEoAQ@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/entry/64: Do not use RDPID in paranoid entry to
- accomodate KVM
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Chang Seok Bae <chang.seok.bae@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="twz1s1Hj1O0rHoT0"
+Content-Disposition: inline
+In-Reply-To: <20200825120531.1479304-2-yukuai3@huawei.com>
+X-Cookie: Don't get to bragging.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 6:44 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Fri, Aug 21 2020 at 11:35, Brian Gerst wrote:
-> > On Fri, Aug 21, 2020 at 10:22 AM Sean Christopherson
-> >> >  .macro GET_PERCPU_BASE reg:req
-> >> > -     ALTERNATIVE \
-> >> > -             "LOAD_CPU_AND_NODE_SEG_LIMIT \reg", \
-> >> > -             "RDPID  \reg", \
-> >>
-> >> This was the only user of the RDPID macro, I assume we want to yank that out
-> >> as well?
-> >
-> > No.  That one should be kept until the minimum binutils version is
-> > raised to one that supports the RDPID opcode.
->
-> The macro is unused and nothing in the kernel can use RDPID as we just
-> established.
 
-It is opencoded in vdso_read_cpunode(), but the RDPID macro can't be
-used there.  So you are correct, it can be removed.
+--twz1s1Hj1O0rHoT0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-Brian Gerst
+On Tue, Aug 25, 2020 at 08:05:30PM +0800, Yu Kuai wrote:
+> If memory allocation for 'data' or 'comp' succeed, imx_es8328_probe()
+> doesn't have corresponding kfree() in exception handling. Thus add
+> kfree() for this function implementation.
+
+> @@ -151,7 +151,7 @@ static int imx_es8328_probe(struct platform_device *pdev)
+>  	comp = devm_kzalloc(dev, 3 * sizeof(*comp), GFP_KERNEL);
+>  	if (!comp) {
+
+The allocation is being done using devm_ which means no explicit kfree()
+is needed, the allocation will be automatically unwound when the device
+is unbound.
+
+--twz1s1Hj1O0rHoT0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9E/9YACgkQJNaLcl1U
+h9By5wf9GsLAxwbWBAbrnKCxyu9PM9ucYMMERlrYpCaWXat0bBzG/zblA6fGcCVd
+UtSA/ON7K+KTqqXX7wYEK1HebOUSfemHcJDZ9OvUfpFkswXpZqkhAmcm4n4wZ0Jo
+ARFpyf9ifjltEU43SfqNs9iwVW6Dj/RXghoQ6/iTh4vzXokipE6IuXiPNnxsJ09g
+SjeN6JJJe0SLYLhPIcrPb7tSIv5ZB5no846dUSUdgpxKN7g0G3nGFeQjYjh63P1u
+ghEhEfq9nUvhjfMZmajC1CtiUjrgf+Y+3eXDByE0p/goE9PH/nQbgTYOsHoSEExC
+BviLGNDWPywLcqIgIv9fsj+ewCVfVg==
+=kko3
+-----END PGP SIGNATURE-----
+
+--twz1s1Hj1O0rHoT0--
