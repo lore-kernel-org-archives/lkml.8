@@ -2,130 +2,113 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAEEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4291D20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2FC20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:19:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="jYuRBqw3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tdvj8Td5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgHYPSa convert rfc822-to-8bit (ORCPT
+        id S1726802AbgHYPTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:18:30 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:51857 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbgHYPRf (ORCPT
+        Tue, 25 Aug 2020 11:19:14 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:41787 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726180AbgHYPTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:17:35 -0400
-X-Originating-IP: 90.89.180.255
-Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
-        (Authenticated sender: kevin.lhopital@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id E216C20003;
-        Tue, 25 Aug 2020 15:17:01 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 17:17:01 +0200
-From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        yong.deng@magewell.com, p.zabel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH 2/7] dt-bindings: media: i2c: Add documentation for
- ov8865
-Message-ID: <20200825171701.158c77c6@lhopital-XPS-13-9360>
-In-Reply-To: <20200824165910.tnsalyxfuimfx5rd@gilmour.lan>
-References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
-        <20200821145935.20346-3-kevin.lhopital@bootlin.com>
-        <20200824165910.tnsalyxfuimfx5rd@gilmour.lan>
-Organization: bootlin
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 25 Aug 2020 11:19:10 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id CE53EA0E;
+        Tue, 25 Aug 2020 11:19:07 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 25 Aug 2020 11:19:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=OBxOGGBFkE5rMst9VNEuQF1EGr1
+        29olkk+P1Mg8wVnY=; b=jYuRBqw3Zolz44RFw9hdZKQtJmd2RU18WUbkepnqhCg
+        pRnZ+Zzvj6UktFoaYG+sBRTL2z6/PIwpWjp7hV7CixrI645v0bslL6CkUjbIWveV
+        4I3r1BXL+PyhnRhrQ4sIGfXOoQjBmcihXXSOqkfgyLmfg/aM6xWVp0bzUSuRPYsb
+        /IDJpbPE0HHMNeTVZrRo3tfw2RL3mRi9qarNqPYGn8DE7P4e1TjxGquSMXfbvvZs
+        p6aqsGzIPaW3cpS1omwzciqHqhv2NAymhvUOTQoXmdCblFVdiqbArEtQ9I+DgrA+
+        b0u4Jv5fxj+1Po7MPzRPWRKUlqik3Aw/xGWzojOpqJQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=OBxOGG
+        BFkE5rMst9VNEuQF1EGr129olkk+P1Mg8wVnY=; b=tdvj8Td5c+VkGL49H1vPTJ
+        EddjRspMuB6zIxazD+5qNw72ZQkzOcF5LHmGRnTdDEgbxtrZjwru0PugD7qf3933
+        m8nUm/dZiHnij6Cqx+ciFW+Euao9Ya5vqaovevbY5WwxZ5et8qzyT6oLrKdvIqR7
+        uXUVzzV94DOLwQLoMOBbPeTzqL7naf8SE9MNV+61e43WBZg1ivX8Ie+zDSg5q6u5
+        iNsKjw3RI9IlVZatTH0Ewx+5hqTLwvuQof8j0Qnjqn6gFPzBuoEViYic/NtcYnOq
+        8hNNI3VUqbmkEOC5omLTaTjE81V2I7V9oDP1/tPd29aw42A626BXEKyFG2daeY0Q
+        ==
+X-ME-Sender: <xms:6itFX-LnwhmFo5wineG_E_JQWvQZYEc8Bp5prlcr2AZ7WadeSTKk6g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgkeelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:6itFX2LjnxyhASeuQA9w2AMLv4fSTfcCuNt3Op8s3ZdnUSs3YiMmXw>
+    <xmx:6itFX-s0FmjbqT0idUDA7sYRmEsm_YpWcNX58KX7iYaqkWJnxVj8rg>
+    <xmx:6itFXzYWhxywVMRwMy5xNYrj7Ps6X6vXy4HxcxJiTqfRNsfPM2TXew>
+    <xmx:6ytFX4yRTt2K29pDZOHdWh1kHjF8kdKE7hOxqOMhUrVwndDlgyiMaw>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id DF064328006F;
+        Tue, 25 Aug 2020 11:19:05 -0400 (EDT)
+Date:   Tue, 25 Aug 2020 17:19:04 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     robh+dt@kernel.org, wens@csie.org, vkoul@kernel.org,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 0/2] ARM: dts: sun8i: r40: Enable DMA
+Message-ID: <20200825151904.ah4ca6pwrvnm4py7@gilmour.lan>
+References: <20200825100030.1145356-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3qulwx76gswnravp"
+Content-Disposition: inline
+In-Reply-To: <20200825100030.1145356-1-jernej.skrabec@siol.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-Le Mon, 24 Aug 2020 18:59:10 +0200,
-Maxime Ripard <maxime@cerno.tech> a écrit :
+--3qulwx76gswnravp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Hi,
-> 
-> On Fri, Aug 21, 2020 at 04:59:30PM +0200, Kévin L'hôpital wrote:
-> > Add a documentation for the sensor ov8865 from Omnivision.
-> > 
-> > Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>  
-> 
-> In order to ease the submission of both drivers, you should probably
-> split this series into two, one with the MIPI-CSI driver, and one with
-> the ov8865 driver.
-> 
+On Tue, Aug 25, 2020 at 12:00:28PM +0200, Jernej Skrabec wrote:
+> Allwinner R40 contains DMA engine similar to that in A64.
+>=20
+> Following two patches enable it so DMA users can be added later.
+>=20
+> Please take a look.
 
-Yes, you are right. I will do this.
+Applied both, thanks!
+Maxime
 
-> > ---
-> >  .../devicetree/bindings/media/i2c/ov8865.txt  | 51
-> > +++++++++++++++++++ 1 file changed, 51 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/media/i2c/ov8865.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ov8865.txt
-> > b/Documentation/devicetree/bindings/media/i2c/ov8865.txt new file
-> > mode 100644 index 000000000000..ac5a662288de
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ov8865.txt
-> > @@ -0,0 +1,51 @@
-> > +* Omnivision OV8865 MIPI CSI-2
-> > +
-> > +Required Properties:
-> > +- compatible: should be "ovti,ov8865"
-> > +- clocks: reference to the xclk input clock.
-> > +- clock-names: should be "xclk".
-> > +- DOVDD-supply: Digital I/O voltage supply, 2.8 volts
-> > +- AVDD-supply: Analog voltage supply, 2.8 volts
-> > +- AFVDD-supply: Analog voltage supply, 2.8 volts
-> > +- DVDD-supply: Digital core voltage supply, 1.2 volts
-> > +- reset-gpios: reference to the GPIO connected to the reset pin.
-> > +	       This is an active low signal to the OV8865.
-> > +- powerdown-gpios: reference to the GPIO connected to the
-> > powerdown pin.
-> > +		   This is an active low signal to the OV8865.
-> > +- rotation: as defined in
-> > +
-> > Documentation/devicetree/bindings/media/video-interfaces.txt,
-> > +	    valid values are 0 (sensor mounted upright) and 180
-> > (sensor
-> > +	    mounted upside down).
-> > +- remote-endpoint: a phandle to the bus receiver's endpoint node.
-> > +- clock-lanes: should be set to <0> (clock lane on hardware lane
-> > 0). +- data-lanes: should be set to <4> (four CSI-2 lanes
-> > supported). +
-> > +The device node must contain one 'port' child node for its digital
-> > output video +port, in accordance with the video interface bindings
-> > defined in
-> > +Documentation/devicetree/bindings/media/video-interfaces.txt.  
-> 
-> Free form DT documentation is deprecated nowadays, you should be
-> doing a YAML schema instead (like the ov8856 driver).
-> 
+--3qulwx76gswnravp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-All right, I will do a YAML schema.
+-----BEGIN PGP SIGNATURE-----
 
-> Maxime
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0Ur6AAKCRDj7w1vZxhR
+xW1YAQCrR65GLd/64vPy0s43xP0TxYum7QY5N9Lzpaddtj7zjwD+Lu09Ymbzf7HH
+F+aWuNXaMURm/mQdOgonsReFTePooAM=
+=madG
+-----END PGP SIGNATURE-----
 
-Thank you very much for the review.
-Kévin
-
-
--- 
-Kevin L'Hopital, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+--3qulwx76gswnravp--
