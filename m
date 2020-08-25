@@ -2,66 +2,311 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E464EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D00C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE4372067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1BD2067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:51:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X9E0WuJU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgHYPvO (ORCPT
+        id S1727024AbgHYPvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46268 "EHLO
+        Tue, 25 Aug 2020 11:51:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgHYPvG (ORCPT
+        with ESMTP id S1726971AbgHYPvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:51:06 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BCB0C061574;
-        Tue, 25 Aug 2020 08:51:06 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 54D9F1344473D;
-        Tue, 25 Aug 2020 08:34:19 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 08:51:05 -0700 (PDT)
-Message-Id: <20200825.085105.471804029075197026.davem@davemloft.net>
-To:     m-karicheri2@ti.com
-Cc:     kuba@kernel.org, grygorii.strashko@ti.com, nsekhar@ti.com,
-        linux-omap@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [net v3 PATCH 2/2] net: ethernet: ti: cpsw_new: fix clean up
- of vlan mc entries for host port
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200824151053.18449-2-m-karicheri2@ti.com>
-References: <20200824151053.18449-1-m-karicheri2@ti.com>
-        <20200824151053.18449-2-m-karicheri2@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 25 Aug 2020 08:34:19 -0700 (PDT)
+        Tue, 25 Aug 2020 11:51:02 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81824C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:51:02 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id nv17so1467256pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:51:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2Cxf5RdgFBWYyJ+SgFEt+5d6mYgMlSzdruviMFoeO3Y=;
+        b=X9E0WuJUmzlU9zEx7FM27DEkR5fIYDY/8bp0bYg9pH/cVZImqAIZY9OENORxRXso7i
+         8sMEqc0NKB1T7v2Fjx8nz3+/S1mhdYg8BvMn3p4t60/XsO89XY7/LmQOCYjLdV5SMHxl
+         JXhd2RIcEZXVIbkztg5u3fJBDbFmbTrfg926I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2Cxf5RdgFBWYyJ+SgFEt+5d6mYgMlSzdruviMFoeO3Y=;
+        b=nu0u2xEGN6Y5cAJxALmPq840AXco5Gxf16UJSusmQXtQ/IJ7iHJl8sSv6K/sZ8TMpP
+         vVS3Iu8o/Wbq0mc02kY2YtT0f8AbYzEq5AGnSYi01qOk9uUayrXb4YwbZTLUIC04VqKO
+         AddkLRp4qkdrPJbnSHLFVbfIBY3yn2l6UKaQEhea1h6x7DUoQcOK8XkKfDveqODpi802
+         VuBpdaSuT8pSOgrtiT+8dpDw2aEkuafmt/fqlqLprIIgCHYGIbmZUIBt3agsYE2NLXl7
+         W8W/mMX1erFuN9YIfGodQA0BzYPqQRBlpjYfRIaGTLRJEkhUtHVDGYx+KNby0Bzghrd4
+         Wcpw==
+X-Gm-Message-State: AOAM532DpSftWDC3gr5j/cmFYxASI7kSVK1wvRlrqaUopgKwkgxPErIV
+        EO+MNNaAYUOrBv/cxDJvuivHDw==
+X-Google-Smtp-Source: ABdhPJyZxNishUlb56vPGcZ4yBxslJjmi0qgjEyklc3wwjWEDfiNysTTcbPhq8y1lsSK/7SegrnARA==
+X-Received: by 2002:a17:90b:1255:: with SMTP id gx21mr2040890pjb.132.1598370661889;
+        Tue, 25 Aug 2020 08:51:01 -0700 (PDT)
+Received: from localhost ([2620:15c:202:201:9657:a5ff:feef:7b57])
+        by smtp.gmail.com with ESMTPSA id u21sm3236856pjn.27.2020.08.25.08.51.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 08:51:01 -0700 (PDT)
+From:   Sean O'Brien <seobrien@chromium.org>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>
+Cc:     linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Sean O'Brien <seobrien@chromium.org>
+Subject: [PATCH v2] HID: google: add google vivaldi HID driver
+Date:   Tue, 25 Aug 2020 08:50:56 -0700
+Message-Id: <20200825085044.1.I170489c0c2ac1538b3890abb5a92b95ad4f04d01@changeid>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murali Karicheri <m-karicheri2@ti.com>
-Date: Mon, 24 Aug 2020 11:10:53 -0400
+Add Google vivaldi HID driver. This driver allows us to read and report
+the top row layout of keyboards which provide a vendor-defined HID
+usage.
 
-> To flush the vid + mc entries from ALE, which is required when a VLAN
-> interface is removed, driver needs to call cpsw_ale_flush_multicast()
-> with ALE_PORT_HOST for port mask as these entries are added only for
-> host port. Without this, these entries remain in the ALE table even
-> after removing the VLAN interface. cpsw_ale_flush_multicast() calls
-> cpsw_ale_flush_mcast which expects a port mask to do the job.
-> 
-> Fixes: ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+Signed-off-by: Sean O'Brien <seobrien@chromium.org>
+---
 
-Applied and queued up for -stable.
+ drivers/hid/Kconfig              |   9 ++
+ drivers/hid/Makefile             |   1 +
+ drivers/hid/hid-core.c           |   7 ++
+ drivers/hid/hid-google-vivaldi.c | 144 +++++++++++++++++++++++++++++++
+ include/linux/hid.h              |   2 +
+ 5 files changed, 163 insertions(+)
+ create mode 100644 drivers/hid/hid-google-vivaldi.c
+
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 05315b434276..b608a5b1d753 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -397,6 +397,15 @@ config HID_GOOGLE_HAMMER
+ 	help
+ 	Say Y here if you have a Google Hammer device.
+ 
++config HID_GOOGLE_VIVALDI
++	tristate "Google Vivaldi Keyboard"
++	depends on HID
++	help
++	  Say Y here if you want to enable support for Google Vivaldi keyboards.
++
++	  Vivaldi keyboards use a vendor-specific HID usage to report how the
++	  keys in the top row are physically ordered.
++
+ config HID_GT683R
+ 	tristate "MSI GT68xR LED support"
+ 	depends on LEDS_CLASS && USB_HID
+diff --git a/drivers/hid/Makefile b/drivers/hid/Makefile
+index d8ea4b8c95af..35ca714c7ee2 100644
+--- a/drivers/hid/Makefile
++++ b/drivers/hid/Makefile
+@@ -50,6 +50,7 @@ obj-$(CONFIG_HID_GEMBIRD)	+= hid-gembird.o
+ obj-$(CONFIG_HID_GFRM)		+= hid-gfrm.o
+ obj-$(CONFIG_HID_GLORIOUS)  += hid-glorious.o
+ obj-$(CONFIG_HID_GOOGLE_HAMMER)	+= hid-google-hammer.o
++obj-$(CONFIG_HID_GOOGLE_VIVALDI)	+= hid-google-vivaldi.o
+ obj-$(CONFIG_HID_GT683R)	+= hid-gt683r.o
+ obj-$(CONFIG_HID_GYRATION)	+= hid-gyration.o
+ obj-$(CONFIG_HID_HOLTEK)	+= hid-holtek-kbd.o
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 359616e3efbb..4df05b35b4d0 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -814,6 +814,13 @@ static void hid_scan_collection(struct hid_parser *parser, unsigned type)
+ 
+ 	if ((parser->global.usage_page << 16) >= HID_UP_MSVENDOR)
+ 		parser->scan_flags |= HID_SCAN_FLAG_VENDOR_SPECIFIC;
++
++	if ((parser->global.usage_page << 16) == HID_UP_GOOGLEVENDOR)
++		for (i = 0; i < parser->local.usage_index; i++)
++			if (parser->local.usage[i] ==
++					(HID_UP_GOOGLEVENDOR | 0x0001))
++				parser->device->group =
++					HID_GROUP_GOOGLE_VIVALDI;
+ }
+ 
+ static int hid_scan_main(struct hid_parser *parser, struct hid_item *item)
+diff --git a/drivers/hid/hid-google-vivaldi.c b/drivers/hid/hid-google-vivaldi.c
+new file mode 100644
+index 000000000000..9165ef5e1542
+--- /dev/null
++++ b/drivers/hid/hid-google-vivaldi.c
+@@ -0,0 +1,144 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * HID support for Google Vivaldi Keyboard
++ *
++ * Copyright 2020 Google LLC.
++ * Author: Sean O'Brien <seobrien@chromium.org>
++ */
++
++#include <linux/hid.h>
++#include <linux/module.h>
++
++#define MIN_FN_ROW_KEY	1
++#define MAX_FN_ROW_KEY	24
++#define HID_VD_FN_ROW_PHYSMAP 0x00000001
++#define HID_USAGE_FN_ROW_PHYSMAP (HID_UP_GOOGLEVENDOR | HID_VD_FN_ROW_PHYSMAP)
++
++static struct hid_driver hid_vivaldi;
++
++struct vivaldi_data {
++	u32 function_row_physmap[MAX_FN_ROW_KEY - MIN_FN_ROW_KEY + 1];
++	int max_function_row_key;
++};
++
++static ssize_t function_row_physmap_show(struct device *dev,
++					 struct device_attribute *attr,
++					 char *buf)
++{
++	struct hid_device *hdev = to_hid_device(dev);
++	struct vivaldi_data *drvdata = hid_get_drvdata(hdev);
++	ssize_t size = 0;
++	int i;
++
++	if (!drvdata->max_function_row_key)
++		return 0;
++
++	for (i = 0; i < drvdata->max_function_row_key; i++)
++		size += sprintf(buf + size, "%02X ",
++				drvdata->function_row_physmap[i]);
++	size += sprintf(buf + size, "\n");
++	return size;
++}
++
++DEVICE_ATTR_RO(function_row_physmap);
++static struct attribute *sysfs_attrs[] = {
++	&dev_attr_function_row_physmap.attr,
++	NULL
++};
++
++static const struct attribute_group input_attribute_group = {
++	.attrs = sysfs_attrs
++};
++
++static int vivaldi_probe(struct hid_device *hdev,
++			 const struct hid_device_id *id)
++{
++	struct vivaldi_data *drvdata;
++	int ret;
++
++	drvdata = devm_kzalloc(&hdev->dev, sizeof(*drvdata), GFP_KERNEL);
++	hid_set_drvdata(hdev, drvdata);
++
++	ret = hid_parse(hdev);
++	if (ret)
++		return ret;
++
++	return hid_hw_start(hdev, HID_CONNECT_DEFAULT);
++}
++
++static void vivaldi_feature_mapping(struct hid_device *hdev,
++				    struct hid_field *field,
++				    struct hid_usage *usage)
++{
++	struct vivaldi_data *drvdata = hid_get_drvdata(hdev);
++	int fn_key;
++	int ret;
++	u32 report_len;
++	u8 *buf;
++
++	if (field->logical != HID_USAGE_FN_ROW_PHYSMAP ||
++	    (usage->hid & HID_USAGE_PAGE) != HID_UP_ORDINAL)
++		return;
++
++	fn_key = (usage->hid & HID_USAGE);
++	if (fn_key < MIN_FN_ROW_KEY || fn_key > MAX_FN_ROW_KEY)
++		return;
++	if (fn_key > drvdata->max_function_row_key)
++		drvdata->max_function_row_key = fn_key;
++
++	buf = hid_alloc_report_buf(field->report, GFP_KERNEL);
++	if (!buf)
++		return;
++
++	report_len = hid_report_len(field->report);
++	ret = hid_hw_raw_request(hdev, field->report->id, buf,
++				 report_len, HID_FEATURE_REPORT,
++				 HID_REQ_GET_REPORT);
++	if (ret < 0) {
++		dev_warn(&hdev->dev, "failed to fetch feature %d\n",
++			 field->report->id);
++		goto out;
++	}
++
++	ret = hid_report_raw_event(hdev, HID_FEATURE_REPORT, buf,
++				   report_len, 0);
++	if (ret) {
++		dev_warn(&hdev->dev, "failed to report feature %d\n",
++			 field->report->id);
++		goto out;
++	}
++
++	drvdata->function_row_physmap[fn_key - MIN_FN_ROW_KEY] =
++	    field->value[usage->usage_index];
++
++out:
++	kfree(buf);
++}
++
++static int vivaldi_input_configured(struct hid_device *hdev,
++				    struct hid_input *hidinput)
++{
++	return sysfs_create_group(&hdev->dev.kobj, &input_attribute_group);
++}
++
++static const struct hid_device_id vivaldi_table[] = {
++	{ HID_DEVICE(HID_BUS_ANY, HID_GROUP_GOOGLE_VIVALDI, HID_ANY_ID,
++		     HID_ANY_ID) },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(hid, vivaldi_table);
++
++static struct hid_driver hid_vivaldi = {
++	.name = "hid-vivaldi",
++	.id_table = vivaldi_table,
++	.probe = vivaldi_probe,
++	.feature_mapping = vivaldi_feature_mapping,
++	.input_configured = vivaldi_input_configured,
++};
++
++module_hid_driver(hid_vivaldi);
++
++MODULE_AUTHOR("Sean O'Brien");
++MODULE_DESCRIPTION("HID Google vivaldi driver");
++MODULE_LICENSE("GPL");
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index 875f71132b14..cfcc76dcc3b6 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -163,6 +163,7 @@ struct hid_item {
+ #define HID_UP_LNVENDOR		0xffa00000
+ #define HID_UP_SENSOR		0x00200000
+ #define HID_UP_ASUSVENDOR	0xff310000
++#define HID_UP_GOOGLEVENDOR	0xffd10000
+ 
+ #define HID_USAGE		0x0000ffff
+ 
+@@ -371,6 +372,7 @@ struct hid_item {
+ #define HID_GROUP_LOGITECH_DJ_DEVICE		0x0102
+ #define HID_GROUP_STEAM				0x0103
+ #define HID_GROUP_LOGITECH_27MHZ_DEVICE		0x0104
++#define HID_GROUP_GOOGLE_VIVALDI		0x0105
+ 
+ /*
+  * HID protocol status
+-- 
+2.28.0.297.g1956fa8f8d-goog
+
