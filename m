@@ -2,245 +2,289 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 612BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DECC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34D6520706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:13:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CHcV8Y2T"
+	by mail.kernel.org (Postfix) with ESMTP id BCB4020738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:15:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598336144;
+	bh=4Ys01Quvr/gd6AZTKP/iqgZLXjT13MOc/IDtxKyLkLQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ij7ACR20guxo/H9XvLwxU3VyFQ1zbO0uA247NlZrnkALOSZ779D7uTyewy6p8SvL8
+	 fkxQJzYu9kQx4Gpj3U+GuLpueLHgrJ+44a6RPydS43XpwCz0jotdcoIfO0YEoWDFuq
+	 ffALicwo4EG6vRNO705ans0SDqxHQ952/TaTL6Zc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbgHYGNU (ORCPT
+        id S1728518AbgHYGPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:13:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728958AbgHYGNT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:13:19 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D87CC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:13:18 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id u131so3169189vsu.11
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:13:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Nz8o+oFvxFIhPP9y7NnSAQb/n8LmPLlle/QHO7DpndA=;
-        b=CHcV8Y2TPdlo+Xta4i6qa6+UDp6JmhA67sFlMSlUMo14OUYmOlCKGXrJTAaIY9mHAx
-         IsuNHPFBRGHmvf2brBdrnjjPhMIF/ZP4bqik/ezRLgcqq1mvN3URaAt+z4bAw76ZphyS
-         bxj/r35WXAv3B6/D+S1uUCiHWGb63j7ikf9lR9HGGw8yaMgBWleWC8JqHh0T1cJ7DVmq
-         LaVysvdwTt0dEc9UwH+B09rZ2s5Q+JqoLOJk8JyqdGKS57nWxuFbMa1J6+WNbcDgY5tT
-         PYvlF9Q/hXszp5eX0+F2Dh7+pwcIVNCT1O764sUWcU2EqACfMa6IssZxIbeHidPBGIT7
-         r3tQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Nz8o+oFvxFIhPP9y7NnSAQb/n8LmPLlle/QHO7DpndA=;
-        b=mozPt0mMm2YdyZMKgHVsXSHGimIMInUEz0MGtUPxQNZjKNeyuN3fA1JMi2uhLvAKQP
-         fcaJXEzucLXFZXAR2pVNuZXN2rsx+7Bss2ads8lq9tK5PwGYREnR2zsnzlSMbQsT0i5E
-         X7B0Fu9Tg43dV78CZMpKYkx/PCqYByKsTrgSYVDhwSW2gNS7/F0iBB65CJwvj8jWfOP1
-         1PW8l2DXJyoA0BHCYOunUN3Fuad2No22Z6Mh/LW9iAbrKSX5hKO0SeHepXM94P6wjfOW
-         mOKd5ikbWCiUXgxrpR0DzmE9nJCGDklXl4fBHSyzAsuzIf08CDO0SoZcQS12rLx2WMFk
-         GQxA==
-X-Gm-Message-State: AOAM530PTLiXFHKZr0E5xrCgZ5k5bZWLlkiONrE+Mk19H9zPkgZSpfvw
-        8/1I0kd9tEl/KUbuUcHBNnBB4nbju5HX90hghUnjqA==
-X-Google-Smtp-Source: ABdhPJyjXdr7m5mL+FbqV7gIRFxLsYp34bvthy15kKLktzHelIgZq89Aj3QVtSZ7UedRF7IzprWPIkpZCyFJUqmT0N8=
-X-Received: by 2002:a05:6102:44e:: with SMTP id e14mr4983180vsq.185.1598335996312;
- Mon, 24 Aug 2020 23:13:16 -0700 (PDT)
-MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 25 Aug 2020 11:43:05 +0530
-Message-ID: <CA+G9fYtg58tm3zq3sobCrXD-aSZ0vaH1mCfJ+pXoTSmO2LYs4A@mail.gmail.com>
-Subject: Kernel panic - not syncing: Attempted to kill init! x86_64 running 4.19
-To:     X86 ML <x86@kernel.org>, open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>, Ingo Molnar <mingo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 25 Aug 2020 02:15:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbgHYGPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 02:15:43 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0688B204FD;
+        Tue, 25 Aug 2020 06:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598336142;
+        bh=4Ys01Quvr/gd6AZTKP/iqgZLXjT13MOc/IDtxKyLkLQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HV6kvZ4Dd37J+2DemTZVu2CCmBeufhRzjBxFcLYnpPHjjJ6hwNjM3vUBGCm8FtEtB
+         v3v97KRZq1nvpMdEzpT9uLJHTAS6nsHnpXlFzvNuVaZdQrw5siL7dVKfWo1qgStts7
+         B2M951JEOA2XhurFHVsMYyUT1PPw582xRgboY7vY=
+Date:   Tue, 25 Aug 2020 15:15:38 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function
+ entry is not optimized (trigger by int3 breakpoint)
+Message-Id: <20200825151538.f856d701a34f4e0561a64932@kernel.org>
+In-Reply-To: <7396e7b2079644a6aafd9670a111232b@trendmicro.com>
+References: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
+        <20200825005426.f592075d13be740cb3c9aa77@kernel.org>
+        <7396e7b2079644a6aafd9670a111232b@trendmicro.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While running LTP tracing ftrace-stress-test kernel on x86_64 got panic on
-stable rc 4.19 branch. I have checked this kernel panic has been happening from
-the beginning of 4.19 release. I will run git bisect starting from
-4.18 and get back to you
-on this email thread.
+Hi Eddy,
+
+On Mon, 24 Aug 2020 16:41:58 +0000
+"Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com> wrote:
+
+> > -----Original Message-----
+> > From: Masami Hiramatsu <mhiramat@kernel.org>
+> > Sent: Monday, August 24, 2020 11:54 PM
+> > To: Eddy Wu (RD-TW) <Eddy_Wu@trendmicro.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>; linux-kernel@vger.kernel.org; x86@kernel.org; David S. Miller <davem@davemloft.net>
+> > Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function entry is not optimized (trigger by int3 breakpoint)
+> >
+> >
+> > This message was sent from outside of Trend Micro. Please do not click links or open attachments unless you recognise the source of this
+> > email and know the content is safe.
+> >
+> >
+> > On Mon, 24 Aug 2020 12:02:58 +0000
+> > "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com> wrote:
+> >
+> > > Greetings!
+> > >
+> > > Starting from kernel 5.8 (x86_64), kretprobe handler will always missed if corresponding kprobe on function entry is not optimized
+> > (using break point instead).
+> >
+> > Oops, good catch. I always enabled ftrace hook for kretprobe, I didn't noticed that.
+> >
+> > > Step to reproduce this:
+> > > 1) Build the kretprobe example module (CONFIG_SAMPLE_KRETPROBES=m)
+> > > 2) Disable jump optimization (`sysctl debug.kprobes-optimization=0` or register any kprobe.post_handler at same location)
+> > > 3) Insert the kretprobe_example module
+> > > 4) Launch some process to trigger _do_fork
+> > > 5) Remove kretprobe_example module
+> > > 6) dmesg shows that all probing instances are missed
+> > >
+> > > Example output:
+> > > # sysctl debug.kprobes-optimization=0
+> > > debug.kprobes-optimization = 0
+> > > # insmod samples/kprobes/kretprobe_example.ko
+> > > # ls > /dev/null
+> > > # rmmod kretprobe_example
+> > > # dmesg
+> > > [48555.067295] Planted return probe at _do_fork: 0000000038ae0211
+> > > [48560.229459] kretprobe at 0000000038ae0211 unregistered
+> > > [48560.229460] Missed probing 3 instances of _do_fork
+> > >
+> > > After bisecting, I found this behavior seems to introduce by this commit: (5.8-rc1)
+> > > 0d00449c7a28a1514595630735df383dec606812 x86: Replace ist_enter() with nmi_enter()
+> > > This make kprobe_int3_handler() effectively running as NMI context, which pre_handler_kretprobe() explicitly checked to prevent
+> > recursion.
+> >
+> > Thanks for the bisecting!
+> >
+> > >
+> > > (in_nmi() check appears from v3.17)
+> > > f96f56780ca584930bb3a2769d73fd9a101bcbbe kprobes: Skip kretprobe hit in NMI context to avoid deadlock
+> > >
+> > > To make kretprobe work again with int3 breakpoint, I think we can replace the in_nmi() check with in_nmi() == (1 << NMI_SHIFT) at
+> > kprobe_int3_handler() and skip kretprobe if nested NMI.
+> >
+> > Ah, I see. Now int3 is a kind of NMI, so in the handler in_nmi() always returns !0.
+> >
+> > > Did a quick test on 5.9-rc2 and it seems to be working.
+> > > I'm not sure if it is the best way to do since it may also require change to other architecture as well, any thought?
+> >
+> > Hmm, this behavior is arch-dependent. So I think we need an weak function like this.
+> >
+> > @kernel/kprobes.c
+> >
+> > bool __weak arch_kprobe_in_nmi(void)
+> > {
+> >         return in_nmi()
+> > }
+> >
+> > @arch/x86/kernel/kprobes/core.c
+> >
+> > bool arch_kprobe_in_nmi(void)
+> > {
+> >        /*
+> >         * Since the int3 is one of NMI, we have to check in_nmi() is
+> >         * bigger than 1 << NMI_SHIFT instead of !0.
+> >         */
+> >        return in_nmi() > (1 << NMI_SHIFT);
+> > }
+> >
+> > And use arch_kprobe_in_nmi() instead of in_nmi() in kprobes.c.
+> >
+> > Thanks,
+> >
+> > --
+> > Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> Kretprobe might still trigger from NMI with nmi counter == 1 (if entry kprobe is jump-optimized).
+
+Ah, right. Hmm, in that case, we can store the int3 status in 
+the kprobe_ctlblk and refer it in the handler.
 
 
-steps to reproduce:
-# Boot qemu x86_64 with trace configs enabled.
-# cd /opt/ltp
-# ./runltp -f tracing
+> The arch- dependent weak function looks cleaner than doing this in kprobe_int3_handler() under x86/, but I don't know if there is a way to check if called by specific int3 handler or not.
+> 
+> My original patch below, need to change all architecture support kretprobe though
 
-Test output log:
----------------------
-ftrace-stress-test 1 TINFO: Start pid16=3123
-/opt/ltp/testcases/bin/ftrace_stress/ftrace_tracing_cpumask.sh
-ftrace-stress-test 1 TINFO: Start pid17=3124
-/opt/ltp/testcases/bin/ftrace_stress/ftrace_set_ftrace_filter.sh
-[   81.695606] Core dump to |/bin/false pipe failed
-[   81.696936] false (3169) used greatest stack depth: 11224 bytes left
-[   81.711194] Kernel panic - not syncing: Attempted to kill init!
-exitcode=0x0000000b
-[   81.711194]
-[   81.720342] CPU: 2 PID: 1 Comm: systemd Not tainted 4.19.142-rc2 #1
-[   81.726622] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.0b 07/27/2017
-[   81.734121] Call Trace:
-[   81.736599]  ? ftrace_graph_caller+0xb0/0xb0
-[   81.740890]  dump_stack+0x7a/0xaa
-[   81.744245]  panic+0xe6/0x239
-[   81.747260]  ? panic+0x5/0x239
-[   81.750343]  ? ftrace_graph_caller+0xb0/0xb0
-[   81.754633]  do_exit.cold+0xa0/0xb7
-[   81.758138]  ? do_exit+0x5/0xb40
-[   81.761389]  ? ftrace_return_to_handler+0x99/0xf0
-[   81.766115]  ? ftrace_graph_caller+0xb0/0xb0
-[   81.770399]  do_group_exit+0x47/0xb0
-[   81.773992]  ? ftrace_graph_caller+0xb0/0xb0
-[   81.778277]  get_signal+0x158/0x7e0
-[   81.781797]  do_signal+0x37/0x640
-[   81.785136]  ? trace_event_raw_event_rcu_dyntick+0x75/0xc0
-[   81.790658]  exit_to_usermode_loop+0x78/0xd0
-[   81.794946]  prepare_exit_to_usermode+0x66/0x90
-[   81.799495]  ? page_fault+0x8/0x30
-[   81.802915]  retint_user+0x8/0x18
-[   81.806259] RIP: 0033:0x7f62d3b648a8
-[   81.809850] Code: fe ff ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44
-00 00 55 66 0f ef c0 48 89 e5 41 56 41 54 53 48 81 ec 98 08 00 00 48
-8b 45 28 <0f> 29 85 90 f7 ff ff 8b 1d 0f 68 38 00 0f 29 85 a0 f7 ff ff
-4c 8b
-[   81.828611] RSP: 002b:00007ffe44822e80 EFLAGS: 00010202
-[   81.833854] RAX: 00007ffe44823950 RBX: 00007ffe44823950 RCX: 00000000000000d7
-[   81.840997] RDX: 000055a3d336bc15 RSI: 0000000000000000 RDI: 0000000000000018
-[   81.848138] RBP: 00007ffe44823730 R08: 000055a3d336e9c5 R09: 0000000000000000
-[   81.855278] R10: 00007ffe44823788 R11: 0000000000000000 R12: 00007ffe44823800
-[   81.862419] R13: 00000000000000d7 R14: 00007ffe44823840 R15: 0000000000000018
-[   81.869625] Kernel Offset: 0x1f800000 from 0xffffffff81000000
-(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[   81.880417] ---[ end Kernel panic - not syncing: Attempted to kill
-init! exitcode=0x0000000b
-[   81.880417]  ]---
-[   81.890803] ------------[ cut here ]------------
-[   81.895440] sched: Unexpected reschedule of offline CPU#3!
-[   81.900946] WARNING: CPU: 2 PID: 1 at arch/x86/kernel/smp.c:128
-native_smp_send_reschedule+0x3a/0x40
-[   81.910087] Modules linked in: x86_pkg_temp_thermal
-[   81.914984] CPU: 2 PID: 1 Comm: systemd Not tainted 4.19.142-rc2 #1
-[   81.921266] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.0b 07/27/2017
-[   81.928762] RIP: 0010:native_smp_send_reschedule+0x3a/0x40
-[   81.934257] Code: b7 8f 01 73 17 48 8b 05 c4 2d 58 01 be fd 00 00
-00 48 8b 40 30 e8 b6 ea f4 00 5d c3 89 fe 48 c7 c7 b8 9a d3 a1 e8 c2
-e1 0b 00 <0f> 0b 5d c3 66 90 e8 ab a3 d4 00 55 48 89 e5 53 48 83 ec 10
-65 48
-[   81.953021] RSP: 0000:ffff9ad0dfb03d38 EFLAGS: 00010082
-[   81.958265] RAX: 0000000000000000 RBX: ffff9ad0dfb9fb40 RCX: 000000000000001f
-[   81.965404] RDX: 0000000000000007 RSI: ffff9ad0da7c6000 RDI: ffffffffa08b755a
-[   81.972545] RBP: ffff9ad0dfb03d38 R08: 0000000000000000 R09: ffffb7044002ff58
-[   81.979686] R10: 0000000000000000 R11: ffff9ad0dda48000 R12: 0000000000000003
-[   81.986830] R13: ffff9ad0dfb9fb40 R14: ffff9ad0dfb03df8 R15: ffff9ad0dfb03df8
-[   81.993979] FS:  00007f62d4103840(0000) GS:ffff9ad0dfb00000(0000)
-knlGS:0000000000000000
-[   82.002082] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   82.007846] CR2: 0000000000000000 CR3: 000000045c4e2003 CR4: 00000000003606e0
-[   82.014995] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   82.022146] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   82.029294] Call Trace:
-[   82.031767]  <IRQ>
-[   82.033804]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.038093]  resched_curr+0x5e/0xc0
-[   82.041606]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.045891]  check_preempt_curr+0x4e/0x90
-[   82.049923]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.054213]  ttwu_do_wakeup+0x1e/0x140
-[   82.057978]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.062262]  ttwu_do_activate+0x6c/0x90
-[   82.066125]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.070409]  try_to_wake_up+0x205/0x4b0
-[   82.074259]  ? try_to_wake_up+0x5/0x4b0
-[   82.078115]  ? default_wake_function+0x5/0x20
-[   82.082498]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.086788]  default_wake_function+0x12/0x20
-[   82.091071]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.095361]  autoremove_wake_function+0x12/0x40
-[   82.099915]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.104200]  __wake_up_common+0x7e/0x140
-[   82.108152]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.112441]  __wake_up_common_lock+0x7b/0xf0
-[   82.116733]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.121024]  __wake_up+0x13/0x20
-[   82.124276]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.128564]  wake_up_klogd_work_func+0x5c/0x60
-[   82.133028]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.137317]  irq_work_run_list+0x4f/0x70
-[   82.141261]  ? set_memory_decrypted+0x10/0x10
-[   82.145636]  irq_work_run+0x2c/0x40
-[   82.149139]  flush_smp_call_function_queue+0x72/0xf0
-[   82.154123]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.158412]  generic_smp_call_function_single_interrupt+0x13/0x2b
-[   82.164522]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.168810]  smp_call_function_interrupt+0x3e/0xd0
-[   82.173623]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.177910]  call_function_interrupt+0xf/0x20
-[   82.182287]  </IRQ>
-[   82.184411] RIP: 0010:panic+0x1fa/0x239
-[   82.188266] Code: b0 83 3d e3 5f a3 01 00 74 05 e8 4c 6c 02 00 48
-c7 c6 a0 b9 3a a2 48 c7 c7 d0 2c d4 a1 e8 9c fb 05 00 e8 74 58 0e 00
-fb 31 db <4c> 39 eb 7c 1d 41 83 f4 01 48 8b 05 91 5f a3 01 44 89 e7 e8
-49 06
-[   82.207019] RSP: 0000:ffffb7044002fc40 EFLAGS: 00000246 ORIG_RAX:
-ffffffffffffff03
-[   82.214603] RAX: ffffb7044002fcb0 RBX: 0000000000000000 RCX: 000000000000001f
-[   82.221754] RDX: 0000000000000001 RSI: ffffffffa16019c0 RDI: ffffffffa097599c
-[   82.228902] RBP: ffffb7044002fcb0 R08: 0000000000000000 R09: ffffb7044002ff58
-[   82.236044] R10: 0000000000000000 R11: ffff9ad0dda48000 R12: 0000000000000000
-[   82.243194] R13: 0000000000000000 R14: ffffb7044002fe01 R15: 000000000000000b
-[   82.250354]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.254644]  ? panic+0x1f7/0x239
-[   82.257901]  ? panic+0x5/0x239
-[   82.260979]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.265271]  do_exit.cold+0xa0/0xb7
-[   82.268781]  ? do_exit+0x5/0xb40
-[   82.272030]  ? ftrace_return_to_handler+0x99/0xf0
-[   82.276759]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.281044]  do_group_exit+0x47/0xb0
-[   82.284642]  ? ftrace_graph_caller+0xb0/0xb0
-[   82.288930]  get_signal+0x158/0x7e0
-[   82.292449]  do_signal+0x37/0x640
-[   82.295787]  ? trace_event_raw_event_rcu_dyntick+0x75/0xc0
-[   82.301309]  exit_to_usermode_loop+0x78/0xd0
-[   82.305598]  prepare_exit_to_usermode+0x66/0x90
-[   82.310145]  ? page_fault+0x8/0x30
-[   82.313570]  retint_user+0x8/0x18
-[   82.316904] RIP: 0033:0x7f62d3b648a8
-[   82.320493] Code: fe ff ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44
-00 00 55 66 0f ef c0 48 89 e5 41 56 41 54 53 48 81 ec 98 08 00 00 48
-8b 45 28 <0f> 29 85 90 f7 ff ff 8b 1d 0f 68 38 00 0f 29 85 a0 f7 ff ff
-4c 8b
-[   82.339254] RSP: 002b:00007ffe44822e80 EFLAGS: 00010202
-[   82.344498] RAX: 00007ffe44823950 RBX: 00007ffe44823950 RCX: 00000000000000d7
-[   82.351647] RDX: 000055a3d336bc15 RSI: 0000000000000000 RDI: 0000000000000018
-[   82.358789] RBP: 00007ffe44823730 R08: 000055a3d336e9c5 R09: 0000000000000000
-[   82.365931] R10: 00007ffe44823788 R11: 0000000000000000 R12: 00007ffe44823800
-[   82.373081] R13: 00000000000000d7 R14: 00007ffe44823840 R15: 0000000000000018
-[   82.380236] ---[ end trace d471dcce52203e4f ]---
+OK, here is my fix. This will not change the other arches. please try it.
 
-full test log link,
-https://lkft.validation.linaro.org/scheduler/job/1705337#L1514
+
+From 24390dffe6eb9a3e95f7d46a528a1dcfd716dc81 Mon Sep 17 00:00:00 2001
+From: Masami Hiramatsu <mhiramat@kernel.org>
+Date: Tue, 25 Aug 2020 01:37:00 +0900
+Subject: [PATCH] kprobes/x86: Fixes NMI context check on x86
+
+Since commit 0d00449c7a28 ("x86: Replace ist_enter() with nmi_enter()")
+made int3 as one of NMI, in_nmi() in kprobe handlers always returns !0.
+Thus the kretprobe handlers always skipped the execution on x86 if it
+is using int3. (CONFIG_KPROBES_ON_FTRACE=n and
+echo 0 > /proc/sys/debug/kprobe_optimization)
+
+To avoid this issue, introduce arch_kprobe_in_nmi() and check the
+in_nmi() count is bigger than 1 << NMI_SHIFT on x86 if the handler
+has been invoked from kprobe_int3_handler. By default, the
+arch_kprobe_in_nmi() will be same as in_nmi().
+
+Fixes: 0d00449c7a28 ("x86: Replace ist_enter() with nmi_enter()")
+Reported-by: Eddy Wu <Eddy_Wu@trendmicro.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/include/asm/kprobes.h |  1 +
+ arch/x86/kernel/kprobes/core.c | 18 ++++++++++++++++++
+ kernel/kprobes.c               |  8 +++++++-
+ 3 files changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/kprobes.h b/arch/x86/include/asm/kprobes.h
+index 143bc9abe99c..ddb24feb95ad 100644
+--- a/arch/x86/include/asm/kprobes.h
++++ b/arch/x86/include/asm/kprobes.h
+@@ -98,6 +98,7 @@ struct kprobe_ctlblk {
+ 	unsigned long kprobe_old_flags;
+ 	unsigned long kprobe_saved_flags;
+ 	struct prev_kprobe prev_kprobe;
++	bool 	in_int3;
+ };
+ 
+ extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 2ca10b770cff..649d467c8231 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -583,6 +583,20 @@ static nokprobe_inline void restore_btf(void)
+ 	}
+ }
+ 
++bool arch_kprobe_in_nmi(void)
++{
++	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
++
++	if (kcb->in_int3) {
++		/*
++		 * Since the int3 is one of NMI, we have to check in_nmi() is
++		 * bigger than 1 << NMI_SHIFT instead of !0.
++		 */
++		return in_nmi() > (1 << NMI_SHIFT);
++	} else
++		return in_nmi();
++}
++
+ void arch_prepare_kretprobe(struct kretprobe_instance *ri, struct pt_regs *regs)
+ {
+ 	unsigned long *sara = stack_addr(regs);
+@@ -697,6 +711,7 @@ int kprobe_int3_handler(struct pt_regs *regs)
+ 				return 1;
+ 		} else {
+ 			set_current_kprobe(p, regs, kcb);
++			kcb->in_int3 = true;
+ 			kcb->kprobe_status = KPROBE_HIT_ACTIVE;
+ 
+ 			/*
+@@ -710,6 +725,7 @@ int kprobe_int3_handler(struct pt_regs *regs)
+ 				setup_singlestep(p, regs, kcb, 0);
+ 			else
+ 				reset_current_kprobe();
++			kcb->in_int3 = false;
+ 			return 1;
+ 		}
+ 	} else if (*addr != INT3_INSN_OPCODE) {
+@@ -994,7 +1010,9 @@ int kprobe_debug_handler(struct pt_regs *regs)
+ 
+ 	if ((kcb->kprobe_status != KPROBE_REENTER) && cur->post_handler) {
+ 		kcb->kprobe_status = KPROBE_HIT_SSDONE;
++		kcb->in_int3 = true;
+ 		cur->post_handler(cur, regs, 0);
++		kcb->in_int3 = false;
+ 	}
+ 
+ 	/* Restore back the original saved kprobes variables and continue. */
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 287b263c9cb9..9564928fb882 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1927,6 +1927,12 @@ unsigned long __weak arch_deref_entry_point(void *entry)
+ }
+ 
+ #ifdef CONFIG_KRETPROBES
++
++bool __weak arch_kprobe_in_nmi(void)
++{
++	return in_nmi();
++}
++
+ /*
+  * This kprobe pre_handler is registered with every kretprobe. When probe
+  * hits it will set up the return probe.
+@@ -1943,7 +1949,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+ 	 * statistical counter, so that the user is informed that
+ 	 * something happened:
+ 	 */
+-	if (unlikely(in_nmi())) {
++	if (unlikely(arch_kprobe_in_nmi())) {
+ 		rp->nmissed++;
+ 		return 0;
+ 	}
+-- 
+2.25.1
+
 
 -- 
-Linaro LKFT
-https://lkft.linaro.org
+Masami Hiramatsu <mhiramat@kernel.org>
