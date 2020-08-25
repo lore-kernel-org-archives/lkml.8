@@ -2,155 +2,116 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39040C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53EF32075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FBD32075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:11:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="Vj9FVogw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tB7mY0ZO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgHYPKw (ORCPT
+        id S1726826AbgHYPLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:10:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40076 "EHLO
+        Tue, 25 Aug 2020 11:11:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbgHYPKr (ORCPT
+        with ESMTP id S1726113AbgHYPLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:10:47 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08915C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:10:46 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id u3so11190906qkd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:10:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BNq5Zlk150pviE6ZXbLRBh3YPk82JI5ia7l5y8IDiZE=;
-        b=Vj9FVogwqT9DCuNcJkRAg+vBqhPWaJhuBSHeqkrDVuKbd8bVb4EJH0XtPU2YJRB3s4
-         i9/X7Hyc+uAj86JCaTP5DulwGeqIU5Y/feIA5Fn6gIg/WDTR+YNPoyBcVRA3vEMgfXGT
-         bIuNxAUDiNLJgRoK9lAHfFvr3GMlF8+f0bOjYGjoeSnCTf0PaZjmYQ9pYlq9ygipWI8Y
-         BRdT2QTnXAWBCGHGJtzVKfhlAG+KIeCRvY0IlnhBz8Go44EfsON6pQs3jq2VaneYC8Yd
-         dCF5vnVByfyCnOdAGar2+8Hh2yqIez4KmNx7+y7jIzRKVe+X+oAc5nflzk89ntDBseJd
-         hWWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BNq5Zlk150pviE6ZXbLRBh3YPk82JI5ia7l5y8IDiZE=;
-        b=RP/JOlQLCtZUSZTcuspwwcYfYkEr3xxVyR7y88NmqVD9thQY4+FpQRdLnUiUq9SV04
-         G8pQC89zho9Ifd2yYEwLJt49+kuXQWOnrlGCIHfFqphCAheoPdVqj4u5Gg+l8f/aH/VL
-         qjmqj7O2Lj6GjwR4PQUKGpCkvXSpOzzU/8SzlPO8kdVZI0igmvd524wej5P1Bo6QyIm5
-         7DAbRhKNAl/7i/+gnEU2eT95UG0nWsBe9IObJSiWk27ufB2pYaMfx2sZIcqv5mjeTa0b
-         G0B0hAE/u8N3xDubxdKO0KIyfWd0/dMGSA3K+8r34UqBKMKhV4Cut9g5YNRpEmFZZia6
-         8gHw==
-X-Gm-Message-State: AOAM531iBRSrJmKGwlKPCQXbLtC+4i8moEazAHyaGiQBmJ9Y3RBLPtEu
-        DOCuYArMtmJIbLcqpC0JKBc/bg==
-X-Google-Smtp-Source: ABdhPJyf8MToRVRD6h//jMS5uIn/DL3VouNopKLGVdpk1lvDF1GD863oMnjBrUpM1NkUMRazxcBGBA==
-X-Received: by 2002:a37:8047:: with SMTP id b68mr9104318qkd.299.1598368246055;
-        Tue, 25 Aug 2020 08:10:46 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:bdd3])
-        by smtp.gmail.com with ESMTPSA id f14sm11854778qkl.52.2020.08.25.08.10.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 08:10:45 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 11:09:33 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+b305848212deec86eabe@syzkaller.appspotmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com, Roman Gushchin <guro@fb.com>,
-        Hugh Dickins <hughd@google.com>,
-        Shakeel Butt <shakeelb@google.com>
-Subject: Re: KASAN: use-after-free Write in page_counter_uncharge
-Message-ID: <20200825150933.GB932571@cmpxchg.org>
-References: <00000000000014822b05ad2802a7@google.com>
- <20200818161856.d18df24b5d10fc727ead846f@linux-foundation.org>
- <20200819063421.GA5422@dhcp22.suse.cz>
- <20200820090341.GC5033@dhcp22.suse.cz>
+        Tue, 25 Aug 2020 11:11:04 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0CAC061755;
+        Tue, 25 Aug 2020 08:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=LPG5Lc7nCg6NrS7ax+6DMhtaCUehIHNu6awjAcV2BcE=; b=tB7mY0ZOpnz4kAH3i8HK3Mu2Dr
+        KdjEI6mp7kDoq4wQGigAPa4qc5Uzr0yGhCJqcti2O8wuhkO6l6Y5mOSL5jBo8HryngLeovoPGDjvT
+        6NodraZ/TUTwHK4CD7ro8a1FOfHYzy0YSFWm5tmdL574Q81rla/G/tPLAgmKQmu9ZnQluf4rmyxgf
+        36SM1gZq65OUuvNaW1W4PtfWlUuVHkOZzx9ekjEmCBgdQC/lzKDU5CnupngOBr3GGGxzUhWMQ1ePt
+        szktTlwydy0dQUcdxA0P35WDPeRCbcYF+OC7Fbzc4p7owylhuQMtnZlwQAd780JWGROiokTNr5vxl
+        WvTtxoaA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAab6-0005G5-QJ; Tue, 25 Aug 2020 15:10:53 +0000
+Subject: Re: [PATCH v5 5/6] can: ctucanfd: CTU CAN FD open-source IP core -
+ platform and next steps and mainlining chances
+To:     Pavel Pisa <pisa@cmp.felk.cvut.cz>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Drew Fustini <pdp7pdp7@gmail.com>
+Cc:     linux-can@vger.kernel.org, devicetree@vger.kernel.org,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        David Miller <davem@davemloft.net>, mark.rutland@arm.com,
+        Carsten Emde <c.emde@osadl.org>, armbru@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marin Jerabek <martin.jerabek01@gmail.com>,
+        Ondrej Ille <ondrej.ille@gmail.com>,
+        Jiri Novak <jnovak@fel.cvut.cz>,
+        Jaroslav Beran <jara.beran@gmail.com>,
+        Petr Porazil <porazil@pikron.com>, Pavel Machek <pavel@ucw.cz>
+References: <cover.1597518433.git.ppisa@pikron.com>
+ <4ceda3a9d68263b4e0dfe66521a46f40b2e502f7.1597518433.git.ppisa@pikron.com>
+ <73e3dad8-9ab7-2f8f-312c-1957b4572b08@infradead.org>
+ <202008251125.41514.pisa@cmp.felk.cvut.cz>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <6f26127d-5403-3ea2-9b6d-11dc35b0d5c2@infradead.org>
+Date:   Tue, 25 Aug 2020 08:10:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820090341.GC5033@dhcp22.suse.cz>
+In-Reply-To: <202008251125.41514.pisa@cmp.felk.cvut.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 11:03:41AM +0200, Michal Hocko wrote:
-> From 73a40589cab12122170fb9f90222982e81d41423 Mon Sep 17 00:00:00 2001
-> From: Michal Hocko <mhocko@suse.com>
-> Date: Thu, 20 Aug 2020 10:44:58 +0200
-> Subject: [PATCH] memcg: fix use-after-free in uncharge_batch
+On 8/25/20 2:25 AM, Pavel Pisa wrote:
+> Hello Randy and Rob,
 > 
-> syzbot has reported an use-after-free in the uncharge_batch path
-> BUG: KASAN: use-after-free in instrument_atomic_write include/linux/instrumented.h:71 [inline]
-> BUG: KASAN: use-after-free in atomic64_sub_return include/asm-generic/atomic-instrumented.h:970 [inline]
-> BUG: KASAN: use-after-free in atomic_long_sub_return include/asm-generic/atomic-long.h:113 [inline]
-> BUG: KASAN: use-after-free in page_counter_cancel mm/page_counter.c:54 [inline]
-> BUG: KASAN: use-after-free in page_counter_uncharge+0x3d/0xc0 mm/page_counter.c:155
-> Write of size 8 at addr ffff8880371c0148 by task syz-executor.0/9304
+> thanks much for review, I have corrected FPGA spelling
+> and binding YAML license.
 > 
-> CPU: 0 PID: 9304 Comm: syz-executor.0 Not tainted 5.8.0-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x1f0/0x31e lib/dump_stack.c:118
->  print_address_description+0x66/0x620 mm/kasan/report.c:383
->  __kasan_report mm/kasan/report.c:513 [inline]
->  kasan_report+0x132/0x1d0 mm/kasan/report.c:530
->  check_memory_region_inline mm/kasan/generic.c:183 [inline]
->  check_memory_region+0x2b5/0x2f0 mm/kasan/generic.c:192
->  instrument_atomic_write include/linux/instrumented.h:71 [inline]
->  atomic64_sub_return include/asm-generic/atomic-instrumented.h:970 [inline]
->  atomic_long_sub_return include/asm-generic/atomic-long.h:113 [inline]
->  page_counter_cancel mm/page_counter.c:54 [inline]
->  page_counter_uncharge+0x3d/0xc0 mm/page_counter.c:155
->  uncharge_batch+0x6c/0x350 mm/memcontrol.c:6764
->  uncharge_page+0x115/0x430 mm/memcontrol.c:6796
->  uncharge_list mm/memcontrol.c:6835 [inline]
->  mem_cgroup_uncharge_list+0x70/0xe0 mm/memcontrol.c:6877
->  release_pages+0x13a2/0x1550 mm/swap.c:911
->  tlb_batch_pages_flush mm/mmu_gather.c:49 [inline]
->  tlb_flush_mmu_free mm/mmu_gather.c:242 [inline]
->  tlb_flush_mmu+0x780/0x910 mm/mmu_gather.c:249
->  tlb_finish_mmu+0xcb/0x200 mm/mmu_gather.c:328
->  exit_mmap+0x296/0x550 mm/mmap.c:3185
->  __mmput+0x113/0x370 kernel/fork.c:1076
->  exit_mm+0x4cd/0x550 kernel/exit.c:483
->  do_exit+0x576/0x1f20 kernel/exit.c:793
->  do_group_exit+0x161/0x2d0 kernel/exit.c:903
->  get_signal+0x139b/0x1d30 kernel/signal.c:2743
->  arch_do_signal+0x33/0x610 arch/x86/kernel/signal.c:811
->  exit_to_user_mode_loop kernel/entry/common.c:135 [inline]
->  exit_to_user_mode_prepare+0x8d/0x1b0 kernel/entry/common.c:166
->  syscall_exit_to_user_mode+0x5e/0x1a0 kernel/entry/common.c:241
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> On Sunday 16 of August 2020 01:28:13 Randy Dunlap wrote:
+>> On 8/15/20 12:43 PM, Pavel Pisa wrote:
+>>> diff --git a/drivers/net/can/ctucanfd/Kconfig
+>>> b/drivers/net/can/ctucanfd/Kconfig index e1636373628a..a8c9cc38f216
+>>> 100644
+>>> --- a/drivers/net/can/ctucanfd/Kconfig
+>>> +++ b/drivers/net/can/ctucanfd/Kconfig
+>>> @@ -21,4 +21,15 @@ config CAN_CTUCANFD_PCI
+>>>  	  PCIe board with PiKRON.com designed transceiver riser shield is
+>>> available at https://gitlab.fel.cvut.cz/canbus/pcie-ctu_can_fd .
+>>>
+>>> +config CAN_CTUCANFD_PLATFORM
+>>> +	tristate "CTU CAN-FD IP core platform (FPGA, SoC) driver"
+>>> +	depends on OF
+>>
+>> Can this be
+>> 	depends on OF || COMPILE_TEST
+>> ?
 > 
-> 1a3e1f40962c ("mm: memcontrol: decouple reference counting from page
-> accounting") has reworked the memcg lifetime to be bound the the struct
-> page rather than charges. It has also removed the css_put_many from
-> uncharge_batch and that is causing the above splat. uncharge_batch is
-> supposed to uncharge accumulated charges for all pages freed from the
-> same memcg. The queuing is done by uncharge_page which however drops the
-> memcg reference after it adds charges to the batch. If the current page
-> happens to be the last one holding the reference for its memcg then the
-> memcg is OK to go and the next page to be freed will trigger batched
-> uncharge which needs to access the memcg which is gone already.
+> I am not sure for this change. Is it ensured/documented somewhere that
+> header files provide dummy definition such way, that OF drivers builds
+> even if OF support is disabled? If I remember well, CTU CAN FD OF
+> module build fails if attempted in the frame of native x86_64
+> build where OF has been disabled. Does COMPILE_TEST ensure that
+> such build succeeds.
 > 
-> Fix the issue by taking a reference for the memcg in the current batch.
-> 
-> Fixes: 1a3e1f40962c ("mm: memcontrol: decouple reference counting from page accounting")
-> Reported-by: syzbot+b305848212deec86eabe@syzkaller.appspotmail.com
-> Reported-by: syzbot+b5ea6fb6f139c8b9482b@syzkaller.appspotmail.com
-> Signed-off-by: Michal Hocko <mhocko@suse.com>
 
-Nice catch! The fix looks correct - ug now holds a reference count for
-its ug->memcg pointer.
+COMPILE_TEST won't ensure anything.
+OTOH, <linux/of.h> has lots of stubs for handling the case of
+CONFIG_OF not being enabled.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+-- 
+~Randy
+
