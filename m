@@ -2,142 +2,103 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A33CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C822C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 072A1207BC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KXJTaoxh"
+	by mail.kernel.org (Postfix) with ESMTP id 3D39620786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:19:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgHYPTW (ORCPT
+        id S1726885AbgHYPTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:19:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbgHYPTO (ORCPT
+        Tue, 25 Aug 2020 11:19:36 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:5084 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726813AbgHYPTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 11:19:30 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PF8BVl004045;
+        Tue, 25 Aug 2020 11:19:15 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3330952011-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 11:19:15 -0400
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07PFJEUA021571
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
         Tue, 25 Aug 2020 11:19:14 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 618D5C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:19:14 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id k20so5643819qtq.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:19:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=brmows/DN8FB52grSh/oKVF6r30vBH02XnLaZne+j6g=;
-        b=KXJTaoxhiqydETO8U5CeanAxKKm7Mei1X7IRqJmq3HIDSPh21lhkFhNVY1kJPZBxN7
-         66QT0QlHVj04ubc6k0t5ymew7vwGqhWs7i1WvChHnllaka0obVnhLGzcfnbKYKbdxC2Y
-         wicQCkKFdpcJZiHbidS/yyHZsk5Y+OZ3aqi6Fm8uKdJMnONtst1DLYF31Zz96QGXr97X
-         kairB7r2gx7dh1IYqN/v4mYoWkTSuejp/63vAHtcJ03JnOMArtvcck8Jh98dUwlm1CnZ
-         nZxWzvE7SYIsYWSRyipLwq2NegNY6KKjHNcoyWXYW2VYzKdC6J8R4pwpwKQw8HcfP+Th
-         yE5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=brmows/DN8FB52grSh/oKVF6r30vBH02XnLaZne+j6g=;
-        b=e87K2cVF5ITcZVTCSFIUCc41EQFjhkbalml6t8OBJJGnMIdDmBrnIoHQOmvr8mHdDz
-         LKtk9eJBaXKcSys19XIsOgoM1Xf4gAYZ/I64fnuYSd/oXWngDS6d7jZF8SsxefJCiZWq
-         yttxL7V1Wl98c5vRMKdfrJ4bro7nVOFvPvE3qFrUgdl8Al9YDfk8usVN31gSY0X5kILH
-         kIM8ppIgsxotw3e0EmSVGpl9zGatl6Qz6ya9d7CbBPDw7KMYGUg9yK1LfRUZlZtvp5DW
-         QPfzSq7ddEkO1M+/q6WcoURpesS0knfZZpfVXmocIlAhqEJnjgFslsnW/5qMW9vXBhYD
-         wnGg==
-X-Gm-Message-State: AOAM530LYMmkd4TDP2onOoLtiXzKQwWAxcIvJ3TWWTF3OoMpmWxh7AK4
-        B+pIo+JbVPqJPrzKFML5UZcnYAFT+wRoQg==
-X-Google-Smtp-Source: ABdhPJwzXkGvFcpHJDTZPxyxGsSgLZJgI14zJolzg9xxdW5i+CsXjL7zhEU3xYVLundRpXPAQPLYFg==
-X-Received: by 2002:ac8:614b:: with SMTP id d11mr9820027qtm.271.1598368753547;
-        Tue, 25 Aug 2020 08:19:13 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id x57sm13726902qtc.61.2020.08.25.08.19.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 08:19:12 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 25 Aug 2020 11:19:10 -0400
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] x86/asm: Replace __force_order with memory clobber
-Message-ID: <20200825151910.GA786059@rani.riverdale.lan>
-References: <20200823011652.GA1910689@rani.riverdale.lan>
- <20200823212550.3377591-1-nivedita@alum.mit.edu>
- <CANiq72kWaS=8rDQ81cCY3021=1J5yFfJk8FHBQEjhtssRFoVcQ@mail.gmail.com>
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 25 Aug 2020 11:19:13 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 25 Aug 2020 11:19:13 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 25 Aug 2020 11:19:12 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07PFJ9kv007670;
+        Tue, 25 Aug 2020 11:19:09 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <vkoul@kernel.org>, <lars@metafoo.de>, <dan.j.williams@intel.com>,
+        <ardeleanalex@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [RESEND PATCH v2 0/6] dmaengine: axi-dmac: add support for reading bus attributes from register
+Date:   Tue, 25 Aug 2020 18:19:44 +0300
+Message-ID: <20200825151950.57605-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CANiq72kWaS=8rDQ81cCY3021=1J5yFfJk8FHBQEjhtssRFoVcQ@mail.gmail.com>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_05:2020-08-25,2020-08-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ phishscore=0 mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
+ suspectscore=8 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 09:13:34PM +0200, Miguel Ojeda wrote:
-> Hi Arvind,
-> 
-> On Sun, Aug 23, 2020 at 11:25 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > - Using a dummy input operand with an arbitrary constant address for the
-> >   read functions, instead of a global variable. This will prevent reads
-> >   from being reordered across writes, while allowing memory loads to be
-> >   cached/reordered across CRn reads, which should be safe.
-> 
-> Assuming no surprises from compilers, this looks better than dealing
-> with different code for each compiler.
-> 
-> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=82602
-> 
-> A lore link to the other discussion would be nice here for context.
-> 
+The series adds support for reading the DMA bus attributes from the
+INTERFACE_DESCRIPTION (0x10) register.
 
-Ok.
+The first 5 changes are a bit of rework prior to adding the actual
+change in patch 6, as things need to be shifted around a bit, to enable 
+the clock to be enabled earlier, to be able to read the version
+register.
 
-> > + * The compiler should not reorder volatile asm, however older versions of GCC
-> > + * had a bug (which was fixed in 8.1, 7.3 and 6.5) where they could sometimes
-> 
-> I'd mention the state of GCC 5 here.
-> 
+Changelog v1 -> v2:
+* fixed error-exit paths for the clock move patch
+  i.e. 'dmaengine: axi-dmac: move clock enable earlier'
+* fixed error-exit path for patch
+  'axi-dmac: wrap channel parameter adjust into function'
+* added patch 'dmaengine: axi-dmac: move active_descs list init after device-tree init'
+  the list of active_descs can be moved a bit lower in the init/probe
+*** BLURB HERE ***
 
-Ok.
+Alexandru Ardelean (6):
+  dmaengine: axi-dmac: move version read in probe
+  dmaengine: axi-dmac: move active_descs list init after device-tree
+    init
+  dmaengine: axi-dmac: move clock enable earlier
+  dmaengine: axi-dmac: wrap entire dt parse in a function
+  dmaengine: axi-dmac: wrap channel parameter adjust into function
+  dmaengine: axi-dmac: add support for reading bus attributes from
+    registers
 
-> > + * reorder volatile asm. The write functions are not a problem since they have
-> > + * memory clobbers preventing reordering. To prevent reads from being reordered
-> > + * with respect to writes, use a dummy memory operand.
-> >   */
-> > -extern unsigned long __force_order;
-> > +
-> 
-> Spurious newline?
-> 
+ drivers/dma/dma-axi-dmac.c | 138 ++++++++++++++++++++++++++++---------
+ 1 file changed, 107 insertions(+), 31 deletions(-)
 
-This was intentional, but I can remove it if people don't like the extra
-whitespace.
+-- 
+2.17.1
 
-I'll wait a few days for additional review comments before sending v2.
-
-Thanks.
