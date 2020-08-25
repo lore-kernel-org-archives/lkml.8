@@ -2,125 +2,123 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C30C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23EEC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0736D20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B282220665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:07:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ixa9FJoz"
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="4zfsWlqx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbgHYVGL (ORCPT
+        id S1726617AbgHYVHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:06:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgHYVGK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 17:06:10 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A556C061574;
-        Tue, 25 Aug 2020 14:06:10 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id i10so15453981ljn.2;
-        Tue, 25 Aug 2020 14:06:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5imsyI0b83eRRG7XSm8dcgFIEu+jMWu3oUZKB77rnAk=;
-        b=ixa9FJozDSEupBwlfbfT2YKeDnuGuwPKxniHDijVcnofGH60f/oOxgRLqF4uQMIZex
-         ur5IuPNQdYJo/OsDiFthjqN4CuvC/8MAPB6+KkNDeQpSvOX2QdZjKWSXsss0/6Jo208g
-         c9roI/+A7cr5YMtRaHqe4QevRkhAa9NQTVPa8+t6RCB+iY74Q/sInS7ruQdiE7/XpjVz
-         v/cJGXdOLtkKeqz/KLOi19mJ59kH0okjnIXPlqPgepfsif4a3SP5hS5fCU4cv/nMiMXF
-         8MR4co23JzgfUyfnirEqeCMTAl7ZRu0ylqWFTrmdC883alloiP+uLnj0EbfAqzm2xRLR
-         C3ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5imsyI0b83eRRG7XSm8dcgFIEu+jMWu3oUZKB77rnAk=;
-        b=PKJ4S+gnnRKqM/mRebfKhkdPGXNX7mGoP2101GagbsJN+/2jwLvkWV+1LMAiJVnKY6
-         GvI73LZCSYLMmwJVBM3fCqSlLSOFSF0aAUimhghpnFeDyNbX5RxZLWHIlTy67uRw3MfI
-         o32VW90TPJ+aROgVi4NahL2wqmELHU+fY0g1aEG/Jm+0xSU2vO8P5DXummCA7HSkK8U2
-         +7Wabzlrr+8bGSXQ1y4vzSLkFB0XE3pfI5MN/LDLtHExKSOe4bzczEKVkIsEoeZesCMI
-         ahcstg6FAtrK97PHx9SgmR1IXwRnsjUFhcWnT/xb8XJ7RNXPoAkw0Z0luGSkNipD66uC
-         /9Gw==
-X-Gm-Message-State: AOAM5305N3K5/eQDPnvnH7eYFCN1bmtYsw9SjMZepRBPtVqaL9SFbFrf
-        m+Gh83GksXusoFHcUWRBom9QUD21c97APvVeO14=
-X-Google-Smtp-Source: ABdhPJzqBo3BZIqb32YXAiqn3A8kkfWg8836sSqMY+6pdpkL6vCTqGuwP9woNyZ1/BoQn9KjnpJ6CuDknJMY7tR/H4U=
-X-Received: by 2002:a2e:4e09:: with SMTP id c9mr5869546ljb.283.1598389568661;
- Tue, 25 Aug 2020 14:06:08 -0700 (PDT)
+        Tue, 25 Aug 2020 17:07:53 -0400
+Received: from cmta18.telus.net ([209.171.16.91]:46801 "EHLO cmta18.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726336AbgHYVHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 17:07:51 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id AgAVkQs0IqUs3AgAWkWBnA; Tue, 25 Aug 2020 15:07:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1598389670; bh=okfs/gSusVf/W8ubFP2qX6KtZJzytKM0afb0qqjR/Eg=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=4zfsWlqxGLKOlEUpukz8dh81lSKCN2RHp4GG2TOj1tlEOJ9WLxtUm7BNJlDFlEgkZ
+         9+1aITVhEpyNa3/xjRqkVtzQnZ7oFcgN0StGFJ8AGLmiCkPbiUMc+GGqDvmhBKZjpk
+         ZDHVzC13+783zLEHXEnCvc7mAuDB/UNGUPpcdxU28UFH7xff4yZjAmxf+WeAyc38Ei
+         DonDDmH8x10J4GE7mjBF1JgszfmNJu08VvfUKBmY0QbrAhN2iNAWnsqwBVWvgT+URN
+         /EH5vAyUAd1WjNv4n0dOzTl17LhNVqPyfTAL1u2AemmmdL8eb9I194HLE6xEdrIU+l
+         3Yr88rf/CIFxg==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=Mo8sFFSe c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=IkcTkHD0fZMA:10 a=2s2tET4dTWZ_aRCLoUoA:9
+ a=QEXdDO2ut3YA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>
+Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
+References: <4169555.5IIHXK4Dsd@kreacher>        <5cf44a75c9f73740d2a22dbfc5c7a57489b1a3ca.camel@linux.intel.com>        <002001d67a7b$2b46e1c0$81d4a540$@net> <d07cd980439d999b060dccdd16cb44c390cbf66d.camel@linux.intel.com>
+In-Reply-To: <d07cd980439d999b060dccdd16cb44c390cbf66d.camel@linux.intel.com>
+Subject: RE: [PATCH v2 0/5] cpufreq: intel_pstate: Address some HWP-related oddities
+Date:   Tue, 25 Aug 2020 14:07:46 -0700
+Message-ID: <004a01d67b23$c9829b60$5c87d220$@net>
 MIME-Version: 1.0
-References: <20200825182919.1118197-1-kpsingh@chromium.org>
-In-Reply-To: <20200825182919.1118197-1-kpsingh@chromium.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 25 Aug 2020 14:05:57 -0700
-Message-ID: <CAADnVQJG+vMTyuNGjWTYnWX11ZqJU-EE30UC5KPJtpv1MC78cw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v10 0/7] Generalizing bpf_local_storage
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdZ68u9Uyt9nR49dTce4yZVhEfzmlQAEGlEQ
+X-CMAE-Envelope: MS4wfIDvh/3kq5OxzYmu7kehd7AzqqKrivKj6FoX406cZFn35t6L5jEJJrAy/xmpYMXe5q2D2Frhoe4BywGq9rwxFkvqoHHvaGOyFTDDthzNfhjCzj3UtAWt
+ 18TIYhyMzVOBRfLgQp7hg/aSqjl6/2UtAnC3WjlWK9v4hqbWP8Q7oYiP8xkkKnizFIYdNStQqpwTwh4AIIvQlQp+jtPa83QTaeeGz3hhZGhRIJ1N+SdFqctD
+ Xc+sc09umctwSgWe/LAy8iTkcWQq9Gf5QePERGC3PihgM2D4Max8rLIfqVuxa5w4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 11:29 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> # v9 -> v10
->
-> - Added NULL check for inode_storage_ptr before calling
->   bpf_local_storage_update
-> - Removed an extraneous include
-> - Rebased and added Acks / Signoff.
+Hi Srinivas,
 
-Hmm. Though it looks good I cannot apply it, because
-test_progs -t map_ptr
-is broken:
-2225: (18) r2 = 0xffffc900004e5004
-2227: (b4) w1 = 58
-2228: (63) *(u32 *)(r2 +0) = r1
- R0=map_value(id=0,off=0,ks=4,vs=4,imm=0) R1_w=inv58
-R2_w=map_value(id=0,off=4,ks=4,vs=8,imm=0) R3=inv49 R4=inv63
-R5=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6_w=inv0
-R7=invP8 R8=map_ptr(id=0,off=0,ks=4,vs=4,imm=0) R10=?
-; VERIFY_TYPE(BPF_MAP_TYPE_SK_STORAGE, check_sk_storage);
-2229: (18) r1 = 0xffffc900004e5000
-2231: (b4) w3 = 24
-2232: (63) *(u32 *)(r1 +0) = r3
- R0=map_value(id=0,off=0,ks=4,vs=4,imm=0)
-R1_w=map_value(id=0,off=0,ks=4,vs=8,imm=0)
-R2_w=map_value(id=0,off=4,ks=4,vs=8,imm=0) R3_w=inv24 R4=inv63
-R5=inv(id=0,umax_value=4294967295,var_off=(0x0; 0xffffffff)) R6_w=inv0
-R7=invP8 R8=map_pt?
-2233: (18) r3 = 0xffff8881f03f7000
-; VERIFY(indirect->map_type == direct->map_type);
-2235: (85) call unknown#195896080
-invalid func unknown#195896080
-processed 4678 insns (limit 1000000) max_states_per_insn 9
-total_states 240 peak_states 178 mark_read 11
+Thanks for your reply.
 
-libbpf: -- END LOG --
-libbpf: failed to load program 'cgroup_skb/egress'
-libbpf: failed to load object 'map_ptr_kern'
-libbpf: failed to load BPF skeleton 'map_ptr_kern': -4007
-test_map_ptr:FAIL:skel_open_load open_load failed
-#43 map_ptr:FAIL
+On 2020.08.25 08:12 Srinivas Pandruvada wrote:
+> On Mon, 2020-08-24 at 18:00 -0700, Doug Smythies wrote:
+> > I think there is a disconnect between your written
+> > description of what is going on and your supporting MSR reads.
+> >
+> I reproduced again.
+> I see the copy paste individual at the first place swapped.
 
-Above 'invalid func unknown#195896080' happens
-when libbpf fails to do a relocation at runtime.
-Please debug.
-It's certainly caused by this set, but not sure why.
+Yes, and that had me confused, initially.
+
+> I pasted the full output by direct copy - paste from the screen.
+> 
+> But the issues are still there.
+
+Agreed.
+I didn't try your offline/online of CPU 1 part previously,
+but did now, and get the same results as you.
+
+I did not know that "rdmsr -a 0x774" lists
+stuff in the order that CPU were last brought on-line.
+I had assumed the list was in CPU order. Weird.
+
+My example (nothing new here, just me catching up.
+The offline/online order was cpu1, then cpu3, then cpu2):
+
+root@s18:/sys/devices/system/cpu# grep . cpu*/cpufreq/energy_performance_preference
+cpu0/cpufreq/energy_performance_preference:balance_performance
+cpu1/cpufreq/energy_performance_preference:127
+cpu2/cpufreq/energy_performance_preference:125
+cpu3/cpufreq/energy_performance_preference:126
+cpu4/cpufreq/energy_performance_preference:balance_performance
+cpu5/cpufreq/energy_performance_preference:balance_performance
+root@s18:/sys/devices/system/cpu# rdmsr -p 0 0x774
+80002e2e
+root@s18:/sys/devices/system/cpu# rdmsr -p 1 0x774
+7f002e2e
+root@s18:/sys/devices/system/cpu# rdmsr -p 2 0x774
+7d002e2e
+root@s18:/sys/devices/system/cpu# rdmsr -p 3 0x774
+7e002e2e
+root@s18:/sys/devices/system/cpu# rdmsr -p 4 0x774
+80002e2e
+root@s18:/sys/devices/system/cpu# rdmsr -p 5 0x774
+80002e2e
+root@s18:/sys/devices/system/cpu# rdmsr -a 0x774
+80002e2e
+80002e2e
+80002e2e
+7f002e2e
+7e002e2e
+7d002e2e
+
+... Doug
+
+
