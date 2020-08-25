@@ -2,113 +2,118 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C5CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C84C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E99902076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BD5A2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:50:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Dp8HZQrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729205AbgHYGta (ORCPT
+        id S1729225AbgHYGul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:49:30 -0400
-Received: from mga06.intel.com ([134.134.136.31]:30123 "EHLO mga06.intel.com"
+        Tue, 25 Aug 2020 02:50:41 -0400
+Received: from ozlabs.org ([203.11.71.1]:51733 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729079AbgHYGt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:49:29 -0400
-IronPort-SDR: CVEweMkr9tTQ0BzzouaKKZ2s2alpAVNTrfJxkN8LR4WjwiI06JFCZfRvoXevm04wAguN1y6sD0
- mASGsGEgPzAQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="217606813"
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="217606813"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 23:49:29 -0700
-IronPort-SDR: V5mWwFtmttc0oEsWfhmDgvgOsHb7rREsw6RKkwLs5R8c5LOYQFJJ/w6ytddXRu/MWuQ/W+OCLA
- 2/b3NG4oJOaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="338698437"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by orsmga007.jf.intel.com with ESMTP; 24 Aug 2020 23:49:26 -0700
-Date:   Tue, 25 Aug 2020 14:49:26 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     Borislav Petkov <bp@suse.de>, "Luck, Tony" <tony.luck@intel.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
- -14.1% regression
-Message-ID: <20200825064926.GB83850@shbuild999.sh.intel.com>
-References: <20200425114414.GU26573@shao2-debian>
- <20200425130136.GA28245@zn.tnic>
- <20200818082943.GA65567@shbuild999.sh.intel.com>
- <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
- <20200819020437.GA2605@shbuild999.sh.intel.com>
- <20200821020259.GA90000@shbuild999.sh.intel.com>
- <20200824151425.GF4794@zn.tnic>
- <20200824153300.GA56944@shbuild999.sh.intel.com>
- <20200824161238.GI4794@zn.tnic>
- <20200824165653.GQ2976@suse.com>
+        id S1729116AbgHYGug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 02:50:36 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BbKPh4TtCz9sTK;
+        Tue, 25 Aug 2020 16:50:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1598338234;
+        bh=j9NrgxUjqWGE3IxuHRcqD4UBKle0ICvlV8D9udyUimw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Dp8HZQrQc6wRe+J1BEAo9CUpupQ4h3iULERXYZPL5jpU/z3dxhpNHZzB006zesX39
+         HtQINc6Nzi8aX9qEhXj7kzGOz5b8duQIhe9FBbcGaN63dtynXRWNbfcbEFUAzsNFIJ
+         Gh9ISm8vtrlNPHxMSHq0Orx7EFHsj/vLDfxQCPxnYIcdF+Yn5eb4BPvxpJo5QrGuyy
+         XrHr3K8ZApY+qSZkh09vMK9KJwxa5xv5yNJbDuDmgWjjUUr252P9Qx950effgVYJn+
+         +Jhm6Tuyy93fMvANbLxIGwK8FtO27IIutMZjl23AdPo9Ps4Q/onET+FmbMGuntn8OK
+         +1NRusNoUGGSA==
+Date:   Tue, 25 Aug 2020 16:50:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Subject: Re: linux-next: build failure after merge of the bpf-next tree
+Message-ID: <20200825165029.795a8428@canb.auug.org.au>
+In-Reply-To: <CAADnVQKGf7o8gJ60m_zjh+QcmRTNH+y1ha_B2q-1ixcCSAoHaw@mail.gmail.com>
+References: <20200821111111.6c04acd6@canb.auug.org.au>
+        <20200825112020.43ce26bb@canb.auug.org.au>
+        <CAADnVQLr8dU799ZrUnrBBDCtDxPyybZwrMFs5CAOHHW5pnLHHA@mail.gmail.com>
+        <20200825130445.655885f8@canb.auug.org.au>
+        <CAADnVQKGf7o8gJ60m_zjh+QcmRTNH+y1ha_B2q-1ixcCSAoHaw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824165653.GQ2976@suse.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: multipart/signed; boundary="Sig_/tDU.O6cX1D9IrOpNIJF9IC5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 05:56:53PM +0100, Mel Gorman wrote:
-> On Mon, Aug 24, 2020 at 06:12:38PM +0200, Borislav Petkov wrote:
-> > 
-> > > :)  Right, this is what I'm doing right now. Some test job is queued on
-> > > the test box, and it may needs some iterations of new patch. Hopefully we
-> > > can isolate some specific variable given some luck.
-> > 
-> > ... yes, exactly, you need to identify the contention where this
-> > happens,
-> > causing a cacheline to bounce or a variable straddles across a
-> > cacheline boundary, causing the read to fetch two cachelines and thus
-> > causes that slowdown. And then align that var to the beginning of a
-> > cacheline.
-> > 
-> 
-> Given the test is malloc1, it *may* be struct per_cpu_pages embedded within
-> per_cpu_pageset. The cache characteristics of per_cpu_pageset are terrible
-> because of how it mixes up zone counters and per-cpu lists. However, if
-> the first per_cpu_pageset is cache-aligned then every second per_cpu_pages
-> will be cache-aligned and half of the lists will fit in one cache line. If
-> the whole structure gets pushed out of alignment then all per_cpu_pages
-> straddle cache lines, increase the overall cache footprint and potentially
-> cause problems if the cache is not large enough to hold hot structures.
-> 
-> The misses could potentially be inferred without c2c from looking at
-> perf -e cache-misses on a good and bad kernel and seeing if there is a
-> noticable increase in misses in mm/page_alloc.c with a focus on anything
-> using per-cpu lists.
- 
-Thanks for the tip, which is useful for Xeon-Phi. I ran it with 'cache-misses'
-instead of default 'cycles', and the 2 versions of perf data show similar hotspots:
+--Sig_/tDU.O6cX1D9IrOpNIJF9IC5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-    92.62%    92.62%  [kernel.kallsyms]   [k] native_queued_spin_lock_slowpath              -      -            
-46.20% native_queued_spin_lock_slowpath;_raw_spin_lock_irqsave;release_pages;tlb_flush_mmu;tlb_finish_mmu;unmap_region;__do_munmap;__vm_munmap;__x64_sys_munmap;do_syscall_64;entry_SYSCALL_64_after_hwframe;munmap
-46.13% native_queued_spin_lock_slowpath;_raw_spin_lock_irqsave;pagevec_lru_move_fn;lru_add_drain_cpu;lru_add_drain;unmap_region;__do_munmap;__vm_munmap;__x64_sys_munmap;do_syscall_64;entry_SYSCALL_64_after_hwframe;munmap
- 
-> Whether the problem is per_cpu_pages or some other structure, it's not
-> struct mce's fault in all likelihood -- it's just the messenger.
+Hi Alexei,
 
-Agreed. The mce patch itself is innocent, it just changes other domains'
-variables' alignment indeliberately. 
+On Mon, 24 Aug 2020 20:27:28 -0700 Alexei Starovoitov <alexei.starovoitov@g=
+mail.com> wrote:
+>
+> I didn't receive the first email you've replied to.
+> The build error is:
+> "
+> No libelf found
+> make[5]: *** [Makefile:284: elfdep] Error 1
+> "
+> and build process stops because libelf is not found, right?
+> That is expected and necessary.
+> bpf_preload needs libbpf that depends on libelf.
+> The only 'fix' is to turn off bpf_preload.
+> It's off by default.
+> allmodconfig cannot build bpf_preload umd if there is no libelf.
+> There is CC_CAN_LINK that does feature detection.
+> We can extend scripts/cc-can-link.sh or add another script that
+> will do CC_CAN_LINK_LIBELF, but such approach doesn't scale.
+> imo it's cleaner to rely on feature detection by libbpf Makefile with
+> an error above instead of adding such knobs to top Kconfig.
+> Does it make sense?
 
-Thanks,
-Feng
+Sorry, but if this is not necessary to build the kernel, then an
+allmodconfig build needs to succeed so you need to do the detection and
+turn it off automatically.  Or you could make it so that it has to be
+manually enabled in all circumstances.
 
-> -- 
-> Mel Gorman
-> SUSE Labs
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/tDU.O6cX1D9IrOpNIJF9IC5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9EtLUACgkQAVBC80lX
+0GwK6gf8DesCk38JfwT0m8g2BShvJEsTqH87hEuvVInFsGPaKvYcQTntETkYPPQa
+bF4jfkYOh5VlMGkgCLMGUw+GP48RuHKXt75oohyPzAEnDSwJhVAdG2q4LD4qhDJJ
+P+vN1s1VQ/qxreEGn0kqy66UJSWzavy1NKn2JXeEkacGKdQBqPhm1o1D+Cqay948
++JGt4A1kCx9uR+a1lWoafFLsdRgkMCbnKM+qTAhU+pnm67xsk+gO81MtmfX2/0Tw
+ocs0Uo2yl1K5u3RVciU83Ad7htWkqBvuFFiCXKIaGKNRPRKIZEnHG+X4hdAp9EdM
+Sbh7fMGJHGmjUV4MUvCVgzhUD65p+A==
+=Geul
+-----END PGP SIGNATURE-----
+
+--Sig_/tDU.O6cX1D9IrOpNIJF9IC5--
