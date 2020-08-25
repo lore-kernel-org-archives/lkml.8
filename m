@@ -2,156 +2,206 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C1AC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE85C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCD420578
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BECF520578
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:34:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="MmbRQlcK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Apqc+J7z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgHYHeA (ORCPT
+        id S1729499AbgHYHeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:34:00 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:28304 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbgHYHd7 (ORCPT
+        Tue, 25 Aug 2020 03:34:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729473AbgHYHeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:33:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598340837;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=6dUq744EcIeZQE4HusZc5ZXRxfqQLwryVwWB3gQxpJY=;
-        b=MmbRQlcKdR8+P2YMLWTycRcCu7EZmBwXG0QbA3Vyf8kljRKq8SDtnqoVSY8XB4B8Mt
-        S6oSQZ6hcaabCuA07+uucrrURLVQCKuEU0GWbLZwC0hTrcFhN5cMcO41Naxmf2xLEl3c
-        LerxBB5MqW9StQbsN818SlCBFzj3c/Kk+B3qZICqy3Avmpo8FUHiJ8dOUBX7yLi/DyDF
-        K70qqKicdGczq4sfcBL2MZN5vxrpRLS1O1iZLoORs2G1IXiGMebyEZVvEgjkYPO3D3lA
-        zxVMs05Q3dKgIIb+ajqDW+ABKAnhM65pyx/jPJo7qDE4oOjPAi5BiNen2s4zaWl2bohR
-        4zTQ==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7IcjDBg=="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w7P7XtcpP
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 25 Aug 2020 09:33:55 +0200 (CEST)
-Date:   Tue, 25 Aug 2020 09:33:48 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Niklas Cassel <nks@flawful.org>
-Subject: Re: [RFC PATCH 3/3] opp: Power on (virtual) power domains managed by
- the OPP core
-Message-ID: <20200825073348.GA1048@gerhold.net>
-References: <20200730080146.25185-1-stephan@gerhold.net>
- <20200730080146.25185-4-stephan@gerhold.net>
- <20200824112744.jsyaxrfbybyjpwex@vireshk-i7>
- <20200824115549.GB208090@gerhold.net>
- <CAPDyKFojtArMRfO+Z8YaWCWw2fFYcO62x3eL1paNi5pKRg3Jww@mail.gmail.com>
- <20200824150831.GA842@gerhold.net>
- <20200825044308.4y3w2urcikban7if@vireshk-i7>
- <CAPDyKFp+71_WGwvdZ6DYamsDjgoRk57H5MjDAdQUtCtJpEHp2Q@mail.gmail.com>
+        Tue, 25 Aug 2020 03:34:06 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90629C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 00:34:06 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id k18so3422981uao.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 00:34:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nv6CSGIbCknVAshl07j/5xGDdqtleXXUaO2AgALOcBQ=;
+        b=Apqc+J7zJjLt7HIY9LJFORqtLChLWyXyW9OPPAm2IWuGKCEajOMJOtXt10DCqIEofM
+         xvvHt+AE/VOWITfgJLQESVHUSXbl5SlmedCTjvNoU6i4abY1JLQs5mDoynT8Fpan7Hve
+         URdOCRAMTN7YlABeKlRlIHyHB9fb7JRo8O2x66tNawMGyqBwQm9OQ4U9+CljGwOgEEum
+         pN53ulxBMNpATD0T+DEUnY3jpR0IPiAa1DOZ2AtxLPw3InU5Wx2J0fgKInN09ExID/3P
+         LkyET0zqDcSGBHVmedmDFcAy5zPKkEh8SiTsqt2rEpCJDplMY23oKHlDSsiyyxM6WRIa
+         Cmcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nv6CSGIbCknVAshl07j/5xGDdqtleXXUaO2AgALOcBQ=;
+        b=M2tOPiB81YJppeW+Dk4w/JeCRDMWvEyMGrb5hHpYOQ3kO/K2vAuhfqVdYFzH7doSYz
+         UxoMy/StX591H4xfSzCfhjc4NNe9ad4JTS/h9DkyMRJ/USyoApM6TeWp/8NKYTjrirRo
+         +FQBEmkRlXUrCDONyIOqYgLwrO9R7FsN7STMqPHXHoHciW3TSGZk6k4tqft53xwZq9ik
+         c/4OdpZKMSBvFU3M9DH6N64HxuxwhvgV9ZLcNysC6L/StqX6Zds8PuT46uHA5yrxWhDe
+         KRSnb7iOCPAKlrX6gwX49ADkJF31LhrbVcEefDuHlKTt1qpBH7JWfKVvF9bcOjJAAVxC
+         XGcw==
+X-Gm-Message-State: AOAM532sRDqCpNI7bxb4R6JGr/ivhka6hqienJ+3hITPyMNIcPkWNE+b
+        zfEMWrnbXDRxDpW/dePZJ3E03PEMU4w88AkhKuBXnQ==
+X-Google-Smtp-Source: ABdhPJzaForEfiwBwHGNvHwRx3BWRXpyG8wDtoenb+p3GP/dDIygv4Sf8WgzvnHPl3pAkzXAJYtywlXsz8c7R9LZ5dk=
+X-Received: by 2002:ab0:462:: with SMTP id 89mr4776164uav.34.1598340845625;
+ Tue, 25 Aug 2020 00:34:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFp+71_WGwvdZ6DYamsDjgoRk57H5MjDAdQUtCtJpEHp2Q@mail.gmail.com>
+References: <CA+G9fYt=oYWHEG6VNkfEh8+UxbReS6_+9hnz+1bOYZHj5j1F_Q@mail.gmail.com>
+ <20200824110645.GC17456@casper.infradead.org>
+In-Reply-To: <20200824110645.GC17456@casper.infradead.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 25 Aug 2020 13:03:53 +0530
+Message-ID: <CA+G9fYvjKGF3HZXyd=JQHzRG=r=bmD0hYQn02VL4Y=5y57OgaA@mail.gmail.com>
+Subject: Re: BUG: Bad page state in process true pfn:a8fed on arm
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-mm <linux-mm@kvack.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LTP List <ltp@lists.linux.it>, Arnd Bergmann <arnd@arndb.de>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Xu <peterx@redhat.com>, opendmb@gmail.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        afzal.mohd.ma@gmail.com, Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 08:43:42AM +0200, Ulf Hansson wrote:
-> On Tue, 25 Aug 2020 at 06:43, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 24-08-20, 17:08, Stephan Gerhold wrote:
-> > > On Mon, Aug 24, 2020 at 04:36:57PM +0200, Ulf Hansson wrote:
-> > > > That said, perhaps should rely on the consumer to deploy runtime PM
-> > > > support, but let the OPP core to set up the device links for the genpd
-> > > > virtual devices!?
-> > > >
-> > >
-> > > Yes, that would be the alternative option.
-> >
-> > That is the right option IMO.
-> >
-> > > I would be fine with it as long as it also works for the CPUfreq case.
-> > >
-> > > I don't think anything manages runtime PM for the CPU device, just
-> > > like no-one calls dev_pm_opp_set_rate(cpu_dev, 0). So with my patch the
-> > > power domain is essentially kept always-on (except for system suspend).
-> > > At least in my case this is intended.
-> > >
-> > > If device links also keep the power domains on if the consumer device
-> > > does not make use of runtime PM it should work fine for my case.
-> >
-> > With device link, you only need to do rpm enable/disable on the consumer device
-> > and it will get propagated by itself.
-> 
-> Note that the default state for the genpd virtual device(s) is that
-> runtime PM has been enabled for them. This means it's left in runtime
-> suspended state, which allows its PM domain to be powered off (if all
-> other devices and child domains for it allow that too, of course).
-> 
-> >
-> > > Personally, I think my original patch (without device links) fits better
-> > > into the OPP API, for the following two reasons.
-> > >
-> > > With device links:
-> > >
-> > >   1. Unlike regulators/interconnects, attached power domains would be
-> > >      controlled by runtime PM instead of dev_pm_opp_set_rate(opp_dev, 0).
-> > >
-> > >   2. ... some driver using OPP tables might not make use of runtime PM.
-> > >      In that case, the power domains would stay on the whole time,
-> > >      even if dev_pm_opp_set_rate(opp_dev, 0) was called.
-> > >
-> > > With my patch, the power domain state is directly related to the
-> > > dev_pm_opp_set_rate(opp_dev, 0) call, which is more intuitive than
-> > > relying on the runtime PM state in my opinion.
-> >
-> > So opp-set-rate isn't in the best of shape TBH, some things are left for the
-> > drivers while other are done by it. Regulator-enable/disable was moved to it
-> > some time back as people needed something like that. While on the other hand,
-> > clk_enable/disable doesn't happen there, nor does rpm enable/disable.
-> >
-> > Maybe one day we may want to do that, but lets make sure someone wants to do
-> > that first.
-> >
-> > Anyway, even in that case both of the changes would be required. We must make
-> > device links nevertheless first. And later on if required, we may want to do rpm
-> > enable/disable on the consumer device itself.
-> 
-> This sounds like a reasonable step-by-step approach.
-> 
-> Then, to create the device links, we should use DL_FLAG_PM_RUNTIME,
-> DL_FLAG_STATELESS.
-> 
+On Mon, 24 Aug 2020 at 16:36, Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Mon, Aug 24, 2020 at 03:14:55PM +0530, Naresh Kamboju wrote:
+> > [   67.545247] BUG: Bad page state in process true  pfn:a8fed
+> > [   67.550767] page:9640c0ab refcount:0 mapcount:-1024
+>
+> Somebody freed a page table without calling __ClearPageTable() on it.
 
-OK, I will give this a try later this week.
+After running git bisect on this problem,
+The first suspecting of this problem on arm architecture this patch.
+424efe723f7717430bec7c93b4d28bba73e31cf6
+("mm: account PMD tables like PTE tables ")
 
-> But whether we should use DL_FLAG_RPM_ACTIVE as well, to initially
-> runtime resume the supplier (the genpd virtual device), is harder to
-> know - as that kind of depends on expectations by the consumer device
-> driver.
-> 
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
 
-I'm not sure I understand the purpose of that flag. I thought we want to
-link the PM state of the virtual genpd device (supplier) to the PM state
-of the device of the OPP table (consumer).
+Additional information:
+We have tested linux next by reverting this patch and confirmed
+that the reported BUG is not reproduced.
 
-Shouldn't it just determine the initial state based on the state of the
-consumer device?
+These configs enabled on the running device,
 
-Thanks!
-Stephan
+CONFIG_TRANSPARENT_HUGEPAGE=y
+CONFIG_TRANSPARENT_HUGEPAGE_MADVISE=y
+
+
+-- Suspecting patch --
+commit 424efe723f7717430bec7c93b4d28bba73e31cf6
+Author: Matthew Wilcox <willy@infradead.org>
+Date:   Thu Aug 20 10:01:30 2020 +1000
+
+    mm: account PMD tables like PTE tables
+
+    We account the PTE level of the page tables to the process in order to
+    make smarter OOM decisions and help diagnose why memory is fragmented.
+    For these same reasons, we should account pages allocated for PMDs.  With
+    larger process address spaces and ASLR, the number of PMDs in use is
+    higher than it used to be so the inaccuracy is starting to matter.
+
+    Link: http://lkml.kernel.org/r/20200627184642.GF25039@casper.infradead.org
+    Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+    Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+    Cc: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+    Cc: Andy Lutomirski <luto@kernel.org>
+    Cc: Arnd Bergmann <arnd@arndb.de>
+    Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+    Cc: Joerg Roedel <joro@8bytes.org>
+    Cc: Max Filippov <jcmvbkbc@gmail.com>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
+    Cc: Stafford Horne <shorne@gmail.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+    Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index b0a15ee77b8a..a4e5b806347c 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2239,7 +2239,7 @@ static inline spinlock_t *pmd_lockptr(struct
+mm_struct *mm, pmd_t *pmd)
+  return ptlock_ptr(pmd_to_page(pmd));
+ }
+
+-static inline bool pgtable_pmd_page_ctor(struct page *page)
++static inline bool pmd_ptlock_init(struct page *page)
+ {
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+  page->pmd_huge_pte = NULL;
+@@ -2247,7 +2247,7 @@ static inline bool pgtable_pmd_page_ctor(struct
+page *page)
+  return ptlock_init(page);
+ }
+
+-static inline void pgtable_pmd_page_dtor(struct page *page)
++static inline void pmd_ptlock_free(struct page *page)
+ {
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+  VM_BUG_ON_PAGE(page->pmd_huge_pte, page);
+@@ -2264,8 +2264,8 @@ static inline spinlock_t *pmd_lockptr(struct
+mm_struct *mm, pmd_t *pmd)
+  return &mm->page_table_lock;
+ }
+
+-static inline bool pgtable_pmd_page_ctor(struct page *page) { return true; }
+-static inline void pgtable_pmd_page_dtor(struct page *page) {}
++static inline bool pmd_ptlock_init(struct page *page) { return true; }
++static inline void pmd_ptlock_free(struct page *page) {}
+
+ #define pmd_huge_pte(mm, pmd) ((mm)->pmd_huge_pte)
+
+@@ -2278,6 +2278,22 @@ static inline spinlock_t *pmd_lock(struct
+mm_struct *mm, pmd_t *pmd)
+  return ptl;
+ }
+
++static inline bool pgtable_pmd_page_ctor(struct page *page)
++{
++ if (!pmd_ptlock_init(page))
++ return false;
++ __SetPageTable(page);
++ inc_zone_page_state(page, NR_PAGETABLE);
++ return true;
++}
++
++static inline void pgtable_pmd_page_dtor(struct page *page)
++{
++ pmd_ptlock_free(page);
++ __ClearPageTable(page);
++ dec_zone_page_state(page, NR_PAGETABLE);
++}
++
+ /*
+  * No scalability reason to split PUD locks yet, but follow the same pattern
+  * as the PMD locks to make it easier if we decide to.  The VM should not be
+
+
+
+
+- Naresh
