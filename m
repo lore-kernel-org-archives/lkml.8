@@ -2,95 +2,117 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8747FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C5E320738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:28:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TpB+P3NY"
+	by mail.kernel.org (Postfix) with ESMTP id 6C0C520639
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgHYN23 (ORCPT
+        id S1726599AbgHYN2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:28:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbgHYN2V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:28:21 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4BE6C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 06:28:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gcXa8qEtYBg2gkLUtzB6uYs7+oY38nWOvnxS0FYrRks=; b=TpB+P3NY95kV/waH2Efp7RbsVA
-        du/fobJECoILXR2P+Td7LvVpeUJOkCohnM/dHtBl929Bi6SBM2vyQyjarY82G1/AM9MG1hv/jzNVz
-        sax1doXOV0XJ/AZOn/id/kk8FGfaJ6/jz2MiPTlm39+9Bu8h0Pai8IM84V33ktojWA8oTUqu9v4OM
-        N3lPiXblGzo/947ZMLTdOgMjKN+kun21Ih4lXUbNJ7FbJAaNQyRyHxmyqdm5A3TzA3g2Tbxim6wnK
-        vsKqfmHRiBKgRicd9o7VV5zyVyV8MaCTF+gbl6pJTwRMcbbTg1ZnwW3DlmQA5p5DbFptFjh/zenWc
-        fg07urCw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAYzm-000782-8X; Tue, 25 Aug 2020 13:28:14 +0000
-Date:   Tue, 25 Aug 2020 14:28:14 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] mm: Pass pvec directly to find_get_entries
-Message-ID: <20200825132814.GO17456@casper.infradead.org>
-References: <20200819150555.31669-1-willy@infradead.org>
- <20200819150555.31669-7-willy@infradead.org>
- <20200824161620.GK24877@quack2.suse.cz>
- <20200824173639.GD17456@casper.infradead.org>
- <20200825123324.GB32298@quack2.suse.cz>
+        Tue, 25 Aug 2020 09:28:54 -0400
+Received: from sauhun.de ([88.99.104.3]:47938 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726429AbgHYN2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:28:51 -0400
+Received: from localhost (p54b33ab6.dip0.t-ipconnect.de [84.179.58.182])
+        by pokefinder.org (Postfix) with ESMTPSA id 374132C04D5;
+        Tue, 25 Aug 2020 15:28:47 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 15:28:46 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Phil Reid <preid@electromag.com.au>
+Cc:     Codrin.Ciubotariu@microchip.com, kamel.bouhara@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
+        devicetree@vger.kernel.org, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
+Message-ID: <20200825132846.GA1753@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
+        Phil Reid <preid@electromag.com.au>,
+        Codrin.Ciubotariu@microchip.com, kamel.bouhara@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Nicolas.Ferre@microchip.com,
+        alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com,
+        devicetree@vger.kernel.org, thomas.petazzoni@bootlin.com
+References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
+ <20191002144658.7718-3-kamel.bouhara@bootlin.com>
+ <20191021202044.GB3607@kunai>
+ <724d3470-0561-1b3f-c826-bc16c74a8c0a@bootlin.com>
+ <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
+ <20191024150726.GA1120@kunai>
+ <65d83bb0-9a0c-c6e2-1c58-cb421c69816c@electromag.com.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
 Content-Disposition: inline
-In-Reply-To: <20200825123324.GB32298@quack2.suse.cz>
+In-Reply-To: <65d83bb0-9a0c-c6e2-1c58-cb421c69816c@electromag.com.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 02:33:24PM +0200, Jan Kara wrote:
-> On Mon 24-08-20 18:36:39, Matthew Wilcox wrote:
-> > We already have functions in filemap which take a pagevec, eg
-> > page_cache_delete_batch() and delete_from_page_cache_batch().
-> 
-> Right but those are really pretty internal helper functions so I don't
-> think they form or strong precedence.
 
-To be honest, I saw that as being the way forward for the page cache APIs.
-If we're going to use a batching mechanism, it should be pagevecs, and
-it should be built into the page cache interfaces rather than hanging
-out off on the side.
+--7AUc2qLy4jB3hD7Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > So if we're going to merge the two functions, it seems more natural to
-> > have it in filemap.c and called find_get_entries(), but I'm definitely
-> > open to persuasion on this!
-> 
-> I agree that having non-trivial xarray code in mm/swap.c isn't attractive
-> either. Dunno, I dislike the inconsistency between find_get_pages() and
-> find_get_entries() you create but they aren't completely consistent anyway
-> so I can live with that. Or we can just leave the pagevec_lookup_entries()
-> wrapper and the API will stay consistent...
+Hi Phil,
 
-I was thinking about this some more [1] [2].  I think we can get to the
-point where find_get_pages(), find_get_entries() and find_get_pages_tag()
-(and all their variants) end up taking a pagevec as their last argument.
+yes, this thread is old but a similar issue came up again...
 
-Also, I was thinking that all these names are wrong.  Really, they're
-mapping_get_pages(), mapping_get_entries() and mapping_get_marked_pages().
-So maybe I should move in that direction.
+On Fri, Oct 25, 2019 at 09:14:00AM +0800, Phil Reid wrote:
 
-[1] https://lore.kernel.org/lkml/20200824214841.17132-1-willy@infradead.org/
-[2] https://lore.kernel.org/lkml/20200824183424.4222-1-willy@infradead.org/
+> >=20
+> > > So at the beginning of a new transfer, we should check if SDA (or SCL=
+?)
+> > > is low and, if it's true, only then we should try recover the bus.
+> >=20
+> > Yes, this is the proper time to do it. Remember, I2C does not define a
+> > timeout.
+> >=20
+>=20
+> FYI: Just a single poll at the start of the transfer, for it being low, w=
+ill cause problems with multi-master buses.
+> Bus recovery should be attempted after a timeout when trying to communica=
+te, even thou i2c doesn't define a timeout.
+>=20
+> I'm trying to fix the designware drivers handling of this at the moment.
+
+I wonder what you ended up with? You are right, a single poll is not
+enough. It only might be if one applies the new "single-master" binding
+for a given bus. If that is not present, my best idea so far is to poll
+SDA for the time defined in adapter->timeout and if it is all low, then
+initiate a recovery.
+
+All the best,
+
+   Wolfram
+
+
+--7AUc2qLy4jB3hD7Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9FEg4ACgkQFA3kzBSg
+KbZfXhAAgtg4dw1Y8ofe9LYQHp/xN3Z+LqaNGBmsKeC7XBv0/j/OuBqokWUtPeZ2
+LKs9hWvaKCiIBNZH8LElTWFS9XSlmiLD7Stw8pUm5Gcav/Hf8FRB3WJ93QGNQcA4
+/kQFrmO7Mxez+Yb3ndImfXQyexOJjzteaxVfbmVLIHC8V2L+LY+M7QiuzEG4vT9C
+/KhzaKVmfGevX0HL0lZcShLCf5Nk8Na/hMfxxK1GisaMvEacilOQBqWyFq5Z9oQd
+h7T0BKO0wn5Az3+lVVzI7qiCTQumy+9bhWJuSWXeVoxmCk2dklCFw/bUnjuVpzOk
+agaRh4BiBmp/zxDVtmS8rihL6htu+2JlFrSPEk1Pl5pfgx5oE2D+cuwRRqkgZwgZ
+EOe60+VfNVkQ5epcCBKRKNOqKnL8ZOG0Q0iVkuxqEVLCnhe4sM31nZ0Z8pioHb8P
+K2Mgr7GvqZCWQLdCHBy16B6LmsIqjwn2BwYcTo9EAGTWbhej7fGoykcuPI4r5QSO
+ivHhv8+sR795YmveXuV9OdXThHoZXVjhe2CQMxm8pQ17PW0M000X3j2FHj4qb5AL
+UQJfYd8o4WHPyJ8VtvdiPbeIQVhhkIysIg5FGJXgydrsMt/CyCuj6epLPWPRm+TB
+vtXTdWN2BLhXYFdxGtnkQdHZnqo58ZGxM3eDHPwywGsWpEr/wAc=
+=3nwt
+-----END PGP SIGNATURE-----
+
+--7AUc2qLy4jB3hD7Z--
