@@ -2,105 +2,75 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2013C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A32C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A33C52072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6F2E20866
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 01:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbgHYB0V (ORCPT
+        id S1726578AbgHYB0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 21:26:21 -0400
-Received: from mga07.intel.com ([134.134.136.100]:46600 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgHYB0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 21:26:21 -0400
-IronPort-SDR: 78vRinSwttS3Rlav7qSk0Dgb2vbrzelSE8otmpJwxfbDHfYBlA8OP8+U5cXJW3DFj3tMyFlekO
- sysgRqPLe8eQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="220289544"
-X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="220289544"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 18:26:20 -0700
-IronPort-SDR: 0U9UupZ1piSB1NCBH8/LgXnxrutyJ+D+zfVz4+5kZRuuwBZsSNjLNwMRR3NOo0xuRAqEEHxSP3
- zbawr9UyAHIg==
-X-IronPort-AV: E=Sophos;i="5.76,350,1592895600"; 
-   d="scan'208";a="443446093"
-Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 18:26:16 -0700
-From:   Bard Liao <yung-chuan.liao@linux.intel.com>
-To:     alsa-devel@alsa-project.org, vkoul@kernel.org
-Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
-        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-Subject: [PATCH v2] soundwire: intel: fix intel_suspend/resume defined but not used warning
-Date:   Mon, 24 Aug 2020 21:32:34 +0800
-Message-Id: <20200824133234.28115-1-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 24 Aug 2020 21:26:44 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:34162 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726090AbgHYB0n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 24 Aug 2020 21:26:43 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R261e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01355;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0U6n39Zm_1598318789;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6n39Zm_1598318789)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 25 Aug 2020 09:26:31 +0800
+Subject: Re: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead
+ page charged
+To:     Michal Hocko <mhocko@suse.com>, Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, nao.horiguchi@gmail.com,
+        osalvador@suse.de, mike.kravetz@oracle.com
+References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200820145850.GA4622@lca.pw> <20200821080127.GD32537@dhcp22.suse.cz>
+ <20200821123934.GA4314@lca.pw> <20200821134842.GF32537@dhcp22.suse.cz>
+ <20200824151013.GB3415@dhcp22.suse.cz>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <12425e06-38ce-7ff4-28ce-b0418353fc67@linux.alibaba.com>
+Date:   Tue, 25 Aug 2020 09:25:01 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200824151013.GB3415@dhcp22.suse.cz>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_PM_SLEEP is not defined, GCC throws compilation warnings:
+reproduce using our linux-mm random bug collection on NUMA systems.
+>>
+>> OK, I must have missed that this was on ppc. The order makes more sense
+>> now. I will have a look at this next week.
+> 
+> OK, so I've had a look and I know what's going on there. The
+> move_pages12 is migrating hugetlb pages. Those are not charged to any
+> memcg. We have completely missed this case. There are two ways going
+> around that. Drop the warning and update the comment so that we do not
+> forget about that or special case hugetlb pages.
+> 
+> I think the first option is better.
+> 
 
-drivers/soundwire/intel.c:1799:12: warning: ‘intel_resume’ defined but not
-used [-Wunused-function]
- static int intel_resume(struct device *dev)
-            ^~~~~~~~~~~~
-drivers/soundwire/intel.c:1683:12: warning: ‘intel_suspend’ defined but not
-used [-Wunused-function]
- static int intel_suspend(struct device *dev)
-            ^~~~~~~~~~~~~
 
-Fix by using __maybe_unused macro.
+Hi Michal,
 
-Suggested-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
-Changelog:
-v2:
- - use __maybe_unused macro instead of wrapping in another ifdef.
----
- drivers/soundwire/intel.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Compare to ignore the warning which is designed to give, seems addressing
+the hugetlb out of charge issue is a better solution, otherwise the memcg
+memory usage is out of control on hugetlb, is that right?
 
-diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index dbcbe2708563..ebca8ced59ec 100644
---- a/drivers/soundwire/intel.c
-+++ b/drivers/soundwire/intel.c
-@@ -1527,7 +1527,7 @@ int intel_master_process_wakeen_event(struct platform_device *pdev)
- 
- #ifdef CONFIG_PM
- 
--static int intel_suspend(struct device *dev)
-+static int __maybe_unused intel_suspend(struct device *dev)
- {
- 	struct sdw_cdns *cdns = dev_get_drvdata(dev);
- 	struct sdw_intel *sdw = cdns_to_intel(cdns);
-@@ -1625,7 +1625,7 @@ static int intel_suspend_runtime(struct device *dev)
- 	return ret;
- }
- 
--static int intel_resume(struct device *dev)
-+static int __maybe_unused intel_resume(struct device *dev)
- {
- 	struct sdw_cdns *cdns = dev_get_drvdata(dev);
- 	struct sdw_intel *sdw = cdns_to_intel(cdns);
--- 
-2.17.1
-
+Thanks
+Alex 
