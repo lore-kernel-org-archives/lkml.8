@@ -2,112 +2,122 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CC6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA1CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB1322075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598367100;
-	bh=AUllHjwye2TIaljSNACL7VBXEIh69WdMA3ahzf153ik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nZ9QpI2Ou+02cHLtoHd3r5bDZX3lP1c2iNUuaKm7XNVvNyhi4PZ8gb6Olcg2CDaII
-	 hrTm8s29tQWqHq5UgDTnSYqeIYzLCO4ktIS0evg9kZ/LgNzEB79C4Ksqwf35C9/Y+R
-	 nj3NTKP/eugFVVBUvCsQS+oVb3kvBlQk6VqcZqbw=
+	by mail.kernel.org (Postfix) with ESMTP id 373052075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:51:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgHYOvj (ORCPT
+        id S1726745AbgHYOvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:51:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725998AbgHYOvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:51:36 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B8342075F;
-        Tue, 25 Aug 2020 14:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598367095;
-        bh=AUllHjwye2TIaljSNACL7VBXEIh69WdMA3ahzf153ik=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PK5uSW+BTKDzTjXEUvGROPruPWyCN+UX0s7aKo0087o6tw39xkTTyG41NJNZR3AP/
-         GE1JD2VZ3aeOJUJnPf7Xb5rO6jhlMLaGBWcBD4/3oIwsIa9tlE4NIOu24cvTotv/Fp
-         IL95pYyZrtSdJRjncevKEr84ykN4r9gVYL2gJQC8=
-Date:   Tue, 25 Aug 2020 20:21:31 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
-Message-ID: <20200825145131.GS2639@vkoul-mobl>
-References: <20200824084712.2526079-1-vkoul@kernel.org>
- <20200824084712.2526079-2-vkoul@kernel.org>
- <20200824174009.GA2948650@bogus>
+        Tue, 25 Aug 2020 10:51:51 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42812 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725998AbgHYOvt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:51:49 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t6so14123147ljk.9;
+        Tue, 25 Aug 2020 07:51:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P4P0Mqj4dl1NT6bCCZOf37xl543y0SvyDIEq1kl/4Bo=;
+        b=kRwe3FO3JRyOVlGPT3UsQFGRKjqGa4zqKP6NNrcBU5p/DmMhFzgfpCfdveytz8nDiK
+         ZDO0s5332ybFPLmGJu+tUC3n+82g/QBdY6gvs4mLsSk9nC4tgUbVhOZ1Z6fjDnrsnYRR
+         zsdR2BTxsqiYfK4z5FGHNAzPQIVBFwyn50F2r1Hpp/3ulvRnePfYSyq9901Nnwq9GQYu
+         C7aTgNtNRcooinqHbpknYb4I4knfS2UPUVZ2TMFJBnMVqzkP36ReicHd/c1ySyS5B4zx
+         +sGNdm79APZSLspb+dERCD4JRNEp3A5V94KWzz4kPnenSWj3HLHs7pipbo4PSRvx6CNh
+         L8iQ==
+X-Gm-Message-State: AOAM532NWRAPYlR8xVdhERlMiMjkQI4lET9vgv1fpHfKcCFq+xKFh+mX
+        Vh0drs5Fe+E/seqQDwNfDXE7eDsDNR22Dw==
+X-Google-Smtp-Source: ABdhPJzEaToII+E+MJulFKcYStOY/UgSO/IsLxXa/ccxOwY8j/Bh+qTlVEKJUepl0TqR4VA02EKwUw==
+X-Received: by 2002:a2e:8945:: with SMTP id b5mr4683045ljk.381.1598367106690;
+        Tue, 25 Aug 2020 07:51:46 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id t4sm2879161ljh.122.2020.08.25.07.51.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 07:51:46 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id 12so6575146lfb.11;
+        Tue, 25 Aug 2020 07:51:46 -0700 (PDT)
+X-Received: by 2002:a05:6512:31c2:: with SMTP id j2mr5148160lfe.85.1598367105913;
+ Tue, 25 Aug 2020 07:51:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824174009.GA2948650@bogus>
+References: <20200823075815.23457-1-dinghao.liu@zju.edu.cn>
+In-Reply-To: <20200823075815.23457-1-dinghao.liu@zju.edu.cn>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Tue, 25 Aug 2020 22:51:33 +0800
+X-Gmail-Original-Message-ID: <CAGb2v640zTha1tzjOo3L+=T=N3hDRG+8qf2xu+bD8BMUnkhORQ@mail.gmail.com>
+Message-ID: <CAGb2v640zTha1tzjOo3L+=T=N3hDRG+8qf2xu+bD8BMUnkhORQ@mail.gmail.com>
+Subject: Re: [PATCH] rtc: sun6i: Fix memleak in sun6i_rtc_clk_init
+To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     Kangjie Lu <kjlu@umn.edu>, linux-rtc@vger.kernel.org,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Rob,
+On Sun, Aug 23, 2020 at 3:59 PM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
+>
+> When clk_hw_register_fixed_rate_with_accuracy() fails,
+> clk_data should be freed. It's the same for the subsequent
+> error paths.
 
-On 24-08-20, 11:40, Rob Herring wrote:
-> On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
-> > Add devicetree binding documentation for GPI DMA controller
-> > implemented on Qualcomm SoCs
-> > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++++++
-> >  1 file changed, 87 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.yaml
-> > 
-> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ring transfer size compare to channel transfer ring. Event ring length = ev-factor * transfer ring size', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
-> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required property
+I suppose you should also unregister the already registered clocks
+in the latter two error paths?
 
-Okay updating dt-schema I do see this, now the question is what is this
-and what does it mean ;-) I am not sure I comprehend the error message.
-I see this for all the new properties I added as required for this
-device node
-
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,gpii-mask: {'description': 'Bitmap of supported GPII instances for OS', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
-> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,gpii-mask: 'not' is a required property
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,max-num-gpii: {'description': 'Maximum number of GPII instances available', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
-> 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,max-num-gpii: 'not' is a required property
-> 
-> ./Documentation/devicetree/bindings/dma/qcom-gpi.yaml: $id: relative path/filename doesn't match actual path or filename
-> 	expected: http://devicetree.org/schemas/dma/qcom-gpi.yaml#
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: ignoring, error in schema: properties: qcom,max-num-gpii
-> warning: no schema found in file: ./Documentation/devicetree/bindings/dma/qcom-gpi.yaml
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.example.dt.yaml: example-0: dma@800000:reg:0: [0, 8388608, 0, 393216] is too long
-> 	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/reg.yaml
-> 
-> 
-> See https://patchwork.ozlabs.org/patch/1350170
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-
--- 
-~Vinod
+> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+> ---
+>  drivers/rtc/rtc-sun6i.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> index e2b8b150bcb4..a837c5a40508 100644
+> --- a/drivers/rtc/rtc-sun6i.c
+> +++ b/drivers/rtc/rtc-sun6i.c
+> @@ -272,7 +272,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
+>                                                                 300000000);
+>         if (IS_ERR(rtc->int_osc)) {
+>                 pr_crit("Couldn't register the internal oscillator\n");
+> -               return;
+> +               goto err;
+>         }
+>
+>         parents[0] = clk_hw_get_name(rtc->int_osc);
+> @@ -290,7 +290,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
+>         rtc->losc = clk_register(NULL, &rtc->hw);
+>         if (IS_ERR(rtc->losc)) {
+>                 pr_crit("Couldn't register the LOSC clock\n");
+> -               return;
+> +               goto err;
+>         }
+>
+>         of_property_read_string_index(node, "clock-output-names", 1,
+> @@ -301,7 +301,7 @@ static void __init sun6i_rtc_clk_init(struct device_node *node,
+>                                           &rtc->lock);
+>         if (IS_ERR(rtc->ext_losc)) {
+>                 pr_crit("Couldn't register the LOSC external gate\n");
+> -               return;
+> +               goto err;
+>         }
+>
+>         clk_data->num = 2;
+> --
+> 2.17.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
