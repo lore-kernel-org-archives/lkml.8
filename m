@@ -7,212 +7,125 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52774C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F919C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36038207BC
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358FC20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726745AbgHYNy3 (ORCPT
+        id S1726697AbgHYNyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:54:29 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:9928 "EHLO pegase1.c-s.fr"
+        Tue, 25 Aug 2020 09:54:20 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:6477 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726610AbgHYNyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:54:11 -0400
+        id S1726191AbgHYNyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:54:08 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BbVpQ6dvgz9txlg;
-        Tue, 25 Aug 2020 15:54:06 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 4BbVpN0mStz9txlZ;
+        Tue, 25 Aug 2020 15:54:04 +0200 (CEST)
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id sP8__vNSoBId; Tue, 25 Aug 2020 15:54:06 +0200 (CEST)
+        with ESMTP id 7XPdRsKX9l1c; Tue, 25 Aug 2020 15:54:04 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BbVpQ5rkPz9txlY;
-        Tue, 25 Aug 2020 15:54:06 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BbVpM73nzz9txlY;
+        Tue, 25 Aug 2020 15:54:03 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4C71E8B826;
-        Tue, 25 Aug 2020 15:54:08 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 714D48B822;
+        Tue, 25 Aug 2020 15:54:02 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 4n1fW0mk10NJ; Tue, 25 Aug 2020 15:54:08 +0200 (CEST)
+        with ESMTP id HxYGHEkwjCuH; Tue, 25 Aug 2020 15:54:02 +0200 (CEST)
 Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 74B618B825;
-        Tue, 25 Aug 2020 15:54:03 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 92E388B812;
+        Tue, 25 Aug 2020 15:53:59 +0200 (CEST)
 Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 53C5165D3C; Tue, 25 Aug 2020 13:54:03 +0000 (UTC)
-Message-Id: <7c6e35df8180650e6d1147476e8b5d9fa8643edb.1598363608.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <df48ed76cf8a756a7f97ed42a1a39d0a404014bc.1598363608.git.christophe.leroy@csgroup.eu>
-References: <df48ed76cf8a756a7f97ed42a1a39d0a404014bc.1598363608.git.christophe.leroy@csgroup.eu>
+        id 2D50F65D3C; Tue, 25 Aug 2020 13:53:59 +0000 (UTC)
+Message-Id: <df48ed76cf8a756a7f97ed42a1a39d0a404014bc.1598363608.git.christophe.leroy@csgroup.eu>
 From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH v1 5/9] powerpc/vdso: move to _install_special_mapping() and
- remove arch_vma_name()
+Subject: [PATCH v1 1/9] powerpc/vdso: Remove BUG_ON() in vdso_init()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 25 Aug 2020 13:54:03 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 13:53:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From commit 2fea7f6c98f5 ("arm64: vdso: move to
-_install_special_mapping and remove arch_vma_name").
+If we are not able to allocate memory for the pagelists, bail out.
 
-Use the new _install_special_mapping() API added by
-commit a62c34bd2a8a ("x86, mm: Improve _install_special_mapping
-and fix x86 vdso naming") which obsolete install_special_mapping().
-
-And remove arch_vma_name() as the name is handled by the new API.
+There is no reason to crash the machine, just have vdso init fail.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 ---
- arch/powerpc/kernel/vdso.c | 59 +++++++++++++++++++-------------------
- 1 file changed, 30 insertions(+), 29 deletions(-)
+This series is based on top of the series switching to C VDSO implementation,
+but in fact only the last patch depends on that series and is not vital as
+it is just afterwork cleanup.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/kernel/vdso.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
 diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-index bbb69832fd46..4ccfc0dc96b5 100644
+index 23208a051af5..88a4a02ed4c4 100644
 --- a/arch/powerpc/kernel/vdso.c
 +++ b/arch/powerpc/kernel/vdso.c
-@@ -47,7 +47,6 @@
- 
- static unsigned int vdso32_pages;
- static void *vdso32_kbase;
--static struct page **vdso32_pagelist;
- unsigned long vdso32_sigtramp;
- unsigned long vdso32_rt_sigtramp;
- 
-@@ -56,7 +55,6 @@ extern char vdso32_start, vdso32_end;
- extern char vdso64_start, vdso64_end;
- static void *vdso64_kbase = &vdso64_start;
- static unsigned int vdso64_pages;
--static struct page **vdso64_pagelist;
- #ifdef CONFIG_PPC64
- unsigned long vdso64_rt_sigtramp;
- #endif /* CONFIG_PPC64 */
-@@ -117,6 +115,14 @@ struct lib64_elfinfo
- };
- 
- 
-+static struct vm_special_mapping vdso32_spec __ro_after_init = {
-+	.name = "[vdso]",
-+};
-+
-+static struct vm_special_mapping vdso64_spec __ro_after_init = {
-+	.name = "[vdso]",
-+};
-+
- /*
-  * This is called from binfmt_elf, we create the special vma for the
-  * vDSO and insert it into the mm struct tree
-@@ -124,7 +130,8 @@ struct lib64_elfinfo
- int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- {
- 	struct mm_struct *mm = current->mm;
--	struct page **vdso_pagelist;
-+	struct vm_special_mapping *vdso_spec;
-+	struct vm_area_struct *vma;
- 	unsigned long vdso_pages;
- 	unsigned long vdso_base;
- 	int rc;
-@@ -133,11 +140,11 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- 		return 0;
- 
- 	if (is_32bit_task()) {
--		vdso_pagelist = vdso32_pagelist;
-+		vdso_spec = &vdso32_spec;
- 		vdso_pages = vdso32_pages;
- 		vdso_base = VDSO32_MBASE;
- 	} else {
--		vdso_pagelist = vdso64_pagelist;
-+		vdso_spec = &vdso64_spec;
- 		vdso_pages = vdso64_pages;
- 		/*
- 		 * On 64bit we don't have a preferred map address. This
-@@ -194,12 +201,12 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- 	 * It's fine to use that for setting breakpoints in the vDSO code
- 	 * pages though.
+@@ -747,20 +747,16 @@ static int __init vdso_init(void)
+ 	 * Initialize the vDSO images in memory, that is do necessary
+ 	 * fixups of vDSO symbols, locate trampolines, etc...
  	 */
--	rc = install_special_mapping(mm, vdso_base, vdso_pages << PAGE_SHIFT,
--				     VM_READ|VM_EXEC|
--				     VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
--				     vdso_pagelist);
--	if (rc) {
-+	vma = _install_special_mapping(mm, vdso_base, vdso_pages << PAGE_SHIFT,
-+				       VM_READ | VM_EXEC | VM_MAYREAD |
-+				       VM_MAYWRITE | VM_MAYEXEC, vdso_spec);
-+	if (IS_ERR(vma)) {
- 		current->mm->context.vdso_base = 0;
-+		rc = PTR_ERR(vma);
- 		goto fail_mmapsem;
- 	}
+-	if (vdso_setup()) {
+-		printk(KERN_ERR "vDSO setup failure, not enabled !\n");
+-		vdso32_pages = 0;
+-#ifdef CONFIG_PPC64
+-		vdso64_pages = 0;
+-#endif
+-		return 0;
+-	}
++	if (vdso_setup())
++		goto setup_failed;
  
-@@ -211,15 +218,6 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
- 	return rc;
- }
- 
--const char *arch_vma_name(struct vm_area_struct *vma)
--{
--	if (vma->vm_mm && vma->vm_start == vma->vm_mm->context.vdso_base)
--		return "[vdso]";
--	return NULL;
--}
--
--
--
  #ifdef CONFIG_VDSO32
- static void * __init find_section32(Elf32_Ehdr *ehdr, const char *secname,
- 				  unsigned long *size)
-@@ -685,6 +683,7 @@ early_initcall(vdso_getcpu_init);
- static int __init vdso_init(void)
- {
- 	int i;
-+	struct page **pagelist;
- 
+ 	/* Make sure pages are in the correct state */
+ 	vdso32_pagelist = kcalloc(vdso32_pages + 2, sizeof(struct page *),
+ 				  GFP_KERNEL);
+-	BUG_ON(vdso32_pagelist == NULL);
++	if (!vdso32_pagelist)
++		goto alloc_failed;
++
+ 	for (i = 0; i < vdso32_pages; i++) {
+ 		struct page *pg = virt_to_page(vdso32_kbase + i*PAGE_SIZE);
+ 		get_page(pg);
+@@ -773,7 +769,9 @@ static int __init vdso_init(void)
  #ifdef CONFIG_PPC64
- 	/*
-@@ -740,27 +739,29 @@ static int __init vdso_init(void)
- 
- 	if (IS_ENABLED(CONFIG_VDSO32)) {
- 		/* Make sure pages are in the correct state */
--		vdso32_pagelist = kcalloc(vdso32_pages + 1, sizeof(struct page *),
--					  GFP_KERNEL);
--		if (!vdso32_pagelist)
-+		pagelist = kcalloc(vdso32_pages + 1, sizeof(struct page *), GFP_KERNEL);
-+		if (!pagelist)
- 			goto alloc_failed;
- 
- 		for (i = 0; i < vdso32_pages; i++)
--			vdso32_pagelist[i] = virt_to_page(vdso32_kbase + i * PAGE_SIZE);
-+			pagelist[i] = virt_to_page(vdso32_kbase + i * PAGE_SIZE);
+ 	vdso64_pagelist = kcalloc(vdso64_pages + 2, sizeof(struct page *),
+ 				  GFP_KERNEL);
+-	BUG_ON(vdso64_pagelist == NULL);
++	if (!vdso64_pagelist)
++		goto alloc_failed;
 +
-+		pagelist[i++] = virt_to_page(vdso_data);
+ 	for (i = 0; i < vdso64_pages; i++) {
+ 		struct page *pg = virt_to_page(vdso64_kbase + i*PAGE_SIZE);
+ 		get_page(pg);
+@@ -789,5 +787,14 @@ static int __init vdso_init(void)
+ 	vdso_ready = 1;
  
--		vdso32_pagelist[i] = virt_to_page(vdso_data);
-+		vdso32_spec.pages = pagelist;
- 	}
- 
- 	if (IS_ENABLED(CONFIG_PPC64)) {
--		vdso64_pagelist = kcalloc(vdso64_pages + 1, sizeof(struct page *),
--					  GFP_KERNEL);
--		if (!vdso64_pagelist)
-+		pagelist = kcalloc(vdso64_pages + 1, sizeof(struct page *), GFP_KERNEL);
-+		if (!pagelist)
- 			goto alloc_failed;
- 
- 		for (i = 0; i < vdso64_pages; i++)
--			vdso64_pagelist[i] = virt_to_page(vdso64_kbase + i * PAGE_SIZE);
-+			pagelist[i] = virt_to_page(vdso64_kbase + i * PAGE_SIZE);
+ 	return 0;
 +
-+		pagelist[i++] = virt_to_page(vdso_data);
- 
--		vdso64_pagelist[i] = virt_to_page(vdso_data);
-+		vdso64_spec.pages = pagelist;
- 	}
- 
- 	smp_wmb();
++setup_failed:
++	pr_err("vDSO setup failure, not enabled !\n");
++alloc_failed:
++	vdso32_pages = 0;
++#ifdef CONFIG_PPC64
++	vdso64_pages = 0;
++#endif
++	return 0;
+ }
+ arch_initcall(vdso_init);
 -- 
 2.25.0
 
