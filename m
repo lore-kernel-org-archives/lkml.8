@@ -2,109 +2,135 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D47C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A034B2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195F12076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:16:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598372195;
+	bh=b9V0dl1ko//ynuoPQLgyZStB0kjF6te3g3DejBWyIOA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=HPeZAy6KantgCPMhgOokYTdfd5xs47cRXAitRRW0WEnS4EBM26UZff3WbsUu6n+Hv
+	 5CMvGZxN2DcAOTSlG5JjKb8VQfyfenjYZJz2s0qg7TONY7ZZimzIVikkCmoXxVXCbQ
+	 /o6UWwgxLBdx+6c2zr0kdu3dYJ1R2t5nzWXq4Umc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgHYQQZ (ORCPT
+        id S1727001AbgHYQQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:16:25 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43886 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgHYQQV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:16:21 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1kAbcR-0004W7-90; Tue, 25 Aug 2020 16:16:19 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Joe Perches <joe@perches.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH v2] MAINTAINERS: add namespace entry
-Date:   Tue, 25 Aug 2020 18:15:57 +0200
-Message-Id: <20200825161556.1225970-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.28.0
+        Tue, 25 Aug 2020 12:16:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726094AbgHYQQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 12:16:29 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 698902076C;
+        Tue, 25 Aug 2020 16:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598372189;
+        bh=b9V0dl1ko//ynuoPQLgyZStB0kjF6te3g3DejBWyIOA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=tFee8Fuy1b7bG+CojbKJ4OMiv7tcrY5PgH+LhfhLK6vwTFHml2Fs2rChkA/ljn0rP
+         dhviFYu+ie1wczZEX6vm37bv3XudHLWxWvQNHbLiY1PBrCQAb6pCxApYzJraSfF5oD
+         BTd7XtdV6A5XAx6B5CEym/Txdm0+5xynMhbjS598=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 3CF7E35226AE; Tue, 25 Aug 2020 09:16:29 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:16:29 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu-tasks: Fix compilation warning with
+ !CONFIG_TASKS_RCU and CONFIG_TINY_RCU
+Message-ID: <20200825161629.GS2855@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200823030405.22174-1-laurent.pinchart@ideasonboard.com>
+ <20200825150222.GP2855@paulmck-ThinkPad-P72>
+ <20200825152249.GF6767@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825152249.GF6767@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Namespace maintainership has never been formalized which has led to
-confusion when people need to determine where to send patches and who
-should take a look at them. Especially, since we have a dedicated list
-containers.lists.linuxfoundation.org already for a long time. In
-preparation of this patch I added the containers.lists.linuxfoundation.org
-mailing list to be archived on lore.
+On Tue, Aug 25, 2020 at 06:22:49PM +0300, Laurent Pinchart wrote:
+> Hi Paul,
+> 
+> On Tue, Aug 25, 2020 at 08:02:22AM -0700, Paul E. McKenney wrote:
+> > On Sun, Aug 23, 2020 at 06:04:05AM +0300, Laurent Pinchart wrote:
+> > > Commit 8344496e8b49 ("rcu-tasks: Conditionally compile
+> > > show_rcu_tasks_gp_kthreads()") introduced conditional compilation of
+> > > several functions, but forgot one occurrence of
+> > > show_rcu_tasks_classic_gp_kthread() that causes the compiler to warn of
+> > > an unused static function. Fix it.
+> > > 
+> > > Fixes: 8344496e8b49 ("rcu-tasks: Conditionally compile show_rcu_tasks_gp_kthreads()")
+> > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > ---
+> > >  kernel/rcu/tasks.h | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+> > > index 835e2df8590a..bddf3968c1eb 100644
+> > > --- a/kernel/rcu/tasks.h
+> > > +++ b/kernel/rcu/tasks.h
+> > > @@ -590,7 +590,9 @@ void exit_tasks_rcu_finish(void) __releases(&tasks_rcu_exit_srcu)
+> > >  }
+> > >  
+> > >  #else /* #ifdef CONFIG_TASKS_RCU */
+> > > +#ifndef CONFIG_TINY_RCU
+> > >  static void show_rcu_tasks_classic_gp_kthread(void) { }
+> > > +#endif /* #ifndef CONFIG_TINY_RCU */
+> > >  void exit_tasks_rcu_start(void) { }
+> > >  void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
+> > >  #endif /* #else #ifdef CONFIG_TASKS_RCU */
+> > 
+> > Good catch!!!
+> > 
+> > But does the following addition of "static inline" work for you?
+> 
+> They do. I initially added a static inline, and realized #ifdef was used
+> extensively when trying to find the proper Fixes: tag, so I went for
+> that. I don't mind either way, as long as this gets fixed :-)
 
-This will not just make it easier to catch and review patches specific to
-namespaces and containers but also for changes not specifically touching
-namespaces but which nevertheless will have impact on namespaces and
-containers.
+This is admittedly an odd .h file, given that it is included but once.
 
-Add an entry for Eric (who agreed to this) and me and add a first batch of
-files that are relevant. Currently, only a small set of files are added and
-only such namespaces that haven't gotten a separate maintainers entry (e.g.
-time namespaces). I expect this to grow more entries and/or regular
-expressions over time. For now these entries here are sufficient. I intend
-to route this patch upstream soon.
+I have applied the following patch with your Reported-by, cc-ing -stable
+for v5.8 and later.
 
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
----
-/* v2 */
-- fix file ordering (passes cleanly through checkpatch.pl now)
----
- MAINTAINERS | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+							Thanx, Paul
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f0068bceeb61..ef636d00a725 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11892,6 +11892,25 @@ S:	Supported
- W:	https://www.cspi.com/ethernet-products/support/downloads/
- F:	drivers/net/ethernet/myricom/myri10ge/
- 
-+NAMESPACES AND CONTAINERS
-+M:	Christian Brauner <christian.brauner@ubuntu.com>
-+M:	Eric W. Biederman <ebiederm@xmission.com>
-+L:	containers.lists.linuxfoundation.org
-+S:	Supported
-+T:	https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/
-+T:	https://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git/
-+F:	include/linux/ipc_namespace.h
-+F:	include/linux/ns_common.h
-+F:	include/linux/nsproxy.h
-+F:	include/linux/pid_namespace.h
-+F:	include/linux/user_namespace.h
-+F:	include/linux/utsname.h
-+F:	ipc/namespace.c
-+F:	kernel/nsproxy.c
-+F:	kernel/pid_namespace.c
-+F:	kernel/user_namespace.c
-+F:	kernel/utsname.c
-+
- NAND FLASH SUBSYSTEM
- M:	Miquel Raynal <miquel.raynal@bootlin.com>
- R:	Richard Weinberger <richard@nod.at>
-
-base-commit: d012a7190fc1fd72ed48911e77ca97ba4521bccd
--- 
-2.28.0
-
+> > ------------------------------------------------------------------------
+> > 
+> > diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+> > index 835e2df..3dc3ffc 100644
+> > --- a/kernel/rcu/tasks.h
+> > +++ b/kernel/rcu/tasks.h
+> > @@ -590,9 +590,9 @@ void exit_tasks_rcu_finish(void) __releases(&tasks_rcu_exit_srcu)
+> >  }
+> >  
+> >  #else /* #ifdef CONFIG_TASKS_RCU */
+> > -static void show_rcu_tasks_classic_gp_kthread(void) { }
+> > -void exit_tasks_rcu_start(void) { }
+> > -void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
+> > +static inline void show_rcu_tasks_classic_gp_kthread(void) { }
+> > +static inline void exit_tasks_rcu_start(void) { }
+> > +static inline void exit_tasks_rcu_finish(void) { exit_tasks_rcu_finish_trace(current); }
+> >  #endif /* #else #ifdef CONFIG_TASKS_RCU */
+> >  
+> >  #ifdef CONFIG_TASKS_RUDE_RCU
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
