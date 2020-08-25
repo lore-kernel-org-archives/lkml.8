@@ -4,43 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56159C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3A9C2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E8E2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbgHYE5t (ORCPT
+        id S1728992AbgHYE6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:57:49 -0400
-Received: from smtprelay0236.hostedemail.com ([216.40.44.236]:33432 "EHLO
+        Tue, 25 Aug 2020 00:58:01 -0400
+Received: from smtprelay0011.hostedemail.com ([216.40.44.11]:49368 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728922AbgHYE5d (ORCPT
+        by vger.kernel.org with ESMTP id S1728929AbgHYE5h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:57:33 -0400
+        Tue, 25 Aug 2020 00:57:37 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 578EF181D3026;
-        Tue, 25 Aug 2020 04:57:32 +0000 (UTC)
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id B73E918029120;
+        Tue, 25 Aug 2020 04:57:34 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: basin79_4e0b4f827059
-X-Filterd-Recvd-Size: 1639
+X-HE-Tag: owl13_531383327059
+X-Filterd-Recvd-Size: 1706
 Received: from joe-laptop.perches.com (unknown [47.151.133.149])
         (Authenticated sender: joe@perches.com)
         by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 25 Aug 2020 04:57:30 +0000 (UTC)
+        Tue, 25 Aug 2020 04:57:32 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     Jiri Kosina <trivial@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Cc:     Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 27/29] ipv6: fib6: Avoid comma separated statements
-Date:   Mon, 24 Aug 2020 21:56:24 -0700
-Message-Id: <21b0a23daf050d522c5d49a908821ce280045207.1598331149.git.joe@perches.com>
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 28/29] sunrpc: Avoid comma separated statements
+Date:   Mon, 24 Aug 2020 21:56:25 -0700
+Message-Id: <6adb266d5efe8e1ab95adfcdc1ff8240e99e2c37.1598331149.git.joe@perches.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.1598331148.git.joe@perches.com>
 References: <cover.1598331148.git.joe@perches.com>
@@ -55,32 +57,26 @@ Use semicolons and braces.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- net/ipv6/ip6_fib.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ net/sunrpc/sysctl.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
-index 25a90f3f705c..44d68ed70f24 100644
---- a/net/ipv6/ip6_fib.c
-+++ b/net/ipv6/ip6_fib.c
-@@ -1812,10 +1812,14 @@ static struct fib6_node *fib6_repair_tree(struct net *net,
- 
- 		children = 0;
- 		child = NULL;
--		if (fn_r)
--			child = fn_r, children |= 1;
--		if (fn_l)
--			child = fn_l, children |= 2;
-+		if (fn_r) {
-+			child = fn_r;
-+			children |= 1;
-+		}
-+		if (fn_l) {
-+			child = fn_l;
-+			children |= 2;
-+		}
- 
- 		if (children == 3 || FIB6_SUBTREE(fn)
- #ifdef CONFIG_IPV6_SUBTREES
+diff --git a/net/sunrpc/sysctl.c b/net/sunrpc/sysctl.c
+index 999eee1ed61c..6c86e2a7d942 100644
+--- a/net/sunrpc/sysctl.c
++++ b/net/sunrpc/sysctl.c
+@@ -108,8 +108,10 @@ proc_dodebug(struct ctl_table *table, int write, void *buffer, size_t *lenp,
+ 			left -= (s - tmpbuf);
+ 			if (left && !isspace(*s))
+ 				return -EINVAL;
+-			while (left && isspace(*s))
+-				left--, s++;
++			while (left && isspace(*s)) {
++				left--;
++				s++;
++			}
+ 		} else
+ 			left = 0;
+ 		*(unsigned int *) table->data = value;
 -- 
 2.26.0
 
