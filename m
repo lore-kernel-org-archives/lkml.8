@@ -2,242 +2,434 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A0EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F96520665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:24:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FC762076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r27VoB6z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UOxBr/Wh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgHYOYx (ORCPT
+        id S1726187AbgHYO1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32810 "EHLO
+        Tue, 25 Aug 2020 10:27:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbgHYOYr (ORCPT
+        with ESMTP id S1726045AbgHYO11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:24:47 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972DBC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:24:46 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id 68so1592016ual.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:24:46 -0700 (PDT)
+        Tue, 25 Aug 2020 10:27:27 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD95C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:27:27 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t4so10579000iln.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:27:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=okmSfG76Cm0/HZKPCuD/vD1jM1zwkcjUb4EgZODn79g=;
-        b=r27VoB6zXP3SyOq+GAb2qPoC+yspqQgbSlRsjPKEneFqgA1vgEo4i6jAx5Z90G0zHs
-         kckquU4h3UODmKcknAvvj9+sszBbxMNSCArj8yEQWl72XSLA/8sS3kRgaMRBNdf+L5q5
-         8YSwrWmcWIa+RRuFvwegLLgIHM1xj0pQUywZ2igKlFw/jxJ/85SE1yUqPPhF1jrRh2oF
-         NvINvwWr+bIqhUANCt9dOK8YX9nH/3hBCNY2kAVcuQXIti3moT8kZyp63ibcHxKlbRMu
-         jYkpcmaop8mipKgPcfUZbHxO4wX+Oj3iz/OI2cbkyyQXMAMi7ekH+UFEPW64dngxum2K
-         ufRg==
+        bh=IMhOoaqeBgw5sd9nH356QHOCGM8LAW30Bvlz/clHT/M=;
+        b=UOxBr/WhWwU8L70OzdYOXaJzqqNL06WIfxyRD+85aDP+XPsdr5qZ/vRxBa6ultrXIk
+         bPdKVMg8rdbaaUTws9rP1C4Z5VYLryTtnNYzS0Al5+OAnGNvmbHTMvn8nArc5W0lZPK/
+         4OWD8DaZ0eLlV2ODQfnBN800Vapo0jIPsAaZ6WeBwgeEdukSRQFH6BArBp8FXNasuWJ2
+         6nwjutcA+ExYhC82Pkn+KOBCtxim3vP9kSG6fi2AUsdFs61dRp4hh/n07WEneNRRximl
+         iu9mTE7gb22gFd/Tr4YYF0xBh+04/CokDFoHAfWNcvdGzzBFA6JKUOmIkmqQZW8pzlxq
+         XUkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=okmSfG76Cm0/HZKPCuD/vD1jM1zwkcjUb4EgZODn79g=;
-        b=Qwg/UxKn6QfGPrZ+w2IZnVRKTiT2twvQElgGDYt88OvJtFGPgBB9QdUBFqNggC8kZO
-         MotGNDPC1d0Y/DF4hnYaeYLioA2ww4HRH41Vt8nuvGAd/+QMAXwIDaNO6nkppliL5n1N
-         aaI/YTLzXxCX9+1apmKmswNj+f8cXF5eBYFt61ioByjsGUJAay+Dbzx91EJEeBXKe0Ab
-         vflj1aqYsd935qIMmIAe094LMuaFbzpm+rGtvn169p0c78zIEOFK6/QLsKbcPCrtXNvo
-         mzuOEKJCvPAIQ3zsVKTmmdApbPTB9jjnWwqf7gRXLY3PUM83FbuDx2PzCODT6sM9++iv
-         otZw==
-X-Gm-Message-State: AOAM531duE8XkTMaTpfR1QT5RvDwPUh1brEIY9b6t6nH0WnAGBSmF9UR
-        5EknMyXqOHrLFP01ujr8hnknsXSF1tJ0xsnI0PpyRA==
-X-Google-Smtp-Source: ABdhPJxyGvLAySOcaQE1wH6W+EB0e+NuFGdnu6GmpbNN0KBXRl9yKJ7k4uW3MLbqXivQ7RUIBJUxMXzjCDnCC7f2zpY=
-X-Received: by 2002:ab0:3765:: with SMTP id o5mr3052916uat.92.1598365485422;
- Tue, 25 Aug 2020 07:24:45 -0700 (PDT)
+        bh=IMhOoaqeBgw5sd9nH356QHOCGM8LAW30Bvlz/clHT/M=;
+        b=BjsDnBrxPSdphXS4uW6rMVnH6A4a6mpJ9ZNftcAmGa8JJpoiiGp4TwA/VpL+c/oelQ
+         iSqHHhbQZiq7FC5U30AYPlLIWtpKn8FmsnWkQkHjG8Esd3TBuNnshbenFyOG8QFeBa6Y
+         sS4goWSqsAJhoguKW3947n3YdNDNAEXMJIVlzFKk2VS3FOVD7ESZMBcBx1vBv9kp51wj
+         z6KmqZ/LSBeZQkK0u9t1o7kDytJt1Xe5ikCF93w+zgA8dJI4lZ9sT5BcUrTITIMFxjuo
+         C+xEtKFfH3dYxznCn392IUNjGIyJXaRuWEidOmpVxIfYGVJDrWpml0lEC28M39XrpBN2
+         Gqfw==
+X-Gm-Message-State: AOAM531xyzmtftlAGv3nX//NW/qRVslAsBVimvCPRQB/qSeiHDAJKCY+
+        TStXdgzXkaVy+NjKt9eayDZtart5IT6jzROTRgxGuy62wWo=
+X-Google-Smtp-Source: ABdhPJz9+K/cyvzC9eGVsTdx+EDViOd8W9JtE6XE6RoAqDqZfsDReKJju9OfgvAvJf+mYGcBVVVsZqX9GEfjC49LuZc=
+X-Received: by 2002:a05:6e02:1343:: with SMTP id k3mr9020959ilr.217.1598365646156;
+ Tue, 25 Aug 2020 07:27:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200824153036.3201505-1-surenb@google.com> <20200825111524.v2bnoya35spde3zt@wittgenstein>
-In-Reply-To: <20200825111524.v2bnoya35spde3zt@wittgenstein>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 25 Aug 2020 07:24:34 -0700
-Message-ID: <CAJuCfpE7YQjBJDKBcc-20qEDsu9koirFuGSO306NDuKz6_9Tsg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Michal Hocko <mhocko@suse.com>, mingo@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com,
-        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
-        Oleg Nesterov <oleg@redhat.com>, adobriyan@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de,
-        John Johansen <john.johansen@canonical.com>,
-        laoar.shao@gmail.com, Tim Murray <timmurray@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, stable <stable@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>
+References: <1597217150-22911-1-git-send-email-simhavcs@gmail.com>
+ <20200812095418.GG6057@pendragon.ideasonboard.com> <CAGWqDJ4i=t4Noi7wjGDDhUYkB_uuQ6A-WiMrh1ErKRi2HU9t9w@mail.gmail.com>
+ <20200812131818.GI6057@pendragon.ideasonboard.com> <CAGWqDJ6eHCNXb5dMCUJ785iUp7gjdCk0bB=GuZesVesaVACucQ@mail.gmail.com>
+ <CAGWqDJ5QWyvgJWyink1eH2fHhFWEKSei7XPCdtCRaM1BqRs-Tw@mail.gmail.com> <CAGWqDJ7DQbnxBmL9xt3cJoXkcm4aU1Msf-MiJOi12hd61GbJpg@mail.gmail.com>
+In-Reply-To: <CAGWqDJ7DQbnxBmL9xt3cJoXkcm4aU1Msf-MiJOi12hd61GbJpg@mail.gmail.com>
+From:   Vinay Simha B N <simhavcs@gmail.com>
+Date:   Tue, 25 Aug 2020 19:57:14 +0530
+Message-ID: <CAGWqDJ4eqDNZFz+F2ybaCzuZ=bvr_4hFq=GGMmPCK0zY1KcyPw@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge/tc358775: Fixes bus formats read
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 4:15 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> On Mon, Aug 24, 2020 at 08:30:36AM -0700, Suren Baghdasaryan wrote:
-> > Currently __set_oom_adj loops through all processes in the system to
-> > keep oom_score_adj and oom_score_adj_min in sync between processes
-> > sharing their mm. This is done for any task with more that one mm_users,
-> > which includes processes with multiple threads (sharing mm and signals).
-> > However for such processes the loop is unnecessary because their signal
-> > structure is shared as well.
-> > Android updates oom_score_adj whenever a tasks changes its role
-> > (background/foreground/...) or binds to/unbinds from a service, making
-> > it more/less important. Such operation can happen frequently.
-> > We noticed that updates to oom_score_adj became more expensive and after
-> > further investigation found out that the patch mentioned in "Fixes"
-> > introduced a regression. Using Pixel 4 with a typical Android workload,
-> > write time to oom_score_adj increased from ~3.57us to ~362us. Moreover
-> > this regression linearly depends on the number of multi-threaded
-> > processes running on the system.
-> > Mark the mm with a new MMF_PROC_SHARED flag bit when task is created with
-> > (CLONE_VM && !CLONE_THREAD && !CLONE_VFORK). Change __set_oom_adj to use
-> > MMF_PROC_SHARED instead of mm_users to decide whether oom_score_adj
-> > update should be synchronized between multiple processes. To prevent
-> > races between clone() and __set_oom_adj(), when oom_score_adj of the
-> > process being cloned might be modified from userspace, we use
-> > oom_adj_mutex. Its scope is changed to global and it is renamed into
-> > oom_adj_lock for naming consistency with oom_lock. The combination of
-> > (CLONE_VM && !CLONE_THREAD) is rarely used except for the case of vfork().
-> > To prevent performance regressions of vfork(), we skip taking oom_adj_lock
-> > and setting MMF_PROC_SHARED when CLONE_VFORK is specified. Clearing the
-> > MMF_PROC_SHARED flag (when the last process sharing the mm exits) is left
-> > out of this patch to keep it simple and because it is believed that this
-> > threading model is rare. Should there ever be a need for optimizing that
-> > case as well, it can be done by hooking into the exit path, likely
-> > following the mm_update_next_owner pattern.
-> > With the combination of (CLONE_VM && !CLONE_THREAD && !CLONE_VFORK) being
-> > quite rare, the regression is gone after the change is applied.
-> >
-> > Fixes: 44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
-> > Reported-by: Tim Murray <timmurray@google.com>
-> > Debugged-by: Minchan Kim <minchan@kernel.org>
-> > Suggested-by: Michal Hocko <mhocko@kernel.org>
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > ---
-> >
-> > v2:
-> > - Implemented proposal from Michal Hocko in:
-> > https://lore.kernel.org/linux-fsdevel/20200820124109.GI5033@dhcp22.suse.cz/
-> > - Updated description to reflect the change
-> >
-> > v1:
-> > - https://lore.kernel.org/linux-mm/20200820002053.1424000-1-surenb@google.com/
-> >
-> >  fs/proc/base.c                 |  7 +++----
-> >  include/linux/oom.h            |  1 +
-> >  include/linux/sched/coredump.h |  1 +
-> >  kernel/fork.c                  | 21 +++++++++++++++++++++
-> >  mm/oom_kill.c                  |  2 ++
-> >  5 files changed, 28 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/fs/proc/base.c b/fs/proc/base.c
-> > index 617db4e0faa0..cff1a58a236c 100644
-> > --- a/fs/proc/base.c
-> > +++ b/fs/proc/base.c
-> > @@ -1055,7 +1055,6 @@ static ssize_t oom_adj_read(struct file *file, char __user *buf, size_t count,
-> >
-> >  static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
-> >  {
-> > -     static DEFINE_MUTEX(oom_adj_mutex);
-> >       struct mm_struct *mm = NULL;
-> >       struct task_struct *task;
-> >       int err = 0;
-> > @@ -1064,7 +1063,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
-> >       if (!task)
-> >               return -ESRCH;
-> >
-> > -     mutex_lock(&oom_adj_mutex);
-> > +     mutex_lock(&oom_adj_lock);
-> >       if (legacy) {
-> >               if (oom_adj < task->signal->oom_score_adj &&
-> >                               !capable(CAP_SYS_RESOURCE)) {
-> > @@ -1095,7 +1094,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
-> >               struct task_struct *p = find_lock_task_mm(task);
-> >
-> >               if (p) {
-> > -                     if (atomic_read(&p->mm->mm_users) > 1) {
-> > +                     if (test_bit(MMF_PROC_SHARED, &p->mm->flags)) {
-> >                               mm = p->mm;
-> >                               mmgrab(mm);
-> >                       }
-> > @@ -1132,7 +1131,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
-> >               mmdrop(mm);
-> >       }
-> >  err_unlock:
-> > -     mutex_unlock(&oom_adj_mutex);
-> > +     mutex_unlock(&oom_adj_lock);
-> >       put_task_struct(task);
-> >       return err;
-> >  }
-> > diff --git a/include/linux/oom.h b/include/linux/oom.h
-> > index f022f581ac29..861f22bd4706 100644
-> > --- a/include/linux/oom.h
-> > +++ b/include/linux/oom.h
-> > @@ -55,6 +55,7 @@ struct oom_control {
-> >  };
-> >
-> >  extern struct mutex oom_lock;
-> > +extern struct mutex oom_adj_lock;
-> >
-> >  static inline void set_current_oom_origin(void)
-> >  {
-> > diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
-> > index ecdc6542070f..070629b722df 100644
-> > --- a/include/linux/sched/coredump.h
-> > +++ b/include/linux/sched/coredump.h
-> > @@ -72,6 +72,7 @@ static inline int get_dumpable(struct mm_struct *mm)
-> >  #define MMF_DISABLE_THP              24      /* disable THP for all VMAs */
-> >  #define MMF_OOM_VICTIM               25      /* mm is the oom victim */
-> >  #define MMF_OOM_REAP_QUEUED  26      /* mm was queued for oom_reaper */
-> > +#define MMF_PROC_SHARED      27      /* mm is shared while sighand is not */
-> >  #define MMF_DISABLE_THP_MASK (1 << MMF_DISABLE_THP)
-> >
-> >  #define MMF_INIT_MASK                (MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index 4d32190861bd..6fce8ffa9b8b 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -1809,6 +1809,25 @@ static __always_inline void delayed_free_task(struct task_struct *tsk)
-> >               free_task(tsk);
-> >  }
-> >
-> > +static void copy_oom_score_adj(u64 clone_flags, struct task_struct *tsk)
-> > +{
-> > +     /* Skip if kernel thread */
-> > +     if (!tsk->mm)
-> > +             return;
->
-> Hm, wouldn't
->
->         if (tsk->flags & PF_KTHREAD)
->                 return;
->
-> be clearer and more future proof?
+laurent,
 
-The check follows a similar pattern from copy_mm to detect when we are
-cloning a kernel thread. Also IMHO this is a more obvious way to
-protect from dereferencing a NULL tsk->mm, which is the important
-point here. I can change or remove the comment if that makes things
-more clear. Please LMK if that would help.
+Please review or give some feedback.
 
+On Thu, Aug 13, 2020 at 9:09 PM Vinay Simha B N <simhavcs@gmail.com> wrote:
 >
-> Christian
+> laurent,
+>
+> The code sequence was a problem. *num_inputs_fmts =
+> ARRAY_SIZE(tc_lvds_in_bus_fmts); should come first and then allocate
+> the kcalloc.
+>
+> input_fmts = kcalloc(*num_input_fmts, ARRAY_SIZE(tc_lvds_in_bus_fmts),
+>                              GFP_KERNEL);
+> ..
+>         for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
+>                 input_fmts[i] = tc_lvds_in_bus_fmts[i];
+>
+>         *num_inputs_fmts = ARRAY_SIZE(tc_lvds_in_bus_fmts);
+>
+> So, internally in the drm pipeline get set the input format based on
+> the output formats?
+>
+> On Wed, Aug 12, 2020 at 10:45 PM Vinay Simha B N <simhavcs@gmail.com> wrote:
+> >
+> > laurent,
+> >
+> > if i add the .atomic_get_input_bus_fmts =
+> > tc_bridge_get_input_bus_fmts, with the implementation suggested,
+> > system does not boot fully, the reason is, we capture all the
+> > supported input formats, but not sure where to set the final input
+> > format. Please suggest.
+> >
+> > for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
+> >                 input_fmts[i] = tc_lvds_in_bus_fmts[i];
+> >
+> >         *num_input_fmts = ARRAY_SIZE(tc_lvds_in_bus_fmts);
+> >
+> > On Wed, Aug 12, 2020 at 8:25 PM Vinay Simha B N <simhavcs@gmail.com> wrote:
+> > >
+> > > laurent,
+> > >
+> > > Video data input format :  RGB666 loosely packed 24 bits per pixel
+> > > Can we use MEDIA_BUS_FMT_RGB666_1X24_CPADHI? There was no information
+> > > wrt CPADHI or for loosely packed
+> > >
+> > > static const u32 tc_lvds_in_bus_fmts[] = {
+> > >         MEDIA_BUS_FMT_RGB565_1X16,
+> > >         MEDIA_BUS_FMT_RGB666_1X18,
+> > >         MEDIA_BUS_FMT_RGB666_1X24_CPADHI,
+> > >         MEDIA_BUS_FMT_RBG888_1X24,
+> > > };
+> > >
+> > > for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
+> > >                 input_fmts[i] = tc_lvds_in_bus_fmts[i];
+> > > >> This will have all the available input formats, but finally which video data input format chosen?
+> > > Since dsi->format = MIPI_DSI_FMT_RGB888 is used does it chooses
+> > > MEDIA_BUS_FMT_RBG888_1X24 by the drm pipeline
+> > >
+> > > On Wed, Aug 12, 2020 at 6:48 PM Laurent Pinchart
+> > > <laurent.pinchart@ideasonboard.com> wrote:
+> > > >
+> > > > Hi Vinay,
+> > > >
+> > > > On Wed, Aug 12, 2020 at 06:07:52PM +0530, Vinay Simha B N wrote:
+> > > > > On Wed, Aug 12, 2020 at 3:24 PM Laurent Pinchart wrote:
+> > > > > > On Wed, Aug 12, 2020 at 12:55:50PM +0530, Vinay Simha BN wrote:
+> > > > > > > - bus formats read from drm_bridge_state.output_bus_cfg.format
+> > > > > > >   and .atomic_get_input_bus_fmts() instead of connector
+> > > > > > >
+> > > > > > > Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> > > > > > >
+> > > > > > > ---
+> > > > > > >  v1:
+> > > > > > >  * Laurent Pinchart review comments incorporated
+> > > > > > >    drm_bridge_state.output_bus_cfg.format
+> > > > > > >    instead of connector
+> > > > > > > ---
+> > > > > > >  drivers/gpu/drm/bridge/tc358775.c | 76 ++++++++++++++++++++++++++++++---------
+> > > > > > >  1 file changed, 59 insertions(+), 17 deletions(-)
+> > > > > > >
+> > > > > > > diff --git a/drivers/gpu/drm/bridge/tc358775.c b/drivers/gpu/drm/bridge/tc358775.c
+> > > > > > > index 7da15cd..5d8714a 100644
+> > > > > > > --- a/drivers/gpu/drm/bridge/tc358775.c
+> > > > > > > +++ b/drivers/gpu/drm/bridge/tc358775.c
+> > > > > > > @@ -271,6 +271,13 @@ struct tc_data {
+> > > > > > >       struct gpio_desc        *stby_gpio;
+> > > > > > >       u8                      lvds_link; /* single-link or dual-link */
+> > > > > > >       u8                      bpc;
+> > > > > > > +     u32                     output_bus_fmt;
+> > > > > > > +};
+> > > > > > > +
+> > > > > > > +static const u32 tc_lvds_out_bus_fmts[] = {
+> > > > > > > +     MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
+> > > > > > > +     MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+> > > > > > > +     MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> > > > > > >  };
+> > > > > > >
+> > > > > > >  static inline struct tc_data *bridge_to_tc(struct drm_bridge *b)
+> > > > > > > @@ -359,19 +366,6 @@ static void d2l_write(struct i2c_client *i2c, u16 addr, u32 val)
+> > > > > > >                       ret, addr);
+> > > > > > >  }
+> > > > > > >
+> > > > > > > -/* helper function to access bus_formats */
+> > > > > > > -static struct drm_connector *get_connector(struct drm_encoder *encoder)
+> > > > > > > -{
+> > > > > > > -     struct drm_device *dev = encoder->dev;
+> > > > > > > -     struct drm_connector *connector;
+> > > > > > > -
+> > > > > > > -     list_for_each_entry(connector, &dev->mode_config.connector_list, head)
+> > > > > > > -             if (connector->encoder == encoder)
+> > > > > > > -                     return connector;
+> > > > > > > -
+> > > > > > > -     return NULL;
+> > > > > > > -}
+> > > > > > > -
+> > > > > > >  static void tc_bridge_enable(struct drm_bridge *bridge)
+> > > > > > >  {
+> > > > > > >       struct tc_data *tc = bridge_to_tc(bridge);
+> > > > > > > @@ -380,7 +374,6 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
+> > > > > > >       u32 val = 0;
+> > > > > > >       u16 dsiclk, clkdiv, byteclk, t1, t2, t3, vsdelay;
+> > > > > > >       struct drm_display_mode *mode;
+> > > > > > > -     struct drm_connector *connector = get_connector(bridge->encoder);
+> > > > > > >
+> > > > > > >       mode = &bridge->encoder->crtc->state->adjusted_mode;
+> > > > > > >
+> > > > > > > @@ -451,14 +444,13 @@ static void tc_bridge_enable(struct drm_bridge *bridge)
+> > > > > > >       d2l_write(tc->i2c, LVPHY0, LV_PHY0_PRBS_ON(4) | LV_PHY0_ND(6));
+> > > > > > >
+> > > > > > >       dev_dbg(tc->dev, "bus_formats %04x bpc %d\n",
+> > > > > > > -             connector->display_info.bus_formats[0],
+> > > > > > > +             tc->output_bus_fmt,
+> > > > > > >               tc->bpc);
+> > > > > > >       /*
+> > > > > > >        * Default hardware register settings of tc358775 configured
+> > > > > > >        * with MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA jeida-24 format
+> > > > > > >        */
+> > > > > > > -     if (connector->display_info.bus_formats[0] ==
+> > > > > > > -             MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
+> > > > > > > +     if (tc->output_bus_fmt == MEDIA_BUS_FMT_RGB888_1X7X4_SPWG) {
+> > > > > > >               /* VESA-24 */
+> > > > > > >               d2l_write(tc->i2c, LV_MX0003, LV_MX(LVI_R0, LVI_R1, LVI_R2, LVI_R3));
+> > > > > > >               d2l_write(tc->i2c, LV_MX0407, LV_MX(LVI_R4, LVI_R7, LVI_R5, LVI_G0));
+> > > > > > > @@ -590,6 +582,51 @@ static int tc358775_parse_dt(struct device_node *np, struct tc_data *tc)
+> > > > > > >       return 0;
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +static int tc_bridge_atomic_check(struct drm_bridge *bridge,
+> > > > > > > +                               struct drm_bridge_state *bridge_state,
+> > > > > > > +                               struct drm_crtc_state *crtc_state,
+> > > > > > > +                               struct drm_connector_state *conn_state)
+> > > > > > > +{
+> > > > > > > +     struct tc_data *tc = bridge_to_tc(bridge);
+> > > > > > > +
+> > > > > > > +     tc->output_bus_fmt = bridge_state->output_bus_cfg.format;
+> > > > > >
+> > > > > > .atomic_check() isn't allowed to modify the device state, neither the
+> > > > > > hardware state nor the software state in drm_bridge or tc_data. You can
+> > > > > > instead access the bridge state directly in tc_bridge_enable(), with
+> > > > > >
+> > > > > >         struct drm_bridge_state *state =
+> > > > > >                 drm_priv_to_bridge_state(bridge->base.state);
+> > > > >
+> > > > > Currently the driver is picking up from the dts panel
+> > > > > (data-mapping = "vesa-24";) or jeida-24 or jeida-18.
+> > > > >
+> > > > > Does state->output_bus_cfg.format  get set from the data-mapping?
+> > > >
+> > > > It should. The drm_panel should take care of that. In
+> > > > panel_simple_get_non_edid_modes(), it calls
+> > > >
+> > > >         if (panel->desc->bus_format)
+> > > >                 drm_display_info_set_bus_formats(&connector->display_info,
+> > > >                                                  &panel->desc->bus_format, 1);
+> > > >
+> > > > to initialize the bus format in display_info. Then, the DRM bridge
+> > > > helper drm_atomic_bridge_chain_select_bus_fmts() retrieves the output
+> > > > format by calling .atomic_get_output_bus_fmts() if implemented by the
+> > > > last bridge in the chain, or directly from the connector display_info.
+> > > > The last bridge in the chain is a DRM panel bridge, and doesn't
+> > > > implement .atomic_get_output_bus_fmts(), so the format from display_info
+> > > > is used, and is stored in the output_bus_cfg.format field of this bridge
+> > > > in select_bus_fmt_recursive().
+> > > >
+> > > > If something doesn't work according to the plan, I can help you
+> > > > debugging.
+> > > >
+> > > > > > > +
+> > > > > > > +     dev_dbg(tc->dev, "output_bus_fmt %04x\n", tc->output_bus_fmt);
+> > > > > > > +
+> > > > > > > +     return 0;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > > +static u32 *
+> > > > > > > +tc_bridge_get_input_bus_fmts(struct drm_bridge *bridge,
+> > > > > > > +                          struct drm_bridge_state *bridge_state,
+> > > > > > > +                          struct drm_crtc_state *crtc_state,
+> > > > > > > +                          struct drm_connector_state *conn_state,
+> > > > > > > +                          u32 output_fmt,
+> > > > > > > +                          unsigned int *num_input_fmts)
+> > > > > > > +{
+> > > > > > > +     u32 *input_fmts = NULL;
+> > > > > > > +     int i;
+> > > > > >
+> > > > > > i only takes positive values, so it can be an unsigned int.
+> > > > > >
+> > > > > > > +
+> > > > > > > +     *num_input_fmts = 0;
+> > > > > > > +
+> > > > > > > +     for (i = 0 ; i < ARRAY_SIZE(tc_lvds_out_bus_fmts) ; ++i) {
+> > > > > > > +             if (output_fmt == tc_lvds_out_bus_fmts[i]) {
+> > > > > > > +                     *num_input_fmts = 1;
+> > > > > > > +                     input_fmts = kcalloc(*num_input_fmts,
+> > > > > > > +                                          sizeof(*input_fmts),
+> > > > > > > +                                          GFP_KERNEL);
+> > > > > > > +                     if (!input_fmts)
+> > > > > > > +                             return NULL;
+> > > > > > > +
+> > > > > > > +                     input_fmts[0] = output_fmt;
+> > > > > >
+> > > > > > I don't think this is right, the input of the bridge isn't LVDS, is it ?
+> > > > >
+> > > > > Input to the bridge is DSI, format is already set
+> > > > >
+> > > > > dsi->format = MIPI_DSI_FMT_RGB888;
+> > > > >
+> > > > > enum mipi_dsi_pixel_format {
+> > > > >         MIPI_DSI_FMT_RGB888,
+> > > > >         MIPI_DSI_FMT_RGB666,
+> > > > >         MIPI_DSI_FMT_RGB666_PACKED,
+> > > > >         MIPI_DSI_FMT_RGB565,
+> > > > > };
+> > > > > include/drm/drm_mipi_dsi.h
+> > > > >
+> > > > > Why do we require this atomic_get_input_bus_fmts?
+> > > > >
+> > > > > Do i need to implement both atomic_get_input_bus_fmts and
+> > > > > atomic_get_output_bus_fmts?
+> > > >
+> > > > .atomic_get_output_bus_fmts() is only need for the last bridge in the
+> > > > chain, and is not mandatory when that bridge supports a single format.
+> > > > As this bridge can't be last (if the output is connect to a panel, there
+> > > > will be a drm_bridge wrapping the drm_panel), you don't have to
+> > > > implement that operation.
+> > > >
+> > > > .atomic_get_input_bus_fmts() is used to negotiate formats along the
+> > > > pipeline. The helps the DRM bridge helpers figure out what formats are
+> > > > possible, with the help of bridges that must report what input formats
+> > > > are compatible with a given output format. The DRM bridge helpers will
+> > > > take care of the rest.
+> > > >
+> > > > So, for this bridge, the input and output formats are decoupled. The
+> > > > bridge can output any of the three supported LVDS formats, regardless of
+> > > > what format it gets at its input. You should thus verify that the output
+> > > > format you receive in this function is supported (and return NULL if it
+> > > > isn't), and then return the list of supported input formats. If you
+> > > > don't implement .atomic_get_input_bus_fmts(), then the DRM bridge
+> > > > helpers will consider that the input and output formats are the same,
+> > > > and will set the output format of the previous bridge to, for example,
+> > > > MEDIA_BUS_FMT_RGB666_1X7X3_SPWG. It may work if the previous bridge
+> > > > doesn't care about its output format, but if it does, then it will be
+> > > > puzzled, as the previous bridge outputs DSI, not LVDS.
+> > > >
+> > > > > > As far as I can tell, the hardware support transcoding any of the
+> > > > > > supported input formats (RGB565, RGB666 or RGB888) to any of the
+> > > > > > supported output formats. How about the following ?
+> > > > > >
+> > > > > > static const u32 tc_lvds_in_bus_fmts[] = {
+> > > > > >         MEDIA_BUS_FMT_RGB565_1X16,
+> > > > > >         MEDIA_BUS_FMT_RGB666_1X18,
+> > > > > >         MEDIA_BUS_FMT_RBG888_1X24,
+> > > > > > };
+> > > > > >
+> > > > > > ...
+> > > > > >
+> > > > > >         u32 *input_fmts;
+> > > > > >         unsigned int i;
+> > > > > >
+> > > > > >         *num_input_fmts = 0;
+> > > > > >
+> > > > > >         for (i = 0 ; i < ARRAY_SIZE(tc_lvds_out_bus_fmts) ; ++i) {
+> > > > > >                 if (output_fmt == tc_lvds_out_bus_fmts[i])
+> > > > > >                         break;
+> > > > > >         }
+> > > > > >
+> > > > > >         if (i == ARRAY_SIZE(tc_lvds_out_bus_fmts))
+> > > > > >                 return NULL;
+> > > > > >
+> > > > > >         input_fmts = kcalloc(*num_input_fmts, ARRAY_SIZE(tc_lvds_in_bus_fmts),
+> > > > > >                              GFP_KERNEL);
+> > > > > >         if (!input_fmts)
+> > > > > >                 return NULL;
+> > > > > >
+> > > > > >         for (i = 0; i < ARRAY_SIZE(tc_lvds_in_bus_fmts); ++i)
+> > > > > >                 input_fmts[i] = tc_lvds_in_bus_fmts[i];
+> > > > > >
+> > > > > >         *num_inputs_fmts = ARRAY_SIZE(tc_lvds_in_bus_fmts);
+> > > > > >         return input_fmts;
+> > > > > >
+> > > > > > > +
+> > > > > > > +                     break;
+> > > > > > > +             }
+> > > > > > > +     }
+> > > > > > > +
+> > > > > > > +     return input_fmts;
+> > > > > > > +}
+> > > > > > > +
+> > > > > > >  static int tc_bridge_attach(struct drm_bridge *bridge,
+> > > > > > >                           enum drm_bridge_attach_flags flags)
+> > > > > > >  {
+> > > > > > > @@ -639,6 +676,11 @@ static int tc_bridge_attach(struct drm_bridge *bridge,
+> > > > > > >  }
+> > > > > > >
+> > > > > > >  static const struct drm_bridge_funcs tc_bridge_funcs = {
+> > > > > > > +     .atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
+> > > > > > > +     .atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
+> > > > > > > +     .atomic_reset = drm_atomic_helper_bridge_reset,
+> > > > > > > +     .atomic_get_input_bus_fmts = tc_bridge_get_input_bus_fmts,
+> > > > > > > +     .atomic_check = tc_bridge_atomic_check,
+> > > > > > >       .attach = tc_bridge_attach,
+> > > > > > >       .pre_enable = tc_bridge_pre_enable,
+> > > > > > >       .enable = tc_bridge_enable,
+> > > >
+> > > > --
+> > > > Regards,
+> > > >
+> > > > Laurent Pinchart
+> > >
+> > >
+> > >
+> > > --
+> > > regards,
+> > > vinaysimha
+> >
+> >
+> >
+> > --
+> > regards,
+> > vinaysimha
+>
+>
+>
+> --
+> regards,
+> vinaysimha
+
+
+
+-- 
+regards,
+vinaysimha
