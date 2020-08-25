@@ -2,102 +2,90 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AABC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F70E20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0C92076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:52:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598399537;
+	bh=cpl2NMcCvB4e05/2Ng+vLlDNVSMOHT2mnJhujSPNZfg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OC5Lb1fxPUYvp9dGiWYjP8EfYBRM++j7FxFKaw5dZQIeEDGEBRGQLo+EQQ+TCqxCo
+	 +J7BTgNaqqiN34iccu4mwY1aLXQMcGqO2XJx2MVVYxmRI2qR4J/JaIqEQZ5BowbDU2
+	 WPLCZFJK8C7Pcrf0sD7kNkMxZTmX9p8jkgZUiJa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHYXuu (ORCPT
+        id S1726672AbgHYXwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:50:50 -0400
-Received: from anchovy3.45ru.net.au ([203.30.46.155]:55394 "EHLO
-        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726475AbgHYXut (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:50:49 -0400
-Received: (qmail 18469 invoked by uid 5089); 25 Aug 2020 23:44:07 -0000
-Received: by simscan 1.2.0 ppid: 18331, pid: 18332, t: 0.0840s
-         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
-Received: from unknown (HELO ?192.168.0.22?) (preid@electromag.com.au@203.59.235.95)
-  by anchovy2.45ru.net.au with ESMTPA; 25 Aug 2020 23:44:06 -0000
-Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
-To:     Wolfram Sang <wsa@the-dreams.de>, Codrin.Ciubotariu@microchip.com,
-        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com, devicetree@vger.kernel.org,
-        thomas.petazzoni@bootlin.com
-References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
- <20191002144658.7718-3-kamel.bouhara@bootlin.com>
- <20191021202044.GB3607@kunai>
- <724d3470-0561-1b3f-c826-bc16c74a8c0a@bootlin.com>
- <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
- <20191024150726.GA1120@kunai>
- <65d83bb0-9a0c-c6e2-1c58-cb421c69816c@electromag.com.au>
- <20200825132846.GA1753@kunai>
-From:   Phil Reid <preid@electromag.com.au>
-Message-ID: <8deeae50-2d67-d728-7afd-1b8f1b7a927e@electromag.com.au>
-Date:   Wed, 26 Aug 2020 07:44:02 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200825132846.GA1753@kunai>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Aug 2020 19:52:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726374AbgHYXwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 19:52:16 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CF4520706;
+        Tue, 25 Aug 2020 23:52:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598399535;
+        bh=cpl2NMcCvB4e05/2Ng+vLlDNVSMOHT2mnJhujSPNZfg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qKT+jfW0x0cEBaRNnmniDD+NJJv6dYtIMRh6+MAaQL7kCvhE58TBFswqwK9Al1D4L
+         vzu/JEqF4MiN61wbJ1dk9vvwGVgx1L0MK73fS/ecYLbLDLBIX/0gcaJ5zFR9qmRcCm
+         oCRwjE6v0kKpA1jTfNrtzQ9QmL57I8x58XPd1/g8=
+Date:   Tue, 25 Aug 2020 16:52:14 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH mmotm] x86/numa: fix build when CONFIG_ACPI is not set
+Message-Id: <20200825165214.2b5e1fbf53d68fd3714c8050@linux-foundation.org>
+In-Reply-To: <70e5ee34-9809-a997-7b49-499e4be61307@infradead.org>
+References: <70e5ee34-9809-a997-7b49-499e4be61307@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/08/2020 21:28, Wolfram Sang wrote:
-> Hi Phil,
+On Tue, 25 Aug 2020 08:20:27 -0700 Randy Dunlap <rdunlap@infradead.org> wrote:
+
+> From: Randy Dunlap <rdunlap@infradead.org>
 > 
-> yes, this thread is old but a similar issue came up again...
+> Fix build errors when CONFIG_ACPI is not set/enabled by adding
+> <acpi/acpi_numa.h> in the #else (!CONFIG_ACPI) block.
 > 
-> On Fri, Oct 25, 2019 at 09:14:00AM +0800, Phil Reid wrote:
-> 
->>>
->>>> So at the beginning of a new transfer, we should check if SDA (or SCL?)
->>>> is low and, if it's true, only then we should try recover the bus.
->>>
->>> Yes, this is the proper time to do it. Remember, I2C does not define a
->>> timeout.
->>>
->>
->> FYI: Just a single poll at the start of the transfer, for it being low, will cause problems with multi-master buses.
->> Bus recovery should be attempted after a timeout when trying to communicate, even thou i2c doesn't define a timeout.
->>
->> I'm trying to fix the designware drivers handling of this at the moment.
-> 
-> I wonder what you ended up with? You are right, a single poll is not
-> enough. It only might be if one applies the new "single-master" binding
-> for a given bus. If that is not present, my best idea so far is to poll
-> SDA for the time defined in adapter->timeout and if it is all low, then
-> initiate a recovery.
-> 
+> ../arch/x86/mm/numa.c: In function ‘numa_setup’:
+> ../arch/x86/mm/numa.c:43:3: error: implicit declaration of function ‘disable_srat’; did you mean ‘disable_irq’? [-Werror=implicit-function-declaration]
+>    disable_srat();
+>    ^~~~~~~~~~~~
+> ../arch/x86/mm/numa.c:45:3: error: implicit declaration of function ‘disable_hmat’; did you mean ‘disable_dma’? [-Werror=implicit-function-declaration]
+>    disable_hmat();
+>    ^~~~~~~~~~~~
+>
+> ...
+>
+> --- mmotm-2020-0824-1606.orig/include/linux/acpi.h
+> +++ mmotm-2020-0824-1606/include/linux/acpi.h
+> @@ -709,6 +709,8 @@ static inline u64 acpi_arch_get_root_poi
+>  #define ACPI_HANDLE_FWNODE(fwnode)	(NULL)
+>  #define ACPI_DEVICE_CLASS(_cls, _msk)	.cls = (0), .cls_msk = (0),
+>  
+> +#include <acpi/acpi_numa.h>
+> +
+>  struct fwnode_handle;
+>  
+>  static inline bool acpi_dev_found(const char *hid)
 
-On my todo list still.
+I don't think there's anything in -next that caused this?  It's in
+mainline also?
 
-Our system eventually recovers at the moment and the multi-master bus
-doesn't contain anything that's time critical to our systems operation.
-
-
--- 
-Regards
-Phil Reid
-
-ElectroMagnetic Imaging Technology Pty Ltd
-Development of Geophysical Instrumentation & Software
-www.electromag.com.au
-
-3 The Avenue, Midland WA 6056, AUSTRALIA
-Ph: +61 8 9250 8100
-Fax: +61 8 9250 7100
-Email: preid@electromag.com.au
