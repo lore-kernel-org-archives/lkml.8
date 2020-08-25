@@ -2,223 +2,235 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA0CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD2BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 774EC2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:50:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NqErmEm2"
+	by mail.kernel.org (Postfix) with ESMTP id 880DC2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598338282;
+	bh=dLhL6dPmhERcMqlQBLbhE8LoE6W9RMctbOefccjpeJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AkSaU1WSgHtvcEgc3nhj9UbPM/jyyWJPqyZLpKHmY2n6/8NLugOa28ELQ3Bn3hv9v
+	 EMnlzRw5WIatWsNp9tIc0CeaaSEDCRcKfSyvFkJuvIZofr+hJD9t6q6SW/G2iKBYcs
+	 mMmj2MCJI1Wdf/5Z+eT2EOqc20gP5Ou0/Y6Lct38=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729214AbgHYGuh (ORCPT
+        id S1729236AbgHYGvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:50:37 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50768 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbgHYGue (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:50:34 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07P6oUbp069409;
-        Tue, 25 Aug 2020 01:50:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598338230;
-        bh=tdz2P7L4M7GY6138AgTYwy06Fxammm7gnj52s0oLfW4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NqErmEm2w2etd7BIyxArIlTF1/OHd3NZ8hLCT4WyEwurZ/3kXmoU/WuOeBk7MezRU
-         Ofhv7ZVbaxJWvQldcjndPLJ+e4bwXQY168W3YdkcZTiVAxX/lIXJw7Xb9Z8GAoHQ29
-         PTewyxZX+rXuWSaZZ3wogFB7ojZx4FDpsU/OXwfg=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07P6oUCX054547
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 01:50:30 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 25
- Aug 2020 01:50:30 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 25 Aug 2020 01:50:30 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07P6oRlL124533;
-        Tue, 25 Aug 2020 01:50:28 -0500
-Subject: Re: [RFC PATCH 2/3] dmaengine: add peripheral configuration
-To:     Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200824084712.2526079-1-vkoul@kernel.org>
- <20200824084712.2526079-3-vkoul@kernel.org>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <50ed780f-4c1a-2da2-71e4-423f3b224e25@ti.com>
-Date:   Tue, 25 Aug 2020 09:52:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 02:51:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729111AbgHYGvU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 02:51:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 844DD2076C;
+        Tue, 25 Aug 2020 06:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598338279;
+        bh=dLhL6dPmhERcMqlQBLbhE8LoE6W9RMctbOefccjpeJs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wTPIXq+tDZCBqLY5h9jg2VnuZ4W6dejTDyTQZ6V8yeAfPL+HhWqNyaEMeWLheOU7p
+         fIzIiXphma4cMbcK1ZxogyvXf2KTXrrX51oKtVhvDIGpyJMObN96lHo+40ljiPlkIh
+         DK/5v5M/v8DEKqeiZStB8blwXcGygdNSPBnitwsc=
+Date:   Tue, 25 Aug 2020 08:51:35 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Himadri Pandya <himadrispandya@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        USB list <linux-usb@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: [PATCH] net: usb: Fix uninit-was-stored issue in asix_read_cmd()
+Message-ID: <20200825065135.GA1316856@kroah.com>
+References: <20200823082042.20816-1-himadrispandya@gmail.com>
+ <CACT4Y+Y1TpqYowNXj+OTcQwH-7T4n6PtPPa4gDWkV-np5KhKAQ@mail.gmail.com>
+ <20200823101924.GA3078429@kroah.com>
+ <CACT4Y+YbDODLRFn8M5QcY4CazhpeCaunJnP_udXtAs0rYoASSg@mail.gmail.com>
+ <20200823105808.GB87391@kroah.com>
+ <CACT4Y+ZiZQK8WBre9E4777NPaRK4UDOeZOeMZOQC=5tDsDu23A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200824084712.2526079-3-vkoul@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+ZiZQK8WBre9E4777NPaRK4UDOeZOeMZOQC=5tDsDu23A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+On Mon, Aug 24, 2020 at 10:55:28AM +0200, Dmitry Vyukov wrote:
+> On Sun, Aug 23, 2020 at 12:57 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Sun, Aug 23, 2020 at 12:31:03PM +0200, Dmitry Vyukov wrote:
+> > > On Sun, Aug 23, 2020 at 12:19 PM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Sun, Aug 23, 2020 at 11:26:27AM +0200, Dmitry Vyukov wrote:
+> > > > > On Sun, Aug 23, 2020 at 10:21 AM Himadri Pandya
+> > > > > <himadrispandya@gmail.com> wrote:
+> > > > > >
+> > > > > > Initialize the buffer before passing it to usb_read_cmd() function(s) to
+> > > > > > fix the uninit-was-stored issue in asix_read_cmd().
+> > > > > >
+> > > > > > Fixes: KMSAN: kernel-infoleak in raw_ioctl
+> > > > > > Reported by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
+> > > > > >
+> > > > > > Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
+> > > > > > ---
+> > > > > >  drivers/net/usb/asix_common.c | 2 ++
+> > > > > >  1 file changed, 2 insertions(+)
+> > > > > >
+> > > > > > diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
+> > > > > > index e39f41efda3e..a67ea1971b78 100644
+> > > > > > --- a/drivers/net/usb/asix_common.c
+> > > > > > +++ b/drivers/net/usb/asix_common.c
+> > > > > > @@ -17,6 +17,8 @@ int asix_read_cmd(struct usbnet *dev, u8 cmd, u16 value, u16 index,
+> > > > > >
+> > > > > >         BUG_ON(!dev);
+> > > > > >
+> > > > > > +       memset(data, 0, size);
+> > > > >
+> > > > > Hi Himadri,
+> > > > >
+> > > > > I think the proper fix is to check
+> > > > > usbnet_read_cmd/usbnet_read_cmd_nopm return value instead.
+> > > > > Memsetting data helps to fix the warning at hand, but the device did
+> > > > > not send these 0's and we use them as if the device did send them.
+> > > >
+> > > > But, for broken/abusive devices, that really is the safest thing to do
+> > > > here.  They are returning something that is obviously not correct, so
+> > > > either all callers need to check the size received really is the size
+> > > > they asked for, or we just plod onward with a 0 value like this.  Or we
+> > > > could pick some other value, but that could cause other problems if it
+> > > > is treated as an actual value.
+> > >
+> > > Do we want callers to do at least some error check (e.g. device did
+> > > not return anything at all, broke, hang)?
+> > > If yes, then with a separate helper function that fails on short
+> > > reads, we can get both benefits at no additional cost. User code will
+> > > say "I want 4 bytes, anything that is not 4 bytes is an error" and
+> > > then 1 error check will do. In fact, it seems that that was the
+> > > intention of whoever wrote this code (they assumed no short reads),
+> > > it's just they did not actually implement that "anything that is not 4
+> > > bytes is an error" part.
+> > >
+> > >
+> > > > > Perhaps we need a separate helper function (of a bool flag) that will
+> > > > > fail on incomplete reads. Maybe even in the common USB layer because I
+> > > > > think we've seen this type of bug lots of times and I guess there are
+> > > > > dozens more.
+> > > >
+> > > > It's not always a failure, some devices have protocols that are "I could
+> > > > return up to a max X bytes but could be shorter" types of messages, so
+> > > > it's up to the caller to check that they got what they really asked for.
+> > >
+> > > Yes, that's why I said _separate_ helper function. There seems to be
+> > > lots of callers that want exactly this -- "I want 4 bytes, anything
+> > > else is an error". With the current API it's harder to do - you need
+> > > additional checks, additional code, maybe even additional variables to
+> > > store the required size. APIs should make correct code easy to write.
+> >
+> > I guess I already answered both of these in my previous email...
+> >
+> > > > Yes, it's more work to do this checking.  However converting the world
+> > > > over to a "give me an error value if you don't read X number of bytes"
+> > > > function would also be the same amount of work, right?
+> > >
+> > > Should this go into the common USB layer then?
+> > > It's weird to have such a special convention on the level of a single
+> > > driver. Why are rules for this single driver so special?...
+> >
+> > They aren't special at all, so yes, we should be checking for a short
+> > read everywhere.  That would be the "correct" thing to do, I was just
+> > suggesting a "quick fix" here, sorry.
+> 
+> Re quick fix, I guess it depends on the amount of work for the larger
+> fix and if we can find volunteers (thanks Himadri!). We need to be
+> practical as well.
+> 
+> Re:
+>         retval = usb_control_msg(....., data, data_size, ...);
+>         if (retval < buf_size) {
+> 
+> There may be a fine line between interfaces and what code they
+> provoke. Let me describe my reasoning.
+> 
+> Yes, the current interface allows writing correct code with moderate
+> amount of effort. Yet we see cases where it's used incorrectly, maybe
+> people were just a little bit lazy, or maybe they did not understand
+> how to use it properly (nobody reads the docs, and it's also
+> reasonable to assume that if you ask for N bytes and the function does
+> not fail, then you get N bytes).
 
-On 24/08/2020 11.47, Vinod Koul wrote:
-> Some complex dmaengine controllers have capability to program the
-> peripheral device, so pass on the peripheral configuration as part of
-> dma_slave_config
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  include/linux/dmaengine.h | 75 +++++++++++++++++++++++++++++++++++++++=
+I did a quick scan of the tree, and in short, I think it's worse than we
+both imagined, more below...
 
->  1 file changed, 75 insertions(+)
->=20
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 6fbd5c99e30c..264643ca9209 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -380,6 +380,73 @@ enum dma_slave_buswidth {
->  	DMA_SLAVE_BUSWIDTH_64_BYTES =3D 64,
->  };
-> =20
-> +/**
-> + * enum spi_transfer_cmd - spi transfer commands
-> + */
-> +enum spi_transfer_cmd {
-> +	SPI_TX =3D 1,
-> +	SPI_RX,
-> +	SPI_DUPLEX,
-> +};
-> +
-> +/**
-> + * struct dmaengine_spi_config - spi config for peripheral
-> + *
-> + * @loopback_en: spi loopback enable when set
-> + * @clock_pol: clock polarity
-> + * @data_pol: data polarity
-> + * @pack_en: process tx/rx buffers as packed
-> + * @word_len: spi word length
-> + * @clk_div: source clock divider
-> + * @clk_src: serial clock
-> + * @cmd: spi cmd
-> + * @cs: chip select toggle
-> + * @rx_len: receive length for spi buffer
-> + */
-> +struct dmaengine_spi_config {
-> +	u8 loopback_en;
-> +	u8 clock_pol;
-> +	u8 data_pol;
-> +	u8 pack_en;
-> +	u8 word_len;
-> +	u32 clk_div;
-> +	u32 clk_src;
-> +	u8 fragmentation;
-> +	enum spi_transfer_cmd cmd;
-> +	u8 cs;
-> +	u32 rx_len;
-> +};
-> +
-> +/**
-> + * struct dmaengine_i2c_config - i2c config for peripheral
-> + *
-> + * @pack_enable: process tx/rx buffers as packed
-> + * @cycle_count: clock cycles to be sent
-> + * @high_count: high period of clock
-> + * @low_count: low period of clock
-> + * @clk_div: source clock divider
-> + * @addr: i2c bus address
-> + * @strech: strech the clock at eot
-> + * @op: i2c cmd
-> + */
-> +struct dmaengine_i2c_config {
-> +	u8 pack_enable;
-> +	u8 cycle_count;
-> +	u8 high_count;
-> +	u8 low_count;
-> +	u16 clk_div;
-> +	u8 addr;
-> +	u8 strech;
-> +	u8 op;
-> +};
-> +
-> +enum dmaengine_peripheral {
-> +	DMAENGINE_PERIPHERAL_SPI,
-> +	DMAENGINE_PERIPHERAL_I2C,
-> +	DMAENGINE_PERIPHERAL_UART,
-> +	DMAENGINE_PERIPHERAL_LAST =3D DMAENGINE_PERIPHERAL_UART,
-> +};
-> +
->  /**
->   * struct dma_slave_config - dma slave channel runtime config
->   * @direction: whether the data shall go in or out on this slave
-> @@ -418,6 +485,10 @@ enum dma_slave_buswidth {
->   * @slave_id: Slave requester id. Only valid for slave channels. The d=
-ma
->   * slave peripheral will have unique id as dma requester which need to=
- be
->   * pass as slave config.
-> + * @peripheral: type of peripheral to DMA to/from
-> + * @set_config: set peripheral config
-> + * @spi: peripheral config for spi
-> + * @:i2c peripheral config for i2c
->   *
->   * This struct is passed in as configuration data to a DMA engine
->   * in order to set up a certain channel for DMA transport at runtime.
-> @@ -443,6 +514,10 @@ struct dma_slave_config {
->  	u32 dst_port_window_size;
->  	bool device_fc;
->  	unsigned int slave_id;
-> +	enum dmaengine_peripheral peripheral;
-> +	u8 set_config;
-> +	struct dmaengine_spi_config spi;
-> +	struct dmaengine_i2c_config i2c;
+> Currently to write correct code (1) we need a bit of duplication,
+> which gets worse if data_size is actually some lengthy expression
+> (X+Y*Z), maybe one will need an additional variable to use it
+> correctly.
+> (2) one needs to understand the contract;
+> (3) may be subject to the following class of bugs (after some copy-paste:
+>         retval = usb_control_msg(....., data, 4, ...);
+>         if (retval < 2) {
+> This class of bugs won't be necessary immediately caught by kernel
+> testing systems (can have long life-time).
+> 
+> I would add a "default" function (with shorter name) that does full read:
+> 
+> if (!usb_control_msg(, ...., data, 4))
+> 
+> and a function with longer name to read variable-size data:
+> 
+> n = usb_control_msg_variable_length(, ...., data, sizeof(data)));
+> 
+> The full read should be "the default" (shorter name), because if you
+> need full read and use the wrong function, it won't be caught by
+> testing (most likely long-lived bug). Whereas if you use full read for
+> lengthy variable size data read, this will be immediately caught
+> during any testing (even manual) -- you ask for 4K, you get fewer
+> bytes, all your reads fail.
+> So having "full read" easier to spell will lead to fewer bugs by design.
 
-Would it be possible to reuse one of the existing feature already
-supported by DMAengine?
-We have DMA_PREP_CMD to give a command instead of a real transfer:
-dmaengine_prep_slave_single(tx_chan, config_data, config_len,
-			    DMA_MEM_TO_DEV, DMA_PREP_CMD);
-dmaengine_prep_slave_single(tx_chan, tx_buff, tx_len, DMA_MEM_TO_DEV,
-			    DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-dma_async_issue_pending(tx_chan);
+Originally I would sick to my first proposal that "all is fine" and the
+api is "easy enough", but in auditing the tree, it's horrid.
 
-or the metadata support:
-tx =3D dmaengine_prep_slave_single(tx_chan, tx_buff, tx_len,
-				 DMA_MEM_TO_DEV,
-				 DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-dmaengine_desc_attach_metadata(tx, config_data, config_len);
-dma_async_issue_pending(tx_chan);
+The error checking for this function call is almost non-existant.  And,
+to make things more difficult, this is a bi-directional call, it is a
+read or write call, depending on what USB endpoint the user asks for (or
+both for some endpoints.)  So trying to automatically scan the tree for
+valid error handling is really really hard.
 
-By reading the driver itself, it is not clear if you always need to send
-the config for TX, or only when the config is changing and what happens
-if the first transfer (for SPI, since that is the only implemented one)
-is RX, when you don't send config at all...
+Combine that with the need of many subsystems to "wrap" this function in
+a helper call, because the USB core isn't providing a useful call it
+could call directly, and we have a total mess.
 
-I'm concerned about the size increase of dma_slave_config (it grows by
->30 bytes) and for DMAs with hundreds of channels (UDMA) it will add up
-to a sizeable amount.
+At first glance, I think this can all be cleaned up, but it will take a
+bit of tree-wide work.  I agree, we need a "read this message and error
+if the whole thing is not there", as well as a "send this message and
+error if the whole thing was not sent", and also a way to handle
+stack-provided data, which seems to be the primary reason subsystems
+wrap this call (they want to make it easier on their drivers to use it.)
 
->  };
-> =20
->  /**
->=20
+Let me think about this in more detail, but maybe something like:
+	usb_control_msg_read()
+	usb_control_msg_send()
+is a good first step (as the caller knows this) and stack provided data
+would be allowed, and it would return an error if the whole message was
+not read/sent properly.  That way we can start converting everything
+over to a sane, and checkable, api and remove a bunch of wrapper
+functions as well.
 
-- P=C3=A9ter
+thanks,
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+greg k-h
