@@ -2,88 +2,78 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE58CC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C32C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9C0A2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:07:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otzCWeBy"
+	by mail.kernel.org (Postfix) with ESMTP id 44947207BC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:10:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbgHYRH2 (ORCPT
+        id S1726541AbgHYRKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:07:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHYRH1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:07:27 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40B79C061574;
-        Tue, 25 Aug 2020 10:07:26 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id z18so1580284pjr.2;
-        Tue, 25 Aug 2020 10:07:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mRjZvPEzTfbfzrXjGveM7zQ3xu+YHRq2yS8IAEamwSE=;
-        b=otzCWeByV0AuhXYZqgJ3P2yJaWWLdWjAt4j1h3rf3XFl+Fgiz/+F+7Z2dVlI3XeLRN
-         +wrBl2o069yyTLJIMPEalo9TxE1IMFeORtLwwA98kW5NvD2r90P12VXlQiqJiz308zc0
-         FAsyFDyCHfzNoYXje7rOuuiqtRydzoke1iiXxZWe7n7/T2sp2WSqjV7jWGXKR7zXz5eq
-         Wqik3Of0DPia3a/pI+peNbVA1j+evyyZJyka0NW/DfNVFgCnj/Mqf+WWtive3u7ZhwoL
-         9BGJFYDryUsTOfYZwX+QzqBiBXcJUPFcXGdFHXJYZFGv/pO5NIFaSEiSSTcSQ+MNgylE
-         Jk9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mRjZvPEzTfbfzrXjGveM7zQ3xu+YHRq2yS8IAEamwSE=;
-        b=lZAcXl781XL7fcSfMbPXog38zw4TrCcgyU3G6oJ+ugZVfwyi3G0YJEcAxulWRsP7ZU
-         tgCswEEcDAS96nK50v8udUQagJChiyjJ68+FU6Jjk62/5adQPsmIWsOBV5iyWNBBENcA
-         pDraV9/a3OAbL5HjrW3JZYCoDgQX9s045Kh/240BkJMbh2HYWHau1tBjcVaTyOlyITQK
-         sPJMQLYmJ1H5DR8o1OGBnIevT4uK6b0qIi8gRyTQ32pit7vo4eIsfzFx0Xl4NaZFiNCv
-         WW8EAaPx0SR6AotuhMBSD7asYXGOVO4vXlQtkUqUjJbKjIgkE8AkdpQccX4JJIOyCiyJ
-         aIEQ==
-X-Gm-Message-State: AOAM533x2B5x0I6UchY1ulmQz1n8sWIrzw05cSAR4qGdYBvxxRlaEyL1
-        h92JV8qbQu97/U0RCkaWq5rKoXpLnfY=
-X-Google-Smtp-Source: ABdhPJyl+ifCcH+O3xpNTGY/GJQsxcDP1uTn2BjMwkU5tyxV0wvYZIa6RZmNlx/VtGqOHr+9v7oZJA==
-X-Received: by 2002:a17:90a:c781:: with SMTP id gn1mr2332600pjb.151.1598375246221;
-        Tue, 25 Aug 2020 10:07:26 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id mw8sm3113769pjb.47.2020.08.25.10.07.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 10:07:25 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 10:07:23 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Jiri Kosina <trivial@kernel.org>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/29] Input: MT - Avoid comma separated statements
-Message-ID: <20200825170723.GZ1665100@dtor-ws>
-References: <cover.1598331148.git.joe@perches.com>
- <02cb394f8c305473c1a783a5ea8425de79fe0ec1.1598331149.git.joe@perches.com>
+        Tue, 25 Aug 2020 13:10:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33576 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726104AbgHYRKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 13:10:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 02E9AAE68;
+        Tue, 25 Aug 2020 17:10:28 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 19:09:55 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/7][next] printk: ringbuffer: rename
+ DESC_COMMITTED_MASK flag
+Message-ID: <20200825170955.GX4353@alley>
+References: <20200824103538.31446-1-john.ogness@linutronix.de>
+ <20200824103538.31446-2-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <02cb394f8c305473c1a783a5ea8425de79fe0ec1.1598331149.git.joe@perches.com>
+In-Reply-To: <20200824103538.31446-2-john.ogness@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 09:56:09PM -0700, Joe Perches wrote:
-> Use semicolons and braces.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
+On Mon 2020-08-24 12:41:32, John Ogness wrote:
+> The flag DESC_COMMITTED_MASK has a much longer name compared to the
+> other state flags and also is in past tense form, rather than in
+> command form. Rename the flag to DESC_COMMIT_MASK in order to match
+> the other state flags.
 
-Applied, thank you.
+I am not a native speaker. But the command form sounds a bit misleading to me.
 
--- 
-Dmitry
+I see that the new name will make more sense after adding the state "FINAL".
+But "FINAL" will not be a command form either.
+
+I am fine with the change but I would prefer a better commit message.
+What about something like?
+
+"A comming support for continuous lines will allow to reopen records
+with DESC_COMMITTED_MASK set. As a result, the flag will not longer
+describe the final committed state. Rename it to DESC_COMMIT_MASK
+as a preparation step."
+
+
+With the updated commit message:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
