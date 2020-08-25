@@ -2,191 +2,89 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4401FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 199912071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:25:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fSG7xuI6"
+	by mail.kernel.org (Postfix) with ESMTP id 10C8720706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:25:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbgHYHZ3 (ORCPT
+        id S1729450AbgHYHZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:25:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728828AbgHYHZ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:25:28 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9849BC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 00:25:27 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id y4so23532vkn.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 00:25:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LsQ6Z/LSlEgnBzqN/u/Za51QKnSSVHsOYfBbNiqX3qg=;
-        b=fSG7xuI6hdvN9UXnyV88cpSYsVzi1RFc7p6vE4JsflwoBdDSiC51GbPTdj2ORvgrA3
-         zg4m8Z0TJfeAP7x38kCewNBMCkKmwklZrJuyNgWwpyFRTRybln44fZmAWlJzrl5Qa73m
-         CR4LkaBtWd/uJ0KE4lCfng3m9orLljEEhh0vWZruot7sI7wbV9aSisF3vSbJ8MVjTcxV
-         QUf0mi4+LQAiLGvS8ZhveA2qZIOOcBCHii3lewL0Fx57k0ZXH85DhvyW/VrW89CF6Z+A
-         UBipNu9ucoCeVtRCQ5xKdoOKUAiL+8u60LAOpTgwA4QA+mPLefXYyK4rvFebZ+wBdKwH
-         rf2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LsQ6Z/LSlEgnBzqN/u/Za51QKnSSVHsOYfBbNiqX3qg=;
-        b=r/NPCKnAdm+JBldUCaDObVmCVscdnXnGGCoxL/cRD033y5ilWUOwZ8nWtlhY8P9Rd9
-         5FNH72cxUhnM5PWuBWOTBMgEmbf3t7a+fxgVqiyrqwQMXFRnU8DmccOes70wcGnN6adl
-         m9acU3zCpFi4WFusFtFl7jvRZswSsFXVC25K0P20RoadYSVjiCG4IfJDjCL8qw7x0cBY
-         gv7Ah5V0ssor6EmdQeJMfBUJvpZc9b1EbI1plNG3QdwHgttxeEfcRfyF+gXe1gFoN8RR
-         /EIYRoHKttm7k4I446ziAMkJsPgke6Ct11sV1jn7n5Ir1sNJ+7rtutE4zr/ScLMOEriQ
-         ztkQ==
-X-Gm-Message-State: AOAM5301x57y/sjN3WC+WBW4V/c65F/QuZWsrSRj8YFzd1+Fj2VoUBuB
-        7ycK4EM20dq23E6johFOTK/t4rBYB3bHWCG3LmtkQA==
-X-Google-Smtp-Source: ABdhPJxtywMh569OxMwZBZzpjAUTN1NycbW1Pwsi6XOVn+c1MAXVI47ivNPmnt2UBDB11mIEnwPeouEU7C2LveKfoEk=
-X-Received: by 2002:a1f:2fc1:: with SMTP id v184mr4873982vkv.42.1598340326172;
- Tue, 25 Aug 2020 00:25:26 -0700 (PDT)
+        Tue, 25 Aug 2020 03:25:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55654 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729322AbgHYHZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 03:25:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 92205AC24;
+        Tue, 25 Aug 2020 07:26:09 +0000 (UTC)
+Date:   Tue, 25 Aug 2020 09:25:38 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, nao.horiguchi@gmail.com,
+        osalvador@suse.de, mike.kravetz@oracle.com
+Subject: Re: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead
+ page charged
+Message-ID: <20200825072538.GB22869@dhcp22.suse.cz>
+References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200820145850.GA4622@lca.pw>
+ <20200821080127.GD32537@dhcp22.suse.cz>
+ <20200821123934.GA4314@lca.pw>
+ <20200821134842.GF32537@dhcp22.suse.cz>
+ <20200824151013.GB3415@dhcp22.suse.cz>
+ <12425e06-38ce-7ff4-28ce-b0418353fc67@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20200824164724.981131044@linuxfoundation.org>
-In-Reply-To: <20200824164724.981131044@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 25 Aug 2020 12:55:14 +0530
-Message-ID: <CA+G9fYvRpqKnMUGQXMZ+QBSrwD6AjGx8cuvzxSYo7r7kdPoRTg@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/51] 4.14.195-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <12425e06-38ce-7ff4-28ce-b0418353fc67@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 at 22:19, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.195 release.
-> There are 51 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 26 Aug 2020 16:47:07 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.195-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On Tue 25-08-20 09:25:01, Alex Shi wrote:
+> reproduce using our linux-mm random bug collection on NUMA systems.
+> >>
+> >> OK, I must have missed that this was on ppc. The order makes more sense
+> >> now. I will have a look at this next week.
+> > 
+> > OK, so I've had a look and I know what's going on there. The
+> > move_pages12 is migrating hugetlb pages. Those are not charged to any
+> > memcg. We have completely missed this case. There are two ways going
+> > around that. Drop the warning and update the comment so that we do not
+> > forget about that or special case hugetlb pages.
+> > 
+> > I think the first option is better.
+> > 
+> 
+> 
+> Hi Michal,
+> 
+> Compare to ignore the warning which is designed to give, seems addressing
+> the hugetlb out of charge issue is a better solution, otherwise the memcg
+> memory usage is out of control on hugetlb, is that right?
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Hugetlb memory is out of memcg scope deliberately. This is not a
+reclaimable memory and something that can easily get out of control. The
+memory is preallocated and overcommit is strictly controlled as well. We
+have a dedicated hugetlb cgroup controller to offer a better control of
+the preallocated pool distribution.
 
-Summary
-------------------------------------------------------------------------
+Anyway this just shows that there are more subtle cases where a page
+with no memcg can hit some common paths so the patch is clearly not
+ready.
 
-kernel: 4.14.195-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 376e60828efba537a502fdb54d35e2805852dbb4
-git describe: v4.14.194-52-g376e60828efb
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.194-52-g376e60828efb
-
-No regressions (compared to build v4.14.194)
-
-No fixes (compared to build v4.14.194)
-
-
-Ran 26317 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* igt-gpu-tools
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* ltp-commands-tests
-* ltp-fs-tests
-* ltp-math-tests
-* ltp-tracing-tests
-* network-basic-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+I should have realized that when giving my ack but same as you I got
+misled by the existing comment.
+-- 
+Michal Hocko
+SUSE Labs
