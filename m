@@ -2,113 +2,100 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DF3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDF6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7F1A2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:00:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KZ3pczex"
+	by mail.kernel.org (Postfix) with ESMTP id 8DDF720767
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598385691;
+	bh=bTc4v+6F/hagCAOCYn0EUdpt19OkZWEAtYQetr9TA/0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j01PpQdLyAANKidx7F2scCZkwxsCfJwyFa9SjjG+KGewaceAronK/zqTgcNMNDjJa
+	 CBZX/V0nVxUwqkWMm8VwYMsNMAWLShTVUJsdhT4B8GI6oVC0zzeIfgdag1Zg4l6Lm9
+	 S4nXL8wSF4JnwUaVQ6gNBtjgtiZDNcXI3h4tNKtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgHYUAS (ORCPT
+        id S1726682AbgHYUBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:00:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726356AbgHYUAS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:00:18 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE3EEC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:00:17 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id a13so41974vso.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:00:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vx1r2CNa1rBAm3wMcMuYtNO0QstZgyCPzPi8kkUlIz4=;
-        b=KZ3pczexEVfIWGV0IPWdQYQBqYBChCLEGtApRH3QfnlBWqlOq7DlgnonpQmEeHUr9Q
-         CcDjp+GBQCLuy08q0QefeFt/oMhUiuz7IYGYn7y53OmbbjhagUOyhSljtDmaGrh+QCYk
-         IBApJr1K/C8AUJcz5Qn0It9c7W46C0PZP4bo0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vx1r2CNa1rBAm3wMcMuYtNO0QstZgyCPzPi8kkUlIz4=;
-        b=Jwa5J5azqUUEOGX3TRdrIXS+w/GVz0gtA0m1OD5cTIlX6E5tvxJtDu9Q+GH1PLto3O
-         lThVsA+97vpoBgZaLlyqaioBzHExMXB2AOozP9p/sLkIyQ8Quq5/eBzO9O7MXH0RL1Qp
-         PJ1++os+zYOBrj1eoZgeBna05XxIa+/d9stxOTlQKbvxjxs9F/QtYw/Fn4IYWi8IB2UD
-         O/YsjFdsRW5lTJwbW3qEZc7rR09xPAoQLi5ZDAz2yf8lhHEEilqYMw6TIEwc1+IOxP2/
-         d0AE7UQA/7g77FYgxM10/eoSipOuh8ChS+ZdL1Jmgldsg7j3RTSjTofFGzxnID0MTV4B
-         rB6Q==
-X-Gm-Message-State: AOAM533f1ECoMSlPDoiSrzBn5VdTqvmZ8hGBOJ2CygfKsECLF0LJ41w4
-        yDzciwBiCbQiAFFVNThM4Qybj5kD6zKghw==
-X-Google-Smtp-Source: ABdhPJze9HQ0rvLac4/tXefzVmrKhgi0WM8GpKnGmLLO5G7rRDkI/8L1s/lzmaUZ9p891sYjklmbiw==
-X-Received: by 2002:a67:e3c3:: with SMTP id k3mr6851574vsm.189.1598385616877;
-        Tue, 25 Aug 2020 13:00:16 -0700 (PDT)
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com. [209.85.221.171])
-        by smtp.gmail.com with ESMTPSA id t136sm14896vkb.38.2020.08.25.13.00.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 13:00:16 -0700 (PDT)
-Received: by mail-vk1-f171.google.com with SMTP id s81so29790vkb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 13:00:16 -0700 (PDT)
-X-Received: by 2002:a1f:9b8f:: with SMTP id d137mr7014781vke.97.1598385615556;
- Tue, 25 Aug 2020 13:00:15 -0700 (PDT)
+        Tue, 25 Aug 2020 16:01:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726158AbgHYUB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 16:01:29 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E12A72072D;
+        Tue, 25 Aug 2020 20:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598385688;
+        bh=bTc4v+6F/hagCAOCYn0EUdpt19OkZWEAtYQetr9TA/0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MtwFGwk4OelnWAHsK7KS1KGH506S1PZ3kare4MTUWPq7jCKnwoKgb2o7vCqoNfWs5
+         RglzVl485H0m+cP4JfbwfwQ+SKsyLWbPjq91O7pjwYne6HsenZz4wBjJbiq3j/7Las
+         Ud8aAq/9a9RtRwSNLbuwHoXPeX8IDt/BSude5F+g=
+Date:   Tue, 25 Aug 2020 21:00:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Srinivasa Rao <srivasam@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
+        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
+        rohitkr@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, vsujithk <vsujithk@codeaurora.org>
+Subject: Re: [PATCH 1/5] dt-bindings: Add sc7180-lpass HDMI header define
+Message-ID: <20200825200052.GI5379@sirena.org.uk>
+References: <1598375788-1882-1-git-send-email-srivasam@codeaurora.org>
+ <1598375788-1882-2-git-send-email-srivasam@codeaurora.org>
 MIME-Version: 1.0
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org> <1598113021-4149-7-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1598113021-4149-7-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 25 Aug 2020 13:00:04 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XBidZvVit+P-HmQpxdi0XwD7uwkawJMCjPAp715Cg=4g@mail.gmail.com>
-Message-ID: <CAD=FV=XBidZvVit+P-HmQpxdi0XwD7uwkawJMCjPAp715Cg=4g@mail.gmail.com>
-Subject: Re: [PATCH v5 6/6] irqchip: qcom-pdc: Reset PDC interrupts during init
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        LinusW <linus.walleij@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Srinivas Rao L <lsrao@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5uO961YFyoDlzFnP"
+Content-Disposition: inline
+In-Reply-To: <1598375788-1882-2-git-send-email-srivasam@codeaurora.org>
+X-Cookie: Don't get to bragging.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Sat, Aug 22, 2020 at 9:18 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->
-> Kexec can directly boot into a new kernel without going to complete
-> reboot. This can leave the previous kernel's configuration for PDC
-> interrupts as is.
->
-> Clear previous kernel's configuration during init by setting interrupts
-> in enable bank to zero. The IRQs specified in qcom,pdc-ranges property
-> are the only ones that can be used by the new kernel so clear only those
-> IRQs. The remaining ones may be in use by a different kernel and should
-> not be set by new kernel.
->
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+--5uO961YFyoDlzFnP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Aug 25, 2020 at 10:46:24PM +0530, Srinivasa Rao wrote:
+> From: vsujithk <vsujithk@codeaurora.org>
+>=20
+> Add header defining HDMI dai-id for SC7180 lpass soc.
+>=20
+> Signed-off-by: Srinivasa Rao <srivasam@codeaurora.org>
 > ---
->  drivers/irqchip/qcom-pdc.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+You haven't provided a signoff for the author "vsujithk" (who presumably
+has a more complete name?) - these are important, see
+submitting-patches.rst for details on what the signoff means and why
+it's needed.
+
+--5uO961YFyoDlzFnP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9FbfQACgkQJNaLcl1U
+h9BSlAf/YtTZ0z9aVXnosGU97p0DjhzallSbOSZxFjDNmCb2yZ/ule4Z75XA+5Ga
+pzP1MEIbbmmTsPsx7NQVDZuAWMGdMUISlp6rL12clfwjkg/XoJhMS6pQ4aJaCvQF
+jP5manaErAltKq3qc3rOpj+4x0/xHnLjfVFyqbmy2AQvhhM/ufJNi2v1rGkn7H2e
+vp2EvfC/3BOU7pRa5JjDWfZ1tfHbCIuPuDWvP+pvcJ0fcULucj25U4IKoF+Y8A13
+qZ0E+eWvWeDIn2iVUboRvD2Y8rK7br55aTIlMviSb2Ss8eQJ/BpEeE1WhUDuC/1C
+UzsYrYs1VQYeyG0d2jSuhyYboKdlHA==
+=4xff
+-----END PGP SIGNATURE-----
+
+--5uO961YFyoDlzFnP--
