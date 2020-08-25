@@ -2,199 +2,231 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E24CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432AFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2203020767
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:42:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598398933;
-	bh=CyQtlYDE+A8MG0JyxNX1QVig85hDl88iFa2qsrgexI0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=COcStWWfLlkuDp6dx4POS+xe+0/Kj7w+3q3T4TpZ7CjUbB3D7SLMehgRVKWLyO4Xh
-	 DOL5FL93ICmxAVs3x0RWLXvJY8ImI8pChbRIt8zG8FYVHdvnRw27H1mKwKMGmM/knY
-	 lHt3p4tm3SrriKjICbcK1RopAU57lvU0M/oiCI/k=
+	by mail.kernel.org (Postfix) with ESMTP id 19DAD20767
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:42:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OcgqyJD1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iIMn4E5r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgHYXmI (ORCPT
+        id S1727031AbgHYXmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:42:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726734AbgHYXlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:41:50 -0400
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9C7621775
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 23:41:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598398910;
-        bh=CyQtlYDE+A8MG0JyxNX1QVig85hDl88iFa2qsrgexI0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gx5ZsCuzH4ioCxetiD2y+vDwoxSZvhEsF7Y75vaMTQ31Zx2Pc7i8L0ab0V5om2kr2
-         356372LR7wlNGShYXgIo51ov/7n9BBGd4pZEl0ixshjyVVdqBdEqHTPdcSE7dNGJKP
-         BCmCCFOhrMdnaXxrUoK47jEzw6JP1t6ssDxFnh+U=
-Received: by mail-wr1-f54.google.com with SMTP id p17so495394wrj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:41:49 -0700 (PDT)
-X-Gm-Message-State: AOAM533T2NrM78sKWEC1N55b2U2zT8M8WSCq7i/vOuwp/qioQ8S7sZrC
-        xh2Q07fYlYQNzVOCYzhP5XsjStjZa3MzpRFKkdHcdg==
-X-Google-Smtp-Source: ABdhPJziIjnGOyouCp9gtTbUgUQ2Fpvm/xo4S/Yz68qNI2Xo0rcmdpT4fj8YTSQ4WNQrlkdF8f3yZXhj2uoNEGenMOo=
-X-Received: by 2002:a5d:4145:: with SMTP id c5mr12976959wrq.18.1598398908278;
- Tue, 25 Aug 2020 16:41:48 -0700 (PDT)
+        Tue, 25 Aug 2020 19:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbgHYXk5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 19:40:57 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37692C061574;
+        Tue, 25 Aug 2020 16:40:57 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 23:40:54 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598398855;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1NdM4NvSUS7lOtb6c85JGMBX+05vF3M/i484C2Si/TQ=;
+        b=OcgqyJD1ZQaVDKszKKbCXYXFbOkjzQgdJ1UIbzy0qC8kuoMYeNQgnNcgZtVzfZadbW2m1i
+        eVt+6oz9C74P1ktYKFBNbAr6i/KGRc9KqPkXoMbTq0KExHlikijmuKTUwmaIL7A4/zCNEH
+        ClePzhuPT0iogsaTIpA3j6CisGdDVKh+AyPoQW3kJ3BNZ5nNvRJZjBaqel40qrrjWp0RoY
+        qgMCog7dq69nE95vST3N8eNg7UoD5EPzJtc11djBtU7DmhadRW32W4EcT8XGx9zsA3FVjV
+        DeGPv9fD9JP4boXOEdSwDXHm70T3yug4MtodJZ7vRqWSkvDdjqG/6xwls7JahQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598398855;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1NdM4NvSUS7lOtb6c85JGMBX+05vF3M/i484C2Si/TQ=;
+        b=iIMn4E5rxBB8IlHH6bvDsHPgl9hv8Pyia/SDCHrKPngTiAarZpYjwCnpX33INUjXP4oWgz
+        OLR+QXUu6skoWKAw==
+From:   "tip-bot2 for Lokesh Vutla" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] arm64: dts: k3-am65: ti-sci-inta/intr: Update to
+ latest bindings
+Cc:     Lokesh Vutla <lokeshvutla@ti.com>, Suman Anna <s-anna@ti.com>,
+        Marc Zyngier <maz@kernel.org>, Nishanth Menon <nm@ti.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200806074826.24607-13-lokeshvutla@ti.com>
+References: <20200806074826.24607-13-lokeshvutla@ti.com>
 MIME-Version: 1.0
-References: <20200521200513.656533920@linutronix.de> <20200521202118.796915981@linutronix.de>
- <f0079706-4cb3-b3e3-9a5e-97aaba0aa0eb@amazon.com> <87a6yj58af.fsf@nanos.tec.linutronix.de>
- <051182cc-6c90-e48b-d191-8ca004385261@amazon.com>
-In-Reply-To: <051182cc-6c90-e48b-d191-8ca004385261@amazon.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 25 Aug 2020 16:41:36 -0700
-X-Gmail-Original-Message-ID: <CALCETrXutDjE5Z6WR+47MJvp3xt4n=EGiF_oEYm88vGvCqUgHA@mail.gmail.com>
-Message-ID: <CALCETrXutDjE5Z6WR+47MJvp3xt4n=EGiF_oEYm88vGvCqUgHA@mail.gmail.com>
-Subject: Re: [patch V9 21/39] x86/irq: Convey vector as argument and not in ptregs
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Avi Kivity <avi@scylladb.com>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>, robketr@amazon.de,
-        amos@scylladb.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <159839885455.389.17024823141000526435.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 4:18 PM Alexander Graf <graf@amazon.com> wrote:
->
-> Hi Thomas,
->
-> On 25.08.20 12:28, Thomas Gleixner wrote:
-> >void irq_complete_move(struct irq_cfg *cfg)
-{
-        __irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
-}
+The following commit has been merged into the irq/urgent branch of tip:
 
-> > Alex,
-> >
-> > On Mon, Aug 24 2020 at 19:29, Alexander Graf wrote:
-> >> I'm currently trying to understand a performance regression with
-> >> ScyllaDB on i3en.3xlarge (KVM based VM on Skylake) which we reliably
-> >> bisected down to this commit:
-> >>
-> >>     https://github.com/scylladb/scylla/issues/7036
-> >>
-> >> What we're seeing is that syscalls such as membarrier() take forever
-> >> (0-10 =C2=B5s would be normal):
-> > ...
-> >> That again seems to stem from a vastly slowed down
-> >> smp_call_function_many_cond():
-> >>
-> >> Samples: 218K of event 'cpu-clock', 4000 Hz
-> >> Overhead  Shared Object        Symbol
-> >>     94.51%  [kernel]             [k] smp_call_function_many_cond
-> >>      0.76%  [kernel]             [k] __do_softirq
-> >>      0.32%  [kernel]             [k] native_queued_spin_lock_slowpath
-> >> [...]
-> >>
-> >> which is stuck in
-> >>
-> >>          =E2=94=82     csd_lock_wait():
-> >>          =E2=94=82             smp_cond_load_acquire(&csd->flags, !(VA=
-L &
-> >>     0.00 =E2=94=82       mov    0x8(%rcx),%edx
-> >>     0.00 =E2=94=82       and    $0x1,%edx
-> >>          =E2=94=82     =E2=86=93 je     2b9
-> >>          =E2=94=82     rep_nop():
-> >>     0.70 =E2=94=822af:   pause
-> >>          =E2=94=82     csd_lock_wait():
-> >>    92.82 =E2=94=82       mov    0x8(%rcx),%edx
-> >>     6.48 =E2=94=82       and    $0x1,%edx
-> >>     0.00 =E2=94=82     =E2=86=91 jne    2af
-> >>     0.00 =E2=94=822b9: =E2=86=91 jmp    282
-> >>
-> >>
-> >> Given the patch at hand I was expecting lost IPIs, but I can't quite s=
-ee
-> >> anything getting lost.
-> >
-> > I have no idea how that patch should be related to IPI and smp function
-> > calls. It's changing the way how regular device interrupts and their
-> > spurious counterpart are handled and not the way how IPIs are
-> > handled. They are handled by direct vectors and do not go through
-> > do_IRQ() at all.
-> >
-> > Aside of that the commit just changes the way how the interrupt vector
-> > of a regular device interrupt is stored and conveyed. The extra read an=
-d
-> > write on the cache hot stack is hardly related to anything IPI.
->
-> I am as puzzled as you are, but the bisect is very clear: 79b9c183021e
-> works fast and 633260fa1 (as well as mainline) shows the weird behavior
-> above.
->
-> It gets even better. This small (demonstrative only, mangled) patch on
-> top of 633260fa1 also resolves the performance issue:
->
-> diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
-> index c766936..7e91e9a 100644
-> --- a/arch/x86/kernel/irq.c
-> +++ b/arch/x86/kernel/irq.c
-> @@ -239,6 +239,7 @@ __visible void __irq_entry do_IRQ(struct pt_regs
-> *regs, unsigned long vector)
->          * lower 8 bits.
->          */
->         vector &=3D 0xFF;
-> +       regs->orig_ax =3D ~vector;
->
->         /* entering_irq() tells RCU that we're not quiescent.  Check it. =
-*/
->         RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up RCU")=
-;
->
->
-> To me that sounds like some irq exit code somewhere must still be
-> looking at orig_ax to decide on something - and that something is wrong
-> now that we removed the negation of the vector. It also seems to have an
-> impact on remote function calls.
->
-> I'll have a deeper look tomorrow again if I can find any such place, but
-> I wouldn't mind if anyone could point me into the right direction
-> earlier :).
+Commit-ID:     fef845122f6c3c92178e4e4a1f85cce84dca06fe
+Gitweb:        https://git.kernel.org/tip/fef845122f6c3c92178e4e4a1f85cce84dca06fe
+Author:        Lokesh Vutla <lokeshvutla@ti.com>
+AuthorDate:    Thu, 06 Aug 2020 13:18:25 +05:30
+Committer:     Marc Zyngier <maz@kernel.org>
+CommitterDate: Sun, 16 Aug 2020 22:01:19 +01:00
 
-How about this:
+arm64: dts: k3-am65: ti-sci-inta/intr: Update to latest bindings
 
-void irq_complete_move(struct irq_cfg *cfg)
-{
-        __irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
-}
+Update the INTA and INTR dt nodes to the latest DT bindings.
 
-in arch/x86/kernel/apic/vector.c.
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Acked-by: Nishanth Menon <nm@ti.com>
+Link: https://lore.kernel.org/r/20200806074826.24607-13-lokeshvutla@ti.com
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi        | 24 +++++++---------
+ arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi      |  8 ++---
+ arch/arm64/boot/dts/ti/k3-am654-base-board.dts  |  4 +--
+ arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi |  1 +-
+ 4 files changed, 17 insertions(+), 20 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 9edfae5..996a82f 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -417,10 +417,10 @@
+ 		ti,intr-trigger-type = <1>;
+ 		interrupt-controller;
+ 		interrupt-parent = <&gic500>;
+-		#interrupt-cells = <2>;
++		#interrupt-cells = <1>;
+ 		ti,sci = <&dmsc>;
+-		ti,sci-dst-id = <56>;
+-		ti,sci-rm-range-girq = <0x1>;
++		ti,sci-dev-id = <100>;
++		ti,interrupt-ranges = <0 392 32>;
+ 	};
+ 
+ 	main_navss {
+@@ -438,10 +438,11 @@
+ 			ti,intr-trigger-type = <4>;
+ 			interrupt-controller;
+ 			interrupt-parent = <&gic500>;
+-			#interrupt-cells = <2>;
++			#interrupt-cells = <1>;
+ 			ti,sci = <&dmsc>;
+-			ti,sci-dst-id = <56>;
+-			ti,sci-rm-range-girq = <0x0>, <0x2>;
++			ti,sci-dev-id = <182>;
++			ti,interrupt-ranges = <0 64 64>,
++					      <64 448 64>;
+ 		};
+ 
+ 		inta_main_udmass: interrupt-controller@33d00000 {
+@@ -452,8 +453,7 @@
+ 			msi-controller;
+ 			ti,sci = <&dmsc>;
+ 			ti,sci-dev-id = <179>;
+-			ti,sci-rm-range-vint = <0x0>;
+-			ti,sci-rm-range-global-event = <0x1>;
++			ti,interrupt-ranges = <0 0 256>;
+ 		};
+ 
+ 		secure_proxy_main: mailbox@32c00000 {
+@@ -622,7 +622,7 @@
+ 			reg-names = "cpts";
+ 			clocks = <&main_cpts_mux>;
+ 			clock-names = "cpts";
+-			interrupts-extended = <&intr_main_navss 163 0>;
++			interrupts-extended = <&intr_main_navss 391>;
+ 			interrupt-names = "cpts";
+ 			ti,cpts-periodic-outputs = <6>;
+ 			ti,cpts-ext-ts-inputs = <8>;
+@@ -645,8 +645,7 @@
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-parent = <&intr_main_gpio>;
+-		interrupts = <57 256>, <57 257>, <57 258>, <57 259>, <57 260>,
+-				<57 261>;
++		interrupts = <192>, <193>, <194>, <195>, <196>, <197>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 		ti,ngpio = <96>;
+@@ -661,8 +660,7 @@
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-parent = <&intr_main_gpio>;
+-		interrupts = <58 256>, <58 257>, <58 258>, <58 259>, <58 260>,
+-				<58 261>;
++		interrupts = <200>, <201>, <202>, <203>, <204>, <205>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 		ti,ngpio = <90>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+index 5f55b9e..a1ffe88 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
+@@ -74,10 +74,10 @@
+ 		ti,intr-trigger-type = <1>;
+ 		interrupt-controller;
+ 		interrupt-parent = <&gic500>;
+-		#interrupt-cells = <2>;
++		#interrupt-cells = <1>;
+ 		ti,sci = <&dmsc>;
+-		ti,sci-dst-id = <56>;
+-		ti,sci-rm-range-girq = <0x4>;
++		ti,sci-dev-id = <156>;
++		ti,interrupt-ranges = <0 712 16>;
+ 	};
+ 
+ 	wkup_gpio0: wkup_gpio0@42110000 {
+@@ -86,7 +86,7 @@
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 		interrupt-parent = <&intr_wkup_gpio>;
+-		interrupts = <59 128>, <59 129>, <59 130>, <59 131>;
++		interrupts = <60>, <61>, <62>, <63>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
+ 		ti,ngpio = <56>;
+diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+index 611e662..b8a8a0f 100644
+--- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
+@@ -384,7 +384,7 @@
+ };
+ 
+ &mailbox0_cluster0 {
+-	interrupts = <164 0>;
++	interrupts = <436>;
+ 
+ 	mbox_mcu_r5fss0_core0: mbox-mcu-r5fss0-core0 {
+ 		ti,mbox-tx = <1 0 0>;
+@@ -393,7 +393,7 @@
+ };
+ 
+ &mailbox0_cluster1 {
+-	interrupts = <165 0>;
++	interrupts = <432>;
+ 
+ 	mbox_mcu_r5fss0_core1: mbox-mcu-r5fss0-core1 {
+ 		ti,mbox-tx = <1 0 0>;
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+index e00cf2a..c4a48e8 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
+@@ -105,7 +105,6 @@
+ 		ti,sci = <&dmsc>;
+ 		ti,sci-dev-id = <137>;
+ 		ti,interrupt-ranges = <16 960 16>;
+-		ti,sci-rm-range-girq = <0x5>;
+ 	};
+ 
+ 	wkup_gpio0: gpio@42110000 {
