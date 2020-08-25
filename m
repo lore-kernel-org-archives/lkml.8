@@ -2,100 +2,120 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AAF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DACC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D6122075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:46:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598366791;
-	bh=phIsJ/MZshaAlE7qLzNtXsogO0cQbIqmLvgOTmSUSss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KoWOu/VXr9h3dlPRnmGNlamaCAWOCYErnjjDhxeqRC0oQyENvJNNNjc/WUPwH9IdR
-	 kJ0xd9ywNrgqH3mDkW4OoDST4x4EN1lcnNIeFTDB30F3pdAJ7vXByV2KU65lLAprUp
-	 k6/k1ZTxs+SUzxY1JHrfIH7IitndyeV6dXZxPLEM=
+	by mail.kernel.org (Postfix) with ESMTP id E7A8F2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgHYOq3 (ORCPT
+        id S1726719AbgHYOqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:46:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgHYOq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:46:26 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 974EB20782;
-        Tue, 25 Aug 2020 14:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598366785;
-        bh=phIsJ/MZshaAlE7qLzNtXsogO0cQbIqmLvgOTmSUSss=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SRGf5E4eKTD9RhFmfUB66zeCi2Ide/AgEYRHSPsOek5yAe83ekR/2mSvo8JavyyHQ
-         1zH0c6aN3f2ZhOox3VOLsAA9SkpZ2wHJRAzFlxIZQBeRmDHX91C3CPWYtPTJ9ljkgj
-         +WE5+K8H2BW4bWaSIn0aPMRU8H4fumeyzg4YTsHU=
-Date:   Tue, 25 Aug 2020 20:16:19 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lars@metafoo.de, dan.j.williams@intel.com, ardeleanalex@gmail.com
-Subject: Re: [PATCH v2 0/6] dmaengine: axi-dmac: add support for reading bus
- attributes from register
-Message-ID: <20200825144619.GR2639@vkoul-mobl>
-References: <20200825124840.43664-1-alexandru.ardelean@analog.com>
+        Tue, 25 Aug 2020 10:46:50 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45054 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbgHYOqr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:46:47 -0400
+Received: by mail-lj1-f195.google.com with SMTP id g6so14086470ljn.11;
+        Tue, 25 Aug 2020 07:46:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YzIv0eWRqW17P5KtXr4y5sGRDVtxCepXAZ7i4vqsn6s=;
+        b=K/oWaTrjT5h30wgTcCdXSEI73oYfWrwplwBf4oy09U4a68CLk76kY3AMwhEEX1bUeS
+         +KStA5V7pv6Q9Dr0IJPGOIbWH+M6QSiK1s0qzBlqXegXTqJIQYoj4kGSVcYdZkQdfg6h
+         MBL9yi92S31m6A0zN45tUZjzL59nocCYWt9hYGOLt2rVmp1IjdM+r1AnaczJQ04z75zs
+         LvA7nIIT3jCtgLHuuKzKbW3/jV0RJV2N2JPJH8QGSm4SpZJIDzHQEuLxYzhr47nw454Z
+         mvZbP2NDFYXyJDs47mZ4M60rO5juhxBoEUOywn8QV+7lnBSnshH0GZemey0Xc+cDIP9d
+         iumw==
+X-Gm-Message-State: AOAM530rN8hJlaqXTxfLLn/JlgKIvls3H34dT5EqQoa5CUgAMTkBIWbg
+        TZhoWcN0aoEXbT9reFxILMsy59eveE07Ng==
+X-Google-Smtp-Source: ABdhPJwQFZ3rb/Sms9gUpHOZYc+JvqXDBhDueufT0/XJWT45uiHnJBmZfD7pLiiJAJAVcnjALBALAA==
+X-Received: by 2002:a2e:8901:: with SMTP id d1mr796399lji.426.1598366804862;
+        Tue, 25 Aug 2020 07:46:44 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id t19sm2872013ljc.137.2020.08.25.07.46.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 07:46:44 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id g6so14086407ljn.11;
+        Tue, 25 Aug 2020 07:46:44 -0700 (PDT)
+X-Received: by 2002:a2e:9b8e:: with SMTP id z14mr5149410lji.47.1598366804084;
+ Tue, 25 Aug 2020 07:46:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825124840.43664-1-alexandru.ardelean@analog.com>
+References: <20200825131049.1277596-1-jernej.skrabec@siol.net>
+In-Reply-To: <20200825131049.1277596-1-jernej.skrabec@siol.net>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Tue, 25 Aug 2020 22:46:31 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66q15syd5g-9RUocmEwJyvpbJniTmwLJL4QH5s==fCi2Q@mail.gmail.com>
+Message-ID: <CAGb2v66q15syd5g-9RUocmEwJyvpbJniTmwLJL4QH5s==fCi2Q@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH] clk: sunxi-ng: sun8i: r40: Use sigma delta
+ modulation for audio PLL
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-08-20, 15:48, Alexandru Ardelean wrote:
-> The series adds support for reading the DMA bus attributes from the
-> INTERFACE_DESCRIPTION (0x10) register.
-> 
-> The first 5 changes are a bit of rework prior to adding the actual
-> change in patch 6, as things need to be shifted around a bit, to enable 
-> the clock to be enabled earlier, to be able to read the version
-> register.
+On Tue, Aug 25, 2020 at 9:11 PM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
+>
+> Audio cores need specific clock rates which can't be simply obtained by
+> adjusting integer multipliers and dividers. HW for such cases supports
+> delta-sigma modulation which enables fractional multipliers.
+>
+> Port H3 delta-sigma table to R40. They have identical audio PLLs.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/clk/sunxi-ng/ccu-sun8i-r40.c | 37 ++++++++++++++++++----------
+>  1 file changed, 24 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-r40.c b/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
+> index 23bfe1d12f21..84153418453f 100644
+> --- a/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
+> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-r40.c
+> @@ -45,18 +45,29 @@ static struct ccu_nkmp pll_cpu_clk = {
+>   * the base (2x, 4x and 8x), and one variable divider (the one true
+>   * pll audio).
+>   *
+> - * We don't have any need for the variable divider for now, so we just
+> - * hardcode it to match with the clock names
+> + * With sigma-delta modulation for fractional-N on the audio PLL,
+> + * we have to use specific dividers. This means the variable divider
+> + * can no longer be used, as the audio codec requests the exact clock
+> + * rates we support through this mechanism. So we now hard code the
+> + * variable divider to 1. This means the clock rates will no longer
+> + * match the clock names.
+>   */
+>  #define SUN8I_R40_PLL_AUDIO_REG        0x008
+>
+> -static SUNXI_CCU_NM_WITH_GATE_LOCK(pll_audio_base_clk, "pll-audio-base",
+> -                                  "osc24M", 0x008,
+> -                                  8, 7,        /* N */
+> -                                  0, 5,        /* M */
+> -                                  BIT(31),     /* gate */
+> -                                  BIT(28),     /* lock */
+> -                                  CLK_SET_RATE_UNGATE);
+> +static struct ccu_sdm_setting pll_audio_sdm_table[] = {
+> +       { .rate = 22579200, .pattern = 0xc0010d84, .m = 8, .n = 7 },
+> +       { .rate = 24576000, .pattern = 0xc000ac02, .m = 14, .n = 14 },
 
-Not sure what happened, I see two sets of patches in this series, maybe
-duplicate..? Better to resend a clean version..
+The user manual has an additional requirement: 3 <= N/M <= 21.
+Though it then says 72 <= 24*N/P <= 504. Not sure which one is
+right...
 
-Even PW shows 12 patches https://patchwork.kernel.org/project/linux-dmaengine/list/
+Did you run into any glitches or audio distortions?
 
-Thanks
-
-> 
-> Changelog v1 -> v2:
-> * fixed error-exit paths for the clock move patch
->   i.e. 'dmaengine: axi-dmac: move clock enable earlier'
-> * fixed error-exit path for patch
->   'axi-dmac: wrap channel parameter adjust into function'
-> * added patch 'dmaengine: axi-dmac: move active_descs list init after device-tree init'
->   the list of active_descs can be moved a bit lower in the init/probe
-> 
-> Alexandru Ardelean (6):
->   dmaengine: axi-dmac: move version read in probe
->   dmaengine: axi-dmac: move active_descs list init after device-tree
->     init
->   dmaengine: axi-dmac: move clock enable earlier
->   dmaengine: axi-dmac: wrap entire dt parse in a function
->   dmaengine: axi-dmac: wrap channel parameter adjust into function
->   dmaengine: axi-dmac: add support for reading bus attributes from
->     registers
-> 
->  drivers/dma/dma-axi-dmac.c | 138 ++++++++++++++++++++++++++++---------
->  1 file changed, 107 insertions(+), 31 deletions(-)
-> 
-> -- 
-> 2.17.1
-
--- 
-~Vinod
+ChenYu
