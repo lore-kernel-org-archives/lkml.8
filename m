@@ -2,146 +2,77 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B20C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3371C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 749DC2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:18:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="aw1QWNf3"
+	by mail.kernel.org (Postfix) with ESMTP id 994CD20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:19:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbgHYOSg (ORCPT
+        id S1726610AbgHYOTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:18:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60094 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbgHYOSc (ORCPT
+        Tue, 25 Aug 2020 10:19:08 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:1778 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726095AbgHYOTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:18:32 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57687C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:18:31 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id r13so10542342iln.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:18:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4fa6CWJEUOwheO2MzeVtgbtKAJxehJpCdEllFRnoowQ=;
-        b=aw1QWNf3nx90XJSzXYAZQe7F04hGPY8+Gb+qR8Ze+dP2vRW0I4JdU4Kyne2+ye13UW
-         Zad39+dVzCW5d6cTcfiDt5+u3pyK0Gm1JhPyRny4A5LDMsB3f/zhEDDVTZndtWUW3Hfc
-         njciB/DQ4eevRhkLmSrwx7364rKibGzFp/FtwIz693ca3qROabwT5HSB7/gHuD9AiwDg
-         7SA0mVFQ44RaNI7rNK4T+AbFcWaIGoobuRvhnB7TvIkMgL/RaLdwUA9adq5hQ4ef+56i
-         g8z5WEYqyxhctyOIRZpS1zKfyTKAsW0SdFeLOwmSEmjdsfBO0lVHaMeFCut9nTP+ABoL
-         4+RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4fa6CWJEUOwheO2MzeVtgbtKAJxehJpCdEllFRnoowQ=;
-        b=aghIN7zD7ggh3p9DtxgFENveS9rol6a6W/ADPCe7mxvRM9qAGNTxkicT5nNAE6qSoq
-         3jbHz+LgQ+M35orFPKoTxfvjfKEzgsVw2zGpCVadn25t4FvVMNabQOY541ASjr5+7xB1
-         AEx/I5zg7rhwTeMnijtFKXSHtbeV/8tBce1sF2SiZw2poBCWtHL0pCJHQRZ2aLQ2SZ8x
-         G9khly8XFBO8atkuIUmgDvY/tfF+Hbe9XvxSU56D8nYY6eThQJyUHewRLcEE/h42dwkJ
-         ID+bfqzaFBJyLyMuNJBo+bovXpcjdZXbH/QiuVAvgrdeWKpPYg1f41cfMOee84wXjqnb
-         45ww==
-X-Gm-Message-State: AOAM532v2UGerOGNh2f0f6lNRogAkTmn4nvNmebkx3Vo2tAsxpDbEXsE
-        8gdw54SzCwME7JjiBq7TIFwsJPc/dzsFOVS3
-X-Google-Smtp-Source: ABdhPJyY1OaQ+Umotok2j2XLRxsZuzwhZJCnmSI1jN+NLrCYnTMyRkEaZpokELcBWo2CHRg0pa9f7w==
-X-Received: by 2002:a92:6c09:: with SMTP id h9mr9815270ilc.46.1598365109513;
-        Tue, 25 Aug 2020 07:18:29 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id f18sm9350485ilj.24.2020.08.25.07.18.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 07:18:28 -0700 (PDT)
-Subject: Re: [PATCH] ext4: flag as supporting buffered async reads
-From:   Jens Axboe <axboe@kernel.dk>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-ext4@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <fb90cc2d-b12c-738f-21a4-dd7a8ae0556a@kernel.dk>
- <20200818181117.GA34125@mit.edu>
- <990cc101-d4a1-f346-fe78-0fb5b963b406@kernel.dk>
- <20c844c8-b649-3250-ff5b-b7420f72ff38@kernel.dk>
- <20200822143326.GC199705@mit.edu>
- <aff250ad-4c31-15c2-fa1d-3f3945cb7aa5@kernel.dk>
- <7f0e2d99-5da2-237e-a894-0afddc0ace1e@kernel.dk>
-Message-ID: <049a97db-c362-bcfb-59e5-4b1d2df59383@kernel.dk>
-Date:   Tue, 25 Aug 2020 08:18:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <7f0e2d99-5da2-237e-a894-0afddc0ace1e@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Aug 2020 10:19:07 -0400
+X-IronPort-AV: E=Sophos;i="5.76,352,1592838000"; 
+   d="scan'208";a="55488784"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 25 Aug 2020 23:19:05 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id A58324005E3F;
+        Tue, 25 Aug 2020 23:19:03 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        iommu@lists.linux-foundation.org,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: iommu: renesas,ipmmu-vmsa: Add r8a7742 support
+Date:   Tue, 25 Aug 2020 15:18:04 +0100
+Message-Id: <20200825141805.27105-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200825141805.27105-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200825141805.27105-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/24/20 4:56 AM, Jens Axboe wrote:
-> On 8/22/20 9:48 AM, Jens Axboe wrote:
->> On 8/22/20 8:33 AM, Theodore Y. Ts'o wrote:
->>> On Fri, Aug 21, 2020 at 03:26:35PM -0600, Jens Axboe wrote:
->>>>>>> Resending this one, as I've been carrying it privately since May. The
->>>>>>> necessary bits are now upstream (and XFS/btrfs equiv changes as well),
->>>>>>> please consider this one for 5.9. Thanks!
->>>>>>
->>>>>> The necessary commit only hit upstream as of 5.9-rc1, unless I'm
->>>>>> missing something?  It's on my queue to send to Linus once I get my
->>>>>> (late) ext4 primary pull request for 5.9.
->>>>>
->>>>> Right, it went in at the start of the merge window for 5.9. Thanks Ted!
->>>>
->>>> Didn't see it in the queue that just sent in, is it still queued up?
->>>
->>> It wasn't in the queue which I queued up because that was based on
->>> 5.8-rc4.  Linus was a bit grumpy (fairly so) because it was late, and
->>> that's totally on me.
->>>
->>> He has said that he's going to start ignoring pull requests that
->>> aren't fixes only if this becomes a pattern, so while I can send him
->>> another pull request which will just have that one change, there are
->>> no guarantees he's going to take it at this late date.
->>>
->>> Sorry, when you sent me the commit saying that the changes that were
->>> needed were already upstream on August 3rd, I thought that meant that
->>> they were aready in Linus's tree.  I should have checked and noticed
->>> that that in fact "ext4: flag as supporting buffered async reads"
->>> wasn't compiling against Linus's upstream tree, so I didn't realize
->>> this needed to be handled as a special case during the merge window.
->>
->> Well to be honest, this kind of sucks. I've been posting it since May,
->> and the ideal approach would have been to just ack it and I could have
->> carried it in my tree. That's what we did for btrfs and XFS, both of
->> which have it.
->>
->> The required patches *were* upstreamed on August 3rd, which is why I
->> mentioned that. But yes, not in 5.8 or earlier, of course.
->>
->> So I suggest that you either include it for the next pull request for
->> Linus, or that I put it in with your ack. Either is fine with me. I'd
->> consider this a "dropping the ball" kind of thing, it's not like the
->> patch hasn't been in linux-next or hasn't been ready for months. This
->> isn't some "oh I wrote this feature after the merge window" event. It'd
->> be a real shame to ship 5.9 and ext4 not have support for the more
->> efficient async buffered reads, imho, especially since the two other
->> major local file systems already have it.
->>
->> Let me know what you think.
-> 
-> Ted, can you make a call on this, please? It's now post -rc2. Let's
-> get this settled and included, one way or another.
+Document RZ/G1H (R8A7742) SoC bindings.
 
-Daily ping on this one...
+No driver change is needed due to the fallback compatible value
+"renesas,ipmmu-vmsa".
 
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+---
+ Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+index 6bfa090fd73a..a79b172b75cb 100644
+--- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
++++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.yaml
+@@ -20,6 +20,7 @@ properties:
+       - items:
+           - enum:
+               - renesas,ipmmu-r8a73a4  # R-Mobile APE6
++              - renesas,ipmmu-r8a7742  # RZ/G1H
+               - renesas,ipmmu-r8a7743  # RZ/G1M
+               - renesas,ipmmu-r8a7744  # RZ/G1N
+               - renesas,ipmmu-r8a7745  # RZ/G1E
 -- 
-Jens Axboe
+2.17.1
 
