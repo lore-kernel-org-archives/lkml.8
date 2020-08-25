@@ -2,222 +2,76 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD46C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 503B02075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:40:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B910206F0
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="V8LDzF9P"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jh69tqh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbgHYLkF (ORCPT
+        id S1730074AbgHYLkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 07:40:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34510 "EHLO
+        Tue, 25 Aug 2020 07:40:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728993AbgHYLi6 (ORCPT
+        with ESMTP id S1730067AbgHYLji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 07:38:58 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B3DC061755;
-        Tue, 25 Aug 2020 04:38:57 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9193E29E;
-        Tue, 25 Aug 2020 13:38:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598355529;
-        bh=oP1EjEnIIX7C41Y3YV+hfiXso0su8fK+nrUt1wKEF9Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V8LDzF9P8hldB1tNCUwNJ/7EKxSr62Gp1cWVZMi/+ekcPHd96IW+rWoq5QdRJlTqH
-         dQ0DWxLi6Lzl6uAqGyxMgjAeEx/ru0IdXvNGSXFnSHtZYbvQMxELXOraGf4t8piTKA
-         ZndhWp0G8aMHKXNn/qTcdYqI4v37quU1a+7p0eyo=
-Date:   Tue, 25 Aug 2020 14:38:28 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liuyao An <anliuyao@huawei.com>,
-        Network Development <netdev@vger.kernel.org>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-Message-ID: <20200825113815.GA6767@pendragon.ideasonboard.com>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
- <20200819152120.GA106437@ravnborg.org>
- <20200819153045.GA18469@pendragon.ideasonboard.com>
- <CALAqxLUXnPRec3UYbMKge8yNKBagLOatOeRCagF=JEyPEfWeKA@mail.gmail.com>
- <20200820090326.3f400a15@coco.lan>
- <20200820100205.GA5962@pendragon.ideasonboard.com>
- <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com>
- <20200825133025.13f047f0@coco.lan>
+        Tue, 25 Aug 2020 07:39:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED8DC061574;
+        Tue, 25 Aug 2020 04:39:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=8tGP1JPc7jordcLr9GYgEH1sQIAUBACeH7562OxDjxY=; b=jh69tqh9e33dVk1UNLhHRmhHiL
+        7OpafBoQ9WlgiW0XNhW64zL1/ETCzp6H4vvEfMB0rWyBOhhR6m6y1f2K8Rm1ANxQ7MfYlSy9BRKBJ
+        0w+5LDlcoKVpEjuSnMGW4tmb3C2UlWZQBKcZs8cryVhqimrR+Bo1XNrvqh8dWMIinKhxaW3hvf/9Y
+        CwqVStNBSBzAiL1dc7uTBWj97LHP8X1bdfHGsABFRj2uE+jdoEwWe8k2GC7wQXV5LKDDEEPlA1adh
+        /aBCHjF34Wg1fJhQNag+xJ6RKYboemMzFYE4Rot8gJswaDDR7LSF6lLLlUCrLc7JS3IZYlIeULqSn
+        LhCnHHdw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAXIF-0000Sk-1w; Tue, 25 Aug 2020 11:39:11 +0000
+Date:   Tue, 25 Aug 2020 12:39:10 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        mgorman@techsingularity.net, tj@kernel.org,
+        khlebnikov@yandex-team.ru, hannes@cmpxchg.org, lkp@intel.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
+        shy828301@gmail.com
+Subject: Re: [PATCH v18 00/32] per memcg lru_lock
+Message-ID: <20200825113910.GM17456@casper.infradead.org>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
+ <alpine.LSU.2.11.2008241231460.1065@eggly.anvils>
+ <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
+ <ec62a835-f79d-2b8c-99c7-120834703b42@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825133025.13f047f0@coco.lan>
+In-Reply-To: <ec62a835-f79d-2b8c-99c7-120834703b42@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro,
+On Tue, Aug 25, 2020 at 11:26:58AM +0800, Alex Shi wrote:
+> I tried reusing page->prviate to store lruvec pointer, that could remove some 
+> regression on this, since private is generally unused on a lru page. But the patch
+> is too buggy now. 
 
-On Tue, Aug 25, 2020 at 01:30:25PM +0200, Mauro Carvalho Chehab wrote:
-> Em Tue, 25 Aug 2020 05:29:29 +1000
-> Dave Airlie <airlied@gmail.com> escreveu:
-> 
-> > On Thu, 20 Aug 2020 at 20:02, Laurent Pinchart
-> > <laurent.pinchart@ideasonboard.com> wrote:
-> > >
-> > > Hi Mauro,
-> > >
-> > > On Thu, Aug 20, 2020 at 09:03:26AM +0200, Mauro Carvalho Chehab wrote:  
-> > > > Em Wed, 19 Aug 2020 12:52:06 -0700 John Stultz escreveu:  
-> > > > > On Wed, Aug 19, 2020 at 8:31 AM Laurent Pinchart wrote:  
-> > > > > > On Wed, Aug 19, 2020 at 05:21:20PM +0200, Sam Ravnborg wrote:  
-> > > > > > > On Wed, Aug 19, 2020 at 01:45:28PM +0200, Mauro Carvalho Chehab wrote:  
-> > > > > > > > This patch series port the out-of-tree driver for Hikey 970 (which
-> > > > > > > > should also support Hikey 960) from the official 96boards tree:
-> > > > > > > >
-> > > > > > > >    https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
-> > > > > > > >
-> > > > > > > > Based on his history, this driver seems to be originally written
-> > > > > > > > for Kernel 4.4, and was later ported to Kernel 4.9. The original
-> > > > > > > > driver used to depend on ION (from Kernel 4.4) and had its own
-> > > > > > > > implementation for FB dev API.
-> > > > > > > >
-> > > > > > > > As I need to preserve the original history (with has patches from
-> > > > > > > > both HiSilicon and from Linaro),  I'm starting from the original
-> > > > > > > > patch applied there. The remaining patches are incremental,
-> > > > > > > > and port this driver to work with upstream Kernel.
-> > > > > > > >  
-> > > > > ...  
-> > > > > > > > - Due to legal reasons, I need to preserve the authorship of
-> > > > > > > >   each one responsbile for each patch. So, I need to start from
-> > > > > > > >   the original patch from Kernel 4.4;  
-> > > > > ...  
-> > > > > > > I do acknowledge you need to preserve history and all -
-> > > > > > > but this patchset is not easy to review.  
-> > > > > >
-> > > > > > Why do we need to preserve history ? Adding relevant Signed-off-by and
-> > > > > > Co-developed-by should be enough, shouldn't it ? Having a public branch
-> > > > > > that contains the history is useful if anyone is interested, but I don't
-> > > > > > think it's required in mainline.  
-> > > > >
-> > > > > Yea. I concur with Laurent here. I'm not sure what legal reasoning you
-> > > > > have on this but preserving the "absolute" history here is actively
-> > > > > detrimental for review and understanding of the patch set.
-> > > > >
-> > > > > Preserving Authorship, Signed-off-by lines and adding Co-developed-by
-> > > > > lines should be sufficient to provide both atribution credit and DCO
-> > > > > history.  
-> > > >
-> > > > I'm not convinced that, from legal standpoint, folding things would
-> > > > be enough. See, there are at least 3 legal systems involved here
-> > > > among the different patch authors:
-> > > >
-> > > >       - civil law;
-> > > >       - common law;
-> > > >       - customary law + common law.
-> > > >
-> > > > Merging stuff altogether from different law systems can be problematic,
-> > > > and trying to discuss this with experienced IP property lawyers will
-> > > > for sure take a lot of time and efforts. I also bet that different
-> > > > lawyers will have different opinions, because laws are subject to
-> > > > interpretation. With that matter I'm not aware of any court rules
-> > > > with regards to folded patches. So, it sounds to me that folding
-> > > > patches is something that has yet to be proofed in courts around
-> > > > the globe.
-> > > >
-> > > > At least for US legal system, it sounds that the Country of
-> > > > origin of a patch is relevant, as they have a concept of
-> > > > "national technology" that can be subject to export regulations.
-> > > >
-> > > > From my side, I really prefer to play safe and stay out of any such
-> > > > legal discussions.  
-> > >
-> > > Let's be serious for a moment. If you think there are legal issues in
-> > > taking GPL-v2.0-only patches and squashing them while retaining
-> > > authorship information through tags, the Linux kernel if *full* of that.
-> > > You also routinely modify patches that you commit to the media subsystem
-> > > to fix "small issues".
-> > >
-> > > The country of origin argument makes no sense either, the kernel code
-> > > base if full of code coming from pretty much all country on the planet.
-> > >
-> > > Keeping the patches separate make this hard to review. Please squash
-> > > them.  
-> > 
-> > I'm inclined to agree with Laurent here.
-> > 
-> > Patches submitted as GPL-v2 with DCO lines and author names/companies
-> > should be fine to be squashed and rearranged,
-> > as long as the DCO and Authorship is kept somewhere in the new patch
-> > that is applied.
-> > 
-> > Review is more important here.
-> 
-> Sorry, but I can't agree that review is more important than to be able
-> to properly indicate copyrights in a valid way at the legal systems that
-> it would apply ;-)
-> 
-> In any case, there's an easy way to make the code easy to review:
-> I can write the patches against staging (where it is OK to submit
-> preserving the history) and then add a final patch moving it out
-> of staging.
-> 
-> You can then just review the last patch, as it will contain the
-> entire code on it.
-> 
-> Another alternative, as I'm already doing with Sam, is for me to
-> submit the folded code as a reply to 00/xx. You can then just 
-> review the final code, without concerning about how the code reached
-> there.
-> 
-> From review point of the view, this will be the same as reviewing
-> a folded patch, but, from legal standpoint, the entire copyright
-> chain will be preserved.
-
-Let's stop with the legal FUD please. Squashing patches is done
-routinely in the kernel. If you have evidence this causes legal issues,
-please bring it up with the TAB or the LF to make this practice stop.
-Otherwise, please squash this series.
-
--- 
-Regards,
-
-Laurent Pinchart
+page->private is for the use of the filesystem.  You can grep for
+attach_page_private() to see how most filesystems use it.
+Some still use set_page_private() for various reasons.
