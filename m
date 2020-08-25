@@ -2,151 +2,127 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D40C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B307BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC3382075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:49:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FzjXo7Aj"
+	by mail.kernel.org (Postfix) with ESMTP id 954DD2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbgHYMte (ORCPT
+        id S1729527AbgHYMtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:49:34 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38626 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729372AbgHYMtN (ORCPT
+        Tue, 25 Aug 2020 08:49:40 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:23674 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727864AbgHYMs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:49:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598359751;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2cbENVwZDuEmq7Y+JiiFnjSHv5sQfWHtT+16663LunI=;
-        b=FzjXo7AjAFrCeH6NgJAyzxT7hF9Xc/qAuCogApNQuzekOWX+GVShq7hc5P3exlIn8J7UfU
-        gGVTHlzNysJth1P0DCrthq19rY01CC95xn7J99uSm4e7V1ViDED5no10AjWd8+bjFQKwtJ
-        Nd2mhx5iA9dsmDvrtzZRMY8Cs2Do0/4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-347-lHpUuQjVPi-HejwtZRDGWw-1; Tue, 25 Aug 2020 08:49:10 -0400
-X-MC-Unique: lHpUuQjVPi-HejwtZRDGWw-1
-Received: by mail-wm1-f70.google.com with SMTP id r14so699821wmh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 05:49:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2cbENVwZDuEmq7Y+JiiFnjSHv5sQfWHtT+16663LunI=;
-        b=J08tQvUDyVnFywEyIHdxNzoStUSElECKExwomecl77D6h5xSkWljAvClLH+g98P5Pa
-         RU2NPa+iRsD8EgvH1ecP3JYAOTzE7Z91Bj/jskUXakoRNH4WTMQmX5mBPzOe9m6klONA
-         oKGibBWP4p/8q9ZAesEvNJzW+ytKGpKz5EAdVD8Joc+EzzlQgv0B3XWkAP8RiXkQsWbD
-         y9kI1eOzH9fNUJkcoLtPz1goMOKbiQx7/5ZW547c69aID4ip1fW2OWt18J12htMWO/YQ
-         +qdawKfODl2Zbabp1KHZ/tN//SR00eXe4aDzopTnT1CGacVMzWA6rQB3NHHnN2f5BcqT
-         bNGQ==
-X-Gm-Message-State: AOAM533taOhkCEl/NsqFBLuT84W9b/luBS2RdrYBCbr7R38L9V1ULtK0
-        3wdwWaWonRX80WKHGZ/Yl1GZQDC/7Tcxko4dEfG4XRI5V+yDx08mlBfnxoblAQlHDc2ibHiDI4o
-        eo+HZWu+LjeO6dfbge1b49yEZ
-X-Received: by 2002:adf:9283:: with SMTP id 3mr10403578wrn.70.1598359748940;
-        Tue, 25 Aug 2020 05:49:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxN9gfbiXLS3FXlknqEUTpyobm1UaS3fx3Umjd+xf3wr9fw7fymjKhATua12i3qZKiqps4MNA==
-X-Received: by 2002:adf:9283:: with SMTP id 3mr10403569wrn.70.1598359748763;
-        Tue, 25 Aug 2020 05:49:08 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:499:3d00:cd47:f651:9d80:157a? ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id y16sm30120301wrr.83.2020.08.25.05.49.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 05:49:08 -0700 (PDT)
-Subject: Re: [PATCH v4 0/4] Remove dependency of check subcmd upon orc
-To:     linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
-        benh@kernel.crashing.org
-References: <20200825124700.29616-1-jthierry@redhat.com>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <3ef3dd0e-8820-1734-d11e-58a5c9390dd6@redhat.com>
-Date:   Tue, 25 Aug 2020 13:49:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 25 Aug 2020 08:48:26 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PCmA2F018929;
+        Tue, 25 Aug 2020 08:48:14 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3330951ggj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 08:48:14 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07PCmD9B034822
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 25 Aug 2020 08:48:13 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Tue, 25 Aug
+ 2020 08:48:12 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 25 Aug 2020 08:48:12 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07PCm0jM001781;
+        Tue, 25 Aug 2020 08:48:09 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <vkoul@kernel.org>, <lars@metafoo.de>, <dan.j.williams@intel.com>,
+        <ardeleanalex@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2 5/6] dmaengine: axi-dmac: wrap channel parameter adjust into function
+Date:   Tue, 25 Aug 2020 15:48:32 +0300
+Message-ID: <20200825124840.43664-6-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200825124840.43664-1-alexandru.ardelean@analog.com>
+References: <20200825124840.43664-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-In-Reply-To: <20200825124700.29616-1-jthierry@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_04:2020-08-25,2020-08-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ phishscore=0 mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
+ suspectscore=8 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+The channel parameters (which are read from the device-tree) are adjusted
+for the DMAEngine framework in the axi_dmac_parse_chan_dt() function, after
+they are read from the device-tree.
 
-Sorry for the duplicate send. An issue happened while sending this one. 
-Please ignore this thread.
+When we want to read these from registers, we will need to use the same
+logic, so this change splits the logic into a separate function.
 
-Thanks,
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ drivers/dma/dma-axi-dmac.c | 25 +++++++++++++++----------
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-Julien
-
-On 8/25/20 1:46 PM, Julien Thierry wrote:
-> Hi,
-> 
-> Matt Helsley's change[1] provided a base framework to opt-in/out
-> objtool subcommands at compile time. This makes it easier for
-> architectures to port objtool, one subcommand at a time.
-> 
-> Orc generation relies on the check operation implementation. However,
-> the way this is done causes the check implementation to depend on the
-> implementation of orc generation functions to call if orc generation is
-> requested. This means that in order to implement check subcmd, orc
-> subcmd also need to be implemented.
-> 
-> These patches aim at removing that dependency, having orc subcmd
-> being built on top of the check subcmd.
-> 
-> 
-> Changes since v3 [2]:
-> - Rebased on v5.9-rc1
-> - Renamed objtool_setup_file() to objtool_open_read()
-> - Fixed misplaced elf_write() when file->elf->changed is true
-> - Avoid additional allocation for orc data and compile out orc
->    definition when not needed instead
-> 
-> [1] https://www.spinics.net/lists/kernel/msg3510844.html
-> [2] https://lkml.org/lkml/2020/7/30/415
-> 
-> Cheers,
-> 
-> Julien
-> 
-> -->
-> 
-> Julien Thierry (4):
->    objtool: Move object file loading out of check
->    objtool: Move orc outside of check
->    objtool: orc: Skip setting orc_entry for non-text sections
->    objtool: check: Use orc definition only when needed
-> 
->   tools/objtool/Makefile        |  4 +++
->   tools/objtool/arch.h          |  2 ++
->   tools/objtool/builtin-check.c | 15 ++++++++++-
->   tools/objtool/builtin-orc.c   | 27 +++++++++++++++++++-
->   tools/objtool/check.c         | 47 ++++++-----------------------------
->   tools/objtool/check.h         |  2 ++
->   tools/objtool/objtool.c       | 29 +++++++++++++++++++++
->   tools/objtool/objtool.h       |  4 ++-
->   tools/objtool/orc_gen.c       |  3 +++
->   tools/objtool/weak.c          |  4 +--
->   10 files changed, 92 insertions(+), 45 deletions(-)
-> 
-> --
-> 2.21.3
-> 
-
+diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+index 1a1e227fa935..7ee56ae60093 100644
+--- a/drivers/dma/dma-axi-dmac.c
++++ b/drivers/dma/dma-axi-dmac.c
+@@ -717,6 +717,20 @@ static const struct regmap_config axi_dmac_regmap_config = {
+ 	.writeable_reg = axi_dmac_regmap_rdwr,
+ };
+ 
++static void axi_dmac_adjust_chan_params(struct axi_dmac_chan *chan)
++{
++	chan->address_align_mask = max(chan->dest_width, chan->src_width) - 1;
++
++	if (axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
++		chan->direction = DMA_MEM_TO_MEM;
++	else if (!axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
++		chan->direction = DMA_MEM_TO_DEV;
++	else if (axi_dmac_dest_is_mem(chan) && !axi_dmac_src_is_mem(chan))
++		chan->direction = DMA_DEV_TO_MEM;
++	else
++		chan->direction = DMA_DEV_TO_DEV;
++}
++
+ /*
+  * The configuration stored in the devicetree matches the configuration
+  * parameters of the peripheral instance and allows the driver to know which
+@@ -760,16 +774,7 @@ static int axi_dmac_parse_chan_dt(struct device_node *of_chan,
+ 		return ret;
+ 	chan->dest_width = val / 8;
+ 
+-	chan->address_align_mask = max(chan->dest_width, chan->src_width) - 1;
+-
+-	if (axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
+-		chan->direction = DMA_MEM_TO_MEM;
+-	else if (!axi_dmac_dest_is_mem(chan) && axi_dmac_src_is_mem(chan))
+-		chan->direction = DMA_MEM_TO_DEV;
+-	else if (axi_dmac_dest_is_mem(chan) && !axi_dmac_src_is_mem(chan))
+-		chan->direction = DMA_DEV_TO_MEM;
+-	else
+-		chan->direction = DMA_DEV_TO_DEV;
++	axi_dmac_adjust_chan_params(chan);
+ 
+ 	return 0;
+ }
 -- 
-Julien Thierry
+2.17.1
 
