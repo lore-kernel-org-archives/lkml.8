@@ -2,180 +2,263 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4CBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF24C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6FAE20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:15:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VlfJWsai"
+	by mail.kernel.org (Postfix) with ESMTP id 068772075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:16:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729735AbgHYKPs (ORCPT
+        id S1729772AbgHYKQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:15:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgHYKPr (ORCPT
+        Tue, 25 Aug 2020 06:16:19 -0400
+Received: from aclms1.advantech.com.tw ([61.58.41.199]:15030 "EHLO
+        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728117AbgHYKQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:15:47 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF9DBC061574;
-        Tue, 25 Aug 2020 03:15:46 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u20so6972693pfn.0;
-        Tue, 25 Aug 2020 03:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bBeFjkrLRepO5x2t9jrG71rLIeewMCntWxdGnW+ePv4=;
-        b=VlfJWsaiucdUF5ERlNyTFu63QUTP06Pp6V2gndpFm+VDE0oiPrnPHH9iAS3AvQZczT
-         RRc7T5l1BJQIF5wtztEKjU9aOliQZdvhM3eQ/T0EPeaOznC1pviKYZgkkYhYu/9armCt
-         Q/2NPh2J+tX0e9uW5nRy8KdxDdJQTAuEvHDSZCppLJuue4dSOat7cLWxyQXIpm6EqhSw
-         jtY0PurvNqqBgyU+HlclnZv/xxu7wiJyT0Bx0qMs2OK0An+34zp0P+ZqcTod5fIDTX8t
-         JCJmTkzeSAoKBzP8ehbrjn9g0FJYCfErP2tK4kRtH4HyLepe0qiMqKBZ40jX1WKX1ZIM
-         AVhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bBeFjkrLRepO5x2t9jrG71rLIeewMCntWxdGnW+ePv4=;
-        b=tu8vcXADWWHeva04eUZxvwHGe/dxyZO2uQlP6feoqKKKpjD3uPiF50leEXf0PX/MKl
-         ZRMbK4JQeOW3Z21EtJ1HJfU3i3Nj9WfELvCe7GFulEoIiK2MJY89Uk15NpG4p0ocxkiz
-         kw+U3Kx5nzVVxv38bitJ5KHIFRtMbOq5mh0LKlajXuhEmeHn9y2cOHgCXjedDowk4WNm
-         NJdzy/MusttQ5uHbSvst/Hk/tGUaJpXKXF6royVaS2uKBuzZtlZ+rTdK8LKya5HF3rJE
-         2p6r/Lhz811ZrQJ1bYfXmzanyWP1J7BwW5SI+QNwSebaPwisq51uyhoaFbtZ0LRmmp1v
-         kHPg==
-X-Gm-Message-State: AOAM531vKpcCyiLJANFWNIRGXdVhZkRCoJjIjKMeHaKjCJ4KgZXTX8wk
-        6NkgE9+I2uY4BOaB1cSaoHapINHKEfI=
-X-Google-Smtp-Source: ABdhPJzaGkj6W5K8gbg8hr32bUIemOs+O0DozWPB5rVbhCxPqk8NcGrdL8aeWY8b4rEyec1WehR9fA==
-X-Received: by 2002:a65:4847:: with SMTP id i7mr6246219pgs.385.1598350546147;
-        Tue, 25 Aug 2020 03:15:46 -0700 (PDT)
-Received: from [192.168.1.200] (FL1-111-169-205-196.hyg.mesh.ad.jp. [111.169.205.196])
-        by smtp.gmail.com with ESMTPSA id g23sm14082776pfo.95.2020.08.25.03.15.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 03:15:45 -0700 (PDT)
-Subject: Re: [PATCH 2/2] exfat: unify name extraction
-To:     Sungjong Seo <sj1557.seo@samsung.com>
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        'Namjae Jeon' <namjae.jeon@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200806055653.9329-1-kohada.t2@gmail.com>
- <CGME20200806055726epcas1p2f36810983abf14d3aa27f8a102bbbc4d@epcas1p2.samsung.com>
- <20200806055653.9329-2-kohada.t2@gmail.com>
- <000201d66da8$07a2c750$16e855f0$@samsung.com>
- <bbd9355c-cd48-b961-0a91-771a702c03df@gmail.com>
- <860b01d677a7$a62bf230$f283d690$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <dea90cbc-9f72-6476-b2a9-10014c34042b@gmail.com>
-Date:   Tue, 25 Aug 2020 19:15:43 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 06:16:18 -0400
+Received: from taipei09.ADVANTECH.CORP (unverified [172.20.0.236]) by ACLMS1.advantech.com.tw
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Te1333e83e4ac14014b1204@ACLMS1.advantech.com.tw>;
+ Tue, 25 Aug 2020 18:16:16 +0800
+Received: from localhost (172.16.12.96) by taipei09.ADVANTECH.CORP
+ (172.20.0.236) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 25 Aug
+ 2020 18:16:15 +0800
+From:   William Sung <william.sung@advantech.com.tw>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Campion Kang <Campion.Kang@advantech.com.tw>
+Subject: [PATCH v2] iio: dac: ad5593r: Dynamically set AD5593R channel modes
+Date:   Tue, 25 Aug 2020 18:16:14 +0800
+Message-ID: <20200825101614.2462-1-william.sung@advantech.com.tw>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <860b01d677a7$a62bf230$f283d690$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [172.16.12.96]
+X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
+ taipei09.ADVANTECH.CORP (172.20.0.236)
+X-StopIT: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+To use ad5593r more flexibly, we use the module parameter to setting the
+channel modes dynamically whenever the module probe up. Users can pass
+the channel modes to the module parameter for allocating the
+functionality of channels as desired.
 
->>>> +			exfat_free_dentry_set(es, false);
->>>> +
->>>> +			if (!exfat_uniname_ncmp(sb,
->>>> +						p_uniname->name,
->>>> +						uni_name.name,
->>>> +						name_len)) {
->>>> +				/* set the last used position as hint */
->>>> +				hint_stat->clu = clu.dir;
->>>> +				hint_stat->eidx = dentry;
->>>
->>> eidx and clu of hint_stat should have one for the next entry we'll
->>> start looking for.
->>> Did you intentionally change the concept?
->>
->> Yes, this is intentional.
->> Essentially, the "Hint" concept is to reduce the next seek cost with
->> minimal cost.
->> There is a difference in the position of the hint, but the concept is the
->> same.
->> As you can see, the patched code strategy doesn't move from current
->> position.
->> Basically, the original code strategy is advancing only one dentry.(It's
->> the "minimum cost") However, when it reaches the cluster boundary, it gets
->> the next cluster and error handling.
-> 
-> I didn't get exactly what "original code" is.
-> Do you mean whole code lines for exfat_find_dir_entry()?
-> Or just only for handling the hint in it?
+For example:
+* Use in the kernel command line:
+Users can add the module parameter in the kernel command line such as
 
-My intention is the latter.
+    "ad5593r.ch_mode=88001122"
 
+"88001122" means the channel mode setting for each channel. The most
+left side indicates the mode of channel 7, and the most right side
+indicates the mode of channel 0.
 
-> The strategy of original code for hint is advancing not one dentry but one dentry_set.
+* Use when manually probe the module:
+Similar to the kernel command line usage, users can enter
 
-That's the strategy as a whole code.
-But all it does to get a hint after "found" is to advance one entry.
-In the original code, the 'dentry' variable points to the end of the EntrySet when "found",
-so it can point to the next EntrySet by simply advancing one entry.
-(However, it may need to scan the cluster chain)
+    "modprobe ad5593r ch_mode=88001122"
 
+to start the ad5593r module with the desired channel mode setting.
 
-> If a hint position is not moved to next like the patched code,
-> caller have to start at old dentry_set that could be already loaded on dentry cache.
-> 
-> Let's think the case of searching through all files sequentially.
-> The patched code should check twice per a file.
+v2: Fix the patch description and remove redundant for loop
 
-This is the case when all requests find the specified file, right?
-
-Sure, the request will evaluate the same EntrySet as before found.
-However, the cost to spend is different from the last time.
-The current request looks for a different name than the last request.
-In most cases, length and hash are different from the last EntrySet.
-Therefore, the last EntrySet just skips dir-entries by num_ext.
-There is no string comparison with ignores cases. <- This cost is high
-The cost of skipping dir-entries is much less than the string comparison.
-
-> No better than the original policy.
-
-In this patch, when "found", the 'dentry' variable still points to the beginning of the EntrySet.
-In this case, I thought "stay here" was a very efficient hint at a minimal cost.
-As a whole, I think that the cost has been reduced...
-> 
->> Getting the next cluster The error handling already exists at the end of
->> the while loop, so the code is duplicated.
->> These costs should be paid next time and are no longer the "minimum cost".
-> 
-> I agree with your words, "These costs should be paid next time".
-> If so, how about moving the cluster handling for a hint dentry to
-> the beginning of the function while keeping the original policy?
-
-My first idea was
-	hint_stat->eidx = dentry + 1 + num_ext;
-
-However, in the current hint, offset ((hint_stat->eidx) and cluster number (hint_stat->clu) in the directory are paired.
-It was difficult to change only one of values.
-So I'm trying to make a 'new hint' where the offset and cluster number aren't linked.
-
-
-> BTW, this patch is not related to the hint code.
-> I think it would be better to keep the original code in this patch and improve it with a separate patch.
-
-I think so, too.
-I'll try another patch.
-
-
-BR
+Signed-off-by: William Sung <william.sung@advantech.com.tw>
 ---
-Tetsuhiro Kohada <kohada.t2@gmail.com>
-> 
+ drivers/iio/dac/ad5592r-base.c | 33 ++++++++++++++++++++---
+ drivers/iio/dac/ad5592r-base.h |  4 +++
+ drivers/iio/dac/ad5593r.c      | 48 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 82 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-base.c
+index cc4875660a69..cd69a34fa21e 100644
+--- a/drivers/iio/dac/ad5592r-base.c
++++ b/drivers/iio/dac/ad5592r-base.c
+@@ -21,6 +21,10 @@
+ 
+ #include "ad5592r-base.h"
+ 
++/* Parameters for dynamic channel mode setting */
++static u8 update_channel_mode;
++static u8 new_channel_modes[AD559XR_CHANNEL_NR];
++
+ static int ad5592r_gpio_get(struct gpio_chip *chip, unsigned offset)
+ {
+ 	struct ad5592r_state *st = gpiochip_get_data(chip);
+@@ -132,7 +136,7 @@ static int ad5592r_gpio_init(struct ad5592r_state *st)
+ 
+ 	st->gpiochip.label = dev_name(st->dev);
+ 	st->gpiochip.base = -1;
+-	st->gpiochip.ngpio = 8;
++	st->gpiochip.ngpio = AD559XR_CHANNEL_NR;
+ 	st->gpiochip.parent = st->dev;
+ 	st->gpiochip.can_sleep = true;
+ 	st->gpiochip.direction_input = ad5592r_gpio_direction_input;
+@@ -287,6 +291,14 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
+ 	return ret;
+ }
+ 
++static void ad5592r_set_def_channel_modes(struct ad5592r_state *st)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(st->channel_modes); i++)
++		st->channel_modes[i] = new_channel_modes[i];
++}
++
+ static int ad5592r_reset_channel_modes(struct ad5592r_state *st)
+ {
+ 	int i;
+@@ -532,6 +544,10 @@ static int ad5592r_alloc_channels(struct iio_dev *iio_dev)
+ 			st->channel_offstate[reg] = tmp;
+ 	}
+ 
++	/* Update default channel modes set by external module */
++	if (update_channel_mode == 1)
++		ad5592r_set_def_channel_modes(st);
++
+ 	channels = devm_kcalloc(st->dev,
+ 			1 + 2 * num_channels, sizeof(*channels),
+ 			GFP_KERNEL);
+@@ -567,7 +583,7 @@ static int ad5592r_alloc_channels(struct iio_dev *iio_dev)
+ 	}
+ 
+ 	channels[curr_channel].type = IIO_TEMP;
+-	channels[curr_channel].channel = 8;
++	channels[curr_channel].channel = AD559XR_CHANNEL_NR;
+ 	channels[curr_channel].info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+ 				   BIT(IIO_CHAN_INFO_SCALE) |
+ 				   BIT(IIO_CHAN_INFO_OFFSET);
+@@ -589,6 +605,17 @@ static void ad5592r_init_scales(struct ad5592r_state *st, int vref_mV)
+ 		div_s64_rem(tmp * 2, 1000000000LL, &st->scale_avail[1][1]);
+ }
+ 
++void ad5592r_update_default_channel_modes(u8 *new_modes)
++{
++	int idx = 0;
++
++	update_channel_mode = 1;
++	for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++)
++		new_channel_modes[idx] = new_modes[idx];
++
++}
++EXPORT_SYMBOL_GPL(ad5592r_update_default_channel_modes);
++
+ int ad5592r_probe(struct device *dev, const char *name,
+ 		const struct ad5592r_rw_ops *ops)
+ {
+@@ -603,7 +630,7 @@ int ad5592r_probe(struct device *dev, const char *name,
+ 	st = iio_priv(iio_dev);
+ 	st->dev = dev;
+ 	st->ops = ops;
+-	st->num_channels = 8;
++	st->num_channels = AD559XR_CHANNEL_NR;
+ 	dev_set_drvdata(dev, iio_dev);
+ 
+ 	st->reg = devm_regulator_get_optional(dev, "vref");
+diff --git a/drivers/iio/dac/ad5592r-base.h b/drivers/iio/dac/ad5592r-base.h
+index 23dac2f1ff8a..40ad6369e660 100644
+--- a/drivers/iio/dac/ad5592r-base.h
++++ b/drivers/iio/dac/ad5592r-base.h
+@@ -39,6 +39,9 @@ enum ad5592r_registers {
+ #define AD5592R_REG_CTRL_ADC_RANGE	BIT(5)
+ #define AD5592R_REG_CTRL_DAC_RANGE	BIT(4)
+ 
++/* Define quantity of channels of AD5592R/AD5593R */
++#define AD559XR_CHANNEL_NR		8
++
+ struct ad5592r_rw_ops {
+ 	int (*write_dac)(struct ad5592r_state *st, unsigned chan, u16 value);
+ 	int (*read_adc)(struct ad5592r_state *st, unsigned chan, u16 *value);
+@@ -69,6 +72,7 @@ struct ad5592r_state {
+ 	__be16 spi_msg_nop;
+ };
+ 
++void ad5592r_update_default_channel_modes(u8 *new_modes);
+ int ad5592r_probe(struct device *dev, const char *name,
+ 		const struct ad5592r_rw_ops *ops);
+ int ad5592r_remove(struct device *dev);
+diff --git a/drivers/iio/dac/ad5593r.c b/drivers/iio/dac/ad5593r.c
+index 1fbe9c019c7f..a19331d91406 100644
+--- a/drivers/iio/dac/ad5593r.c
++++ b/drivers/iio/dac/ad5593r.c
+@@ -21,6 +21,10 @@
+ #define AD5593R_MODE_GPIO_READBACK	(6 << 4)
+ #define AD5593R_MODE_REG_READBACK	(7 << 4)
+ 
++/* Parameters for dynamic channel mode setting */
++static char *ch_mode = "";
++module_param(ch_mode, charp, 0400);
++
+ static int ad5593r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
+ {
+ 	struct i2c_client *i2c = to_i2c_client(st->dev);
+@@ -92,9 +96,53 @@ static const struct ad5592r_rw_ops ad5593r_rw_ops = {
+ 	.gpio_read = ad5593r_gpio_read,
+ };
+ 
++static void ad5593r_check_new_channel_mode(void)
++{
++	char *new_mode = NULL, tmp[2];
++	u8 new_ch_modes[AD559XR_CHANNEL_NR];
++	int idx = 0;
++
++	if (strlen(ch_mode) != AD559XR_CHANNEL_NR)
++		return;
++
++	new_mode = ch_mode;
++
++	/* Check if all channel modes are valid */
++	for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++) {
++		switch (new_mode[idx]) {
++		case '0':
++		case '1':
++		case '2':
++		case '3':
++		case '8':
++			continue;
++		default:
++			/* There is invalid mode exist, ignore the settings */
++			pr_err("%s: invalid(%c) in index(%d)\n",
++				__func__, new_mode[idx], idx);
++			return;
++		}
++	}
++
++	/* Set the new modes to ad5592r-base driver to setup the new channel modes */
++	memset(tmp, 0, 2);
++	for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++) {
++		tmp[0] = new_mode[idx];
++		if (kstrtou8(tmp, 10, &new_ch_modes[AD559XR_CHANNEL_NR - idx - 1])) {
++			/* Something error when converting the string to integer */
++			/* Ignore this settings */
++			pr_err("%s: kstr error idx(%d)\n", __func__, idx);
++			return;
++		}
++	}
++
++	ad5592r_update_default_channel_modes(new_ch_modes);
++}
++
+ static int ad5593r_i2c_probe(struct i2c_client *i2c,
+ 		const struct i2c_device_id *id)
+ {
++	ad5593r_check_new_channel_mode();
+ 	return ad5592r_probe(&i2c->dev, id->name, &ad5593r_rw_ops);
+ }
+ 
+-- 
+2.17.1
+
