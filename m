@@ -5,65 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
 	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E90C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267EDC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E5BB2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07AC720737
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:22:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="kLvgRy07"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="n72OI6Mo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgHYEWe (ORCPT
+        id S1728538AbgHYEWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50844 "EHLO
+        Tue, 25 Aug 2020 00:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728396AbgHYEWa (ORCPT
+        with ESMTP id S1728496AbgHYEWe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:22:30 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 178F6C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:30 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id p2so6879170pge.20
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:30 -0700 (PDT)
+        Tue, 25 Aug 2020 00:22:34 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E8AC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:34 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id n1so4680258pgi.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=uNM7HP/LHsK3vi9PvtdHxJ86dOAfeYqmzrZ0qZRLxlA=;
-        b=kLvgRy07hQY2lFzW8fHlfXXMd+Cdx+25eTP3d2GAQaRmvrpEvr0iAFVsIyM6tdQzUG
-         fEUK0gzn46C7cz3lOCBOpJEG17FJ/QjLLf1910ETwwZs1q9K767pm1R1eH6rypa3PQEp
-         a0r1Sys7b8s83UyKlk8Gq4MWl2gJQVX8QPRPxlghpMYrA6BiO8cB4uolJpWH4hx036mY
-         +mKRGeRc8gRUBQhgtQP7i1Bp8UK+GWO0/69lxHNwRpsvcRrom/zeJLCKBTCnADIxDPF+
-         rm/iLdkxbk2V2xnx5aaRVvF8mZ2p9pwsE+LP5fRI1EHlZYZqbL9MDeALfyugt3HmeRTa
-         rKcQ==
+        bh=F8R7yB/uW413X5BedlVvfs1XP30S/Fpzu0dI0Wqxoxc=;
+        b=n72OI6MoEkQhfKUwJdHzWFQo0b8hAvkNDSD1jmWoyZQ0V8OJBU2zf9TYkIjQYpXtCo
+         dUStaSep5gflMaYcmcL10S6XR/DnqRv7amQsr9GxaBe2MnDAxILEhPQWW3VG5ABPS2vh
+         gDTLW7GGp0hfHW1TCkZJkfAAwPALmBk/VDLkGb6JSOt8XzTD1AjuqshMjX8wseVt5E8S
+         RY6f27PWDyrpbj01THKYTfJ5h+K5UhMQJSGDLhuErTYtZvRFeFQGkDh7vmu1PbxIrVWT
+         SBPc9z1H4Ln+WHTzwN1F8WXvd1I+1D7wnSbQtdxyTo2Gbffbf9SRmBA2yLbXStxxNNxR
+         C0yQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=uNM7HP/LHsK3vi9PvtdHxJ86dOAfeYqmzrZ0qZRLxlA=;
-        b=rnmSMwWfKHS9p1pqaULcWtNCp8doy2p41Yitl+snFSggNzzhMtyRGDaMlp0/vSxwRR
-         bQlkVhUj6BDfnAyovlc8fLfRsgZRwmvfnLItgIYrsgB8v3MklhTKElymTTHX88xx8fwW
-         H3TAaYkaJEvOiS+VMchM/AV9sWwkLZ16NG8NtwUxAU/oaoAQrXBtRsSWVFHGJNloTnsT
-         Ash1gKoM3sTYQqD5+kkGPswyktNhIUhv36Aeh4tyklAaJicFqee8yHXJAqA0wpDxASlA
-         QJ53FxlvEULSeEjS3DuKeHshviXDwsCzuDOjAm0KQLslTNbiIUdecORR//v+/MZmxbU9
-         mN2Q==
-X-Gm-Message-State: AOAM531ki2OZli9bx3gUGSCYrTdV+7Th736RVb+JBAZcsowZQ/2fRJND
-        cqz4/7NjwENikAREDTzBdmFQR4jXbrE=
-X-Google-Smtp-Source: ABdhPJwgrbZbyUxmLVv4z18yXQbs+H+ZgJyhIt2GSckwXachV3QFr36xqqieA4TJVkGjje0KVF56fSqFqOQ=
+        bh=F8R7yB/uW413X5BedlVvfs1XP30S/Fpzu0dI0Wqxoxc=;
+        b=BH5CuoHowXlqiHetnZeqQhUXwzQC+U/9CrE1FFkFoWIAsgsBRfFKKWL07BYEPJMFuf
+         MNrCqQquZlZGJFS/lRh0cVyxMtpuXtzpXq5rELoAgFLafJBSW1H+4ej7FaZQVxkoIxgL
+         nvitSUDmaD3h2lwbWgqt/J3m8RNz8abhwc/Gu9gVu/b0rWhQGf4cymDjgmsUgKr1iZnY
+         A/7m+0IO/5TwUv6/dDV+bNg44POjr2dBKfF1NhKv9O+htRtyrO/vZ1V8zGtjfGtg67V/
+         +Ik4MZTxCp7ciUFo1sx+slaxuRncqFkx9BaaKtdm3QWH+YDY0KF5Bs2/NkvEEDOidnSK
+         BqLQ==
+X-Gm-Message-State: AOAM5321duvWrRjQlNZU0OyzX5TuDuubRehoIzLJz75suD7hzZH0ceOM
+        sdY8AYO9SglwuJ8sH/GATsQiGFGiP6s=
+X-Google-Smtp-Source: ABdhPJzj5NrEqS6R/E/pway38JrzWHE+PYmAiWI5fTlEcegdm6POulaQfy5AaYM7tiD79DhVVquGuO7tQkA=
 X-Received: from badhri.mtv.corp.google.com ([2620:15c:211:1:f292:1cff:fee0:66cf])
- (user=badhri job=sendgmr) by 2002:a63:cd54:: with SMTP id a20mr5362196pgj.228.1598329349509;
- Mon, 24 Aug 2020 21:22:29 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 21:21:58 -0700
+ (user=badhri job=sendgmr) by 2002:a17:90a:638c:: with SMTP id
+ f12mr249425pjj.1.1598329353549; Mon, 24 Aug 2020 21:22:33 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 21:21:59 -0700
 In-Reply-To: <20200825042210.300632-1-badhri@google.com>
-Message-Id: <20200825042210.300632-3-badhri@google.com>
+Message-Id: <20200825042210.300632-4-badhri@google.com>
 Mime-Version: 1.0
 References: <20200825042210.300632-1-badhri@google.com>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH 02/14 v2] usb: typec: tcpci: Add support when hidden tx
- registers are inaccessible
+Subject: [PATCH 03/14 v1] usb: typec: tcpci: update ROLE_CONTROL for DRP
 From:   Badhri Jagan Sridharan <badhri@google.com>
 To:     Guenter Roeck <linux@roeck-us.net>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
@@ -76,113 +75,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TCPCI spec forbids direct access of TX_BUF_BYTE_x register.
-The existing version of tcpci driver assumes that those registers
-are directly addressible. Add support for tcpci chips which do
-not support direct access to TX_BUF_BYTE_x registers. TX_BUF_BYTE_x
-can only be accessed by I2C_WRITE_BYTE_COUNT.
+ROLE_CONTROL register would not have the actual CC terminations
+unless the port does not set ROLE_CONTROL.DRP. For DRP ports,
+CC_STATUS.cc1/cc2 indicates the final terminations applied
+when TCPC enters potential_connect_as_source/_sink.
+For DRP ports, infer port role from CC_STATUS and set corresponding
+CC terminations before setting the orientation.
 
 Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 ---
- drivers/usb/typec/tcpm/tcpci.c | 49 +++++++++++++++++++++++++---------
- drivers/usb/typec/tcpm/tcpci.h |  8 ++++++
- 2 files changed, 44 insertions(+), 13 deletions(-)
+ drivers/usb/typec/tcpm/tcpci.c | 37 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 36 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-index f57d91fd0e09..90d348caa6a8 100644
+index 90d348caa6a8..9e814d454d14 100644
 --- a/drivers/usb/typec/tcpm/tcpci.c
 +++ b/drivers/usb/typec/tcpm/tcpci.c
-@@ -320,8 +320,7 @@ static int tcpci_set_vbus(struct tcpc_dev *tcpc, bool source, bool sink)
- 	return 0;
- }
- 
--static int tcpci_pd_transmit(struct tcpc_dev *tcpc,
--			     enum tcpm_transmit_type type,
-+static int tcpci_pd_transmit(struct tcpc_dev *tcpc, enum tcpm_transmit_type type,
- 			     const struct pd_message *msg)
- {
+@@ -191,12 +191,47 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
  	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-@@ -330,23 +329,47 @@ static int tcpci_pd_transmit(struct tcpc_dev *tcpc,
+ 	unsigned int reg;
  	int ret;
++	enum typec_cc_status cc1, cc2;
  
- 	cnt = msg ? pd_header_cnt(header) * 4 : 0;
--	ret = regmap_write(tcpci->regmap, TCPC_TX_BYTE_CNT, cnt + 2);
--	if (ret < 0)
--		return ret;
-+	/**
-+	 * TCPCI spec forbids direct access of TCPC_TX_DATA.
-+	 * But, since some of the chipsets offer this capability,
-+	 * it's fair to support both.
-+	 */
-+	if (!tcpci->data->TX_BUF_BYTE_x_hidden) {
-+		ret = regmap_write(tcpci->regmap, TCPC_TX_BYTE_CNT, cnt + 2);
-+		if (ret < 0)
-+			return ret;
- 
--	ret = tcpci_write16(tcpci, TCPC_TX_HDR, header);
--	if (ret < 0)
--		return ret;
-+		ret = tcpci_write16(tcpci, TCPC_TX_HDR, header);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (cnt > 0) {
-+			ret = regmap_raw_write(tcpci->regmap, TCPC_TX_DATA, &msg->payload, cnt);
-+			if (ret < 0)
-+				return ret;
-+		}
-+	} else {
-+		u8 buf[TCPC_TRANSMIT_BUFFER_MAX_LEN] = {0,};
-+		u8 pos = 0;
-+
-+		/* Payload + header + TCPC_TX_BYTE_CNT */
-+		buf[pos++] = cnt + 2;
-+
-+		if (msg)
-+			memcpy(&buf[pos], &msg->header, sizeof(msg->header));
-+
-+		pos += sizeof(header);
-+
-+		if (cnt > 0)
-+			memcpy(&buf[pos], msg->payload, cnt);
- 
--	if (cnt > 0) {
--		ret = regmap_raw_write(tcpci->regmap, TCPC_TX_DATA,
--				       &msg->payload, cnt);
-+		pos += cnt;
-+		ret = regmap_raw_write(tcpci->regmap, TCPC_TX_BYTE_CNT, buf, pos);
- 		if (ret < 0)
- 			return ret;
- 	}
- 
--	reg = (PD_RETRY_COUNT << TCPC_TRANSMIT_RETRY_SHIFT) |
--		(type << TCPC_TRANSMIT_TYPE_SHIFT);
-+	reg = (PD_RETRY_COUNT << TCPC_TRANSMIT_RETRY_SHIFT) | (type << TCPC_TRANSMIT_TYPE_SHIFT);
- 	ret = regmap_write(tcpci->regmap, TCPC_TRANSMIT, reg);
+-	/* Keep the disconnect cc line open */
++	/* Obtain Rp setting from role control */
+ 	ret = regmap_read(tcpci->regmap, TCPC_ROLE_CTRL, &reg);
  	if (ret < 0)
  		return ret;
-diff --git a/drivers/usb/typec/tcpm/tcpci.h b/drivers/usb/typec/tcpm/tcpci.h
-index fd26ca35814c..cf9d8b63adcb 100644
---- a/drivers/usb/typec/tcpm/tcpci.h
-+++ b/drivers/usb/typec/tcpm/tcpci.h
-@@ -128,9 +128,17 @@
- #define TCPC_VBUS_VOLTAGE_ALARM_HI_CFG		0x76
- #define TCPC_VBUS_VOLTAGE_ALARM_LO_CFG		0x78
  
-+/* I2C_WRITE_BYTE_COUNT + 1 when TX_BUF_BYTE_x is only accessible I2C_WRITE_BYTE_COUNT */
-+#define TCPC_TRANSMIT_BUFFER_MAX_LEN		31
++	ret = tcpci_get_cc(tcpc, &cc1, &cc2);
++	if (ret < 0)
++		return ret;
 +
-+/*
-+ * @TX_BUF_BYTE_x_hidden
-+ *		optional; Set when TX_BUF_BYTE_x can only be accessed through I2C_WRITE_BYTE_COUNT.
-+ */
- struct tcpci;
- struct tcpci_data {
- 	struct regmap *regmap;
-+	unsigned char TX_BUF_BYTE_x_hidden:1;
- 	int (*init)(struct tcpci *tcpci, struct tcpci_data *data);
- 	int (*set_vconn)(struct tcpci *tcpci, struct tcpci_data *data,
- 			 bool enable);
++	/*
++	 * When port has drp toggling enabled, ROLE_CONTROL would only have the initial
++	 * terminations for the toggling and does not indicate the final cc
++	 * terminations when ConnectionResult is 0 i.e. drp toggling stops and
++	 * the connection is resolbed. Infer port role from TCPC_CC_STATUS based on the
++	 * terminations seen. The port role is then used to set the cc terminations.
++	 */
++	if (reg & TCPC_ROLE_CTRL_DRP) {
++		/* Disable DRP for the OPEN setting to take effect */
++		reg = reg & ~TCPC_ROLE_CTRL_DRP;
++
++		if (polarity == TYPEC_POLARITY_CC2) {
++			reg &= ~(TCPC_ROLE_CTRL_CC2_MASK << TCPC_ROLE_CTRL_CC2_SHIFT);
++			/* Local port is source */
++			if (cc2 == TYPEC_CC_RD)
++				/* Role control would have the Rp setting when DRP was enabled */
++				reg |= TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
++			else
++				reg |= TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT;
++		} else {
++			reg &= ~(TCPC_ROLE_CTRL_CC1_MASK << TCPC_ROLE_CTRL_CC1_SHIFT);
++			/* Local port is source */
++			if (cc1 == TYPEC_CC_RD)
++				/* Role control would have the Rp setting when DRP was enabled */
++				reg |= TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
++			else
++				reg |= TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT;
++		}
++	}
++
+ 	if (polarity == TYPEC_POLARITY_CC2)
+ 		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC1_SHIFT;
+ 	else
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
