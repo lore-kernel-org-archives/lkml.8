@@ -2,159 +2,337 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20512C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C67842076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF86C2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:32:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="YQx42pHO"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZdemlU3p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbgHYRcO (ORCPT
+        id S1726661AbgHYRcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:32:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33792 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHYRcM (ORCPT
+        Tue, 25 Aug 2020 13:32:45 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:33360 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYRcl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:32:12 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937E2C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:32:11 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id q4so2152241eds.3
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:32:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=37YjFvfGUrUoPQRff1MpT8oVlpr3fqL+nMv5i4fSK4g=;
-        b=YQx42pHOZc5N8G3XsEfnMM2ARp6TEv3TI3yU31wboJckh6S83T90uD2dqH0i07L0EX
-         iSOOGkhqqxpHCpYzPf6XiWNxBTNcT131QQHTWLrPgwG2zG03Bugt2FvJ4714K5x/z+Ar
-         KLrS+KC+jA7IzgfjUOveTR0GvQQO/ts27jwxxC0JRr4oAKP8pqrnu58MsosM6B994+CD
-         m3bU/nFcsUtvuQUMwpdn5W0TzoD3qFCbobBYkSrNeKgvVHjLu0mb9+dDjh+HsomW9ylg
-         x5fx92q5rHPWOGgydHGQLziOgs/m6LCfzV9UdWz+vnZHoCwtCD8v1JtlH2kaP0ar6IWN
-         pXow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=37YjFvfGUrUoPQRff1MpT8oVlpr3fqL+nMv5i4fSK4g=;
-        b=trFyr9OjTEO2gtO73PInXwMPhmk+gfWbHGOD11lXEqBINfPS5G5Qkdil+qJje4UpmW
-         gzCI00SFHud8/UaU4J9j0eDFq+BPUYpBWhVImdSRhEp0O9wAxh+bVg63YLNVMDJexShv
-         xai8OcaanQ7V61aMicAkaCpZQ2oJm61oMhlhietpLa07qFHpNEK9SOAHuw7hjtogTBdJ
-         4Sf0+bdE+knVxWoF1OdzRIi29AbdBtsSXpemJczfdSV9zYgR+YczwVgYlDUXU3L15C8k
-         WOGrqHSzwjAphvMpu+fp5eBk7L4yUktMEx/ZOYrhqy3uRt803x7eCJlisyhl+E+HHSwq
-         HBZQ==
-X-Gm-Message-State: AOAM530GD8DPTTMx+AsHORmxY6Lx/1c1REFcJKsj3Ev29oS4CC9rka8W
-        eNnkkTZavxO2cOYHMwlV5X3Erw7ouHGnZ25inAHjjQ==
-X-Google-Smtp-Source: ABdhPJxr6PkGNq+grGUmoUA1Eewz9GLvKH0m7Xk7R8zM2K7cAckkPz9Y7lFlFW+5XkVD8xC0790k9phF74yJ1/KtaeU=
-X-Received: by 2002:aa7:da9a:: with SMTP id q26mr11600701eds.163.1598376730101;
- Tue, 25 Aug 2020 10:32:10 -0700 (PDT)
+        Tue, 25 Aug 2020 13:32:41 -0400
+Received: from [192.168.86.21] (c-71-197-163-6.hsd1.wa.comcast.net [71.197.163.6])
+        by linux.microsoft.com (Postfix) with ESMTPSA id ECFA320B4908;
+        Tue, 25 Aug 2020 10:32:38 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ECFA320B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598376759;
+        bh=ym33B67iPgLMuGorJ+JkAin7zQIK5vYjzuOwS2ATPhE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZdemlU3p12xh8psoe6kCUoclHXAO+vW1DjPGYEmWVB2oKaLHALD2Lr7OabJju3Dby
+         q6GdmohVnbZ3hwVA8sNJmnKweX2gXxXn9yT3fhqYbdqt2DKE3TOSswO8+zJc28DqUZ
+         t3jfyDHByak1kKSADbfF9KG0MO++aZVTUT6VrISY=
+Subject: Re: [PATCH v2 2/3] IMA: add policy to support measuring critical data
+ from kernel components
+To:     Mimi Zohar <zohar@linux.ibm.com>, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com, agk@redhat.com, snitzer@redhat.com,
+        gmazyland@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com
+References: <20200821182107.5328-1-tusharsu@linux.microsoft.com>
+ <20200821182107.5328-3-tusharsu@linux.microsoft.com>
+ <d82c5cdab170d3dcc513b38632801c3aa14ca389.camel@linux.ibm.com>
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Message-ID: <e701ad15-1672-d208-c2b8-8228a728c98d@linux.microsoft.com>
+Date:   Tue, 25 Aug 2020 10:32:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <CAOp6jLYrwMqV=7hmxgdZUdDZ2aeUB27TTHm=j6cQT7C10Muhww@mail.gmail.com>
- <7DF88F22-0310-40C9-9DA6-5EBCB4877933@amacapital.net> <CALCETrUrvrQNw6dPau_rtHjA_YuCVdCTWYd4dsdcvcGsOaspmg@mail.gmail.com>
- <b0813ec5-b163-cc11-bfc9-e9d08c9c4ff2@zytor.com> <CALCETrXvgb257CWnaA1NgUUp3x08+gJBEOQh4o9OYkB-RvAo1A@mail.gmail.com>
- <CAP045Ao6xBquwSDoCLzzNbEW1Lr969d+D0jQQ2Zb4pX3B77-Xw@mail.gmail.com>
- <CALCETrUgm-Cph4fwqk108VHZPLuM7XWL=nff-xB+hc+hiDrqsg@mail.gmail.com>
- <CAP045Aqhox6YSdk0v_YZWY=y7Ps4ZfH779MG-W4a=gc+cYEY+Q@mail.gmail.com> <CALCETrX+TLB+w0X0jc9jq_U4SQezWXEmSpEmmdPobnbUuYfang@mail.gmail.com>
-In-Reply-To: <CALCETrX+TLB+w0X0jc9jq_U4SQezWXEmSpEmmdPobnbUuYfang@mail.gmail.com>
-From:   Kyle Huey <me@kylehuey.com>
-Date:   Tue, 25 Aug 2020 10:31:58 -0700
-Message-ID: <CAP045ArKLoNdbX8rhkfC1gSuntTOE6PKaEFszUCh8xTDYYZZZw@mail.gmail.com>
-Subject: Re: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on
- a 64 bit system
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>,
-        "Robert O'Callahan" <robert@ocallahan.org>,
-        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d82c5cdab170d3dcc513b38632801c3aa14ca389.camel@linux.ibm.com>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 9:46 AM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Tue, Aug 25, 2020 at 9:32 AM Kyle Huey <me@kylehuey.com> wrote:
-> >
-> > On Tue, Aug 25, 2020 at 9:12 AM Andy Lutomirski <luto@amacapital.net> w=
-rote:
-> > > I don=E2=80=99t like this at all. Your behavior really shouldn=E2=80=
-=99t depend on
-> > > whether the new instructions are available.  Also, some day I would
-> > > like to change Linux to have the new behavior even if FSGSBASE
-> > > instructions are not available, and this will break rr again.  (The
-> > > current !FSGSBASE behavior is an ugly optimization of dubious value.
-> > > I would not go so far as to describe it as correct.)
-> >
-> > Ok.
-> >
-> > > I would suggest you do one of the following things:
-> > >
-> > > 1. Use int $0x80 directly to load 32-bit regs into a child.  This
-> > > might dramatically simplify your code and should just do the right
-> > > thing.
-> >
-> > I don't know what that means.
->
-> This is untested, but what I mean is:
->
-> static int ptrace32(int req, pid_t pid, int addr, int data) {
->    int ret;
->    /* new enough kernels won't clobber r8, etc. */
->    asm volatile ("int $0x80" : "=3Da" (ret) : "a" (26 /* ptrace */), "b"
-> (req), "c" (pid), "d" (addr), "S" (data) : "flags", "r8", "r9", "r10",
-> "r11");
->    return ret;
-> }
->
-> with a handful of caveats:
->
->  - This won't compile with -fPIC, I think.  Instead you'll need to
-> write a little bit of asm to set up and restore ebx yourself.  gcc is
-> silly like this.
->
->  - Note that addr is an int.  You'll need to mmap(..., MAP_32BIT, ...)
-> to get a buffer that can be pointed to with an int.
->
-> The advantage is that this should work on all kernels that support
-> 32-bit mode at all.
->
-> >
-> > > 2. Something like your patch but make it unconditional.
-> > >
-> > > 3. Ask for, and receive, real kernel support for setting FS and GS in
-> > > the way that 32-bit code expects.
-> >
-> > I think the easiest way forward for us would be a PTRACE_GET/SETREGSET
-> > like operation that operates on the regsets according to the
-> > *tracee*'s bitness (rather than the tracer, as it works currently).
-> > Does that sound workable?
-> >
->
-> Strictly speaking, on Linux, there is no unified concept of a task's
-> bitness, so "set all these registers according to the target's
-> bitness" is not well defined.  We could easily give you a
-> PTRACE_SETREGS_X86_32, etc, though.
 
-In the process of responding to this I spent some time doing code
-inspection and discovered a subtlety in the ptrace API that I was
-previously unaware of. PTRACE_GET/SETREGS use the regset views
-corresponding to the tracer but PTRACE_GET/SETREGSET use the regset
-views corresponding to the tracee. This means it is possible for us
-today to set FS/GS "the old way" with a 64 bit tracer/32 bit tracee
-combo, as long as we use PTRACE_SETREGSET with NT_PRSTATUS instead of
-PTRACE_SETREGS.
 
-- Kyle
+On 2020-08-24 3:46 p.m., Mimi Zohar wrote:
+> On Fri, 2020-08-21 at 11:21 -0700, Tushar Sugandhi wrote:
+>> There would be several candidate kernel components suitable for IMA
+>> measurement. Not all of them would have support for IMA measurement.
+>> Also, system administrators may not want to measure data for all of
+>> them, even when they support IMA measurement. An IMA policy specific
+>> to various kernel components is needed to measure their respective
+>> critical data.
+>>
+>> Add a new IMA policy CRITICAL_DATA+data_sources to support measuring
+>> various critical kernel components. This policy would enable the
+>> system administrators to limit the measurement to the components,
+>> if the components support IMA measurement.
+>>
+>> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+>> ---
+>>   Documentation/ABI/testing/ima_policy |  6 ++-
+>>   security/integrity/ima/ima.h         |  1 +
+>>   security/integrity/ima/ima_api.c     |  2 +-
+>>   security/integrity/ima/ima_policy.c  | 62 +++++++++++++++++++++++++---
+>>   4 files changed, 63 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+>> index cd572912c593..a0dd0f108555 100644
+>> --- a/Documentation/ABI/testing/ima_policy
+>> +++ b/Documentation/ABI/testing/ima_policy
+>> @@ -29,7 +29,7 @@ Description:
+>>   		base: 	func:= [BPRM_CHECK][MMAP_CHECK][CREDS_CHECK][FILE_CHECK][MODULE_CHECK]
+>>   				[FIRMWARE_CHECK]
+>>   				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
+>> -				[KEXEC_CMDLINE] [KEY_CHECK]
+>> +				[KEXEC_CMDLINE] [KEY_CHECK] [CRITICAL_DATA]
+>>   			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+>>   			       [[^]MAY_EXEC]
+>>   			fsmagic:= hex value
+>> @@ -125,3 +125,7 @@ Description:
+>>   		keys added to .builtin_trusted_keys or .ima keyring:
+>>   
+>>   			measure func=KEY_CHECK keyrings=.builtin_trusted_keys|.ima
+>> +
+>> +		Example of measure rule using CRITICAL_DATA to measure critical data
+>> +
+>> +			measure func=CRITICAL_DATA data_sources=selinux|apparmor|dm-crypt
+> 
+> This example uses "data_sources" without first defining it in the
+> "option:" section.  Defining two new options is an indication that this
+Thanks. I will define "data_sources" first in "option:" section.
+> patch should be split up.  One which defines the "CRITICAL_DATA" and
+> another one which defines the new key value pair.  The term
+I intentionally kept the "CRITICAL_DATA" and "data_sources" in the same
+patch.
+
+CRITICAL_DATA is different than KEY_CHECK because in case of KEY_CHECK,
+"keyrings=" is optional. If "keyrings=" is not specified, then we
+measure all keyrings.
+
+Where for CRITICAL_DATA, "data_sources=" is mandatory.
+
+Because the data sources would be diverse and orthogonal to each other,
+(unlike "keyrings=") - not specifying "data_sources=" shouldn't result
+in IMA blindly measuring all data sources.
+
+Since CRITICAL_DATA, and "data_sources=" go hand in hand, I wanted them
+to be part of the same patch.
+> "data_sources" is pretty generic.  Perhaps constrain it a bit by re-
+> naming it "critical_data=".  Or was such using a generic name
+> intentional?
+> 
+We intentionally kept the name generic because the data to be measured
+could be coming from any kernel component with any granularity (from a
+single bool to megabytes of data). The kernel component is also loosely
+defined here. It could be an LSM (like SELinux), or a broader base layer
+(like device-mapper), or a specific module (like dm-crypt), or it could
+be different parts of a single module.
+
+Also, we didn't want to name "data_sources" as "critical_data" to avoid
+confusion with func "CRITICAL_DATA".
+
+> Normally "CRITICAL_DATA" would be defined with the critical data hook,
+> but that seems to be defined in patch 3/3 "IMA: define IMA hook to
+> measure critical data from kernel components".
+> 
+I can make the "CRITICAL_DATA" and the hook as part of the same patch.
+That would mean combining patch 2 and 3 into a single one.
+
+Does it sound ok?
+>> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+>> index 8875085db689..0f4209a92bfb 100644
+>> --- a/security/integrity/ima/ima.h
+>> +++ b/security/integrity/ima/ima.h
+>> @@ -200,6 +200,7 @@ static inline unsigned int ima_hash_key(u8 *digest)
+>>   	hook(POLICY_CHECK, policy)			\
+>>   	hook(KEXEC_CMDLINE, kexec_cmdline)		\
+>>   	hook(KEY_CHECK, key)				\
+>> +	hook(CRITICAL_DATA, critical_data)		\
+>>   	hook(MAX_CHECK, none)
+>>   
+>>   #define __ima_hook_enumify(ENUM, str)	ENUM,
+>> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+>> index af218babd198..9917e1730cb6 100644
+>> --- a/security/integrity/ima/ima_api.c
+>> +++ b/security/integrity/ima/ima_api.c
+>> @@ -176,7 +176,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+>>    *		subj=, obj=, type=, func=, mask=, fsmagic=
+>>    *	subj,obj, and type: are LSM specific.
+>>    *	func: FILE_CHECK | BPRM_CHECK | CREDS_CHECK | MMAP_CHECK | MODULE_CHECK
+>> - *	| KEXEC_CMDLINE | KEY_CHECK
+>> + *	| KEXEC_CMDLINE | KEY_CHECK | CRITICAL_DATA
+>>    *	mask: contains the permission mask
+>>    *	fsmagic: hex value
+>>    *
+>> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+>> index 8866e84d0062..7b649095ac7a 100644
+>> --- a/security/integrity/ima/ima_policy.c
+>> +++ b/security/integrity/ima/ima_policy.c
+>> @@ -33,6 +33,7 @@
+>>   #define IMA_PCR		0x0100
+>>   #define IMA_FSNAME	0x0200
+>>   #define IMA_KEYRINGS	0x0400
+>> +#define IMA_DATA_SOURCES	0x0800
+>>   
+>>   #define UNKNOWN		0
+>>   #define MEASURE		0x0001	/* same as IMA_MEASURE */
+>> @@ -84,6 +85,7 @@ struct ima_rule_entry {
+>>   	} lsm[MAX_LSM_RULES];
+>>   	char *fsname;
+>>   	struct ima_rule_opt_list *keyrings; /* Measure keys added to these keyrings */
+>> +	struct ima_rule_opt_list *data_sources; /* Measure data from these sources */
+>>   	struct ima_template_desc *template;
+>>   };
+>>   
+>> @@ -508,14 +510,23 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+>>   {
+>>   	int i;
+>>   
+>> -	if (func == KEY_CHECK) {
+>> -		return (rule->flags & IMA_FUNC) && (rule->func == func) &&
+>> -		       ima_match_rule_data(rule, rule->keyrings, func_data,
+>> -					   true, cred);
+>> -	}
+>>   	if ((rule->flags & IMA_FUNC) &&
+>>   	    (rule->func != func && func != POST_SETATTR))
+>>   		return false;
+>> +
+>> +	switch (func) {
+>> +	case KEY_CHECK:
+>> +		return ((rule->func == func) &&
+>> +			ima_match_rule_data(rule, rule->keyrings,
+>> +					    func_data, true, cred));
+>> +	case CRITICAL_DATA:
+>> +		return ((rule->func == func) &&
+>> +			ima_match_rule_data(rule, rule->data_sources,
+>> +					    func_data, false, cred));
+>> +	default:
+>> +		break;
+>> +	}
+>> +
+>>   	if ((rule->flags & IMA_MASK) &&
+>>   	    (rule->mask != mask && func != POST_SETATTR))
+>>   		return false;
+>> @@ -911,7 +922,7 @@ enum {
+>>   	Opt_uid_lt, Opt_euid_lt, Opt_fowner_lt,
+>>   	Opt_appraise_type, Opt_appraise_flag,
+>>   	Opt_permit_directio, Opt_pcr, Opt_template, Opt_keyrings,
+>> -	Opt_err
+>> +	Opt_data_sources, Opt_err
+>>   };
+>>   
+>>   static const match_table_t policy_tokens = {
+>> @@ -948,6 +959,7 @@ static const match_table_t policy_tokens = {
+>>   	{Opt_pcr, "pcr=%s"},
+>>   	{Opt_template, "template=%s"},
+>>   	{Opt_keyrings, "keyrings=%s"},
+>> +	{Opt_data_sources, "data_sources=%s"},
+>>   	{Opt_err, NULL}
+>>   };
+>>   
+>> @@ -1110,6 +1122,19 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+>>   		if (ima_rule_contains_lsm_cond(entry))
+>>   			return false;
+>>   
+>> +		break;
+>> +	case CRITICAL_DATA:
+>> +		if (entry->action & ~(MEASURE | DONT_MEASURE))
+>> +			return false;
+>> +
+>> +		if (!(entry->flags & IMA_DATA_SOURCES) ||
+>> +		    (entry->flags & ~(IMA_FUNC | IMA_UID | IMA_PCR |
+>> +		    IMA_DATA_SOURCES)))
+>> +			return false;
+> 
+> Requiring IMA_FUNC and IMA_DATA_SOURCES makes sense, but why are
+> IMA_UID and IMA_PCR required?
+> 
+Since the data to be measured could be for any scenario, I didn't want
+to restrict the kernel components from choosing UID to measure the data
+for, or restrict them from choosing PCR to store the measurements in.
+But as the consumers are kernel components, perhaps support for IMA_UID
+is not required.  But we should still support IMA_PCR.
+Please let me know what do you think, and I can update the logic
+accordingly.
+>> +
+>> +		if (ima_rule_contains_lsm_cond(entry))
+>> +			return false;
+>> +
+>>   		break;
+>>   	default:
+>>   		return false;
+>> @@ -1242,6 +1267,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>>   			else if (IS_ENABLED(CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS) &&
+>>   				 strcmp(args[0].from, "KEY_CHECK") == 0)
+>>   				entry->func = KEY_CHECK;
+>> +			else if (strcmp(args[0].from, "CRITICAL_DATA") == 0)
+>> +				entry->func = CRITICAL_DATA;
+>>   			else
+>>   				result = -EINVAL;
+>>   			if (!result)
+>> @@ -1312,6 +1339,23 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+>>   
+>>   			entry->flags |= IMA_KEYRINGS;
+>>   			break;
+>> +		case Opt_data_sources:
+>> +			ima_log_string(ab, "data_sources", args[0].from);
+>> +
+>> +			if (entry->data_sources) {
+>> +				result = -EINVAL;
+>> +				break;
+>> +			}
+>> +
+>> +			entry->data_sources = ima_alloc_rule_opt_list(args);
+>> +			if (IS_ERR(entry->data_sources)) {
+>> +				result = PTR_ERR(entry->data_sources);
+>> +				entry->data_sources = NULL;
+>> +				break;
+>> +			}
+>> +
+> 
+> "keyrings=" isn't bounded because keyrings can be created by userspace.
+> Perhaps keyring names has a minimum/maximum length.  IMA isn't
+> measuring userspace construsts.  Shouldn't the list of critical data
+> being measured be bounded and verified?
+The comment is not entirely clear.
+Do you mean there should be some sort of allow_list in IMA, against
+which the values in "data_sources=" should be vetted? And if the
+value is present in the IMA allow_list, then only the measurements for
+that data source are allowed?
+
+Or do you mean something else?
+
+~Tushar
+> 
+> Mimi
+> 
+>> +			entry->flags |= IMA_DATA_SOURCES;
+>> +			break;
+>>   		case Opt_fsuuid:
+>>   			ima_log_string(ab, "fsuuid", args[0].from);
+>>   
+>> @@ -1692,6 +1736,12 @@ int ima_policy_show(struct seq_file *m, void *v)
+>>   		seq_puts(m, " ");
+>>   	}
+>>   
+>> +	if (entry->flags & IMA_DATA_SOURCES) {
+>> +		seq_puts(m, "data_sources=");
+>> +		ima_show_rule_opt_list(m, entry->data_sources);
+>> +		seq_puts(m, " ");
+>> +	}
+>> +
+>>   	if (entry->flags & IMA_PCR) {
+>>   		snprintf(tbuf, sizeof(tbuf), "%d", entry->pcr);
+>>   		seq_printf(m, pt(Opt_pcr), tbuf);
+> 
