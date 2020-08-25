@@ -2,144 +2,135 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC2BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D686C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFCDC20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A87E20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:16:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=stwcx.xyz header.i=@stwcx.xyz header.b="E5WRahuZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TSZDQnqG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgHYOQR (ORCPT
+        id S1726444AbgHYOQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:16:17 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:9286 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbgHYOQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:16:15 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BbWHt0vQ2z9tx1l;
-        Tue, 25 Aug 2020 16:16:10 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id pJ2ZT6WP1cSM; Tue, 25 Aug 2020 16:16:10 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BbWHs4Dvlz9txlt;
-        Tue, 25 Aug 2020 16:16:09 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 01BDA8B823;
-        Tue, 25 Aug 2020 16:16:08 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id PErXmI-tRVWl; Tue, 25 Aug 2020 16:16:07 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7380D8B820;
-        Tue, 25 Aug 2020 16:16:04 +0200 (CEST)
-Subject: Re: [PATCH v8 2/8] powerpc/vdso: Remove __kernel_datapage_offset and
- simplify __get_datapage()
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, nathanl@linux.ibm.com
-Cc:     linux-arch@vger.kernel.org, arnd@arndb.de,
-        linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        vincenzo.frascino@arm.com, linuxppc-dev@lists.ozlabs.org
-References: <cover.1588079622.git.christophe.leroy@c-s.fr>
- <0d2201efe3c7727f2acc718aefd7c5bb22c66c57.1588079622.git.christophe.leroy@c-s.fr>
- <87wo34tbas.fsf@mpe.ellerman.id.au>
- <2f9b7d02-9e2f-4724-2608-c5573f6507a2@csgroup.eu>
-Message-ID: <6862421a-5a14-2e38-b825-e39e6ad3d51d@csgroup.eu>
-Date:   Tue, 25 Aug 2020 16:15:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 10:16:34 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:49239 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725893AbgHYOQb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:16:31 -0400
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id BB182E0C;
+        Tue, 25 Aug 2020 10:16:28 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute7.internal (MEProxy); Tue, 25 Aug 2020 10:16:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwcx.xyz; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=aTF9QeBnpIsAQ0xRTTMILzpdzds
+        NQO9ZOQWY0lJXDFw=; b=E5WRahuZsjMQvhMTLsD/vchYbXw2A+eoGYNFOwK0ieE
+        dlmxm1h6pmt0BwJY25VVneIs3OZVWFiuh9PtfvEbtnfXICso1kAx3FMNlB+tvrUN
+        ncjAZ6ltRIvATM8OkWnOVDSNB7zXyIzMsMgK9drJ3X/1XgU7T2RohjMuPW9IbAXL
+        rgxc4pPynHIwxs3sOMs3fhOREK1Hon8oPpcs21rR7vnNJUsqyTIa5ROuLGNO7+dY
+        YwJ0qlEIPWZlLxJI0tma+IQWnng6nkR1oBxZuwoetAEKSS49P3KgTedul5u4lHw9
+        /l8VDHWx1tYORLYd0oqQd4pjHA7D4uzZv+U5eeviXTA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=aTF9Qe
+        BnpIsAQ0xRTTMILzpdzdsNQO9ZOQWY0lJXDFw=; b=TSZDQnqGHCmU14XXJUJK5l
+        AAYjthmhrI4Xfum6iVh5puHLXOiABqbEXW414pEiqi1dg6AcDY00mIUwvH70wbQp
+        /ILR1WBMz1RjD7k2TOU3j6suwTsYfnc+qBOdM40F2nRD65/iKNLsVXe1RgFvndyO
+        +5NKJIFSzhTrewYYI/Wrc5RYaz5Quqq0+4GtQ1wTHNzfOXX4+SSNySyP6yOe1BkA
+        HSKrDFqhcazPwgv4oYyeXlbNiIt4EskjzRed4e7XOcJuABbpb/Q088CtB1xDmc8y
+        vuBZ17QIxnrFZcBXxKb1d2/oiuJi7prB6ap5fjxot8fu4MxrUjR9KGdEVLS0LyXg
+        ==
+X-ME-Sender: <xms:Oh1FX274azyzIX59INlSBTbwQni4fHa2WxIRF04DcujVYot8L7ij4g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgjeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdlfeehmdenucfjughrpeffhffvuffkfhggtggujgesghdtreertddt
+    vdenucfhrhhomheprfgrthhrihgtkhcuhghilhhlihgrmhhsuceophgrthhrihgtkhessh
+    htfigtgidrgiihiieqnecuggftrfgrthhtvghrnhepgeehheefffegkeevhedthffgudfh
+    geefgfdthefhkedtleffveekgfeuffehtdeinecukfhppeejiedrvdehtddrkeegrddvfe
+    einecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepphgr
+    thhrihgtkhesshhtfigtgidrgiihii
+X-ME-Proxy: <xmx:Oh1FX_62iWyDUEb-WkaELSl13bQBIxEngSYH6A2BFKzIIDDosgvlCA>
+    <xmx:Oh1FX1d2k97vZFiYWWobJog9a1yERDVi9WhTDcLN8ymxfT87G394eA>
+    <xmx:Oh1FXzL5MhCirYngyd8570YuI6mEuT8KSFo7EWbFfbF0Y3U5vsvv9A>
+    <xmx:PB1FXy9VoKz0zE9UwSytN-F2FjSRaxOlwx-Ma-nLO2soSKnTPCnbDg>
+Received: from localhost (76-250-84-236.lightspeed.austtx.sbcglobal.net [76.250.84.236])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 065A93280067;
+        Tue, 25 Aug 2020 10:16:25 -0400 (EDT)
+Date:   Tue, 25 Aug 2020 09:16:21 -0500
+From:   Patrick Williams <patrick@stwcx.xyz>
+To:     rentao.bupt@gmail.com
+Cc:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Subject: Re: [PATCH 1/5] ARM: dts: aspeed: Remove flash layout from Facebook
+ AST2500 Common dtsi
+Message-ID: <20200825141621.GE3532@heinlein>
+References: <20200824211948.12852-1-rentao.bupt@gmail.com>
+ <20200824211948.12852-2-rentao.bupt@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <2f9b7d02-9e2f-4724-2608-c5573f6507a2@csgroup.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nHwqXXcoX0o6fKCv"
+Content-Disposition: inline
+In-Reply-To: <20200824211948.12852-2-rentao.bupt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--nHwqXXcoX0o6fKCv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Le 04/08/2020 à 13:17, Christophe Leroy a écrit :
-> 
-> 
-> On 07/16/2020 02:59 AM, Michael Ellerman wrote:
->> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->>> The VDSO datapage and the text pages are always located immediately
->>> next to each other, so it can be hardcoded without an indirection
->>> through __kernel_datapage_offset
->>>
->>> In order to ease things, move the data page in front like other
->>> arches, that way there is no need to know the size of the library
->>> to locate the data page.
->>>
-[...]
+On Mon, Aug 24, 2020 at 02:19:44PM -0700, rentao.bupt@gmail.com wrote:
+> From: Tao Ren <rentao.bupt@gmail.com>
+>=20
+> Remove FMC flash layout from ast2500-facebook-netbmc-common.dtsi because
+> flash size and layout varies across different Facebook AST2500 OpenBMC
+> platforms.
+>=20
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> ---
+>  .../boot/dts/ast2500-facebook-netbmc-common.dtsi    | 13 -------------
+>  1 file changed, 13 deletions(-)
+>=20
 
->>
->> I merged this but then realised it breaks the display of the vdso in 
->> /proc/self/maps.
->>
->> ie. the vdso vma gets no name:
->>
->>    # cat /proc/self/maps
+Reviewed-by: Patrick Williams <patrick@stwcx.xyz>
 
-[...]
+--=20
+Patrick Williams
 
->>
->>
->> And it's also going to break the logic in arch_unmap() to detect if
->> we're unmapping (part of) the VDSO. And it will break arch_remap() too.
->>
->> And the logic to recognise the signal trampoline in
->> arch/powerpc/perf/callchain_*.c as well.
-> 
-> I don't think it breaks that one, because ->vdsobase is still the start 
-> of text.
-> 
->>
->> So I'm going to rebase and drop this for now.
->>
->> Basically we have a bunch of places that assume that vdso_base is == the
->> start of the VDSO vma, and also that the code starts there. So that will
->> need some work to tease out all those assumptions and make them work
->> with this change.
-> 
-> Ok, one day I need to look at it in more details and see how other 
-> architectures handle it etc ...
-> 
+--nHwqXXcoX0o6fKCv
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I just sent out a series which switches powerpc to the new 
-_install_special_mapping() API, the one powerpc uses being deprecated 
-since commit a62c34bd2a8a ("x86, mm: Improve _install_special_mapping
-and fix x86 vdso naming")
+-----BEGIN PGP SIGNATURE-----
 
-arch_remap() gets replaced by vdso_remap()
+iQIzBAABCAAdFiEEBGD9ii4LE9cNbqJBqwNHzC0AwRkFAl9FHTMACgkQqwNHzC0A
+wRlLVg//Yi7bXT2BaZK+9/u1ddHBmjb9gupHMr7tC457ocMMNTHa8wNR4QxtjMKd
+VdobcwMM0bOlXZ+mA3rJ95xoSHSlpr6BV16nH619r/hjP6zWOkGFcQnSJ1vvrwVE
+8rtNOJgDaV5mrkUc6Q3t5exKCa+bDN3BWxiARMvDr3xN7CqLfzOj12AaHC2P2ryt
+6INPiGQSrrMdQ3NCO42ufRaiNhou9ozoLVtba+V/cWQ2B6wYItQj4HAc1SDew6zo
+hEiK510DpLOSOgkkE290EL/D22ix5IdSFQ+iCq1Ej/rJVJEZRF8co3VhBlUe7+3v
+mqEAJWpLsA7xnySjpflKLnYZ3foFSg4JidmeJL3QyKk24j8Uf53pJ9yrXjqlCEgg
+EVovsJmZHms0Z6w1ShhBuAvbtX6vfI97ilJKuJs6Yv9qlruLdMT7ZCVZ2GA35xoA
+/DVUF5J+QR/op00dZITZh3AW+yXhUFGZVDa4OqFMHS9Ln6WlGRX3Jr9QIS8dlArP
+NCWM27YhPBKB4Q7ERkBJ0YtQugeo6AcHGfg+a65TYxmgIpL3lT79lEyfkNWvB7Du
+QrWIe+l5bV8Jbz3EIEVB/jxPxw+bTxXaVjWkyeBbTdiy9jH49qk0PtAcE+xvjMyw
+Yo0rfBKvO8IOCs38VDeMzilMu2yiJc0lnntWcCOqPny3Z39Mmr4=
+=RrBW
+-----END PGP SIGNATURE-----
 
-For arch_unmap(), I'm wondering how/what other architectures do, because 
-powerpc seems to be the only one to erase the vdso context pointer when 
-unmapping the vdso. So far I updated it to take into account the pages 
-switch.
-
-Everything else is not impacted because our vdso_base is still the base 
-of the text and that's what those things (signal trampoline, callchain, 
-...) expect.
-
-Maybe we should change it to 'void *vdso' in the same way as other 
-architectures, as it is not anymore the exact vdso_base but the start of 
-VDSO text.
-
-Note that the series applies on top of the generic C VDSO implementation 
-series. However all but the last commit cleanly apply without that 
-series. As that last commit is just an afterwork cleanup, it can come in 
-a second step.
-
-Christophe
+--nHwqXXcoX0o6fKCv--
