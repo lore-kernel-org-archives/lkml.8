@@ -2,132 +2,200 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB96C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8571C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:16:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F23442065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:15:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmDZwmz/"
+	by mail.kernel.org (Postfix) with ESMTP id B87662075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:16:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbgHYIPE (ORCPT
+        id S1728013AbgHYIQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725936AbgHYIPD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:15:03 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DF7C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 01:15:02 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id r15so11722852wrp.13
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 01:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fCMhYRJmjkYiKHZv5M9E4fwHUfNifLkPhD+twyPnjk8=;
-        b=PmDZwmz/MeYnNaxx634n/X2V9xw4jBokuKq3G9Cymy+g8c25WRZi9y9Dt0sYltwoLj
-         rfXvOeghHR2ar1bXcVTbSDIa6gZt19jSb5F6pyMM3XPnP/Pf+lRj5siFbW4Lyo4eUGGg
-         u4lCIRzS13c/cp77o+pDAdycl01PenDOecNgaLrtL4j2Nr3m50ytRhyw4IK2jOkjkCqD
-         h+HADUFO3wFFJtzG6+7F1Gfhx6tPzeWEYpmLaXSebSkzhKIUyw/V62kWOhEfZ8zI8tiF
-         vnM+JUMmVfHKEc7KPfwaXphrA7P4eaUfbKqKvOtGFeXJJCYM7Hc8VEKBlEN1McplTPO5
-         wvfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fCMhYRJmjkYiKHZv5M9E4fwHUfNifLkPhD+twyPnjk8=;
-        b=t6q4vvDZ482xpBiFWCbtl9xyC6LcuVL4qOwq9aH/ivc2w/7HwqjjfqP+qWc/E37Te3
-         YoyZ8JPCrzpG3lc1PuSqR6MU2xhkwUj++oEiEoLFOhPb/1B9OxYEuPDDDpbtR75bLxQh
-         z9Dsyn0Bubo/2gqUzB8i5wfmJ6P+YqojhSPKxqQMEeeIuOXjRpjB6rLCtFD87akmvWYN
-         pwSBueTbLjaxbmc7DOEvIs3NL+ApbeAMXqf743AMhY8z3SFC+/dhZGFPDGNyTYTBazGG
-         gLi2Dzob+Us7ZbgpXnNYFesvbKSmxhFvSeJMnMmXdFHryDq2wCkwbQpGkQqea25tiPs3
-         zGwg==
-X-Gm-Message-State: AOAM5320KkLHkZtq6TIbEizvhnvZbYqTf3xHldcqMna92mqxT6DDosm1
-        rFAjmPhg6Qoi878+fruEFgk=
-X-Google-Smtp-Source: ABdhPJx/HZbjSGWiAMZDR8byiF2se8q102htS9s8NywuAX8BwxBr4+FOSWXB9/ZHj8ZWtL6kI4/uJA==
-X-Received: by 2002:a5d:6885:: with SMTP id h5mr5689661wru.358.1598343301615;
-        Tue, 25 Aug 2020 01:15:01 -0700 (PDT)
-Received: from lenovo-laptop (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id v67sm4395205wma.46.2020.08.25.01.15.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 01:15:00 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-X-Google-Original-From: Alex Dewar <alex.dewar@gmx.co.uk>
-Date:   Tue, 25 Aug 2020 09:14:59 +0100
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>, devel@driverdev.osuosl.org,
-        Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        Magnus Damm <damm+renesas@opensource.se>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        YueHaibing <yuehaibing@huawei.com>, linux-kernel@vger.kernel.org,
-        "Javier F. Arias" <jarias.linux@gmail.com>,
-        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
-        Simon Horman <horms+renesas@verge.net.au>
-Subject: Re: [PATCH] staging: emxx_udc: Fix passing of NULL to
- dma_alloc_coherent()
-Message-ID: <20200825081459.qfvswtep5fkaqai2@lenovo-laptop>
-References: <20200824142118.GA223827@mwanda>
- <20200824151920.251446-1-alex.dewar90@gmail.com>
- <20200824155712.4kgxwqiufm2ieboz@medion>
- <20200825073713.GR1793@kadam>
+        Tue, 25 Aug 2020 04:16:39 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2689 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725924AbgHYIQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 04:16:39 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 5C7627B498D567DE738A;
+        Tue, 25 Aug 2020 09:16:37 +0100 (IST)
+Received: from [127.0.0.1] (10.47.8.13) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 25 Aug
+ 2020 09:16:36 +0100
+Subject: Re: [RFC] perf/jevents: Add new structure to pass json fields.
+To:     Kajol Jain <kjain@linux.ibm.com>, <acme@kernel.org>
+CC:     <jolsa@redhat.com>, <ak@linux.intel.com>,
+        <yao.jin@linux.intel.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <irogers@google.com>,
+        <maddy@linux.ibm.com>, <ravi.bangoria@linux.ibm.com>
+References: <20200825074041.378520-1-kjain@linux.ibm.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <bc078472-e859-b7dc-c451-d737dd573edf@huawei.com>
+Date:   Tue, 25 Aug 2020 09:14:11 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825073713.GR1793@kadam>
+In-Reply-To: <20200825074041.378520-1-kjain@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.8.13]
+X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 10:37:13AM +0300, Dan Carpenter wrote:
-> On Mon, Aug 24, 2020 at 04:57:12PM +0100, Alex Dewar wrote:
-> > On Mon, Aug 24, 2020 at 04:19:17PM +0100, Alex Dewar wrote:
-> > > In nbu2ss_eq_queue() memory is allocated with dma_alloc_coherent(),
-> > > though, strangely, NULL is passed as the struct device* argument. Pass
-> > > the UDC's device instead.
+On 25/08/2020 08:40, Kajol Jain wrote:
+> This patch adds new structure called 'json_event' inside jevents.h
+> file to improve the callback prototype inside jevent files.
+> Initially, whenever user want to add new field, they need to update
+> in all function callback which make it more and more complex with
+> increased number of parmeters.
+> With this change, we just need to add it in new structure 'json_event'.
 > 
-> I think passing NULL was always wrong, but it used to not cause an Oops.
-> This was changed a year or two ago.
 > 
-> > > 
-> > > Build-tested on x86 only.
-> > > 
-> > > Fixes: 33aa8d45a4fe ("staging: emxx_udc: Add Emma Mobile USB Gadget driver")
-> > > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
-> > > ---
-> > > 
-> > > So I *think* this is the right fix, but I don't have the hardware so
-> > > I've only been able to build-test it. My worry is that I could be
-> > > passing in the wrong struct device* here, which would squelch the
-> > > warning without fixing the breakage.
-> > > 
-> > > Can someone cleverer than me tell me if this makes sense?
-> > > 
-> > > - Alex
-> > 
-> > PS -- I meant to put an RFC in the subject line and an extra tag:
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > 
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>   tools/perf/pmu-events/jevents.c | 188 +++++++++++++-------------------
+>   tools/perf/pmu-events/jevents.h |  28 +++--
+>   2 files changed, 94 insertions(+), 122 deletions(-)
 > 
-> I don't know which dev pointer we're supposed to pass...  It would be
-> good to find someone to test the patch but if not then applying your
-> patch is reasonable.
+> This is the initial prototype to include structure for passing
+> json fileds. Please, Let me know if this is the right direction
+> to go forward.
+> This patch doen't include all the changes, like percore/perchip
+> field addition. If this looks fine I can send new patch set with
+> those changes.
 > 
-> But could you search through the file and update the rest as well.
-> The dma_free_coherent() needs to be updated and there was a second
-> dma_alloc_coherent() in the bug report.
-> 
-> regards,
-> dan carpenter
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index fa86c5f997cc..606805af69fe 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -318,12 +318,7 @@ static void print_events_table_prefix(FILE *fp, const char *tblname)
+>   	close_table = 1;
+>   }
+>   
+> -static int print_events_table_entry(void *data, char *name, char *event,
+> -				    char *desc, char *long_desc,
+> -				    char *pmu, char *unit, char *perpkg,
+> -				    char *metric_expr,
+> -				    char *metric_name, char *metric_group,
+> -				    char *deprecated, char *metric_constraint)
+
+Right, too many paramaetrs of the same type, so looks reasonable to pass 
+a struct
+
+[...]
+
+>   		if (arch_std) {
+>   			/*
+>   			 * An arch standard event is referenced, so try to
+>   			 * fixup any unassigned values.
+>   			 */
+> -			err = try_fixup(fn, arch_std, &event, &desc, &name,
+> -					&long_desc, &pmu, &filter, &perpkg,
+> -					&unit, &metric_expr, &metric_name,
+> -					&metric_group, eventcode,
+> -					&deprecated, &metric_constraint);
+> +			err = try_fixup(fn, arch_std, eventcode, je);
+>   			if (err)
+>   				goto free_strings;
+>   		}
+> -		err = func(data, name, real_event(name, event), desc, long_desc,
+> -			   pmu, unit, perpkg, metric_expr, metric_name,
+> -			   metric_group, deprecated, metric_constraint);
+> +		je->event = real_event(je->name, je->event);
+> +		err = func(data, je);
+>   free_strings:
+> -		free(event);
+> -		free(desc);
+> -		free(name);
+> -		free(long_desc);
+>   		free(extra_desc);
+> -		free(pmu);
+>   		free(filter);
+> -		free(perpkg);
+> -		free(deprecated);
+> -		free(unit);
+> -		free(metric_expr);
+> -		free(metric_name);
+> -		free(metric_group);
+> -		free(metric_constraint);
+>   		free(arch_std);
+> +		free(je);
+>   
+>   		if (err)
+>   			break;
+> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
+> index 2afc8304529e..e696edf70e9a 100644
+> --- a/tools/perf/pmu-events/jevents.h
+> +++ b/tools/perf/pmu-events/jevents.h
+
+Somewhat unrelated - this file only seems to be included in jevents.c, 
+so I don't see why it exists...
+
+> @@ -2,14 +2,28 @@
+>   #ifndef JEVENTS_H
+>   #define JEVENTS_H 1
+>   
+> +#include "pmu-events.h"
+> +
+> +struct json_event {
+> +	char *name;
+> +	char *event;
+> +	char *desc;
+> +	char *topic;
+> +	char *long_desc;
+> +	char *pmu;
+> +	char *unit;
+> +	char *perpkg;
+> +	char *metric_expr;
+> +	char *metric_name;
+> +	char *metric_group;
+> +	char *deprecated;
+> +	char *metric_constraint;
+
+This looks very much like struct event_struct, so could look to consolidate:
+
+struct event_struct {
+	struct list_head list;
+	char *name;
+	char *event;
+	char *desc;
+	char *long_desc;
+	char *pmu;
+	char *unit;
+	char *perpkg;
+	char *metric_expr;
+	char *metric_name;
+	char *metric_group;
+	char *deprecated;
+	char *metric_constraint;
+};
+
+> +};
+> +
+>   int json_events(const char *fn,
+> -		int (*func)(void *data, char *name, char *event, char *desc,
+> -				char *long_desc,
+> -				char *pmu,
+> -				char *unit, char *perpkg, char *metric_expr,
+> -				char *metric_name, char *metric_group,
+> -				char *deprecated, char *metric_constraint),
+> -		void *data);
+> +		int (*func)(void *data, struct json_event *je),
+> +			void *data);
+> +
+>   char *get_cpu_str(void);
+>   
+>   #ifndef min
 > 
 
-I can only find the one instance of dma_alloc_coherent(). Was it by any
-chance a different warning about the same call....?
