@@ -2,143 +2,208 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2ACC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711DCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1718D20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46E4120782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:02:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OmgvobhW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gHlYvvBK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgHYQC1 (ORCPT
+        id S1727036AbgHYQCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47996 "EHLO
+        Tue, 25 Aug 2020 12:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726351AbgHYQCP (ORCPT
+        with ESMTP id S1726351AbgHYQCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:02:15 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5145C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:02:14 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id t2so3002855wma.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 09:02:14 -0700 (PDT)
+        Tue, 25 Aug 2020 12:02:46 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 003AFC061574;
+        Tue, 25 Aug 2020 09:02:45 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id q14so2136727wrn.9;
+        Tue, 25 Aug 2020 09:02:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tTxeNahv5q1FXtG4qVWxMsRTv7XdCLwkd20q56V8+2I=;
-        b=OmgvobhW1+4wUwztCxo9jyR+SPzYBjWffxCQjTAXmY7Mj0rcbvtXLh0GIJ2zAFgTR4
-         424w8VwynEJM9uR+bqi5cYA1ACQ2ToMXh+b9qRPrEzhINMIQcnZKvNoEAss8S52OPNGr
-         Pa9o3yVGOSOy5wKaRSbGxkA0c0wrQPQv+T+iuIwdv5umPngXd5hGdpAG+Q7FI6xH35gg
-         EuHgSLDjEGOJanVZf9591vSeH7uQTzsp+I7mxxBUleeb7NnZIZ1edyWm/b71BB3eguMB
-         tOcsgkWAuc36az2J9dgSwe/kn3mE8jZMmseO98jEgzUYqCcljKBTgLIeQHFQnPuDJRi0
-         QU4Q==
+        h=from:to:cc:subject:date:message-id;
+        bh=GBdGSIj6c6kMmn2l3br70BmRSgCoyvpbeosCzLwhaiQ=;
+        b=gHlYvvBKVBB9MbiHpJ5W2+mubNzZz9fccqFaVNiF6i65de6l84KBY2YNo/CcZBWTtU
+         Hb03r9OSnU1blTHS5k2PPlxQLTuoN6jFn0wGPaLEFir468xZHzCR62Mn2QI3unQk3Rm7
+         Y2mvP7GsmCKu/SKmT31Ymuy3dOw78ZpsR29AHkWlxL0tEQU/3pEvx1DErT+zPikjyOd7
+         +SL1LMNDRQMwBD2hQgzVwbWL5aKOO5VVO5OEe5E1ULbsHMyP6O5ytdR5+7DuHqchJB2Q
+         t+FuovH+xtHDfjx9ufsJWScZl8VhOYV1ozNHgWkDPCILhMh0rV3tXebuPVkqoeBtcfMn
+         epTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tTxeNahv5q1FXtG4qVWxMsRTv7XdCLwkd20q56V8+2I=;
-        b=oPvkmzGm6ppozrN88oS8Noawzg7yHjZ+MEdR+XTj0oc820x2T+3KCWoalWJqeLgtk7
-         yVhkGXpJOoBDMrFAhlKryFat0I6I8FSEsYiQrJ+JT0fc5aVQzV8N5k2ODZPhsYm3Cnbb
-         H0DigSpj+Jn91iUgfbt2gMeyzuZUxP2HS5qxwtRh+ZllFtf/yQQ5PQ/4BG/kn61pw68x
-         ShO5NDb7FxTT4RQ9uCd6Q7ZA0nttRosegyNSzyOdwN9GnuyXwXbj40pq769XdG2lSCdU
-         TELPZ8roY72knus8elYqLmMIGNMLnSY9SN11l0gOQUQv1QYspmu/eak57BF3zHCInVfx
-         4yAQ==
-X-Gm-Message-State: AOAM532sh4GyzoxlCz9l74jB5tDGZ3Z4Vt4CHCwIucaFc5WgRc0Oy6nu
-        ILC7odwqVluDYHJVMXbzIrM=
-X-Google-Smtp-Source: ABdhPJxATi2/nACkk9huMF7nAKfQT11rcTxjVkx+7ijD2XDfrF49ww0RbwnuIie3KoZRrhmScvMytw==
-X-Received: by 2002:a1c:7902:: with SMTP id l2mr2695006wme.101.1598371333323;
-        Tue, 25 Aug 2020 09:02:13 -0700 (PDT)
-Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
-        by smtp.gmail.com with ESMTPSA id g18sm32633985wru.27.2020.08.25.09.02.12
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GBdGSIj6c6kMmn2l3br70BmRSgCoyvpbeosCzLwhaiQ=;
+        b=lyMc9kuZA2JncwBDaSXGt47FfvAdk+PU7LA5/CpPNv5jlwhL5y3e7Mi8GegMi9Rhb7
+         kmabMZTEGcT/JIt9Juw/EtHULpgCo4sudBQHnLftpnigPYQVVZzHiuOxQ8ZM89GpbVsg
+         gWlhmfC/f3twXYZLiBr5uz6FtovzxtaD4G1XpS4byhBZ46zgxLJcN/q6TKdHmnysgY0Z
+         jmwYo+RQQkRA+ZWYqBiBPNiiZ2RbhBCfJm66rTEESRxcpsrBupO3douWjmb1bJnwIHEb
+         IxH2MiswfF7+VTdYYt+PZ0wqCPRfuNC/ganPUH2MS55HmzYWEKOtC1E96iZiGzXhXhGc
+         qfOA==
+X-Gm-Message-State: AOAM5307rNe4Wrr0SyMHqBtQccONBS9yoUoSuJMCspIOlzdxK+osFmTa
+        Gd4zcK4u8xxrXknx6lArQFk=
+X-Google-Smtp-Source: ABdhPJwg1w6hC0wPfzTvlgDP5wtZeHxsrtuxW2x99xq/v63Bl0Alz7BDYKNzUJgFqZ2t6A3L2A42yQ==
+X-Received: by 2002:adf:fecc:: with SMTP id q12mr11701025wrs.374.1598371364695;
+        Tue, 25 Aug 2020 09:02:44 -0700 (PDT)
+Received: from ubuntu18_1.cisco.com ([173.38.220.45])
+        by smtp.gmail.com with ESMTPSA id o2sm30070711wrj.21.2020.08.25.09.02.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 09:02:12 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 13:02:06 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Simon Ser <contact@emersion.fr>,
-        Leandro Ribeiro <leandro.ribeiro@collabora.com>,
-        daniels@collabora.com, Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH v5 0/3] drm/vkms: Introduces writeback support
-Message-ID: <20200825160206.jpdxrdbswaogayzu@smtp.gmail.com>
-References: <20200825023142.2561220-1-rodrigosiqueiramelo@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825023142.2561220-1-rodrigosiqueiramelo@gmail.com>
+        Tue, 25 Aug 2020 09:02:44 -0700 (PDT)
+From:   Ahmed Abdelsalam <ahabdels@gmail.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Ahmed Abdelsalam <ahabdels@gmail.com>,
+        David Ahern <dsahern@gmail.com>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     andrea.mayer@uniroma2.it
+Subject: [net-next v5 1/2] seg6: inherit DSCP of inner IPv4 packets
+Date:   Tue, 25 Aug 2020 16:02:33 +0000
+Message-Id: <20200825160236.1123-1-ahabdels@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rodrigo,
+This patch allows SRv6 encapsulation to inherit the DSCP value of
+the inner IPv4 packet.
 
-Nice work!
+This allows forwarding packet across the SRv6 fabric based on their
+original traffic class.
 
-I tested this on the kms_writeback set of subtests and works fine.
+The option is controlled through a sysctl (seg6_inherit_inner_ipv4_dscp).
+The sysctl has to be set to 1 to enable this feature.
 
-I have also checked it on the other IGT tests that I usually uses:
-- kms_cursor_crc/cursor-alpha-transparent was affected by a small
-  problem in the bitmap_clear of the get_pixel_from_buffer function,
-  that I pointed out inline. Please, check it.
-- kms_flip and kms_pipe_crc_basic works as expected (was not affected).
+Signed-off-by: Ahmed Abdelsalam <ahabdels@gmail.com>
+---
+ include/net/netns/ipv6.h   |  1 +
+ net/ipv6/seg6_iptunnel.c   | 37 ++++++++++++++++++++-----------------
+ net/ipv6/sysctl_net_ipv6.c |  9 +++++++++
+ 3 files changed, 30 insertions(+), 17 deletions(-)
 
-Best regards,
+diff --git a/include/net/netns/ipv6.h b/include/net/netns/ipv6.h
+index 5ec054473d81..6ed73951f479 100644
+--- a/include/net/netns/ipv6.h
++++ b/include/net/netns/ipv6.h
+@@ -50,6 +50,7 @@ struct netns_sysctl_ipv6 {
+ 	int max_dst_opts_len;
+ 	int max_hbh_opts_len;
+ 	int seg6_flowlabel;
++	bool seg6_inherit_inner_ipv4_dscp;
+ 	bool skip_notify_on_dev_down;
+ };
+ 
+diff --git a/net/ipv6/seg6_iptunnel.c b/net/ipv6/seg6_iptunnel.c
+index 897fa59c47de..9cc168462e11 100644
+--- a/net/ipv6/seg6_iptunnel.c
++++ b/net/ipv6/seg6_iptunnel.c
+@@ -104,8 +104,7 @@ static void set_tun_src(struct net *net, struct net_device *dev,
+ }
+ 
+ /* Compute flowlabel for outer IPv6 header */
+-static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb,
+-				  struct ipv6hdr *inner_hdr)
++static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb)
+ {
+ 	int do_flowlabel = net->ipv6.sysctl.seg6_flowlabel;
+ 	__be32 flowlabel = 0;
+@@ -116,7 +115,7 @@ static __be32 seg6_make_flowlabel(struct net *net, struct sk_buff *skb,
+ 		hash = rol32(hash, 16);
+ 		flowlabel = (__force __be32)hash & IPV6_FLOWLABEL_MASK;
+ 	} else if (!do_flowlabel && skb->protocol == htons(ETH_P_IPV6)) {
+-		flowlabel = ip6_flowlabel(inner_hdr);
++		flowlabel = ip6_flowlabel(ipv6_hdr(skb));
+ 	}
+ 	return flowlabel;
+ }
+@@ -129,6 +128,7 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
+ 	struct ipv6hdr *hdr, *inner_hdr;
+ 	struct ipv6_sr_hdr *isrh;
+ 	int hdrlen, tot_len, err;
++	u8 tos = 0, hop_limit;
+ 	__be32 flowlabel;
+ 
+ 	hdrlen = (osrh->hdrlen + 1) << 3;
+@@ -138,30 +138,33 @@ int seg6_do_srh_encap(struct sk_buff *skb, struct ipv6_sr_hdr *osrh, int proto)
+ 	if (unlikely(err))
+ 		return err;
+ 
+-	inner_hdr = ipv6_hdr(skb);
+-	flowlabel = seg6_make_flowlabel(net, skb, inner_hdr);
+-
+-	skb_push(skb, tot_len);
+-	skb_reset_network_header(skb);
+-	skb_mac_header_rebuild(skb);
+-	hdr = ipv6_hdr(skb);
+-
+ 	/* inherit tc, flowlabel and hlim
+ 	 * hlim will be decremented in ip6_forward() afterwards and
+ 	 * decapsulation will overwrite inner hlim with outer hlim
+ 	 */
+ 
++	flowlabel = seg6_make_flowlabel(net, skb);
++	hop_limit = ip6_dst_hoplimit(skb_dst(skb));
++
+ 	if (skb->protocol == htons(ETH_P_IPV6)) {
+-		ip6_flow_hdr(hdr, ip6_tclass(ip6_flowinfo(inner_hdr)),
+-			     flowlabel);
+-		hdr->hop_limit = inner_hdr->hop_limit;
++		inner_hdr = ipv6_hdr(skb);
++		hop_limit = inner_hdr->hop_limit;
++		tos = ip6_tclass(ip6_flowinfo(inner_hdr));
++	} else if (skb->protocol == htons(ETH_P_IP)) {
++		if (net->ipv6.sysctl.seg6_inherit_inner_ipv4_dscp)
++			tos = ip_hdr(skb)->tos;
++		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 	} else {
+-		ip6_flow_hdr(hdr, 0, flowlabel);
+-		hdr->hop_limit = ip6_dst_hoplimit(skb_dst(skb));
+-
+ 		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+ 	}
+ 
++	skb_push(skb, tot_len);
++	skb_reset_network_header(skb);
++	skb_mac_header_rebuild(skb);
++
++	hdr = ipv6_hdr(skb);
++	ip6_flow_hdr(hdr, tos, flowlabel);
++	hdr->hop_limit = hop_limit;
+ 	hdr->nexthdr = NEXTHDR_ROUTING;
+ 
+ 	isrh = (void *)hdr + sizeof(*hdr);
+diff --git a/net/ipv6/sysctl_net_ipv6.c b/net/ipv6/sysctl_net_ipv6.c
+index fac2135aa47b..4b2cf8764524 100644
+--- a/net/ipv6/sysctl_net_ipv6.c
++++ b/net/ipv6/sysctl_net_ipv6.c
+@@ -159,6 +159,15 @@ static struct ctl_table ipv6_table_template[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec
+ 	},
++	{
++		.procname	= "seg6_inherit_inner_ipv4_dscp",
++		.data		= &init_net.ipv6.sysctl.seg6_inherit_inner_ipv4_dscp,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
+ 	{ }
+ };
+ 
+-- 
+2.17.1
 
-Melissa Wen
-
-On 08/24, Rodrigo Siqueira wrote:
-> This is the V5 version of a series that introduces the writeback support
-> to VKMS. The first two patches of this series are a pre-work for the
-> latest patch that adds the writeback connector, this patchset can be seen
-> in two parts: 
-> 
-> * A pre-work that aims to make vkms composer operations a little bit more
->   generic; these patches try to centralize the vkms framebuffer operations.
-> * The final patch enables the support for writeback in vkms.
-> 
-> In the previous review, Emil suggested multiple changes in the series. I
-> tried to apply most of the recommendations except for some suggestions
-> which I was not able to incorporate due to compilation issues, or other
-> suggestions that may complicate this series review. I left some changes
-> for future patches for keeping this patchset simple with the hope of
-> landing this feature soon in order to support VKMS user's requirements.
-> Emil, let me know if you want me to change any other thing.
-> 
-> It is important to highlight that from the previous series to the
-> current version of this patchset we had some changes in the VKMS that
-> made it unstable.  In particular, our previous writeback series stopped
-> working properly due to changes in our commit tail.  Thanks to Melissa
-> working in the instability issue and her latest fixes to VKMS, I finally
-> could update writeback and make it work again. The main update in the
-> latest patch is the use of vkms_set_composer when the writeback work
-> starts (enable composer) and after the writeback end (disable composer).
-> 
-> Best Regard
-> 
-> Rodrigo Siqueira (3):
->   drm/vkms: Decouple crc operations from composer
->   drm/vkms: Compute CRC without change input data
->   drm/vkms: Add support for writeback
-> 
->  drivers/gpu/drm/vkms/Makefile         |   9 +-
->  drivers/gpu/drm/vkms/vkms_composer.c  | 102 +++++++++++-------
->  drivers/gpu/drm/vkms/vkms_drv.h       |  11 +-
->  drivers/gpu/drm/vkms/vkms_output.c    |   4 +
->  drivers/gpu/drm/vkms/vkms_writeback.c | 143 ++++++++++++++++++++++++++
->  5 files changed, 231 insertions(+), 38 deletions(-)
->  create mode 100644 drivers/gpu/drm/vkms/vkms_writeback.c
-> 
-> -- 
-> 2.28.0
-> 
