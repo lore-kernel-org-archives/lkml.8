@@ -2,263 +2,176 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF24C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B09C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 068772075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C882B2068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:17:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FLMfaI34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgHYKQT (ORCPT
+        id S1729788AbgHYKRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:16:19 -0400
-Received: from aclms1.advantech.com.tw ([61.58.41.199]:15030 "EHLO
-        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgHYKQS (ORCPT
+        Tue, 25 Aug 2020 06:17:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16426 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728117AbgHYKRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:16:18 -0400
-Received: from taipei09.ADVANTECH.CORP (unverified [172.20.0.236]) by ACLMS1.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Te1333e83e4ac14014b1204@ACLMS1.advantech.com.tw>;
- Tue, 25 Aug 2020 18:16:16 +0800
-Received: from localhost (172.16.12.96) by taipei09.ADVANTECH.CORP
- (172.20.0.236) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 25 Aug
- 2020 18:16:15 +0800
-From:   William Sung <william.sung@advantech.com.tw>
-To:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Campion Kang <Campion.Kang@advantech.com.tw>
-Subject: [PATCH v2] iio: dac: ad5593r: Dynamically set AD5593R channel modes
-Date:   Tue, 25 Aug 2020 18:16:14 +0800
-Message-ID: <20200825101614.2462-1-william.sung@advantech.com.tw>
-X-Mailer: git-send-email 2.17.1
+        Tue, 25 Aug 2020 06:17:35 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PA4pWp154169;
+        Tue, 25 Aug 2020 06:16:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=EOBUoNumc+lfxeSxOyM8nxTJchcZ8SasJG/UKpKCePc=;
+ b=FLMfaI34xTiJCIrm5uFNqbuk0uT2DGykGFonCKV9ValbKJI3Gb8aJ1pjUCvH1rBMViHH
+ a+46qMxkOoSEKYil9BF1E0fCNjqHrqN02uE3u63nGbSY/ajxgIwKwmxxu46FESXlA2nM
+ CSrGWVcVfhlmX34vqVger2iojhSeXB+dFv+4FsmjCV6iJGBcX6jS2sIknOsTSUArI8jv
+ pWnbWazaY41s/AVuWDg2oC/WN57VTsUafbWj+P2oGiWZap4gTf8wGpUUY7J7pjuNx8tf
+ G6kTrWxeMCgWUXkLDaUJi/CEnjLBtbu0oz+Lo59EIPqzoCxSQsIPS9X7KAhGXPUvR8Iv 7g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334yc52e4u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 06:16:35 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07PA7kP9161517;
+        Tue, 25 Aug 2020 06:16:34 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 334yc52e43-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 06:16:34 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07PAFFq5019135;
+        Tue, 25 Aug 2020 10:16:32 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma04ams.nl.ibm.com with ESMTP id 33498u97t7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 10:16:32 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07PAGT9N24445372
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Aug 2020 10:16:29 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B3F1A4054;
+        Tue, 25 Aug 2020 10:16:29 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6052A4062;
+        Tue, 25 Aug 2020 10:16:27 +0000 (GMT)
+Received: from oc5500677777.ibm.com (unknown [9.145.83.242])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Aug 2020 10:16:27 +0000 (GMT)
+Subject: Re: [RFT][PATCH 0/7] Avoid overflow at boundary_size
+To:     Nicolin Chen <nicoleotsuka@gmail.com>, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com, tony.luck@intel.com,
+        fenghua.yu@intel.com, gerald.schaefer@linux.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        James.Bottomley@HansenPartnership.com, deller@gmx.de
+Cc:     sfr@canb.auug.org.au, hch@lst.de, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org
+References: <20200820231923.23678-1-nicoleotsuka@gmail.com>
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+Message-ID: <4321af30-9554-6897-5281-05afd88f2631@linux.ibm.com>
+Date:   Tue, 25 Aug 2020 12:16:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.16.12.96]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- taipei09.ADVANTECH.CORP (172.20.0.236)
-X-StopIT: No
+In-Reply-To: <20200820231923.23678-1-nicoleotsuka@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_02:2020-08-24,2020-08-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ spamscore=0 impostorscore=0 priorityscore=1501 clxscore=1011
+ mlxlogscore=999 malwarescore=0 suspectscore=2 adultscore=0 bulkscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To use ad5593r more flexibly, we use the module parameter to setting the
-channel modes dynamically whenever the module probe up. Users can pass
-the channel modes to the module parameter for allocating the
-functionality of channels as desired.
 
-For example:
-* Use in the kernel command line:
-Users can add the module parameter in the kernel command line such as
 
-    "ad5593r.ch_mode=88001122"
+On 8/21/20 1:19 AM, Nicolin Chen wrote:
+> We are expending the default DMA segmentation boundary to its
+> possible maximum value (ULONG_MAX) to indicate that a device
+> doesn't specify a boundary limit. So all dma_get_seg_boundary
+> callers should take a precaution with the return values since
+> it would easily get overflowed.
+> 
+> I scanned the entire kernel tree for all the existing callers
+> and found that most of callers may get overflowed in two ways:
+> either "+ 1" or passing it to ALIGN() that does "+ mask".
+> 
+> According to kernel defines:
+>     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
+>     #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
+> 
+> We can simplify the logic here:
+>   ALIGN(boundary + 1, 1 << shift) >> shift
+> = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
+> = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
+> = [b + 1 + (1 << s) - 1] >> s
+> = [b + (1 << s)] >> s
+> = (b >> s) + 1
+> 
+> So this series of patches fix the potential overflow with this
+> overflow-free shortcut.
 
-"88001122" means the channel mode setting for each channel. The most
-left side indicates the mode of channel 7, and the most right side
-indicates the mode of channel 0.
+Hi Nicolin,
 
-* Use when manually probe the module:
-Similar to the kernel command line usage, users can enter
+haven't seen any other feedback from other maintainers,
+so I guess you will resend this?
+On first glance it seems to make sense.
+I'm a little confused why it is only a "potential overflow"
+while this part
 
-    "modprobe ad5593r ch_mode=88001122"
+"We are expending the default DMA segmentation boundary to its
+ possible maximum value (ULONG_MAX) to indicate that a device
+ doesn't specify a boundary limit"
 
-to start the ad5593r module with the desired channel mode setting.
+sounds to me like ULONG_MAX is actually used, does that
+mean there are currently no devices which do not specify a
+boundary limit?
 
-v2: Fix the patch description and remove redundant for loop
 
-Signed-off-by: William Sung <william.sung@advantech.com.tw>
----
- drivers/iio/dac/ad5592r-base.c | 33 ++++++++++++++++++++---
- drivers/iio/dac/ad5592r-base.h |  4 +++
- drivers/iio/dac/ad5593r.c      | 48 ++++++++++++++++++++++++++++++++++
- 3 files changed, 82 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iio/dac/ad5592r-base.c b/drivers/iio/dac/ad5592r-base.c
-index cc4875660a69..cd69a34fa21e 100644
---- a/drivers/iio/dac/ad5592r-base.c
-+++ b/drivers/iio/dac/ad5592r-base.c
-@@ -21,6 +21,10 @@
- 
- #include "ad5592r-base.h"
- 
-+/* Parameters for dynamic channel mode setting */
-+static u8 update_channel_mode;
-+static u8 new_channel_modes[AD559XR_CHANNEL_NR];
-+
- static int ad5592r_gpio_get(struct gpio_chip *chip, unsigned offset)
- {
- 	struct ad5592r_state *st = gpiochip_get_data(chip);
-@@ -132,7 +136,7 @@ static int ad5592r_gpio_init(struct ad5592r_state *st)
- 
- 	st->gpiochip.label = dev_name(st->dev);
- 	st->gpiochip.base = -1;
--	st->gpiochip.ngpio = 8;
-+	st->gpiochip.ngpio = AD559XR_CHANNEL_NR;
- 	st->gpiochip.parent = st->dev;
- 	st->gpiochip.can_sleep = true;
- 	st->gpiochip.direction_input = ad5592r_gpio_direction_input;
-@@ -287,6 +291,14 @@ static int ad5592r_set_channel_modes(struct ad5592r_state *st)
- 	return ret;
- }
- 
-+static void ad5592r_set_def_channel_modes(struct ad5592r_state *st)
-+{
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(st->channel_modes); i++)
-+		st->channel_modes[i] = new_channel_modes[i];
-+}
-+
- static int ad5592r_reset_channel_modes(struct ad5592r_state *st)
- {
- 	int i;
-@@ -532,6 +544,10 @@ static int ad5592r_alloc_channels(struct iio_dev *iio_dev)
- 			st->channel_offstate[reg] = tmp;
- 	}
- 
-+	/* Update default channel modes set by external module */
-+	if (update_channel_mode == 1)
-+		ad5592r_set_def_channel_modes(st);
-+
- 	channels = devm_kcalloc(st->dev,
- 			1 + 2 * num_channels, sizeof(*channels),
- 			GFP_KERNEL);
-@@ -567,7 +583,7 @@ static int ad5592r_alloc_channels(struct iio_dev *iio_dev)
- 	}
- 
- 	channels[curr_channel].type = IIO_TEMP;
--	channels[curr_channel].channel = 8;
-+	channels[curr_channel].channel = AD559XR_CHANNEL_NR;
- 	channels[curr_channel].info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
- 				   BIT(IIO_CHAN_INFO_SCALE) |
- 				   BIT(IIO_CHAN_INFO_OFFSET);
-@@ -589,6 +605,17 @@ static void ad5592r_init_scales(struct ad5592r_state *st, int vref_mV)
- 		div_s64_rem(tmp * 2, 1000000000LL, &st->scale_avail[1][1]);
- }
- 
-+void ad5592r_update_default_channel_modes(u8 *new_modes)
-+{
-+	int idx = 0;
-+
-+	update_channel_mode = 1;
-+	for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++)
-+		new_channel_modes[idx] = new_modes[idx];
-+
-+}
-+EXPORT_SYMBOL_GPL(ad5592r_update_default_channel_modes);
-+
- int ad5592r_probe(struct device *dev, const char *name,
- 		const struct ad5592r_rw_ops *ops)
- {
-@@ -603,7 +630,7 @@ int ad5592r_probe(struct device *dev, const char *name,
- 	st = iio_priv(iio_dev);
- 	st->dev = dev;
- 	st->ops = ops;
--	st->num_channels = 8;
-+	st->num_channels = AD559XR_CHANNEL_NR;
- 	dev_set_drvdata(dev, iio_dev);
- 
- 	st->reg = devm_regulator_get_optional(dev, "vref");
-diff --git a/drivers/iio/dac/ad5592r-base.h b/drivers/iio/dac/ad5592r-base.h
-index 23dac2f1ff8a..40ad6369e660 100644
---- a/drivers/iio/dac/ad5592r-base.h
-+++ b/drivers/iio/dac/ad5592r-base.h
-@@ -39,6 +39,9 @@ enum ad5592r_registers {
- #define AD5592R_REG_CTRL_ADC_RANGE	BIT(5)
- #define AD5592R_REG_CTRL_DAC_RANGE	BIT(4)
- 
-+/* Define quantity of channels of AD5592R/AD5593R */
-+#define AD559XR_CHANNEL_NR		8
-+
- struct ad5592r_rw_ops {
- 	int (*write_dac)(struct ad5592r_state *st, unsigned chan, u16 value);
- 	int (*read_adc)(struct ad5592r_state *st, unsigned chan, u16 *value);
-@@ -69,6 +72,7 @@ struct ad5592r_state {
- 	__be16 spi_msg_nop;
- };
- 
-+void ad5592r_update_default_channel_modes(u8 *new_modes);
- int ad5592r_probe(struct device *dev, const char *name,
- 		const struct ad5592r_rw_ops *ops);
- int ad5592r_remove(struct device *dev);
-diff --git a/drivers/iio/dac/ad5593r.c b/drivers/iio/dac/ad5593r.c
-index 1fbe9c019c7f..a19331d91406 100644
---- a/drivers/iio/dac/ad5593r.c
-+++ b/drivers/iio/dac/ad5593r.c
-@@ -21,6 +21,10 @@
- #define AD5593R_MODE_GPIO_READBACK	(6 << 4)
- #define AD5593R_MODE_REG_READBACK	(7 << 4)
- 
-+/* Parameters for dynamic channel mode setting */
-+static char *ch_mode = "";
-+module_param(ch_mode, charp, 0400);
-+
- static int ad5593r_write_dac(struct ad5592r_state *st, unsigned chan, u16 value)
- {
- 	struct i2c_client *i2c = to_i2c_client(st->dev);
-@@ -92,9 +96,53 @@ static const struct ad5592r_rw_ops ad5593r_rw_ops = {
- 	.gpio_read = ad5593r_gpio_read,
- };
- 
-+static void ad5593r_check_new_channel_mode(void)
-+{
-+	char *new_mode = NULL, tmp[2];
-+	u8 new_ch_modes[AD559XR_CHANNEL_NR];
-+	int idx = 0;
-+
-+	if (strlen(ch_mode) != AD559XR_CHANNEL_NR)
-+		return;
-+
-+	new_mode = ch_mode;
-+
-+	/* Check if all channel modes are valid */
-+	for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++) {
-+		switch (new_mode[idx]) {
-+		case '0':
-+		case '1':
-+		case '2':
-+		case '3':
-+		case '8':
-+			continue;
-+		default:
-+			/* There is invalid mode exist, ignore the settings */
-+			pr_err("%s: invalid(%c) in index(%d)\n",
-+				__func__, new_mode[idx], idx);
-+			return;
-+		}
-+	}
-+
-+	/* Set the new modes to ad5592r-base driver to setup the new channel modes */
-+	memset(tmp, 0, 2);
-+	for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++) {
-+		tmp[0] = new_mode[idx];
-+		if (kstrtou8(tmp, 10, &new_ch_modes[AD559XR_CHANNEL_NR - idx - 1])) {
-+			/* Something error when converting the string to integer */
-+			/* Ignore this settings */
-+			pr_err("%s: kstr error idx(%d)\n", __func__, idx);
-+			return;
-+		}
-+	}
-+
-+	ad5592r_update_default_channel_modes(new_ch_modes);
-+}
-+
- static int ad5593r_i2c_probe(struct i2c_client *i2c,
- 		const struct i2c_device_id *id)
- {
-+	ad5593r_check_new_channel_mode();
- 	return ad5592r_probe(&i2c->dev, id->name, &ad5593r_rw_ops);
- }
- 
--- 
-2.17.1
-
+> 
+> As I don't think that I have these platforms, marking RFT.
+> 
+> Thanks
+> Nic
+> 
+> Nicolin Chen (7):
+>   powerpc/iommu: Avoid overflow at boundary_size
+>   alpha: Avoid overflow at boundary_size
+>   ia64/sba_iommu: Avoid overflow at boundary_size
+>   s390/pci_dma: Avoid overflow at boundary_size
+>   sparc: Avoid overflow at boundary_size
+>   x86/amd_gart: Avoid overflow at boundary_size
+>   parisc: Avoid overflow at boundary_size
+> 
+>  arch/alpha/kernel/pci_iommu.c    | 10 ++++------
+>  arch/ia64/hp/common/sba_iommu.c  |  4 ++--
+>  arch/powerpc/kernel/iommu.c      | 11 +++++------
+>  arch/s390/pci/pci_dma.c          |  4 ++--
+>  arch/sparc/kernel/iommu-common.c |  9 +++------
+>  arch/sparc/kernel/iommu.c        |  4 ++--
+>  arch/sparc/kernel/pci_sun4v.c    |  4 ++--
+>  arch/x86/kernel/amd_gart_64.c    |  4 ++--
+>  drivers/parisc/ccio-dma.c        |  4 ++--
+>  drivers/parisc/sba_iommu.c       |  4 ++--
+>  10 files changed, 26 insertions(+), 32 deletions(-)
+> 
