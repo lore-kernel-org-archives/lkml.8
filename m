@@ -2,442 +2,224 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C7CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23B062074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218AD2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="fmc8iYS3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVcobcRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgHYTKj (ORCPT
+        id S1726739AbgHYTLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:10:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49140 "EHLO
+        Tue, 25 Aug 2020 15:11:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYTKg (ORCPT
+        with ESMTP id S1726149AbgHYTLc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:10:36 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25EA7C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:10:36 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id a65so47822wme.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:10:36 -0700 (PDT)
+        Tue, 25 Aug 2020 15:11:32 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A60C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:11:31 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id w25so15069670ljo.12
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 12:11:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nmEWks99ETFd54v9RPVNHrlKY8LROi6ivK+zqVS2cko=;
-        b=fmc8iYS3OkqBCAvDD8X3kJyL5xoMm4ZiFXA3VdYSL05/x/4+GdgkoniKDVTAC4laLK
-         cBmuJiQmBptd2uqEsuiLyuNFoJXpTbYygwYkmI+D+9VZya+83v95nbGkIMUGMWGGP0P1
-         I4N7HLQ80AFg0hPoU/rXiAEiTQM32KW/x/d2A=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sqg/AVsJ1oT2dhhuL1pGToPQlBX2/1COi4hiuERTnjA=;
+        b=kVcobcRSSbSwtArpkequCFg/jJ8T8FsgtVMPimpf6wOhWqq2/Hr5kRE1Yg6BwYr0UA
+         u7ysR2Efssagz6ZUOk0bL32r4e+n7hetOE99CvYwOGifEqDmV77B0i0ujKWezdmds8ec
+         S+Vm+7O3HyyI0CFW88D2upgwbRZL92pXrqclUJMcxNhmXAzNBwQ05/dxoHRvgLicg1Xr
+         PtYw651eXyLcjWYvXHNNqa+aw2OZzurp/+y4ddaFVKkn5Qda8IB4W/JBwPUZV7AYoVfe
+         djrTzvHgMN0SDBrc3ft5i+Bumjr8XezO69qr5rk98ZjjCy3guO17BPMnhGyZS+zWBcl+
+         s0kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nmEWks99ETFd54v9RPVNHrlKY8LROi6ivK+zqVS2cko=;
-        b=cymzEyMIIefsG+vwN7qLRgW7i2AMjgvTVSKKVbk9yMKEublfj2g62DV6nbfHX7ksjr
-         pNhAtSQ4Msd5xwKa7QYzhpTPQ9VJW7OlQFvu7Xjxl92MgELOVzYPVVXW3SKQ/3eZKmbT
-         Kt/jxnSDM0D3ra2nMl9qKzeY5nutM8WzZ86tr7crVeIy/b7AisVaNT/hL17XtbcDs2nf
-         Zaz8W6YPdju/SysnnBOdtl96eT8vUrlMckev9yOOf0xcNKK44rk1sXEOo8fmld8fcYLP
-         Hd4txbr0CIuOmkz3dsfvGMVrjemqk6X0wwlQxfd1mrXhoL9DujxUZsDsV5GpTfxPrFfl
-         iOrQ==
-X-Gm-Message-State: AOAM5300BB/Xq7HbNnBTNdgxO4Bpw5iPMuMYcQ3dpPljMZh2oaNSSqO5
-        15Dr8+Uq6Dte9r8/0zHKopeHvO+5mn5CpIecLdeG
-X-Google-Smtp-Source: ABdhPJwZTiHNBYD+IoxhDqh+/hKZWO/N0qn6URd4qFE+vGCLZWHQtTjkhbuC7MODKF/4gJX9/euGekeQnD+Y9t21jXw=
-X-Received: by 2002:a05:600c:230f:: with SMTP id 15mr3356730wmo.186.1598382634644;
- Tue, 25 Aug 2020 12:10:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sqg/AVsJ1oT2dhhuL1pGToPQlBX2/1COi4hiuERTnjA=;
+        b=UCoDs+1K1FDm0flF9aezqeSPDNI0fEfLCwRpjW7kg5TIWOhJHIadSpUHTL5emlfTd5
+         mH24tw355uikQ586S1pvGWbrTD0xuTSLG83yEplg4TGg6hJaoyp+NvXwQ9wBGxZzkWoe
+         bE4XbrtBcfzijDZogONy1rN754kl5GW0a785KXc+XJliMIDyOuzxtaKSBlqQw/HdthuQ
+         2IwtIiSxw2TcQcsNvuwwx0SlbNjMRFh0RhoYVVZq2SdoOOHpJNC1a0OMExCn7+5nfPZ1
+         fG9w3gcsehcOBHbQeY8OrVWxOqd9u9XHKz40gk+rOc75Zv1MmXWpb4Da6ZZAOz2LbcLE
+         6OLw==
+X-Gm-Message-State: AOAM53192BcDMa5IL+7p3uAU+DBXAr85gVzgD4SDhdRRGXOPyR1QlXrL
+        vF2MLldwr/8CLmRXQh3jwEMgjoK1xFBPwg==
+X-Google-Smtp-Source: ABdhPJz+OTacs8Xwj814WKp5+Cw9J+NxKBiS1siquss8/CzHeiONjrJOKY1MqArLFW8bS5WLf28ZEA==
+X-Received: by 2002:a2e:9b95:: with SMTP id z21mr5742369lji.83.1598382690090;
+        Tue, 25 Aug 2020 12:11:30 -0700 (PDT)
+Received: from nero.bb.dnainternet.fi (dyn9cmyyyyyyyyyyyyyft-3.rev.dnainternet.fi. [2001:14ba:2fa:2500::9])
+        by smtp.gmail.com with ESMTPSA id q20sm3016553ljj.42.2020.08.25.12.11.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 12:11:29 -0700 (PDT)
+From:   Pekka Enberg <penberg@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Pekka Enberg <penberg@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [RFC PATCH] x86/mm/fault: Inline page fault paths to reduce kernel text size
+Date:   Tue, 25 Aug 2020 22:11:26 +0300
+Message-Id: <20200825191126.289713-1-penberg@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-References: <20200819222425.30721-6-atish.patra@wdc.com> <mhng-e2d261a0-c4c2-497e-bcef-08b8d1576f3f@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-e2d261a0-c4c2-497e-bcef-08b8d1576f3f@palmerdabbelt-glaptop1>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Tue, 25 Aug 2020 12:10:23 -0700
-Message-ID: <CAOnJCUK12rjGXLjrZz-7LfwJE2OFWjNE+k+x=8tEVKCOm9xrNg@mail.gmail.com>
-Subject: Re: [PATCH v6 5/9] RISC-V: Add PE/COFF header for EFI stub
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Atish Patra <Atish.Patra@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Anup Patel <anup@brainfault.org>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Greentime Hu <greentime.hu@sifive.com>, hca@linux.ibm.com,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Steven Price <steven.price@arm.com>,
-        Waiman Long <longman@redhat.com>, Zong Li <zong.li@sifive.com>,
-        "Schaefer, Daniel (DualStudy)" <daniel.schaefer@hpe.com>,
-        Abner Chang <abner.chang@hpe.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 11:04 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
->
-> On Wed, 19 Aug 2020 15:24:21 PDT (-0700), Atish Patra wrote:
-> > Linux kernel Image can appear as an EFI application With appropriate
-> > PE/COFF header fields in the beginning of the Image header. An EFI
-> > application loader can directly load a Linux kernel Image and an EFI
-> > stub residing in kernel can boot Linux kernel directly.
-> >
-> > Add the necessary PE/COFF header.
-> >
-> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > Link: https://lore.kernel.org/r/20200421033336.9663-3-atish.patra@wdc.com
-> > [ardb: - use C prefix for c.li to ensure the expected opcode is emitted
-> >        - align all image sections according to PE/COFF section alignment ]
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > Reviewed-by: Anup Patel <anup@brainfault.org>
-> > ---
-> >  arch/riscv/include/asm/sections.h |  13 ++++
-> >  arch/riscv/kernel/Makefile        |   4 ++
-> >  arch/riscv/kernel/efi-header.S    | 104 ++++++++++++++++++++++++++++++
-> >  arch/riscv/kernel/head.S          |  16 +++++
-> >  arch/riscv/kernel/image-vars.h    |  51 +++++++++++++++
-> >  arch/riscv/kernel/vmlinux.lds.S   |  22 ++++++-
-> >  6 files changed, 208 insertions(+), 2 deletions(-)
-> >  create mode 100644 arch/riscv/include/asm/sections.h
-> >  create mode 100644 arch/riscv/kernel/efi-header.S
-> >  create mode 100644 arch/riscv/kernel/image-vars.h
-> >
-> > diff --git a/arch/riscv/include/asm/sections.h b/arch/riscv/include/asm/sections.h
-> > new file mode 100644
-> > index 000000000000..3a9971b1210f
-> > --- /dev/null
-> > +++ b/arch/riscv/include/asm/sections.h
-> > @@ -0,0 +1,13 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> > + */
-> > +#ifndef __ASM_SECTIONS_H
-> > +#define __ASM_SECTIONS_H
-> > +
-> > +#include <asm-generic/sections.h>
-> > +
-> > +extern char _start[];
-> > +extern char _start_kernel[];
-> > +
-> > +#endif /* __ASM_SECTIONS_H */
-> > diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-> > index a5287ab9f7f2..eabec4dce50b 100644
-> > --- a/arch/riscv/kernel/Makefile
-> > +++ b/arch/riscv/kernel/Makefile
-> > @@ -32,6 +32,10 @@ obj-y      += patch.o
-> >  obj-$(CONFIG_MMU) += vdso.o vdso/
-> >
-> >  obj-$(CONFIG_RISCV_M_MODE)   += clint.o traps_misaligned.o
-> > +OBJCOPYFLAGS := --prefix-symbols=__efistub_
-> > +$(obj)/%.stub.o: $(obj)/%.o FORCE
-> > +     $(call if_changed,objcopy)
-> > +
->
-> Is there a reason this is below those objects?
-Nope.
+From: Pekka Enberg <penberg@kernel.org>
 
-  I don't really care, but it
-> triggered a merge conflict and it seems cleaner above so I put it up there.
->
+The commit 92181f190b649f7ef2b79cbf5c00f26ccc66da2a ("x86: optimise
+x86's do_page_fault (C entry point for the page fault path)") from 2009
+shows significant stack savings when infrequent page fault handling
+paths are moved out of line with the "noinline" annotation, with some increase
+in kernel text size.
 
-Sure. Thanks.
+However, a decade of GCC improvements (and changes in the code) has
+eliminated such wins in stack usage:
 
-> >  obj-$(CONFIG_FPU)            += fpu.o
-> >  obj-$(CONFIG_SMP)            += smpboot.o
-> >  obj-$(CONFIG_SMP)            += smp.o
-> > diff --git a/arch/riscv/kernel/efi-header.S b/arch/riscv/kernel/efi-header.S
-> > new file mode 100644
-> > index 000000000000..822b4c9ff2bb
-> > --- /dev/null
-> > +++ b/arch/riscv/kernel/efi-header.S
-> > @@ -0,0 +1,104 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> > + * Adapted from arch/arm64/kernel/efi-header.S
-> > + */
-> > +
-> > +#include <linux/pe.h>
-> > +#include <linux/sizes.h>
-> > +
-> > +     .macro  __EFI_PE_HEADER
-> > +     .long   PE_MAGIC
-> > +coff_header:
-> > +#ifdef CONFIG_64BIT
-> > +     .short  IMAGE_FILE_MACHINE_RISCV64              // Machine
-> > +#else
-> > +     .short  IMAGE_FILE_MACHINE_RISCV32              // Machine
-> > +#endif
-> > +     .short  section_count                           // NumberOfSections
-> > +     .long   0                                       // TimeDateStamp
-> > +     .long   0                                       // PointerToSymbolTable
-> > +     .long   0                                       // NumberOfSymbols
-> > +     .short  section_table - optional_header         // SizeOfOptionalHeader
-> > +     .short  IMAGE_FILE_DEBUG_STRIPPED | \
-> > +             IMAGE_FILE_EXECUTABLE_IMAGE | \
-> > +             IMAGE_FILE_LINE_NUMS_STRIPPED           // Characteristics
-> > +
-> > +optional_header:
-> > +     .short  PE_OPT_MAGIC_PE32PLUS                   // PE32+ format
-> > +     .byte   0x02                                    // MajorLinkerVersion
-> > +     .byte   0x14                                    // MinorLinkerVersion
-> > +     .long   __pecoff_text_end - efi_header_end      // SizeOfCode
-> > +     .long   __pecoff_data_virt_size                 // SizeOfInitializedData
-> > +     .long   0                                       // SizeOfUninitializedData
-> > +     .long   __efistub_efi_pe_entry - _start         // AddressOfEntryPoint
-> > +     .long   efi_header_end - _start                 // BaseOfCode
-> > +
-> > +extra_header_fields:
-> > +     .quad   0                                       // ImageBase
-> > +     .long   PECOFF_SECTION_ALIGNMENT                // SectionAlignment
-> > +     .long   PECOFF_FILE_ALIGNMENT                   // FileAlignment
-> > +     .short  0                                       // MajorOperatingSystemVersion
-> > +     .short  0                                       // MinorOperatingSystemVersion
-> > +     .short  LINUX_EFISTUB_MAJOR_VERSION             // MajorImageVersion
-> > +     .short  LINUX_EFISTUB_MINOR_VERSION             // MinorImageVersion
-> > +     .short  0                                       // MajorSubsystemVersion
-> > +     .short  0                                       // MinorSubsystemVersion
-> > +     .long   0                                       // Win32VersionValue
-> > +
-> > +     .long   _end - _start                           // SizeOfImage
-> > +
-> > +     // Everything before the kernel image is considered part of the header
-> > +     .long   efi_header_end - _start                 // SizeOfHeaders
-> > +     .long   0                                       // CheckSum
-> > +     .short  IMAGE_SUBSYSTEM_EFI_APPLICATION         // Subsystem
-> > +     .short  0                                       // DllCharacteristics
-> > +     .quad   0                                       // SizeOfStackReserve
-> > +     .quad   0                                       // SizeOfStackCommit
-> > +     .quad   0                                       // SizeOfHeapReserve
-> > +     .quad   0                                       // SizeOfHeapCommit
-> > +     .long   0                                       // LoaderFlags
-> > +     .long   (section_table - .) / 8                 // NumberOfRvaAndSizes
-> > +
-> > +     .quad   0                                       // ExportTable
-> > +     .quad   0                                       // ImportTable
-> > +     .quad   0                                       // ResourceTable
-> > +     .quad   0                                       // ExceptionTable
-> > +     .quad   0                                       // CertificationTable
-> > +     .quad   0                                       // BaseRelocationTable
-> > +
-> > +     // Section table
-> > +section_table:
-> > +     .ascii  ".text\0\0\0"
-> > +     .long   __pecoff_text_end - efi_header_end      // VirtualSize
-> > +     .long   efi_header_end - _start                 // VirtualAddress
-> > +     .long   __pecoff_text_end - efi_header_end      // SizeOfRawData
-> > +     .long   efi_header_end - _start                 // PointerToRawData
-> > +
-> > +     .long   0                                       // PointerToRelocations
-> > +     .long   0                                       // PointerToLineNumbers
-> > +     .short  0                                       // NumberOfRelocations
-> > +     .short  0                                       // NumberOfLineNumbers
-> > +     .long   IMAGE_SCN_CNT_CODE | \
-> > +             IMAGE_SCN_MEM_READ | \
-> > +             IMAGE_SCN_MEM_EXECUTE                   // Characteristics
-> > +
-> > +     .ascii  ".data\0\0\0"
-> > +     .long   __pecoff_data_virt_size                 // VirtualSize
-> > +     .long   __pecoff_text_end - _start              // VirtualAddress
-> > +     .long   __pecoff_data_raw_size                  // SizeOfRawData
-> > +     .long   __pecoff_text_end - _start              // PointerToRawData
-> > +
-> > +     .long   0                                       // PointerToRelocations
-> > +     .long   0                                       // PointerToLineNumbers
-> > +     .short  0                                       // NumberOfRelocations
-> > +     .short  0                                       // NumberOfLineNumbers
-> > +     .long   IMAGE_SCN_CNT_INITIALIZED_DATA | \
-> > +             IMAGE_SCN_MEM_READ | \
-> > +             IMAGE_SCN_MEM_WRITE                     // Characteristics
-> > +
-> > +     .set    section_count, (. - section_table) / 40
-> > +
-> > +     .balign 0x1000
-> > +efi_header_end:
-> > +     .endm
-> > diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> > index c6a37e8231a8..3631147732ee 100644
-> > --- a/arch/riscv/kernel/head.S
-> > +++ b/arch/riscv/kernel/head.S
-> > @@ -13,6 +13,7 @@
-> >  #include <asm/csr.h>
-> >  #include <asm/hwcap.h>
-> >  #include <asm/image.h>
-> > +#include "efi-header.S"
-> >
-> >  __HEAD
-> >  ENTRY(_start)
-> > @@ -22,10 +23,18 @@ ENTRY(_start)
-> >        * Do not modify it without modifying the structure and all bootloaders
-> >        * that expects this header format!!
-> >        */
-> > +#ifdef CONFIG_EFI
-> > +     /*
-> > +      * This instruction decodes to "MZ" ASCII required by UEFI.
-> > +      */
-> > +     c.li s4,-13
-> > +     j _start_kernel
-> > +#else
-> >       /* jump to start kernel */
-> >       j _start_kernel
-> >       /* reserved */
-> >       .word 0
-> > +#endif
-> >       .balign 8
-> >  #if __riscv_xlen == 64
-> >       /* Image load offset(2MB) from start of RAM */
-> > @@ -43,7 +52,14 @@ ENTRY(_start)
-> >       .ascii RISCV_IMAGE_MAGIC
-> >       .balign 4
-> >       .ascii RISCV_IMAGE_MAGIC2
-> > +#ifdef CONFIG_EFI
-> > +     .word pe_head_start - _start
-> > +pe_head_start:
-> > +
-> > +     __EFI_PE_HEADER
-> > +#else
-> >       .word 0
-> > +#endif
-> >
-> >  .align 2
-> >  #ifdef CONFIG_MMU
-> > diff --git a/arch/riscv/kernel/image-vars.h b/arch/riscv/kernel/image-vars.h
-> > new file mode 100644
-> > index 000000000000..8c212efb37a6
-> > --- /dev/null
-> > +++ b/arch/riscv/kernel/image-vars.h
-> > @@ -0,0 +1,51 @@
-> > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > +/*
-> > + * Copyright (C) 2020 Western Digital Corporation or its affiliates.
-> > + * Linker script variables to be set after section resolution, as
-> > + * ld.lld does not like variables assigned before SECTIONS is processed.
-> > + * Based on arch/arm64/kerne/image-vars.h
-> > + */
-> > +#ifndef __RISCV_KERNEL_IMAGE_VARS_H
-> > +#define __RISCV_KERNEL_IMAGE_VARS_H
-> > +
-> > +#ifndef LINKER_SCRIPT
-> > +#error This file should only be included in vmlinux.lds.S
-> > +#endif
-> > +
-> > +#ifdef CONFIG_EFI
-> > +
-> > +/*
-> > + * The EFI stub has its own symbol namespace prefixed by __efistub_, to
-> > + * isolate it from the kernel proper. The following symbols are legally
-> > + * accessed by the stub, so provide some aliases to make them accessible.
-> > + * Only include data symbols here, or text symbols of functions that are
-> > + * guaranteed to be safe when executed at another offset than they were
-> > + * linked at. The routines below are all implemented in assembler in a
-> > + * position independent manner
-> > + */
-> > +__efistub_memcmp             = memcmp;
-> > +__efistub_memchr             = memchr;
-> > +__efistub_memcpy             = memcpy;
-> > +__efistub_memmove            = memmove;
-> > +__efistub_memset             = memset;
-> > +__efistub_strlen             = strlen;
-> > +__efistub_strnlen            = strnlen;
-> > +__efistub_strcmp             = strcmp;
-> > +__efistub_strncmp            = strncmp;
-> > +__efistub_strrchr            = strrchr;
-> > +
-> > +#ifdef CONFIG_KASAN
-> > +__efistub___memcpy           = memcpy;
-> > +__efistub___memmove          = memmove;
-> > +__efistub___memset           = memset;
-> > +#endif
-> > +
-> > +__efistub__start             = _start;
-> > +__efistub__start_kernel              = _start_kernel;
-> > +__efistub__end                       = _end;
-> > +__efistub__edata             = _edata;
-> > +__efistub_screen_info                = screen_info;
-> > +
-> > +#endif
-> > +
-> > +#endif /* __RISCV_KERNEL_IMAGE_VARS_H */
-> > diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-> > index f3586e31ed1e..6dcf790282dd 100644
-> > --- a/arch/riscv/kernel/vmlinux.lds.S
-> > +++ b/arch/riscv/kernel/vmlinux.lds.S
-> > @@ -10,6 +10,7 @@
-> >  #include <asm/cache.h>
-> >  #include <asm/thread_info.h>
-> >  #include <asm/set_memory.h>
-> > +#include "image-vars.h"
-> >
-> >  #include <linux/sizes.h>
-> >  OUTPUT_ARCH(riscv)
-> > @@ -17,6 +18,9 @@ ENTRY(_start)
-> >
-> >  jiffies = jiffies_64;
-> >
-> > +PECOFF_SECTION_ALIGNMENT = 0x1000;
-> > +PECOFF_FILE_ALIGNMENT = 0x200;
-> > +
-> >  SECTIONS
-> >  {
-> >       /* Beginning of code and text segment */
-> > @@ -76,6 +80,10 @@ SECTIONS
-> >
-> >       EXCEPTION_TABLE(0x10)
-> >
-> > +#ifdef CONFIG_EFI
-> > +     . = ALIGN(PECOFF_SECTION_ALIGNMENT);
-> > +     __pecoff_text_end = .;
-> > +#endif
-> >       . = ALIGN(SECTION_ALIGN);
-> >       _data = .;
-> >
-> > @@ -83,16 +91,26 @@ SECTIONS
-> >       .sdata : {
-> >               __global_pointer$ = . + 0x800;
-> >               *(.sdata*)
-> > -             /* End of data section */
-> > -             _edata = .;
-> >       }
-> >
-> > +#ifdef CONFIG_EFI
-> > +     .pecoff_edata_padding : { BYTE(0); . = ALIGN(PECOFF_FILE_ALIGNMENT); }
-> > +     __pecoff_data_raw_size = ABSOLUTE(. - __pecoff_text_end);
-> > +#endif
-> > +
-> > +     /* End of data section */
-> > +     _edata = .;
-> > +
-> >       BSS_SECTION(PAGE_SIZE, PAGE_SIZE, 0)
-> >
-> >       .rel.dyn : {
-> >               *(.rel.dyn*)
-> >       }
-> >
-> > +#ifdef CONFIG_EFI
-> > +     . = ALIGN(PECOFF_SECTION_ALIGNMENT);
-> > +     __pecoff_data_virt_size = ABSOLUTE(. - __pecoff_text_end);
-> > +#endif
-> >       _end = .;
-> >
-> >       STABS_DEBUG
+With "noinline":
 
+0000000000000b30 <do_user_addr_fault>:
+     b30:       41 57                   push   %r15
+     b32:       41 56                   push   %r14
+     b34:       41 55                   push   %r13
+     b36:       49 89 d5                mov    %rdx,%r13
+     b39:       41 54                   push   %r12
+     b3b:       49 89 fc                mov    %rdi,%r12
+     b3e:       55                      push   %rbp
+     b3f:       48 89 f5                mov    %rsi,%rbp
+     b42:       53                      push   %rbx
+     b43:       65 48 8b 04 25 00 00    mov    %gs:0x0,%rax
+     b4a:       00 00
+     b4c:       48 83 ec 18             sub    $0x18,%rsp
 
+With "inline":
 
+00000000000008a0 <do_user_addr_fault>:
+     8a0:       41 57                   push   %r15
+     8a2:       41 56                   push   %r14
+     8a4:       41 55                   push   %r13
+     8a6:       49 89 d5                mov    %rdx,%r13
+     8a9:       41 54                   push   %r12
+     8ab:       49 89 fc                mov    %rdi,%r12
+     8ae:       55                      push   %rbp
+     8af:       48 89 f5                mov    %rsi,%rbp
+     8b2:       53                      push   %rbx
+     8b3:       65 48 8b 04 25 00 00    mov    %gs:0x0,%rax
+     8ba:       00 00
+     8bc:       48 83 ec 18             sub    $0x18,%rsp
+
+So all we're left with is the increase in kernel text:
+
+  add/remove: 1/5 grow/shrink: 2/1 up/down: 1049/-1144 (-95)
+  Function                                     old     new   delta
+  spurious_kernel_fault.part                     -     559    +559
+  do_user_addr_fault                           988    1446    +458
+  do_kern_addr_fault                           103     135     +32
+  bad_area_nosemaphore                          13       -     -13
+  bad_area                                      66       -     -66
+  pgtable_bad                                  107       -    -107
+  mm_fault_error                               199       -    -199
+  bad_area_access_error                        226       -    -226
+  spurious_kernel_fault                        553      20    -533
+  Total: Before=7359, After=7264, chg -1.29%
+
+Therefore, let's inline the page fault handling paths to reduce kernel
+text size.
+
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Signed-off-by: Pekka Enberg <penberg@kernel.org>
+---
+ arch/x86/mm/fault.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 35f1498e9832..b8893684d80c 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -533,7 +533,7 @@ show_fault_oops(struct pt_regs *regs, unsigned long error_code, unsigned long ad
+ 	dump_pagetable(address);
+ }
+ 
+-static noinline void
++static inline void
+ pgtable_bad(struct pt_regs *regs, unsigned long error_code,
+ 	    unsigned long address)
+ {
+@@ -577,7 +577,7 @@ static void set_signal_archinfo(unsigned long address,
+ 	tsk->thread.cr2 = address;
+ }
+ 
+-static noinline void
++static inline void
+ no_context(struct pt_regs *regs, unsigned long error_code,
+ 	   unsigned long address, int signal, int si_code)
+ {
+@@ -788,7 +788,7 @@ __bad_area_nosemaphore(struct pt_regs *regs, unsigned long error_code,
+ 	no_context(regs, error_code, address, SIGSEGV, si_code);
+ }
+ 
+-static noinline void
++static inline void
+ bad_area_nosemaphore(struct pt_regs *regs, unsigned long error_code,
+ 		     unsigned long address)
+ {
+@@ -809,7 +809,7 @@ __bad_area(struct pt_regs *regs, unsigned long error_code,
+ 	__bad_area_nosemaphore(regs, error_code, address, pkey, si_code);
+ }
+ 
+-static noinline void
++static inline void
+ bad_area(struct pt_regs *regs, unsigned long error_code, unsigned long address)
+ {
+ 	__bad_area(regs, error_code, address, 0, SEGV_MAPERR);
+@@ -832,7 +832,7 @@ static inline bool bad_area_access_from_pkeys(unsigned long error_code,
+ 	return false;
+ }
+ 
+-static noinline void
++static inline void
+ bad_area_access_error(struct pt_regs *regs, unsigned long error_code,
+ 		      unsigned long address, struct vm_area_struct *vma)
+ {
+@@ -905,7 +905,7 @@ do_sigbus(struct pt_regs *regs, unsigned long error_code, unsigned long address,
+ 	force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)address);
+ }
+ 
+-static noinline void
++static inline void
+ mm_fault_error(struct pt_regs *regs, unsigned long error_code,
+ 	       unsigned long address, vm_fault_t fault)
+ {
+@@ -971,7 +971,7 @@ static int spurious_kernel_fault_check(unsigned long error_code, pte_t *pte)
+  * See Intel Developer's Manual Vol 3 Section 4.10.4.3, bullet 3
+  * (Optional Invalidation).
+  */
+-static noinline int
++static inline int
+ spurious_kernel_fault(unsigned long error_code, unsigned long address)
+ {
+ 	pgd_t *pgd;
 -- 
-Regards,
-Atish
+2.26.2
+
