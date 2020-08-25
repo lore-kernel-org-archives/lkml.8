@@ -2,122 +2,95 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF6BC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A7BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4D1020706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:35:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598344516;
-	bh=P7tYkDgeMh3wvYdqzgUhOqZq1GFmaBnxq32kC8LyopY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=axRpGFvYtfwdw0/0A9EWJjsEUowy6v+s+CA+Hurw6ltBA0CbIOE7+/I43TZ5GvH0Y
-	 s4g6fA7U2hS8yr7HvKld78QU2UKO4mpB5bXgFpYL9D8LPMPecqH2xvh12dnuhEEDIx
-	 miKq/UZSBfG3BQd6apFLXVXyiuBFtQXUTVutdHno=
+	by mail.kernel.org (Postfix) with ESMTP id CD7FE2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgHYIfP convert rfc822-to-8bit (ORCPT
+        id S1729274AbgHYIjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:35:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39738 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbgHYIfN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:35:13 -0400
-Received: by mail-wr1-f67.google.com with SMTP id a5so11832132wrm.6;
-        Tue, 25 Aug 2020 01:35:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1qEjxyiiC2lGzcAr6s2ibTUKc7Z/mlq1zZKoS1Bu9DI=;
-        b=PNSZA/Goj2v4wmd9FuxARlrW4a99vKiCV0MYFj55Dew+KgSV/M3e2xWCfNnMhKa5rv
-         e/pO7FdiBoXtSISIb1HWeRJqZO1HGtFuqOSv9HbvI9veNin/yiTIeAA3213PoqJMs692
-         +POlIWf4MFOnUVu1o1Tm4JkXF81OGVvO5+SE97YA2AEw4K296FYJ+u+1dI2ux17f879C
-         sMTjAeb5vlbYQ+vs2yyBDFF/ptW7jxtP2yXdLFgSLAyiV4vbYN+7P6QKYgcw11IUCZMJ
-         ajXzXIQcWcF3MqTpQ3m+rryVtYwcBX6MVnw0P3y735xdzIro557/7Rth7H8lCRYWGB5F
-         iinA==
-X-Gm-Message-State: AOAM5325kqFdTg+UjYrVuI3BovVLWLrosPYqStdVwMIuGHTZ9wZP1thR
-        Sfx+KKGlpZoFEOpz0LZG2ak=
-X-Google-Smtp-Source: ABdhPJwecYN2rByJF63cxcgAApA/0EZmkurGTClR14WhE+iyH+pK594u9go7TnYRUVxdFwq6fDp6OQ==
-X-Received: by 2002:adf:f08a:: with SMTP id n10mr10084799wro.351.1598344511461;
-        Tue, 25 Aug 2020 01:35:11 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id 188sm12831261wmz.2.2020.08.25.01.35.10
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Aug 2020 01:35:10 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 10:35:08 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     =?utf-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     tsbogend@alpha.franken.de, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        zhenwenjin@gmail.com, sernia.zhou@foxmail.com,
-        yanfei.li@ingenic.com, rick.tyliu@ingenic.com,
-        aric.pzqi@ingenic.com, dongsheng.qiu@ingenic.com,
-        hns@goldelico.com, ebiederm@xmission.com, paul@crapouillou.net
-Subject: Re: [PATCH 1/1] MIPS: CI20: Update defconfig for EFUSE.
-Message-ID: <20200825083508.GA13642@kozik-lap>
-References: <20200825075239.17133-1-zhouyanjie@wanyeetech.com>
- <20200825075239.17133-2-zhouyanjie@wanyeetech.com>
+        Tue, 25 Aug 2020 04:39:49 -0400
+Received: from mga18.intel.com ([134.134.136.126]:62291 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728786AbgHYIjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 04:39:46 -0400
+IronPort-SDR: 6hf9NM6ewjQSKZwP43xw4/WIGF6gqWLnwNiVLyha8zyY/fqXmKfYoZ48+qPa2x2swHtdm1Cmqm
+ 3prENlFcsZ8A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="143731051"
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="143731051"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 01:39:45 -0700
+IronPort-SDR: khKc+1k2dfxF4I/hhwwK2jpkKpV+l8pJZgUuRxWOG5P6qT2C7oPwsHNpHHjbSHvSUUY3InWVO4
+ 8r+GKvbUE2Vw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="328791951"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2020 01:39:44 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kAUHs-00BHJo-Jf; Tue, 25 Aug 2020 11:26:36 +0300
+Date:   Tue, 25 Aug 2020 11:26:36 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH v1] sched/topology: Make compiler happy about unused
+ constant definitions
+Message-ID: <20200825082636.GQ1891694@smile.fi.intel.com>
+References: <20200824153902.57875-1-andriy.shevchenko@linux.intel.com>
+ <jhjeenwdl7u.mognet@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200825075239.17133-2-zhouyanjie@wanyeetech.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <jhjeenwdl7u.mognet@arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 03:52:39PM +0800, 周琰杰 (Zhou Yanjie) wrote:
-> The commit 19c968222934 ("MIPS: DTS: CI20: make DM9000 Ethernet
-> controller use NVMEM to find the default MAC address") add EFUSE
-> node for DM9000 in CI20, however, the EFUSE driver is not selected,
-> which will cause the DM9000 to fail to read the MAC address from
-> EFUSE, causing the following issue:
+On Mon, Aug 24, 2020 at 06:09:41PM +0100, Valentin Schneider wrote:
+> On 24/08/20 16:39, Andy Shevchenko wrote:
+> > Compilation of almost each file ends up with
+> >
+> >  In file included from .../include/linux/energy_model.h:10,
+> >                 from .../include/linux/device.h:16,
+> >                 from .../drivers/spi/spi.c:8:
+> >  .../include/linux/sched/topology.h:30:27: warning: ‘SD_DEGENERATE_GROUPS_MASK’ defined but not used [-Wunused-const-variable=]
+> >     30 | static const unsigned int SD_DEGENERATE_GROUPS_MASK =
+> >        |                           ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >  ...
+> >
+> > Make compiler happy by annotating the static constants with __maybwe_unused.
+> >
 > 
-> [FAILED] Failed to start Raise network interfaces.
-> 
-> Fix this problem by select CONFIG_JZ4780_EFUSE by default in the
-> ci20_defconfig.
-> 
-> Fixes: 19c968222934 ("MIPS: DTS: CI20: make DM9000 Ethernet
-> controller use NVMEM to find the default MAC address").
+> That should see some use as long as the build is for SMP. This whole region
+> is guarded by #ifdef CONFIG_SMP, so an !SMP build shouldn't trigger this.
 
-There is nothing to fix here or to backport to stable. The defconfigs
-are just examples, useful for development and for downstream.
+Isn't SMP is default for most of the kernel builds?
+And honestly I didn't get the purpose of this comment.
 
-If you really think there is a bug which should be fixed, then there
-should be dependency on JZ4780_EFUSE by Ethernet driver.
+> With what config/kernel are you getting this?
 
-Best regards,
-Krzysztof
+x86_64_defconfig from the kernel sources with some drivers added (SMP or so has
+not been touched, DEBUG_SHED was enabled once to confirm that another static
+const has same issue).
 
-> 
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
->  arch/mips/configs/ci20_defconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/mips/configs/ci20_defconfig b/arch/mips/configs/ci20_defconfig
-> index 0a46199fdc3f..050ee6a17e11 100644
-> --- a/arch/mips/configs/ci20_defconfig
-> +++ b/arch/mips/configs/ci20_defconfig
-> @@ -131,6 +131,7 @@ CONFIG_MEMORY=y
->  CONFIG_JZ4780_NEMC=y
->  CONFIG_PWM=y
->  CONFIG_PWM_JZ4740=m
-> +CONFIG_JZ4780_EFUSE=y
->  CONFIG_EXT4_FS=y
->  # CONFIG_DNOTIFY is not set
->  CONFIG_PROC_KCORE=y
-> -- 
-> 2.11.0
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
