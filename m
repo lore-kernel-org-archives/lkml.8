@@ -2,108 +2,131 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F83C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1972C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0A922074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB29206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:46:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C4WmnLKm"
+	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="Gukgr50R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgHYApO (ORCPT
+        id S1728236AbgHYAqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 20:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45278 "EHLO
+        Mon, 24 Aug 2020 20:46:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHYApO (ORCPT
+        with ESMTP id S1727872AbgHYAqW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 20:45:14 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBDBEC061574;
-        Mon, 24 Aug 2020 17:45:13 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bb9J64kqDz9sTK;
-        Tue, 25 Aug 2020 10:45:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598316311;
-        bh=XZ5U/mRjH4bfGsLqiTjpO9nUgHwgu//el4h0ktVGRbs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=C4WmnLKmTy4rAxXXGy9wq8ugEm8xrkrqKmoaAnUxEAHcpLXBjiyLMVggqrwxfba8b
-         JZWYqVh4J/HdUqAHkTvls6xAz0fIKIHT7p0Pjn5b3xUPapLnAnhAI1Qud0IS6dm/fH
-         oN8oEZYY4TNrbh62Rr8GhZyjBq7JIfdS8EuH4W3qlkZLedLNuoFwR+uw8tzjqkMNFB
-         kEpnBvDwMR5rTpcWuqewP8z8qWN9r0bmsN8J3meGlROnyIrsIvIkAb5c40Kr1GAbyA
-         zuSOl1g5fWpqWOBb7wDkUvW6Rsgmj3yLethFxlvP1XOOGlksWpunYT+Erbo70D+nVB
-         oixodeUXeZMEw==
-Date:   Tue, 25 Aug 2020 10:45:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Sterba <dsterba@suse.cz>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Nikolay Borisov <nborisov@suse.com>
-Subject: linux-next: build warning after merge of the btrfs tree
-Message-ID: <20200825104507.4c79c433@canb.auug.org.au>
+        Mon, 24 Aug 2020 20:46:22 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E5B7C061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 17:46:21 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id l63so6669866edl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 17:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kylehuey.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hjKqIZLzmHd4p7kyaSwWp24u2GNn12XnZUdGmho9Jcc=;
+        b=Gukgr50RNodxfXTTBzruy3oCMBvOtbOKndtYi99p3fzNN/nAiWauej2yuDwwx1B9v5
+         x3hrRWEh3f9BVGlHsxPUFF5Y2Y8KLfwmT4G1vA0uA3v1SoGKPbACxtAMaB/zt5E8NZnx
+         tCWhKnfHF0kwalFm/1hHwQ4u1SuSqr23klpYVsMHMJiVndajb6qY1eMs62ZkmeDlrPYS
+         FksqDzOkPP1NjqM+LDcnHCXQ1ldWRfsIEFdZxr85EYurxGFV+EHrFXWW2fJLvhlfYxFX
+         VFZyWN72qTlEGLchjKKbchHUx1uBFLpB+2f6R/rb5NP5vOuBTvYn4dg8snLRNJQ9EX3z
+         lxRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hjKqIZLzmHd4p7kyaSwWp24u2GNn12XnZUdGmho9Jcc=;
+        b=edPzGv0xJxGgIwGcYTAjfFm8M/V3QxT2TiLOp2uGEE/ZA2NkKGqUmsFPe6PUICU0AY
+         V4CdeLJBeGzpDBY4QAzw3b+DFZIQ0WCVm4RG070Y4w7Q56HJPfwcU7nXOWnq7oyVhYL5
+         uIQY3IQEIW+j8gLAzQfJQUCBcPqSEU6FXc2Smj2fBXX3JMf4HN01vzlfA7x9WaRkdbwk
+         1gynvECBlP7vZlKvhcVEdg5eOkuEvpp29XMyh/pPFt1eGprJK6vo0cGGFGR3VWb6kNcl
+         +HLfz5GzRdift5kXbKCeHgecEh6EtR+xis4GRv9l0WolPc1YoclrA/HFJJs16PDUuowL
+         sDyw==
+X-Gm-Message-State: AOAM5311dtNBpqHeTz7ThSivL6IF5B8dcsM8Hcbjf6kzZkS7PVw1/NaH
+        zO/bz4z/oKr6E/iFs/JCZnXqWFL+RYWGK+1WOyiL1v/fz3KFQqVg
+X-Google-Smtp-Source: ABdhPJyrUJewW7tGk1AEDaQKUn0xsE8weAKH+gBJaf0g6+ZXdiaFxkmJiIIbVKd6WLqq+YT0MHmj9qMPR7RgzS1+moE=
+X-Received: by 2002:a05:6402:2212:: with SMTP id cq18mr7996788edb.34.1598316380072;
+ Mon, 24 Aug 2020 17:46:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/XePTgdGnGNUt+GcXKp37B_i";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <CAOp6jLYrwMqV=7hmxgdZUdDZ2aeUB27TTHm=j6cQT7C10Muhww@mail.gmail.com>
+ <7DF88F22-0310-40C9-9DA6-5EBCB4877933@amacapital.net> <CALCETrUrvrQNw6dPau_rtHjA_YuCVdCTWYd4dsdcvcGsOaspmg@mail.gmail.com>
+ <b0813ec5-b163-cc11-bfc9-e9d08c9c4ff2@zytor.com> <CALCETrXvgb257CWnaA1NgUUp3x08+gJBEOQh4o9OYkB-RvAo1A@mail.gmail.com>
+In-Reply-To: <CALCETrXvgb257CWnaA1NgUUp3x08+gJBEOQh4o9OYkB-RvAo1A@mail.gmail.com>
+From:   Kyle Huey <me@kylehuey.com>
+Date:   Mon, 24 Aug 2020 17:46:04 -0700
+Message-ID: <CAP045Ao6xBquwSDoCLzzNbEW1Lr969d+D0jQQ2Zb4pX3B77-Xw@mail.gmail.com>
+Subject: Re: [REGRESSION] x86/cpu fsgsbase breaks TLS in 32 bit rr tracees on
+ a 64 bit system
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        "Robert O'Callahan" <robert@ocallahan.org>,
+        "Bae, Chang Seok" <chang.seok.bae@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/XePTgdGnGNUt+GcXKp37B_i
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Aug 24, 2020 at 5:31 PM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Mon, Aug 24, 2020 at 4:52 PM H. Peter Anvin <hpa@zytor.com> wrote:
+> >
+> > On 2020-08-24 14:10, Andy Lutomirski wrote:
+> > >
+> > > PTRACE_READ_SEGMENT_DESCRIPTOR to read a segment descriptor.
+> > >
+> > > PTRACE_SET_FS / PTRACE_SET_GS: Sets FS or GS and updates the base accordingly.
+> > >
+> > > PTRACE_READ_SEGMENT_BASE: pass in a segment selector, get a base out.
+> > > You would use this to populate the base fields.
+> > >
+> > > or perhaps a ptrace SETREGS variant that tries to preserve the old
+> > > base semantics and magically sets the bases to match the selectors if
+> > > the selectors are nonzero.
+> > >
+> > > Do any of these choices sound preferable to any of you?
+> > >
+> >
+> > My suggestion would be to export the GDT and LDT as a (readonly or mostly
+> > readonly) regset(s) rather than adding entirely new operations. We could allow
+> > the LDT and the per-thread GDT entries to be written, subject to the same
+> > limitations as the corresponding system calls.
+> >
+>
+> That seems useful, although we'd want to do some extensive
+> sanitization of the GDT.  But maybe it's obnoxious to ask Kyle and
+> Robert to parse the GDT, LDT, and selector just to emulate the
+> demented pre-5.9 ptrace() behavior.
+>
+> --Andy
 
-Hi all,
+We've already addressed the main issue on rr's side[0]. The only
+outstanding issue is that if you record a trace with 32 bit programs
+on a pre-5.9 64 bit kernel and then try to replay it on 5.9 it won't
+work. If you hit this case rr will print an error message telling you
+to boot your 5.9 kernel with nofsgsbase if you want to replay the
+trace. I think that's probably sufficient. 32 bit is legacy stuff we
+don't care that much about anyways, replaying traces on a different
+kernel/machine has always been a bit dicey, and if you absolutely must
+do it there is a workaround. I'm not inclined to do much work to
+support the narrow remaining case.
 
-After merging the btrfs tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
+- Kyle
 
-fs/btrfs/volumes.c: In function 'btrfs_rm_dev_replace_free_srcdev':
-fs/btrfs/volumes.c:2217:24: warning: unused variable 'fs_info' [-Wunused-va=
-riable]
- 2217 |  struct btrfs_fs_info *fs_info =3D srcdev->fs_info;
-      |                        ^~~~~~~
-
-Introduced by commits
-
-  2a6fac3ea9a1 ("btrfs: move btrfs_scratch_superblocks into btrfs_dev_repla=
-ce_finishing")
-  438ac6dd65ef ("btrfs: switch seed device to list api")
-
-merged in commit
-
-  76e6c55d5432 ("Merge branch 'ext/nikbor/seed-cleanups-v2' into for-next-n=
-ext-v5.9-20200824")
-
-which should have removed the declaration.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/XePTgdGnGNUt+GcXKp37B_i
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9EXxMACgkQAVBC80lX
-0GzKFAf+IbDKqYrrbY9P7HvyNC6vIQ7vq9+5+ZfUF+eV1QXttnnkQO+2+/spHd5m
-iAiYljDWvQtxEcL21XEZHrPDksMg2gCsgYGjf/LXfYjNiVQg68RrwyfWm1MPhZoT
-C2qVXiEy9aDQ4aHGNQYEnu4z6zy//6BEhdLCJavGQt/W5htKDoWATUN2bADsHfAK
-XQgTsSBndnkcMWj5Is/q//cpnGDhRJaBgihgvas6EZTUwkTqeyrGGt28wj3PslIB
-UyY+yK93m/MuldLc7x5Hw50kEUpwKf42DIM2b2fGdOhWLk6fIDckISJ3ffqC3JJU
-zFkmRfxIxFp5jVAV0JjAgUpUxG27Ug==
-=r9aG
------END PGP SIGNATURE-----
-
---Sig_/XePTgdGnGNUt+GcXKp37B_i--
+[0] Namely, we're tracking fs/gsbase for 32 bit tracees on 64 bit
+kernels where the fs/gsbase instructions work in new recordings now:
+https://github.com/mozilla/rr/commit/c3292c75dbd8c9ce5256496108965c0442424eef
