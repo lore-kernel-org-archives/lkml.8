@@ -7,40 +7,37 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79507C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D75C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFC52072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7492072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgHYE5b (ORCPT
+        id S1728898AbgHYE50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:57:31 -0400
-Received: from smtprelay0241.hostedemail.com ([216.40.44.241]:33396 "EHLO
+        Tue, 25 Aug 2020 00:57:26 -0400
+Received: from smtprelay0117.hostedemail.com ([216.40.44.117]:38492 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728848AbgHYE5V (ORCPT
+        by vger.kernel.org with ESMTP id S1728821AbgHYE5O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:57:21 -0400
+        Tue, 25 Aug 2020 00:57:14 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id EBFFD181D330D;
-        Tue, 25 Aug 2020 04:57:19 +0000 (UTC)
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 6A42D182CED2A;
+        Tue, 25 Aug 2020 04:57:12 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: star96_3d1160527059
-X-Filterd-Recvd-Size: 3599
+X-HE-Tag: soap42_300b81b27059
+X-Filterd-Recvd-Size: 4465
 Received: from joe-laptop.perches.com (unknown [47.151.133.149])
         (Authenticated sender: joe@perches.com)
         by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 25 Aug 2020 04:57:18 +0000 (UTC)
+        Tue, 25 Aug 2020 04:57:11 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     Jiri Kosina <trivial@kernel.org>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-arm-kernel@lists.infradead.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 20/29] scai/arm: Avoid comma separated statements
-Date:   Mon, 24 Aug 2020 21:56:17 -0700
-Message-Id: <be30bb0f24a5fb4f70ca8ed7027ca7555816a3fb.1598331149.git.joe@perches.com>
+To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH 16/29] 8390: Avoid comma separated statements
+Date:   Mon, 24 Aug 2020 21:56:13 -0700
+Message-Id: <720727617483779e9831f513bf9b671f59d26d57.1598331149.git.joe@perches.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.1598331148.git.joe@perches.com>
 References: <cover.1598331148.git.joe@perches.com>
@@ -55,96 +52,107 @@ Use semicolons and braces.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/scsi/arm/cumana_2.c | 19 +++++++++++--------
- drivers/scsi/arm/eesox.c    |  9 +++++----
- drivers/scsi/arm/powertec.c |  9 +++++----
- 3 files changed, 21 insertions(+), 16 deletions(-)
+ drivers/net/ethernet/8390/axnet_cs.c | 19 ++++++++++++-------
+ drivers/net/ethernet/8390/lib8390.c  | 14 +++++++++-----
+ drivers/net/ethernet/8390/pcnet_cs.c |  6 ++++--
+ 3 files changed, 25 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/scsi/arm/cumana_2.c b/drivers/scsi/arm/cumana_2.c
-index 29294f0ef8a9..9dcd912267e6 100644
---- a/drivers/scsi/arm/cumana_2.c
-+++ b/drivers/scsi/arm/cumana_2.c
-@@ -166,14 +166,15 @@ cumanascsi_2_dma_setup(struct Scsi_Host *host, struct scsi_pointer *SCp,
+diff --git a/drivers/net/ethernet/8390/axnet_cs.c b/drivers/net/ethernet/8390/axnet_cs.c
+index a00b36f91d9f..d041b6dda012 100644
+--- a/drivers/net/ethernet/8390/axnet_cs.c
++++ b/drivers/net/ethernet/8390/axnet_cs.c
+@@ -657,8 +657,10 @@ static void block_input(struct net_device *dev, int count,
+     outb_p(E8390_RREAD+E8390_START, nic_base + AXNET_CMD);
  
- 		bufs = copy_SCp_to_sg(&info->sg[0], SCp, NR_SG);
+     insw(nic_base + AXNET_DATAPORT,buf,count>>1);
+-    if (count & 0x01)
+-	buf[count-1] = inb(nic_base + AXNET_DATAPORT), xfer_count++;
++    if (count & 0x01) {
++	buf[count-1] = inb(nic_base + AXNET_DATAPORT);
++	xfer_count++;
++    }
  
--		if (direction == DMA_OUT)
--			map_dir = DMA_TO_DEVICE,
--			dma_dir = DMA_MODE_WRITE,
-+		if (direction == DMA_OUT) {
-+			map_dir = DMA_TO_DEVICE;
-+			dma_dir = DMA_MODE_WRITE;
- 			alatch_dir = ALATCH_DMA_OUT;
--		else
--			map_dir = DMA_FROM_DEVICE,
--			dma_dir = DMA_MODE_READ,
-+		} else {
-+			map_dir = DMA_FROM_DEVICE;
-+			dma_dir = DMA_MODE_READ;
- 			alatch_dir = ALATCH_DMA_IN;
-+		}
- 
- 		dma_map_sg(dev, info->sg, bufs, map_dir);
- 
-@@ -326,10 +327,12 @@ cumanascsi_2_set_proc_info(struct Scsi_Host *host, char *buffer, int length)
- 				cumanascsi_2_terminator_ctl(host, 0);
- 			else
- 				ret = -EINVAL;
--		} else
-+		} else {
- 			ret = -EINVAL;
--	} else
-+		}
-+	} else {
- 		ret = -EINVAL;
-+	}
- 
- 	return ret;
  }
-diff --git a/drivers/scsi/arm/eesox.c b/drivers/scsi/arm/eesox.c
-index 591ae2a6dd74..5eb2415dda9d 100644
---- a/drivers/scsi/arm/eesox.c
-+++ b/drivers/scsi/arm/eesox.c
-@@ -165,12 +165,13 @@ eesoxscsi_dma_setup(struct Scsi_Host *host, struct scsi_pointer *SCp,
  
- 		bufs = copy_SCp_to_sg(&info->sg[0], SCp, NR_SG);
- 
--		if (direction == DMA_OUT)
--			map_dir = DMA_TO_DEVICE,
-+		if (direction == DMA_OUT) {
-+			map_dir = DMA_TO_DEVICE;
- 			dma_dir = DMA_MODE_WRITE;
--		else
--			map_dir = DMA_FROM_DEVICE,
+@@ -1270,10 +1272,12 @@ static void ei_tx_intr(struct net_device *dev)
+ 			ei_local->txing = 1;
+ 			NS8390_trigger_send(dev, ei_local->tx2, ei_local->tx_start_page + 6);
+ 			netif_trans_update(dev);
+-			ei_local->tx2 = -1,
++			ei_local->tx2 = -1;
+ 			ei_local->lasttx = 2;
+-		}
+-		else ei_local->lasttx = 20, ei_local->txing = 0;	
 +		} else {
-+			map_dir = DMA_FROM_DEVICE;
- 			dma_dir = DMA_MODE_READ;
-+		}
- 
- 		dma_map_sg(dev, info->sg, bufs, map_dir);
- 
-diff --git a/drivers/scsi/arm/powertec.c b/drivers/scsi/arm/powertec.c
-index d99ef014528e..9cc73da4e876 100644
---- a/drivers/scsi/arm/powertec.c
-+++ b/drivers/scsi/arm/powertec.c
-@@ -138,12 +138,13 @@ powertecscsi_dma_setup(struct Scsi_Host *host, struct scsi_pointer *SCp,
- 
- 		bufs = copy_SCp_to_sg(&info->sg[0], SCp, NR_SG);
- 
--		if (direction == DMA_OUT)
--			map_dir = DMA_TO_DEVICE,
-+		if (direction == DMA_OUT) {
-+			map_dir = DMA_TO_DEVICE;
- 			dma_dir = DMA_MODE_WRITE;
--		else
--			map_dir = DMA_FROM_DEVICE,
++			ei_local->lasttx = 20;
++			ei_local->txing = 0;
++		}	
+ 	}
+ 	else if (ei_local->tx2 < 0) 
+ 	{
+@@ -1289,9 +1293,10 @@ static void ei_tx_intr(struct net_device *dev)
+ 			netif_trans_update(dev);
+ 			ei_local->tx1 = -1;
+ 			ei_local->lasttx = 1;
 +		} else {
-+			map_dir = DMA_FROM_DEVICE;
- 			dma_dir = DMA_MODE_READ;
++			ei_local->lasttx = 10;
++			ei_local->txing = 0;
+ 		}
+-		else
+-			ei_local->lasttx = 10, ei_local->txing = 0;
+ 	}
+ //	else
+ //		netdev_warn(dev, "unexpected TX-done interrupt, lasttx=%d\n",
+diff --git a/drivers/net/ethernet/8390/lib8390.c b/drivers/net/ethernet/8390/lib8390.c
+index babc92e2692e..1f48d7f6365c 100644
+--- a/drivers/net/ethernet/8390/lib8390.c
++++ b/drivers/net/ethernet/8390/lib8390.c
+@@ -597,10 +597,12 @@ static void ei_tx_intr(struct net_device *dev)
+ 			ei_local->txing = 1;
+ 			NS8390_trigger_send(dev, ei_local->tx2, ei_local->tx_start_page + 6);
+ 			netif_trans_update(dev);
+-			ei_local->tx2 = -1,
++			ei_local->tx2 = -1;
+ 			ei_local->lasttx = 2;
+-		} else
+-			ei_local->lasttx = 20, ei_local->txing = 0;
++		} else {
++			ei_local->lasttx = 20;
++			ei_local->txing = 0;
 +		}
+ 	} else if (ei_local->tx2 < 0) {
+ 		if (ei_local->lasttx != 2  &&  ei_local->lasttx != -2)
+ 			pr_err("%s: bogus last_tx_buffer %d, tx2=%d\n",
+@@ -612,8 +614,10 @@ static void ei_tx_intr(struct net_device *dev)
+ 			netif_trans_update(dev);
+ 			ei_local->tx1 = -1;
+ 			ei_local->lasttx = 1;
+-		} else
+-			ei_local->lasttx = 10, ei_local->txing = 0;
++		} else {
++			ei_local->lasttx = 10;
++			ei_local->txing = 0;
++		}
+ 	} /* else
+ 		netdev_warn(dev, "unexpected TX-done interrupt, lasttx=%d\n",
+ 			    ei_local->lasttx);
+diff --git a/drivers/net/ethernet/8390/pcnet_cs.c b/drivers/net/ethernet/8390/pcnet_cs.c
+index 164c3ed550bf..9d3b1e0e425c 100644
+--- a/drivers/net/ethernet/8390/pcnet_cs.c
++++ b/drivers/net/ethernet/8390/pcnet_cs.c
+@@ -1178,8 +1178,10 @@ static void dma_block_input(struct net_device *dev, int count,
+     outb_p(E8390_RREAD+E8390_START, nic_base + PCNET_CMD);
  
- 		dma_map_sg(dev, info->sg, bufs, map_dir);
+     insw(nic_base + PCNET_DATAPORT,buf,count>>1);
+-    if (count & 0x01)
+-	buf[count-1] = inb(nic_base + PCNET_DATAPORT), xfer_count++;
++    if (count & 0x01) {
++	buf[count-1] = inb(nic_base + PCNET_DATAPORT);
++	xfer_count++;
++    }
  
+     /* This was for the ALPHA version only, but enough people have been
+        encountering problems that it is still here. */
 -- 
 2.26.0
 
