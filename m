@@ -2,165 +2,88 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16A7C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE58CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B83D42076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C0A2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n5RLxxn4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otzCWeBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbgHYREE (ORCPT
+        id S1726391AbgHYRH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:04:04 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:59735 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgHYRD0 (ORCPT
+        Tue, 25 Aug 2020 13:07:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYRH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:03:26 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200825170324euoutp01b62ed9c29765a719be3f8d6e1c2fbb2b~ukZkSkzEB1623316233euoutp01G
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 17:03:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200825170324euoutp01b62ed9c29765a719be3f8d6e1c2fbb2b~ukZkSkzEB1623316233euoutp01G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598375004;
-        bh=lT/pl1UqwgOneCVuz4KsAzjqeeKNXQsmCXwNe9O0dU4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5RLxxn4Kr0GUCoNLBbXVFwuI95z3WSkk5oRNzalIORTEAOWKm47Z62ZjpvMCw1ss
-         NLgqeUFdcEMKbQtW/4lSxKc8QDxeGV8TN0/hdJeRZhzcLzH7r0oaEpT0YcRs5tYup6
-         Bo4e4pK5xx9KdeiA0RNoAY5yBcnUo+CmiDPuiiJg=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200825170323eucas1p2d545dc9328a6145c1bca5dda5a65dcc2~ukZj2CgIj2589925899eucas1p2B;
-        Tue, 25 Aug 2020 17:03:23 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id C6.99.06318.B54454F5; Tue, 25
-        Aug 2020 18:03:23 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200825170323eucas1p15f2bbfa460f7ef787069dd3459dd77b3~ukZjivK8g3202332023eucas1p14;
-        Tue, 25 Aug 2020 17:03:23 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200825170323eusmtrp1f5737ef6b130b74d4774840b86a12242~ukZjiCK210199301993eusmtrp1E;
-        Tue, 25 Aug 2020 17:03:23 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-a3-5f45445b753a
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 91.93.06017.B54454F5; Tue, 25
-        Aug 2020 18:03:23 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200825170323eusmtip23d84fa8f7cffda9917febb8e4156b60f~ukZjYrn7G1936819368eusmtip2j;
-        Tue, 25 Aug 2020 17:03:23 +0000 (GMT)
-From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     m.szyprowski@samsung.com, b.zolnierkie@samsung.com,
-        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-Subject: [PATCH 3/3] ARM: defconfig: Enable ax88796c driver
-Date:   Tue, 25 Aug 2020 19:03:11 +0200
-Message-Id: <20200825170311.24886-3-l.stelmach@samsung.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200825170311.24886-1-l.stelmach@samsung.com>
+        Tue, 25 Aug 2020 13:07:27 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40B79C061574;
+        Tue, 25 Aug 2020 10:07:26 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id z18so1580284pjr.2;
+        Tue, 25 Aug 2020 10:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mRjZvPEzTfbfzrXjGveM7zQ3xu+YHRq2yS8IAEamwSE=;
+        b=otzCWeByV0AuhXYZqgJ3P2yJaWWLdWjAt4j1h3rf3XFl+Fgiz/+F+7Z2dVlI3XeLRN
+         +wrBl2o069yyTLJIMPEalo9TxE1IMFeORtLwwA98kW5NvD2r90P12VXlQiqJiz308zc0
+         FAsyFDyCHfzNoYXje7rOuuiqtRydzoke1iiXxZWe7n7/T2sp2WSqjV7jWGXKR7zXz5eq
+         Wqik3Of0DPia3a/pI+peNbVA1j+evyyZJyka0NW/DfNVFgCnj/Mqf+WWtive3u7ZhwoL
+         9BGJFYDryUsTOfYZwX+QzqBiBXcJUPFcXGdFHXJYZFGv/pO5NIFaSEiSSTcSQ+MNgylE
+         Jk9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mRjZvPEzTfbfzrXjGveM7zQ3xu+YHRq2yS8IAEamwSE=;
+        b=lZAcXl781XL7fcSfMbPXog38zw4TrCcgyU3G6oJ+ugZVfwyi3G0YJEcAxulWRsP7ZU
+         tgCswEEcDAS96nK50v8udUQagJChiyjJ68+FU6Jjk62/5adQPsmIWsOBV5iyWNBBENcA
+         pDraV9/a3OAbL5HjrW3JZYCoDgQX9s045Kh/240BkJMbh2HYWHau1tBjcVaTyOlyITQK
+         sPJMQLYmJ1H5DR8o1OGBnIevT4uK6b0qIi8gRyTQ32pit7vo4eIsfzFx0Xl4NaZFiNCv
+         WW8EAaPx0SR6AotuhMBSD7asYXGOVO4vXlQtkUqUjJbKjIgkE8AkdpQccX4JJIOyCiyJ
+         aIEQ==
+X-Gm-Message-State: AOAM533x2B5x0I6UchY1ulmQz1n8sWIrzw05cSAR4qGdYBvxxRlaEyL1
+        h92JV8qbQu97/U0RCkaWq5rKoXpLnfY=
+X-Google-Smtp-Source: ABdhPJyl+ifCcH+O3xpNTGY/GJQsxcDP1uTn2BjMwkU5tyxV0wvYZIa6RZmNlx/VtGqOHr+9v7oZJA==
+X-Received: by 2002:a17:90a:c781:: with SMTP id gn1mr2332600pjb.151.1598375246221;
+        Tue, 25 Aug 2020 10:07:26 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id mw8sm3113769pjb.47.2020.08.25.10.07.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 10:07:25 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 10:07:23 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Jiri Kosina <trivial@kernel.org>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/29] Input: MT - Avoid comma separated statements
+Message-ID: <20200825170723.GZ1665100@dtor-ws>
+References: <cover.1598331148.git.joe@perches.com>
+ <02cb394f8c305473c1a783a5ea8425de79fe0ec1.1598331149.git.joe@perches.com>
 MIME-Version: 1.0
-Organization: Samsung R&D Institute Poland
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3fOtrPl9DhFn6ZkzIIS8hp1SokspQV98EtERdnS07R0yo5a
-        9iEta6ktNa20NdLU0MxLzrt5wTWvQ+cNTUmIDFO7UWbalZxHyW//9/n//s8FXgITt3MlRLgy
-        hlYp5RFSnhCv7fhh3n4iIDDYsyrfm6rMqeBSOvM1nMo19nGp9Mn3GGU2P+NT/bVpXGrMUIwo
-        /eQIlxpq1PGoHHMLhzLcbUZUmXGCT3XkOVDXm438fdayoZEBTFb9ZIwj05ek8GRVhQmytOoS
-        JJvTbwziHRf6hdIR4XG0ymPvaWHYUH8DFt0rvFhmNHESUYUgFQkIIHfAvTv1eCoSEmKyGMEf
-        dQ9iH98QtD9txtjHHIL8jhHOauRhYjafNYoQNGqer1DvEGQNzuIWikf6Q/rjLq7FsCcTMZi6
-        aUIWAyNjQdNg4Fm0HekLGVe+8C0aJ7fA+CPtshYt1XW3F3B2nAvcKKpb5gWkH3ww1mAsYwvd
-        998uMzakG5ReHcXZ/i6QVPNgeSMgZ/gwaVjA2EYB8LVHjVhtB7Od1XxWO4MpS7MUJpZ0AmRl
-        7mSzGgS1usWVJXzhVd9PnoXByG1Q0ejBlv1hsU3NZaPW8PKjLbuCNWTWZmNsWQTJajFLb4by
-        9KaVhhK4NVuMMpBUu+YY7ZoDtP9n5SGsBDnSsUykgmZ8lPQFd0YeycQqFe4hUZF6tPS5TH87
-        5+tRy+8zBkQSSGolyuMFBou58jgmPtKAgMCk9qL9vaZTYlGoPP4SrYoKVsVG0IwBORG41FHk
-        kz9zUkwq5DH0eZqOplWrLocQSBJR1WWXyfDxmbP0wIBrW0TraNeBwulPApOhdaA0O89WU1UQ
-        PpXSRLo6B9X/8h7Wk6+r+cybo05xE6m6XJ3VoWTqoEJvo5AY0ffDwukCiX13wPh0gKcXQ23d
-        AJWbXF80NAInZFfS4O7MI+t65td7ZN4/Fn+uy6FuuPyz0HbWPWePFGfC5F5umIqR/wNH+ygn
-        WAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrKIsWRmVeSWpSXmKPExsVy+t/xe7rRLq7xBn8WKlpsnLGe1WLO+RYW
-        i/lHzrFa9D9+zWxx/vwGdosL2/pYLW4eWsFosenxNVaLy7vmsFnMOL+PyeLQ1L2MFmuP3GW3
-        OLZAzKJ17xF2Bz6Py9cuMntsWXmTyWPTqk42j81L6j36tqxi9Pi8SS6ALUrPpii/tCRVISO/
-        uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEv4/KFncwFZ7kq1h45zdTA
-        uJ6zi5GTQ0LARGJew3T2LkYuDiGBpYwSLyc+ZOxi5ABKSEmsnJsOUSMs8edaFxtEzVNGiXkX
-        b7CBJNgEHCX6l55gBUmICHQxSxy5+BMswSxQLnFp1nN2EFtYwFpiQuNHMJtFQFXi1sJZYDYv
-        UHzOxO8sEBvkJdqXbwfr5RSwkXhzZCsziC0EVNNz8BoTRL2gxMmZT1hAjmMWUJdYP08IJMwv
-        oCWxpuk6C8RaeYnmrbOZJzAKzULSMQuhYxaSqgWMzKsYRVJLi3PTc4uN9IoTc4tL89L1kvNz
-        NzECo3TbsZ9bdjB2vQs+xCjAwajEw7uAzTVeiDWxrLgy9xCjBAezkgiv09nTcUK8KYmVValF
-        +fFFpTmpxYcYTYHenMgsJZqcD0wgeSXxhqaG5haWhubG5sZmFkrivB0CB2OEBNITS1KzU1ML
-        Uotg+pg4OKUaGJUDj7JbLjFbwef8ZHqT+YtX0tbuTelVjLZBLL+FEh47nDP8z3916wf1Sdd+
-        ixp9X+2p3pZRtO2WerOsvW9VQO9UhV8LDvreV+g4WH4vaEXcKaVjiy+JLdGP+u393K1HToL1
-        3WmxsPkbvrDE3Dz8Zc2dm8milmebL1YtP6P2tojVw3NTtK2MmhJLcUaioRZzUXEiAAig+ejo
-        AgAA
-X-CMS-MailID: 20200825170323eucas1p15f2bbfa460f7ef787069dd3459dd77b3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200825170323eucas1p15f2bbfa460f7ef787069dd3459dd77b3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200825170323eucas1p15f2bbfa460f7ef787069dd3459dd77b3
-References: <20200825170311.24886-1-l.stelmach@samsung.com>
-        <CGME20200825170323eucas1p15f2bbfa460f7ef787069dd3459dd77b3@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <02cb394f8c305473c1a783a5ea8425de79fe0ec1.1598331149.git.joe@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable ax88796c driver for the ethernet chip on Exynos3250-based
-ARTIK5 boards.
+On Mon, Aug 24, 2020 at 09:56:09PM -0700, Joe Perches wrote:
+> Use semicolons and braces.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
----
- arch/arm/configs/exynos_defconfig   | 2 ++
- arch/arm/configs/multi_v7_defconfig | 2 ++
- 2 files changed, 4 insertions(+)
+Applied, thank you.
 
-Please DO NOT merge before these two
-
-  https://lore.kernel.org/lkml/20200821161401.11307-2-l.stelmach@samsung.com/
-  https://lore.kernel.org/lkml/20200821161401.11307-3-l.stelmach@samsung.com/
-
-diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-index 6e8b5ff0859c..82480b2bf545 100644
---- a/arch/arm/configs/exynos_defconfig
-+++ b/arch/arm/configs/exynos_defconfig
-@@ -107,6 +107,8 @@ CONFIG_MD=y
- CONFIG_BLK_DEV_DM=y
- CONFIG_DM_CRYPT=m
- CONFIG_NETDEVICES=y
-+CONFIG_NET_VENDOR_ASIX=y
-+CONFIG_SPI_AX88796C=y
- CONFIG_SMSC911X=y
- CONFIG_USB_RTL8150=m
- CONFIG_USB_RTL8152=y
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index e9e76e32f10f..a8b4e95d4148 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -241,6 +241,8 @@ CONFIG_SATA_HIGHBANK=y
- CONFIG_SATA_MV=y
- CONFIG_SATA_RCAR=y
- CONFIG_NETDEVICES=y
-+CONFIG_NET_VENDOR_ASIX=y
-+CONFIG_SPI_AX88796C=m
- CONFIG_VIRTIO_NET=y
- CONFIG_B53_SPI_DRIVER=m
- CONFIG_B53_MDIO_DRIVER=m
 -- 
-2.26.2
-
+Dmitry
