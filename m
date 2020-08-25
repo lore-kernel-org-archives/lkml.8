@@ -2,212 +2,126 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B49C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDB082071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB96920706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:38:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rh/jUyId"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbgHYJhU (ORCPT
+        id S1729514AbgHYJit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:37:20 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:42451 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725792AbgHYJhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:37:18 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BbP632BtZzB09Zk;
-        Tue, 25 Aug 2020 11:37:15 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id VH4tJWpNzU26; Tue, 25 Aug 2020 11:37:15 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BbP631J8mzB09ZP;
-        Tue, 25 Aug 2020 11:37:15 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 52B5D8B806;
-        Tue, 25 Aug 2020 11:37:16 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id uXubsWHjtDix; Tue, 25 Aug 2020 11:37:16 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9F27A8B803;
-        Tue, 25 Aug 2020 11:37:15 +0200 (CEST)
-Subject: Re: [PATCH v5 5/8] powerpc/watchpoint: Fix exception handling for
- CONFIG_HAVE_HW_BREAKPOINT=N
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
-        christophe.leroy@c-s.fr
-Cc:     mikey@neuling.org, paulus@samba.org,
-        naveen.n.rao@linux.vnet.ibm.com, pedromfc@linux.ibm.com,
-        rogealve@linux.ibm.com, jniethe5@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20200825043617.1073634-1-ravi.bangoria@linux.ibm.com>
- <20200825043617.1073634-6-ravi.bangoria@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <91d34b89-603a-fddc-ea0f-53a79b287eed@csgroup.eu>
-Date:   Tue, 25 Aug 2020 11:37:11 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 05:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43512 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729470AbgHYJin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:38:43 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2106C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 02:38:42 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id s29so3526917uae.1
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 02:38:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1gWftRufV4NK6rIXKQL8vsvZfEemfLSR6mtXtwRZFzQ=;
+        b=rh/jUyIdqBpxrftU7bsFkeDWmPi0O1o0znXb5JJoLfyzd2AuwzQ3SCf8kqQxkxDptR
+         YtOYN+hqUP9aLBUYZOihy7ayRVUAanhRbLc6b90QTJ1Y7jm4vQMfgsYKEz5NU5ENQKtG
+         5XkQs4MohtrnOz0LgPlLE7bblPwsJrGADpKT0xCTt6Gcq+Mv8yW8HkNAAW7E5fRjTC0/
+         N8xCjtaIh6wf9XQz2oP2eF1Eg0VYqqH/uwRxT635Ra684LOIPSnVuQYVws6mS+fRhlPU
+         tV94mLS6wG4ELRMzjiPZ/2SgyEWB8rDbDx3wE0lKxS8wehQ8lk7725zPeSvnVqoIGI8y
+         Jgig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1gWftRufV4NK6rIXKQL8vsvZfEemfLSR6mtXtwRZFzQ=;
+        b=K+E3rEu23ovu8Ak6IVyRivm6rxtpEUf1sc7AIgQJB76dZMeah0l4P1uu2KZjvDfhnb
+         mXeBQaZbSYFob/3xzL93pCtzzrgcy3fy5lRaUC+F3kDSOyKbTaanP/vXnOb9S5pRonfC
+         Cxu/3QDO6n9sQit9KW6C19mxeQ3j+aIF0DfTdNwanJ5HX1EWFTzfn8bYlfe0o7HO0AcB
+         5vDGevVJa5bRpWjQpKucliaDuR2/YwiE7j1DZL5fpHRtLzMNTST5szyVRwZGAMuN2wO5
+         rjlsXk2VjICJ5EwtrtqSoUcyn9alQrVlrO0fo30mZ8BwF/4SQmW7MS0MJcK5aAwhqnig
+         W4kA==
+X-Gm-Message-State: AOAM5337WESXrb2e5KoceMjsV03dlI9+a5s7nK8JwvPs6XgE3+yvWf+V
+        Nj2p7Py4vXzL/HPFXAbP5/03wCxKqQWtMhKYxCQuXg==
+X-Google-Smtp-Source: ABdhPJzMmCKvJlBmLpXAm8S2BTBSrUskkCWdbQ5/m7WmoIXptfO9SSZImSgVTm+LyNloXbnyCeyilszNaD3qHCnRoyY=
+X-Received: by 2002:ab0:3114:: with SMTP id e20mr4720974ual.104.1598348321741;
+ Tue, 25 Aug 2020 02:38:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200825043617.1073634-6-ravi.bangoria@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <aef586778921c93377ec2f31c86e151b6e93f6c7.1598257520.git.michal.simek@xilinx.com>
+In-Reply-To: <aef586778921c93377ec2f31c86e151b6e93f6c7.1598257520.git.michal.simek@xilinx.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 25 Aug 2020 11:38:05 +0200
+Message-ID: <CAPDyKFooWoUR4-=JWY16xw7qZKG5DGhQw8u6OQ4n42_VjkfgJQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: mmc: Add missing description for clk_in/out_sd1
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
+        Manish Narani <manish.narani@xilinx.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 24 Aug 2020 at 10:25, Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> The commit a8fdb80f4d47 ("arm64: zynqmp: Add ZynqMP SDHCI compatible
+> string") added clock-output-names for both SDHCIs before DT binding yaml
+> conversion. But only clk_in/out_sd0 clock names have been covered by
+> DT binding which ends up with dt yaml checking warnings as:
+> From schema: .../Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+> ... mmc@ff170000: clock-output-names:0: 'clk_out_sd0' was expected
+> ... mmc@ff170000: clock-output-names:1: 'clk_in_sd0' was expected
+>
+> Fixes: 16ecd8f33c6e ("dt-bindings: mmc: convert arasan sdhci bindings to yaml")
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+
+Applied for fixes, thanks!
+
+Kind regards
+Uffe
 
 
-Le 25/08/2020 à 06:36, Ravi Bangoria a écrit :
-> On powerpc, ptrace watchpoint works in one-shot mode. i.e. kernel
-> disables event every time it fires and user has to re-enable it.
-> Also, in case of ptrace watchpoint, kernel notifies ptrace user
-> before executing instruction.
-> 
-> With CONFIG_HAVE_HW_BREAKPOINT=N, kernel is missing to disable
-> ptrace event and thus it's causing infinite loop of exceptions.
-> This is especially harmful when user watches on a data which is
-> also read/written by kernel, eg syscall parameters. In such case,
-> infinite exceptions happens in kernel mode which causes soft-lockup.
-> 
-> Fixes: 9422de3e953d ("powerpc: Hardware breakpoints rewrite to handle non DABR breakpoint registers")
-> Reported-by: Pedro Miraglia Franco de Carvalho <pedromfc@linux.ibm.com>
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 > ---
->   arch/powerpc/include/asm/hw_breakpoint.h  |  3 ++
->   arch/powerpc/kernel/process.c             | 48 +++++++++++++++++++++++
->   arch/powerpc/kernel/ptrace/ptrace-noadv.c |  5 +++
->   3 files changed, 56 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
-> index 2eca3dd54b55..c72263214d3f 100644
-> --- a/arch/powerpc/include/asm/hw_breakpoint.h
-> +++ b/arch/powerpc/include/asm/hw_breakpoint.h
-> @@ -18,6 +18,7 @@ struct arch_hw_breakpoint {
->   	u16		type;
->   	u16		len; /* length of the target data symbol */
->   	u16		hw_len; /* length programmed in hw */
-> +	u8		flags;
->   };
->   
->   /* Note: Don't change the first 6 bits below as they are in the same order
-> @@ -37,6 +38,8 @@ struct arch_hw_breakpoint {
->   #define HW_BRK_TYPE_PRIV_ALL	(HW_BRK_TYPE_USER | HW_BRK_TYPE_KERNEL | \
->   				 HW_BRK_TYPE_HYP)
->   
-> +#define HW_BRK_FLAG_DISABLED	0x1
-> +
->   /* Minimum granularity */
->   #ifdef CONFIG_PPC_8xx
->   #define HW_BREAKPOINT_SIZE  0x4
-> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-> index 016bd831908e..160fbbf41d40 100644
-> --- a/arch/powerpc/kernel/process.c
-> +++ b/arch/powerpc/kernel/process.c
-> @@ -636,6 +636,44 @@ void do_send_trap(struct pt_regs *regs, unsigned long address,
->   				    (void __user *)address);
->   }
->   #else	/* !CONFIG_PPC_ADV_DEBUG_REGS */
-> +
-> +static void do_break_handler(struct pt_regs *regs)
-> +{
-> +	struct arch_hw_breakpoint null_brk = {0};
-> +	struct arch_hw_breakpoint *info;
-> +	struct ppc_inst instr = ppc_inst(0);
-> +	int type = 0;
-> +	int size = 0;
-> +	unsigned long ea;
-> +	int i;
-> +
-> +	/*
-> +	 * If underneath hw supports only one watchpoint, we know it
-> +	 * caused exception. 8xx also falls into this category.
-> +	 */
-> +	if (nr_wp_slots() == 1) {
-> +		__set_breakpoint(0, &null_brk);
-> +		current->thread.hw_brk[0] = null_brk;
-> +		current->thread.hw_brk[0].flags |= HW_BRK_FLAG_DISABLED;
-> +		return;
-> +	}
-> +
-> +	/* Otherwise findout which DAWR caused exception and disable it. */
-> +	wp_get_instr_detail(regs, &instr, &type, &size, &ea);
-> +
-> +	for (i = 0; i < nr_wp_slots(); i++) {
-> +		info = &current->thread.hw_brk[i];
-> +		if (!info->address)
-> +			continue;
-> +
-> +		if (wp_check_constraints(regs, instr, ea, type, size, info)) {
-> +			__set_breakpoint(i, &null_brk);
-> +			current->thread.hw_brk[i] = null_brk;
-> +			current->thread.hw_brk[i].flags |= HW_BRK_FLAG_DISABLED;
-> +		}
-> +	}
-> +}
-> +
->   void do_break (struct pt_regs *regs, unsigned long address,
->   		    unsigned long error_code)
->   {
-> @@ -647,6 +685,16 @@ void do_break (struct pt_regs *regs, unsigned long address,
->   	if (debugger_break_match(regs))
->   		return;
->   
-> +	/*
-> +	 * We reach here only when watchpoint exception is generated by ptrace
-> +	 * event (or hw is buggy!). Now if CONFIG_HAVE_HW_BREAKPOINT is set,
-> +	 * watchpoint is already handled by hw_breakpoint_handler() so we don't
-> +	 * have to do anything. But when CONFIG_HAVE_HW_BREAKPOINT is not set,
-> +	 * we need to manually handle the watchpoint here.
-> +	 */
-> +	if (!IS_ENABLED(CONFIG_HAVE_HW_BREAKPOINT))
-> +		do_break_handler(regs);
-> +
->   	/* Deliver the signal to userspace */
->   	force_sig_fault(SIGTRAP, TRAP_HWBKPT, (void __user *)address);
->   }
-> diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-> index 57a0ab822334..866597b407bc 100644
-> --- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-> +++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-> @@ -286,11 +286,16 @@ long ppc_del_hwdebug(struct task_struct *child, long data)
->   	}
->   	return ret;
->   #else /* CONFIG_HAVE_HW_BREAKPOINT */
-> +	if (child->thread.hw_brk[data - 1].flags & HW_BRK_FLAG_DISABLED)
-
-I think child->thread.hw_brk[data - 1].flags & HW_BRK_FLAG_DISABLED 
-should go around additionnal ()
-
-> +		goto del;
-> +
->   	if (child->thread.hw_brk[data - 1].address == 0)
->   		return -ENOENT;
-
-What about replacing the above if by:
-	if (!(child->thread.hw_brk[data - 1].flags) & HW_BRK_FLAG_DISABLED) &&
-	    child->thread.hw_brk[data - 1].address == 0)
-		return -ENOENT;
-
-That would avoid the goto and the label.
-
->   
-> +del:
->   	child->thread.hw_brk[data - 1].address = 0;
->   	child->thread.hw_brk[data - 1].type = 0;
-> +	child->thread.hw_brk[data - 1].flags = 0;
->   #endif /* CONFIG_HAVE_HW_BREAKPOINT */
->   
->   	return 0;
-> 
-
-Christophe
+>
+>  .../devicetree/bindings/mmc/arasan,sdhci.yaml          | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml b/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+> index 5887c917d480..58fe9d02a781 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.yaml
+> @@ -30,9 +30,13 @@ allOf:
+>      then:
+>        properties:
+>          clock-output-names:
+> -          items:
+> -            - const: clk_out_sd0
+> -            - const: clk_in_sd0
+> +          oneOf:
+> +            - items:
+> +              - const: clk_out_sd0
+> +              - const: clk_in_sd0
+> +            - items:
+> +              - const: clk_out_sd1
+> +              - const: clk_in_sd1
+>
+>  properties:
+>    compatible:
+> --
+> 2.28.0
+>
