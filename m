@@ -2,133 +2,212 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFC3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DC002083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5E7F20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:10:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jLnUNSiR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbgHYOHI (ORCPT
+        id S1726222AbgHYOKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:07:08 -0400
-Received: from ec2-3-21-30-127.us-east-2.compute.amazonaws.com ([3.21.30.127]:59940
-        "EHLO www.teo-en-ming.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbgHYOHF (ORCPT
+        Tue, 25 Aug 2020 10:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726090AbgHYOK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:07:05 -0400
-Received: from localhost (localhost [IPv6:::1])
-        by www.teo-en-ming.com (Postfix) with ESMTPA id 00186426B9B;
-        Tue, 25 Aug 2020 22:07:03 +0800 (+08)
+        Tue, 25 Aug 2020 10:10:29 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5A9C061756
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:10:29 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id j25so7560069ejk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 07:10:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KBFZttGfteQiG/F6m1JwLuRmWwiLtOn1NGTSQxlL0R8=;
+        b=jLnUNSiRkVPmazSgOpBGGkBIFbQgn3SubSGBtfI3udYnQF9YnvGbPLGw/Bg6gNQG51
+         2HwfjMpqoLNbtQmB1chriB3Xc8+RWCRJunAgmt/FWga/wQK351I3xuMzc9ungM1zD6Tt
+         VRfW5hS51m8ANRTTusv4bV+aPInEeBnWiAcyo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KBFZttGfteQiG/F6m1JwLuRmWwiLtOn1NGTSQxlL0R8=;
+        b=YJ/Tskzc4eIf5eQdqUUcrKf+Bask1JTqRxysldLqUfS+3TjSyDFpZNq9/sKqUlTbzW
+         ESI6kyTQG9UWaaifu+oGlaOb83j/3TD7i98eZrmM7aEAaU6XvrLXaTtYyvbEXKapcibs
+         61khgIkOTWkt/lx/hZAuizMCLEl4JMGYmWETL/9TZVtxPaaywSLLWGftjLRvzPRqAqpN
+         zaSAaYxcqXH2EJcXgO3eevQ1SsEz5ouyOoG+/Ak9ASX01Ejmh+ehNpD6f5pqiQ8stUri
+         vs2z6Vrhy/jIvyEZ+fios6+86j0uPcOp4GixtFmmdHQnMoi90GBJcRABT6zJ10/ZElrN
+         Xrrg==
+X-Gm-Message-State: AOAM533w8flLq4zfzN5D4Heae5cwvM7otV1SJOvDw+5jqfA6/fiDCFrh
+        OvLe2QhJmq3ZjY7CKltPvBbTsA==
+X-Google-Smtp-Source: ABdhPJxq6mmRIKDhAU5ShGteau34Y08h7aVZadX+431P5t07HDWQQ3Kk0Yx+B6hDuJMw7xniEin/hA==
+X-Received: by 2002:a17:906:553:: with SMTP id k19mr11039230eja.401.1598364627531;
+        Tue, 25 Aug 2020 07:10:27 -0700 (PDT)
+Received: from [192.168.2.66] ([81.6.44.51])
+        by smtp.gmail.com with ESMTPSA id dj16sm7658961edb.5.2020.08.25.07.10.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 07:10:27 -0700 (PDT)
+Subject: Re: [PATCH bpf-next v9 5/7] bpf: Implement bpf_local_storage for
+ inodes
+To:     Martin KaFai Lau <kafai@fb.com>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
+References: <20200823165612.404892-1-kpsingh@chromium.org>
+ <20200823165612.404892-6-kpsingh@chromium.org>
+ <20200825005249.tu4c54fg36jt3rh4@kafai-mbp.dhcp.thefacebook.com>
+From:   KP Singh <kpsingh@chromium.org>
+Message-ID: <8d188285-96f5-3b17-126f-5e842702e339@chromium.org>
+Date:   Tue, 25 Aug 2020 16:10:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Date:   Tue, 25 Aug 2020 22:07:03 +0800
-From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     ceo@teo-en-ming-corp.com
-Subject: Configuring Fortigate 60D Firewall SSL VPN with FortiToken 2FA
- (Advanced Configuration)
-Message-ID: <fac273f8cd4cde443b1f9fdd047d208e@teo-en-ming.com>
-X-Sender: ceo@teo-en-ming.com
-User-Agent: Roundcube Webmail/1.2.3
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200825005249.tu4c54fg36jt3rh4@kafai-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject: Configuring Fortigate 60D Firewall SSL VPN with FortiToken 2FA 
-(Advanced Configuration)
-
-Author: Mr. Turritopsis Dohrnii Teo En Ming
-Country: Singapore
-Date: 25 August 2020 Tuesday Singapore Time
-Type of Publication: PDF Manual
-Document Version: 20200825.01
-
-INTRODUCTION
-============
-
-Fortigate firewall appliances are based on Linux Kernel and open source 
-software.
-
-In this PDF manual, I will show you how to:
-
-1.	Install Windows Server 2019 Standard as a virtual machine in Linux 
-KVM/QEMU Hypervisor
-2.	Install Active Directory Domain Services role/feature
-3.	Promote Windows Server 2019 Standard to Domain Controller
-4.	Create organizational units in Active Directory Users and Computers
-5.	Create Active Directory user
-6.	Create security group for SSL VPN users
-7.	Assign Active Directory user to the SSL VPN Users security group
-8.	Add LDAP server (Microsoft Active Directory/LDAP integration) in 
-Fortigate 60D firewall
-9.	Add user group from LDAP server in Fortigate 60D firewall (remember 
-to add members of the group as well)
-10.	Add LDAP user in Fortigate 60D firewall
-11.	Configure SSL VPN tunnel in Fortigate 60D firewall
-12.	Configure two firewall security policies to allow VPN users to 
-access the (a) internal network and the (b) internet
-13.	Assign FortiToken to LDAP user in Fortigate 60D firewall and turn on 
-2nd Factor Authentication (2FA)
-14.	Create VPN tunnel in FortiClient VPN on your Android phone and 
-connect to Fortigate 60D SSL VPN tunnel successfully
-15.	FortiClient VPN will now ask you for the token code
-
-Redundant Google Drive download links for my PDF manual
-=======================================================
-
-[1] 
-https://drive.google.com/file/d/1uhRWr8OXerCN30OeWhgFP8rG_4NlkHsa/view?usp=sharing
-
-[2] 
-https://drive.google.com/file/d/1mJ5m7zlPFLXuXfKgfLcq_nAGP1jC2QlC/view?usp=sharing
-
-[3] 
-https://drive.google.com/file/d/1ZU7aphOXIG3q8-1g6GSRXX2hXgG7AibU/view?usp=sharing
-
-[4] 
-https://drive.google.com/file/d/1IKVeGJZ5HPR6hAsRwxTHfABBLjKz9uyl/view?usp=sharing
-
-[5] 
-https://drive.google.com/file/d/1nwC7VlA3p0U2apmsOlH6mADrX84wxTNM/view?usp=sharing
-
-[6] 
-https://drive.google.com/file/d/1mXT3TdX8dtCDA1YeoX7oRxk3mSgcoN6P/view?usp=sharing
 
 
+On 8/25/20 2:52 AM, Martin KaFai Lau wrote:
+> On Sun, Aug 23, 2020 at 06:56:10PM +0200, KP Singh wrote:
+>> From: KP Singh <kpsingh@google.com>
+>>
+>> Similar to bpf_local_storage for sockets, add local storage for inodes.
+>> The life-cycle of storage is managed with the life-cycle of the inode.
+>> i.e. the storage is destroyed along with the owning inode.
+>>
+>> The BPF LSM allocates an __rcu pointer to the bpf_local_storage in the
+>> security blob which are now stackable and can co-exist with other LSMs.
+>>
+> [ ... ]
+> 
+>> diff --git a/kernel/bpf/bpf_inode_storage.c b/kernel/bpf/bpf_inode_storage.c
+>> new file mode 100644
+>> index 000000000000..b0b283c224c1
+>> --- /dev/null
+>> +++ b/kernel/bpf/bpf_inode_storage.c
+
+[...]
+
+>> +
+>> +DEFINE_BPF_STORAGE_CACHE(inode_cache);
+>> +
+>> +static struct bpf_local_storage __rcu **
+>> +inode_storage_ptr(void *owner)
+>> +{
+>> +	struct inode *inode = owner;
+>> +	struct bpf_storage_blob *bsb;
+>> +
+>> +	bsb = bpf_inode(inode);
+>> +	if (!bsb)
+>> +		return NULL;
+> just noticed this one.  NULL could be returned here.  When will it happen?
+
+This can happen if CONFIG_BPF_LSM is enabled but "bpf" is not in the list of
+active LSMs.
+
+> 
+>> +	return &bsb->storage;
+>> +}
+>> +
+>> +static struct bpf_local_storage_data *inode_storage_lookup(struct inode *inode,
+>> +							   struct bpf_map *map,
+>> +							   bool cacheit_lockit)
+>> +{
+
+[...]
+
+> path first before calling the bpf_local_storage_update() since
+> this case is specific to inode local storage.
+> 
+> Same for the other bpf_local_storage_update() cases.
+
+If you're okay with this I can send a new series with the following updates.
+
+diff --git a/kernel/bpf/bpf_inode_storage.c b/kernel/bpf/bpf_inode_storage.c
+index b0b283c224c1..74546cee814d 100644
+--- a/kernel/bpf/bpf_inode_storage.c
++++ b/kernel/bpf/bpf_inode_storage.c
+@@ -125,7 +125,7 @@ static int bpf_fd_inode_storage_update_elem(struct bpf_map *map, void *key,
+ 
+        fd = *(int *)key;
+        f = fget_raw(fd);
+-       if (!f)
++       if (!f || !inode_storage_ptr(f->f_inode))
+                return -EBADF;
+ 
+        sdata = bpf_local_storage_update(f->f_inode,
+@@ -171,6 +171,14 @@ BPF_CALL_4(bpf_inode_storage_get, struct bpf_map *, map, struct inode *, inode,
+        if (flags & ~(BPF_LOCAL_STORAGE_GET_F_CREATE))
+                return (unsigned long)NULL;
+ 
++       /* explicitly check that the inode_storage_ptr is not
++        * NULL as inode_storage_lookup returns NULL in this case and
++        * and bpf_local_storage_update expects the owner to have a
++        * valid storage pointer.
++        */
++       if (!inode_storage_ptr(inode))
++               return (unsigned long)NULL;
++
+        sdata = inode_storage_lookup(inode, map, true);
+        if (sdata)
+                return (unsigned long)sdata->data;
 
 
+> 
+>> +					 (struct bpf_local_storage_map *)map,
+>> +					 value, map_flags);
+>> +	fput(f);
+>> +	return PTR_ERR_OR_ZERO(sdata);
+>> +}
+>> +
+> 
 
+[...]
 
+>> +	return (unsigned long)NULL;
+>> +}
+>> +
+> 
+>> diff --git a/security/bpf/hooks.c b/security/bpf/hooks.c
+>> index 32d32d485451..35f9b19259e5 100644
+>> --- a/security/bpf/hooks.c
+>> +++ b/security/bpf/hooks.c
+>> @@ -3,6 +3,7 @@
+>>  /*
+>>   * Copyright (C) 2020 Google LLC.
+>>   */
+>> +#include <linux/bpf_local_storage.h>
+> Is it needed?
 
+No. Removed. Thanks!
 
------BEGIN EMAIL SIGNATURE-----
+> 
+>>  #include <linux/lsm_hooks.h>
+>>  #include <linux/bpf_lsm.h>
+>>  
+>> @@ -11,6 +12,7 @@ static struct security_hook_list bpf_lsm_hooks[] __lsm_ro_after_init = {
+>>  	LSM_HOOK_INIT(NAME, bpf_lsm_##NAME),
 
-The Gospel for all Targeted Individuals (TIs):
+[...]
 
-[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
-U.S. Embassy Workers
-
-Link: 
-https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
-
-********************************************************************************************
-
-Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
-Qualifications as at 14 Feb 2019 and refugee seeking attempts at the 
-United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 
-2019) and Australia (25 Dec 2019 to 9 Jan 2020):
-
-[1] https://tdtemcerts.wordpress.com/
-
-[2] https://tdtemcerts.blogspot.sg/
-
-[3] https://www.scribd.com/user/270125049/Teo-En-Ming
-
------END EMAIL SIGNATURE-----
+>> +	.blobs = &bpf_lsm_blob_sizes
+>>  };
