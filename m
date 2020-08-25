@@ -2,108 +2,97 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8270AC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7FBC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68C49207DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 372C72074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:06:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598382145;
-	bh=UsX97ie3LWdOPxNzUYsEmiHiw19foauTYVSmUnWaSa8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FbHqZ4QdzvXdYEilovSh7D3Tg0ppLJimgqFMYzMDPfV1mZDqGjgY09zxiBVOYs1x6
-	 bJd5nHKVZaT19Ov3H4j6DeiRrIH7gtmfdP7kf8sogp8uDWmqi+Lz5iF9XxLodBzAiK
-	 PuXoopWhqA6SmJTPhMb60oMDXjGTl5qo8akpPkfY=
+	s=default; t=1598382377;
+	bh=nFY9Byoa7IafoHZHxTgBMjQ8dyHzdWFqPV0Bq/m9pIQ=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=1Dt7qI8HEn2h19Hg+egWdpV3OxdGBkFIAFYWXIpIh3G+e/8nTDvlhsscZycnc+oUA
+	 i6hE2bAdckv/7gmgSuKI2oSCZk1QvzqZXIMP4p/tmI9F07gluayPgMh6a1jnfkvzKG
+	 KgrOsm0LsUwvvkn4wVlVFdgrL2CrhOE7MZWM/WAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHYTCX (ORCPT
+        id S1726303AbgHYTGQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:02:23 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:46549 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYTCX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:02:23 -0400
-Received: by mail-il1-f195.google.com with SMTP id c6so11327734ilo.13;
-        Tue, 25 Aug 2020 12:02:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bCUdIkx3EH4ynR39zceLFnFiKqklMoIPLVpCbylMme0=;
-        b=DAlqAbcKwIPeZCDLhBKf1K6yqnjkEw1fqTHcDw+wUhkdH1oh9LPaZa+o+TjU0yyBZA
-         cszOwGoA4Vg4aHcdCPw+ShATWt50ZWUBfomqsfrM4Fmz2ISXLbr9FND9I6nyf9XMdYs5
-         cztev0ipwc+2jKm4YbA0k2xkHR+4BWrUpnPb4oaE1F/vtV/LqcsccEGvOR1LnV2ktEKt
-         p4lCDQ3jDoOq4w28SfznZ1pFtSWmIpW4xmXvzdpeI04vWocj5eiMIqlXH0hjSbxB8+7h
-         oEZaD+R7Jcd4Bw/n6uLmtNNt9iVzXMzQd3zLxRAARmbnpE8VeY3pxkt50tm/S9uWbI1p
-         KD3Q==
-X-Gm-Message-State: AOAM530nz78U/emWFzfhJKystyPTQtUbG4qSG32DVqJABsTFPSfNaPXD
-        ml7vmSivDrmooreWpkcgGzzfeLxH3kfw
-X-Google-Smtp-Source: ABdhPJyp2RzYq4kUaObuB2FkwOWJE9pU5Wa539AYxfYQlLjDNUgMTHsNlNcZd+0aqG3qq9CfEGuYjw==
-X-Received: by 2002:a92:8556:: with SMTP id f83mr10122295ilh.135.1598382141887;
-        Tue, 25 Aug 2020 12:02:21 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id a11sm9505457ilh.74.2020.08.25.12.02.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 12:02:21 -0700 (PDT)
-Received: (nullmailer pid 1133284 invoked by uid 1000);
-        Tue, 25 Aug 2020 19:02:19 -0000
-Date:   Tue, 25 Aug 2020 13:02:19 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Crystal Guo <crystal.guo@mediatek.com>
-Cc:     p.zabel@pengutronix.de, matthias.bgg@gmail.com,
-        srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org,
+        Tue, 25 Aug 2020 15:06:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726593AbgHYTGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 15:06:14 -0400
+Received: from [192.168.0.50] (89-70-52-201.dynamic.chello.pl [89.70.52.201])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 363762076C;
+        Tue, 25 Aug 2020 19:06:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598382374;
+        bh=nFY9Byoa7IafoHZHxTgBMjQ8dyHzdWFqPV0Bq/m9pIQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=yUgoV8TEt4ukVuYw7absvzUjk2l9zDyAF4VAnUWfsw//qHqZf73dyR7uYYmP61Uyz
+         vYJPjzCOZxuEB0C177HjrTdx4TsfOu7aKZKomimGZogPJLauhar4wxmbVRzqET/uoB
+         3b1CiqptcnTX5cu3HiFpxpVmtOxKrzU5QXoXY2MA=
+Subject: Re: [PATCH v2 6/9] spi: spi-s3c64xx: Check return values
+To:     =?UTF-8?Q?=c5=81ukasz_Stelmach?= <l.stelmach@samsung.com>
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
+        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, s-anna@ti.com, afd@ti.com,
-        seiya.wang@mediatek.com, stanley.chu@mediatek.com,
-        yingjoe.chen@mediatek.com, fan.chen@mediatek.com,
-        yong.liang@mediatek.com
-Subject: Re: [v4,2/4] dt-binding: reset-controller: ti: add
- 'mediatek,infra-reset' to compatible
-Message-ID: <20200825190219.GA1125997@bogus>
-References: <20200817030324.5690-1-crystal.guo@mediatek.com>
- <20200817030324.5690-3-crystal.guo@mediatek.com>
+        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
+References: <20200821161401.11307-1-l.stelmach@samsung.com>
+ <CGME20200821161407eucas1p116af63a668bdbb75fa974589e5f6139f@eucas1p1.samsung.com>
+ <20200821161401.11307-7-l.stelmach@samsung.com>
+From:   Sylwester Nawrocki <snawrocki@kernel.org>
+Message-ID: <e7db038c-b8e6-8ddc-edc7-8b69c2019d04@kernel.org>
+Date:   Tue, 25 Aug 2020 21:06:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817030324.5690-3-crystal.guo@mediatek.com>
+In-Reply-To: <20200821161401.11307-7-l.stelmach@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 11:03:22AM +0800, Crystal Guo wrote:
-> The TI syscon reset controller provides a common reset management,
-> and is suitable for MTK SoCs. Add compatible 'mediatek,infra-reset',
-> which denotes to use ti reset-controller driver directly.
+On 8/21/20 18:13, Łukasz Stelmach wrote:
+> Check return values in prepare_dma() and s3c64xx_spi_config() and
+> propagate errors upwards.
 > 
-> Signed-off-by: Crystal Guo <crystal.guo@mediatek.com>
+> Signed-off-by: Łukasz Stelmach<l.stelmach@samsung.com>
 > ---
->  Documentation/devicetree/bindings/reset/ti-syscon-reset.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-> index ab041032339b..5a0e9365b51b 100644
-> --- a/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-> @@ -25,6 +25,7 @@ Required properties:
->  			    "ti,k2l-pscrst"
->  			    "ti,k2hk-pscrst"
->  			    "ti,syscon-reset"
-> +			    "mediatek,infra-reset", "ti,syscon-reset"
+>   drivers/spi/spi-s3c64xx.c | 47 ++++++++++++++++++++++++++++++++-------
+>   1 file changed, 39 insertions(+), 8 deletions(-)
 
-You need your own binding doc. If you can use the same driver then fine, 
-but that's a separate issue. There's also reset-simple driver if you 
-have just array of 32-bit registers with a bit per reset.
+> @@ -298,12 +299,24 @@ static void prepare_dma(struct s3c64xx_spi_dma_data *dma,
+>   
+>   	desc = dmaengine_prep_slave_sg(dma->ch, sgt->sgl, sgt->nents,
+>   				       dma->direction, DMA_PREP_INTERRUPT);
+> +	if (!desc) {
+> +		dev_err(&sdd->pdev->dev, "unable to prepare %s scatterlist",
+> +			dma->direction == DMA_DEV_TO_MEM ? "rx" : "tx");
+> +		return -ENOMEM;
+> +	}
+>   
+>   	desc->callback = s3c64xx_spi_dmacb;
+>   	desc->callback_param = dma;
+>   
+>   	dma->cookie = dmaengine_submit(desc);
+> +	ret = dma_submit_error(dma->cookie);
+> +	if (ret) {
+> +		dev_err(&sdd->pdev->dev, "DMA submission failed");
+> +		return -EIO;
 
-Don't repeat 'ti,reset-bits' either.
+Just return the error value from dma_submit_error() here?
 
->   - #reset-cells		: Should be 1. Please see the reset consumer node below
->  			  for usage details
->   - ti,reset-bits	: Contains the reset control register information
-> -- 
-> 2.18.0
+
