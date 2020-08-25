@@ -2,86 +2,233 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA1FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2013CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF0502067C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDDC72071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:56:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbgHYJzi (ORCPT
+        id S1729687AbgHYJ4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:55:38 -0400
-Received: from mga17.intel.com ([192.55.52.151]:51130 "EHLO mga17.intel.com"
+        Tue, 25 Aug 2020 05:56:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:55038 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729456AbgHYJzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:55:33 -0400
-IronPort-SDR: pZu2LfBsiVj80GfFJ7utuJxX/JPdglIhYbZDdo5w3o0V+/Zim3KVkxeXjlr6PKC5hT5DyEgMH2
- 6M+6tJgX20FA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136139931"
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="136139931"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 02:55:32 -0700
-IronPort-SDR: SO5pteS+3BNVXHt9gxEDvxYfrNdjv2PGu99rQW43zfRbMCLaRf+GnKSUtkkxGAnJx8qQxEgSIX
- vtC4BDimXcuw==
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="474283564"
-Received: from mmoerth-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.32.133])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 02:55:28 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Pavel Machek <pavel@ucw.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to mainline
-In-Reply-To: <20200821091900.hzbivycs5ky5d3iw@duo.ucw.cz>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200817161132.GA4711@amd> <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com> <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com> <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com> <20200820092349.GA3792@amd> <CAHk-=wjX=ck_u8uvp=PjGCQ3M9igE-yqyRPsJ54th1gQWpwMnA@mail.gmail.com> <20200821091900.hzbivycs5ky5d3iw@duo.ucw.cz>
-Date:   Tue, 25 Aug 2020 12:55:25 +0300
-Message-ID: <87tuwr59te.fsf@intel.com>
+        id S1728944AbgHYJ4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:56:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B095530E;
+        Tue, 25 Aug 2020 02:56:31 -0700 (PDT)
+Received: from localhost (unknown [10.1.199.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51D3B3F66B;
+        Tue, 25 Aug 2020 02:56:31 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 10:56:29 +0100
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Ben Segall <bsegall@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Puhov <peter.puhov@linaro.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
+Subject: Re: [RFC 0/3] cpufreq: cppc: Add support for frequency invariance
+Message-ID: <20200825095629.GA15469@arm.com>
+References: <cover.1594289009.git.viresh.kumar@linaro.org>
+ <20200709124349.GA15342@arm.com>
+ <20200710030032.3yq3lqqybhy5m744@vireshk-i7>
+ <CAKfTPtBpOdRSV0gb2CoC8J9GnuPiqZ+MbQLLc6NdSmjJhb0cgA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKfTPtBpOdRSV0gb2CoC8J9GnuPiqZ+MbQLLc6NdSmjJhb0cgA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020, Pavel Machek <pavel@ucw.cz> wrote:
-> On Thu 2020-08-20 09:16:18, Linus Torvalds wrote:
->> On Thu, Aug 20, 2020 at 2:23 AM Pavel Machek <pavel@ucw.cz> wrote:
->> >
->> > Yes, it seems they make things work. (Chris asked for new patch to be
->> > tested, so I am switching to his kernel, but it survived longer than
->> > it usually does.)
->> 
->> Ok, so at worst we know how to solve it, at best the reverts won't be
->> needed because Chris' patch will fix the issue properly.
->> 
->> So I'll archive this thread, but remind me if this hasn't gotten
->> sorted out in the later rc's.
->
-> Yes, thank you, it seems we have a solution w/o the revert.
+Hi guys,
 
-For posterity, I'm told the fix is [1].
+On Friday 24 Jul 2020 at 11:38:59 (+0200), Vincent Guittot wrote:
+> On Fri, 10 Jul 2020 at 05:00, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > Thanks for the quick reply Ionela.
+> >
+> > On 09-07-20, 13:43, Ionela Voinescu wrote:
+> > > I'll put all my comments here for now, as they refer more to the design
+> > > of the solution.
+> > >
+> > > I hope it won't be too repetitive compared to what we previously discussed
+> > > offline.
+> >
+> > > I understand you want to get additional points of view.
+> >
+> > Not necessarily, I knew you would be one of the major reviewers here
+> > :)
+> >
+> > I posted so you don't need to review in private anymore and then the
+> > code is somewhat updated since the previous time.
+> >
+> > > On Thursday 09 Jul 2020 at 15:43:32 (+0530), Viresh Kumar wrote:
+> > > I believe the code is unnecessarily invasive for the functionality it
+> > > tries to introduce and it does break existing functionality.
+> > >
+> > >
+> > >  - (1) From code readability and design point of view, this switching
+> > >        between an architectural method and a driver method complicates
+> > >        an already complicated situation. We already have code that
+> > >        chooses between a cpufreq-based method and a counter based method
+> > >        for frequency invariance. This would basically introduce a choice
+> > >        between a cpufreq-based method through arch_set_freq_scale(), an
+> > >        architectural counter-based method through arch_set_freq_tick(),
+> > >        and another cpufreq-based method that piggy-backs on the
+> > >        architectural arch_set_freq_tick().
+> >
+> > I agree.
+> >
+> > >        As discussed offline, before I even try to begin accepting the
+> > >        possibility of this complicated mix, I would like to know why
+> > >        methods of obtaining the same thing by using the cpufreq
+> > >        arch_set_freq_scale()
+> >
+> > The problem is same as that was in case of x86, we don't know the real
+> > frequency the CPU may be running at and we need something that fires
+> > up periodically in a guaranteed way to capture the freq-scale.
+> 
+> Yeah it's exactly the same behavior as x86 and re using the same
+> mechanism seems the  best solution
+> 
+> The main problem is that AMU currently assumes that it will be the
+> only to support such tick based mechanism whereas others like cppc can
+> provides similar information
+> 
 
-BR,
-Jani.
+Yes, I agree that a similar method to the use of AMUs or APERF/MPERF would
+result in a more accurate frequency scale factor.
 
+> >
+> > Though I am thinking now if we can trust the target_index() helper and
+> > keep updating the freq-scale based on the delta between last call to
+> > it and the latest call. I am not sure if it will be sufficient.
+> >
+> > >        or even the more invasive wrapping of the
+> > >        counter read functions is not working.
+> >
+> > I am not sure I understood this one.
+> >
 
-[1] https://lore.kernel.org/intel-gfx/20200821123746.16904-1-joro@8bytes.org/
+I've been putting some more thought/code into this one and I believe
+something as follows might look nicer as well as cover a few corner cases
+(ignore implementation details for now, they can be changed):
 
+- Have a per cpu value that marks the use of either AMUs, CPPC, or
+  cpufreq for freq invariance (can be done with per-cpu variable or with
+  cpumasks)
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+- arch_topology.c: initialization code as follows:
+
+	for_each_present_cpu(cpu) {
+		if (freq_inv_amus_valid(cpu) &&
+		    !freq_inv_set_max_ratio(cpufreq_get_hw_max_freq(cpu) * 1000,
+					    arch_timer_get_rate(), cpu)) {
+			per_cpu(inv_source, cpu) = INV_AMU_COUNTERS;
+			continue;
+		}
+		if (freq_inv_cppc_counters_valid(cpu) &&
+		    !freq_inv_set_max_ratio(cppc_max_perf, cppc_ref_perf, cpu)) {
+			per_cpu(inv_source, cpu) = INV_CPPC_COUNTERS;
+			continue;
+		}
+		if (!cpufreq_supports_freq_invariance() ||
+		    freq_inv_set_max_ratio(cpufreq_get_hw_max_freq(cpu),
+					   1, cpu)) {
+			pr_info("FIE disabled: no valid source for CPU%d.", cpu);
+			return 0;
+		}
+	}
+  This would live in an equivalent of the init function we have now for
+  AMU counters only (init_amu_fie), made to handle more sources and moved
+  to arch_topology.c.
+  The freq_inv_set_max_ratio() would be a generic version of what is now
+  validate_cpu_freq_invariance_counters() (only the ratio computation and
+  setting).
+
+ - Finally, 
+	void freq_inv_update_counter_refs(void)
+	{
+		this_cpu_write(arch_core_cycles_prev, read_corecnt());
+		this_cpu_write(arch_const_cycles_prev, read_constcnt());
+	}
+  This would be an equivalent of init_cpu_freq_invariance_counters().
+  There is the option of either read_{corecnt/constcnt}() to either do AMU
+  reads or CPPC counter reads depending on inv_source, or for either arm64
+  or cppc code to define the entire freq_inv_update_counter_refs().
+
+ - Given all of the above, topology_scale_freq_tick() can then be made generic
+
+	prev_const_cnt = this_cpu_read(arch_const_cycles_prev);
+	prev_core_cnt = this_cpu_read(arch_core_cycles_prev);
+	freq_inv_update_counter_refs();
+	const_cnt = this_cpu_read(arch_const_cycles_prev);
+	core_cnt = this_cpu_read(arch_core_cycles_prev);
+
+I have some versions of code that do this generalisation for AMUs and cpufreq
+with a common topology_set_freq_scale() that is to be used for both
+arch_set_freq_scale() and arch_set_freq_tick(). But it's written with this
+usecase in mind so it can be extended to use CPPC counters as source as well,
+as detailed above.
+
+So, this is basically what I had in mind when recommending "wrapping of the
+counter read functions" :). This would basically reuse much of what is now
+the AMU invariance code while allowing for CPPC counters as a possible source.
+
+I'll stop here for now to see what you guys think about this.
+
+Thanks,
+Ionela.
+
+> > >  - (2) For 1/3, the presence of AMU counters does not guarantee their
+> > >        usability for frequency invariance. I know you wanted to avoid
+> > >        the complications of AMUs being marked as supporting invariance
+> > >        after the cpufreq driver init function, but this breaks the
+> > >        scenario in which the maximum frequency is invalid.
+> >
+> > Is that really a scenario ? i.e. Invalid maximum frequency ? Why would
+> > that ever happen ?
+> >
+> > And I am not sure if this breaks anything which already exists,
+> > because all we are doing in this case now is not registering cppc for
+> > FI, which should be fine.
+> 
+> IIUC, AMU must wait for cpufreq drivers to be registered in order to
+> get the maximum freq and being able to enable its FIE support.
+> Could we have a sequence like:
+> cppc register its scale_freq_tick function
+> AMU can then override the tick function for cpu which supports AMU
+> 
+> >
+> > >  - (3) For 2/3, currently we support platforms that have partial support
+> > >        for AMUs, while this would not be supported here. The suggestions
+> > >        at (1) would give us this for free.
+> >
+> > As both were counter based mechanisms, I thought it would be better
+> > and more consistent if only one of them is picked. Though partial
+> > support of AMUs would still work without the CPPC driver.
+> >
+> > --
+> > viresh
