@@ -7,60 +7,56 @@ X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7952078D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B37F20FC3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="218RE5fJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VSarBxag"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CfnDvFW5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ww0K10Cm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgHYXlH (ORCPT
+        id S1726750AbgHYXlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:41:07 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:53314 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbgHYXk4 (ORCPT
+        Tue, 25 Aug 2020 19:41:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34378 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbgHYXk4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 19:40:56 -0400
-Date:   Tue, 25 Aug 2020 23:40:52 -0000
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE8F8C061755;
+        Tue, 25 Aug 2020 16:40:55 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 23:40:53 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020; t=1598398853;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8wmgAG5W2pqZeMqd7LjtnFdAGZkv++MtSBjncFs25Kg=;
-        b=218RE5fJjak4xqxD8/vygvrv8pWLIRiAxAIwo/jSuJ+XlzUyGUAwl9BH4A+tqEeqTWFt3B
-        j9mt+hnLF5sOO3zF6Ug5mMvPOe53RLq0/z7jyR5r6mmhVOAEd+mFRCtelNgc8ByMebfaSR
-        2V5gawwYyjU2lY0o35JVq/5DNxLOZvaSrz0r6gpENx7+MhBIHlFGRINmciQUFtAAqdx5Ow
-        8ZjEL7sLCynzrTEmNeEnbWbgbVLImbLneOK+Uv1o0izyx5UjYN+lSVVsCkGFoFHUv+03Ta
-        oTjb/MCY3vBBrfAURWOmS4a0LgtaYY0kXi6YJzP8HtO8yo5wLvJlv1kxml9i/g==
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=WRkfD05x7MCm3eiOQBtDuIPIfOjQ7TSZpVY4wuWe4dY=;
+        b=CfnDvFW5CBxTqucbnDi5dtSj6DnLfsd2hOp30wEpUJ2ad1TWrkK8LThvyn2lrRhMFMEp9x
+        ILoVgvYF8KaazBYD5hb3x9YAufLFuJV9Jz/ICmAJzR1PpoCCOHQpnfPjtzYJuWo9Jk7ZEH
+        0ATPNzsSLpc2nwaVooL8PYjKXxU7H6+VgxZdyi7ABbVkCwOCGw4GnuQ6WlSrwouU01D48t
+        TsqOb6yScmrkInbq7YsJ2iKvAC7HYJqflCO+5kcxZFXT5fjxXjgSX1GKCt6lQkKdAjXjlD
+        nWrW33sWLpsKcBAj4MDk2t/JFTWexTmPwM6WL1XOiKsM9Y8Qmc/2EBFlfcH+xw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1598398853;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8wmgAG5W2pqZeMqd7LjtnFdAGZkv++MtSBjncFs25Kg=;
-        b=VSarBxagrqAGNeUk5aOg076LS54CMsA9p4xMlcT2wkVuGbJuXtxGa3EIRLW4r97Tx3z1x+
-        wzzs11KHy3jOfeDA==
+         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+        bh=WRkfD05x7MCm3eiOQBtDuIPIfOjQ7TSZpVY4wuWe4dY=;
+        b=Ww0K10CmS2d8PrbI5XrstP/Lu682BieLgWACuTywuZU5ecoKiwQv1AVoXd3qlUpwI3xc5D
+        oqGfOP3KsxaUqCCw==
 From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] irqchip: Revert modular support for drivers using
- IRQCHIP_PLATFORM_DRIVER helperse
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Frank Wunderlich <linux@fw-web.de>,
+Subject: [tip: irq/urgent] irqchip: Fix probing deferal when using
+ IRQCHIP_PLATFORM_DRIVER helpers
+Cc:     John Stultz <john.stultz@linaro.org>,
         Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <93debe6a0308b66d3f307af67ba7ec2c@kernel.org>
-References: <93debe6a0308b66d3f307af67ba7ec2c@kernel.org>
 MIME-Version: 1.0
-Message-ID: <159839885252.389.8655544450744275136.tip-bot2@tip-bot2>
+Message-ID: <159839885325.389.3069378479635894674.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -72,102 +68,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/urgent branch of tip:
 
-Commit-ID:     a150dac5a8fb711fdc378c23f44bee4546f04246
-Gitweb:        https://git.kernel.org/tip/a150dac5a8fb711fdc378c23f44bee4546f04246
+Commit-ID:     7828a3ef8646fb2e69ed45616c8453a037ca7867
+Gitweb:        https://git.kernel.org/tip/7828a3ef8646fb2e69ed45616c8453a037ca7867
 Author:        Marc Zyngier <maz@kernel.org>
-AuthorDate:    Tue, 25 Aug 2020 10:38:39 +01:00
+AuthorDate:    Thu, 06 Aug 2020 10:57:45 +01:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Tue, 25 Aug 2020 10:48:54 +01:00
+CommitterDate: Mon, 17 Aug 2020 08:06:11 +01:00
 
-irqchip: Revert modular support for drivers using IRQCHIP_PLATFORM_DRIVER helperse
+irqchip: Fix probing deferal when using IRQCHIP_PLATFORM_DRIVER helpers
 
-It has become obvious that switching a number of irqchip drivers
-to being platform drivers without considering the platform was a
-mistake. We have multiple reports of end-point drivers not
-probing because the irqchip driver isn't there yet, breaking
-the expectations of the users.
+When probing an interrupt controller that is behind a parent,
+we try to check whether the parent domain is available as
+an indication that we can actually try to probe.
 
-This patch reverts:
+Unfortunately, we are checking this with the firmware node of
+the about to be probed device, not the parent. This is obviously
+bound to fail.
 
-920ecb8c35cb ("irqchip/mtk-cirq: Convert to a platform driver")
-f97dbf48ca43 ("irqchip/mtk-sysirq: Convert to a platform driver")
-5be57099d445 ("irqchip/qcom-pdc: Switch to using IRQCHIP_PLATFORM_DRIVER helper macros")
-95bf9305d2e3 ("irqchip/qcom-pdc: Allow QCOM_PDC to be loadable as a permanent module")
+Instead, use the parent node.
 
-and leave QCOM PDC, MTK sysrq and cirq drivers as built-in, special purpose
-drivers for the time being until we have worked out a better solution.
-
-Reported-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reported-by: Frank Wunderlich <linux@fw-web.de>
+Fixes: f8410e626569 ("irqchip: Add IRQCHIP_PLATFORM_DRIVER_BEGIN/END and IRQCHIP_MATCH helper macros")
+Reported-by: John Stultz <john.stultz@linaro.org>
+Tested-by: John Stultz <john.stultz@linaro.org>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/93debe6a0308b66d3f307af67ba7ec2c@kernel.org
 ---
- drivers/irqchip/Kconfig          | 2 +-
- drivers/irqchip/irq-mtk-cirq.c   | 4 +---
- drivers/irqchip/irq-mtk-sysirq.c | 4 +---
- drivers/irqchip/qcom-pdc.c       | 8 +-------
- 4 files changed, 4 insertions(+), 14 deletions(-)
+ drivers/irqchip/irqchip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index bb70b71..bfc9719 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -425,7 +425,7 @@ config GOLDFISH_PIC
-          for Goldfish based virtual platforms.
+diff --git a/drivers/irqchip/irqchip.c b/drivers/irqchip/irqchip.c
+index 1bb0e36..d234115 100644
+--- a/drivers/irqchip/irqchip.c
++++ b/drivers/irqchip/irqchip.c
+@@ -52,7 +52,7 @@ int platform_irqchip_probe(struct platform_device *pdev)
+ 	 * interrupt controller. The actual initialization callback of this
+ 	 * interrupt controller can check for specific domains as necessary.
+ 	 */
+-	if (par_np && !irq_find_matching_host(np, DOMAIN_BUS_ANY))
++	if (par_np && !irq_find_matching_host(par_np, DOMAIN_BUS_ANY))
+ 		return -EPROBE_DEFER;
  
- config QCOM_PDC
--	tristate "QCOM PDC"
-+	bool "QCOM PDC"
- 	depends on ARCH_QCOM
- 	select IRQ_DOMAIN_HIERARCHY
- 	help
-diff --git a/drivers/irqchip/irq-mtk-cirq.c b/drivers/irqchip/irq-mtk-cirq.c
-index 62a6127..69ba8ce 100644
---- a/drivers/irqchip/irq-mtk-cirq.c
-+++ b/drivers/irqchip/irq-mtk-cirq.c
-@@ -295,6 +295,4 @@ out_free:
- 	return ret;
- }
- 
--IRQCHIP_PLATFORM_DRIVER_BEGIN(mtk_cirq)
--IRQCHIP_MATCH("mediatek,mtk-cirq", mtk_cirq_of_init)
--IRQCHIP_PLATFORM_DRIVER_END(mtk_cirq)
-+IRQCHIP_DECLARE(mtk_cirq, "mediatek,mtk-cirq", mtk_cirq_of_init);
-diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
-index 7299c5a..6ff98b8 100644
---- a/drivers/irqchip/irq-mtk-sysirq.c
-+++ b/drivers/irqchip/irq-mtk-sysirq.c
-@@ -231,6 +231,4 @@ out_free_chip:
- 	kfree(chip_data);
- 	return ret;
- }
--IRQCHIP_PLATFORM_DRIVER_BEGIN(mtk_sysirq)
--IRQCHIP_MATCH("mediatek,mt6577-sysirq", mtk_sysirq_of_init)
--IRQCHIP_PLATFORM_DRIVER_END(mtk_sysirq)
-+IRQCHIP_DECLARE(mtk_sysirq, "mediatek,mt6577-sysirq", mtk_sysirq_of_init);
-diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-index c1c5dfa..6ae9e1f 100644
---- a/drivers/irqchip/qcom-pdc.c
-+++ b/drivers/irqchip/qcom-pdc.c
-@@ -11,11 +11,9 @@
- #include <linux/irqdomain.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
--#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
--#include <linux/of_irq.h>
- #include <linux/soc/qcom/irq.h>
- #include <linux/spinlock.h>
- #include <linux/slab.h>
-@@ -432,8 +430,4 @@ fail:
- 	return ret;
- }
- 
--IRQCHIP_PLATFORM_DRIVER_BEGIN(qcom_pdc)
--IRQCHIP_MATCH("qcom,pdc", qcom_pdc_init)
--IRQCHIP_PLATFORM_DRIVER_END(qcom_pdc)
--MODULE_DESCRIPTION("Qualcomm Technologies, Inc. Power Domain Controller");
--MODULE_LICENSE("GPL v2");
-+IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
+ 	return irq_init_cb(np, par_np);
