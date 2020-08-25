@@ -2,186 +2,127 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2396BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AA0C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0841620738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:33:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7262A20738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:34:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkXhmIey"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgHYMdj (ORCPT
+        id S1726853AbgHYMeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:33:39 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10320 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726691AbgHYMdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:33:35 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EDFE757303068AF559DB;
-        Tue, 25 Aug 2020 20:33:28 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Tue, 25 Aug 2020
- 20:33:19 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] net: clean up codestyle for net/ipv4
-Date:   Tue, 25 Aug 2020 08:32:11 -0400
-Message-ID: <20200825123211.33235-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Tue, 25 Aug 2020 08:34:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbgHYMes (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 08:34:48 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7878AC061574;
+        Tue, 25 Aug 2020 05:34:48 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id a6so2654088oog.9;
+        Tue, 25 Aug 2020 05:34:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8STidKdjB3IAsSg9qwMG6/fnbTG9ueb7BIUx1fPaPdM=;
+        b=EkXhmIeyqrFX4pTjEOdzP/jGeBGkdRMiIPackjwd0wko0Uj4wDHsnTqJgmE/DUMoOC
+         7UM2Ma7p67yIwuDuwdq0mgDsKjxEhDGZMd3UWwWr9xXzO3XiFPdfZsfq+Ybu18CJpCmv
+         sXA6HfyteNRB35O6jz+EhrtqehZZxQofMP/ar5YWVagBCdMGwjiqJ6yJ6q1Hp0knCTct
+         aFtdRkXwm9KZexzNqUipJ2ymmG0sdCjJldCZKNtdIkR85mQeiCYyMmw5x/pJdFJ1VjcP
+         rCPFgsIJBtyhUZXXDg+oIHHSImxO+1/EvkVPy+bXhZ9PRswqPxoROp7rklfG/xgMCD4C
+         G+wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8STidKdjB3IAsSg9qwMG6/fnbTG9ueb7BIUx1fPaPdM=;
+        b=n1cnoctdPTt2h7EUXpW/J0FqOsXO5gJ1amXYZj7qdw8KQaWjkIYn0irRYjbLTV5o2u
+         VsMCAw7A1B+UN6Z33RlsBz3wHo8K5JW6irqQlqNoMOYg23QJFcDq8BHQxT9ZpOJ2RVhK
+         mDvJRrWtPIsup6lyYvFS8NkvEwBW/zxJpH4RP7m27abAArG0c7Me02xOkMCJUawXAMaS
+         ZnQeK6hdhSSlBMYHkPAVvjscdimqIZHbBglGZUtrzb3TgIzNARzqAKuitzoYHBHZa2re
+         vFs8X7qNB9HhR3K4AsU9GvAMQn6I0IoRvD0zk/nAb560Ats/NK6gFpHBFxbsL2ykK4H1
+         iexA==
+X-Gm-Message-State: AOAM530Gu6OVnrEVQX6FV4QZgHiDdKLmk0EHVRVkKZWRADy5rRjUSN+c
+        eA/OvCk9m4qpQzZNJOT1t5J5yHziLGRiTp/z2rw=
+X-Google-Smtp-Source: ABdhPJyaNv6o4uVnFGumvl1cK7gZdIPeLXqVmwVKwDEiu2FCFHEKUVACuI2WumJhRdItKWAqsIjyLUZJMeK+/egbH10=
+X-Received: by 2002:a4a:380b:: with SMTP id c11mr6876012ooa.17.1598358887626;
+ Tue, 25 Aug 2020 05:34:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+References: <20200819071633.76494-1-alexandru.ardelean@analog.com>
+ <20200819071633.76494-2-alexandru.ardelean@analog.com> <20200825112435.GO2639@vkoul-mobl>
+In-Reply-To: <20200825112435.GO2639@vkoul-mobl>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Tue, 25 Aug 2020 15:34:36 +0300
+Message-ID: <CA+U=DspxU+Fo3Ynwr0ST2pyNW8Hrie=r0N2QZGrgiEqMvpicuA@mail.gmail.com>
+Subject: Re: [PATCH 2/5] dmaengine: axi-dmac: move clock enable earlier
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>, dan.j.williams@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a pure codestyle cleanup patch. Also add a blank line after
-declarations as warned by checkpatch.pl.
+On Tue, Aug 25, 2020 at 2:24 PM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 19-08-20, 10:16, Alexandru Ardelean wrote:
+> > The clock may also be required to read registers from the IP core (if it is
+> > provided and the driver needs to control it).
+> > So, move it earlier in the probe.
+> >
+> > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> > ---
+> >  drivers/dma/dma-axi-dmac.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/dma/dma-axi-dmac.c b/drivers/dma/dma-axi-dmac.c
+> > index 088c79137398..07665c60c21b 100644
+> > --- a/drivers/dma/dma-axi-dmac.c
+> > +++ b/drivers/dma/dma-axi-dmac.c
+> > @@ -850,6 +850,10 @@ static int axi_dmac_probe(struct platform_device *pdev)
+> >       if (IS_ERR(dmac->clk))
+> >               return PTR_ERR(dmac->clk);
+> >
+> > +     ret = clk_prepare_enable(dmac->clk);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> >       INIT_LIST_HEAD(&dmac->chan.active_descs);
+>
+> Change is fine, but then you need to jump to err_clk_disable in few
+> place below this and not return error
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- net/ipv4/ip_options.c | 35 +++++++++++++++++++----------------
- net/ipv4/ip_output.c  |  2 +-
- net/ipv4/route.c      |  6 +++---
- 3 files changed, 23 insertions(+), 20 deletions(-)
+oops;
+thanks for catching this;
+will send a v2
 
-diff --git a/net/ipv4/ip_options.c b/net/ipv4/ip_options.c
-index 948747aac4e2..da1b5038bdfd 100644
---- a/net/ipv4/ip_options.c
-+++ b/net/ipv4/ip_options.c
-@@ -47,32 +47,32 @@ void ip_options_build(struct sk_buff *skb, struct ip_options *opt,
- 	unsigned char *iph = skb_network_header(skb);
- 
- 	memcpy(&(IPCB(skb)->opt), opt, sizeof(struct ip_options));
--	memcpy(iph+sizeof(struct iphdr), opt->__data, opt->optlen);
-+	memcpy(iph + sizeof(struct iphdr), opt->__data, opt->optlen);
- 	opt = &(IPCB(skb)->opt);
- 
- 	if (opt->srr)
--		memcpy(iph+opt->srr+iph[opt->srr+1]-4, &daddr, 4);
-+		memcpy(iph + opt->srr + iph[opt->srr + 1] - 4, &daddr, 4);
- 
- 	if (!is_frag) {
- 		if (opt->rr_needaddr)
--			ip_rt_get_source(iph+opt->rr+iph[opt->rr+2]-5, skb, rt);
-+			ip_rt_get_source(iph + opt->rr + iph[opt->rr + 2] - 5, skb, rt);
- 		if (opt->ts_needaddr)
--			ip_rt_get_source(iph+opt->ts+iph[opt->ts+2]-9, skb, rt);
-+			ip_rt_get_source(iph + opt->ts + iph[opt->ts + 2] - 9, skb, rt);
- 		if (opt->ts_needtime) {
- 			__be32 midtime;
- 
- 			midtime = inet_current_timestamp();
--			memcpy(iph+opt->ts+iph[opt->ts+2]-5, &midtime, 4);
-+			memcpy(iph + opt->ts + iph[opt->ts + 2] - 5, &midtime, 4);
- 		}
- 		return;
- 	}
- 	if (opt->rr) {
--		memset(iph+opt->rr, IPOPT_NOP, iph[opt->rr+1]);
-+		memset(iph + opt->rr, IPOPT_NOP, iph[opt->rr + 1]);
- 		opt->rr = 0;
- 		opt->rr_needaddr = 0;
- 	}
- 	if (opt->ts) {
--		memset(iph+opt->ts, IPOPT_NOP, iph[opt->ts+1]);
-+		memset(iph + opt->ts, IPOPT_NOP, iph[opt->ts + 1]);
- 		opt->ts = 0;
- 		opt->ts_needaddr = opt->ts_needtime = 0;
- 	}
-@@ -495,26 +495,29 @@ EXPORT_SYMBOL(ip_options_compile);
- void ip_options_undo(struct ip_options *opt)
- {
- 	if (opt->srr) {
--		unsigned  char *optptr = opt->__data+opt->srr-sizeof(struct  iphdr);
--		memmove(optptr+7, optptr+3, optptr[1]-7);
--		memcpy(optptr+3, &opt->faddr, 4);
-+		unsigned char *optptr = opt->__data + opt->srr - sizeof(struct iphdr);
-+
-+		memmove(optptr + 7, optptr + 3, optptr[1] - 7);
-+		memcpy(optptr + 3, &opt->faddr, 4);
- 	}
- 	if (opt->rr_needaddr) {
--		unsigned  char *optptr = opt->__data+opt->rr-sizeof(struct  iphdr);
-+		unsigned char *optptr = opt->__data + opt->rr - sizeof(struct iphdr);
-+
- 		optptr[2] -= 4;
--		memset(&optptr[optptr[2]-1], 0, 4);
-+		memset(&optptr[optptr[2] - 1], 0, 4);
- 	}
- 	if (opt->ts) {
--		unsigned  char *optptr = opt->__data+opt->ts-sizeof(struct  iphdr);
-+		unsigned char *optptr = opt->__data + opt->ts - sizeof(struct iphdr);
-+
- 		if (opt->ts_needtime) {
- 			optptr[2] -= 4;
--			memset(&optptr[optptr[2]-1], 0, 4);
--			if ((optptr[3]&0xF) == IPOPT_TS_PRESPEC)
-+			memset(&optptr[optptr[2] - 1], 0, 4);
-+			if ((optptr[3] & 0xF) == IPOPT_TS_PRESPEC)
- 				optptr[2] -= 4;
- 		}
- 		if (opt->ts_needaddr) {
- 			optptr[2] -= 4;
--			memset(&optptr[optptr[2]-1], 0, 4);
-+			memset(&optptr[optptr[2] - 1], 0, 4);
- 		}
- 	}
- }
-diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
-index 61f802d5350c..329a0ab87542 100644
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -1351,7 +1351,7 @@ ssize_t	ip_append_page(struct sock *sk, struct flowi4 *fl4, struct page *page,
- 	if (cork->flags & IPCORK_OPT)
- 		opt = cork->opt;
- 
--	if (!(rt->dst.dev->features&NETIF_F_SG))
-+	if (!(rt->dst.dev->features & NETIF_F_SG))
- 		return -EOPNOTSUPP;
- 
- 	hh_len = LL_RESERVED_SPACE(rt->dst.dev);
-diff --git a/net/ipv4/route.c b/net/ipv4/route.c
-index 18c8baf32de5..96fcdfb9bb26 100644
---- a/net/ipv4/route.c
-+++ b/net/ipv4/route.c
-@@ -1079,7 +1079,7 @@ EXPORT_SYMBOL_GPL(ipv4_update_pmtu);
- 
- static void __ipv4_sk_update_pmtu(struct sk_buff *skb, struct sock *sk, u32 mtu)
- {
--	const struct iphdr *iph = (const struct iphdr *) skb->data;
-+	const struct iphdr *iph = (const struct iphdr *)skb->data;
- 	struct flowi4 fl4;
- 	struct rtable *rt;
- 
-@@ -1127,7 +1127,7 @@ void ipv4_sk_update_pmtu(struct sk_buff *skb, struct sock *sk, u32 mtu)
- 		new = true;
- 	}
- 
--	__ip_rt_update_pmtu((struct rtable *) xfrm_dst_path(&rt->dst), &fl4, mtu);
-+	__ip_rt_update_pmtu((struct rtable *)xfrm_dst_path(&rt->dst), &fl4, mtu);
- 
- 	if (!dst_check(&rt->dst, 0)) {
- 		if (new)
-@@ -1168,7 +1168,7 @@ EXPORT_SYMBOL_GPL(ipv4_redirect);
- 
- void ipv4_sk_redirect(struct sk_buff *skb, struct sock *sk)
- {
--	const struct iphdr *iph = (const struct iphdr *) skb->data;
-+	const struct iphdr *iph = (const struct iphdr *)skb->data;
- 	struct flowi4 fl4;
- 	struct rtable *rt;
- 	struct net *net = sock_net(sk);
--- 
-2.19.1
-
+>
+> >
+> >       of_channels = of_get_child_by_name(pdev->dev.of_node, "adi,channels");
+> > @@ -892,10 +896,6 @@ static int axi_dmac_probe(struct platform_device *pdev)
+> >       dmac->chan.vchan.desc_free = axi_dmac_desc_free;
+> >       vchan_init(&dmac->chan.vchan, dma_dev);
+> >
+> > -     ret = clk_prepare_enable(dmac->clk);
+> > -     if (ret < 0)
+> > -             return ret;
+> > -
+> >       version = axi_dmac_read(dmac, ADI_AXI_REG_VERSION);
+> >
+> >       ret = axi_dmac_detect_caps(dmac, version);
+> > --
+> > 2.17.1
+>
+> --
+> ~Vinod
