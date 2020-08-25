@@ -2,87 +2,113 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 941ADC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6946E2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:34:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF1B20782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:34:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OCecthoS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHYOeT (ORCPT
+        id S1726630AbgHYOek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:34:19 -0400
-Received: from mga07.intel.com ([134.134.136.100]:48069 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726483AbgHYOd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:33:59 -0400
-IronPort-SDR: rY/5/ZBrnqsTNyf3HA16dSVV1buAL3eI58we/ZKYnmTqnI+DyrsIO6lcZrnMUm8m5ELc7uob8U
- BHbEU7XMEHvQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="220379820"
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="220379820"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 07:33:57 -0700
-IronPort-SDR: dzmeqHoIyTXJ+o+g7Y8O9WxJ1M4qlPGVCY4Rp7vvQQFDRLvAXeYKDd3/dQ9lCaBWtakJIiZusD
- 4GhiA4F4SMXQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
-   d="scan'208";a="328880141"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2020 07:33:55 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kAa1J-00BLPk-Mi; Tue, 25 Aug 2020 17:33:53 +0300
-Date:   Tue, 25 Aug 2020 17:33:53 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: Re: [PATCH 2/3] software node: Introduce device_add_software_node()
-Message-ID: <20200825143353.GL1891694@smile.fi.intel.com>
-References: <20200825135951.53340-1-heikki.krogerus@linux.intel.com>
- <20200825135951.53340-3-heikki.krogerus@linux.intel.com>
- <20200825143228.GK1891694@smile.fi.intel.com>
+        Tue, 25 Aug 2020 10:34:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgHYOeH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:34:07 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B737C061574;
+        Tue, 25 Aug 2020 07:34:04 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w25so14038964ljo.12;
+        Tue, 25 Aug 2020 07:34:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=00qy2pNCOtPFyED/8lG4zQs8PuaD2Zn8I4O/t5hQ9Bk=;
+        b=OCecthoSt4bCALEoeE5FfEDKlZu18mvmEIdpPOsMkQ5l6lPkerHfErNgTJzfxxC+DX
+         jhaZR5EuPhkh31XY0g0jK+LPX680HVNsA2kIljZpjMk+1n3MfNm5wKPpoUt1nXyEtUt7
+         eL0iyv9JmUesw6rlTvZB1Gqvw11FLp/R3DwzQMEbFCgP2729nNW/+qm4hJ9PsDVCOvnD
+         L7colNLXj6/HoHwIhEYWDRnco8YxdMGf1HIKfIVseTiFcMxZ7k/nR+EFcmtSluYoJAxT
+         fEe9NtHotaJpCZA5OWmVGe4sMzX3w96kIgRVsV17UX+QyeohQny0JGGgVts1t39vQU01
+         PZPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=00qy2pNCOtPFyED/8lG4zQs8PuaD2Zn8I4O/t5hQ9Bk=;
+        b=HfUCrM4henAikbdg7yu3gr8dtiloNlSB5rhz5ZAY/GN45IwKZKDkRibf8/bbiTrr3V
+         G+UpdGrkWagW/qE35Ko3OAGLyOMZnWM1I/TIHhnCbqvUQ53QdTVAiAThV/p7JRSy+XdZ
+         zjjOmI1YArLGlQHhPjnYCD37HxTDm1C40VZ/B+d8yUMlJoSv4vmN/R52pOctpVB4Lljo
+         ot8j4gTqf4n0pjVo2u+Ysey5AZDEHWcWuWlZnmtxccDrjH2Bdv2tH+D6fkFWp7FB1hwy
+         g2MNsYn+PmHUwVaIer+LKWZwKuMJJQF9IaX22tplg7O5EfMWoOw5gaugi7ia5aP4+LyO
+         OkIw==
+X-Gm-Message-State: AOAM532YjBWUG+lpIbZ3ssL733m4WwuPPfmymOvvvzZi/V3TY5uVX+UE
+        ykGb6MjSGQaErwIqs0oFxCAP3wcjK4GY5KTkzn4=
+X-Google-Smtp-Source: ABdhPJw+2PoMTt6hCpRQlUsK/fYGK+EZ00dHWuxY8Agb+bMR/IyI65ArPrD06xZaoIRR454ye1p7RW6pIp+aChjNGfM=
+X-Received: by 2002:a2e:968c:: with SMTP id q12mr4759972lji.51.1598366042818;
+ Tue, 25 Aug 2020 07:34:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825143228.GK1891694@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200821111111.6c04acd6@canb.auug.org.au> <20200825112020.43ce26bb@canb.auug.org.au>
+ <CAADnVQLr8dU799ZrUnrBBDCtDxPyybZwrMFs5CAOHHW5pnLHHA@mail.gmail.com>
+ <20200825130445.655885f8@canb.auug.org.au> <CAADnVQKGf7o8gJ60m_zjh+QcmRTNH+y1ha_B2q-1ixcCSAoHaw@mail.gmail.com>
+ <20200825165029.795a8428@canb.auug.org.au>
+In-Reply-To: <20200825165029.795a8428@canb.auug.org.au>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 25 Aug 2020 07:33:51 -0700
+Message-ID: <CAADnVQ+SZj-Q=vijGkoUkmWeA=MM2S2oaVvJ7fj6=c4S4y-LMA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the bpf-next tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 05:32:28PM +0300, Andy Shevchenko wrote:
-> On Tue, Aug 25, 2020 at 04:59:50PM +0300, Heikki Krogerus wrote:
-> > This helper will register a software node and then assign
-> > it to device at the same time. The function will also make
-> > sure that the device can't have more than one software node.
-> 
-> > +	/* Only one software node per device. */
-> > +	if (dev_to_swnode(dev))
-> > +		return -EBUSY;
-> 
-> > +	swnode = dev_to_swnode(dev);
-> > +	if (!swnode)
-> > +		return;
-> 
-> Hmm... I didn't find implementation of dev_to_swnode().
-> What did I miss?
+On Mon, Aug 24, 2020 at 11:50 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi Alexei,
+>
+> On Mon, 24 Aug 2020 20:27:28 -0700 Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> >
+> > I didn't receive the first email you've replied to.
+> > The build error is:
+> > "
+> > No libelf found
+> > make[5]: *** [Makefile:284: elfdep] Error 1
+> > "
+> > and build process stops because libelf is not found, right?
+> > That is expected and necessary.
+> > bpf_preload needs libbpf that depends on libelf.
+> > The only 'fix' is to turn off bpf_preload.
+> > It's off by default.
+> > allmodconfig cannot build bpf_preload umd if there is no libelf.
+> > There is CC_CAN_LINK that does feature detection.
+> > We can extend scripts/cc-can-link.sh or add another script that
+> > will do CC_CAN_LINK_LIBELF, but such approach doesn't scale.
+> > imo it's cleaner to rely on feature detection by libbpf Makefile with
+> > an error above instead of adding such knobs to top Kconfig.
+> > Does it make sense?
+>
+> Sorry, but if this is not necessary to build the kernel, then an
+> allmodconfig build needs to succeed so you need to do the detection and
+> turn it off automatically.  Or you could make it so that it has to be
+> manually enabled in all circumstances.
 
-Now found, I was looking into header, but it's defined in the c-file in
-previous patch.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+what do you suggest to use to make it 'manually enabled' ?
+All I could think of is to add:
+depends on !COMPILE_TEST
+so that allmodconfig doesn't pick it up.
