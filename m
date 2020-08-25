@@ -2,111 +2,103 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C71B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7091C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A55A02075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7052074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:17:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZvJ/ufQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bacm3EUT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgHYURS (ORCPT
+        id S1726739AbgHYURm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59436 "EHLO
+        Tue, 25 Aug 2020 16:17:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYURP (ORCPT
+        with ESMTP id S1726149AbgHYURk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:17:15 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05999C061574;
-        Tue, 25 Aug 2020 13:17:14 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id l23so12368632edv.11;
-        Tue, 25 Aug 2020 13:17:14 -0700 (PDT)
+        Tue, 25 Aug 2020 16:17:40 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3213C061574;
+        Tue, 25 Aug 2020 13:17:40 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d22so8217753pfn.5;
+        Tue, 25 Aug 2020 13:17:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=81t2aDI5v1x3cz6lfle+1PiUyFahp9ZjxTfV8FCX8Xo=;
-        b=IZvJ/ufQek750GeWPxk9BxabiDFeqIOQLeTijcyIhHyqigJDxAvuLEvssHqG0ByYzd
-         5RgULxsKaJVJ/ImRbHQoZ0UFLH/eHB+6QDVs9zdYHOdZ/ifdWTqet4IRO/hirzYDWmc8
-         QYM/voORlmaRa+9Y6b3zrNyVjezPqsZhWnlV94NsZVQZQCUy+GwJgJoU8B34nUaTX19c
-         5vRRdzc4eVIKv3TpU3AHGvc/SPWcLEu2oTxbjF/IXCE+Hd+O51/5Mebf1b8QraGMBCdX
-         xjOjs8dPxfFV5tu7xI1ApTxRqfNc8wv2eEiCSGkD7rQriK712jxAgx+hXIo5og/QWnbT
-         m5+g==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kTTQkj1GrVnPq+Jl1z8GjL/Z8OGPiCHoo0nN5v+V4rY=;
+        b=Bacm3EUT/ArUc+tJ9DwRQAvy/UQanfr22vRs63UqaoZPXSzQYh/+7a0r6T0aQDh4uE
+         LzAPULF85HO+nfixAWfuBIZc/sPjruiwm7mOQtvzQDv0GVvB2+WFW0eX4PMqoKoTsov9
+         UpSUIHA+kv6ZN6VEmO8wmKc1cT6y2ChnuhrkU4QoBfUo0mvE64ZgjuEpj1Q8zO9WGL5x
+         UM+uc+DVQkom+H1zEKh1RyJOA/aVSCrecCoKUepBQScc3bJ1BFMQDefHrsqq66BBSvww
+         sLUFov/yW4z8jH4OEIClkRB3sRqS64/ayOG6XHYwJSqrkZVDT1uF75Kia/bBITKArVP4
+         QPNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=81t2aDI5v1x3cz6lfle+1PiUyFahp9ZjxTfV8FCX8Xo=;
-        b=NoocFbsS/FtqVu9xQPx5Zy0j6B6BzkzKZNDiRNZ1UdwtPUzwQliSqERWv926Aw4e00
-         lb6kCeHdOv7WU3xKtAy4MoQMzD1MmCDp485aiWxTj2B4vsDUyE8BCUERciZb6Z9530mw
-         UePGeeJU/D/ZlEAtCBR/y2tbhoP0XtXVgYnMVs7EHykUHi6M1hDjJFK+ov5cd1gOv/UZ
-         BGaetOKV9PvElhPp4z9IAjG76swQcFzaGWDqcWpjxI2WZ4zRoIQ0AncZ9MMo1/PZj/HI
-         rPMrSOjl6yDS2VQbYJcQ2iS+QZLbu6U5Mas44r32rGRHF2H6Q8b13MQWd4WOyibe8XD2
-         bsxw==
-X-Gm-Message-State: AOAM533PenUw8vrYB1aJuiKz3dvcrneRHHd7nQNW70+IJaV47ZNJWSG6
-        kRl95b5E574i2VLRHzxzXyU=
-X-Google-Smtp-Source: ABdhPJzDMdTD0z69cJdwS/8jhUmd/UCBW5lo2GAsKIaEs4WrroEXT6CUJTbOoG5ZIVbA0v2Ssh5/Dw==
-X-Received: by 2002:a50:8709:: with SMTP id i9mr12236951edb.141.1598386632599;
-        Tue, 25 Aug 2020 13:17:12 -0700 (PDT)
-Received: from [192.168.2.202] (pd9ea301b.dip0.t-ipconnect.de. [217.234.48.27])
-        by smtp.gmail.com with ESMTPSA id sd17sm14506440ejb.93.2020.08.25.13.17.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 13:17:11 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Subject: Re: [PATCH net] mwifiex: Increase AES key storage size to 256 bits
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kaloyan Nikolov <konik98@gmail.com>,
-        Brian Norris <briannorris@chromium.org>
-References: <20200825153829.38043-1-luzmaximilian@gmail.com>
- <20200825185151.GV5493@kadam>
-Message-ID: <54a785f9-d49e-354b-1430-8a854b4d36c5@gmail.com>
-Date:   Tue, 25 Aug 2020 22:17:10 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kTTQkj1GrVnPq+Jl1z8GjL/Z8OGPiCHoo0nN5v+V4rY=;
+        b=VUn/0zE1aJcXK77w6DHBl3Li1bm60MRurl/+Y2gxX05ehErhD0r0BWrEukv7K4RAc5
+         aRDARUXWcPbJU13zXU929/ai/hiFtGUhtqd1OXdIEy7fLxFo664ht5o4gpf8k0O+55y6
+         41PT7U3AIpy7HQp6J0ddMeKqo+TPmuWyLA4z0tH0nGym+4vRdyvQzyKslDl7ZenY074Q
+         lkfOVD+w1KBiI7NbU5ZPTEXwr4KA/n55yi+2xMxw2jP1dXeGANoS0EtTHNll4sz/1B2W
+         OPqSAnAfxjgnJ4NMz/ISsrz3h2iFmhtivnoZ6s401MpNhNuMJt5Z9rr9RTTeqqU8NljY
+         fXkw==
+X-Gm-Message-State: AOAM530zkvj7JsE6+lv+lz7KrgUFSTmqf4FDJ139sPW9km2DouKVoSOb
+        tyEBzip6jHDcRphy6yUF9C8=
+X-Google-Smtp-Source: ABdhPJy3+1AevdVVKZO0m/DyW+KokVwfuzGmzhV1klUpmR4e2P7ivu3hcck2+VYDCkh7E6/kPMLtLQ==
+X-Received: by 2002:a17:902:7605:: with SMTP id k5mr9428097pll.122.1598386660168;
+        Tue, 25 Aug 2020 13:17:40 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id o192sm88628pfg.81.2020.08.25.13.17.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 13:17:39 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 13:17:37 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Rob Herring <robh+dt@kernel.org>, Andrew Jeffery <andrew@aj.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tao Ren <taoren@fb.com>
+Subject: Re: [PATCH 5/5] ARM: dts: aspeed: Add Facebook Wedge400 BMC
+Message-ID: <20200825201736.GB22083@taoren-ubuntu-R90MNF91>
+References: <20200824211948.12852-1-rentao.bupt@gmail.com>
+ <20200824211948.12852-6-rentao.bupt@gmail.com>
+ <CACPK8XfbUt9W9xQ4Gxj0LMq=C99V1ExBbkOKvbOvCbJR4N_Bwg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200825185151.GV5493@kadam>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACPK8XfbUt9W9xQ4Gxj0LMq=C99V1ExBbkOKvbOvCbJR4N_Bwg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/25/20 8:51 PM, Dan Carpenter wrote:
-> I sort of feel like the code was broken before I added the bounds
-> checking but it's also okay if the Fixes tag points to my change as
-> well just to make backporting easier.
+On Tue, Aug 25, 2020 at 04:07:56AM +0000, Joel Stanley wrote:
+> On Mon, 24 Aug 2020 at 21:20, <rentao.bupt@gmail.com> wrote:
+> >
+> > From: Tao Ren <rentao.bupt@gmail.com>
+> >
+> > Add initial version of device tree for Facebook Wedge400 (AST2500) BMC.
+> >
+> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> 
+> Reviewed-by: Joel Stanley <joel@jms.id.au>
 
-I'd argue the same. Any critical out-of-bounds access was just never
-discovered (at least for 256 bit keys) due to the struct containing the
-key being a union member, as Brian observed.
+Thank you for the review, Joel.
 
-> Another question would be if it would be better to move the bounds
-> check after the "if (key_v2->key_param_set.key_type != KEY_TYPE_ID_AES)"
-> check?  Do we care if the length is invalid on the other paths?
 
-Given that I have pretty much no knowledge of the driver, I
-unfortunately can't answer this. But I agree that this should be looked
-at. I think this has the potential to work now (as long as the maximum
-key size is 256 bit) but break in the future if the maximum key size
-ever gets larger and the check excludes some key types that would be
-valid in this context (if there are even any?).
+Cheers,
 
-Regards,
-Max
+Tao
