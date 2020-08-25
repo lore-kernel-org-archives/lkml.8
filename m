@@ -2,89 +2,75 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A95C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6A720639
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A5932071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgHYN0p (ORCPT
+        id S1726243AbgHYN1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:26:45 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33347 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYN0m (ORCPT
+        Tue, 25 Aug 2020 09:27:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgHYN1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:26:42 -0400
-Received: by mail-ot1-f67.google.com with SMTP id t7so10353277otp.0;
-        Tue, 25 Aug 2020 06:26:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Z4lruBPSPBoCjk79gyfZpdmH0WXdNgeiqOeNZcAn4Ck=;
-        b=MKKHHpVBingi6NfIAxBsRtIgk9F8am+deZn3CIPms5Tkl8eOxgKr8EqG005dkX0SRx
-         gatk2qqVkra8nRtymeogF3YTCVx+Qc+wA2ALEgz0ntKKHoyKPY5mNy/Trx1x5Ox8XULq
-         5IrmttxvyTCaVx6mTo6b2X5J4Dks3mSJH9EWDYbj3o4ohPiime7NW2Iw6i/MVmL/ho8K
-         Mi7q/jdEHoC4Stglmg+t2MwDfCHY/T1H1aEZz1CMNZIV22D4J2Xo0VT7AIVgJyMxQ85U
-         eB4CL0VkPzJuNH2T7Eumzj3e/5aMSQzOtvEwx+nrGiMfj7Mni8eOzUao7v2w6iI93sZ/
-         kGWw==
-X-Gm-Message-State: AOAM5326oeQSA7YqDzaDk98Ec71lwuFvGzYW8gMEqaMvL9e1plxuyGOu
-        p3k3YS87qQHlzQsd1dzuRZw9jN9uhGlODbolmWGYCg6v
-X-Google-Smtp-Source: ABdhPJxezF532QFJrLI6cfNX5O+6qltMV9la/ajBFid1dzl1wERNYCWJFaFu0svnQ0KOr2ghKW/xA+/iIvnjKUXrJV0=
-X-Received: by 2002:a9d:32e5:: with SMTP id u92mr6266712otb.107.1598362001245;
- Tue, 25 Aug 2020 06:26:41 -0700 (PDT)
+        Tue, 25 Aug 2020 09:27:12 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86003C061574;
+        Tue, 25 Aug 2020 06:27:11 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id 34C76295FCD
+Subject: Re: [PATCH] MAINTAINERS: add Dafna Hirschfeld for rkisp1
+To:     Helen Koike <helen.koike@collabora.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, hverkuil-cisco@xs4all.nl,
+        kernel@collabora.com, tfiga@chromium.org
+References: <20200825132209.193435-1-helen.koike@collabora.com>
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Message-ID: <ca53cdf2-e82b-9370-86d8-9005b104ca04@collabora.com>
+Date:   Tue, 25 Aug 2020 15:27:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200825095448.13093-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200825095448.13093-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 25 Aug 2020 15:26:29 +0200
-Message-ID: <CAMuHMdUOvm+63TKU=2Yb4E12OZjdxAt+LRFfeT9sTayoyU8zVQ@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: sh-pfc: r8a7790: Add CAN pins, groups and functions
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200825132209.193435-1-helen.koike@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 11:55 AM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add pins, groups and functions for the CAN{0,1} interface.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+
+
+Am 25.08.20 um 15:22 schrieb Helen Koike:
+> Add Dafna Hirschfeld to rkisp1 maintainers list
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
 > ---
-> Hi All,
-> This patch is part of series [1], since rest of the patches have been
-> acked, I am resending patch 1/3 from the series.
->
-> [1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=333191
->
-> v1->v2
-> * Added CAN clk pins
+>   MAINTAINERS | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index deaafb617361c..3deb954b2bb5d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14858,6 +14858,7 @@ F:	include/linux/hid-roccat*
+>   
+>   ROCKCHIP ISP V1 DRIVER
+>   M:	Helen Koike <helen.koike@collabora.com>
+> +M:	Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+>   L:	linux-media@vger.kernel.org
+>   S:	Maintained
+>   F:	drivers/staging/media/rkisp1/
 
-Thanks for the update!
+Acked-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
