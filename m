@@ -2,119 +2,114 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0157FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8CD9204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B971020737
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:39:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G++tiKuD"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="oYDoh1MC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbgHYFio (ORCPT
+        id S1728836AbgHYFjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 01:38:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34470 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbgHYFin (ORCPT
+        Tue, 25 Aug 2020 01:39:11 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:35280 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728145AbgHYFjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 01:38:43 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D22C061574;
-        Mon, 24 Aug 2020 22:38:42 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id si26so14862670ejb.12;
-        Mon, 24 Aug 2020 22:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Cvb0A9IRVLSsoFCfcZyj1U4yUSMM5vQl3gQOUmNeIGo=;
-        b=G++tiKuDShN9pc23dyIevDr+cZBVwyC7VvsI4bEXClMei5oqFqjWi94wCCneP/vKy0
-         LexpHU99oSZzMjQcL+WLa4F5lm87dhEquZAmwrqATs1/wGGpZwgxDxBNQPvBb7jgAh17
-         UpoIdxBgpYRu6+E5uy8j0oDtBzuaQul0b5ThXf5n/aTRdTT4PYZPXarS1zYN74+cDT1W
-         qUttZUMeEvPpPyvlaZvpPe9npBne9X4v/bGcSPs0M3QkqUSnnO9Vhh4MVm2FM0cngDLp
-         8Y4Ju+KPzw357U9ckQDm9wXsztmLWj36MqIyEnE56zNf7rVm7TBqqwTHx4AeI/pTwjGk
-         grYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Cvb0A9IRVLSsoFCfcZyj1U4yUSMM5vQl3gQOUmNeIGo=;
-        b=RGt3H2Bwn+4CwHl621NUI2BV4Liu0Y5Y0zcegURorM04CqtBDsoRTZrOGcL5XbrqtS
-         BDVghFa5J8fTQYeri2YbvZzd+ruCjG8YQxtNyBGjjc1UHuuXKZ7OvndVhaTGTEr1d7L+
-         ofZT+YfmHIYIYvuA1vaPyo4/dKV4eDWBeibMnwrQP6BK7xOM9KRHkjOWBVh4K4jlGqbs
-         KIDXuRmYW3+hRzZ7vs6EJBo061qrnBIJP5zRR02GTxBAlEbbnA05GED6ZObCjjrofm9o
-         jXMaJld423S5GYbDC5Vn5cuWjse0HddWd15XdO4tuwVPmCHz7vV6/JbyvVy9RjfQ3JeP
-         WZ4Q==
-X-Gm-Message-State: AOAM533bSVe/2mbTtRVEXwu2K5chTHZpuF883UUT/6KrO7e6cxqwcVGW
-        w8lyAcyyQvdqRNMhu7TW6X8U/v/QKUhZ6w==
-X-Google-Smtp-Source: ABdhPJyRUIKUbRUhlOKBBMsu5/OxI8cNrhveYOeqRDXItbKYX5J13lRtTjQy9/UFSHUieFtfPvPmcw==
-X-Received: by 2002:a17:906:a219:: with SMTP id r25mr9055831ejy.201.1598333921147;
-        Mon, 24 Aug 2020 22:38:41 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d83:7500:a091:6d55:fb72:2347])
-        by smtp.gmail.com with ESMTPSA id dn7sm11802273ejc.76.2020.08.24.22.38.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 22:38:40 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>
-Cc:     Rob Clark <robdclark@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>, kernel-team@android.com,
-        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH v2] MAINTAINERS: update QUALCOMM IOMMU after Arm SMMU drivers move
-Date:   Tue, 25 Aug 2020 07:38:28 +0200
-Message-Id: <20200825053828.4166-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 25 Aug 2020 01:39:10 -0400
+X-UUID: bd94c9fa368a4a7a80f5ff7bd8c919c9-20200825
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=VRegGJ4jV43Hdy8Pytxo0IKxzzf+VLe4lBHE+Uv90dM=;
+        b=oYDoh1MCKW1tSpK6SqegVMnHSCYkZNOGtgIdYX2Bnb2sAv2cpr/78Lwx8r/Gmse1ZQtP/WRfxmxkFIZb8XsVvT3Ej9chGGipXP/vmdumfSAala4DCiTp4Sieuz8OWjpbNQXySTf3TyOIVdeAgjwPRdJjnWuGTOOgSXoBV3xkaBk=;
+X-UUID: bd94c9fa368a4a7a80f5ff7bd8c919c9-20200825
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <tiffany.lin@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 415149096; Tue, 25 Aug 2020 13:39:06 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 25 Aug 2020 13:39:05 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 25 Aug 2020 13:39:05 +0800
+Message-ID: <1598333944.1969.0.camel@mtksdaap41>
+Subject: Re: [PATCH v4 14/17] media: mtk-vcodec: venc: use platform data for
+ ENUM_FRAMESIZES
+From:   Tiffany Lin <tiffany.lin@mediatek.com>
+To:     Alexandre Courbot <acourbot@chromium.org>
+CC:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Tue, 25 Aug 2020 13:39:04 +0800
+In-Reply-To: <20200821103608.2310097-15-acourbot@chromium.org>
+References: <20200821103608.2310097-1-acourbot@chromium.org>
+         <20200821103608.2310097-15-acourbot@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit e86d1aa8b60f ("iommu/arm-smmu: Move Arm SMMU drivers into their own
-subdirectory") moved drivers/iommu/qcom_iommu.c to
-drivers/iommu/arm/arm-smmu/qcom_iommu.c amongst other moves, adjusted some
-sections in MAINTAINERS, but missed adjusting the QUALCOMM IOMMU section.
-
-Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
-
-  warning: no file matches    F:    drivers/iommu/qcom_iommu.c
-
-Update the file entry in MAINTAINERS to the new location.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Acked-by: Will Deacon <will@kernel.org>
----
-v1: https://lore.kernel.org/lkml/20200802065320.7470-1-lukas.bulwahn@gmail.com/
-v1 -> v2: typo fixed; added Will's Ack.
-
-Joerg, please pick this minor non-urgent patch for your -next branch.
-
-applies cleanly on next-20200731
-
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1469cb81261d..e175c0741653 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14358,7 +14358,7 @@ M:	Rob Clark <robdclark@gmail.com>
- L:	iommu@lists.linux-foundation.org
- L:	linux-arm-msm@vger.kernel.org
- S:	Maintained
--F:	drivers/iommu/qcom_iommu.c
-+F:	drivers/iommu/arm/arm-smmu/qcom_iommu.c
- 
- QUALCOMM IPCC MAILBOX DRIVER
- M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
--- 
-2.17.1
+T24gRnJpLCAyMDIwLTA4LTIxIGF0IDE5OjM2ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
+ZToNCj4gdmlkaW9jX2VudW1fZnJhbWVzaXplcygpIGFzc3VtZXMgdGhhdCBhbGwgZW5jb2RlcnMg
+c3VwcG9ydCBILjI2NCBhbmQgVlA4LA0KPiB3aGljaCBpcyBub3QgbmVjZXNzYXJpbHkgdHJ1ZSBh
+bmQgcmVxdWlyZXMgdG8gZHVwbGljYXRlIGluZm9ybWF0aW9uIGFib3V0DQo+IHRoZSBzdXBwb3J0
+ZWQgY29kZWNzIHdoaWNoIGlzIGFscmVhZHkgc3RvcmVkIGluIHRoZSBwbGF0Zm9ybSBkYXRhLg0K
+PiANCj4gRml4IHRoaXMgYnkgcmVmZXJyaW5nIHRvIHRoZSBwbGF0Zm9ybSBkYXRhIHRvIGZpbmQg
+b3V0IHdoZXRoZXIgYSBnaXZlbg0KPiBmb3JtYXQgaXMgc3VwcG9ydGVkLiBTaW5jZSB0aGUgc3Vw
+cG9ydGVkIHNpemVzIGFyZSBhbGwgdGhlIHNhbWUNCj4gcmVnYXJkbGVzcyBvZiB0aGUgZm9ybWF0
+LCB3ZSBjYW4gdGhlbiByZXR1cm4gYSBjb3B5IG9mIGEgc3RhdGljIHZhbHVlIGlmDQo+IHRoZSBm
+b3JtYXQgaXMgc3VwcG9ydGVkLg0KPiANCg0KQWNrZWQtYnk6IFRpZmZhbnkgTGluIDx0aWZmYW55
+LmxpbkBtZWRpYXRlay5jb20+DQoNCj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZHJlIENvdXJib3Qg
+PGFjb3VyYm90QGNocm9taXVtLm9yZz4NCj4gLS0tDQo+ICAuLi4vcGxhdGZvcm0vbXRrLXZjb2Rl
+Yy9tdGtfdmNvZGVjX2VuYy5jICAgICAgfCAyNCArKysrKysrKy0tLS0tLS0tLS0tDQo+ICAxIGZp
+bGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMTQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5j
+LmMgYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19lbmMuYw0K
+PiBpbmRleCAxYTk4MWQ4NDJjMTkuLmY4ZDRmYmU5MjdmOSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
+cy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jLmMNCj4gKysrIGIvZHJp
+dmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jLmMNCj4gQEAgLTI2
+LDE3ICsyNiw5IEBADQo+ICANCj4gIHN0YXRpYyB2b2lkIG10a192ZW5jX3dvcmtlcihzdHJ1Y3Qg
+d29ya19zdHJ1Y3QgKndvcmspOw0KPiAgDQo+IC1zdGF0aWMgY29uc3Qgc3RydWN0IG10a19jb2Rl
+Y19mcmFtZXNpemVzIG10a192ZW5jX2ZyYW1lc2l6ZXNbXSA9IHsNCj4gLQl7DQo+IC0JCS5mb3Vy
+Y2MJPSBWNEwyX1BJWF9GTVRfSDI2NCwNCj4gLQkJLnN0ZXB3aXNlID0geyBNVEtfVkVOQ19NSU5f
+VywgTVRLX1ZFTkNfTUFYX1csIDE2LA0KPiAtCQkJICAgICAgTVRLX1ZFTkNfTUlOX0gsIE1US19W
+RU5DX01BWF9ILCAxNiB9LA0KPiAtCX0sDQo+IC0Jew0KPiAtCQkuZm91cmNjID0gVjRMMl9QSVhf
+Rk1UX1ZQOCwNCj4gLQkJLnN0ZXB3aXNlID0geyBNVEtfVkVOQ19NSU5fVywgTVRLX1ZFTkNfTUFY
+X1csIDE2LA0KPiAtCQkJICAgICAgTVRLX1ZFTkNfTUlOX0gsIE1US19WRU5DX01BWF9ILCAxNiB9
+LA0KPiAtCX0sDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHY0bDJfZnJtc2l6ZV9zdGVwd2lzZSBt
+dGtfdmVuY19mcmFtZXNpemVzID0gew0KPiArCU1US19WRU5DX01JTl9XLCBNVEtfVkVOQ19NQVhf
+VywgMTYsDQo+ICsJTVRLX1ZFTkNfTUlOX0gsIE1US19WRU5DX01BWF9ILCAxNiwNCj4gIH07DQo+
+ICANCj4gICNkZWZpbmUgTlVNX1NVUFBPUlRFRF9GUkFNRVNJWkUgQVJSQVlfU0laRShtdGtfdmVu
+Y19mcmFtZXNpemVzKQ0KPiBAQCAtMTM0LDE3ICsxMjYsMjEgQEAgc3RhdGljIGludCB2aWRpb2Nf
+ZW51bV9mbXQoc3RydWN0IHY0bDJfZm10ZGVzYyAqZiwNCj4gIHN0YXRpYyBpbnQgdmlkaW9jX2Vu
+dW1fZnJhbWVzaXplcyhzdHJ1Y3QgZmlsZSAqZmlsZSwgdm9pZCAqZmgsDQo+ICAJCQkJICBzdHJ1
+Y3QgdjRsMl9mcm1zaXplZW51bSAqZnNpemUpDQo+ICB7DQo+ICsJY29uc3Qgc3RydWN0IG10a192
+Y29kZWNfZW5jX3BkYXRhICpwZGF0YSA9DQo+ICsJCWZoX3RvX2N0eChmaCktPmRldi0+dmVuY19w
+ZGF0YTsNCj4gIAlpbnQgaSA9IDA7DQo+ICANCj4gIAlpZiAoZnNpemUtPmluZGV4ICE9IDApDQo+
+ICAJCXJldHVybiAtRUlOVkFMOw0KPiAgDQo+IC0JZm9yIChpID0gMDsgaSA8IE5VTV9TVVBQT1JU
+RURfRlJBTUVTSVpFOyArK2kpIHsNCj4gLQkJaWYgKGZzaXplLT5waXhlbF9mb3JtYXQgIT0gbXRr
+X3ZlbmNfZnJhbWVzaXplc1tpXS5mb3VyY2MpDQo+ICsJZm9yIChpID0gMDsgaSA8IHBkYXRhLT5u
+dW1fY2FwdHVyZV9mb3JtYXRzOyArK2kpIHsNCj4gKwkJY29uc3Qgc3RydWN0IG10a192aWRlb19m
+bXQgKmZtdCA9ICZwZGF0YS0+Y2FwdHVyZV9mb3JtYXRzW2ldOw0KPiArDQo+ICsJCWlmIChmc2l6
+ZS0+cGl4ZWxfZm9ybWF0ICE9IGZtdC0+Zm91cmNjKQ0KPiAgCQkJY29udGludWU7DQo+ICANCj4g
+IAkJZnNpemUtPnR5cGUgPSBWNEwyX0ZSTVNJWkVfVFlQRV9TVEVQV0lTRTsNCj4gLQkJZnNpemUt
+PnN0ZXB3aXNlID0gbXRrX3ZlbmNfZnJhbWVzaXplc1tpXS5zdGVwd2lzZTsNCj4gKwkJZnNpemUt
+PnN0ZXB3aXNlID0gbXRrX3ZlbmNfZnJhbWVzaXplczsNCj4gIAkJcmV0dXJuIDA7DQo+ICAJfQ0K
+PiAgDQoNCg==
 
