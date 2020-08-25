@@ -2,142 +2,94 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF64FC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747D8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1E72074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5065820782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:49:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IJO6wug5"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g1XjYt4T";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2g3lJNGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726704AbgHYTsH (ORCPT
+        id S1726706AbgHYTtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:48:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18846 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726149AbgHYTsH (ORCPT
+        Tue, 25 Aug 2020 15:49:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:51978 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726149AbgHYTtJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:48:07 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PJVxDs006515;
-        Tue, 25 Aug 2020 15:47:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=7Rl2UklbYVkVJfBrMuiwtrmhml+iZDfjKAcAFsLmd3w=;
- b=IJO6wug5RqiSOpBic/JM2E7zcG24hhtuSpdf7fsjlf13Y0352A1nu+kKrvvp2FSFh/Zr
- YYT3cViGFZF4kSEiAwTfvT8w9RSHuv0swMNpR7FYX36wrzELn3nUa1fTCsdtMI7SaZDs
- cVFE9Fbp3ubrpuKKMAMRPXK3xmkPiaScjEAUncQbEIOfDnIu5r/gw2PIa/PqboRwdtEg
- +ZpaJXgWP5JC2D998EK/gnlk6HFPJfuhcrgMR709RgDnOV07PwcMjERlCpHThLI39aFf
- FmssUYM3Vrfw3tJ7hk1NnO9OUHHn5Rs+yCBgWX2oQtc4TGkP6GJgeUtSxHSZh8wpngY3 +Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3358kn0tpu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 15:47:55 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07PJWGuu007381;
-        Tue, 25 Aug 2020 15:47:55 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3358kn0tpd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 15:47:55 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07PJl7xm014803;
-        Tue, 25 Aug 2020 19:47:54 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma01dal.us.ibm.com with ESMTP id 332uttb3mf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 19:47:54 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07PJlrQs16253940
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 19:47:53 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 688C7AC05E;
-        Tue, 25 Aug 2020 19:47:53 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5A8F2AC059;
-        Tue, 25 Aug 2020 19:47:52 +0000 (GMT)
-Received: from [9.211.52.131] (unknown [9.211.52.131])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Aug 2020 19:47:52 +0000 (GMT)
-Subject: Re: [PATCH 3/5] i2c: aspeed: Mask IRQ status to relevant bits
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     linux-input@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        linux-i2c@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        dmitry.torokhov@gmail.com, Rob Herring <robh+dt@kernel.org>
-References: <20200820161152.22751-1-eajames@linux.ibm.com>
- <20200820161152.22751-4-eajames@linux.ibm.com>
- <CACPK8XdG1+3eQPQ71fZYZdHwcn8WNLQKF=5iKrOvGhLwispSQA@mail.gmail.com>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <8fc365dd-8a89-9e5c-ed70-093ef2bf7265@linux.ibm.com>
-Date:   Tue, 25 Aug 2020 14:47:51 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 15:49:09 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598384947;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nx2guUxaBEVRMrKDYjrAwhgM23aIhrP6oY6kMfLb3ZY=;
+        b=g1XjYt4TEhfIY6zrAYI2vv7JWz6a8/qZG+rhV5sdrhKQwt5rS3GTPX98RLngamtPG9Z0Y3
+        ntvwf0MVpAvbdcNSDVleHqSaE4p5MlEYpYwvz7nk29+5U2TCyOKncN04dwSr0OWPdIgPJG
+        A0QSLZ0sA0h+HgZx/mQgRmO6I4yG2sHs1lsqMr3E/5CqXK42C+h/ARaLPPjp2MWk1QlXyk
+        v8uEnyfhYM2ViD4JqdUrsapwJA+hp33e9/oG1extMtwpcl8QfTKvS1iv25lguijo5REdDp
+        E/ZBLpZDhpgjaK4SpEzZRinrpGEDdfHgzczMI7oVnvGJo4BWezDtXkkgGUrtOQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598384947;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nx2guUxaBEVRMrKDYjrAwhgM23aIhrP6oY6kMfLb3ZY=;
+        b=2g3lJNGuoxX9O8r/+8OdIEIqhjw+1a9reAJCb6GL7K9VJOf6bRa85U3T6T4Bopph0LPMC4
+        HIa0NGsb+LXwOSCA==
+To:     "Luck\, Tony" <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Christopherson\, Sean J" <sean.j.christopherson@intel.com>
+Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Pu Wen <puwen@hygon.cn>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Dirk Hohndel <dirkhh@vmware.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        "H. Peter Anvin" <hpa@linux.intel.com>,
+        "Mallick\, Asit K" <asit.k.mallick@intel.com>,
+        Gordon Tetlow <gordon@tetlows.org>,
+        David Kaplan <David.Kaplan@amd.com>
+Subject: RE: TDX #VE in SYSCALL gap (was: [RFD] x86: Curing the exception and syscall trainwreck in hardware)
+In-Reply-To: <dfce335fefe043868301bacf57120759@intel.com>
+References: <875z98jkof.fsf@nanos.tec.linutronix.de> <3babf003-6854-e50a-34ca-c87ce4169c77@citrix.com> <20200825043959.GF15046@sjchrist-ice> <CALCETrUP1T2k3UzZMsXMfAD83xbYEG+nAv3a-LeBjNW+=ijJAg@mail.gmail.com> <20200825171903.GA20660@sjchrist-ice> <CALCETrWy2x-RByfknjjKxRbE0LBPk2Ugj1d58xYHb91ogbfnvA@mail.gmail.com> <dfce335fefe043868301bacf57120759@intel.com>
+Date:   Tue, 25 Aug 2020 21:49:07 +0200
+Message-ID: <87ft8ay098.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <CACPK8XdG1+3eQPQ71fZYZdHwcn8WNLQKF=5iKrOvGhLwispSQA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-25_08:2020-08-25,2020-08-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- adultscore=0 impostorscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
- mlxlogscore=861 clxscore=1015 priorityscore=1501 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250143
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 8/25/20 1:38 AM, Joel Stanley wrote:
-> On Thu, 20 Aug 2020 at 16:12, Eddie James <eajames@linux.ibm.com> wrote:
->> Mask the IRQ status to only the bits that the driver checks. This
->> prevents excessive driver warnings when operating in slave mode
->> when additional bits are set that the driver doesn't handle.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->> ---
->>   drivers/i2c/busses/i2c-aspeed.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
->> index 31268074c422..abf40f2af8b4 100644
->> --- a/drivers/i2c/busses/i2c-aspeed.c
->> +++ b/drivers/i2c/busses/i2c-aspeed.c
->> @@ -604,6 +604,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
->>          writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
->>                 bus->base + ASPEED_I2C_INTR_STS_REG);
->>          readl(bus->base + ASPEED_I2C_INTR_STS_REG);
->> +       irq_received &= 0xf000ffff;
->>          irq_remaining = irq_received;
-> This would defeat the check for irq_remaining. I don't think we want to do this.
+On Tue, Aug 25 2020 at 17:35, Tony Luck wrote:
+>> > Or malicious hypervisor action, and that's a problem.
+>> >
+>> > Suppose the hypervisor remaps a GPA used in the SYSCALL gap (e.g. the
+>> > actual SYSCALL text or the first memory it accesses -- I don't have a
+>> > TDX spec so I don't know the details).
 >
-> Can you explain why these bits are being set in slave mode?
+> Is it feasible to defend against a malicious (or buggy) hypervisor?
+>
+> Obviously, we can't leave holes that guests can exploit. But the hypervisor
+> can crash the system no matter how clever TDX is.
 
+If it crashes and burns reliably then fine, but is that guaranteed?
 
-No, I don't have any documentation for the bits that are masked off 
-here, so I don't know why they would get set.
-
-The check for irq_remaining is still useful for detecting that the 
-driver state machine might be out of sync with what the master is doing.
-
+I have serious doubts about that given the history and fragility of all
+of this and I really have zero interest in dealing with the fallout a
+year from now.
 
 Thanks,
 
-Eddie
-
-
+        tglx
