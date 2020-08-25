@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D75C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B37C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 666D02072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA06C2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="YFdvLbfu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="dX5uz47r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgHYEXa (ORCPT
+        id S1728788AbgHYEXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:23:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50928 "EHLO
+        Tue, 25 Aug 2020 00:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728543AbgHYEWv (ORCPT
+        with ESMTP id S1728603AbgHYEWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:22:51 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2467EC061796
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:51 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id r15so869365pjo.9
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:51 -0700 (PDT)
+        Tue, 25 Aug 2020 00:22:45 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 312A8C0613ED
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:45 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id v11so13353414ybm.22
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:22:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=Vf05DHbJOL8YiBgNY4RcEwAfFMau7ErjLwduxlsjLdo=;
-        b=YFdvLbfuNEJOET5kjewhbsqwCOZ0iwwmylh9OKTb1DDvbbUo/f5M1W+AAgZCsQpYBQ
-         UgQFNEdlEYlNHkXGZP3HWfXHW2CisBYqCknHiJGJpM5Mz0jw/L7IBAc4WcA7DaBJ4IXG
-         Sv/6I+1/leX8sBLiINDSEcQkpjnSNS97so1BfkXBe4Q6xivbrd1WB1FpnR14G0rfLc0B
-         3NquMc3XPk8BL2pAA8WUoAOAbGfuVxAuzKVSBoOgBWxXeA+Kmp8zOs4lXc/vjvRnhhxG
-         56nhUNShRrQErheoGsHJbCM/C5dkWEMQQGOgyEk+n8mTyw/N5PA9qxMOLcAwwZ8mVJAz
-         u6IQ==
+        bh=sFdYqBQlTSkB+FFqFlpawTx7xM2r9WYQ3mb5WM7+TDQ=;
+        b=dX5uz47rOdNS32QHVSWJzNCzMTPaSaOMrw2hwaJLtbyBStRFrCNExIdSuqI2aBsbka
+         HHM6794Ikzpr4ubevzqkxqj5nERllwBBabxaFdvdaH2qbOdhvzfFjezAg0GbZqfeq52f
+         t0nNIdyaDkQN2z6Jf/uj/xzlLC+Y1rbNHuXHOsfxnvA7znqHu2PIMUa8g+HxCJCyL77+
+         EMePiPFP4uTQWPB3UAOsH2G/fpIVM9O5dDbqnZWFm7cJigQA1fmkfRVmk6XO/2f/UsYE
+         gYLmC2D0HAth92diZQZ8czf8O4KCgkH4bPCv/nhrEqI+iUT60Qx7/trveJqst5Xmz5CR
+         5dPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=Vf05DHbJOL8YiBgNY4RcEwAfFMau7ErjLwduxlsjLdo=;
-        b=q0dqKD5I9jc55HiOBCNBuY7izpARA28jGprgXPQQpSE/fdzXtEgCo/vYmm1N1vUEbw
-         24pcHcmcKOl47Ag7VB1IjlzyorHb++26FFnKr8GG37gsqs6C5eAf0nEH96cox7zVwZbB
-         J5PzkET4NMniA3XQohgYc0vrRNs5DBVML6XwkcNUDzvhhQL4UExVQZ68cjbJhjLw5ZpC
-         sq8m4EZbkdnBzQIaY2ji9DquoD9rOxIuPbZIjjsTDRugTGPKrGAFQ3z3eeQiTN741TP2
-         swHay3Lpi4frQ2mJWZFQ5rSNv26tGnAqPv7uQ15oACVioL7rPZf5I3MitalBMAUXVqLB
-         z0FA==
-X-Gm-Message-State: AOAM530oH7t3wCIhHPuqbfv5MvpG4F1+es5pV5i+T1853faophnAJoEL
-        wVwhqLkbTtWFzvK38VZ3T8xZfC30kZA=
-X-Google-Smtp-Source: ABdhPJy+tvS3+K7sfYIGeYaZ5HlFjz8vLgYSBHkYoDYFx2Jh9ydO5cH2HKTHEGm0OOG4GYBiwuAZuHGV1sA=
+        bh=sFdYqBQlTSkB+FFqFlpawTx7xM2r9WYQ3mb5WM7+TDQ=;
+        b=GRGb6msOpambmo2zFqZVVSIf2IRgxgkVEnq2H2cHaaSgcMzMLg0zdN+0haRtD+QNVW
+         WlpWtnPU8aVcunViDbfmD+cU76SsKEKEg8UsOdNL0BOwtGbr7sYHmpFvjLMxPiRRksHk
+         zDvzdt9ES9xSZhPBV/Gz0fjOeuzsIcAofufupL1tv3ClieQbH3G843dVLCYpG8B+JJ4J
+         s0YRNhRzAnjGInkGifcDHHyot79kPH4jxF4yhYaAiyHHxsIit4diPrD7mraBICI4s5Wx
+         penqqCAegqJzmnoExYdQ2XIJ4kIVbhI6iZfs9MesWSMVWNuX41Y/tOsD1vdEsnNjW0Yx
+         kMxg==
+X-Gm-Message-State: AOAM530+a35mRCXeZe6s8Frqq9RUHvaW3wvZzIf0t1r8g2AfWL6PJo3C
+        WyPUBEUWDLYDY3buJOEptdZUCyHrfbM=
+X-Google-Smtp-Source: ABdhPJyhAYrZP4syB+/LfKRsjiHSevArYgDQeEQwJ784AAKb9XLYH3OQm2uDpxYkuL+OQ7f8RrFPtNkYJWk=
 X-Received: from badhri.mtv.corp.google.com ([2620:15c:211:1:f292:1cff:fee0:66cf])
- (user=badhri job=sendgmr) by 2002:a17:90a:e558:: with SMTP id
- ei24mr72404pjb.54.1598329370679; Mon, 24 Aug 2020 21:22:50 -0700 (PDT)
-Date:   Mon, 24 Aug 2020 21:22:06 -0700
+ (user=badhri job=sendgmr) by 2002:a25:ca83:: with SMTP id a125mr12717448ybg.513.1598329364377;
+ Mon, 24 Aug 2020 21:22:44 -0700 (PDT)
+Date:   Mon, 24 Aug 2020 21:22:03 -0700
 In-Reply-To: <20200825042210.300632-1-badhri@google.com>
-Message-Id: <20200825042210.300632-11-badhri@google.com>
+Message-Id: <20200825042210.300632-8-badhri@google.com>
 Mime-Version: 1.0
 References: <20200825042210.300632-1-badhri@google.com>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH 10/14 v1] usb: typec: tcpci: Implement callbacks for FRS
+Subject: [PATCH 07/14 v1] usb: typec: tcpci_maxim: Chip level TCPC driver
 From:   Badhri Jagan Sridharan <badhri@google.com>
 To:     Guenter Roeck <linux@roeck-us.net>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
@@ -75,98 +75,549 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement tcpc.enable_frs to enable TCPC to receive
-Fast role swap signal.
-
-Additionally set the sink disconnect threshold to 4v
-to prevent disconnect during Fast Role swap.
+Chip level TCPC driver for Maxim's TCPCI implementation.
+This TCPC implementation does not support the following
+commands: COMMAND.SinkVbus, COMMAND.SourceVbusDefaultVoltage,
+COMMAND.SourceVbusHighVoltage. Instead the sinking and sourcing
+from vbus is supported by writes to custom registers.
 
 Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 ---
- drivers/usb/typec/tcpm/tcpci.c | 17 +++++++++++++++++
- drivers/usb/typec/tcpm/tcpci.h |  8 ++++++++
- 2 files changed, 25 insertions(+)
+ drivers/usb/typec/tcpm/Kconfig       |   6 +
+ drivers/usb/typec/tcpm/Makefile      |  13 +-
+ drivers/usb/typec/tcpm/tcpci.h       |   1 +
+ drivers/usb/typec/tcpm/tcpci_maxim.c | 474 +++++++++++++++++++++++++++
+ 4 files changed, 488 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/usb/typec/tcpm/tcpci_maxim.c
 
-diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-index 89d28e3fbee8..13d2e1c2ff20 100644
---- a/drivers/usb/typec/tcpm/tcpci.c
-+++ b/drivers/usb/typec/tcpm/tcpci.c
-@@ -268,6 +268,22 @@ static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
- 				enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
- }
+diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
+index fa3f39336246..7c9722b02afe 100644
+--- a/drivers/usb/typec/tcpm/Kconfig
++++ b/drivers/usb/typec/tcpm/Kconfig
+@@ -27,6 +27,12 @@ config TYPEC_RT1711H
+ 	  Type-C Port Controller Manager to provide USB PD and USB
+ 	  Type-C functionalities.
  
-+static int tcpci_enable_frs(struct tcpc_dev *dev, bool enable)
++config TYPEC_TCPCI_MAXIM
++	tristate "Maxim TCPCI based Type-C chip driver"
++	select USB_PSY
++	help
++	  MAXIM TCPCI based Type-C chip driver
++
+ endif # TYPEC_TCPCI
+ 
+ config TYPEC_FUSB302
+diff --git a/drivers/usb/typec/tcpm/Makefile b/drivers/usb/typec/tcpm/Makefile
+index a5ff6c8eb892..58d001cf0dd2 100644
+--- a/drivers/usb/typec/tcpm/Makefile
++++ b/drivers/usb/typec/tcpm/Makefile
+@@ -1,7 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-$(CONFIG_TYPEC_TCPM)	+= tcpm.o
+-obj-$(CONFIG_TYPEC_FUSB302)	+= fusb302.o
+-obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
+-typec_wcove-y			:= wcove.o
+-obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
+-obj-$(CONFIG_TYPEC_RT1711H)	+= tcpci_rt1711h.o
++obj-$(CONFIG_TYPEC_TCPM)		+= tcpm.o
++obj-$(CONFIG_TYPEC_FUSB302)		+= fusb302.o
++obj-$(CONFIG_TYPEC_WCOVE)		+= typec_wcove.o
++typec_wcove-y				:= wcove.o
++obj-$(CONFIG_TYPEC_TCPCI)		+= tcpci.o
++obj-$(CONFIG_TYPEC_RT1711H)		+= tcpci_rt1711h.o
++obj-$(CONFIG_TYPEC_TCPCI_MAXIM)		+= tcpci_maxim.o
+diff --git a/drivers/usb/typec/tcpm/tcpci.h b/drivers/usb/typec/tcpm/tcpci.h
+index 4d441bdf24d5..82f021a82456 100644
+--- a/drivers/usb/typec/tcpm/tcpci.h
++++ b/drivers/usb/typec/tcpm/tcpci.h
+@@ -109,6 +109,7 @@
+ 
+ #define TCPC_RX_BYTE_CNT		0x30
+ #define TCPC_RX_BUF_FRAME_TYPE		0x31
++#define TCPC_RX_BUF_FRAME_TYPE_SOP	0
+ #define TCPC_RX_HDR			0x32
+ #define TCPC_RX_DATA			0x34 /* through 0x4f */
+ 
+diff --git a/drivers/usb/typec/tcpm/tcpci_maxim.c b/drivers/usb/typec/tcpm/tcpci_maxim.c
+new file mode 100644
+index 000000000000..b61f290a8f96
+--- /dev/null
++++ b/drivers/usb/typec/tcpm/tcpci_maxim.c
+@@ -0,0 +1,474 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020, Google LLC
++ *
++ * MAXIM TCPCI based TCPC driver
++ */
++
++#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
++#include <linux/interrupt.h>
++#include <linux/i2c.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_gpio.h>
++#include <linux/regmap.h>
++#include <linux/usb/pd.h>
++#include <linux/usb/tcpm.h>
++#include <linux/usb/typec.h>
++
++#include "tcpci.h"
++
++#define PD_ACTIVITY_TIMEOUT_MS				10000
++
++#define TCPC_VENDOR_ALERT				0x80
++
++#define TCPC_RECEIVE_BUFFER_COUNT_OFFSET		0
++#define TCPC_RECEIVE_BUFFER_FRAME_TYPE_OFFSET		1
++#define TCPC_RECEIVE_BUFFER_RX_BYTE_BUF_OFFSET		2
++
++/*
++ * LongMessage not supported, hence 32 bytes for buf to be read from RECEIVE_BUFFER.
++ * DEVICE_CAPABILITIES_2.LongMessage = 0, the value in READABLE_BYTE_COUNT reg shall be
++ * less than or equal to 31. Since, RECEIVE_BUFFER len = 31 + 1(READABLE_BYTE_COUNT).
++ */
++#define TCPC_RECEIVE_BUFFER_LEN				32
++
++#define MAX_BUCK_BOOST_SID				0x69
++#define MAX_BUCK_BOOST_OP				0xb9
++#define MAX_BUCK_BOOST_OFF				0
++#define MAX_BUCK_BOOST_SOURCE				0xa
++#define MAX_BUCK_BOOST_SINK				0x5
++
++struct max_tcpci_chip {
++	struct tcpci_data data;
++	struct tcpci *tcpci;
++	struct device *dev;
++	struct i2c_client *client;
++	struct tcpm_port *port;
++};
++
++static const struct regmap_range max_tcpci_tcpci_range[] = {
++	regmap_reg_range(0x00, 0x95)
++};
++
++const struct regmap_access_table max_tcpci_tcpci_write_table = {
++	.yes_ranges = max_tcpci_tcpci_range,
++	.n_yes_ranges = ARRAY_SIZE(max_tcpci_tcpci_range),
++};
++
++static const struct regmap_config max_tcpci_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.max_register = 0x95,
++	.wr_table = &max_tcpci_tcpci_write_table,
++};
++
++static struct max_tcpci_chip *tdata_to_max_tcpci(struct tcpci_data *tdata)
 +{
-+	struct tcpci *tcpci = tcpc_to_tcpci(dev);
++	return container_of(tdata, struct max_tcpci_chip, data);
++}
++
++static int max_tcpci_read16(struct max_tcpci_chip *chip, unsigned int reg, u16 *val)
++{
++	return regmap_raw_read(chip->data.regmap, reg, val, sizeof(u16));
++}
++
++static int max_tcpci_write16(struct max_tcpci_chip *chip, unsigned int reg, u16 val)
++{
++	return regmap_raw_write(chip->data.regmap, reg, &val, sizeof(u16));
++}
++
++static int max_tcpci_read8(struct max_tcpci_chip *chip, unsigned int reg, u8 *val)
++{
++	return regmap_raw_read(chip->data.regmap, reg, val, sizeof(u8));
++}
++
++static int max_tcpci_write8(struct max_tcpci_chip *chip, unsigned int reg, u8 val)
++{
++	return regmap_raw_write(chip->data.regmap, reg, &val, sizeof(u8));
++}
++
++static void max_tcpci_init_regs(struct max_tcpci_chip *chip)
++{
++	u16 alert_mask = 0;
 +	int ret;
 +
-+	/* To prevent disconnect during FRS, set disconnect threshold to 3.5V */
-+	ret = tcpci_write16(tcpci, TCPC_VBUS_SINK_DISCONNECT_THRESH, enable ? 0 : 0x8c);
++	ret = max_tcpci_write16(chip, TCPC_ALERT, 0xffff);
++	if (ret < 0) {
++		dev_err(chip->dev, "Error writing to TCPC_ALERT ret:%d\n", ret);
++		return;
++	}
++
++	ret = max_tcpci_write16(chip, TCPC_VENDOR_ALERT, 0xffff);
++	if (ret < 0) {
++		dev_err(chip->dev, "Error writing to TCPC_VENDOR_ALERT ret:%d\n", ret);
++		return;
++	}
++
++	alert_mask = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_DISCARDED | TCPC_ALERT_TX_FAILED |
++		TCPC_ALERT_RX_HARD_RST | TCPC_ALERT_RX_STATUS | TCPC_ALERT_CC_STATUS |
++		TCPC_ALERT_VBUS_DISCNCT | TCPC_ALERT_RX_BUF_OVF | TCPC_ALERT_POWER_STATUS;
++
++	ret = max_tcpci_write16(chip, TCPC_ALERT_MASK, alert_mask);
++	if (ret < 0) {
++		dev_err(chip->dev, "Error writing to TCPC_ALERT_MASK ret:%d\n", ret);
++		return;
++	}
++
++	/* Enable vbus voltage monitoring and voltage alerts */
++	ret = max_tcpci_write8(chip, TCPC_POWER_CTRL, 0);
++	if (ret < 0) {
++		dev_err(chip->dev, "Error writing to TCPC_POWER_CTRL ret:%d\n", ret);
++		return;
++	}
++}
++
++static void process_rx(struct max_tcpci_chip *chip, u16 status)
++{
++	struct pd_message msg;
++	u8 count, frame_type, rx_buf[TCPC_RECEIVE_BUFFER_LEN];
++	int ret, payload_index;
++	u8 *rx_buf_ptr;
++
++	/*
++	 * READABLE_BYTE_COUNT: Indicates the number of bytes in the RX_BUF_BYTE_x registers
++	 * plus one (for the RX_BUF_FRAME_TYPE) Table 4-36.
++	 * Read the count and frame type.
++	 */
++	ret = regmap_raw_read(chip->data.regmap, TCPC_RX_BYTE_CNT, rx_buf, 2);
++	if (ret < 0) {
++		dev_err(chip->dev, "TCPC_RX_BYTE_CNT read failed ret:%d", ret);
++		return;
++	}
++
++	count = rx_buf[TCPC_RECEIVE_BUFFER_COUNT_OFFSET];
++	frame_type = rx_buf[TCPC_RECEIVE_BUFFER_FRAME_TYPE_OFFSET];
++
++	if (count == 0 || frame_type != TCPC_RX_BUF_FRAME_TYPE_SOP) {
++		max_tcpci_write16(chip, TCPC_ALERT, TCPC_ALERT_RX_STATUS);
++		dev_err(chip->dev, "%s", count ==  0 ? "error: count is 0" :
++			"error frame_type is not SOP");
++		return;
++	}
++
++	if (count > sizeof(struct pd_message) || count + 1 > TCPC_RECEIVE_BUFFER_LEN) {
++		dev_err(chip->dev, "Invalid TCPC_RX_BYTE_CNT %d", count);
++		return;
++	}
++
++	/*
++	 * Read count + 1 as RX_BUF_BYTE_x is hidden and can only be read through
++	 * TCPC_RX_BYTE_CNT
++	 */
++	count += 1;
++	ret = regmap_raw_read(chip->data.regmap, TCPC_RX_BYTE_CNT, rx_buf, count);
++	if (ret < 0) {
++		dev_err(chip->dev, "Error: TCPC_RX_BYTE_CNT read failed: %d", ret);
++		return;
++	}
++
++	rx_buf_ptr = rx_buf + TCPC_RECEIVE_BUFFER_RX_BYTE_BUF_OFFSET;
++	msg.header = cpu_to_le16(*(u16 *)rx_buf_ptr);
++	rx_buf_ptr = rx_buf_ptr + sizeof(msg.header);
++	for (payload_index = 0; payload_index < pd_header_cnt_le(msg.header); payload_index++,
++	     rx_buf_ptr += sizeof(msg.payload[0]))
++		msg.payload[payload_index] = cpu_to_le32(*(u32 *)rx_buf_ptr);
++
++	/*
++	 * Read complete, clear RX status alert bit.
++	 * Clear overflow as well if set.
++	 */
++	ret = max_tcpci_write16(chip, TCPC_ALERT, status & TCPC_ALERT_RX_BUF_OVF ?
++				TCPC_ALERT_RX_STATUS | TCPC_ALERT_RX_BUF_OVF :
++				TCPC_ALERT_RX_STATUS);
++	if (ret < 0)
++		return;
++
++	tcpm_pd_receive(chip->port, &msg);
++}
++
++static int max_tcpci_set_vbus(struct tcpci *tcpci, struct tcpci_data *tdata, bool source, bool sink)
++{
++	struct max_tcpci_chip *chip = tdata_to_max_tcpci(tdata);
++	u8 buffer_source[2] = {MAX_BUCK_BOOST_OP, MAX_BUCK_BOOST_SOURCE};
++	u8 buffer_sink[2] = {MAX_BUCK_BOOST_OP, MAX_BUCK_BOOST_SINK};
++	u8 buffer_none[2] = {MAX_BUCK_BOOST_OP, MAX_BUCK_BOOST_OFF};
++	struct i2c_client *i2c = chip->client;
++	int ret;
++
++	struct i2c_msg msgs[] = {
++		{
++			.addr = MAX_BUCK_BOOST_SID,
++			.flags = i2c->flags & I2C_M_TEN,
++			.len = 2,
++			.buf = source ? buffer_source : sink ? buffer_sink : buffer_none,
++		},
++	};
++
++	if (source && sink) {
++		dev_err(chip->dev, "Both source and sink set\n");
++		return -EINVAL;
++	}
++
++	ret = i2c_transfer(i2c->adapter, msgs, 1);
++
++	return  ret < 0 ? ret : 1;
++}
++
++static void process_power_status(struct max_tcpci_chip *chip)
++{
++	u8 pwr_status;
++	int ret;
++
++	ret = max_tcpci_read8(chip, TCPC_POWER_STATUS, &pwr_status);
++	if (ret < 0)
++		return;
++
++	if (pwr_status == 0xff)
++		max_tcpci_init_regs(chip);
++	else
++		tcpm_vbus_change(chip->port);
++}
++
++static void process_tx(struct max_tcpci_chip *chip, u16 status)
++{
++	if (status & TCPC_ALERT_TX_SUCCESS)
++		tcpm_pd_transmit_complete(chip->port, TCPC_TX_SUCCESS);
++	else if (status & TCPC_ALERT_TX_DISCARDED)
++		tcpm_pd_transmit_complete(chip->port, TCPC_TX_DISCARDED);
++	else if (status & TCPC_ALERT_TX_FAILED)
++		tcpm_pd_transmit_complete(chip->port, TCPC_TX_FAILED);
++
++	/* Reinit regs as Hard reset sets them to default value */
++	if ((status & TCPC_ALERT_TX_SUCCESS) && (status & TCPC_ALERT_TX_FAILED))
++		max_tcpci_init_regs(chip);
++}
++
++static irqreturn_t _max_tcpci_irq(struct max_tcpci_chip *chip, u16 status)
++{
++	u16 mask;
++	int ret;
++
++	/*
++	 * Clear alert status for everything except RX_STATUS, which shouldn't
++	 * be cleared until we have successfully retrieved message.
++	 */
++	if (status & ~TCPC_ALERT_RX_STATUS) {
++		mask = status & TCPC_ALERT_RX_BUF_OVF ?
++			status & ~(TCPC_ALERT_RX_STATUS | TCPC_ALERT_RX_BUF_OVF) :
++			status & ~TCPC_ALERT_RX_STATUS;
++		ret = max_tcpci_write16(chip, TCPC_ALERT, mask);
++		if (ret < 0) {
++			dev_err(chip->dev, "ALERT clear failed\n");
++			return ret;
++		}
++	}
++
++	if (status & TCPC_ALERT_RX_BUF_OVF && !(status & TCPC_ALERT_RX_STATUS)) {
++		ret = max_tcpci_write16(chip, TCPC_ALERT, (TCPC_ALERT_RX_STATUS |
++							  TCPC_ALERT_RX_BUF_OVF));
++		if (ret < 0) {
++			dev_err(chip->dev, "ALERT clear failed\n");
++			return ret;
++		}
++	}
++
++	if (status & TCPC_ALERT_RX_STATUS)
++		process_rx(chip, status);
++
++	if (status & TCPC_ALERT_TX_DISCARDED)
++		dev_info(chip->dev, "TX_DISCARDED");
++
++	if (status & TCPC_ALERT_VBUS_DISCNCT)
++		tcpm_vbus_change(chip->port);
++
++	if (status & TCPC_ALERT_CC_STATUS)
++		tcpm_cc_change(chip->port);
++
++	if (status & TCPC_ALERT_POWER_STATUS)
++		process_power_status(chip);
++
++	if (status & TCPC_ALERT_RX_HARD_RST) {
++		tcpm_pd_hard_reset(chip->port);
++		max_tcpci_init_regs(chip);
++	}
++
++	if (status & TCPC_ALERT_TX_SUCCESS || status & TCPC_ALERT_TX_DISCARDED || status &
++	    TCPC_ALERT_TX_FAILED)
++		process_tx(chip, status);
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t max_tcpci_irq(int irq, void *dev_id)
++{
++	struct max_tcpci_chip *chip = dev_id;
++	u16 status;
++	irqreturn_t irq_return;
++	int ret;
++
++	if (!chip->port)
++		return IRQ_HANDLED;
++
++	ret = max_tcpci_read16(chip, TCPC_ALERT, &status);
++	if (ret < 0) {
++		dev_err(chip->dev, "ALERT read failed\n");
++		return ret;
++	}
++	while (status) {
++		irq_return = _max_tcpci_irq(chip, status);
++		/* Do not return if the ALERT is already set. */
++		ret = max_tcpci_read16(chip, TCPC_ALERT, &status);
++		if (ret < 0)
++			break;
++	}
++
++	return irq_return;
++}
++
++static irqreturn_t max_tcpci_isr(int irq, void *dev_id)
++{
++	struct max_tcpci_chip *chip = dev_id;
++
++	pm_wakeup_event(chip->dev, PD_ACTIVITY_TIMEOUT_MS);
++
++	if (!chip->port)
++		return IRQ_HANDLED;
++
++	return IRQ_WAKE_THREAD;
++}
++
++static int max_tcpci_init_alert(struct max_tcpci_chip *chip, struct i2c_client *client)
++{
++	int ret, irq_gpio;
++
++	irq_gpio = of_get_named_gpio(client->dev.of_node, "usbpd,usbpd_int", 0);
++	client->irq = gpio_to_irq(irq_gpio);
++	if (!client->irq)
++		return -ENODEV;
++
++	ret = devm_request_threaded_irq(chip->dev, client->irq, max_tcpci_isr, max_tcpci_irq,
++					(IRQF_TRIGGER_LOW | IRQF_ONESHOT), dev_name(chip->dev),
++					chip);
++
 +	if (ret < 0)
 +		return ret;
 +
-+	ret = regmap_update_bits(tcpci->regmap, TCPC_POWER_CTRL, TCPC_FAST_ROLE_SWAP_EN, enable ?
-+				 TCPC_FAST_ROLE_SWAP_EN : 0);
++	enable_irq_wake(client->irq);
++	return 0;
++}
++
++static int max_tcpci_start_toggling(struct tcpci *tcpci, struct tcpci_data *tdata,
++				    enum typec_cc_status cc)
++{
++	struct max_tcpci_chip *chip = tdata_to_max_tcpci(tdata);
++
++	max_tcpci_init_regs(chip);
++
++	return 0;
++}
++
++static int tcpci_init(struct tcpci *tcpci, struct tcpci_data *data)
++{
++	/*
++	 * Generic TCPCI overwrites the regs once this driver initializes
++	 * them. Prevent this by returning -1.
++	 */
++	return -1;
++}
++
++static int max_tcpci_probe(struct i2c_client *client, const struct i2c_device_id *i2c_id)
++{
++	int ret;
++	struct max_tcpci_chip *chip;
++	u8 power_status;
++
++	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	chip->client = client;
++	chip->data.regmap = devm_regmap_init_i2c(client, &max_tcpci_regmap_config);
++	if (IS_ERR(chip->data.regmap)) {
++		dev_err(&client->dev, "Regmap init failed\n");
++		return PTR_ERR(chip->data.regmap);
++	}
++
++	chip->dev = &client->dev;
++	i2c_set_clientdata(client, chip);
++
++	ret = max_tcpci_read8(chip, TCPC_POWER_STATUS, &power_status);
++	if (ret < 0)
++		return ret;
++
++	if (power_status & TCPC_POWER_STATUS_UNINIT) {
++		dev_err(&client->dev, "TCPC not ready!");
++		return -EPROBE_DEFER;
++	}
++
++	/* Chip level tcpci callbacks */
++	chip->data.set_vbus = max_tcpci_set_vbus;
++	chip->data.start_drp_toggling = max_tcpci_start_toggling;
++	chip->data.TX_BUF_BYTE_x_hidden = true;
++	chip->data.init = tcpci_init;
++
++	max_tcpci_init_regs(chip);
++	chip->tcpci = tcpci_register_port(chip->dev, &chip->data);
++	if (IS_ERR_OR_NULL(chip->tcpci)) {
++		dev_err(&client->dev, "TCPCI port registration failed");
++		ret = PTR_ERR(chip->tcpci);
++		return PTR_ERR(chip->tcpci);
++	}
++	chip->port = tcpci_get_tcpm_port(chip->tcpci);
++	ret = max_tcpci_init_alert(chip, client);
++	if (ret < 0)
++		goto unreg_port;
++
++	device_init_wakeup(chip->dev, true);
++	return 0;
++
++unreg_port:
++	tcpci_unregister_port(chip->tcpci);
 +
 +	return ret;
 +}
 +
- static int tcpci_set_bist_data(struct tcpc_dev *tcpc, bool enable)
- {
- 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
-@@ -610,6 +626,7 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
- 	tcpci->tcpc.set_roles = tcpci_set_roles;
- 	tcpci->tcpc.pd_transmit = tcpci_pd_transmit;
- 	tcpci->tcpc.set_bist_data = tcpci_set_bist_data;
-+	tcpci->tcpc.enable_frs = tcpci_enable_frs;
- 
- 	err = tcpci_parse_config(tcpci);
- 	if (err < 0)
-diff --git a/drivers/usb/typec/tcpm/tcpci.h b/drivers/usb/typec/tcpm/tcpci.h
-index 82f021a82456..5ef07a56d67a 100644
---- a/drivers/usb/typec/tcpm/tcpci.h
-+++ b/drivers/usb/typec/tcpm/tcpci.h
-@@ -16,6 +16,7 @@
- #define TCPC_PD_INT_REV			0xa
- 
- #define TCPC_ALERT			0x10
-+#define TCPC_ALERT_EXTND		BIT(14)
- #define TCPC_ALERT_EXTENDED_STATUS	BIT(13)
- #define TCPC_ALERT_VBUS_DISCNCT		BIT(11)
- #define TCPC_ALERT_RX_BUF_OVF		BIT(10)
-@@ -37,6 +38,9 @@
- #define TCPC_EXTENDED_STATUS_MASK		0x16
- #define TCPC_EXTENDED_STATUS_MASK_VSAFE0V	BIT(0)
- 
-+#define TCPC_ALERT_EXTENDED_MASK	0x17
-+#define TCPC_SINK_FAST_ROLE_SWAP	BIT(0)
++static int max_tcpci_remove(struct i2c_client *client)
++{
++	struct max_tcpci_chip *chip = i2c_get_clientdata(client);
 +
- #define TCPC_CONFIG_STD_OUTPUT		0x18
- 
- #define TCPC_TCPC_CTRL			0x19
-@@ -63,6 +67,7 @@
- 
- #define TCPC_POWER_CTRL			0x1c
- #define TCPC_POWER_CTRL_VCONN_ENABLE	BIT(0)
-+#define TCPC_FAST_ROLE_SWAP_EN		BIT(7)
- 
- #define TCPC_CC_STATUS			0x1d
- #define TCPC_CC_STATUS_TOGGLING		BIT(5)
-@@ -74,11 +79,14 @@
- 
- #define TCPC_POWER_STATUS		0x1e
- #define TCPC_POWER_STATUS_UNINIT	BIT(6)
-+#define TCPC_POWER_STATUS_SOURCING_VBUS	BIT(4)
- #define TCPC_POWER_STATUS_VBUS_DET	BIT(3)
- #define TCPC_POWER_STATUS_VBUS_PRES	BIT(2)
- 
- #define TCPC_FAULT_STATUS		0x1f
- 
-+#define TCPC_ALERT_EXTENDED		0x21
++	if (!IS_ERR_OR_NULL(chip->tcpci))
++		tcpci_unregister_port(chip->tcpci);
 +
- #define TCPC_COMMAND			0x23
- #define TCPC_CMD_WAKE_I2C		0x11
- #define TCPC_CMD_DISABLE_VBUS_DETECT	0x22
++	return 0;
++}
++
++static const struct i2c_device_id max_tcpci_id[] = {
++	{ "maxtcpc", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, max_tcpci_id);
++
++#ifdef CONFIG_OF
++static const struct of_device_id max_tcpci_of_match[] = {
++	{ .compatible = "maxim,tcpc", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, max_tcpci_of_match);
++#endif
++
++static struct i2c_driver max_tcpci_i2c_driver = {
++	.driver = {
++		.name = "maxtcpc",
++		.of_match_table = of_match_ptr(max_tcpci_of_match),
++	},
++	.probe = max_tcpci_probe,
++	.remove = max_tcpci_remove,
++	.id_table = max_tcpci_id,
++};
++module_i2c_driver(max_tcpci_i2c_driver);
++
++MODULE_AUTHOR("Badhri Jagan Sridharan <badhri@google.com>");
++MODULE_DESCRIPTION("Maxim TCPCI based USB Type-C Port Controller Interface Driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
