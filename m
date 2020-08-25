@@ -2,146 +2,196 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72159C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F8CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9F22071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D0FA2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:52:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sUtrjydE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gL/syhdA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgHYFuJ (ORCPT
+        id S1728861AbgHYFwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 01:50:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36248 "EHLO
+        Tue, 25 Aug 2020 01:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728928AbgHYFuI (ORCPT
+        with ESMTP id S1726090AbgHYFw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 01:50:08 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B330C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:50:07 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 67so2935360pgd.12
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:50:07 -0700 (PDT)
+        Tue, 25 Aug 2020 01:52:28 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E937DC061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:52:27 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id x142so2553427vke.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:52:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vnJNUHtuFQUFx13e1DH6FdQTNcSlnOczZJdYD+gETKQ=;
-        b=sUtrjydErcLgPizhn/Xtx4ItBgxoAz/OtzMIkDhh/Q2SE9qFJyNZ2IWh/2wrLbP6F3
-         vMtRByRkp1mYza87avjNVjpHkG6lCbqxvXdcHvDFWIUUDogaJ2wO/o4/rENLnkbuOACB
-         Hps0Tvpynh9hWCbsYRkAKdJwaeblvE+o/JQuCsq1VknHKEl6aAc7zlJDEZijhlYuLR3i
-         ND/Go6sn4ST2/vDfSmtmhqTcmAI2UtUsC21eT/h6OZwd1Ipp6dRZnrCk2yFlAF7tZXmf
-         RGy1hmTFbfTZYLSQluB5wNe7oBjCkvwFyXaDTcVXAOzhh74RtFdCJtggaXeZT7b5TZrc
-         YyRg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=M7XsooAFuHGHi3D3V0DX30y9bL0P0cmujAiQdt5pyvk=;
+        b=gL/syhdAGBBcGdIdbtXPT1t60LAH98hYc36gXrkjtycE/sDFAmczB9X0gWxvo517R1
+         sz0MN2T1y2dSGtS3fuwu7plCdEwko7Ob3bYzFzIXTtOtk+o0HGZRqOAWsUS9BXze5qgJ
+         qQnUXylr/jEGboVLqrS/+YH2Wzkpf9DqWp+D1+W8qnvBe1tgHDqEolim3uTHbi7LNLaZ
+         uBig9RtB9UFxPMP9EKqkPFlUDP01FTcj3ru8hZy+eH5oolaP44elR+3q4WuS+9iroM8s
+         EwxwKHl/kyYM/55LA1b2r+/BGv3pEIPYfM7A0oCxY5EXm7dGw2lr/kEXkXSPugA4C1QV
+         3+7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vnJNUHtuFQUFx13e1DH6FdQTNcSlnOczZJdYD+gETKQ=;
-        b=QzC8qxGONNiHMtrtPer9oIU0Dg5qzF1Dj7HEkiJvhokscsNsxkMnGy4pcgWSMCjjoc
-         Ql4oeDOWe1+p59cJdKD4XT6UjY10uuvMMdaDKJ1qE9GwDzMZ7jAT0hufuhl2LPYDn7/F
-         EUaiXjUsD6dF0DY40Ng/gjXuSDvXg/+RDOxqGmS0n8Jb1K4N5CrufxJB4MyDuJ2EY3kP
-         p3LO0TlFFcg2bUeucEjNFeBfC5lTxOHpgNJ3Y+gw8FW3pumbqDJsGIKggrYOL64GZQkY
-         8TH29E7xAXylHvOzAex+2kUqhiTMdtIcFInzch8Wu5Ou3WuKpZvMzh0myZ19EguMsoZl
-         AWDg==
-X-Gm-Message-State: AOAM531dsQ2PR6KDBUmz2AVsMMnLZWttrk7G3LNPdiBan4z1SKpYnAlC
-        5gO7zfzZmc78l0FIR1C1LdAdNg==
-X-Google-Smtp-Source: ABdhPJx7LW43H/WEVT3wFqJuqlI6n26TIbT5/snnF9dSqDbHnlNMONApn7rCm69tVvLefn/LYmHMeQ==
-X-Received: by 2002:a63:31d0:: with SMTP id x199mr5238003pgx.99.1598334606437;
-        Mon, 24 Aug 2020 22:50:06 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id o5sm2988556pgi.18.2020.08.24.22.50.05
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 22:50:05 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 11:20:03 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] cpufreq: tegra186: Fix initial frequency
-Message-ID: <20200825055003.qfsuktsv7cyouxei@vireshk-i7>
-References: <20200824145907.331899-1-jonathanh@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=M7XsooAFuHGHi3D3V0DX30y9bL0P0cmujAiQdt5pyvk=;
+        b=Yq5VBDOgtMwjLtSK5lc6La1YBwjqHmEgQPPzdeI5Sohqd9wxEighup34wGwNFa5vAX
+         8i9CjBDWNHAj7c/7LNuAty428ZOKNZdEvk7J9UQmCu8UvT13cuGNnM/miqidL+zt8MXU
+         CuDgBIJxDddFI29JYEYiqXdnUi6sI72IOplegFmI8kmfQxOYzbiMV+U6epdSDEYX4dBq
+         Snnpwc+qSm7l7oqu+zGUJcuGKS8YqQQREgDIN6eZnmKd1eNh2QnXHQN1jfVoq6wOMn8R
+         4iVPGHehzgYsDsA2QqwXXQpmow3n2rDTaojc3zdmmyWk8HI8pHseMF+FyjHzqxJr0TgG
+         0ZIg==
+X-Gm-Message-State: AOAM5303JP+JOa9kwq25zpBVnrhglkHDx+CkoDMEyBhliutmNSg2gJn8
+        HMkRsptubbXWgwJzEedPL4HLxltLz0RwOu1lMbQtUA==
+X-Google-Smtp-Source: ABdhPJyQ208O7MAlUBfz9+NVG8ImFQwisVQrPUl0rUjQUurqJzeS/28Syl8UyLGYyB5/ubAXEePM3Uv/VQXWn+ndhzI=
+X-Received: by 2002:a1f:2fc1:: with SMTP id v184mr4748425vkv.42.1598334746920;
+ Mon, 24 Aug 2020 22:52:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824145907.331899-1-jonathanh@nvidia.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20200824164737.830839404@linuxfoundation.org>
+In-Reply-To: <20200824164737.830839404@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 25 Aug 2020 11:22:14 +0530
+Message-ID: <CA+G9fYuodyaEJdGG75fQCrp9+WDZaj8W-V6uSgOaJLfGxQDJ7w@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/109] 5.4.61-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-08-20, 15:59, Jon Hunter wrote:
-> Commit 6cc3d0e9a097 ("cpufreq: tegra186: add
-> CPUFREQ_NEED_INITIAL_FREQ_CHECK flag") fixed CPUFREQ support for
-> Tegra186 but as a consequence the following warnings are now seen on
-> boot ...
-> 
->  cpufreq: cpufreq_online: CPU0: Running at unlisted freq: 0 KHz
->  cpufreq: cpufreq_online: CPU0: Unlisted initial frequency changed to: 2035200 KHz
->  cpufreq: cpufreq_online: CPU1: Running at unlisted freq: 0 KHz
->  cpufreq: cpufreq_online: CPU1: Unlisted initial frequency changed to: 2035200 KHz
->  cpufreq: cpufreq_online: CPU2: Running at unlisted freq: 0 KHz
->  cpufreq: cpufreq_online: CPU2: Unlisted initial frequency changed to: 2035200 KHz
->  cpufreq: cpufreq_online: CPU3: Running at unlisted freq: 0 KHz
->  cpufreq: cpufreq_online: CPU3: Unlisted initial frequency changed to: 2035200 KHz
->  cpufreq: cpufreq_online: CPU4: Running at unlisted freq: 0 KHz
->  cpufreq: cpufreq_online: CPU4: Unlisted initial frequency changed to: 2035200 KHz
->  cpufreq: cpufreq_online: CPU5: Running at unlisted freq: 0 KHz
->  cpufreq: cpufreq_online: CPU5: Unlisted initial frequency changed to: 2035200 KHz
-> 
-> Fix this by adding a 'get' callback for the Tegra186 CPUFREQ driver to
-> retrieve the current operating frequency for a given CPU. The 'get'
-> callback uses the current 'ndiv' value that is programmed to determine
-> that current operating frequency.
-> 
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
-> Changes since V1:
-> - Moved code into a 'get' callback
-> 
->  drivers/cpufreq/tegra186-cpufreq.c | 30 ++++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
-> 
-> diff --git a/drivers/cpufreq/tegra186-cpufreq.c b/drivers/cpufreq/tegra186-cpufreq.c
-> index 01e1f58ba422..0d0fcff60765 100644
-> --- a/drivers/cpufreq/tegra186-cpufreq.c
-> +++ b/drivers/cpufreq/tegra186-cpufreq.c
-> @@ -14,6 +14,7 @@
->  
->  #define EDVD_CORE_VOLT_FREQ(core)		(0x20 + (core) * 0x4)
->  #define EDVD_CORE_VOLT_FREQ_F_SHIFT		0
-> +#define EDVD_CORE_VOLT_FREQ_F_MASK		0xffff
->  #define EDVD_CORE_VOLT_FREQ_V_SHIFT		16
->  
->  struct tegra186_cpufreq_cluster_info {
-> @@ -91,10 +92,39 @@ static int tegra186_cpufreq_set_target(struct cpufreq_policy *policy,
->  	return 0;
->  }
->  
-> +static unsigned int tegra186_cpufreq_get(unsigned int cpu)
-> +{
-> +	struct cpufreq_frequency_table *tbl;
-> +	struct cpufreq_policy *policy;
-> +	void __iomem *edvd_reg;
-> +	unsigned int i, freq = 0;
-> +	u32 ndiv;
-> +
-> +	policy = cpufreq_cpu_get(cpu);
-> +	if (!policy)
-> +		return -EINVAL;
+On Mon, 24 Aug 2020 at 22:19, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.61 release.
+> There are 109 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 26 Aug 2020 16:47:07 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.61-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-This should be return 0;
 
-Applied with that change. Thanks.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
--- 
-viresh
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.4.61-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: d3dbec480949413c968365e6f8c25b1e7847e4dd
+git describe: v5.4.60-110-gd3dbec480949
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.60-110-gd3dbec480949
+
+No regressions (compared to build v5.4.60)
+
+No fixes (compared to build v5.4.60)
+
+
+Ran 36416 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* igt-gpu-tools
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-math-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* network-basic-tests
+* ltp-controllers-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-open-posix-tests
+* ltp-tracing-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
