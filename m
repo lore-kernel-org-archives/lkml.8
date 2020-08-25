@@ -2,320 +2,213 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 948DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDA4C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 513532076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 108302076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 17:39:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pe23f4Ex"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qNzb0qmh";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="UuSmATjs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbgHYRhL (ORCPT
+        id S1726391AbgHYRjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 13:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgHYRg7 (ORCPT
+        Tue, 25 Aug 2020 13:39:55 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:34312 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725936AbgHYRjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 13:36:59 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38824C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:36:59 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id y8so6779435vsq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:36:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+855CmegM+DswyOpl/Szdp5ActwZ8DYUP58NTFD9vJU=;
-        b=Pe23f4ExVOzYgrqtYwx2WgAVRZ5swZyB+ojamfXaxfvx7dyPw9+zF+/1R3tWrh62zs
-         kk/fUQh8DCinymfeBmEXtLfdHVd5v2fRzrPZ8IugiMGSjLJp3h2BNP9Qe2L76dbqiOHm
-         5Ky/VUmLumzpUYJVOMU51VfVov+Sh69DvbbNnjQuuYJNnxzB+I1bLlD1oB1w32LQT9Eh
-         KeNd2+06XCSUP5/6tud+ZNSArngcoRgy8L/wrGlA8vDo8CAL3WDaKQWc8i0x2NTyB3qy
-         lyopTTrN/t0iGQKqiVjwHqZ/amk9K4lNIXy0BOvWryD1mYTjQcH3FzLvMSLidUOWUaJt
-         KU4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+855CmegM+DswyOpl/Szdp5ActwZ8DYUP58NTFD9vJU=;
-        b=DgvIdA7Nu5sp95DqEfyaxuHoQhrzMKAfjchG+10DN35wKA6zCApjWt38gQkaQIWKVL
-         SxRlW2EoLCnPndlbLVVZrTPyCoOyQ94DvTHFhJrviPR2Ov4XsKmSPiBiVMx6/UZhWbBN
-         A1JLjtG2uuD7pSX4A7phUbCL1SRZZp4ffCy0aBO8VvaXHre7A1gRb7Lye8uyecROzT0q
-         cvLLFT/OHQkyqpFzntwSGH+ryAaWphII+xfXNPM+QtdBbMatQNcYb4N2jkkwgbC5I2N2
-         ifMB640dOVDnoC/SAHlt+CWMTPyhUCa9O944934Deh7Rsc2RfJdIUUHlefEi5u2wUTl5
-         jSyA==
-X-Gm-Message-State: AOAM532f1OEOjpNGKsfaXCbPgUxE0UW2tV1p9+yOvIbpiFVHuS6msag1
-        RFidOdeuvl9RPeKUS2E8ySSY822h/boVSkUH+fYukA==
-X-Google-Smtp-Source: ABdhPJxbywIoBPQZF125TFQpPJDrXpJj7CqAFrBMQcd2a5TQ1EuOhPPVFDMNkJC6B4coJKwZbj/Fn/5bvu2Aprsrsuk=
-X-Received: by 2002:a67:efd4:: with SMTP id s20mr2401698vsp.221.1598377017637;
- Tue, 25 Aug 2020 10:36:57 -0700 (PDT)
+        Tue, 25 Aug 2020 13:39:53 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07PHZOJh018389;
+        Tue, 25 Aug 2020 10:39:32 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=facebook; bh=Klzn/5GDglqr9+v3V+ruJgQ1fcQUY3wyLgew7EBfK9Y=;
+ b=qNzb0qmhWiFEbVWt0StFqyk+UsfRhxDJ33fso+UC8egIO5NS9IVIIGlR7E+HRxhif/fm
+ 8fELq7hdMvmJMtrb/IdMynoud2IU+nB8FuQMewkFi76B0DS22cwdXu6VIF2AmxLuZmPm
+ p8Ce1oQZskO7ws/rB+gbhg4KKVkbBYAqTO4= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by m0089730.ppops.net with ESMTP id 332xuwqk3j-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 25 Aug 2020 10:39:32 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 25 Aug 2020 10:39:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dXv0Gxa2jpZVRgYWCryVURJkJ1jbXizXaqzb2HAKVy0qPqKdnnnHhK1W53jiWfpMOzOfpbpIpMi+2gnZN3ShVBSMQQtaauVf0nncHonquA2Ew5sjl7l6+2cB2SuI4wJn/y6G0MBX3RM72aeUWoC/eQQd8WUkAfbUsA9KbtzkWZ5EtT8FeXuRdQ1k0Sz7xE0aJVAUT4FEd8bBPyi9oTRQQJSO5+6JfDITAuVC3oM9ndQYVF/qBlANVbp8wh9tEP2K0r/eyyUcn4/g0tJkUBJjG1rPYBZVTaIEFugBpSUhpw5ikmp1ZqIwzZHEeVKsQ4DZ/sJt1E488GnRJpgxfRJrBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Klzn/5GDglqr9+v3V+ruJgQ1fcQUY3wyLgew7EBfK9Y=;
+ b=UErgu/aDkI+1LT9EIvsNMMUrfyOEK1I/YiaRlQdtY+ILipU8/QPDKdulHRwY1jW69Umk1XTOjXC2Pu0qFBARDKHIGIP/fugOmPj72ADJrNcfhpiDN2NU4SIqnzMysMM6NDDMjLvd28POUziK0ZhMQFaPdvhhFq4dhiCsXyJC9wtUb5dpBfDpnGophyqq/3kBQjmsi1kRrSJcjtdamoYz0xxO+dHZChvTRuc2DpB5DHBh2rh2eAmUklyIn6xqD+n9htALyrhp7A/gPZ+Jvvz8iTapzB9UYNZCkEIKBas3VPgc54dVXGzFOAATOAlwO678zcOxkAsmOtq4P2vYtOPiuQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Klzn/5GDglqr9+v3V+ruJgQ1fcQUY3wyLgew7EBfK9Y=;
+ b=UuSmATjsV+Hkcmc1EaEEgz2XA4mp38JBrtWvVvPmvpcG6e8u8PVyhDuqlL9IkLv9TzQf5ksE3uFmmmNZWCR1ny43w6evT6g6HDmhw4xCsc6+7+/MIKDKKcqdmGCYRh38EFU0weJKhClLX6iw7xw9WUIreyjd34Xx8owGhAuaxMM=
+Authentication-Results: chromium.org; dkim=none (message not signed)
+ header.d=none;chromium.org; dmarc=none action=none header.from=fb.com;
+Received: from BY5PR15MB3571.namprd15.prod.outlook.com (2603:10b6:a03:1f6::32)
+ by BYAPR15MB3000.namprd15.prod.outlook.com (2603:10b6:a03:b1::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Tue, 25 Aug
+ 2020 17:39:30 +0000
+Received: from BY5PR15MB3571.namprd15.prod.outlook.com
+ ([fe80::c13c:fca9:5e04:9bfb]) by BY5PR15MB3571.namprd15.prod.outlook.com
+ ([fe80::c13c:fca9:5e04:9bfb%3]) with mapi id 15.20.3305.026; Tue, 25 Aug 2020
+ 17:39:30 +0000
+Date:   Tue, 25 Aug 2020 10:39:25 -0700
+From:   Martin KaFai Lau <kafai@fb.com>
+To:     KP Singh <kpsingh@chromium.org>
+CC:     <linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
+Subject: Re: [PATCH bpf-next v9 5/7] bpf: Implement bpf_local_storage for
+ inodes
+Message-ID: <20200825173925.tmi4h5lomzwkciew@kafai-mbp.dhcp.thefacebook.com>
+References: <20200823165612.404892-1-kpsingh@chromium.org>
+ <20200823165612.404892-6-kpsingh@chromium.org>
+ <20200825005249.tu4c54fg36jt3rh4@kafai-mbp.dhcp.thefacebook.com>
+ <8d188285-96f5-3b17-126f-5e842702e339@chromium.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d188285-96f5-3b17-126f-5e842702e339@chromium.org>
+X-ClientProxiedBy: BYAPR07CA0085.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::26) To BY5PR15MB3571.namprd15.prod.outlook.com
+ (2603:10b6:a03:1f6::32)
 MIME-Version: 1.0
-References: <20200824153036.3201505-1-surenb@google.com> <87imd6n0qk.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87imd6n0qk.fsf@x220.int.ebiederm.org>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 25 Aug 2020 10:36:45 -0700
-Message-ID: <CAJuCfpG4emt9vT8qdakc8Myoc65XyxSgg30Am0Z67z+hc-Psbg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        mingo@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com,
-        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
-        Oleg Nesterov <oleg@redhat.com>, adobriyan@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de,
-        John Johansen <john.johansen@canonical.com>,
-        laoar.shao@gmail.com, Tim Murray <timmurray@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, stable <stable@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by BYAPR07CA0085.namprd07.prod.outlook.com (2603:10b6:a03:12b::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Tue, 25 Aug 2020 17:39:29 +0000
+X-Originating-IP: [2620:10d:c090:400::5:ae73]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8ab68737-e0df-4405-a02e-08d8491dd21f
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3000:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB300078C9FEAFB6D5463E9990D5570@BYAPR15MB3000.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pRdr7YzkENZZg3wuvWfPtgcYY0zps9ZDtfNdNrvYfsy28ScIu0QJKUz/jMkUB4Hqv2PEbgoN8OAPlNEbZ6z73MVXwgCGei8Q7FhXlm27xhGRwz6Xp9ZAML6ZHtS+0iB3e2TFXgLF3BsQuXICYO0+QrL1txlh/UIz81puVeHUMiHM+D+hvoiZYDePfWhk3fM+2zW3X++HOFjfJiQJEQnHua3W74c6oO4LfuIOlUWkMVRSZBgF6C3F76kPBuA10yq3Pt/7bAgx1AogOsbrL5Gxy0VPnRfuJLSATmr2qKiT5ampWj4rLZURwNXrJHi8W9AJ/eSCK/WIz9kCKbFly6e6ig==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3571.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(396003)(346002)(366004)(136003)(376002)(9686003)(6666004)(316002)(53546011)(66556008)(8936002)(66476007)(66946007)(2906002)(83380400001)(54906003)(8676002)(16576012)(86362001)(52116002)(478600001)(6486002)(4326008)(5660300002)(956004)(6916009)(186003)(1076003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: AXbB41vLHsgKSuQuyQGO5XbzkbqGNiYe7FJY9F/TGiksU1KrwraxI1ik30oIGN/B+e/AtVRfEQ5r5ytRUeMFEzBKyQeGgxvIxA2T2WdL7jC8ZoTdU2j8qaoia7H2vFMO7QX+2NqaSna5oXADE2h+8MdEAgxDVBV8AcUhmBIbxGH9K/fU8A8LVaweXu4/13mf3yjeESJXFRWqpDhoJTXMWgivZ2e+MSaXtv17G9w9Hjoe+wSVY5QHpvczKBUvVuMNnS1yBT80C1ByaILiRfFW6E/wDYLd3PcFHmL6hRKMk2Sv7piUM5XSBq+TccfVoQ3nfofHxeWRnG7YROZcGjzDQxwj64atJtx8aTVjMQBnDgNALGxKuWcCxQyniQcKkOp0bA02iQzX3Q2iQNh3OZtKGlR9p7hERyMgyH8GnCH8uK2g9P6A9AMAP9QDopf81YUz66MBc6or1xBPnUndyNNouLC0Hm6vZlS2Rfv+uWvXILMszPvy3IjdPvZP/WZabT6aEmeTMyGWSENMQIwzgjFntF80B8j5cbl7pqt2pUo/sq9d4BUdE5O+fZguijB1j4Quoc46L8JRmxnuqb45FqYb+NLrYbLavGkZv6x0PQom/kx0nTKYbt2GKMaPA1Im26ysU6o5oJb+8vNTRiXiSZRu/JoZ+e7oiwrupWduLw1yhtw=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ab68737-e0df-4405-a02e-08d8491dd21f
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3571.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2020 17:39:30.4590
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iFtcaDk16qNQ/8xx6U1ui73COFownj4Xx68b1mPSikIqKyNz/K0jPCJKFunG+MQa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3000
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_08:2020-08-25,2020-08-25 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 lowpriorityscore=0
+ adultscore=0 bulkscore=0 suspectscore=1 priorityscore=1501 mlxscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=870 phishscore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250132
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 9:38 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> Suren Baghdasaryan <surenb@google.com> writes:
->
-> > Currently __set_oom_adj loops through all processes in the system to
-> > keep oom_score_adj and oom_score_adj_min in sync between processes
-> > sharing their mm. This is done for any task with more that one mm_users,
-> > which includes processes with multiple threads (sharing mm and signals).
-> > However for such processes the loop is unnecessary because their signal
-> > structure is shared as well.
-> > Android updates oom_score_adj whenever a tasks changes its role
-> > (background/foreground/...) or binds to/unbinds from a service, making
-> > it more/less important. Such operation can happen frequently.
-> > We noticed that updates to oom_score_adj became more expensive and after
-> > further investigation found out that the patch mentioned in "Fixes"
-> > introduced a regression. Using Pixel 4 with a typical Android workload,
-> > write time to oom_score_adj increased from ~3.57us to ~362us. Moreover
-> > this regression linearly depends on the number of multi-threaded
-> > processes running on the system.
-> > Mark the mm with a new MMF_PROC_SHARED flag bit when task is created with
-> > (CLONE_VM && !CLONE_THREAD && !CLONE_VFORK). Change __set_oom_adj to use
-> > MMF_PROC_SHARED instead of mm_users to decide whether oom_score_adj
-> > update should be synchronized between multiple processes. To prevent
-> > races between clone() and __set_oom_adj(), when oom_score_adj of the
-> > process being cloned might be modified from userspace, we use
-> > oom_adj_mutex. Its scope is changed to global and it is renamed into
-> > oom_adj_lock for naming consistency with oom_lock. The combination of
-> > (CLONE_VM && !CLONE_THREAD) is rarely used except for the case of vfork().
-> > To prevent performance regressions of vfork(), we skip taking oom_adj_lock
-> > and setting MMF_PROC_SHARED when CLONE_VFORK is specified. Clearing the
-> > MMF_PROC_SHARED flag (when the last process sharing the mm exits) is left
-> > out of this patch to keep it simple and because it is believed that this
-> > threading model is rare. Should there ever be a need for optimizing that
-> > case as well, it can be done by hooking into the exit path, likely
-> > following the mm_update_next_owner pattern.
-> > With the combination of (CLONE_VM && !CLONE_THREAD && !CLONE_VFORK) being
-> > quite rare, the regression is gone after the change is applied.
->
-> This patch still makes my head hurt.
-
-Sorry about that. It was not my intention and I wish there was a
-simpler way to do this.
-
->
-> The obvious wrong things I have mentioned below.
->
->
-> > Fixes: 44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
-> > Reported-by: Tim Murray <timmurray@google.com>
-> > Debugged-by: Minchan Kim <minchan@kernel.org>
-> > Suggested-by: Michal Hocko <mhocko@kernel.org>
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > ---
-> >
-> > v2:
-> > - Implemented proposal from Michal Hocko in:
-> > https://lore.kernel.org/linux-fsdevel/20200820124109.GI5033@dhcp22.suse.cz/
-> > - Updated description to reflect the change
-> >
-> > v1:
-> > - https://lore.kernel.org/linux-mm/20200820002053.1424000-1-surenb@google.com/
-> >
-> >  fs/proc/base.c                 |  7 +++----
-> >  include/linux/oom.h            |  1 +
-> >  include/linux/sched/coredump.h |  1 +
-> >  kernel/fork.c                  | 21 +++++++++++++++++++++
-> >  mm/oom_kill.c                  |  2 ++
-> >  5 files changed, 28 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/fs/proc/base.c b/fs/proc/base.c
-> > index 617db4e0faa0..cff1a58a236c 100644
-> > --- a/fs/proc/base.c
-> > +++ b/fs/proc/base.c
-> > @@ -1055,7 +1055,6 @@ static ssize_t oom_adj_read(struct file *file, char __user *buf, size_t count,
-> >
-> >  static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
-> >  {
-> > -     static DEFINE_MUTEX(oom_adj_mutex);
-> >       struct mm_struct *mm = NULL;
-> >       struct task_struct *task;
-> >       int err = 0;
-> > @@ -1064,7 +1063,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
-> >       if (!task)
-> >               return -ESRCH;
-> >
-> > -     mutex_lock(&oom_adj_mutex);
-> > +     mutex_lock(&oom_adj_lock);
-> >       if (legacy) {
-> >               if (oom_adj < task->signal->oom_score_adj &&
-> >                               !capable(CAP_SYS_RESOURCE)) {
-> > @@ -1095,7 +1094,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
-> >               struct task_struct *p = find_lock_task_mm(task);
-> >
-> >               if (p) {
-> > -                     if (atomic_read(&p->mm->mm_users) > 1) {
-> > +                     if (test_bit(MMF_PROC_SHARED, &p->mm->flags)) {
-> >                               mm = p->mm;
-> >                               mmgrab(mm);
-> >                       }
-> > @@ -1132,7 +1131,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
-> >               mmdrop(mm);
-> >       }
-> >  err_unlock:
-> > -     mutex_unlock(&oom_adj_mutex);
-> > +     mutex_unlock(&oom_adj_lock);
-> >       put_task_struct(task);
-> >       return err;
-> >  }
-> > diff --git a/include/linux/oom.h b/include/linux/oom.h
-> > index f022f581ac29..861f22bd4706 100644
-> > --- a/include/linux/oom.h
-> > +++ b/include/linux/oom.h
-> > @@ -55,6 +55,7 @@ struct oom_control {
-> >  };
-> >
-> >  extern struct mutex oom_lock;
-> > +extern struct mutex oom_adj_lock;
->                        ^^^^^^^^^^^^^^
->
-> I understand moving this lock by why renaming it?
-
-To be consistent with the mutex name right above it. I'm ok keeping it
-as before if this is too much additional churn. I guess Michal deals
-with this code more than anyone else, so I'll wait for him to comment
-on this one.
-
->
-> >  static inline void set_current_oom_origin(void)
-> >  {
-> > diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
-> > index ecdc6542070f..070629b722df 100644
-> > --- a/include/linux/sched/coredump.h
-> > +++ b/include/linux/sched/coredump.h
-> > @@ -72,6 +72,7 @@ static inline int get_dumpable(struct mm_struct *mm)
-> >  #define MMF_DISABLE_THP              24      /* disable THP for all VMAs */
-> >  #define MMF_OOM_VICTIM               25      /* mm is the oom victim */
-> >  #define MMF_OOM_REAP_QUEUED  26      /* mm was queued for oom_reaper */
-> > +#define MMF_PROC_SHARED      27      /* mm is shared while sighand is not */
->            ^^^^^^^^^^^^^^^              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->
-> Arguably this is misnamed MMF_MULTIPROCESS is probably better.
-
-SGTM. Thanks for the suggestion.
-
-> The comment is definitely wrong.
-
-Agree. Will change to "mm is shared while signal_struct is not"
-
->
-> >  #define MMF_DISABLE_THP_MASK (1 << MMF_DISABLE_THP)
-> >
-> >  #define MMF_INIT_MASK                (MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index 4d32190861bd..6fce8ffa9b8b 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -1809,6 +1809,25 @@ static __always_inline void delayed_free_task(struct task_struct *tsk)
-> >               free_task(tsk);
-> >  }
-> >
-> > +static void copy_oom_score_adj(u64 clone_flags, struct task_struct *tsk)
-> > +{
-> > +     /* Skip if kernel thread */
-> > +     if (!tsk->mm)
-> > +             return;
-> > +
-> > +     /* Skip if spawning a thread or using vfork */
-> > +     if ((clone_flags & (CLONE_VM | CLONE_THREAD | CLONE_VFORK)) != CLONE_VM)
-> > +             return;
-> > +
-> > +     /* We need to synchronize with __set_oom_adj */
-> > +     mutex_lock(&oom_adj_lock);
-> > +     set_bit(MMF_PROC_SHARED, &tsk->mm->flags);
-> > +     /* Update the values in case they were changed after copy_signal */
-> > +     tsk->signal->oom_score_adj = current->signal->oom_score_adj;
-> > +     tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
-> > +     mutex_unlock(&oom_adj_lock);
->
-> The copying and the setting of a bit on a mm should be logically
-> separate things.
->
-> This really makes my head hurt because the functionality is not
-> separated out.  I don't have a clue how we could maintain this
-> copy_oom_score_adj function.
->
-
-Copying oom_score_adj here is necessary to prevent a possible race
-from creating inconsistent oom_score_adj for the cloned process. The
-race this protects from is when __set_oom_adj happens after
-copy_signal but before copy_oom_score_adj. In that case __set_oom_adj
-will not see MMF_PROC_SHARED and therefore will not update
-oom_score_adj of the cloned process. Copying oom_score_adj again
-inside copy_oom_score_adj will fix such inconsistency. This is the
-simplest way I see to keep things in sync until mm->oom_score_adj is
-implemented (which I agree should happen but it's also a much bigger
-change).
-
->
-> > +}
-> > +
-> >  /*
-> >   * This creates a new process as a copy of the old one,
-> >   * but does not actually start it yet.
-> > @@ -2281,6 +2300,8 @@ static __latent_entropy struct task_struct *copy_process(
-> >       trace_task_newtask(p, clone_flags);
-> >       uprobe_copy_process(p, clone_flags);
-> >
-> > +     copy_oom_score_adj(clone_flags, p);
-> > +
-> >       return p;
-> >
-> >  bad_fork_cancel_cgroup:
-> > diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> > index e90f25d6385d..c22f07c986cb 100644
-> > --- a/mm/oom_kill.c
-> > +++ b/mm/oom_kill.c
-> > @@ -64,6 +64,8 @@ int sysctl_oom_dump_tasks = 1;
-> >   * and mark_oom_victim
-> >   */
-> >  DEFINE_MUTEX(oom_lock);
-> > +/* Serializes oom_score_adj and oom_score_adj_min updates */
-> > +DEFINE_MUTEX(oom_adj_lock);
-> >
-> >  static inline bool is_memcg_oom(struct oom_control *oc)
-> >  {
->
-> Eric
-
-Thanks everyone for the reviews and feedback! I'll wait for a couple
-days to see if any other comments come in and will send a version with
-fixes addressing Eric's concerns.
+On Tue, Aug 25, 2020 at 04:10:26PM +0200, KP Singh wrote:
+> 
+> 
+> On 8/25/20 2:52 AM, Martin KaFai Lau wrote:
+> > On Sun, Aug 23, 2020 at 06:56:10PM +0200, KP Singh wrote:
+> >> From: KP Singh <kpsingh@google.com>
+> >>
+> >> Similar to bpf_local_storage for sockets, add local storage for inodes.
+> >> The life-cycle of storage is managed with the life-cycle of the inode.
+> >> i.e. the storage is destroyed along with the owning inode.
+> >>
+> >> The BPF LSM allocates an __rcu pointer to the bpf_local_storage in the
+> >> security blob which are now stackable and can co-exist with other LSMs.
+> >>
+> > [ ... ]
+> > 
+> >> diff --git a/kernel/bpf/bpf_inode_storage.c b/kernel/bpf/bpf_inode_storage.c
+> >> new file mode 100644
+> >> index 000000000000..b0b283c224c1
+> >> --- /dev/null
+> >> +++ b/kernel/bpf/bpf_inode_storage.c
+> 
+> [...]
+> 
+> >> +
+> >> +DEFINE_BPF_STORAGE_CACHE(inode_cache);
+> >> +
+> >> +static struct bpf_local_storage __rcu **
+> >> +inode_storage_ptr(void *owner)
+> >> +{
+> >> +	struct inode *inode = owner;
+> >> +	struct bpf_storage_blob *bsb;
+> >> +
+> >> +	bsb = bpf_inode(inode);
+> >> +	if (!bsb)
+> >> +		return NULL;
+> > just noticed this one.  NULL could be returned here.  When will it happen?
+> 
+> This can happen if CONFIG_BPF_LSM is enabled but "bpf" is not in the list of
+> active LSMs.
+> 
+> > 
+> >> +	return &bsb->storage;
+> >> +}
+> >> +
+> >> +static struct bpf_local_storage_data *inode_storage_lookup(struct inode *inode,
+> >> +							   struct bpf_map *map,
+> >> +							   bool cacheit_lockit)
+> >> +{
+> 
+> [...]
+> 
+> > path first before calling the bpf_local_storage_update() since
+> > this case is specific to inode local storage.
+> > 
+> > Same for the other bpf_local_storage_update() cases.
+> 
+> If you're okay with this I can send a new series with the following updates.
+> 
+> diff --git a/kernel/bpf/bpf_inode_storage.c b/kernel/bpf/bpf_inode_storage.c
+> index b0b283c224c1..74546cee814d 100644
+> --- a/kernel/bpf/bpf_inode_storage.c
+> +++ b/kernel/bpf/bpf_inode_storage.c
+> @@ -125,7 +125,7 @@ static int bpf_fd_inode_storage_update_elem(struct bpf_map *map, void *key,
+>  
+>         fd = *(int *)key;
+>         f = fget_raw(fd);
+> -       if (!f)
+> +       if (!f || !inode_storage_ptr(f->f_inode))
+>                 return -EBADF;
+>  
+>         sdata = bpf_local_storage_update(f->f_inode,
+> @@ -171,6 +171,14 @@ BPF_CALL_4(bpf_inode_storage_get, struct bpf_map *, map, struct inode *, inode,
+>         if (flags & ~(BPF_LOCAL_STORAGE_GET_F_CREATE))
+>                 return (unsigned long)NULL;
+>  
+> +       /* explicitly check that the inode_storage_ptr is not
+> +        * NULL as inode_storage_lookup returns NULL in this case and
+> +        * and bpf_local_storage_update expects the owner to have a
+> +        * valid storage pointer.
+> +        */
+> +       if (!inode_storage_ptr(inode))
+> +               return (unsigned long)NULL;
+LGTM
