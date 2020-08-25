@@ -4,85 +4,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493CDC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08220C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F60B20639
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5C9420639
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598321801;
-	bh=scwGphPCjzFspkwof4FVot0GgrXNXEHuwnyRgS8bDhk=;
+	s=default; t=1598321823;
+	bh=WvVetekKhkaYtqbboq+rBKuO2wsH27S4WQusdkNNv0w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Czdq+mCsBk2fi7pAfd/d5xvgkFWG2c/VBdcH5Czytc07lqauO4eC2yIxd4fs9QcXe
-	 hMrTGPk9QXW0VwqjrO+YdR8/jEZNF2qUbAvWWdf7+J56iuKYGHe9t+rd+S/8c9lX+U
-	 snEMBmt0VrYYYSw5X8A8JSozdtSl4tET/GgqQAss=
+	b=fLYuQereM2Y1BcJaZ8knnSeQ6Vt9I5UtqWQL6t4dCiJUY4jgEtyyxZmAM498Cn3Nc
+	 fxJlJtnBh89FfTgdSFeowIGMKE6U0yhT9d/gMG2H6iNEW84I90skScH8y97nzv0/DY
+	 J+87w5Q5uKwuItvtfgH05y0Bf9PQv9okt4/CfHxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgHYCQk (ORCPT
+        id S1728013AbgHYCRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:16:40 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37341 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726531AbgHYCQi (ORCPT
+        Mon, 24 Aug 2020 22:17:02 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45914 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726531AbgHYCRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 22:16:38 -0400
-Received: by mail-il1-f196.google.com with SMTP id v2so9131449ilq.4;
-        Mon, 24 Aug 2020 19:16:37 -0700 (PDT)
+        Mon, 24 Aug 2020 22:17:01 -0400
+Received: by mail-il1-f193.google.com with SMTP id k4so9109246ilr.12;
+        Mon, 24 Aug 2020 19:17:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=D70MBmv/w34G/CqYdHez+DLPaNFBleLhALN3HVop59Q=;
-        b=ClNVW3jaGiXAJ1xAVeo5CYmMdZ4C+eP5OcejfO6oJafJr1kPMaYuPgbzPGSMjOv1EA
-         NiNEv3gVmWBU4fcoD5mZVT0YejbupUmhfZbip+mL3t9uyUtY20SAgLlAICadbzxoO+HV
-         hqNyjj3sp5lG9/LzQZkkB2rZKwASwhQK5L4fYtmkAAfe946xEYoJT3tSil1PcTxvSKSC
-         hePeJKZK/Odi9+eElhDr4UTQBUNqUfpKhqzHUZEFuqaYVWCmOSAaQHm3C+lGA8IThOxg
-         B18Li+xN8O5ZKWxK0LLIEP7fQ16imYYD4zi03wxQhqu9HXCqSbldxvDz0n8IZddFTYcz
-         SSSA==
-X-Gm-Message-State: AOAM530kTRCGJvV0TtLCyYLHhunob1dLtRI3BL4qBor4Oxl4PNOOqDra
-        JepNWqbC+kzBKpvSX+r3Jg==
-X-Google-Smtp-Source: ABdhPJyPK1Ko0mPm3l/WvrtEs/pnlNv63VwjLW2XYzlB/ERGqCi2eaEGU42EFeFXSodspa51hEUUlA==
-X-Received: by 2002:a92:d782:: with SMTP id d2mr7992163iln.167.1598321797329;
-        Mon, 24 Aug 2020 19:16:37 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=cPaUYqeBD8duoMMFHhwQl/b6M7U9Dhl4gzL36hPNANM=;
+        b=PaUg8UVgFkV8xgWBE6u2tLN0ov0OGgqUSMY5FL/6y8QNWzcgVS0RMLjXmSxw1VRE/9
+         TZ1wuSpMryDW/TbNgREHclNA0kBCdo+0y3B2HjnS+YywKIYfryWG5jHbMIlUiFLzgUkc
+         cidX65NgG3tkk/m0GKVGTHxYUIQp8uW6Z3ooSne5Mn8rL2187+OfO4E843ZVOJc2sqpN
+         9a+e+TqsmWkHqDMISH8EcL5UIyWcnkCAihVXYrbMECV9KccJ7d3kbXmcg0/4ux/H03K8
+         mqOBRDvZQQNg6B3TVSY2o+AKwFnOCG9pTKuC3dH2i8msr0pXn9AvqRBFZji+k9qwHt3G
+         HW/Q==
+X-Gm-Message-State: AOAM531QSZaVeghvCMUC85RaDFy6R+F3SEmQilBhFKnh2OKAmgD4jK0o
+        Zvr4KNtxWuEFd/uuzuYf8jzD2wyBSUdH
+X-Google-Smtp-Source: ABdhPJy039p/D5ALU5plBARNf/qhTGH6VaZe6QqtAV1pNqKKbjtJR47Z1aYdm+9EkRB8JTK6peL8tQ==
+X-Received: by 2002:a92:5bcb:: with SMTP id c72mr6813468ilg.94.1598321820672;
+        Mon, 24 Aug 2020 19:17:00 -0700 (PDT)
 Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id s8sm7665868iow.11.2020.08.24.19.16.35
+        by smtp.gmail.com with ESMTPSA id 18sm1263026iog.31.2020.08.24.19.16.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 19:16:36 -0700 (PDT)
-Received: (nullmailer pid 3800742 invoked by uid 1000);
-        Tue, 25 Aug 2020 02:16:34 -0000
-Date:   Mon, 24 Aug 2020 20:16:34 -0600
+        Mon, 24 Aug 2020 19:17:00 -0700 (PDT)
+Received: (nullmailer pid 3801477 invoked by uid 1000);
+        Tue, 25 Aug 2020 02:16:57 -0000
+Date:   Mon, 24 Aug 2020 20:16:57 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     s.hauer@pengutronix.de, j.neuschaefer@gmx.net,
-        sebastien.szymanski@armadeus.com, letux-kernel@openphoenux.org,
-        linux-arm-kernel@lists.infradead.org, Anson.Huang@nxp.com,
-        leoyang.li@nxp.com, linux-imx@nxp.com, marcel.ziswiler@toradex.com,
-        rjones@gateworks.com, festevam@gmail.com, kernel@pengutronix.de,
-        shawnguo@kernel.org, robh+dt@kernel.org, michael@walle.cc,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl: add compatible string for
- Tolino Shine 2 HD
-Message-ID: <20200825021634.GA3800690@bogus>
-References: <20200815193336.21598-1-andreas@kemnade.info>
- <20200815193336.21598-2-andreas@kemnade.info>
+To:     Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Cc:     devicetree@vger.kernel.org,
+        Marin Jerabek <martin.jerabek01@gmail.com>,
+        Ondrej Ille <ondrej.ille@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        linux-can@vger.kernel.org, mark.rutland@arm.com,
+        netdev@vger.kernel.org, armbru@redhat.com,
+        Jiri Novak <jnovak@fel.cvut.cz>,
+        Jaroslav Beran <jara.beran@gmail.com>,
+        Petr Porazil <porazil@pikron.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Carsten Emde <c.emde@osadl.org>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/6] dt-bindings: vendor-prefix: add prefix for the
+ Czech Technical University in Prague.
+Message-ID: <20200825021657.GA3801424@bogus>
+References: <cover.1597518433.git.ppisa@pikron.com>
+ <8d0674796f3c4ecfd6fcd66ae79bc3aeb93ace22.1597518433.git.ppisa@pikron.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200815193336.21598-2-andreas@kemnade.info>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8d0674796f3c4ecfd6fcd66ae79bc3aeb93ace22.1597518433.git.ppisa@pikron.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 15 Aug 2020 21:33:35 +0200, Andreas Kemnade wrote:
-> This adds a compatible string for the Tolino Shine 2 HD eBook reader.
+On Sat, 15 Aug 2020 21:43:03 +0200, Pavel Pisa wrote:
+> The Czech Technical University in Prague (CTU) is one of
+> the biggest and oldest (founded 1707) technical universities
+> in Europe. The abbreviation in Czech language is ČVUT according
+> to official name in Czech language
 > 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+>   České vysoké učení technické v Praze
+> 
+> The English translation
+> 
+>   The Czech Technical University in Prague
+> 
+> The university pages in English
+> 
+>   https://www.cvut.cz/en
+> 
+> Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
 > ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
