@@ -2,144 +2,126 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B855C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB69C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:15:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25A3F2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598368518;
-	bh=gMWKBpAk4pBEmAIw08EcaeFhJmB3UcvQzwUXGD2ZJSk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bm83OguBh/xLYNXMOROcBFsW9SWPxlOWlgrPYx16pCTiHuPOrhq+QyvNw9bsa87gf
-	 7+240H9aRyv64NbCWwVW/fP1kOkQGrjvKE7ZNYK+Eybk+ZMtOTDeeQ3Pwti0IN6g2x
-	 AJ/k/dNTRSf8N2oQyWL6b0DzqqLQFrLB/vqtIDwY=
+	by mail.kernel.org (Postfix) with ESMTP id A575A20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:15:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0K/Grxt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgHYPPP (ORCPT
+        id S1726820AbgHYPPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:15:15 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36044 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726113AbgHYPOv (ORCPT
+        Tue, 25 Aug 2020 11:15:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgHYPPB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:14:51 -0400
-Received: by mail-ot1-f68.google.com with SMTP id x24so10655482otp.3;
-        Tue, 25 Aug 2020 08:14:51 -0700 (PDT)
+        Tue, 25 Aug 2020 11:15:01 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B271BC061574;
+        Tue, 25 Aug 2020 08:15:01 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id z22so11906392oid.1;
+        Tue, 25 Aug 2020 08:15:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s4p9YQ24Yqz5BWvKJez6nOG2+kXTy6OCMRyd8gMw2b4=;
+        b=b0K/GrxtX8vI+99lOoFZbuj940Cos9IJqqnF8kg1Gq6IxvdZoFbwuVJ7rrsYx2ZDXU
+         STM/ATTwMVtGTl9VmsdeLS5dPiW9XUQ38MQ0Xs+6hl3SGiN5giPY3gtwfFsWHObG30NZ
+         x5jDR3enXgdZF6oyUHbnpCDYi/MuDCNWGkoo8Sycivu2A0wqdfPgaF5C2wfxVap4qn7H
+         LfsaFDteUuh3Wp5kVuC9Qz5A09Km7he5l9B/qqvIGx9ryjbHD+om4nMCKTcYJ7KMeRSx
+         4GUYAjPHEnzGm8DfX1FSbEzwYS3Fx0WTM7Vlbax+oaFPJZNEByEN2vWHhYjIUn1saU/g
+         GzYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4SuxOmAQqZZFaDvKNEg/FnVPjE4bxt3cvqZyJwNFitw=;
-        b=U5QfGkHm4UygzPoNmhFGBlXRf9C24r7otGtxmHg/Y3aoPqtdGS6qpdWaDVz2heWDpz
-         8MjjKvIj3ODMrU6JCk1lD6QsXowDu6d1rlsQsxytGXebH0cZNbgq0YQs3XOx7l2PSmSs
-         1Yd6UT8DqLvHpkEpGtn5IpBmw/l2jcw3nTzFslBdPvvaMYFkzsnF2GuoPARkFCqQI2PE
-         EjUevCC3cCmxyOvfRGcZ9vmvSn4R+mPFl/c9NeXqN7YSnR4B1bBLITQZaLe3zuqqoc10
-         D2S+Efzy1seljYwruwTLfuvsqf9XPHlRYaG0XMVjgJaL0EOPDaOsX77TLWmbA8+AcDuh
-         0zyg==
-X-Gm-Message-State: AOAM5319q6ZYL7buiUmcVvZ5+EbPIrj78yMdmZ6O3A1hI3Q4HN8Cldy2
-        zMh8kLdXhdpdwzwwfDzmQPC239h7kuEuufqaef3krSES
-X-Google-Smtp-Source: ABdhPJwUfmlKxhswVBxCwo67zMwlc6fUHpc4thJYu0l2U5cAZJk40Ip4v9q2g8F8U5V+K3WAMfKhqwjQV+f1mp7KHR0=
-X-Received: by 2002:a9d:5c06:: with SMTP id o6mr7145886otk.262.1598368490533;
- Tue, 25 Aug 2020 08:14:50 -0700 (PDT)
+        bh=s4p9YQ24Yqz5BWvKJez6nOG2+kXTy6OCMRyd8gMw2b4=;
+        b=GS+xP++KJ8zxntOWBLpprVDZg4eRoOofo4eEI74/sehbEMf8WIjFaqEH3b1EZFmrEM
+         F+kMF8ycoT2e3jQC0Btj/APfGXT6kcgtpWNaLrRFBooAmTZ0BinnOTwxeMgBLlXYUmkx
+         EAx+1AvN7+weXNPk351PMyE9aQSyyKJxndm9u8ojXMXz26aNRQzrxnithfRA9xCBWHxZ
+         h/kz0OUVfrUXNB+VbSb4Xxjv19TvMn56WhdxPGjBq83DLQ27cZ+Z4+9vHLb6nKSCoB+h
+         orkKRD5u2theSJgcq3yr7TEmhw/P92UM5TMCgHGP9HVrlIUA92Pouez6prlOIJ17fYcm
+         +8Gw==
+X-Gm-Message-State: AOAM532OazEvdm6VhY++Rt3U1vbVrTwsfQp45I3m9BxMRDAxo3TXX5Ha
+        GjdzUmZ3ixJghWapaHD3qDz7QqrFb+wDw/egFV4=
+X-Google-Smtp-Source: ABdhPJzC71ZGDUw6CCwEsPEXn2P1h/sJFbUDsBxR+bQn4pvVUQe5ZevafM0STXXFqKpIMjKdcqJEmWI7XNk+TuxMLms=
+X-Received: by 2002:aca:304b:: with SMTP id w72mr1234294oiw.117.1598368501009;
+ Tue, 25 Aug 2020 08:15:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <4169555.5IIHXK4Dsd@kreacher> <2064342.aRc67yb0pC@kreacher>
- <61ea43fce7dd8700d94f12236a86ffec6f76a898.camel@gmail.com>
- <CAJZ5v0hkmcAuCsnfjCSWTarr4pkQry2VCtk2aWM74fOW2guzmg@mail.gmail.com> <1341038e00d965e913ee9f0c7a1e739eadef42f7.camel@linux.intel.com>
-In-Reply-To: <1341038e00d965e913ee9f0c7a1e739eadef42f7.camel@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 25 Aug 2020 17:14:39 +0200
-Message-ID: <CAJZ5v0gf9WCwm8Bdzo02Jfbz5vgdH8c_T9y89SaVvTNXH7p4hA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] cpufreq: intel_pstate: Always return last EPP
- value from sysfs
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Doug Smythies <dsmythies@telus.net>
+References: <20200825124840.43664-1-alexandru.ardelean@analog.com> <20200825144619.GR2639@vkoul-mobl>
+In-Reply-To: <20200825144619.GR2639@vkoul-mobl>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Tue, 25 Aug 2020 18:14:50 +0300
+Message-ID: <CA+U=Dsra7JT9X036M6PruJpQPw-Ht_4A83M1T0L-PdByHg+wAw@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] dmaengine: axi-dmac: add support for reading bus
+ attributes from register
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>, dan.j.williams@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 5:06 PM Srinivas Pandruvada
-<srinivas.pandruvada@linux.intel.com> wrote:
+On Tue, Aug 25, 2020 at 5:46 PM Vinod Koul <vkoul@kernel.org> wrote:
 >
-> On Tue, 2020-08-25 at 16:51 +0200, Rafael J. Wysocki wrote:
-> > On Tue, Aug 25, 2020 at 8:20 AM Artem Bityutskiy <dedekind1@gmail.com
-> > > wrote:
-> > > On Mon, 2020-08-24 at 19:42 +0200, Rafael J. Wysocki wrote:
-> > > > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> > > >
-> > > > Make the energy_performance_preference policy attribute in sysfs
-> > > > always return the last EPP value written to it instead of the one
-> > > > currently in the HWP Request MSR to avoid possible confusion when
-> > > > the performance scaling algorithm is used in the active mode with
-> > > > HWP enabled (in which case the EPP is forced to 0 regardless of
-> > > > what value it has been set to via sysfs).
-> > >
-> > > Why is this a good idea, I wonder. If there was a prior discussion,
-> > > please, point to it.
-> > >
-> > > The general approach to changing settings via sysfs is often like
-> > > this:
-> > >
-> > > 1. Write new value.
-> > > 2. Read it back and verify that it is the same. Because there is no
-> > > better way to verify that the kernel "accepted" the value.
+> On 25-08-20, 15:48, Alexandru Ardelean wrote:
+> > The series adds support for reading the DMA bus attributes from the
+> > INTERFACE_DESCRIPTION (0x10) register.
 > >
-> > If the write is successful (ie. no errors returned and the value
-> > returned is equal to the number of written characters), the kernel
-> > *has* accepted the written value, but it may not have taken effect.
-> > These are two different things.
-> >
-> > The written value may take an effect immediately or it may take an
-> > effect later, depending on the current configuration etc.  If you
-> > don't see the effect of it immediately, it doesn't matter that there
-> > was a failure of some sort.
-> >
-> > > Let's say I write 'balanced' to energy_performance_preference. I
-> > > read
-> > > it back, and it contains 'balanced', so I am happy, I trust the
-> > > kernel
-> > > changed EPP to "balanced".
-> > >
-> > > If the kernel, in fact, uses something else, I want to know about
-> > > it
-> > > and have my script fail.
-> >
-> > Why do you want it to fail then?
-> >
-> > > Why caching the value and making my script _think_ it succeeded is
-> > > a good idea.
-> >
-> > Because when you change the scaling algorithm or the driver's
-> > operation mode, the value you have written will take effect.
-> >
-> > In this particular case it is explained in the driver documentation
-> > that the performance scaling algorithm in the active mode overrides
-> > the sysfs value and that's the only case when it can be overridden.
-> > So whatever you write to this attribute will not take effect
-> > immediately anyway, but it may take an effect later.
+> > The first 5 changes are a bit of rework prior to adding the actual
+> > change in patch 6, as things need to be shifted around a bit, to enable
+> > the clock to be enabled earlier, to be able to read the version
+> > register.
 >
-> In some cases without even changing active/passive this is happening
-> when there was some error previously. For example:
+> Not sure what happened, I see two sets of patches in this series, maybe
+> duplicate..? Better to resend a clean version..
 >
-> #cat energy_performance_preference
-> 127
-> [root@otcpl-perf-test-skx-i9 cpufreq]# rdmsr -p 1 0x774
-> 8000ff00
->
-> I think we should show reality. In mode change can be a special case
-> and use the stored value to restore in new mode.
+> Even PW shows 12 patches https://patchwork.kernel.org/project/linux-dmaengine/list/
 
-OK, so I'll make it fail on attempts to change the EPP from 0
-(performance) in the active mode with the performance "governor".
+I'm not sure either.
+I checked the folder from where I sent the patches.
+They're still there, and only 6 { + cover letter].
 
-Cheers!
+Will re-send.
+
+>
+> Thanks
+>
+> >
+> > Changelog v1 -> v2:
+> > * fixed error-exit paths for the clock move patch
+> >   i.e. 'dmaengine: axi-dmac: move clock enable earlier'
+> > * fixed error-exit path for patch
+> >   'axi-dmac: wrap channel parameter adjust into function'
+> > * added patch 'dmaengine: axi-dmac: move active_descs list init after device-tree init'
+> >   the list of active_descs can be moved a bit lower in the init/probe
+> >
+> > Alexandru Ardelean (6):
+> >   dmaengine: axi-dmac: move version read in probe
+> >   dmaengine: axi-dmac: move active_descs list init after device-tree
+> >     init
+> >   dmaengine: axi-dmac: move clock enable earlier
+> >   dmaengine: axi-dmac: wrap entire dt parse in a function
+> >   dmaengine: axi-dmac: wrap channel parameter adjust into function
+> >   dmaengine: axi-dmac: add support for reading bus attributes from
+> >     registers
+> >
+> >  drivers/dma/dma-axi-dmac.c | 138 ++++++++++++++++++++++++++++---------
+> >  1 file changed, 107 insertions(+), 31 deletions(-)
+> >
+> > --
+> > 2.17.1
+>
+> --
+> ~Vinod
