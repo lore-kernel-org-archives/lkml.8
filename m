@@ -2,47 +2,46 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA510C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C92F2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B703C2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:21:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="h4HDgXe4"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NHsqbFmK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgHYXUx (ORCPT
+        id S1726793AbgHYXVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:20:53 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:6848 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726599AbgHYXUr (ORCPT
+        Tue, 25 Aug 2020 19:21:00 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:41312 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726779AbgHYXUx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:20:47 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07PNJX5r019359
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:20:45 -0700
+        Tue, 25 Aug 2020 19:20:53 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07PNFm3Y017393
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:20:53 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=facebook;
- bh=6hP5mUKG/j4pRCIHETlDk5rGb7u5IR+keJvIHYWiKi4=;
- b=h4HDgXe423usHrrmubcMu4Ztvdwqyn0R/8FdSR2E2aLqetI9I+Rs5Z4Kkm17ya/QhBZW
- uqI3DhsFDdZ/J64Hz0IhsXym7VsH8PsrlFAB6Rl6wUKx5Oq+4IG7SXH1eplkJPzEB8iW
- BmhnGPSzoBKvLERH8wDNsmr1t2ebbmu134k= 
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=7vFPxfbUZkYxWAD0+nMscJ1pZa6+fxgsolX0ujeyhgk=;
+ b=NHsqbFmKZntSF0WU0EKbv/Zb7124/L7ItbUD/UTTDypokd8KuFN491uW2VxLjuF7eJE/
+ z7vzhdyh2C3xNhIqWNVMPHdIPNS3Mn2GT2WOAZEPA+1WuKCAwjfl+aKnZwBLyC8YIkCi
+ OLWtNzHLXcFXlM0JsUHerrvTLFWZCu5QsfQ= 
 Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 3359k9ryd1-2
+        by mx0a-00082601.pphosted.com with ESMTP id 333ke6nv0q-3
         (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:20:45 -0700
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:20:52 -0700
 Received: from intmgw004.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 25 Aug 2020 16:20:44 -0700
+ 15.1.1979.3; Tue, 25 Aug 2020 16:20:39 -0700
 Received: by devbig218.frc2.facebook.com (Postfix, from userid 116055)
-        id A03182077AE; Tue, 25 Aug 2020 16:20:41 -0700 (PDT)
+        id A08A4207586; Tue, 25 Aug 2020 16:20:35 -0700 (PDT)
 Smtp-Origin-Hostprefix: devbig
 From:   Udip Pant <udippant@fb.com>
 Smtp-Origin-Hostname: devbig218.frc2.facebook.com
@@ -54,30 +53,29 @@ To:     Udip Pant <udippant@fb.com>, Alexei Starovoitov <ast@kernel.org>,
 CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 Smtp-Origin-Cluster: frc2c02
-Subject: [PATCH bpf-next v3 1/4] bpf: verifier: use target program's type for access verifications
-Date:   Tue, 25 Aug 2020 16:20:00 -0700
-Message-ID: <20200825232003.2877030-2-udippant@fb.com>
+Subject: [PATCH bpf-next v3 0/4] bpf: verifier: use target program's type for access verifications
+Date:   Tue, 25 Aug 2020 16:19:59 -0700
+Message-ID: <20200825232003.2877030-1-udippant@fb.com>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200825232003.2877030-1-udippant@fb.com>
-References: <20200825232003.2877030-1-udippant@fb.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 X-FB-Internal: Safe
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-25_10:2020-08-25,2020-08-25 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
- mlxscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
- clxscore=1015 phishscore=0 priorityscore=1501 suspectscore=0
- malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008250173
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 impostorscore=0 clxscore=1015
+ mlxlogscore=994 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250173
 X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds changes in verifier to make decisions such as granting
+This patch series adds changes in verifier to make decisions such as gran=
+ting
 of read / write access or enforcement of return code status based on
 the program type of the target program while using dynamic program
 extension (of type BPF_PROG_TYPE_EXT).
@@ -87,154 +85,44 @@ and others. Since the BPF_PROG_TYPE_EXT program type on itself is just a
 placeholder for those, we need this extended check for those extended
 programs to actually work with proper access, while using this option.
 
-Specifically, it introduces following changes:
-- may_access_direct_pkt_data:
-    allow access to packet data based on the target prog
-- check_return_code:
-    enforce return code based on the target prog
-    (currently, this check is skipped for EXT program)
-- check_ld_abs:
-    check for 'may_access_skb' based on the target prog
-- check_map_prog_compatibility:
-    enforce the map compatibility check based on the target prog
-- may_update_sockmap:
-    allow sockmap update based on the target prog
+Patch #1 includes changes in the verifier.
+Patch #2 adds selftests to verify write access on a packet for a valid=20
+extension program type
+Patch #3 adds selftests to verify proper check for the return code
+Patch #4 adds selftests to ensure access permissions and restrictions=20
+for some map types such sockmap.
 
-Some other occurrences of prog->type is left as it without replacing
-with the 'resolved' type:
-- do_check_common() and check_attach_btf_id():
-    already have specific logic to handle the EXT prog type
-- jit_subprogs() and bpf_check():
-    Not changed for jit compilation or while inferring env->ops
+Changelogs:
+  v2 -> v3:
+    * more comprehensive resolution of the program type in the verifier
+      based on the target program (and not just for the packet access)
+    * selftests for checking return code and map access
+    * Also moved this patch to 'bpf-next' from 'bpf' tree
+  v1 -> v2:
+    * extraction of the logic to resolve prog type into a separate method
+    * selftests to check for packet access for a valid freplace prog
 
-Next few patches in this series include selftests for some of these cases=
-.
+Udip Pant (4):
+  bpf: verifier: use target program's type for access verifications
+  selftests/bpf: add test for freplace program with write access
+  selftests/bpf: test for checking return code for the extended prog
+  selftests/bpf: test for map update access from within EXT programs
 
-Signed-off-by: Udip Pant <udippant@fb.com>
----
- kernel/bpf/verifier.c | 32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ kernel/bpf/verifier.c                         | 32 ++++++---
+ .../selftests/bpf/prog_tests/fexit_bpf2bpf.c  | 68 +++++++++++++++++++
+ .../selftests/bpf/progs/fexit_bpf2bpf.c       | 27 ++++++++
+ .../bpf/progs/freplace_attach_probe.c         | 40 +++++++++++
+ .../bpf/progs/freplace_cls_redirect.c         | 34 ++++++++++
+ .../bpf/progs/freplace_connect_v4_prog.c      | 19 ++++++
+ .../selftests/bpf/progs/test_pkt_access.c     | 20 ++++++
+ 7 files changed, 229 insertions(+), 11 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/freplace_attach_pro=
+be.c
+ create mode 100644 tools/testing/selftests/bpf/progs/freplace_cls_redire=
+ct.c
+ create mode 100644 tools/testing/selftests/bpf/progs/freplace_connect_v4=
+_prog.c
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 38748794518e..95c715508034 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -2625,11 +2625,19 @@ static int check_map_access(struct bpf_verifier_e=
-nv *env, u32 regno,
-=20
- #define MAX_PACKET_OFF 0xffff
-=20
-+static enum bpf_prog_type resolve_prog_type(struct bpf_prog *prog)
-+{
-+	return prog->aux->linked_prog ? prog->aux->linked_prog->type
-+				      : prog->type;
-+}
-+
- static bool may_access_direct_pkt_data(struct bpf_verifier_env *env,
- 				       const struct bpf_call_arg_meta *meta,
- 				       enum bpf_access_type t)
- {
--	switch (env->prog->type) {
-+	enum bpf_prog_type prog_type =3D resolve_prog_type(env->prog);
-+
-+	switch (prog_type) {
- 	/* Program types only with direct read access go here! */
- 	case BPF_PROG_TYPE_LWT_IN:
- 	case BPF_PROG_TYPE_LWT_OUT:
-@@ -4181,7 +4189,7 @@ static int check_func_arg(struct bpf_verifier_env *=
-env, u32 arg,
- static bool may_update_sockmap(struct bpf_verifier_env *env, int func_id=
-)
- {
- 	enum bpf_attach_type eatype =3D env->prog->expected_attach_type;
--	enum bpf_prog_type type =3D env->prog->type;
-+	enum bpf_prog_type type =3D resolve_prog_type(env->prog);
-=20
- 	if (func_id !=3D BPF_FUNC_map_update_elem)
- 		return false;
-@@ -7366,7 +7374,7 @@ static int check_ld_abs(struct bpf_verifier_env *en=
-v, struct bpf_insn *insn)
- 	u8 mode =3D BPF_MODE(insn->code);
- 	int i, err;
-=20
--	if (!may_access_skb(env->prog->type)) {
-+	if (!may_access_skb(resolve_prog_type(env->prog))) {
- 		verbose(env, "BPF_LD_[ABS|IND] instructions not allowed for this progr=
-am type\n");
- 		return -EINVAL;
- 	}
-@@ -7454,11 +7462,12 @@ static int check_return_code(struct bpf_verifier_=
-env *env)
- 	const struct bpf_prog *prog =3D env->prog;
- 	struct bpf_reg_state *reg;
- 	struct tnum range =3D tnum_range(0, 1);
-+	enum bpf_prog_type prog_type =3D resolve_prog_type(env->prog);
- 	int err;
-=20
- 	/* LSM and struct_ops func-ptr's return type could be "void" */
--	if ((env->prog->type =3D=3D BPF_PROG_TYPE_STRUCT_OPS ||
--	     env->prog->type =3D=3D BPF_PROG_TYPE_LSM) &&
-+	if ((prog_type =3D=3D BPF_PROG_TYPE_STRUCT_OPS ||
-+	     prog_type =3D=3D BPF_PROG_TYPE_LSM) &&
- 	    !prog->aux->attach_func_proto->type)
- 		return 0;
-=20
-@@ -7477,7 +7486,7 @@ static int check_return_code(struct bpf_verifier_en=
-v *env)
- 		return -EACCES;
- 	}
-=20
--	switch (env->prog->type) {
-+	switch (prog_type) {
- 	case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
- 		if (env->prog->expected_attach_type =3D=3D BPF_CGROUP_UDP4_RECVMSG ||
- 		    env->prog->expected_attach_type =3D=3D BPF_CGROUP_UDP6_RECVMSG ||
-@@ -9233,6 +9242,7 @@ static int check_map_prog_compatibility(struct bpf_=
-verifier_env *env,
- 					struct bpf_prog *prog)
-=20
- {
-+	enum bpf_prog_type prog_type =3D resolve_prog_type(prog);
- 	/*
- 	 * Validate that trace type programs use preallocated hash maps.
- 	 *
-@@ -9250,8 +9260,8 @@ static int check_map_prog_compatibility(struct bpf_=
-verifier_env *env,
- 	 * now, but warnings are emitted so developers are made aware of
- 	 * the unsafety and can fix their programs before this is enforced.
- 	 */
--	if (is_tracing_prog_type(prog->type) && !is_preallocated_map(map)) {
--		if (prog->type =3D=3D BPF_PROG_TYPE_PERF_EVENT) {
-+	if (is_tracing_prog_type(prog_type) && !is_preallocated_map(map)) {
-+		if (prog_type =3D=3D BPF_PROG_TYPE_PERF_EVENT) {
- 			verbose(env, "perf_event programs can only use preallocated hash map\=
-n");
- 			return -EINVAL;
- 		}
-@@ -9263,8 +9273,8 @@ static int check_map_prog_compatibility(struct bpf_=
-verifier_env *env,
- 		verbose(env, "trace type programs with run-time allocated hash maps ar=
-e unsafe. Switch to preallocated hash maps.\n");
- 	}
-=20
--	if ((is_tracing_prog_type(prog->type) ||
--	     prog->type =3D=3D BPF_PROG_TYPE_SOCKET_FILTER) &&
-+	if ((is_tracing_prog_type(prog_type) ||
-+	     prog_type =3D=3D BPF_PROG_TYPE_SOCKET_FILTER) &&
- 	    map_value_has_spin_lock(map)) {
- 		verbose(env, "tracing progs cannot use bpf_spin_lock yet\n");
- 		return -EINVAL;
-@@ -9976,7 +9986,7 @@ static int convert_ctx_accesses(struct bpf_verifier=
-_env *env)
- 				insn->code =3D BPF_LDX | BPF_PROBE_MEM |
- 					BPF_SIZE((insn)->code);
- 				env->prog->aux->num_exentries++;
--			} else if (env->prog->type !=3D BPF_PROG_TYPE_STRUCT_OPS) {
-+			} else if (resolve_prog_type(env->prog) !=3D BPF_PROG_TYPE_STRUCT_OPS=
-) {
- 				verbose(env, "Writes through BTF pointers are not allowed\n");
- 				return -EINVAL;
- 			}
 --=20
 2.24.1
 
