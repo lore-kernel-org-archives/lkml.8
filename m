@@ -2,125 +2,269 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A18DC20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:22:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC3720578
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:22:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="S9mqBrBK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKg4zB/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbgHYHWb (ORCPT
+        id S1729424AbgHYHW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:22:31 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:12666 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729363AbgHYHW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:22:28 -0400
-IronPort-SDR: eNmFQX5PpPmcEviaQ2tfOjEkWWdWkKRzvrImmUXl5mVRrlUFPtqZ1wE+lK5yUYBsvhcmqsJCih
- WZDOx5VMYDnh/viACzRfE1Tkh+vbv8SOTGngblCPqnNJLtiYDqHBsS5aA5nttEjVzxD8QJC3I7
- ex0xbFCkwsEMSF4s6ua0kKt75D+5gMj+RgDujclKkAP8wBUQcuoyiwyYCv9HyUg4fj5mw8T5nS
- YdSyBiigWoxxCAXJ4Z56l3KNpG2OmZkMQYvXTzJvIQI35XhVFRjkMSh1p9SzyhUAXp+PfZ4NFG
- UCs=
-X-IronPort-AV: E=Sophos;i="5.76,351,1592863200"; 
-   d="scan'208";a="13583860"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 25 Aug 2020 09:22:25 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Tue, 25 Aug 2020 09:22:25 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Tue, 25 Aug 2020 09:22:25 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1598340145; x=1629876145;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4N6dkL/kwNBk8VB5tEU1JJE9/9Y0/PoteI2pocptzkY=;
-  b=S9mqBrBKlNgb+0T+IF2kdpiiEGgikcqmK+2fhaPMQJBD4DIq/WyVeZUY
-   hk8Uc7pGbgtT8T0BxzUrOWgSdvR3pbcNFDU/uHEqRutJi94N0uOETQEe3
-   TZOW8vs4lTYu+W0Vs9DTPtJgkis5DHAzYDcHO4XNtIqflxmKkfxpqw86G
-   4HVkmztL4Vayzhc17aZ/7uLrlikyPvTs04c+TcCWzM1ZxBFP6HxJka2oC
-   4N/Fb24BOEWifJHAHJUFk9wPPpD1fePf3eNrUr6kcFi4DDfLnm7qSZd94
-   6KWM+/iLV9kkdgWoUbtmvWeXFh+8DBSNy2OwowGeZwTC6lEnHHNCTGCRu
-   A==;
-IronPort-SDR: Mo8sm6JNKdJHPOvnPGZCJUM1pHbd62JlnrYNHSQgJoCMunDMl/YvYKBGo/yinevAYV9fXAP/dm
- /N+Bn7rRGKn+6l2bl09VCsiCxkYyPE2Y/rmrtBKTia197y7YgLR10w/PNaGf9dGkJUOGd/1rFn
- 8qBVKRuQKPewSYPNAY1bruwsF8E7N67Z/3slrcCdP1CmsG2HAdsoMrjAhx63ZU6m5BDP5Eg+zg
- Z/TbokoBRUguSjMRQNg/JF5yOx52odm/yjXG0ZnZI5tB3Bia0cYgNTus5WzDoZWHYBc6fbdP0X
- YMg=
-X-IronPort-AV: E=Sophos;i="5.76,351,1592863200"; 
-   d="scan'208";a="13583859"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 25 Aug 2020 09:22:25 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 87F0B280065;
-        Tue, 25 Aug 2020 09:22:25 +0200 (CEST)
-Message-ID: <4b7d57738ce8e2130c4740a0f3f973fbaf60a7cf.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: [PATCH 2/2] ARM: dts: imx6qdl: tqma6: minor fixes
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Tue, 25 Aug 2020 09:22:23 +0200
-In-Reply-To: <CAOMZO5DSX1pf3xxo=CGvgPmHcjMJoWFx74grVJBckSmjtF-RGg@mail.gmail.com>
-References: <20200824091013.20640-1-matthias.schiffer@ew.tq-group.com>
-         <20200824091013.20640-2-matthias.schiffer@ew.tq-group.com>
-         <CAOMZO5DSX1pf3xxo=CGvgPmHcjMJoWFx74grVJBckSmjtF-RGg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Aug 2020 03:22:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729363AbgHYHW4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 03:22:56 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2F9C061574;
+        Tue, 25 Aug 2020 00:22:55 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id l2so9144560eji.3;
+        Tue, 25 Aug 2020 00:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OADTftaUqa0gqWbzg8dntRETIGBaFisPIux6F2d7Xks=;
+        b=LKg4zB/vDLYJda6TA91mSYdm6ubYWSNZ7yMZt6jDGsgx7tw7Kxs08Zzwiz3u5PgP0n
+         qGgdt6Aa1TeorwyggBIJXKSRz4nQc1zK15UGtG3ClWCYR8v7J+T/YwVTTRODf1Y2mkSe
+         jdG11BjPs0zKRtty0kQ7pUyHP5IrRxgWrf7UKWOHEf52VpMjvUKOiRcU4+jllCZzDwsj
+         uUmNPMZJR15ya/E6jMoIe0Iwfhr5Iv5rymdxFCmOnlM6N7LNDLq4OJygpJS1IzAhJ4t9
+         ooA/QSoN9vpa20V+0slmwh4mO0IqwcTSJ/2rNbHXk1bBcRJlEjEeDy2bECt6AOD1JUy5
+         Yl2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OADTftaUqa0gqWbzg8dntRETIGBaFisPIux6F2d7Xks=;
+        b=pWVjaUQzgOLZ9qXSm18T/gWLmaCLAefV956avCyL2vqt+I7UwB8uvx9JCCLd9jEoyT
+         VQ2fu9yK21GaWzGegH8TlII+FedK9heUs5dzwBwFajt/C4qJEplfGBRC0QUe9zKpWy9x
+         6cSfZvtEOHoPkC2D0rhXL6TLIQeHWwXDD2+ifRJIOMFcz0H4pjURQFIwOYoE80he8R6m
+         LvoFTijLvJCe7QxJRdNWscbkXH43dBR8dEFHoBcKsoz1hFgKobfQ/ho9XZiqvS2X38mK
+         sKRFdf1gudxKQL4BmcFw2Q9iP9G/1XMfNUJxcQZIeHTm1+7PWCkOcGZEqqjq0x2MpZUi
+         kcrw==
+X-Gm-Message-State: AOAM5336MD6bu4jVBMLY10LCd4KZEZZcHxFH4ViYHEf10wnT/w6jgcJi
+        Oj6qzKnVDBueE0OpuiRdN/Fj5kS8ouJM3Q==
+X-Google-Smtp-Source: ABdhPJwOkduFavTmq4VITqGicuVuRG4Vo1SQn5RrMfXrJPegMiqGfQLcpcchXDEu6lH0M99KUNcXtA==
+X-Received: by 2002:a17:906:2289:: with SMTP id p9mr8900398eja.437.1598340174058;
+        Tue, 25 Aug 2020 00:22:54 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f23:5700:40ac:16ed:6e22:2a54? (p200300ea8f23570040ac16ed6e222a54.dip0.t-ipconnect.de. [2003:ea:8f23:5700:40ac:16ed:6e22:2a54])
+        by smtp.googlemail.com with ESMTPSA id dj16sm6834217edb.5.2020.08.25.00.22.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 00:22:53 -0700 (PDT)
+Subject: Re: fsl_espi errors on v5.7.15
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "paulus@samba.org" <paulus@samba.org>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <3f48e5fb-33c9-8046-0f80-236eed163c16@alliedtelesis.co.nz>
+ <c43a23bd-33ec-4ef2-2ca5-730342248db3@gmail.com>
+ <3c72eec1-41ba-7389-eceb-3de80065555a@alliedtelesis.co.nz>
+ <1bbb3726-b0a4-6eb9-9076-706b06dfb90f@alliedtelesis.co.nz>
+ <61bb9800-9f90-9cd4-3b17-c14a7f83d792@gmail.com>
+ <0ff80ebb-e6ae-d8e1-9f0d-8759b2556141@alliedtelesis.co.nz>
+ <c2dadf51-666f-72f6-7687-731f281ed7d6@alliedtelesis.co.nz>
+ <4ed8a84b-0763-820e-df3e-1861d718f77d@alliedtelesis.co.nz>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <f97dc3af-d1f0-6974-ec2d-ace8d7e73993@gmail.com>
+Date:   Tue, 25 Aug 2020 09:22:48 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <4ed8a84b-0763-820e-df3e-1861d718f77d@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-24 at 18:36 -0300, Fabio Estevam wrote:
-> Hi Matthias,
+On 25.08.2020 05:54, Chris Packham wrote:
 > 
-> On Mon, Aug 24, 2020 at 6:10 AM Matthias Schiffer
-> <matthias.schiffer@ew.tq-group.com> wrote:
+> On 25/08/20 10:04 am, Chris Packham wrote:
+>>
+>> On 20/08/20 9:08 am, Chris Packham wrote:
+>>>
+>>> On 19/08/20 6:15 pm, Heiner Kallweit wrote:
+>>>> On 19.08.2020 00:44, Chris Packham wrote:
+>>>>> Hi Again,
+>>>>>
+>>>>> On 17/08/20 9:09 am, Chris Packham wrote:
+>>>>>
+>>>>>> On 14/08/20 6:19 pm, Heiner Kallweit wrote:
+>>>>>>> On 14.08.2020 04:48, Chris Packham wrote:
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> I'm seeing a problem with accessing spi-nor after upgrading a T2081
+>>>>>>>> based system to linux v5.7.15
+>>>>>>>>
+>>>>>>>> For this board u-boot and the u-boot environment live on spi-nor.
+>>>>>>>>
+>>>>>>>> When I use fw_setenv from userspace I get the following kernel logs
+>>>>>>>>
+>>>>>>>> # fw_setenv foo=1
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't 
+>>>>>>>> empty!
+>>>>>>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't 
+>>>>>>>> empty!
+>>>>>>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
+>>>>>>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't 
+>>>>>>>> empty!
+>>>>>>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
+>>>>>>>> ...
+>>>>>>>>
+>>>>>>> This error reporting doesn't exist yet in 4.4. So you may have an 
+>>>>>>> issue
+>>>>>>> under 4.4 too, it's just not reported.
+>>>>>>> Did you verify that under 4.4 fw_setenv actually has an effect?
+>>>>>> Just double checked and yes under 4.4 the setting does get saved.
+>>>>>>>> If I run fw_printenv (before getting it into a bad state) it is 
+>>>>>>>> able to
+>>>>>>>> display the content of the boards u-boot environment.
+>>>>>>>>
+>>>>>>> This might indicate an issue with spi being locked. I've seen 
+>>>>>>> related
+>>>>>>> questions, just use the search engine of your choice and check for
+>>>>>>> fw_setenv and locked.
+>>>>>> I'm running a version of fw_setenv which includes
+>>>>>> https://gitlab.denx.de/u-boot/u-boot/-/commit/db820159 so it 
+>>>>>> shouldn't
+>>>>>> be locking things unnecessarily.
+>>>>>>>> If been unsuccessful in producing a setup for bisecting the 
+>>>>>>>> issue. I do
+>>>>>>>> know the issue doesn't occur on the old 4.4.x based kernel but 
+>>>>>>>> that's
+>>>>>>>> probably not much help.
+>>>>>>>>
+>>>>>>>> Any pointers on what the issue (and/or solution) might be.
+>>>>> I finally managed to get our board running with a vanilla kernel. With
+>>>>> corenet64_smp_defconfig I occasionally see
+>>>>>
+>>>>>     fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>
+>>>>> other than the message things seem to be working.
+>>>>>
+>>>>> With a custom defconfig I see
+>>>>>
+>>>>>     fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>     fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't 
+>>>>> empty!
+>>>>>     fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
+>>>>>     ...
+>>>>>
+>>>>> and access to the spi-nor does not work until the board is reset.
+>>>>>
+>>>>> I'll try and pick apart the differences between the two defconfigs.
+>>>
+>>> I now think my earlier testing is invalid. I have seen the problem 
+>>> with either defconfig if I try hard enough. I had convinced myself 
+>>> that the problem was CONFIG_PREEMPT but that was before I found 
+>>> boot-to-boot differences with the same kernel.
+>>>
+>>> It's possible that I'm chasing multiple issues with the same symptom.
+>>>
+>>> The error I'm most concerned with is in the sequence
+>>> 1. boot with old image
+>>> 2. write environment
+>>> 3. boot with new image
+>>> 4. write environment
+>>> 5. write fails and environment is corrupted
+>>>
+>>> After I recover the system things sometimes seem fine. Until I repeat 
+>>> the sequence above.
+>>>
+>>>> Also relevant may be:
+>>>> - Which dts are you using?
+>>> Custom but based heavily on the t2080rdb.
+>>>> - What's the spi-nor type, and at which frequency are you operating it?
+>>> The board has several alternate parts for the spi-nor so the dts just 
+>>> specifies compatible = "jedec,spi-nor" the actual chip detected on 
+>>> the board I have is "n25q032a (4096 Kbytes)". The dts sets 
+>>> spi-max-frequency = <10000000> I haven't measured the actual 
+>>> frequency on the bus.
+>>>> - Does the issue still happen if you lower the frequency?
+>>> I did play around with the frequency initially but I should probably 
+>>> give that another go now that I have a better reproduction method.
+>>
+>> Playing around with the frequency didn't help.
+>>
+>> One thing that I've found is that the problem appears to be that I end 
+>> up with extra bytes in the RX FIFO. If I add code to drain the RX FIFO 
+>> then the system is able to keep accessing the spi-nor (albeit with 
+>> some noisy logs).
 > 
-> > diff --git a/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-> > b/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-> > index 9513020ddd1a..7aaae83c1fae 100644
-> > --- a/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-> > +++ b/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-> > @@ -20,7 +20,7 @@
-> >  &ecspi1 {
-> >         pinctrl-names = "default";
-> >         pinctrl-0 = <&pinctrl_ecspi1>;
-> > -       fsl,spi-num-chipselects = <1>;
-> > +       num-cs = <1>;
+> I've been staring at spi-fsl-espi.c for while now and I think I've 
+> identified a couple of deficiencies that may or may not be related to my 
+> issue.
 > 
-> You could simply remove fsl,spi-num-chipselects without passing num-
-> cs.
+> First I think the 'Transfer done but SPIE_DON isn't set' message can be 
+> generated spuriously. In fsl_espi_irq() we read the ESPI_SPIE register. 
+> We also write back to it to clear the current events. We re-read it in 
+> fsl_espi_cpu_irq() and complain when SPIE_DON is not set. But we can 
+> naturally end up in that situation if we're doing a large read. Consider 
+> the messages for reading a block of data from a spi-nor chip
 > 
-> The spi core is able to count the number of chipselects passed via
-> cs-gpios in the device tree.
+>   tx = READ_OP + ADDR
+>   rx = data
+> 
+> We setup the transfer and pump out the tx_buf. The first interrupt goes 
+> off and ESPI_SPIE has SPIM_DON and SPIM_RXT set. We empty the rx fifo, 
+> clear ESPI_SPIE and wait for the next interrupt. The next interrupt 
+> fires and this time we have ESPI_SPIE with just SPIM_RXT set. This 
+> continues until we've received all the data and we finish with ESPI_SPIE 
+> having only SPIM_RXT set. When we re-read it we complain that SPIE_DON 
+> isn't set.
+> 
+> The other deficiency is that we only get an interrupt when the amount of 
+> data in the rx fifo is above FSL_ESPI_RXTHR. If there are fewer than 
+> FSL_ESPI_RXTHR left to be received we will never pull them out of the fifo.
+> 
+SPIM_DON will trigger an interrupt once the last characters have been
+transferred, and read the remaining characters from the FIFO.
 
-Hmm, unless I'm overlooking something, this is not going to work:
+> I think the reason I'm seeing some variability is because of how fast 
+> (or slow) the interrupts get processed and how fast the spi-nor chip can 
+> fill the CPUs rx fifo.
+> 
+To rule out timing issues at high bus frequencies I initially asked
+for re-testing at lower frequencies. If you e.g. limit the bus to 1 MHz
+or even less, then timing shouldn't be an issue.
 
-- spi_get_gpio_descs() sets num_chipselect to the maximum of the
-num_chipselect set in the driver and the number of cs-gpios
+Last relevant functional changes have been done almost 4 years ago.
+And yours is the first such report I see. So question is what could be so
+special with your setup that it seems you're the only one being affected.
+The scenarios you describe are standard, therefore much more people
+should be affected in case of a driver bug.
 
-- spi_imx_probe() sets num_chipselect to 3 if not specified in the
-device tree
-
-So I think we would end up with 3 instead of 1 chipselect.
-
-
-Kind regards,
-Matthias
-
+You said that kernel config impacts how frequently the issue happens.
+Therefore question is what's the diff in kernel config, and how could
+the differences be related to SPI.
