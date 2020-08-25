@@ -2,142 +2,239 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E47C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D98512075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C92F2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="h4HDgXe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgHYXUt (ORCPT
+        id S1726786AbgHYXUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:20:49 -0400
-Received: from mga11.intel.com ([192.55.52.93]:64351 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbgHYXUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:20:45 -0400
-IronPort-SDR: wG38uz093x+ROHUOKSLCZ+n8z1/uJHaLg0B87oue+95NwACuXbRjQH5XthEvhQDNShkHMaseRa
- 4S60Mcoaf3uw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="153785378"
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="153785378"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 16:20:44 -0700
-IronPort-SDR: HbLeFRBO0j4TUp/5AwD3jwj6kDOUWk9a36wZcMaRz5dn+yScu6/OrmFmjmecDIO5bLlrG4ykFO
- UfDAyCFdRFKQ==
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="474548472"
-Received: from akrishn3-mobl3.amr.corp.intel.com (HELO [10.212.155.246]) ([10.212.155.246])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 16:20:43 -0700
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
- <20200825002540.3351-26-yu-cheng.yu@intel.com>
- <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
- <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
- <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
- <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
-Date:   Tue, 25 Aug 2020 16:20:42 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 25 Aug 2020 19:20:53 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:6848 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726599AbgHYXUr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 19:20:47 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07PNJX5r019359
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:20:45 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=6hP5mUKG/j4pRCIHETlDk5rGb7u5IR+keJvIHYWiKi4=;
+ b=h4HDgXe423usHrrmubcMu4Ztvdwqyn0R/8FdSR2E2aLqetI9I+Rs5Z4Kkm17ya/QhBZW
+ uqI3DhsFDdZ/J64Hz0IhsXym7VsH8PsrlFAB6Rl6wUKx5Oq+4IG7SXH1eplkJPzEB8iW
+ BmhnGPSzoBKvLERH8wDNsmr1t2ebbmu134k= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 3359k9ryd1-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 16:20:45 -0700
+Received: from intmgw004.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 25 Aug 2020 16:20:44 -0700
+Received: by devbig218.frc2.facebook.com (Postfix, from userid 116055)
+        id A03182077AE; Tue, 25 Aug 2020 16:20:41 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Udip Pant <udippant@fb.com>
+Smtp-Origin-Hostname: devbig218.frc2.facebook.com
+To:     Udip Pant <udippant@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Smtp-Origin-Cluster: frc2c02
+Subject: [PATCH bpf-next v3 1/4] bpf: verifier: use target program's type for access verifications
+Date:   Tue, 25 Aug 2020 16:20:00 -0700
+Message-ID: <20200825232003.2877030-2-udippant@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200825232003.2877030-1-udippant@fb.com>
+References: <20200825232003.2877030-1-udippant@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-25_10:2020-08-25,2020-08-25 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ mlxscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 adultscore=0
+ clxscore=1015 phishscore=0 priorityscore=1501 suspectscore=0
+ malwarescore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008250173
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/25/20 2:04 PM, Yu, Yu-cheng wrote:
->>> I think this is more arch-specific.  Even if it becomes a new syscall,
->>> we still need to pass the same parameters.
->>
->> Right, but without the copying in and out of memory.
->>
-> Linux-api is already on the Cc list.  Do we need to add more people to
-> get some agreements for the syscall?
-What kind of agreement are you looking for?  I'd suggest just coding it
-up and posting the patches.  Adding syscalls really is really pretty
-straightforward and isn't much code at all.
+This patch adds changes in verifier to make decisions such as granting
+of read / write access or enforcement of return code status based on
+the program type of the target program while using dynamic program
+extension (of type BPF_PROG_TYPE_EXT).
+
+The BPF_PROG_TYPE_EXT type can be used to extend types such as XDP, SKB
+and others. Since the BPF_PROG_TYPE_EXT program type on itself is just a
+placeholder for those, we need this extended check for those extended
+programs to actually work with proper access, while using this option.
+
+Specifically, it introduces following changes:
+- may_access_direct_pkt_data:
+    allow access to packet data based on the target prog
+- check_return_code:
+    enforce return code based on the target prog
+    (currently, this check is skipped for EXT program)
+- check_ld_abs:
+    check for 'may_access_skb' based on the target prog
+- check_map_prog_compatibility:
+    enforce the map compatibility check based on the target prog
+- may_update_sockmap:
+    allow sockmap update based on the target prog
+
+Some other occurrences of prog->type is left as it without replacing
+with the 'resolved' type:
+- do_check_common() and check_attach_btf_id():
+    already have specific logic to handle the EXT prog type
+- jit_subprogs() and bpf_check():
+    Not changed for jit compilation or while inferring env->ops
+
+Next few patches in this series include selftests for some of these cases=
+.
+
+Signed-off-by: Udip Pant <udippant@fb.com>
+---
+ kernel/bpf/verifier.c | 32 +++++++++++++++++++++-----------
+ 1 file changed, 21 insertions(+), 11 deletions(-)
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 38748794518e..95c715508034 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -2625,11 +2625,19 @@ static int check_map_access(struct bpf_verifier_e=
+nv *env, u32 regno,
+=20
+ #define MAX_PACKET_OFF 0xffff
+=20
++static enum bpf_prog_type resolve_prog_type(struct bpf_prog *prog)
++{
++	return prog->aux->linked_prog ? prog->aux->linked_prog->type
++				      : prog->type;
++}
++
+ static bool may_access_direct_pkt_data(struct bpf_verifier_env *env,
+ 				       const struct bpf_call_arg_meta *meta,
+ 				       enum bpf_access_type t)
+ {
+-	switch (env->prog->type) {
++	enum bpf_prog_type prog_type =3D resolve_prog_type(env->prog);
++
++	switch (prog_type) {
+ 	/* Program types only with direct read access go here! */
+ 	case BPF_PROG_TYPE_LWT_IN:
+ 	case BPF_PROG_TYPE_LWT_OUT:
+@@ -4181,7 +4189,7 @@ static int check_func_arg(struct bpf_verifier_env *=
+env, u32 arg,
+ static bool may_update_sockmap(struct bpf_verifier_env *env, int func_id=
+)
+ {
+ 	enum bpf_attach_type eatype =3D env->prog->expected_attach_type;
+-	enum bpf_prog_type type =3D env->prog->type;
++	enum bpf_prog_type type =3D resolve_prog_type(env->prog);
+=20
+ 	if (func_id !=3D BPF_FUNC_map_update_elem)
+ 		return false;
+@@ -7366,7 +7374,7 @@ static int check_ld_abs(struct bpf_verifier_env *en=
+v, struct bpf_insn *insn)
+ 	u8 mode =3D BPF_MODE(insn->code);
+ 	int i, err;
+=20
+-	if (!may_access_skb(env->prog->type)) {
++	if (!may_access_skb(resolve_prog_type(env->prog))) {
+ 		verbose(env, "BPF_LD_[ABS|IND] instructions not allowed for this progr=
+am type\n");
+ 		return -EINVAL;
+ 	}
+@@ -7454,11 +7462,12 @@ static int check_return_code(struct bpf_verifier_=
+env *env)
+ 	const struct bpf_prog *prog =3D env->prog;
+ 	struct bpf_reg_state *reg;
+ 	struct tnum range =3D tnum_range(0, 1);
++	enum bpf_prog_type prog_type =3D resolve_prog_type(env->prog);
+ 	int err;
+=20
+ 	/* LSM and struct_ops func-ptr's return type could be "void" */
+-	if ((env->prog->type =3D=3D BPF_PROG_TYPE_STRUCT_OPS ||
+-	     env->prog->type =3D=3D BPF_PROG_TYPE_LSM) &&
++	if ((prog_type =3D=3D BPF_PROG_TYPE_STRUCT_OPS ||
++	     prog_type =3D=3D BPF_PROG_TYPE_LSM) &&
+ 	    !prog->aux->attach_func_proto->type)
+ 		return 0;
+=20
+@@ -7477,7 +7486,7 @@ static int check_return_code(struct bpf_verifier_en=
+v *env)
+ 		return -EACCES;
+ 	}
+=20
+-	switch (env->prog->type) {
++	switch (prog_type) {
+ 	case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
+ 		if (env->prog->expected_attach_type =3D=3D BPF_CGROUP_UDP4_RECVMSG ||
+ 		    env->prog->expected_attach_type =3D=3D BPF_CGROUP_UDP6_RECVMSG ||
+@@ -9233,6 +9242,7 @@ static int check_map_prog_compatibility(struct bpf_=
+verifier_env *env,
+ 					struct bpf_prog *prog)
+=20
+ {
++	enum bpf_prog_type prog_type =3D resolve_prog_type(prog);
+ 	/*
+ 	 * Validate that trace type programs use preallocated hash maps.
+ 	 *
+@@ -9250,8 +9260,8 @@ static int check_map_prog_compatibility(struct bpf_=
+verifier_env *env,
+ 	 * now, but warnings are emitted so developers are made aware of
+ 	 * the unsafety and can fix their programs before this is enforced.
+ 	 */
+-	if (is_tracing_prog_type(prog->type) && !is_preallocated_map(map)) {
+-		if (prog->type =3D=3D BPF_PROG_TYPE_PERF_EVENT) {
++	if (is_tracing_prog_type(prog_type) && !is_preallocated_map(map)) {
++		if (prog_type =3D=3D BPF_PROG_TYPE_PERF_EVENT) {
+ 			verbose(env, "perf_event programs can only use preallocated hash map\=
+n");
+ 			return -EINVAL;
+ 		}
+@@ -9263,8 +9273,8 @@ static int check_map_prog_compatibility(struct bpf_=
+verifier_env *env,
+ 		verbose(env, "trace type programs with run-time allocated hash maps ar=
+e unsafe. Switch to preallocated hash maps.\n");
+ 	}
+=20
+-	if ((is_tracing_prog_type(prog->type) ||
+-	     prog->type =3D=3D BPF_PROG_TYPE_SOCKET_FILTER) &&
++	if ((is_tracing_prog_type(prog_type) ||
++	     prog_type =3D=3D BPF_PROG_TYPE_SOCKET_FILTER) &&
+ 	    map_value_has_spin_lock(map)) {
+ 		verbose(env, "tracing progs cannot use bpf_spin_lock yet\n");
+ 		return -EINVAL;
+@@ -9976,7 +9986,7 @@ static int convert_ctx_accesses(struct bpf_verifier=
+_env *env)
+ 				insn->code =3D BPF_LDX | BPF_PROBE_MEM |
+ 					BPF_SIZE((insn)->code);
+ 				env->prog->aux->num_exentries++;
+-			} else if (env->prog->type !=3D BPF_PROG_TYPE_STRUCT_OPS) {
++			} else if (resolve_prog_type(env->prog) !=3D BPF_PROG_TYPE_STRUCT_OPS=
+) {
+ 				verbose(env, "Writes through BTF pointers are not allowed\n");
+ 				return -EINVAL;
+ 			}
+--=20
+2.24.1
 
