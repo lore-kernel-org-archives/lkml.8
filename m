@@ -2,98 +2,146 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72159C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FEC92071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F9F22071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:50:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="iwH2tpJg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sUtrjydE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgHYFt7 (ORCPT
+        id S1728941AbgHYFuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 01:49:59 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:63712 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726090AbgHYFt7 (ORCPT
+        Tue, 25 Aug 2020 01:50:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36248 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728928AbgHYFuI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 01:49:59 -0400
-X-UUID: 8c52e717cd56457386aab6ec17ffc486-20200825
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=x24GTs4og816xQigVioi/+Ob9pQhy96LyKGjS7OYRMc=;
-        b=iwH2tpJgrgR3KrNYkukx9eMsnaurS3rowME2whW82Y83BXsfoJWoWR3VeuOKzOBwSUm7gZbMjpCLg/rq/NcxSxTd02axJ1DyygTtt9Jjj5LSoTk8dDv4x5DW86hK9jhxyOysmJcAOBgvtVCSoSTP6Qe3h+hOMY1lHzdWccz518I=;
-X-UUID: 8c52e717cd56457386aab6ec17ffc486-20200825
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <tiffany.lin@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1222872420; Tue, 25 Aug 2020 13:49:54 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 25 Aug 2020 13:49:53 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 25 Aug 2020 13:49:54 +0800
-Message-ID: <1598334593.1969.3.camel@mtksdaap41>
-Subject: Re: [PATCH v4 17/17] media: mtk-vcodec: venc: fix invalid time per
- frame in S_PARM
-From:   Tiffany Lin <tiffany.lin@mediatek.com>
-To:     Alexandre Courbot <acourbot@chromium.org>
-CC:     Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Maoguang Meng <maoguang.meng@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Date:   Tue, 25 Aug 2020 13:49:53 +0800
-In-Reply-To: <20200821103608.2310097-18-acourbot@chromium.org>
-References: <20200821103608.2310097-1-acourbot@chromium.org>
-         <20200821103608.2310097-18-acourbot@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 25 Aug 2020 01:50:08 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B330C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:50:07 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 67so2935360pgd.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:50:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vnJNUHtuFQUFx13e1DH6FdQTNcSlnOczZJdYD+gETKQ=;
+        b=sUtrjydErcLgPizhn/Xtx4ItBgxoAz/OtzMIkDhh/Q2SE9qFJyNZ2IWh/2wrLbP6F3
+         vMtRByRkp1mYza87avjNVjpHkG6lCbqxvXdcHvDFWIUUDogaJ2wO/o4/rENLnkbuOACB
+         Hps0Tvpynh9hWCbsYRkAKdJwaeblvE+o/JQuCsq1VknHKEl6aAc7zlJDEZijhlYuLR3i
+         ND/Go6sn4ST2/vDfSmtmhqTcmAI2UtUsC21eT/h6OZwd1Ipp6dRZnrCk2yFlAF7tZXmf
+         RGy1hmTFbfTZYLSQluB5wNe7oBjCkvwFyXaDTcVXAOzhh74RtFdCJtggaXeZT7b5TZrc
+         YyRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vnJNUHtuFQUFx13e1DH6FdQTNcSlnOczZJdYD+gETKQ=;
+        b=QzC8qxGONNiHMtrtPer9oIU0Dg5qzF1Dj7HEkiJvhokscsNsxkMnGy4pcgWSMCjjoc
+         Ql4oeDOWe1+p59cJdKD4XT6UjY10uuvMMdaDKJ1qE9GwDzMZ7jAT0hufuhl2LPYDn7/F
+         EUaiXjUsD6dF0DY40Ng/gjXuSDvXg/+RDOxqGmS0n8Jb1K4N5CrufxJB4MyDuJ2EY3kP
+         p3LO0TlFFcg2bUeucEjNFeBfC5lTxOHpgNJ3Y+gw8FW3pumbqDJsGIKggrYOL64GZQkY
+         8TH29E7xAXylHvOzAex+2kUqhiTMdtIcFInzch8Wu5Ou3WuKpZvMzh0myZ19EguMsoZl
+         AWDg==
+X-Gm-Message-State: AOAM531dsQ2PR6KDBUmz2AVsMMnLZWttrk7G3LNPdiBan4z1SKpYnAlC
+        5gO7zfzZmc78l0FIR1C1LdAdNg==
+X-Google-Smtp-Source: ABdhPJx7LW43H/WEVT3wFqJuqlI6n26TIbT5/snnF9dSqDbHnlNMONApn7rCm69tVvLefn/LYmHMeQ==
+X-Received: by 2002:a63:31d0:: with SMTP id x199mr5238003pgx.99.1598334606437;
+        Mon, 24 Aug 2020 22:50:06 -0700 (PDT)
+Received: from localhost ([122.172.43.13])
+        by smtp.gmail.com with ESMTPSA id o5sm2988556pgi.18.2020.08.24.22.50.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Aug 2020 22:50:05 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 11:20:03 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] cpufreq: tegra186: Fix initial frequency
+Message-ID: <20200825055003.qfsuktsv7cyouxei@vireshk-i7>
+References: <20200824145907.331899-1-jonathanh@nvidia.com>
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824145907.331899-1-jonathanh@nvidia.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpLCAyMDIwLTA4LTIxIGF0IDE5OjM2ICswOTAwLCBBbGV4YW5kcmUgQ291cmJvdCB3cm90
-ZToNCj4gdjRsMi1jb21wbGlhbmNlIGV4cGVjdHMgdGhlIGRyaXZlciB0byBhZGp1c3QgdGhlIHRp
-bWUgcGVyIGZyYW1lIGlmIGl0IGlzDQo+IGludmFsaWQgKG51bWVyYXRvciBvciBkZW5vbWluYXRv
-ciBzZXQgdG8gMCkuIEFkanVzdCBpdCB0byB0aGUgZGVmYXVsdA0KPiB2YWx1ZSBpbiB0aGVzZSBj
-YXNlcy4NCj4gDQoNCkFja2VkLWJ5OiBUaWZmYW55IExpbiA8dGlmZmFueS5saW5AbWVkaWF0ZWsu
-Y29tPg0KDQo+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRyZSBDb3VyYm90IDxhY291cmJvdEBjaHJv
-bWl1bS5vcmc+DQo+IC0tLQ0KPiAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210
-a192Y29kZWNfZW5jLmMgfCAxMiArKysrKysrKy0tLS0NCj4gIDEgZmlsZSBjaGFuZ2VkLCA4IGlu
-c2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
-ZWRpYS9wbGF0Zm9ybS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jLmMgYi9kcml2ZXJzL21lZGlh
-L3BsYXRmb3JtL210ay12Y29kZWMvbXRrX3Zjb2RlY19lbmMuYw0KPiBpbmRleCAwOWJhYWMyZGJj
-MzYuLjgyYjA0NzE0Zjc1MCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9t
-dGstdmNvZGVjL210a192Y29kZWNfZW5jLmMNCj4gKysrIGIvZHJpdmVycy9tZWRpYS9wbGF0Zm9y
-bS9tdGstdmNvZGVjL210a192Y29kZWNfZW5jLmMNCj4gQEAgLTIwMCwxNCArMjAwLDE4IEBAIHN0
-YXRpYyBpbnQgdmlkaW9jX3ZlbmNfc19wYXJtKHN0cnVjdCBmaWxlICpmaWxlLCB2b2lkICpwcml2
-LA0KPiAgCQkJICAgICAgc3RydWN0IHY0bDJfc3RyZWFtcGFybSAqYSkNCj4gIHsNCj4gIAlzdHJ1
-Y3QgbXRrX3Zjb2RlY19jdHggKmN0eCA9IGZoX3RvX2N0eChwcml2KTsNCj4gKwlzdHJ1Y3QgdjRs
-Ml9mcmFjdCAqdGltZXBlcmZyYW1lID0gJmEtPnBhcm0ub3V0cHV0LnRpbWVwZXJmcmFtZTsNCj4g
-IA0KPiAgCWlmIChhLT50eXBlICE9IFY0TDJfQlVGX1RZUEVfVklERU9fT1VUUFVUX01QTEFORSkN
-Cj4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+ICANCj4gLQljdHgtPmVuY19wYXJhbXMuZnJhbWVyYXRl
-X251bSA9DQo+IC0JCQlhLT5wYXJtLm91dHB1dC50aW1lcGVyZnJhbWUuZGVub21pbmF0b3I7DQo+
-IC0JY3R4LT5lbmNfcGFyYW1zLmZyYW1lcmF0ZV9kZW5vbSA9DQo+IC0JCQlhLT5wYXJtLm91dHB1
-dC50aW1lcGVyZnJhbWUubnVtZXJhdG9yOw0KPiArCWlmICh0aW1lcGVyZnJhbWUtPm51bWVyYXRv
-ciA9PSAwIHx8IHRpbWVwZXJmcmFtZS0+ZGVub21pbmF0b3IgPT0gMCkgew0KPiArCQl0aW1lcGVy
-ZnJhbWUtPm51bWVyYXRvciA9IE1US19ERUZBVUxUX0ZSQU1FUkFURV9OVU07DQo+ICsJCXRpbWVw
-ZXJmcmFtZS0+ZGVub21pbmF0b3IgPSBNVEtfREVGQVVMVF9GUkFNRVJBVEVfREVOT007DQo+ICsJ
-fQ0KPiArDQo+ICsJY3R4LT5lbmNfcGFyYW1zLmZyYW1lcmF0ZV9udW0gPSB0aW1lcGVyZnJhbWUt
-PmRlbm9taW5hdG9yOw0KPiArCWN0eC0+ZW5jX3BhcmFtcy5mcmFtZXJhdGVfZGVub20gPSB0aW1l
-cGVyZnJhbWUtPm51bWVyYXRvcjsNCj4gIAljdHgtPnBhcmFtX2NoYW5nZSB8PSBNVEtfRU5DT0RF
-X1BBUkFNX0ZSQU1FUkFURTsNCj4gIA0KPiAgCWEtPnBhcm0ub3V0cHV0LmNhcGFiaWxpdHkgPSBW
-NEwyX0NBUF9USU1FUEVSRlJBTUU7DQoNCg==
+On 24-08-20, 15:59, Jon Hunter wrote:
+> Commit 6cc3d0e9a097 ("cpufreq: tegra186: add
+> CPUFREQ_NEED_INITIAL_FREQ_CHECK flag") fixed CPUFREQ support for
+> Tegra186 but as a consequence the following warnings are now seen on
+> boot ...
+> 
+>  cpufreq: cpufreq_online: CPU0: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU0: Unlisted initial frequency changed to: 2035200 KHz
+>  cpufreq: cpufreq_online: CPU1: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU1: Unlisted initial frequency changed to: 2035200 KHz
+>  cpufreq: cpufreq_online: CPU2: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU2: Unlisted initial frequency changed to: 2035200 KHz
+>  cpufreq: cpufreq_online: CPU3: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU3: Unlisted initial frequency changed to: 2035200 KHz
+>  cpufreq: cpufreq_online: CPU4: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU4: Unlisted initial frequency changed to: 2035200 KHz
+>  cpufreq: cpufreq_online: CPU5: Running at unlisted freq: 0 KHz
+>  cpufreq: cpufreq_online: CPU5: Unlisted initial frequency changed to: 2035200 KHz
+> 
+> Fix this by adding a 'get' callback for the Tegra186 CPUFREQ driver to
+> retrieve the current operating frequency for a given CPU. The 'get'
+> callback uses the current 'ndiv' value that is programmed to determine
+> that current operating frequency.
+> 
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+> Changes since V1:
+> - Moved code into a 'get' callback
+> 
+>  drivers/cpufreq/tegra186-cpufreq.c | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/cpufreq/tegra186-cpufreq.c b/drivers/cpufreq/tegra186-cpufreq.c
+> index 01e1f58ba422..0d0fcff60765 100644
+> --- a/drivers/cpufreq/tegra186-cpufreq.c
+> +++ b/drivers/cpufreq/tegra186-cpufreq.c
+> @@ -14,6 +14,7 @@
+>  
+>  #define EDVD_CORE_VOLT_FREQ(core)		(0x20 + (core) * 0x4)
+>  #define EDVD_CORE_VOLT_FREQ_F_SHIFT		0
+> +#define EDVD_CORE_VOLT_FREQ_F_MASK		0xffff
+>  #define EDVD_CORE_VOLT_FREQ_V_SHIFT		16
+>  
+>  struct tegra186_cpufreq_cluster_info {
+> @@ -91,10 +92,39 @@ static int tegra186_cpufreq_set_target(struct cpufreq_policy *policy,
+>  	return 0;
+>  }
+>  
+> +static unsigned int tegra186_cpufreq_get(unsigned int cpu)
+> +{
+> +	struct cpufreq_frequency_table *tbl;
+> +	struct cpufreq_policy *policy;
+> +	void __iomem *edvd_reg;
+> +	unsigned int i, freq = 0;
+> +	u32 ndiv;
+> +
+> +	policy = cpufreq_cpu_get(cpu);
+> +	if (!policy)
+> +		return -EINVAL;
 
+This should be return 0;
+
+Applied with that change. Thanks.
+
+-- 
+viresh
