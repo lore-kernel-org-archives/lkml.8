@@ -6,36 +6,44 @@ X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF898C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73533C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF7E2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5662A2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 18:20:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbgHYSTi (ORCPT
+        id S1726627AbgHYSUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 14:19:38 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:38548 "EHLO
+        Tue, 25 Aug 2020 14:20:02 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:38626 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHYSTe (ORCPT
+        with ESMTP id S1726090AbgHYST5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 14:19:34 -0400
+        Tue, 25 Aug 2020 14:19:57 -0400
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 3FB271C0BB9; Tue, 25 Aug 2020 20:19:31 +0200 (CEST)
-Date:   Tue, 25 Aug 2020 20:19:30 +0200
+        id A673A1C0BB9; Tue, 25 Aug 2020 20:19:55 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 20:19:54 +0200
 From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        David Sterba <dsterba@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>
-Subject: Re: [PATCH 4.19 09/71] btrfs: sysfs: use NOFS for device creation
-Message-ID: <20200825181930.GA989@bug>
-References: <20200824082355.848475917@linuxfoundation.org>
- <20200824082356.348762357@linuxfoundation.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Qiwu Huang <yanziily@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qiwu Huang <huangqiwu@xiaomi.com>
+Subject: Re: [PATCH v8 1/4] power: supply: core: add quick charge type
+ property
+Message-ID: <20200825181954.GB989@bug>
+References: <cover.1597376585.git.huangqiwu@xiaomi.com>
+ <ced256ea8ac2f3e54c33677facc4c2ef04dee643.1597376585.git.huangqiwu@xiaomi.com>
+ <20200814060909.GD1409566@kroah.com>
+ <CAPtXDt1e3fi7ymW0-FSknUAYCQ80aL=4btbeA2e4Xre7+e7OtA@mail.gmail.com>
+ <20200818060707.GB1742213@kroah.com>
+ <CAPtXDt26DdOi6JG7x3mTrR5YwArjkAeXY2TogRnK_xkSabhL2g@mail.gmail.com>
+ <20200824074357.GB4133866@kroah.com>
+ <CAPtXDt0yW7Kh6a9JGfXaha_wKVjae7U74m6K=631Ofh8_m4uvg@mail.gmail.com>
+ <20200824085715.GB402243@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824082356.348762357@linuxfoundation.org>
+In-Reply-To: <20200824085715.GB402243@kroah.com>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -44,18 +52,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi!
 
-> From: Josef Bacik <josef@toxicpanda.com>
+> > > > If we ported the full driver, we would break the existing driver
+> > > > structure because we would introduce more Qualcomm code. I think
+> > > > that's an unreasonable change.
+> > >
+> > > That doesn't make much sense.  You have a working driver for these apis,
+> > > just submit it for inclusion, it should never break any existing
+> > > drivers, otherwise your code wouldn't work either.
+> > 
+> > We're an Android device, we're working on a Qualcomm based code, and
+> > from the current code tree, the current code tree is missing the QTI
+> > Charger code
 > 
-> Dave hit this splat during testing btrfs/078:
+> I don't know what that means, sorry.  Just submit your driver, and any
+> needed dependencies as well.  There's no other way to evaluate this api
+> addition without that, right?
 
-...
+Actually, there's a way to evaluate the API without the driver... if the API
+is pretty obviously unacceptable.
 
-> CC: stable@vger.kernel.org # 4.14+
-
-This commit is in mainline, as a47bd78d0c44621efb98b525d04d60dc4d1a79b0, but is not marked
-as such.
-
-Best regards,
 									Pavel
 -- 
 (english) http://www.livejournal.com/~pavelmachek
