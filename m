@@ -2,88 +2,89 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C992DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04489C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77AD32068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:17:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Vjpbkbla"
+	by mail.kernel.org (Postfix) with ESMTP id CDE1F2068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598347061;
+	bh=9QeGB1fXHAQSQh1eR70hPqgCS2Tc/JeiZO9IWAi9qPI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JSmwn7oMBnUKilUk0R9NykyRTLekt8uuE0OJmfumaH+OKFJPQBQXVNKsiG6mo7EbN
+	 XttZcZiPp8Hb0uvPqddZAK3Fbk+enJ9xleEpX+NEhJ5MNQsGNOZ5iTVd4wkPHjRRrc
+	 mLduUGNz6gZIoYpgWaadMEUCWir3o8O/HxnpUhlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbgHYJRO (ORCPT
+        id S1729420AbgHYJRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:17:14 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38085 "EHLO ozlabs.org"
+        Tue, 25 Aug 2020 05:17:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbgHYJRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:17:12 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1729200AbgHYJRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:17:38 -0400
+Received: from coco.lan (ip5f5ad5a4.dynamic.kabel-deutschland.de [95.90.213.164])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BbNfr5s2Nz9sSP;
-        Tue, 25 Aug 2020 19:17:08 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598347030;
-        bh=8+HCk3p1QLwmXwB6X50SNetgu111UDw1AjiCvBM1Qoc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VjpbkblajU7mqY192XaSvH07JYOT7dIP0r2K67EFTD1QN5Rjx61EmDnEqE9jiSPXG
-         97jJNo9a388hhQQ/84o/6/nHx/VSCMAyjV5E7jSE7KQ+qGNA+qTWjkakLKPbFldMlu
-         abxbDo0eM12E8B8p4LT76udOlpl5mZASdfSWjIqEUMB16qQ/ehJHKRf1e3Eax+EdBx
-         VIFvm2bNHKGES27gzqd1/PiacoZ1Ih4aM+BJoiTSRvACxLV3j7EVeJu7D/ntZWujpM
-         Ma/O25A6iL+3AC5MWjr08nMQUQ4rf3y9jLfYOwJqoIMTY5QopiClq08e/e3WP6Jxrj
-         GJKBz+VhCxQkw==
-Date:   Tue, 25 Aug 2020 19:17:07 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: linux-next: Signed-off-by missing for commit in the net-next tree
-Message-ID: <20200825191707.3c244b4f@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id C6BD92068F;
+        Tue, 25 Aug 2020 09:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598347058;
+        bh=9QeGB1fXHAQSQh1eR70hPqgCS2Tc/JeiZO9IWAi9qPI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QG7lkNYwhNzmsuyMt4/05k2/nQtRbBggtJoeFDNh43HKu1cyq/RW+kDL/sSos3BjP
+         10aD46wy0Ay6dlEnwr/KfVlcIXcJCt/eFBMr4imMKhwDAYwvnausAPPsO+CYy7mlV/
+         ZQHB0va3N/VTA1WXmQtBZoSLZIgS74HDyhUHkGwI=
+Date:   Tue, 25 Aug 2020 11:17:34 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] staging: spmi: hisi-spmi-controller: fix spelling
+ mistake "controlller" -> "controller"
+Message-ID: <20200825111734.40c13380@coco.lan>
+In-Reply-To: <20200820075136.186199-1-colin.king@canonical.com>
+References: <20200820075136.186199-1-colin.king@canonical.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Qee=H7JH_MGf+Bt0fL0_Jdo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Qee=H7JH_MGf+Bt0fL0_Jdo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Em Thu, 20 Aug 2020 08:51:36 +0100
+Colin King <colin.king@canonical.com> escreveu:
 
-Hi all,
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> There is a spelling mistake in the MODULE_ALIAS, fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Commit
+> ---
+>  drivers/staging/hikey9xx/hisi-spmi-controller.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+> index 66a0b296e06f..b132b2a5d939 100644
+> --- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
+> +++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+> @@ -354,4 +354,4 @@ module_exit(spmi_controller_exit);
+>  
+>  MODULE_LICENSE("GPL v2");
+>  MODULE_VERSION("1.0");
+> -MODULE_ALIAS("platform:spmi_controlller");
+> +MODULE_ALIAS("platform:spmi_controller");
 
-  0093870aa891 ("batman-adv: Migrate to linux/prandom.h")
 
-is missing a Signed-off-by from its committer.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Qee=H7JH_MGf+Bt0fL0_Jdo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9E1xMACgkQAVBC80lX
-0Gwh7ggAnnBLs/I+UEtLEoB8fQg2672yo7GLfnZFpN9+LrY4i5vhF2YTPXAQU1en
-A4KVU9QxZbt5k7ZZW2u0Dx1+h8XXTjmn6cQR28i+JXcv7BFwsCGKM3VCVhrQZzJj
-OklyzKb0OIrytVvQBnScuOhQAaunFFj9zMH1iTAapfzco9NTVyv+gQG+rrubR2uV
-SFZVqY5ShtTqM5MybBvHGImK6cm0XnLFNwrAFwUQeeHysMpkuYq5FQcVotH74Yd5
-BOp+ixOvuvWBmQrkuvesAMmonXHADgSgPkWCFXIkwEHriQfH+uWOD9U0jFor+pK/
-jIBlD63YZb2Eedqiy2b3+BwgMrvYrA==
-=Qoeq
------END PGP SIGNATURE-----
-
---Sig_/Qee=H7JH_MGf+Bt0fL0_Jdo--
+Thanks,
+Mauro
