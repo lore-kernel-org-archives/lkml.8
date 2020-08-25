@@ -2,184 +2,102 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0BBC433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB95C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB642075E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:20:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598394044;
-	bh=iL1EFp5LvDcgnSYQTBQ+/7CaT/KJbfdmt8xGsOh4YyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OoHBjRfNokcD5EcAGXdQDOXMVauEC7PT4Wl8aHbqowwzxHgUKijvDMRNprf96xghH
-	 TczsLWQrTEVPf16O2sGf9SLFRkrwgTfSvRzePR8xKBfzJHd15b8645fAybtM5+szKn
-	 J+TQQ3aceEwi4GWaIUcmjMkhB+tNta64W+r+vzaY=
+	by mail.kernel.org (Postfix) with ESMTP id D2B4F2075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:21:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgHYWUm (ORCPT
+        id S1726707AbgHYWVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:20:42 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:37163 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgHYWUl (ORCPT
+        Tue, 25 Aug 2020 18:21:13 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:45965 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726391AbgHYWVK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 18:20:41 -0400
-Received: by mail-il1-f194.google.com with SMTP id v2so131810ilq.4;
-        Tue, 25 Aug 2020 15:20:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=k3KGmLJGZaOAZkv6OSfgLj0L7NmLhPE7zQczouh7MEU=;
-        b=Osys/usJ78FVhYjt6m5AckJ4c106dBCdzMGkn/WVXs7vIp6VbinlnFdHL7y+3az5CE
-         859AoNFZ4NYQSIn7Sv0oC1lOYPk2dI4BcdUgeifZafjkoCODHmVfvv3FeAORkMdECiqt
-         Nb6x8xtfQacV9o4BTW7wsWws1nAi6tuqq38kHNv36H2H9+4yr0j9nhc+c1Kck4lw9Cm+
-         AQvwpJjVG9DbXs12iRS66P/VoLuco6L+t9TF8XI0vi9x2uaiLljS9D8pPvA84vIDW6Im
-         HczMTqZvQpYHlLEK7NVRMJHDTBqwdRfpnVkFqGJ01LstbeWNmQbdqq9FIKV0DXZNQZno
-         bP8w==
-X-Gm-Message-State: AOAM531Iev/rOGth+x0rbpFE66TX9IKreec2iLjRWRAfD088TbhWWF02
-        CwqUWt3v5CujjqqzfKfOpA==
-X-Google-Smtp-Source: ABdhPJzvk8+3fhcPALS9UgRxvDmg4rJYVAmWzKAM0VmpBUEr/br5MUyUK52jUlLc3MBVxtZH4RMmfw==
-X-Received: by 2002:a92:cf09:: with SMTP id c9mr11410277ilo.38.1598394040539;
-        Tue, 25 Aug 2020 15:20:40 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id p77sm224314ill.39.2020.08.25.15.20.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 15:20:39 -0700 (PDT)
-Received: (nullmailer pid 1447409 invoked by uid 1000);
-        Tue, 25 Aug 2020 22:20:37 -0000
-Date:   Tue, 25 Aug 2020 16:20:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ikjoon Jang <ikjn@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bayi Cheng <bayi.cheng@mediatek.com>,
-        Chuanhong Guo <gch981213@gmail.com>, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: spi: Convert spi-mtk-nor to json-schema
-Message-ID: <20200825222037.GA1443219@bogus>
-References: <20200820052827.2642164-1-ikjn@chromium.org>
+        Tue, 25 Aug 2020 18:21:10 -0400
+Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 46746823043;
+        Wed, 26 Aug 2020 08:21:07 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1kAhJS-0000Td-G5; Wed, 26 Aug 2020 08:21:06 +1000
+Date:   Wed, 26 Aug 2020 08:21:06 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 2/9] fs: Introduce i_blocks_per_page
+Message-ID: <20200825222106.GP12131@dread.disaster.area>
+References: <20200824145511.10500-1-willy@infradead.org>
+ <20200824145511.10500-3-willy@infradead.org>
+ <20200825204922.GG6096@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820052827.2642164-1-ikjn@chromium.org>
+In-Reply-To: <20200825204922.GG6096@magnolia>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0 cx=a_idp_d
+        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=JfrnYn6hAAAA:8 a=7-415B0cAAAA:8
+        a=Qo8iioWGcHrh27a4tzsA:9 a=CjuIK1q_8ugA:10 a=1CNFftbPRP8L7MoqJWF3:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 01:28:27PM +0800, Ikjoon Jang wrote:
-> Convert Mediatek ARM SOC's serial NOR flash controller binding
-> to json-schema format.
+On Tue, Aug 25, 2020 at 01:49:22PM -0700, Darrick J. Wong wrote:
+> On Mon, Aug 24, 2020 at 03:55:03PM +0100, Matthew Wilcox (Oracle) wrote:
+> > This helper is useful for both THPs and for supporting block size larger
+> > than page size.  Convert all users that I could find (we have a few
+> > different ways of writing this idiom, and I may have missed some).
+> > 
+> > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> > Reviewed-by: Christoph Hellwig <hch@lst.de>
 > 
-> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> ---
->  .../bindings/spi/mediatek,spi-mtk-nor.yaml    | 82 +++++++++++++++++++
->  .../devicetree/bindings/spi/spi-mtk-nor.txt   | 47 -----------
->  2 files changed, 82 insertions(+), 47 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
->  delete mode 100644 Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
-> new file mode 100644
-> index 000000000000..1e4bcf691539
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
-> @@ -0,0 +1,82 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/spi/mediatek,spi-mtk-nor.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Serial NOR flash controller for MediaTek ARM SoCs
-> +
-> +maintainers:
-> +  - Bayi Cheng <bayi.cheng@mediatek.com>
-> +  - Chuanhong Guo <gch981213@gmail.com>
-> +
-> +description: |
-> +  This spi controller support single, dual, or quad mode transfer for
-> +  SPI NOR flash. There should be only one spi slave device following
-> +  generic spi bindings. It's not recommended to use this controller
-> +  for devices other than SPI NOR flash due to limited transfer
-> +  capability of this controller.
-> +
-> +allOf:
-> +  - $ref: /spi/spi-controller.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - mediatek,mt2701-nor
-> +              - mediatek,mt2712-nor
-> +              - mediatek,mt7622-nor
-> +              - mediatek,mt7623-nor
-> +              - mediatek,mt7629-nor
-> +          - enum:
-> +              - mediatek,mt8173-nor
-> +      - items:
-> +          - const: mediatek,mt8173-nor
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: clock used for spi bus
-> +      - description: clock used for controller
-> +
-> +  clock-names:
-> +    items:
-> +      - const: "spi"
-> +      - const: "sf"
+> /me wonders what will happen when someone tries to make blocksz >
+> pagesize work,
 
-Don't need quotes.
+I abstract the page/block size stuff into "chunks". i.e. we work on
+the smallest contiguous chunk of data the current combination of
+page and inode define. In the context of this patch, it is simply
+just:
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
+s/i_blocks_per_page/iomap_chunks_per_page/g
 
-interrupts was required.
+i.e. The helper functions end up looking like this:
 
-Add:
+static inline unsigned
+iomap_chunk_size(struct inode *inode, struct page *page)
+{
+       return min_t(unsigned, page_size(page), i_blocksize(inode));
+}
 
-unevaluatedProperties: false
+static inline unsigned
+iomap_chunk_bits(struct inode *inode, struct page *page)
+{
+       return min_t(unsigned, page_shift(page), inode->i_blkbits);
+}
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/mt8173-clk.h>
-> +
-> +    soc {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +
-> +      nor_flash: spi@1100d000 {
-> +        compatible = "mediatek,mt8173-nor";
-> +        reg = <0 0x1100d000 0 0xe0>;
-> +        interrupts = <&spi_flash_irq>;
-> +        clocks = <&pericfg CLK_PERI_SPI>, <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
-> +        clock-names = "spi", "sf";
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        flash@0 {
-> +          compatible = "jedec,spi-nor";
-> +          reg = <0>;
-> +        };
-> +      };
-> +    };
-> +
+static inline unsigned
+iomap_chunks_per_page(struct inode *inode, struct page *page)
+{
+       return page_size(page) >> inode->i_blkbits;
+}
+
+and the latter is actually the same as what i_block_per_page() is
+currently implemented as....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
