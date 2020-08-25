@@ -2,35 +2,34 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFE6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC132075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B162075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727081AbgHYO5t convert rfc822-to-8bit (ORCPT
+        id S1726783AbgHYO57 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:57:49 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:52972 "EHLO
+        Tue, 25 Aug 2020 10:57:59 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:32048 "EHLO
         eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726777AbgHYOws (ORCPT
+        by vger.kernel.org with ESMTP id S1726336AbgHYOwk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:52:48 -0400
+        Tue, 25 Aug 2020 10:52:40 -0400
 Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
  TLS) by relay.mimecast.com with ESMTP id
- uk-mta-261-VVZffqM0Ptibna-5noedJg-1; Tue, 25 Aug 2020 15:52:42 +0100
-X-MC-Unique: VVZffqM0Ptibna-5noedJg-1
+ uk-mta-229-XTGr5FjFOiOuMkOxNdlKew-1; Tue, 25 Aug 2020 15:52:36 +0100
+X-MC-Unique: XTGr5FjFOiOuMkOxNdlKew-1
 Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
  AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 25 Aug 2020 15:52:41 +0100
+ Server (TLS) id 15.0.1347.2; Tue, 25 Aug 2020 15:52:35 +0100
 Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
  AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 25 Aug 2020 15:52:41 +0100
+ Tue, 25 Aug 2020 15:52:35 +0100
 From:   David Laight <David.Laight@ACULAB.COM>
 To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
@@ -40,13 +39,12 @@ To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "'kent.overstreet@gmail.com'" <kent.overstreet@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         "'Neil Horman'" <nhorman@tuxdriver.com>
-Subject: [PATCH 12/13] lib/generic-radix-tree: Inline genradix_ptr() for
- simple trees.
-Thread-Topic: [PATCH 12/13] lib/generic-radix-tree: Inline genradix_ptr() for
- simple trees.
-Thread-Index: AdZ672E12U23wUlQRu+lh3fnJ6uD7g==
-Date:   Tue, 25 Aug 2020 14:52:41 +0000
-Message-ID: <a94f93ffed6749c9a7676e11f440d9b5@AcuMS.aculab.com>
+Subject: [PATCH 07/13] lib/generic-radix-tree: Optimise __genradix_iter_peek()
+Thread-Topic: [PATCH 07/13] lib/generic-radix-tree: Optimise
+ __genradix_iter_peek()
+Thread-Index: AdZ67z36LdYIWMqoTRCrizJoKBNmVA==
+Date:   Tue, 25 Aug 2020 14:52:35 +0000
+Message-ID: <d606b3e29ec3407f98d4deb20bc29662@AcuMS.aculab.com>
 Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -65,165 +63,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Inline genradix_ptr() for trees that only contain 1 data page.
-While this increases code size somewhat it should improve performance.
+Use the the 'shift' rather than the 'level'.
+NB There are exactly zero users of this code.
 
 Signed-off-by: David Laight <david.laight@aculab.com>
 ---
- include/linux/generic-radix-tree.h | 38 ++++++++++++++++++++++++++----
- lib/generic-radix-tree.c           | 19 +++++----------
- 2 files changed, 39 insertions(+), 18 deletions(-)
+ lib/generic-radix-tree.c | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/generic-radix-tree.h b/include/linux/generic-radix-tree.h
-index c486fb410855..7575862f02d5 100644
---- a/include/linux/generic-radix-tree.h
-+++ b/include/linux/generic-radix-tree.h
-@@ -42,6 +42,16 @@
- #include <linux/log2.h>
- 
- struct genradix_root;
-+struct genradix_node;
-+
-+/* The depth of the tree is encoded in low bits of __genradix.root. */
-+#define GENRADIX_SHIFT_MASK	0xff
-+#define GENRADIX_ROOT_SHIFT	ilog2(sizeof(struct genradix_node *))
-+
-+static inline unsigned int __genradix_root_to_shift(struct genradix_root *root)
-+{
-+	return (unsigned long)root & GENRADIX_SHIFT_MASK;
-+}
- 
- struct __genradix {
- 	struct genradix_root		*root;
-@@ -98,11 +108,12 @@ void __genradix_free(struct __genradix *);
-  */
- #define genradix_free(_radix)	__genradix_free(&(_radix)->tree)
- 
-+#define __genradix_offset_adjust(idx, obj_size) \
-+	((PAGE_SIZE % obj_size) * (idx / (PAGE_SIZE / obj_size)))
-+
- static inline size_t __idx_to_offset(size_t idx, size_t obj_size)
- {
--	size_t objs_per_page = PAGE_SIZE / obj_size;
--
--	return idx * obj_size + (idx / objs_per_page) * (PAGE_SIZE % obj_size);
-+	return idx * obj_size + __genradix_offset_adjust(idx, obj_size);
- }
- 
- #define __genradix_cast(_radix)		(typeof((_radix)->type[0]) *)
-@@ -112,6 +123,23 @@ static inline size_t __idx_to_offset(size_t idx, size_t obj_size)
- 
- void *__genradix_ptr(struct genradix_root *, size_t);
- 
-+static inline void *__genradix_ptr1(struct genradix_root *root, size_t idx,
-+				    size_t sz)
-+{
-+	size_t offset = idx * sz;
-+
-+	/* Optimise accesses into small trees */
-+	if (likely(offset <= PAGE_SIZE - sz)) {
-+		if (likely(__genradix_root_to_shift(root) == GENRADIX_ROOT_SHIFT))
-+			return (u8 *)root - GENRADIX_ROOT_SHIFT + offset;
-+	} else {
-+		offset += __genradix_offset_adjust(idx, sz);
-+	}
-+
-+	return __genradix_ptr(root, offset);
-+}
-+
-+
- /**
-  * genradix_ptr - get a pointer to a genradix entry
-  * @_radix:	genradix to access
-@@ -121,8 +149,8 @@ void *__genradix_ptr(struct genradix_root *, size_t);
-  */
- #define genradix_ptr(_radix, _idx)				\
- 	(__genradix_cast(_radix)				\
--	 __genradix_ptr(READ_ONCE(_radix)->tree.root),			\
--			__genradix_idx_to_offset(_radix, _idx)))
-+	 __genradix_ptr1(READ_ONCE((_radix)->tree.root), _idx,	\
-+			__genradix_obj_size(_radix)))
- 
- void *__genradix_ptr_alloc(struct __genradix *, size_t, gfp_t);
- 
 diff --git a/lib/generic-radix-tree.c b/lib/generic-radix-tree.c
-index 037a6456a17b..7029a14eed97 100644
+index 219b43250a06..0df99ee428d8 100644
 --- a/lib/generic-radix-tree.c
 +++ b/lib/generic-radix-tree.c
-@@ -6,7 +6,6 @@
+@@ -22,14 +22,6 @@ static inline int genradix_depth_shift(unsigned depth)
+ 	return PAGE_SHIFT + GENRADIX_ARY_SHIFT * depth;
+ }
  
- #define GENRADIX_ARY		(PAGE_SIZE / sizeof(struct genradix_node *))
- #define GENRADIX_ARY_SHIFT	ilog2(GENRADIX_ARY)
--#define GENRADIX_ROOT_SHIFT	ilog2(sizeof(struct genradix_node *))
- 
- struct genradix_node {
- 	union {
-@@ -30,12 +29,6 @@ struct genradix_node {
-  * With 4k pages on a 64bit system the values are 3, 12, 21 etc.
-  * A 0 shift only ever happens when the pointer is NULL.
-  */
--#define GENRADIX_SHIFT_MASK 0xff
--
--static inline unsigned genradix_root_to_shift(struct genradix_root *r)
+-/*
+- * Returns size (of data, in bytes) that a tree of a given depth holds:
+- */
+-static inline size_t genradix_depth_size(unsigned depth)
 -{
--	return (unsigned long)r & GENRADIX_SHIFT_MASK;
+-	return 1UL << genradix_depth_shift(depth);
 -}
- 
- static inline struct genradix_node *genradix_root_to_node(struct genradix_root *r)
+-
+ /*
+  * The 'depth' of the tree is held in the low bits of the 'root'.
+  * Since all the buffers are allocated as pages lots of low bits are zero.
+@@ -209,7 +201,7 @@ void *__genradix_iter_peek(struct genradix_iter *iter,
  {
-@@ -49,7 +42,7 @@ static inline struct genradix_node *genradix_root_to_node(struct genradix_root *
- void *__genradix_ptr(struct genradix_root *r, size_t offset)
- {
- 	struct genradix_node *n = genradix_root_to_node(r);
--	unsigned int shift = genradix_root_to_shift(r);
-+	unsigned int shift = __genradix_root_to_shift(r);
- 	unsigned int idx;
- 
- 	if (likely(shift == GENRADIX_ROOT_SHIFT))
-@@ -138,7 +131,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset, gfp_t gfp)
- 	unsigned int idx;
- 
+ 	struct genradix_root *r;
+ 	struct genradix_node *n;
+-	unsigned level, i;
++	unsigned int shift, level, i;
+ restart:
  	r = READ_ONCE(radix->root);
--	shift = genradix_root_to_shift(r);
-+	shift = __genradix_root_to_shift(r);
- 	n = genradix_root_to_node(r);
- 
- 	/* Optimise non-tree structures */
-@@ -150,7 +143,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset, gfp_t gfp)
- 			r = alloc_root(&radix->root, NULL, NULL, GENRADIX_ROOT_SHIFT, gfp);
- 			if (!r)
- 				return NULL;
--			shift = genradix_root_to_shift(r);
-+			shift = __genradix_root_to_shift(r);
- 			n = genradix_root_to_node(r);
- 			if (shift == GENRADIX_ROOT_SHIFT)
- 				return n->data + offset;
-@@ -173,7 +166,7 @@ void *__genradix_ptr_alloc(struct __genradix *radix, size_t offset, gfp_t gfp)
- 				return NULL;
- 
- 			/* Many levels could have been added by someone else. */
--			shift = genradix_root_to_shift(r);
-+			shift = __genradix_root_to_shift(r);
- 			n = genradix_root_to_node(r);
- 		}
- 	}
-@@ -210,7 +203,7 @@ void *__genradix_iter_peek(struct genradix_iter *iter,
- 		return NULL;
+ 	if (!r)
+@@ -217,21 +209,21 @@ void *__genradix_iter_peek(struct genradix_iter *iter,
  
  	n	= genradix_root_to_node(r);
--	shift	= genradix_root_to_shift(r);
-+	shift	= __genradix_root_to_shift(r);
+ 	level	= genradix_root_to_depth(r);
++	shift = genradix_depth_shift(level);
  
- 	if (iter->offset >> shift)
+-	if (iter->offset >> genradix_depth_shift(level))
++	if (iter->offset >> shift)
  		return NULL;
-@@ -268,6 +261,6 @@ void __genradix_free(struct __genradix *radix)
- 	struct genradix_root *r = xchg(&radix->root, NULL);
  
- 	genradix_free_recurse(genradix_root_to_node(r),
--			      genradix_root_to_shift(r));
-+			      __genradix_root_to_shift(r));
- }
- EXPORT_SYMBOL(__genradix_free);
+-	while (level) {
+-		level--;
++	while (shift > GENRADIX_ARY_SHIFT) {
++		shift -= GENRADIX_ARY_SHIFT;
+ 
+-		i = (iter->offset >> genradix_depth_shift(level)) &
+-			(GENRADIX_ARY - 1);
++		i = (iter->offset >> shift) % GENRADIX_ARY;
+ 
+ 		while (!n->children[i]) {
+ 			i++;
+ 			iter->offset = round_down(iter->offset +
+-					   genradix_depth_size(level),
+-					   genradix_depth_size(level));
++					   (1u << shift),
++					   1u << shift);
+ 			iter->pos = (iter->offset >> PAGE_SHIFT) *
+ 				objs_per_page;
+ 			if (i == GENRADIX_ARY)
 -- 
 2.25.1
 
