@@ -2,189 +2,148 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D59C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 576D32074A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB50A2074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598386067;
-	bh=YaQswRXI+GSH/he6lrf1zXvIORSUoUcZRaf2KaM0aQg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=GoZTQOdDb/3knyqTVAPwtFSnTsQL3rfEuc1XBo9ASSpoBBXmV8plj7N4po3M/VJmq
-	 KfZ51a7iyRsNdwEskRq5uX29ko1TqTQpp5G/KAScuH5+XexHAWLYTlezt5RAkjqEIU
-	 jaC6ylUeujLt2r4RdxS6f8tDK0wRUyfBW0N/9l+s=
+	s=default; t=1598386092;
+	bh=XbmH07wbcFIV/RrfmMjndcKF+uq2nCiDV73youbhKi0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Zm+5YZ1LVUxz0mS1QAEczHM/I3YY9oxhUP2NsZubz0FcGOOPS7TmURIJKelDlyG+8
+	 3+i3S3NrICZyQ+1zb+SVVMJ26Forg65d0LX5IANeFBfqSyuw+s6DiqTGnL9LsQUEJt
+	 hMqTzGB7QmQzRCVA/j+LfacLMkD2G6BSY/IY+KFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726471AbgHYUHp (ORCPT
+        id S1726611AbgHYUIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:07:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47826 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 16:08:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbgHYUHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:07:44 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
+        id S1726149AbgHYUIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 16:08:10 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C17D20738;
-        Tue, 25 Aug 2020 20:07:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87D0120738;
+        Tue, 25 Aug 2020 20:08:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598386063;
-        bh=YaQswRXI+GSH/he6lrf1zXvIORSUoUcZRaf2KaM0aQg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=j4zLeGo92A7idyLdF9wx1padjR1BkvijWirrN+DxgEJ80bcdC8FpwVMDmsikynYYX
-         RflhFTwDDlLvi1z9ipQILUK45Xl/2KD6J8/5T+6i73r3Mswi/bzbfgcBEU8cEMdf1a
-         EPw7h59JF5ItUvWJik/+iH27NdtyTyyC3QhM2pvw=
-Date:   Tue, 25 Aug 2020 15:07:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 30/38] PCI/MSI: Allow to disable arch fallbacks
-Message-ID: <20200825200742.GA1924669@bjorn-Precision-5520>
+        s=default; t=1598386089;
+        bh=XbmH07wbcFIV/RrfmMjndcKF+uq2nCiDV73youbhKi0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=SHpORjOmnqVvwizcO3gjZq0AEb4cMvekHXt8sABBCTobZfILv4HATTqe2+/5o9UpV
+         KXvUD3YtlLDPJM8IlTKIwdSD7T8KDTV5KXu7LG0tlv4BAmI6BXTufpInaqn00S+ryY
+         61B8pIM0cCRCFeT/h0+agOwNBkBaB86+xriKZCPk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6B06F35226AE; Tue, 25 Aug 2020 13:08:09 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 13:08:09 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
+        dave@stgolabs.net, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neeraj.iitr10@gmail.com, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>, vineethrp@gmail.com
+Subject: Re: [PATCH v4 -rcu 1/4] rcu/segcblist: Do not depend on rcl->len to
+ store the segcb len during merge
+Message-ID: <20200825200809.GW2855@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200825024842.3408659-1-joel@joelfernandes.org>
+ <20200825024842.3408659-2-joel@joelfernandes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200821002948.285988229@linutronix.de>
+In-Reply-To: <20200825024842.3408659-2-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 02:24:54AM +0200, Thomas Gleixner wrote:
-> If an architecture does not require the MSI setup/teardown fallback
-> functions, then allow them to be replaced by stub functions which emit a
-> warning.
+On Mon, Aug 24, 2020 at 10:48:39PM -0400, Joel Fernandes (Google) wrote:
+> The donecbs's ->len field is used to store the total count of the segmented
+> callback list's length. This ->len field is then added to the destination segcb
+> list.
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
+> However, this presents a problem for per-segment length counting which is added
+> in a future patch. This future patch sets the rcl->len field as we move
+> segments of callbacks between source and destination lists, thus becoming
+> incompatible with the donecb's ->len field.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+OK, I will bite.  What is "rcl"?  A placeholder for donecbs and pendcbs?
+If so, please just name them both.  If not, please explain.
 
-Question/comment below.
+> This commit therefore avoids depending on the ->len field in this way. IMHO,
+> this is also less error-prone and is more accurate - the donecb's ->len field
+> should be the length of the done segment and not just used as a temporarily
+> variable.
 
+Please also mention why ->len is handled specially at all, namely
+interactions between rcu_barrier() and callback invocation.  This is
+the answer to "why not just make all this work like normal lists?"
+This might go well in the first paragraph.
+
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 > ---
->  drivers/pci/Kconfig |    3 +++
->  drivers/pci/msi.c   |    3 ++-
->  include/linux/msi.h |   31 ++++++++++++++++++++++++++-----
->  3 files changed, 31 insertions(+), 6 deletions(-)
+>  kernel/rcu/rcu_segcblist.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -56,6 +56,9 @@ config PCI_MSI_IRQ_DOMAIN
->  	depends on PCI_MSI
->  	select GENERIC_MSI_IRQ_DOMAIN
+> diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
+> index 2d2a6b6b9dfb..b70d4154433c 100644
+> --- a/kernel/rcu/rcu_segcblist.c
+> +++ b/kernel/rcu/rcu_segcblist.c
+> @@ -513,14 +513,18 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
+>  {
+>  	struct rcu_cblist donecbs;
+>  	struct rcu_cblist pendcbs;
+> +	long src_len;
 >  
-> +config PCI_MSI_DISABLE_ARCH_FALLBACKS
-> +	bool
+>  	rcu_cblist_init(&donecbs);
+>  	rcu_cblist_init(&pendcbs);
+> -	rcu_segcblist_extract_count(src_rsclp, &donecbs);
 > +
->  config PCI_QUIRKS
->  	default y
->  	bool "Enable PCI quirk workarounds" if EXPERT
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -58,8 +58,8 @@ static void pci_msi_teardown_msi_irqs(st
->  #define pci_msi_teardown_msi_irqs	arch_teardown_msi_irqs
->  #endif
->  
-> +#ifndef CONFIG_PCI_MSI_DISABLE_ARCH_FALLBACKS
->  /* Arch hooks */
-> -
->  int __weak arch_setup_msi_irq(struct pci_dev *dev, struct msi_desc *desc)
->  {
->  	struct msi_controller *chip = dev->bus->msi;
-> @@ -132,6 +132,7 @@ void __weak arch_teardown_msi_irqs(struc
->  {
->  	return default_teardown_msi_irqs(dev);
+> +	src_len = rcu_segcblist_xchg_len(src_rsclp, 0);
+
+Given that both rcu_segcblist_xchg_len() and rcu_segcblist_extract_count()
+have only one callsite each, why not get rid of one of them?
+
+Or better yet, please see below, which should allow getting rid of both
+of them.
+
+>  	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
+>  	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
+> -	rcu_segcblist_insert_count(dst_rsclp, &donecbs);
+> +
+> +	rcu_segcblist_add_len(dst_rsclp, src_len);
+>  	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
+>  	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
+
+Rather than adding the blank lines, why not have the rcu_cblist structures
+carry the lengths?  You are already adjusting one of the two call sites
+that care (rcu_do_batch()), and the other is srcu_invoke_callbacks().
+That should shorten this function a bit more.  And make callback handling
+much more approachable, I suspect.
+
+There would still be the callback-invocation need to be careful with
+->cblist.len due to rcu_barrier() and srcu_barrier().  But both of
+those should be excluded by this code.  (But don't take my word for it,
+ask KCSAN.)
+
+							Thanx, Paul
+
+> +
+>  	rcu_segcblist_init(src_rsclp);
 >  }
-> +#endif /* !CONFIG_PCI_MSI_DISABLE_ARCH_FALLBACKS */
->  
->  static void default_restore_msi_irq(struct pci_dev *dev, int irq)
->  {
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -193,17 +193,38 @@ void pci_msi_mask_irq(struct irq_data *d
->  void pci_msi_unmask_irq(struct irq_data *data);
->  
->  /*
-> - * The arch hooks to setup up msi irqs. Those functions are
-> - * implemented as weak symbols so that they /can/ be overriden by
-> - * architecture specific code if needed.
-> + * The arch hooks to setup up msi irqs. Default functions are implemented
-> + * as weak symbols so that they /can/ be overriden by architecture specific
-> + * code if needed.
-> + *
-> + * They can be replaced by stubs with warnings via
-> + * CONFIG_PCI_MSI_DISABLE_ARCH_FALLBACKS when the architecture fully
-> + * utilizes direct irqdomain based setup.
-
-Do you expect *all* arches to eventually use direct irqdomain setup?
-And in that case, to remove the config option?
-
-If not, it seems like it'd be nicer to have the burden on the arches
-that need/want to use arch-specific code instead of on the arches that
-do things generically.
-
->   */
-> +#ifndef CONFIG_PCI_MSI_DISABLE_ARCH_FALLBACKS
->  int arch_setup_msi_irq(struct pci_dev *dev, struct msi_desc *desc);
->  void arch_teardown_msi_irq(unsigned int irq);
->  int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
->  void arch_teardown_msi_irqs(struct pci_dev *dev);
-> -void arch_restore_msi_irqs(struct pci_dev *dev);
-> -
->  void default_teardown_msi_irqs(struct pci_dev *dev);
-> +#else
-> +static inline int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
-> +{
-> +	WARN_ON_ONCE(1);
-> +	return -ENODEV;
-> +}
-> +
-> +static inline void arch_teardown_msi_irqs(struct pci_dev *dev)
-> +{
-> +	WARN_ON_ONCE(1);
-> +}
-> +#endif
-> +
-> +/*
-> + * The restore hooks are still available as they are useful even
-> + * for fully irq domain based setups. Courtesy to XEN/X86.
-> + */
-> +void arch_restore_msi_irqs(struct pci_dev *dev);
->  void default_restore_msi_irqs(struct pci_dev *dev);
->  
->  struct msi_controller {
+> -- 
+> 2.28.0.297.g1956fa8f8d-goog
 > 
