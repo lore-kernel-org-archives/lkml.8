@@ -2,97 +2,148 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7259C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD7E20782
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77EA520782
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:33:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="AQxOqGkp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbgHYPck (ORCPT
+        id S1726923AbgHYPdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:32:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39616 "EHLO mx2.suse.de"
+        Tue, 25 Aug 2020 11:33:53 -0400
+Received: from smtp2.axis.com ([195.60.68.18]:42874 "EHLO smtp2.axis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726627AbgHYPcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:32:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 12256B579;
-        Tue, 25 Aug 2020 15:33:08 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 17:32:36 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/5] printk: implement pr_cont_t
-Message-ID: <20200825153236.GW4353@alley>
-References: <20200819232632.13418-1-john.ogness@linutronix.de>
- <20200819232632.13418-2-john.ogness@linutronix.de>
- <20200820101625.GE4353@alley>
- <fb47baa77ff940e99224feac85a2f2d7@AcuMS.aculab.com>
- <20200825131041.GV4353@alley>
- <0f3e3efffad64739a223273cc7c738bc@AcuMS.aculab.com>
+        id S1726823AbgHYPdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 11:33:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=3188; q=dns/txt; s=axis-central1;
+  t=1598369624; x=1629905624;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=k9DWfFxacgfI90ODdFuxGvqVhFWoL7hEO0qJYfgj5pc=;
+  b=AQxOqGkpkMa3/iroHdWTuz4b55j9rrZ+O6Pjhfq9UEk1K0MqoRebq4tU
+   ooZqd+IekHiM0HDKa7Vlu/pD8rkEuAqjdPs/l6XoVLhega0SO+VkJM7V0
+   KtBkd0VsHku3CbyTo8M19f4qRiIxgb4bP1E0SZqmgDIh7UoSj9zDIvv8G
+   a3vzoOCCxPDDmzz5ZQjxC3qUdGAWSeodbm6HFCWmh9j2hL+2/6Lq5rqra
+   MRgOsasR2f4uv/tkYbIJpvSMKeh7V3NZKRXZn4I6fHxHoohrDRCs+3+UC
+   azzV2TzdWQQwU8vJgtUIcGbbC7v7ifD3t095E4yH0SrhzZYncLxv7A7Y6
+   g==;
+IronPort-SDR: YYBl7pzffhPWUUFqBB3dntU1FxuEU8rAOa8STLiMFJ66GbsatuUed1daoaZ7HCr9rmD7TV6Kf+
+ 9RD0k54Aaos+34Hp0vEfR/FenwT3DCAYRzYl8NR819NxXLGjYZCPInE2WGJiUaL3dgqTklX3K7
+ kuPt+iMwJkesVHFi2qVXBCs/UdyK+CQhz/WFRoWzCzIZYeTw9EfMGjYdFavVD2+EQG5BC18ze/
+ Ex+cq2+any95oEQB+Jlk3K87KgjpHEkiUQ5XmqsqajaOJUdl1VbPTUebnrZFuufvrucry/UUvN
+ LnI=
+X-IronPort-AV: E=Sophos;i="5.76,353,1592863200"; 
+   d="scan'208";a="11853116"
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     <jbaron@akamai.com>, <rostedt@goodmis.org>, <mingo@redhat.com>
+CC:     <kernel@axis.com>, <corbet@lwn.net>, <pmladek@suse.com>,
+        <sergey.senozhatsky@gmail.com>, <john.ogness@linutronix.de>,
+        <linux-kernel@vger.kernel.org>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: [PATCH v3 1/2] dynamic debug: split enable and printk flags
+Date:   Tue, 25 Aug 2020 17:33:37 +0200
+Message-ID: <20200825153338.17061-2-vincent.whitchurch@axis.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200825153338.17061-1-vincent.whitchurch@axis.com>
+References: <20200825153338.17061-1-vincent.whitchurch@axis.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0f3e3efffad64739a223273cc7c738bc@AcuMS.aculab.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-08-25 13:38:57, David Laight wrote:
-> From: Petr Mladek
-> > Sent: 25 August 2020 14:11
-> > 
-> > On Thu 2020-08-20 12:33:23, David Laight wrote:
-> > > From: Petr Mladek
-> > > > Sent: 20 August 2020 11:16
-> > > ...
-> > > > Now that I think about it. This is the biggest problem with any temporary buffer
-> > > > for pr_cont() lines. I am more and more convinced that we should just
-> > > > _keep the current behavior_. It is not ideal. But sometimes mixed
-> > > > messages are always better than lost ones.
-> > >
-> > > Maybe a marker to say 'more expected' might be useful.
-> > > OTOH lack of a trailing '\n' probably signifies that a
-> > > pr_cont() is likely to be next.
-> > 
-> > The problem is the "probably". Lack of trailing '\n' might also mean
-> > that the author did not care. Note that newline is not strictly
-> > required at the moment. The next message is concatenated only when
-> > pr_cont() is used from the same process.
-> 
-> Thinks.... (smoke comes out of ears...):
-> If the 'trace entry' contained the pid and whether it was a pr_cont
-> then the trace reader could merge continuation lines even if
-> there was a small number of interleaved other traces.
-> 
-> So anything reading continuously might break a continuation
-> (as might happen if there is a trace from an ISR).
-> But the output from dmesg and /var/log/messages will
-> almost always be correct.
-> 
-> This moves all the complexity away from the trace writing code.
+We're going to add support to allow dynamic debug locations to print to
+a trace event, and that will make _DPRINTK_FLAGS_PRINT a bit ambiguous.
+Will it mean printk(), or printing to the trace event, or any of the
+two?
 
-Yeah, this was the original plan. Unfortunately, it would require
-changes on the reader side and it would break existing readers (userspace),
-see
-https://lore.kernel.org/lkml/20200811160551.GC12903@alley/
+To make it clearer, split _DPRINTK_FLAGS_PRINT into two:
 
-And it is not acceptable, see
-https://lore.kernel.org/lkml/CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com/
+ (1) _DPRINTK_FLAGS_PRINTK for turning on the printk() and
+ (2) _DPRINTK_FLAGS_ENABLE when checking if the dynamic debug location
+     is enabled.
 
-Best Regards,
-Petr
+_DPRINTK_FLAGS_ENABLE is currently just an alias of
+_DPRINTK_FLAGS_PRINTK but will later also include a new flag for
+enabling printing to the trace event.
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+ include/linux/dynamic_debug.h | 9 +++++----
+ lib/dynamic_debug.c           | 8 ++++----
+ 2 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
+index aa9ff9e1c0b3..738421898aac 100644
+--- a/include/linux/dynamic_debug.h
++++ b/include/linux/dynamic_debug.h
+@@ -27,13 +27,14 @@ struct _ddebug {
+ 	 * writes commands to <debugfs>/dynamic_debug/control
+ 	 */
+ #define _DPRINTK_FLAGS_NONE	0
+-#define _DPRINTK_FLAGS_PRINT	(1<<0) /* printk() a message using the format */
++#define _DPRINTK_FLAGS_PRINTK	(1<<0) /* printk() a message using the format */
+ #define _DPRINTK_FLAGS_INCL_MODNAME	(1<<1)
+ #define _DPRINTK_FLAGS_INCL_FUNCNAME	(1<<2)
+ #define _DPRINTK_FLAGS_INCL_LINENO	(1<<3)
+ #define _DPRINTK_FLAGS_INCL_TID		(1<<4)
++#define _DPRINTK_FLAGS_ENABLE		_DPRINTK_FLAGS_PRINTK
+ #if defined DEBUG
+-#define _DPRINTK_FLAGS_DEFAULT _DPRINTK_FLAGS_PRINT
++#define _DPRINTK_FLAGS_DEFAULT _DPRINTK_FLAGS_PRINTK
+ #else
+ #define _DPRINTK_FLAGS_DEFAULT 0
+ #endif
+@@ -111,10 +112,10 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
+ 
+ #ifdef DEBUG
+ #define DYNAMIC_DEBUG_BRANCH(descriptor) \
+-	likely(descriptor.flags & _DPRINTK_FLAGS_PRINT)
++	likely(descriptor.flags & _DPRINTK_FLAGS_ENABLE)
+ #else
+ #define DYNAMIC_DEBUG_BRANCH(descriptor) \
+-	unlikely(descriptor.flags & _DPRINTK_FLAGS_PRINT)
++	unlikely(descriptor.flags & _DPRINTK_FLAGS_ENABLE)
+ #endif
+ 
+ #endif
+diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
+index 1d012e597cc3..88af85cb5222 100644
+--- a/lib/dynamic_debug.c
++++ b/lib/dynamic_debug.c
+@@ -84,7 +84,7 @@ static inline const char *trim_prefix(const char *path)
+ }
+ 
+ static struct { unsigned flag:8; char opt_char; } opt_array[] = {
+-	{ _DPRINTK_FLAGS_PRINT, 'p' },
++	{ _DPRINTK_FLAGS_PRINTK, 'p' },
+ 	{ _DPRINTK_FLAGS_INCL_MODNAME, 'm' },
+ 	{ _DPRINTK_FLAGS_INCL_FUNCNAME, 'f' },
+ 	{ _DPRINTK_FLAGS_INCL_LINENO, 'l' },
+@@ -206,10 +206,10 @@ static int ddebug_change(const struct ddebug_query *query,
+ 			if (newflags == dp->flags)
+ 				continue;
+ #ifdef CONFIG_JUMP_LABEL
+-			if (dp->flags & _DPRINTK_FLAGS_PRINT) {
+-				if (!(modifiers->flags & _DPRINTK_FLAGS_PRINT))
++			if (dp->flags & _DPRINTK_FLAGS_ENABLE) {
++				if (!(modifiers->flags & _DPRINTK_FLAGS_ENABLE))
+ 					static_branch_disable(&dp->key.dd_key_true);
+-			} else if (modifiers->flags & _DPRINTK_FLAGS_PRINT)
++			} else if (modifiers->flags & _DPRINTK_FLAGS_ENABLE)
+ 				static_branch_enable(&dp->key.dd_key_true);
+ #endif
+ 			dp->flags = newflags;
+-- 
+2.28.0
+
