@@ -4,137 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB591C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA6CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:30:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1E420706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C841520706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:30:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgHYJaX (ORCPT
+        id S1729470AbgHYJa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:30:23 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:8883 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728543AbgHYJaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:30:22 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BbNy20M3jz9txvL;
-        Tue, 25 Aug 2020 11:30:18 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id DLp4VNLfgl2e; Tue, 25 Aug 2020 11:30:17 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BbNy16dWVz9txvH;
-        Tue, 25 Aug 2020 11:30:17 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F0C178B806;
-        Tue, 25 Aug 2020 11:30:18 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id emBSym7Dg09c; Tue, 25 Aug 2020 11:30:18 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DDDB68B803;
-        Tue, 25 Aug 2020 11:30:17 +0200 (CEST)
-Subject: Re: [PATCH v5 4/8] powerpc/watchpoint: Move DAWR detection logic
- outside of hw_breakpoint.c
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au,
-        christophe.leroy@c-s.fr
-Cc:     mikey@neuling.org, paulus@samba.org,
-        naveen.n.rao@linux.vnet.ibm.com, pedromfc@linux.ibm.com,
-        rogealve@linux.ibm.com, jniethe5@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20200825043617.1073634-1-ravi.bangoria@linux.ibm.com>
- <20200825043617.1073634-5-ravi.bangoria@linux.ibm.com>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <0a73280b-c231-a7bb-18d9-abf2a37ba24b@csgroup.eu>
-Date:   Tue, 25 Aug 2020 11:30:15 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+        Tue, 25 Aug 2020 05:30:28 -0400
+Received: from imap3.hz.codethink.co.uk ([176.9.8.87]:33956 "EHLO
+        imap3.hz.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728543AbgHYJa0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:30:26 -0400
+X-Greylist: delayed 2596 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Aug 2020 05:30:23 EDT
+Received: from cpc98990-stkp12-2-0-cust216.10-2.cable.virginm.net ([86.26.12.217] helo=[192.168.0.10])
+        by imap3.hz.codethink.co.uk with esmtpsa  (Exim 4.92 #3 (Debian))
+        id 1kAUbe-0002Te-3f; Tue, 25 Aug 2020 09:47:02 +0100
+Subject: Re: [PATCH v7 10/10] Drivers: hv: Enable Hyper-V code to be built on
+ ARM64
+To:     Ard Biesheuvel <ardb@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Cc:     Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>, wei.liu@kernel.org,
+        vkuznets <vkuznets@redhat.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
+ <1598287583-71762-11-git-send-email-mikelley@microsoft.com>
+ <CAMj1kXHKDD5+Na7t=bbkqo2OaiidmnJg+RqermV-2=exj-P77A@mail.gmail.com>
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+Message-ID: <5e8af3c3-fe08-0a56-fe05-0527a6cae0dd@codethink.co.uk>
+Date:   Tue, 25 Aug 2020 09:47:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200825043617.1073634-5-ravi.bangoria@linux.ibm.com>
+In-Reply-To: <CAMj1kXHKDD5+Na7t=bbkqo2OaiidmnJg+RqermV-2=exj-P77A@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 25/08/2020 à 06:36, Ravi Bangoria a écrit :
-> Power10 hw has multiple DAWRs but hw doesn't tell which DAWR caused
-> the exception. So we have a sw logic to detect that in hw_breakpoint.c.
-> But hw_breakpoint.c gets compiled only with CONFIG_HAVE_HW_BREAKPOINT=Y.
-> Move DAWR detection logic outside of hw_breakpoint.c so that it can be
-> reused when CONFIG_HAVE_HW_BREAKPOINT is not set.
+On 24/08/2020 18:24, Ard Biesheuvel wrote:
+> On Mon, 24 Aug 2020 at 18:48, Michael Kelley <mikelley@microsoft.com> wrote:
+>>
+>> Update drivers/hv/Kconfig so CONFIG_HYPERV can be selected on
+>> ARM64, causing the Hyper-V specific code to be built.
+>>
+>> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+>> ---
+>>   drivers/hv/Kconfig | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+>> index 79e5356..1113e49 100644
+>> --- a/drivers/hv/Kconfig
+>> +++ b/drivers/hv/Kconfig
+>> @@ -4,7 +4,8 @@ menu "Microsoft Hyper-V guest support"
+>>
+>>   config HYPERV
+>>          tristate "Microsoft Hyper-V client drivers"
+>> -       depends on X86 && ACPI && X86_LOCAL_APIC && HYPERVISOR_GUEST
+>> +       depends on ACPI && \
+>> +                       ((X86 && X86_LOCAL_APIC && HYPERVISOR_GUEST) || ARM64)
+>>          select PARAVIRT
+>>          select X86_HV_CALLBACK_VECTOR
+>>          help
 > 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-> ---
->   arch/powerpc/include/asm/hw_breakpoint.h      |   8 +
->   arch/powerpc/kernel/Makefile                  |   3 +-
->   arch/powerpc/kernel/hw_breakpoint.c           | 159 +----------------
->   .../kernel/hw_breakpoint_constraints.c        | 162 ++++++++++++++++++
->   4 files changed, 174 insertions(+), 158 deletions(-)
->   create mode 100644 arch/powerpc/kernel/hw_breakpoint_constraints.c
+> Given the comment in a previous patch
 > 
-
-[...]
-
-> diff --git a/arch/powerpc/kernel/hw_breakpoint_constraints.c b/arch/powerpc/kernel/hw_breakpoint_constraints.c
-> new file mode 100644
-> index 000000000000..867ee4aa026a
-> --- /dev/null
-> +++ b/arch/powerpc/kernel/hw_breakpoint_constraints.c
-> @@ -0,0 +1,162 @@
-
-[...]
-
-> +
-> +static int cache_op_size(void)
-> +{
-> +#ifdef __powerpc64__
-> +	return ppc64_caches.l1d.block_size;
-> +#else
-> +	return L1_CACHE_BYTES;
-> +#endif
-> +}
-
-You've got l1_dcache_bytes() in arch/powerpc/include/asm/cache.h to do that.
-
-> +
-> +void wp_get_instr_detail(struct pt_regs *regs, struct ppc_inst *instr,
-> +			 int *type, int *size, unsigned long *ea)
-> +{
-> +	struct instruction_op op;
-> +
-> +	if (__get_user_instr_inatomic(*instr, (void __user *)regs->nip))
-> +		return;
-> +
-> +	analyse_instr(&op, regs, *instr);
-> +	*type = GETTYPE(op.type);
-> +	*ea = op.ea;
-> +#ifdef __powerpc64__
-> +	if (!(regs->msr & MSR_64BIT))
-> +		*ea &= 0xffffffffUL;
-> +#endif
-
-This #ifdef is unneeded, it should build fine on a 32 bits too.
-
-> +
-> +	*size = GETSIZE(op.type);
-> +	if (*type == CACHEOP) {
-> +		*size = cache_op_size();
-> +		*ea &= ~(*size - 1);
-> +	} else if (*type == LOAD_VMX || *type == STORE_VMX) {
-> +		*ea &= ~(*size - 1);
-> +	}
-> +}
+> +/*
+> + * All data structures defined in the TLFS that are shared between Hyper-V
+> + * and a guest VM use Little Endian byte ordering.  This matches the default
+> + * byte ordering of Linux running on ARM64, so no special handling is required.
+> + */
 > 
+> shouldn't this depend on !CONFIG_CPU_BIG_ENDIAN ?
 
-Christophe
+or mark the data __le and have the appropriate accessor functions do
+the swapping.
+
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+https://www.codethink.co.uk/privacy.html
