@@ -2,118 +2,223 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C84C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA0CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BD5A2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:50:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 774EC2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Dp8HZQrQ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NqErmEm2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgHYGul (ORCPT
+        id S1729214AbgHYGuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:50:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:51733 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729116AbgHYGug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:50:36 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BbKPh4TtCz9sTK;
-        Tue, 25 Aug 2020 16:50:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598338234;
-        bh=j9NrgxUjqWGE3IxuHRcqD4UBKle0ICvlV8D9udyUimw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Dp8HZQrQc6wRe+J1BEAo9CUpupQ4h3iULERXYZPL5jpU/z3dxhpNHZzB006zesX39
-         HtQINc6Nzi8aX9qEhXj7kzGOz5b8duQIhe9FBbcGaN63dtynXRWNbfcbEFUAzsNFIJ
-         Gh9ISm8vtrlNPHxMSHq0Orx7EFHsj/vLDfxQCPxnYIcdF+Yn5eb4BPvxpJo5QrGuyy
-         XrHr3K8ZApY+qSZkh09vMK9KJwxa5xv5yNJbDuDmgWjjUUr252P9Qx950effgVYJn+
-         +Jhm6Tuyy93fMvANbLxIGwK8FtO27IIutMZjl23AdPo9Ps4Q/onET+FmbMGuntn8OK
-         +1NRusNoUGGSA==
-Date:   Tue, 25 Aug 2020 16:50:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Miller <davem@davemloft.net>
-Subject: Re: linux-next: build failure after merge of the bpf-next tree
-Message-ID: <20200825165029.795a8428@canb.auug.org.au>
-In-Reply-To: <CAADnVQKGf7o8gJ60m_zjh+QcmRTNH+y1ha_B2q-1ixcCSAoHaw@mail.gmail.com>
-References: <20200821111111.6c04acd6@canb.auug.org.au>
-        <20200825112020.43ce26bb@canb.auug.org.au>
-        <CAADnVQLr8dU799ZrUnrBBDCtDxPyybZwrMFs5CAOHHW5pnLHHA@mail.gmail.com>
-        <20200825130445.655885f8@canb.auug.org.au>
-        <CAADnVQKGf7o8gJ60m_zjh+QcmRTNH+y1ha_B2q-1ixcCSAoHaw@mail.gmail.com>
+        Tue, 25 Aug 2020 02:50:37 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50768 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729079AbgHYGue (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 02:50:34 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07P6oUbp069409;
+        Tue, 25 Aug 2020 01:50:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598338230;
+        bh=tdz2P7L4M7GY6138AgTYwy06Fxammm7gnj52s0oLfW4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NqErmEm2w2etd7BIyxArIlTF1/OHd3NZ8hLCT4WyEwurZ/3kXmoU/WuOeBk7MezRU
+         Ofhv7ZVbaxJWvQldcjndPLJ+e4bwXQY168W3YdkcZTiVAxX/lIXJw7Xb9Z8GAoHQ29
+         PTewyxZX+rXuWSaZZ3wogFB7ojZx4FDpsU/OXwfg=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07P6oUCX054547
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Aug 2020 01:50:30 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 25
+ Aug 2020 01:50:30 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 25 Aug 2020 01:50:30 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07P6oRlL124533;
+        Tue, 25 Aug 2020 01:50:28 -0500
+Subject: Re: [RFC PATCH 2/3] dmaengine: add peripheral configuration
+To:     Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200824084712.2526079-1-vkoul@kernel.org>
+ <20200824084712.2526079-3-vkoul@kernel.org>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <50ed780f-4c1a-2da2-71e4-423f3b224e25@ti.com>
+Date:   Tue, 25 Aug 2020 09:52:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/tDU.O6cX1D9IrOpNIJF9IC5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20200824084712.2526079-3-vkoul@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/tDU.O6cX1D9IrOpNIJF9IC5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Vinod,
 
-Hi Alexei,
+On 24/08/2020 11.47, Vinod Koul wrote:
+> Some complex dmaengine controllers have capability to program the
+> peripheral device, so pass on the peripheral configuration as part of
+> dma_slave_config
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  include/linux/dmaengine.h | 75 +++++++++++++++++++++++++++++++++++++++=
 
-On Mon, 24 Aug 2020 20:27:28 -0700 Alexei Starovoitov <alexei.starovoitov@g=
-mail.com> wrote:
->
-> I didn't receive the first email you've replied to.
-> The build error is:
-> "
-> No libelf found
-> make[5]: *** [Makefile:284: elfdep] Error 1
-> "
-> and build process stops because libelf is not found, right?
-> That is expected and necessary.
-> bpf_preload needs libbpf that depends on libelf.
-> The only 'fix' is to turn off bpf_preload.
-> It's off by default.
-> allmodconfig cannot build bpf_preload umd if there is no libelf.
-> There is CC_CAN_LINK that does feature detection.
-> We can extend scripts/cc-can-link.sh or add another script that
-> will do CC_CAN_LINK_LIBELF, but such approach doesn't scale.
-> imo it's cleaner to rely on feature detection by libbpf Makefile with
-> an error above instead of adding such knobs to top Kconfig.
-> Does it make sense?
+>  1 file changed, 75 insertions(+)
+>=20
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index 6fbd5c99e30c..264643ca9209 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -380,6 +380,73 @@ enum dma_slave_buswidth {
+>  	DMA_SLAVE_BUSWIDTH_64_BYTES =3D 64,
+>  };
+> =20
+> +/**
+> + * enum spi_transfer_cmd - spi transfer commands
+> + */
+> +enum spi_transfer_cmd {
+> +	SPI_TX =3D 1,
+> +	SPI_RX,
+> +	SPI_DUPLEX,
+> +};
+> +
+> +/**
+> + * struct dmaengine_spi_config - spi config for peripheral
+> + *
+> + * @loopback_en: spi loopback enable when set
+> + * @clock_pol: clock polarity
+> + * @data_pol: data polarity
+> + * @pack_en: process tx/rx buffers as packed
+> + * @word_len: spi word length
+> + * @clk_div: source clock divider
+> + * @clk_src: serial clock
+> + * @cmd: spi cmd
+> + * @cs: chip select toggle
+> + * @rx_len: receive length for spi buffer
+> + */
+> +struct dmaengine_spi_config {
+> +	u8 loopback_en;
+> +	u8 clock_pol;
+> +	u8 data_pol;
+> +	u8 pack_en;
+> +	u8 word_len;
+> +	u32 clk_div;
+> +	u32 clk_src;
+> +	u8 fragmentation;
+> +	enum spi_transfer_cmd cmd;
+> +	u8 cs;
+> +	u32 rx_len;
+> +};
+> +
+> +/**
+> + * struct dmaengine_i2c_config - i2c config for peripheral
+> + *
+> + * @pack_enable: process tx/rx buffers as packed
+> + * @cycle_count: clock cycles to be sent
+> + * @high_count: high period of clock
+> + * @low_count: low period of clock
+> + * @clk_div: source clock divider
+> + * @addr: i2c bus address
+> + * @strech: strech the clock at eot
+> + * @op: i2c cmd
+> + */
+> +struct dmaengine_i2c_config {
+> +	u8 pack_enable;
+> +	u8 cycle_count;
+> +	u8 high_count;
+> +	u8 low_count;
+> +	u16 clk_div;
+> +	u8 addr;
+> +	u8 strech;
+> +	u8 op;
+> +};
+> +
+> +enum dmaengine_peripheral {
+> +	DMAENGINE_PERIPHERAL_SPI,
+> +	DMAENGINE_PERIPHERAL_I2C,
+> +	DMAENGINE_PERIPHERAL_UART,
+> +	DMAENGINE_PERIPHERAL_LAST =3D DMAENGINE_PERIPHERAL_UART,
+> +};
+> +
+>  /**
+>   * struct dma_slave_config - dma slave channel runtime config
+>   * @direction: whether the data shall go in or out on this slave
+> @@ -418,6 +485,10 @@ enum dma_slave_buswidth {
+>   * @slave_id: Slave requester id. Only valid for slave channels. The d=
+ma
+>   * slave peripheral will have unique id as dma requester which need to=
+ be
+>   * pass as slave config.
+> + * @peripheral: type of peripheral to DMA to/from
+> + * @set_config: set peripheral config
+> + * @spi: peripheral config for spi
+> + * @:i2c peripheral config for i2c
+>   *
+>   * This struct is passed in as configuration data to a DMA engine
+>   * in order to set up a certain channel for DMA transport at runtime.
+> @@ -443,6 +514,10 @@ struct dma_slave_config {
+>  	u32 dst_port_window_size;
+>  	bool device_fc;
+>  	unsigned int slave_id;
+> +	enum dmaengine_peripheral peripheral;
+> +	u8 set_config;
+> +	struct dmaengine_spi_config spi;
+> +	struct dmaengine_i2c_config i2c;
 
-Sorry, but if this is not necessary to build the kernel, then an
-allmodconfig build needs to succeed so you need to do the detection and
-turn it off automatically.  Or you could make it so that it has to be
-manually enabled in all circumstances.
+Would it be possible to reuse one of the existing feature already
+supported by DMAengine?
+We have DMA_PREP_CMD to give a command instead of a real transfer:
+dmaengine_prep_slave_single(tx_chan, config_data, config_len,
+			    DMA_MEM_TO_DEV, DMA_PREP_CMD);
+dmaengine_prep_slave_single(tx_chan, tx_buff, tx_len, DMA_MEM_TO_DEV,
+			    DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+dma_async_issue_pending(tx_chan);
 
---=20
-Cheers,
-Stephen Rothwell
+or the metadata support:
+tx =3D dmaengine_prep_slave_single(tx_chan, tx_buff, tx_len,
+				 DMA_MEM_TO_DEV,
+				 DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
+dmaengine_desc_attach_metadata(tx, config_data, config_len);
+dma_async_issue_pending(tx_chan);
 
---Sig_/tDU.O6cX1D9IrOpNIJF9IC5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+By reading the driver itself, it is not clear if you always need to send
+the config for TX, or only when the config is changing and what happens
+if the first transfer (for SPI, since that is the only implemented one)
+is RX, when you don't send config at all...
 
------BEGIN PGP SIGNATURE-----
+I'm concerned about the size increase of dma_slave_config (it grows by
+>30 bytes) and for DMAs with hundreds of channels (UDMA) it will add up
+to a sizeable amount.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9EtLUACgkQAVBC80lX
-0GwK6gf8DesCk38JfwT0m8g2BShvJEsTqH87hEuvVInFsGPaKvYcQTntETkYPPQa
-bF4jfkYOh5VlMGkgCLMGUw+GP48RuHKXt75oohyPzAEnDSwJhVAdG2q4LD4qhDJJ
-P+vN1s1VQ/qxreEGn0kqy66UJSWzavy1NKn2JXeEkacGKdQBqPhm1o1D+Cqay948
-+JGt4A1kCx9uR+a1lWoafFLsdRgkMCbnKM+qTAhU+pnm67xsk+gO81MtmfX2/0Tw
-ocs0Uo2yl1K5u3RVciU83Ad7htWkqBvuFFiCXKIaGKNRPRKIZEnHG+X4hdAp9EdM
-Sbh7fMGJHGmjUV4MUvCVgzhUD65p+A==
-=Geul
------END PGP SIGNATURE-----
+>  };
+> =20
+>  /**
+>=20
 
---Sig_/tDU.O6cX1D9IrOpNIJF9IC5--
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
