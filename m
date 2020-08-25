@@ -2,304 +2,145 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC45C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69F882074A
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F792074A
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:13:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jtqNeoQV"
+	dkim=pass (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="I6AC7eup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgHYNMg (ORCPT
+        id S1726820AbgHYNNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:12:36 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:31007 "EHLO m43-7.mailgun.net"
+        Tue, 25 Aug 2020 09:13:33 -0400
+Received: from mx01-muc.bfs.de ([193.174.230.67]:55655 "EHLO mx01-muc.bfs.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726241AbgHYNMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:12:33 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598361152; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=VNmOkJ1wnWQHGG+C0J588SwNs0wGbwm8t0k66TTmSIo=;
- b=jtqNeoQV+sr54kiutplaQZ3uhh22gCWst8AWbKlXVLq09hIR13wya5ciJkRS9DbRsb3zUXHT
- +LsHNvqBneTjOKbyE0I9Zp29tO5/VSJiEM0g7IesEqzlrcOMEQ600sJtlYxubeB26FdHGvBE
- 4wVFqqS6uWxh7KgfNgwZFMxkyFM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
- 5f450e3f4bd493d13e661ad1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Aug 2020 13:12:31
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 55277C43395; Tue, 25 Aug 2020 13:12:30 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: skakit)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6811C433CB;
-        Tue, 25 Aug 2020 13:12:28 +0000 (UTC)
+        id S1726241AbgHYNN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:13:27 -0400
+X-Greylist: delayed 316 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Aug 2020 09:13:25 EDT
+Received: from SRVEX01-SZ.bfs.intern (exchange-sz.bfs.de [10.129.90.31])
+        by mx01-muc.bfs.de (Postfix) with ESMTPS id 7DED42011B;
+        Tue, 25 Aug 2020 15:08:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
+        t=1598360888;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DfGEV/vhGDWZpAaUnALOMzkCaWG+zSVd/96DRDJ5/ls=;
+        b=I6AC7eupTBweA2z5lzUYIzGpaHhVMS8gH9lBNdCrYmKpLKX2J0X72ORAJ9SsVWa3HCU9GA
+        V/U7AkUXfwNPrPnTy8GqzNEh/BvCWSrWTFm4mKy1E4pSfbiJacpsk/Lx5heQqTn6s/Whnj
+        dWdl0qaAwtnd4XavzsBtT8Mj1dFOMlwSZDJwmIvc4ES+wPX6gRL0ea7ESd9lHsFHKrvMQS
+        7WpNWJL0Hq2OCTOuUPqc1ppLEQVi7AsRqNn6T8zvQ0EbeQIAhGNS8qPbMeWA/udd28/Z6l
+        Lq2s1Tiop1k/Ny4TlqOlai+PogWJCw5Y3BlV9eH9OeuxWV9byzAhj+vMiBzOHw==
+Received: from SRVEX01-SZ.bfs.intern (10.129.90.31) by SRVEX01-SZ.bfs.intern
+ (10.129.90.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2044.4; Tue, 25 Aug
+ 2020 15:08:07 +0200
+Received: from SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a]) by
+ SRVEX01-SZ.bfs.intern ([fe80::7d2d:f9cb:2761:d24a%6]) with mapi id
+ 15.01.2044.004; Tue, 25 Aug 2020 15:08:07 +0200
+From:   Walter Harms <wharms@bfs.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+CC:     Stefan Achatz <erazor_de@users.sourceforge.net>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: AW: [PATCH v2] HID: roccat: add bounds checking in
+ kone_sysfs_write_settings()
+Thread-Topic: [PATCH v2] HID: roccat: add bounds checking in
+ kone_sysfs_write_settings()
+Thread-Index: AQHWefToEl9avbae1kGQ4FmFDoAFsalHYb09gADrooCAAIAoLQ==
+Date:   Tue, 25 Aug 2020 13:08:07 +0000
+Message-ID: <4b0f8fc9b361495c8678de81b1cba381@bfs.de>
+References: <1597819984.4101.16.camel@web.de> <20200824085735.GA208317@mwanda>
+ <ab4625b2b2ea41dd83ff9e192a027f41@bfs.de>,<20200825072903.GQ1793@kadam>
+In-Reply-To: <20200825072903.GQ1793@kadam>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.137.16.39]
+x-tm-as-product-ver: SMEX-14.0.0.3031-8.6.1012-25624.007
+x-tm-as-result: No-10--10.842700-5.000000
+x-tmase-matchedrid: 9K29sLhW7mvRubRCcrbc5pzEHTUOuMX33dCmvEa6IiGoLZarzrrPmYbM
+        AgFeDdi/NxD2+UPaZLLxJpuUVnIb4aEJuVPDxbSkL7t268n/pW3lf2cXbNRplGOMyb1Ixq8VLUR
+        eLvdYkFoPn/Bqa8wShuMwa0EiWUk5HyjC+QCbXy0C4mcWVH6HR6dlL9piCOvOMYkmNIO7+haW0G
+        j8TPZHp/8nv9x3PStarwZ5g8tV9IyD/sxA0J0W+vUwiX15l0tvMC4zO7d4kaN/50V5HbQzfO7wr
+        YXyDkL3rwukP2KfdpBl2ySchWEQjPEPTHQ3k3TSRXdiukZQCgF9LQinZ4QefNZE3xJMmmXc+gtH
+        j7OwNO2J8YJgRrgXF16w4bdxd81x2moSG7OJU8U+f4Zag2CTlsuKfUh5HKbi
+x-tm-as-user-approved-sender: No
+x-tm-as-user-blocked-sender: No
+x-tmase-result: 10--10.842700-5.000000
+x-tmase-version: SMEX-14.0.0.3031-8.6.1012-25624.007
+x-tm-snts-smtp: B9A852186FD1D5E37DF19BB7767A9DCF76ABCED6B72DBA16A1D7B4441AD735862000:9
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 25 Aug 2020 18:42:28 +0530
-From:   skakit@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V3 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
- BT uart
-In-Reply-To: <20200821172215.GB486007@google.com>
-References: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
- <1597931467-24268-3-git-send-email-skakit@codeaurora.org>
- <20200821172215.GB486007@google.com>
-Message-ID: <e1738473c26de45b5c9c7c4d5963f32c@codeaurora.org>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Authentication-Results: mx01-muc.bfs.de;
+        none
+X-Spamd-Result: default: False [0.07 / 7.00];
+         ARC_NA(0.00)[];
+         TO_DN_EQ_ADDR_SOME(0.00)[];
+         HAS_XOIP(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         BAYES_SPAM(0.07)[58.26%];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         NEURAL_HAM(-0.00)[-0.994];
+         RCVD_NO_TLS_LAST(0.10)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         MID_RHS_MATCH_FROM(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-21 22:52, Matthias Kaehlcke wrote:
-> On Thu, Aug 20, 2020 at 07:21:06PM +0530, satya priya wrote:
->> Add sleep pin ctrl for BT uart, and also change the bias
->> configuration to match Bluetooth module.
->> 
->> Signed-off-by: satya priya <skakit@codeaurora.org>
->> Reviewed-by: Akash Asthana <akashast@codeaurora.org>
->> ---
->> Changes in V2:
->>  - This patch adds sleep state for BT UART. Newly added in V2.
->> 
->> Changes in V3:
->>  - Remove "output-high" for TX from both sleep and default states
->>    as it is not required. Configure pull-up for TX in sleep state.
->> 
->>  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 54 
->> +++++++++++++++++++++++++++------
->>  1 file changed, 45 insertions(+), 9 deletions(-)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts 
->> b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> index d8b5507..806f626 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
->> @@ -473,20 +473,20 @@
->> 
->>  &qup_uart3_default {
->>  	pinconf-cts {
->> -		/*
->> -		 * Configure a pull-down on 38 (CTS) to match the pull of
->> -		 * the Bluetooth module.
->> -		 */
->> +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
->>  		pins = "gpio38";
->> -		bias-pull-down;
->> -		output-high;
->> +		bias-disable;
-> 
-> I think it should be ok in functional terms, but I don't like the 
-> rationale
-> and also doubt the change is really needed.
-> 
-> If the pull is removed to match the Bluetooth module, then that sounds 
-> as
-> if the signal was floating on the the BT side, which I think is not the 
-> case.
-> Yes, according to the datasheet there is no pull when the BT controller 
-> is
-> active, but then it drives the signal actively to either high or low. 
-> There
-> seems to be no merit in 'matching' the Bluetooth side in this case, if 
-> the
-> signal was really floating on the BT side we would definitely not want 
-> this.
-> 
-> In a reply to v2 you said:
-> 
->> Recently on cherokee we worked with BT team and came to an agreement 
->> to
->> keep no-pull from our side in order to not conflict with their pull in
->> any state.
-> 
-> What are these conflicting pull states?
-> 
-> The WCN3998 datasheet has a pull-down on RTS (WCN3998 side) in reset 
-> and
-> boot mode, and no pull in active mode. In reset and boot mode the host
-> config with a pull down would match, and no pull in active mode doesn't
-> conflict with the pull-down on the host UART. My understanding is that
-> the pinconf pulls are weak pulls, so as soon as the BT chip drives its
-> RTS the pull on the host side shouldn't matter.
-> 
+lets hope the maintainer picks that up.
 
-yes, I agree with you, the pinconf pulls are weak. As this is driven by 
-BT SoC (pull on HOST side shouldn't matter), we are not mentioning any 
-bias configuration from our side and simply putting it as no-pull, just 
-to not conflict in any case. It seems that the rationale mentioned is a 
-bit confusing i will change it to clearly specify why we are configuring 
-no-pull.
+re,
+ wh
 
-> Is this change actually related with wakeup support? I have the 
-> impression
-> that multiple things are conflated in this patch. If some of the 
-> changes
-> are just fixing/improving other things they should be in a separate 
-> patch,
-> which could be part of this series, otherwise it's really hard to
-> distinguish between the pieces that are actually relevant for wakeup 
-> and
-> the rest.
-> 
-> Independently of whether the changes are done in a single or multiple
-> patches, the commit log should include details on why the changes are
-> necessary, especially when there are not explantatory comments in the
-> DT/code itself (e.g. the removal of 'output-high', which seems correct
-> to me, but no reason is given why it is done).
-> 
+________________________________________
+Von: Dan Carpenter [dan.carpenter@oracle.com]
+Gesendet: Dienstag, 25. August 2020 09:29
+An: Walter Harms
+Cc: Stefan Achatz; Jiri Kosina; Benjamin Tissoires; linux-input@vger.kernel=
+.org; linux-kernel@vger.kernel.org; kernel-janitors@vger.kernel.org
+Betreff: Re: [PATCH v2] HID: roccat: add bounds checking in kone_sysfs_writ=
+e_settings()
 
-This change is not related to wakeup support, I will make it a separate 
-patch, will also mention the details in commit text.
+On Mon, Aug 24, 2020 at 03:35:16PM +0000, Walter Harms wrote:
+> hello Dan,
+>
+> i notice that you can shorten the line to:
+> (line above checks for count=3D=3Dsizeof(struct kone_settings))
+>
+> difference =3D memcmp(settings, &kone->settings, count);
+>
+> nothing special just to shorten the line and make use of count.
+>
+> and just to save one indent level and because its  readabel nicely:
+>     if ( ! difference )
+>           goto unlock;
+>
+> hope that helps
 
->>  	};
->> 
->>  	pinconf-rts {
->> -		/* We'll drive 39 (RTS), so no pull */
->> +		/*
->> +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
->> +		 * floating pin which could mislead Bluetooth controller
->> +		 * with UART RFR state (READY/NOT_READY).
->> +		 */
->>  		pins = "gpio39";
->>  		drive-strength = <2>;
->> -		bias-disable;
->> +		bias-pull-down;
->>  	};
-> 
-> [copy of my comment on v2]
-> 
-> I'm a bit at a loss here, about two things:
-> 
-> RTS is an output pin controlled by the UART. IIUC if the UART port is 
-> active
-> and hardware flow control is enabled the RTS signal is either driven to 
-> high
-> or low, but not floating.
+Yeah.  I wrote that version and I wanted to send it, but then I decided
+not to change the style too much.  I definitely agree with you, but I
+figured I would keep the patch less intrusive.
 
-Yes, RTS is either driven high or low. HW flow control is always enabled 
-and only turned off when RX FIFO is full. Whereas SW flow control is 
-controlled by upper layers(serial core), also it can be enabled/disabled 
-from host by calling set_mctrl.
+regards,
+dan carpenter
 
-> 
-> Now lets assume I'm wrong with the above and RTS can be floating. We 
-> only want
-> the BT SoC to send data when the host UART is ready to receive them, 
-> right?
-> RTS is an active low signal, hence by configuring it as a pull-down the 
-> BT
-> SoC can send data regardless of whether the host UART actually asserts 
-> RTS,
-> so the host UART may not be ready to receive it. I would argue that if 
-> there
-> is really such a thing as a floating RTS signal then it should have a 
-> pull-up,
-> to prevent the BT SoC from sending data at any time.
-> 
-> I'm not an expert in UART communication and pinconf, so it could be 
-> that I
-> got something wrong, but as of now it seems to me that no pull is the 
-> correct
-> config for RTS.
-> 
->> 
->>  	pinconf-tx {
->> @@ -494,7 +494,43 @@
->>  		pins = "gpio40";
->>  		drive-strength = <2>;
->>  		bias-disable;
->> -		output-high;
->> +	};
->> +
->> +	pinconf-rx {
->> +		/*
->> +		 * Configure a pull-up on 41 (RX). This is needed to avoid
->> +		 * garbage data when the TX pin of the Bluetooth module is
->> +		 * in tri-state (module powered off or not driving the
->> +		 * signal yet).
->> +		 */
->> +		pins = "gpio41";
->> +		bias-pull-up;
->> +	};
->> +};
->> +
->> +&qup_uart3_sleep {
->> +	pinconf-cts {
->> +		/* Configure no-pull on 38 (CTS) to match Bluetooth module */
->> +		pins = "gpio38";
->> +		bias-disable;
->> +	};
->> +
->> +	pinconf-rts {
->> +		/*
->> +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
->> +		 * floating pin which could mislead Bluetooth controller
->> +		 * with UART RFR state (READY/NOT_READY).
->> +		 */
->> +		pins = "gpio39";
->> +		drive-strength = <2>;
->> +		bias-pull-down;
->> +	};
-> 
-> I don't know all the details, but I have the impression that this is 
-> the
-> relevant pull change for wakeup. From the title of the series I derive
-> that the UART RX pin is used for signalling wakeup. A pull-down on RTS
-> indicates the BT controller that it can always send data to wake up the
-> host.
-> 
-> I think RTS in default mode should remain with no-pull (the UART is 
-> driving
-> the signal), and then change it to pull-down in sleep mode.
-> 
-> 
-
-As I understand from your previous comment, pinconf pulls are weak and 
-cannot override the pull of controller. Although pull down is 
-configured, data will be received only if host controller is ready to 
-accept it. So, we want to put RTS in pull-down state(known state) 
-instead of leaving it in ambiguous state i.e, no-pull(high/low).
-
->> +
->> +	pinconf-tx {
->> +		/* Configure pull-up on 40 (TX) when it isn't actively driven */
-> 
-> nit: just say '... on TX ...', the GPIO number isn't really interesting 
-> and can
-> easily be determined by looking at 'pins' if needed . Applicable to all 
-> comments
-> involving pins.
-> 
-
-Okay.
-
->> +		pins = "gpio40";
->> +		drive-strength = <2>;
->> +		bias-pull-up;
-> 
-> This makes sense to me.
-
-Thanks,
-Satya Priya
