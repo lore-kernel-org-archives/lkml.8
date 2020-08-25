@@ -2,146 +2,118 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E454C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D599C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEFE2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598342155;
-	bh=S5rlKBx7VFgdSrBKPZytFQQydfMl9pnBjLY78TfRSRo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LWdIphEmHpyI17DKL3HK96G3HPwbV4QTcSdQF3ZR5n5nshEwwA7Y23MGEPFpkRbLK
-	 TuZpBSkSkUXMk6zPSxjZu1Y0fC4OQzKYITWu46HXgpT5nvONsd+Lmw71AYssIuwtye
-	 FukQE6T6aKEiLdhcyIHdNu7hzwlyN20RiQlSvCLo=
+	by mail.kernel.org (Postfix) with ESMTP id 723E02071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:58:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JIpR4o0Q";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UFHNoPg/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729119AbgHYHzx (ORCPT
+        id S1728920AbgHYH5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:55:53 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45806 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725379AbgHYHzv (ORCPT
+        Tue, 25 Aug 2020 03:57:55 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47740 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725379AbgHYH5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:55:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h15so4958434wrt.12;
-        Tue, 25 Aug 2020 00:55:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aBjVw1JG0tpm4bk51wIknFht9NwTSZ65KB4U3gClblQ=;
-        b=pVQLT+8ijKQCPTJ9nJSzGdtsvR4/qHb2QG9MgKgdIdQ2hG1dj2KpBB8/UQzGdjBnrG
-         YyCru7GkjEW1Z2avQWxiG/fCrKBPJ8QLh7Ak9F4nZ797j6oRUqOhRDx1vcJ0Didy1eh4
-         pterNAMGOBwZ+SC1cypGNjD7gNwVaG1ORbIDM9wyKISr3dMwnhqVxIvWq+/cECtf1ZVT
-         i2nYue89aCsbjA1z3gQLqGHe7hFUPHIhQUW8NA+ARK/3s5DEwLOyri6XUavdKa7MBTJJ
-         yvhAgAaQK4/bMkq+sxNvowGly71mHlHX7xdg0tdijpLF57CchJpgSl+5bPAc9qDr96s5
-         bjIw==
-X-Gm-Message-State: AOAM531VaZJ9MZnL9VRgwXymUo0hQu1KXP7Pt3vjMMEplrw4cCwPLMhE
-        xhxP7RtNtC49OSmDbRJDYO8=
-X-Google-Smtp-Source: ABdhPJy11J0dvtltETiMUmgoqOGY5vwRYKznzFSM+Jn9Jhy70mulHl9VGChcIKqtFo0jH3ClWuVjng==
-X-Received: by 2002:adf:f5c7:: with SMTP id k7mr9247503wrp.230.1598342147767;
-        Tue, 25 Aug 2020 00:55:47 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id f9sm8049134wrm.5.2020.08.25.00.55.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Aug 2020 00:55:47 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 09:55:43 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
-        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v2 17/19] dt-bindings: serial: fsl-lpuart: Fix compatible
- matching
-Message-ID: <20200825075543.GA10369@kozik-lap>
-References: <20200824162652.21047-1-krzk@kernel.org>
- <20200824162652.21047-17-krzk@kernel.org>
- <20200825024226.GA3843643@bogus>
+        Tue, 25 Aug 2020 03:57:46 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598342264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z7XEOONAx/Y/ZiGBa138zNdJ2aL0ZkJolLF35mYWdkk=;
+        b=JIpR4o0QGi7kK727LCmqEP1DulpXQaBIgflkZBLs5t7Lz8BkKPnpuEKumBjEIUv4Qu2fG/
+        Oir+lSuIqPfxIOiBFQCY78M6YxK5B+THOxc0icLjtAE5JJUVAEoLFxVLAg3uxDsMB1SGXX
+        XnaeD4Z6L/kPkUhTl+94PS6Ks0d2HjckxWbTB9b++Lqlou5zbvd+xX/Hopw1vkn5tYovdo
+        HLgyn2z6ttiQeTALU45iDOFAu5axIGbm6lbmj8cbkv/CZonC9AGBAL/usvMWV2QkosoUW5
+        3RNUmC/gOSqY1Bc8xh5ArbnCykaJkYqCjP/+V1YJalXwg1JSBYvSGRteI38PbA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598342264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=z7XEOONAx/Y/ZiGBa138zNdJ2aL0ZkJolLF35mYWdkk=;
+        b=UFHNoPg/zXQ+Xg2Pv56inRA93Orb7eMVMpZPw2ESh1dxXdBikqTGQn7J7IK19znmQQ8GAl
+        YbijH/OnOMKVGqAA==
+To:     =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch RFC 26/38] x86/xen: Wrap XEN MSI management into irqdomain
+In-Reply-To: <8860c7bc-67ab-ce64-0340-1458d2483a39@suse.com>
+References: <20200821002424.119492231@linutronix.de> <20200821002947.868727656@linutronix.de> <8860c7bc-67ab-ce64-0340-1458d2483a39@suse.com>
+Date:   Tue, 25 Aug 2020 09:57:44 +0200
+Message-ID: <87r1rv5f9j.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200825024226.GA3843643@bogus>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 08:42:26PM -0600, Rob Herring wrote:
-> On Mon, Aug 24, 2020 at 06:26:50PM +0200, Krzysztof Kozlowski wrote:
-> > The i.MX 8QXP DTSes use two compatibles so update the binding to fix
-> > dtbs_check warnings like:
-> > 
-> >   arch/arm64/boot/dts/freescale/imx8qxp-mek.dt.yaml: serial@5a060000:
-> >     compatible: ['fsl,imx8qxp-lpuart', 'fsl,imx7ulp-lpuart'] is too long
-> >     From schema: Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
-> > 
-> >   arch/arm64/boot/dts/freescale/imx8qxp-mek.dt.yaml: serial@5a060000:
-> >     compatible: Additional items are not allowed ('fsl,imx7ulp-lpuart' was unexpected)
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > 
-> > ---
-> > 
-> > Changes since v1:
-> > 1. New patch.
-> > ---
-> >  .../devicetree/bindings/serial/fsl-lpuart.yaml | 18 +++++++++++-------
-> >  1 file changed, 11 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml b/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
-> > index e82c2cf9fef7..8ee651f2ef0b 100644
-> > --- a/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
-> > +++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.yaml
-> > @@ -14,13 +14,17 @@ allOf:
-> >  
-> >  properties:
-> >    compatible:
-> > -    enum:
-> > -      - fsl,vf610-lpuart
-> > -      - fsl,ls1021a-lpuart
-> > -      - fsl,ls1028a-lpuart
-> > -      - fsl,imx7ulp-lpuart
-> > -      - fsl,imx8qxp-lpuart
-> > -      - fsl,imx8qm-lpuart
-> > +    oneOf:
-> > +      - enum:
-> > +          - fsl,vf610-lpuart
-> > +          - fsl,ls1021a-lpuart
-> > +          - fsl,ls1028a-lpuart
-> > +          - fsl,imx7ulp-lpuart
-> > +          - fsl,imx8qxp-lpuart
-> 
-> This should be dropped.
+On Mon, Aug 24 2020 at 08:21, J=C3=BCrgen Gro=C3=9F wrote:
+> On 21.08.20 02:24, Thomas Gleixner wrote:
+>
+> Looking into https://www.kernel.org/doc/Documentation/IRQ-domain.txt (is
+> this still valid?)
 
-Right.
+It's halfways correct. Emphasis on halfways.
 
-Best regards,
-Krzysztof
+> I believe Xen should be able to use the "No Map" approach, as Xen only
+> ever uses software IRQs (at least those are the only ones visible to
+> any driver). The (virtualized) hardware interrupts are Xen events
+> after all.
+>
+> So maybe morphing Xen into supporting irqdomains in a sane way isn't
+> that complicated. Maybe I'm missing the main complexities, though.
+
+The wrapper domain I did is pretty much that, but with the extra
+functionality required by hierarchical irq domains. So, yes it's
+functionally correct, but it's only utilizing the alloc/free interface
+and not any of the other mechanisms provided by irqdomains. The latter
+should make the overall code simpler but that obviously needs some
+thought.
+
+Thanks,
+
+        tglx
+
+
 
