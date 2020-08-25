@@ -4,64 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94207C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F970C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5492071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88D2E2071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598382991;
-	bh=ccl2PxpjV71b6R3oiNJ1mYGPWMxjhVotgiPqHQonsfU=;
+	s=default; t=1598382995;
+	bh=SZWJRi05rOY1sUbfWFfI75smVjftRmFLtpHNqqXUUII=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ibvj+4zgctuATLgUH22V3btyT24aqgh39EZ9NJ1DajWl0JRJXZ56YMN1O7o6hRBFg
-	 egC5ipX+VkBxlAhl51W4BuFWegk6EPjB4Ov4nrHdzL8I/EsbTHqgiKIXtW1tjHw7wB
-	 0/U5cd2TNYv/iBuGNqWAf0TeHSS0PGYeUGt7NOo8=
+	b=ubccRxggf2cx9PEVY05mY0Vt/9r+Acth2Oe8lF3WfquvJfqy79nB1QdyKknvO4FKX
+	 dnlyyb3JXzVriDBj+MZy5SUsW4IR7bWiOQxR2QSn0vqLq2QjnLlE2SDXWTOX6JLNLI
+	 FafgVaaa/+yTYukew3RSEGyqwU1g8IEoHLxMAtlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHYTQ2 (ORCPT
+        id S1726874AbgHYTQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:16:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46562 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 15:16:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726471AbgHYTQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726222AbgHYTQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 15:16:22 -0400
-Subject: Re: [git pull] m68knommu changes for v5.9-rc3
+Subject: Re: [GIT PULL] HID fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598382981;
-        bh=ccl2PxpjV71b6R3oiNJ1mYGPWMxjhVotgiPqHQonsfU=;
+        bh=SZWJRi05rOY1sUbfWFfI75smVjftRmFLtpHNqqXUUII=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=ZZkkW1EjyBFU7XK2Nmwn6EwJiTBSt7iEkT/IYG6ZYx41I2LH4Q0Jsw1p3bkQ4NB7g
-         PKuZJyIGxrRsckt9F3kat8WCxITXLUNpLa+djm8waCf3KJX8+MzQ6m+lRU1TChSmsH
-         otJoZzcCGFS2W6963B2HBB16Rq2S3egNzAkvVsaI=
+        b=hsO+YKMAS+/30qfTJ6jd9xhBqFJRgkaiiGAl3ZC7pc0K5xSJ3PCpzaf7bVeSTom6/
+         5r4XfWT6HV12CktSUqncILVCPYbXUTbwUj2xxDcTj2apEExJg0qQMq7YJtaYWiMi4b
+         cVAJhNutDZPqG+V0+np7yoCXfvOVHicQ5GymSSF8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <97069a5f-fd94-8a75-3fc6-3e50f7e3ec3a@linux-m68k.org>
-References: <97069a5f-fd94-8a75-3fc6-3e50f7e3ec3a@linux-m68k.org>
+In-Reply-To: <nycvar.YFH.7.76.2008251003480.27422@cbobk.fhfr.pm>
+References: <nycvar.YFH.7.76.2008251003480.27422@cbobk.fhfr.pm>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <97069a5f-fd94-8a75-3fc6-3e50f7e3ec3a@linux-m68k.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu.git tags/m68knommu-for-v5.9-rc3
-X-PR-Tracked-Commit-Id: 2217b982624680d19a80ebb4600d05c8586c4f96
+X-PR-Tracked-Message-Id: <nycvar.YFH.7.76.2008251003480.27422@cbobk.fhfr.pm>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
+X-PR-Tracked-Commit-Id: 5b0545dc184442fa509a311b8c855370441ad5bc
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: abb3438d69fb6dd5baa4ae23eafbf5b87945eff1
-Message-Id: <159838298188.30843.12096079475236397075.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: b9aa527ae38ba0ee998ced376b040fc92b0a2c03
+Message-Id: <159838298167.30843.11960269909407594984.pr-tracker-bot@kernel.org>
 Date:   Tue, 25 Aug 2020 19:16:21 +0000
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     torvalds@linux-foundation.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux/m68k <linux-m68k@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 25 Aug 2020 23:40:42 +1000:
+The pull request you sent on Tue, 25 Aug 2020 10:14:56 +0200 (CEST):
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu.git tags/m68knommu-for-v5.9-rc3
+> git://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git for-linus
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/abb3438d69fb6dd5baa4ae23eafbf5b87945eff1
+https://git.kernel.org/torvalds/c/b9aa527ae38ba0ee998ced376b040fc92b0a2c03
 
 Thank you!
 
