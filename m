@@ -2,119 +2,141 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49169C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0250C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25888206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:38:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A4dLEmZs"
+	by mail.kernel.org (Postfix) with ESMTP id 8B18E2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 00:42:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728196AbgHYAil (ORCPT
+        id S1728073AbgHYAmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 20:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726090AbgHYAij (ORCPT
+        Mon, 24 Aug 2020 20:42:11 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:59878 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726090AbgHYAmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 20:38:39 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8664C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 17:38:39 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id y8so5447651vsq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 17:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y7P6WkRur/Wi1nF0hQV3VdSO9RWelS35A2+LFPlb/Uw=;
-        b=A4dLEmZsScgkGVFoBW/ZD/K+W5FlpYsKMIOncqMhANo9TeioVu6heRzICP8VIjCOej
-         X13V/SiFz0gPIZiIuNnsTArDIufgYzWQxLyhszvX/HQ2WdhufUrqfWBvFoXNfaPEFq9R
-         AKm/U+0B9Cl9HksWRnDPx/i8nBlvVajpBfkp4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y7P6WkRur/Wi1nF0hQV3VdSO9RWelS35A2+LFPlb/Uw=;
-        b=lHByfZ8mEbM1hw+O2pXhm3R+FGK8mlbSIK8CizVjzYq5IUmP+Kwcu5tMlJ/KNm0F/L
-         v6aCsl2UOncvtS1lIPbBaXqEGhPZ2rRwQzsfc1zvufcJJI2M+LatHVzADeEO+duQVnzg
-         DI4ieeEu+3i7VQ3aUl9jsZIQLNRzZeZP38xQXX1mdVFLB2T37Tl4vXzgShucAjlmlh4d
-         e/oL5j6x50d99JAxbi2rqNhxfOgcEUlTWzTbuD7RKvUZEZeXSZ3nkMNAIJEIWhPn/nZt
-         65iV0Nfy8u5xbJDQ+dYKoE5buEWUnbkjvDny070zXQFcw78Wy0KcPEz6R0tMqknZ+3pa
-         wiNQ==
-X-Gm-Message-State: AOAM5314ICrwNuonkRT4tUxkFVAtnZhE515lhdO34aT1Bz9teWeIE1el
-        rydAA1rE+AjvRIiWSm3EcfFXFlYuFSN4f/9njE/BQw==
-X-Google-Smtp-Source: ABdhPJyGrJQ3BTXk72neawiE/wop5TF/z06m1M/EvRmFPlgVpgNQcH1fZn4GuY31+fa2UfdmPKqLjnOVR07AkeRgA/g=
-X-Received: by 2002:a67:bb06:: with SMTP id m6mr4308771vsn.54.1598315918860;
- Mon, 24 Aug 2020 17:38:38 -0700 (PDT)
+        Mon, 24 Aug 2020 20:42:11 -0400
+Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 3BD726AFD27;
+        Tue, 25 Aug 2020 10:42:04 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1kAN2J-0005pG-Kx; Tue, 25 Aug 2020 10:42:03 +1000
+Date:   Tue, 25 Aug 2020 10:42:03 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Brian Foster <bfoster@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Ritesh Harjani <riteshh@linux.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        willy@infradead.org
+Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
+Message-ID: <20200825004203.GJ12131@dread.disaster.area>
+References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
+ <20200820231140.GE7941@dread.disaster.area>
+ <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
+ <20200821215358.GG7941@dread.disaster.area>
+ <20200822131312.GA17997@infradead.org>
+ <20200824142823.GA295033@bfoster>
+ <20200824150417.GA12258@infradead.org>
+ <20200824154841.GB295033@bfoster>
 MIME-Version: 1.0
-References: <20200824105852.v5.1.I4feb11d34ce7a0dd5ee2c3327fb5a1a9a646be30@changeid>
- <20200824093020.073ae8d8@oasis.local.home>
-In-Reply-To: <20200824093020.073ae8d8@oasis.local.home>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Tue, 25 Aug 2020 08:38:27 +0800
-Message-ID: <CANMq1KCQjX1632qyo5+8kv8TXNu_Onh4gz7oMx3rx79XQX2fqg@mail.gmail.com>
-Subject: Re: [PATCH v5] kernel/trace: Add DISALLOW_TRACE_PRINTK make option
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        Kars Mulder <kerneldev@karsmulder.nl>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Will Deacon <will@kernel.org>, Yue Hu <huyue2@yulong.com>,
-        linux-kbuild@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200824154841.GB295033@bfoster>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0 cx=a_idp_d
+        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=7-415B0cAAAA:8
+        a=6_Yu4yksRqBpIYSk360A:9 a=Cckdbgs5SKQHxyt1:21 a=uiPvv5w2ab8WhoyN:21
+        a=CjuIK1q_8ugA:10 a=igBNqPyMv6gA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 9:30 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Mon, 24 Aug 2020 10:59:13 +0800
-> Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> > ---
-> >
+On Mon, Aug 24, 2020 at 11:48:41AM -0400, Brian Foster wrote:
+> On Mon, Aug 24, 2020 at 04:04:17PM +0100, Christoph Hellwig wrote:
+> > On Mon, Aug 24, 2020 at 10:28:23AM -0400, Brian Foster wrote:
+> > > Do I understand the current code (__bio_try_merge_page() ->
+> > > page_is_mergeable()) correctly in that we're checking for physical page
+> > > contiguity and not necessarily requiring a new bio_vec per physical
+> > > page?
+> > 
+> > 
+> > Yes.
+> > 
+> 
+> Ok. I also realize now that this occurs on a kernel without commit
+> 07173c3ec276 ("block: enable multipage bvecs"). That is probably a
+> contributing factor, but it's not clear to me whether it's feasible to
+> backport whatever supporting infrastructure is required for that
+> mechanism to work (I suspect not).
+> 
+> > > With regard to Dave's earlier point around seeing excessively sized bio
+> > > chains.. If I set up a large memory box with high dirty mem ratios and
+> > > do contiguous buffered overwrites over a 32GB range followed by fsync, I
+> > > can see upwards of 1GB per bio and thus chains on the order of 32+ bios
+> > > for the entire write. If I play games with how the buffered overwrite is
+> > > submitted (i.e., in reverse) however, then I can occasionally reproduce
+> > > a ~32GB chain of ~32k bios, which I think is what leads to problems in
+> > > I/O completion on some systems. Granted, I don't reproduce soft lockup
+> > > issues on my system with that behavior, so perhaps there's more to that
+> > > particular issue.
+> > > 
+> > > Regardless, it seems reasonable to me to at least have a conservative
+> > > limit on the length of an ioend bio chain. Would anybody object to
+> > > iomap_ioend growing a chain counter and perhaps forcing into a new ioend
+> > > if we chain something like more than 1k bios at once?
+> > 
+> > So what exactly is the problem of processing a long chain in the
+> > workqueue vs multiple small chains?  Maybe we need a cond_resched()
+> > here and there, but I don't see how we'd substantially change behavior.
+> > 
+> 
+> The immediate problem is a watchdog lockup detection in bio completion:
+> 
+>   NMI watchdog: Watchdog detected hard LOCKUP on cpu 25
+> 
+> This effectively lands at the following segment of iomap_finish_ioend():
+> 
+> 		...
+>                /* walk each page on bio, ending page IO on them */
+>                 bio_for_each_segment_all(bv, bio, iter_all)
+>                         iomap_finish_page_writeback(inode, bv->bv_page, error);
+> 
+> I suppose we could add a cond_resched(), but is that safe directly
+> inside of a ->bi_end_io() handler? Another option could be to dump large
+> chains into the completion workqueue, but we may still need to track the
+> length to do that. Thoughts?
 
-> > +ifeq ($(KBUILD_DISALLOW_TRACE_PRINTK),1)
-> > +KBUILD_CFLAGS += -DDISALLOW_TRACE_PRINTK
-> > +endif
-> > +
-> >  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
-> >  export DEBUG_CFLAGS
-> >
->
->
-> There's one more thing we need to do, is if you build without this option
-> then build with it, you should trigger a full kernel rebuild.
-> Otherwise, if you build without the option, then build with it, and it
-> doesn't rebuild the tree, it wont catch anything.
+We have ioend completion merging that will run the compeltion once
+for all the pending ioend completions on that inode. IOWs, we do not
+need to build huge chains at submission time to batch up completions
+efficiently. However, huge bio chains at submission time do cause
+issues with writeback fairness, pinning GBs of ram as unreclaimable
+for seconds because they are queued for completion while we are
+still submitting the bio chain and submission is being throttled by
+the block layer writeback throttle, etc. Not to mention the latency
+of stable pages in a situation like this - a mmap() write fault
+could stall for many seconds waiting for a huge bio chain to finish
+submission and run completion processing even when the IO for the
+given page we faulted on was completed before the page fault
+occurred...
 
-This already works. I'll be honest, I'm not 100% sure why (and if
-fully intentional)...
+Hence I think we really do need to cap the length of the bio
+chains here so that we start completing and ending page writeback on
+large writeback ranges long before the writeback code finishes
+submitting the range it was asked to write back.
 
-The CFLAGS end up in 3 generated assembly files:
-# grep -R DISALLOW_TRACE_PRINTK * | grep -v ".cmd:"
-arch/x86/kernel/asm-offsets.s:# -imultiarch x86_64-linux-gnu -D
-__KERNEL__ -D DISALLOW_TRACE_PRINTK
-kernel/bounds.s:# -imultiarch x86_64-linux-gnu -D __KERNEL__ -D
-DISALLOW_TRACE_PRINTK
-scripts/mod/devicetable-offsets.s:# -D DISALLOW_TRACE_PRINTK
-(along with all *.cmd files)
+Cheers,
 
-and I suspect some/all of those force a complete kernel rebuild.
-
-> -- Steve
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
