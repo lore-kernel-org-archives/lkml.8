@@ -2,162 +2,146 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EED8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23D3A2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:06:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="qIpyzpWq";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="qzOmkcJu"
+	by mail.kernel.org (Postfix) with ESMTP id D79302075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:06:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgHYPGQ (ORCPT
+        id S1726882AbgHYPGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:06:16 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:57253 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726096AbgHYPGM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:06:12 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 275BE2CD;
-        Tue, 25 Aug 2020 11:06:11 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 11:06:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=3I3j5EOU60U1Ry7H1RtmtTOIRsx
-        0SMf4gLT/+JVsv3s=; b=qIpyzpWqvt49gOQjIw0P0YCE2o/ZjNok7k0l03cLlv+
-        ZNuULsmpjgGUIgHy7RDdPRQ6tB30SnDfI67RXYZWdKMv5Bm8MggcpzKmHXkAv/Rh
-        deoC3EWpwQGa991tom1omCJZuh1oMAUqOg3hIfGHEOXWNhDjfyngbihaqb9SKl/h
-        a3qlD4IbkfRjq6zenklH3d43+CwRAEKcUDYe9h2lNBrKjiYf9vlatkMtz/98M0kp
-        R06d/Arif3zzDdMXJbUn/zhOmTaXBQhwpmSqfUBFwpLoQQlSx3kY9RsxX54QOABL
-        38OA7qovlZ/SQshAtEfv3qAZiTrvYF4Qzwb9vmb7U6w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=3I3j5E
-        OU60U1Ry7H1RtmtTOIRsx0SMf4gLT/+JVsv3s=; b=qzOmkcJu5rhTpkZVcdNhea
-        bN4ZfR5/9NMiAQfypTNM3a/2wYBmsuFeh+hAvANlrlhodAp6AJb+vBuJscM6LoaM
-        8bRICOzMMOBrxLps3y8Lusrq8vCNl/ZnnXxghVld9K3kxIdb4b26454xnQpSW+Yv
-        pACmmzRT/K7nrc0zemOoPQ7LgGW33mryry5kf15hPBFqnq7Wc1cUYx9/jcTYQA2I
-        1ipQFOOTQ9WKZGM2sZ9LQ1UNMfBYb+iotUo/Is4vaKR1nbqMo0E0nikRdIF/uALW
-        81DctUrFdzz7tZKnztYKE8FRuqt5ZaoxRVuvdNemrpn/TMF6qaHZEAk4HFC2ZUQw
-        ==
-X-ME-Sender: <xms:4ChFX0bSx9W0Znia52kwIwRyTGKvg5JNkn1Xqchou6x4CYpRS5VtTA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgkeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:4ChFX_aHfWHINNwK6U-Fw35J35K8kmyiTo9Wr4mD8L0WZ2fWb7yElw>
-    <xmx:4ChFX-8_wuzxIem1Ch830fXwF5JwhpY4fWY2sXBzEJ9tu22ZQ5ASNQ>
-    <xmx:4ChFX-peXcuf1lTBpFTmkcOTpsnuQD8wkeVGkybIPEzAlyzlFimteA>
-    <xmx:4ihFX7L70Inwhrj51vikWUZKeo623Hway8xr1A2iFuJ78Phb5-nCDgr7Pn4>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4B3AE3280067;
-        Tue, 25 Aug 2020 11:06:08 -0400 (EDT)
-Date:   Tue, 25 Aug 2020 17:06:06 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
+        Tue, 25 Aug 2020 11:06:23 -0400
+Received: from mga05.intel.com ([192.55.52.43]:13714 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726831AbgHYPGU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 11:06:20 -0400
+IronPort-SDR: iITx/wPJ6QZV2Gb4xyNwAZ9Jy0MraUkbBjKX147zCc8Z9D0a1nEkfXKV5mJvFF0MDjBdf45Qv7
+ Zas1iSl/5qQA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="240945674"
+X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
+   d="scan'208";a="240945674"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 08:06:09 -0700
+IronPort-SDR: w4csY4NHOUXkNsjcdUPtlwbZVJ3CFpVIfG5/fxJvpmlLFYLZX1/TmW4eiBBf9fHeSM9Qz1nkb4
+ QvXEkiLrOpUw==
+X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
+   d="scan'208";a="299118305"
+Received: from spandruv-mobl.amr.corp.intel.com ([10.251.25.243])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 08:06:10 -0700
+Message-ID: <1341038e00d965e913ee9f0c7a1e739eadef42f7.camel@linux.intel.com>
+Subject: Re: [PATCH v2 2/5] cpufreq: intel_pstate: Always return last EPP
+ value from sysfs
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Artem Bityutskiy <dedekind1@gmail.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Eric Anholt <eric@anholt.net>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 29/78] drm/vc4: crtc: Add a delay after disabling the
- PixelValve output
-Message-ID: <20200825150606.utlynhzo664bwksy@gilmour.lan>
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <a1f22aadc60a2f32022831a6348c8bbd6e1954c3.1594230107.git-series.maxime@cerno.tech>
- <CAPY8ntBLWrfagZ5-kQz+5Mkw4_KaaTP63_L3D4owJAfA5kFpzw@mail.gmail.com>
- <20200729144251.us6a2pgkjjmm53ov@gilmour.lan>
- <ff6eca99-d98e-5b50-8b74-bba82928dda2@i2se.com>
+        Doug Smythies <dsmythies@telus.net>
+Date:   Tue, 25 Aug 2020 08:06:09 -0700
+In-Reply-To: <CAJZ5v0hkmcAuCsnfjCSWTarr4pkQry2VCtk2aWM74fOW2guzmg@mail.gmail.com>
+References: <4169555.5IIHXK4Dsd@kreacher> <2064342.aRc67yb0pC@kreacher>
+         <61ea43fce7dd8700d94f12236a86ffec6f76a898.camel@gmail.com>
+         <CAJZ5v0hkmcAuCsnfjCSWTarr4pkQry2VCtk2aWM74fOW2guzmg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gbp4s6jsz2sfula3"
-Content-Disposition: inline
-In-Reply-To: <ff6eca99-d98e-5b50-8b74-bba82928dda2@i2se.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2020-08-25 at 16:51 +0200, Rafael J. Wysocki wrote:
+> On Tue, Aug 25, 2020 at 8:20 AM Artem Bityutskiy <dedekind1@gmail.com
+> > wrote:
+> > On Mon, 2020-08-24 at 19:42 +0200, Rafael J. Wysocki wrote:
+> > > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> > > 
+> > > Make the energy_performance_preference policy attribute in sysfs
+> > > always return the last EPP value written to it instead of the one
+> > > currently in the HWP Request MSR to avoid possible confusion when
+> > > the performance scaling algorithm is used in the active mode with
+> > > HWP enabled (in which case the EPP is forced to 0 regardless of
+> > > what value it has been set to via sysfs).
+> > 
+> > Why is this a good idea, I wonder. If there was a prior discussion,
+> > please, point to it.
+> > 
+> > The general approach to changing settings via sysfs is often like
+> > this:
+> > 
+> > 1. Write new value.
+> > 2. Read it back and verify that it is the same. Because there is no
+> > better way to verify that the kernel "accepted" the value.
+> 
+> If the write is successful (ie. no errors returned and the value
+> returned is equal to the number of written characters), the kernel
+> *has* accepted the written value, but it may not have taken effect.
+> These are two different things.
+> 
+> The written value may take an effect immediately or it may take an
+> effect later, depending on the current configuration etc.  If you
+> don't see the effect of it immediately, it doesn't matter that there
+> was a failure of some sort.
+> 
+> > Let's say I write 'balanced' to energy_performance_preference. I
+> > read
+> > it back, and it contains 'balanced', so I am happy, I trust the
+> > kernel
+> > changed EPP to "balanced".
+> > 
+> > If the kernel, in fact, uses something else, I want to know about
+> > it
+> > and have my script fail.
+> 
+> Why do you want it to fail then?
+> 
+> > Why caching the value and making my script _think_ it succeeded is
+> > a good idea.
+> 
+> Because when you change the scaling algorithm or the driver's
+> operation mode, the value you have written will take effect.
+> 
+> In this particular case it is explained in the driver documentation
+> that the performance scaling algorithm in the active mode overrides
+> the sysfs value and that's the only case when it can be overridden.
+> So whatever you write to this attribute will not take effect
+> immediately anyway, but it may take an effect later.
 
---gbp4s6jsz2sfula3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In some cases without even changing active/passive this is happening
+when there was some error previously. For example:
 
-Hi Stefan,
+#cat energy_performance_preference 
+127
+[root@otcpl-perf-test-skx-i9 cpufreq]# rdmsr -p 1 0x774
+8000ff00
 
-On Wed, Jul 29, 2020 at 05:50:31PM +0200, Stefan Wahren wrote:
-> Am 29.07.20 um 16:42 schrieb Maxime Ripard:
-> > Hi,
-> >
-> > On Wed, Jul 29, 2020 at 03:09:21PM +0100, Dave Stevenson wrote:
-> >> On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
-> >>> In order to avoid pixels getting stuck in the (unflushable) FIFO betw=
-een
-> >>> the HVS and the PV, we need to add some delay after disabling the PV =
-output
-> >>> and before disabling the HDMI controller. 20ms seems to be good enoug=
-h so
-> >>> let's use that.
-> >>>
-> >>> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> >>> ---
-> >>>  drivers/gpu/drm/vc4/vc4_crtc.c | 2 ++
-> >>>  1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4=
-_crtc.c
-> >>> index d0b326e1df0a..7b178d67187f 100644
-> >>> --- a/drivers/gpu/drm/vc4/vc4_crtc.c
-> >>> +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
-> >>> @@ -403,6 +403,8 @@ static void vc4_crtc_atomic_disable(struct drm_cr=
-tc *crtc,
-> >>>         ret =3D wait_for(!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDE=
-N), 1);
-> >>>         WARN_ONCE(ret, "Timeout waiting for !PV_VCONTROL_VIDEN\n");
-> >>>
-> >>> +       mdelay(20);
-> >> mdelay for 20ms seems a touch unfriendly as it's a busy wait. Can we
-> >> not msleep instead?
-> > Since the timing was fairly critical, sleeping didn't seem like a good
-> > solution since there's definitely some chance you overshoot and end up
-> > with a higher time than the one you targeted.
->=20
-> usleep_range(min, max) isn't a solution?
+I think we should show reality. In mode change can be a special case
+and use the stored value to restore in new mode.
 
-My understanding of usleep_range was that you can still overshoot, even
-though it's backed by an HR timer so the resolution is not a jiffy. Are
-we certain that we're going to be in that range?
+Thanks,
+Srinivas
 
-Maxime
+> > In other words, in my usage scenarios at list, I prefer kernel
+> > telling
+> > the true EPP value, not some "cached, but not used" value.
+> 
+> An alternative is to fail writes to energy_performance_preference if
+> the driver works in the active mode and the scaling algorithm for the
+> scaling CPU is performance and *then* to make reads from it return
+> the
+> value in the register.
+> 
+> Accepting a write and returning a different value in a subsequent
+> read
+> is confusing.
+> 
+> Thanks!
 
---gbp4s6jsz2sfula3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0Uo3gAKCRDj7w1vZxhR
-xTjQAQCZiLqHqiPNSDq7T1euBsIbQ+XTGhdLmdnBZbUIO+1VPwEA1z/O7HFK3t4N
-IhM8AxotumyFnRcchBjauHOWLcdL+Qo=
-=am4A
------END PGP SIGNATURE-----
-
---gbp4s6jsz2sfula3--
