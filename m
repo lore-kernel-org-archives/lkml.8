@@ -2,196 +2,121 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB15C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2574FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4172065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC4C2065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:14:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ZEvN7jDP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="eU6bzw/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbgHYIOF (ORCPT
+        id S1728523AbgHYIOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:14:05 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:9509 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgHYIOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:14:04 -0400
-IronPort-SDR: 3TZ+pFKs7+99wzg5P+7OVUGj7Aleqy2XQ6PeHy9Jnh00a6aA9nbnDlKSBSL2mFvX7X4Z1APj+O
- H/1SEYCHDR59cgkjjmIbjyxvTPPAg1ZQZlSdadW2F4TEPAFBLpTJzi7I4ovJLrReUXgzns7BEl
- G3vNt/5vlQl4/hkR6iilwOwuR4lHLjjEAYPLf6KUuZM2yUO9OhsbXZQLhttE6hH5KVmcy22A28
- bbz5rUHJJKh7wX7gCOlULeFjnR5M3INJrT7684mp1edsC0TXyY0ho5ghzPXh3ncspF7KC8DuOa
- Aog=
-X-IronPort-AV: E=Sophos;i="5.76,351,1592863200"; 
-   d="scan'208";a="13585174"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 25 Aug 2020 10:14:02 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Tue, 25 Aug 2020 10:14:02 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Tue, 25 Aug 2020 10:14:02 +0200
+        Tue, 25 Aug 2020 04:14:14 -0400
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:10977 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725936AbgHYIOM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 04:14:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1598343242; x=1629879242;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SbnisccfhTeUVsH1MoGKsVpn0dy/gnGJsTIGiG2lQNA=;
-  b=ZEvN7jDPW+J0vAHgxc7i1JxAolwjIFAKHqIPg3UwgIssSfehdis8FMP1
-   9he1AQWVt276Wn01MfhAhUWOLBZNd/TzD4UghrYomPrDe7MQ3A7/L6C1t
-   IGvaskdjgvkkN+ye9JK5xfqgwHFdlzKe/zAoov8l/pgrk87OccD0mkUKJ
-   vTLCBIXhZm8QVQCYcZP1WbGshMbmcw6/WwD3O6MEgM4FfSNl/vIRFFInl
-   DMllpQCIzdOKBLgxWWszTQhY3c84As4cTCMQen3XIZOX9LyT7ay+VoDQ3
-   +BYfdhJiOLEwk19xoYVXlpHGos/euvLTE/WY1QGTAtFWt8MPQiRjnBipv
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1598343251; x=1629879251;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=g0oeSZlVpkf2Kzf0aWXXwlGNTwXvDpPW9GbL9juy12M=;
+  b=eU6bzw/L480AjZueaHDRy+xI0PLXTFsIloiV9KY0I6gObO+Zj/4IEdok
+   jKVUClfX799xuA3zoIBJWUBd884rH9Q4odWcTpfybBajDbflA3LKlLXEf
+   K50SA2BstfhDuXOC01qOCTHoUJTPlQ+dUptLXEQYWLAw5xiseNAtUMj9U
+   /6747HrvFpUHzwXSrefimG/QKw57wERU8W4H6TxaBjq6qfl+mfZDxpuZH
+   GKqlhisggP0bchccOdA6LPZ891GEnftBxNY7O7D2r4uF/A4LfgWywRviP
+   urcDlzUAeD2BH66fWUPg0kFcxfCrz3VACXiqVONU8uccmENZ8L0PmSG2Q
    Q==;
-IronPort-SDR: /Hr8llNwaok/l5wxLk2a7W2+jptFZ1II6U8aUetTCCD4/EaBVgu0mLd6C6TcErxFDxM/8GMwtv
- rULJHQ6MMsCdDajiUT3EHpOMD53+xc7a/Fmugyfuk52a94oGist6EaelEXP2z7XBWlUkgKWKSm
- GlaTkRampryusq326ZbOQ3UjkzrZGc6efxixx8QTWZT81oKgyNDip9G7xwQOPhHBS/gUcnRSZR
- 1UzLq5ZA748gJfg8wWMTb67NbSsir+5m/3x8pA3cbzKFmpakuCDLOQewSytyppBLwOy/Nx7gGL
- bzg=
-X-IronPort-AV: E=Sophos;i="5.76,351,1592863200"; 
-   d="scan'208";a="13585173"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 25 Aug 2020 10:14:02 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 0F10A280065;
-        Tue, 25 Aug 2020 10:14:02 +0200 (CEST)
-Message-ID: <2b3604bf88082f8d8f6d21707907eff757b49362.camel@ew.tq-group.com>
-Subject: Re: [PATCH RFC leds + net-next v4 0/2] Add support for LEDs on
- Marvell PHYs
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Date:   Tue, 25 Aug 2020 10:13:59 +0200
-In-Reply-To: <20200728150530.28827-1-marek.behun@nic.cz>
-References: <20200728150530.28827-1-marek.behun@nic.cz>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
+IronPort-SDR: /wZRFZLMaC+FjjwakJmXc7gnUIOu6foIdLH8Cp825Cq/gPdvA98qu5moD2NNYiQzpp3w6tX0GN
+ VS0U7j05HD+k9rfXdYWnfK+AIpca/dmjnDuQPWkc8r4eZK7cuFzkNuqY+Jr4pWiKNY+ePMp28/
+ rdph1RlRy0fi2fn70mFrYroAB1gOPIw59ZpAbhblYirvohScFia4oNxfz4JKxrI0Q8i6UOXOdS
+ eGnte/DjDGrUfd9vGguVA0CdJGVkYzMnrZnfhfCYDdxlTip/h5fB7YletARsvCxyzEYFQ5TZ+0
+ MAk=
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="86802294"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2020 01:14:06 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 25 Aug 2020 01:14:05 -0700
+Received: from soft-dev15.microsemi.net (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Tue, 25 Aug 2020 01:13:23 -0700
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+List-Id: <soc.lore.kernel.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        SoC Team <soc@kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v5 0/3] mmc: Adding support for Microchip Sparx5 SoC
+Date:   Tue, 25 Aug 2020 10:13:54 +0200
+Message-ID: <20200825081357.32354-1-lars.povlsen@microchip.com>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-28 at 17:05 +0200, Marek Behún wrote:
-> Hi,
-> 
-> this is v4 of my RFC adding support for LEDs connected to Marvell
-> PHYs.
-> 
-> Please note that if you want to test this, you still need to first
-> apply
-> the patch adding the LED private triggers support from Pavel's tree.
-> 
-https://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git/commit/?h=for-next&id=93690cdf3060c61dfce813121d0bfc055e7fa30d
-> 
-> What I still don't like about this is that the LEDs created by the
-> code
-> don't properly support device names. LEDs should have name in format
-> "device:color:function", for example "eth0:green:activity".
-> 
-> The code currently looks for attached netdev for a given PHY, but
-> at the time this happens there is no netdev attached, so the LEDs
-> gets
-> names without the device part (ie ":green:activity").
-> 
-> This can be addressed in next version by renaming the LED when a
-> netdev
-> is attached to the PHY, but first a API for LED device renaming needs
-> to
-> be proposed. I am going to try to do that. This would also solve the
-> same problem when userspace renames an interface.
-> 
-> And no, I don't want phydev name there.
+The patch adds eMMC support for Sparx5, by adding a driver for the SoC
+SDHCI controller, DT configuration and DT binding documentation.
 
+Changes in v5:
+- DT+yaml: Change (mmc|sdhci)@600800000 to mmc0@600800000
+- Add missing "static" attribute to probe function
+- Drop MMC_SDHCI_IO_ACCESSORS, as it is not required (anymore)
 
-Hello Marek,
+Changes in v4:
+- Disable clock if sdhci_add_host() fails
+- Remove dev_err if sdhci_add_host() fails
 
-thanks for your patches - Andrew suggested me to have a look at them as
-I'm currently trying to add LED trigger support to the TI DP83867 PHY.
+Changes in v3:
+- Add dt-bindings for property "microchip,clock-delay"
+- Enforce "microchip,clock-delay" valid range in driver
+- Removed a noisy pr_debug() in sdhci_sparx5_adma_write_desc()
 
-Is there already a plan to add support for polarity and similiar
-settings, at least to the generic part of your changes?
+Changes in v2:
+- Changes in driver as per review comments
+ - Drop debug code
+ - Drop sysfs code
+ - use usleep_range()
+ - use mmc_hostname() in pr_debug()
+ - Remove deactivated code
+ - Minor cosmetics
 
-In the TI DP83867, there are 2 separate settings for each LED:
+Lars Povlsen (3):
+  dt-bindings: mmc: Add Sparx5 SDHCI controller bindings
+  sdhci: sparx5: Add Sparx5 SoC eMMC driver
+  arm64: dts: sparx5: Add Sparx5 eMMC support
 
-- Trigger event
-- Polarity or override (active-high/active-low/force-high/force-low -
-the latter two would be used for led_brightness_set)
-- (There is also a 3rd register that defines the blink frequency, but
-as it allows only a single setting for all LEDs, I would ignore it for
-now)
+ .../mmc/microchip,dw-sparx5-sdhci.yaml        |  65 +++++
+ arch/arm64/boot/dts/microchip/sparx5.dtsi     |  24 ++
+ .../boot/dts/microchip/sparx5_pcb125.dts      |  23 ++
+ .../boot/dts/microchip/sparx5_pcb134_emmc.dts |  23 ++
+ .../boot/dts/microchip/sparx5_pcb135_emmc.dts |  23 ++
+ drivers/mmc/host/Kconfig                      |  12 +
+ drivers/mmc/host/Makefile                     |   1 +
+ drivers/mmc/host/sdhci-of-sparx5.c            | 269 ++++++++++++++++++
+ 8 files changed, 440 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+ create mode 100644 drivers/mmc/host/sdhci-of-sparx5.c
 
-At least the per-LED polarity setting would be essential to have for
-this feature to be useful for our TQ-Systems mainboards with TI PHYs.
-
-
-Kind regards,
-Matthias
-
-
-
-> 
-> Changes since v3:
-> - addressed some of Andrew's suggestions
-> - phy_hw_led_mode.c renamed to phy_led.c
-> - the DT reading code is now also generic, moved to phy_led.c and
-> called
->   from phy_probe
-> - the function registering the phydev-hw-mode trigger is now called
-> from
->   phy_device.c function phy_init before registering genphy drivers
-> - PHY LED functionality now depends on CONFIG_LEDS_TRIGGERS
-> 
-> Changes since v2:
-> - to share code with other drivers which may want to also offer PHY
-> HW
->   control of LEDs some of the code was refactored and now resides in
->   phy_hw_led_mode.c. This code is compiled in when config option
->   LED_TRIGGER_PHY_HW is enabled. Drivers wanting to offer PHY HW
-> control
->   of LEDs should depend on this option.
-> - the "hw-control" trigger is renamed to "phydev-hw-mode" and is
->   registered by the code in phy_hw_led_mode.c
-> - the "hw_control" sysfs file is renamed to "hw_mode"
-> - struct phy_driver is extended by three methods to support PHY HW
-> LED
->   control
-> - I renamed the various HW control modes offeret by Marvell PHYs to
->   conform to other Linux mode names, for example the
-> "1000/100/10/else"
->   mode was renamed to "1Gbps/100Mbps/10Mbps", or "recv/else" was
-> renamed
->   to "rx" (this is the name of the mode in netdev trigger).
-> 
-> Marek
-> 
-> 
-> Marek Behún (2):
->   net: phy: add API for LEDs controlled by PHY HW
->   net: phy: marvell: add support for PHY LEDs via LED class
-> 
->  drivers/net/phy/Kconfig      |   4 +
->  drivers/net/phy/Makefile     |   1 +
->  drivers/net/phy/marvell.c    | 287
-> +++++++++++++++++++++++++++++++++++
->  drivers/net/phy/phy_device.c |  25 ++-
->  drivers/net/phy/phy_led.c    | 176 +++++++++++++++++++++
->  include/linux/phy.h          |  51 +++++++
->  6 files changed, 537 insertions(+), 7 deletions(-)
->  create mode 100644 drivers/net/phy/phy_led.c
-> 
+-- 
+2.27.0
 
