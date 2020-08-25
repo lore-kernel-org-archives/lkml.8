@@ -2,171 +2,91 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A4BC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE11C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A175620578
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598321072;
-	bh=/jCFrerCuezmeouL6T97G1WTOyw0lxhgzaGAJjbq7Vs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RnQNe5YuNdtK3tYkX1WiteCmvyE+oGbOeLZiwCnPvl7AYHqFdqsB/gCWHApSj/mu3
-	 hTWi0xLVYx3pFgkWkwYzJhdFc/KfXrCUSZu8Gu1T+Q/W19kvjFUG/BIiMyADa6BvxQ
-	 lVndayupV+4FQqKtH2UrOOfGlT7AFGp7oAle/h20=
+	by mail.kernel.org (Postfix) with ESMTP id 83300204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:04:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Dgjux9zI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbgHYCEb (ORCPT
+        id S1726818AbgHYCEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:04:31 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42123 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgHYCEa (ORCPT
+        Mon, 24 Aug 2020 22:04:45 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:48337 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725781AbgHYCEo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 22:04:30 -0400
-Received: by mail-io1-f68.google.com with SMTP id g13so10881300ioo.9;
-        Mon, 24 Aug 2020 19:04:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=blgkJC98PTiLtQ7EY6Ja7z8tjOvIr37IMYyL+0fqpwo=;
-        b=WawycbwqP3wOhBa311N3fBUh7TapoyjOya12OO4DEeNUZWeNp3211IItQtO2LdoJZC
-         D1r1/gg9+N3HmBIx3c9tVQhobxTl741GjDpr/yqtyiXthSK6Hc8lGNVN2C4qyHCTLA1l
-         xYO7n2LW+af3KELTncRa987H7xul6lt41YRPgChsc1M/h7SRbatKNb3eTjYJ/7QMCKEw
-         P2D5blaELV+sn+fr31CEcWTrJHMM5gcCFLfMYYljEjqCgovKmJwgpaffe7W8utoQamS5
-         vA+zCgnW3I1cP3Lo6k/MA6IrdvWfpHBqQdzNLEl7sitbyeZ93vnOC6H/y0qz2wUIxBFg
-         7blQ==
-X-Gm-Message-State: AOAM5328Tj+egEC6CQMUAez6DjRa/QhZJ+T9bDdh9dk2YEvVJnT1YDNJ
-        k8QkbRAfvNgZW17OEcO6Xg==
-X-Google-Smtp-Source: ABdhPJyaaWTqX7Y2GueUjwPPkPW4DfUqOiYuBmQTQM2DxYEqy0LyZ3MAI8PjozuIA/FocPvW4hlGqw==
-X-Received: by 2002:a6b:6204:: with SMTP id f4mr7200166iog.56.1598321068966;
-        Mon, 24 Aug 2020 19:04:28 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id q19sm8336663ilj.85.2020.08.24.19.04.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Aug 2020 19:04:27 -0700 (PDT)
-Received: (nullmailer pid 3780329 invoked by uid 1000);
-        Tue, 25 Aug 2020 02:04:23 -0000
-Date:   Mon, 24 Aug 2020 20:04:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Hector Yuan <hector.yuan@mediatek.com>
-Cc:     linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mon, 24 Aug 2020 22:04:44 -0400
+X-UUID: f3eda44dd7d9449a9dbac3ed2a327111-20200825
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=DVHRh1RBZU+BcDSktqxKWMvFtrCLwtkjiR8252F3Grw=;
+        b=Dgjux9zIVCoQHL5kknP6I1URpOzRZFTSRQhUV2J4JMkiGHNp6QEZdgi34O8g6vbGQl74404uDyf9aqjqr9Sb0dlvr4sQp+LVotOxKgnHFVa96j80+wZvrUD7xXNSXRKVkdEzq1rv4F18UhY5wtv2tgVbWvj/VGPYR5jSuMJGa+4=;
+X-UUID: f3eda44dd7d9449a9dbac3ed2a327111-20200825
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1259988992; Tue, 25 Aug 2020 10:04:39 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 25 Aug 2020 10:04:36 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 25 Aug 2020 10:04:36 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+CC:     Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Vinod Koul <vkoul@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org,
-        wsd_upstream@mediatek.com
-Subject: Re: [PATCH v2 2/2] dt-bindings: cpufreq: add bindings for MediaTek
- cpufreq HW
-Message-ID: <20200825020423.GA3775564@bogus>
-References: <1597302475-15484-1-git-send-email-hector.yuan@mediatek.com>
- <1597302475-15484-3-git-send-email-hector.yuan@mediatek.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Bharat Gooty <bharat.gooty@broadcom.com>,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH 2/6] phy: phy-bcm-ns2-usbdrd: convert to readl_poll_timeout_atomic()
+Date:   Tue, 25 Aug 2020 10:03:03 +0800
+Message-ID: <1598320987-25518-2-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1598320987-25518-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1598320987-25518-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597302475-15484-3-git-send-email-hector.yuan@mediatek.com>
+Content-Type: text/plain
+X-TM-SNTS-SMTP: EEC3529724919847FA126E25E02BCF7766E0E17551D1EF8D6C698E3376E31CD22000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 03:07:55PM +0800, Hector Yuan wrote:
-> From: "Hector.Yuan" <hector.yuan@mediatek.com>
-> 
-> Add devicetree bindings for MediaTek HW driver.
-> 
-> Signed-off-by: Hector.Yuan <hector.yuan@mediatek.com>
-> ---
->  .../bindings/cpufreq/cpufreq-mediatek-hw.yaml      |   61 ++++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek-hw.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek-hw.yaml b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek-hw.yaml
-> new file mode 100644
-> index 0000000..59bb24e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek-hw.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/cpufreq/cpufreq-mediatek-hw.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek's CPUFREQ Bindings
-> +
-> +maintainers:
-> +  - Hector Yuan <hector.yuan@mediatek.com>
-> +
-> +description:
-> +  CPUFREQ HW is a hardware engine used by MediaTek
-> +  SoCs to manage frequency in hardware. It is capable of controlling frequency
-> +  for multiple clusters.
-> +
-> +properties:
-> +  compatible:
-> +    const: mediatek,cpufreq-hw
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description: |
-> +      Addresses and sizes for the memory of the HW bases in each frequency domain.
-> +
-> +  reg-names:
-> +    items:
-> +      - const: "freq-domain0"
-> +      - const: "freq-domain1"
+VXNlIHJlYWRsX3BvbGxfdGltZW91dF9hdG9taWMoKSB0byBzaW1wbGlmeSBjb2RlDQoNClNpZ25l
+ZC1vZmYtYnk6IENodW5mZW5nIFl1biA8Y2h1bmZlbmcueXVuQG1lZGlhdGVrLmNvbT4NCi0tLQ0K
+IGRyaXZlcnMvcGh5L2Jyb2FkY29tL3BoeS1iY20tbnMyLXVzYmRyZC5jIHwgMTMgKysrKy0tLS0t
+LS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pDQoN
+CmRpZmYgLS1naXQgYS9kcml2ZXJzL3BoeS9icm9hZGNvbS9waHktYmNtLW5zMi11c2JkcmQuYyBi
+L2RyaXZlcnMvcGh5L2Jyb2FkY29tL3BoeS1iY20tbnMyLXVzYmRyZC5jDQppbmRleCA1Mjc2MjU5
+Li45NjMwYWMxIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9waHkvYnJvYWRjb20vcGh5LWJjbS1uczIt
+dXNiZHJkLmMNCisrKyBiL2RyaXZlcnMvcGh5L2Jyb2FkY29tL3BoeS1iY20tbnMyLXVzYmRyZC5j
+DQpAQCAtMTgsNiArMTgsNyBAQA0KICNpbmNsdWRlIDxsaW51eC9pbml0Lmg+DQogI2luY2x1ZGUg
+PGxpbnV4L2ludGVycnVwdC5oPg0KICNpbmNsdWRlIDxsaW51eC9pby5oPg0KKyNpbmNsdWRlIDxs
+aW51eC9pb3BvbGwuaD4NCiAjaW5jbHVkZSA8bGludXgvaXJxLmg+DQogI2luY2x1ZGUgPGxpbnV4
+L21mZC9zeXNjb24uaD4NCiAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+DQpAQCAtODcsMTcgKzg4
+LDExIEBAIHN0cnVjdCBuczJfcGh5X2RhdGEgew0KIHN0YXRpYyBpbmxpbmUgaW50IHBsbF9sb2Nr
+X3N0YXQodTMyIHVzYl9yZWcsIGludCByZWdfbWFzaywNCiAJCQkJc3RydWN0IG5zMl9waHlfZHJp
+dmVyICpkcml2ZXIpDQogew0KLQlpbnQgcmV0cnkgPSBQTExfTE9DS19SRVRSWTsNCiAJdTMyIHZh
+bDsNCiANCi0JZG8gew0KLQkJdWRlbGF5KDEpOw0KLQkJdmFsID0gcmVhZGwoZHJpdmVyLT5pY2Zn
+ZHJkX3JlZ3MgKyB1c2JfcmVnKTsNCi0JCWlmICh2YWwgJiByZWdfbWFzaykNCi0JCQlyZXR1cm4g
+MDsNCi0JfSB3aGlsZSAoLS1yZXRyeSA+IDApOw0KLQ0KLQlyZXR1cm4gLUVCVVNZOw0KKwlyZXR1
+cm4gcmVhZGxfcG9sbF90aW1lb3V0X2F0b21pYyhkcml2ZXItPmljZmdkcmRfcmVncyArIHVzYl9y
+ZWcsDQorCQkJCQkgdmFsLCAodmFsICYgcmVnX21hc2spLCAxLA0KKwkJCQkJIFBMTF9MT0NLX1JF
+VFJZKTsNCiB9DQogDQogc3RhdGljIGludCBuczJfZHJkX3BoeV9pbml0KHN0cnVjdCBwaHkgKnBo
+eSkNCi0tIA0KMS45LjENCg==
 
-Not all that useful of a name given it's based on the index.
-
-> +    description: |
-> +      Frequency domain name.
-> +
-> +  "#freq-domain-cells":
-> +    const: 1
-> +    description: |
-> +      Number of cells in a freqency domain specifier.
-
-What's this for?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - "#freq-domain-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        cpufreq_hw: cpufreq@11bc00 {
-> +            compatible = "mediatek,cpufreq-hw";
-> +            reg = <0 0x11bc10 0 0x8c>,
-> +               <0 0x11bca0 0 0x8c>;
-> +            reg-names = "freq-domain0", "freq-domain1";
-> +            #freq-domain-cells = <1>;
-> +        };
-> +    };
-> +
-> -- 
-> 1.7.9.5
