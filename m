@@ -2,90 +2,100 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC18EC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B657206EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845B6206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598341747;
+	bh=EAVPl8HI0qm5Z1E+GM1eitUP0eVWdhTAbiPxcjbxgeo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c3FFYr5rYtW86xKeCzuWradrP6JYXE56jcwLWC7XbOEYFM5B6Q+a0lll5p5LznHge
+	 RY13XaSAshNZVtSmUiepxYEIUyRM/koRCn60h4cpsGpV5Vfir6mg8XqKNGEUCHO8YH
+	 ZpANyxyIzRRkSCfG6nq2+cUI1HuAeS1zPXOnL6Qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbgHYHsL (ORCPT
+        id S1729541AbgHYHtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:48:11 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:44855 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbgHYHsJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:48:09 -0400
-Received: by mail-yb1-f194.google.com with SMTP id i10so6636671ybt.11;
-        Tue, 25 Aug 2020 00:48:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HfaePIFgkKDaQAvHyLocpP4Zlin9g8e2YzOSoHz2+5g=;
-        b=TdBnLyTH6xPp1R/3FBMAPWOlrOkbGHAkfm6pHDLU5T+N0HtXCJ3RrllGDgGBLnJjLf
-         vY+cOASe1zd79HSxG9nqp/+L3ihYG5DlKlRBwpbpIwBxPnccUOrNj3wqBguhN9sZbIsM
-         WU2LjM7rba/n7bAaChgl7FrVDDwyeiBnj+cwArMwLTJ9YiFpkUpdPFIhzthXkVyblAse
-         OXP6R0Hehnz/lPfFxWwJK2HgsVHIsldu+1RzjdM4t2FH4/F62c/1MqxH2ysUekY2KFW/
-         xC3O55b/Cpf79yPDJH0KT0OkyeZbEEOyaK7xxu6hVvcsJgAzunZC5IkSHupvvtzyaj1d
-         aNgw==
-X-Gm-Message-State: AOAM531OEz1Iu+MwnPnM8lWj2dT85MxTjDll7QxcaQZuV2f/fg3foca7
-        Jkgrwyb+E9eadO0Ps52I602QWwYTxzHxf5baXrE=
-X-Google-Smtp-Source: ABdhPJzzoQCHoXnnSY9x7+KhRyF3ktxgw1KVvIH0dVLRr/ri2WIgVCoeB1qGC/E8jcdRDplu5z/cKMya91xE/i8mUtU=
-X-Received: by 2002:a25:2b89:: with SMTP id r131mr12592617ybr.131.1598341688832;
- Tue, 25 Aug 2020 00:48:08 -0700 (PDT)
+        Tue, 25 Aug 2020 03:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729194AbgHYHtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 03:49:06 -0400
+Received: from localhost (p54b333df.dip0.t-ipconnect.de [84.179.51.223])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4004206EB;
+        Tue, 25 Aug 2020 07:49:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598341745;
+        bh=EAVPl8HI0qm5Z1E+GM1eitUP0eVWdhTAbiPxcjbxgeo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o42hzT6XNP1akB69Gj9FKiRANr1USTDNM4eElmGuJafsirozDmR3MxvzvQsZIjqJ8
+         ZD0ZSPiduI9MDF4ElIVV3LjmWJebWXvKTz7NtQPMJStU3nwXviNZvLKKZSwN6lspyI
+         alNSXsB9ESLx57Q5/mhQL8Kb4u3YtpNTx6pYqWoU=
+Date:   Tue, 25 Aug 2020 09:49:02 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Ray Jui <ray.jui@broadcom.com>
+Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Subject: Re: [PATCH] i2c: iproc: Fix checkpatch warnings by using 'BIT' macro
+Message-ID: <20200825074902.GG1861@ninjato>
+References: <20200814224008.107430-1-ray.jui@broadcom.com>
 MIME-Version: 1.0
-References: <20200825062900.11210-1-dinghao.liu@zju.edu.cn>
-In-Reply-To: <20200825062900.11210-1-dinghao.liu@zju.edu.cn>
-From:   Mathieu Malaterre <malat@debian.org>
-Date:   Tue, 25 Aug 2020 09:47:56 +0200
-Message-ID: <CA+7wUswtuOPqQ131F5LdH=7dH+sWZc+jmMHXpaYmTDUehvx5eQ@mail.gmail.com>
-Subject: Re: [PATCH] video: fbdev: radeon: Fix memleak in radeonfb_pci_register
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-Cc:     kjlu@umn.edu, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zGQnqpIoxlsbsOfg"
+Content-Disposition: inline
+In-Reply-To: <20200814224008.107430-1-ray.jui@broadcom.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 9:27 AM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
->
-> When radeon_kick_out_firmware_fb() fails, info should be
-> freed just like the subsequent error paths.
->
-> Fixes: 069ee21a82344 ("fbdev: Fix loading of module radeonfb on PowerMac")
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/video/fbdev/aty/radeon_base.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
-> index 3fe509cb9b87..13bd2bd5c043 100644
-> --- a/drivers/video/fbdev/aty/radeon_base.c
-> +++ b/drivers/video/fbdev/aty/radeon_base.c
-> @@ -2307,7 +2307,7 @@ static int radeonfb_pci_register(struct pci_dev *pdev,
->
->         ret = radeon_kick_out_firmware_fb(pdev);
->         if (ret)
-> -               return ret;
-> +               goto err_release_fb;
 
-Good catch ! Thanks
+--zGQnqpIoxlsbsOfg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Mathieu Malaterre <malat@debian.org>
+On Fri, Aug 14, 2020 at 03:40:08PM -0700, Ray Jui wrote:
+> Fix additional checkpatch warnings in the iProc I2C driver by using
+> 'BIT' marcro.
+>=20
+> Reported-by: Wolfram Sang <wsa@kernel.org>
+> Signed-off-by: Ray Jui <ray.jui@broadcom.com>
 
->         /* request the mem regions */
->         ret = pci_request_region(pdev, 0, "radeonfb framebuffer");
-> --
-> 2.17.1
->
+Changed the commit msg a little. This is not about 'checkpatch', this is
+about fixing undefined C behaviour.
+
+Applied to for-current, thanks!
+
+
+--zGQnqpIoxlsbsOfg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9Ewm4ACgkQFA3kzBSg
+KbamgQ/7BM8jeTcEvAB4lW9JZQHtA+KGu9QgovN9T+TlFGPBzrlgrvc+0/hBk6Gy
+njNOnI4R3u+0Xyssrq/ROCpw9tsSyI5H1A4okP0uC/itM4P0bQNHZsXIiZrBTIyr
+L9+eXZLQddDTtYxRqnrMLtqS+BufAH1sykRTDyrPL/Z30WiGo7Gy9cs3JDbUVTOO
+pLbl44oBWjns0ZSeMf7l5hWOdnM7YGpfMwhmIHT8ftHZjk1yngjLyB/SOUZ7U2AG
+zYXlZXvXStMLddnUvKLf9IwDq4XHnTxukQ2eTVRDglnhMpCKylPDZLOgdRnyzrzw
+4pQQjGtWvknyhY7+ePwYKEa9Hu6NSsXvcTX8C5gb0oCikOg++Y4grM9lOUVy7w5+
+Z/uZCYmqfLuEW1uIvyYuELlxH3wChG5icdXpRPpCTyjFt6zRVWow3l23eJH444UL
+UCxd2+oxp15YpdLRSi3JSTADzWoloQ4YPTfftieEpuxVfzLSlj2mP1xnn4KA1RHK
+q6PObpQDQ78WRDyg5Zcj4scySH4v+1hiCAWGcjBTfL249cMp3h1uLE82ylBKwbeO
+NyBZHAe+jCeJboFeoiunSXdLwRkFNqec0czt+GxWTsXRpg9xm9f44CfYHwrNrWhW
+Yh0qnTnh25oMw++6zqTbj/v9mNOGwyG58vmUBCo9zgg7oQZLa1g=
+=8zAd
+-----END PGP SIGNATURE-----
+
+--zGQnqpIoxlsbsOfg--
