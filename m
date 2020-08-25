@@ -7,74 +7,74 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CC5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C54C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 513F120678
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F39EF20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:37:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="RcJNgci7"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GLHWScQg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728758AbgHYEhO (ORCPT
+        id S1728799AbgHYEhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:37:14 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20444 "EHLO
+        Tue, 25 Aug 2020 00:37:23 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4088 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728415AbgHYEhI (ORCPT
+        by vger.kernel.org with ESMTP id S1728747AbgHYEhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:37:08 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07P4Vt8L177831;
-        Tue, 25 Aug 2020 00:36:47 -0400
+        Tue, 25 Aug 2020 00:37:14 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07P4WL8D001865;
+        Tue, 25 Aug 2020 00:36:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=qYW6kMBXuW2eBojnnQbWdTTvVoxBeB244/VWM8uumKg=;
- b=RcJNgci7dfbzfjDEfKLaOz3pNwr/s6kvxYgej/9QsxJHrL0McQYzPkoUUfB5ryQRJXv9
- riseU7wPeU2yWHb84LmmKsN1VVSeYtTV+mxf3l3bgfz47NEddCJFexoZpRfePJ7l/PhT
- qJQtGAn0Cs3hudxk0pu+83ZBni9WQaEmcI58VuuxINA0Pqg3IWiiJoiL02FpKfny6v+q
- oucEKiXnOtkWwbqQyrk3vEcr82Hp/ytMnWSjGEerxeohiFK7PFGyVFccDsbDVbsS+TeS
- LaXEUpqbYKCwEegPh2MOyoHCMKnVGLE2Q7UrP2Mb/WDPzokpvK0m7gddPTqbY/+XQTtH +g== 
+ bh=cXJ1hb+rxB2SKxqD4eqkp6G4YrcNWaRqf6p7TUeDxs0=;
+ b=GLHWScQgfEaJS7Yu3wqWBXpepdpBiY03F9d7XKSgQwq9TW2DjOl0TiVwo3+gSGXPM/Qp
+ v7Z0h0CVNNEFrmWXTxuY3ikiS5Od6HOqK2cFTrBi+j5jc/cChtP6fg9RvfADcu4Kgy12
+ 3eAwmJ7i2Dp1hMg08hUIwzwk1cT7sIIA2Nug6UHueIi56Nf8VtsB0o95tLuxK7I+TxRf
+ NC5rcFg1NkD/uhVorIDxEjDY/jMTJXin3CpzLTyvh1E8NpivyhF1gh4g1u+4VUTXQRRT
+ iAaLWzRv/uUlwtuplnLKVH/+HGcotkt/x5ZLRlmA7SwH1bTQufaJdW2kw9t+xtFo784F bw== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 334sne2p1s-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 334sekjxqr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 00:36:46 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07P4XTnM182410;
-        Tue, 25 Aug 2020 00:36:46 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 334sne2p12-1
+        Tue, 25 Aug 2020 00:36:53 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07P4aqfn013525;
+        Tue, 25 Aug 2020 00:36:52 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 334sekjxpt-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 00:36:46 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07P4WhIo030814;
-        Tue, 25 Aug 2020 04:36:44 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 332uk6b1cr-1
+        Tue, 25 Aug 2020 00:36:52 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07P4X5Vj027929;
+        Tue, 25 Aug 2020 04:36:50 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 33498u8xqh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Aug 2020 04:36:44 +0000
+        Tue, 25 Aug 2020 04:36:50 +0000
 Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07P4afTc26149194
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07P4alRq26673550
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 04:36:41 GMT
+        Tue, 25 Aug 2020 04:36:47 GMT
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B7E2AAE045;
-        Tue, 25 Aug 2020 04:36:41 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id AA3BEAE05A;
+        Tue, 25 Aug 2020 04:36:47 +0000 (GMT)
 Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5431CAE051;
-        Tue, 25 Aug 2020 04:36:39 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 50FE0AE045;
+        Tue, 25 Aug 2020 04:36:45 +0000 (GMT)
 Received: from bangoria.ibmuc.com (unknown [9.199.33.167])
         by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Aug 2020 04:36:39 +0000 (GMT)
+        Tue, 25 Aug 2020 04:36:45 +0000 (GMT)
 From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 To:     mpe@ellerman.id.au, christophe.leroy@c-s.fr
 Cc:     ravi.bangoria@linux.ibm.com, mikey@neuling.org, paulus@samba.org,
         naveen.n.rao@linux.vnet.ibm.com, pedromfc@linux.ibm.com,
         rogealve@linux.ibm.com, jniethe5@gmail.com,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 6/8] powerpc/watchpoint: Add hw_len wherever missing
-Date:   Tue, 25 Aug 2020 10:06:15 +0530
-Message-Id: <20200825043617.1073634-7-ravi.bangoria@linux.ibm.com>
+Subject: [PATCH v5 8/8] powerpc/watchpoint/selftests: Tests for kernel accessing user memory
+Date:   Tue, 25 Aug 2020 10:06:17 +0530
+Message-Id: <20200825043617.1073634-9-ravi.bangoria@linux.ibm.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200825043617.1073634-1-ravi.bangoria@linux.ibm.com>
 References: <20200825043617.1073634-1-ravi.bangoria@linux.ibm.com>
@@ -83,54 +83,139 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- impostorscore=0 adultscore=0 spamscore=0 clxscore=1015 suspectscore=0
- mlxlogscore=999 priorityscore=1501 bulkscore=0 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008250030
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ priorityscore=1501 spamscore=0 clxscore=1015 impostorscore=0
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250030
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are couple of places where we set len but not hw_len. For
-ptrace/perf watchpoints, when CONFIG_HAVE_HW_BREAKPOINT=Y, hw_len
-will be calculated and set internally while parsing watchpoint.
-But when CONFIG_HAVE_HW_BREAKPOINT=N, we need to manually set
-'hw_len'. Similarly for xmon as well, hw_len needs to be set
-directly.
+Introduce tests to cover simple scenarios where user is watching
+memory which can be accessed by kernel as well. We also support
+_MODE_EXACT with _SETHWDEBUG interface. Move those testcases out-
+side of _BP_RANGE condition. This will help to test _MODE_EXACT
+scenarios when CONFIG_HAVE_HW_BREAKPOINT is not set, eg:
 
-Fixes: b57aeab811db ("powerpc/watchpoint: Fix length calculation for unaligned target")
+  $ ./ptrace-hwbreak
+  ...
+  PTRACE_SET_DEBUGREG, Kernel Access Userspace, len: 8: Ok
+  PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO, len: 1: Ok
+  PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RO, len: 1: Ok
+  PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RW, len: 1: Ok
+  PPC_PTRACE_SETHWDEBUG, MODE_EXACT, Kernel Access Userspace, len: 1: Ok
+  success: ptrace-hwbreak
+
+Suggested-by: Pedro Miraglia Franco de Carvalho <pedromfc@linux.ibm.com>
 Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 ---
- arch/powerpc/kernel/ptrace/ptrace-noadv.c | 1 +
- arch/powerpc/xmon/xmon.c                  | 1 +
- 2 files changed, 2 insertions(+)
+ .../selftests/powerpc/ptrace/ptrace-hwbreak.c | 48 ++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/ptrace/ptrace-noadv.c b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-index 866597b407bc..081c39842d84 100644
---- a/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-+++ b/arch/powerpc/kernel/ptrace/ptrace-noadv.c
-@@ -219,6 +219,7 @@ long ppc_set_hwdebug(struct task_struct *child, struct ppc_hw_breakpoint *bp_inf
- 	brk.address = ALIGN_DOWN(bp_info->addr, HW_BREAKPOINT_SIZE);
- 	brk.type = HW_BRK_TYPE_TRANSLATE | HW_BRK_TYPE_PRIV_ALL;
- 	brk.len = DABR_MAX_LEN;
-+	brk.hw_len = DABR_MAX_LEN;
- 	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_READ)
- 		brk.type |= HW_BRK_TYPE_READ;
- 	if (bp_info->trigger_type & PPC_BREAKPOINT_TRIGGER_WRITE)
-diff --git a/arch/powerpc/xmon/xmon.c b/arch/powerpc/xmon/xmon.c
-index df7bca00f5ec..55c43a6c9111 100644
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -969,6 +969,7 @@ static void insert_cpu_bpts(void)
- 			brk.address = dabr[i].address;
- 			brk.type = (dabr[i].enabled & HW_BRK_TYPE_DABR) | HW_BRK_TYPE_PRIV_ALL;
- 			brk.len = 8;
-+			brk.hw_len = 8;
- 			__set_breakpoint(i, &brk);
- 		}
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c b/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c
+index fc477dfe86a2..2e0d86e0687e 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c
+@@ -20,6 +20,8 @@
+ #include <signal.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
++#include <sys/syscall.h>
++#include <linux/limits.h>
+ #include "ptrace.h"
+ 
+ #define SPRN_PVR	0x11F
+@@ -44,6 +46,7 @@ struct gstruct {
+ };
+ static volatile struct gstruct gstruct __attribute__((aligned(512)));
+ 
++static volatile char cwd[PATH_MAX] __attribute__((aligned(8)));
+ 
+ static void get_dbginfo(pid_t child_pid, struct ppc_debug_info *dbginfo)
+ {
+@@ -138,6 +141,9 @@ static void test_workload(void)
+ 			write_var(len);
  	}
+ 
++	/* PTRACE_SET_DEBUGREG, Kernel Access Userspace test */
++	syscall(__NR_getcwd, &cwd, PATH_MAX);
++
+ 	/* PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO test */
+ 	write_var(1);
+ 
+@@ -150,6 +156,9 @@ static void test_workload(void)
+ 	else
+ 		read_var(1);
+ 
++	/* PPC_PTRACE_SETHWDEBUG, MODE_EXACT, Kernel Access Userspace test */
++	syscall(__NR_getcwd, &cwd, PATH_MAX);
++
+ 	/* PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, WO test */
+ 	gstruct.a[rand() % A_LEN] = 'a';
+ 
+@@ -293,6 +302,24 @@ static int test_set_debugreg(pid_t child_pid)
+ 	return 0;
+ }
+ 
++static int test_set_debugreg_kernel_userspace(pid_t child_pid)
++{
++	unsigned long wp_addr = (unsigned long)cwd;
++	char *name = "PTRACE_SET_DEBUGREG";
++
++	/* PTRACE_SET_DEBUGREG, Kernel Access Userspace test */
++	wp_addr &= ~0x7UL;
++	wp_addr |= (1Ul << DABR_READ_SHIFT);
++	wp_addr |= (1UL << DABR_WRITE_SHIFT);
++	wp_addr |= (1UL << DABR_TRANSLATION_SHIFT);
++	ptrace_set_debugreg(child_pid, wp_addr);
++	ptrace(PTRACE_CONT, child_pid, NULL, 0);
++	check_success(child_pid, name, "Kernel Access Userspace", wp_addr, 8);
++
++	ptrace_set_debugreg(child_pid, 0);
++	return 0;
++}
++
+ static void get_ppc_hw_breakpoint(struct ppc_hw_breakpoint *info, int type,
+ 				  unsigned long addr, int len)
+ {
+@@ -338,6 +365,22 @@ static void test_sethwdebug_exact(pid_t child_pid)
+ 	ptrace_delhwdebug(child_pid, wh);
+ }
+ 
++static void test_sethwdebug_exact_kernel_userspace(pid_t child_pid)
++{
++	struct ppc_hw_breakpoint info;
++	unsigned long wp_addr = (unsigned long)&cwd;
++	char *name = "PPC_PTRACE_SETHWDEBUG, MODE_EXACT";
++	int len = 1; /* hardcoded in kernel */
++	int wh;
++
++	/* PPC_PTRACE_SETHWDEBUG, MODE_EXACT, Kernel Access Userspace test */
++	get_ppc_hw_breakpoint(&info, PPC_BREAKPOINT_TRIGGER_WRITE, wp_addr, 0);
++	wh = ptrace_sethwdebug(child_pid, &info);
++	ptrace(PTRACE_CONT, child_pid, NULL, 0);
++	check_success(child_pid, name, "Kernel Access Userspace", wp_addr, len);
++	ptrace_delhwdebug(child_pid, wh);
++}
++
+ static void test_sethwdebug_range_aligned(pid_t child_pid)
+ {
+ 	struct ppc_hw_breakpoint info;
+@@ -452,9 +495,10 @@ static void
+ run_tests(pid_t child_pid, struct ppc_debug_info *dbginfo, bool dawr)
+ {
+ 	test_set_debugreg(child_pid);
++	test_set_debugreg_kernel_userspace(child_pid);
++	test_sethwdebug_exact(child_pid);
++	test_sethwdebug_exact_kernel_userspace(child_pid);
+ 	if (dbginfo->features & PPC_DEBUG_FEATURE_DATA_BP_RANGE) {
+-		test_sethwdebug_exact(child_pid);
+-
+ 		test_sethwdebug_range_aligned(child_pid);
+ 		if (dawr || is_8xx) {
+ 			test_sethwdebug_range_unaligned(child_pid);
 -- 
 2.26.2
 
