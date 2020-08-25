@@ -2,133 +2,172 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4788AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2A7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7262068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B774020715
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:33:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="J/arBTGQ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Ih1UP6+r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgHYK3c (ORCPT
+        id S1729789AbgHYKdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:29:32 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:36924 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729698AbgHYK3a (ORCPT
+        Tue, 25 Aug 2020 06:33:43 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:22499 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728117AbgHYKdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:29:30 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PAPOJx078060;
-        Tue, 25 Aug 2020 10:29:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=eYOBrGq+oIN0aCgQgUHudJMPRgvhB81SD1iHx4MSQQ4=;
- b=J/arBTGQW/QHlSBjkq9YtT0uCotUCrSo7RyLr1Q5UjfA9XzjxXOZb8ukdTTio6bcVass
- F3/3JySMpw5/8eMSsiFWLI1x3hRZVPXe0YEgfU/d6ktOONu3xGvUFLBhRVX9Mg3ENs3U
- vN4iUEiI6CJGYMlOhD8BZAtPNXgmWIqVt8W0eHK43l1IY/yAo9vSC0i8XiLVVl+JmgKL
- VpiFpuLOApElDLdSp9WpO5MX46CorU6Ch2bqgGrZNtNOTMV9aapa7v//m47uNJlkmq3S
- 1A9BQpju++mbT5eoSXgVb8tdhfbgzf55KzEhDwVFzdkvJwJhJnmnKNMvWvq7ZH40FTGJ EA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 333csj1qf5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 25 Aug 2020 10:29:18 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PAPHQB176374;
-        Tue, 25 Aug 2020 10:29:18 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 333r9jcmjm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Aug 2020 10:29:18 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07PATHMO005180;
-        Tue, 25 Aug 2020 10:29:17 GMT
-Received: from localhost.localdomain (/73.243.10.6)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Aug 2020 03:29:17 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.0.3\))
-Subject: Re: [PATCH 00/11] iomap/fs/block patches for 5.11
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <20200824151700.16097-1-willy@infradead.org>
-Date:   Tue, 25 Aug 2020 04:29:16 -0600
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-block@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        Tue, 25 Aug 2020 06:33:41 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200825103336epoutp0382871002ba8a618634680e336c4dd0ff~ufFOeTAVA0792907929epoutp03c
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 10:33:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200825103336epoutp0382871002ba8a618634680e336c4dd0ff~ufFOeTAVA0792907929epoutp03c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598351616;
+        bh=l6bgua5qF1U2anSdUW95hVGgAsI0ptIuSgH/OBirhSk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Ih1UP6+rTm5eGdqOOIG3BeuEWCRiyEtOKa7ze0PDVaAqAC0xv50fLQJYKJzTkgZf9
+         881HPYGlTiIrYnSyK3AJmuY8//f5DG3IO4m7i6kvF3yITapzx0jWzdbX5bicESM/H7
+         OX/J9y/KBj0mJO4OZBBqm7HdOgXXQSvgcLX6iu+A=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200825103335epcas1p15a5a344977d6990c2058627888284a6f~ufFOC-eEo2081420814epcas1p1W;
+        Tue, 25 Aug 2020 10:33:35 +0000 (GMT)
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.154]) by
+        epsnrtp2.localdomain (Postfix) with ESMTP id 4BbQM05WMQzMqYkZ; Tue, 25 Aug
+        2020 10:33:32 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        65.F2.29173.CF8E44F5; Tue, 25 Aug 2020 19:33:32 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200825103331epcas1p341eca764a8accfad2113d7bed7a7e7fd~ufFJ85NCB0778707787epcas1p3J;
+        Tue, 25 Aug 2020 10:33:31 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200825103331epsmtrp1618d954f3f43d77474fc6f156b57ed16~ufFJ2yIKL1149211492epsmtrp1m;
+        Tue, 25 Aug 2020 10:33:31 +0000 (GMT)
+X-AuditID: b6c32a37-9cdff700000071f5-5d-5f44e8fcdc23
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        80.14.08303.BF8E44F5; Tue, 25 Aug 2020 19:33:31 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200825103331epsmtip1dd254f71d0a0cbe244daedb4e2865ef8~ufFJnI14F1178111781epsmtip1Q;
+        Tue, 25 Aug 2020 10:33:31 +0000 (GMT)
+Subject: Re: [PATCH v1 1/1] extcon: ptn5150: Add usb-typec support for Intel
+ LGM SoC
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
         linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1E04AE83-85F0-4C90-924C-9A6792D453DE@oracle.com>
-References: <20200824151700.16097-1-willy@infradead.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-X-Mailer: Apple Mail (2.3654.0.3)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250078
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 clxscore=1011
- spamscore=0 priorityscore=1501 impostorscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008250078
+Cc:     vijaikumar.kanagarajan@gmail.com, krzk@kernel.org,
+        myungjoo.ham@samsung.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, yin1.li@intel.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <4b1edd2e-4791-3f12-206f-9277435cdf59@samsung.com>
+Date:   Tue, 25 Aug 2020 19:46:00 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
+MIME-Version: 1.0
+In-Reply-To: <20200825083147.25270-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrAJsWRmVeSWpSXmKPExsWy7bCmru6fFy7xBvcP61hcfxthcf78BnaL
+        y7vmsFncblzBZvGlYz2bxYZj99ksXu6fzmrR1HSczYHDY+esu+wei/e8ZPLYtKqTzWPeyUCP
+        vi2rGD0+b5ILYIvKtslITUxJLVJIzUvOT8nMS7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLx
+        CdB1y8wBOkdJoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BZoFecmFtcmpeul5yf
+        a2VoYGBkClSYkJ1x6+su9oJ53BW7fx1gaWBcw9nFyMkhIWAi0fV8P0sXIxeHkMAORolnl9ZB
+        OZ8YJc68XcMG4XxmlJiz5ywTTMvyv6+hErsYJWYffMAM4bxnlLhxtYkFpEpYIEzixuVu1i5G
+        Dg4RgXyJM08EQcLMAtOAJq1hBLHZBLQk9r+4wQZi8wsoSlz98RgszitgJ/HgYBNYnEVAVWL7
+        9jusILYo0MiT21qgagQlTs58AraKUyBQ4vfSu0wQ88Ulbj2ZD2XLS2x/OwfsNgmBpRwSH67f
+        YoT4wEVi3cG1rBC2sMSr41vYIWwpiZf9bVB2tcTKk0fYIJo7GCW27L8A1WAssX/pZCaQx5gF
+        NCXW79KHCCtK7Pw9lxFiMZ/Eu689YL9LCPBKdLQJQZQoS1x+cBcaiJISi9s72SYwKs1C8s4s
+        JC/MQvLCLIRlCxhZVjGKpRYU56anFhsWGCPH9iZGcFLVMt/BOO3tB71DjEwcjIcYJTiYlUR4
+        BS86xwvxpiRWVqUW5ccXleakFh9iNAUG8ERmKdHkfGBazyuJNzQ1MjY2tjAxNDM1NFQS5314
+        SyFeSCA9sSQ1OzW1ILUIpo+Jg1OqgelekbinoN2Vb8WS39O9FdlqWMocEp/0KxT5d8czsGZl
+        B94SzNjS1r/zQOfdW7eWWciffN0tHTU7c6rJtHWFpXMKrxz46h+/Y6NYu7xF01muKbY6jzll
+        Y7TkP67bfDBI2NGWbXmNbMrlqV9msD492ya+fuv0bO8XIs/M7hxWLk23vOb/2K+rNlaIVeMY
+        o8SOElad067ydQ/z7H41KtmELxQ1FeKIyhR5Grl/hXfqmtWRX2+Xm+/YJf0iVL325vmX7S+y
+        vkltZMkX//2PO35acGvE0i1V14wPaBZvvTrT+cDvdbMOvaqdq6n3sLR5rd+p3+lvnCd9nzdl
+        +SrzpeGW4asUnTv2hOv8Wy40k0fgsxJLcUaioRZzUXEiAHkPruEzBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFuphkeLIzCtJLcpLzFFi42LZdlhJTvf3C5d4gy/3hSyuv42wOH9+A7vF
+        5V1z2CxuN65gs/jSsZ7NYsOx+2wWL/dPZ7VoajrO5sDhsXPWXXaPxXteMnlsWtXJ5jHvZKBH
+        35ZVjB6fN8kFsEVx2aSk5mSWpRbp2yVwZdz6uou9YB53xe5fB1gaGNdwdjFyckgImEgs//ua
+        rYuRi0NIYAejxJ/N81ghEpIS0y4eZe5i5ACyhSUOHy6GqHnLKPF5xhpGkBphgTCJG5e7wepF
+        BPIl3s3czQpSxCwwjVHi//E2VoiO14wSa1avA6tiE9CS2P/iBhuIzS+gKHH1x2OwSbwCdhIP
+        DjaBxVkEVCW2b78DVi8KtGHnksdMEDWCEidnPmEBsTkFAiV+L70LFmcWUJf4M+8SM4QtLnHr
+        yXyouLzE9rdzmCcwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhglJdarlecmFtcmpeu
+        l5yfu4kRHGFaWjsY96z6oHeIkYmD8RCjBAezkgiv4EXneCHelMTKqtSi/Pii0pzU4kOM0hws
+        SuK8X2ctjBMSSE8sSc1OTS1ILYLJMnFwSjUwXbmtKlSu8uyobtm5addfsn4/ouC9Rf62f6U4
+        9zY3MxuhX8ZdOuuMWcseJOg05a6cr+3Gkj3h8Nmns5etU/qXqyOsxbSA73//avldHoIiG/xf
+        crZXdrxdKyjt05Yb9mrOxLfWxjwnBNpb260a5U/v3RBeq3Ao9OqF05f3xl68si3n79MpVm8n
+        RBk7F3QyzxOKWfLP2dJyX4jt1othMWJbH7ezOK+7VeQTH1n6hiG0ump+a5po/vFdkpGW5+zm
+        344zYKoLa9hlPquHdeXy6sZtzY4sk1iarD9XMERO58uoz1OM1D505fe6T/m7Ttcke7yY/f6e
+        dOrKd+duTVBP31kUvefd4T1bk+yO3Oib9nmBEktxRqKhFnNRcSIAzIcoIx8DAAA=
+X-CMS-MailID: 20200825103331epcas1p341eca764a8accfad2113d7bed7a7e7fd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200825083202epcas1p39a30661dd7ae7e5b4f8645a7cfcedd1d
+References: <20200825083147.25270-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+        <CGME20200825083202epcas1p39a30661dd7ae7e5b4f8645a7cfcedd1d@epcas1p3.samsung.com>
+        <20200825083147.25270-2-vadivel.muruganx.ramuthevar@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Really nice improvements here.
+Hi,
 
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>
+On 8/25/20 5:31 PM, Ramuthevar,Vadivel MuruganX wrote:
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> 
+> Add usb-typec detection support for Intel LGM SoC based
+> boards.
+> 
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+> ---
+>  drivers/extcon/extcon-ptn5150.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
+> index 8ba706fad887..60355a1b5cb2 100644
+> --- a/drivers/extcon/extcon-ptn5150.c
+> +++ b/drivers/extcon/extcon-ptn5150.c
+> @@ -300,6 +300,8 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
+>  		return ret;
+>  	}
+>  
+> +	extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
+> +				       EXTCON_PROP_USB_TYPEC_POLARITY);
 
-> On Aug 24, 2020, at 9:16 AM, Matthew Wilcox (Oracle) =
-<willy@infradead.org> wrote:
->=20
-> As promised earlier [1], here are the patches which I would like to
-> merge into 5.11 to support THPs.  They depend on that earlier series.
-> If there's anything in here that you'd like to see pulled out and =
-added
-> to that earlier series, let me know.
->=20
-> There are a couple of pieces in here which aren't exactly part of
-> iomap, but I think make sense to take through the iomap tree.
->=20
-> [1] =
-https://lore.kernel.org/linux-fsdevel/20200824145511.10500-1-willy@infrade=
-ad.org/
->=20
-> Matthew Wilcox (Oracle) (11):
->  fs: Make page_mkwrite_check_truncate thp-aware
->  mm: Support THPs in zero_user_segments
->  mm: Zero the head page, not the tail page
->  block: Add bio_for_each_thp_segment_all
->  iomap: Support THPs in iomap_adjust_read_range
->  iomap: Support THPs in invalidatepage
->  iomap: Support THPs in read paths
->  iomap: Change iomap_write_begin calling convention
->  iomap: Support THPs in write paths
->  iomap: Inline data shouldn't see THPs
->  iomap: Handle tail pages in iomap_page_mkwrite
->=20
-> fs/iomap/buffered-io.c  | 178 ++++++++++++++++++++++++----------------
-> include/linux/bio.h     |  13 +++
-> include/linux/bvec.h    |  27 ++++++
-> include/linux/highmem.h |  15 +++-
-> include/linux/pagemap.h |  10 +--
-> mm/highmem.c            |  62 +++++++++++++-
-> mm/shmem.c              |   7 ++
-> mm/truncate.c           |   7 ++
-> 8 files changed, 236 insertions(+), 83 deletions(-)
->=20
-> --=20
-> 2.28.0
->=20
->=20
+extcon_set_property_capability() just sets the capability
+of EXTCON_PROP_USB_TYPEC_POLARITY property.
 
+If you want to set the value (0 or 1) of EXTCON_PROP_USB_TYPEC_POLARITY,
+we have to call extcon_set_property() function. But, this patch doesn't
+set the any value of EXTCON_PROP_USB_TYPEC_POLARITY property.
+
+Why do you only use extcon_set_property_capability()
+without the proper extcon_set_property()?
+
+>  	/* Initialize PTN5150 device and print vendor id and version id */
+>  	ret = ptn5150_init_dev_type(info);
+>  	if (ret)
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
