@@ -2,109 +2,83 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22191C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CE1A20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:27:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HunUM9M5"
+	by mail.kernel.org (Postfix) with ESMTP id 0759320738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbgHYG1s (ORCPT
+        id S1729062AbgHYG3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:27:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbgHYG1q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:27:46 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB9BC061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:27:46 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id o5so6110637pgb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:27:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=94MSSc6Bw+ePCcLcj9S6ugcreG6qu4BBnSYozoT3V0s=;
-        b=HunUM9M5QD0dPkyiCaGhJhjgK4tiwnoi5/fgs8rW5CPYd4dtGClL0fylBu0MsgjTiI
-         VtN8xkLXyaSIVhlU3eiJtUAb58guTng9h0FlsNglOxWHUkJx/Zw9YPQrWvuFoWfCu8Nd
-         b54BpMYtOxUpuRIdBgsNjIKNdwM1OaY56Qsw32T2ys7T30fEB3pIu1cobZPLSbckJGm6
-         /Upd8zGNaWRqNKVPi3Qo22Yxp3+UUBKLraX6GF3s7XpAk+t5q6vmcsLlToBWdxoMNBvB
-         qoQmhOpC9D6GcrqnyWRE7Y+U4VC5XNordG9WsNumB8qCLZaal2zANOnpFYyKYG0bIOTU
-         ueQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=94MSSc6Bw+ePCcLcj9S6ugcreG6qu4BBnSYozoT3V0s=;
-        b=UHMArCRKDsVnCU/79YOoG0k1z5hBDWh0XgV51U6/Kx3rPCeFiij/y/vM7nbJmXq9eu
-         O4y8d4sn5HNmETC9x3amUMX43GHMIdK8YFAXCzFveIH8dmNpwGhcHjlMAJwabwzMmHKu
-         NoPcojrTZWgv4tGcnw5/KYf/9jlaFhzzrIcAkW+SVtpjudnx5ZVweu47kxbd4lsrOi2K
-         fCKtuwRiho+ItzrToDHVe776KAAnwE91wKAov67htEUw6xFSbj+4wvx3Q36oEbxkE5m7
-         +88vItsLbmumjAES6edQnM/h8dOhqGjpOJUfJcdZxB0H0rtp8QKelAwbrCz34SstuoHd
-         w3HA==
-X-Gm-Message-State: AOAM533m+5KX/7NVkMU/1ATXMVhjUyMjs/Xv3nP/zddgHxu3XNmn2Pt+
-        HNYKGSlwnnpjudRRXbcP6zTv/Q==
-X-Google-Smtp-Source: ABdhPJxUaiTJF/Sy9hbAUOY7Tja+Z4piLIACl5WlyQYBJJ8kL4CGYfZ2NHJkit4vpYUkT6HD2pjf7g==
-X-Received: by 2002:aa7:9e4e:: with SMTP id z14mr6932510pfq.60.1598336865613;
-        Mon, 24 Aug 2020 23:27:45 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id x12sm3159096pfr.42.2020.08.24.23.27.44
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 23:27:45 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 11:57:43 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
-        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
-        valentin.schneider@arm.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] arch_topology, cpufreq: constify arch_* cpumasks
-Message-ID: <20200825062743.mi6rwltqdqfddjox@vireshk-i7>
-References: <20200824210252.27486-1-ionela.voinescu@arm.com>
- <20200824210252.27486-5-ionela.voinescu@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824210252.27486-5-ionela.voinescu@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+        Tue, 25 Aug 2020 02:29:19 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:23388 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728912AbgHYG3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 02:29:19 -0400
+Received: from localhost.localdomain (unknown [210.32.144.184])
+        by mail-app4 (Coremail) with SMTP id cS_KCgAnb_+sr0RfQp5LAQ--.5869S4;
+        Tue, 25 Aug 2020 14:29:04 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] video: fbdev: radeon: Fix memleak in radeonfb_pci_register
+Date:   Tue, 25 Aug 2020 14:29:00 +0800
+Message-Id: <20200825062900.11210-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgAnb_+sr0RfQp5LAQ--.5869S4
+X-Coremail-Antispam: 1UD129KBjvdXoWruF4DZFWkuF1rZF1fZw45trb_yoWfXrc_Cr
+        18uasrXayDGFykWr18WF15ZrWayrZrWF95Zrn7trZ3uFy7Wr1FgF45Zw18XFW5Ww47GF98
+        Jr1vgrWxZr4SkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbxAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owA2z4x0Y4vEx4A2
+        jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52
+        x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWU
+        GwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+        8JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l
+        42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+        8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+        ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+        0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AK
+        xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0J
+        U-J5rUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgQDBlZdtPqDKgACst
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-08-20, 22:02, Ionela Voinescu wrote:
-> From: Valentin Schneider <valentin.schneider@arm.com>
-> 
-> The passed cpumask arguments to arch_set_freq_scale() and
-> arch_freq_counters_available() are only iterated over, so reflect this
-> in the prototype. This also allows to pass system cpumasks like
-> cpu_online_mask without getting a warning.
-> 
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  arch/arm64/kernel/topology.c  | 2 +-
->  drivers/base/arch_topology.c  | 4 ++--
->  drivers/cpufreq/cpufreq.c     | 5 +++--
->  include/linux/arch_topology.h | 2 +-
->  include/linux/cpufreq.h       | 3 ++-
->  5 files changed, 9 insertions(+), 7 deletions(-)
+When radeon_kick_out_firmware_fb() fails, info should be
+freed just like the subsequent error paths.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Fixes: 069ee21a82344 ("fbdev: Fix loading of module radeonfb on PowerMac")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/video/fbdev/aty/radeon_base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
+index 3fe509cb9b87..13bd2bd5c043 100644
+--- a/drivers/video/fbdev/aty/radeon_base.c
++++ b/drivers/video/fbdev/aty/radeon_base.c
+@@ -2307,7 +2307,7 @@ static int radeonfb_pci_register(struct pci_dev *pdev,
+ 
+ 	ret = radeon_kick_out_firmware_fb(pdev);
+ 	if (ret)
+-		return ret;
++		goto err_release_fb;
+ 
+ 	/* request the mem regions */
+ 	ret = pci_request_region(pdev, 0, "radeonfb framebuffer");
 -- 
-viresh
+2.17.1
+
