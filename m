@@ -2,172 +2,185 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-19.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CE8C433E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B49612071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185FA20578
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:31:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YVimBWLT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sjOzCSRV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbgHYH3F (ORCPT
+        id S1729444AbgHYHbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:29:05 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16435 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729194AbgHYH3E (ORCPT
+        Tue, 25 Aug 2020 03:31:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbgHYHbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:29:04 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f44bd480002>; Tue, 25 Aug 2020 00:27:04 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 25 Aug 2020 00:29:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 25 Aug 2020 00:29:03 -0700
-Received: from [10.26.74.41] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 25 Aug
- 2020 07:28:56 +0000
-Subject: Re: [PATCH v4 7/7] sdhci: tegra: Add missing TMCLK for data timeout
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <robh+dt@kernel.org>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <1598296557-32020-1-git-send-email-skomatineni@nvidia.com>
- <1598296557-32020-8-git-send-email-skomatineni@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a8ea7d0e-ed1d-165a-bba7-2a39c31cc107@nvidia.com>
-Date:   Tue, 25 Aug 2020 08:28:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 25 Aug 2020 03:31:32 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0874EC061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 00:31:30 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id l191so4111386pgd.5
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 00:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=m7ch7awO6dQw6oGepnCr0LIwMq/ocai7485X8Nfpk3A=;
+        b=sjOzCSRVvG1BQ9lfblTNWFud2sOL4Z8FoPVLLR2PV/do9wx1dr4Z4Y689ZhRA/v0rY
+         q7pmrtRQPDdQoYCsmHvS4g5iPRU+uFKFKsau302IkCsImMeSerTUn6CxGksc6llIvewO
+         oKXxq3B5dvx40WPTaY7rdYOrfM6QQUFjKMDdcfMbBmseNYJbYc3D8RL00BGtau8VFU7J
+         Vx8KeOuhxOkA7KmNU+W4EpZOZvzXprk9Pku2b0eAOFKHBSi7dN+reeBtCqdu8VKo09iN
+         Cyu6nNg7qs5GoBPqsXrpDun8rD+8Q7rSGKEq6jLFtLAtumZ4VyxrpKjmSzkkG345bhCk
+         TDsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=m7ch7awO6dQw6oGepnCr0LIwMq/ocai7485X8Nfpk3A=;
+        b=tK4eQxhrt/lm+hQgRbXkJkGa0qw1OXQpiF9tJ0LUVhwlpd7qsNsfcolztRQyvIt/yb
+         8+0Zlgy7ozcAR5xPv14bqiV9JR/sPI8VvwA7jfHn6UYWe7EEXhucg3i84qWR+EwdY+Xj
+         NQ/drq+qIN9uZJX0RNVPHM/4SKEgS7zZHwbaSBuoSubNr1PCJAI2XNAgwWEOGP2aA/LJ
+         iTRxu7dMoVCtNG9d2gYlvVoCp3w4brzwr/YGunzWn4d4M6eHxy/jxNGUByZ1ALRBFgS8
+         VFDudWMn4P+mLRLGUmXP5UAJjmYUXS6Y7gFHOPmQGIv3uzxLvYbe/gGrK+JZQyNJVlTj
+         MZ+Q==
+X-Gm-Message-State: AOAM532oHJfXknjdTNGmj5a5RRvAwDprNfn+9CK5OgAgsr9+Wo+ypp83
+        10rg2L/WbOa2+CcUELsmXH0qV97LD0ChuEupuyJGgA==
+X-Google-Smtp-Source: ABdhPJwe6jM7HG16VFQngcUGbRQn3BsibeeAW1tnRrBzba3m+D9Bx6IoJfIhWy3w05MZeYYI3/zkzvt4t6UXOd3rZI4=
+X-Received: by 2002:a62:7845:: with SMTP id t66mr6315514pfc.238.1598340690018;
+ Tue, 25 Aug 2020 00:31:30 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1598296557-32020-8-git-send-email-skomatineni@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598340424; bh=R3hLvCd5YUZLhhnoklm4RrizfdS9HAJpYHSPgk5QwRc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=YVimBWLTRrbrR+FkD2wyHFGJzWM82x9PGLcjxAyHWw/Z5zCgc2BKGnQYsvhaBsX34
-         GlEmTtT0sVhAM+a70ut0CbPpN9swBjfOLru9INzrN9Z2wTbqOQqWYyHze8SLVOONEL
-         XjI+Juwc1EiGSxo+5VuQQyuhCBHqIG6ATKQkca54RIHuMUdx5jfNgytCpVXt5KmFHD
-         GoTfedudxaB8zEQ1yiOrBMg6x5E1pu/J31sZthQNAuys7McMDRzS9yigsvbB3czgdJ
-         gIo54HQ6AM32cMzqw8wH6q0CyBWEMsLBNAJ6uzbpBOrrwwXlDONclUzCQ4ffpDgxYX
-         AdbggAbwKFkHg==
+References: <20200817220212.338670-1-ndesaulniers@google.com>
+ <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com> <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
+ <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
+ <20200818202407.GA3143683@rani.riverdale.lan> <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
+ <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
+ <20200818214146.GA3196105@rani.riverdale.lan> <CAK7LNAQmWBPV4nZ0xPdSHEt=DipHmR40co827voGOFN=2j47BQ@mail.gmail.com>
+ <20200824173450.GA4157679@rani.riverdale.lan> <CAKwvOd=BEwuHFeuskJ4gPOGLoXm98oXA18U=tTw981g+HdVz-w@mail.gmail.com>
+In-Reply-To: <CAKwvOd=BEwuHFeuskJ4gPOGLoXm98oXA18U=tTw981g+HdVz-w@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 25 Aug 2020 00:31:18 -0700
+Message-ID: <CAKwvOdmRz6d9touuZnotpF3vs0m5M9MbbKX8M_XmTCZ+8Fe6-A@mail.gmail.com>
+Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 25, 2020 at 12:10 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Mon, Aug 24, 2020 at 10:34 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > On Tue, Aug 25, 2020 at 12:57:22AM +0900, Masahiro Yamada wrote:
+> > >
+> > >
+> > > To prevent transformation from foo() into bar(),
+> > > there are two ways in Clang to do that;
+> > > -fno-builtin-foo, and -fno-builtin-bar.
+> > > There is only one in GCC; -fno-buitin-foo.
+> > >
+> > > Is this correct?
+> > >
+> >
+> > It looked that way from previous experimentation, but...
+> >
+> > >
+> > >
+> > > I just played the optimization
+> > > from printf("helloworld\n") to puts("helloworld").
+> > >
+> > > https://godbolt.org/z/5s4ded
+> > >
+> > >
+> > > -fno-builtin-puts cannot prevent clang
+> > > from emitting puts.
+> > > Is it because clang does not support
+> > > -fno-builtin-puts?
+> >
+> > Ugh. clang doesn't have __builtin_puts() but it optimizes printf() into
+> > puts(). It doesn't have __builtin_putchar() but will optimize
+> > printf("c") into putchar('c').
+>
+> Bah, merely a <strikethrough>flesh
+> wound</strikethrough><strikethrough>compiler bug</strikethrough>rather
+> long TODO in the compiler.
+> https://github.com/llvm/llvm-project/blob/be2bc7d4cef2edd66c7fb74b70adf62fc68754db/clang/include/clang/Basic/Builtins.def#L943
+>
+> Anyways, give me a week and I'll hack through the rest of them
+> https://reviews.llvm.org/D86508.  Certainly made HPA's point hit home,
+> that's a lot of functionality to implement or disable in an
+> environment.
+>
+> Masahiro, are you implying that we shouldn't take the
+> -fno-builtin-stpcpy patch, because Clang is inconsistent? (That can be
+> fixed.) Even though -fno-builtin-stpcpy works here as intended?
+> https://lore.kernel.org/lkml/20200817220212.338670-2-ndesaulniers@google.com/
 
-On 24/08/2020 20:15, Sowjanya Komatineni wrote:
-> commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
-> 
-> Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
-> SDMMC hawdware for data timeout to achive better timeout than using
-> SDCLK and using TMCLK is recommended.
-> 
-> USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
-> SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
-> SDCLK for data timeout.
-> 
-> Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
-> for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
-> is not recommended.
-> 
-> So, this patch fixes it.
-> 
-> Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
-> Cc: stable <stable@vger.kernel.org> # 5.4
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
-> Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/mmc/host/sdhci-tegra.c | 41 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index 31ed321..c0b9405 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -140,6 +140,7 @@ struct sdhci_tegra_autocal_offsets {
->  struct sdhci_tegra {
->  	const struct sdhci_tegra_soc_data *soc_data;
->  	struct gpio_desc *power_gpio;
-> +	struct clk *tmclk;
->  	bool ddr_signaling;
->  	bool pad_calib_required;
->  	bool pad_control_available;
-> @@ -1611,6 +1612,44 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
->  		goto err_power_req;
->  	}
->  
-> +	/*
-> +	 * Tegra210 has a separate SDMMC_LEGACY_TM clock used for host
-> +	 * timeout clock and SW can choose TMCLK or SDCLK for hardware
-> +	 * data timeout through the bit USE_TMCLK_FOR_DATA_TIMEOUT of
-> +	 * the register SDHCI_TEGRA_VENDOR_SYS_SW_CTRL.
-> +	 *
-> +	 * USE_TMCLK_FOR_DATA_TIMEOUT bit default is set to 1 and SDMMC uses
-> +	 * 12Mhz TMCLK which is advertised in host capability register.
-> +	 * With TMCLK of 12Mhz provides maximum data timeout period that can
-> +	 * be achieved is 11s better than using SDCLK for data timeout.
-> +	 *
-> +	 * So, TMCLK is set to 12Mhz and kept enabled all the time on SoC's
-> +	 * supporting SDR104 mode and when not using SDCLK for data timeout.
-> +	 */
-> +
-> +	if ((soc_data->nvquirks & NVQUIRK_ENABLE_SDR104) &&
-> +	    !(soc_data->pdata->quirks & SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK)) {
-> +		clk = devm_clk_get(&pdev->dev, "tmclk");
-> +		if (IS_ERR(clk)) {
-> +			rc = PTR_ERR(clk);
-> +			if (rc == -EPROBE_DEFER)
-> +				goto err_power_req;
-> +
-> +			dev_warn(&pdev->dev, "failed to get tmclk: %d\n", rc);
-> +			clk = NULL;
-> +		}
-> +
-> +		clk_set_rate(clk, 12000000);
-> +		rc = clk_prepare_enable(clk);
-> +		if (rc) {
-> +			dev_err(&pdev->dev,
-> +				"failed to enable tmclk: %d\n", rc);
-> +			goto err_power_req;
-> +		}
-> +
-> +		tegra_host->tmclk = clk;
-> +	}
-> +
->  	clk = devm_clk_get(mmc_dev(host->mmc), NULL);
+Sorry, the above link ^ should be this hunk (beyond tired, getting up
+in 4.5hrs for plumbers):
+
+diff --git a/Makefile b/Makefile
+index c4470a4e131f..6a08cdfa58ae 100644
+--- a/Makefile
++++ b/Makefile
+@@ -577,6 +577,7 @@ ifneq ($(LLVM_IAS),1)
+ CLANG_FLAGS    += -no-integrated-as
+ endif
+ CLANG_FLAGS    += -Werror=unknown-warning-option
++CLANG_FLAGS    += -fno-builtin-stpcpy
+ KBUILD_CFLAGS  += $(CLANG_FLAGS)
+ KBUILD_AFLAGS  += $(CLANG_FLAGS)
+ export CLANG_FLAGS
+
+>
+> Otherwise we need to provide an implementation of this symbol in the kernel.
+> https://lore.kernel.org/lkml/20200815020946.1538085-1-ndesaulniers@google.com/
+>
+> Please, pick your poison.
+> --
+> Thanks,
+> ~Nick Desaulniers
 
 
-One thing that I just thought of is that now we may have two clocks,
-shouldn't we use the name, 'sdhci', for requesting the above clock as well?
-
-Unfortunately, the name 'sdhci' has not been populated for all Tegra
-devices until recently and so we may need to check if there are one of
-two clocks populated. If there is only one, then maybe we fall back to
-the above.
-
-Cheers
-Jon
 
 -- 
-nvpublic
+Thanks,
+~Nick Desaulniers
