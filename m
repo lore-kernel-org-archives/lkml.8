@@ -2,148 +2,133 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD47C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4788AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 740032068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7262068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 10:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MNRhKl0q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vNvYriJp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="J/arBTGQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbgHYK22 (ORCPT
+        id S1729860AbgHYK3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 06:28:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729458AbgHYK21 (ORCPT
+        Tue, 25 Aug 2020 06:29:32 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:36924 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729698AbgHYK3a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 06:28:27 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CF6C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 03:28:26 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598351305;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XGq27nqRzhydXuYXKqM77GLSeoyVZvew8+Gqoyfxaks=;
-        b=MNRhKl0qJ3SryZLP4eRQmYXdz3FaBYrzxO8W2bXu0lWcKc+pTA4/j4AH05VewuixcxT4Bj
-        6kjUIAB7SE2EzCnBiVSkqc9aAu5QWjDOGnhGBrGvPncGyM88VwRAboHDAWqsyp58rwHj0D
-        w1RNrKqMqMxeSXq/Ze7MfoxILzclWU1OKQBEtbL+NUyMOI7Y2F0afqjqVcWaGa5RfuV370
-        UwSPnrv681bmj1Y0juMM6ZYKLFxyB3IqhfX8kNSstLMyfkHTYzjZrL74RVMQZYOctDrr/G
-        BOLpIDt43lmfSvOYBZGc6AQ9bQuFpNHFDruXaAbM3m3/aXKiRkCTLzgKYvLsWw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598351305;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XGq27nqRzhydXuYXKqM77GLSeoyVZvew8+Gqoyfxaks=;
-        b=vNvYriJpXxiCcZDhrSzCuVO1860RkEGwRvJ24kUFCEevngTqJUnCmG3IUNU7idOSE/CJ5E
-        YWArQe2XGyg95+AA==
-To:     Alexander Graf <graf@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        X86 ML <x86@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        avi@scylladb.com, "Herrenschmidt\, Benjamin" <benh@amazon.com>,
-        robketr@amazon.de, amos@scylladb.com
-Subject: Re: [patch V9 21/39] x86/irq: Convey vector as argument and not in ptregs
-In-Reply-To: <f0079706-4cb3-b3e3-9a5e-97aaba0aa0eb@amazon.com>
-References: <20200521200513.656533920@linutronix.de> <20200521202118.796915981@linutronix.de> <f0079706-4cb3-b3e3-9a5e-97aaba0aa0eb@amazon.com>
-Date:   Tue, 25 Aug 2020 12:28:24 +0200
-Message-ID: <87a6yj58af.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Tue, 25 Aug 2020 06:29:30 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PAPOJx078060;
+        Tue, 25 Aug 2020 10:29:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=eYOBrGq+oIN0aCgQgUHudJMPRgvhB81SD1iHx4MSQQ4=;
+ b=J/arBTGQW/QHlSBjkq9YtT0uCotUCrSo7RyLr1Q5UjfA9XzjxXOZb8ukdTTio6bcVass
+ F3/3JySMpw5/8eMSsiFWLI1x3hRZVPXe0YEgfU/d6ktOONu3xGvUFLBhRVX9Mg3ENs3U
+ vN4iUEiI6CJGYMlOhD8BZAtPNXgmWIqVt8W0eHK43l1IY/yAo9vSC0i8XiLVVl+JmgKL
+ VpiFpuLOApElDLdSp9WpO5MX46CorU6Ch2bqgGrZNtNOTMV9aapa7v//m47uNJlkmq3S
+ 1A9BQpju++mbT5eoSXgVb8tdhfbgzf55KzEhDwVFzdkvJwJhJnmnKNMvWvq7ZH40FTGJ EA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 333csj1qf5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 25 Aug 2020 10:29:18 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07PAPHQB176374;
+        Tue, 25 Aug 2020 10:29:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 333r9jcmjm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Aug 2020 10:29:18 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07PATHMO005180;
+        Tue, 25 Aug 2020 10:29:17 GMT
+Received: from localhost.localdomain (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 25 Aug 2020 03:29:17 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.0.3\))
+Subject: Re: [PATCH 00/11] iomap/fs/block patches for 5.11
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <20200824151700.16097-1-willy@infradead.org>
+Date:   Tue, 25 Aug 2020 04:29:16 -0600
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-block@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
+        linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <1E04AE83-85F0-4C90-924C-9A6792D453DE@oracle.com>
+References: <20200824151700.16097-1-willy@infradead.org>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+X-Mailer: Apple Mail (2.3654.0.3)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250078
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9723 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 clxscore=1011
+ spamscore=0 priorityscore=1501 impostorscore=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alex,
+Really nice improvements here.
 
-On Mon, Aug 24 2020 at 19:29, Alexander Graf wrote:
-> I'm currently trying to understand a performance regression with=20
-> ScyllaDB on i3en.3xlarge (KVM based VM on Skylake) which we reliably=20
-> bisected down to this commit:
->
->    https://github.com/scylladb/scylla/issues/7036
->
-> What we're seeing is that syscalls such as membarrier() take forever=20
-> (0-10 =C2=B5s would be normal):
-...
-> That again seems to stem from a vastly slowed down=20
-> smp_call_function_many_cond():
->
-> Samples: 218K of event 'cpu-clock', 4000 Hz
-> Overhead  Shared Object        Symbol
->    94.51%  [kernel]             [k] smp_call_function_many_cond
->     0.76%  [kernel]             [k] __do_softirq
->     0.32%  [kernel]             [k] native_queued_spin_lock_slowpath
-> [...]
->
-> which is stuck in
->
->         =E2=94=82     csd_lock_wait():
->         =E2=94=82             smp_cond_load_acquire(&csd->flags, !(VAL &
->    0.00 =E2=94=82       mov    0x8(%rcx),%edx
->    0.00 =E2=94=82       and    $0x1,%edx
->         =E2=94=82     =E2=86=93 je     2b9
->         =E2=94=82     rep_nop():
->    0.70 =E2=94=822af:   pause
->         =E2=94=82     csd_lock_wait():
->   92.82 =E2=94=82       mov    0x8(%rcx),%edx
->    6.48 =E2=94=82       and    $0x1,%edx
->    0.00 =E2=94=82     =E2=86=91 jne    2af
->    0.00 =E2=94=822b9: =E2=86=91 jmp    282
->
->
-> Given the patch at hand I was expecting lost IPIs, but I can't quite see=
-=20
-> anything getting lost.
+Reviewed-by: William Kucharski <william.kucharski@oracle.com>
 
-I have no idea how that patch should be related to IPI and smp function
-calls. It's changing the way how regular device interrupts and their
-spurious counterpart are handled and not the way how IPIs are
-handled. They are handled by direct vectors and do not go through
-do_IRQ() at all.
-
-Aside of that the commit just changes the way how the interrupt vector
-of a regular device interrupt is stored and conveyed. The extra read and
-write on the cache hot stack is hardly related to anything IPI.
-
-Thanks,
-
-        tglx
-
+> On Aug 24, 2020, at 9:16 AM, Matthew Wilcox (Oracle) =
+<willy@infradead.org> wrote:
+>=20
+> As promised earlier [1], here are the patches which I would like to
+> merge into 5.11 to support THPs.  They depend on that earlier series.
+> If there's anything in here that you'd like to see pulled out and =
+added
+> to that earlier series, let me know.
+>=20
+> There are a couple of pieces in here which aren't exactly part of
+> iomap, but I think make sense to take through the iomap tree.
+>=20
+> [1] =
+https://lore.kernel.org/linux-fsdevel/20200824145511.10500-1-willy@infrade=
+ad.org/
+>=20
+> Matthew Wilcox (Oracle) (11):
+>  fs: Make page_mkwrite_check_truncate thp-aware
+>  mm: Support THPs in zero_user_segments
+>  mm: Zero the head page, not the tail page
+>  block: Add bio_for_each_thp_segment_all
+>  iomap: Support THPs in iomap_adjust_read_range
+>  iomap: Support THPs in invalidatepage
+>  iomap: Support THPs in read paths
+>  iomap: Change iomap_write_begin calling convention
+>  iomap: Support THPs in write paths
+>  iomap: Inline data shouldn't see THPs
+>  iomap: Handle tail pages in iomap_page_mkwrite
+>=20
+> fs/iomap/buffered-io.c  | 178 ++++++++++++++++++++++++----------------
+> include/linux/bio.h     |  13 +++
+> include/linux/bvec.h    |  27 ++++++
+> include/linux/highmem.h |  15 +++-
+> include/linux/pagemap.h |  10 +--
+> mm/highmem.c            |  62 +++++++++++++-
+> mm/shmem.c              |   7 ++
+> mm/truncate.c           |   7 ++
+> 8 files changed, 236 insertions(+), 83 deletions(-)
+>=20
+> --=20
+> 2.28.0
+>=20
+>=20
 
