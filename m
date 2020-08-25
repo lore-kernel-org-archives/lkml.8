@@ -2,142 +2,118 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF05C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D69C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 983AF20715
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F18E20715
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 11:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="MHoY2Hw6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="aGppIgky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbgHYLWp (ORCPT
+        id S1729962AbgHYLYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 07:22:45 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:13195 "EHLO m43-7.mailgun.net"
+        Tue, 25 Aug 2020 07:24:16 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:30835 "EHLO mx1.tq-group.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729981AbgHYLWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 07:22:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598354528; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=KLf2zBaDDS5tD2z7RxlmoPAxmVgtqNHM5SLIOWEITKI=; b=MHoY2Hw6oqNQq7Ga9Y0Vvx+cKUnavpWoyLJzJXU7x4t43BoiClkrbcZWq4NocRJ+arSO46xE
- mcgI9t0pS0wWg1ekKgU+VC1+F//06AvVd0ttrB2CNZP9wDuctyBVx2Os3XAVoLOomr4qb2Rv
- VOF4kvEvXUghvsNrEfpbBIucp9w=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 5f44f4504413b7d5db475923 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 25 Aug 2020 11:21:52
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 096F3C43391; Tue, 25 Aug 2020 11:21:52 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DA220C433CA;
-        Tue, 25 Aug 2020 11:21:45 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DA220C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     bjorn.andersson@linaro.org, andy.gross@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        ulf.hansson@linaro.org, swboyd@chromium.org, dianders@chromium.org,
-        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
-        John Stultz <john.stultz@linaro.org>,
-        Todd Kjos <tkjos@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Andy Gross <agross@kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v2 2/2] soc: qcom: rpmh: Allow RPMH driver to be loaded as a module
-Date:   Tue, 25 Aug 2020 16:51:22 +0530
-Message-Id: <1598354482-15491-3-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598354482-15491-1-git-send-email-mkshah@codeaurora.org>
-References: <1598354482-15491-1-git-send-email-mkshah@codeaurora.org>
+        id S1729873AbgHYLYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 07:24:15 -0400
+IronPort-SDR: l4Vuf8WTzX9BgJf23Fn9jXkHwyuqj30PyE4qjAY+TlCPBQUvILt43cbreN2GTOsCn3quVNVwCG
+ br/BPtKLP9o41EXJrGEvPBAJf8c9k9/1+ykxc0h7Q5f6tCGcgmtx4Hm1DlFzIBl92r3lyrHRJ8
+ b0v+JgLeUkrjaNlJXUwo1j0O4PnAlU00awgvxmBPyYjNa4FJXZcsajHRapjtomFr/Ak3X3DEzy
+ 9cel1uGAQS/NwT2gEucRtB6qHABOQA2ai/X4yR0VwNRRwqQCA6Ma8ss1qNpz//fNBs90SYBc4Y
+ bjQ=
+X-IronPort-AV: E=Sophos;i="5.76,352,1592863200"; 
+   d="scan'208";a="13589397"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 25 Aug 2020 13:24:13 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Tue, 25 Aug 2020 13:24:13 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Tue, 25 Aug 2020 13:24:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1598354653; x=1629890653;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=EE2R5sLmnj/yzSqma8+AXL+jr4yYEH7vlKI8ggnnb50=;
+  b=aGppIgkyoJmoBnEMOfaEdyLY/pVhj4tFBSy3TMDoxR59bYtGNxQ8Xxst
+   ThipZxTgXMlj0Md0TyxePMAqpLK81Q/bM+PML/FB03V9yDjHKcOV3Cj5X
+   IxjSIXNej2O4j0nKg4v4d0cOaDKwiuxZYz1A1sGeTRDffq8haUE3rwy+T
+   5OcQKiZqkkTPhUsE1uWLvBXoIpW4cTsLi4ilRz17eYEK0Oc7gTJXFhNkT
+   msZopCgrGww0oJipaJyyLItosZgmSg4iAjVMeAsV8UUBVIVRt8S5FxnI5
+   +zmL9MZnka0LJtf3TPcNwa4a7aXM2GEyPAEzyFtYqA7hpjgKJB0LNCtRx
+   g==;
+IronPort-SDR: Nd1N5rubAGnAH8MP8Ey/6MF4/cj4EQqY967yrHgvky6U1P5ZlW6WWTvT9Jzqs5IpunIXH9MVxr
+ 9k//jsnpzPGH2V/2CsiUIZs+DtTyCzqpkVEd02gxFi6Vj7W9chE4kTPsooTmap5OVHraGd34yf
+ NT0KRMBAJlQ4UWQA7qaFXeoTNkHIASLkMcH0aeGcTxYHwVrdRIjnsHbPSV22qdXRtsjsalWp/2
+ 545IEs3EcafVaI6JJsyp4cmOofyRrXlO0z8AgPq83OKliiDVlBX8ZEqRMBdnECh4D377Pxhk9m
+ 2rM=
+X-IronPort-AV: E=Sophos;i="5.76,352,1592863200"; 
+   d="scan'208";a="13589396"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 25 Aug 2020 13:24:13 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 01841280065;
+        Tue, 25 Aug 2020 13:24:12 +0200 (CEST)
+Message-ID: <50b5b51e31d9497dbb84c52e11d0d1547d4804f4.camel@ew.tq-group.com>
+Subject: Re: (EXT) Re: [PATCH mmc-next v2] mmc: allow setting slot index via
+ device tree alias
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Tue, 25 Aug 2020 13:24:10 +0200
+In-Reply-To: <548605506aa2e73afafdc228263da04585871e0b.camel@ew.tq-group.com>
+References: <20200820075949.19133-1-matthias.schiffer@ew.tq-group.com>
+         <CAPDyKFoi7KghuBqu7YVS4GH4Bp1puhgb=PcwBVDvaTesLujrrw@mail.gmail.com>
+         <548605506aa2e73afafdc228263da04585871e0b.camel@ew.tq-group.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Stultz <john.stultz@linaro.org>
+On Tue, 2020-08-25 at 11:39 +0200, Matthias Schiffer wrote:
+> On Tue, 2020-08-25 at 11:14 +0200, Ulf Hansson wrote:
+> > On Thu, 20 Aug 2020 at 09:59, Matthias Schiffer
+> > <matthias.schiffer@ew.tq-group.com> wrote:
+> > > +
+> > > +static void __init mmc_of_reserve_idx(void)
+> > > +{
+> > > +       int max;
+> > > +
+> > > +       max = of_alias_get_highest_id("mmc");
+> > 
+> > Is calling of_alias_get_highest_id("mmc") costly from an execution
+> > point of view?
+> > 
+> > If not, we might as well call it directly from mmc_alloc_host()
+> > each
+> > time a host is allocated instead, to simplify the code a bit.
+> 
+> It's not particularly costly (it just walks the list of aliases once
+> and does a string comparison for each entry), but it does so while
+> holding the of_mutex.
+> 
+> Both variants exist in the current kernel: The I2C core stores the
+> hightest index in a global variable, while of_alias_get_highest_id()
+> is
+> called once for each registered SPI controller. I have a slight
+> preference for the global variable solution.
 
-This patch allow the rpmh driver to be loaded as a permenent
-module. Meaning it can be loaded from a module, but then cannot
-be unloaded.
+Looking at this again, it's pretty much the same as of_alias_get_id().
+I'll remove the extra functions and global variable.
 
-Ideally, it would include a remove hook and related logic, but
-the rpmh driver is fairly core to the system, so once its loaded
-with almost anything else to get the system to go, the dependencies
-are not likely to ever also be removed.
-
-So making it a permanent module at least improves things slightly
-over requiring it to be a built in driver.
-
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-[mkshah: Fix typos in commit message, send after removing _rcuidle trace]
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/soc/qcom/Kconfig    | 2 +-
- drivers/soc/qcom/rpmh-rsc.c | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 3dc3e3d..892bdc7 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -92,7 +92,7 @@ config QCOM_RMTFS_MEM
- 	  Say y here if you intend to boot the modem remoteproc.
- 
- config QCOM_RPMH
--	bool "Qualcomm RPM-Hardened (RPMH) Communication"
-+	tristate "Qualcomm RPM-Hardened (RPMH) Communication"
- 	depends on ARCH_QCOM || COMPILE_TEST
- 	help
- 	  Support for communication with the hardened-RPM blocks in
-diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index fabe390d..5fce87c 100644
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -13,6 +13,7 @@
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-@@ -1025,6 +1026,7 @@ static const struct of_device_id rpmh_drv_match[] = {
- 	{ .compatible = "qcom,rpmh-rsc", },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(of, rpmh_drv_match);
- 
- static struct platform_driver rpmh_driver = {
- 	.probe = rpmh_rsc_probe,
-@@ -1040,3 +1042,6 @@ static int __init rpmh_driver_init(void)
- 	return platform_driver_register(&rpmh_driver);
- }
- arch_initcall(rpmh_driver_init);
-+
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. RPMh Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Kind regards,
+Matthias
 
