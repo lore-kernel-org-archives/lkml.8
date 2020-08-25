@@ -2,199 +2,134 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C69F5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BAFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB3420706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:04:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p6T3Focr"
+	by mail.kernel.org (Postfix) with ESMTP id D010220706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbgHYGED (ORCPT
+        id S1728951AbgHYGNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:04:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728126AbgHYGEC (ORCPT
+        Tue, 25 Aug 2020 02:13:05 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51859 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726189AbgHYGNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:04:02 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFCDC061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:04:02 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id g6so673747pjl.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 23:04:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=j6FEjnx7PaimSRrvrozgKYaPtn/SFhcnkbYcPW36XLg=;
-        b=p6T3Focr93ouZkmdLVz/SoOb0+bPLw1NHJB09nzp0GY4q40NpzUs7tJvMy0+PKhiMJ
-         LnJ9l/p6zB3J6wvU715eAWiJLvLwWYskvSd3upNiPNFBbRvixg/m3pCHWOyLGcKnU7k4
-         nvZGTw30p6IsdJ9W1UNw8+BkiBczelkgNf+S10SXKFTqbIR3e32QqIkbJKetHDsZZmGC
-         ++5/JUNJ5sE674VUVsUrXLotNFqT6gkXNJFCpdBIAFpmII8xm22OtWmmWxlKDCNMTD55
-         GwXqlIaVxGgYHufBeL3mG2OOUtDyWiELn3fC9QCt41AWXj/PiMnc5qvdqKCtt25msY31
-         KyPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=j6FEjnx7PaimSRrvrozgKYaPtn/SFhcnkbYcPW36XLg=;
-        b=g/WFJoEMP42b4imH/lPCQMmW3Vojr1HlLB7RCQaSQrtaHsFqcyXEVOTYcuAHHrxlFB
-         cxbw44+Ty7abqF8DMvyUIC0WtMHOhNKR7tdf5AZTw6buNQ5Qn6fSgK9ggRRjWRDhrtfA
-         9vSNGRxHD+EV4a+Kol6lAmz8MmdmqeHh1DrZq4Ff9Drf5hu/I1ajs+p+rbxcYw1UVQGi
-         XMjwinItar3ogtSN8zHE2eGvl5vN9fWoDmwnmH86ky8pv7r5gOV9I1TuXR3pBSolMjDF
-         o5ZI4dfTUEUCpcl9gMYmeq8K1mNGq+WlD5HacIZJoFV2DYRkW03HFVKTylZXcPEj7Bmx
-         KRIQ==
-X-Gm-Message-State: AOAM533nZ0b5HLIrbeZQPzWsFUinoI6VlKNy2FM3S5oTbnJxSXmRIqFU
-        h+bQUZAQb+w+/iJJxCK3Q/Aj+992bPQLnQ==
-X-Google-Smtp-Source: ABdhPJyZ+OEKLubiI1wEvFDF9H9Vf+Wr3UBGzlkTTh7kt7lwA9ceWdtWRoYesX7q9QVxmW8MDraiXg==
-X-Received: by 2002:a17:90a:9c3:: with SMTP id 61mr304355pjo.191.1598335441898;
-        Mon, 24 Aug 2020 23:04:01 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id q5sm11548209pgv.1.2020.08.24.23.04.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 24 Aug 2020 23:04:01 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 11:33:59 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
-        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
-        valentin.schneider@arm.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] cpufreq: move invariance setter calls in cpufreq
- core
-Message-ID: <20200825060359.mrhou4pwrzmfq23n@vireshk-i7>
-References: <20200824210252.27486-1-ionela.voinescu@arm.com>
- <20200824210252.27486-3-ionela.voinescu@arm.com>
+        Tue, 25 Aug 2020 02:13:04 -0400
+Received: from [2001:67c:670:100:1d::c0] (helo=ptx.hi.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1kASCS-0004AV-Lp; Tue, 25 Aug 2020 08:12:52 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1kASCO-0001dd-22; Tue, 25 Aug 2020 08:12:48 +0200
+Date:   Tue, 25 Aug 2020 08:12:48 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Richard Leitner - SKIDATA <Richard.Leitner@skidata.com>
+Subject: Re: pcm|dmaengine|imx-sdma race condition on i.MX6
+Message-ID: <20200825061247.GL13023@pengutronix.de>
+References: <20200813112258.GA327172@pcleri>
+ <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <61498763c60e488a825e8dd270732b62@skidata.com>
+ <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
+ <20200820065221.GF19745@pengutronix.de>
+ <VE1PR04MB66386A43E2BCC5B758D1A71A895B0@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824210252.27486-3-ionela.voinescu@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <VE1PR04MB66386A43E2BCC5B758D1A71A895B0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:55:28 up 187 days, 13:25, 139 users,  load average: 0.40, 0.16,
+ 0.11
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-08-20, 22:02, Ionela Voinescu wrote:
-> To properly scale its per-entity load-tracking signals, the task scheduler
-> needs to be given a frequency scale factor, i.e. some image of the current
-> frequency the CPU is running at. Currently, this scale can be computed
-> either by using counters (APERF/MPERF on x86, AMU on arm64), or by
-> piggy-backing on the frequency selection done by cpufreq.
-> 
-> For the latter, drivers have to explicitly set the scale factor
-> themselves, despite it being purely boiler-plate code: the required
-> information depends entirely on the kind of frequency switch callback
-> implemented by the driver, i.e. either of: target_index(), target(),
-> fast_switch() and setpolicy().
-> 
-> The fitness of those callbacks with regard to driving the Frequency
-> Invariance Engine (FIE) is studied below:
-> 
-> target_index()
-> ==============
-> Documentation states that the chosen frequency "must be determined by
-> freq_table[index].frequency". It isn't clear if it *has* to be that
-> frequency, or if it can use that frequency value to do some computation
-> that ultimately leads to a different frequency selection. All drivers
-> go for the former, while the vexpress-spc-cpufreq has an atypical
-> implementation which is handled separately.
-> 
-> Therefore, the hook works on the assumption the core can use
-> freq_table[index].frequency.
-> 
-> target()
-> =======
-> This has been flagged as deprecated since:
-> 
->   commit 9c0ebcf78fde ("cpufreq: Implement light weight ->target_index() routine")
-> 
-> It also doesn't have that many users:
-> 
->   gx-suspmod.c:439:       .target = cpufreq_gx_target,
->   s3c24xx-cpufreq.c:428:  .target = s3c_cpufreq_target,
->   intel_pstate.c:2528:    .target = intel_cpufreq_target,
->   cppc_cpufreq.c:401:     .target = cppc_cpufreq_set_target,
->   cpufreq-nforce2.c:371:  .target = nforce2_target,
->   sh-cpufreq.c:163:       .target = sh_cpufreq_target,
->   pcc-cpufreq.c:573:      .target = pcc_cpufreq_target,
-> 
-> Similarly to the path taken for target_index() calls in the cpufreq core
-> during a frequency change, all of the drivers above will mark the end of a
-> frequency change by a call to cpufreq_freq_transition_end().
-> 
-> Therefore, cpufreq_freq_transition_end() can be used as the location for
-> the arch_set_freq_scale() call to potentially inform the scheduler of the
-> frequency change.
-> 
-> This change maintains the previous functionality for the drivers that
-> implement the target_index() callback, while also adding support for the
-> few drivers that implement the deprecated target() callback.
-> 
-> fast_switch()
-> =============
-> This callback *has* to return the frequency that was selected.
-> 
-> setpolicy()
-> ===========
-> This callback does not have any designated way of informing what was the
-> end choice. But there are only two drivers using setpolicy(), and none
-> of them have current FIE support:
-> 
->   drivers/cpufreq/longrun.c:281:	.setpolicy	= longrun_set_policy,
->   drivers/cpufreq/intel_pstate.c:2215:	.setpolicy	= intel_pstate_set_policy,
-> 
-> The intel_pstate is known to use counter-driven frequency invariance.
-> 
-> Conclusion
-> ==========
-> 
-> Given that the significant majority of current FIE enabled drivers use
-> callbacks that lend themselves to triggering the setting of the FIE scale
-> factor in a generic way, move the invariance setter calls to cpufreq core.
-> 
-> As a result of setting the frequency scale factor in cpufreq core, after
-> callbacks that lend themselves to trigger it, remove this functionality
-> from the driver side.
-> 
-> To be noted that despite marking a successful frequency change, many
-> cpufreq drivers will consider the new frequency as the requested
-> frequency, although this is might not be the one granted by the hardware.
-> 
-> Therefore, the call to arch_set_freq_scale() is a "best effort" one, and
-> it is up to the architecture if the new frequency is used in the new
-> frequency scale factor setting (determined by the implementation of
-> arch_set_freq_scale()) or eventually used by the scheduler (determined
-> by the implementation of arch_scale_freq_capacity()). The architecture
-> is in a better position to decide if it has better methods to obtain
-> more accurate information regarding the current frequency and use that
-> information instead (for example, the use of counters).
-> 
-> Also, the implementation to arch_set_freq_scale() will now have to handle
-> error conditions (current frequency == 0) in order to prevent the
-> overhead in cpufreq core when the default arch_set_freq_scale()
-> implementation is used.
-> 
-> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> Suggested-by: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/cpufreq-dt.c           | 10 +---------
->  drivers/cpufreq/cpufreq.c              | 12 +++++++++++-
->  drivers/cpufreq/qcom-cpufreq-hw.c      |  9 +--------
->  drivers/cpufreq/scmi-cpufreq.c         | 12 ++----------
->  drivers/cpufreq/scpi-cpufreq.c         |  6 +-----
->  drivers/cpufreq/vexpress-spc-cpufreq.c | 12 ++----------
->  6 files changed, 18 insertions(+), 43 deletions(-)
+On Fri, Aug 21, 2020 at 09:52:00AM +0000, Robin Gong wrote:
+> On 2020/08/20 14:52 Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > On Wed, Aug 19, 2020 at 01:08:29PM +0200, Lars-Peter Clausen wrote:
+> > > > For the first option, which is potentially more performant, we have
+> > > > to leave the atomic PCM context and we are not sure if we are allowed to.
+> > > > For the second option, we would have to divide the dma_device
+> > > > terminate_all into an atomic sync and an async one, which would
+> > > > align with the dmaengine API, giving it the option to ensure termination in
+> > an atomic context.
+> > > > Based on my understanding, most of them are synchronous anyways, for
+> > > > the currently async ones we would have to implement busy waits.
+> > > > However, with this approach, we reach the WARN_ON [6] inside of an
+> > > > atomic context, indicating we might not do the right thing.
+> > >
+> > > I don't know how feasible this is to implement in the SDMA dmaengine
+> > driver.
+> > > But I think what is should do is to have some flag to indicate if a
+> > > terminate is in progress. If a new transfer is issued while terminate
+> > > is in progress the transfer should go on a list. Once terminate
+> > > finishes it should check the list and start the transfer if there are any on the
+> > list.
+> > 
+> > The list is already there in form of the vchan helpers the driver uses.
+> Seems Lars major concern is on the race condition between next descriptor
+> and sdma_channel_terminate_work which free the last terminated descriptor,
+> not the ability of vchan to support multi descriptors. But anyway, I think we
+> should take care vchan_get_all_descriptors to free descriptors during terminate
+> phase in case it's done in worker like sdma_channel_terminate_work, since that
+> may free the next descriptor wrongly. That's what my patch attached in
+> 0001-dmaengine-imx-sdma-add-terminated-list-for-freed-des.patch
+> https://www.spinics.net/lists/arm-kernel/msg829972.html
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Indeed this should solve the problem of freeing descriptors allocated
+between terminate_all and a following prep_slave*.
+
+> 
+> > 
+> > I think the big mistake the driver makes is to configure fields in struct
+> > sdma_channel and also the hardware directly in sdma_prep_memcpy(),
+> > sdma_prep_slave_sg() and sdma_prep_dma_cyclic(). All information should be
+> > stored in the struct sdma_desc allocated in the prep functions and only be used
+> > when it's time to fire that specific descriptor.
+> Sorry Sascha, seems that's another topic and your intention is to make sure only
+> software involved in sdma_prep_* and all HW moved into one function inside
+> sdma_start_desc. I agree that will make code more clean but my concern is
+> sdma_start_desc is protect by spin_lock which should be short as possible while
+> some HW touch as context_load may cost some time. Anyway, that's another topic,
+> maybe we can refine it in the future.
+
+Yes, you are right. This is another topic.
+
+Sascha
 
 -- 
-viresh
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
