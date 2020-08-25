@@ -2,222 +2,86 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3095C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA1FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE5002071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF0502067C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729627AbgHYJzK (ORCPT
+        id S1729646AbgHYJzi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:55:10 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:1287 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729534AbgHYJzK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:55:10 -0400
-X-IronPort-AV: E=Sophos;i="5.76,351,1592838000"; 
-   d="scan'208";a="55473398"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 25 Aug 2020 18:55:07 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id BF50740083E6;
-        Tue, 25 Aug 2020 18:55:05 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-renesas-soc@vger.kernel.or, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2] pinctrl: sh-pfc: r8a7790: Add CAN pins, groups and functions
-Date:   Tue, 25 Aug 2020 10:54:48 +0100
-Message-Id: <20200825095448.13093-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 25 Aug 2020 05:55:38 -0400
+Received: from mga17.intel.com ([192.55.52.151]:51130 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729456AbgHYJzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:55:33 -0400
+IronPort-SDR: pZu2LfBsiVj80GfFJ7utuJxX/JPdglIhYbZDdo5w3o0V+/Zim3KVkxeXjlr6PKC5hT5DyEgMH2
+ 6M+6tJgX20FA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="136139931"
+X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
+   d="scan'208";a="136139931"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 02:55:32 -0700
+IronPort-SDR: SO5pteS+3BNVXHt9gxEDvxYfrNdjv2PGu99rQW43zfRbMCLaRf+GnKSUtkkxGAnJx8qQxEgSIX
+ vtC4BDimXcuw==
+X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
+   d="scan'208";a="474283564"
+Received: from mmoerth-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.32.133])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 02:55:28 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Pavel Machek <pavel@ucw.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Dave Airlie <airlied@gmail.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to mainline
+In-Reply-To: <20200821091900.hzbivycs5ky5d3iw@duo.ucw.cz>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200817161132.GA4711@amd> <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com> <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com> <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com> <20200820092349.GA3792@amd> <CAHk-=wjX=ck_u8uvp=PjGCQ3M9igE-yqyRPsJ54th1gQWpwMnA@mail.gmail.com> <20200821091900.hzbivycs5ky5d3iw@duo.ucw.cz>
+Date:   Tue, 25 Aug 2020 12:55:25 +0300
+Message-ID: <87tuwr59te.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pins, groups and functions for the CAN{0,1} interface.
+On Fri, 21 Aug 2020, Pavel Machek <pavel@ucw.cz> wrote:
+> On Thu 2020-08-20 09:16:18, Linus Torvalds wrote:
+>> On Thu, Aug 20, 2020 at 2:23 AM Pavel Machek <pavel@ucw.cz> wrote:
+>> >
+>> > Yes, it seems they make things work. (Chris asked for new patch to be
+>> > tested, so I am switching to his kernel, but it survived longer than
+>> > it usually does.)
+>> 
+>> Ok, so at worst we know how to solve it, at best the reverts won't be
+>> needed because Chris' patch will fix the issue properly.
+>> 
+>> So I'll archive this thread, but remind me if this hasn't gotten
+>> sorted out in the later rc's.
+>
+> Yes, thank you, it seems we have a solution w/o the revert.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
-Hi All,
-This patch is part of series [1], since rest of the patches have been
-acked, I am resending patch 1/3 from the series.
+For posterity, I'm told the fix is [1].
 
-[1] https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=333191
+BR,
+Jani.
 
-v1->v2
-* Added CAN clk pins
----
- drivers/pinctrl/sh-pfc/pfc-r8a7790.c | 112 ++++++++++++++++++++++++++-
- 1 file changed, 110 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-index 39ba1e7cc1c3..60f973c5dffe 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a7790.c
-@@ -1871,6 +1871,86 @@ static const unsigned int avb_gmii_mux[] = {
- 	AVB_TX_EN_MARK, AVB_TX_ER_MARK, AVB_TX_CLK_MARK,
- 	AVB_COL_MARK,
- };
-+/* - CAN0 ----------------------------------------------------------------- */
-+static const unsigned int can0_data_pins[] = {
-+	/* CAN0 RX */
-+	RCAR_GP_PIN(1, 17),
-+	/* CAN0 TX */
-+	RCAR_GP_PIN(1, 19),
-+};
-+static const unsigned int can0_data_mux[] = {
-+	CAN0_RX_MARK,
-+	CAN0_TX_MARK,
-+};
-+static const unsigned int can0_data_b_pins[] = {
-+	/* CAN0 RXB */
-+	RCAR_GP_PIN(4, 5),
-+	/* CAN0 TXB */
-+	RCAR_GP_PIN(4, 4),
-+};
-+static const unsigned int can0_data_b_mux[] = {
-+	CAN0_RX_B_MARK,
-+	CAN0_TX_B_MARK,
-+};
-+static const unsigned int can0_data_c_pins[] = {
-+	/* CAN0 RXC */
-+	RCAR_GP_PIN(4, 26),
-+	/* CAN0 TXC */
-+	RCAR_GP_PIN(4, 23),
-+};
-+static const unsigned int can0_data_c_mux[] = {
-+	CAN0_RX_C_MARK,
-+	CAN0_TX_C_MARK,
-+};
-+static const unsigned int can0_data_d_pins[] = {
-+	/* CAN0 RXD */
-+	RCAR_GP_PIN(4, 26),
-+	/* CAN0 TXD */
-+	RCAR_GP_PIN(4, 18),
-+};
-+static const unsigned int can0_data_d_mux[] = {
-+	CAN0_RX_D_MARK,
-+	CAN0_TX_D_MARK,
-+};
-+/* - CAN1 ----------------------------------------------------------------- */
-+static const unsigned int can1_data_pins[] = {
-+	/* CAN1 RX */
-+	RCAR_GP_PIN(1, 22),
-+	/* CAN1 TX */
-+	RCAR_GP_PIN(1, 18),
-+};
-+static const unsigned int can1_data_mux[] = {
-+	CAN1_RX_MARK,
-+	CAN1_TX_MARK,
-+};
-+static const unsigned int can1_data_b_pins[] = {
-+	/* CAN1 RXB */
-+	RCAR_GP_PIN(4, 7),
-+	/* CAN1 TXB */
-+	RCAR_GP_PIN(4, 6),
-+};
-+static const unsigned int can1_data_b_mux[] = {
-+	CAN1_RX_B_MARK,
-+	CAN1_TX_B_MARK,
-+};
-+/* - CAN Clock -------------------------------------------------------------- */
-+static const unsigned int can_clk_pins[] = {
-+	/* CLK */
-+	RCAR_GP_PIN(1, 21),
-+};
-+
-+static const unsigned int can_clk_mux[] = {
-+	CAN_CLK_MARK,
-+};
-+
-+static const unsigned int can_clk_b_pins[] = {
-+	/* CLK */
-+	RCAR_GP_PIN(4, 3),
-+};
-+
-+static const unsigned int can_clk_b_mux[] = {
-+	CAN_CLK_B_MARK,
-+};
- /* - DU RGB ----------------------------------------------------------------- */
- static const unsigned int du_rgb666_pins[] = {
- 	/* R[7:2], G[7:2], B[7:2] */
-@@ -3946,7 +4026,7 @@ static const unsigned int vin3_clk_mux[] = {
- };
- 
- static const struct {
--	struct sh_pfc_pin_group common[290];
-+	struct sh_pfc_pin_group common[298];
- 	struct sh_pfc_pin_group automotive[1];
- } pinmux_groups = {
- 	.common = {
-@@ -3963,6 +4043,14 @@ static const struct {
- 		SH_PFC_PIN_GROUP(avb_mdio),
- 		SH_PFC_PIN_GROUP(avb_mii),
- 		SH_PFC_PIN_GROUP(avb_gmii),
-+		SH_PFC_PIN_GROUP(can0_data),
-+		SH_PFC_PIN_GROUP(can0_data_b),
-+		SH_PFC_PIN_GROUP(can0_data_c),
-+		SH_PFC_PIN_GROUP(can0_data_d),
-+		SH_PFC_PIN_GROUP(can1_data),
-+		SH_PFC_PIN_GROUP(can1_data_b),
-+		SH_PFC_PIN_GROUP(can_clk),
-+		SH_PFC_PIN_GROUP(can_clk_b),
- 		SH_PFC_PIN_GROUP(du_rgb666),
- 		SH_PFC_PIN_GROUP(du_rgb888),
- 		SH_PFC_PIN_GROUP(du_clk_out_0),
-@@ -4265,6 +4353,23 @@ static const char * const avb_groups[] = {
- 	"avb_gmii",
- };
- 
-+static const char * const can0_groups[] = {
-+	"can0_data",
-+	"can0_data_b",
-+	"can0_data_c",
-+	"can0_data_d",
-+};
-+
-+static const char * const can1_groups[] = {
-+	"can1_data",
-+	"can1_data_b",
-+};
-+
-+static const char * const can_clk_groups[] = {
-+	"can_clk",
-+	"can_clk_b",
-+};
-+
- static const char * const du_groups[] = {
- 	"du_rgb666",
- 	"du_rgb888",
-@@ -4706,13 +4811,16 @@ static const char * const vin3_groups[] = {
- };
- 
- static const struct {
--	struct sh_pfc_function common[55];
-+	struct sh_pfc_function common[58];
- 	struct sh_pfc_function automotive[1];
- } pinmux_functions = {
- 	.common = {
- 		SH_PFC_FUNCTION(audio_clk),
- 		SH_PFC_FUNCTION(avb),
- 		SH_PFC_FUNCTION(du),
-+		SH_PFC_FUNCTION(can0),
-+		SH_PFC_FUNCTION(can1),
-+		SH_PFC_FUNCTION(can_clk),
- 		SH_PFC_FUNCTION(du0),
- 		SH_PFC_FUNCTION(du1),
- 		SH_PFC_FUNCTION(du2),
+[1] https://lore.kernel.org/intel-gfx/20200821123746.16904-1-joro@8bytes.org/
+
+
 -- 
-2.17.1
-
+Jani Nikula, Intel Open Source Graphics Center
