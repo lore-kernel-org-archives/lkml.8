@@ -2,70 +2,107 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B65C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E55BC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA1E20738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F82120738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:07:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hiiW82z6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbgHYWF3 (ORCPT
+        id S1726627AbgHYWH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:05:29 -0400
-Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:53878 "EHLO
-        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726303AbgHYWF3 (ORCPT
+        Tue, 25 Aug 2020 18:07:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgHYWH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 18:05:29 -0400
-Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
-        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 13A45D7D47D;
-        Wed, 26 Aug 2020 08:05:24 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kAh4E-0000RK-Vc; Wed, 26 Aug 2020 08:05:22 +1000
-Date:   Wed, 26 Aug 2020 08:05:22 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Andreas Dilger <adilger@dilger.ca>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 9/9] iomap: Change calling convention for zeroing
-Message-ID: <20200825220522.GO12131@dread.disaster.area>
-References: <20200824145511.10500-1-willy@infradead.org>
- <20200824145511.10500-10-willy@infradead.org>
- <20200825002735.GI12131@dread.disaster.area>
- <20200825032603.GL17456@casper.infradead.org>
- <E47B2C68-43F2-496F-AA91-A83EB3D91F28@dilger.ca>
- <20200825042711.GL12131@dread.disaster.area>
- <20200825124024.GN17456@casper.infradead.org>
+        Tue, 25 Aug 2020 18:07:27 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0033BC061574;
+        Tue, 25 Aug 2020 15:07:26 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id kx11so195227pjb.5;
+        Tue, 25 Aug 2020 15:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DDfuEeZvkhmoX/XBxHBvhw10a3kF5GozAC7FQVyl31M=;
+        b=hiiW82z64jhCNt3G6O1Gbo3lHrfE3KuGanUIOpwd7pOWjJpHoX3aRXOeP9MNvppOW1
+         ITGK+p9JecHZWNR9soJZo5gBGMqr+t89qRspTlgSzrrAq8UmjWe9yVGqKeX/XxtHgVcm
+         gmtHfqPiTnHsiOXgCfi66YA4pkQ6BUpquoldIbo/I8JM+J9nZQLpHj9prsZt4GZsWcTp
+         3bqxh9L/a/c/aq6FM6sibf0VOkcuKhQ552JqeNaMlBR+vuMESJ7qYjhnwQeheap2xYND
+         kLokaSIlXPQZlRIGk8gRbJFCimmNXa7VwwD/tlK/DSgcZamTMydsnG7q3GIyfx720KwY
+         PumQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DDfuEeZvkhmoX/XBxHBvhw10a3kF5GozAC7FQVyl31M=;
+        b=Y3i6BwT0zlzRey+1l14OdiXjNDm6nDxyfhBZVJo7S0s2QR7ftea83hzZfeBvbi2UYm
+         Yv8Yy4KYMFJ415poOnccBFIR0vJFO7MGJ5GDmHxsVswE0kdrbZZeZcqce4sqWY7ukd5T
+         z3uPgUDTggsQl18CveDwSoQMHFksRog8EJut3shVrb5ufH9FxEmt0he/bu8yKfXl8DBc
+         3DMcnEwlYY8n484FBUdRXivbnlP+G1zM4sSuwxl79KgImlJPdrCURJXDI23l/IDxtDcG
+         Jx3xzqJibXRJxOUDEL8Z+FVTfVGNI7nFx8BWimICflRd71+lqFM+wPHBUwkjjIMyye8g
+         SASQ==
+X-Gm-Message-State: AOAM532aUI9J5NXSxxRcsCQMpsOY1WceXbtZ9prvc4xm84oXD0wBRL2g
+        A+45uhAOJG0Gl65oN5GNsbs=
+X-Google-Smtp-Source: ABdhPJzdVxSjyNH/rkjA1cfgXm37K+6qmC4ppHxC38w/8WOIGBgXvKCET8wbHnHpdKSj2ecCn8tUvg==
+X-Received: by 2002:a17:90b:100e:: with SMTP id gm14mr3216566pjb.39.1598393246279;
+        Tue, 25 Aug 2020 15:07:26 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.215.131])
+        by smtp.gmail.com with ESMTPSA id k5sm100368pgk.78.2020.08.25.15.07.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 15:07:25 -0700 (PDT)
+From:   Anant Thazhemadam <anant.thazhemadam@gmail.com>
+To:     anant.thazhemadam@gmail.com
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: media-atomisp : fix "dubious: !x | !y" sparse warning
+Date:   Wed, 26 Aug 2020 03:34:26 +0530
+Message-Id: <20200825220437.11214-1-anant.thazhemadam@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825124024.GN17456@casper.infradead.org>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=QKgWuTDL c=1 sm=1 tr=0 cx=a_idp_d
-        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=7-415B0cAAAA:8
-        a=2U9gKF9mzcrskAPIHE4A:9 a=CjuIK1q_8ugA:10 a=n3xvM8a_0i4A:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 01:40:24PM +0100, Matthew Wilcox wrote:
-> Any objection to leaving this patch as-is with a u64 length?
+Upon running sparse, "warning: dubious: !x | !y" is brought to notice
+for this file. This patch fixes that warning.
 
-No objection here - I just wanted to make sure that signed/unsigned
-overflow was not going to be an issue...
+If there's a specific reason that this change is considered undesirable, 
+please do let me know why.
+Thanks.
 
-Cheers,
+Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
+---
+ .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Dave.
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+index 358cb7d2cd4c..3b850bb2d39d 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+@@ -58,7 +58,7 @@ sh_css_vf_downscale_log2(
+ 	unsigned int ds_log2 = 0;
+ 	unsigned int out_width;
+ 
+-	if ((!out_info) | (!vf_info))
++	if ((!out_info) || (!vf_info))
+ 		return -EINVAL;
+ 
+ 	out_width = out_info->res.width;
 -- 
-Dave Chinner
-david@fromorbit.com
+2.25.1
+
