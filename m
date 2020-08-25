@@ -2,123 +2,102 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A07C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37AABC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8342720738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kn659dFW"
+	by mail.kernel.org (Postfix) with ESMTP id 1F70E20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726661AbgHYXpW (ORCPT
+        id S1726593AbgHYXuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:45:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbgHYXpV (ORCPT
+        Tue, 25 Aug 2020 19:50:50 -0400
+Received: from anchovy3.45ru.net.au ([203.30.46.155]:55394 "EHLO
+        anchovy3.45ru.net.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbgHYXut (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:45:21 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D96C061574;
-        Tue, 25 Aug 2020 16:45:19 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id c10so128037edk.6;
-        Tue, 25 Aug 2020 16:45:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Vrq4v6qq3XTqsCKD1xadXMdCN6zU2zFU1IE+7WmavGw=;
-        b=Kn659dFWmM6eaNHeoUbbJFk/+yk+FWcjQ9E3SslJknb596Z2T+k3qG+VekL1ENpr/c
-         lxWLaWefCF/KRQcDyXzRSo+u25QhzqOscYX5IuAYW1EITerFlnmBfUgkqu7FQyD52tdQ
-         +C7pUhnqfTOeglZSNNoifcCJacfYzW6B2ckXMfJjLGAmy7OvQ90qmZYArLXM72L2PlwH
-         YIngkJjC00Bk03d/u0dSLBM1KsdUACbnP72YNgLDLnm8W3BSar02CpmBwGIXWy6J2Svc
-         r0gcedYv7R+66E8folLWb+u0VCfvAOoUCmbgXNklCd3WFuCF7LQtUWUV1r3jdD4zzjlm
-         Bgow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Vrq4v6qq3XTqsCKD1xadXMdCN6zU2zFU1IE+7WmavGw=;
-        b=IKkHUXNmy0841pBUP7cG1YqlxWvJeXwzee7WLNoqXUQIy3eH6nbEYF3JJWOdNwggGX
-         qDN5RGgKhIYJjuHYY1ox6ZxtJQTr2UcJVwiTNkpMCGUD0SXYI9oSg0k82zqQvHQ9H0yD
-         F960Zv6mF1IpPKiXmRerM8+2dk6Aly4RJ7tS7VMElpf3ztkmy6RlqimuHQhKF+CGEW7A
-         /HR2kxMXu+U94fCtx7ckTowO+rL+W9DFpCDjg/cqfDgpX1Hp/IdBV64lMSUN19gfOY8A
-         /A/XaX9mxPtdeO8GqGE8wZgGCm3YFewoRYj19RgnxoTqAZ+hkGJO9TsmttWGxsfiL6h3
-         LfBw==
-X-Gm-Message-State: AOAM530JcS+ZUdLzgfYikMxvUbMi1aoDCEU6234RsN65yOpI+5AHXEgQ
-        s+VwK7mTk/I5Zvp9CfSNYHw=
-X-Google-Smtp-Source: ABdhPJx1TaRXrlWWmd+DeFQoGwngrI/rLvXGBVk1+SYj4vT9Z2hyfjQEHa2Wxgf66AMBphaMsUcjxg==
-X-Received: by 2002:a05:6402:c1:: with SMTP id i1mr6143271edu.277.1598399118015;
-        Tue, 25 Aug 2020 16:45:18 -0700 (PDT)
-Received: from [10.55.3.147] ([173.38.220.45])
-        by smtp.gmail.com with ESMTPSA id p16sm342051ejw.110.2020.08.25.16.45.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 16:45:17 -0700 (PDT)
-Subject: Re: [net-next v5 1/2] seg6: inherit DSCP of inner IPv4 packets
-To:     David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     andrea.mayer@uniroma2.it
-References: <20200825160236.1123-1-ahabdels@gmail.com>
- <efaf3273-e147-c27e-d5b8-241930335b82@gmail.com>
-From:   Ahmed Abdelsalam <ahabdels@gmail.com>
-Message-ID: <75f7be67-2362-e931-6793-1ce12c69b4ea@gmail.com>
-Date:   Wed, 26 Aug 2020 01:45:14 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Tue, 25 Aug 2020 19:50:49 -0400
+Received: (qmail 18469 invoked by uid 5089); 25 Aug 2020 23:44:07 -0000
+Received: by simscan 1.2.0 ppid: 18331, pid: 18332, t: 0.0840s
+         scanners: regex: 1.2.0 attach: 1.2.0 clamav: 0.88.3/m:40/d:1950
+Received: from unknown (HELO ?192.168.0.22?) (preid@electromag.com.au@203.59.235.95)
+  by anchovy2.45ru.net.au with ESMTPA; 25 Aug 2020 23:44:06 -0000
+Subject: Re: [PATCH 2/4] i2c: at91: implement i2c bus recovery
+To:     Wolfram Sang <wsa@the-dreams.de>, Codrin.Ciubotariu@microchip.com,
+        kamel.bouhara@bootlin.com, linux-arm-kernel@lists.infradead.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        Ludovic.Desroches@microchip.com, devicetree@vger.kernel.org,
+        thomas.petazzoni@bootlin.com
+References: <20191002144658.7718-1-kamel.bouhara@bootlin.com>
+ <20191002144658.7718-3-kamel.bouhara@bootlin.com>
+ <20191021202044.GB3607@kunai>
+ <724d3470-0561-1b3f-c826-bc16c74a8c0a@bootlin.com>
+ <1e70ae35-052b-67cc-27c4-1077c211efd0@microchip.com>
+ <20191024150726.GA1120@kunai>
+ <65d83bb0-9a0c-c6e2-1c58-cb421c69816c@electromag.com.au>
+ <20200825132846.GA1753@kunai>
+From:   Phil Reid <preid@electromag.com.au>
+Message-ID: <8deeae50-2d67-d728-7afd-1b8f1b7a927e@electromag.com.au>
+Date:   Wed, 26 Aug 2020 07:44:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <efaf3273-e147-c27e-d5b8-241930335b82@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20200825132846.GA1753@kunai>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-AU
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/08/2020 18:45, David Ahern wrote:
-> On 8/25/20 10:02 AM, Ahmed Abdelsalam wrote:
->> This patch allows SRv6 encapsulation to inherit the DSCP value of
->> the inner IPv4 packet.
->>
->> This allows forwarding packet across the SRv6 fabric based on their
->> original traffic class.
->>
->> The option is controlled through a sysctl (seg6_inherit_inner_ipv4_dscp).
->> The sysctl has to be set to 1 to enable this feature.
->>
+On 25/08/2020 21:28, Wolfram Sang wrote:
+> Hi Phil,
 > 
-> rather than adding another sysctl, can this be done as a SEG6_LOCAL
-> attribute and managed via seg6_local_lwt?
+> yes, this thread is old but a similar issue came up again...
+> 
+> On Fri, Oct 25, 2019 at 09:14:00AM +0800, Phil Reid wrote:
+> 
+>>>
+>>>> So at the beginning of a new transfer, we should check if SDA (or SCL?)
+>>>> is low and, if it's true, only then we should try recover the bus.
+>>>
+>>> Yes, this is the proper time to do it. Remember, I2C does not define a
+>>> timeout.
+>>>
+>>
+>> FYI: Just a single poll at the start of the transfer, for it being low, will cause problems with multi-master buses.
+>> Bus recovery should be attempted after a timeout when trying to communicate, even thou i2c doesn't define a timeout.
+>>
+>> I'm trying to fix the designware drivers handling of this at the moment.
+> 
+> I wonder what you ended up with? You are right, a single poll is not
+> enough. It only might be if one applies the new "single-master" binding
+> for a given bus. If that is not present, my best idea so far is to poll
+> SDA for the time defined in adapter->timeout and if it is all low, then
+> initiate a recovery.
 > 
 
-Hi David
+On my todo list still.
 
-The seg6 encap is implemented through the seg6_lwt rather than 
-seg6_local_lwt.
-We can add a flag(SEG6_IPTUNNEL_DSCP) in seg6_iptunnel.h if we do not 
-want to go the sysctl direction.
-Perhaps this would require various changes to seg6 infrastructure 
-including seg6_iptunnel_policy, seg6_build_state, fill_encap, 
-get_encap_size, etc.
+Our system eventually recovers at the moment and the multi-master bus
+doesn't contain anything that's time critical to our systems operation.
 
-We have proposed a patch before to support optional parameters for SRv6 
-behaviors [1].
-Unfortunately, this patch was rejected.
 
-So i do not know which option is better.
+-- 
+Regards
+Phil Reid
 
-[1] 
-https://patchwork.ozlabs.org/project/netdev/patch/20200319183641.29608-1-andrea.mayer@uniroma2.it/
+ElectroMagnetic Imaging Technology Pty Ltd
+Development of Geophysical Instrumentation & Software
+www.electromag.com.au
 
-Ahmed
+3 The Avenue, Midland WA 6056, AUSTRALIA
+Ph: +61 8 9250 8100
+Fax: +61 8 9250 7100
+Email: preid@electromag.com.au
