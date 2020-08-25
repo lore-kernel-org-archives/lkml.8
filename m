@@ -2,279 +2,206 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4555BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A83C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6102075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2C52075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 22:55:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YnhZQy0b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c/dFY/lU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbgHYWyG (ORCPT
+        id S1726672AbgHYWzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 18:54:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55390 "EHLO
+        Tue, 25 Aug 2020 18:55:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbgHYWyE (ORCPT
+        with ESMTP id S1726471AbgHYWzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 18:54:04 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC215C061574;
-        Tue, 25 Aug 2020 15:54:03 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id p17so412759wrj.8;
-        Tue, 25 Aug 2020 15:54:03 -0700 (PDT)
+        Tue, 25 Aug 2020 18:55:22 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A74C061574;
+        Tue, 25 Aug 2020 15:55:21 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id j13so244037pjd.4;
+        Tue, 25 Aug 2020 15:55:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qR+rsjCm9M7x6htG/F+Mg3/umV1obLyEiRL40nbc4yg=;
-        b=YnhZQy0b12UncXbENoXP8OsCPM+jdlr9o2duHN6bfby+YcY0ixhX6pP/cFbkXSBsO/
-         Z/PZUnjS6e0+BtjRyaraKJNAMM/VsNXCr85veu6ZUbtsFuC2EInY6Nn5L0O/d0LNGWYp
-         xCtdSyLU9ewpbfRTM6tJoi43fw3vGmuYpIROCpFNK2bMRX5ih/zZ9nSuRKCTa3FaPXZT
-         TneOeTAvfjasOotL+lfw3scfGMNTHjmBa5ZMLDGuyiF7ORXOXDhxL7fXdDqPLhbXUwW1
-         4AI84RJyvVMsVdZScxM4EHX0LSU43hSOa8xJqWfnm+BUSCTc0LVlqiWuWijroEYEM0k6
-         5NYw==
+        h=to:from:subject:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=zzPbrQeMbbDq8vxQXVPO6befCNwmPB7fKgiXV+X7gIE=;
+        b=c/dFY/lUiH0/gKb0XGwbFwRTuQhztL8wGE/O6bznGbsfHXepl/kGCQ69f0Q0rFmLlI
+         ZmudC48SZebBBQOAmtib1quKOjuvuEVuj9GNxYG1X58xlMXBHBjVK/VWuLDIrYaxk5TD
+         XYgnyGmVqIQm+Jw04tsYdHFv69EIOeWDzxeyMF0nnhtWJ/w3RZj9fAyTiuG91p/O+WqA
+         08hAI1NGzoCLRj7urDzWFD0pJK5x0yOzF1vrgkhB74kiBH3CFfDq8Y9vP0jIlOAuSWDN
+         +2vGq/yehAEtgtQHrNKeAUyVznasHQO2sCf/QJgqaD0j1eUHdsDnfW5kT2/Cpw7fm77H
+         fI3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qR+rsjCm9M7x6htG/F+Mg3/umV1obLyEiRL40nbc4yg=;
-        b=N+Bsn+MXTZXbXS77f3MCA2Y/tPpTwY7URoi5URQMJlXIqfClXMBedb1CtC5KCxtybS
-         2Bhf4smAiRe5nhB0ZDg7e/PdE+wS9CDwMZaVcn4IJglXguhCK482T8LaR4Et54BT9xGQ
-         QndJ8wi/LR9IAYtJU3MpnKC9tDM/iIrCmDgRzGpyWa9vGJIOpv9eLdXniMtsd8WcS/X8
-         3UUr2/IVioOfcExFxT4aW1lmCQM/F2N//hIUN7u3SphgPO2YI92R5F36LdFX9F3Xjh1l
-         hYBhPxyIOjZ51jcvH2/wwx47BqkdRbV1UBBP4dk6QMg5XWf/QsVecN9EUKy1HpG4szXZ
-         RMpA==
-X-Gm-Message-State: AOAM532kX4XvguFSY0bQfcsVRv53DK8371r7Uw1IRkY0oYh/ibcR5YKz
-        MU4aSUFoy1y+eCKDEbOamGhpzrmCTAKedV5FVMg=
-X-Google-Smtp-Source: ABdhPJxgQdWxS5C5/b6Clez7Q4YazJjjcmna79lLTQv8LkOPWC8eBFe3GKXRHUQyTRtV1ykEnTSjOxo9job01P3mO1c=
-X-Received: by 2002:a5d:4a8a:: with SMTP id o10mr11849609wrq.327.1598396041548;
- Tue, 25 Aug 2020 15:54:01 -0700 (PDT)
+        h=x-gm-message-state:to:from:subject:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=zzPbrQeMbbDq8vxQXVPO6befCNwmPB7fKgiXV+X7gIE=;
+        b=WaEM4rVgDqcRhrDaEDsh6P60KSl2IdyAcKizq+PZ/wjlO/dhcZnLdDU6zkJkDchEKw
+         xd+8PRMu2l8k36wj2/VGfALxDEqLHupPhPpvkykdm1dbGzlJck/cbwKyz9Znd1a5Z4h4
+         Ut9CSHx9DeHjEsNkQA42c6dROgsNNlweV/2K7z+D4ostDi3FqkjAc1nz8DL9SYpmSHYh
+         60Vr16IWs+G++8ZEIObEFD60GxUWlBbYQxxH/tLjGlJWO8/iuW2hhkdOvOmTXAcbJ1hb
+         xrGWW9EhA66h/O7iIr4b4zPsVPug0OiU+NN+MWYFYqaBkdKDni17+vJ2qHa1qCZAddIK
+         t8RQ==
+X-Gm-Message-State: AOAM5311BJpdYmyDW7+6fvHm58tKe8N7I+Exn6n5UR9ISiDk3NOxAZwB
+        OAV1T+VcV0xDjHjQ3xKacTg=
+X-Google-Smtp-Source: ABdhPJw9LpbzR+ZSRIPcFrQy0FTysaBF8gWzi404ijUQz+2/kAgv5ipXDZ3GZ0v87NLueYCuahMHEA==
+X-Received: by 2002:a17:90a:cc14:: with SMTP id b20mr3252895pju.1.1598396121012;
+        Tue, 25 Aug 2020 15:55:21 -0700 (PDT)
+Received: from [10.69.56.142] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f6sm145891pgf.68.2020.08.25.15.55.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 15:55:20 -0700 (PDT)
+To:     stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>
+From:   Doug Berger <opendmb@gmail.com>
+Subject: RFC: backport of commit a32c1c61212d
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Michal Hocko <mhocko@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        zhaoyang <huangzhaoyang@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Baoquan He <bhe@redhat.com>
+Message-ID: <bd960a80-c953-ad11-cdfd-1e48ffdce443@gmail.com>
+Date:   Tue, 25 Aug 2020 15:58:27 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200825154249.20011-1-saiprakash.ranjan@codeaurora.org>
- <CAD=FV=XK3Xa3rRWvuSA_jA+5_1XYBmHEX2B2XSb8h3oOe1PHLw@mail.gmail.com>
- <3df7edd53ebca00be288e69b92b8d4b9@codeaurora.org> <CAD=FV=X=3Jae7_gXN_05EsmZjrM1bN=TMZ0qoGKz=UaNrthzAg@mail.gmail.com>
-In-Reply-To: <CAD=FV=X=3Jae7_gXN_05EsmZjrM1bN=TMZ0qoGKz=UaNrthzAg@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 25 Aug 2020 15:53:49 -0700
-Message-ID: <CAF6AEGsuusnGaN-H9geFa+jwX_hkvMHGZCWvwk5-MDGQ7cBsbQ@mail.gmail.com>
-Subject: Re: [PATCH] iommu: Add support to filter non-strict/lazy mode based
- on device names
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 3:23 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Tue, Aug 25, 2020 at 12:01 PM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
-> >
-> > Hi,
-> >
-> > On 2020-08-25 21:40, Doug Anderson wrote:
-> > > Hi,
-> > >
-> > > On Tue, Aug 25, 2020 at 8:43 AM Sai Prakash Ranjan
-> > > <saiprakash.ranjan@codeaurora.org> wrote:
-> > >>
-> > >> Currently the non-strict or lazy mode of TLB invalidation can only be
-> > >> set
-> > >> for all or no domains. This works well for development platforms where
-> > >> setting to non-strict/lazy mode is fine for performance reasons but on
-> > >> production devices, we need a more fine grained control to allow only
-> > >> certain peripherals to support this mode where we can be sure that it
-> > >> is
-> > >> safe. So add support to filter non-strict/lazy mode based on the
-> > >> device
-> > >> names that are passed via cmdline parameter "iommu.nonstrict_device".
-> > >>
-> > >> Example:
-> > >> iommu.nonstrict_device="7c4000.sdhci,a600000.dwc3,6048000.etr"
->
-> Just curious: are device names like this really guaranteed to be
-> stable across versions?
->
->
-> > > I have an inherent dislike of jamming things like this onto the
-> > > command line.  IMHO the command line is the last resort for specifying
-> > > configuration and generally should be limited to some specialized
-> > > debug options and cases where the person running the kernel needs to
-> > > override a config that was set by the person (or company) compiling
-> > > the kernel.  Specifically, having a long/unwieldy command line makes
-> > > it harder to use for the case when an end user actually wants to use
-> > > it to override something.  It's also just another place to look for
-> > > config.
-> > >
-> >
-> > Good thing about command line parameters are that they are optional,
-> > they do
-> > not specify any default behaviour (I mean they are not mandatory to be
-> > set
-> > for the system to be functional), so I would like to view it as an
-> > optional
-> > config. And this command line parameter (nonstrict_device) is strictly
-> > optional
-> > with default being strict already set in the driver.
-> >
-> > They can be passed from the bootloader via chosen node for DT platforms
-> > or choose
-> > a new *bootconfig* as a way to pass the cmdline but finally it does boil
-> > down to
-> > just another config.
->
-> Never looked at bootconfig.  Unfortunately it seems to require
-> initramfs so that pretty much means it's out for my usage.  :(
->
->
-> > I agree with general boolean or single value command line parameters
-> > being just
-> > more messy which could just be Kconfigs instead but for multiple value
-> > parameters
-> > like these do not fit in Kconfig.
-> >
-> > As you might already know, command line also gives an advantage to the
-> > end user
-> > to configure system without building kernel, for this specific command
-> > line its
-> > very useful because the performance bump is quite noticeable when the
-> > iommu.strict
-> > is off. Now for end user who would not be interested in building entire
-> > kernel(majority)
-> > and just cares about good speeds or throughput can find this very
-> > beneficial.
-> > I am not talking about one specific OS usecase here but more in general
-> > term.
-> >
-> > > The other problem is that this doesn't necessarily scale very well.
-> > > While it works OK for embedded cases it doesn't work terribly well for
-> > > distributions.  I know that in an out-of-band thread you indicated
-> > > that it doesn't break anything that's not already broken (AKA this
-> > > doesn't fix the distro case but it doesn't make it worse), it would be
-> > > better to come up with a more universal solution.
-> > >
-> >
-> > Is the universal solution here referring to fix all the command line
-> > parameters
-> > in the kernel or this specific command line? Are we going to remove any
-> > more
-> > addition to the cmdline ;)
->
-> There are very few cases where a kernel command line parameter is the
-> only way to configure something.  Most of the time it's just there to
-> override a config.  I wouldn't suggest removing those.  I just don't
-> want a kernel command line parameter to be the primary way to enable
-> something.
->
->
-> > So possible other solution is the *bootconfig* which is again just
-> > another place
-> > to look for a config. So thing is that this universal solution would
-> > result in
-> > just more new fancy ways of passing configs or adding such configs to
-> > the drivers
-> > or subsystems in kernel which is pretty much similar to implementing
-> > policy in
-> > kernel which I think is frowned upon and mentioned in the other thread.
-> >
-> > > Ideally it feels like we should figure out how to tag devices in a
-> > > generic manner automatically (hardcode at the driver or in the device
-> > > tree).  I think the out-of-band discussions talked about "external
-> > > facing" and the like.  We could also, perhaps, tag devices that have
-> > > "binary blob" firmware if we wanted.  Then we'd have a policy (set by
-> > > Kconfig, perhaps overridable via commandline) that indicated the
-> > > strictness level for the various classes of devices.  So policy would
-> > > be decided by KConfig and/or command line.
-> > >
-> >
-> > How is tagging in driver or device tree better than the simple command
-> > line
-> > approach to pass the same list of devices which otherwise you would
-> > hardcode
-> > in the corresponding drivers and device tree all over the kernel other
-> > than
-> > the scalability part for command line? IMHO it is too much churn.
->
-> It's better because it doesn't require keeping track and updating
-> these per-board (or per machine) arguments for each and every
-> board/machine you maintain.  If, for instance, we start out by
-> allowing HW video decoder to use non-strict.  So:
->
-> On one board, we add in "aa00000.video-codec" to the command line.
-> On some other board, maybe we add in "1d00000.video-codec" to the command line.
-> On some other board, maybe we add in "90400000.video-codec" to the command line.
->
-> Now we realize that there's some problem and we have to remove it, so
-> we need to go through and remove this from our command line
-> everywhere.  Worse is that we have to proactively notice it and remove
-> it.
->
-> Instead, let's imagine that we set a policy at a bit of a higher
-> level.  Different ideas:
->
-> a) We could have a CONFIG_ option for the video codec that's something
-> like "CONFIG_VIDEOCODEC_DEFAULT_NONSTRICT".  If this was set then if
-> there is no "iommu.strict" command line argument then this device
-> would be mapped as non-strict.  If "iommu.strict=0" or
-> "iommu.strict=1" is on the command line then it would override all of
-> these defaults.  Probably the existence (or maybe the default value)
-> of this CONFIG option implies that there are no known/expected
-> exploits related to it.
+I recently tracked down a problem I observed when booting a v5.4 kernel
+on a sparsemem UMA arm platform which includes a no-map reserved-memory
+region in the middle of its HighMem zone.
 
-jumping in a bit late so might have missed some of the background, but
-shouldn't the driver decide strict vs non-strict?  It should be the
-one that knows if non-strict is safe or not?
+When memmap_init_zone() is invoked the pfn's that correspond to the
+no-map region fail the early_pfn_valid() check and the struct page
+structures are not initialized creating a "hole" in the memmap. Later in
+my boot sequence the sock_init() initcall leads to a bpf_prog_alloc()
+which ends up stealing a page from the block containing the no-map
+region which then leads to a call of move_freepages_block() to
+reclassify the migratetype of the entire block.
 
-BR,
--R
+The function move_freepages() includes a check of pfn_valid_within for
+each page in the range, but since the arm architecture doesn't include
+HOLES_IN_ZONE this check is optimized out and the uninitialized struct
+page is accessed. Specifically, PageLRU() calls compound_head() on the
+page and if the page->compound_head value is odd the value is used as a
+pointer to the head struct page. For uninitialized memory there is a
+high chance that a random value of compound head will be odd and contain
+an invalid pointer value that causes the kernel to abort and panic.
 
->
-> b) We could find some way to tag the video codec and then set
-> non-strictness on certain classes of devices, then we could have a
-> policy to disable strictness on certain classes of devices.
->
-> The nice thing about the above is that you could imagine someone
-> pushing a change to the stable trees that would fix everyone affected.
-> Nobody would need to go around and adjust command line options, they'd
-> just get the newest stable and it could cause devices to move into
-> strict mode if there was a known exploit.  I suppose with your
-> proposal stable trees could have a "blacklist" where the commandline
-> is ignored for exploited devices, but that seems ugly.
->
->
-> > Device tree could be used but then we have a problem with it being for
-> > only
-> > describing hardware and it doesn't work for ACPI based systems.
-> >
-> > Command line approach works for all systems (both DT and ACPI) without
-> > having
-> > to add too much churn to drivers. Lastly, I think we can have both
-> > options, it
-> > doesn't hurt to add command line parameter since it is optional.
->
-> I'm not opposed to something existing that lets you override this on
-> the command line, but I'm just not a fan of it being the primary way.
->
-> -Doug
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+As you might imagine specifying HOLES_IN_ZONE for the arm build allows
+pfn_valid_within to protect against accessing the uninitialized struct
+page. However, the performance penalty this incurs seems unnecessary.
+
+Commit 35fd1eb1e821 ("mm/sparse: abstract sparse buffer allocations") as
+part of the "sparse_init rewrite" series introduced in v4.19 changed the
+way sparsemem memmaps are initialized. Prior to this patch the sparsemem
+memmaps are initialized to all 0's. I observed that on older kernels the
+"uninitialized" struct page access also occurs, but the 0
+page->compound_head indicates no compound head and the page pointer is
+therefore not corrupted. The other logic ends up causing the page to be
+skipped and everything "happens to work".
+
+While considering solutions to this issue I observed that the problem
+does not occur in the current upstream as a result of a combination of
+other commits. The following commits provided functionality to
+initialize struct page structures for pages that are unavailable like
+the no-map region in my system:
+commit a4a3ede2132a ("mm: zero reserved and unavailable struct pages")
+commit 907ec5fca3dc ("mm: zero remaining unavailable struct pages")
+commit ec393a0f014e ("mm: return zero_resv_unavail optimization")
+commit e822969cab48 ("mm/page_alloc.c: fix uninitialized memmaps on a
+partially populated last section")
+commit 4b094b7851bf ("mm/page_alloc.c: initialize memmap of unavailable
+memory directly")
+
+However, those commits added the functionality to the free_area_init()
+and free_area_init_nodes() functions and the non-NUMA arm architecture
+did not begin calling free_area_init() until the following commit in v5.8:
+commit a32c1c61212d ("arm: simplify detection of memory zone boundaries")
+
+Prior to that commit the non-NUMA arm architecture called
+free_area_init_node() directly at the end of zone_sizes_init().
+
+So while the problem appears to be fixed upstream by commit a32c1c61212d
+("arm: simplify detection of memory zone boundaries") it is still
+present in stable branches between v4.19.y and v5.7.y inclusive and
+probably for architectures other than arm as well that didn't call
+free_area_init(). This upstream commit is not easily/safely backportable
+to stable branches, but if we focus on the sliver of functionality that
+adds the initialization code from free_area_init() to the
+zones_sizes_init() function used by non-NUMA arm kernels I believe a
+simple patch could be developed for each relevant stable branch to
+resolve the issue I am observing. Similar patches could also be applied
+for other architectures that now call free_area_init() upstream but not
+in one of these stable branches, but I am not in a position to test
+those architectures.
+
+For the linux-5.4.y branch such a patch might look like this:
+From 671c341b5cdb8360349c33ade43115e28ca56a8a Mon Sep 17 00:00:00 2001
+From: Doug Berger <opendmb@gmail.com>
+Date: Tue, 25 Aug 2020 14:39:43 -0700
+Subject: [PATCH] ARM: mm: sync zone_sizes_init with free_area_init
+
+The arm architecture does not invoke the common function
+free_area_init(). Instead for non-NUMA builds it invokes
+free_area_init_node() directly from zone_sizes_init().
+
+As a result recent changes in free_area_init() are not
+picked up by arm architecture builds.
+
+This commit adds the updates to the zone_sizes_init()
+function to achieve parity with the free_area_init()
+functionality.
+
+Fixes: 35fd1eb1e821 ("mm/sparse: abstract sparse buffer allocations")
+Signed-off-by: Doug Berger <opendmb@gmail.com>
+Cc: stable@vger.kernel.org
+---
+ arch/arm/mm/init.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/mm/init.c b/arch/arm/mm/init.c
+index 6f19ba53fd1f..4f171d834c60 100644
+--- a/arch/arm/mm/init.c
++++ b/arch/arm/mm/init.c
+@@ -169,6 +169,7 @@ static void __init zone_sizes_init(unsigned long
+min, unsigned long max_low,
+                        arm_dma_zone_size >> PAGE_SHIFT);
+ #endif
+
++       zero_resv_unavail();
+        free_area_init_node(0, zone_size, min, zhole_size);
+ }
+
+-- 
+2.7.4
+
+I am unclear of the mechanics for submitting such a stable patch when it
+represents a perhaps less than obvious sliver of the upstream commit
+that fixes the issue, so I am soliciting guidance with this email.
+
+Thank you for taking the time to read this far, and please let me know
+how I can improve the situation,
+    Doug
