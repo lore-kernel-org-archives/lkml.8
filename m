@@ -6,119 +6,99 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23EEC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B01C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B282220665
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98EC220665
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 21:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="4zfsWlqx"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QlbTTwbu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbgHYVHx (ORCPT
+        id S1726700AbgHYVKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 17:07:53 -0400
-Received: from cmta18.telus.net ([209.171.16.91]:46801 "EHLO cmta18.telus.net"
+        Tue, 25 Aug 2020 17:10:51 -0400
+Received: from ozlabs.org ([203.11.71.1]:41271 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgHYVHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 17:07:51 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id AgAVkQs0IqUs3AgAWkWBnA; Tue, 25 Aug 2020 15:07:50 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1598389670; bh=okfs/gSusVf/W8ubFP2qX6KtZJzytKM0afb0qqjR/Eg=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=4zfsWlqxGLKOlEUpukz8dh81lSKCN2RHp4GG2TOj1tlEOJ9WLxtUm7BNJlDFlEgkZ
-         9+1aITVhEpyNa3/xjRqkVtzQnZ7oFcgN0StGFJ8AGLmiCkPbiUMc+GGqDvmhBKZjpk
-         ZDHVzC13+783zLEHXEnCvc7mAuDB/UNGUPpcdxU28UFH7xff4yZjAmxf+WeAyc38Ei
-         DonDDmH8x10J4GE7mjBF1JgszfmNJu08VvfUKBmY0QbrAhN2iNAWnsqwBVWvgT+URN
-         /EH5vAyUAd1WjNv4n0dOzTl17LhNVqPyfTAL1u2AemmmdL8eb9I194HLE6xEdrIU+l
-         3Yr88rf/CIFxg==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=Mo8sFFSe c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=IkcTkHD0fZMA:10 a=2s2tET4dTWZ_aRCLoUoA:9
- a=QEXdDO2ut3YA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>
-Cc:     "'LKML'" <linux-kernel@vger.kernel.org>,
-        "'Linux PM'" <linux-pm@vger.kernel.org>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-References: <4169555.5IIHXK4Dsd@kreacher>        <5cf44a75c9f73740d2a22dbfc5c7a57489b1a3ca.camel@linux.intel.com>        <002001d67a7b$2b46e1c0$81d4a540$@net> <d07cd980439d999b060dccdd16cb44c390cbf66d.camel@linux.intel.com>
-In-Reply-To: <d07cd980439d999b060dccdd16cb44c390cbf66d.camel@linux.intel.com>
-Subject: RE: [PATCH v2 0/5] cpufreq: intel_pstate: Address some HWP-related oddities
-Date:   Tue, 25 Aug 2020 14:07:46 -0700
-Message-ID: <004a01d67b23$c9829b60$5c87d220$@net>
+        id S1726149AbgHYVKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 17:10:50 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BbhVH30g0z9sPB;
+        Wed, 26 Aug 2020 07:10:47 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1598389848;
+        bh=QO0VFcTYeT00h9+sR3A8pseHdrBg8aKdHYb6On8HQrY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QlbTTwbuKi9SZo3famM1SYPZOR24DM7Mbk2NPkexjSIoJ20RVbSgG6q7I3A2jWTrG
+         F/TMd9QU0OrnnrOxtMmyhBIDaLSOgrPvHiRuXZkx+H3v/G/AvDXxysKQuQ3z18VeeK
+         0YziGBwEG8kfxEsBBSVqVqC8lixCVoUXGJAoLxpKgb4SGL5fCxhle2LSoOFKS2kmoi
+         jGkbI28jr+ggDk45JBaLf77maxQX3YfVfJ/B/Z67Rxq1/ZXdnBlJ9PU3goD6Eri4GS
+         f4ZmqhStPwGFC2RAW3LWvMwbeUkDgNeBMoHra6/c78nufN/PcMuqkd3uRYJbnrBpya
+         0dHukJO7Ocsjg==
+Date:   Wed, 26 Aug 2020 07:10:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
+Subject: Re: linux-next: build failure after merge of the bpf-next tree
+Message-ID: <20200826071046.263e0c24@canb.auug.org.au>
+In-Reply-To: <CAADnVQ+SZj-Q=vijGkoUkmWeA=MM2S2oaVvJ7fj6=c4S4y-LMA@mail.gmail.com>
+References: <20200821111111.6c04acd6@canb.auug.org.au>
+        <20200825112020.43ce26bb@canb.auug.org.au>
+        <CAADnVQLr8dU799ZrUnrBBDCtDxPyybZwrMFs5CAOHHW5pnLHHA@mail.gmail.com>
+        <20200825130445.655885f8@canb.auug.org.au>
+        <CAADnVQKGf7o8gJ60m_zjh+QcmRTNH+y1ha_B2q-1ixcCSAoHaw@mail.gmail.com>
+        <20200825165029.795a8428@canb.auug.org.au>
+        <CAADnVQ+SZj-Q=vijGkoUkmWeA=MM2S2oaVvJ7fj6=c4S4y-LMA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdZ68u9Uyt9nR49dTce4yZVhEfzmlQAEGlEQ
-X-CMAE-Envelope: MS4wfIDvh/3kq5OxzYmu7kehd7AzqqKrivKj6FoX406cZFn35t6L5jEJJrAy/xmpYMXe5q2D2Frhoe4BywGq9rwxFkvqoHHvaGOyFTDDthzNfhjCzj3UtAWt
- 18TIYhyMzVOBRfLgQp7hg/aSqjl6/2UtAnC3WjlWK9v4hqbWP8Q7oYiP8xkkKnizFIYdNStQqpwTwh4AIIvQlQp+jtPa83QTaeeGz3hhZGhRIJ1N+SdFqctD
- Xc+sc09umctwSgWe/LAy8iTkcWQq9Gf5QePERGC3PihgM2D4Max8rLIfqVuxa5w4
+Content-Type: multipart/signed; boundary="Sig_/y/.zqijQVP+YmB_bY0J/fw2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srinivas,
+--Sig_/y/.zqijQVP+YmB_bY0J/fw2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your reply.
+Hi Alexei,
 
-On 2020.08.25 08:12 Srinivas Pandruvada wrote:
-> On Mon, 2020-08-24 at 18:00 -0700, Doug Smythies wrote:
-> > I think there is a disconnect between your written
-> > description of what is going on and your supporting MSR reads.
-> >
-> I reproduced again.
-> I see the copy paste individual at the first place swapped.
+On Tue, 25 Aug 2020 07:33:51 -0700 Alexei Starovoitov <alexei.starovoitov@g=
+mail.com> wrote:
+>
+> what do you suggest to use to make it 'manually enabled' ?
+> All I could think of is to add:
+> depends on !COMPILE_TEST
+> so that allmodconfig doesn't pick it up.
 
-Yes, and that had me confused, initially.
+That is probably sufficient.  Some gcc plugins and kasan bits, etc use
+just that.
 
-> I pasted the full output by direct copy - paste from the screen.
-> 
-> But the issues are still there.
+--=20
+Cheers,
+Stephen Rothwell
 
-Agreed.
-I didn't try your offline/online of CPU 1 part previously,
-but did now, and get the same results as you.
+--Sig_/y/.zqijQVP+YmB_bY0J/fw2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-I did not know that "rdmsr -a 0x774" lists
-stuff in the order that CPU were last brought on-line.
-I had assumed the list was in CPU order. Weird.
+-----BEGIN PGP SIGNATURE-----
 
-My example (nothing new here, just me catching up.
-The offline/online order was cpu1, then cpu3, then cpu2):
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9FflYACgkQAVBC80lX
+0Gyrrgf+NknsvQw7owFtB5Pel/msT4aHC2kMQZM6gItF8wEutI6YJ2hcsYDThS8L
+y/4m6LPsYaBDlVcevw2lzwKiROs+3DyeSbc/j0l2fE6ndWNbKL7NCnmqpwAMRrz/
+HMxxs/4AEsGuwfzfVxT+yY2K6FD0dsdQySktPHoxsLR1uMVTIat/daPWtTXNiojI
+YusSanCdtztGqKlv5p+rkBaMVsdC4zehmcH0TrrkXNSPn+2CL6UAKfQTVRcxa5wv
+xzoFCreq+R0tmm2jDlLaNz6HUiNotIbW64o5sOQObHpUpIpFiX12twv98IUO1QZn
+qz6pNpLa1CAA5zkQXkRPjOg6GFOQ0Q==
+=+8xn
+-----END PGP SIGNATURE-----
 
-root@s18:/sys/devices/system/cpu# grep . cpu*/cpufreq/energy_performance_preference
-cpu0/cpufreq/energy_performance_preference:balance_performance
-cpu1/cpufreq/energy_performance_preference:127
-cpu2/cpufreq/energy_performance_preference:125
-cpu3/cpufreq/energy_performance_preference:126
-cpu4/cpufreq/energy_performance_preference:balance_performance
-cpu5/cpufreq/energy_performance_preference:balance_performance
-root@s18:/sys/devices/system/cpu# rdmsr -p 0 0x774
-80002e2e
-root@s18:/sys/devices/system/cpu# rdmsr -p 1 0x774
-7f002e2e
-root@s18:/sys/devices/system/cpu# rdmsr -p 2 0x774
-7d002e2e
-root@s18:/sys/devices/system/cpu# rdmsr -p 3 0x774
-7e002e2e
-root@s18:/sys/devices/system/cpu# rdmsr -p 4 0x774
-80002e2e
-root@s18:/sys/devices/system/cpu# rdmsr -p 5 0x774
-80002e2e
-root@s18:/sys/devices/system/cpu# rdmsr -a 0x774
-80002e2e
-80002e2e
-80002e2e
-7f002e2e
-7e002e2e
-7d002e2e
-
-... Doug
-
-
+--Sig_/y/.zqijQVP+YmB_bY0J/fw2--
