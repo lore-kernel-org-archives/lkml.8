@@ -2,140 +2,109 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DATE_IN_PAST_12_24,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 928C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2015C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED1B2075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:45:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C99520738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:46:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MCRsTNJn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rKqjw58r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="N1MxhvFB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgHYNpx (ORCPT
+        id S1726497AbgHYNqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 25 Aug 2020 09:46:04 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:40528 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726730AbgHYNpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 09:45:53 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:48387 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726222AbgHYNll (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:41:41 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 9AB6E58042E;
-        Tue, 25 Aug 2020 09:35:50 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 25 Aug 2020 09:35:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ojmseEKHzxoiGqB788p1XAtMfVn
-        G9Y87jZdv0bH8iWE=; b=MCRsTNJnWzXk9w8vclVSRjI++JPspgkJnMOA7vlbc3n
-        2BGrls9MO4acqbXQq3avMJLWlJbyeykiadgy+pA4CFkpN2plJmY5vupBbsXEwWbY
-        3V6CTg4yDI9Ha9R2qoYYjnmrMWvw/iogG7iufUAjz4I+CO3sPkI0Ew8R6tbwGAnr
-        5JcY7bs2dSJnivpEGc1ArzJ/qLhkiL/ROmcHCtg7vsT9EcEdRmi5YtXXKur7dui8
-        BES1GXueKXi02W3hGBouwDJ/ypXJTzAKr7yqyseInqGsbXgg0ZwbUQjMgniCNeOR
-        C+IdsOHpsAO+XX/mQERWIQMsnNX4ugUY9lNESKYNORg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ojmseE
-        KHzxoiGqB788p1XAtMfVnG9Y87jZdv0bH8iWE=; b=rKqjw58rqy7uCIb+DDNORU
-        olRXuwt/cUxRQj+RlZvtrFH0gPWq51xcpRN4aJl7MyOtvbQqaMEBNsFcfhr6Ayjf
-        h1By9naU3BkTTuxJwOt8JzacwJftRvDPRfJLV/g6jg9BLxxAHKyi9XA52KjSJVzf
-        6X6I77fSxvdnfNhHgYoaf+roZMDx5m4cXMMRV3cPyn6d56zyp3Krq2cwjev0Ukcu
-        sNcvvubJpnbYgnKy23DvluNTOh1uh/zd2OFnmFo/wq+0uzbOMIoXUksWMrILBpbs
-        CRAow3ee/0/Gh+jpKue7nGTZ/riCtaEzDqgdKYck2lV5LoUiRlXoftickV8LJ8xw
-        ==
-X-ME-Sender: <xms:thNFX_6NlrgGqglkP6kcrUyexVbFsV7qHokZLVxCxe4zwngaDeAIBg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvtddgieelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepuddvudfhkeekhefgffetffelgffftdehffduffegveetffehueeivddvjedv
-    gfevnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:thNFX07Fyk2e9VROTjTBQzUNe7VeVyRlJI4nkosjP-XeHGD3kkWSeA>
-    <xmx:thNFX2du4subVK53IYoS_Arv2LfhpedppmYFebGKSNLyCPP0y38HZg>
-    <xmx:thNFXwL4cJympLRTlTvvA5a3vJBVzambWHD-RG7ezuxGkCKd1N-1Kw>
-    <xmx:thNFX0UdnNiY7WlVSzZjw-yksRmZALcOET-BwHw3cekgzqOSAJnfJA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B826A3060067;
-        Tue, 25 Aug 2020 09:35:49 -0400 (EDT)
-Date:   Mon, 24 Aug 2020 18:52:44 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     =?utf-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        yong.deng@magewell.com, p.zabel@pengutronix.de,
+IronPort-SDR: EWepCS+1mazOO+d5eLqNjy3LCf4T4rGNVIZfE5RnWj3/mC2fy6VwcCarTx4PlRW7xqYxs4CTPD
+ x80tyrxo8qkNz+DY8xVh2QFvDzdlAhbVa43SSt5g6n1B6UTgYOhmw21wQeYNGe1KMsRjejO8Fb
+ d9d8RwdDrPJz5AxUt3C6NrZ3yU/gNET2YTixcYyHJjYgwOtC2GEdHiMED8760kPj6RmZnhjpjG
+ O6Vj+s51HhXAvLFL4atetCaB0RusqjKtnML2e9MoWcTREqNWpj2LLoPRNCjPIdJC8KzJoIGj7g
+ QIs=
+X-IronPort-AV: E=Sophos;i="5.76,352,1592863200"; 
+   d="scan'208";a="13592257"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 25 Aug 2020 15:45:34 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Tue, 25 Aug 2020 15:45:34 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Tue, 25 Aug 2020 15:45:34 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1598363134; x=1629899134;
+  h=from:to:cc:subject:date:message-id;
+  bh=fUqsPE/ZO4LWYoE8Q40E9k79iF8jdqLY6H5vK/D03uU=;
+  b=N1MxhvFBkHSgLoGTAkYNUnrzhNL2SLQIPQaUmt1EpiBJhtMP9HiTRPto
+   Y2qbpaWRZKtKM1AkgGNdZlFOLRQeGH6Z9MwW/yq6A7wi3JJ/Mn7Jx2JDX
+   loGCItdOZnJwfy5hEqp6WsTWpg5kp+jir/k+a2vp7PvcrQpGfmVfdmpQd
+   pueFlhDZQ7oPL5gQCLH/HNp9+LlOaJyd9QVtsHDRvAUkXBKYdD0mpRpIP
+   CsebwOAEMcEpWeVsPapwvKn2LyFEEEhsUOEF9GCfmSH2pTz8WWZdKjx8Q
+   pY+6+HAkdLJvjd7Y2q5ydTvpgbze+6rqZPE8KIBfH5mIGTzuVydzhU4bR
+   A==;
+IronPort-SDR: T2F+3bqy5rZURdVPnteiUoZlsLwR7+OAK9TaRMfSCf3g99BUQOIVMLEFNQBnxLRx6covkVmJ8F
+ L8fSAClNtpW+amrJ7JA80xz0KKAV3tt0JhPKdVKMSg44qp6BuxD+GWJGilfNGUbiqlxCxuREGK
+ pG6y41bO1TUk51ontoPE7lywW2c9TJZKKS+utz39F5e3QcnFF/VoaIkU7S8vptiXampI1z1DXd
+ nHm1qawYEaVwD/yGWA8vbcksMGTJQxiW2IyUiw8PKStaM+6Y4o14+eWSYzN9Qe3ospvV07VwsA
+ zKY=
+X-IronPort-AV: E=Sophos;i="5.76,352,1592863200"; 
+   d="scan'208";a="13592256"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 25 Aug 2020 15:45:34 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 7E1E9280065;
+        Tue, 25 Aug 2020 15:45:34 +0200 (CEST)
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Sascha Hauer <s.hauer@pengutronix.de>, linux-mmc@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH 0/7] Support of MIPI CSI-2 for A83T and OV8865 camera
-Message-ID: <20200824165244.x5rnon47kmtxojg2@gilmour.lan>
-References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6inilh36kvmcvg6m"
-Content-Disposition: inline
-In-Reply-To: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH mmc-next v3 1/2] dt-bindings: mmc: add alias example
+Date:   Tue, 25 Aug 2020 15:44:40 +0200
+Message-Id: <20200825134441.17537-1-matthias.schiffer@ew.tq-group.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As for I2C and SPI, it now is possible to reserve a fixed index for
+mmc/mmcblk devices.
 
---6inilh36kvmcvg6m
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+---
 
-Hi,
+v3: new patch
 
-On Fri, Aug 21, 2020 at 04:59:28PM +0200, K=E9vin L'h=F4pital wrote:
->=20
-> K=E9vin L'h=F4pital (7):
->   media: sun6i-csi: Fix the bpp for 10-bit bayer formats
->   dt-bindings: media: i2c: Add documentation for ov8865
->   media: i2c: Add support for the OV8865 image sensor
->   media: sunxi: sun6i-csi: Move the sun6i_csi_dev structure to the
->     common header
->   media: sunxi: sun6i-csi: Add support of MIPI CSI-2 for A83T
->   ARM: dts: sun8i: a83t: Add support for the MIPI CSI-2 in CSI node
->   [NOT FOR MERGE] ARM: dts: sun8i: a83t: bananapi-m3: Enable OV8865
->     camera
+ Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-You should have a cover letter here to provide some context.
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+index b96da0c7f819..22ed4a36c65d 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
++++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+@@ -367,6 +367,14 @@ examples:
+     };
+ 
+   - |
++    /*
++     * Optionally define an alias to reserve a fixed index for the
++     * mmc and mmcblk devices
++     */
++    aliases {
++        mmc0 = &mmc3;
++    };
++
+     mmc3: mmc@1c12000 {
+         #address-cells = <1>;
+         #size-cells = <0>;
+-- 
+2.17.1
 
-There's a bunch of things that would need to be explained and / or
-argued for here, in particular:
-  - Why did you need to plumb it into sun6i-csi?
-  - You're naming the CSI part as the A83t CSI, while MIPI-CSI has been
-    supported since the A31(?), is there a reason for that?
-  - This is not documented anywhere, what did you base this work on?
-
-Also, I think that documenting the general challenges you faced (which
-were likely because of the first bullet point above) and how you solved
-them here would be great to start a discussion if needed.
-
-Finally, iirc, Hans requires a v4l2-compliance run for any new driver,
-which isn't strictly the case for this driver, but isn't really *not*
-the case either.
-
-Maxime
-
---6inilh36kvmcvg6m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0PwXAAKCRDj7w1vZxhR
-xVcYAQDaPS4QQ1Gi24DL+makRUO9jaKTktQUPcL9pxgsiF10fwEAit94g5iWgJcy
-Au+vTT0bokw+qv26aQbdeHa5l3a/4Qc=
-=LI1/
------END PGP SIGNATURE-----
-
---6inilh36kvmcvg6m--
