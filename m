@@ -2,89 +2,200 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4401FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2549C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10C8720706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F01B20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 07:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598340347;
+	bh=UjCBJMCkqk63JRzde43gORsNZpGbCBgyF4occeqJf1I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dfEtX2b3wUSQMGPIEPea3XG0AeVIsjnSJzfMpzBkvCQ7upxekmXqIWOgdlIGIHx8l
+	 1I0XzMSqGsgqK75PCP8n2iYGjcL2X/a9J0vCeGuo4Yo/4dEoXaQagJXOgtWfW64ASL
+	 5Kp+6odwWWl4xgvGspqOjFfNYKDsbp9pkdJzwsMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729450AbgHYHZl (ORCPT
+        id S1729458AbgHYHZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 03:25:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55654 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729322AbgHYHZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 03:25:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 92205AC24;
-        Tue, 25 Aug 2020 07:26:09 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 09:25:38 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, nao.horiguchi@gmail.com,
-        osalvador@suse.de, mike.kravetz@oracle.com
-Subject: Re: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead
- page charged
-Message-ID: <20200825072538.GB22869@dhcp22.suse.cz>
-References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200820145850.GA4622@lca.pw>
- <20200821080127.GD32537@dhcp22.suse.cz>
- <20200821123934.GA4314@lca.pw>
- <20200821134842.GF32537@dhcp22.suse.cz>
- <20200824151013.GB3415@dhcp22.suse.cz>
- <12425e06-38ce-7ff4-28ce-b0418353fc67@linux.alibaba.com>
+        Tue, 25 Aug 2020 03:25:46 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44259 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729322AbgHYHZn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 03:25:43 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c15so11591512wrs.11;
+        Tue, 25 Aug 2020 00:25:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2UDn8nshmtelV8H6R+gegKh3+mv7xE3Ee9qPVJXzBko=;
+        b=S4RdN/vMMc0Coh78HuMqgbN43vnvU4MEkGp4iVIhYKM1Ntu2HrZNF2ZA55pqJethkB
+         VQnR21o1ifR3bFsXjjuAKGABHsFPtUr0O22RQBLsi6pqP2JvCsgVCW9Q7E9M1oDKbKMy
+         FKT/q+bRvuvYmWXozyNqoDnJ4qcummDtpNpqtlLVBXvB4ySCCVU9Am9vb8QA8rxh6Pb4
+         3xqfvENrKTM95G/MOF2fhccDxFkKyfzuvUWfOnBDCHpinuRO9NCe94cnhQTDbPhUGrMj
+         7Gdmd0uuShBNvc/gVFbbxyUq6G7HjhuxUD0GU7RUHgzOBtBD+/Cn+Wv2y8FRqUS7YusC
+         XYeA==
+X-Gm-Message-State: AOAM5326ljVnj3Mz7IkCzbHLXJPObxWqMbbr13/ZkCuHfvmaDGypJa6c
+        Jr/6+kDl7QEPnfFNNtxe1t8=
+X-Google-Smtp-Source: ABdhPJzAtbLQMnecXqAvMsqz572yNqZJ5Dk8OpUuLTfB3ohjDCMwvv1x50yQZ9ondRCQBmNzjHwp/A==
+X-Received: by 2002:adf:9224:: with SMTP id 33mr9207502wrj.24.1598340341132;
+        Tue, 25 Aug 2020 00:25:41 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id f10sm3717581wmj.37.2020.08.25.00.25.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 00:25:40 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 09:25:37 +0200
+From:   "krzk@kernel.org" <krzk@kernel.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "han.xu@nxp.com" <han.xu@nxp.com>,
+        "Anson.Huang@nxp.com" <Anson.Huang@nxp.com>,
+        "yibin.gong@nxp.com" <yibin.gong@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "aford173@gmail.com" <aford173@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "richard@nod.at" <richard@nod.at>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "daniel.baluta@nxp.com" <daniel.baluta@nxp.com>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "jun.li@nxp.com" <jun.li@nxp.com>
+Subject: Re: [PATCH 03/16] arm64: dts: imx8mm-beacon-som.dtsi: Align
+ regulator names with schema
+Message-ID: <20200825072537.GA5914@kozik-lap>
+References: <20200824190701.8447-1-krzk@kernel.org>
+ <20200824190701.8447-3-krzk@kernel.org>
+ <fa042a4f670775f340e88fca8f363252112fd538.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <12425e06-38ce-7ff4-28ce-b0418353fc67@linux.alibaba.com>
+In-Reply-To: <fa042a4f670775f340e88fca8f363252112fd538.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 25-08-20 09:25:01, Alex Shi wrote:
-> reproduce using our linux-mm random bug collection on NUMA systems.
-> >>
-> >> OK, I must have missed that this was on ppc. The order makes more sense
-> >> now. I will have a look at this next week.
-> > 
-> > OK, so I've had a look and I know what's going on there. The
-> > move_pages12 is migrating hugetlb pages. Those are not charged to any
-> > memcg. We have completely missed this case. There are two ways going
-> > around that. Drop the warning and update the comment so that we do not
-> > forget about that or special case hugetlb pages.
-> > 
-> > I think the first option is better.
-> > 
+On Tue, Aug 25, 2020 at 06:51:33AM +0000, Vaittinen, Matti wrote:
+> Hello Krzysztof,
 > 
+> Just some questions - please ignore if I misunderstood the impact of
+> the change.
 > 
-> Hi Michal,
+> On Mon, 2020-08-24 at 21:06 +0200, Krzysztof Kozlowski wrote:
+> > Device tree schema expects regulator names to be lowercase.  This
+> > fixes
+> > dtbs_check warnings like:
+> > 
+> >     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b:
+> > regulators:LDO1:regulator-name:0: 'LDO1' does not match '^ldo[1-6]$'
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  .../boot/dts/freescale/imx8mn-ddr4-evk.dts    | 22 +++++++++------
+> > ----
+> >  1 file changed, 11 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > index a1e5483dbbbe..299caed5d46e 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+> > @@ -60,7 +60,7 @@
+> >  
+> >  		regulators {
+> >  			buck1_reg: BUCK1 {
+> > -				regulator-name = "BUCK1";
+> > +				regulator-name = "buck1";
 > 
-> Compare to ignore the warning which is designed to give, seems addressing
-> the hugetlb out of charge issue is a better solution, otherwise the memcg
-> memory usage is out of control on hugetlb, is that right?
+> I am not against this change but I would expect seeing some other
+> patches too? I guess this will change the regulator name in regulator
+> core, right? So maybe I am mistaken but it looks to me this change is
+> visible in suppliers, sysfs and debugfs too? Thus changing this sounds
+> a bit like asking for a nose bleed :) Am I right that the impact of
+> this change has been thoroughly tested? Are there any other patches
+> (that I have not seen) related to this change?
 
-Hugetlb memory is out of memcg scope deliberately. This is not a
-reclaimable memory and something that can easily get out of control. The
-memory is preallocated and overcommit is strictly controlled as well. We
-have a dedicated hugetlb cgroup controller to offer a better control of
-the preallocated pool distribution.
+Oh, crap, the names of regulators in the driver are lowercase, but they
+use of_match_ptr for upper case. Seriously, why making a binding which
+is contradictory to the driver implementation on the first day?
 
-Anyway this just shows that there are more subtle cases where a page
-with no memcg can hit some common paths so the patch is clearly not
-ready.
+The driver goes with binding, right? One expects uppercase, other
+lowercase...
 
-I should have realized that when giving my ack but same as you I got
-misled by the existing comment.
--- 
-Michal Hocko
-SUSE Labs
+And tell me, what is now the ABI? The binding or the incorrect
+implementation?
+
+> 
+> >  				regulator-min-microvolt = <700000>;
+> >  				regulator-max-microvolt = <1300000>;
+> >  				regulator-boot-on;
+> > @@ -69,7 +69,7 @@
+> >  			};
+> >  
+> >  			buck2_reg: BUCK2 {
+> > -				regulator-name = "BUCK2";
+> > +				regulator-name = "buck2";
+> >  				regulator-min-microvolt = <700000>;
+> >  				regulator-max-microvolt = <1300000>;
+> >  				regulator-boot-on;
+> > @@ -79,14 +79,14 @@
+> >  
+> >  			buck3_reg: BUCK3 {
+> >  				// BUCK5 in datasheet
+> > -				regulator-name = "BUCK3";
+> > +				regulator-name = "buck3";
+> >  				regulator-min-microvolt = <700000>;
+> >  				regulator-max-microvolt = <1350000>;
+> >  			};
+> >  
+> >  			buck4_reg: BUCK4 {
+> >  				// BUCK6 in datasheet
+> > -				regulator-name = "BUCK4";
+> > +				regulator-name = "buck4";
+> >  				regulator-min-microvolt = <3000000>;
+> >  				regulator-max-microvolt = <3300000>;
+> >  				regulator-boot-on;
+> > @@ -95,7 +95,7 @@
+> >  
+> >  			buck5_reg: BUCK5 {
+> >  				// BUCK7 in datasheet
+> > -				regulator-name = "BUCK5";
+> > +				regulator-name = "buck5";
+> 
+> What I see in bd718x7-regulator.c for LDO6 desc is:
+> 
+>                         /* LDO6 is supplied by buck5 */
+>                         .supply_name = "buck5",
+> 
+> So, is this change going to change the supply-chain for the board? Is
+> this intended? (Or am I mistaken on what is the impact of regulator-
+> name property?)
+
+The names will take regulator names from the driver. The problem is with
+matching the of_node.
+
+
+Dear Rob,
+
+Maybe you have an idea how to fix this driver-binding ABI
+incompatibility? Or better just leave it?
+
+
+Best regards,
+Krzysztof
+
