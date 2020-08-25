@@ -2,153 +2,82 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B994BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C927BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA7A2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:30:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2MtYo/f"
+	by mail.kernel.org (Postfix) with ESMTP id A16BB2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbgHYOas (ORCPT
+        id S1726471AbgHYOcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:30:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33728 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726104AbgHYOar (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:30:47 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0B0C061574;
-        Tue, 25 Aug 2020 07:30:46 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id y3so12927420wrl.4;
-        Tue, 25 Aug 2020 07:30:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S+6VLNo7jVsZMs96k3TAyrUWwYE2zYV0Z+aJV/lR5gQ=;
-        b=g2MtYo/faVMcap4ysEZrl6A4Ung7mIbCAJzz7IoQg2X+KEOtDexjY0CKf8Abg88vvG
-         Geq/Va9NTnsEEKdGFIwf1DmOJfz6rl8Tygzl3Gu+Bxfcsowzu0HwX+ESKQqjHlcJDi8T
-         Jj7JyQce28dmgusLiUOufnJ4427xUcxw7in3DxCrzYllOrlU2+EUFmVQB/+7WiuWtHi9
-         PIHRvDaAJfRuJ9xc7/m2djZ/BXv7lSgr2pleVUt8xCjDacc12/Pe8l32pRLqOYFpmvLq
-         8Yo7E4+XE4yGU7lQpUesfKdJX1a4ihCgD580a6TarIKkbHFAJ2hfq94o7hxbENgd9Cfb
-         Z1aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=S+6VLNo7jVsZMs96k3TAyrUWwYE2zYV0Z+aJV/lR5gQ=;
-        b=KH7L8Dni9E3f8Qx02qPatPI7K2I+Adt4Srw8xsNsrkWNyYkgChsNPBeGy6kVLaylMZ
-         PISnt2nqEV5nLa3I0euyks+yRDWZhca81qHiNwzAPv6ELIgPEIWWlXUOVJKNYifQGP4C
-         gCJXQsmZ95zfu4NuwkOAteQtmyWQ3xjfnyn80zEd1oYnAwtyEUQsFvb3KGxlskzUULI7
-         1PlRXjRBWHHHgub8vx9yV7Ku3OAcLhCeihsxeVs+K6KHnYAJeOcCsAlUwdA6lWaAWB7A
-         mE4O5Elmyh3nskw4DE9GE1QuNlCd/r6uznpPltNftzVAns+Ix3A5pqYQ0P9FLpkVdXRB
-         p6HQ==
-X-Gm-Message-State: AOAM531XXDQJmGQtUaRGJUZDrEJxVZnh3cMvXiCADomaQjB5Irv9oBmq
-        gIVSjdJfKrxczX2m0/DhbWo=
-X-Google-Smtp-Source: ABdhPJxRIor0FRGt3Lk2eyf4YUKwzH2RveG1kfqYaMMOrZft0AIIOd3ZMew9upHyFc92y9jUmCye9Q==
-X-Received: by 2002:adf:e6cc:: with SMTP id y12mr10863958wrm.391.1598365845380;
-        Tue, 25 Aug 2020 07:30:45 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id j11sm30078337wrq.69.2020.08.25.07.30.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 07:30:44 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ath11k: return error if firmware request fails
-Date:   Tue, 25 Aug 2020 15:30:39 +0100
-Message-Id: <20200825143040.233619-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Tue, 25 Aug 2020 10:32:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:22174 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726015AbgHYOcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 10:32:33 -0400
+IronPort-SDR: noZL9phiXY3oO1TsfQkD3IUsj1iCdx60v5PaYUuDVerhDvC22eoN9100GQNzyRvFS5KknlGZcu
+ /cDgS7zgPanw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="153688720"
+X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
+   d="scan'208";a="153688720"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 07:32:32 -0700
+IronPort-SDR: GfgR888EqII5XdJD72waaKiFsEn1snYO90FUG+SVICdI1oCgSRKBb9sB/6cjbL8Yl/r/ZvMS5J
+ RvvI4tgPoEfg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
+   d="scan'208";a="328879737"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2020 07:32:30 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kAZzw-00BLOn-VM; Tue, 25 Aug 2020 17:32:28 +0300
+Date:   Tue, 25 Aug 2020 17:32:28 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: Re: [PATCH 2/3] software node: Introduce device_add_software_node()
+Message-ID: <20200825143228.GK1891694@smile.fi.intel.com>
+References: <20200825135951.53340-1-heikki.krogerus@linux.intel.com>
+ <20200825135951.53340-3-heikki.krogerus@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825135951.53340-3-heikki.krogerus@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ath11k_qmi_prepare_bdf_download(), ath11k_core_firmware_request() is
-called, but the returned pointer is not checked for errors. Rather the
-variable ret (which will always be zero) is checked by mistake. Fix
-this and replace the various gotos with simple returns for clarity.
+On Tue, Aug 25, 2020 at 04:59:50PM +0300, Heikki Krogerus wrote:
+> This helper will register a software node and then assign
+> it to device at the same time. The function will also make
+> sure that the device can't have more than one software node.
 
-While we are at it, move the call to memset, as variable bd is not used
-on all code paths.
+> +	/* Only one software node per device. */
+> +	if (dev_to_swnode(dev))
+> +		return -EBUSY;
 
-Fixes: 7b57b2ddec21 ("ath11k: create a common function to request all firmware files")
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- drivers/net/wireless/ath/ath11k/qmi.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+> +	swnode = dev_to_swnode(dev);
+> +	if (!swnode)
+> +		return;
 
-diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
-index 91134510364c..b906b50ee57e 100644
---- a/drivers/net/wireless/ath/ath11k/qmi.c
-+++ b/drivers/net/wireless/ath/ath11k/qmi.c
-@@ -1868,16 +1868,16 @@ ath11k_qmi_prepare_bdf_download(struct ath11k_base *ab, int type,
- 	const struct firmware *fw_entry;
- 	struct ath11k_board_data bd;
- 	u32 fw_size;
--	int ret = 0;
--
--	memset(&bd, 0, sizeof(bd));
-+	int ret;
- 
- 	switch (type) {
- 	case ATH11K_QMI_FILE_TYPE_BDF_GOLDEN:
-+		memset(&bd, 0, sizeof(bd));
-+
- 		ret = ath11k_core_fetch_bdf(ab, &bd);
- 		if (ret) {
- 			ath11k_warn(ab, "qmi failed to load BDF\n");
--			goto out;
-+			return ret;
- 		}
- 
- 		fw_size = min_t(u32, ab->hw_params.fw.board_size, bd.len);
-@@ -1886,10 +1886,11 @@ ath11k_qmi_prepare_bdf_download(struct ath11k_base *ab, int type,
- 		break;
- 	case ATH11K_QMI_FILE_TYPE_CALDATA:
- 		fw_entry = ath11k_core_firmware_request(ab, ATH11K_DEFAULT_CAL_FILE);
--		if (ret) {
-+		if (IS_ERR(fw_entry)) {
-+			ret = PTR_ERR(fw_entry);
- 			ath11k_warn(ab, "failed to load %s: %d\n",
- 				    ATH11K_DEFAULT_CAL_FILE, ret);
--			goto out;
-+			return ret;
- 		}
- 
- 		fw_size = min_t(u32, ab->hw_params.fw.board_size,
-@@ -1901,14 +1902,11 @@ ath11k_qmi_prepare_bdf_download(struct ath11k_base *ab, int type,
- 		release_firmware(fw_entry);
- 		break;
- 	default:
--		ret = -EINVAL;
--		goto out;
-+		return -EINVAL;
- 	}
- 
- 	req->total_size = fw_size;
--
--out:
--	return ret;
-+	return 0;
- }
- 
- static int ath11k_qmi_load_bdf_fixed_addr(struct ath11k_base *ab)
+Hmm... I didn't find implementation of dev_to_swnode().
+What did I miss?
+
 -- 
-2.28.0
+With Best Regards,
+Andy Shevchenko
+
 
