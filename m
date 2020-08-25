@@ -2,155 +2,123 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B838EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A07C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 912E92076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8342720738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:45:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z8Snrd2Y";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+PlXlbj0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kn659dFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgHYXmU (ORCPT
+        id S1726661AbgHYXpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34380 "EHLO
+        Tue, 25 Aug 2020 19:45:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgHYXk4 (ORCPT
+        with ESMTP id S1726391AbgHYXpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:40:56 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 561F9C061756;
-        Tue, 25 Aug 2020 16:40:56 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 23:40:53 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598398854;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gPKk67gKW0ZvbKeofZ428pxN89jqIvOY6ptGP+glXNs=;
-        b=z8Snrd2YUAwWlH/qb0sirYaI/hbBjMZo1u1hNrYb8z5ZyfqAV2IT3SxFsxJm8X+9CcBDaM
-        /i39umJZakihgZq0xBUrwE+d0wCrmr7E4yc5Mtf5E223OK0fx56pAJxjQRk3prK5YUcPhE
-        MaUGH2hm+pPBlHbINkyaM8GHvlf9zHUmL3ffq3f2F9/i0VipoNZ+5M8gpFhK1aCTrabyYH
-        XdlOObt9w80+4d0gu9Bn3/rYgsBmYsDgLm8js5/zoiWz/8CD2MUuHn6ZbsdY0EFvoqPekW
-        ujaH0OVO4zxXS//4kYWkqWsC0h8QuTpTOrC/YS1JrMdYzOIjULtaG8ozJRQhnQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598398854;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gPKk67gKW0ZvbKeofZ428pxN89jqIvOY6ptGP+glXNs=;
-        b=+PlXlbj0/cVBfV0EXvnRewLwUvLa/+nkanbtr1J2kVj6oaXg2hYIwbNvjYjyFR1sWD/Jd+
-        MF3VoOn4+oj2FPCg==
-From:   "tip-bot2 for Lokesh Vutla" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] arm64: dts: k3-am65: Update the RM resource types
-Cc:     Lokesh Vutla <lokeshvutla@ti.com>, Marc Zyngier <maz@kernel.org>,
-        Nishanth Menon <nm@ti.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200806074826.24607-14-lokeshvutla@ti.com>
-References: <20200806074826.24607-14-lokeshvutla@ti.com>
+        Tue, 25 Aug 2020 19:45:21 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D96C061574;
+        Tue, 25 Aug 2020 16:45:19 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id c10so128037edk.6;
+        Tue, 25 Aug 2020 16:45:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Vrq4v6qq3XTqsCKD1xadXMdCN6zU2zFU1IE+7WmavGw=;
+        b=Kn659dFWmM6eaNHeoUbbJFk/+yk+FWcjQ9E3SslJknb596Z2T+k3qG+VekL1ENpr/c
+         lxWLaWefCF/KRQcDyXzRSo+u25QhzqOscYX5IuAYW1EITerFlnmBfUgkqu7FQyD52tdQ
+         +C7pUhnqfTOeglZSNNoifcCJacfYzW6B2ckXMfJjLGAmy7OvQ90qmZYArLXM72L2PlwH
+         YIngkJjC00Bk03d/u0dSLBM1KsdUACbnP72YNgLDLnm8W3BSar02CpmBwGIXWy6J2Svc
+         r0gcedYv7R+66E8folLWb+u0VCfvAOoUCmbgXNklCd3WFuCF7LQtUWUV1r3jdD4zzjlm
+         Bgow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Vrq4v6qq3XTqsCKD1xadXMdCN6zU2zFU1IE+7WmavGw=;
+        b=IKkHUXNmy0841pBUP7cG1YqlxWvJeXwzee7WLNoqXUQIy3eH6nbEYF3JJWOdNwggGX
+         qDN5RGgKhIYJjuHYY1ox6ZxtJQTr2UcJVwiTNkpMCGUD0SXYI9oSg0k82zqQvHQ9H0yD
+         F960Zv6mF1IpPKiXmRerM8+2dk6Aly4RJ7tS7VMElpf3ztkmy6RlqimuHQhKF+CGEW7A
+         /HR2kxMXu+U94fCtx7ckTowO+rL+W9DFpCDjg/cqfDgpX1Hp/IdBV64lMSUN19gfOY8A
+         /A/XaX9mxPtdeO8GqGE8wZgGCm3YFewoRYj19RgnxoTqAZ+hkGJO9TsmttWGxsfiL6h3
+         LfBw==
+X-Gm-Message-State: AOAM530JcS+ZUdLzgfYikMxvUbMi1aoDCEU6234RsN65yOpI+5AHXEgQ
+        s+VwK7mTk/I5Zvp9CfSNYHw=
+X-Google-Smtp-Source: ABdhPJx1TaRXrlWWmd+DeFQoGwngrI/rLvXGBVk1+SYj4vT9Z2hyfjQEHa2Wxgf66AMBphaMsUcjxg==
+X-Received: by 2002:a05:6402:c1:: with SMTP id i1mr6143271edu.277.1598399118015;
+        Tue, 25 Aug 2020 16:45:18 -0700 (PDT)
+Received: from [10.55.3.147] ([173.38.220.45])
+        by smtp.gmail.com with ESMTPSA id p16sm342051ejw.110.2020.08.25.16.45.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 16:45:17 -0700 (PDT)
+Subject: Re: [net-next v5 1/2] seg6: inherit DSCP of inner IPv4 packets
+To:     David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     andrea.mayer@uniroma2.it
+References: <20200825160236.1123-1-ahabdels@gmail.com>
+ <efaf3273-e147-c27e-d5b8-241930335b82@gmail.com>
+From:   Ahmed Abdelsalam <ahabdels@gmail.com>
+Message-ID: <75f7be67-2362-e931-6793-1ce12c69b4ea@gmail.com>
+Date:   Wed, 26 Aug 2020 01:45:14 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Message-ID: <159839885387.389.16168779829595056743.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <efaf3273-e147-c27e-d5b8-241930335b82@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the irq/urgent branch of tip:
+On 25/08/2020 18:45, David Ahern wrote:
+> On 8/25/20 10:02 AM, Ahmed Abdelsalam wrote:
+>> This patch allows SRv6 encapsulation to inherit the DSCP value of
+>> the inner IPv4 packet.
+>>
+>> This allows forwarding packet across the SRv6 fabric based on their
+>> original traffic class.
+>>
+>> The option is controlled through a sysctl (seg6_inherit_inner_ipv4_dscp).
+>> The sysctl has to be set to 1 to enable this feature.
+>>
+> 
+> rather than adding another sysctl, can this be done as a SEG6_LOCAL
+> attribute and managed via seg6_local_lwt?
+> 
 
-Commit-ID:     6da45875fa174d9db238ea0d6846061e68b41b6d
-Gitweb:        https://git.kernel.org/tip/6da45875fa174d9db238ea0d6846061e68b41b6d
-Author:        Lokesh Vutla <lokeshvutla@ti.com>
-AuthorDate:    Thu, 06 Aug 2020 13:18:26 +05:30
-Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sun, 16 Aug 2020 22:01:20 +01:00
+Hi David
 
-arm64: dts: k3-am65: Update the RM resource types
+The seg6 encap is implemented through the seg6_lwt rather than 
+seg6_local_lwt.
+We can add a flag(SEG6_IPTUNNEL_DSCP) in seg6_iptunnel.h if we do not 
+want to go the sysctl direction.
+Perhaps this would require various changes to seg6 infrastructure 
+including seg6_iptunnel_policy, seg6_build_state, fill_encap, 
+get_encap_size, etc.
 
-Update the ringacc and udma dt nodes to use the latest RM resource types
-similar to the ones used in k3-j721e dt nodes.
+We have proposed a patch before to support optional parameters for SRv6 
+behaviors [1].
+Unfortunately, this patch was rejected.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Nishanth Menon <nm@ti.com>
-Link: https://lore.kernel.org/r/20200806074826.24607-14-lokeshvutla@ti.com
----
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 12 ++++++------
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi  | 12 ++++++------
- 2 files changed, 12 insertions(+), 12 deletions(-)
+So i do not know which option is better.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index 996a82f..24ef18f 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -589,7 +589,7 @@
- 				<0x0 0x33000000 0x0 0x40000>;
- 			reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
- 			ti,num-rings = <818>;
--			ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
-+			ti,sci-rm-range-gp-rings = <0x1>; /* GP ring range */
- 			ti,dma-ring-reset-quirk;
- 			ti,sci = <&dmsc>;
- 			ti,sci-dev-id = <187>;
-@@ -609,11 +609,11 @@
- 			ti,sci-dev-id = <188>;
- 			ti,ringacc = <&ringacc>;
- 
--			ti,sci-rm-range-tchan = <0x1>, /* TX_HCHAN */
--						<0x2>; /* TX_CHAN */
--			ti,sci-rm-range-rchan = <0x4>, /* RX_HCHAN */
--						<0x5>; /* RX_CHAN */
--			ti,sci-rm-range-rflow = <0x6>; /* GP RFLOW */
-+			ti,sci-rm-range-tchan = <0xf>, /* TX_HCHAN */
-+						<0xd>; /* TX_CHAN */
-+			ti,sci-rm-range-rchan = <0xb>, /* RX_HCHAN */
-+						<0xa>; /* RX_CHAN */
-+			ti,sci-rm-range-rflow = <0x0>; /* GP RFLOW */
- 		};
- 
- 		cpts@310d0000 {
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index 8c1abcf..51ca4b4 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -134,7 +134,7 @@
- 				<0x0 0x2a500000 0x0 0x40000>;
- 			reg-names = "rt", "fifos", "proxy_gcfg", "proxy_target";
- 			ti,num-rings = <286>;
--			ti,sci-rm-range-gp-rings = <0x2>; /* GP ring range */
-+			ti,sci-rm-range-gp-rings = <0x1>; /* GP ring range */
- 			ti,dma-ring-reset-quirk;
- 			ti,sci = <&dmsc>;
- 			ti,sci-dev-id = <195>;
-@@ -154,11 +154,11 @@
- 			ti,sci-dev-id = <194>;
- 			ti,ringacc = <&mcu_ringacc>;
- 
--			ti,sci-rm-range-tchan = <0x1>, /* TX_HCHAN */
--						<0x2>; /* TX_CHAN */
--			ti,sci-rm-range-rchan = <0x3>, /* RX_HCHAN */
--						<0x4>; /* RX_CHAN */
--			ti,sci-rm-range-rflow = <0x5>; /* GP RFLOW */
-+			ti,sci-rm-range-tchan = <0xf>, /* TX_HCHAN */
-+						<0xd>; /* TX_CHAN */
-+			ti,sci-rm-range-rchan = <0xb>, /* RX_HCHAN */
-+						<0xa>; /* RX_CHAN */
-+			ti,sci-rm-range-rflow = <0x0>; /* GP RFLOW */
- 		};
- 	};
- 
+[1] 
+https://patchwork.ozlabs.org/project/netdev/patch/20200319183641.29608-1-andrea.mayer@uniroma2.it/
+
+Ahmed
