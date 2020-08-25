@@ -2,120 +2,132 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE2BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:04:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532FCC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C78352072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:04:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598385870;
-	bh=dTMuBfpKgtEYOt9p2Rn3qpf/VvcSbFu+JYG5Bh8kmyA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=dbkDuXb+AvIyD32cqB5okRNjNnEI0fHYtIX0DuqWhrkKh8Pmp/KULyLL+57vbgQBu
-	 kxbd9kgWl50XTAxA3R5oi31fJqoqq+T69VXccAio6SyTfkw9QtW2cXQ0Wuopta9hbf
-	 kjam0uvjlMLqJd+5zbX0m/5CZR9KDDnD5kZYHTww=
+	by mail.kernel.org (Postfix) with ESMTP id 2FE8D2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 20:05:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tgbmbD+w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgHYUE3 (ORCPT
+        id S1726717AbgHYUFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 16:04:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726090AbgHYUE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 16:04:27 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7118A2072D;
-        Tue, 25 Aug 2020 20:04:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598385866;
-        bh=dTMuBfpKgtEYOt9p2Rn3qpf/VvcSbFu+JYG5Bh8kmyA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cKrsE5aH9KEYT64296qE0G5KVNFvq5DVTB2yGKvHtiT3unhAr1XB6ZHkLDbMCuiDT
-         8DZix0IP8SqTBX4wL/zrtUQGVB7Ol9qfyAtIzmySuOVj4QsGoYhYhUC+8gCfgXeDAx
-         LOglK+g2f0nZ29h0rIpk2nBkTgJ5E2NHxftE1KkY=
-Date:   Tue, 25 Aug 2020 15:04:25 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jonathan Derrick <jonathan.derrick@intel.com>,
-        linux-pci@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 20/38] PCI: vmd: Mark VMD irqdomain with
- DOMAIN_BUS_VMD_MSI
-Message-ID: <20200825200425.GA1924566@bjorn-Precision-5520>
+        Tue, 25 Aug 2020 16:05:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57606 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbgHYUFc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 16:05:32 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 339D3C061574;
+        Tue, 25 Aug 2020 13:05:32 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id d19so7570250pgl.10;
+        Tue, 25 Aug 2020 13:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ONP7fZ70W2uCdTHIa7UQWtYrSdBuzbghSeSM9bNYZbY=;
+        b=tgbmbD+wfpJT0QWPEnhlgQF5kw4Vo5saQ52d9A56Z8Nv6AXKi4ehf1K3DM9u/s2bgF
+         dTROYbcBlMs+/ptni+PJ0GjhZPMqvtTPGtl9YPsR2U80BWlbUqbs0BvOowHLqlcwqDSb
+         aMS0u/X/DRHH4mdqzt/Wiwm+TORwj6G1JoziCoNnlxN20hY6ceAGoOVoebxtTkyTsA/t
+         BT1ydtHIVivdjkMaIkMLzu6VyJmeJHd/pZY7fZ09qrDetg7EnCoiZsmx6r2J3R4zPnZB
+         NshksLlzD2CKL3iR00HiCu8kXf2uUVbt14A45g3Pvc9WHzqrJJX8quZr7L/tQVZb2ded
+         gaWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ONP7fZ70W2uCdTHIa7UQWtYrSdBuzbghSeSM9bNYZbY=;
+        b=GLMK+FjETPSa8w+CIYFoADF3D13hyhs2qLlYr2/EvKlGuAO9/tLvZJ0/ph9hAenMDV
+         A4tdclfZQXsRLfo5sv4GjXDO9IVl3APhUiSst0xTTsleqmAaD0xdAhSWqHtG24nMWa13
+         xlctVmakvy4HV76/e+9UA4JRjxPu3e50pk14gVOyph/Nrf0pOuQ6jaUId+s3cQm0MC09
+         NozBVpd2pbtE0Xt3bVVa7moyGzwmTB65Sip2Wikjcn/gh+JiMsLH571Xg1pDvFUC8ZQZ
+         XmMftb7y9ynfjWUaL3Z7HGvGaaDR1s/qSQmdwUaJDmjJmRQFqXkvtHr0igNZ1CTNY/v7
+         mQXg==
+X-Gm-Message-State: AOAM530Pqnr3Y58/IQ9pKeqTU5rs8IgMRlWG0Fw/nJojUFpxgVFX8Hy7
+        hfv58q+Yf/gvPPRrFP1pKkJotx7V9ckR/MZv
+X-Google-Smtp-Source: ABdhPJxEAAm69I+hmyQ36720FaKJ62zxQBG060VTuh1WKf2H2fqvAee9Hbj4xH/b8NAs6LgrJ92sOg==
+X-Received: by 2002:a62:1483:: with SMTP id 125mr8939252pfu.186.1598385931482;
+        Tue, 25 Aug 2020 13:05:31 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id g8sm59446pfo.132.2020.08.25.13.05.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 13:05:30 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 13:05:24 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     Joel Stanley <joel@jms.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        dmitry.torokhov@gmail.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, ryan_chen@aspeedtech.com
+Subject: Re: [PATCH 3/5] i2c: aspeed: Mask IRQ status to relevant bits
+Message-ID: <20200825200523.GA22083@taoren-ubuntu-R90MNF91>
+References: <20200820161152.22751-1-eajames@linux.ibm.com>
+ <20200820161152.22751-4-eajames@linux.ibm.com>
+ <CACPK8XdG1+3eQPQ71fZYZdHwcn8WNLQKF=5iKrOvGhLwispSQA@mail.gmail.com>
+ <8fc365dd-8a89-9e5c-ed70-093ef2bf7265@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200821002947.263753263@linutronix.de>
+In-Reply-To: <8fc365dd-8a89-9e5c-ed70-093ef2bf7265@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 02:24:44AM +0200, Thomas Gleixner wrote:
-> Devices on the VMD bus use their own MSI irq domain, but it is not
-> distinguishable from regular PCI/MSI irq domains. This is required
-> to exclude VMD devices from getting the irq domain pointer set by
-> interrupt remapping.
+On Tue, Aug 25, 2020 at 02:47:51PM -0500, Eddie James wrote:
 > 
-> Override the default bus token.
+> On 8/25/20 1:38 AM, Joel Stanley wrote:
+> > On Thu, 20 Aug 2020 at 16:12, Eddie James <eajames@linux.ibm.com> wrote:
+> > > Mask the IRQ status to only the bits that the driver checks. This
+> > > prevents excessive driver warnings when operating in slave mode
+> > > when additional bits are set that the driver doesn't handle.
+> > > 
+> > > Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> > > ---
+> > >   drivers/i2c/busses/i2c-aspeed.c | 1 +
+> > >   1 file changed, 1 insertion(+)
+> > > 
+> > > diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
+> > > index 31268074c422..abf40f2af8b4 100644
+> > > --- a/drivers/i2c/busses/i2c-aspeed.c
+> > > +++ b/drivers/i2c/busses/i2c-aspeed.c
+> > > @@ -604,6 +604,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
+> > >          writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
+> > >                 bus->base + ASPEED_I2C_INTR_STS_REG);
+> > >          readl(bus->base + ASPEED_I2C_INTR_STS_REG);
+> > > +       irq_received &= 0xf000ffff;
+> > >          irq_remaining = irq_received;
+> > This would defeat the check for irq_remaining. I don't think we want to do this.
+> > 
+> > Can you explain why these bits are being set in slave mode?
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> Cc: Jonathan Derrick <jonathan.derrick@intel.com>
-> Cc: linux-pci@vger.kernel.org
+> 
+> No, I don't have any documentation for the bits that are masked off here, so
+> I don't know why they would get set.
+> 
+> The check for irq_remaining is still useful for detecting that the driver
+> state machine might be out of sync with what the master is doing.
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+I have a similar patch in my local tree, and the reason being: AST2600
+I2C Controller may set I2CD10[25:24] to report Current Slave Parking
+Status (defined in new register I2CS24) even though the new register
+mode is off. The 2 bits can be ignored in legacy mode, and Ryan from
+ASPEED could confirm it.
 
-> ---
->  drivers/pci/controller/vmd.c |    6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -579,6 +579,12 @@ static int vmd_enable_domain(struct vmd_
->  		return -ENODEV;
->  	}
->  
-> +	/*
-> +	 * Override the irq domain bus token so the domain can be distinguished
-> +	 * from a regular PCI/MSI domain.
-> +	 */
-> +	irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_VMD_MSI);
-> +
->  	pci_add_resource(&resources, &vmd->resources[0]);
->  	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
->  	pci_add_resource_offset(&resources, &vmd->resources[2], offset[1]);
-> 
+
+Cheers,
+
+Tao
