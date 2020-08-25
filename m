@@ -2,194 +2,119 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 809A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0157FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B38920737
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8CD9204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 05:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gLMvKV5V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G++tiKuD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgHYFet (ORCPT
+        id S1728788AbgHYFio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 01:34:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33876 "EHLO
+        Tue, 25 Aug 2020 01:38:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728352AbgHYFet (ORCPT
+        with ESMTP id S1728145AbgHYFin (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 01:34:49 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00B2BC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:34:48 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id d20so3350047ual.13
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 22:34:48 -0700 (PDT)
+        Tue, 25 Aug 2020 01:38:43 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D22C061574;
+        Mon, 24 Aug 2020 22:38:42 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id si26so14862670ejb.12;
+        Mon, 24 Aug 2020 22:38:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=PaekePd+GUMlAPVeDLs32NXzFqhLDy3um0wCpNnWIqQ=;
-        b=gLMvKV5VUClmPRVowS/5lsoz9LOpypjox+UFD9WhekvZBf1f0VOCcATYQdO4k6Jfty
-         vJwYK98syVOt/EOi1qB4DHItS8lG5NZXg3z6GMNjanP487OOdFAn5W6YlZewySLirD77
-         PpU9Gi2GjKWwJGE4s5Lm8//UpqHRoYeWQ79LAA8+suOKrzQW6CGHpulLzsMzgzR7byr3
-         oQ34XmCXBb97I1LPVisYPRWb6f5l5rTryHNpNf9u3n6y9hJNBJQWHYOhMisUePnqrNBT
-         eCHxpksSlIGenkyY1lHq9D1fEjuBnt3x0S7+RJxlqvuEp7lz/w1RtuD7075zwpzk4ztH
-         joKA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Cvb0A9IRVLSsoFCfcZyj1U4yUSMM5vQl3gQOUmNeIGo=;
+        b=G++tiKuDShN9pc23dyIevDr+cZBVwyC7VvsI4bEXClMei5oqFqjWi94wCCneP/vKy0
+         LexpHU99oSZzMjQcL+WLa4F5lm87dhEquZAmwrqATs1/wGGpZwgxDxBNQPvBb7jgAh17
+         UpoIdxBgpYRu6+E5uy8j0oDtBzuaQul0b5ThXf5n/aTRdTT4PYZPXarS1zYN74+cDT1W
+         qUttZUMeEvPpPyvlaZvpPe9npBne9X4v/bGcSPs0M3QkqUSnnO9Vhh4MVm2FM0cngDLp
+         8Y4Ju+KPzw357U9ckQDm9wXsztmLWj36MqIyEnE56zNf7rVm7TBqqwTHx4AeI/pTwjGk
+         grYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=PaekePd+GUMlAPVeDLs32NXzFqhLDy3um0wCpNnWIqQ=;
-        b=X3ZZopjkxKakpt2b81OvLoofU4HRDqdXr/oylzb3g6uMuxJsg6eG0q9XE+aTOYHe66
-         6EFILs1aVDtqnYUoNDoXecWXGUBYhRX9rXpFAP/k8QbcGhLidVYj6/ujTCEQmjXXubOB
-         lcstpw8HM3gM/830+OMcHz6j+KJ/Qfr/C4th3sXm3R+WdUqnSm0SvQEO4FYy8l6kVCrh
-         h5xeiIGp85QkpDpWJrtcfAl9Ehy+UiNXbvJJoTqhsg1F2tfxFsIQSHYO4rw5BK6iCvMA
-         7IWt+zDRR/4gR3AWELqn/wgr+NC5W/qX2cjgopxdKAmkpYFqYUx9iuR/y58mmt64agP1
-         4dng==
-X-Gm-Message-State: AOAM530PSUHH2HeomKSfHyul/EzYnlBKfmPyPo1v7c32Ol2JLL41u+UD
-        ZRZXmdj74IY8lXMi31Lzx1zjQAWoLpailfUA2w22K/zOu+QimJM1
-X-Google-Smtp-Source: ABdhPJzx9GhGTvLBPcfcsQiEXUwWu2GR2Cn1ZLdwtFitn7xbwXKBkM4XuFLoESC4Cp5edBA4JKh8Til1FTjjgl1a27o=
-X-Received: by 2002:ab0:142e:: with SMTP id b43mr4640459uae.7.1598333687686;
- Mon, 24 Aug 2020 22:34:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200824164741.748994020@linuxfoundation.org>
-In-Reply-To: <20200824164741.748994020@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 25 Aug 2020 11:04:36 +0530
-Message-ID: <CA+G9fYtCtXBXmUBBdy1kWa_fcs3jPVQm4UWwx=JTA8oVL1XdtQ@mail.gmail.com>
-Subject: Re: [PATCH 5.7 000/127] 5.7.18-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Cvb0A9IRVLSsoFCfcZyj1U4yUSMM5vQl3gQOUmNeIGo=;
+        b=RGt3H2Bwn+4CwHl621NUI2BV4Liu0Y5Y0zcegURorM04CqtBDsoRTZrOGcL5XbrqtS
+         BDVghFa5J8fTQYeri2YbvZzd+ruCjG8YQxtNyBGjjc1UHuuXKZ7OvndVhaTGTEr1d7L+
+         ofZT+YfmHIYIYvuA1vaPyo4/dKV4eDWBeibMnwrQP6BK7xOM9KRHkjOWBVh4K4jlGqbs
+         KIDXuRmYW3+hRzZ7vs6EJBo061qrnBIJP5zRR02GTxBAlEbbnA05GED6ZObCjjrofm9o
+         jXMaJld423S5GYbDC5Vn5cuWjse0HddWd15XdO4tuwVPmCHz7vV6/JbyvVy9RjfQ3JeP
+         WZ4Q==
+X-Gm-Message-State: AOAM533bSVe/2mbTtRVEXwu2K5chTHZpuF883UUT/6KrO7e6cxqwcVGW
+        w8lyAcyyQvdqRNMhu7TW6X8U/v/QKUhZ6w==
+X-Google-Smtp-Source: ABdhPJyRUIKUbRUhlOKBBMsu5/OxI8cNrhveYOeqRDXItbKYX5J13lRtTjQy9/UFSHUieFtfPvPmcw==
+X-Received: by 2002:a17:906:a219:: with SMTP id r25mr9055831ejy.201.1598333921147;
+        Mon, 24 Aug 2020 22:38:41 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2d83:7500:a091:6d55:fb72:2347])
+        by smtp.gmail.com with ESMTPSA id dn7sm11802273ejc.76.2020.08.24.22.38.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 22:38:40 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>, kernel-team@android.com,
+        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH v2] MAINTAINERS: update QUALCOMM IOMMU after Arm SMMU drivers move
+Date:   Tue, 25 Aug 2020 07:38:28 +0200
+Message-Id: <20200825053828.4166-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 at 22:18, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.7.18 release.
-> There are 127 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 26 Aug 2020 16:47:07 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.7.18-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.7.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Commit e86d1aa8b60f ("iommu/arm-smmu: Move Arm SMMU drivers into their own
+subdirectory") moved drivers/iommu/qcom_iommu.c to
+drivers/iommu/arm/arm-smmu/qcom_iommu.c amongst other moves, adjusted some
+sections in MAINTAINERS, but missed adjusting the QUALCOMM IOMMU section.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
 
-Summary
-------------------------------------------------------------------------
+  warning: no file matches    F:    drivers/iommu/qcom_iommu.c
 
-kernel: 5.7.18-rc2
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.7.y
-git commit: f16d132bb2de3adb5e9470242c50c83b6d5d9a54
-git describe: v5.7.17-128-gf16d132bb2de
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
-ld/v5.7.17-128-gf16d132bb2de
+Update the file entry in MAINTAINERS to the new location.
 
-No regressions (compared to build v5.7.17)
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Acked-by: Will Deacon <will@kernel.org>
+---
+v1: https://lore.kernel.org/lkml/20200802065320.7470-1-lukas.bulwahn@gmail.com/
+v1 -> v2: typo fixed; added Will's Ack.
 
-No fixes (compared to build v5.7.17)
+Joerg, please pick this minor non-urgent patch for your -next branch.
 
-Ran 34887 total tests in the following environments and test suites.
+applies cleanly on next-20200731
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Test Suites
------------
-* build
-* igt-gpu-tools
-* install-android-platform-tools-r2600
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-tracing-tests
-* v4l2-compliance
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* ltp-commands-tests
-* ltp-controllers-tests
-* ltp-math-tests
-* perf
-* kselftest/net
-* libhugetlbfs
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-open-posix-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 1469cb81261d..e175c0741653 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14358,7 +14358,7 @@ M:	Rob Clark <robdclark@gmail.com>
+ L:	iommu@lists.linux-foundation.org
+ L:	linux-arm-msm@vger.kernel.org
+ S:	Maintained
+-F:	drivers/iommu/qcom_iommu.c
++F:	drivers/iommu/arm/arm-smmu/qcom_iommu.c
+ 
+ QUALCOMM IPCC MAILBOX DRIVER
+ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+-- 
+2.17.1
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
