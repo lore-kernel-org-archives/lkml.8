@@ -2,105 +2,180 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F803C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07E7520706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:34:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598348088;
-	bh=iLhF9CJwZ8QUh5DuvKsLlkhW2dg54+n1MTOWIYJs+9w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A/2lvQZVtIAXl1D/Z8nKXZUvtQ40PCWxPGtICVDmnvMhyTZyoFEJmAm8IvJNHgz4T
-	 bbyaSOMc0QM+X0nSsS2eLGFcebvOXGSgb7lFAazGchy/O0TN0aWFVACtDfh4mH5NiH
-	 alsxqz4ka0ItLhYSANO7jclBs/Plz5n/A/pKbKik=
+	by mail.kernel.org (Postfix) with ESMTP id CA6AA20706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:35:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Cd6Y0NWO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbgHYJeo (ORCPT
+        id S1729473AbgHYJfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:34:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34530 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728059AbgHYJek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:34:40 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96D8820706;
-        Tue, 25 Aug 2020 09:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598348080;
-        bh=iLhF9CJwZ8QUh5DuvKsLlkhW2dg54+n1MTOWIYJs+9w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YTqCrQ8br8SvcPLpu342YqgAXUZTdk11PQz2Du4qg5vwpjaGIeiewhlS2e+9cP5z+
-         JjykoK9uYm5+7Q7C5s8rUAZ/ZmWre4R/+Bu6XdbrmgATdWqzXsCOenWNKvNpzjKwkq
-         bz47p0VqD5HiByf0Nd+1t7IAJqV5rTtU/TYt1+ps=
-Date:   Tue, 25 Aug 2020 10:34:04 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>, robh+dt@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Gene Chen <gene_chen@richtek.com>
-Subject: Re: [PATCH v3 2/2] regulator: mt6360: Add DT binding documentation
-Message-ID: <20200825093404.GB5379@sirena.org.uk>
-References: <1597910022-22617-1-git-send-email-gene.chen.richtek@gmail.com>
- <1597910022-22617-3-git-send-email-gene.chen.richtek@gmail.com>
- <20200820113015.GB5854@sirena.org.uk>
- <CAE+NS36C0AwbrFJdYGY6_n_g3DVitp_e1GfZUxjMbKu1bJ_t4w@mail.gmail.com>
- <20200824194840.GF4676@sirena.org.uk>
- <CAE+NS37p38dAN1bAi_VvEYYGNiWDVFKrdHL-hTgi2nim_7Zvqw@mail.gmail.com>
+        Tue, 25 Aug 2020 05:35:23 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:1801 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728475AbgHYJfV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:35:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1598348121; x=1629884121;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=imehd6Av3YkuYC+nc5UVG2QVM5uP2/002Rwbm57LAj4=;
+  b=Cd6Y0NWOanAEZw3eQHwoC6WO34L1SevvlxNpOztC+X4IRCm5fWY9dt41
+   sGhPOReeBL8Sr5X7JBuGvF3Nb0XuGcwiyUhfvYYgcdd8C9eNpD5qnhgEL
+   8W7B6LsColU9CGhhPWSYJvPqnlNT3h1FgjqknR159Axcn5fVHtappYim0
+   PNMpCMi+YG7qi1xIbxrFcUY7lJceH4ty57XP5Brcw7szT2Mcr6V0Pning
+   R3x0t0yxNbVib2IsQVxYe36pKH1qADcfBE6U/wT0IPVezdJh5qw8R/s/m
+   6L4ushcLkg4H/LhhVTEWxsiyp8bvl6x+CR0JMw4TFJbB/i6XwOHOnFROE
+   g==;
+IronPort-SDR: 6EmdwmgpID8mju0ri4n9FZNsRpGabVlBIRftulRHk0+bN0Q3pcW2ZTdmkcGbEyz9ZHKAevKDM1
+ HQLmw9DCfYKm8B6KoTGDcnYOMhlh4ZKvoKbmBoEN1STE+lGM8seasctMwl6UbWUHceXp7Lv6uq
+ BWfJmpS8xo9+ZQpO2BM36xw3/Yj1TbKhNtoqdOl0MzS1nAldHV/NH9dLRn9utQTOL6nd8jsvXZ
+ n9UkcaZAG/9t2zVdM00UDmO3cvPmdnJaz97xjeQKi/uGK5rCZ7YSUpOX7BYHxkvahf5IweYcLp
+ CGs=
+X-IronPort-AV: E=Sophos;i="5.76,352,1592895600"; 
+   d="scan'208";a="88417367"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2020 02:35:20 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 25 Aug 2020 02:34:38 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Tue, 25 Aug 2020 02:35:14 -0700
+References: <20200824151035.31093-1-lars.povlsen@microchip.com> <20200824151035.31093-2-lars.povlsen@microchip.com> <CAPDyKFoBom1n4AHniiukPiE_szskHrhcmVXfMpKTvNo9Xw9v0w@mail.gmail.com> <20200825084752.GD2389103@piout.net>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+List-Id: <soc.lore.kernel.org>
+CC:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "SoC Team" <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        "Microchip Linux Driver Support" <UNGLinuxDriver@microchip.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller bindings
+In-Reply-To: <20200825084752.GD2389103@piout.net>
+Date:   Tue, 25 Aug 2020 11:35:14 +0200
+Message-ID: <87blizxe3x.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jq0ap7NbKX2Kqbes"
-Content-Disposition: inline
-In-Reply-To: <CAE+NS37p38dAN1bAi_VvEYYGNiWDVFKrdHL-hTgi2nim_7Zvqw@mail.gmail.com>
-X-Cookie: Don't get to bragging.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---jq0ap7NbKX2Kqbes
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Alexandre Belloni writes:
 
-On Tue, Aug 25, 2020 at 05:21:06PM +0800, Gene Chen wrote:
-> Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8825=E6=97=
-=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=883:49=E5=AF=AB=E9=81=93=EF=BC=9A
+> On 25/08/2020 09:33:45+0200, Ulf Hansson wrote:
+>> On Mon, 24 Aug 2020 at 17:10, Lars Povlsen <lars.povlsen@microchip.com> wrote:
+>> >
+>> > The Sparx5 SDHCI controller is based on the Designware controller IP.
+>> >
+>> > Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>> > ---
+>> >  .../mmc/microchip,dw-sparx5-sdhci.yaml        | 65 +++++++++++++++++++
+>> >  1 file changed, 65 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml b/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+>> > new file mode 100644
+>> > index 0000000000000..55883290543b9
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
+>> > @@ -0,0 +1,65 @@
+>> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> > +%YAML 1.2
+>> > +---
+>> > +$id: http://devicetree.org/schemas/mmc/microchip,dw-sparx5-sdhci.yaml#
+>> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> > +
+>> > +title: Microchip Sparx5 Mobile Storage Host Controller Binding
+>> > +
+>> > +allOf:
+>> > +  - $ref: "mmc-controller.yaml"
+>> > +
+>> > +maintainers:
+>> > +  - Lars Povlsen <lars.povlsen@microchip.com>
+>> > +
+>> > +# Everything else is described in the common file
+>> > +properties:
+>> > +  compatible:
+>> > +    const: microchip,dw-sparx5-sdhci
+>> > +
+>> > +  reg:
+>> > +    maxItems: 1
+>> > +
+>> > +  interrupts:
+>> > +    maxItems: 1
+>> > +
+>> > +  clocks:
+>> > +    maxItems: 1
+>> > +    description:
+>> > +      Handle to "core" clock for the sdhci controller.
+>> > +
+>> > +  clock-names:
+>> > +    items:
+>> > +      - const: core
+>> > +
+>> > +  microchip,clock-delay:
+>> > +    description: Delay clock to card to meet setup time requirements.
+>> > +      Each step increase by 1.25ns.
+>> > +    $ref: "/schemas/types.yaml#/definitions/uint32"
+>> > +    minimum: 1
+>> > +    maximum: 15
+>> > +
+>> > +required:
+>> > +  - compatible
+>> > +  - reg
+>> > +  - interrupts
+>> > +  - clocks
+>> > +  - clock-names
+>> > +
+>> > +examples:
+>> > +  - |
+>> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>> > +    #include <dt-bindings/clock/microchip,sparx5.h>
+>> > +    sdhci0: mmc@600800000 {
+>>
+>> Nitpick:
+>>
+>> I think we should use solely "mmc[n]" here. So:
+>>
+>> mmc0@600800000 {
+>>
+>> Please update patch3/3 accordingly as well.
+>
+> This is not what the devicetree specification says. 2.2.2 says that the
+> generic name is mmc, not mmc[n]. Since there is a proper unit-address, I
+> don't see the need for an index here.
+>
 
-> > So shouldn't there be a documented LDO_VIN1/2 then?
+Alex,
 
-> LDO_VINx is HW design layout, so actually it can't be changed by device t=
-ree.
-> LDO_VIN1/LDO_VIN2 supply from VSYS, not regulator, so I think usually
-> not to show the supply from in device tree.
-> or I should declare a dummy reference to system power like "*-supply =3D
-> <&system_power>;"?
+Yeah, I thought so as well - and the existing DTs have practically all
+variations..
 
-When you say it's from the hardware design do you mean it's fixed by the
-silicon or is this something that's fixed in the board?
+Nevertheless, I followed suit since I had to refresh the patch set
+anyhow.
 
---jq0ap7NbKX2Kqbes
-Content-Type: application/pgp-signature; name="signature.asc"
+Cheers,
 
------BEGIN PGP SIGNATURE-----
+---Lars
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9E2wsACgkQJNaLcl1U
-h9DBaAf/UJOBy/iygjB9JFJ4GtbOAjn/N/rUqf1/KFMnz3cPKgQYUsIJGpdxmbn5
-DiJcykHC4+eYbi6+EjG+YXvfTeqXZiqBZgYy2fgI0foL8niNbNR4l4f2dizSAusa
-FzlufGHoNmhjW/frLoBo544S4VCf3g/bXwum3c+bkGZCeT4uwKT8spBK1Dqt/69N
-bWgQB+uCUjC0vRlMAZAnbAR45zd0H8B/eLyjIK1qGXoEeUpMQPPYbGyg1GypOK6n
-h5E6oy2FV29bq/+vsCQ6uf6Xy+CWtkHma69fI1hWNP4SXzePWEpOW5TZbHb/3E3t
-SgvJzDJJ2VxGUsR2uxU/jhedGNW/Ag==
-=aMgv
------END PGP SIGNATURE-----
-
---jq0ap7NbKX2Kqbes--
+-- 
+Lars Povlsen,
+Microchip
