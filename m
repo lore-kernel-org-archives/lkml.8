@@ -2,76 +2,82 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8577CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9658CC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 531312076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7421D2076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 16:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgHYQ0j (ORCPT
+        id S1726831AbgHYQ2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 12:26:39 -0400
-Received: from smtprelay0248.hostedemail.com ([216.40.44.248]:50666 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725805AbgHYQ0i (ORCPT
+        Tue, 25 Aug 2020 12:28:32 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:56907 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726222AbgHYQ2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 12:26:38 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 618B3181D330D;
-        Tue, 25 Aug 2020 16:26:36 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: goose87_0e0f18d2705d
-X-Filterd-Recvd-Size: 2005
-Received: from XPS-9350 (unknown [172.58.27.113])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 25 Aug 2020 16:26:33 +0000 (UTC)
-Message-ID: <086ee29ef75f657dcf45e92d4ebfdf2b3f4fcab8.camel@perches.com>
-Subject: Re: [PATCH] IB/qib: remove superfluous fallthrough statements
-From:   Joe Perches <joe@perches.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roland Dreier <roland@purestorage.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 25 Aug 2020 09:26:30 -0700
-In-Reply-To: <4877c3a5-365e-4500-43c0-4a4361e2cda3@embeddedor.com>
-References: <20200825155142.349651-1-alex.dewar90@gmail.com>
-         <4877c3a5-365e-4500-43c0-4a4361e2cda3@embeddedor.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Aug 2020 12:28:31 -0400
+X-IronPort-AV: E=Sophos;i="5.76,353,1592838000"; 
+   d="scan'208";a="55277828"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 26 Aug 2020 01:28:28 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id F16E340175FB;
+        Wed, 26 Aug 2020 01:28:26 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH 1/4] ARM: dts: r8a7742-iwg21d-q7: Enable PCIe Controller
+Date:   Tue, 25 Aug 2020 17:27:15 +0100
+Message-Id: <20200825162718.5838-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-25 at 11:19 -0500, Gustavo A. R. Silva wrote:
-> 
-> On 8/25/20 10:51, Alex Dewar wrote:
-> > Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
-> > erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
-> > were later converted to fallthrough statements by commit df561f6688fe
-> > ("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
-> > warning about unreachable code.
-> > 
-> > Remove the fallthrough statements and replace the mass of gotos with
-> > simple return statements to make the code terser and less bug-prone.
-> > 
-> 
-> This should be split up into two separate patches: one to address the
-> fallthrough markings, and another one for the gotos.
+Enable PCIe Controller and set PCIe bus clock frequency.
 
-I don't think it's necessary to break this into multiple patches.
-Logical changes in a single patch are just fine, micro patches
-aren't that useful.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+---
+ arch/arm/boot/dts/r8a7742-iwg21d-q7.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
+diff --git a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+index 9bf4fbd9c736..73300ab46ea6 100644
+--- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
++++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+@@ -238,6 +238,18 @@
+ 	/* status = "okay"; */
+ };
+ 
++&pcie_bus_clk {
++	clock-frequency = <100000000>;
++};
++
++&pciec {
++	/* SW2[6] determines which connector is activated
++	 * ON = PCIe X4 (connector-J7)
++	 * OFF = mini-PCIe (connector-J26)
++	 */
++	status = "okay";
++};
++
+ &pfc {
+ 	avb_pins: avb {
+ 		groups = "avb_mdio", "avb_gmii";
+-- 
+2.17.1
 
