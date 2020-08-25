@@ -2,88 +2,100 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E06FC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0792C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF9D32075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D812076C
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 13:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726609AbgHYNcV (ORCPT
+        id S1726681AbgHYNcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 09:32:21 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:38839 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgHYNcU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 09:32:20 -0400
-Received: by mail-oo1-f68.google.com with SMTP id z11so2701465oon.5;
-        Tue, 25 Aug 2020 06:32:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AoPa6tIoCK3whU9pBPzOcV5Uo3NIFh12F5Ac6ptY9h0=;
-        b=esWBPYuF9HYbSZYb8jEJOvte00O/TlqL1NLTlwOPPS2phgFLg4vg/MboaHH6bJ2sDL
-         yDcz646gKiAuHlZ1kDiBeN46mUK1pdkEq2AegPk3tIACBkFftyEbvB0j07d3LOeZeElS
-         sZNBMq/D25swdqtf3yuECW1b1YjDbFO+c06JCLsZVehjhry4HPhmhXChO1EzA954iteR
-         rpbJXwtFWsLemvfKtVRUm7bNZMKgfqI9WfH0JHW4E2rOMgrJ3onikuCC5zb8iryuw3vV
-         iefDq3C/oi3t4bELUTF4ov0zIIzufwyr6u/Cwuri723wFNWqqPNOOA39Znhys7t688va
-         +kzQ==
-X-Gm-Message-State: AOAM531QmEgY66wkH+OMM1hr/RrFmTOhk65t7YwpZnK1GJDAVQ2rPkoq
-        NYSs423cB7ZJP7pyf2x9x0sS0eAIHxD8gVxz8ng=
-X-Google-Smtp-Source: ABdhPJxLl4LjPnUw0osPkN7eyYfOkhZhX2vApW9KSn7zpZVt5FQDuryRNu96u+tAJACetGF/gPNsVbXqowakQy6v1oQ=
-X-Received: by 2002:a4a:275e:: with SMTP id w30mr7058474oow.40.1598362339606;
- Tue, 25 Aug 2020 06:32:19 -0700 (PDT)
+        Tue, 25 Aug 2020 09:32:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:58828 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726611AbgHYNcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 09:32:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B53081FB;
+        Tue, 25 Aug 2020 06:32:23 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 97CDC3F66B;
+        Tue, 25 Aug 2020 06:32:22 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        mingo@kernel.org, peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com
+Subject: [PATCH 1/2] sched/topology: Move sd_flag_debug out of linux/sched/topology.h
+Date:   Tue, 25 Aug 2020 14:32:15 +0100
+Message-Id: <20200825133216.9163-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200825104455.18000-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200825104455.18000-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200825104455.18000-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 25 Aug 2020 15:32:08 +0200
-Message-ID: <CAMuHMdWmvcA8x-t=FgNOuMnAtw6j3OAgo8irmD5e2wrB+LfhHg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: r8a774e1: Add PWM device nodes
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 12:45 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
->
-> This patch adds PWM[0123456] device nodes to the RZ/G2H (a.k.a R8A774E1)
-> device tree.
->
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Defining an array in a header imported all over the place clearly is a daft
+idea, that still didn't stop me from doing it.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+Leave a declaration of sd_flag_debug in topology.h and move its definition
+to sched/debug.c.
 
-Gr{oetje,eeting}s,
+Fixes: b6e862f38672 ("sched/topology: Define and assign sched_domain flag metadata")
+Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+---
+ include/linux/sched/topology.h | 9 ++++-----
+ kernel/sched/debug.c           | 6 ++++++
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
-                        Geert
-
+diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+index 2d59ca77103e..b9b0dab4d067 100644
+--- a/include/linux/sched/topology.h
++++ b/include/linux/sched/topology.h
+@@ -33,14 +33,13 @@ static const unsigned int SD_DEGENERATE_GROUPS_MASK =
+ #undef SD_FLAG
+ 
+ #ifdef CONFIG_SCHED_DEBUG
+-#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
+-static const struct {
++
++struct sd_flag_debug {
+ 	unsigned int meta_flags;
+ 	char *name;
+-} sd_flag_debug[] = {
+-#include <linux/sched/sd_flags.h>
+ };
+-#undef SD_FLAG
++extern const struct sd_flag_debug sd_flag_debug[];
++
+ #endif
+ 
+ #ifdef CONFIG_SCHED_SMT
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 0655524700d2..0d7896d2a0b2 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -245,6 +245,12 @@ set_table_entry(struct ctl_table *entry,
+ 	entry->proc_handler = proc_handler;
+ }
+ 
++#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
++const struct sd_flag_debug sd_flag_debug[] = {
++#include <linux/sched/sd_flags.h>
++};
++#undef SD_FLAG
++
+ static int sd_ctl_doflags(struct ctl_table *table, int write,
+ 			  void *buffer, size_t *lenp, loff_t *ppos)
+ {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.27.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
