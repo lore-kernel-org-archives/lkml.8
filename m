@@ -2,135 +2,91 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A7AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECBAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94A6F207D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6F720786
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSF0aVZC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fdQK1ZhN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgHYPU2 (ORCPT
+        id S1727095AbgHYPUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:20:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41562 "EHLO
+        Tue, 25 Aug 2020 11:20:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgHYPU0 (ORCPT
+        with ESMTP id S1726723AbgHYPUj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:20:26 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125EDC061574;
-        Tue, 25 Aug 2020 08:20:26 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id z195so8891110oia.6;
-        Tue, 25 Aug 2020 08:20:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q+RMk5wvoqYVTQjyw9GbUNNJ6WQtEUUd/c3ecY2vkpY=;
-        b=RSF0aVZCnRpnvapcXXDPeJL4Z812mMOogWe2XKyLGbg4HRBCINbBQEgTwTkCBaERj6
-         /XaH702noT121NOZzEP1yTSRAPW31PGWYmDnNl2Wf15uJExXhl3C8STKv6DJ4MtdyqT2
-         EhbJL1JTOjK9JgVzwcVKtpGu5QMiATBc4zAM2aOTCRZGZpvjzG4vHabgzthPU5nUFdRk
-         rO3LiNzI58Ib+lG9mqrghS41ctbPxTDA26wCbxLF4Pe2QurLq+vl+YIkBHX6hOC2TBuz
-         TmRiScL4ocnnVztRbRl8kJ+cL2/GkOo3mTitCn6xfIiapTTHU5ZvwRjhvO4imkFU6Qp1
-         FcBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q+RMk5wvoqYVTQjyw9GbUNNJ6WQtEUUd/c3ecY2vkpY=;
-        b=NfgmZaX/qJX13TQUYNxiwoT9a2Rzhsx3Bg8zXiYAL0+AczZWOszstzaMw+A3/Aq+yf
-         K3uBxVWUEtGKGm1lyYqveShqRWUJ1vFsE+LckSBZLo1+l/UEAAt1GRwGkf3+8Zp0r1Wn
-         htWuwgYDab95lSS/fbOPH9YSOc0/qvIBSCNBaCiQfWiCDVYTugznwrkvoNQlOd7EJDin
-         3jOwQnveq9Dp4y833KgQd2dt8MFLfJl44BORIyaFOWgmFDV0u/dailaLMcDmblvEigw2
-         nClcExX//yf8CCoKXi5eC9pduVPAsBQwvFnBA+EweRF43LKMBpy4Juegsxi1M2t7Y0ay
-         5HFA==
-X-Gm-Message-State: AOAM530wX8k8AbzDlhN7Ym2oF/AZsiQMy8olXj+ErJ6ZpOVKHSoWkG1C
-        /wZMGJHE2vKSgd+yAwAvgmqtAYi0EiroU5fnOhPuoyvEy4Q=
-X-Google-Smtp-Source: ABdhPJwubsbMhk3N5K1XreQ6Lx/R1j+L+VAnnbBIZ+ffdw6J6wbP+cjZhnRGIUbtxCOOGu9EqdiJ6V8ll55ds3e9pKY=
-X-Received: by 2002:a05:6808:9a7:: with SMTP id e7mr1267408oig.124.1598368825486;
- Tue, 25 Aug 2020 08:20:25 -0700 (PDT)
+        Tue, 25 Aug 2020 11:20:39 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0DCC061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:20:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=ENFgYq2det3TbaKrOxz6iT496d9fQlJUs9aH/gy1mek=; b=fdQK1ZhNC+bUU186LjBNw/dv/S
+        6tuWfa8JvNSy62lFo1WGM0FKljnJGeAka02oLi2Y9Db9NkDbWZC6FLFOYb8udjMYWhLw/8gihhDdb
+        +ieOqpgxAsaLJEcWGLr1QzooQG38jz7fkeKAb0Ov+NSmBl0j6TpcvbQ332PriZ9eny3AmkLhi1rB5
+        QN8JT+ZpsJo0K4dfV09m1DVHYd4EOpJMNNx6OWPDWxmiojhjBBeoyF4yoTYBOBdGlNCyln20Sal0V
+        LcjXU++nZNE6bd4OSXe3YDMz0/GYCq0XaUJUR8S1NrN3sYk9LABcXpb12ztwA+aWpx8p4YAFGD88Q
+        r9QHSocA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAakR-0007Uv-Qu; Tue, 25 Aug 2020 15:20:32 +0000
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Dan Williams <dan.j.williams@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH mmotm] x86/numa: fix build when CONFIG_ACPI is not set
+Message-ID: <70e5ee34-9809-a997-7b49-499e4be61307@infradead.org>
+Date:   Tue, 25 Aug 2020 08:20:27 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200825124840.43664-1-alexandru.ardelean@analog.com>
- <20200825144619.GR2639@vkoul-mobl> <CA+U=Dsra7JT9X036M6PruJpQPw-Ht_4A83M1T0L-PdByHg+wAw@mail.gmail.com>
-In-Reply-To: <CA+U=Dsra7JT9X036M6PruJpQPw-Ht_4A83M1T0L-PdByHg+wAw@mail.gmail.com>
-From:   Alexandru Ardelean <ardeleanalex@gmail.com>
-Date:   Tue, 25 Aug 2020 18:20:14 +0300
-Message-ID: <CA+U=DsoMBcoB+=r3L4j-w8cxv7eovNCtrHWVi_Y2ywRTh5QRHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/6] dmaengine: axi-dmac: add support for reading bus
- attributes from register
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>, dan.j.williams@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 6:14 PM Alexandru Ardelean
-<ardeleanalex@gmail.com> wrote:
->
-> On Tue, Aug 25, 2020 at 5:46 PM Vinod Koul <vkoul@kernel.org> wrote:
-> >
-> > On 25-08-20, 15:48, Alexandru Ardelean wrote:
-> > > The series adds support for reading the DMA bus attributes from the
-> > > INTERFACE_DESCRIPTION (0x10) register.
-> > >
-> > > The first 5 changes are a bit of rework prior to adding the actual
-> > > change in patch 6, as things need to be shifted around a bit, to enable
-> > > the clock to be enabled earlier, to be able to read the version
-> > > register.
-> >
-> > Not sure what happened, I see two sets of patches in this series, maybe
-> > duplicate..? Better to resend a clean version..
-> >
-> > Even PW shows 12 patches https://patchwork.kernel.org/project/linux-dmaengine/list/
->
-> I'm not sure either.
-> I checked the folder from where I sent the patches.
-> They're still there, and only 6 { + cover letter].
->
-> Will re-send.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-My bad.
-In the bash history I found that I put *.patch & v2-*.patch when sending.
-They were mixed in with some CC'ed emails so I didn't see it before.
+Fix build errors when CONFIG_ACPI is not set/enabled by adding
+<acpi/acpi_numa.h> in the #else (!CONFIG_ACPI) block.
 
->
-> >
-> > Thanks
-> >
-> > >
-> > > Changelog v1 -> v2:
-> > > * fixed error-exit paths for the clock move patch
-> > >   i.e. 'dmaengine: axi-dmac: move clock enable earlier'
-> > > * fixed error-exit path for patch
-> > >   'axi-dmac: wrap channel parameter adjust into function'
-> > > * added patch 'dmaengine: axi-dmac: move active_descs list init after device-tree init'
-> > >   the list of active_descs can be moved a bit lower in the init/probe
-> > >
-> > > Alexandru Ardelean (6):
-> > >   dmaengine: axi-dmac: move version read in probe
-> > >   dmaengine: axi-dmac: move active_descs list init after device-tree
-> > >     init
-> > >   dmaengine: axi-dmac: move clock enable earlier
-> > >   dmaengine: axi-dmac: wrap entire dt parse in a function
-> > >   dmaengine: axi-dmac: wrap channel parameter adjust into function
-> > >   dmaengine: axi-dmac: add support for reading bus attributes from
-> > >     registers
-> > >
-> > >  drivers/dma/dma-axi-dmac.c | 138 ++++++++++++++++++++++++++++---------
-> > >  1 file changed, 107 insertions(+), 31 deletions(-)
-> > >
-> > > --
-> > > 2.17.1
-> >
-> > --
-> > ~Vinod
+../arch/x86/mm/numa.c: In function ‘numa_setup’:
+../arch/x86/mm/numa.c:43:3: error: implicit declaration of function ‘disable_srat’; did you mean ‘disable_irq’? [-Werror=implicit-function-declaration]
+   disable_srat();
+   ^~~~~~~~~~~~
+../arch/x86/mm/numa.c:45:3: error: implicit declaration of function ‘disable_hmat’; did you mean ‘disable_dma’? [-Werror=implicit-function-declaration]
+   disable_hmat();
+   ^~~~~~~~~~~~
+
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+---
+ include/linux/acpi.h |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- mmotm-2020-0824-1606.orig/include/linux/acpi.h
++++ mmotm-2020-0824-1606/include/linux/acpi.h
+@@ -709,6 +709,8 @@ static inline u64 acpi_arch_get_root_poi
+ #define ACPI_HANDLE_FWNODE(fwnode)	(NULL)
+ #define ACPI_DEVICE_CLASS(_cls, _msk)	.cls = (0), .cls_msk = (0),
+ 
++#include <acpi/acpi_numa.h>
++
+ struct fwnode_handle;
+ 
+ static inline bool acpi_dev_found(const char *hid)
+
