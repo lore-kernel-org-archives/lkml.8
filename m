@@ -7,39 +7,37 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85799C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66FEC433E5
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6364B2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DC332072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgHYE6q (ORCPT
+        id S1729020AbgHYE6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:58:46 -0400
-Received: from smtprelay0180.hostedemail.com ([216.40.44.180]:33390 "EHLO
+        Tue, 25 Aug 2020 00:58:51 -0400
+Received: from smtprelay0201.hostedemail.com ([216.40.44.201]:35682 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728533AbgHYE5U (ORCPT
+        by vger.kernel.org with ESMTP id S1728717AbgHYE5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:57:20 -0400
+        Tue, 25 Aug 2020 00:57:12 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id DA32C181D337B;
-        Tue, 25 Aug 2020 04:57:17 +0000 (UTC)
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id A19FF180A7FF2;
+        Tue, 25 Aug 2020 04:57:06 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: low63_3a0323c27059
-X-Filterd-Recvd-Size: 1653
+X-HE-Tag: bell57_2912de727059
+X-Filterd-Recvd-Size: 2577
 Received: from joe-laptop.perches.com (unknown [47.151.133.149])
         (Authenticated sender: joe@perches.com)
         by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 25 Aug 2020 04:57:16 +0000 (UTC)
+        Tue, 25 Aug 2020 04:57:05 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
-To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 19/29] s390/tty3270: Avoid comma separated statements
-Date:   Mon, 24 Aug 2020 21:56:16 -0700
-Message-Id: <9988babd9cca4ac841961d9f0bbf5e49caa87659.1598331149.git.joe@perches.com>
+To:     Jiri Kosina <trivial@kernel.org>, Coly Li <colyli@suse.de>,
+        Kent Overstreet <kent.overstreet@gmail.com>
+Cc:     linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 13/29] bcache: Avoid comma separated statements
+Date:   Mon, 24 Aug 2020 21:56:10 -0700
+Message-Id: <99ba798329f7d957e75a22c8551e8bd22f70c626.1598331149.git.joe@perches.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.1598331148.git.joe@perches.com>
 References: <cover.1598331148.git.joe@perches.com>
@@ -54,26 +52,57 @@ Use semicolons and braces.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/s390/char/tty3270.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/md/bcache/bset.c  | 12 ++++++++----
+ drivers/md/bcache/sysfs.c |  6 ++++--
+ 2 files changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
-index aec996de44d9..6acce975df26 100644
---- a/drivers/s390/char/tty3270.c
-+++ b/drivers/s390/char/tty3270.c
-@@ -424,8 +424,10 @@ tty3270_update(struct timer_list *t)
- 			 * last output position matches the start address
- 			 * of this line.
- 			 */
--			if (s->string[1] == sba[0] && s->string[2] == sba[1])
--				str += 3, len -= 3;
-+			if (s->string[1] == sba[0] && s->string[2] == sba[1]) {
-+				str += 3;
-+				len -= 3;
-+			}
- 			if (raw3270_request_add_data(wrq, str, len) != 0)
- 				break;
- 			list_del_init(&s->update);
+diff --git a/drivers/md/bcache/bset.c b/drivers/md/bcache/bset.c
+index 67a2c47f4201..94d38e8a59b3 100644
+--- a/drivers/md/bcache/bset.c
++++ b/drivers/md/bcache/bset.c
+@@ -712,8 +712,10 @@ void bch_bset_build_written_tree(struct btree_keys *b)
+ 	for (j = inorder_next(0, t->size);
+ 	     j;
+ 	     j = inorder_next(j, t->size)) {
+-		while (bkey_to_cacheline(t, k) < cacheline)
+-			prev = k, k = bkey_next(k);
++		while (bkey_to_cacheline(t, k) < cacheline) {
++			prev = k;
++			k = bkey_next(k);
++		}
+ 
+ 		t->prev[j] = bkey_u64s(prev);
+ 		t->tree[j].m = bkey_to_cacheline_offset(t, cacheline++, k);
+@@ -901,8 +903,10 @@ unsigned int bch_btree_insert_key(struct btree_keys *b, struct bkey *k,
+ 	status = BTREE_INSERT_STATUS_INSERT;
+ 
+ 	while (m != bset_bkey_last(i) &&
+-	       bkey_cmp(k, b->ops->is_extents ? &START_KEY(m) : m) > 0)
+-		prev = m, m = bkey_next(m);
++	       bkey_cmp(k, b->ops->is_extents ? &START_KEY(m) : m) > 0) {
++		prev = m;
++		m = bkey_next(m);
++	}
+ 
+ 	/* prev is in the tree, if we merge we're done */
+ 	status = BTREE_INSERT_STATUS_BACK_MERGE;
+diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+index ac06c0bc3c0a..1878c5ee53b6 100644
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -1071,8 +1071,10 @@ SHOW(__bch_cache)
+ 			--n;
+ 
+ 		while (cached < p + n &&
+-		       *cached == BTREE_PRIO)
+-			cached++, n--;
++		       *cached == BTREE_PRIO) {
++			cached++;
++			n--;
++		}
+ 
+ 		for (i = 0; i < n; i++)
+ 			sum += INITIAL_PRIO - cached[i];
 -- 
 2.26.0
 
