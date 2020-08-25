@@ -2,111 +2,106 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDC5C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14A8220706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:33:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRB51f8d"
+	by mail.kernel.org (Postfix) with ESMTP id B2BA420706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:34:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgHYXd0 (ORCPT
+        id S1726700AbgHYXed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:33:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbgHYXd0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:33:26 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E809AC061574;
-        Tue, 25 Aug 2020 16:33:25 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id n3so252933pjq.1;
-        Tue, 25 Aug 2020 16:33:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2FNoKN0kaYc5PEMF/7OkH/69aeo+O5crzxwYWBe7l/8=;
-        b=mRB51f8dmL9rWfcKDVGREdgeS94KkEpoCj1ZfOTjHF22suF5rmr2Xpq8QrOthz4pvd
-         Km90MiILM2NhaxXXMYaoTSyVIzn6KVVYTYYTKbgrTRzyltStY2NbxL+n2pc3yadrpsOm
-         OGJVV2mtci2n0lWGr1bFPf5168mjoEOJZ4cSjYBn7wkmOzdkWswNWG3F6WFU3gjWj5q1
-         Citjl3fBVrDkZ7twXiAXus5LcO06kmvRNiUflrhnWoU7C6ZOdjT3aUmhglgHJczjGjlQ
-         1Mr1HPmsiRmuBlFw8eAbSHt0agxiS7zIHz+HCZZyxTox1YI2D62k0cJggqSMxGqpWAm4
-         igWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2FNoKN0kaYc5PEMF/7OkH/69aeo+O5crzxwYWBe7l/8=;
-        b=qp3IBcihyBfvS5i059s3YH6KRNTamSjsU6OZWbIinWIIq+PvmzRXRqULaTADwA0DhL
-         shsNSC696DgnD7l7Y/2cdugCnyrz9EvQkOPhJisqNxQi0xiuff0348ym5yVdrwN5AOl1
-         Sn2OQQY6ySQXcx4UXL8V4ii9M1EdcahYqF65YqVrJKqUvq/ofh3j/B8pPq1T2qNZMEHa
-         85ihqNTz1LJOAS/LdCyOyEGqG6x5JFxEMpLHLhyRtcugdF8JwZDCUJpy+bhZtpXDo14x
-         rBZu931SQjBLkFEDINOKF9zaMv8BAgN4ksQOtC6/jEFV3MGm7hO/a1mr1EiIsnIjV6Jq
-         O/6w==
-X-Gm-Message-State: AOAM533XBBEqwx/uh28Qw8Ndhz1aVfP1p8MqgzfEwbP0ddzlyq9vxExw
-        uUn1Rsjrs8DeUTMMn/5iX3Dzdx6CPiI=
-X-Google-Smtp-Source: ABdhPJwGw/Z5ArzPamde04jc7fUQiAw5EXM8GGHqGXKxjBb7+3cSk4h16+h9laio5cduQfdUy5p6EQ==
-X-Received: by 2002:a17:902:9883:: with SMTP id s3mr9582714plp.271.1598398405513;
-        Tue, 25 Aug 2020 16:33:25 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v128sm369465pfc.14.2020.08.25.16.33.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Aug 2020 16:33:24 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 16:33:23 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Joe Perches <joe@perches.com>
-Cc:     Jiri Kosina <trivial@kernel.org>, Jean Delvare <jdelvare@suse.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 11/29] hwmon: (scmi-hwmon): Avoid comma separated
- statements
-Message-ID: <20200825233323.GA127894@roeck-us.net>
-References: <cover.1598331148.git.joe@perches.com>
- <5e1ca60df261e3bfd0e6510e388581a1d1f52c77.1598331149.git.joe@perches.com>
+        Tue, 25 Aug 2020 19:34:33 -0400
+Received: from mga02.intel.com ([134.134.136.20]:9369 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726542AbgHYXec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 19:34:32 -0400
+IronPort-SDR: ZN+OV2SFvIotG49YgGU8rrxns0mJE/9HDrfzzPoLzPJ86VEYrAYkKoruTmaknORLiEbgoKMCF5
+ vQvMny8PkGNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="143984475"
+X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
+   d="scan'208";a="143984475"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 16:34:29 -0700
+IronPort-SDR: jDH1O40YY4lOk1YRVka2qfIczRRKbt6rlwfRgT/NIKrAOgYtq0SF7EEESuwd0piSxHaIIvjQiR
+ Ag1HGEmIkTmw==
+X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
+   d="scan'208";a="336668677"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.213.162.112]) ([10.213.162.112])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 16:34:28 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+ <20200825002540.3351-26-yu-cheng.yu@intel.com>
+ <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
+ <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
+ <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+ <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+Date:   Tue, 25 Aug 2020 16:34:27 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5e1ca60df261e3bfd0e6510e388581a1d1f52c77.1598331149.git.joe@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 09:56:08PM -0700, Joe Perches wrote:
-> Use semicolons and braces.
+On 8/25/2020 4:20 PM, Dave Hansen wrote:
+> On 8/25/20 2:04 PM, Yu, Yu-cheng wrote:
+>>>> I think this is more arch-specific.  Even if it becomes a new syscall,
+>>>> we still need to pass the same parameters.
+>>>
+>>> Right, but without the copying in and out of memory.
+>>>
+>> Linux-api is already on the Cc list.  Do we need to add more people to
+>> get some agreements for the syscall?
+> What kind of agreement are you looking for?  I'd suggest just coding it
+> up and posting the patches.  Adding syscalls really is really pretty
+> straightforward and isn't much code at all.
 > 
-> Signed-off-by: Joe Perches <joe@perches.com>
 
-Applied.
+Sure, I will do that.
 
 Thanks,
-Guenter
-
-> ---
->  drivers/hwmon/scmi-hwmon.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
-> index d421e691318b..09ce30cba54b 100644
-> --- a/drivers/hwmon/scmi-hwmon.c
-> +++ b/drivers/hwmon/scmi-hwmon.c
-> @@ -202,8 +202,10 @@ static int scmi_hwmon_probe(struct scmi_device *sdev)
->  		}
->  	}
->  
-> -	if (nr_count[hwmon_temp])
-> -		nr_count[hwmon_chip]++, nr_types++;
-> +	if (nr_count[hwmon_temp]) {
-> +		nr_count[hwmon_chip]++;
-> +		nr_types++;
-> +	}
->  
->  	scmi_hwmon_chan = devm_kcalloc(dev, nr_types, sizeof(*scmi_hwmon_chan),
->  				       GFP_KERNEL);
+Yu-cheng
