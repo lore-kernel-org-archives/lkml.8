@@ -2,153 +2,658 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A61C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50B0B20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4A520706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:09:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Dp3o98+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbgHYMHx convert rfc822-to-8bit (ORCPT
+        id S1730158AbgHYMJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:07:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39164 "EHLO
+        Tue, 25 Aug 2020 08:09:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730139AbgHYMHu (ORCPT
+        with ESMTP id S1728869AbgHYMJX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:07:50 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B1FC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 05:07:50 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1kAXje-0000BL-IT; Tue, 25 Aug 2020 14:07:30 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1kAXjd-0004kj-KW; Tue, 25 Aug 2020 14:07:29 +0200
-Message-ID: <8e8e33386eea12036bb17529b4d578704bf735d1.camel@pengutronix.de>
-Subject: Re: [PATCH v2 11/17] clk: imx: Add blk_ctrl combo driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Abel Vesa <abel.vesa@nxp.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>, Rob Herring <robh@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>, devicetree@vger.kernel.org,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Date:   Tue, 25 Aug 2020 14:07:29 +0200
-In-Reply-To: <20200825112421.eut7gx3i4eirhnfw@fsr-ub1664-175>
-References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
-         <1597406966-13740-12-git-send-email-abel.vesa@nxp.com>
-         <ea2563fcb456830b37b0031455e5054d6b81c680.camel@pengutronix.de>
-         <20200825112421.eut7gx3i4eirhnfw@fsr-ub1664-175>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 25 Aug 2020 08:09:23 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B308C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 05:09:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DDuLdFk+UsdUZwML4w/TQzmMjqNOxYoYhaNw8Q1qlO8=; b=Dp3o98+WLCA0BQkMUqlY/qh/U0
+        NbNwATytbkQ2sXt+A0m18Ou6EVBJHeYoNe3qQ5+pdYA1H37llIytUjHHWkwpG1wdcN+XqqhKDVu93
+        WYzJR+u52CbrMnJ11a/14bXJwdBXVifmuAQq5Y7WkbzdGcHfBoLn+yDfLdnynm8fx3qvFygvKHDBy
+        BDYzSKpf+xzbC4Ixl1INmDu5rmRTVahpZ648MaVvI+LMwPGKpDTwWw12Hpb0gDPPOYDSz3mA1tHER
+        7nqFo3oOrlUyxAH3pphKsWXNhJ0CBhCXkWkNEEH5aFaAdZ9H6jaSSg7AQeKGnHn2AdLmeejBOWcyP
+        hhUQUaPQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAXlN-0002JF-2J; Tue, 25 Aug 2020 12:09:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 20D8A3003D8;
+        Tue, 25 Aug 2020 14:09:11 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C944221219255; Tue, 25 Aug 2020 14:09:11 +0200 (CEST)
+Date:   Tue, 25 Aug 2020 14:09:11 +0200
+From:   peterz@infradead.org
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function
+ entry is not optimized (trigger by int3 breakpoint)
+Message-ID: <20200825120911.GX1362448@hirez.programming.kicks-ass.net>
+References: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
+ <20200825005426.f592075d13be740cb3c9aa77@kernel.org>
+ <7396e7b2079644a6aafd9670a111232b@trendmicro.com>
+ <20200825151538.f856d701a34f4e0561a64932@kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825151538.f856d701a34f4e0561a64932@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-25 at 14:24 +0300, Abel Vesa wrote:
-[...]
-> > > +static int imx_blk_ctrl_reset_set(struct reset_controller_dev *rcdev,
-> > > +				  unsigned long id, bool assert)
-> > > +{
-> > > +	struct imx_blk_ctrl_drvdata *drvdata = container_of(rcdev,
-> > > +			struct imx_blk_ctrl_drvdata, rcdev);
-> > > +	unsigned int offset = drvdata->rst_hws[id].offset;
-> > > +	unsigned int shift = drvdata->rst_hws[id].shift;
-> > > +	unsigned int mask = drvdata->rst_hws[id].mask;
-> > > +	void __iomem *reg_addr = drvdata->base + offset;
-> > > +	unsigned long flags;
-> > > +	unsigned int asserted_before = 0, asserted_after = 0;
-> > > +	u32 reg;
-> > > +	int i;
-> > > +
-> > > +	spin_lock_irqsave(&drvdata->lock, flags);
-> > > +
-> > > +	for (i = 0; i < drvdata->rcdev.nr_resets; i++)
-> > > +		if (drvdata->rst_hws[i].asserted)
-> > > +			asserted_before++;
-> > > +
-> > > +	if (asserted_before == 0 && assert)
-> > > +		pm_runtime_get(rcdev->dev);
-> > 
-> > Shouldn't that be pm_runtime_get_sync() ?
-> > 
-> > I would do that unconditionally before locking drvdata->lock and then
-> > drop unnecessary refcounts afterwards.
-> > 
+On Tue, Aug 25, 2020 at 03:15:38PM +0900, Masami Hiramatsu wrote:
+
+> From 24390dffe6eb9a3e95f7d46a528a1dcfd716dc81 Mon Sep 17 00:00:00 2001
+> From: Masami Hiramatsu <mhiramat@kernel.org>
+> Date: Tue, 25 Aug 2020 01:37:00 +0900
+> Subject: [PATCH] kprobes/x86: Fixes NMI context check on x86
 > 
-> I thought we already discussed this on the last's version thread.
+> Since commit 0d00449c7a28 ("x86: Replace ist_enter() with nmi_enter()")
+> made int3 as one of NMI, in_nmi() in kprobe handlers always returns !0.
+> Thus the kretprobe handlers always skipped the execution on x86 if it
+> is using int3. (CONFIG_KPROBES_ON_FTRACE=n and
+> echo 0 > /proc/sys/debug/kprobe_optimization)
+> 
+> To avoid this issue, introduce arch_kprobe_in_nmi() and check the
+> in_nmi() count is bigger than 1 << NMI_SHIFT on x86 if the handler
+> has been invoked from kprobe_int3_handler. By default, the
+> arch_kprobe_in_nmi() will be same as in_nmi().
 
-This is about something different. pm_runtime_get() just queues the
-device to be enabled at a later point, but I presume you want to have it
-enabled before writing to its registers. (The question here is can you
-write to the registers, and have the device update its internal state,
-while the power domain is disabled?)
-Either way, if you want the reset to be asserted after the function
-returns (as is required by the reset API), as I understand it, you have
-to make sure that the power domain is activated before the function
-returns.
-Therefore pm_runtime_get_sync() is required instead of pm_runtime_get(),
-and that must be called outside of the spin locked section. My
-suggestion would be:
+So I still hate all of this, it feels like it's making a bad hack worse.
 
-	if (assert)
-		pm_runtime_get_sync();
-	spin_lock_irqsave();
-	/* ... */
-	spin_unlock_irqrestore();
-	if (assert && asserted_before)
-		pm_runtime_put();
+> Fixes: 0d00449c7a28 ("x86: Replace ist_enter() with nmi_enter()")
 
-unless the following might be an issue:
+I think there's another problem, when you run this code with lockdep
+enabled it'll complain very loudly. Lockdep doesn't like using locks
+from NMI context much.
 
-> > > +
-> > > +	if (assert) {
-> > > +		reg = readl(reg_addr);
-> > > +		writel(reg & ~(mask << shift), reg_addr);
-> > > +		drvdata->rst_hws[id].asserted = true;
-> > > +	} else {
-> > > +		reg = readl(reg_addr);
-> > > +		writel(reg | (mask << shift), reg_addr);
+Can't we take one step back. Why are we taking locks from kprobe
+context? I was under the impression that kprobes were lockless (for good
+reasons), why does kretprobe need one? And can't we fix that?
 
-Could this cause problems if the power domain is already disabled? If
-so, it would be best to either temporarily enable power, or to skip the
-register writes if asserted_before == 0 && !assert.
+Looking at the code it mucks about with with an hlist.
 
-> > > +		drvdata->rst_hws[id].asserted = false;
-> > > +	}
-> > > +
-> > > +	for (i = 0; i < drvdata->rcdev.nr_resets; i++)
-> > > +		if (drvdata->rst_hws[i].asserted)
-> > > +			asserted_after++;
-> > > +
-> > > +	if (asserted_before == 1 && asserted_after == 0)
-> > > +		pm_runtime_put(rcdev->dev);
-> > > +
-> > > +	spin_unlock_irqrestore(&drvdata->lock, flags);
-> > > +
-> > > +	return 0;
-> > > +}
+So on pre_handler is tries and take a kretprobe_instance from a list,
+and fails when there isn't one. This looks like per-task-per-retprobe
+data. Also, all of that is only returned when the task dies.
 
-regards
-Philipp
+Surely we can do a lockless list for this. We have llist_add() and
+llist_del_first() to make a lockless LIFO/stack.
+
+
+/me frobs code....
+
+
+Oooohh, another lock :-( kretprobe_table_lock
+
+Bah bah bah, what a mess, surely we have a lockless hash-table
+somewhere? /me goes rummage around. Nope we don't.
+
+Lightbulb!
+
+That whole hash-table is nonsense, we don't need it. All it does is
+provide a per-task hlist. We can just stick a llist_head in task_struct
+itself and delete all that.
+
+
+/me frobs more code...
+
+argh, arch/ code uses this
+
+
+damn... one last problem is dangling instances.. so close.
+We can apparently unregister a kretprobe while there's still active
+kretprobe_instance's out referencing it.
+
+Ignoring that issue for the moment, the below seems to actually work.
+
+---
+Subject: kprobe: Rewrite kretprobe to not use locks
+
+Use llist based atomic stack for rp->free_instances, and a llist based
+non-atomic stack for current->kretprobe_instances. The latter is only
+ever referenced from the task context and properly nests, so even if it
+gets interrupted, the interrupt should pop whatever it pushed on the
+stack before returning.
+
+XXX unregister_kretprobe*() vs active instances is broken.
+XXX everything !x86 is broken
+
+Not-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/kernel/kprobes/core.c      |  75 ++++++-------------
+ drivers/gpu/drm/i915/i915_request.c |   6 --
+ include/linux/kprobes.h             |   8 +-
+ include/linux/llist.h               |  15 ++++
+ include/linux/sched.h               |   4 +
+ kernel/fork.c                       |   4 +
+ kernel/kprobes.c                    | 145 +++++++++---------------------------
+ 7 files changed, 87 insertions(+), 170 deletions(-)
+
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index 2ca10b770cff..311c26ef0fc2 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -772,14 +772,12 @@ STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
+  */
+ __used __visible void *trampoline_handler(struct pt_regs *regs)
+ {
+-	struct kretprobe_instance *ri = NULL;
+-	struct hlist_head *head, empty_rp;
+-	struct hlist_node *tmp;
+-	unsigned long flags, orig_ret_address = 0;
+ 	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
+ 	kprobe_opcode_t *correct_ret_addr = NULL;
++	struct kretprobe_instance *ri = NULL;
++	struct llist_node *node, *first;
++	unsigned long orig_ret_address;
+ 	void *frame_pointer;
+-	bool skipped = false;
+ 
+ 	/*
+ 	 * Set a dummy kprobe for avoiding kretprobe recursion.
+@@ -788,8 +786,6 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
+ 	 */
+ 	kprobe_busy_begin();
+ 
+-	INIT_HLIST_HEAD(&empty_rp);
+-	kretprobe_hash_lock(current, &head, &flags);
+ 	/* fixup registers */
+ 	regs->cs = __KERNEL_CS;
+ #ifdef CONFIG_X86_32
+@@ -813,48 +809,37 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
+ 	 *	 will be the real return address, and all the rest will
+ 	 *	 point to kretprobe_trampoline.
+ 	 */
+-	hlist_for_each_entry(ri, head, hlist) {
+-		if (ri->task != current)
+-			/* another task is sharing our hash bucket */
+-			continue;
+-		/*
+-		 * Return probes must be pushed on this hash list correct
+-		 * order (same as return order) so that it can be popped
+-		 * correctly. However, if we find it is pushed it incorrect
+-		 * order, this means we find a function which should not be
+-		 * probed, because the wrong order entry is pushed on the
+-		 * path of processing other kretprobe itself.
+-		 */
+-		if (ri->fp != frame_pointer) {
+-			if (!skipped)
+-				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
+-			skipped = true;
+-			continue;
+-		}
+ 
+-		orig_ret_address = (unsigned long)ri->ret_addr;
+-		if (skipped)
+-			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
+-				ri->rp->kp.addr);
++	first = node = current->kretprobe_instances.first;
++	while (node) {
++		ri = container_of(node, struct kretprobe_instance, llist);
++		node = node->next;
+ 
+-		if (orig_ret_address != trampoline_address)
++		BUG_ON(ri->fp != frame_pointer);
++
++		orig_ret_address = (unsigned long)ri->ret_addr;
++		if (orig_ret_address != trampoline_address) {
+ 			/*
+ 			 * This is the real return address. Any other
+ 			 * instances associated with this task are for
+ 			 * other calls deeper on the call stack
+ 			 */
+ 			break;
++		}
+ 	}
+ 
+ 	kretprobe_assert(ri, orig_ret_address, trampoline_address);
+-
+ 	correct_ret_addr = ri->ret_addr;
+-	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+-		if (ri->task != current)
+-			/* another task is sharing our hash bucket */
+-			continue;
+-		if (ri->fp != frame_pointer)
+-			continue;
++
++	/*
++	 * Per the above BUG_ON() we're guaranteed at least one ri.
++	 *
++	 * Delete all nodes for this frame_pointer.
++	 */
++	current->kretprobe_instances.first = node;
++	while (first) {
++		ri = container_of(first, struct kretprobe_instance, llist);
++		node = first->next;
+ 
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
+ 		if (ri->rp && ri->rp->handler) {
+@@ -864,25 +849,13 @@ __used __visible void *trampoline_handler(struct pt_regs *regs)
+ 			__this_cpu_write(current_kprobe, &kprobe_busy);
+ 		}
+ 
+-		recycle_rp_inst(ri, &empty_rp);
++		recycle_rp_inst(ri, NULL);
+ 
+-		if (orig_ret_address != trampoline_address)
+-			/*
+-			 * This is the real return address. Any other
+-			 * instances associated with this task are for
+-			 * other calls deeper on the call stack
+-			 */
+-			break;
++		first = node;
+ 	}
+ 
+-	kretprobe_hash_unlock(current, &flags);
+-
+ 	kprobe_busy_end();
+ 
+-	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+-		hlist_del(&ri->hlist);
+-		kfree(ri);
+-	}
+ 	return (void *)orig_ret_address;
+ }
+ NOKPROBE_SYMBOL(trampoline_handler);
+diff --git a/drivers/gpu/drm/i915/i915_request.c b/drivers/gpu/drm/i915/i915_request.c
+index 0b2fe55e6194..0e851b925c8c 100644
+--- a/drivers/gpu/drm/i915/i915_request.c
++++ b/drivers/gpu/drm/i915/i915_request.c
+@@ -357,12 +357,6 @@ void i915_request_retire_upto(struct i915_request *rq)
+ 	} while (i915_request_retire(tmp) && tmp != rq);
+ }
+ 
+-static void __llist_add(struct llist_node *node, struct llist_head *head)
+-{
+-	node->next = head->first;
+-	head->first = node;
+-}
+-
+ static struct i915_request * const *
+ __engine_active(struct intel_engine_cs *engine)
+ {
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 9be1bff4f586..073c40ae2cdb 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -151,12 +151,14 @@ struct kretprobe {
+ 	int maxactive;
+ 	int nmissed;
+ 	size_t data_size;
+-	struct hlist_head free_instances;
+-	raw_spinlock_t lock;
++//	struct hlist_head free_instances;
++//	raw_spinlock_t lock;
++	struct llist_head free_instances;
+ };
+ 
+ struct kretprobe_instance {
+-	struct hlist_node hlist;
++//	struct hlist_node hlist;
++	struct llist_node llist;
+ 	struct kretprobe *rp;
+ 	kprobe_opcode_t *ret_addr;
+ 	struct task_struct *task;
+diff --git a/include/linux/llist.h b/include/linux/llist.h
+index 2e9c7215882b..c17893dcc591 100644
+--- a/include/linux/llist.h
++++ b/include/linux/llist.h
+@@ -197,6 +197,16 @@ static inline struct llist_node *llist_next(struct llist_node *node)
+ extern bool llist_add_batch(struct llist_node *new_first,
+ 			    struct llist_node *new_last,
+ 			    struct llist_head *head);
++
++static inline bool __llist_add_batch(struct llist_node *new_first,
++				     struct llist_node *new_last,
++				     struct llist_head *head)
++{
++	new_last->next = head->first;
++	head->first = new_first;
++	return new_last->next == NULL;
++}
++
+ /**
+  * llist_add - add a new entry
+  * @new:	new entry to be added
+@@ -209,6 +219,11 @@ static inline bool llist_add(struct llist_node *new, struct llist_head *head)
+ 	return llist_add_batch(new, new, head);
+ }
+ 
++static inline bool __llist_add(struct llist_node *new, struct llist_head *head)
++{
++	return __llist_add_batch(new, new, head);
++}
++
+ /**
+  * llist_del_all - delete all entries from lock-less list
+  * @head:	the head of lock-less list to delete all entries
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 93ecd930efd3..e53fd653cefa 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1315,6 +1315,10 @@ struct task_struct {
+ 	struct callback_head		mce_kill_me;
+ #endif
+ 
++#ifdef CONFIG_KRETPROBES
++	struct llist_head		kretprobe_instances;
++#endif
++
+ 	/*
+ 	 * New fields for task_struct should be added above here, so that
+ 	 * they are included in the randomized portion of task_struct.
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 4d32190861bd..2ff5cceb0732 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2161,6 +2161,10 @@ static __latent_entropy struct task_struct *copy_process(
+ 	INIT_LIST_HEAD(&p->thread_group);
+ 	p->task_works = NULL;
+ 
++#ifdef CONFIG_KRETPROBES
++	p->kretprobe_instances.first = NULL;
++#endif
++
+ 	/*
+ 	 * Ensure that the cgroup subsystem policies allow the new process to be
+ 	 * forked. It should be noted the the new process's css_set can be changed
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 287b263c9cb9..e208ce6fa84d 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -53,7 +53,6 @@ static int kprobes_initialized;
+  * - RCU hlist traversal under disabling preempt (breakpoint handlers)
+  */
+ static struct hlist_head kprobe_table[KPROBE_TABLE_SIZE];
+-static struct hlist_head kretprobe_inst_table[KPROBE_TABLE_SIZE];
+ 
+ /* NOTE: change this value only with kprobe_mutex held */
+ static bool kprobes_all_disarmed;
+@@ -61,9 +60,6 @@ static bool kprobes_all_disarmed;
+ /* This protects kprobe_table and optimizing_list */
+ static DEFINE_MUTEX(kprobe_mutex);
+ static DEFINE_PER_CPU(struct kprobe *, kprobe_instance) = NULL;
+-static struct {
+-	raw_spinlock_t lock ____cacheline_aligned_in_smp;
+-} kretprobe_table_locks[KPROBE_TABLE_SIZE];
+ 
+ kprobe_opcode_t * __weak kprobe_lookup_name(const char *name,
+ 					unsigned int __unused)
+@@ -71,11 +67,6 @@ kprobe_opcode_t * __weak kprobe_lookup_name(const char *name,
+ 	return ((kprobe_opcode_t *)(kallsyms_lookup_name(name)));
+ }
+ 
+-static raw_spinlock_t *kretprobe_table_lock_ptr(unsigned long hash)
+-{
+-	return &(kretprobe_table_locks[hash].lock);
+-}
+-
+ /* Blacklist -- list of struct kprobe_blacklist_entry */
+ static LIST_HEAD(kprobe_blacklist);
+ 
+@@ -1228,62 +1219,22 @@ void recycle_rp_inst(struct kretprobe_instance *ri,
+ {
+ 	struct kretprobe *rp = ri->rp;
+ 
+-	/* remove rp inst off the rprobe_inst_table */
+-	hlist_del(&ri->hlist);
+-	INIT_HLIST_NODE(&ri->hlist);
+-	if (likely(rp)) {
+-		raw_spin_lock(&rp->lock);
+-		hlist_add_head(&ri->hlist, &rp->free_instances);
+-		raw_spin_unlock(&rp->lock);
+-	} else
+-		/* Unregistering */
+-		hlist_add_head(&ri->hlist, head);
++	llist_add(&ri->llist, &rp->free_instances);
+ }
+ NOKPROBE_SYMBOL(recycle_rp_inst);
+ 
+ void kretprobe_hash_lock(struct task_struct *tsk,
+ 			 struct hlist_head **head, unsigned long *flags)
+-__acquires(hlist_lock)
+ {
+-	unsigned long hash = hash_ptr(tsk, KPROBE_HASH_BITS);
+-	raw_spinlock_t *hlist_lock;
+-
+-	*head = &kretprobe_inst_table[hash];
+-	hlist_lock = kretprobe_table_lock_ptr(hash);
+-	raw_spin_lock_irqsave(hlist_lock, *flags);
+ }
+ NOKPROBE_SYMBOL(kretprobe_hash_lock);
+ 
+-static void kretprobe_table_lock(unsigned long hash,
+-				 unsigned long *flags)
+-__acquires(hlist_lock)
+-{
+-	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
+-	raw_spin_lock_irqsave(hlist_lock, *flags);
+-}
+-NOKPROBE_SYMBOL(kretprobe_table_lock);
+-
+ void kretprobe_hash_unlock(struct task_struct *tsk,
+ 			   unsigned long *flags)
+-__releases(hlist_lock)
+ {
+-	unsigned long hash = hash_ptr(tsk, KPROBE_HASH_BITS);
+-	raw_spinlock_t *hlist_lock;
+-
+-	hlist_lock = kretprobe_table_lock_ptr(hash);
+-	raw_spin_unlock_irqrestore(hlist_lock, *flags);
+ }
+ NOKPROBE_SYMBOL(kretprobe_hash_unlock);
+ 
+-static void kretprobe_table_unlock(unsigned long hash,
+-				   unsigned long *flags)
+-__releases(hlist_lock)
+-{
+-	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
+-	raw_spin_unlock_irqrestore(hlist_lock, *flags);
+-}
+-NOKPROBE_SYMBOL(kretprobe_table_unlock);
+-
+ struct kprobe kprobe_busy = {
+ 	.addr = (void *) get_kprobe,
+ };
+@@ -1312,29 +1263,21 @@ void kprobe_busy_end(void)
+  */
+ void kprobe_flush_task(struct task_struct *tk)
+ {
++	struct llist_node *next, *node;
+ 	struct kretprobe_instance *ri;
+-	struct hlist_head *head, empty_rp;
+-	struct hlist_node *tmp;
+-	unsigned long hash, flags = 0;
+ 
++	/* Early boot, not yet initialized. */
+ 	if (unlikely(!kprobes_initialized))
+-		/* Early boot.  kretprobe_table_locks not yet initialized. */
+ 		return;
+ 
+ 	kprobe_busy_begin();
+ 
+-	INIT_HLIST_HEAD(&empty_rp);
+-	hash = hash_ptr(tk, KPROBE_HASH_BITS);
+-	head = &kretprobe_inst_table[hash];
+-	kretprobe_table_lock(hash, &flags);
+-	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+-		if (ri->task == tk)
+-			recycle_rp_inst(ri, &empty_rp);
+-	}
+-	kretprobe_table_unlock(hash, &flags);
+-	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+-		hlist_del(&ri->hlist);
++	node = llist_del_all(&current->kretprobe_instances);
++	while (node) {
++		next = node->next;
++		ri = container_of(node, struct kretprobe_instance, llist);
+ 		kfree(ri);
++		node = next;
+ 	}
+ 
+ 	kprobe_busy_end();
+@@ -1343,12 +1286,14 @@ NOKPROBE_SYMBOL(kprobe_flush_task);
+ 
+ static inline void free_rp_inst(struct kretprobe *rp)
+ {
++	struct llist_node *next, *node = llist_del_all(&rp->free_instances);
+ 	struct kretprobe_instance *ri;
+-	struct hlist_node *next;
+ 
+-	hlist_for_each_entry_safe(ri, next, &rp->free_instances, hlist) {
+-		hlist_del(&ri->hlist);
++	while (node) {
++		next = node->next;
++		ri = container_of(node, struct kretprobe_instance, llist);
+ 		kfree(ri);
++		node = next;
+ 	}
+ }
+ 
+@@ -1359,6 +1304,10 @@ static void cleanup_rp_inst(struct kretprobe *rp)
+ 	struct hlist_node *next;
+ 	struct hlist_head *head;
+ 
++	/*
++	 * XXX broken... 
++	 */
++#if 0
+ 	/* No race here */
+ 	for (hash = 0; hash < KPROBE_TABLE_SIZE; hash++) {
+ 		kretprobe_table_lock(hash, &flags);
+@@ -1369,6 +1318,7 @@ static void cleanup_rp_inst(struct kretprobe *rp)
+ 		}
+ 		kretprobe_table_unlock(hash, &flags);
+ 	}
++#endif
+ 	free_rp_inst(rp);
+ }
+ NOKPROBE_SYMBOL(cleanup_rp_inst);
+@@ -1934,50 +1884,28 @@ unsigned long __weak arch_deref_entry_point(void *entry)
+ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
+ {
+ 	struct kretprobe *rp = container_of(p, struct kretprobe, kp);
+-	unsigned long hash, flags = 0;
+ 	struct kretprobe_instance *ri;
++	struct llist_node *llist;
+ 
+-	/*
+-	 * To avoid deadlocks, prohibit return probing in NMI contexts,
+-	 * just skip the probe and increase the (inexact) 'nmissed'
+-	 * statistical counter, so that the user is informed that
+-	 * something happened:
+-	 */
+-	if (unlikely(in_nmi())) {
++	llist = llist_del_first(&rp->free_instances);
++	if (!llist) {
+ 		rp->nmissed++;
+ 		return 0;
+ 	}
+ 
+-	/* TODO: consider to only swap the RA after the last pre_handler fired */
+-	hash = hash_ptr(current, KPROBE_HASH_BITS);
+-	raw_spin_lock_irqsave(&rp->lock, flags);
+-	if (!hlist_empty(&rp->free_instances)) {
+-		ri = hlist_entry(rp->free_instances.first,
+-				struct kretprobe_instance, hlist);
+-		hlist_del(&ri->hlist);
+-		raw_spin_unlock_irqrestore(&rp->lock, flags);
++	ri = container_of(llist, struct kretprobe_instance, llist);
++	ri->rp = rp;
++	ri->task = current;
+ 
+-		ri->rp = rp;
+-		ri->task = current;
++	if (rp->entry_handler && rp->entry_handler(ri, regs)) {
++		llist_add(llist, &rp->free_instances);
++		return 0;
++	}
+ 
+-		if (rp->entry_handler && rp->entry_handler(ri, regs)) {
+-			raw_spin_lock_irqsave(&rp->lock, flags);
+-			hlist_add_head(&ri->hlist, &rp->free_instances);
+-			raw_spin_unlock_irqrestore(&rp->lock, flags);
+-			return 0;
+-		}
++	arch_prepare_kretprobe(ri, regs);
+ 
+-		arch_prepare_kretprobe(ri, regs);
++	__llist_add(llist, &current->kretprobe_instances);
+ 
+-		/* XXX(hch): why is there no hlist_move_head? */
+-		INIT_HLIST_NODE(&ri->hlist);
+-		kretprobe_table_lock(hash, &flags);
+-		hlist_add_head(&ri->hlist, &kretprobe_inst_table[hash]);
+-		kretprobe_table_unlock(hash, &flags);
+-	} else {
+-		rp->nmissed++;
+-		raw_spin_unlock_irqrestore(&rp->lock, flags);
+-	}
+ 	return 0;
+ }
+ NOKPROBE_SYMBOL(pre_handler_kretprobe);
+@@ -2034,8 +1962,9 @@ int register_kretprobe(struct kretprobe *rp)
+ 		rp->maxactive = num_possible_cpus();
+ #endif
+ 	}
+-	raw_spin_lock_init(&rp->lock);
+-	INIT_HLIST_HEAD(&rp->free_instances);
++
++	rp->free_instances.first = NULL;
++
+ 	for (i = 0; i < rp->maxactive; i++) {
+ 		inst = kmalloc(sizeof(struct kretprobe_instance) +
+ 			       rp->data_size, GFP_KERNEL);
+@@ -2043,8 +1972,7 @@ int register_kretprobe(struct kretprobe *rp)
+ 			free_rp_inst(rp);
+ 			return -ENOMEM;
+ 		}
+-		INIT_HLIST_NODE(&inst->hlist);
+-		hlist_add_head(&inst->hlist, &rp->free_instances);
++		llist_add(&inst->llist, &rp->free_instances);
+ 	}
+ 
+ 	rp->nmissed = 0;
+@@ -2458,11 +2386,8 @@ static int __init init_kprobes(void)
+ 
+ 	/* FIXME allocate the probe table, currently defined statically */
+ 	/* initialize all list heads */
+-	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
++	for (i = 0; i < KPROBE_TABLE_SIZE; i++)
+ 		INIT_HLIST_HEAD(&kprobe_table[i]);
+-		INIT_HLIST_HEAD(&kretprobe_inst_table[i]);
+-		raw_spin_lock_init(&(kretprobe_table_locks[i].lock));
+-	}
+ 
+ 	err = populate_kprobe_blacklist(__start_kprobe_blacklist,
+ 					__stop_kprobe_blacklist);
