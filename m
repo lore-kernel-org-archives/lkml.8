@@ -2,117 +2,97 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3E1C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64965C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFE72075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3778520706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:43:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbgHYJkM (ORCPT
+        id S1729555AbgHYJno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:40:12 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:49204 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729462AbgHYJkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:40:10 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxCMZo3ERfncENAA--.2579S2;
-        Tue, 25 Aug 2020 17:39:53 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Takashi Iwai <tiwai@suse.com>, Takashi Iwai <tiwai@suse.de>,
-        Jaroslav Kysela <perex@perex.cz>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>, <stable@vger.kernel.org>
-Subject: [PATCH v2] Revert "ALSA: hda: Add support for Loongson 7A1000 controller"
-Date:   Tue, 25 Aug 2020 17:39:48 +0800
-Message-Id: <1598348388-2518-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxCMZo3ERfncENAA--.2579S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAFW3Gr43KFW5XFyrAw4DXFb_yoW5Jw1fpw
-        15Zr12yr4kKr4qqa15ta4Yvry8twnrAasrGrWxJw17ZFnrur18JryxZF4SkFs8urWrJFy7
-        J34DtwsrWayDGw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxG
-        rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-        vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IY
-        x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26c
-        xKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
-        xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUq38nUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Tue, 25 Aug 2020 05:43:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45586 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728059AbgHYJno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:43:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 92048AF33;
+        Tue, 25 Aug 2020 09:44:12 +0000 (UTC)
+Subject: Re: [PATCH for v5.9] mm/page_alloc: handle a missing case for
+ memalloc_nocma_{save/restore} APIs
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        kernel-team@lge.com, Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1598331582-19923-1-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <e83100ae-d687-3b4e-8256-aee242191ada@suse.cz>
+Date:   Tue, 25 Aug 2020 11:43:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <1598331582-19923-1-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 61eee4a7fc40 ("ALSA: hda: Add support for Loongson
-7A1000 controller") to fix the following error on the Loongson LS7A
-platform:
 
-rcu: INFO: rcu_preempt self-detected stall on CPU
-<SNIP>
-NMI backtrace for cpu 0
-CPU: 0 PID: 68 Comm: kworker/0:2 Not tainted 5.8.0+ #3
-Hardware name:  , BIOS
-Workqueue: events azx_probe_work [snd_hda_intel]
-<SNIP>
-Call Trace:
-[<ffffffff80211a64>] show_stack+0x9c/0x130
-[<ffffffff8065a740>] dump_stack+0xb0/0xf0
-[<ffffffff80665774>] nmi_cpu_backtrace+0x134/0x140
-[<ffffffff80665910>] nmi_trigger_cpumask_backtrace+0x190/0x200
-[<ffffffff802b1abc>] rcu_dump_cpu_stacks+0x12c/0x190
-[<ffffffff802b08cc>] rcu_sched_clock_irq+0xa2c/0xfc8
-[<ffffffff802b91d4>] update_process_times+0x2c/0xb8
-[<ffffffff802cad80>] tick_sched_timer+0x40/0xb8
-[<ffffffff802ba5f0>] __hrtimer_run_queues+0x118/0x1d0
-[<ffffffff802bab74>] hrtimer_interrupt+0x12c/0x2d8
-[<ffffffff8021547c>] c0_compare_interrupt+0x74/0xa0
-[<ffffffff80296bd0>] __handle_irq_event_percpu+0xa8/0x198
-[<ffffffff80296cf0>] handle_irq_event_percpu+0x30/0x90
-[<ffffffff8029d958>] handle_percpu_irq+0x88/0xb8
-[<ffffffff80296124>] generic_handle_irq+0x44/0x60
-[<ffffffff80b3cfd0>] do_IRQ+0x18/0x28
-[<ffffffff8067ace4>] plat_irq_dispatch+0x64/0x100
-[<ffffffff80209a20>] handle_int+0x140/0x14c
-[<ffffffff802402e8>] irq_exit+0xf8/0x100
+On 8/25/20 6:59 AM, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> memalloc_nocma_{save/restore} APIs can be used to skip page allocation
+> on CMA area, but, there is a missing case and the page on CMA area could
+> be allocated even if APIs are used. This patch handles this case to fix
+> the potential issue.
+> 
+> Missing case is an allocation from the pcplist. MIGRATE_MOVABLE pcplist
+> could have the pages on CMA area so we need to skip it if ALLOC_CMA isn't
+> specified.
+> 
+> This patch implements this behaviour by checking allocated page from
+> the pcplist rather than skipping an allocation from the pcplist entirely.
+> Skipping the pcplist entirely would result in a mismatch between watermark
+> check and actual page allocation.
 
-Because AZX_DRIVER_GENERIC can not work well for Loongson LS7A HDA
-controller, it needs some workarounds which are not merged into the
-upstream kernel at this time, so it should revert this patch now.
+Are you sure? I think a mismatch exists already. Pages can be on the pcplist but
+they are not considered as free in the watermark check. So passing watermark
+check means there should be also pages on free lists. So skipping pcplists would
+be safe, no?
 
-Fixes: 61eee4a7fc40 ("ALSA: hda: Add support for Loongson 7A1000 controller")
-Cc: <stable@vger.kernel.org> # 5.9-rc1+
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+> And, it requires to break current code
+> layering that order-0 page is always handled by the pcplist. I'd prefer
+> to avoid it so this patch uses different way to skip CMA page allocation
+> from the pcplist.
 
-v2: update commit message
+Well it would be much simpler and won't affect most of allocations. Better than
+flushing pcplists IMHO.
 
- sound/pci/hda/hda_intel.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index e34a4d5..0f86e37 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2745,8 +2745,6 @@ static const struct pci_device_id azx_ids[] = {
- 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_HDMI },
- 	/* Zhaoxin */
- 	{ PCI_DEVICE(0x1d17, 0x3288), .driver_data = AZX_DRIVER_ZHAOXIN },
--	/* Loongson */
--	{ PCI_DEVICE(0x0014, 0x7a07), .driver_data = AZX_DRIVER_GENERIC },
- 	{ 0, }
- };
- MODULE_DEVICE_TABLE(pci, azx_ids);
--- 
-2.1.0
-
+Something like this?
+----8<----
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 0e2bab486fea..15787ffb1708 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -3361,7 +3361,10 @@ struct page *rmqueue(struct zone *preferred_zone,
+        unsigned long flags;
+        struct page *page;
+ 
+-       if (likely(order == 0)) {
++       if (likely(order == 0) &&
++                       (!IS_ENABLED(CONFIG_CMA) ||
++                        migratetype != MIGRATE_MOVABLE ||
++                        alloc_flags & ALLOC_CMA)) {
+                page = rmqueue_pcplist(preferred_zone, zone, gfp_flags,
+                                        migratetype, alloc_flags);
+                goto out;
