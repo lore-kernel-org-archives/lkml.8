@@ -2,200 +2,124 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8571C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9E2C433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B87662075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A7B2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 08:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728013AbgHYIQj (ORCPT
+        id S1728222AbgHYIQo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 04:16:39 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2689 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725924AbgHYIQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 04:16:39 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 5C7627B498D567DE738A;
-        Tue, 25 Aug 2020 09:16:37 +0100 (IST)
-Received: from [127.0.0.1] (10.47.8.13) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 25 Aug
- 2020 09:16:36 +0100
-Subject: Re: [RFC] perf/jevents: Add new structure to pass json fields.
-To:     Kajol Jain <kjain@linux.ibm.com>, <acme@kernel.org>
-CC:     <jolsa@redhat.com>, <ak@linux.intel.com>,
-        <yao.jin@linux.intel.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <irogers@google.com>,
-        <maddy@linux.ibm.com>, <ravi.bangoria@linux.ibm.com>
-References: <20200825074041.378520-1-kjain@linux.ibm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <bc078472-e859-b7dc-c451-d737dd573edf@huawei.com>
-Date:   Tue, 25 Aug 2020 09:14:11 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 25 Aug 2020 04:16:44 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43231 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728089AbgHYIQn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 04:16:43 -0400
+Received: from [2001:67c:670:100:3ad5:47ff:feaf:1a17] (helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1kAU8B-0000Us-1j; Tue, 25 Aug 2020 10:16:35 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1kAU89-0002cv-D2; Tue, 25 Aug 2020 10:16:33 +0200
+Message-ID: <32b000b801202c3d6318da6c5bc52d47ab6947e0.camel@pengutronix.de>
+Subject: Re: [PATCH v1] ata: ahci_brcm: Fix use of BCM7216 reset controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Jim Quinlan <james.quinlan@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Tue, 25 Aug 2020 10:16:33 +0200
+In-Reply-To: <20200824204002.45500-1-james.quinlan@broadcom.com>
+References: <20200824204002.45500-1-james.quinlan@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <20200825074041.378520-1-kjain@linux.ibm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.8.13]
-X-ClientProxiedBy: lhreml702-chm.china.huawei.com (10.201.108.51) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/08/2020 08:40, Kajol Jain wrote:
-> This patch adds new structure called 'json_event' inside jevents.h
-> file to improve the callback prototype inside jevent files.
-> Initially, whenever user want to add new field, they need to update
-> in all function callback which make it more and more complex with
-> increased number of parmeters.
-> With this change, we just need to add it in new structure 'json_event'.
+On Mon, 2020-08-24 at 16:40 -0400, Jim Quinlan wrote:
+> From: Jim Quinlan <jquinlan@broadcom.com>
 > 
+> A reset controller "rescal" is shared between the AHCI driver and the PCIe
+> driver for the BrcmSTB 7216 chip.  Use
+> devm_reset_control_get_optional_shared() to handle this sharing.
 > 
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> Fixes: 272ecd60a636 ("ata: ahci_brcm: BCM7216 reset is self de-asserting")
+> Fixes: c345ec6a50e9 ("ata: ahci_brcm: Support BCM7216 reset controller name")
+> Signed-off-by: Jim Quinlan <jquinlan@broadcom.com>
 > ---
->   tools/perf/pmu-events/jevents.c | 188 +++++++++++++-------------------
->   tools/perf/pmu-events/jevents.h |  28 +++--
->   2 files changed, 94 insertions(+), 122 deletions(-)
+>  drivers/ata/ahci_brcm.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
 > 
-> This is the initial prototype to include structure for passing
-> json fileds. Please, Let me know if this is the right direction
-> to go forward.
-> This patch doen't include all the changes, like percore/perchip
-> field addition. If this looks fine I can send new patch set with
-> those changes.
-> 
-> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> index fa86c5f997cc..606805af69fe 100644
-> --- a/tools/perf/pmu-events/jevents.c
-> +++ b/tools/perf/pmu-events/jevents.c
-> @@ -318,12 +318,7 @@ static void print_events_table_prefix(FILE *fp, const char *tblname)
->   	close_table = 1;
->   }
->   
-> -static int print_events_table_entry(void *data, char *name, char *event,
-> -				    char *desc, char *long_desc,
-> -				    char *pmu, char *unit, char *perpkg,
-> -				    char *metric_expr,
-> -				    char *metric_name, char *metric_group,
-> -				    char *deprecated, char *metric_constraint)
+> diff --git a/drivers/ata/ahci_brcm.c b/drivers/ata/ahci_brcm.c
+> index 6853dbb4131d..d6115bc04b09 100644
+> --- a/drivers/ata/ahci_brcm.c
+> +++ b/drivers/ata/ahci_brcm.c
+> @@ -428,7 +428,6 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+>  {
+>  	const struct of_device_id *of_id;
+>  	struct device *dev = &pdev->dev;
+> -	const char *reset_name = NULL;
+>  	struct brcm_ahci_priv *priv;
+>  	struct ahci_host_priv *hpriv;
+>  	struct resource *res;
+> @@ -452,11 +451,10 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+>  
+>  	/* Reset is optional depending on platform and named differently */
+>  	if (priv->version == BRCM_SATA_BCM7216)
+> -		reset_name = "rescal";
+> +		priv->rcdev = devm_reset_control_get_optional_shared(&pdev->dev, "rescal");
+>  	else
+> -		reset_name = "ahci";
+> +		priv->rcdev = devm_reset_control_get_optional(&pdev->dev, "ahci");
 
-Right, too many paramaetrs of the same type, so looks reasonable to pass 
-a struct
+I think it would be cleaner to use two separate reset control handles
+here. It is hard to reason about what the code does when the reset
+control is shared on one platform and exclusive on the other.
 
-[...]
+> -	priv->rcdev = devm_reset_control_get_optional(&pdev->dev, reset_name);
+>  	if (IS_ERR(priv->rcdev))
+>  		return PTR_ERR(priv->rcdev);
+>  
+> @@ -479,10 +477,7 @@ static int brcm_ahci_probe(struct platform_device *pdev)
+>  		break;
+>  	}
+>  
+> -	if (priv->version == BRCM_SATA_BCM7216)
+> -		ret = reset_control_reset(priv->rcdev);
 
->   		if (arch_std) {
->   			/*
->   			 * An arch standard event is referenced, so try to
->   			 * fixup any unassigned values.
->   			 */
-> -			err = try_fixup(fn, arch_std, &event, &desc, &name,
-> -					&long_desc, &pmu, &filter, &perpkg,
-> -					&unit, &metric_expr, &metric_name,
-> -					&metric_group, eventcode,
-> -					&deprecated, &metric_constraint);
-> +			err = try_fixup(fn, arch_std, eventcode, je);
->   			if (err)
->   				goto free_strings;
->   		}
-> -		err = func(data, name, real_event(name, event), desc, long_desc,
-> -			   pmu, unit, perpkg, metric_expr, metric_name,
-> -			   metric_group, deprecated, metric_constraint);
-> +		je->event = real_event(je->name, je->event);
-> +		err = func(data, je);
->   free_strings:
-> -		free(event);
-> -		free(desc);
-> -		free(name);
-> -		free(long_desc);
->   		free(extra_desc);
-> -		free(pmu);
->   		free(filter);
-> -		free(perpkg);
-> -		free(deprecated);
-> -		free(unit);
-> -		free(metric_expr);
-> -		free(metric_name);
-> -		free(metric_group);
-> -		free(metric_constraint);
->   		free(arch_std);
-> +		free(je);
->   
->   		if (err)
->   			break;
-> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
-> index 2afc8304529e..e696edf70e9a 100644
-> --- a/tools/perf/pmu-events/jevents.h
-> +++ b/tools/perf/pmu-events/jevents.h
+I think we might have a similar issue currently with
+"usb: dwc3: meson-g12a: fix shared reset control use", where two IP
+cores try to share a pulsed reset line.
 
-Somewhat unrelated - this file only seems to be included in jevents.c, 
-so I don't see why it exists...
+> -	else
+> -		ret = reset_control_deassert(priv->rcdev);
+> +	ret = reset_control_deassert(priv->rcdev);
 
-> @@ -2,14 +2,28 @@
->   #ifndef JEVENTS_H
->   #define JEVENTS_H 1
->   
-> +#include "pmu-events.h"
-> +
-> +struct json_event {
-> +	char *name;
-> +	char *event;
-> +	char *desc;
-> +	char *topic;
-> +	char *long_desc;
-> +	char *pmu;
-> +	char *unit;
-> +	char *perpkg;
-> +	char *metric_expr;
-> +	char *metric_name;
-> +	char *metric_group;
-> +	char *deprecated;
-> +	char *metric_constraint;
+Isn't the shared 'rescal' reset a triggered reset pulse? Looking at the
+reset-brcmstb-rescal reset controller driver, without reset line level
+control implemented, this will turn into a no-op for BCM7216. Yes, the
+reset line will be deasserted after this call, but there is no guarantee
+that the reset line was ever pulsed.
 
-This looks very much like struct event_struct, so could look to consolidate:
-
-struct event_struct {
-	struct list_head list;
-	char *name;
-	char *event;
-	char *desc;
-	char *long_desc;
-	char *pmu;
-	char *unit;
-	char *perpkg;
-	char *metric_expr;
-	char *metric_name;
-	char *metric_group;
-	char *deprecated;
-	char *metric_constraint;
-};
-
-> +};
-> +
->   int json_events(const char *fn,
-> -		int (*func)(void *data, char *name, char *event, char *desc,
-> -				char *long_desc,
-> -				char *pmu,
-> -				char *unit, char *perpkg, char *metric_expr,
-> -				char *metric_name, char *metric_group,
-> -				char *deprecated, char *metric_constraint),
-> -		void *data);
-> +		int (*func)(void *data, struct json_event *je),
-> +			void *data);
-> +
->   char *get_cpu_str(void);
->   
->   #ifndef min
-> 
-
+regards
+Philipp
