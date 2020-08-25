@@ -2,196 +2,129 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A599C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DCE8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D43E92072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB96204EC
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 02:49:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="Xik35GAU"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="MVMfwOZV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbgHYCnj (ORCPT
+        id S1728202AbgHYCs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 22:43:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35466 "EHLO
+        Mon, 24 Aug 2020 22:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727913AbgHYCni (ORCPT
+        with ESMTP id S1728061AbgHYCsv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 22:43:38 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CE8C061574
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 19:43:37 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ds1so457435pjb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 19:43:37 -0700 (PDT)
+        Mon, 24 Aug 2020 22:48:51 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DD9DC0613ED
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 19:48:51 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id z3so5436977qkz.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 19:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PXXvfJjv+PfyYEP8RerkMouFzdtCWZ46cy+YpsBryXM=;
-        b=Xik35GAUruB2YLQx720bmys7UuUJGGrYPGuEWgm4bPqBkTXHUDAkLWkGaggEzipwWv
-         AO56TZIgMYaCIqml9oATDFk1HJx0zki2DTurK1g3tetjO3zxIj9xZX6PUaY0kO1NN7iJ
-         P2ujzWCdfsHgZykDkWcT9h9qBjq+OEiH6URRIRnV857aBeXNpEifOJ9ls7EpWEPq2Uq6
-         ZiTuauFw9sGVSMnlxJcWm+nu/ERr+0zYUJRmq3KhEc5BcyoXUFjbOsq0rrS8jINzvFjY
-         o+79Cg6qYv2B0CfhkwFXCroS4zXtL3/8PmR60S407BuJI5DwNjh0wKh/BAeGgUNiGOs1
-         SKbA==
+        d=joelfernandes.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZysaSI5yV1FqGvE2KQYGBQnhBGkYceVPyQn+o+Qr/5I=;
+        b=MVMfwOZVJRqlGMMh58yzJyBWm78A8XbSB1PnLgjpi6Uv+IuvP5FjtWbuhI2F+5wsAw
+         RvwY+GPvSannr0L3tJ9zPnHqzagYfT6EdR5SgqPRSy1DUHgl3I6D5IRyhxWI9/FAS5KN
+         0+vSF/cF+91qLlqySeDrydVFY91sPlnwivK10=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PXXvfJjv+PfyYEP8RerkMouFzdtCWZ46cy+YpsBryXM=;
-        b=ld7UM5C+XMw9TRgTFnTBnE1QTesComeNkqPM9gqQIegNSoz058DTSCqkG7VtHbEX2I
-         hlgtrsFSzYcSSMkKb3Dh4yazSItulMfRZMmKjjIxkML0FGK79uK26vX/Omgcm8juF3Nn
-         2ufKR5W6JLEnp8sXQ7URM4LYUI4w5t8YuXIlPvblvq5SBmoQx2mlUS0/TkShaG5NnuXF
-         UnKdzaWCmgn5o4Zrgwax6jnOXf8fc0qRv9u9fF5ZOweRuxNNI25qdwyslYToy2CJhgyk
-         5EaoureUz9lhF5KgN3cLlhlQEVg81B6TZBk04SrxGDs1EHkWYC7M2kl9QZVUEJ0zRtPi
-         O/UQ==
-X-Gm-Message-State: AOAM530vR/dWE66CX1+oz2jKDHzzQH1pD3DgyA7Z7f1aR/GtWGORC7WG
-        DEGeWUAWh1TlTtS8kTW5hqwjq/dq48xgrU3mtS4z+g==
-X-Google-Smtp-Source: ABdhPJxbM2UTrkjNNbuYhIYu/UiCbPfU46l9LiniAtioxQL1QQTA6YdZMibG5etJIacAOqOjPvawN2MFfmH81tyM/6w=
-X-Received: by 2002:a17:90a:bd0e:: with SMTP id y14mr1828365pjr.13.1598323417348;
- Mon, 24 Aug 2020 19:43:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ZysaSI5yV1FqGvE2KQYGBQnhBGkYceVPyQn+o+Qr/5I=;
+        b=IifNZBbt7klAaA3r204Xqwx+1dNsYKI6pxOWCAgRUVoFsBcjqG8BEBTCsMA1uxNRuE
+         DtIrCdcZfjwE5HT4F/F9WLb1vJ7sV5WUPNL0YRBtNw6ieFV8H04NJiaOWywMp3Rck9DM
+         IIkhby0IAfaqxk9DcJbwg8pxsyMr9IaHGc8EWYPTOSYi0RJKLS1OfcZPjVB4UlXQuq9l
+         KX3O10nSKOqx8/c68Ryu10L/ePl5fHQzH7h/NdGd/7l46ZMkU2ZFxgsRnCGRBs4kLxOe
+         F6ueoEGJ3aCsSYYs4lktcF2N3InqMAUs9v+RD5QS4hbBbTUjkzBL6rPeheotup/SLht5
+         dHFg==
+X-Gm-Message-State: AOAM532q7RHc+8RjDqTvcsmflipv+FDG0qAXMQOU/+Ns4u9CBq0Oi7W7
+        4jeu2z0j/DHNeSCbo4B6yOoBA7BE0N18Ag==
+X-Google-Smtp-Source: ABdhPJwfWA7ZYbRJz/2t6AMGiMRL04UCzNl4aWt1ng8pH8/SsOtQNWt5k8Hhj03GrNJCWp5+fdmj+g==
+X-Received: by 2002:a37:afc4:: with SMTP id y187mr7762698qke.285.1598323730619;
+        Mon, 24 Aug 2020 19:48:50 -0700 (PDT)
+Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id n14sm2159188qtk.50.2020.08.24.19.48.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Aug 2020 19:48:50 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        boqun.feng@gmail.com, dave@stgolabs.net,
+        Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neeraj.iitr10@gmail.com, "Paul E. McKenney" <paulmck@kernel.org>,
+        rcu@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>, vineethrp@gmail.com
+Subject: [PATCH v4 -rcu 1/4] rcu/segcblist: Do not depend on rcl->len to store the segcb len during merge
+Date:   Mon, 24 Aug 2020 22:48:39 -0400
+Message-Id: <20200825024842.3408659-2-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+In-Reply-To: <20200825024842.3408659-1-joel@joelfernandes.org>
+References: <20200825024842.3408659-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-References: <20200822095328.61306-1-songmuchun@bytedance.com>
-In-Reply-To: <20200822095328.61306-1-songmuchun@bytedance.com>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Tue, 25 Aug 2020 10:42:58 +0800
-Message-ID: <CAMZfGtUCeD_zLr+VY--3fcCuB+_P14tSPPeeSR6aG5KnBU36Gg@mail.gmail.com>
-Subject: Re: [PATCH] mm/hugetlb: Fix a race between hugetlb sysctl handlers
-To:     mike.kravetz@oracle.com, Andrew Morton <akpm@linux-foundation.org>
-Cc:     ak@linux.intel.com,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew and Mike,
+The donecbs's ->len field is used to store the total count of the segmented
+callback list's length. This ->len field is then added to the destination segcb
+list.
 
-On Sat, Aug 22, 2020 at 5:53 PM Muchun Song <songmuchun@bytedance.com> wrote:
->
-> There is a race between the assignment of `table->data` and write value
-> to the pointer of `table->data` in the __do_proc_doulongvec_minmax().
-> Fix this by duplicating the `table`, and only update the duplicate of
-> it. And introduce a helper of proc_hugetlb_doulongvec_minmax() to
-> simplify the code.
+However, this presents a problem for per-segment length counting which is added
+in a future patch. This future patch sets the rcl->len field as we move
+segments of callbacks between source and destination lists, thus becoming
+incompatible with the donecb's ->len field.
 
-I am sorry, I didn't expose more details about how the race happened.
+This commit therefore avoids depending on the ->len field in this way. IMHO,
+this is also less error-prone and is more accurate - the donecb's ->len field
+should be the length of the done segment and not just used as a temporarily
+variable.
 
-CPU0:                                     CPU1:
-                                          proc_sys_write
-hugetlb_sysctl_handler                      proc_sys_call_handler
-hugetlb_sysctl_handler_common                 hugetlb_sysctl_handler
-  table->data = &tmp;                           hugetlb_sysctl_handler_common
-                                                  table->data = &tmp;
-    proc_doulongvec_minmax
-      do_proc_doulongvec_minmax             sysctl_head_finish
-        __do_proc_doulongvec_minmax
-          i = table->data;
-          *i = val;     // corrupt CPU1 stack
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ kernel/rcu/rcu_segcblist.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
->
-> The following oops was seen:
->
->     BUG: kernel NULL pointer dereference, address: 0000000000000000
->     #PF: supervisor instruction fetch in kernel mode
->     #PF: error_code(0x0010) - not-present page
->     Code: Bad RIP value.
-
-Here we can see the "Bad RIP value", so the stack frame is corrupted by
-others.
-
->     ...
->     Call Trace:
->      ? set_max_huge_pages+0x3da/0x4f0
->      ? alloc_pool_huge_page+0x150/0x150
->      ? proc_doulongvec_minmax+0x46/0x60
->      ? hugetlb_sysctl_handler_common+0x1c7/0x200
->      ? nr_hugepages_store+0x20/0x20
->      ? copy_fd_bitmaps+0x170/0x170
->      ? hugetlb_sysctl_handler+0x1e/0x20
->      ? proc_sys_call_handler+0x2f1/0x300
->      ? unregister_sysctl_table+0xb0/0xb0
->      ? __fd_install+0x78/0x100
->      ? proc_sys_write+0x14/0x20
->      ? __vfs_write+0x4d/0x90
->      ? vfs_write+0xef/0x240
->      ? ksys_write+0xc0/0x160
->      ? __ia32_sys_read+0x50/0x50
->      ? __close_fd+0x129/0x150
->      ? __x64_sys_write+0x43/0x50
->      ? do_syscall_64+0x6c/0x200
->      ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> Fixes: e5ff215941d5 ("hugetlb: multiple hstates for multiple page sizes")
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> ---
->  mm/hugetlb.c | 27 +++++++++++++++++++++------
->  1 file changed, 21 insertions(+), 6 deletions(-)
->
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index a301c2d672bf..818d6125af49 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -3454,6 +3454,23 @@ static unsigned int allowed_mems_nr(struct hstate *h)
->  }
->
->  #ifdef CONFIG_SYSCTL
-> +static int proc_hugetlb_doulongvec_minmax(struct ctl_table *table, int write,
-> +                                         void *buffer, size_t *length,
-> +                                         loff_t *ppos, unsigned long *out)
-> +{
-> +       struct ctl_table dup_table;
-> +
-> +       /*
-> +        * In order to avoid races with __do_proc_doulongvec_minmax(), we
-> +        * can duplicate the @table and alter the duplicate of it.
-> +        */
-> +       dup_table = *table;
-> +       dup_table.data = out;
-> +       dup_table.maxlen = sizeof(unsigned long);
-> +
-> +       return proc_doulongvec_minmax(&dup_table, write, buffer, length, ppos);
-> +}
-> +
->  static int hugetlb_sysctl_handler_common(bool obey_mempolicy,
->                          struct ctl_table *table, int write,
->                          void *buffer, size_t *length, loff_t *ppos)
-> @@ -3465,9 +3482,8 @@ static int hugetlb_sysctl_handler_common(bool obey_mempolicy,
->         if (!hugepages_supported())
->                 return -EOPNOTSUPP;
->
-> -       table->data = &tmp;
-> -       table->maxlen = sizeof(unsigned long);
-> -       ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
-> +       ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
-> +                                            &tmp);
->         if (ret)
->                 goto out;
->
-> @@ -3510,9 +3526,8 @@ int hugetlb_overcommit_handler(struct ctl_table *table, int write,
->         if (write && hstate_is_gigantic(h))
->                 return -EINVAL;
->
-> -       table->data = &tmp;
-> -       table->maxlen = sizeof(unsigned long);
-> -       ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
-> +       ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
-> +                                            &tmp);
->         if (ret)
->                 goto out;
->
-> --
-> 2.11.0
->
-
-
+diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
+index 2d2a6b6b9dfb..b70d4154433c 100644
+--- a/kernel/rcu/rcu_segcblist.c
++++ b/kernel/rcu/rcu_segcblist.c
+@@ -513,14 +513,18 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
+ {
+ 	struct rcu_cblist donecbs;
+ 	struct rcu_cblist pendcbs;
++	long src_len;
+ 
+ 	rcu_cblist_init(&donecbs);
+ 	rcu_cblist_init(&pendcbs);
+-	rcu_segcblist_extract_count(src_rsclp, &donecbs);
++
++	src_len = rcu_segcblist_xchg_len(src_rsclp, 0);
+ 	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
+ 	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
+-	rcu_segcblist_insert_count(dst_rsclp, &donecbs);
++
++	rcu_segcblist_add_len(dst_rsclp, src_len);
+ 	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
+ 	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
++
+ 	rcu_segcblist_init(src_rsclp);
+ }
 -- 
-Yours,
-Muchun
+2.28.0.297.g1956fa8f8d-goog
+
