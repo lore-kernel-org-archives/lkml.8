@@ -2,289 +2,272 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DECC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1103AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCB4020738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598336144;
-	bh=4Ys01Quvr/gd6AZTKP/iqgZLXjT13MOc/IDtxKyLkLQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ij7ACR20guxo/H9XvLwxU3VyFQ1zbO0uA247NlZrnkALOSZ779D7uTyewy6p8SvL8
-	 fkxQJzYu9kQx4Gpj3U+GuLpueLHgrJ+44a6RPydS43XpwCz0jotdcoIfO0YEoWDFuq
-	 ffALicwo4EG6vRNO705ans0SDqxHQ952/TaTL6Zc=
+	by mail.kernel.org (Postfix) with ESMTP id D0A8D2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 06:16:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="l7rhqOGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbgHYGPn (ORCPT
+        id S1729005AbgHYGQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 02:15:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726015AbgHYGPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 02:15:43 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0688B204FD;
-        Tue, 25 Aug 2020 06:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598336142;
-        bh=4Ys01Quvr/gd6AZTKP/iqgZLXjT13MOc/IDtxKyLkLQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HV6kvZ4Dd37J+2DemTZVu2CCmBeufhRzjBxFcLYnpPHjjJ6hwNjM3vUBGCm8FtEtB
-         v3v97KRZq1nvpMdEzpT9uLJHTAS6nsHnpXlFzvNuVaZdQrw5siL7dVKfWo1qgStts7
-         B2M951JEOA2XhurFHVsMYyUT1PPw582xRgboY7vY=
-Date:   Tue, 25 Aug 2020 15:15:38 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function
- entry is not optimized (trigger by int3 breakpoint)
-Message-Id: <20200825151538.f856d701a34f4e0561a64932@kernel.org>
-In-Reply-To: <7396e7b2079644a6aafd9670a111232b@trendmicro.com>
-References: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
-        <20200825005426.f592075d13be740cb3c9aa77@kernel.org>
-        <7396e7b2079644a6aafd9670a111232b@trendmicro.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Aug 2020 02:16:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13968 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726015AbgHYGQy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 02:16:54 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07P62OnK151685;
+        Tue, 25 Aug 2020 02:15:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=3lt9n+xylShg1nAnIhyMPuf0nMy+IWs9NzPJh3a0kqo=;
+ b=l7rhqOGHy5Yjh0DD5875O+BNchFUuULnXRXHGttUPxQaBNEKDc+sejqLReIdmIPMfrul
+ Iuplm+oSu5KRd36z1Oo0h/2tyG/b3VApRx3PnnldoKQf4ovmGYBkdMl1Wju0/5HFURzC
+ 9KSz9tcb9iKYFhFcUy2AtXZGE9PJ8DauppGxDMGJRIhhmkwCcyhd0t5JlvOq+xae2xXs
+ WW+F0eX7uJ5ehKElMCUSeDvnXkHfG4BYDqT0rtG9DFJdJI9w8jW5yd0ld9+iZqUnUelv
+ oW/BTM5OowxLXgEaZVgqYaI3a8aoe2Wvb9JUJr8Hw8M0AbJ5/4L8UybEut1gIqJGQGFO Fw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 334vjugyc1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 02:15:49 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07P641j5157800;
+        Tue, 25 Aug 2020 02:15:49 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 334vjugyba-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 02:15:48 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07P68PCs022600;
+        Tue, 25 Aug 2020 06:15:47 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 332ujku3ed-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Aug 2020 06:15:47 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07P6EEtT45023572
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Aug 2020 06:14:14 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 647C442061;
+        Tue, 25 Aug 2020 06:15:44 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5207C42045;
+        Tue, 25 Aug 2020 06:15:37 +0000 (GMT)
+Received: from oc3784624756.ibm.com (unknown [9.81.204.251])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Aug 2020 06:15:36 +0000 (GMT)
+Subject: Re: [PATCH] Fix s390x compile error on F32 utils/stat-display.c
+To:     Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jin Yao <yao.jin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com
+References: <20200722092053.22345-1-tmricht@linux.ibm.com>
+ <20200812112708.GA13995@kernel.org> <20200824202215.GA631468@krava>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+Message-ID: <9753b4ff-2f28-9012-5849-d82031d3ec76@linux.ibm.com>
+Date:   Tue, 25 Aug 2020 08:15:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200824202215.GA631468@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-24_12:2020-08-24,2020-08-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
+ suspectscore=2 malwarescore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008250043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eddy,
-
-On Mon, 24 Aug 2020 16:41:58 +0000
-"Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com> wrote:
-
-> > -----Original Message-----
-> > From: Masami Hiramatsu <mhiramat@kernel.org>
-> > Sent: Monday, August 24, 2020 11:54 PM
-> > To: Eddy Wu (RD-TW) <Eddy_Wu@trendmicro.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>; linux-kernel@vger.kernel.org; x86@kernel.org; David S. Miller <davem@davemloft.net>
-> > Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function entry is not optimized (trigger by int3 breakpoint)
-> >
-> >
-> > This message was sent from outside of Trend Micro. Please do not click links or open attachments unless you recognise the source of this
-> > email and know the content is safe.
-> >
-> >
-> > On Mon, 24 Aug 2020 12:02:58 +0000
-> > "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com> wrote:
-> >
-> > > Greetings!
-> > >
-> > > Starting from kernel 5.8 (x86_64), kretprobe handler will always missed if corresponding kprobe on function entry is not optimized
-> > (using break point instead).
-> >
-> > Oops, good catch. I always enabled ftrace hook for kretprobe, I didn't noticed that.
-> >
-> > > Step to reproduce this:
-> > > 1) Build the kretprobe example module (CONFIG_SAMPLE_KRETPROBES=m)
-> > > 2) Disable jump optimization (`sysctl debug.kprobes-optimization=0` or register any kprobe.post_handler at same location)
-> > > 3) Insert the kretprobe_example module
-> > > 4) Launch some process to trigger _do_fork
-> > > 5) Remove kretprobe_example module
-> > > 6) dmesg shows that all probing instances are missed
-> > >
-> > > Example output:
-> > > # sysctl debug.kprobes-optimization=0
-> > > debug.kprobes-optimization = 0
-> > > # insmod samples/kprobes/kretprobe_example.ko
-> > > # ls > /dev/null
-> > > # rmmod kretprobe_example
-> > > # dmesg
-> > > [48555.067295] Planted return probe at _do_fork: 0000000038ae0211
-> > > [48560.229459] kretprobe at 0000000038ae0211 unregistered
-> > > [48560.229460] Missed probing 3 instances of _do_fork
-> > >
-> > > After bisecting, I found this behavior seems to introduce by this commit: (5.8-rc1)
-> > > 0d00449c7a28a1514595630735df383dec606812 x86: Replace ist_enter() with nmi_enter()
-> > > This make kprobe_int3_handler() effectively running as NMI context, which pre_handler_kretprobe() explicitly checked to prevent
-> > recursion.
-> >
-> > Thanks for the bisecting!
-> >
-> > >
-> > > (in_nmi() check appears from v3.17)
-> > > f96f56780ca584930bb3a2769d73fd9a101bcbbe kprobes: Skip kretprobe hit in NMI context to avoid deadlock
-> > >
-> > > To make kretprobe work again with int3 breakpoint, I think we can replace the in_nmi() check with in_nmi() == (1 << NMI_SHIFT) at
-> > kprobe_int3_handler() and skip kretprobe if nested NMI.
-> >
-> > Ah, I see. Now int3 is a kind of NMI, so in the handler in_nmi() always returns !0.
-> >
-> > > Did a quick test on 5.9-rc2 and it seems to be working.
-> > > I'm not sure if it is the best way to do since it may also require change to other architecture as well, any thought?
-> >
-> > Hmm, this behavior is arch-dependent. So I think we need an weak function like this.
-> >
-> > @kernel/kprobes.c
-> >
-> > bool __weak arch_kprobe_in_nmi(void)
-> > {
-> >         return in_nmi()
-> > }
-> >
-> > @arch/x86/kernel/kprobes/core.c
-> >
-> > bool arch_kprobe_in_nmi(void)
-> > {
-> >        /*
-> >         * Since the int3 is one of NMI, we have to check in_nmi() is
-> >         * bigger than 1 << NMI_SHIFT instead of !0.
-> >         */
-> >        return in_nmi() > (1 << NMI_SHIFT);
-> > }
-> >
-> > And use arch_kprobe_in_nmi() instead of in_nmi() in kprobes.c.
-> >
-> > Thanks,
-> >
-> > --
-> > Masami Hiramatsu <mhiramat@kernel.org>
+On 8/24/20 10:22 PM, Jiri Olsa wrote:
+> On Wed, Aug 12, 2020 at 08:27:08AM -0300, Arnaldo Carvalho de Melo wrote:
+>> Em Wed, Jul 22, 2020 at 11:20:53AM +0200, Thomas Richter escreveu:
+>>> Fix a compile error on F32 and gcc version 10.1 on s390 in file
+>>> utils/stat-display.c.  The error does not show up with make DEBUG=y.
+>>> In fact the issue shows up when using both compiler options
+>>> -O6 and -D_FORTIFY_SOURCE=2 (which are omitted with DEBUG=Y).
+>>>
+>>> This is the offending call chain:
+>>> print_counter_aggr()
+>>>   printout(config, -1, 0, ...)  with 2nd parm id set to -1
+>>>     aggr_printout(config, x, id --> -1, ...) which leads to this code:
+>>> 		case AGGR_NONE:
+>>>                 if (evsel->percore && !config->percore_show_thread) {
+>>>                         ....
+>>>                 } else {
+>>>                         fprintf(config->output, "CPU%*d%s",
+>>>                                 config->csv_output ? 0 : -7,
+>>>                                 evsel__cpus(evsel)->map[id],
+>>> 				                        ^^ id is -1 !!!!
+>>>                                 config->csv_sep);
+>>>                 }
+>>>
+>>> This is a compiler inlining issue which is detected on s390 but not on
+>>> other plattforms.
+>>
+>> What is the sequence of events that gets to this? I.e. is it valid to
+>> get a config->aggr_mode == AGGR_NONE, then have evsel not be percore and
+>> config->percore_show_thread to be false?
+>>
+>> I wonder if this won't be papering over some bug :-\
+>>
+>> Jin?
+>>
+>> This is where this came from:
+>> commit 4fc4d8dfa056dfd48afe73b9ea3b7570ceb80b9c (tag: perf-core-for-mingo-5.2-20190517)
+>> Author: Jin Yao <yao.jin@linux.intel.com>
+>> Date:   Fri Apr 12 21:59:49 2019 +0800
+>>
+>>     perf stat: Support 'percore' event qualifier
+>>
+>>     With this patch, we can use the 'percore' event qualifier in perf-stat.
+>>
+>> ---
+>>
+>> Also please add at least Jiri and Namhyung on the CC list, having the
+>> person that added that array usage also helps.
+>>
+>> [acme@quaco perf]$ scripts/get_maintainer.pl tools/perf | grep reviewer
+>> Mark Rutland <mark.rutland@arm.com> (reviewer:PERFORMANCE EVENTS SUBSYSTEM)
+>> Alexander Shishkin <alexander.shishkin@linux.intel.com> (reviewer:PERFORMANCE EVENTS SUBSYSTEM)
+>> Jiri Olsa <jolsa@redhat.com> (reviewer:PERFORMANCE EVENTS SUBSYSTEM)
+>> Namhyung Kim <namhyung@kernel.org> (reviewer:PERFORMANCE EVENTS SUBSYSTEM)
+>> [acme@quaco perf]$
+>>
+>> Thanks,
+>>
+>> - Arnaldo
+>>  
+>>> Output before:
+>>>  # make util/stat-display.o
+>>>     .....
+>>>
+>>>   util/stat-display.c: In function ‘perf_evlist__print_counters’:
+>>>   util/stat-display.c:121:4: error: array subscript -1 is below array
+>>>       bounds of ‘int[]’ [-Werror=array-bounds]
+>>>   121 |    fprintf(config->output, "CPU%*d%s",
+>>>       |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>   122 |     config->csv_output ? 0 : -7,
+>>>       |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>   123 |     evsel__cpus(evsel)->map[id],
+>>>       |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>   124 |     config->csv_sep);
+>>>       |     ~~~~~~~~~~~~~~~~
+>>>   In file included from util/evsel.h:13,
+>>>                  from util/evlist.h:13,
+>>>                  from util/stat-display.c:9:
+>>>   /root/linux/tools/lib/perf/include/internal/cpumap.h:10:7:
+>>>   note: while referencing ‘map’
+>>>    10 |  int  map[];
+>>>       |       ^~~
+>>>   cc1: all warnings being treated as errors
+>>>   mv: cannot stat 'util/.stat-display.o.tmp': No such file or directory
+>>>   make[3]: *** [/root/linux/tools/build/Makefile.build:97: util/stat-display.o]
+>>>   Error 1
+>>>   make[2]: *** [Makefile.perf:716: util/stat-display.o] Error 2
+>>>   make[1]: *** [Makefile.perf:231: sub-make] Error 2
+>>>   make: *** [Makefile:110: util/stat-display.o] Error 2
+>>>   [root@t35lp46 perf]#
 > 
-> Kretprobe might still trigger from NMI with nmi counter == 1 (if entry kprobe is jump-optimized).
-
-Ah, right. Hmm, in that case, we can store the int3 status in 
-the kprobe_ctlblk and refer it in the handler.
-
-
-> The arch- dependent weak function looks cleaner than doing this in kprobe_int3_handler() under x86/, but I don't know if there is a way to check if called by specific int3 handler or not.
+> I tested on s390 with rhel8, but did not get this error,
+> f32's gcc must be smarter
 > 
-> My original patch below, need to change all architecture support kretprobe though
 
-OK, here is my fix. This will not change the other arches. please try it.
+i Jiri,
 
+that is correct. I have installed Fedora 32 on my LPAR and the gcc version
+is:
+[root@t35lp46 ~]# gcc --version
+gcc (GCC) 10.1.1 20200507 (Red Hat 10.1.1-1)
+Copyright (C) 2020 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-From 24390dffe6eb9a3e95f7d46a528a1dcfd716dc81 Mon Sep 17 00:00:00 2001
-From: Masami Hiramatsu <mhiramat@kernel.org>
-Date: Tue, 25 Aug 2020 01:37:00 +0900
-Subject: [PATCH] kprobes/x86: Fixes NMI context check on x86
+[root@t35lp46 ~]# cat /etc/redhat-release
+Fedora release 32 (Thirty Two)
+[root@t35lp46 ~]#
 
-Since commit 0d00449c7a28 ("x86: Replace ist_enter() with nmi_enter()")
-made int3 as one of NMI, in_nmi() in kprobe handlers always returns !0.
-Thus the kretprobe handlers always skipped the execution on x86 if it
-is using int3. (CONFIG_KPROBES_ON_FTRACE=n and
-echo 0 > /proc/sys/debug/kprobe_optimization)
+Same commands on a RHEL 8.2 installation reveal
+[root@m35lp76 ~]# gcc --version
+gcc (GCC) 8.3.1 20191121 (Red Hat 8.3.1-5)
+Copyright (C) 2018 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-To avoid this issue, introduce arch_kprobe_in_nmi() and check the
-in_nmi() count is bigger than 1 << NMI_SHIFT on x86 if the handler
-has been invoked from kprobe_int3_handler. By default, the
-arch_kprobe_in_nmi() will be same as in_nmi().
+[root@m35lp76 ~]# cat /etc/redhat-release
+Red Hat Enterprise Linux release 8.2 Beta (Ootpa)
+[root@m35lp76 ~]# 
 
-Fixes: 0d00449c7a28 ("x86: Replace ist_enter() with nmi_enter()")
-Reported-by: Eddy Wu <Eddy_Wu@trendmicro.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: stable@vger.kernel.org
----
- arch/x86/include/asm/kprobes.h |  1 +
- arch/x86/kernel/kprobes/core.c | 18 ++++++++++++++++++
- kernel/kprobes.c               |  8 +++++++-
- 3 files changed, 26 insertions(+), 1 deletion(-)
+So there are 2 major revisions difference between a F32 and a RHEL8
+gcc compiler installation.
 
-diff --git a/arch/x86/include/asm/kprobes.h b/arch/x86/include/asm/kprobes.h
-index 143bc9abe99c..ddb24feb95ad 100644
---- a/arch/x86/include/asm/kprobes.h
-+++ b/arch/x86/include/asm/kprobes.h
-@@ -98,6 +98,7 @@ struct kprobe_ctlblk {
- 	unsigned long kprobe_old_flags;
- 	unsigned long kprobe_saved_flags;
- 	struct prev_kprobe prev_kprobe;
-+	bool 	in_int3;
- };
- 
- extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 2ca10b770cff..649d467c8231 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -583,6 +583,20 @@ static nokprobe_inline void restore_btf(void)
- 	}
- }
- 
-+bool arch_kprobe_in_nmi(void)
-+{
-+	struct kprobe_ctlblk *kcb = get_kprobe_ctlblk();
-+
-+	if (kcb->in_int3) {
-+		/*
-+		 * Since the int3 is one of NMI, we have to check in_nmi() is
-+		 * bigger than 1 << NMI_SHIFT instead of !0.
-+		 */
-+		return in_nmi() > (1 << NMI_SHIFT);
-+	} else
-+		return in_nmi();
-+}
-+
- void arch_prepare_kretprobe(struct kretprobe_instance *ri, struct pt_regs *regs)
- {
- 	unsigned long *sara = stack_addr(regs);
-@@ -697,6 +711,7 @@ int kprobe_int3_handler(struct pt_regs *regs)
- 				return 1;
- 		} else {
- 			set_current_kprobe(p, regs, kcb);
-+			kcb->in_int3 = true;
- 			kcb->kprobe_status = KPROBE_HIT_ACTIVE;
- 
- 			/*
-@@ -710,6 +725,7 @@ int kprobe_int3_handler(struct pt_regs *regs)
- 				setup_singlestep(p, regs, kcb, 0);
- 			else
- 				reset_current_kprobe();
-+			kcb->in_int3 = false;
- 			return 1;
- 		}
- 	} else if (*addr != INT3_INSN_OPCODE) {
-@@ -994,7 +1010,9 @@ int kprobe_debug_handler(struct pt_regs *regs)
- 
- 	if ((kcb->kprobe_status != KPROBE_REENTER) && cur->post_handler) {
- 		kcb->kprobe_status = KPROBE_HIT_SSDONE;
-+		kcb->in_int3 = true;
- 		cur->post_handler(cur, regs, 0);
-+		kcb->in_int3 = false;
- 	}
- 
- 	/* Restore back the original saved kprobes variables and continue. */
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 287b263c9cb9..9564928fb882 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1927,6 +1927,12 @@ unsigned long __weak arch_deref_entry_point(void *entry)
- }
- 
- #ifdef CONFIG_KRETPROBES
-+
-+bool __weak arch_kprobe_in_nmi(void)
-+{
-+	return in_nmi();
-+}
-+
- /*
-  * This kprobe pre_handler is registered with every kretprobe. When probe
-  * hits it will set up the return probe.
-@@ -1943,7 +1949,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
- 	 * statistical counter, so that the user is informed that
- 	 * something happened:
- 	 */
--	if (unlikely(in_nmi())) {
-+	if (unlikely(arch_kprobe_in_nmi())) {
- 		rp->nmissed++;
- 		return 0;
- 	}
--- 
-2.25.1
+>>>
+>>> Output after:
+>>>   # make util/stat-display.o
+>>>     .....
+>>>   CC       util/stat-display.o
+>>>   [root@t35lp46 perf]#
+>>>
+>>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>>> ---
+>>>  tools/perf/util/stat-display.c | 9 +++++----
+>>>  1 file changed, 5 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+>>> index 57d0706e1330..e49e544188e4 100644
+>>> --- a/tools/perf/util/stat-display.c
+>>> +++ b/tools/perf/util/stat-display.c
+>>> @@ -118,10 +118,11 @@ static void aggr_printout(struct perf_stat_config *config,
+>>>  				config->csv_output ? 0 : -3,
+>>>  				cpu_map__id_to_cpu(id), config->csv_sep);
+>>>  		} else {
+>>> -			fprintf(config->output, "CPU%*d%s",
+>>> -				config->csv_output ? 0 : -7,
+>>> -				evsel__cpus(evsel)->map[id],
+>>> -				config->csv_sep);
+>>> +			if (id > -1)
+>>> +				fprintf(config->output, "CPU%*d%s",
+>>> +					config->csv_output ? 0 : -7,
+>>> +					evsel__cpus(evsel)->map[id],
+>>> +					config->csv_sep);
+> 
+> -1 is only through print_counter_aggr which is called for AGGR_GLOBAL
+> case as you described, but I guess we can have this check as precaution
+> 
+> you could put it together with above else
+> 
+>     } else if (id > -1)
+> 
+> thanks,
+> jirka
+> 
 
+As suggested I will send a new patch.
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Thomas Richter, Dept 3252, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
