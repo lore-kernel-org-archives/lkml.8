@@ -2,96 +2,135 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9320C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A7AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEA9220786
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94A6F207D3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:20:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSF0aVZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgHYPU3 convert rfc822-to-8bit (ORCPT
+        id S1727061AbgHYPU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:20:29 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:33193 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgHYPU1 (ORCPT
+        Tue, 25 Aug 2020 11:20:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbgHYPU0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:20:27 -0400
-X-Originating-IP: 90.89.180.255
-Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
-        (Authenticated sender: kevin.lhopital@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 3691A240004;
-        Tue, 25 Aug 2020 15:20:23 +0000 (UTC)
-Date:   Tue, 25 Aug 2020 17:20:22 +0200
-From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
-        yong.deng@magewell.com, p.zabel@pengutronix.de,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH 0/7] Support of MIPI CSI-2 for A83T and OV8865 camera
-Message-ID: <20200825172022.3c951ab2@lhopital-XPS-13-9360>
-In-Reply-To: <20200824165244.x5rnon47kmtxojg2@gilmour.lan>
-References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
-        <20200824165244.x5rnon47kmtxojg2@gilmour.lan>
-Organization: bootlin
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 25 Aug 2020 11:20:26 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125EDC061574;
+        Tue, 25 Aug 2020 08:20:26 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id z195so8891110oia.6;
+        Tue, 25 Aug 2020 08:20:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q+RMk5wvoqYVTQjyw9GbUNNJ6WQtEUUd/c3ecY2vkpY=;
+        b=RSF0aVZCnRpnvapcXXDPeJL4Z812mMOogWe2XKyLGbg4HRBCINbBQEgTwTkCBaERj6
+         /XaH702noT121NOZzEP1yTSRAPW31PGWYmDnNl2Wf15uJExXhl3C8STKv6DJ4MtdyqT2
+         EhbJL1JTOjK9JgVzwcVKtpGu5QMiATBc4zAM2aOTCRZGZpvjzG4vHabgzthPU5nUFdRk
+         rO3LiNzI58Ib+lG9mqrghS41ctbPxTDA26wCbxLF4Pe2QurLq+vl+YIkBHX6hOC2TBuz
+         TmRiScL4ocnnVztRbRl8kJ+cL2/GkOo3mTitCn6xfIiapTTHU5ZvwRjhvO4imkFU6Qp1
+         FcBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q+RMk5wvoqYVTQjyw9GbUNNJ6WQtEUUd/c3ecY2vkpY=;
+        b=NfgmZaX/qJX13TQUYNxiwoT9a2Rzhsx3Bg8zXiYAL0+AczZWOszstzaMw+A3/Aq+yf
+         K3uBxVWUEtGKGm1lyYqveShqRWUJ1vFsE+LckSBZLo1+l/UEAAt1GRwGkf3+8Zp0r1Wn
+         htWuwgYDab95lSS/fbOPH9YSOc0/qvIBSCNBaCiQfWiCDVYTugznwrkvoNQlOd7EJDin
+         3jOwQnveq9Dp4y833KgQd2dt8MFLfJl44BORIyaFOWgmFDV0u/dailaLMcDmblvEigw2
+         nClcExX//yf8CCoKXi5eC9pduVPAsBQwvFnBA+EweRF43LKMBpy4Juegsxi1M2t7Y0ay
+         5HFA==
+X-Gm-Message-State: AOAM530wX8k8AbzDlhN7Ym2oF/AZsiQMy8olXj+ErJ6ZpOVKHSoWkG1C
+        /wZMGJHE2vKSgd+yAwAvgmqtAYi0EiroU5fnOhPuoyvEy4Q=
+X-Google-Smtp-Source: ABdhPJwubsbMhk3N5K1XreQ6Lx/R1j+L+VAnnbBIZ+ffdw6J6wbP+cjZhnRGIUbtxCOOGu9EqdiJ6V8ll55ds3e9pKY=
+X-Received: by 2002:a05:6808:9a7:: with SMTP id e7mr1267408oig.124.1598368825486;
+ Tue, 25 Aug 2020 08:20:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20200825124840.43664-1-alexandru.ardelean@analog.com>
+ <20200825144619.GR2639@vkoul-mobl> <CA+U=Dsra7JT9X036M6PruJpQPw-Ht_4A83M1T0L-PdByHg+wAw@mail.gmail.com>
+In-Reply-To: <CA+U=Dsra7JT9X036M6PruJpQPw-Ht_4A83M1T0L-PdByHg+wAw@mail.gmail.com>
+From:   Alexandru Ardelean <ardeleanalex@gmail.com>
+Date:   Tue, 25 Aug 2020 18:20:14 +0300
+Message-ID: <CA+U=DsoMBcoB+=r3L4j-w8cxv7eovNCtrHWVi_Y2ywRTh5QRHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] dmaengine: axi-dmac: add support for reading bus
+ attributes from register
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        dmaengine@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>, dan.j.williams@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le Mon, 24 Aug 2020 18:52:44 +0200,
-Maxime Ripard <maxime@cerno.tech> a écrit :
+On Tue, Aug 25, 2020 at 6:14 PM Alexandru Ardelean
+<ardeleanalex@gmail.com> wrote:
+>
+> On Tue, Aug 25, 2020 at 5:46 PM Vinod Koul <vkoul@kernel.org> wrote:
+> >
+> > On 25-08-20, 15:48, Alexandru Ardelean wrote:
+> > > The series adds support for reading the DMA bus attributes from the
+> > > INTERFACE_DESCRIPTION (0x10) register.
+> > >
+> > > The first 5 changes are a bit of rework prior to adding the actual
+> > > change in patch 6, as things need to be shifted around a bit, to enable
+> > > the clock to be enabled earlier, to be able to read the version
+> > > register.
+> >
+> > Not sure what happened, I see two sets of patches in this series, maybe
+> > duplicate..? Better to resend a clean version..
+> >
+> > Even PW shows 12 patches https://patchwork.kernel.org/project/linux-dmaengine/list/
+>
+> I'm not sure either.
+> I checked the folder from where I sent the patches.
+> They're still there, and only 6 { + cover letter].
+>
+> Will re-send.
 
-> Hi,
-> 
-> On Fri, Aug 21, 2020 at 04:59:28PM +0200, Kévin L'hôpital wrote:
-> > 
-> > Kévin L'hôpital (7):
-> >   media: sun6i-csi: Fix the bpp for 10-bit bayer formats
-> >   dt-bindings: media: i2c: Add documentation for ov8865
-> >   media: i2c: Add support for the OV8865 image sensor
-> >   media: sunxi: sun6i-csi: Move the sun6i_csi_dev structure to the
-> >     common header
-> >   media: sunxi: sun6i-csi: Add support of MIPI CSI-2 for A83T
-> >   ARM: dts: sun8i: a83t: Add support for the MIPI CSI-2 in CSI node
-> >   [NOT FOR MERGE] ARM: dts: sun8i: a83t: bananapi-m3: Enable OV8865
-> >     camera  
-> 
-> You should have a cover letter here to provide some context.
-> 
-> There's a bunch of things that would need to be explained and / or
-> argued for here, in particular:
->   - Why did you need to plumb it into sun6i-csi?
->   - You're naming the CSI part as the A83t CSI, while MIPI-CSI has
-> been supported since the A31(?), is there a reason for that?
->   - This is not documented anywhere, what did you base this work on?
-> 
-> Also, I think that documenting the general challenges you faced (which
-> were likely because of the first bullet point above) and how you
-> solved them here would be great to start a discussion if needed.
-> 
-> Finally, iirc, Hans requires a v4l2-compliance run for any new driver,
-> which isn't strictly the case for this driver, but isn't really *not*
-> the case either.
-> 
-> Maxime
+My bad.
+In the bash history I found that I put *.patch & v2-*.patch when sending.
+They were mixed in with some CC'ed emails so I didn't see it before.
 
-Thank you very much for the review, I will add all this context.
-
-Kévin
-
-
--- 
-Kevin L'Hopital, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+>
+> >
+> > Thanks
+> >
+> > >
+> > > Changelog v1 -> v2:
+> > > * fixed error-exit paths for the clock move patch
+> > >   i.e. 'dmaengine: axi-dmac: move clock enable earlier'
+> > > * fixed error-exit path for patch
+> > >   'axi-dmac: wrap channel parameter adjust into function'
+> > > * added patch 'dmaengine: axi-dmac: move active_descs list init after device-tree init'
+> > >   the list of active_descs can be moved a bit lower in the init/probe
+> > >
+> > > Alexandru Ardelean (6):
+> > >   dmaengine: axi-dmac: move version read in probe
+> > >   dmaengine: axi-dmac: move active_descs list init after device-tree
+> > >     init
+> > >   dmaengine: axi-dmac: move clock enable earlier
+> > >   dmaengine: axi-dmac: wrap entire dt parse in a function
+> > >   dmaengine: axi-dmac: wrap channel parameter adjust into function
+> > >   dmaengine: axi-dmac: add support for reading bus attributes from
+> > >     registers
+> > >
+> > >  drivers/dma/dma-axi-dmac.c | 138 ++++++++++++++++++++++++++++---------
+> > >  1 file changed, 107 insertions(+), 31 deletions(-)
+> > >
+> > > --
+> > > 2.17.1
+> >
+> > --
+> > ~Vinod
