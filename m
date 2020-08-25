@@ -2,125 +2,183 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3072C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD75C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEC172071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9CD32071E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 12:43:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ojprYWBY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U566dHbT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgHYMka (ORCPT
+        id S1726611AbgHYMne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 08:40:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44478 "EHLO
+        Tue, 25 Aug 2020 08:43:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbgHYMk2 (ORCPT
+        with ESMTP id S1726038AbgHYMnc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 08:40:28 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32EFFC061574;
-        Tue, 25 Aug 2020 05:40:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tw5dcUYU1cuOf4FiFUQPG5KaP/PO9JilKtZRxZg/G8g=; b=ojprYWBY613BEb+StdJ0sxAyYt
-        xMBg5qD1i74X/rjfNcU3gB4uY9pUinU2iATgkX0wej7DwChopPzimexI44FgtHomC+/S2vxY5Sep8
-        T7rDlQiBkUFG9SX5ljMSX0SpUSTlLEBqhL3QIxD5RlFAvxm8bQWfYs7rXEjhBcKobos3I50NoqAYZ
-        /hDcxtVuham4kEwH1msCu8TAeXpk2xEEiIW/LsnJa3WUcQsN1LCiVfCM+UAw8iHdMp0DV++omjnsU
-        hnS4vi39EcNhowoNyU1vySJ2NofttZbo8aNEma3HQlamiZN6quSfpYv+kZjnoYeP27AKSMYQFyODi
-        adgr5+fw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAYFU-0004As-Sf; Tue, 25 Aug 2020 12:40:24 +0000
-Date:   Tue, 25 Aug 2020 13:40:24 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Andreas Dilger <adilger@dilger.ca>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 9/9] iomap: Change calling convention for zeroing
-Message-ID: <20200825124024.GN17456@casper.infradead.org>
-References: <20200824145511.10500-1-willy@infradead.org>
- <20200824145511.10500-10-willy@infradead.org>
- <20200825002735.GI12131@dread.disaster.area>
- <20200825032603.GL17456@casper.infradead.org>
- <E47B2C68-43F2-496F-AA91-A83EB3D91F28@dilger.ca>
- <20200825042711.GL12131@dread.disaster.area>
+        Tue, 25 Aug 2020 08:43:32 -0400
+Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD525C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 05:43:31 -0700 (PDT)
+Received: by mail-vs1-xe43.google.com with SMTP id b26so6236853vsa.13
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 05:43:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KLVFtnGfv315f2cFlk5FripJT8yacKqKZDtbXzYmCDI=;
+        b=U566dHbTo04FW3tyndOxJtS5iVLtX46FMq/KDV9EPwWlBk5Mg9Xrcq4mEdgd9Q5FhW
+         YU1MTkJr+aQKkHRtX9aWTRspF57xJp+5fH/Jwt8yJixXdsQNSR8xFp5sFmwqnJanmZ64
+         qx8DlZQRLvL8ZK/GfL+fARwSyLAbUZs/htfHFm/E3OOrRm/9q65uNNibeCCFSsoIJf6c
+         iiiyzX/Et7x1vHs8Q8b2WQLPBWXI3YSSuKA/W8N33Ci1DkdpEpq4pmClA+1tZt8hPPwj
+         vfXZFH65QtmU/hnLnMJOAEE/x4ptTxDxCeNmh4XKDY/6onNE4kpYTEVrCEuptUi7aPmQ
+         2avw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KLVFtnGfv315f2cFlk5FripJT8yacKqKZDtbXzYmCDI=;
+        b=SSMZPrdaCAoy7doM7Fjgg3FojPfsL2vzLKlVpwaS9Zn9A608m7n6nlVPIgOguRupPq
+         GjAeDzeZjmrGA0zINyoN/PwLggiGIfxkJR5he+yccrXaVyIDo/4OEpR/ibDvpZVUo4cf
+         3K7Yxfgq9Q9piog3lsqY2uSGLMRzoJcq8UTZ3HjJ7CCrcLSH1Ept8itidbXj1r9hF/TA
+         SLuNkgFlPIEI8EX0mH7l6z525Wx0VK2EKBLLn7dYCxJp9tCdu6OMyA5UInL0Z5+KmvlX
+         H2XUuqXHS7uGWQnXjSjs4rZ/ueKzgPo4GbT3QFpXOmPnqKafUnDWN3ZXbr/pFLikuSfK
+         ZN+A==
+X-Gm-Message-State: AOAM53029UBG1MKrEKYziRsq3vlFkVFFz41LxLdbxpj2yvsads0r65+W
+        Zdas6eAYrZXyybnoGHt1MWH72IHQe8TfvwNBfU81r8vbKBriVCI0
+X-Google-Smtp-Source: ABdhPJwbwNg013MOScMFnsgy3TICJRQmBvzLvJLnTLM78u9drmk/zWgpSBbb1E/PUZIcr6dShagAtm53gGvBtrMWL1Y=
+X-Received: by 2002:a67:e9d8:: with SMTP id q24mr5265924vso.165.1598359410979;
+ Tue, 25 Aug 2020 05:43:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825042711.GL12131@dread.disaster.area>
+References: <20200730080146.25185-1-stephan@gerhold.net> <20200730080146.25185-4-stephan@gerhold.net>
+ <20200824112744.jsyaxrfbybyjpwex@vireshk-i7> <20200824115549.GB208090@gerhold.net>
+ <CAPDyKFojtArMRfO+Z8YaWCWw2fFYcO62x3eL1paNi5pKRg3Jww@mail.gmail.com>
+ <20200824150831.GA842@gerhold.net> <20200825044308.4y3w2urcikban7if@vireshk-i7>
+ <CAPDyKFp+71_WGwvdZ6DYamsDjgoRk57H5MjDAdQUtCtJpEHp2Q@mail.gmail.com> <20200825073348.GA1048@gerhold.net>
+In-Reply-To: <20200825073348.GA1048@gerhold.net>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 25 Aug 2020 14:42:54 +0200
+Message-ID: <CAPDyKFr-gfpVypFs_13hb9Pi5FfQoB32fg=C_gtdSKVDN1U=gQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/3] opp: Power on (virtual) power domains managed by
+ the OPP core
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Niklas Cassel <nks@flawful.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 02:27:11PM +1000, Dave Chinner wrote:
-> On Mon, Aug 24, 2020 at 09:35:59PM -0600, Andreas Dilger wrote:
-> > On Aug 24, 2020, at 9:26 PM, Matthew Wilcox <willy@infradead.org> wrote:
-> > > 
-> > > On Tue, Aug 25, 2020 at 10:27:35AM +1000, Dave Chinner wrote:
-> > >>> 	do {
-> > >>> -		unsigned offset, bytes;
-> > >>> -
-> > >>> -		offset = offset_in_page(pos);
-> > >>> -		bytes = min_t(loff_t, PAGE_SIZE - offset, count);
-> > >>> +		loff_t bytes;
-> > >>> 
-> > >>> 		if (IS_DAX(inode))
-> > >>> -			status = dax_iomap_zero(pos, offset, bytes, iomap);
-> > >>> +			bytes = dax_iomap_zero(pos, length, iomap);
-> > >> 
-> > >> Hmmm. everything is loff_t here, but the callers are defining length
-> > >> as u64, not loff_t. Is there a potential sign conversion problem
-> > >> here? (sure 64 bit is way beyond anything we'll pass here, but...)
-> > > 
-> > > I've gone back and forth on the correct type for 'length' a few times.
-> > > size_t is too small (not for zeroing, but for seek()).  An unsigned type
-> > > seems right -- a length can't be negative, and we don't want to give
-> > > the impression that it can.  But the return value from these functions
-> > > definitely needs to be signed so we can represent an error.  So a u64
-> > > length with an loff_t return type feels like the best solution.  And
-> > > the upper layers have to promise not to pass in a length that's more
-> > > than 2^63-1.
-> > 
-> > The problem with allowing a u64 as the length is that it leads to the
-> > possibility of an argument value that cannot be returned.  Checking
-> > length < 0 is not worse than checking length > 0x7ffffffffffffff,
-> > and has the benefit of consistency with the other argument types and
-> > signs...
+On Tue, 25 Aug 2020 at 09:34, Stephan Gerhold <stephan@gerhold.net> wrote:
+>
+> On Tue, Aug 25, 2020 at 08:43:42AM +0200, Ulf Hansson wrote:
+> > On Tue, 25 Aug 2020 at 06:43, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 24-08-20, 17:08, Stephan Gerhold wrote:
+> > > > On Mon, Aug 24, 2020 at 04:36:57PM +0200, Ulf Hansson wrote:
+> > > > > That said, perhaps should rely on the consumer to deploy runtime PM
+> > > > > support, but let the OPP core to set up the device links for the genpd
+> > > > > virtual devices!?
+> > > > >
+> > > >
+> > > > Yes, that would be the alternative option.
+> > >
+> > > That is the right option IMO.
+> > >
+> > > > I would be fine with it as long as it also works for the CPUfreq case.
+> > > >
+> > > > I don't think anything manages runtime PM for the CPU device, just
+> > > > like no-one calls dev_pm_opp_set_rate(cpu_dev, 0). So with my patch the
+> > > > power domain is essentially kept always-on (except for system suspend).
+> > > > At least in my case this is intended.
+> > > >
+> > > > If device links also keep the power domains on if the consumer device
+> > > > does not make use of runtime PM it should work fine for my case.
+> > >
+> > > With device link, you only need to do rpm enable/disable on the consumer device
+> > > and it will get propagated by itself.
+> >
+> > Note that the default state for the genpd virtual device(s) is that
+> > runtime PM has been enabled for them. This means it's left in runtime
+> > suspended state, which allows its PM domain to be powered off (if all
+> > other devices and child domains for it allow that too, of course).
+> >
+> > >
+> > > > Personally, I think my original patch (without device links) fits better
+> > > > into the OPP API, for the following two reasons.
+> > > >
+> > > > With device links:
+> > > >
+> > > >   1. Unlike regulators/interconnects, attached power domains would be
+> > > >      controlled by runtime PM instead of dev_pm_opp_set_rate(opp_dev, 0).
+> > > >
+> > > >   2. ... some driver using OPP tables might not make use of runtime PM.
+> > > >      In that case, the power domains would stay on the whole time,
+> > > >      even if dev_pm_opp_set_rate(opp_dev, 0) was called.
+> > > >
+> > > > With my patch, the power domain state is directly related to the
+> > > > dev_pm_opp_set_rate(opp_dev, 0) call, which is more intuitive than
+> > > > relying on the runtime PM state in my opinion.
+> > >
+> > > So opp-set-rate isn't in the best of shape TBH, some things are left for the
+> > > drivers while other are done by it. Regulator-enable/disable was moved to it
+> > > some time back as people needed something like that. While on the other hand,
+> > > clk_enable/disable doesn't happen there, nor does rpm enable/disable.
+> > >
+> > > Maybe one day we may want to do that, but lets make sure someone wants to do
+> > > that first.
+> > >
+> > > Anyway, even in that case both of the changes would be required. We must make
+> > > device links nevertheless first. And later on if required, we may want to do rpm
+> > > enable/disable on the consumer device itself.
+> >
+> > This sounds like a reasonable step-by-step approach.
+> >
+> > Then, to create the device links, we should use DL_FLAG_PM_RUNTIME,
+> > DL_FLAG_STATELESS.
+> >
+>
+> OK, I will give this a try later this week.
+>
+> > But whether we should use DL_FLAG_RPM_ACTIVE as well, to initially
+> > runtime resume the supplier (the genpd virtual device), is harder to
+> > know - as that kind of depends on expectations by the consumer device
+> > driver.
+> >
+>
+> I'm not sure I understand the purpose of that flag. I thought we want to
+> link the PM state of the virtual genpd device (supplier) to the PM state
+> of the device of the OPP table (consumer).
 
-The callee should just trust that the caller isn't going to do that.
-File sizes can't be more than 2^63-1 bytes, so an extent of a file also
-can't be more than 2^63-1 bytes.
+Correct, but this is about synchronizing the initial runtime PM state
+of the consumer and supplier.
 
-> I think the problem here is that we have no guaranteed 64 bit size
-> type. when that was the case with off_t, we created loff_t to always
-> represent a 64 bit offset value. However, we never created one for
-> the count/size that is passed alongside loff_t in many places - it
-> was said that "syscalls are limited to 32 bit sizes" and
-> "size_t is 64 bit on 64 bit platforms" and so on and so we still
-> don't have a clean way to pass 64 bit sizes through the IO path.
-> 
-> We've been living with this shitty situation for a long time now, so
-> perhaps it's time for us to define lsize_t for 64 bit lengths and
-> start using that everywhere that needs a 64 bit clean path
-> through the code, regardless of whether the arch is 32 or 64 bit...
-> 
-> Thoughts?
+>
+> Shouldn't it just determine the initial state based on the state of the
+> consumer device?
 
-I don't think the THP patches should be blocked on this expedition.
+We could do that. Then something along the lines of the below, should work:
 
-We have a guaranteed 64 bit type -- it's u64.  I don't think defining
-lsize_t is going to fix anything.  The next big problem to fix will be
-supporting storage >16EiB, but I think that's a project that can start
-in ten years and still be here before anyone but the TLAs have that much
-storage in a single device.
+pm_runtime_get_noresume(consumer) - to prevent runtime suspend, temporarily.
 
-Any objection to leaving this patch as-is with a u64 length?
+if(pm_runtime_active(consumer))
+    create links with DL_FLAG_RPM_ACTIVE
+else
+    create links without DL_FLAG_RPM_ACTIVE
+
+pm_runtime_put(consumer)
+
+Kind regards
+Uffe
