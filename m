@@ -2,305 +2,135 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02A3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7BBC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B962D20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:29:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598347759;
-	bh=giUh8kfdw+J36IN0Ge8r43Cgn1ew0GISv68WF0PHD6c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rugYXkBYCGIVoLhu8X60fbQ58SfnxICd/weYGiecvc8PF4713tIGzKK9p0bjq9RoR
-	 fQW1F02dWqAb9Rwp6otRzpMFUW+859JQUJA1A8uA6vHzWC7CcjEN9GAjb5ukhEU899
-	 pgNRwpaLQ1D0yTehuKvLbr4xi1oFsdmu6cLQiHac=
+	by mail.kernel.org (Postfix) with ESMTP id BC8E62068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:29:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="WjBc9ONP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbgHYJ3S (ORCPT
+        id S1729454AbgHYJ3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:29:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726149AbgHYJ3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:29:18 -0400
-Received: from coco.lan (ip5f5ad5a4.dynamic.kabel-deutschland.de [95.90.213.164])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4DDB2068F;
-        Tue, 25 Aug 2020 09:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598347757;
-        bh=giUh8kfdw+J36IN0Ge8r43Cgn1ew0GISv68WF0PHD6c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OKFVKlDTuVbtfdKMEfHQBUFSi6MOoM/ICBdx2oNDMshzM1tuFmSkFC0ODT1FPGhDr
-         b7AS2aRWF8NI00LIOrrbKPdWaBa0Gjyn1+ysZ6fqrQbtNQrvTE1vPu95P57J0bncnn
-         Gq9NmF0ow7xDJkWWG20g38ccq9mUWJW5xrahMJrU=
-Date:   Tue, 25 Aug 2020 11:29:12 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Josh Cartwright <joshc@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: convert spmi.txt to spmi.yaml
-Message-ID: <20200825112912.4fca31ad@coco.lan>
-In-Reply-To: <20200819230812.GB2090217@bogus>
-References: <94b055687143c9593cd4311f8bcda99a743a619f.1597850327.git.mchehab+huawei@kernel.org>
-        <20200819230812.GB2090217@bogus>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 25 Aug 2020 05:29:42 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:12754 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726149AbgHYJ3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:29:42 -0400
+X-UUID: 4ab557a0b8c348b6879857d307f40f92-20200825
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=pzm6RISn/tNeKbUICcBC7qg5/+/y+MTOUCaljQkJv5I=;
+        b=WjBc9ONPbH2xD4WxLXUJLuFNUrmcxAywnOvIJ56DGvSswJiwg0LamrKhcxY5oqiO5LdTTv9IfQqfxnRx8yvmDo8BgWleofTk4jQACBZTpakTIO4qfIW9ISIz0PPvCaGnfIJnQclKIh9g2UwPm+2XSDs36z68lNqveiE2RCurNwU=;
+X-UUID: 4ab557a0b8c348b6879857d307f40f92-20200825
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <michael.kao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1131286243; Tue, 25 Aug 2020 17:29:37 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 25 Aug 2020 17:29:34 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 25 Aug 2020 17:29:34 +0800
+Message-ID: <1598347775.16267.0.camel@mtksdccf07>
+Subject: Re: [PATCH] thermal: power_allocate: add upper and lower limits
+From:   Michael Kao <michael.kao@mediatek.com>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+CC:     Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>, <hsinyi@chromium.org>,
+        <linux-pm@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Tue, 25 Aug 2020 17:29:35 +0800
+In-Reply-To: <03286571-c110-7f5e-a911-24f8c3e4fd42@arm.com>
+References: <20200424071601.2636-1-michael.kao@mediatek.com>
+         <accb83e0-ffbe-b6e3-6bf9-e7cc8b9fe19c@arm.com>
+         <1588156776.3573.1.camel@mtksdccf07>
+         <03286571-c110-7f5e-a911-24f8c3e4fd42@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 19 Aug 2020 17:08:12 -0600
-Rob Herring <robh@kernel.org> escreveu:
+T24gV2VkLCAyMDIwLTA0LTI5IGF0IDIxOjI0ICswMTAwLCBMdWthc3ogTHViYSB3cm90ZToNCj4g
+DQo+IE9uIDQvMjkvMjAgMTE6MzkgQU0sIE1pY2hhZWwgS2FvIHdyb3RlOg0KPiA+IE9uIEZyaSwg
+MjAyMC0wNC0yNCBhdCAxMDoyMiArMDEwMCwgTHVrYXN6IEx1YmEgd3JvdGU6DQo+ID4+IEhpIE1p
+Y2hhZWwsDQo+ID4+DQo+ID4+IE9uIDQvMjQvMjAgODoxNiBBTSwgTWljaGFlbCBLYW8gd3JvdGU6
+DQo+ID4+PiBUaGUgdXBwZXIgYW5kIGxvd2VyIGxpbWl0cyBvZiB0aGVybWFsIHRocm90dGxlIHN0
+YXRlIGluIHRoZQ0KPiA+Pj4gZGV2aWNlIHRyZWUgZG8gbm90IGFwcGx5IHRvIHRoZSBwb3dlcl9h
+bGxvY2F0ZSBnb3Zlcm5vci4NCj4gPj4+IEFkZCB0aGUgdXBwZXIgYW5kIGxvd2VyIGxpbWl0cyB0
+byB0aGUgcG93ZXJfYWxsb2NhdGUgZ292ZXJub3IuDQo+ID4+Pg0KPiA+Pj4gU2lnbmVkLW9mZi1i
+eTogTWljaGFlbCBLYW8gPG1pY2hhZWwua2FvQG1lZGlhdGVrLmNvbT4NCj4gPj4+IC0tLQ0KPiA+
+Pj4gICAgZHJpdmVycy90aGVybWFsL3RoZXJtYWxfY29yZS5jIHwgMiArLQ0KPiA+Pj4gICAgMSBm
+aWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4+Pg0KPiA+Pj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvdGhlcm1hbC90aGVybWFsX2NvcmUuYyBiL2RyaXZlcnMvdGhl
+cm1hbC90aGVybWFsX2NvcmUuYw0KPiA+Pj4gaW5kZXggOWEzMjFkYzU0OGM4Li5mNmZlZWQyMjY1
+YmQgMTAwNjQ0DQo+ID4+PiAtLS0gYS9kcml2ZXJzL3RoZXJtYWwvdGhlcm1hbF9jb3JlLmMNCj4g
+Pj4+ICsrKyBiL2RyaXZlcnMvdGhlcm1hbC90aGVybWFsX2NvcmUuYw0KPiA+Pj4gQEAgLTU5OCw3
+ICs1OTgsNyBAQCBpbnQgcG93ZXJfYWN0b3Jfc2V0X3Bvd2VyKHN0cnVjdCB0aGVybWFsX2Nvb2xp
+bmdfZGV2aWNlICpjZGV2LA0KPiA+Pj4gICAgCWlmIChyZXQpDQo+ID4+PiAgICAJCXJldHVybiBy
+ZXQ7DQo+ID4+PiAgICANCj4gPj4+IC0JaW5zdGFuY2UtPnRhcmdldCA9IHN0YXRlOw0KPiA+Pj4g
+KwlpbnN0YW5jZS0+dGFyZ2V0ID0gY2xhbXBfdmFsKHN0YXRlLCBpbnN0YW5jZS0+bG93ZXIsIGlu
+c3RhbmNlLT51cHBlcik7DQo+ID4+PiAgICAJbXV0ZXhfbG9jaygmY2Rldi0+bG9jayk7DQo+ID4+
+PiAgICAJY2Rldi0+dXBkYXRlZCA9IGZhbHNlOw0KPiA+Pj4gICAgCW11dGV4X3VubG9jaygmY2Rl
+di0+bG9jayk7DQo+ID4+Pg0KPiA+Pg0KPiA+PiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaCBhbmQg
+aGF2aW5nIHRvIGxvb2sgYXQgaXQuIEkgaGF2ZSBzb21lIGNvbmNlcm5zDQo+ID4+IHdpdGggdGhp
+cyBhcHByb2FjaC4gTGV0J3MgYW5hbHl6ZSBpdCBmdXJ0aGVyLg0KPiA+Pg0KPiA+PiBJbiBkZWZh
+dWx0IHRoZSBjb29saW5nIGRldmljZXMgaW4gdGhlIHRoZXJtYWwgem9uZSB3aGljaCBpcyB1c2Vk
+IGJ5IElQQQ0KPiA+PiBkbyBub3QgaGF2ZSB0aGlzICdsb3dlcicgYW5kICd1cHBlcicgbGltaXRz
+LiBUaGV5IGFyZSBzZXQgdG8NCj4gPj4gVEhFUk1BTF9OT19MSU1JVCBpbiBEVCB0byBnaXZlIGZ1
+bGwgY29udHJvbCB0byBJUEEgb3ZlciB0aGUgc3RhdGVzLg0KPiA+Pg0KPiA+PiBUaGlzIHRoZSBm
+dW5jdGlvbiAncG93ZXJfYWN0b3Jfc2V0X3Bvd2VyJyBhY3R1YWxseSB0cmFuc2xhdGVzIGdyYW50
+ZWQNCj4gPj4gcG93ZXIgdG8gdGhlIHN0YXRlIHRoYXQgZGV2aWNlIHdpbGwgcnVuIGZvciB0aGUg
+bmV4dCBwZXJpb2QuDQo+ID4+IFRoZSBJUEEgYWxnb3JpdGhtIGhhcyBhbHJlYWR5IHNwbGl0IHRo
+ZSBwb3dlciBidWRnZXQuDQo+ID4+IE5vdyB3aGF0IGhhcHBlbiB3aGVuIHRoZSAnbG93ZXInIHZh
+bHVlIHdpbGwgY2hhbmdlIHRoZSBzdGF0ZSB0byBhIHN0YXRlDQo+ID4+IHdoaWNoIGNvbnN1bWVz
+IG1vcmUgcG93ZXIgdGhhbiB3YXMgY2FsY3VsYXRlZCBpbiB0aGUgSVBBIGFsZy4uLiBJdCB3aWxs
+DQo+ID4+IGJlY2FtZSB1bnN0YWJsZS4NCj4gPj4NCj4gPj4gSSB3b3VsZCByYXRoZXIgc2VlIGEg
+Y2hhbmdlIHdoaWNoIHVzZXMgdGhlc2UgJ2xvd2VyJyBhbmQgJ3VwcGVyJyBsaW1pdHMNCj4gPj4g
+YmVmb3JlIHRoZSBJUEEgZG8gdGhlIGNhbGN1bGF0aW9uIG9mIHRoZSBwb3dlciBidWRnZXQuIEJ1
+dCB0aGlzIHdhc24ndA0KPiA+PiBhIHJlcXVpcmVtZW50IGFuZCB3ZSBhc3N1bWVkIHRoYXQgSVBB
+IGhhcyBmdWxsIGNvbnRyb2wgb3ZlciB0aGUgY29vbGluZw0KPiA+PiBkZXZpY2UgKHdoaWNoIEkg
+ZGVzY3JpYmVkIGFib3ZlIHdpdGggdGhpcyBEVCBUSEVSTUFMX05PX0xJTUlUKS4NCj4gPj4NCj4g
+Pj4gSXMgdGhlcmUgYSBwcm9ibGVtIHdpdGggeW91ciBwbGF0Zm9ybSB0aGF0IGl0IGhhcyB0byBw
+cm92aWRlIHNvbWUNCj4gPj4gbWluaW1hbCBwZXJmb3JtYW5jZSwgc28geW91IHRyaWVkIHRvIGlu
+dHJvZHVjZSB0aGlzIGNsYW1waW5nPw0KPiA+Pg0KPiA+PiBSZWdhcmRzLA0KPiA+PiBMdWthc3oN
+Cj4gPiANCj4gPiANCj4gPiBIaSBMdWthc3osDQo+ID4gDQo+ID4gSSByZWZlciB0byB0aGUgZG9j
+dW1lbnRhdGlvbiBzZXR0aW5ncyBvZiB0aGUgdGhlcm1hbCBkZXZpY2UgdHJlZQ0KPiA+IChEb2N1
+bWVudGF0aW9uIC8gZGV2aWNldHJlZSAvIGJpbmRpbmdzIC8gdGhlcm1hbCAvIHRoZXJtYWwudHh0
+KS4NCj4gPiANCj4gPiBJdCBzaG93cyB0aGF0IGNvb2xpbmctZGV2aWNlIGlzIGEgbWFuZGF0b3J5
+IHByb3BlcnR5LCBzbyBtYXgvbWluIGNvb2xpbmcNCj4gPiBzdGF0ZSBzaG91bGQgYmUgYWJsZSB0
+byBzdXBwb3J0IGluIGZyYW1ld29yayBwb2ludCBvZiB2aWV3Lg0KPiA+IE90aGVyd2lzZSwgdGhl
+IGxpbWl0YXRpb24gc2hvdWxkIGJlIGFkZGVkIGluIGJpbmRpbmcgZG9jdW1lbnQuDQo+ID4gDQo+
+ID4gRGlmZmVyZW50IGhhcmR3YXJlIG1lY2hhbmlzbXMgaGF2ZSBkaWZmZXJlbnQgaGVhdCBkaXNz
+aXBhdGlvbg0KPiA+IGNhcGFiaWxpdGllcy4NCj4gPiBMaW1pdGluZyB0aGUgaW5wdXQgaGVhdCBz
+b3VyY2UgY2FuIHNsb3cgZG93biB0aGUgaGVhdCBhY2N1bXVsYXRpb24gYW5kDQo+ID4gdGVtcGVy
+YXR1cmUgYnVyc3QuDQo+ID4gV2Ugd2FudCB0byByZWR1Y2UgdGhlIGFjY3VtdWxhdGlvbiBvZiBo
+ZWF0IGF0IGhpZ2ggdGVtcGVyYXR1cmUgYnkNCj4gPiBsaW1pdGluZyB0aGUgbWluaW11bSBnZWFy
+IG9mIHRoZXJtYWwgdGhyb3R0bGUuDQo+IA0KPiBJIGFncmVlIHRoYXQgdGhlc2UgJ2xvd2VyJyBh
+bmQgJ3VwcGVyJyBsaW1pdHMgc2hvdWxkbid0IGJlIGp1c3QNCj4gaWdub3JlZCBhcyBpcyBjdXJy
+ZW50bHkuIFRoaXMgcGF0Y2ggY2xhbXBzIHRoZSB2YWx1ZSBhdCBsYXRlIHN0YWdlLA0KPiB0aG91
+Z2guDQo+IA0KPiBMZXQgbWUgaGF2ZSBhIGxvb2sgaG93IGl0IGNvdWxkIGJlIHRha2VuIGludG8g
+YWNjb3VudCBpbiB0aGUgZWFybHkNCj4gc3RhZ2UsIGJlZm9yZSB0aGUgcG93ZXIgY2FsY3VsYXRp
+b24gYW5kIHNwbGl0IGFyZSBkb25lLiBNYXliZSB0aGVyZQ0KPiBpcyBhIGNsZWFuIHdheSB0byBp
+bmplY3QgdGhpcy4NCj4gDQo+IFJlZ2FyZHMsDQo+IEx1a2Fzeg0KSGkgTHVrYXN6LA0KDQpBZnRl
+ciB0aGUgcmVzZWFyY2gsIGRvIHlvdSBoYXZlIGFueSBpZGVhcyBvciBzdWdnZXN0aW9ucz8NCg0K
+QmVzdCBSZWdhcmRzLA0KTWljaGFlbA0KDQo=
 
-> On Wed, Aug 19, 2020 at 05:20:06PM +0200, Mauro Carvalho Chehab wrote:
-> > Convert the SPMI bus documentation to JSON/yaml.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> > 
-> > Rob,
-> > 
-> > As promissed, this patch converts the spmi.txt generic bus bindings to
-> > html.  
-> 
-> Thanks!
-> 
-> > 
-> >  .../bindings/mfd/qcom,spmi-pmic.txt           |  2 +-
-> >  .../bindings/spmi/qcom,spmi-pmic-arb.txt      |  4 +-
-> >  .../devicetree/bindings/spmi/spmi.txt         | 41 ------------
-> >  .../devicetree/bindings/spmi/spmi.yaml        | 62 +++++++++++++++++++
-> >  4 files changed, 65 insertions(+), 44 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/spmi/spmi.txt
-> >  create mode 100644 Documentation/devicetree/bindings/spmi/spmi.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> > index fffc8fde3302..79367a43b27d 100644
-> > --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
-> > @@ -37,7 +37,7 @@ Required properties:
-> >                     or generalized "qcom,spmi-pmic".
-> >  - reg:             Specifies the SPMI USID slave address for this device.
-> >                     For more information see:
-> > -                   Documentation/devicetree/bindings/spmi/spmi.txt
-> > +                   Documentation/devicetree/bindings/spmi/spmi.yaml
-> >  
-> >  Required properties for peripheral child nodes:
-> >  - compatible:      Should contain "qcom,xxx", where "xxx" is a peripheral name.
-> > diff --git a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-> > index e16b9b5afc70..ca645e21fe47 100644
-> > --- a/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-> > +++ b/Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-> > @@ -7,8 +7,8 @@ devices to control a single SPMI master.
-> >  The PMIC Arbiter can also act as an interrupt controller, providing interrupts
-> >  to slave devices.
-> >  
-> > -See spmi.txt for the generic SPMI controller binding requirements for child
-> > -nodes.
-> > +See Documentation/devicetree/bindings/spmi/spmi.yaml for the generic SPMI
-> > +controller binding requirements for child nodes.
-> >  
-> >  See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt for
-> >  generic interrupt controller binding documentation.
-> > diff --git a/Documentation/devicetree/bindings/spmi/spmi.txt b/Documentation/devicetree/bindings/spmi/spmi.txt
-> > deleted file mode 100644
-> > index 4bb10d161a27..000000000000
-> > --- a/Documentation/devicetree/bindings/spmi/spmi.txt
-> > +++ /dev/null
-> > @@ -1,41 +0,0 @@
-> > -System Power Management Interface (SPMI) Controller
-> > -
-> > -This document defines a generic set of bindings for use by SPMI controllers.  A
-> > -controller is modelled in device tree as a node with zero or more child nodes,
-> > -each representing a unique slave on the bus.
-> > -
-> > -Required properties:
-> > -- #address-cells : must be set to 2
-> > -- #size-cells : must be set to 0
-> > -
-> > -Child nodes:
-> > -
-> > -An SPMI controller node can contain zero or more child nodes representing slave
-> > -devices on the bus.  Child 'reg' properties are specified as an address, type
-> > -pair.  The address must be in the range 0-15 (4 bits).  The type must be one of
-> > -SPMI_USID (0) or SPMI_GSID (1) for Unique Slave ID or Group Slave ID respectively.
-> > -These are the identifiers "statically assigned by the system integrator", as
-> > -per the SPMI spec.
-> > -
-> > -Each child node must have one and only one 'reg' entry of type SPMI_USID.
-> > -
-> > -#include <dt-bindings/spmi/spmi.h>
-> > -
-> > -	spmi@.. {
-> > -		compatible = "...";
-> > -		reg = <...>;
-> > -
-> > -		#address-cells = <2>;
-> > -		#size-cells = <0>;
-> > -
-> > -		child@0 {
-> > -			compatible = "...";
-> > -			reg = <0 SPMI_USID>;
-> > -		};
-> > -
-> > -		child@7 {
-> > -			compatible = "...";
-> > -			reg = <7 SPMI_USID
-> > -			       3 SPMI_GSID>;
-> > -		};
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/spmi/spmi.yaml b/Documentation/devicetree/bindings/spmi/spmi.yaml
-> > new file mode 100644
-> > index 000000000000..8d72796b9bec
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/spmi/spmi.yaml
-> > @@ -0,0 +1,62 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/spmi/spmi.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: System Power Management Interface (SPMI) Controller
-> > +
-> > +maintainers:
-> > +  - Josh Cartwright <joshc@codeaurora.org>
-> > +
-> > +description: |
-> > +  The System Power Management (SPMI) controller is a 2-wire bus defined
-> > +  by the MIPI Alliance for power management control to be used on SoC designs.
-> > +
-> > +  SPMI controllers are modelled in device tree using a generic set of
-> > +  bindings defined here, plus any bus controller specific properties, if
-> > +  needed.
-> > +
-> > +  Each SPMI controller has zero or more child nodes (up to 16 ones), each
-> > +  one representing an unique slave at the bus.
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    pattern: "spmi@[0-9a-f]+"  
-> 
-> Just "spmi@.*" as we shouldn't assume unit-address details of the parent 
-> bus.
-
-Ok.
-
-> 
-> > +
-> > +  compatible:
-> > +    description: filled by the SPMI bus controller
-> > +
-> > +  reg:
-> > +    maxItems: 1  
-> 
-> No need for 'reg' and 'compatible' here. Those will be covered by 
-> specific SPMI controller schemas.
-
-Ok. I was in doubt about those, as the original .txt file had it with
-a <...>.
-
-> But you do need:
-> 
-> "#address-cells":
->   const: 2
-> 
-> "#size-cells":
->   const: 0
-
-Ok. 
-
-> 
-> > +
-> > +patternProperties:
-> > +  "@([0-9]|1[0-5])$":  
-> 
-> While buses define their own unit-address format, unit addresses are 
-> normally hex.
-
-I don't have a strong preference here. Yet, as this bus can have only up 
-to 16 child (starting from 0), I guess decimal would make more sense.
-
-> 
-> > +    description: up to 16 child PMIC nodes  
-> 
->        type: object
-> 
-> Need to also define 'reg' constraints as defined by the bus:
-> 
-> properties:
->   reg:
->     minItems: 1
->     maxItems: 2  #??? Not sure about this. Is it 1 SPMI_USID and 1 \
-> SPMI_GSID entry at most?
-
-
-I guess so. Currently, no devices use SPMI_GSID. I guess that we
-can place maxItems: 2. If later needed, this could be changed in
-the future.
-
->     items:
->       items:
->         - minimum: 0
->           maximum: 0xf
->         - enum: [ 0, 1 ]
-> 
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/spmi/spmi.h>
-> > +
-> > +    spmi@.. {
-> > +      compatible = "...";
-> > +      reg = <...>;  
-> 
-> Example has to build now. Just drop these 2 properties.
-
-OK.
-
-> 
-> > +
-> > +      #address-cells = <2>;
-> > +      #size-cells = <0>;
-> > +
-> > +      child@0 {
-> > +        compatible = "...";
-> > +        reg = <0 SPMI_USID>;
-> > +      };
-> > +
-> > +      child@7 {
-> > +        compatible = "...";
-> > +        reg = <7 SPMI_USID
-> > +               3 SPMI_GSID>;
-> > +      };
-> > +    };
-> > -- 
-> > 2.26.2
-> > 
-> >   
-
-
-
-Thanks,
-Mauro
