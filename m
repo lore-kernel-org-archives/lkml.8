@@ -2,116 +2,123 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C398020706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:15:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dXID83x2"
+	by mail.kernel.org (Postfix) with ESMTP id 837C82068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 09:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbgHYJPN (ORCPT
+        id S1729332AbgHYJQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 05:15:13 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24718 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729036AbgHYJPD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 05:15:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598346900;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=92i+0YUtQgEC4ia+7x4FHZS4hUNlAuigR1V4PDLFWpU=;
-        b=dXID83x2aRkxAWfQMPZWk/vI0Qh6hxbzpf47lTeb+tvwUuSj24TdgkBRIgaD3YGlKDHCvj
-        SX0gBQ3rs/KB+oGq+tV6STleCJU2EMW74zeeqTsUIgHcgFv0Gbs6KFrUuNrUir9FoGGTcZ
-        CrwCG66NpsxslHzCJrVNy5/sTPOAUQQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-493-qjGmojjQPt2LSoxrEMPg0A-1; Tue, 25 Aug 2020 05:14:56 -0400
-X-MC-Unique: qjGmojjQPt2LSoxrEMPg0A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7438100746B;
-        Tue, 25 Aug 2020 09:14:52 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-112-37.ams2.redhat.com [10.36.112.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5353C808AB;
-        Tue, 25 Aug 2020 09:14:39 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Subject: Re: [PATCH v11 9/9] x86: Disallow vsyscall emulation when CET is enabled
-References: <20200825002645.3658-1-yu-cheng.yu@intel.com>
-        <20200825002645.3658-10-yu-cheng.yu@intel.com>
-        <CALCETrVXwUDu2m-XEd-_J03L=sricM4cMxQYVkdGRWZDjmMB2g@mail.gmail.com>
-Date:   Tue, 25 Aug 2020 11:14:37 +0200
-In-Reply-To: <CALCETrVXwUDu2m-XEd-_J03L=sricM4cMxQYVkdGRWZDjmMB2g@mail.gmail.com>
-        (Andy Lutomirski's message of "Mon, 24 Aug 2020 17:32:35 -0700")
-Message-ID: <87pn7f9jeq.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Tue, 25 Aug 2020 05:16:28 -0400
+Received: from mga18.intel.com ([134.134.136.126]:45958 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729023AbgHYJQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 05:16:27 -0400
+IronPort-SDR: Tcg9Wymp2JnI650b5dnnR6FrzffqkYvu23e63JurTaGMX+Ma+MAzOQ8RhZGyznrZPMS8sLqsJ+
+ 1qTN32yH/cHw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="143735321"
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="143735321"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 02:16:27 -0700
+IronPort-SDR: GS0E3cOxlhtrlTsQ2dLkSpVEMRWywSWViLPNUSZmA5W3Yl0Pw2C5TQe485QFLTDdNCb/enzuyp
+ J/Jj/GOTt17A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
+   d="scan'208";a="328804097"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 25 Aug 2020 02:16:27 -0700
+Received: from [10.226.38.20] (unknown [10.226.38.20])
+        by linux.intel.com (Postfix) with ESMTP id 25BBA5805EB;
+        Tue, 25 Aug 2020 02:16:24 -0700 (PDT)
+Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
+Subject: Re: [PATCH v1 1/1] extcon: ptn5150: Add usb-typec support for Intel
+ LGM SoC
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     cw00.choi@samsung.com, linux-kernel@vger.kernel.org,
+        vijaikumar.kanagarajan@gmail.com, myungjoo.ham@samsung.com,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
+References: <20200825083147.25270-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200825083147.25270-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20200825084053.GA13905@kozik-lap>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <4cdc6be5-9bd7-3e90-547a-1fe8399c8852@linux.intel.com>
+Date:   Tue, 25 Aug 2020 17:16:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200825084053.GA13905@kozik-lap>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Andy Lutomirski:
+Hi,
 
-> On Mon, Aug 24, 2020 at 5:30 PM Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+    Thank you for the review comments...
+
+On 25/8/2020 4:40 pm, Krzysztof Kozlowski wrote:
+> On Tue, Aug 25, 2020 at 04:31:47PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+>> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 >>
->> From: "H.J. Lu" <hjl.tools@gmail.com>
+>> Add usb-typec detection support for Intel LGM SoC based
+>> boards.
 >>
->> Emulation of the legacy vsyscall page is required by some programs built
->> before 2013.  Newer programs after 2013 don't use it.  Disallow vsyscall
->> emulation when Control-flow Enforcement (CET) is enabled to enhance
->> security.
->
-> NAK.
->
-> By all means disable execute emulation if CET-IBT is enabled at the
-> time emulation is attempted, and maybe even disable the vsyscall page
-> entirely if you can magically tell that CET-IBT will be enabled when a
-> process starts, but you don't get to just disable it outright on a
-> CET-enabled kernel.
+>> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>> ---
+>>   drivers/extcon/extcon-ptn5150.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
+>> index 8ba706fad887..60355a1b5cb2 100644
+>> --- a/drivers/extcon/extcon-ptn5150.c
+>> +++ b/drivers/extcon/extcon-ptn5150.c
+>> @@ -300,6 +300,8 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
+>>   		return ret;
+>>   	}
+>>   
+>> +	extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
+>> +				       EXTCON_PROP_USB_TYPEC_POLARITY);
+> 
+> Hi,
+> 
+> I think you need the same for EXTCON_USB.
+> 
+> Although extcon_set_property_capability() error should not be fatal, but
+> printing a warn message would be useful.
+Yes , earlier we had like below settings in our patches,
++       extcon_set_property_capability(info->edev, EXTCON_USB,
++                                      EXTCON_PROP_USB_VBUS);
++       extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
++                                      EXTCON_PROP_USB_VBUS);
++       extcon_set_property_capability(info->edev, EXTCON_USB_HOST,
++                                      EXTCON_PROP_USB_TYPEC_POLARITY);
 
-Yeah, we definitely would have to revert/avoid this downstream.  People
-definitely want to run glibc-2.12-era workloads on current kernels.
-Thanks for catching it.
+sure, will add warn message as well.
 
-Florian
-
+Thanks!
+Best Regards
+Vadivel
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
+>>   	/* Initialize PTN5150 device and print vendor id and version id */
+>>   	ret = ptn5150_init_dev_type(info);
+>>   	if (ret)
+>> -- 
+>> 2.11.0
+>>
