@@ -2,97 +2,153 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89726C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F58DC433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D05B2071E
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:19:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CD9OUsxd"
+	by mail.kernel.org (Postfix) with ESMTP id 750712075E
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:19:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgHYTTi (ORCPT
+        id S1726853AbgHYTTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:19:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbgHYTTd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:19:33 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8669BC061574;
-        Tue, 25 Aug 2020 12:19:33 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id m34so7492999pgl.11;
-        Tue, 25 Aug 2020 12:19:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cQlHqlc1tK1iEWmUufJf/eq4OirISs+gpFvJgf67QNk=;
-        b=CD9OUsxdm52u8bG5e7uJkt+eG6cUJzOAB/gaE8afwN/Aa2Pad22Jm2uESi55wrAhYu
-         karNaAW9Qk8Cqcw54T7D/y9ZFzvqeZFxnxutSkR4PGGFXUKhPnC0/Y5WAnDeKhEkQF5w
-         ckKZrJrg6LHPQCnUN2yWpDdQoBbNRE0VInc7dx7jril0IBNT/OJATwLFz6941Mh5DqzC
-         nW1iK7ZYxObFMOJ+Y9cK5K3FElueeEzkkgDRDYW6GnNpjYHli/e8Nxi7VKBaVuPp/yfo
-         4Sdsor15HCVnUWrJlq8ksM6r3DNh/8Khah7V8eJZmBKxGLExxhYFnULe4Pi3bBt/OoRV
-         T2dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cQlHqlc1tK1iEWmUufJf/eq4OirISs+gpFvJgf67QNk=;
-        b=Tv4dbEq+8dFVDZxhVqy8baFaGnKPbRz8BD3FteyVxrxp3sB0+VhVQdjPRncPK/Rh9D
-         cNlAWiVV7OCMa403Wyr283rYadbBAsCI/q4NIRf6fn6CRvPAg336hOXVRKGnMd6DAsWm
-         I2sJX4sM7NBAIn+gh+PcA10KASlMvwe5qpfBDY14WgHo9I88FgPK9s+ja7rVPjlWquoJ
-         PL0RSF7tAGvGyJkcsqWskLQJPSIwdUR/92fA/N7EVs/+DPT6MwFNHvBzATKWuiSY2kKN
-         7CHbFEVlJkjiAvmZODL4/gHWzwxCo++q+2sQ2jgsOT65HyJwbZAxjh06TbELLdTp7dVi
-         6Kqg==
-X-Gm-Message-State: AOAM533YZxpOvk7u3IqlvC8cvgX1XPulCb3aNuFIGNavwq63RMKd9qEU
-        9FaTsH/zjXa0nQAzbLsFW5DfGTMyc+M=
-X-Google-Smtp-Source: ABdhPJzNcNP7Ayh6nnN0MrZn1K7s3rdVQ3AMbrAXAC9/UWLHkQgBgjscMiu+JeAxYpR5fROGay1VVA==
-X-Received: by 2002:a63:31d0:: with SMTP id x199mr7184877pgx.99.1598383173141;
-        Tue, 25 Aug 2020 12:19:33 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b20sm16156232pfp.140.2020.08.25.12.19.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Aug 2020 12:19:32 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 12:19:31 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/39] 4.9.234-rc2 review
-Message-ID: <20200825191931.GB36661@roeck-us.net>
-References: <20200824164720.742523552@linuxfoundation.org>
+        Tue, 25 Aug 2020 15:19:44 -0400
+Received: from mga05.intel.com ([192.55.52.43]:35230 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726066AbgHYTTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 15:19:42 -0400
+IronPort-SDR: NxHIegQeoBHups59+/3E5gd9y9S7wsBVckjNVO9eyNdvTKlD1apMhsjPnBUIHe81aQRKIf+Bqy
+ xefxIyY34ZoQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="241000530"
+X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
+   d="scan'208";a="241000530"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 12:19:40 -0700
+IronPort-SDR: Y24Yfil7S3hRIfFw4Mrr55F4dA6sqQFZw11d2oU2g5HgMQkTzLunzq8V9gMdfD1tPqdQBFPeUw
+ vCsGizrjLljQ==
+X-IronPort-AV: E=Sophos;i="5.76,353,1592895600"; 
+   d="scan'208";a="474476320"
+Received: from mmendo7x-mobl.amr.corp.intel.com (HELO [10.251.24.55]) ([10.251.24.55])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 12:19:39 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+ <20200825002540.3351-26-yu-cheng.yu@intel.com>
+ <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
+ <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+Date:   Tue, 25 Aug 2020 12:19:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824164720.742523552@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 06:49:12PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.234 release.
-> There are 39 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 8/25/20 11:43 AM, Yu, Yu-cheng wrote:
+>>> arch_prctl(ARCH_X86_CET_MMAP_SHSTK, u64 *args)
+>>>      Allocate a new shadow stack.
+>>>
+>>>      The parameter 'args' is a pointer to a user buffer.
+>>>
+>>>      *args = desired size
+>>>      *(args + 1) = MAP_32BIT or MAP_POPULATE
+>>>
+>>>      On returning, *args is the allocated shadow stack address.
+>>
+>> This is hideous.  Would this be better as a new syscall?
 > 
-> Responses should be made by Wed, 26 Aug 2020 16:47:07 +0000.
-> Anything received after that time might be too late.
-> 
+> Could you point out why this is hideous, so that I can modify the
+> arch_prctl?
 
-Build results:
-	total: 171 pass: 171 fail: 0
-Qemu test results:
-	total: 386 pass: 386 fail: 0
+Passing values in memory is hideous when we don't have to.  A syscall
+would let you have separate arguments for size and flags and would also
+let you have a nice return value instead of needing to do that in memory
+too.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+> I think this is more arch-specific.  Even if it becomes a new syscall,
+> we still need to pass the same parameters.
 
-Guenter
+Right, but without the copying in and out of memory.
