@@ -2,194 +2,117 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A15C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1643C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91AEC2072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC7262072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 15:52:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rw/DxH6G"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NooWtfxj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgHYPwB (ORCPT
+        id S1726825AbgHYPww (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 11:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46400 "EHLO
+        Tue, 25 Aug 2020 11:52:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726149AbgHYPv7 (ORCPT
+        with ESMTP id S1726149AbgHYPwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 11:51:59 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9128AC061574;
-        Tue, 25 Aug 2020 08:51:58 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id y8so1412528wma.0;
-        Tue, 25 Aug 2020 08:51:58 -0700 (PDT)
+        Tue, 25 Aug 2020 11:52:51 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407C7C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:52:51 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f26so14367116ljc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 08:52:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2WWaSZZuXloXF3hXA39Q3ZCHpRit+wqprTZANU5AeMQ=;
-        b=rw/DxH6GxN345y2h6nelqrvVSJ+WYtUojlJ1ozoP6zQI7IOifGBqQkEy+dFuQPezPW
-         /jGm5n2pHyYB3wWTxGMSzkBGy7/LHnlOcL+6NNfFL/ZvkdoaAtUQgyrnY04r7jzXp87/
-         3g5GAsYiHOlRTZxhIE1fApeF9j334HZM++zkr2NMItqSo7CBW8r5EhfERPFzW7wOFbdN
-         QyvCwTntdoKisqeKhwXP+VT6BgmqDZQ7GMizaQad0yuP81CL86beJv2CtmZmMkC5KHgi
-         JYpl1hTjw3tTOCKmCoEIsUBcy5M5TqBBTPAIwmZlMKEbOG5lwKcKIDockt8QMICJ9Zfw
-         4O4Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rHSFQrjZHAaK6c2r2wcs6JOsgCtrTLBeAvyy7LBBQW4=;
+        b=NooWtfxjikEFUBZ0gKwgvN1NRpBmGRbeeNzrO/+tkaSRBCJ0vKgjh4rx0jE1c+5a+l
+         6fFTRPm4m0oRNEbmMXCe2V8KLIhgRZbp4ZshbJ4NZLAnoxfemb/RfQKjX13N+cA3n0To
+         CCM6JQp9tVXhvphsqCogPbsliHDRjyD4cOIhCJSDSo0oJXCJrXYWEh5qtP4V0bDQYu5C
+         tHllRcZygSRpM1I7/YhhlObAWR4miqPgA9eNca5noAHD0TgnpZqSmP/jFKASuibRMsbq
+         i+5KZOARgzhTjIFdVCs3BVNCTMezrlhuFVICrBvKrYVde/QrA+u6ZO1+ZymVmS6c6MiH
+         Zq9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2WWaSZZuXloXF3hXA39Q3ZCHpRit+wqprTZANU5AeMQ=;
-        b=pJfTbk54qWMuwYwUAzIjzhpkHOLunNqGBxsuGPfwzj3xhfNwl2uG5R/bqcPAhHBoZW
-         fiZ32pg2ldmLNX6FiEFdQ/XqCuy+FhtLCQUzuOk07G+oGjMjJqcmvXpFfqnecGFx2VHT
-         aS4xomTHbnBGoEhFdYHpgiw4CDG9m0mGhfRfBZdrIgNY6TwRZLMVJ70b31Kqx0Bn71mU
-         NGcBXLjhcZgoKjjh78xlWB2YbmteQvKieOFGtgQiMAXJKgHNAxHkQdVf82Vc1mMJ4zdq
-         rFU5exjJFiGy7e/V3FzVg4UBquAkFuNVd2Zg0EYuv4vVnoEawh7RDMjikWEnKR0USA4l
-         Cwwg==
-X-Gm-Message-State: AOAM533fJS5DX+NSs4pqRALHmrCHXuI+IFiFJ9zuVR92/GlF9j9mStYN
-        7aiakNaobuq5nEuq5hR2wjM=
-X-Google-Smtp-Source: ABdhPJxbzjMYznH2bknIDMu+vaMPZmI1DImIMLu0bptCORhJT3lHHQlr6j84R6N4o63i7k8DOxxCkA==
-X-Received: by 2002:a7b:c205:: with SMTP id x5mr2819350wmi.161.1598370717236;
-        Tue, 25 Aug 2020 08:51:57 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id 33sm32511492wri.16.2020.08.25.08.51.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 08:51:56 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Roland Dreier <roland@purestorage.com>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] IB/qib: remove superfluous fallthrough statements
-Date:   Tue, 25 Aug 2020 16:51:42 +0100
-Message-Id: <20200825155142.349651-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rHSFQrjZHAaK6c2r2wcs6JOsgCtrTLBeAvyy7LBBQW4=;
+        b=pfUzho3CRm4/40Ztkh75yWtNUeKreINkcMzZ6bcT3lG/HerUO66FApYjko3pGAj/8C
+         2x7uzf4/C9VQTVFcm1r+NXt0eyIKOH3p0PChdSJLdqQH47WPzOGg8uzAS7heahjD41rh
+         wMtVQiAMN1RGNPqDwTYHFkZkQUcvFY7ao46AMHQcUDc+aYlJgI/Mh6bz/ZfZblqShqqX
+         Uwl/tTzv+/w/DJMqvrac1Xd5Oort1ar/ulsuRfCmrQlaqybaW1PIvCGtUteFK3mfnmHh
+         gRvi9pB2ab4FCu+Cj1jkhQsZHNVpTNZZ6C4ZdsORx2ONjUssqjzFUM1uBkf8jpAARoya
+         k1+A==
+X-Gm-Message-State: AOAM53146dhNsDcqbIhBYvFF8or0Os8IHWKbAACj2iqWzNzVMG6+9ju2
+        Pl9fBcdBdvG1zPfEAnbYfeb2fEqgTJTfkjJviURiPQSDEeY=
+X-Google-Smtp-Source: ABdhPJwdAb40aUYvsW3uCcBqK7XgBG/A3oSnYmuI/jvqjdbNSI2GdjS0lVAW1jrJVTYlb35qTwua+vVISbVNeS26kEQ=
+X-Received: by 2002:a2e:b045:: with SMTP id d5mr5474069ljl.111.1598370769636;
+ Tue, 25 Aug 2020 08:52:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200825121818.30260-1-vincent.guittot@linaro.org> <20200825135841.GC3033@suse.de>
+In-Reply-To: <20200825135841.GC3033@suse.de>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 25 Aug 2020 17:52:38 +0200
+Message-ID: <CAKfTPtBfb25L4J2tF-XOXVJSu8-N-dzU3mBdTPVxAtCnUZNfLA@mail.gmail.com>
+Subject: Re: [PATCH] sched/numa: use runnable_avg to classify node
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
-erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
-were later converted to fallthrough statements by commit df561f6688fe
-("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
-warning about unreachable code.
+On Tue, 25 Aug 2020 at 15:58, Mel Gorman <mgorman@suse.de> wrote:
+>
+> On Tue, Aug 25, 2020 at 02:18:18PM +0200, Vincent Guittot wrote:
+> > Use runnable_avg to classify numa node state similarly to what is done for
+> > normal load balancer. This helps to ensure that numa and normal balancers
+> > use the same view of the state of the system.
+> >
+> > - large arm64system: 2 nodes / 224 CPUs
+> > hackbench -l (256000/#grp) -g #grp
+> >
+> > grp    tip/sched/core         +patchset              improvement
+> > 1      14,008(+/- 4,99 %)     13,800(+/- 3.88 %)     1,48 %
+> > 4       4,340(+/- 5.35 %)      4.283(+/- 4.85 %)     1,33 %
+> > 16      3,357(+/- 0.55 %)      3.359(+/- 0.54 %)    -0,06 %
+> > 32      3,050(+/- 0.94 %)      3.039(+/- 1,06 %)     0,38 %
+> > 64      2.968(+/- 1,85 %)      3.006(+/- 2.92 %)    -1.27 %
+> > 128     3,290(+/-12.61 %)      3,108(+/- 5.97 %)     5.51 %
+> > 256     3.235(+/- 3.95 %)      3,188(+/- 2.83 %)     1.45 %
+> >
+>
+> Intuitively the patch makes sense but I'm not a fan of using hackbench
+> for evaluating NUMA balancing. The tasks are too short-lived and it's
+> not sensitive enough to data placement because of the small footprint
+> and because hackbench tends to saturate a machine.
+>
+> As predicting NUMA balancing behaviour in your head can be difficult, I've
+> queued up a battery of tests on a few different NUMA machines and will see
+> what falls out. It'll take a few days as some of the tests are long-lived.
 
-Remove the fallthrough statements and replace the mass of gotos with
-simple return statements to make the code terser and less bug-prone.
+Thanks for testing Mel
 
-Addresses-Coverity: ("Unreachable code")
-Fixes: 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- drivers/infiniband/hw/qib/qib_mad.c | 52 ++++++++---------------------
- 1 file changed, 13 insertions(+), 39 deletions(-)
+>
+> Baseline will be 5.9-rc2 as I haven't looked at the topology rework in
+> tip/sched/core and this patch should not be related to it.
 
-diff --git a/drivers/infiniband/hw/qib/qib_mad.c b/drivers/infiniband/hw/qib/qib_mad.c
-index e7789e724f56..f83e331977f8 100644
---- a/drivers/infiniband/hw/qib/qib_mad.c
-+++ b/drivers/infiniband/hw/qib/qib_mad.c
-@@ -2293,76 +2293,50 @@ static int process_cc(struct ib_device *ibdev, int mad_flags,
- 			struct ib_mad *out_mad)
- {
- 	struct ib_cc_mad *ccp = (struct ib_cc_mad *)out_mad;
--	int ret;
--
- 	*out_mad = *in_mad;
- 
- 	if (ccp->class_version != 2) {
- 		ccp->status |= IB_SMP_UNSUP_VERSION;
--		ret = reply((struct ib_smp *)ccp);
--		goto bail;
-+		return reply((struct ib_smp *)ccp);
- 	}
- 
- 	switch (ccp->method) {
- 	case IB_MGMT_METHOD_GET:
- 		switch (ccp->attr_id) {
- 		case IB_CC_ATTR_CLASSPORTINFO:
--			ret = cc_get_classportinfo(ccp, ibdev);
--			goto bail;
--
-+			return cc_get_classportinfo(ccp, ibdev);
- 		case IB_CC_ATTR_CONGESTION_INFO:
--			ret = cc_get_congestion_info(ccp, ibdev, port);
--			goto bail;
--
-+			return cc_get_congestion_info(ccp, ibdev, port);
- 		case IB_CC_ATTR_CA_CONGESTION_SETTING:
--			ret = cc_get_congestion_setting(ccp, ibdev, port);
--			goto bail;
--
-+			return cc_get_congestion_setting(ccp, ibdev, port);
- 		case IB_CC_ATTR_CONGESTION_CONTROL_TABLE:
--			ret = cc_get_congestion_control_table(ccp, ibdev, port);
--			goto bail;
--
--			fallthrough;
-+			return cc_get_congestion_control_table(ccp, ibdev, port);
- 		default:
- 			ccp->status |= IB_SMP_UNSUP_METH_ATTR;
--			ret = reply((struct ib_smp *) ccp);
--			goto bail;
-+			return reply((struct ib_smp *) ccp);
- 		}
--
- 	case IB_MGMT_METHOD_SET:
- 		switch (ccp->attr_id) {
- 		case IB_CC_ATTR_CA_CONGESTION_SETTING:
--			ret = cc_set_congestion_setting(ccp, ibdev, port);
--			goto bail;
--
-+			return cc_set_congestion_setting(ccp, ibdev, port);
- 		case IB_CC_ATTR_CONGESTION_CONTROL_TABLE:
--			ret = cc_set_congestion_control_table(ccp, ibdev, port);
--			goto bail;
--
--			fallthrough;
-+			return cc_set_congestion_control_table(ccp, ibdev, port);
- 		default:
- 			ccp->status |= IB_SMP_UNSUP_METH_ATTR;
--			ret = reply((struct ib_smp *) ccp);
--			goto bail;
-+			return reply((struct ib_smp *) ccp);
- 		}
--
- 	case IB_MGMT_METHOD_GET_RESP:
- 		/*
- 		 * The ib_mad module will call us to process responses
- 		 * before checking for other consumers.
- 		 * Just tell the caller to process it normally.
- 		 */
--		ret = IB_MAD_RESULT_SUCCESS;
--		goto bail;
--
--	case IB_MGMT_METHOD_TRAP:
--	default:
--		ccp->status |= IB_SMP_UNSUP_METHOD;
--		ret = reply((struct ib_smp *) ccp);
-+		return IB_MAD_RESULT_SUCCESS;
- 	}
- 
--bail:
--	return ret;
-+	/* method is unsupported */
-+	ccp->status |= IB_SMP_UNSUP_METHOD;
-+	return reply((struct ib_smp *) ccp);
- }
- 
- /**
--- 
-2.28.0
+looks fine to me
 
+>
+> --
+> Mel Gorman
+> SUSE Labs
