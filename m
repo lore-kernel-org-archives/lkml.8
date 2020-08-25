@@ -7,40 +7,39 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9560C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85799C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 800F12072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6364B2072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbgHYE5X (ORCPT
+        id S1729012AbgHYE6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:57:23 -0400
-Received: from smtprelay0144.hostedemail.com ([216.40.44.144]:33320 "EHLO
+        Tue, 25 Aug 2020 00:58:46 -0400
+Received: from smtprelay0180.hostedemail.com ([216.40.44.180]:33390 "EHLO
         smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728803AbgHYE5M (ORCPT
+        by vger.kernel.org with ESMTP id S1728533AbgHYE5U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:57:12 -0400
-X-Greylist: delayed 125017 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Aug 2020 00:57:12 EDT
+        Tue, 25 Aug 2020 00:57:20 -0400
 Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 7D2D418224D86;
-        Tue, 25 Aug 2020 04:57:10 +0000 (UTC)
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id DA32C181D337B;
+        Tue, 25 Aug 2020 04:57:17 +0000 (UTC)
 X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: offer77_2f11fd827059
-X-Filterd-Recvd-Size: 1989
+X-HE-Tag: low63_3a0323c27059
+X-Filterd-Recvd-Size: 1653
 Received: from joe-laptop.perches.com (unknown [47.151.133.149])
         (Authenticated sender: joe@perches.com)
         by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 25 Aug 2020 04:57:09 +0000 (UTC)
+        Tue, 25 Aug 2020 04:57:16 +0000 (UTC)
 From:   Joe Perches <joe@perches.com>
 To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH 15/29] mtd: Avoid comma separated statements
-Date:   Mon, 24 Aug 2020 21:56:12 -0700
-Message-Id: <ae92f4c0507c470d9461886410dc7030192f9014.1598331149.git.joe@perches.com>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 19/29] s390/tty3270: Avoid comma separated statements
+Date:   Mon, 24 Aug 2020 21:56:16 -0700
+Message-Id: <9988babd9cca4ac841961d9f0bbf5e49caa87659.1598331149.git.joe@perches.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <cover.1598331148.git.joe@perches.com>
 References: <cover.1598331148.git.joe@perches.com>
@@ -55,37 +54,26 @@ Use semicolons and braces.
 
 Signed-off-by: Joe Perches <joe@perches.com>
 ---
- drivers/mtd/devices/lart.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/s390/char/tty3270.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/devices/lart.c b/drivers/mtd/devices/lart.c
-index 56f50d27b7fd..aecd441e4183 100644
---- a/drivers/mtd/devices/lart.c
-+++ b/drivers/mtd/devices/lart.c
-@@ -436,7 +436,10 @@ static int flash_read (struct mtd_info *mtd,loff_t from,size_t len,size_t *retle
- 	 {
- 		int gap = BUSWIDTH - (from & (BUSWIDTH - 1));
- 
--		while (len && gap--) *buf++ = read8 (from++), len--;
-+		while (len && gap--) {
-+			*buf++ = read8 (from++);
-+			len--;
-+		}
- 	 }
- 
-    /* now we read dwords until we reach a non-dword boundary */
-@@ -518,7 +521,10 @@ static int flash_write (struct mtd_info *mtd,loff_t to,size_t len,size_t *retlen
- 		i = n = 0;
- 
- 		while (gap--) tmp[i++] = 0xFF;
--		while (len && i < BUSWIDTH) tmp[i++] = buf[n++], len--;
-+		while (len && i < BUSWIDTH) {
-+			tmp[i++] = buf[n++];
-+			len--;
-+		}
- 		while (i < BUSWIDTH) tmp[i++] = 0xFF;
- 
- 		if (!write_dword (aligned,*((__u32 *) tmp))) return (-EIO);
+diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
+index aec996de44d9..6acce975df26 100644
+--- a/drivers/s390/char/tty3270.c
++++ b/drivers/s390/char/tty3270.c
+@@ -424,8 +424,10 @@ tty3270_update(struct timer_list *t)
+ 			 * last output position matches the start address
+ 			 * of this line.
+ 			 */
+-			if (s->string[1] == sba[0] && s->string[2] == sba[1])
+-				str += 3, len -= 3;
++			if (s->string[1] == sba[0] && s->string[2] == sba[1]) {
++				str += 3;
++				len -= 3;
++			}
+ 			if (raw3270_request_add_data(wrq, str, len) != 0)
+ 				break;
+ 			list_del_init(&s->update);
 -- 
 2.26.0
 
