@@ -2,136 +2,151 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFE6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0FAC433E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0B162075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CDE2075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 14:58:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tQvGYTFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgHYO57 convert rfc822-to-8bit (ORCPT
+        id S1727103AbgHYO6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 10:57:59 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:32048 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726336AbgHYOwk (ORCPT
+        Tue, 25 Aug 2020 10:58:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgHYO6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 10:52:40 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-229-XTGr5FjFOiOuMkOxNdlKew-1; Tue, 25 Aug 2020 15:52:36 +0100
-X-MC-Unique: XTGr5FjFOiOuMkOxNdlKew-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 25 Aug 2020 15:52:35 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 25 Aug 2020 15:52:35 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>,
-        'Catalin Marinas' <catalin.marinas@arm.com>,
-        "'kent.overstreet@gmail.com'" <kent.overstreet@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "'Neil Horman'" <nhorman@tuxdriver.com>
-Subject: [PATCH 07/13] lib/generic-radix-tree: Optimise __genradix_iter_peek()
-Thread-Topic: [PATCH 07/13] lib/generic-radix-tree: Optimise
- __genradix_iter_peek()
-Thread-Index: AdZ67z36LdYIWMqoTRCrizJoKBNmVA==
-Date:   Tue, 25 Aug 2020 14:52:35 +0000
-Message-ID: <d606b3e29ec3407f98d4deb20bc29662@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 25 Aug 2020 10:58:04 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4061CC061574;
+        Tue, 25 Aug 2020 07:58:04 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u128so7552687pfb.6;
+        Tue, 25 Aug 2020 07:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EV9ZwzCwV4Z9BNt841c3RBiIdIkv89NbNGG9BR4Vsvo=;
+        b=tQvGYTFufQJ5ANwInffuD4W0HHbHhK3UMnx7AkOXZ23wS9FDnOwTjxSUnuDU8w4+6H
+         WrzNpO/vv8kZIl9tBYikyi80TDvKRYoJRBF/EOhJ27PSG4SngR/Xuxnm4uoZDqEtmWBG
+         w9Q0ZzZ9TN1p9oEP0v5cNP2EC/Qk6ju4EZSTPIhwUvYV4CJIzVxROxF6yxMWRxEcdjR3
+         Wwb3UgbmDMVI5u10e62d1rDys9XDuhYY/OoRWEe7B70C4tjmS+HdaxNk2nUDyAKQCx1z
+         59brznER2AMWT2lF91xyUfS5EzwwaTvRDntW33H3IP4yPpmtQ1udSgwIFm7gpknoBzQ6
+         VDYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EV9ZwzCwV4Z9BNt841c3RBiIdIkv89NbNGG9BR4Vsvo=;
+        b=BtD7YGdTJUT2agGmnvXR8lfXoJjMV0/kJIHjtrC+5M3mHw3OStSb8wm2BskmgUB8G3
+         ejNwmKN5P6Hm1Qey8xgbp48plidW0TwIGJqsgnpekMuqezTZsKO0zM6WSEZTbXLUbybv
+         iMj0OBVVJ2TXQ+CmBcKk9593NgPGk6GAdUqiRl5Ffyx38L5fmzoE1OG4SNQ2EPpSTkFl
+         i8LuphpqHt17nJdXpGr1WNxkNGu8gRPtbOaL1vkJ32QV+jA1q0JM0diit7I+oKz1BnlN
+         j59I4R7Lug6tMaiMbUC8fwJvy+AoALTrTE+pTLFthydzQc0502CLOKb2JZkqiYP96v5+
+         gAQw==
+X-Gm-Message-State: AOAM533rqJ9iksNCfb1bOmojLvYnoxlcDLYxprRDgihjAwE8iLVnoQVs
+        mZuGH5yO1GMJ/gSa6NmN0lU=
+X-Google-Smtp-Source: ABdhPJxnK3YNImOtYVgHd5D3Y/G4BRiEKbLrVsJXP4BBfTIN6Zbw6lEUoA6/orOoc47WqA6yXSiVLw==
+X-Received: by 2002:a17:902:8bcc:: with SMTP id r12mr7892933plo.314.1598367483737;
+        Tue, 25 Aug 2020 07:58:03 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id e29sm15755956pfj.92.2020.08.25.07.57.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 07:58:03 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Zefan Li <lizefan@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH v7 00/12] huge vmalloc mappings
+Date:   Wed, 26 Aug 2020 00:57:41 +1000
+Message-Id: <20200825145753.529284-1-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.002
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the the 'shift' rather than the 'level'.
-NB There are exactly zero users of this code.
+I think it's ready to go into -mm if it gets acks for the arch
+changes.
 
-Signed-off-by: David Laight <david.laight@aculab.com>
----
- lib/generic-radix-tree.c | 24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+Thanks,
+Nick
 
-diff --git a/lib/generic-radix-tree.c b/lib/generic-radix-tree.c
-index 219b43250a06..0df99ee428d8 100644
---- a/lib/generic-radix-tree.c
-+++ b/lib/generic-radix-tree.c
-@@ -22,14 +22,6 @@ static inline int genradix_depth_shift(unsigned depth)
- 	return PAGE_SHIFT + GENRADIX_ARY_SHIFT * depth;
- }
- 
--/*
-- * Returns size (of data, in bytes) that a tree of a given depth holds:
-- */
--static inline size_t genradix_depth_size(unsigned depth)
--{
--	return 1UL << genradix_depth_shift(depth);
--}
--
- /*
-  * The 'depth' of the tree is held in the low bits of the 'root'.
-  * Since all the buffers are allocated as pages lots of low bits are zero.
-@@ -209,7 +201,7 @@ void *__genradix_iter_peek(struct genradix_iter *iter,
- {
- 	struct genradix_root *r;
- 	struct genradix_node *n;
--	unsigned level, i;
-+	unsigned int shift, level, i;
- restart:
- 	r = READ_ONCE(radix->root);
- 	if (!r)
-@@ -217,21 +209,21 @@ void *__genradix_iter_peek(struct genradix_iter *iter,
- 
- 	n	= genradix_root_to_node(r);
- 	level	= genradix_root_to_depth(r);
-+	shift = genradix_depth_shift(level);
- 
--	if (iter->offset >> genradix_depth_shift(level))
-+	if (iter->offset >> shift)
- 		return NULL;
- 
--	while (level) {
--		level--;
-+	while (shift > GENRADIX_ARY_SHIFT) {
-+		shift -= GENRADIX_ARY_SHIFT;
- 
--		i = (iter->offset >> genradix_depth_shift(level)) &
--			(GENRADIX_ARY - 1);
-+		i = (iter->offset >> shift) % GENRADIX_ARY;
- 
- 		while (!n->children[i]) {
- 			i++;
- 			iter->offset = round_down(iter->offset +
--					   genradix_depth_size(level),
--					   genradix_depth_size(level));
-+					   (1u << shift),
-+					   1u << shift);
- 			iter->pos = (iter->offset >> PAGE_SHIFT) *
- 				objs_per_page;
- 			if (i == GENRADIX_ARY)
+Since v6:
+- Fixed a false positive warning introduced in patch 2, found by
+  kbuild test robot.
+
+Since v5:
+- Split arch changes out better and make the constant folding work
+- Avoid most of the 80 column wrap, fix a reference to lib/ioremap.c
+- Fix compile error on some archs
+
+Since v4:
+- Fixed an off-by-page-order bug in v4
+- Several minor cleanups.
+- Added page order to /proc/vmallocinfo
+- Added hugepage to alloc_large_system_hage output.
+- Made an architecture config option, powerpc only for now.
+
+Since v3:
+- Fixed an off-by-one bug in a loop
+- Fix !CONFIG_HAVE_ARCH_HUGE_VMAP build fail
+- Hopefully this time fix the arm64 vmap stack bug, thanks Jonathan
+  Cameron for debugging the cause of this (hopefully).
+
+Since v2:
+- Rebased on vmalloc cleanups, split series into simpler pieces.
+- Fixed several compile errors and warnings
+- Keep the page array and accounting in small page units because
+  struct vm_struct is an interface (this should fix x86 vmap stack debug
+  assert). [Thanks Zefan]
+
+
+Nicholas Piggin (12):
+  mm/vmalloc: fix vmalloc_to_page for huge vmap mappings
+  mm: apply_to_pte_range warn and fail if a large pte is encountered
+  mm/vmalloc: rename vmap_*_range vmap_pages_*_range
+  mm/ioremap: rename ioremap_*_range to vmap_*_range
+  mm: HUGE_VMAP arch support cleanup
+  powerpc: inline huge vmap supported functions
+  arm64: inline huge vmap supported functions
+  x86: inline huge vmap supported functions
+  mm: Move vmap_range from mm/ioremap.c to mm/vmalloc.c
+  mm/vmalloc: add vmap_range_noflush variant
+  mm/vmalloc: Hugepage vmalloc mappings
+  powerpc/64s/radix: Enable huge vmalloc mappings
+
+ .../admin-guide/kernel-parameters.txt         |   2 +
+ arch/Kconfig                                  |   4 +
+ arch/arm64/include/asm/vmalloc.h              |  25 +
+ arch/arm64/mm/mmu.c                           |  26 -
+ arch/powerpc/Kconfig                          |   1 +
+ arch/powerpc/include/asm/vmalloc.h            |  21 +
+ arch/powerpc/mm/book3s64/radix_pgtable.c      |  21 -
+ arch/x86/include/asm/vmalloc.h                |  23 +
+ arch/x86/mm/ioremap.c                         |  19 -
+ arch/x86/mm/pgtable.c                         |  13 -
+ include/linux/io.h                            |   9 -
+ include/linux/vmalloc.h                       |  10 +
+ init/main.c                                   |   1 -
+ mm/ioremap.c                                  | 225 +--------
+ mm/memory.c                                   |  60 ++-
+ mm/page_alloc.c                               |   5 +-
+ mm/vmalloc.c                                  | 443 +++++++++++++++---
+ 17 files changed, 515 insertions(+), 393 deletions(-)
+
 -- 
-2.25.1
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+2.23.0
 
