@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1631AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEF3C433E3
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1F292075F
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53FC32075F
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 19:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598384200;
-	bh=wlqBmIZakjThWfsNYNSXRzUys0EPXws/z1mqU2+A+80=;
+	s=default; t=1598384205;
+	bh=6pQee/lEOtd6XVjbMxZhh087Cotb2fe4tMAUouVEZXE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lgl3gb9k189NLCqcwTUNSOqifRpZUi2Mhwp/SKb7LRRSHyBEe/gtqmzk2i5VYWI7b
-	 5VyvKfbzO16hMKaZjRQG16xQPkuenKPh4REOMvy1nz5Qamf9RS4iKRiOUQj01pTsuT
-	 BHYYEAQ6ilqufHya3AIFvEyQf4m7VW2kiHLPFMks=
+	b=dqElROO38fjT7adxkFplm7nNr3C5ziYy2E2MTb1EjFh5SmWDIXea3WA1n5OLFJ/p+
+	 QYrhK992xP0He2cAx2blWFN0SHfTPFYIfDSJu6rg+HtDXbIGbiRD3qa3XGJO7KbJJT
+	 PUSbILd/vow5RhDeekrkGTx3Fj8jPuwI1iVrn/4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbgHYTgi (ORCPT
+        id S1726929AbgHYTgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 15:36:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40518 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 15:36:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbgHYTgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 15:36:32 -0400
+        id S1726713AbgHYTgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 15:36:43 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FC7820897;
-        Tue, 25 Aug 2020 19:36:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 062442075E;
+        Tue, 25 Aug 2020 19:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598384191;
-        bh=wlqBmIZakjThWfsNYNSXRzUys0EPXws/z1mqU2+A+80=;
+        s=default; t=1598384203;
+        bh=6pQee/lEOtd6XVjbMxZhh087Cotb2fe4tMAUouVEZXE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NKNaAevsmSyPGRzDQ+92XeeGVni0MwuQAhfDjyIxdLQr1siYERZDAaFHkVDPBp259
-         4q4O+8S87Y5L13uVzqOwf/sxPly7eH2dDdO0cdp/NQKfy8IaAW+84PVrynfjnwqI6h
-         ldMPBAUFmkcT3xRmq3x3jtrZwF3nzTbOPUzwWybk=
+        b=FuZ8wpSH8ZxNJeaDZ9YPkq4WRh/FgzFB65KrG/V8H46eZwNAD9VCLEf8BZAXqx1WM
+         GMvU1WaU3R1fVUrNgygVIt4aLnCHFV9xiLRz7ZqBu9UwTdmD+/vDc7++Hb3yLlCYO3
+         Sm8Hk6bMrhY6+Nzl3cn9vZ5raF4BAJTozB2hAWP0=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -61,9 +61,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 04/19] dt-bindings: gpio: fsl-imx-gpio: Add power-domains
-Date:   Tue, 25 Aug 2020 21:35:21 +0200
-Message-Id: <20200825193536.7332-5-krzk@kernel.org>
+Subject: [PATCH v3 05/19] dt-bindings: perf: fsl-imx-ddr: Add i.MX 8M compatibles
+Date:   Tue, 25 Aug 2020 21:35:22 +0200
+Message-Id: <20200825193536.7332-6-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200825193536.7332-1-krzk@kernel.org>
 References: <20200825193536.7332-1-krzk@kernel.org>
@@ -72,32 +72,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Parse also optional power-domains property to fix dtbs_check warnings
-like:
+DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
+to fix dtbs_check warnings like:
 
-  arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml: gpio@5d080000: 'power-domains' does not match any of the regexes: 'pinctrl-[0-9]+'
-    From schema: Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: ddr-pmu@3d800000:
+    compatible:0: 'fsl,imx8mm-ddr-pmu' is not one of ['fsl,imx8-ddr-pmu', 'fsl,imx8m-ddr-pmu', 'fsl,imx8mp-ddr-pmu']
+    From schema: Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+
+  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: ddr-pmu@3d800000:
+    compatible: ['fsl,imx8mm-ddr-pmu', 'fsl,imx8m-ddr-pmu'] is too long
+
+  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: ddr-pmu@3d800000:
+    compatible: Additional items are not allowed ('fsl,imx8m-ddr-pmu' was unexpected)
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-index 620a52f944e8..de0b9b5f6a70 100644
---- a/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
-@@ -53,6 +53,9 @@ properties:
+---
+
+Changes since v1:
+1. Handle also fsl,imx8mp-ddr-pmu
+---
+ .../devicetree/bindings/perf/fsl-imx-ddr.yaml    | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+index 9ed8f44adabe..5aad9f4e0b2a 100644
+--- a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
++++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
+@@ -11,10 +11,18 @@ maintainers:
  
-   gpio-ranges: true
+ properties:
+   compatible:
+-    enum:
+-      - fsl,imx8-ddr-pmu
+-      - fsl,imx8m-ddr-pmu
+-      - fsl,imx8mp-ddr-pmu
++    oneOf:
++      - enum:
++          - fsl,imx8-ddr-pmu
++          - fsl,imx8m-ddr-pmu
++          - fsl,imx8mp-ddr-pmu
++      - items:
++          - enum:
++              - fsl,imx8mm-ddr-pmu
++              - fsl,imx8mn-ddr-pmu
++              - fsl,imx8mq-ddr-pmu
++              - fsl,imx8mp-ddr-pmu
++          - const: fsl,imx8m-ddr-pmu
  
-+  power-domains:
-+    maxItems: 1
-+
- patternProperties:
-   "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
-     type: object
+   reg:
+     maxItems: 1
 -- 
 2.17.1
 
