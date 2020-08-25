@@ -2,92 +2,156 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF97C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A67C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F087720738
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D43120738
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 03:36:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="guBrQLSe"
+	dkim=pass (2048-bit key) header.d=dilger-ca.20150623.gappssmtp.com header.i=@dilger-ca.20150623.gappssmtp.com header.b="1EbY6cqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbgHYDe0 (ORCPT
+        id S1728565AbgHYDgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 24 Aug 2020 23:34:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43412 "EHLO
+        Mon, 24 Aug 2020 23:36:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726532AbgHYDeZ (ORCPT
+        with ESMTP id S1726532AbgHYDgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 24 Aug 2020 23:34:25 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A30FC061574;
-        Mon, 24 Aug 2020 20:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=qo7vXrEZhpDizbZsPI7G5k0fUIjudAsV66SwXq7rzag=; b=guBrQLSexeg0VYTb0hsSOclFGL
-        wEiobKE8SjCyUbrMdiNu63wvh2S2K9KnD4Lbi7ulX+RyYlRazbW8sVfl6Pcy4miVdUM+ma/bpwQQi
-        hgHkY3jHm7utKnf2HUSEH+k3goBWtDHJa/tFmktWJSiHYRST/PwFSJUoSLWivd51x8TtpzAhBAuEe
-        cHhI0KbvRXnrI+JA76LoWvyT3+TMkzA8K12dYwDLyHosschKz+/ZxGzZ2b980Ufl/L+jNmAS1koYL
-        pfRIM3gKZWDQoD3X0t4KnT5UvFr2OXSJ0Q9rJ7Sfhylw027HGYinrdZz2/art7gRSAuctzt5grUzq
-        xwVNbdHw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAPit-0006GU-5m; Tue, 25 Aug 2020 03:34:12 +0000
-Subject: Re: mmotm 2020-08-24-16-06 uploaded (drivers/nvdimm/e820.c)
-To:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200824230725.8gXQoJFD-%akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b579d385-3c87-d822-1651-e5acb9ce413e@infradead.org>
-Date:   Mon, 24 Aug 2020 20:34:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200824230725.8gXQoJFD-%akpm@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 24 Aug 2020 23:36:03 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B59C061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 20:36:03 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f193so6214420pfa.12
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 20:36:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=jMst9AALyVE1vuNR7TVhktCGxVDBADXL6clCiwvRDF4=;
+        b=1EbY6cqHzWJ8O5xJucVD6EGWUfFV/sOP5pT0xJwxdbllnLVz47G6Zh/q/HCihEgjMF
+         E+HvYQE2mzaQyPZ2NVV6CCYObcm/lxIMxDCBZZVCFuVswDSKwinMoPvFZwz0rYEny0Zk
+         RvU6m5BzuenPCBtp8cnPmR2ldM9p2H3i2Zx1xr3FXQP/CbTMtAJUE3oGl/Lem9mhZk9v
+         XjTHaRC7v76gEAYHy8wCVHEvHwXVyxij9SYMv83TmRoiEePGUvFgBwxSUcgik57/S7vD
+         mOzWAEIqhXqkbGPwMMFV574UE/d/02sLBmeyxMpR3oQ0TnSQfnEmkhotRBPbWqp/JsSM
+         hXiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=jMst9AALyVE1vuNR7TVhktCGxVDBADXL6clCiwvRDF4=;
+        b=IYWKPHh1ubms8zyTn/EUZB5Dr0GSCJAB7VjvLovbTVm2GycGn3zAJRwA4g+BpKlg45
+         puxwX7NPtCM7LygKFWw1eP0HirWx5UycinjqZfjyrFbBGMYsAOM4wEN4NeoMVjmfHe9B
+         DgImgsLjaYyETIa2y6plQu/gyCjIDzFOIuhom7xN9rW4O0FwQGVs0nkWPr2KdOU2hq9O
+         0x5iGIsbOunQvhfbCYq4Yh4cGEYtz300KD260xmZFk2x7o5UdSoCW7GdSdXQCvIRG5Ds
+         eXFNBr/78nlnTPsUQFMInbZhTrsHsHLjukaeBPZhSmqGUDhKmbCNKoaWDS67CUm3ub47
+         MxNA==
+X-Gm-Message-State: AOAM530/wU99rBDSQI4LhsSFenqsFSaxPMavqP4o52e23QCdVnGyJM17
+        zC7czST111IVE8/6wqtHNq9iGg==
+X-Google-Smtp-Source: ABdhPJwMrxZOJCEdo6Oiehi+gc/8cfNjuXrzzHMWlxrsTYr5jEk0TdfzRtpVv16lWhN5uoC6za1EeA==
+X-Received: by 2002:aa7:858c:: with SMTP id w12mr1295615pfn.157.1598326563022;
+        Mon, 24 Aug 2020 20:36:03 -0700 (PDT)
+Received: from [192.168.10.160] (S01061cabc081bf83.cg.shawcable.net. [70.77.221.9])
+        by smtp.gmail.com with ESMTPSA id x5sm1877284pfj.1.2020.08.24.20.36.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Aug 2020 20:36:02 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <E47B2C68-43F2-496F-AA91-A83EB3D91F28@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_23D8BB5C-5128-4552-921A-F0AEEE76FFB1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH 9/9] iomap: Change calling convention for zeroing
+Date:   Mon, 24 Aug 2020 21:35:59 -0600
+In-Reply-To: <20200825032603.GL17456@casper.infradead.org>
+Cc:     Dave Chinner <david@fromorbit.com>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+To:     Matthew Wilcox <willy@infradead.org>
+References: <20200824145511.10500-1-willy@infradead.org>
+ <20200824145511.10500-10-willy@infradead.org>
+ <20200825002735.GI12131@dread.disaster.area>
+ <20200825032603.GL17456@casper.infradead.org>
+X-Mailer: Apple Mail (2.3273)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/24/20 4:07 PM, akpm@linux-foundation.org wrote:
-> The mm-of-the-moment snapshot 2020-08-24-16-06 has been uploaded to
+
+--Apple-Mail=_23D8BB5C-5128-4552-921A-F0AEEE76FFB1
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=us-ascii
+
+On Aug 24, 2020, at 9:26 PM, Matthew Wilcox <willy@infradead.org> wrote:
 > 
->    https://www.ozlabs.org/~akpm/mmotm/
+> On Tue, Aug 25, 2020 at 10:27:35AM +1000, Dave Chinner wrote:
+>>> 	do {
+>>> -		unsigned offset, bytes;
+>>> -
+>>> -		offset = offset_in_page(pos);
+>>> -		bytes = min_t(loff_t, PAGE_SIZE - offset, count);
+>>> +		loff_t bytes;
+>>> 
+>>> 		if (IS_DAX(inode))
+>>> -			status = dax_iomap_zero(pos, offset, bytes, iomap);
+>>> +			bytes = dax_iomap_zero(pos, length, iomap);
+>> 
+>> Hmmm. everything is loff_t here, but the callers are defining length
+>> as u64, not loff_t. Is there a potential sign conversion problem
+>> here? (sure 64 bit is way beyond anything we'll pass here, but...)
 > 
-> mmotm-readme.txt says
-> 
-> README for mm-of-the-moment:
-> 
-> https://www.ozlabs.org/~akpm/mmotm/
-> 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
+> I've gone back and forth on the correct type for 'length' a few times.
+> size_t is too small (not for zeroing, but for seek()).  An unsigned type
+> seems right -- a length can't be negative, and we don't want to give
+> the impression that it can.  But the return value from these functions
+> definitely needs to be signed so we can represent an error.  So a u64
+> length with an loff_t return type feels like the best solution.  And
+> the upper layers have to promise not to pass in a length that's more
+> than 2^63-1.
 
-on i386:
+The problem with allowing a u64 as the length is that it leads to the
+possibility of an argument value that cannot be returned.  Checking
+length < 0 is not worse than checking length > 0x7ffffffffffffff,
+and has the benefit of consistency with the other argument types and
+signs...
 
-when MEMORY_HOTPLUG is not set and NUMA is not set:
-
-../drivers/nvdimm/e820.c: In function ‘e820_register_one’:
-../drivers/nvdimm/e820.c:24:12: error: implicit declaration of function ‘phys_to_target_node’; did you mean ‘set_page_node’? [-Werror=implicit-function-declaration]
-  int nid = phys_to_target_node(res->start);
-            ^~~~~~~~~~~~~~~~~~~
-
-In include/linux/memory_hotplug.h, phys_to_target_node() is hidden inside
-CONFIG_MEMORY_HOTPLUG.
+Cheers, Andreas
 
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+
+
+
+
+--Apple-Mail=_23D8BB5C-5128-4552-921A-F0AEEE76FFB1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAl9EhyAACgkQcqXauRfM
+H+A2bA/+PJl5m7FnhjTWHQEwftqKx/Ihjoc2ef7C7c8Kdyb+cda3QwWzm+mFKLB/
+S0ORVi1pC9acc6wTSQNKa38aIj6o/oqeAevz2fXiAF4K0P8JrgWhH0WQE2tFry5O
+ZFcS2+ppn14u69WkcEvtFG7kXfT2KFf8LfPy5/nXTTJFodVFFVg1kaa6UNyfR6QB
+mLG0x8YD7QoAU8RmUgbXR2E7j/2JItJyIdDzMIm4O6Bc1B5akrj679DlYgyW6pb2
+Po4L23OEDHHB+dNEvJuY3XpjEg6cbb6AvB8oZGMBfMGoVs1/zV3OcMfDqyJ9Wm7/
+sPszYKLpnpZyVTV3tKd7u6p8WAbQJSdlqNj33OIiXWg6EPtqdOnCcDO9Bx0+CHhf
+UBDtcjgXGZvJ5gsurTfQHr1hz40x2MIbkwpsxuy5ogal1kO4eQJZvfCVgsUR4n6c
+4TkI1vEYW6GGxaEOvXSZuTtRccIJkmnNeUHSOrl5XTMjfVg9UsiueKtrkjkMLo+s
+5sOQTI/+4ocYeccNJObLDwj4ENDOahJz0G7lM5C4R3lBCb+RmBvjqDmqkI1zmonN
+f7+/jKRPT1p6V7COLZ/SHg4HY9M6EV3lm4tMXsiu445rWTUR0Fi3bKFOeN/+E9wg
+a+wwO+kzZUswiDVqDtfpZmnON1msvguMHvgEfIwormwE9FwU1GQ=
+=dr3G
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_23D8BB5C-5128-4552-921A-F0AEEE76FFB1--
