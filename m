@@ -2,101 +2,111 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07291C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDC5C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C13DB20706
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A8220706
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 23:33:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aCptvD7R"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRB51f8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgHYXct (ORCPT
+        id S1726838AbgHYXd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 19:32:49 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23403 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726672AbgHYXcs (ORCPT
+        Tue, 25 Aug 2020 19:33:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726542AbgHYXd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 19:32:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598398367;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iNZwRJs0PD9iKsaLBqotm4UwZlEiqVWYFVG+uF+ypPo=;
-        b=aCptvD7RnRLZc5E7/MoBHRbfmS/7zcuAikd6vdEeIgJtTpjbvFTKnT+g6v4v6R1GKwbR21
-        u+yX65AwlmvVLPoCKZNNI5YZ2q/5h+9hbQdw8XMEKLNRYfXS+MYeUdi4M82ufct0+Zzc2+
-        jrUA/MaRhXJtjt3pOVZI6P2ddIIjxdo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-nQGTg9oSMM-q7GISHw33yQ-1; Tue, 25 Aug 2020 19:32:43 -0400
-X-MC-Unique: nQGTg9oSMM-q7GISHw33yQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 279CA805EE2;
-        Tue, 25 Aug 2020 23:32:42 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-112-124.rdu2.redhat.com [10.10.112.124])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E0271002396;
-        Tue, 25 Aug 2020 23:32:41 +0000 (UTC)
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTogW1BBVENIXSBkZWJ1Z29iamVjdHM6IGluc3RhbGwg?=
- =?UTF-8?Q?cpu_hotplug_callback?=
-From:   Waiman Long <longman@redhat.com>
-To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "elver@google.com" <elver@google.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-References: <20200820032453.5222-1-qiang.zhang@windriver.com>
- <BYAPR11MB263237C2A74C32CC14DD0F2EFF570@BYAPR11MB2632.namprd11.prod.outlook.com>
- <e75c1601-b466-8476-f75b-514b1c21646e@redhat.com>
-Organization: Red Hat
-Message-ID: <d1255075-e273-a74d-3bc7-d97b320470db@redhat.com>
-Date:   Tue, 25 Aug 2020 19:32:40 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 25 Aug 2020 19:33:26 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E809AC061574;
+        Tue, 25 Aug 2020 16:33:25 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id n3so252933pjq.1;
+        Tue, 25 Aug 2020 16:33:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2FNoKN0kaYc5PEMF/7OkH/69aeo+O5crzxwYWBe7l/8=;
+        b=mRB51f8dmL9rWfcKDVGREdgeS94KkEpoCj1ZfOTjHF22suF5rmr2Xpq8QrOthz4pvd
+         Km90MiILM2NhaxXXMYaoTSyVIzn6KVVYTYYTKbgrTRzyltStY2NbxL+n2pc3yadrpsOm
+         OGJVV2mtci2n0lWGr1bFPf5168mjoEOJZ4cSjYBn7wkmOzdkWswNWG3F6WFU3gjWj5q1
+         Citjl3fBVrDkZ7twXiAXus5LcO06kmvRNiUflrhnWoU7C6ZOdjT3aUmhglgHJczjGjlQ
+         1Mr1HPmsiRmuBlFw8eAbSHt0agxiS7zIHz+HCZZyxTox1YI2D62k0cJggqSMxGqpWAm4
+         igWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2FNoKN0kaYc5PEMF/7OkH/69aeo+O5crzxwYWBe7l/8=;
+        b=qp3IBcihyBfvS5i059s3YH6KRNTamSjsU6OZWbIinWIIq+PvmzRXRqULaTADwA0DhL
+         shsNSC696DgnD7l7Y/2cdugCnyrz9EvQkOPhJisqNxQi0xiuff0348ym5yVdrwN5AOl1
+         Sn2OQQY6ySQXcx4UXL8V4ii9M1EdcahYqF65YqVrJKqUvq/ofh3j/B8pPq1T2qNZMEHa
+         85ihqNTz1LJOAS/LdCyOyEGqG6x5JFxEMpLHLhyRtcugdF8JwZDCUJpy+bhZtpXDo14x
+         rBZu931SQjBLkFEDINOKF9zaMv8BAgN4ksQOtC6/jEFV3MGm7hO/a1mr1EiIsnIjV6Jq
+         O/6w==
+X-Gm-Message-State: AOAM533XBBEqwx/uh28Qw8Ndhz1aVfP1p8MqgzfEwbP0ddzlyq9vxExw
+        uUn1Rsjrs8DeUTMMn/5iX3Dzdx6CPiI=
+X-Google-Smtp-Source: ABdhPJwGw/Z5ArzPamde04jc7fUQiAw5EXM8GGHqGXKxjBb7+3cSk4h16+h9laio5cduQfdUy5p6EQ==
+X-Received: by 2002:a17:902:9883:: with SMTP id s3mr9582714plp.271.1598398405513;
+        Tue, 25 Aug 2020 16:33:25 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v128sm369465pfc.14.2020.08.25.16.33.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 16:33:24 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 16:33:23 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Joe Perches <joe@perches.com>
+Cc:     Jiri Kosina <trivial@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 11/29] hwmon: (scmi-hwmon): Avoid comma separated
+ statements
+Message-ID: <20200825233323.GA127894@roeck-us.net>
+References: <cover.1598331148.git.joe@perches.com>
+ <5e1ca60df261e3bfd0e6510e388581a1d1f52c77.1598331149.git.joe@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <e75c1601-b466-8476-f75b-514b1c21646e@redhat.com>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e1ca60df261e3bfd0e6510e388581a1d1f52c77.1598331149.git.joe@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/25/20 6:26 PM, Waiman Long wrote:
-> On 8/25/20 12:53 AM, Zhang, Qiang wrote:
->> ________________________________________
->> 发件人: linux-kernel-owner@vger.kernel.org 
->> <linux-kernel-owner@vger.kernel.org> 代表 qiang.zhang@windriver.com 
->> <qiang.zhang@windriver.com>
->> 发送时间: 2020年8月20日 11:24
->> 收件人: tglx@linutronix.de; elver@google.com; longman@redhat.com
->> 抄送: linux-kernel@vger.kernel.org
->> 主题: [PATCH] debugobjects: install cpu hotplug callback
->>
->> From: Zqiang <qiang.zhang@windriver.com>
->>
->> When a cpu going offline, we should free objects in "percpu_obj_pool"
->> free_objs list which corresponding to this cpu.
->
-> The percpu free object pool is supposed to be accessed only by that 
-> particular cpu without any lock. Trying to access it from another cpu 
-> can cause a race condition unless one can make sure that the offline 
-> cpu won't become online in the mean time. There shouldn't be too many 
-> free objects in the percpu pool. Is it worth the effort to free them? 
+On Mon, Aug 24, 2020 at 09:56:08PM -0700, Joe Perches wrote:
+> Use semicolons and braces.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-Or if you can make the to-be-offlined cpu free the debugobjs before it 
-is offlined. That will work too.
+Applied.
 
-Cheers,
-Longman
+Thanks,
+Guenter
 
+> ---
+>  drivers/hwmon/scmi-hwmon.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+> index d421e691318b..09ce30cba54b 100644
+> --- a/drivers/hwmon/scmi-hwmon.c
+> +++ b/drivers/hwmon/scmi-hwmon.c
+> @@ -202,8 +202,10 @@ static int scmi_hwmon_probe(struct scmi_device *sdev)
+>  		}
+>  	}
+>  
+> -	if (nr_count[hwmon_temp])
+> -		nr_count[hwmon_chip]++, nr_types++;
+> +	if (nr_count[hwmon_temp]) {
+> +		nr_count[hwmon_chip]++;
+> +		nr_types++;
+> +	}
+>  
+>  	scmi_hwmon_chan = devm_kcalloc(dev, nr_types, sizeof(*scmi_hwmon_chan),
+>  				       GFP_KERNEL);
