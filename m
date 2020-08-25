@@ -2,103 +2,143 @@ Return-Path: <SRS0=mfLo=CD=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9020AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA4220678
-	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96BF720678
+	for <linux-kernel@archiver.kernel.org>; Tue, 25 Aug 2020 04:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PydPDPoT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgHYEkC (ORCPT
+        id S1728496AbgHYEnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 00:40:02 -0400
-Received: from mga04.intel.com ([192.55.52.120]:31046 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725287AbgHYEkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 00:40:01 -0400
-IronPort-SDR: SYzY5mU6q8dU+DfOL7cQfsumhZKZN7yLmRgIkUo8deq2OOO3F2QyJdwFCYjlix3ws+6WO2eQm6
- /5e3mMqGdgTQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9723"; a="153461546"
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="153461546"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 21:40:00 -0700
-IronPort-SDR: ow8rA3C33GVLkjslFqifQSALGMBU840+fzA6uJ7OHN6/wGiOXaQRjprQuRwZXZVNV7qbP1Bd57
- NqLT2RXxmOKA==
-X-IronPort-AV: E=Sophos;i="5.76,351,1592895600"; 
-   d="scan'208";a="474190915"
-Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2020 21:40:00 -0700
-Date:   Mon, 24 Aug 2020 21:39:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Pu Wen <puwen@hygon.cn>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Dirk Hohndel <dirkhh@vmware.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        "H. Peter Anvin" <hpa@linux.intel.com>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Gordon Tetlow <gordon@tetlows.org>,
-        David Kaplan <David.Kaplan@amd.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: TDX #VE in SYSCALL gap (was: [RFD] x86: Curing the exception and
- syscall trainwreck in hardware)
-Message-ID: <20200825043959.GF15046@sjchrist-ice>
-References: <875z98jkof.fsf@nanos.tec.linutronix.de>
- <3babf003-6854-e50a-34ca-c87ce4169c77@citrix.com>
+        Tue, 25 Aug 2020 00:43:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbgHYEnL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 00:43:11 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95EE8C061574
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:43:11 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id h12so5948059pgm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Aug 2020 21:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xAFI0qsutu56A0T8YbbHopvqKbQ58AqtuMd/bLnxq5g=;
+        b=PydPDPoT9vmx4KjiX1i5QeL7G5IfhbjA4PIFEOGyLWxh0HDxsXFN8fyO5OVlo3F/iE
+         ElxirtK3oeBKmrsmX08tHaLMb4fhSlfn5als2H3BMplmzAZ8ijHJSrUB0WS2B5QJ5aN7
+         rwkZBEPwV2O2ZRpBlC7zmXGU8HXlCqVoIc0GDrUkYu55pH+Aa5Fe1UZHjsMCaKhIgPYI
+         QCgg3JIG5tjylER4Uf5wbivxNZG1fQ+Ogj4ErV+HhQmi1Z7KvJQ9QOtCK2jNdjtxZ5sx
+         XCpLUvHTQ7LgfkMVuZ7RrfxQ6CgUmGcc53WahQg7wCX3LemU2umWdyPwtNsEGv+sG3RE
+         i2qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xAFI0qsutu56A0T8YbbHopvqKbQ58AqtuMd/bLnxq5g=;
+        b=S/J+/q7UEu4MZj1Dgvg8vokTD3hWYcEIq2MNK4Oaux8hl/T9lwlHw0pQfpv0atn/uS
+         27NNu3rKcDhnPjWGjIxrr4fSuAw5yOXhiu5bNeYwVdimKLMzXoSC4sgHC4rQC1uZPdk3
+         iDhLrfQ2NGwlb5GS5LIMbzOhsrL8q8SwoL67cIOKTog8BqKQ89ClkauIx8LWxVboONcH
+         XOPn2Ygewq5mOAPEUqFFefC45f/X9oBc9b38N+kLFjwXWGpZ03YGuc6hXpxhkEpXSkTz
+         G292exP7ACLJvMW4/3qDXkRW9RFLgxO9gvTGGqwIWESG8Xutu0EEvaJp/x3Qzpg4LNRw
+         muGg==
+X-Gm-Message-State: AOAM531hdhVZUIBQPuDSJVcS5xw/CVYAYH/7wR/HRZK9rlU1R5B2GBDR
+        8XfRTHqA8KphYeUPpm5/lb/4YA==
+X-Google-Smtp-Source: ABdhPJz/01SNEdqoJUUp5KGjIxBdVrind7pWS2z9Jie8BehWkAtUSxB98NdsBDL0xiGRsxF+n6YkcA==
+X-Received: by 2002:a17:902:4b:: with SMTP id 69mr6335779pla.245.1598330591057;
+        Mon, 24 Aug 2020 21:43:11 -0700 (PDT)
+Received: from localhost ([122.172.43.13])
+        by smtp.gmail.com with ESMTPSA id k5sm11698020pgk.78.2020.08.24.21.43.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 24 Aug 2020 21:43:10 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 10:13:08 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Niklas Cassel <nks@flawful.org>
+Subject: Re: [RFC PATCH 3/3] opp: Power on (virtual) power domains managed by
+ the OPP core
+Message-ID: <20200825044308.4y3w2urcikban7if@vireshk-i7>
+References: <20200730080146.25185-1-stephan@gerhold.net>
+ <20200730080146.25185-4-stephan@gerhold.net>
+ <20200824112744.jsyaxrfbybyjpwex@vireshk-i7>
+ <20200824115549.GB208090@gerhold.net>
+ <CAPDyKFojtArMRfO+Z8YaWCWw2fFYcO62x3eL1paNi5pKRg3Jww@mail.gmail.com>
+ <20200824150831.GA842@gerhold.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3babf003-6854-e50a-34ca-c87ce4169c77@citrix.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200824150831.GA842@gerhold.net>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Andy
-
-On Mon, Aug 24, 2020 at 02:52:01PM +0100, Andrew Cooper wrote:
-> And to help with coordination, here is something prepared (slightly)
-> earlier.
+On 24-08-20, 17:08, Stephan Gerhold wrote:
+> On Mon, Aug 24, 2020 at 04:36:57PM +0200, Ulf Hansson wrote:
+> > That said, perhaps should rely on the consumer to deploy runtime PM
+> > support, but let the OPP core to set up the device links for the genpd
+> > virtual devices!?
+> > 
 > 
-> https://docs.google.com/document/d/1hWejnyDkjRRAW-JEsRjA5c9CKLOPc6VKJQsuvODlQEI/edit?usp=sharing
+> Yes, that would be the alternative option.
+
+That is the right option IMO.
+
+> I would be fine with it as long as it also works for the CPUfreq case.
 > 
-> This identifies the problems from software's perspective, along with
-> proposing behaviour which ought to resolve the issues.
+> I don't think anything manages runtime PM for the CPU device, just
+> like no-one calls dev_pm_opp_set_rate(cpu_dev, 0). So with my patch the
+> power domain is essentially kept always-on (except for system suspend).
+> At least in my case this is intended.
 > 
-> It is still a work-in-progress.  The #VE section still needs updating in
-> light of the publication of the recent TDX spec.
+> If device links also keep the power domains on if the consumer device
+> does not make use of runtime PM it should work fine for my case.
 
-For #VE on memory accesses in the SYSCALL gap (or NMI entry), is this
-something we (Linux) as the guest kernel actually want to handle gracefully
-(where gracefully means not panicking)?  For TDX, a #VE in the SYSCALL gap
-would require one of two things:
+With device link, you only need to do rpm enable/disable on the consumer device
+and it will get propagated by itself.
 
-  a) The guest kernel to not accept/validate the GPA->HPA mapping for the
-     relevant pages, e.g. code or scratch data.
+> Personally, I think my original patch (without device links) fits better
+> into the OPP API, for the following two reasons.
+> 
+> With device links:
+> 
+>   1. Unlike regulators/interconnects, attached power domains would be
+>      controlled by runtime PM instead of dev_pm_opp_set_rate(opp_dev, 0).
+> 
+>   2. ... some driver using OPP tables might not make use of runtime PM.
+>      In that case, the power domains would stay on the whole time,
+>      even if dev_pm_opp_set_rate(opp_dev, 0) was called.
+> 
+> With my patch, the power domain state is directly related to the
+> dev_pm_opp_set_rate(opp_dev, 0) call, which is more intuitive than
+> relying on the runtime PM state in my opinion.
 
-  b) The host VMM to remap the GPA (making the GPA->HPA pending again).
+So opp-set-rate isn't in the best of shape TBH, some things are left for the
+drivers while other are done by it. Regulator-enable/disable was moved to it
+some time back as people needed something like that. While on the other hand,
+clk_enable/disable doesn't happen there, nor does rpm enable/disable.
 
-(a) is only possible if there's a fatal buggy guest kernel (or perhaps vBIOS).
-(b) requires either a buggy or malicious host VMM.
+Maybe one day we may want to do that, but lets make sure someone wants to do
+that first.
 
-I ask because, if the answer is "no, panic at will", then we shouldn't need
-to burn an IST for TDX #VE.  Exceptions won't morph to #VE and hitting an
-instruction based #VE in the SYSCALL gap would be a CPU bug or a kernel bug.
-Ditto for a #VE in NMI entry before it gets to a thread stack.
+Anyway, even in that case both of the changes would be required. We must make
+device links nevertheless first. And later on if required, we may want to do rpm
+enable/disable on the consumer device itself.
 
-Am I missing anything?
+-- 
+viresh
