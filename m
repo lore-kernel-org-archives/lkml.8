@@ -2,135 +2,133 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E14C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22231C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA452087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E322087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ZimkLCAA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocRCgCm1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728861AbgHZLsK (ORCPT
+        id S1728989AbgHZLsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:48:10 -0400
-Received: from mail-eopbgr750043.outbound.protection.outlook.com ([40.107.75.43]:29409
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728852AbgHZLTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:19:07 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H8OWV2gzkifS2zNRNuxs+ML7KVhPNHhDcPgOaBYatR28OSuunDc6TFS7UvpQH459tKGQUW66H/ivUEdHiR4fIB/SwbjPQT2JoNM3AkrhGvWvFFfP5d/FsAYkJzcQvr4foejp6CP0NVH2TzHRTYHa3KQIOdU7bI+jEcdwlsSRN2xJfpDgFEb3+tARJQxixqOkBlmcvGjbpeGwi8ViCYOu0WEQudT8zoFRmP+9KDzDNOXEd4rPaeic2cvTOrY3kN/phEOFFY1DIU3P3TimV/kMB2hkSPvFWYOwn40Sfni54l/Vt4RGYnwP2KIZwjBjUQOeCSTJhYWnPuE9gKaW2z/sgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1BR69KVJXjNlZx1sBgp0e9oyc4MhVgZI1iMJljI5NLc=;
- b=TRZUe4v+QGFd5XqSHoxcvrP2Z0Mu9xkhRy0FhHFNCdhcirs7zDMNWgiIop9pGPBi0H5T7CHzLFxCyZebyGUfVJl/VxW8xdrYcYeEVDQ5BCORgXQQfjUGyvsFMAGN2PyidrwBaW5dOVwQDibUorG8MnRkV1FykEKik/FMQ9FJe9+gk5F7e3cJQu4TdnP94MWodOJbtu3g3vG5OWYv4PK61hOI44zNG5lsqKTt2S6T6h3obkGh7K0p92d1GUYCDMfa0XrfmsQ+aGoigbkHigQkjDIKBzpD8Dde02TaFXsmC3L8id478TX5sdkzv4zp1e8XJNyBHZP/RCjcu72Q8EPdCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 26 Aug 2020 07:48:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728786AbgHZLsD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 07:48:03 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70AC1C061574;
+        Wed, 26 Aug 2020 04:48:02 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id si26so2379842ejb.12;
+        Wed, 26 Aug 2020 04:48:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1BR69KVJXjNlZx1sBgp0e9oyc4MhVgZI1iMJljI5NLc=;
- b=ZimkLCAALz3l0O5LhS0loaJqcC3B8lNa0ri1spXEYzXihLL4duWzTRFUF47UXnkyEnKkLFh/yeGzCFcxMHZPKpOvS37SGl6b8AeesR75T5rpBHp1gD4jgyPGkB1NDheD1OCyD17ki/YmRaGFvFbxIroTpxoybPruDPhPJ/lN4uw=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR1201MB0188.namprd12.prod.outlook.com (2603:10b6:4:56::12)
- by DM6PR12MB4450.namprd12.prod.outlook.com (2603:10b6:5:28e::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Wed, 26 Aug
- 2020 11:18:54 +0000
-Received: from DM5PR1201MB0188.namprd12.prod.outlook.com
- ([fe80::4df1:4ad8:38cd:128c]) by DM5PR1201MB0188.namprd12.prod.outlook.com
- ([fe80::4df1:4ad8:38cd:128c%7]) with mapi id 15.20.3305.026; Wed, 26 Aug 2020
- 11:18:54 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-To:     akshu.agrawal@amd.com
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=c1XozxQRBMRgCKFKdNle/Ejgq+G0usremp3MX2cyWos=;
+        b=ocRCgCm1md7sljlo+SIzz85uD6Xuib+W3pQzgHaGXjz9/C0I2MggKbwptLqFIiH/vw
+         EjI7LIiJ9CArRO9o4Roys6YXJ8ib3E5uBplGpHCSCI69vA3DBuHJIC9LfaLGWKTm6BjV
+         qIRex/PhQ1S35OkHEV2uuLNUoX7vxJWy7tBTECAYXQQK/nYWkjcljdMptHZOqTDMXV7A
+         oO53byRis2jOE8OXXbZAHrEO+jiLW00Grzf+6uPIzlXfuWB6gcdWpXLOboktsY9Unp62
+         tAQS2CnQMafG2gZ8FK0jUwtIuyZW0BQ0Y1YF+C4XhYY8+/xby0sFWl30AMbycGJJaJ17
+         uPuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=c1XozxQRBMRgCKFKdNle/Ejgq+G0usremp3MX2cyWos=;
+        b=fR9oiNGWkTE47mJZ9gzzF7ZCQmBCxjxMYiPiVqKPeVCtBaIiRIs6GgCFXiJFBplDsT
+         1pwVJL6k7sO1mj8HzfIKmIqFEoVAEYRcveg4zdObd9ZKOYFZmedqOn4wou05dd5kLA6e
+         w2RFXQ7EUzqi6BJEnpUS7NGiAXU9UmhUrF/+Gl3B5yZCAck1Ig7T6oviRuONJ1HEZZ+w
+         RUXrqOOhivQgFNe1QkWhox7jqyKwCRcpEBgVeQOkGuC1ISyRixEKKsvk/U2w/YxwzsK7
+         UhXhW/sYBKXOZ8rhIqlZlcZGm1yMmZvVZlsnH+bMhAjzYWggW8HZgIKH4c4QHdsbycJJ
+         xLAA==
+X-Gm-Message-State: AOAM530uPS3xOKsQUsQgLJGTnFLrPNl8qm96qKXeaJNIH431KOn7nJSE
+        KO4Ed0OuBtfwag1Etj5ewC8=
+X-Google-Smtp-Source: ABdhPJzhid1dnmRXgGd4Cm6Jwp4Nteh8EDCcXbUEZ7SwOXXIZm7aWyXRxE8lLcwuzMu9jhpQXen34A==
+X-Received: by 2002:a17:906:f0c1:: with SMTP id dk1mr10704937ejb.44.1598442480970;
+        Wed, 26 Aug 2020 04:48:00 -0700 (PDT)
+Received: from skbuf ([86.126.22.216])
+        by smtp.gmail.com with ESMTPSA id dj16sm1863342edb.5.2020.08.26.04.47.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 04:48:00 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 14:47:58 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Qiang Zhao <qiang.zhao@nxp.com>
+Cc:     kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
         Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
-        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ASoC: AMD: Clean kernel log from deferred probe error messages
-Date:   Wed, 26 Aug 2020 16:48:05 +0530
-Message-Id: <20200826111826.3168-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MAXPR01CA0109.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:5d::27) To DM5PR1201MB0188.namprd12.prod.outlook.com
- (2603:10b6:4:56::12)
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Tanveer Alam <tanveer.alam@puresoftware.com>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
+Message-ID: <20200826114758.4agph53ag2fin6um@skbuf>
+References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
+ <20200821140718.GH4870@sirena.org.uk>
+ <c810740d75f64e308fd362e6c6a5f437@mail.gmail.com>
+ <20200822152118.rlwbcgfk4abjldtg@skbuf>
+ <VE1PR04MB6768699B6D7A507A5BF82F9191540@VE1PR04MB6768.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by MAXPR01CA0109.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:5d::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 11:18:50 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [171.61.65.59]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c7579fc1-cbd1-4d31-5e42-08d849b1d117
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4450:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4450A93DEA4E43863E0D6725F8540@DM6PR12MB4450.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WIZPhHhJccB8vD7WenXWkk/qaWzsu6MpQequ7krEuTd+Hk7e7vtI61FoWKmRFzvkhS0daGiSrTjNuH/2ekxJ9uVhFqlda85pOvGsXIBoAhbeq2riJy69EQQriUSfRky+4bX37BRu67JXKgzDiaKqvETEMACGD3BSwqDBFULtI/B81FwLm/22XWeJTGg+vTeG+tGKmE8L/9PEPmY/1F5MbPTSd9IJ+YD+tVJXIGXCub3y+93Ha8XAACX/1cqD4NvXEQlZ1AW/3SpDRjH7i34SaVL3Ie5xT0JXyvwI1ddJFcT7meLU85VbE3rJbv25PJibglVCfH18kqC7Qa6qaHCERw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(396003)(39860400002)(366004)(16576012)(83380400001)(5660300002)(6486002)(4744005)(66946007)(1076003)(2906002)(316002)(86362001)(37006003)(8936002)(8676002)(36756003)(54906003)(15650500001)(44832011)(52116002)(26005)(186003)(4326008)(478600001)(956004)(2616005)(66556008)(6666004)(66476007)(34206002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: RsSshFk5pg95vOV7Da1DbWiTWcGnUxO6hy148AYKeZtZK6Z0tWMqoGJ6cps9+OqKks6EI5unZFB7eoa/fVuYDCkfwDjGO/vzhy3fDX9doNDXYs/H/XG5qG/EuTWLTV9XJUxhgbHCvUBqChuA3RT5ebYJ2SWxmxzBtZzJVhseMjiqKEmvVuXyGR/ist5BzIMYXiVw5U/BkodfmV9R8klumSxdqIDc9TS3wuvc3hkLtIwUbGdW1m+5O74CIhace80BpoMBlxp8c8NRWi/RAYx+nPCFvCABGpGTNqH5nMpFA7W0mOX5MJKsSkrupv0i6pSuvhi5HJrqnyL0//+EBIxZ1y/7YOaqbHvWFCMT8SE+F3NxeGjwMlrBO9rP/foXZ8tEDGWxY/dLQBaxawvlHzsPg1H0XLGBqPyzQd6gp7K9Jc8NuNJ5vtiWpMaRZbWcu8BHqhMLb/wVSuLkj+8s9ClZ9+Aky4gtPVhtna9ttfLoTHCrvSYQBOI2n+qAtKpVYLXU4cNEK8SXmgxwi4CqUPc0/g4HlNPkYjuHGHjJf21J+Ngj7v24JnbrhZ2m8vQPDltp1Tq09YF/RQW1rFlHJiToFgHqaRvWewWAtoclXZPXdThA+upGCZiGSRY8co47aaOQ+q+5HAk+7FEPmn4EVl+LPQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7579fc1-cbd1-4d31-5e42-08d849b1d117
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR1201MB0188.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 11:18:54.3291
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GEMx22fbMj5MhIginhgGW/1jFL0T5LYcxHuAdp6DTgDYhBHIkUc/WAl5J2ZwXS1dBuJ+px0SJ3PXgPsHHkNHog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4450
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <VE1PR04MB6768699B6D7A507A5BF82F9191540@VE1PR04MB6768.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the driver waits for DAIs to be probed and retries probing,
-avoid printing error messages.
+On Wed, Aug 26, 2020 at 11:10:49AM +0000, Qiang Zhao wrote:
+> On Sat, Aug 22, 2020 at 23:21PM, Vladimir Oltean <olteanv@gmail.com> wrote:
+> > Yes, definitely bloatware from the old days. I think this driver needs the existing
+> > device tree bindings rethought a little bit before mindlessly porting them to
+> > ACPI.
+>
+> Could you give more details?
+>
+> Best Regards
+> Qiang Zhao
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
----
- sound/soc/amd/acp3x-rt5682-max9836.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Yes.
+This driver has some device tree bindings.
+Some thought need to be given as to which one of those is necessary for
+a functional ACPI setup, and which one isn't.
+For example:
 
-diff --git a/sound/soc/amd/acp3x-rt5682-max9836.c b/sound/soc/amd/acp3x-rt5682-max9836.c
-index 406526e79af3..67f80ba51de0 100644
---- a/sound/soc/amd/acp3x-rt5682-max9836.c
-+++ b/sound/soc/amd/acp3x-rt5682-max9836.c
-@@ -471,13 +471,11 @@ static int acp3x_probe(struct platform_device *pdev)
- 	}
- 
- 	ret = devm_snd_soc_register_card(&pdev->dev, card);
--	if (ret) {
-+	if (ret && ret != -EPROBE_DEFER)
- 		dev_err(&pdev->dev,
- 				"devm_snd_soc_register_card(%s) failed: %d\n",
- 				card->name, ret);
--		return ret;
--	}
--	return 0;
-+	return ret;
- }
- 
- static const struct acpi_device_id acp3x_audio_acpi_match[] = {
--- 
-2.20.1
+- fsl,spi-cs-sck-delay and fsl,spi-sck-cs-delay are many times
+  necessary. I don't see an attempt to read something equivalent to
+  those in this patch, or to do something about those, otherwise, in
+  case a peripheral needs special treatment. If we want to do something
+  like e.g. deprecate these bindings and just set up a large enough
+  CS-to-SCK and SCK-to-CS delay to make every peripheral happy, in order
+  to not carry this binding over to ACPI, at least we should establish
+  that and do it now, so that the DT code can benefit from that as well.
 
+- The bus-num property was made optional by Sascha Hauer in commit
+  29d2daf2c33c ("spi: spi-fsl-dspi: Make bus-num property optional").
+  I think this is because he couldn't just remove it completely. But
+  that doesn't mean we should carry it over to ACPI. The SPI core should
+  know to allocate a bus_num dynamically (using IDR, or by looking at
+  aliases) if we just set spi->bus_num = -1.
+
+- The spi-num-chipselects can be deduced from compatible string and bus
+  number, and therefore we can avoid carrying it over to ACPI. But
+  again, DT should have this logic first, and then ACPI can be added.
+
+- The compatible string plays an integral part in the functionality of
+  the spi-fsl-dspi driver. I want to see a solution for ACPI where the
+  driver knows on which SoC it's running on. Otherwise it doesn't know
+  what are the silicon parameters of the DSPI module (XSPI present or
+  not, DMA present or not, FIFO depth). I don't see that now. I just see
+  something hardcoded for:
+  { "NXP0005", .driver_data = (kernel_ulong_t)&devtype_data[LS2085A], }
+
+Thanks,
+-Vladimir
