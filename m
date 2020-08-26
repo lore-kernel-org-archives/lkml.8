@@ -2,186 +2,355 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB79C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3803BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8242920737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:27:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4ED2207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:27:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aATDp49D"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FIwVmJzK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgHZS1l (ORCPT
+        id S1726851AbgHZS0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbgHZS0y (ORCPT
+        Wed, 26 Aug 2020 14:26:35 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43556 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727077AbgHZSZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:26:54 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B2EC061574;
-        Wed, 26 Aug 2020 11:26:53 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id x7so2834378wro.3;
-        Wed, 26 Aug 2020 11:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bu4pOYOLpF8hHIWAO8QllDzn4fIcc5GK3Fq1pOjr02M=;
-        b=aATDp49DrNEi4o+dQ3aZilAVzYRQBAblxtl0UNdBGXKSmVRdFgpISE1zQyc7cNSsZ9
-         lW/EYpEmbA0Lu3HCV4gTg4WJlfsP9Ucv3zSATOZO1HiWK3Xl7zEtjeqoNbC6i1Ns4mAR
-         ZRq0r3vG4sM3xbUlDy8LPAizO4V/iBIepvQgRwBNTOXvKWuZklWHI7dz6KPp6mM5pW+8
-         e4/LtEjr5E3izgeXPBOlpPbB1jJpfchAVzL6KSrkYYKPwTjqCaTuOMWV4ujlyA488gay
-         4N7boVhG1b57UDIcUR6HQBrmSeSXAtmip16JCAoNV2oOOh9NdAZhe34FxbbIB/ucho4E
-         KVLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bu4pOYOLpF8hHIWAO8QllDzn4fIcc5GK3Fq1pOjr02M=;
-        b=KMT3IIu+WYoS+2TjRhO2ASZGjQ1stICBN3bZz98cCXy0H5V67NQ9cx/0nOnoyDSFVm
-         S655VKHuuHugwYv6oXlhqHAByKuf6g8UUnhlBQmzjyGbF3hJ/p9JJiExDo0bf89WiDag
-         Yw5NLd7sb68w9XhQfUPMfGr3ncvRTfx3eVfjw4pny56QIvH94z20taUQz/EJbMEsCnEy
-         t/Qfid7r+pKyeJ2ANjAVh1hW+yv5SwPj48uzAGJQvi5wfZ8LO7JxQeJeKHI0UjO7imNr
-         2Yw4eaRjV4a9cQKGwYJGQX6/6mThq332GBJ7q2XvoHCqi/SSbPRKTHUEBKP71pyjOUZP
-         N+vA==
-X-Gm-Message-State: AOAM531uRpkhojzPLxSEH8WtuRUSROfEwKZQb6eE1hYseE3DBJtR+792
-        tOnaQh44sFPlvNC7RGw8S0tBJn/ndQxIGB5CSpc=
-X-Google-Smtp-Source: ABdhPJw6XRhfFzc0ep7oxhqIsPm6hA1ZYk5Rt4Z7Rf4kNW/IcW2BOalXNQMof7JDtDOsechyJwXMAwWd0bJeEtpmfUE=
-X-Received: by 2002:a5d:6085:: with SMTP id w5mr16385547wrt.362.1598466412249;
- Wed, 26 Aug 2020 11:26:52 -0700 (PDT)
+        Wed, 26 Aug 2020 14:25:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598466353;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qBboEPvvnSYxaLTbL81NiiaMU9KhxKXVv6hDuFdKMFk=;
+        b=FIwVmJzKf+XEuYnD1ngN8anTOzf1+mPrmfoVzO+wQ8ZB/O9nKFA72vA7VRa08neLX2maj1
+        GRYUi8+yocQ3/Qs74EgnvNR0twphKQs2oDJThxD+8wVupSZKLnjbPdB1S2+N5yhHLNQ5CC
+        XFGw4+mutgfToV8vIMzXx5EiMXzMf7c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-eOu9PhEnMySOjWa5yPs8wQ-1; Wed, 26 Aug 2020 14:25:48 -0400
+X-MC-Unique: eOu9PhEnMySOjWa5yPs8wQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9FC20873115;
+        Wed, 26 Aug 2020 18:25:46 +0000 (UTC)
+Received: from Whitewolf.redhat.com (ovpn-119-77.rdu2.redhat.com [10.10.119.77])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C844E1002382;
+        Wed, 26 Aug 2020 18:25:45 +0000 (UTC)
+From:   Lyude Paul <lyude@redhat.com>
+To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v5 12/20] drm/nouveau/kms: Only use hpd_work for reprobing in HPD paths
+Date:   Wed, 26 Aug 2020 14:24:48 -0400
+Message-Id: <20200826182456.322681-13-lyude@redhat.com>
+In-Reply-To: <20200826182456.322681-1-lyude@redhat.com>
+References: <20200826182456.322681-1-lyude@redhat.com>
 MIME-Version: 1.0
-References: <20191221150402.13868-1-murphyt7@tcd.ie> <465815ae-9292-f37a-59b9-03949cb68460@deltatee.com>
- <20200529124523.GA11817@infradead.org> <CGME20200529190523eucas1p2c086133e707257c0cdc002f502d4f51d@eucas1p2.samsung.com>
- <33137cfb-603c-86e8-1091-f36117ecfaf3@deltatee.com> <ef2150d5-7b6a-df25-c10d-e43316fe7812@samsung.com>
- <b9140772-0370-a858-578c-af503a06d8e9@deltatee.com> <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
-In-Reply-To: <CALQxJuutRaeX89k2o4ffTKYRMizmMu0XbRnzpFuSSrkQR02jKg@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 26 Aug 2020 14:26:40 -0400
-Message-ID: <CADnq5_PRuPtpzR-pCgXARRXVaC0vO=HdcGUkGQr7sDqUmq7G_Q@mail.gmail.com>
-Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
-To:     Tom Murphy <murphyt7@tcd.ie>
-Cc:     Logan Gunthorpe <logang@deltatee.com>, kvm@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-tegra@vger.kernel.org, Julien Grall <julien.grall@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-s390@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-mediatek@lists.infradead.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:VIRTIO CORE, NET..." 
-        <virtualization@lists.linux-foundation.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 2:56 AM Tom Murphy <murphyt7@tcd.ie> wrote:
->
-> Hi Logan/All,
->
-> I have added a check for the sg_dma_len == 0 :
-> """
->  } __sgt_iter(struct scatterlist *sgl, bool dma) {
->         struct sgt_iter s = { .sgp = sgl };
->
-> +       if (sgl && sg_dma_len(sgl) == 0)
-> +           s.sgp = NULL;
->
->         if (s.sgp) {
->             .....
-> """
-> at location [1].
-> but it doens't fix the problem.
->
-> You're right though, this change does need to be made, this code
-> doesn't handle pages of sg_dma_len(sg) == 0 correctly
-> So my guess is that we have more bugs in other parts of the i915
-> driver (or there is a problem with my "sg_dma_len == 0" fix above).
-> I have been trying to spot where else the code might be buggy but I
-> haven't had any luck so far.
->
-> I'm doing a microconfernce (at LPC 2020) this wednesdays [1] on this
-> if you're interested in attending.
-> I'm hoping I can chat about it with a few people and find how can
-> reproduce and fix this issues. I don't have any more time I can give
-> to this unfortunately and it would be a shame for the work to go to
-> waste.
->
-> [0] https://github.com/torvalds/linux/blob/d012a7190fc1fd72ed48911e77ca97ba4521bccd/drivers/gpu/drm/i915/i915_scatterlist.h#L28
-> [1] https://linuxplumbersconf.org/event/7/contributions/846/
->
-> On Fri, 29 May 2020 at 22:21, Logan Gunthorpe <logang@deltatee.com> wrote:
-> >
-> >
-> >
-> > On 2020-05-29 3:11 p.m., Marek Szyprowski wrote:
-> > > Patches are pending:
-> > > https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
-> >
-> > Cool, nice! Though, I still don't think that fixes the issue in
-> > i915_scatterlist.h given it still ignores sg_dma_len() and strictly
-> > relies on sg_next()/sg_is_last() to stop iterating -- and I suspect this
-> > is the bug that got in Tom's way.
-> >
-> > >> However, as Robin pointed out, there are other ugly tricks like stopping
-> > >> iterating through the SGL when sg_dma_len() is zero. For example, the
-> > >> AMD driver appears to use drm_prime_sg_to_page_addr_arrays() which does
-> > >> this trick and thus likely isn't buggy (otherwise, I'd expect someone to
-> > >> have complained by now seeing AMD has already switched to IOMMU-DMA.
+Currently we perform both short IRQ handling for DP, and connector
+reprobing in the HPD IRQ handler. However since we need to grab
+connection_mutex in order to reprobe a connector, in theory we could
+accidentally block ourselves from handling any short IRQs until after a
+modeset completes if a connector hotplug happens to occur in parallel
+with a modeset.
 
-We ran into the same issue with amdgpu and radeon when the AMD IOMMU
-driver was converted and had to fix it as well.  The relevant fixes
-were:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=42e67b479eab6d26459b80b4867298232b0435e7
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0199172f933342d8b1011aae2054a695c25726f4
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=47f7826c520ecd92ffbffe59ecaa2fe61e42ec70
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=c0f83d164fb8f3a2b7bc379a6c1e27d1123a9eab
+I haven't seen this actually happen yet, but since we're cleaning up
+nouveau's hotplug handling code anyway and we already have a hpd worker,
+we can simply fix this by only relying on the HPD worker to actually
+reprobe connectors when we receive a HPD IRQ. We also add a mask to
+nouveau_drm to keep track of which connectors are waiting to be reprobed
+in response to an HPD IRQ.
 
-Alex
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
+---
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 42 +++++--------
+ drivers/gpu/drm/nouveau/nouveau_connector.h |  1 +
+ drivers/gpu/drm/nouveau/nouveau_display.c   | 70 ++++++++++++++++++---
+ drivers/gpu/drm/nouveau/nouveau_display.h   |  1 +
+ drivers/gpu/drm/nouveau/nouveau_dp.c        |  2 +-
+ drivers/gpu/drm/nouveau/nouveau_drm.c       |  4 +-
+ drivers/gpu/drm/nouveau/nouveau_drv.h       |  2 +
+ 7 files changed, 86 insertions(+), 36 deletions(-)
 
-> > >
-> > > I'm not sure that this is a trick. Stopping at zero sg_dma_len() was
-> > > somewhere documented.
-> >
-> > Well whatever you want to call it, it is ugly to have some drivers doing
-> > one thing with the returned value and others assuming there's an extra
-> > zero at the end. It just causes confusion for people reading/copying the
-> > code. It would be better if they are all consistent. However, I concede
-> > stopping at zero should not be broken, presently.
-> >
-> > Logan
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
+index 4a29f691c08e4..637e91594fbe8 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -1138,6 +1138,20 @@ nouveau_connector_funcs_lvds = {
+ 	.early_unregister = nouveau_connector_early_unregister,
+ };
+ 
++void
++nouveau_connector_hpd(struct drm_connector *connector)
++{
++	struct nouveau_drm *drm = nouveau_drm(connector->dev);
++	u32 mask = drm_connector_mask(connector);
++
++	mutex_lock(&drm->hpd_lock);
++	if (!(drm->hpd_pending & mask)) {
++		drm->hpd_pending |= mask;
++		schedule_work(&drm->hpd_work);
++	}
++	mutex_unlock(&drm->hpd_lock);
++}
++
+ static int
+ nouveau_connector_hotplug(struct nvif_notify *notify)
+ {
+@@ -1147,8 +1161,6 @@ nouveau_connector_hotplug(struct nvif_notify *notify)
+ 	struct drm_device *dev = connector->dev;
+ 	struct nouveau_drm *drm = nouveau_drm(dev);
+ 	const struct nvif_notify_conn_rep_v0 *rep = notify->data;
+-	const char *name = connector->name;
+-	int ret;
+ 	bool plugged = (rep->mask != NVIF_NOTIFY_CONN_V0_UNPLUG);
+ 
+ 	if (rep->mask & NVIF_NOTIFY_CONN_V0_IRQ) {
+@@ -1156,31 +1168,9 @@ nouveau_connector_hotplug(struct nvif_notify *notify)
+ 		return NVIF_NOTIFY_KEEP;
+ 	}
+ 
+-	ret = pm_runtime_get(drm->dev->dev);
+-	if (ret == 0) {
+-		/* We can't block here if there's a pending PM request
+-		 * running, as we'll deadlock nouveau_display_fini() when it
+-		 * calls nvif_put() on our nvif_notify struct. So, simply
+-		 * defer the hotplug event until the device finishes resuming
+-		 */
+-		NV_DEBUG(drm, "Deferring HPD on %s until runtime resume\n",
+-			 name);
+-		schedule_work(&drm->hpd_work);
+-
+-		pm_runtime_put_noidle(drm->dev->dev);
+-		return NVIF_NOTIFY_KEEP;
+-	} else if (ret != 1 && ret != -EACCES) {
+-		NV_WARN(drm, "HPD on %s dropped due to RPM failure: %d\n",
+-			name, ret);
+-		return NVIF_NOTIFY_DROP;
+-	}
+-
+-	NV_DEBUG(drm, "%splugged %s\n", plugged ? "" : "un", name);
+-
+-	drm_helper_hpd_irq_event(connector->dev);
++	NV_DEBUG(drm, "%splugged %s\n", plugged ? "" : "un", connector->name);
++	nouveau_connector_hpd(connector);
+ 
+-	pm_runtime_mark_last_busy(drm->dev->dev);
+-	pm_runtime_put_autosuspend(drm->dev->dev);
+ 	return NVIF_NOTIFY_KEEP;
+ }
+ 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.h b/drivers/gpu/drm/nouveau/nouveau_connector.h
+index d6de5cb8e2238..d0b859c4a80ea 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.h
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.h
+@@ -187,6 +187,7 @@ nouveau_crtc_connector_get(struct nouveau_crtc *nv_crtc)
+ 
+ struct drm_connector *
+ nouveau_connector_create(struct drm_device *, const struct dcb_output *);
++void nouveau_connector_hpd(struct drm_connector *connector);
+ 
+ extern int nouveau_tv_disable;
+ extern int nouveau_ignorelid;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_display.c b/drivers/gpu/drm/nouveau/nouveau_display.c
+index 13016769a194b..bceb48a2dfca6 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_display.c
++++ b/drivers/gpu/drm/nouveau/nouveau_display.c
+@@ -457,16 +457,70 @@ static struct nouveau_drm_prop_enum_list dither_depth[] = {
+ 	}                                                                      \
+ } while(0)
+ 
++void
++nouveau_display_hpd_resume(struct drm_device *dev)
++{
++	struct nouveau_drm *drm = nouveau_drm(dev);
++
++	mutex_lock(&drm->hpd_lock);
++	drm->hpd_pending = ~0;
++	mutex_unlock(&drm->hpd_lock);
++
++	schedule_work(&drm->hpd_work);
++}
++
+ static void
+ nouveau_display_hpd_work(struct work_struct *work)
+ {
+ 	struct nouveau_drm *drm = container_of(work, typeof(*drm), hpd_work);
++	struct drm_device *dev = drm->dev;
++	struct drm_connector *connector;
++	struct drm_connector_list_iter conn_iter;
++	u32 pending;
++	bool changed = false;
++
++	pm_runtime_get_sync(dev->dev);
+ 
+-	pm_runtime_get_sync(drm->dev->dev);
++	mutex_lock(&drm->hpd_lock);
++	pending = drm->hpd_pending;
++	drm->hpd_pending = 0;
++	mutex_unlock(&drm->hpd_lock);
+ 
+-	drm_helper_hpd_irq_event(drm->dev);
++	/* Nothing to do, exit early without updating the last busy counter */
++	if (!pending)
++		goto noop;
++
++	mutex_lock(&dev->mode_config.mutex);
++	drm_connector_list_iter_begin(dev, &conn_iter);
++
++	nouveau_for_each_non_mst_connector_iter(connector, &conn_iter) {
++		enum drm_connector_status old_status = connector->status;
++		u64 old_epoch_counter = connector->epoch_counter;
++
++		if (!(pending & drm_connector_mask(connector)))
++			continue;
++
++		connector->status = drm_helper_probe_detect(connector, NULL,
++							    false);
++		if (old_epoch_counter == connector->epoch_counter)
++			continue;
++
++		changed = true;
++		drm_dbg_kms(dev, "[CONNECTOR:%d:%s] status updated from %s to %s (epoch counter %llu->%llu)\n",
++			    connector->base.id, connector->name,
++			    drm_get_connector_status_name(old_status),
++			    drm_get_connector_status_name(connector->status),
++			    old_epoch_counter, connector->epoch_counter);
++	}
++
++	drm_connector_list_iter_end(&conn_iter);
++	mutex_unlock(&dev->mode_config.mutex);
++
++	if (changed)
++		drm_kms_helper_hotplug_event(dev);
+ 
+ 	pm_runtime_mark_last_busy(drm->dev->dev);
++noop:
+ 	pm_runtime_put_sync(drm->dev->dev);
+ }
+ 
+@@ -490,12 +544,11 @@ nouveau_display_acpi_ntfy(struct notifier_block *nb, unsigned long val,
+ 				 */
+ 				pm_runtime_put_autosuspend(drm->dev->dev);
+ 			} else if (ret == 0) {
+-				/* This may be the only indication we receive
+-				 * of a connector hotplug on a runtime
+-				 * suspended GPU, schedule hpd_work to check.
++				/* We've started resuming the GPU already, so
++				 * it will handle scheduling a full reprobe
++				 * itself
+ 				 */
+ 				NV_DEBUG(drm, "ACPI requested connector reprobe\n");
+-				schedule_work(&drm->hpd_work);
+ 				pm_runtime_put_noidle(drm->dev->dev);
+ 			} else {
+ 				NV_WARN(drm, "Dropped ACPI reprobe event due to RPM error: %d\n",
+@@ -686,6 +739,7 @@ nouveau_display_create(struct drm_device *dev)
+ 	}
+ 
+ 	INIT_WORK(&drm->hpd_work, nouveau_display_hpd_work);
++	mutex_init(&drm->hpd_lock);
+ #ifdef CONFIG_ACPI
+ 	drm->acpi_nb.notifier_call = nouveau_display_acpi_ntfy;
+ 	register_acpi_notifier(&drm->acpi_nb);
+@@ -705,9 +759,10 @@ void
+ nouveau_display_destroy(struct drm_device *dev)
+ {
+ 	struct nouveau_display *disp = nouveau_display(dev);
++	struct nouveau_drm *drm = nouveau_drm(dev);
+ 
+ #ifdef CONFIG_ACPI
+-	unregister_acpi_notifier(&nouveau_drm(dev)->acpi_nb);
++	unregister_acpi_notifier(&drm->acpi_nb);
+ #endif
+ 
+ 	drm_kms_helper_poll_fini(dev);
+@@ -719,6 +774,7 @@ nouveau_display_destroy(struct drm_device *dev)
+ 	nvif_disp_dtor(&disp->disp);
+ 
+ 	nouveau_drm(dev)->display = NULL;
++	mutex_destroy(&drm->hpd_lock);
+ 	kfree(disp);
+ }
+ 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_display.h b/drivers/gpu/drm/nouveau/nouveau_display.h
+index 76ba93e01aff4..616c434270594 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_display.h
++++ b/drivers/gpu/drm/nouveau/nouveau_display.h
+@@ -45,6 +45,7 @@ nouveau_display(struct drm_device *dev)
+ int  nouveau_display_create(struct drm_device *dev);
+ void nouveau_display_destroy(struct drm_device *dev);
+ int  nouveau_display_init(struct drm_device *dev, bool resume, bool runtime);
++void nouveau_display_hpd_resume(struct drm_device *dev);
+ void nouveau_display_fini(struct drm_device *dev, bool suspend, bool runtime);
+ int  nouveau_display_suspend(struct drm_device *dev, bool runtime);
+ void nouveau_display_resume(struct drm_device *dev, bool runtime);
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
+index a5934064a75ea..005750aeb6d4f 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dp.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
+@@ -165,7 +165,7 @@ void nouveau_dp_irq(struct nouveau_drm *drm,
+ 
+ 	if (mstm && mstm->is_mst) {
+ 		if (!nv50_mstm_service(drm, nv_connector, mstm))
+-			schedule_work(&drm->hpd_work);
++			nouveau_connector_hpd(connector);
+ 	} else {
+ 		drm_dp_cec_irq(&nv_connector->aux);
+ 	}
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index 22d246acc5e52..42fc5c813a9bb 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -953,7 +953,7 @@ nouveau_pmops_resume(struct device *dev)
+ 	ret = nouveau_do_resume(drm_dev, false);
+ 
+ 	/* Monitors may have been connected / disconnected during suspend */
+-	schedule_work(&nouveau_drm(drm_dev)->hpd_work);
++	nouveau_display_hpd_resume(drm_dev);
+ 
+ 	return ret;
+ }
+@@ -1036,7 +1036,7 @@ nouveau_pmops_runtime_resume(struct device *dev)
+ 	drm_dev->switch_power_state = DRM_SWITCH_POWER_ON;
+ 
+ 	/* Monitors may have been connected / disconnected during suspend */
+-	schedule_work(&nouveau_drm(drm_dev)->hpd_work);
++	nouveau_display_hpd_resume(drm_dev);
+ 
+ 	return ret;
+ }
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
+index f63ac72aa556f..73ebf5fba2fcd 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drv.h
++++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
+@@ -198,6 +198,8 @@ struct nouveau_drm {
+ 	struct nvbios vbios;
+ 	struct nouveau_display *display;
+ 	struct work_struct hpd_work;
++	struct mutex hpd_lock;
++	u32 hpd_pending;
+ 	struct work_struct fbcon_work;
+ 	int fbcon_new_state;
+ #ifdef CONFIG_ACPI
+-- 
+2.26.2
+
