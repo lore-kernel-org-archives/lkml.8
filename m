@@ -6,55 +6,53 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F38C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF315C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86DB2208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B09C208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598450073;
-	bh=n/6d2UUED3wg06etiyVMGNSdggwuojSvWn37LraJKfE=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
-	 References:List-ID:From;
-	b=L8GdTLHQSHmHy2UvyAycYuS34oMT/IRDDHGTlwMg1kSoZlTnZ+CqhTDmL77Mxb/SK
-	 Z/ZU/4+7jTYrWyryK385WG8c0b1Qo2RssrJ7Jz4yCQlsgbt7yjJMi9SmLCy7o3H+oH
-	 Xehjpn+biO3zf3+5aFYzm7ceihB/rROfiANNojLg=
+	s=default; t=1598450081;
+	bh=Fk7gxuA24E9tzAw4KMxn84xJNQo/KTyyA409rVaoAqM=;
+	h=Date:From:To:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=0TJnlC5LB7DMzos9U7McvFSbBY/OA9DaicaDyb0D7v+2c6AXJRUxnagBRDi3d8Ulz
+	 Ih6BmTZDD8fmZ0bK3z+6LieO7pGgUzM6BqVNz/tS1poZvheB/LS0dR1GAQrmZPHqe6
+	 Lb2gTd1XZzz1cN95dwLz81QnKm7qJj9ZIep2az54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730549AbgHZNya (ORCPT
+        id S1730572AbgHZNyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:54:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33302 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 09:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730527AbgHZNyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:54:17 -0400
+        id S1730522AbgHZNyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:54:14 -0400
 Received: from localhost (unknown [70.37.104.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A6BF22BED;
-        Wed, 26 Aug 2020 13:54:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D615F22B4E;
+        Wed, 26 Aug 2020 13:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598450056;
-        bh=n/6d2UUED3wg06etiyVMGNSdggwuojSvWn37LraJKfE=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
-         References:From;
-        b=ArXWnIy1bud6x43tADjM1MznKdIVoDXwbTghf0/b73J5Npko9ZJqt6dvTztkks41v
-         9uxhICBnfFhVEOLnCwzkShBPoIilrqV4b+xaEwTkqYZJbi5TTddiJLQzsUYuHroQvQ
-         Oxr2Pm0jyW8571vxkdfSBJbvspO4dmSbcJKdf/ag=
-Date:   Wed, 26 Aug 2020 13:54:16 +0000
+        s=default; t=1598450054;
+        bh=Fk7gxuA24E9tzAw4KMxn84xJNQo/KTyyA409rVaoAqM=;
+        h=Date:From:To:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+         From;
+        b=C9TQIBJ2dR4RE4qGM1dExos/cRKe6EXVVlAQMKaKt3Tc4Uh2y16OA1QSBONwGwxmQ
+         d9C4xHOgUUfJJZ28oE36v93Wk6na5uxNaKuxLByYd2yATsqtdKIrnQVWfjIk0SfZMs
+         sogsTTcilfnzyPxNQlfFa9haYMcDqpHLIpWD/b4M=
+Date:   Wed, 26 Aug 2020 13:54:13 +0000
 From:   Sasha Levin <sashal@kernel.org>
 To:     Sasha Levin <sashal@kernel.org>
-To:     Will Deacon <will@kernel.org>
-To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
-Cc:     <stable@vger.kernel.org>
-Cc:     Marc Zyngier <maz@kernel.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     James Morse <james.morse@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@kernel.org>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Kyle Huey <me@kylehuey.com>
 Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] KVM: Pass MMU notifier range flags to kvm_unmap_hva_range()
-In-Reply-To: <20200811102725.7121-2-will@kernel.org>
-References: <20200811102725.7121-2-will@kernel.org>
-Message-Id: <20200826135416.9A6BF22BED@mail.kernel.org>
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH 1/7] x86/debug: Allow a single level of #DB recursion
+In-Reply-To: <20200820104905.118636133@infradead.org>
+References: <20200820104905.118636133@infradead.org>
+Message-Id: <20200826135413.D615F22B4E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,78 +62,19 @@ Hi
 
 [This is an automated email]
 
-This commit has been processed because it contains a -stable tag.
-The stable tag indicates that it's relevant for the following trees: all
+This commit has been processed because it contains a "Fixes:" tag
+fixing commit: 9f58fdde95c9 ("x86/db: Split out dr6/7 handling").
 
-The bot has tested the following trees: v5.8.2, v5.7.16, v5.4.59, v4.19.140, v4.14.193, v4.9.232, v4.4.232.
+The bot has tested the following trees: v5.8.2.
 
-v5.8.2: Build OK!
-v5.7.16: Build OK!
-v5.4.59: Build OK!
-v4.19.140: Failed to apply! Possible dependencies:
-    18fc7bf8e041 ("arm64: KVM: Allow for direct call of HYP functions when using VHE")
-    208243c752a7 ("KVM: arm64: Move hyp-init.S to nVHE")
-    25357de01b95 ("KVM: arm64: Clean up kvm makefiles")
-    33e45234987e ("arm64: initialize and switch ptrauth kernel keys")
-    396244692232 ("arm64: preempt: Provide our own implementation of asm/preempt.h")
-    3f58bf634555 ("KVM: arm/arm64: Share common code in user_mem_abort()")
-    6396b852e46e ("KVM: arm/arm64: Re-factor setting the Stage 2 entry to exec on fault")
-    748c0e312fce ("KVM: Make kvm_set_spte_hva() return int")
-    750319756256 ("arm64: add basic pointer authentication support")
-    7621712918ad ("KVM: arm64: Add build rules for separate VHE/nVHE object files")
-    7aa8d1464165 ("arm/arm64: KVM: Introduce kvm_call_hyp_ret()")
-    86d0dd34eaff ("arm64: cpufeature: add feature for CRC32 instructions")
-    90776dd1c427 ("arm64/efi: Move variable assignments after SECTIONS")
-    95b861a4a6d9 ("arm64: arch_timer: Add workaround for ARM erratum 1188873")
-    a0e50aa3f4a8 ("KVM: arm64: Factor out stage 2 page table data from struct kvm")
-    b877e9849d41 ("KVM: arm64: Build hyp-entry.S separately for VHE/nVHE")
-    bd4fb6d270bc ("arm64: Add support for SB barrier and patch in over DSB; ISB sequences")
-    be1298425665 ("arm64: install user ptrauth keys at kernel exit time")
-    d82755b2e781 ("KVM: arm64: Kill off CONFIG_KVM_ARM_HOST")
-    f50b6f6ae131 ("KVM: arm64: Handle calls to prefixed hyp functions")
-    f56063c51f9f ("arm64: add image head flag definitions")
-    f8df73388ee2 ("KVM: arm/arm64: Introduce helpers to manipulate page table entries")
-
-v4.14.193: Failed to apply! Possible dependencies:
-    0db9dd8a0fbd ("KVM: arm/arm64: Stop using the kernel's {pmd,pud,pgd}_populate helpers")
-    17ab9d57deba ("KVM: arm/arm64: Drop vcpu parameter from guest cache maintenance operartions")
-    3f58bf634555 ("KVM: arm/arm64: Share common code in user_mem_abort()")
-    6396b852e46e ("KVM: arm/arm64: Re-factor setting the Stage 2 entry to exec on fault")
-    694556d54f35 ("KVM: arm/arm64: Clean dcache to PoC when changing PTE due to CoW")
-    748c0e312fce ("KVM: Make kvm_set_spte_hva() return int")
-    88dc25e8ea7c ("KVM: arm/arm64: Consolidate page-table accessors")
-    91c703e0382a ("arm: KVM: Add optimized PIPT icache flushing")
-    a15f693935a9 ("KVM: arm/arm64: Split dcache/icache flushing")
-    a9c0e12ebee5 ("KVM: arm/arm64: Only clean the dcache on translation fault")
-    d0e22b4ac3ba ("KVM: arm/arm64: Limit icache invalidation to prefetch aborts")
-    f8df73388ee2 ("KVM: arm/arm64: Introduce helpers to manipulate page table entries")
-
-v4.9.232: Failed to apply! Possible dependencies:
-    1534b3964901 ("KVM: MIPS/MMU: Simplify ASID restoration")
-    1581ff3dbf69 ("KVM: MIPS/MMU: Move preempt/ASID handling to implementation")
-    1880afd6057f ("KVM: MIPS/T&E: Add lockless GVA access helpers")
-    411740f5422a ("KVM: MIPS/MMU: Implement KVM_CAP_SYNC_MMU")
-    748c0e312fce ("KVM: Make kvm_set_spte_hva() return int")
-    91cdee5710d5 ("KVM: MIPS/T&E: Restore host asid on return to host")
-    a2c046e40ff1 ("KVM: MIPS: Add vcpu_run() & vcpu_reenter() callbacks")
-    a31b50d741bd ("KVM: MIPS/MMU: Invalidate GVA PTs on ASID changes")
-    a60b8438bdba ("KVM: MIPS: Convert get/set_regs -> vcpu_load/put")
-    a7ebb2e410f8 ("KVM: MIPS/T&E: active_mm = init_mm in guest context")
-    aba8592950f1 ("KVM: MIPS/MMU: Invalidate stale GVA PTEs on TLBW")
-    c550d53934d8 ("KVM: MIPS: Remove duplicated ASIDs from vcpu")
-
-v4.4.232: Failed to apply! Possible dependencies:
-    16d100db245a ("MIPS: Move Cause.ExcCode trap codes to mipsregs.h")
-    1880afd6057f ("KVM: MIPS/T&E: Add lockless GVA access helpers")
-    19d194c62b25 ("MIPS: KVM: Simplify TLB_* macros")
-    411740f5422a ("KVM: MIPS/MMU: Implement KVM_CAP_SYNC_MMU")
-    748c0e312fce ("KVM: Make kvm_set_spte_hva() return int")
-    8cffd1974851 ("MIPS: KVM: Convert code to kernel sized types")
-    9fbfb06a4065 ("MIPS: KVM: Arrayify struct kvm_mips_tlb::tlb_lo*")
-    ba049e93aef7 ("kvm: rename pfn_t to kvm_pfn_t")
-    bdb7ed8608f8 ("MIPS: KVM: Convert headers to kernel sized types")
-    ca64c2beecd4 ("MIPS: KVM: Abstract guest ASID mask")
-    caa1faa7aba6 ("MIPS: KVM: Trivial whitespace and style fixes")
+v5.8.2: Failed to apply! Possible dependencies:
+    0b085e68f407 ("x86/entry: Consolidate 32/64 bit syscall entry")
+    27d6b4d14f5c ("x86/entry: Use generic syscall entry function")
+    517e499227be ("x86/entry: Cleanup idtentry_entry/exit_user")
+    8d5ea35c5e91 ("x86/entry: Consolidate check_user_regs()")
+    a377ac1cd9d7 ("x86/entry: Move user return notifier out of loop")
+    b037b09b9058 ("x86/entry: Rename idtentry_enter/exit_cond_rcu() to idtentry_enter/exit()")
+    ba1f2b2eaa2a ("x86/entry: Fix NMI vs IRQ state tracking")
 
 
 NOTE: The patch will not be queued to stable trees until it is upstream.
