@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFA9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE959C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB8A20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B2C20707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598449807;
-	bh=UJ+ocn3BaOJ19OKLX01EL0EppLq2nJgJ2qMjz+Qu7lg=;
+	s=default; t=1598449817;
+	bh=NDgTujQf40aEc0EizGnGw4M8AkJqzxUV0D0lyCYMSxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PNfVEj+9iVdx2KReKSe/0dm99cYztAZFnTjvRful63d5Lsdfw5CHap9UK2B6yjOom
-	 8I/gdrhZeCPiGQV5uPgNyDVwCZwJ5w8xoxWLTV8RuiEpMh/HZdI5AQ899UGl7K0j55
-	 yFG03d6/KAkbBaIe+gz7M70i3obRu1Mk57oP5lmI=
+	b=NT0t9/AEWoCrXyaw/psY2Jc8dsU2gc34eSjPYE6d7P5MWuJyjdajnkd3mliyJaPaY
+	 voOsKf0bPTthaLbvKHaSReMJm9gOJPzadBsRa5vcJCcVgfyoEirCly6jdddlAnQDLy
+	 BP/6COfvQvDeXS5hnDncJOccas6rDwIV7klw2cL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730511AbgHZNuF (ORCPT
+        id S1730504AbgHZNuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57584 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 09:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730455AbgHZNsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:48:30 -0400
+        id S1730459AbgHZNsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:48:19 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2EAE420707;
-        Wed, 26 Aug 2020 13:48:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25F58221E2;
+        Wed, 26 Aug 2020 13:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598449708;
-        bh=UJ+ocn3BaOJ19OKLX01EL0EppLq2nJgJ2qMjz+Qu7lg=;
+        s=default; t=1598449698;
+        bh=NDgTujQf40aEc0EizGnGw4M8AkJqzxUV0D0lyCYMSxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=brX+PGsTbiQnrRXc65q5p57iZC5ACJ7ABfPLxghFk0Nm6IVcIIs62gwKdIxo1l0OQ
-         q8/UKMCAzAvP5GM2Z1G97tq0LaYMck1VXwYeEOx9IXxGNQzgLaGJoUk6kYjhgehQQq
-         0bfXBzpTgsuCckMK1Phr+Avl/tiOU2Ode9kj8oK0=
+        b=Oj2migLj8ctFEej7wbf04OZXN9CCrXAHTsbK6ReojfcMRUjBouRSEE7OBU5GwKNtJ
+         N6OCdfXjK5AaP6Gtv+8+XNTuq7rYQxcETBQ57ZXl+CuGVVCtuaA54uVbxdY2PuFOAe
+         vCnSqKywx6HpI9eVIPkKn+losPjPdK+QMF1oX8SM=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, linux-kernel@vger.kernel.org,
@@ -48,9 +48,9 @@ Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, linux-kernel@vger.kernel.org,
         "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
         Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
         linux-arch@vger.kernel.org
-Subject: [RFC PATCH 13/14] sparc: kprobes: Use generic kretprobe trampoline handler
-Date:   Wed, 26 Aug 2020 22:48:24 +0900
-Message-Id: <159844970401.510284.14364618717570527245.stgit@devnote2>
+Subject: [RFC PATCH 12/14] sh: kprobes: Use generic kretprobe trampoline handler
+Date:   Wed, 26 Aug 2020 22:48:14 +0900
+Message-Id: <159844969375.510284.14762268483841116550.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <159844957216.510284.17683703701627367133.stgit@devnote2>
 References: <159844957216.510284.17683703701627367133.stgit@devnote2>
@@ -65,31 +65,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- arch/sparc/kernel/kprobes.c |   52 +++----------------------------------------
- 1 file changed, 4 insertions(+), 48 deletions(-)
+ arch/sh/kernel/kprobes.c |   59 +++-------------------------------------------
+ 1 file changed, 4 insertions(+), 55 deletions(-)
 
-diff --git a/arch/sparc/kernel/kprobes.c b/arch/sparc/kernel/kprobes.c
-index dfbca2470536..cd34aeaa3ebb 100644
---- a/arch/sparc/kernel/kprobes.c
-+++ b/arch/sparc/kernel/kprobes.c
-@@ -453,6 +453,7 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+diff --git a/arch/sh/kernel/kprobes.c b/arch/sh/kernel/kprobes.c
+index 318296f48f1a..118927ab63af 100644
+--- a/arch/sh/kernel/kprobes.c
++++ b/arch/sh/kernel/kprobes.c
+@@ -204,6 +204,7 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
  				      struct pt_regs *regs)
  {
- 	ri->ret_addr = (kprobe_opcode_t *)(regs->u_regs[UREG_RETPC] + 8);
+ 	ri->ret_addr = (kprobe_opcode_t *) regs->pr;
 +	ri->fp = NULL;
  
  	/* Replace the return addr with trampoline addr */
- 	regs->u_regs[UREG_RETPC] =
-@@ -465,58 +466,13 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
- static int __kprobes trampoline_probe_handler(struct kprobe *p,
- 					      struct pt_regs *regs)
+ 	regs->pr = (unsigned long)kretprobe_trampoline;
+@@ -302,62 +303,10 @@ static void __used kretprobe_trampoline_holder(void)
+  */
+ int __kprobes trampoline_probe_handler(struct kprobe *p, struct pt_regs *regs)
  {
 -	struct kretprobe_instance *ri = NULL;
 -	struct hlist_head *head, empty_rp;
 -	struct hlist_node *tmp;
 -	unsigned long flags, orig_ret_address = 0;
--	unsigned long trampoline_address =(unsigned long)&kretprobe_trampoline;
-+	unsigned long orig_ret_address = 0;
+-	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
++	regs->pc = __kretprobe_trampoline_handler(regs,
++			(unsigned long)&kretprobe_trampoline, NULL);
  
 -	INIT_HLIST_HEAD(&empty_rp);
 -	kretprobe_hash_lock(current, &head, &flags);
@@ -97,7 +98,7 @@ index dfbca2470536..cd34aeaa3ebb 100644
 -	/*
 -	 * It is possible to have multiple instances associated with a given
 -	 * task either because an multiple functions in the call path
--	 * have a return probe installed on them, and/or more than one return
+-	 * have a return probe installed on them, and/or more then one return
 -	 * return probe was registered for a target function.
 -	 *
 -	 * We can handle this because:
@@ -112,8 +113,11 @@ index dfbca2470536..cd34aeaa3ebb 100644
 -			/* another task is sharing our hash bucket */
 -			continue;
 -
--		if (ri->rp && ri->rp->handler)
+-		if (ri->rp && ri->rp->handler) {
+-			__this_cpu_write(current_kprobe, &ri->rp->kp);
 -			ri->rp->handler(ri, regs);
+-			__this_cpu_write(current_kprobe, NULL);
+-		}
 -
 -		orig_ret_address = (unsigned long)ri->ret_addr;
 -		recycle_rp_inst(ri, &empty_rp);
@@ -128,18 +132,18 @@ index dfbca2470536..cd34aeaa3ebb 100644
 -	}
 -
 -	kretprobe_assert(ri, orig_ret_address, trampoline_address);
-+	orig_ret_address = __kretprobe_trampoline_handler(regs,
-+			(unsigned long)&kretprobe_trampoline, NULL);
- 	regs->tpc = orig_ret_address;
- 	regs->tnpc = orig_ret_address + 4;
- 
+-
+-	regs->pc = orig_ret_address;
 -	kretprobe_hash_unlock(current, &flags);
 -
 -	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
 -		hlist_del(&ri->hlist);
 -		kfree(ri);
 -	}
- 	/*
- 	 * By returning a non-zero value, we are telling
- 	 * kprobe_handler() that we don't want the post_handler
+-
+-	return orig_ret_address;
++	return 1;
+ }
+ 
+ static int __kprobes post_kprobe_handler(struct pt_regs *regs)
 
