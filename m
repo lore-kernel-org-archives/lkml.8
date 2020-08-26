@@ -2,125 +2,149 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E512C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A15C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3922820707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FEC320707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:56:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ufg/BlL2"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hp7PAqBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbgHZLzv (ORCPT
+        id S1729293AbgHZL4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:55:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23922 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729184AbgHZLzj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:55:39 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QBXJ7x021628;
-        Wed, 26 Aug 2020 07:55:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : date : in-reply-to : references : content-type : mime-version
- : content-transfer-encoding; s=pp1;
- bh=dHqlfOWSxjq+gaqjLFymI8135q9+O5+SFhB0cL1SeAg=;
- b=Ufg/BlL2bIQ4Z8Vs2bqLdfnFjNZRXOHuBIuvqOuxdB/L4XCegNlA+4KQuAat81knZc6v
- Xri75XdYAgIZTq5jBONqlcU2BPV8cggLx/F4OaG8lX12H6aNLaWrieeAGknTuGTiW43Z
- VWWJGAsOk0FVBryUHK649HimsSX/qkKY5SUMgwMz48t3EJzYSrwP5YDIBkr2qEgqMDwn
- lJ7WN1lEpnCyMHYzwh1c1ZbQ40k11fDV7Pj7RvIJrqZTJ+3w/KFj+8jAUS0EMi0hWRo8
- GkzT2UEap8iufCWz2cWHLZ0T3Ix5Tt5KoAXJ5RQ4Rf7187Rx8/tlebLr77O8A2tnNPDf rw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335pfn9gn4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 07:55:20 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07QBYHm3025194;
-        Wed, 26 Aug 2020 07:55:19 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335pfn9gm4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 07:55:19 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07QBr8Ul003672;
-        Wed, 26 Aug 2020 11:55:17 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma03fra.de.ibm.com with ESMTP id 332utq2rkv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 11:55:16 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07QBtENT26476832
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 11:55:14 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7A07352057;
-        Wed, 26 Aug 2020 11:55:14 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.28.3])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A618A52050;
-        Wed, 26 Aug 2020 11:55:11 +0000 (GMT)
-Message-ID: <6f63a0cf1349281ef2c407d95abedfba1f90345a.camel@linux.ibm.com>
-Subject: Re: [PATCH 0/3] integrity: Load certs from EFI MOK config table
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lenny Szubowicz <lszubowi@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-security-module@vger.kernel.org, ardb@kernel.org,
-        jmorris@namei.org, serge@hallyn.com, keescook@chromium.org,
-        bp@alien8.de, pjones@redhat.com, dhowells@redhat.com,
-        prarit@redhat.com
-Date:   Wed, 26 Aug 2020 07:55:10 -0400
-In-Reply-To: <20200826034455.28707-1-lszubowi@redhat.com>
-References: <20200826034455.28707-1-lszubowi@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
+        Wed, 26 Aug 2020 07:56:33 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:18984 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729277AbgHZL4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 07:56:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598442969; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Bwhuv2Mg8XX7hTVE0N5W+Eqr1RkfhHeyhdfuGEzNN3U=; b=hp7PAqBuXpVH8xRG0qqiaqSIUxeaGOGCS04Ub0tmGJCXh92YcqiKWtXB/X1oh/gnmgF+pgO9
+ swtISU+kwR4La7LpoJdnYWXFUR0o4zmcRM7mGZUpPZn/aleq45xOK65e0F5PYxvqSGEfHlI3
+ KR4EoYBnaHCfx2tZMLKNf0nlLOU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5f464dd8222038607afe1398 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 11:56:08
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9F1B3C433B2; Wed, 26 Aug 2020 11:56:06 +0000 (UTC)
+Received: from [192.168.1.100] (unknown [47.8.163.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: akashast)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4DC6EC433C6;
+        Wed, 26 Aug 2020 11:55:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4DC6EC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=akashast@codeaurora.org
+Subject: Re: [PATCH V2 1/2] i2c: i2c-qcom-geni: Store DMA mapping data in
+ geni_i2c_dev struct
+To:     Roja Rani Yarubandi <rojay@codeaurora.org>, wsa@kernel.org
+Cc:     swboyd@chromium.org, dianders@chromium.org,
+        saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org,
+        mka@chromium.org, msavaliy@qti.qualcomm.com, skakit@codeaurora.org,
+        rnayak@codeaurora.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+References: <20200820103522.26242-1-rojay@codeaurora.org>
+ <20200820103522.26242-2-rojay@codeaurora.org>
+From:   Akash Asthana <akashast@codeaurora.org>
+Message-ID: <c09a6bb3-6a7d-bcf8-42ad-cc8dc971c705@codeaurora.org>
+Date:   Wed, 26 Aug 2020 17:25:52 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200820103522.26242-2-rojay@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-26_08:2020-08-26,2020-08-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- impostorscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
- mlxscore=0 malwarescore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008260094
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lenny,
+Hi Roja,
 
-On Tue, 2020-08-25 at 23:44 -0400, Lenny Szubowicz wrote:
-> Because of system-specific EFI firmware limitations,
-> EFI volatile variables may not be capable of holding the
-> required contents of the Machine Owner Key (MOK) certificate
-> store. Therefore, an EFI boot loader may pass the MOK certs
-> via a EFI configuration table created specifically for this
-> purpose to avoid this firmware limitation.
-> 
-> An EFI configuration table is a simpler and more robust mechanism
-> compared to EFI variables and is well suited for one-way passage
-> of static information from a pre-OS environment to the kernel.
-> 
-> This patch set does not remove the support for loading certs
-> from the EFI MOK variables into the platform key ring.
-> However, if both the EFI MOK config table and corresponding
-> EFI MOK variables are present, the MOK table is used as the
-> source of MOK certs.
-> 
-> The contents of the individual named MOK config table entries are
-> made available to user space via read-only sysfs binary files under:
-> 
-> 	/sys/firmware/efi/mok-variables/
+On 8/20/2020 4:05 PM, Roja Rani Yarubandi wrote:
+> Store DMA mapping data in geni_i2c_dev struct to enhance DMA mapping
+> data scope. For example during shutdown callback to unmap DMA mapping,
+> this stored DMA mapping data can be used to call geni_se_tx_dma_unprep
+> and geni_se_rx_dma_unprep functions.
+>
+> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+> ---
+> Changes in V2:
+>   - As per Stephen's comments, changed commit text, fixed minor nitpicks.
+>
+>   drivers/i2c/busses/i2c-qcom-geni.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
+> index 7f130829bf01..1fda5c7c2cfc 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -86,6 +86,9 @@ struct geni_i2c_dev {
+>   	u32 clk_freq_out;
+>   	const struct geni_i2c_clk_fld *clk_fld;
+>   	int suspended;
+> +	dma_addr_t tx_dma;
+> +	dma_addr_t rx_dma;
+> +	size_t xfer_len;
+>   };
+>   
+>   struct geni_i2c_err_log {
+> @@ -358,6 +361,7 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>   	struct geni_se *se = &gi2c->se;
+>   	size_t len = msg->len;
+>   
+> +	gi2c->xfer_len = msg->len;
 
-Please include a security section in this cover letter with a
-comparison of the MoK variables and the EFI configuration table
-security (eg. same mechanism?).  Has mokutil been updated?  If so,
-please provide a link.
+nit: gi2c->xfer = len, for tx_one_msg as well.
 
-Mimi
+Regards,
+
+Akash
+
+>   	if (!of_machine_is_compatible("lenovo,yoga-c630"))
+>   		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+>   
+> @@ -384,6 +388,7 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>   	if (dma_buf) {
+>   		if (gi2c->err)
+>   			geni_i2c_rx_fsm_rst(gi2c);
+> +		gi2c->rx_dma = rx_dma;
+>   		geni_se_rx_dma_unprep(se, rx_dma, len);
+>   		i2c_put_dma_safe_msg_buf(dma_buf, msg, !gi2c->err);
+>   	}
+> @@ -400,6 +405,7 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>   	struct geni_se *se = &gi2c->se;
+>   	size_t len = msg->len;
+>   
+> +	gi2c->xfer_len = msg->len;
+>   	if (!of_machine_is_compatible("lenovo,yoga-c630"))
+>   		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+>   
+> @@ -429,6 +435,7 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>   	if (dma_buf) {
+>   		if (gi2c->err)
+>   			geni_i2c_tx_fsm_rst(gi2c);
+> +		gi2c->tx_dma = tx_dma;
+>   		geni_se_tx_dma_unprep(se, tx_dma, len);
+>   		i2c_put_dma_safe_msg_buf(dma_buf, msg, !gi2c->err);
+>   	}
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\na Linux Foundation Collaborative Project
 
