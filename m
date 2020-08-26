@@ -2,105 +2,128 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E85C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93A2620707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598422489;
-	bh=49bBfzJ0v+qJasfusLzXWkh70Zib8QKIhWug9Dvwlmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rpqYg/lODyOKeZ8jUaOCICL/P2FXMyjL71f1SHoVyuJgh6HsmLCI7yjDZdkZ/gTss
-	 LyM4vxWtcTd1Y7XEM3sxFOXddrUa2Vfr5mQljDILoeY6PPGGxZ7inoRzxRVn2G+Zz9
-	 rncTKZBSU9C9gRQeXxJK6zt6aO651MDs5KbdxtQE=
+	by mail.kernel.org (Postfix) with ESMTP id 738F92076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgHZGOs (ORCPT
+        id S1726148AbgHZGSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:14:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbgHZGOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:14:47 -0400
-Received: from localhost (p54b33436.dip0.t-ipconnect.de [84.179.52.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 26 Aug 2020 02:18:24 -0400
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:44431 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725786AbgHZGSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 02:18:21 -0400
+Received: from [192.168.0.2] (ip5f5af678.dynamic.kabel-deutschland.de [95.90.246.120])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97E8C206FA;
-        Wed, 26 Aug 2020 06:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598422487;
-        bh=49bBfzJ0v+qJasfusLzXWkh70Zib8QKIhWug9Dvwlmg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=O8u9cTodiav9/5/uP9JrzGmXxnudMVcpy4d3occvVrX6f8H99soSLyI+MDGAYZRB5
-         Z28E1Jc2+mNow1kniqA+dqyDjeptyQ9Ilrm25IDtW01AWqv0p0bKusZiX74vo7lQE5
-         uoeEC/KzlsT0z26TFgL2ySaUWeHZjaHj0YC8cpKE=
-Date:   Wed, 26 Aug 2020 08:14:44 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Codrin.Ciubotariu@microchip.com
-Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, Ludovic.Desroches@microchip.com,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        linux@armlinux.org.uk, kamel.bouhara@bootlin.com
-Subject: Re: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus recovery
-Message-ID: <20200826061444.GB1081@ninjato>
-References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
- <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
- <20200802170820.GC10193@kunai>
- <65890aab-1d19-7e7e-abff-3c6ee05c8ade@microchip.com>
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id C3F7320225BDA;
+        Wed, 26 Aug 2020 08:18:17 +0200 (CEST)
+Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
+To:     Caleb Jorden <caljorden@hotmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+References: <20200826055150.2753.90553@ml01.vlan13.01.org>
+Cc:     iwd@lists.01.org, stable@vger.kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Message-ID: <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
+Date:   Wed, 26 Aug 2020 08:18:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
-Content-Disposition: inline
-In-Reply-To: <65890aab-1d19-7e7e-abff-3c6ee05c8ade@microchip.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200826055150.2753.90553@ml01.vlan13.01.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---tsOsTdHNUZQcU9Ye
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Dear Caleb,
 
 
-> Thanks, this would be great! I tested this on a sam9x60, with the HW=20
-> feature for the 9 pulses disabled, with a picky audio codec as I2C device.
-> Please let me know of the result.
+Thank you for the report. Linux has a no regression policy, so the 
+correct forum to report this to is the Linux kernel folks. I am adding 
+the crypto and stable folks to the receiver list.
 
-I can't make use of the feature on the platform I had in mind, sadly. It
-doesn't really support switching from/to GPIO pinctrl states. If that
-ever changes, I will add bus recovery for that controller, but I think
-this is low priority.
+Am 26.08.20 um 07:51 schrieb caljorden@hotmail.com:
 
-On the good side, there are patches which make i2c-mv64xxx another user
-of your new mechanism, so everything is well, I think.
+> I wanted to note an issue that I have hit with iwd when I upgraded to
+> the Linux 5.8.3 stable kernel.  My office network uses WPA Enterprise
+> with EAP-PEAPv0 + MSCHAPv2.  When using this office network,
+> upgrading to Linux 5.8.3 caused my system to refuse to associate
+> successfully to the network.  I get the following in my dmesg logs:
+> 
+> [   40.846535] wlan0: authenticate with <redacted>:60
+> [   40.850570] wlan0: send auth to <redacted>:60 (try 1/3)
+> [   40.854627] wlan0: authenticated
+> [   40.855992] wlan0: associate with <redacted>:60 (try 1/3)
+> [   40.860450] wlan0: RX AssocResp from <redacted>:60 (capab=0x411 status=0 aid=11)
+> [   40.861620] wlan0: associated
+> [   41.886503] wlan0: deauthenticating from <redacted>:60 by local choice (Reason: 23=IEEE8021X_FAILED)
+> [   42.360127] wlan0: authenticate with <redacted>:22
+> [   42.364584] wlan0: send auth to <redacted>:22 (try 1/3)
+> [   42.370821] wlan0: authenticated
+> [   42.372658] wlan0: associate with <redacted>:22 (try 1/3)
+> [   42.377426] wlan0: RX AssocResp from <redacted>:22 (capab=0x411 status=0 aid=15)
+> [   42.378607] wlan0: associated
+> [   43.402009] wlan0: deauthenticating from <redacted>:22 by local choice (Reason: 23=IEEE8021X_FAILED)
+> [   43.875921] wlan0: authenticate with <redacted>:60
+> [   43.879988] wlan0: send auth to <redacted>:60 (try 1/3)
+> [   43.886244] wlan0: authenticated
+> [   43.889273] wlan0: associate with <redacted>:60 (try 1/3)
+> [   43.894586] wlan0: RX AssocResp from <redacted>:60 (capab=0x411 status=0 aid=11)
+> [   43.896077] wlan0: associated
+> [   44.918504] wlan0: deauthenticating from <redacted>:60 by local choice (Reason: 23=IEEE8021X_FAILED)
+> 
+> This continues as long as I let iwd run.
+> 
+> I downgraded back to Linux 5.8.2, and verified that everything works
+> as expected.  I also tried using Linux 5.8.3 on a different system at
+> my home, which uses WPA2-PSK.  It worked fine (though it uses an
+> Atheros wireless card instead of an Intel card - but I assume that is
+> irrelevant).
+> 
+> I decided to try to figure out what caused the issue in the changes
+> for Linux 5.8.3.  I assumed that it was something that changed in the
+> crypto interface, which limited my bisection to a very few commits.
+> Sure enough, I found that if I revert commit
+> e91d82703ad0bc68942a7d91c1c3d993e3ad87f0 (crypto: algif_aead - Only
+> wake up when ctx->more is zero), the problem goes away and I am able
+> to associate to my WPA Enterprise network successfully, and use it.
+> I found that in order to revert this commit, I also first had to
+> revert 465c03e999102bddac9b1e132266c232c5456440 (crypto: af_alg - Fix
+> regression on empty requests), because the two commits have coupled
+> changes.
+> 
+> I normally would have assumed that this should be sent to the kernel
+> list, but I thought I would first mention it here because of what I
+> found in some email threads on the Linux-Crypto list about the crypto
+> interfaces to the kernel being sub-optimal and needing to be fixed.
+> The changes in these commits look like they are just trying to fix
+> what could be broken interfaces, so I thought that it would make
+> sense to see what the iwd team thinks about the situation first.
+> 
+> The wireless card I was using during this testing is an Intel
+> Wireless 3165 (rev 81).  If there is any additional information I
+> could help provide, please let me know.
+
+It’d be great, if you verified, if the problem occurs with Linus’ master 
+branch too.
 
 
---tsOsTdHNUZQcU9Ye
-Content-Type: application/pgp-signature; name="signature.asc"
+Kind regards,
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9F/dAACgkQFA3kzBSg
-KbYNJw/+NFAFce8+QOGLjzXTrfZC+xhRwteAfXf5szBpChtCKinehTdgy/VIPABE
-DvkKYf5ocko7S08+wPdXNeeCX6CDglhgeBB89fW1MVOzIoiTcQ4TisNWegjFOIcD
-bbrMCoDObXs3PvnpaH58u3x10O1TXvPBZchywcmHT4TnZ8KwvdWOV63cX7ZNoYtE
-bJTuQaBJwgsisfCrOqAIw1w1hQ0/+9wln56NlAktwGR2hQfUfmXU3RrhmYssVHao
-Pc975YvoyRN4OJlwz8eITEfWG+2NcazKwT28Mv5LJU0Q7h5Tau4rwjzfU2Op32bW
-h4E3AV80ocUML8etDOfFYEc8N5biVOMURyJWxM2OaipIpfGoBkT9BTswvd61q3+R
-RacGLtRmaFyLtjWLndRy9DVZ1V+B6KsdGugQqABrzOwiAXK3OMf965427aI7v60B
-S2ZrxK3QhFTctotYAqHm7wCzLJNZBchSZzxYgJDEwuscbAbN7dBECdiCAfPYyO0K
-R+YbY6TuFZwBaEhKmJQ9IP26DB+Av5963X9CjU+e+nUxaPr5Nq/cS3sD5ku3bgGJ
-kJtaaM6fG9M8ZLa5bzOKQlOR1B4/Zojp5KCk4vTUhUzV97VX0VfaR8J7D4/k+Cal
-dF/LAlikTn1TZmLiLdYZrUFu7FPU9JTvXET48Uoa2s9vEPFw7rQ=
-=+8C1
------END PGP SIGNATURE-----
-
---tsOsTdHNUZQcU9Ye--
+Paul
