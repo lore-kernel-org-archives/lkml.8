@@ -2,133 +2,122 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21673C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A24C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E99E2206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AD52072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:46:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBeuV+cs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGCI67e+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgHZApc (ORCPT
+        id S1726770AbgHZAqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 20:45:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44362 "EHLO
+        Tue, 25 Aug 2020 20:46:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbgHZApc (ORCPT
+        with ESMTP id S1726570AbgHZAqM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 20:45:32 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CFC6C061574;
-        Tue, 25 Aug 2020 17:45:32 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id x24so181108otp.3;
-        Tue, 25 Aug 2020 17:45:32 -0700 (PDT)
+        Tue, 25 Aug 2020 20:46:12 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDDB1C061574;
+        Tue, 25 Aug 2020 17:46:12 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id w186so173858pgb.8;
+        Tue, 25 Aug 2020 17:46:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3/FdbAJD7BVKy5XahgLzv+uucXfdZpA+XZQ5pa4d864=;
-        b=bBeuV+csDJ4A2tR0keDdrTv9hablIvV5K9WJotu/UnH1q5gAqaCi6IZFp4qas/XxHZ
-         5vPlX2EJM8/qDjp9NPefU0YtNF1DWg2otIGdxsSN3QelAcPbI4/hgIIjNU6zId6re5J7
-         Dra0ggk+Lmu0g3f255OB6svP8Dtqn6Zag34TCp0pxBZJxR9I5sdMYMIJP05VvNnXVGTK
-         5Kxg2Lbkj51Fj4oeQTgCTzz+ZQOtwCMPEW7XSr0FA7bDogM4TedOGdap/bm8UCqRemzX
-         utkBbBLCxYtKKNDEkTz8zx93MnKz4FG38aOb1odUkVmzfU/5mnRBG4wjhfLkvylE02PD
-         Viow==
+        h=from:to:cc:subject:date:message-id;
+        bh=tYkmP2T+taGzQPsdNtmk2OPLPT6ITCwubwhEvkJJlCk=;
+        b=GGCI67e+oEId6snat38qMmRD/cojMw+wU62EvwvFdd0q3is7kDXAaVI72o2D2BgLcg
+         WrFBmzhN+Xs57YQPxevp7oGA6ZvYp5MsCxsnsOzC/DS9LaaYCj9Gag50gOggeQeF1BvU
+         LvjCgOzTTFsdPIy6a3fSWpjzW5K1mqQauP/+P+93ZeIwRUt9wnr0nIEvnSp5NvldFFXI
+         gSyL5jlwp4Pi1YoCFt1xc/1A9VRfNVUXL6E97gifx9rFCjHRvv6jwA34q/2gLCj7XRF0
+         5+AlZPMWPOka9YqAjK4ersPfW+rlKqLTycYryUzFAbwCGB04MUuG471+7RqdNe/rOLKJ
+         rTOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3/FdbAJD7BVKy5XahgLzv+uucXfdZpA+XZQ5pa4d864=;
-        b=VbuWkGu+8JidRAf/3NaXccSEN6xD7ZrqnpNMTFlgiPAxYJ3ok/ylKN1HfiIKD37TmQ
-         TDvGkB0Pzgz8eFCJ8EDs+fH4zimX39SmoTIskaYuLG5sfGKGYFBtB8crYNt6VOpRT8rz
-         hpjk94JLis3jPGrTuXmjJ3HwAf1lkV0aEeQ+xnobLtKDGSfOvD4Fy9Q6RyZ4XtnZrD/X
-         6L3ooVi1P5UX7D+4SpYquCPnvTZa5U6vlViwCdg5/pMWPImFvlniPWliH3dVhnA0YOmK
-         +aISl6B+vdnet9c0HybIdlXthaHoRK98fxgHBHw8p6+CdOB0/ijT+oeHmvn2WBiV/DUL
-         TdNQ==
-X-Gm-Message-State: AOAM532PUf0+vgspHo+5sAouElQPntCMZgDMKMsEthIhbhgc74uJ+lQ7
-        EoPXGteW1iB+F8KTbFjLoG0=
-X-Google-Smtp-Source: ABdhPJwpQ4MR/gBTilv7N6/jG0RY+5DGluTWhReFvF70UYOf+9YnGR4r+gKt7J+zT9fcWLDPOAyG7g==
-X-Received: by 2002:a9d:b82:: with SMTP id 2mr8289582oth.202.1598402731384;
-        Tue, 25 Aug 2020 17:45:31 -0700 (PDT)
-Received: from Davids-MacBook-Pro.local ([2601:282:803:7700:a5be:ea41:732d:f3d6])
-        by smtp.googlemail.com with ESMTPSA id e7sm131281otj.28.2020.08.25.17.45.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 17:45:30 -0700 (PDT)
-Subject: Re: [net-next v5 1/2] seg6: inherit DSCP of inner IPv4 packets
-To:     Ahmed Abdelsalam <ahabdels@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     andrea.mayer@uniroma2.it
-References: <20200825160236.1123-1-ahabdels@gmail.com>
- <efaf3273-e147-c27e-d5b8-241930335b82@gmail.com>
- <75f7be67-2362-e931-6793-1ce12c69b4ea@gmail.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <71351d27-0719-6ed9-f5c6-4aee20547c58@gmail.com>
-Date:   Tue, 25 Aug 2020 18:45:29 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <75f7be67-2362-e931-6793-1ce12c69b4ea@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tYkmP2T+taGzQPsdNtmk2OPLPT6ITCwubwhEvkJJlCk=;
+        b=JTLRHycZ6fR4524ilioNhdHTMMLhqYGQjAnsVUMWe9I25aH9XNX1lc2YKc1hobMK9P
+         W+tOWk7NQrRywcqWWYigYZdsSxTFHGgBUxbcrp+568VCGrShZ6FA9H9/zYA0r/TYV71Y
+         /9RTNU6cNlDH2KYTt8gx3Ztw4UroCGQ8vZbUjzIi+4346cVIyQRTvMlsbMQqWQT4cPU1
+         kSlb7QT27bnpjg5ENPQ4+tcfGLUsjODfmbd4rcPEmz+k5ZTZKxpcUParTnh20Pf8yCiI
+         5kx41q11RgOJQRobaMh0buqnL7xVR4RHVV7Nfeskx7GAW3aIk6l/eMq/8jw5vsRM0Vyd
+         DIyQ==
+X-Gm-Message-State: AOAM530xHJtXbD53LM0JBHBo4ubyvYqdPT0sMZl0u68VYkM1sSAK4tNv
+        xn4f/evbXdW3CVr3X1jRDzFeEajF/mQ=
+X-Google-Smtp-Source: ABdhPJwrkfHpS2LCPLcl2zwqpbRRX0x+ND+JnKe6KIxu6P4VzxGh1LKiTQleevwGOAEAH/WWCZtYTg==
+X-Received: by 2002:a63:511a:: with SMTP id f26mr8721575pgb.15.1598402772496;
+        Tue, 25 Aug 2020 17:46:12 -0700 (PDT)
+Received: from linux-691t.suse.de ([124.11.22.254])
+        by smtp.gmail.com with ESMTPSA id x4sm454044pff.112.2020.08.25.17.46.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 25 Aug 2020 17:46:11 -0700 (PDT)
+From:   "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+X-Google-Original-From: "Lee, Chun-Yi" <jlee@suse.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Lee, Chun-Yi" <jlee@suse.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Fabian Vogt <fvogt@suse.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH v2] efi/efivars: Create efivars mount point via efivars abstraction
+Date:   Wed, 26 Aug 2020 08:46:07 +0800
+Message-Id: <20200826004607.7483-1-jlee@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/25/20 5:45 PM, Ahmed Abdelsalam wrote:
-> 
-> Hi David
-> 
-> The seg6 encap is implemented through the seg6_lwt rather than
-> seg6_local_lwt.
+This patch creates efivars mount point when active efivars abstraction
+be set. It is useful for userland to determine the availability of efivars
+filesystem.
 
-ok. I don't know the seg6 code; just taking a guess from a quick look.
+Cc: Matthias Brugger <mbrugger@suse.com>
+Cc: Fabian Vogt <fvogt@suse.com>
+Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
+---
 
-> We can add a flag(SEG6_IPTUNNEL_DSCP) in seg6_iptunnel.h if we do not
-> want to go the sysctl direction.
+v2:
+Using efivars_kobject() helper instead of checking GetVariable or
+GetNextVariable EFI runtime services. Because the efivarfs code could be
+instantiated using a different efivars abstraction.
 
-sysctl is just a big hammer with side effects.
+ drivers/firmware/efi/efi.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-It struck me that the DSCP propagation is very similar to the TTL
-propagation with MPLS which is per route entry (MPLS_IPTUNNEL_TTL and
-stored as ttl_propagate in mpls_iptunnel_encap). Hence the question of
-whether SR could make this a per route attribute. Consistency across
-implementations is best.
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 3aa07c3b5136..db483fc68501 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -405,11 +405,13 @@ static int __init efisubsys_init(void)
+ 	if (error)
+ 		goto err_remove_group;
+ 
+-	/* and the standard mountpoint for efivarfs */
+-	error = sysfs_create_mount_point(efi_kobj, "efivars");
+-	if (error) {
+-		pr_err("efivars: Subsystem registration failed.\n");
+-		goto err_remove_group;
++	if (efivars_kobject()) {
++		/* and the standard mountpoint for efivarfs */
++		error = sysfs_create_mount_point(efi_kobj, "efivars");
++		if (error) {
++			pr_err("efivars: Subsystem registration failed.\n");
++			goto err_remove_group;
++		}
+ 	}
+ 
+ 	if (efi_enabled(EFI_DBG) && efi_enabled(EFI_PRESERVE_BS_REGIONS))
+-- 
+2.16.4
 
-> Perhaps this would require various changes to seg6 infrastructure
-> including seg6_iptunnel_policy, seg6_build_state, fill_encap,
-> get_encap_size, etc.
-> 
-> We have proposed a patch before to support optional parameters for SRv6
-> behaviors [1].
-> Unfortunately, this patch was rejected.
-> 
-
-not sure I follow why the patch was rejected. Does it change behavior of
-existing code?
-
-I would expect that new attributes can be added without affecting
-handling of current ones. Looking at seg6_iptunnel.c the new attribute
-would be ignored on older kernels but should be fine on new ones and
-forward.
-
-###
-
-Since seg6 does not have strict attribute checking the only way to find
-out if it is supported is to send down the config and then read it back.
-If the attribute is missing, the kernel does not support. Ugly, but one
-way to determine support. The next time an attribute is added to seg6
-code, strict checking should be enabled so that going forward as new
-attributes are added older kernels with strict checking would reject it.
