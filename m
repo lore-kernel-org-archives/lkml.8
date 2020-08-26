@@ -2,81 +2,145 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFCEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26D852080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598440488;
-	bh=dW+XxAJpHFDjfaJ4wYtnP+dey0mXAR+H3ngD3LKAmuo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=V9wmrZm66xjTx+6rCYep39RZs7kLYDnASRZycr5CZlp7VzJIwfoTMYluwdG/JXTix
-	 GYIi9+2WPtE6aRTwBhT9e18VjY9MIDcSvZPoXRK3xlDCs0UcWsmkBBO4mLW6wDMtho
-	 ygF6qorOGgj/S0DI5trvFQRlCNS2j1o5xY2qTeVE=
+	by mail.kernel.org (Postfix) with ESMTP id 7DB0C206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:15:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NQSsqa27"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgHZLOm (ORCPT
+        id S1728805AbgHZLPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbgHZLO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:14:28 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 623B02080C;
-        Wed, 26 Aug 2020 11:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598440468;
-        bh=dW+XxAJpHFDjfaJ4wYtnP+dey0mXAR+H3ngD3LKAmuo=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=1yIPNP/7AHbxNWQ1HaDcLefPIcVjeGNsUFaos+hIWvoiz/esGedsdqPCJ1GMyr/aP
-         XarLaoP5WJvhx+Qc+M2zykBddRvkv5BzJsBiQD8q7Q8t+vVIW07emqzXwvt1dH+BBI
-         nNWHLi+dLOKjh1FiKx4FMaJxNNM6wMQAbpsffeW4=
-Date:   Wed, 26 Aug 2020 13:14:25 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Sean O'Brien <seobrien@chromium.org>
-cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Wei-Ning Huang <wnhuang@google.com>
-Subject: Re: [PATCH v2] HID: google: add google vivaldi HID driver
-In-Reply-To: <20200825085044.1.I170489c0c2ac1538b3890abb5a92b95ad4f04d01@changeid>
-Message-ID: <nycvar.YFH.7.76.2008261311550.27422@cbobk.fhfr.pm>
-References: <20200825085044.1.I170489c0c2ac1538b3890abb5a92b95ad4f04d01@changeid>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 26 Aug 2020 07:15:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22308 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728668AbgHZLOb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 07:14:31 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QB3IIM112212;
+        Wed, 26 Aug 2020 07:14:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=TusebNyuzSZj6zQ1qcq5fCJU7Qk0mlvSif7um9HzO9I=;
+ b=NQSsqa27uQfGSHl+6tFWbHyHia+PmDtjkmPoXRg20wlXf3gMnRaye48i44VnECKaaFZL
+ mXSObA0Lh9jhK0js2Xx07hKPtRrC/qtisDnye3DjV+qH71/t82w88RyYed1+GH6rbyXm
+ +HdbdyPyLa2wFBXk3LHHHv5zZ6DtIh6qbh55+PEId0zzVtrxkM4BDhKAPYznqv1lKhBh
+ 1uYNNtWNMFHS1xTNEPrBM8e+6V16NHUzbD7eHnZ2ggEL2txwFmvVYMuj1gGqFRRWmOOo
+ xWP4sm75+C0e5H0EDSJpu0A7Y85PFazG9ectbhoQu3xVfNr4zHE1rHZR3fbqp1to16wf VQ== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 335pfn8cxn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 07:14:19 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07QBBZ28000618;
+        Wed, 26 Aug 2020 11:14:16 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 33498uadc4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 11:14:16 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07QBEEE349545564
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Aug 2020 11:14:14 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 82C98A405F;
+        Wed, 26 Aug 2020 11:14:14 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6D56CA405B;
+        Wed, 26 Aug 2020 11:14:13 +0000 (GMT)
+Received: from [9.199.33.201] (unknown [9.199.33.201])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 26 Aug 2020 11:14:13 +0000 (GMT)
+Subject: Re: [PATCH 4.19 65/71] powerpc/pseries: Do not initiate shutdown when
+ system is running on UPS
+To:     Pavel Machek <pavel@denx.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <20200824082355.848475917@linuxfoundation.org>
+ <20200824082359.202438041@linuxfoundation.org>
+ <20200825195620.GB27453@duo.ucw.cz>
+From:   Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
+Message-ID: <268a861f-59ac-679c-7507-d685d059a2ab@linux.vnet.ibm.com>
+Date:   Wed, 26 Aug 2020 16:44:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200825195620.GB27453@duo.ucw.cz>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-26_08:2020-08-26,2020-08-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ impostorscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
+ mlxscore=0 malwarescore=0 adultscore=0 bulkscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008260089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020, Sean O'Brien wrote:
+On 8/26/20 1:26 AM, Pavel Machek wrote:
+> Hi!
+> 
 
-> Add Google vivaldi HID driver. This driver allows us to read and report
-> the top row layout of keyboards which provide a vendor-defined HID
-> usage.
+Hi Pavel,
 
-Thanks for the driver.
+>> We have a user space tool (rtas_errd) on LPAR to monitor for
+>> EPOW_SHUTDOWN_ON_UPS. Once it gets an event it initiates shutdown
+>> after predefined time. It also starts monitoring for any new EPOW
+> 
+> Yeah, so there's userspace tool, and currently systems _with_ that
+> tool work poorly with UPS.
+> 
+> So you have fixed that, and now, systems _without_ that tool will work
+> poorly.
 
-I actually believe we should follow the standard convention here, and have 
-just one hid-<vendor> driver for all google products. Currently we have 
-hid-google-hammer, and this would add hid-google-vivaldi. Would you (or 
-Wei-Ning, CCing here) object on merging these two together?
+User space tool exists for long long time (more than decade) and its default tool
+on pseries system. Also user space tool behavior is not changed for long time.
 
-It's of course possible to still have hid-google-vivaldi.c and 
-hid-google-hammer.c, but then have only one CONFIG_HID_GOOGLE option 
-that'd link these two (and pontentially any future ones) into one single 
-hid-google.ko.
+The original design was to forward UPS event to userspace and let user space wait
+for predefined time and then initiate shutdown.
 
-Thanks,
+Previous fix accidentally initiated shutdown as soon as system switch to UPS power.
 
--- 
-Jiri Kosina
-SUSE Labs
+> 
+> That's not a fix for serious bug, that's behaviour change. You are
+> fixing one set of systems and breaking another.
+
+Without fix, as soon as system switches to UPS power supply, kernel will start 
+shutdown process. which is not correct. Its actually impacting customers running 
+Linux on pseries LPAR mode. Hence I have requested this fix for stable tree.
+
+Hope this clarifies your concern.
+
+-Vasant
+
+
+> 
+> I don't believe it is suitable for stable.
+> 
+> 								Pavel
+> 
+>> @@ -118,7 +118,6 @@ static void handle_system_shutdown(char
+>>   	case EPOW_SHUTDOWN_ON_UPS:
+>>   		pr_emerg("Loss of system power detected. System is running on"
+>>   			 " UPS/battery. Check RTAS error log for details\n");
+>> -		orderly_poweroff(true);
+>>   		break;
+>>   
+>>   	case EPOW_SHUTDOWN_LOSS_OF_CRITICAL_FUNCTIONS:
+>>
+> 
 
