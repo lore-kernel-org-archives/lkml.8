@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD51C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3328920838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E93720678
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgHZIPu (ORCPT
+        id S1726967AbgHZIPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 04:15:50 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39516 "EHLO
+        Wed, 26 Aug 2020 04:15:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39514 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbgHZIPj (ORCPT
+        with ESMTP id S1726813AbgHZIPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 04:15:39 -0400
+        Wed, 26 Aug 2020 04:15:38 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 95E3929943E
+        with ESMTPSA id 87C7329945B
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
@@ -37,9 +37,9 @@ Cc:     Collabora Kernel ML <kernel@collabora.com>, matthias.bgg@gmail.com,
         Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
         Neil Armstrong <narmstrong@baylibre.com>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH v2 4/5] drm/bridge: ps8640: Print an error if VDO control fails
-Date:   Wed, 26 Aug 2020 10:15:25 +0200
-Message-Id: <20200826081526.674866-5-enric.balletbo@collabora.com>
+Subject: [PATCH v2 3/5] drm/bridge: ps8640: Return an error for incorrect attach flags
+Date:   Wed, 26 Aug 2020 10:15:24 +0200
+Message-Id: <20200826081526.674866-4-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200826081526.674866-1-enric.balletbo@collabora.com>
 References: <20200826081526.674866-1-enric.balletbo@collabora.com>
@@ -50,9 +50,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Print an error message inside ps8640_bridge_vdo_control() function when
-it fails so we can simplify a bit the callers, they will only need to
-check the error code.
+Bridge drivers that implement the new model only shall return an error
+from their attach() handler when the DRM_BRIDGE_ATTACH_NO_CONNECTOR flag
+is not set. So make sure we return an error because only the new
+drm_bridge model is supported.
 
 Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
@@ -60,49 +61,24 @@ Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
 Changes in v2: None
 
- drivers/gpu/drm/bridge/parade-ps8640.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/bridge/parade-ps8640.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
-index ce3e8b2da8c9..9f7b7a9c53c5 100644
+index 13755d278db6..ce3e8b2da8c9 100644
 --- a/drivers/gpu/drm/bridge/parade-ps8640.c
 +++ b/drivers/gpu/drm/bridge/parade-ps8640.c
-@@ -82,8 +82,11 @@ static int ps8640_bridge_vdo_control(struct ps8640 *ps_bridge,
- 	ret = i2c_smbus_write_i2c_block_data(client, PAGE3_SET_ADD,
- 					     sizeof(vdo_ctrl_buf),
- 					     vdo_ctrl_buf);
--	if (ret < 0)
-+	if (ret < 0) {
-+		DRM_ERROR("failed to %sable VDO: %d\n",
-+			  ctrl == ENABLE ? "en" : "dis", ret);
- 		return ret;
-+	}
- 
- 	return 0;
- }
-@@ -150,10 +153,8 @@ static void ps8640_pre_enable(struct drm_bridge *bridge)
- 	}
- 
- 	ret = ps8640_bridge_vdo_control(ps_bridge, ENABLE);
--	if (ret) {
--		DRM_ERROR("failed to enable VDO: %d\n", ret);
-+	if (ret)
- 		goto err_regulators_disable;
--	}
- 
- 	/* Switch access edp panel's edid through i2c */
- 	ret = i2c_smbus_write_byte_data(client, PAGE2_I2C_BYPASS,
-@@ -175,9 +176,7 @@ static void ps8640_post_disable(struct drm_bridge *bridge)
- 	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
- 	int ret;
- 
--	ret = ps8640_bridge_vdo_control(ps_bridge, DISABLE);
--	if (ret < 0)
--		DRM_ERROR("failed to disable VDO: %d\n", ret);
-+	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
- 
- 	gpiod_set_value(ps_bridge->gpio_reset, 1);
- 	gpiod_set_value(ps_bridge->gpio_powerdown, 1);
+@@ -200,6 +200,10 @@ static int ps8640_bridge_attach(struct drm_bridge *bridge,
+ 						   .channel = 0,
+ 						   .node = NULL,
+ 						 };
++
++	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR))
++		return -EINVAL;
++
+ 	/* port@0 is ps8640 dsi input port */
+ 	in_ep = of_graph_get_endpoint_by_regs(dev->of_node, 0, -1);
+ 	if (!in_ep)
 -- 
 2.28.0
 
