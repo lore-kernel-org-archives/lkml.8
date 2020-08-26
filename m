@@ -6,81 +6,98 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D4DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF6052078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25312078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598469574;
-	bh=F6Y1Xklmrbbf3bsS48BdgWI0k9w+fz3aEY1yMgt01O4=;
+	s=default; t=1598469784;
+	bh=6LMIGauMiBRJMcOpdECzUGyEQkUdA1nW6+6wgr8LkCg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j/fzOpPF6iDHer81uS9MOWdHAq2dDF2xfRsDBCKbYVlnPSb9MN1o0IANV2SJtqigk
-	 z3bRu2iPUZjqk0CuvZaGPygU0+q2aCLHZwcOxCRPIr79RSukmbOUkN7wKbSISNOouR
-	 cKhKPjli2nzOaNbAYamHWm/AeZwn3BXf/mCzt/ps=
+	b=iwiUxW48WbhKKE9jmI2RYDZL7ZDCVvIdE9Dn45pJvh2tzepFp1SBs/fOluTJf111Q
+	 KdCmSIp0r7Otx0lde43G9NjS/18/WK9ARiKVQHwC8VpvThLeMrcAHdd+9QA4axZxkU
+	 7eiteYmR7PewzzrUtMJ0iM9ULDYAFaV2XvRoTVAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgHZTTc (ORCPT
+        id S1726740AbgHZTXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:19:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726734AbgHZTT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:19:29 -0400
-Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9D312078A;
-        Wed, 26 Aug 2020 19:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598469569;
-        bh=F6Y1Xklmrbbf3bsS48BdgWI0k9w+fz3aEY1yMgt01O4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vIL3cgtkt1CcbsrdZdmz0umqHMv1hzSTBKLpLxK/HDPFuGEhlIjqhtartZ81nfZeL
-         1y8QnUmpx3OUBJ8tWaDLheTw2Pep19qpjDAOkBi0UbaTO08B6fLs4BYCI8VxS34COE
-         FDFNlU+SnV4ACynvPbIKjcPOggry/Z6+Yb/q2qiE=
-Date:   Wed, 26 Aug 2020 14:25:29 -0500
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: dpot-dac: fix code comment in dpot_dac_read_raw()
-Message-ID: <20200826192529.GC2671@embeddedor>
-References: <20200826000844.GA16807@embeddedor>
- <3fb79fa8-e86b-111b-a4a7-5da767d40b52@axentia.se>
- <3528f053-70d8-bd12-8683-3c1ed0b4d6e7@embeddedor.com>
- <13e9b0cf-9fae-5dcf-d0ac-4beaf18295d0@axentia.se>
+        Wed, 26 Aug 2020 15:23:03 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45975 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbgHZTXC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:23:02 -0400
+Received: by mail-ed1-f67.google.com with SMTP id i17so1228367edx.12;
+        Wed, 26 Aug 2020 12:23:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YoSbFEE6WxawXijyPOSjl6BnMKpo5u+32xWA9EukxUc=;
+        b=eDkd129y5p8wfoSExAwj4DezugO6ajkHBYeJA8JjXkf9Pk3or28D89ZBRliielkvlZ
+         o/EoAtOjrSt5MuX+1XoXw8OmzZu8cdnDvKiWAQykLceLtAxZ6h0TDTZLyM2BAKvYBQ/O
+         WbdrK/m1aAV8LvbBY4s1N+Bwv1J9C2VUDOr9/VKSUb2we+4DwpeGc3WA9shf7to0IqPX
+         NvwAZ01udl/4qtNou0KMP1y3WXgrTzHKp6PjgEsRePFrt6Cusr+J421Jcew4iM9pzgg9
+         raiCOF07Yvi+NMyBtibhff66N26Z1JdmRSOeBqHIjhp1vdH0Lzmc2X1YCioLtNCoc7Tu
+         714w==
+X-Gm-Message-State: AOAM533ZfAezDHFmI1WtZJFqawzTS3zCbCbAYCldT3HixtT9TeBdQ5zj
+        zHeNfehOgxMtO0sB/cRpewA=
+X-Google-Smtp-Source: ABdhPJx8/pzC23/MfkOErm5NZndYQOVvm0SrUDOipckwuovfnOyFr2pW/5b6DcISQkKxPM6zKPgt0g==
+X-Received: by 2002:a05:6402:1591:: with SMTP id c17mr16230169edv.111.1598469780133;
+        Wed, 26 Aug 2020 12:23:00 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id b9sm940428edw.93.2020.08.26.12.22.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Aug 2020 12:22:59 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 21:22:56 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 02/24] Input: gpio_keys - Simplify with dev_err_probe()
+Message-ID: <20200826192256.GA14739@kozik-lap>
+References: <20200826181706.11098-1-krzk@kernel.org>
+ <20200826181706.11098-2-krzk@kernel.org>
+ <20200826191334.GX1891694@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <13e9b0cf-9fae-5dcf-d0ac-4beaf18295d0@axentia.se>
+In-Reply-To: <20200826191334.GX1891694@smile.fi.intel.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 04:16:23PM +0200, Peter Rosin wrote:
-> On 2020-08-26 16:17, Gustavo A. R. Silva wrote:
-> >> And just to be explicit, this fix is for 5.9.
-> >>
-> >> Acked-by: Peter Rosin <peda@axentia.se>
-> >>
-> > 
-> > If you don't mind I can add this to my tree for 5.9-rc4
-> > and send it directly to Linus.
+On Wed, Aug 26, 2020 at 10:13:34PM +0300, Andy Shevchenko wrote:
+> On Wed, Aug 26, 2020 at 08:16:44PM +0200, Krzysztof Kozlowski wrote:
+> > Common pattern of handling deferred probe can be simplified with
+> > dev_err_probe().  Less code and also it prints the error value.
 > 
-> Fine by me, Jonathan might think differently but I can't find a reason why.
-> Just about nothing is happening in that file and the risk for conflicts is
-> negligible.
+> > --- a/drivers/input/keyboard/gpio_keys.c
+> > +++ b/drivers/input/keyboard/gpio_keys.c
+> > @@ -505,10 +505,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+> >  				 */
+> >  				bdata->gpiod = NULL;
 > 
+> gpiod_get_optional()?
+> Do not see much context though (but please double check your series for these
+> kind of things).
 
-OK. In the meantime, I have added this to my -next tree and queued it up
-for 5.9-rc3.
+It would fit except it is devm_fwnode_gpiod_get() which does not have
+optional yet.
 
-Thanks
---
-Gustavo
+I can add it although the scope of the patch grows from simple
+defer-path-simplification.
+
+Thanks for the feedback.
+
+Best regards,
+Krzysztof
