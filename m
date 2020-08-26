@@ -3,138 +3,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C49FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC245C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC4212087D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:36:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8416A2087D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oXu9uOqc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lHkQ9kbI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgHZJgL (ORCPT
+        id S1728493AbgHZJgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:36:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9428 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728414AbgHZJfb (ORCPT
+        Wed, 26 Aug 2020 05:36:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728422AbgHZJfa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:35:31 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07Q93fqv062189;
-        Wed, 26 Aug 2020 05:33:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=f6n5hA9DQ+0MPkLhlYXYoSErJsIfh7/Cf8XqwUfu8TU=;
- b=oXu9uOqcDBZ3rzFg2UKvVK0x0FIYDygwK4Lhd4yAF+Xoht64BCyEKZCyM2VDCye2lpqv
- UDYSMhAo2TYgmmyHS81nqfaw9Y4+2dsOzIq0x68gUtd6+LXu+qGJALsiRe2LkOd6OXHy
- QlZyQulJmhqe8OgK/S6Ur+xJC6ilqWMb8VMgvKrakypAsctk/CyNszQlw2s8Uwwu4WWm
- ujhqLScihwxyDNqKC2nnFeC17BEyvmQIZXJ8ncCv87LoWwOnS7FoJPlI5jbMXiOp2ui1
- PXlCEzdOEoPSWSzP2ASxnNarFgc0wtbn1dfldFWZ3kvZZAGHUbhEVSd+i+NYBRU0KtQh Ow== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335kkv369t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 05:33:07 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07Q9NEGF126698;
-        Wed, 26 Aug 2020 05:33:07 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335kkv3661-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 05:33:05 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07Q9X1M9010480;
-        Wed, 26 Aug 2020 09:33:01 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 332utq2nma-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 09:33:01 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07Q9WwTs29622674
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 09:32:58 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8651D4C044;
-        Wed, 26 Aug 2020 09:32:58 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1738A4C040;
-        Wed, 26 Aug 2020 09:32:55 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.77.206.242])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Aug 2020 09:32:54 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org
-Cc:     jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        daniel@iogearbox.net, brho@google.com, srikar@linux.vnet.ibm.com,
-        kjain@linux.ibm.com
-Subject: [RFC] perf/core: Fixes hung issue on perf stat command during cpu hotplug
-Date:   Wed, 26 Aug 2020 15:02:36 +0530
-Message-Id: <20200826093236.446024-1-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 26 Aug 2020 05:35:30 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AAAEC061365
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:42 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id d10so174529wrw.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xmeKWj6ihDtxXg7mmV0g02PkzMbJUwVy4vUADq1jq3Y=;
+        b=lHkQ9kbI4YiHrMG+5c1O2DA0EUdgjZyvLmV+8YExFcXi1gdFNdZna7wI1C7eYgwRYz
+         9Xk1+KxSEYrXF/zIdSTSg24AIl/kZzSC8uzCISjmVpPb5WPvkYGGet2Msnt5AYRohb/9
+         tdTLogHLdCjhAebO1xjCBX6weShNPfIwXefOeUNOsk4XydWW3Dg3BLWF1dKUkFyUxjFH
+         89+MNPaKS6ACrOuzatrjQoAYZCgN2RoMGXmYGEZ8aYPqTCfAjVCfkJdUGw7QdeinfKnR
+         fQiS/5nY5m8XV04zepMGobk9n7MVwie/ajSLslD2eTM/u2MZs63wJfpm38MbNLDGKajP
+         esjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xmeKWj6ihDtxXg7mmV0g02PkzMbJUwVy4vUADq1jq3Y=;
+        b=J7mhI5cp2AElN60DnjsGmpUy+/PahQKEV/Pr6+0IptaJEkDituHOW9/wK/5heiBtQe
+         4kmyvvaQ0cOBmgslEfFG3C6PiuHzadpArbN+GyibH7991lOvX2EUIgHnUfVmPEDrCVb7
+         hANg/FyIsuGHklHrOa4H/AUL+vGCUFeMkiniz9jXpcZ0Tyd9oIzRmUiC17gUylw0wdVS
+         sxNZ75tY0hS58BPE+NYVgUk151y8/JeavMk5fHdVJcbwx5HpJz2ON+spOGMp3kS4BFto
+         LXFDQJH/I3YE0+CbhmMbZaOozVghT7NyMzIezhzrqUNvWu/2FP1QYlzYXQ7MoG8iR9q+
+         G20g==
+X-Gm-Message-State: AOAM530sr9Fid/IIczZ/L6rGIFLgVm5dMzEqPSW3t7hd6qbymECadj73
+        sK1JrFK6o389zBg0JGCULsiVjA==
+X-Google-Smtp-Source: ABdhPJysAlZ5GN6k56EGB8IkpZjoW4o5OuDOadTyLk2UwIoJAbWs4p5DNd4oDWJVopFCUT4nSOwAVg==
+X-Received: by 2002:adf:ff90:: with SMTP id j16mr477311wrr.105.1598434480972;
+        Wed, 26 Aug 2020 02:34:40 -0700 (PDT)
+Received: from dell.default ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 02:34:40 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
+Subject: [PATCH 29/30] wireless: broadcom: brcm80211: phytbl_lcn: Remove unused array 'dot11lcnphytbl_rx_gain_info_rev1'
+Date:   Wed, 26 Aug 2020 10:34:00 +0100
+Message-Id: <20200826093401.1458456-30-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200826093401.1458456-1-lee.jones@linaro.org>
+References: <20200826093401.1458456-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-26_06:2020-08-25,2020-08-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1
- mlxlogscore=999 mlxscore=0 malwarescore=0 priorityscore=1501
- lowpriorityscore=0 spamscore=0 phishscore=0 bulkscore=0 adultscore=0
- clxscore=1011 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008260072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 2ed6edd33a21 ("perf: Add cond_resched() to task_function_call()")
-added assignment of ret value as -EAGAIN in case function
-call to 'smp_call_function_single' fails.
-For non-zero ret value, it did 
-'ret = !ret ? data.ret : -EAGAIN;', which always
-assign -EAGAIN to ret and make second if condition useless.
+Fixes the following W=1 kernel build warning(s):
 
-In scenarios like when executing a perf stat with --per-thread option, and 
-if any of the monitoring cpu goes offline, the 'smp_call_function_single'
-function could return -ENXIO, and with the above check,
-task_function_call hung and increases CPU
-usage (because of repeated 'smp_call_function_single()')
+ drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phytbl_lcn.c:1510:33: warning: ‘dot11lcnphytbl_rx_gain_info_rev1’ defined but not used [-Wunused-const-variable=]
 
-Recration scenario:
-	# perf stat -a --per-thread && (offline a CPU )
-
-Patch here removes the tertiary condition added as part of that 
-commit and added a check for NULL and -EAGAIN.
-
-Fixes: 2ed6edd33a21("perf: Add cond_resched() to task_function_call()")
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Reported-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Franky Lin <franky.lin@broadcom.com>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Cc: Wright Feng <wright.feng@cypress.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: brcm80211-dev-list.pdl@broadcom.com
+Cc: brcm80211-dev-list@cypress.com
+Cc: netdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- kernel/events/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../broadcom/brcm80211/brcmsmac/phy/phytbl_lcn.c    | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5bfe8e3c6e44..330c53f7df9c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -115,9 +115,9 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
- 	for (;;) {
- 		ret = smp_call_function_single(task_cpu(p), remote_function,
- 					       &data, 1);
--		ret = !ret ? data.ret : -EAGAIN;
--
--		if (ret != -EAGAIN)
-+		if (!ret)
-+			ret = data.ret;
-+		else if (ret != -EAGAIN)
- 			break;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phytbl_lcn.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phytbl_lcn.c
+index be703be34616a..7526aa441de11 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phytbl_lcn.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phytbl_lcn.c
+@@ -1507,19 +1507,6 @@ const struct phytbl_info dot11lcnphytbl_rx_gain_info_rev0[] = {
+ 	,
+ };
  
- 		cond_resched();
+-static const struct phytbl_info dot11lcnphytbl_rx_gain_info_rev1[] = {
+-	{&dot11lcn_gain_tbl_rev1,
+-	 ARRAY_SIZE(dot11lcn_gain_tbl_rev1), 18,
+-	 0, 32}
+-	,
+-	{&dot11lcn_aux_gain_idx_tbl_rev0,
+-	 ARRAY_SIZE(dot11lcn_aux_gain_idx_tbl_rev0), 14, 0, 16}
+-	,
+-	{&dot11lcn_gain_idx_tbl_rev0,
+-	 ARRAY_SIZE(dot11lcn_gain_idx_tbl_rev0), 13, 0, 32}
+-	,
+-};
+-
+ const struct phytbl_info dot11lcnphytbl_rx_gain_info_2G_rev2[] = {
+ 	{&dot11lcn_gain_tbl_2G,
+ 	 ARRAY_SIZE(dot11lcn_gain_tbl_2G), 18, 0,
 -- 
-2.26.2
+2.25.1
 
