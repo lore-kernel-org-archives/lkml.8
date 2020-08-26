@@ -2,145 +2,89 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB0C206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:15:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NQSsqa27"
+	by mail.kernel.org (Postfix) with ESMTP id F18D92075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728805AbgHZLPW (ORCPT
+        id S1728435AbgHZLSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:15:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22308 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728668AbgHZLOb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:14:31 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QB3IIM112212;
-        Wed, 26 Aug 2020 07:14:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=TusebNyuzSZj6zQ1qcq5fCJU7Qk0mlvSif7um9HzO9I=;
- b=NQSsqa27uQfGSHl+6tFWbHyHia+PmDtjkmPoXRg20wlXf3gMnRaye48i44VnECKaaFZL
- mXSObA0Lh9jhK0js2Xx07hKPtRrC/qtisDnye3DjV+qH71/t82w88RyYed1+GH6rbyXm
- +HdbdyPyLa2wFBXk3LHHHv5zZ6DtIh6qbh55+PEId0zzVtrxkM4BDhKAPYznqv1lKhBh
- 1uYNNtWNMFHS1xTNEPrBM8e+6V16NHUzbD7eHnZ2ggEL2txwFmvVYMuj1gGqFRRWmOOo
- xWP4sm75+C0e5H0EDSJpu0A7Y85PFazG9ectbhoQu3xVfNr4zHE1rHZR3fbqp1to16wf VQ== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335pfn8cxn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 07:14:19 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07QBBZ28000618;
-        Wed, 26 Aug 2020 11:14:16 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 33498uadc4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 11:14:16 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07QBEEE349545564
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 11:14:14 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 82C98A405F;
-        Wed, 26 Aug 2020 11:14:14 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D56CA405B;
-        Wed, 26 Aug 2020 11:14:13 +0000 (GMT)
-Received: from [9.199.33.201] (unknown [9.199.33.201])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Aug 2020 11:14:13 +0000 (GMT)
-Subject: Re: [PATCH 4.19 65/71] powerpc/pseries: Do not initiate shutdown when
- system is running on UPS
-To:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <20200824082355.848475917@linuxfoundation.org>
- <20200824082359.202438041@linuxfoundation.org>
- <20200825195620.GB27453@duo.ucw.cz>
-From:   Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
-Message-ID: <268a861f-59ac-679c-7507-d685d059a2ab@linux.vnet.ibm.com>
-Date:   Wed, 26 Aug 2020 16:44:12 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Wed, 26 Aug 2020 07:18:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:44394 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728586AbgHZLQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 07:16:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2ADE1FB;
+        Wed, 26 Aug 2020 04:16:50 -0700 (PDT)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8BE143F71F;
+        Wed, 26 Aug 2020 04:16:49 -0700 (PDT)
+References: <20200824102317.1038259-1-maz@kernel.org> <20200824102317.1038259-6-maz@kernel.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 5/9] fsl-msi: Provide default retrigger callback
+In-reply-to: <20200824102317.1038259-6-maz@kernel.org>
+Date:   Wed, 26 Aug 2020 12:16:47 +0100
+Message-ID: <jhj7dtlejxc.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200825195620.GB27453@duo.ucw.cz>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-26_08:2020-08-26,2020-08-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
- impostorscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
- mlxscore=0 malwarescore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008260089
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/20 1:26 AM, Pavel Machek wrote:
-> Hi!
-> 
 
-Hi Pavel,
+Hi Marc,
 
->> We have a user space tool (rtas_errd) on LPAR to monitor for
->> EPOW_SHUTDOWN_ON_UPS. Once it gets an event it initiates shutdown
->> after predefined time. It also starts monitoring for any new EPOW
-> 
-> Yeah, so there's userspace tool, and currently systems _with_ that
-> tool work poorly with UPS.
-> 
-> So you have fixed that, and now, systems _without_ that tool will work
-> poorly.
+Many thanks for picking this up!
+Below's the only comment I have, the rest LGTM.
 
-User space tool exists for long long time (more than decade) and its default tool
-on pseries system. Also user space tool behavior is not changed for long time.
+On 24/08/20 11:23, Marc Zyngier wrote:
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/bus/fsl-mc/fsl-mc-msi.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c b/drivers/bus/fsl-mc/fsl-mc-msi.c
+> index 8edadf05cbb7..5306ba7dea3e 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-msi.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
+> @@ -144,6 +144,8 @@ static void fsl_mc_msi_update_chip_ops(struct msi_domain_info *info)
+>        */
+>       if (!chip->irq_write_msi_msg)
+>               chip->irq_write_msi_msg = fsl_mc_msi_write_msg;
+> +	if (!chip->irq_retrigger)
+> +		chip->irq_retrigger = irq_chip_retrigger_hierarchy;
 
-The original design was to forward UPS event to userspace and let user space wait
-for predefined time and then initiate shutdown.
+AFAICT the closest generic hook we could use here is
 
-Previous fix accidentally initiated shutdown as soon as system switch to UPS power.
+  msi_create_irq_domain() -> msi_domain_update_chip_ops()
 
-> 
-> That's not a fix for serious bug, that's behaviour change. You are
-> fixing one set of systems and breaking another.
-
-Without fix, as soon as system switches to UPS power supply, kernel will start 
-shutdown process. which is not correct. Its actually impacting customers running 
-Linux on pseries LPAR mode. Hence I have requested this fix for stable tree.
-
-Hope this clarifies your concern.
-
--Vasant
+which happens just below the fsl-specific ops update.
 
 
-> 
-> I don't believe it is suitable for stable.
-> 
-> 								Pavel
-> 
->> @@ -118,7 +118,6 @@ static void handle_system_shutdown(char
->>   	case EPOW_SHUTDOWN_ON_UPS:
->>   		pr_emerg("Loss of system power detected. System is running on"
->>   			 " UPS/battery. Check RTAS error log for details\n");
->> -		orderly_poweroff(true);
->>   		break;
->>   
->>   	case EPOW_SHUTDOWN_LOSS_OF_CRITICAL_FUNCTIONS:
->>
-> 
+However, placing a default .irq_retrigger callback in there would affect any
+and all MSI domain. IOW that would cover PCI and platform MSIs (covered by
+separate patches in this series), but also some x86 ("dmar" & "hpet") and
+TI thingies.
 
+I can't tell right now how bad of an idea it is, but I figured I'd throw
+this out there.
+
+
+>  }
+>
+>  /**
