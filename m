@@ -2,284 +2,416 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2621C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4071BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB83207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2A69207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fvsKoVJn"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="E7ZlXrll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgHZTO1 (ORCPT
+        id S1727846AbgHZTOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:14:27 -0400
-Received: from mail-eopbgr770055.outbound.protection.outlook.com ([40.107.77.55]:31745
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        Wed, 26 Aug 2020 15:14:33 -0400
+Received: from mail-bn7nam10on2082.outbound.protection.outlook.com ([40.107.92.82]:51745
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727813AbgHZTON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:14:13 -0400
+        id S1726910AbgHZTO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:14:28 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TbAKKOGaHYt0Q8TWZVLw4LQgI0Tkaya0CFab4ItrlP6/KazXZgve0DKu55iYKFJgu4ZcZtvtQjyRTgQiJXAMrOsXpm0eEDum9hzyPZm+H9ydWjMwv4PJ1JegnT9qMm2bVyaxSDW+0SH5Hn83k8Ohi8VGNfHpfErm25vGm8ycjn1XK9Ac4wvNszDUwnyEQz2CE4gc9uPHQbIi2oqStul9G+uyHMQ9h0zEfeQb4MMuaJTjk1to9KcBLvf6hUbau9Ejmdf0kShNPBkw2AIqyW0WMMCsFLIJdk5/3ckR8HgZeEdUaAyHNvrvNL/kw7LG3Yd+Yzbe4k3QgKkudcIIE3ktMw==
+ b=h+0U2K3shNqNNVJxVZ2bkstU/TT0hVpRrnT/3aNmBR+9mtdjKXwQkqf9VNTcA+uokhW8ltGg9oM9ZrcroTLE0rsCub5zdWauwAS3+Z5XO0zK/gb6V9mC4P8exbfD2y4YBil4bRC/ETXxJdo49W+Sel4atlxGQJdPe0zH/mb/3xiIRdioMdfZoZcbzyJpoKkFQTLOWD8xXekmQV/yneA+7wOuf1dHIqnUtXr3Sz/LOu/GWxQXNn3zwZe4t2RoODsA4BRu7hMjJmnLPL993unnGnKYlr5/xJ+l/gnavcesze8Bu59iYGybFo1tN1G0HFu6tg5KguvMwUYA2suL8GDwYQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bckht8T8MtG8i/+MDkmslAfdqqqLtYTbpiPUur41qhk=;
- b=VWwTs6KpQ7+fZ7OmBjT7dVR0f/RWgAnPKbJF9FEZl6R2mYa2CnXHJatlhAwaBL6KzEYLtA0Ww3X5dvtvEOQPv77KsPidfwzdF7y9aRr+fuQCvICd+TcV39xix7clUaMKvuCyYZpKIijs5GLMM8zwjj/wXp7/TLyuk6AwSzo+9Q32hOXZ/mxJxXkutezMU3PBk0yUgkw8g2KK4EShjDHk0pEkC7UB+crGaSe94WHTw6YMJiHEm5IjIdfBGvx8RJGse8OnpdroZJBBPQU1fRNtuHhy+9s+mu0of8sjRAWKf5uFV6oBitxikoycT/K1T7quSm2xVZZKPeL3UqsbiDPoYA==
+ bh=jRIsWxT0ILE3KT36R9KGtHzYCpDFmOG+Nwbu2l6CWZw=;
+ b=aSu5ZfpqIwzBZqgOB/5gYNumhFWZ3WqaQKDo3G22THEdVhtXime6dyPpJ1kZkgfimU9ifTikxY8XanilGzeO1PpWi4o01pedfieCZJGSuE67MwilMKQPDo2ekSZ3Qr1PD50wqBLtxsHZunVf3INEo0pScMM0OBjoDBUPUgrXWBRvw+p12xLEELiEEE/YI9rywSG62RRkQccIoZyi3A0h0O7506+nFvTd6hY83XQmRZVdbqKIIFqpWGrhNhIGNTh1UN/1hVeHjYAW6LWsOFX5+3VH2h2dxA8NhvlzAhaXFmJlwm6o7UDiUaQ26Bv0sqEWMFlXrr5FjW/AXmqp6GqH1Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bckht8T8MtG8i/+MDkmslAfdqqqLtYTbpiPUur41qhk=;
- b=fvsKoVJn9HrIBdGgq6h7bkfKH6iwFLrfpQ0TRKRUTocfvF70C4COIJONVSYRaj6M7+IK+lhcQXHBr0a8UliksOsx1p7qfpq60Ol5K8WW0nVVT3IoE3Pbw+EShjRkSODx4iYoieObuVEPW+Xq+2l41s+veXc4tKp0UExjakA0124=
+ bh=jRIsWxT0ILE3KT36R9KGtHzYCpDFmOG+Nwbu2l6CWZw=;
+ b=E7ZlXrllwbdycdKn64pZxqOu//gcOvITzU3orNUDgNPlz52a7vsv5mJ/VCTitRnEw+PHjm00BBNlR5rhIy2NOqbBw38qhqp0KsV4YM0ARTGf6B3rNqVe7WCGKPx5Lq/HbXbs3899kmXNhuz7zFTOFSJiGjprsd+5QsfwaADGpT8=
 Authentication-Results: tencent.com; dkim=none (message not signed)
  header.d=none;tencent.com; dmarc=none action=none header.from=amd.com;
 Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1PR12MB2384.namprd12.prod.outlook.com (2603:10b6:802:25::25) with
+ by SN1PR12MB2461.namprd12.prod.outlook.com (2603:10b6:802:27::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Wed, 26 Aug
- 2020 19:14:09 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Wed, 26 Aug
+ 2020 19:14:25 +0000
 Received: from SN1PR12MB2560.namprd12.prod.outlook.com
  ([fe80::ccd9:728:9577:200d]) by SN1PR12MB2560.namprd12.prod.outlook.com
  ([fe80::ccd9:728:9577:200d%4]) with mapi id 15.20.3305.026; Wed, 26 Aug 2020
- 19:14:09 +0000
-Subject: [PATCH v5 03/12] KVM: SVM: Change intercept_dr to generic intercepts
+ 19:14:25 +0000
+Subject: [PATCH v5 05/12] KVM: SVM: Modify 64 bit intercept field to two 32
+ bit vectors
 From:   Babu Moger <babu.moger@amd.com>
 To:     pbonzini@redhat.com, vkuznets@redhat.com,
         sean.j.christopherson@intel.com, jmattson@google.com
 Cc:     wanpengli@tencent.com, kvm@vger.kernel.org, joro@8bytes.org,
         x86@kernel.org, linux-kernel@vger.kernel.org, babu.moger@amd.com,
         mingo@redhat.com, bp@alien8.de, hpa@zytor.com, tglx@linutronix.de
-Date:   Wed, 26 Aug 2020 14:14:06 -0500
-Message-ID: <159846924650.18873.2599714820148493539.stgit@bmoger-ubuntu>
+Date:   Wed, 26 Aug 2020 14:14:22 -0500
+Message-ID: <159846926282.18873.15781891247605539136.stgit@bmoger-ubuntu>
 In-Reply-To: <159846887637.18873.14677728679411578606.stgit@bmoger-ubuntu>
 References: <159846887637.18873.14677728679411578606.stgit@bmoger-ubuntu>
 User-Agent: StGit/0.17.1-dirty
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM5PR18CA0079.namprd18.prod.outlook.com (2603:10b6:3:3::17)
- To SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+X-ClientProxiedBy: DM3PR11CA0022.namprd11.prod.outlook.com
+ (2603:10b6:0:54::32) To SN1PR12MB2560.namprd12.prod.outlook.com
+ (2603:10b6:802:26::19)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by DM5PR18CA0079.namprd18.prod.outlook.com (2603:10b6:3:3::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 19:14:07 +0000
+Received: from 255.255.255.255 (255.255.255.255) by DM3PR11CA0022.namprd11.prod.outlook.com (2603:10b6:0:54::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 19:14:23 +0000
 X-Originating-IP: [165.204.77.1]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b259a83e-3a1a-4b12-0fd8-08d849f43556
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2384:
+X-MS-Office365-Filtering-Correlation-Id: 59d6b046-c014-493c-9c0b-08d849f43eed
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2461:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN1PR12MB23840B4EDD09B5040D14274195540@SN1PR12MB2384.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
+X-Microsoft-Antispam-PRVS: <SN1PR12MB246192F202C22591952423E795540@SN1PR12MB2461.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xQSYsGvg0LL7yBA9smwKohORBTcOZJfxX2M9WLrF06km4VTU3pve9DxGAtYp7VpzGHXGDST8w7akvU22GneIqjHN6Gd+lhP8p79E+Dmy2LoDV0OEwYF4+IFCho0GwfltHN6I6VPDbPMOgSJT10Ku4thJ5q7q24psU6qrWuzBWLmYd51hNAu7aRUnFbdnpzgzHbwJNLYOV++XT1K3lsA+XAAOvfkGqPNAtZMc9z77xvipA4SmaKew1JVTDPiVgK11c+lyygmAdS6RtAAIa7JfHWOCGNWBgPn59929Or1F3h8h0lc9lnTVzpmGt37lUXC6HN3IgEjYDuXX488pfyEnzlc2k1cOY2RsGb3Wh1j/2xxjmRGyIAR+Df36pxuf6Azb
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(7916004)(346002)(366004)(136003)(376002)(396003)(39860400002)(103116003)(4326008)(186003)(66946007)(5660300002)(66476007)(66556008)(44832011)(86362001)(33716001)(9686003)(52116002)(7416002)(83380400001)(6486002)(8936002)(8676002)(16576012)(2906002)(316002)(26005)(478600001)(956004)(41533002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 64tfhUfbdqs3Bu2zvi0v63Kk3DkGy6ea11/3wc8FT/KfxWr6eYrf0R2H5nFmsZ1ZuiB8cL4sAjGmyY233ol38vR/KhBSCuS3FNpvuWy8FWAaICklVydsdJSkOk383jbRQ7x5qFCC489JHw0O6LJJdndFHXEWtDgtKiNVGuG9X2Axd/8s2Pt+qb24SY5V5W677UUDRJ61Yp2LBVrqqwnCkyOe9YFET0/CE38RkVb4tRua9YX24FHoSali1IKVxrLSupbCO1LFfx4IBLgAktNnToGnQjtB2lKUgJzgk5jEh7S/1U4TuiF1eCpPpeQaCSusiEHWKl1oe72WJYRU6N/VdT8/+ciSPpvkULA/GIcG/TVFH9sQoe3UeYaKtQ4eCzixwiOl0Ra89ZgWQD00FFhdckoq/dpaXOJM2uyzCgr838zA1OoIUqBmTQ/oGKb5KtkzbFZCk8cr0lkmaKH9h/r6sTMnm7yY3pglAuFOLUS/6OfWse0hJziUW25E0Qi9sHdxL55XaNNPogj+R7hhQx/vw4pzmd+El979uUF5VHef8x5PsyAHUPYBztBJANOu+9b05u7Miu7KkZNpFxBG0vgiBLTCD0+/s4hdl1iPTbk2x7iVSjsxAjIgKhcpHJYYaNTm+3XwT3cJ8duo7xgw02kEgg==
+X-Microsoft-Antispam-Message-Info: nW6/6QBi2rxujD0LhCKriqExYnriBvsw4UoLfPRpyJqkAR5BtAK7gICoU59iq1rzdsMfy/aqJhZgCwvJfXLrbFM5A/NFYlwgfMDwkIRTjSntvdNxWKl8A0PAmzIwnk5erJXriMLT2jrdIogAj1tS4x84BiMHJm6AOUhLWQlHnRiT+RHLaHl3/t5miCzvKOEcwgzCRiSFEFUCZ494V4IQSa85DpzA4TVr44gESXt3HMW3JUVngau+lTJfKlmHz0mVMHTm3MuJXiSUX59JLUdM/QJjcwLDr//DrXeyICrJMgkKa0FSzzspm8wSxzgw6A1zFF7isDZrrlZ7cnhcU7UslA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(4636009)(346002)(376002)(136003)(39860400002)(396003)(366004)(956004)(44832011)(66556008)(8936002)(66946007)(66476007)(16576012)(9686003)(7416002)(26005)(478600001)(6486002)(186003)(86362001)(52116002)(8676002)(316002)(5660300002)(4326008)(83380400001)(2906002)(33716001)(30864003)(103116003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 9/K7FLIwNyayPwvsu5YBCLQ6eeZnbhDuftiKfi+Eg7fqeolztvJ4Ma8xYzPONR2iWC8Tw8x/JdwV8VR6kNMBMFJr08/K7w3qZMGeI+E+vS+DfXSXpnj3X+jCMQiSCgQSX6c8bylqLCxzt7P0vePoN9b77TTikOwERGmfSzLNzjb1HDklg4hW8DCMmBqKWrrod/J4uIMXS01b/Q+S7y7oeLYfZcaKCKzN7NCm0EHB9ZqF3g5EGgugxxRBpZx1n5PF7rBJN1GNfkhdGAnmDz/95rkIOUsA7XzbxzqGPv8YAbnnBfhP+m8j8mAzQFP+iSnOYR3xCm4sA2TjfVOlf/xDgt5kMrcNauagwYERnkvHe3phn8Bjyb39oXkgfcOLYKU8KRkEE+HCMrGh6ojlJ0aYCO8LBQTjG+suyQGXNDaWrgy0Ib+u0WpZUCVFKyllVfPva6qPzNatcSvr3hm0iJJ2iTlD8ydsxLWg0tvio1G0DvZRZTORXVd24WFTfVvFFOQKCmVRFrgeIOO8lSwoXxfADQQd2wWap6yGaL7KNQ6TIDUDXSm6KQv/NOfKxc7cEnbzemg6mYtx0ypJC/FIVhwhhv5k/2slrf4l8Tso/rT5vwpiJoZymRD9zepCsuRVi7PsaV2d8Qy8Egwxopl6NPrWEA==
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b259a83e-3a1a-4b12-0fd8-08d849f43556
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59d6b046-c014-493c-9c0b-08d849f43eed
 X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2560.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 19:14:09.0414
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 19:14:25.1201
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dyomhryTBUOxBvOoOd6/JlXvpCoLN7y5b2AAigOdR1M/dm8TG2eU9G2YeTqVQJX9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2384
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0k9SOBKGWtA+G1WGEgS+uegL276N13S2br0j3SWMSTkir587Tkp2GsiZfPN+dOEk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2461
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modify intercept_dr to generic intercepts in vmcb_control_area. Use
-the generic vmcb_set_intercept, vmcb_clr_intercept and vmcb_is_intercept
-to set/clear/test the intercept_dr bits.
+Convert all the intercepts to one array of 32 bit vectors in
+vmcb_control_area. This makes it easy for future intercept vector
+additions. Also update trace functions.
 
 Signed-off-by: Babu Moger <babu.moger@amd.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
 ---
- arch/x86/include/asm/svm.h |   36 ++++++++++++++++++------------------
- arch/x86/kvm/svm/nested.c  |    6 +-----
- arch/x86/kvm/svm/svm.c     |    4 ++--
- arch/x86/kvm/svm/svm.h     |   34 +++++++++++++++++-----------------
- 4 files changed, 38 insertions(+), 42 deletions(-)
+ arch/x86/include/asm/svm.h |   14 +++++++-------
+ arch/x86/kvm/svm/nested.c  |   25 ++++++++++---------------
+ arch/x86/kvm/svm/svm.c     |   16 ++++++----------
+ arch/x86/kvm/svm/svm.h     |   12 ++++++------
+ arch/x86/kvm/trace.h       |   18 +++++++++++-------
+ 5 files changed, 40 insertions(+), 45 deletions(-)
 
 diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index d4739f4eae63..ffc89d8e4fcb 100644
+index 51833a611eba..9f0fa02fc838 100644
 --- a/arch/x86/include/asm/svm.h
 +++ b/arch/x86/include/asm/svm.h
-@@ -11,6 +11,7 @@
- 
- enum vector_offset {
+@@ -14,6 +14,8 @@ enum vector_offset {
  	CR_VECTOR = 0,
-+	DR_VECTOR,
+ 	DR_VECTOR,
+ 	EXCEPTION_VECTOR,
++	INTERCEPT_VECTOR_3,
++	INTERCEPT_VECTOR_4,
  	MAX_VECTORS,
  };
  
-@@ -34,6 +35,23 @@ enum {
- 	INTERCEPT_CR6_WRITE,
- 	INTERCEPT_CR7_WRITE,
- 	INTERCEPT_CR8_WRITE,
-+	/* Byte offset 004h (Vector 1) */
-+	INTERCEPT_DR0_READ = 32,
-+	INTERCEPT_DR1_READ,
-+	INTERCEPT_DR2_READ,
-+	INTERCEPT_DR3_READ,
-+	INTERCEPT_DR4_READ,
-+	INTERCEPT_DR5_READ,
-+	INTERCEPT_DR6_READ,
-+	INTERCEPT_DR7_READ,
-+	INTERCEPT_DR0_WRITE = 48,
-+	INTERCEPT_DR1_WRITE,
-+	INTERCEPT_DR2_WRITE,
-+	INTERCEPT_DR3_WRITE,
-+	INTERCEPT_DR4_WRITE,
-+	INTERCEPT_DR5_WRITE,
-+	INTERCEPT_DR6_WRITE,
-+	INTERCEPT_DR7_WRITE,
- };
- 
- enum {
-@@ -89,7 +107,6 @@ enum {
+@@ -73,10 +75,8 @@ enum {
+ 	INTERCEPT_MC_VECTOR = 64 + MC_VECTOR,
+ 	INTERCEPT_XM_VECTOR = 64 + XM_VECTOR,
+ 	INTERCEPT_VE_VECTOR = 64 + VE_VECTOR,
+-};
+-
+-enum {
+-	INTERCEPT_INTR,
++	/* Byte offset 00Ch (Vector 3) */
++	INTERCEPT_INTR = 96,
+ 	INTERCEPT_NMI,
+ 	INTERCEPT_SMI,
+ 	INTERCEPT_INIT,
+@@ -108,7 +108,8 @@ enum {
+ 	INTERCEPT_TASK_SWITCH,
+ 	INTERCEPT_FERR_FREEZE,
+ 	INTERCEPT_SHUTDOWN,
+-	INTERCEPT_VMRUN,
++	/* Byte offset 010h (Vector 4) */
++	INTERCEPT_VMRUN = 128,
+ 	INTERCEPT_VMMCALL,
+ 	INTERCEPT_VMLOAD,
+ 	INTERCEPT_VMSAVE,
+@@ -128,8 +129,7 @@ enum {
  
  struct __attribute__ ((__packed__)) vmcb_control_area {
  	u32 intercepts[MAX_VECTORS];
--	u32 intercept_dr;
- 	u32 intercept_exceptions;
- 	u64 intercept;
- 	u8 reserved_1[40];
-@@ -271,23 +288,6 @@ struct __attribute__ ((__packed__)) vmcb {
- #define SVM_SELECTOR_READ_MASK SVM_SELECTOR_WRITE_MASK
- #define SVM_SELECTOR_CODE_MASK (1 << 3)
- 
--#define INTERCEPT_DR0_READ	0
--#define INTERCEPT_DR1_READ	1
--#define INTERCEPT_DR2_READ	2
--#define INTERCEPT_DR3_READ	3
--#define INTERCEPT_DR4_READ	4
--#define INTERCEPT_DR5_READ	5
--#define INTERCEPT_DR6_READ	6
--#define INTERCEPT_DR7_READ	7
--#define INTERCEPT_DR0_WRITE	(16 + 0)
--#define INTERCEPT_DR1_WRITE	(16 + 1)
--#define INTERCEPT_DR2_WRITE	(16 + 2)
--#define INTERCEPT_DR3_WRITE	(16 + 3)
--#define INTERCEPT_DR4_WRITE	(16 + 4)
--#define INTERCEPT_DR5_WRITE	(16 + 5)
--#define INTERCEPT_DR6_WRITE	(16 + 6)
--#define INTERCEPT_DR7_WRITE	(16 + 7)
--
- #define SVM_EVTINJ_VEC_MASK 0xff
- 
- #define SVM_EVTINJ_TYPE_SHIFT 8
+-	u64 intercept;
+-	u8 reserved_1[40];
++	u32 reserved_1[15 - MAX_VECTORS];
+ 	u16 pause_filter_thresh;
+ 	u16 pause_filter_count;
+ 	u64 iopm_base_pa;
 diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 5f65b759abcb..ba11fc3bf843 100644
+index 798ae2fabc74..772e6d8e6459 100644
 --- a/arch/x86/kvm/svm/nested.c
 +++ b/arch/x86/kvm/svm/nested.c
-@@ -114,7 +114,6 @@ void recalc_intercepts(struct vcpu_svm *svm)
+@@ -114,8 +114,6 @@ void recalc_intercepts(struct vcpu_svm *svm)
  	for (i = 0; i < MAX_VECTORS; i++)
  		c->intercepts[i] = h->intercepts[i];
  
--	c->intercept_dr = h->intercept_dr;
- 	c->intercept_exceptions = h->intercept_exceptions;
- 	c->intercept = h->intercept;
+-	c->intercept = h->intercept;
+-
+ 	if (g->int_ctl & V_INTR_MASKING_MASK) {
+ 		/* We only want the cr8 intercept bits of L1 */
+ 		vmcb_clr_intercept(c, INTERCEPT_CR8_READ);
+@@ -126,16 +124,14 @@ void recalc_intercepts(struct vcpu_svm *svm)
+ 		 * affect any interrupt we may want to inject; therefore,
+ 		 * interrupt window vmexits are irrelevant to L0.
+ 		 */
+-		c->intercept &= ~(1ULL << INTERCEPT_VINTR);
++		vmcb_clr_intercept(c, INTERCEPT_VINTR);
+ 	}
  
-@@ -137,7 +136,6 @@ void recalc_intercepts(struct vcpu_svm *svm)
+ 	/* We don't want to see VMMCALLs from a nested guest */
+-	c->intercept &= ~(1ULL << INTERCEPT_VMMCALL);
++	vmcb_clr_intercept(c, INTERCEPT_VMMCALL);
+ 
  	for (i = 0; i < MAX_VECTORS; i++)
  		c->intercepts[i] |= g->intercepts[i];
- 
--	c->intercept_dr |= g->intercept_dr;
- 	c->intercept_exceptions |= g->intercept_exceptions;
- 	c->intercept |= g->intercept;
+-
+-	c->intercept |= g->intercept;
  }
-@@ -150,7 +148,6 @@ static void copy_vmcb_control_area(struct vmcb_control_area *dst,
+ 
+ static void copy_vmcb_control_area(struct vmcb_control_area *dst,
+@@ -146,7 +142,6 @@ static void copy_vmcb_control_area(struct vmcb_control_area *dst,
  	for (i = 0; i < MAX_VECTORS; i++)
  		dst->intercepts[i] = from->intercepts[i];
  
--	dst->intercept_dr         = from->intercept_dr;
- 	dst->intercept_exceptions = from->intercept_exceptions;
- 	dst->intercept            = from->intercept;
+-	dst->intercept            = from->intercept;
  	dst->iopm_base_pa         = from->iopm_base_pa;
-@@ -779,8 +776,7 @@ static int nested_svm_intercept(struct vcpu_svm *svm)
+ 	dst->msrpm_base_pa        = from->msrpm_base_pa;
+ 	dst->tsc_offset           = from->tsc_offset;
+@@ -179,7 +174,7 @@ static bool nested_svm_vmrun_msrpm(struct vcpu_svm *svm)
+ 	 */
+ 	int i;
+ 
+-	if (!(svm->nested.ctl.intercept & (1ULL << INTERCEPT_MSR_PROT)))
++	if (!(vmcb_is_intercept(&svm->nested.ctl, INTERCEPT_MSR_PROT)))
+ 		return true;
+ 
+ 	for (i = 0; i < MSRPM_OFFSETS; i++) {
+@@ -205,7 +200,7 @@ static bool nested_svm_vmrun_msrpm(struct vcpu_svm *svm)
+ 
+ static bool nested_vmcb_check_controls(struct vmcb_control_area *control)
+ {
+-	if ((control->intercept & (1ULL << INTERCEPT_VMRUN)) == 0)
++	if ((vmcb_is_intercept(control, INTERCEPT_VMRUN)) == 0)
+ 		return false;
+ 
+ 	if (control->asid == 0)
+@@ -493,7 +488,8 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
+ 	trace_kvm_nested_intercepts(nested_vmcb->control.intercepts[CR_VECTOR] & 0xffff,
+ 				    nested_vmcb->control.intercepts[CR_VECTOR] >> 16,
+ 				    nested_vmcb->control.intercepts[EXCEPTION_VECTOR],
+-				    nested_vmcb->control.intercept);
++				    nested_vmcb->control.intercepts[INTERCEPT_VECTOR_3],
++				    nested_vmcb->control.intercepts[INTERCEPT_VECTOR_4]);
+ 
+ 	/* Clear internal status */
+ 	kvm_clear_exception_queue(&svm->vcpu);
+@@ -710,7 +706,7 @@ static int nested_svm_exit_handled_msr(struct vcpu_svm *svm)
+ 	u32 offset, msr, value;
+ 	int write, mask;
+ 
+-	if (!(svm->nested.ctl.intercept & (1ULL << INTERCEPT_MSR_PROT)))
++	if (!(vmcb_is_intercept(&svm->nested.ctl, INTERCEPT_MSR_PROT)))
+ 		return NESTED_EXIT_HOST;
+ 
+ 	msr    = svm->vcpu.arch.regs[VCPU_REGS_RCX];
+@@ -737,7 +733,7 @@ static int nested_svm_intercept_ioio(struct vcpu_svm *svm)
+ 	u8 start_bit;
+ 	u64 gpa;
+ 
+-	if (!(svm->nested.ctl.intercept & (1ULL << INTERCEPT_IOIO_PROT)))
++	if (!(vmcb_is_intercept(&svm->nested.ctl, INTERCEPT_IOIO_PROT)))
+ 		return NESTED_EXIT_HOST;
+ 
+ 	port = svm->vmcb->control.exit_info_1 >> 16;
+@@ -791,8 +787,7 @@ static int nested_svm_intercept(struct vcpu_svm *svm)
  		break;
  	}
- 	case SVM_EXIT_READ_DR0 ... SVM_EXIT_WRITE_DR7: {
--		u32 bit = 1U << (exit_code - SVM_EXIT_READ_DR0);
--		if (svm->nested.ctl.intercept_dr & bit)
+ 	default: {
+-		u64 exit_bits = 1ULL << (exit_code - SVM_EXIT_INTR);
+-		if (svm->nested.ctl.intercept & exit_bits)
 +		if (vmcb_is_intercept(&svm->nested.ctl, exit_code))
  			vmexit = NESTED_EXIT_DONE;
- 		break;
  	}
+ 	}
+@@ -900,7 +895,7 @@ static void nested_svm_intr(struct vcpu_svm *svm)
+ 
+ static inline bool nested_exit_on_init(struct vcpu_svm *svm)
+ {
+-	return (svm->nested.ctl.intercept & (1ULL << INTERCEPT_INIT));
++	return vmcb_is_intercept(&svm->nested.ctl, INTERCEPT_INIT);
+ }
+ 
+ static void nested_svm_init(struct vcpu_svm *svm)
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 523936b80dda..1a5f3908b388 100644
+index 11892e86cb39..17bfa34033ac 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -2815,8 +2815,8 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
- 	pr_err("VMCB Control Area:\n");
- 	pr_err("%-20s%04x\n", "cr_read:", control->intercepts[CR_VECTOR] & 0xffff);
- 	pr_err("%-20s%04x\n", "cr_write:", control->intercepts[CR_VECTOR] >> 16);
--	pr_err("%-20s%04x\n", "dr_read:", control->intercept_dr & 0xffff);
--	pr_err("%-20s%04x\n", "dr_write:", control->intercept_dr >> 16);
-+	pr_err("%-20s%04x\n", "dr_read:", control->intercepts[DR_VECTOR] & 0xffff);
-+	pr_err("%-20s%04x\n", "dr_write:", control->intercepts[DR_VECTOR] >> 16);
- 	pr_err("%-20s%08x\n", "exceptions:", control->intercept_exceptions);
- 	pr_err("%-20s%016llx\n", "intercepts:", control->intercept);
+@@ -2218,12 +2218,9 @@ static bool check_selective_cr0_intercepted(struct vcpu_svm *svm,
+ {
+ 	unsigned long cr0 = svm->vcpu.arch.cr0;
+ 	bool ret = false;
+-	u64 intercept;
+-
+-	intercept = svm->nested.ctl.intercept;
+ 
+ 	if (!is_guest_mode(&svm->vcpu) ||
+-	    (!(intercept & (1ULL << INTERCEPT_SELECTIVE_CR0))))
++	    (!(vmcb_is_intercept(&svm->nested.ctl, INTERCEPT_SELECTIVE_CR0))))
+ 		return false;
+ 
+ 	cr0 &= ~SVM_CR0_SELECTIVE_MASK;
+@@ -2818,7 +2815,8 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
+ 	pr_err("%-20s%04x\n", "dr_read:", control->intercepts[DR_VECTOR] & 0xffff);
+ 	pr_err("%-20s%04x\n", "dr_write:", control->intercepts[DR_VECTOR] >> 16);
+ 	pr_err("%-20s%08x\n", "exceptions:", control->intercepts[EXCEPTION_VECTOR]);
+-	pr_err("%-20s%016llx\n", "intercepts:", control->intercept);
++	pr_err("%-20s%08x\n", "intercept1:", control->intercepts[INTERCEPT_VECTOR_3]);
++	pr_err("%-20s%08x\n", "intercept2:", control->intercepts[INTERCEPT_VECTOR_4]);
  	pr_err("%-20s%d\n", "pause filter count:", control->pause_filter_count);
+ 	pr_err("%-20s%d\n", "pause filter threshold:",
+ 	       control->pause_filter_thresh);
+@@ -3738,7 +3736,6 @@ static int svm_check_intercept(struct kvm_vcpu *vcpu,
+ 		break;
+ 	case SVM_EXIT_WRITE_CR0: {
+ 		unsigned long cr0, val;
+-		u64 intercept;
+ 
+ 		if (info->intercept == x86_intercept_cr_write)
+ 			icpt_info.exit_code += info->modrm_reg;
+@@ -3747,9 +3744,8 @@ static int svm_check_intercept(struct kvm_vcpu *vcpu,
+ 		    info->intercept == x86_intercept_clts)
+ 			break;
+ 
+-		intercept = svm->nested.ctl.intercept;
+-
+-		if (!(intercept & (1ULL << INTERCEPT_SELECTIVE_CR0)))
++		if (!(vmcb_is_intercept(&svm->nested.ctl,
++					INTERCEPT_SELECTIVE_CR0)))
+ 			break;
+ 
+ 		cr0 = vcpu->arch.cr0 & ~SVM_CR0_SELECTIVE_MASK;
+@@ -4010,7 +4006,7 @@ static bool svm_apic_init_signal_blocked(struct kvm_vcpu *vcpu)
+ 	 * if an INIT signal is pending.
+ 	 */
+ 	return !gif_set(svm) ||
+-		   (svm->vmcb->control.intercept & (1ULL << INTERCEPT_INIT));
++		   (vmcb_is_intercept(&svm->vmcb->control, INTERCEPT_INIT));
+ }
+ 
+ static void svm_vm_destroy(struct kvm *kvm)
 diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index e775c502a074..d3b34e0276c5 100644
+index 2fc305f647a3..2cde5091775a 100644
 --- a/arch/x86/kvm/svm/svm.h
 +++ b/arch/x86/kvm/svm/svm.h
-@@ -258,22 +258,22 @@ static inline void set_dr_intercepts(struct vcpu_svm *svm)
+@@ -309,7 +309,7 @@ static inline void svm_set_intercept(struct vcpu_svm *svm, int bit)
  {
  	struct vmcb *vmcb = get_host_vmcb(svm);
  
--	vmcb->control.intercept_dr = (1 << INTERCEPT_DR0_READ)
--		| (1 << INTERCEPT_DR1_READ)
--		| (1 << INTERCEPT_DR2_READ)
--		| (1 << INTERCEPT_DR3_READ)
--		| (1 << INTERCEPT_DR4_READ)
--		| (1 << INTERCEPT_DR5_READ)
--		| (1 << INTERCEPT_DR6_READ)
--		| (1 << INTERCEPT_DR7_READ)
--		| (1 << INTERCEPT_DR0_WRITE)
--		| (1 << INTERCEPT_DR1_WRITE)
--		| (1 << INTERCEPT_DR2_WRITE)
--		| (1 << INTERCEPT_DR3_WRITE)
--		| (1 << INTERCEPT_DR4_WRITE)
--		| (1 << INTERCEPT_DR5_WRITE)
--		| (1 << INTERCEPT_DR6_WRITE)
--		| (1 << INTERCEPT_DR7_WRITE);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR0_READ);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR1_READ);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR2_READ);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR3_READ);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR4_READ);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR5_READ);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR6_READ);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR7_READ);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR0_WRITE);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR1_WRITE);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR2_WRITE);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR3_WRITE);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR4_WRITE);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR5_WRITE);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR6_WRITE);
-+	vmcb_set_intercept(&vmcb->control, INTERCEPT_DR7_WRITE);
+-	vmcb->control.intercept |= (1ULL << bit);
++	vmcb_set_intercept(&vmcb->control, bit);
  
  	recalc_intercepts(svm);
  }
-@@ -282,7 +282,7 @@ static inline void clr_dr_intercepts(struct vcpu_svm *svm)
+@@ -318,14 +318,14 @@ static inline void svm_clr_intercept(struct vcpu_svm *svm, int bit)
  {
  	struct vmcb *vmcb = get_host_vmcb(svm);
  
--	vmcb->control.intercept_dr = 0;
-+	vmcb->control.intercepts[DR_VECTOR] = 0;
+-	vmcb->control.intercept &= ~(1ULL << bit);
++	vmcb_clr_intercept(&vmcb->control, bit);
  
  	recalc_intercepts(svm);
  }
+ 
+ static inline bool svm_is_intercept(struct vcpu_svm *svm, int bit)
+ {
+-	return (svm->vmcb->control.intercept & (1ULL << bit)) != 0;
++	return vmcb_is_intercept(&svm->vmcb->control, bit);
+ }
+ 
+ static inline bool vgif_enabled(struct vcpu_svm *svm)
+@@ -389,17 +389,17 @@ static inline bool nested_svm_virtualize_tpr(struct kvm_vcpu *vcpu)
+ 
+ static inline bool nested_exit_on_smi(struct vcpu_svm *svm)
+ {
+-	return (svm->nested.ctl.intercept & (1ULL << INTERCEPT_SMI));
++	return vmcb_is_intercept(&svm->nested.ctl, INTERCEPT_SMI);
+ }
+ 
+ static inline bool nested_exit_on_intr(struct vcpu_svm *svm)
+ {
+-	return (svm->nested.ctl.intercept & (1ULL << INTERCEPT_INTR));
++	return vmcb_is_intercept(&svm->nested.ctl, INTERCEPT_INTR);
+ }
+ 
+ static inline bool nested_exit_on_nmi(struct vcpu_svm *svm)
+ {
+-	return (svm->nested.ctl.intercept & (1ULL << INTERCEPT_NMI));
++	return vmcb_is_intercept(&svm->nested.ctl, INTERCEPT_NMI);
+ }
+ 
+ int enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index b66432b015d2..6e7262229e6a 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -544,26 +544,30 @@ TRACE_EVENT(kvm_nested_vmrun,
+ );
+ 
+ TRACE_EVENT(kvm_nested_intercepts,
+-	    TP_PROTO(__u16 cr_read, __u16 cr_write, __u32 exceptions, __u64 intercept),
+-	    TP_ARGS(cr_read, cr_write, exceptions, intercept),
++	    TP_PROTO(__u16 cr_read, __u16 cr_write, __u32 exceptions, __u32 intercept1,
++		     __u32 intercept2),
++	    TP_ARGS(cr_read, cr_write, exceptions, intercept1, intercept2),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(	__u16,		cr_read		)
+ 		__field(	__u16,		cr_write	)
+ 		__field(	__u32,		exceptions	)
+-		__field(	__u64,		intercept	)
++		__field(	__u32,		intercept1	)
++		__field(	__u32,		intercept2	)
+ 	),
+ 
+ 	TP_fast_assign(
+ 		__entry->cr_read	= cr_read;
+ 		__entry->cr_write	= cr_write;
+ 		__entry->exceptions	= exceptions;
+-		__entry->intercept	= intercept;
++		__entry->intercept1	= intercept1;
++		__entry->intercept2	= intercept2;
+ 	),
+ 
+-	TP_printk("cr_read: %04x cr_write: %04x excp: %08x intercept: %016llx",
+-		__entry->cr_read, __entry->cr_write, __entry->exceptions,
+-		__entry->intercept)
++	TP_printk("cr_read: %04x cr_write: %04x excp: %08x "
++		  "intercept1: %08x intercept2: %08x",
++		  __entry->cr_read, __entry->cr_write, __entry->exceptions,
++		  __entry->intercept1, __entry->intercept2)
+ );
+ /*
+  * Tracepoint for #VMEXIT while nested
 
