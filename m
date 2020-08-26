@@ -3,157 +3,91 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 042C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB2C2224D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D29D021741
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vZ0MQN94";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jkPC6xof"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="OF5msf8x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgHZO2C (ORCPT
+        id S1726885AbgHZO22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:28:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:59268 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbgHZO16 (ORCPT
+        Wed, 26 Aug 2020 10:28:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbgHZO2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:27:58 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598452074;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yLI1JliWBimG+ivF3z1VwX50dlgm/KDIAccbPnUPwJQ=;
-        b=vZ0MQN940VxAwJgiVL2fdMU4aOCDK0uKAR4ZMl+9P6Z0aFtKL2WYTOlvB7xg/AcGx54knW
-        DCypEonnJIWdlmkSc/Upao1amR5z/yCXLBIV9o8pt2NpbY5iu4v2qXkSZeIpxomOvoR5UJ
-        uH5SxaU31UHt+7Ejm27bDJ3zDdQ404IEcyysrsIbpfLIV7wb0fqfy969+LupFf8nSMmV1U
-        r8SBVxsgG5Ss5TQWEdRhAHzKyw0CL71P0IxXJWkThpU7WOWzJaOF/Yf2r38ZTkAE8CnPQZ
-        s4n0xwsEag78WIHr3rWDNxJFiMFK8krl85qGhK+USJ+TC3auLk+vvu4d1nYmAw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598452074;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yLI1JliWBimG+ivF3z1VwX50dlgm/KDIAccbPnUPwJQ=;
-        b=jkPC6xofKbboBQ68bXnjzKaQ0LzRqWIsS332zGOxhvCZcTte8FT5JrpCObaEYbOPtY3c61
-        DM0S4JkSJMaxUYDg==
-To:     Alexander Graf <graf@amazon.com>, X86 ML <x86@kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Avi Kivity <avi@scylladb.com>,
-        "Herrenschmidt\, Benjamin" <benh@amazon.com>, robketr@amazon.de,
-        amos@scylladb.com, Brian Gerst <brgerst@gmail.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] x86/irq: Preserve vector in orig_ax for APIC code
-In-Reply-To: <20200826115357.3049-1-graf@amazon.com>
-References: <20200826115357.3049-1-graf@amazon.com>
-Date:   Wed, 26 Aug 2020 16:27:54 +0200
-Message-ID: <87k0xlv5w5.fsf@nanos.tec.linutronix.de>
+        Wed, 26 Aug 2020 10:28:19 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772EEC061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:28:19 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id b14so2016727qkn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:28:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xk5PuaZ3h09SHfotxUuVEcyrelgIx31zSBn5gXVN9IM=;
+        b=OF5msf8xUCmN3Dyr5IsRi7XjXqiObhM2vxPE0Wx6z73yQzocQZyXZsVr5xG0GxVewc
+         8mLHzkVTThC3XbmKu2Oa0VF7cELOHQSCp/cqw+5vpnsG3VZHJvXAr+JOvrRE6R63MecR
+         5eKN8lU7SEwLqjplk8sot+PoejbjUxEv8shqxLgH73nW3b2ndtpOW1dPSVhhoQHC5XxK
+         PdD3gTbsv7nty7LeKQllTit9Ov259nDQt7vZU9yH1d6KPkehzqy90/rxUJUFDOLY8VkC
+         R2+yVQgS7FhIexvx3CAo8IWgUcOwpwxqj9aIgTPNL0TCgX8H7T0yWCtFyDa7/BtXGVhx
+         sMNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xk5PuaZ3h09SHfotxUuVEcyrelgIx31zSBn5gXVN9IM=;
+        b=QAQwWAa7w29BeGRxdaxz2gKVZ2MiBWwDpiqWRboGuTwnTBBNLCobS1g/Wr6zl55xUv
+         9oBziyo4QnbW7X9eZmnFM9DD2C8X43QGw5LRCJsxrTcJJmguczsnKuk1r+o914TE6Rbi
+         27sndW5z6ICRc534nOLBVZZrQ8IhyeRFMpQEScuLq7jQDJKTQYycSUNt6dqYEZpIPELc
+         otdkrTGWpYxPhw2caAXIPdSpYisyzhCoCX3BeFjJuz9KlsZSIN6bMUrEGttNtjmQa+25
+         vCuPjvnZwwOtAB1IsRq+0ewuZg5nXyY2us2iQVDYyt7vI+ql1cOAZLS+IsiAAG22MRMm
+         8E2g==
+X-Gm-Message-State: AOAM532O/7fWDM0n/bCzeU7ZmiIsOjHqT5RiKYipSNHTiIwFpeWkoRKn
+        FMzhvhdf/IOPiJrTJwkGLQLKcA==
+X-Google-Smtp-Source: ABdhPJwTpEodJr7XmJ6vcGG/Qy1YoTKLrAkKtGQKZLh7Xqi5GwYySJHucKowPQ2UWvg/JqRFErD0OQ==
+X-Received: by 2002:a05:620a:1257:: with SMTP id a23mr13959682qkl.207.1598452098795;
+        Wed, 26 Aug 2020 07:28:18 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:1f2b])
+        by smtp.gmail.com with ESMTPSA id v136sm1814940qkb.31.2020.08.26.07.28.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:28:18 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 10:27:03 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/8] i915: Use find_lock_page instead of find_lock_entry
+Message-ID: <20200826142703.GD988805@cmpxchg.org>
+References: <20200819184850.24779-1-willy@infradead.org>
+ <20200819184850.24779-6-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819184850.24779-6-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26 2020 at 13:53, Alexander Graf wrote:
-> Commit 633260fa143 ("x86/irq: Convey vector as argument and not in ptregs")
-> changed the handover logic of the vector identifier from ~vector in orig_ax
-> to purely register based. Unfortunately, this field has another consumer
-> in the APIC code which the commit did not touch. The net result was that
-> IRQ balancing did not work and instead resulted in interrupt storms, slowing
-> down the system.
+On Wed, Aug 19, 2020 at 07:48:47PM +0100, Matthew Wilcox (Oracle) wrote:
+> i915 does not want to see value entries.  Switch it to use
+> find_lock_page() instead, and remove the export of find_lock_entry().
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-The net result is an observationof the symptom but that does not explain
-what the underlying technical issue is.
-
-> This patch restores the original semantics that orig_ax contains the vector.
-> When we receive an interrupt now, the actual vector number stays stored in
-> the orig_ax field which then gets consumed by the APIC code.
->
-> To ensure that nobody else trips over this in the future, the patch also adds
-> comments at strategic places to warn anyone who would refactor the code that
-> there is another consumer of the field.
->
-> With this patch in place, IRQ balancing works as expected and performance
-> levels are restored to previous levels.
-
-There's a lot of 'This patch and we' in that changelog. Care to grep
-for 'This patch' in Documentation/process/ ?
-
-> diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-> index df8c017..22e829c 100644
-> --- a/arch/x86/entry/entry_32.S
-> +++ b/arch/x86/entry/entry_32.S
-> @@ -727,7 +727,7 @@ SYM_CODE_START_LOCAL(asm_\cfunc)
->  	ENCODE_FRAME_POINTER
->  	movl	%esp, %eax
->  	movl	PT_ORIG_EAX(%esp), %edx		/* get the vector from stack */
-> -	movl	$-1, PT_ORIG_EAX(%esp)		/* no syscall to restart */
-> +	/* keep vector on stack for APIC's irq_complete_move() */
-
-Yes that's fixing your observed wreckage, but it introduces a worse one.
-
-user space
-  -> interrupt
-       push vector into orig_ax (values are in the ranges of 0-127 and -128 - 255
-                                 except for the system vectors which do
-                                 not go through this code)
-      handle()
-      ...
-      exit_to_user_mode_loop()
-         arch_do_signal()
-            /* Did we come from a system call? */
-	    if (syscall_get_nr(current, regs) >= 0) {
-
-               ---> BOOM for any vector 0-127 because syscall_get_nr()
-                         resolves to regs->orig_ax
-
-Going to be fun to debug.
-
-The below nasty hack cures it, but I hate it with a passion. I'll look
-deeper for a sane variant.
-
-Thanks,
-
-        tglx
----
---- a/arch/x86/kernel/irq.c
-+++ b/arch/x86/kernel/irq.c
-@@ -246,7 +246,9 @@ DEFINE_IDTENTRY_IRQ(common_interrupt)
- 
- 	desc = __this_cpu_read(vector_irq[vector]);
- 	if (likely(!IS_ERR_OR_NULL(desc))) {
-+		regs->orig_ax = (unsigned long)vector;
- 		handle_irq(desc, regs);
-+		regs->orig_ax = -1;
- 	} else {
- 		ack_APIC_irq();
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
