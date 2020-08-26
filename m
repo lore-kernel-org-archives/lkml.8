@@ -2,145 +2,99 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13714C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABA2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6A2120707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3C4206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:12:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EswcXKT5"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Ar/nkxi6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbgHZGHc (ORCPT
+        id S1726071AbgHZGMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:07:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37278 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbgHZGH2 (ORCPT
+        Wed, 26 Aug 2020 02:12:20 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:27134 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725786AbgHZGMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:07:28 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C05C061574;
-        Tue, 25 Aug 2020 23:07:28 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mw10so383578pjb.2;
-        Tue, 25 Aug 2020 23:07:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0iJwaCSx+3r+rI0OH/E9AfkKeJSKpzXpEFMS5ankSbc=;
-        b=EswcXKT55DMjQALoe9Y39PlK86DdyQ8H07XSBKfU3TiU+njua9N+ssGnkHT/YoZluh
-         4cGWYDa7IeGFd2hyYa011HWtxbyL9j9EvuMaTtxAYlncC+kmkGoHvMvrcLKgvnM7wAbA
-         DSo/NitpuIk3RoBwm3Y8NJXcZN0bXqkFTZxUC/0ohptBT9UMADnxxhooTbVuu2KpYz8W
-         e1xwl7Jkqln2p18ZZdA/aMt2XksmiguFDo40VRyaVBfdf5Oe0WVdjr4TpjYs4raB0FLc
-         CG3dYr8pYuZ52cc/TdSCKN0JYSGkQPB86HtuIHvNJoRq7eIj0txgLirJUtdvLzpwe7u8
-         8FQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0iJwaCSx+3r+rI0OH/E9AfkKeJSKpzXpEFMS5ankSbc=;
-        b=FsarhQKVZTzUIzhgDUj9sSXnb5PYO9OW4SO2G8YFMXyQdBfET2N0tlxKKGKCbYBah1
-         YbDefRKoCGLyWCqsvfF+Z6+69zlK58sDu2yjAQVkuM+ylO9UHSNXRiU2Md9Na2ncszwy
-         zC3bnQ2mJWEv6J7cZodG/CfvfX9Z9upSYrbMpK78wsltGuWTDDWjN+44FtLTJAnOwXwm
-         HMtGZEVrbdsonp00onWj+hKc/wIg5FsZFyku0z6tyIrnxIJWdjJrcfpRJqYtrnPLEouw
-         wFYVrrvg0vREFVzaJq6lM44L6wStNeN3sLBRzaP1AKYrzf3HASITHXYq3OOYZQMyR6Fq
-         SyNA==
-X-Gm-Message-State: AOAM532VMg6Dy5zWkN74VsUYE7S9SWP+Hgz0MJKNxSXxnR2SrvIrWH4N
-        9CJQxPdwU3Ytmlx7SGFKwcUP8950M/k=
-X-Google-Smtp-Source: ABdhPJyOxXdfOHpurIXqzkD7Op7IuaE0Q+ch1b/A7moZMXfisLtcNVzsttOjAJdvnUagc9CwOj24uA==
-X-Received: by 2002:a17:90a:bd8f:: with SMTP id z15mr4687594pjr.58.1598422047640;
-        Tue, 25 Aug 2020 23:07:27 -0700 (PDT)
-Received: from [192.168.1.200] (FL1-111-169-205-196.hyg.mesh.ad.jp. [111.169.205.196])
-        by smtp.gmail.com with ESMTPSA id t10sm1361921pfq.77.2020.08.25.23.07.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 23:07:27 -0700 (PDT)
-Subject: Re: [PATCH v3] exfat: integrates dir-entry getting and validation
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200806010250epcas1p482847d6d906fbf0ccd618c7d1cacd12e@epcas1p4.samsung.com>
- <20200806010229.24690-1-kohada.t2@gmail.com>
- <003c01d66edc$edbb1690$c93143b0$@samsung.com>
- <ca3b2b52-1abc-939c-aa11-8c7d12e4eb2e@gmail.com>
- <000001d67787$d3abcbb0$7b036310$@samsung.com>
- <fdaff3a3-99ba-8b9e-bdaf-9bcf9d7208e0@gmail.com>
- <000101d67b44$ac458c80$04d0a580$@samsung.com>
- <d1df9cca-3020-9e1e-0f3d-9db6752a22b6@gmail.com>
- <002e01d67b60$0b7d82a0$227887e0$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <7d7ec460-b5ab-68da-658b-2104f393b4e8@gmail.com>
-Date:   Wed, 26 Aug 2020 15:07:25 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 26 Aug 2020 02:12:20 -0400
+X-UUID: 2401c97b37ef48f783df91d289af493a-20200826
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ylPSVH9BPictdHb8dQm8y8sP20WP8ufKl9IkALHg1BE=;
+        b=Ar/nkxi6+jNfNOSZ8XAQIhcPFao4E9qf1iF1APWfnnp0Ug0YwG+KoqYI2L3S7YWVmY8F09+Abhjqq+VEAPRY6SRPwnzWEBzelnGgH1xfwL5sW/udC2fZGjDrRsY3dpgslmMyiKZDxiznZfPeSPIzGgyckKq8Q/TfIeaK44No8uY=;
+X-UUID: 2401c97b37ef48f783df91d289af493a-20200826
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <chih-en.hsu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1216554603; Wed, 26 Aug 2020 14:12:15 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 26 Aug 2020 14:12:13 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 26 Aug 2020 14:12:12 +0800
+Message-ID: <1598422333.15853.9.camel@mtksdccf07>
+Subject: Re: [PATCH] nvmem: mtk-efuse: Remove EFUSE register write support
+From:   Chih-En Hsu <chih-en.hsu@mediatek.com>
+To:     CK Hu <ck.hu@mediatek.com>
+CC:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <Andrew-CT.Chen@mediatek.com>, <srv_heupstream@mediatek.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>, <Michael.Mei@mediatek.com>
+Date:   Wed, 26 Aug 2020 14:12:13 +0800
+In-Reply-To: <1598418963.20150.2.camel@mtksdaap41>
+References: <20200826050145.24655-1-chih-en.hsu@mediatek.com>
+         <1598418963.20150.2.camel@mtksdaap41>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <002e01d67b60$0b7d82a0$227887e0$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 9F567A1762FAF26BD80846770A7646E7628B363C3C179FDC61A5C52ED89CB1042000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for quick reply!
+SGkgQ0s6DQoNCkkgc2VlLg0KDQpJIHdpbGwgYWRkIHRoZSBmb2xsb3dpbmcgZml4IHRhZyBpbnRv
+IHRoZSBuZXh0IHBhdGNoIHZlcnNpb24uDQoNCkZpeGVzOiA0YzdlNGZlMzc3NjYgKCJudm1lbTog
+bWVkaWF0ZWs6IEFkZCBNZWRpYXRlayBFRlVTRSBkcml2ZXIiKQ0KDQpUaGFua3MgYSBsb3QuDQoN
+CkFsZXgNCg0KDQpPbiBXZWQsIDIwMjAtMDgtMjYgYXQgMTM6MTYgKzA4MDAsIENLIEh1IHdyb3Rl
+Og0KPiBIaSwgQ2hpaC1FbjoNCj4gDQo+IE9uIFdlZCwgMjAyMC0wOC0yNiBhdCAxMzowMSArMDgw
+MCwgQ2hpaC1FbiBIc3Ugd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBpcyB0byByZW1vdmUgZnVuY3Rp
+b24gIm10a19yZWdfd3JpdGUiIHNpbmNlDQo+ID4gTWVkaWF0ZWsgRUZVU0UgaGFyZHdhcmUgb25s
+eSBzdXBwb3J0cyByZWFkIGZ1bmN0aW9uYWxpdHkNCj4gPiBmb3IgTlZNRU0gY29uc3VtZXJzLg0K
+PiA+IA0KPiANCj4gVGhpcyBpcyBhIGJ1Zy1maXggcGF0Y2gsIHNvIG5lZWQgYSAnRml4ZXMnIHRh
+Zy4gWW91IGNvdWxkIHJlZmVyIHRvIFsxXS4NCj4gDQo+IFsxXQ0KPiBodHRwczovL3d3dy5rZXJu
+ZWwub3JnL2RvYy9odG1sL2xhdGVzdC9wcm9jZXNzL3N1Ym1pdHRpbmctcGF0Y2hlcy5odG1sI2Rl
+c2NyaWJlLWNoYW5nZXMNCj4gDQo+IFJlZ2FyZHMsDQo+IENLLg0KPiANCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBDaGloLUVuIEhzdSA8Y2hpaC1lbi5oc3VAbWVkaWF0ZWsuY29tPg0KPiA+IC0tLQ0KPiA+
+ICBkcml2ZXJzL252bWVtL210ay1lZnVzZS5jIHwgMTQgLS0tLS0tLS0tLS0tLS0NCj4gPiAgMSBm
+aWxlIGNoYW5nZWQsIDE0IGRlbGV0aW9ucygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL252bWVtL210ay1lZnVzZS5jIGIvZHJpdmVycy9udm1lbS9tdGstZWZ1c2UuYw0KPiA+IGlu
+ZGV4IDg1NmQ5YzNmYzM4ZS4uNmE1MzdkOTU5ZjE0IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMv
+bnZtZW0vbXRrLWVmdXNlLmMNCj4gPiArKysgYi9kcml2ZXJzL252bWVtL210ay1lZnVzZS5jDQo+
+ID4gQEAgLTI4LDE5ICsyOCw2IEBAIHN0YXRpYyBpbnQgbXRrX3JlZ19yZWFkKHZvaWQgKmNvbnRl
+eHQsDQo+ID4gIAlyZXR1cm4gMDsNCj4gPiAgfQ0KPiA+ICANCj4gPiAtc3RhdGljIGludCBtdGtf
+cmVnX3dyaXRlKHZvaWQgKmNvbnRleHQsDQo+ID4gLQkJCSB1bnNpZ25lZCBpbnQgcmVnLCB2b2lk
+ICpfdmFsLCBzaXplX3QgYnl0ZXMpDQo+ID4gLXsNCj4gPiAtCXN0cnVjdCBtdGtfZWZ1c2VfcHJp
+diAqcHJpdiA9IGNvbnRleHQ7DQo+ID4gLQl1MzIgKnZhbCA9IF92YWw7DQo+ID4gLQlpbnQgaSA9
+IDAsIHdvcmRzID0gYnl0ZXMgLyA0Ow0KPiA+IC0NCj4gPiAtCXdoaWxlICh3b3Jkcy0tKQ0KPiA+
+IC0JCXdyaXRlbCgqdmFsKyssIHByaXYtPmJhc2UgKyByZWcgKyAoaSsrICogNCkpOw0KPiA+IC0N
+Cj4gPiAtCXJldHVybiAwOw0KPiA+IC19DQo+ID4gLQ0KPiA+ICBzdGF0aWMgaW50IG10a19lZnVz
+ZV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICB7DQo+ID4gIAlzdHJ1
+Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiA+IEBAIC02MSw3ICs0OCw2IEBAIHN0YXRp
+YyBpbnQgbXRrX2VmdXNlX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4g
+IAllY29uZmlnLnN0cmlkZSA9IDQ7DQo+ID4gIAllY29uZmlnLndvcmRfc2l6ZSA9IDQ7DQo+ID4g
+IAllY29uZmlnLnJlZ19yZWFkID0gbXRrX3JlZ19yZWFkOw0KPiA+IC0JZWNvbmZpZy5yZWdfd3Jp
+dGUgPSBtdGtfcmVnX3dyaXRlOw0KPiA+ICAJZWNvbmZpZy5zaXplID0gcmVzb3VyY2Vfc2l6ZShy
+ZXMpOw0KPiA+ICAJZWNvbmZpZy5wcml2ID0gcHJpdjsNCj4gPiAgCWVjb25maWcuZGV2ID0gZGV2
+Ow0KPiANCj4gDQoNCg==
 
-On 2020/08/26 13:19, Namjae Jeon wrote:
->> On 2020/08/26 10:03, Namjae Jeon wrote:
->>>> Second: Range validation and type validation should not be separated.
->>>> When I started making this patch, I intended to add only range validation.
->>>> However, after the caller gets the ep, the type validation follows.
->>>> Get ep, null check of ep (= range verification), type verification is a series of procedures.
->>>> There would be no reason to keep them independent anymore.
->>>> Range and type validation is enforced when the caller uses ep.
->>> You can add a validate flags as argument of exfat_get_dentry_set(), e.g. none, basic and strict.
->>> none : only range validation.
->>> basic : range + type validation.
->>> strict : range + type + checksum and name length, etc.
->>
->> Currently, various types of verification will not be needed.
->> Let's add it when we need it.
->>>
->>>>> -	/* validiate cached dentries */
->>>>> -	for (i = 1; i < num_entries; i++) {
->>>>> -		ep = exfat_get_dentry_cached(es, i);
->>>>> -		if (!exfat_validate_entry(exfat_get_entry_type(ep), &mode))
->>>>> +	ep = exfat_get_dentry_cached(es, ENTRY_STREAM);
->>>>> +	if (!ep || ep->type != EXFAT_STREAM)
->>>>> +		goto free_es;
->>>>> +	es->de[ENTRY_STREAM] = ep;
->>>>
->>>> The value contained in stream-ext dir-entry should not be used before validating the EntrySet
->> checksum.
->>>> So I would insert EntrySet checksum validation here.
->>>> In that case, the checksum verification loop would be followed by the
->>>> TYPE_NAME verification loop, can you acceptable?
->>> Yes. That would be great.
->>
->> OK.
->> I'll add TYPE_NAME verification after checksum verification, in next patch.
->> However, I think it is enough to validate TYPE_NAME when extracting name.
->> Could you please tell me why you think you need TYPE_NAME validation here?
-> I've told you on previous mail. This function should return validated dentry set after checking
-> file->stream->name in sequence.
-
-Yes. I understand that the current implementation checks in that order.
-Sorry, my question was unclear.
-Why do you think you should leave the TYPE_NAME validation in this function?
-What kind of problem are you worried about if this function does not validate TYPE_NAME?
-(for preserve the current behavior?)
-
-Don't worry, I will add TYPE_NAME verification to the v4 patch.
-I will post it later today.
-
-BR
----
-Tetsuhiro Kohada <kohada.t2@gmail.com>
