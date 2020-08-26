@@ -2,75 +2,177 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A68DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB60BC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 416792080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 841882080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:29:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MGOHcxtM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HrFlsGiZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbgHZE3d (ORCPT
+        id S1726750AbgHZE3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 00:29:33 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25688 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725267AbgHZE3c (ORCPT
+        Wed, 26 Aug 2020 00:29:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50586 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgHZE3v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 00:29:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598416171;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=25qYfOACsmbAvoaQnmoTDd/ocsmeL+RtLd1N/yOMT6o=;
-        b=MGOHcxtMZBQZlyxdfMtKkqVwOW8ZjmYGUdmgkhIc92gu60jHnnvgO3vRByN+eMvsPtw3rq
-        Ul9aKXBufSa9pK4dt9OsY2636b80NANzMcpHtZl2GcaSdextTSoXeodXbzr9kzet1fxYv0
-        Jb63aKGCAYFWNaDXHvIBCvDbB+A6iVU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-11-azbTPEEWOT-tRC0vhUVV4w-1; Wed, 26 Aug 2020 00:29:29 -0400
-X-MC-Unique: azbTPEEWOT-tRC0vhUVV4w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DE058030CB;
-        Wed, 26 Aug 2020 04:29:28 +0000 (UTC)
-Received: from T590 (ovpn-13-178.pek2.redhat.com [10.72.13.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0BC7A7C5F6;
-        Wed, 26 Aug 2020 04:29:22 +0000 (UTC)
-Date:   Wed, 26 Aug 2020 12:29:18 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Xianting Tian <tian.xianting@h3c.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] blk-mq: use BLK_MQ_NO_TAG for no tag
-Message-ID: <20200826042918.GA116347@T590>
-References: <20200826020651.9856-1-tian.xianting@h3c.com>
+        Wed, 26 Aug 2020 00:29:51 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0500AC061574;
+        Tue, 25 Aug 2020 21:29:51 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id y6so293108plt.3;
+        Tue, 25 Aug 2020 21:29:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GCZ8S70q/brUfDJj63/s3T6IAKyQyHfuEnfukx9cOtU=;
+        b=HrFlsGiZTha9U1y+3TC36VL/w9WVsJhdU6NuY/Ica1FvVWcLiXcSrzMQm6cM5Se/sI
+         zff58XEgoztoWCNnfro2sMgwkjGxxevhWXgzNvBVJPvbTCM481QdORzMLEh+PMo0d/Ec
+         uxsbLmYQsZNG47TU9X+0JkONopLangHoiSRSaQfWAYRikwSlWYQFhq6nZxeH9LCkT0Nl
+         rVKrZarGhuTJ/MLrhy4Vyldxf54/VRePc69xKRpphNpN4H7a0AcooYRLvr1EaQs4qMGB
+         hVZj2b9jtnp1a+tI7iifeR+WuQzIa9Luk7NDhB93n/P8WLIGsz/wUGg/kuywOad8XcvT
+         g3oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GCZ8S70q/brUfDJj63/s3T6IAKyQyHfuEnfukx9cOtU=;
+        b=ZLG17tZU7BM0XYb+QnKO7EHulcM4yAwJLjnFiC1TB3WhQ2Uht5R4DvUyuLhPZFHHBv
+         XpxbEbUVVWRMEHAD0itqQqQeKnghEacBTrlH6rVBHPr/fbSOX/W8FFLF30ZdpGfe8pB9
+         eCCDZwZdaYlLrVPeSaOILTQYbP/1QOSsUZDBUlU2mecR7CiP8mDqk2TSa7VP6SdxchWq
+         P21iljVv6Fdgk/btXVxlQRifRYxhYaImndKzVWGlMD8NrD5SGU1W71FcVNVNzEcYIQ6U
+         0ZhdYVbEZqnQMlZV78NX6vDKO3V8CTQIa9xMTThG3RXCHxsDN1tlSMXGy4GL/QaGT8Fx
+         fJHQ==
+X-Gm-Message-State: AOAM531VAvKipj8w51Rf5uvBhXf57mWtHU1KSLJ9w1xFfNQ00+Lq2OMK
+        pEcOdAvG3JV41nt3BsthZ80=
+X-Google-Smtp-Source: ABdhPJx2ltNFYF938dSpCBrZsWTvAvj5c/hdI2zRM+Pp8Hl43ycpBJJRrGKDVM9XCl99xOhQVp7Qrw==
+X-Received: by 2002:a17:90a:f3ce:: with SMTP id ha14mr4157773pjb.149.1598416189918;
+        Tue, 25 Aug 2020 21:29:49 -0700 (PDT)
+Received: from localhost.localdomain ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id a25sm885761pfk.151.2020.08.25.21.29.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 21:29:49 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Wolfram Sang <wsa@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCH 1/2] i2c: consider devices with of_match_table during i2c device probing
+Date:   Wed, 26 Aug 2020 13:29:37 +0900
+Message-Id: <20200826042938.3259-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826020651.9856-1-tian.xianting@h3c.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 10:06:51AM +0800, Xianting Tian wrote:
-> Replace various magic -1 constants for tags with BLK_MQ_NO_TAG.
-> And move the definition of BLK_MQ_NO_TAG from 'block/blk-mq-tag.h'
-> to 'include/linux/blk-mq.h'
+Unlike acpi_match_device(), acpi_driver_match_device() does
+consider devices that provide of_match_table and performs
+of_compatible() matching for such devices. The key point here is
+that ACPI of_compatible() matching - acpi_of_match_device() - is
+part of ACPI and does not depend on CONFIG_OF.
 
-All three symbols are supposed for block core internal code only, so
-looks you shouldn't move them to public header.
+Consider the following case:
+o !CONFIG_OF system
+o probing of i2c device that provides .of_match_table, but no .id_table
 
+ i2c_device_probe()
+ ...
+   if (!driver->id_table &&
+       !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
+       !i2c_of_match_device(dev->driver->of_match_table, client)) {
+       status = -ENODEV;
+       goto put_sync_adapter;
+   }
 
-Thanks, 
-Ming
+i2c_of_match_device() depends on CONFIG_OF and, thus, is always false.
+i2c_acpi_match_device() does ACPI match only, no of_comtatible() matching
+takes place, even though the device provides .of_match_table and ACPI,
+technically, is capable of matching such device. The result is -ENODEV.
+Probing will succeed, however, if we'd use .of_match_table aware ACPI
+matching.
+
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+---
+ drivers/i2c/i2c-core-acpi.c | 10 ++++------
+ drivers/i2c/i2c-core-base.c |  2 +-
+ drivers/i2c/i2c-core.h      | 10 +++-------
+ 3 files changed, 8 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
+index 2ade99b105b9..1dd152ae75e5 100644
+--- a/drivers/i2c/i2c-core-acpi.c
++++ b/drivers/i2c/i2c-core-acpi.c
+@@ -276,14 +276,12 @@ void i2c_acpi_register_devices(struct i2c_adapter *adap)
+ 		dev_warn(&adap->dev, "failed to enumerate I2C slaves\n");
+ }
+ 
+-const struct acpi_device_id *
+-i2c_acpi_match_device(const struct acpi_device_id *matches,
+-		      struct i2c_client *client)
++bool i2c_acpi_match_device(struct device *dev, struct i2c_client *client)
+ {
+-	if (!(client && matches))
+-		return NULL;
++	if (!client)
++		return false;
+ 
+-	return acpi_match_device(matches, &client->dev);
++	return acpi_driver_match_device(&client->dev, dev->driver);
+ }
+ 
+ static const struct acpi_device_id i2c_acpi_force_400khz_device_ids[] = {
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 34a9609f256d..35ec6335852b 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -480,7 +480,7 @@ static int i2c_device_probe(struct device *dev)
+ 	 * or ACPI ID table is supplied for the probing device.
+ 	 */
+ 	if (!driver->id_table &&
+-	    !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
++	    !i2c_acpi_match_device(dev, client) &&
+ 	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
+ 		status = -ENODEV;
+ 		goto put_sync_adapter;
+diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
+index 94ff1693b391..7ee6a6e3fb8d 100644
+--- a/drivers/i2c/i2c-core.h
++++ b/drivers/i2c/i2c-core.h
+@@ -59,19 +59,15 @@ static inline int __i2c_check_suspended(struct i2c_adapter *adap)
+ }
+ 
+ #ifdef CONFIG_ACPI
+-const struct acpi_device_id *
+-i2c_acpi_match_device(const struct acpi_device_id *matches,
+-		      struct i2c_client *client);
++bool i2c_acpi_match_device(struct device *dev, struct i2c_client *client);
+ void i2c_acpi_register_devices(struct i2c_adapter *adap);
+ 
+ int i2c_acpi_get_irq(struct i2c_client *client);
+ #else /* CONFIG_ACPI */
+ static inline void i2c_acpi_register_devices(struct i2c_adapter *adap) { }
+-static inline const struct acpi_device_id *
+-i2c_acpi_match_device(const struct acpi_device_id *matches,
+-		      struct i2c_client *client)
++bool i2c_acpi_match_device(struct device *dev, struct i2c_client *client)
+ {
+-	return NULL;
++	return false;
+ }
+ 
+ static inline int i2c_acpi_get_irq(struct i2c_client *client)
+-- 
+2.28.0
 
