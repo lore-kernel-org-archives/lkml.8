@@ -2,104 +2,115 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB19C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 062762074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:57:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BVXtUQ3+"
+	by mail.kernel.org (Postfix) with ESMTP id 18EF520678
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:00:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598482851;
+	bh=vgZiUdTJKtuy+UKo5OusgdT4clzCRsy1ZDAJfxXjd40=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hdvgIcvRZ1rRaBr0uEmbn90xvnHo7+46tGLlRBdG2Gztn9o6FQRW7yywF3JM51/hH
+	 rGGQ/RYHasRFGCl2D8TEmDEKdbv5y1WhU6wyxvRLPXWlhpzRgQze8G5C/XB3yrk8qU
+	 U0Ea0CNthDmdVUImEVxBEDEz7sXBf7gyRq5IwaTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgHZW5Z (ORCPT
+        id S1726826AbgHZXAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 18:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726186AbgHZW4l (ORCPT
+        Wed, 26 Aug 2020 19:00:49 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:58738 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbgHZXAs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 18:56:41 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EC48C061756;
-        Wed, 26 Aug 2020 15:56:41 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id r13so833518ljm.0;
-        Wed, 26 Aug 2020 15:56:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hgAI8q2j0AZh1tvmkKar6IJHXC6blIHNOlRoGq8CQhg=;
-        b=BVXtUQ3+S7vWfJMKiRXenJgRm8IQbPOYDE1d4+ncKZ+ng0sOlYNqlR2OPvSvkEQuIf
-         EdjWcmRLkQ09egztT44e2+/B/+qSqCmgxTV3/TVx7Wge99hpudsLwYcNjl2LV5MVLruu
-         gsT8zuItxYTs5v016vwxwkgQErLrBtAgYaD6Xput1JCekN6AxIVuIbdv+6LOUzAfGhQd
-         GqLoEVE0yKQlk2jIUEgjTgtQ4qkfQnUYTZO8nX7szugrw9eTOvte/9tuV6hKNQ+gxLGN
-         KQvk7jpYglX7GA2Wg7k1ws+ocOD/RSOvmXX7f3jZL+G5Ufjrv3+zAm05/BqvAQpmpIE5
-         fD6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hgAI8q2j0AZh1tvmkKar6IJHXC6blIHNOlRoGq8CQhg=;
-        b=o0tvyPM7sO8Jmuvyvpw2Wo0q2U+m0xWdvtfzIFeD//9slM5oh4KWlLz+DWOhgfy2Gd
-         B8xN6Y+Zu016BDJKpiVAeUVC69hLiIbCElRuWKVYZ5bD+oNshDflDPFTmvPnuA00Bu7d
-         SPiodmpj/LfZKGtVt7FyB8niAHmFRhoYU93+5h/DVbn9x/sK5QlK9OEHRPmkYdRq9Nm5
-         3MTONaSvXsc4rUtc2PXf+N4/c2LeyfdlGZKGZA/HXBRdqaGjdUvn4RJjMlvdLyNc2CM9
-         4ugGSVL3J6nLuiUORvb0zn9KT2DjZC6s6TMkl8EQWgclmUarGRnSGm36xxf6/nK3GUlz
-         ajaw==
-X-Gm-Message-State: AOAM531PAZDz5D2sbAaVQ2wm7B0TPYSK23q0GEaG5WVi9Jjen3RO6E6X
-        Xw9ZC0E/kx84QPmYa+n/n38=
-X-Google-Smtp-Source: ABdhPJyQrkoC0ZxPorDSS349rPbvidPOhC6FwNRTdt7IAYrl1WtWCfeagJJEa0S0KyoiD7E6twotQA==
-X-Received: by 2002:a2e:6815:: with SMTP id c21mr555840lja.132.1598482599855;
-        Wed, 26 Aug 2020 15:56:39 -0700 (PDT)
-Received: from localhost.localdomain (h-82-196-111-59.NA.cust.bahnhof.se. [82.196.111.59])
-        by smtp.gmail.com with ESMTPSA id u28sm49075ljd.39.2020.08.26.15.56.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 15:56:38 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     "David S . Miller" <davem@davemloft.net>
-Cc:     Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH net-next 1/6] net: ethernet: qualcomm: constify qca_serdev_ops
-Date:   Thu, 27 Aug 2020 00:56:03 +0200
-Message-Id: <20200826225608.90299-2-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200826225608.90299-1-rikard.falkeborn@gmail.com>
-References: <20200826225608.90299-1-rikard.falkeborn@gmail.com>
+        Wed, 26 Aug 2020 19:00:48 -0400
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 07QN0NgL010554;
+        Thu, 27 Aug 2020 08:00:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 07QN0NgL010554
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1598482823;
+        bh=sACWlafBGUgCIkfb1+UQoBai0rXGJ0Q7gCQT2fF8M2M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fXobgc/qmGs4jiZd5F2ZRYLNWbwCnMbOoAHaNawvCu3J3ONitwW+/OulF7UlsldNd
+         u4agZjeB4yyoiwvWPjXewANZx0VxBul2/7xEw0Zjx8apWdrUR8Mj4ViruIL2SjtiVz
+         8x2NE7WnzDnG+11JkQPViszSvgdP7m9IgqbuVeFiVu+L0k86PgBQMBsz3dP0//Ya9I
+         af2LVJ/zrBCtfPDk/GTI772Z0GnYi3gmGzp9UD774A0UAhs90uqjNl17DzdRCkhalu
+         dhJ6A4CljyKVEw3mqZizGO3s26aXXWftTWPmoCIkh5b917ppL/vq9ahrVLOJFhZ4vo
+         j+9TmuP5v/HJw==
+X-Nifty-SrcIP: [209.85.210.170]
+Received: by mail-pf1-f170.google.com with SMTP id d22so1940928pfn.5;
+        Wed, 26 Aug 2020 16:00:23 -0700 (PDT)
+X-Gm-Message-State: AOAM532b7QREDxxzORDWYwHE+UmpUR2Ec9ehiuVFI+YJK8cDistzyTfh
+        101MIJaceP6HVg3GDsW8EZWloKAhZ7qeW2NvJAM=
+X-Google-Smtp-Source: ABdhPJwOb56Zv/T8wt+zsLdXiiLmYDNs/du0GD7DK8PG09w2g5wysISheYHnmVPmlUdt+UDWHt04XMWYW+5tMApWEWw=
+X-Received: by 2002:a63:3309:: with SMTP id z9mr11967515pgz.7.1598482822744;
+ Wed, 26 Aug 2020 16:00:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200825135838.2938771-1-ndesaulniers@google.com>
+ <CAK7LNAQXo5-5W6hvNMEVPBPf3tRWaf-pQdSR-0OHyi4RCGhjsQ@mail.gmail.com>
+ <d56bf7b93f7a28c4a90e4e16fd412e6934704346.camel@perches.com> <CAKwvOd=YrVtPsB7HYPO0N=K7QJm9KstayqqeYQERSaGtGy2Bjg@mail.gmail.com>
+In-Reply-To: <CAKwvOd=YrVtPsB7HYPO0N=K7QJm9KstayqqeYQERSaGtGy2Bjg@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 27 Aug 2020 07:59:45 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQKwOo=Oas+7Du9+neSm=Ev6pxdPV7ges7eEEpW+jh8Ug@mail.gmail.com>
+Message-ID: <CAK7LNAQKwOo=Oas+7Du9+neSm=Ev6pxdPV7ges7eEEpW+jh8Ug@mail.gmail.com>
+Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Joe Perches <joe@perches.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        stable <stable@vger.kernel.org>, Andy Lavr <andy.lavr@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only usage of qca_serdev_ops is to pass its address to
-serdev_device_set_client_ops() which takes a const pointer. Make it
-const to allow the compiler to put it in read-only memory.
+On Thu, Aug 27, 2020 at 1:58 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Wed, Aug 26, 2020 at 9:57 AM Joe Perches <joe@perches.com> wrote:
+> >
+> > On Thu, 2020-08-27 at 01:49 +0900, Masahiro Yamada wrote:
+> > > I do not have time to keep track of the discussion fully,
+> > > but could you give me a little more context why
+> > > the usage of stpcpy() is not recommended ?
+> > >
+> > > The implementation of strcpy() is almost the same.
+> > > It is unclear to me what makes stpcpy() unsafe..
+>
+> https://lore.kernel.org/lkml/202008150921.B70721A359@keescook/
+>
+> >
+> > It's the same thing that makes strcpy unsafe:
+> >
+> > Unchecked buffer lengths with no guarantee src is terminated.
+>
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
----
- drivers/net/ethernet/qualcomm/qca_uart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/qca_uart.c b/drivers/net/ethernet/qualcomm/qca_uart.c
-index 375a844cd27c..362b4f5c162c 100644
---- a/drivers/net/ethernet/qualcomm/qca_uart.c
-+++ b/drivers/net/ethernet/qualcomm/qca_uart.c
-@@ -167,7 +167,7 @@ static void qca_tty_wakeup(struct serdev_device *serdev)
- 	schedule_work(&qca->tx_work);
- }
- 
--static struct serdev_device_ops qca_serdev_ops = {
-+static const struct serdev_device_ops qca_serdev_ops = {
- 	.receive_buf = qca_tty_receive,
- 	.write_wakeup = qca_tty_wakeup,
- };
+OK, then stpcpy(), strcpy() and sprintf()
+have the same level of unsafety.
+
+
+strcpy() is used everywhere.
+
+I am not convinced why only stpcpy() should be hidden.
+
+
+
+
 -- 
-2.28.0
-
+Best Regards
+Masahiro Yamada
