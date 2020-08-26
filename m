@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB6AC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E998C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C5D021741
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 526AE2224D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598453403;
-	bh=4KSU23WtTjItpkpM4PdbL4vEH8O0UC56ECWXv2J/6J0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=PCKpQUh5DvznqGIjB+cHvnJhkEgsYOw+No3HOSPZvQv9lpFb6Jp8VUIi4eX7OjoG4
-	 OB9JKj4TpdrXvPy+s02Mt/Eob0hcol93eoJ1eUvMK1budHr2pyxgs0xHAZ70QTvFQd
-	 KxoF35faik8s+A+VqJtWd9KV82cWpwgkOx9/uu08=
+	s=default; t=1598453411;
+	bh=Ll4xsfiXa6dFreMGmr8jn0xtDKD1luWEnl5tzrpEESQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nUave23WMNzLVJ95DA8qc5jsbQJGvZh7/ymfvHW3nPO+aPPtllvHbKzyIUo5LJd7I
+	 NYS/49a0YIG0Wi5u+vWECQrmo61IJQN8ehHVPywp6xw1aJS05ZCbu7ygydZts7Q/mm
+	 WIO5SU7qfPMcP+9Seu/X4LZqPW0cdcnfO4qjwbEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgHZOuA (ORCPT
+        id S1727923AbgHZOuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:50:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34572 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 10:50:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgHZOtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:49:41 -0400
+        id S1727884AbgHZOtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:49:46 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFABF2177B;
-        Wed, 26 Aug 2020 14:49:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52E6B22B3F;
+        Wed, 26 Aug 2020 14:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453381;
-        bh=4KSU23WtTjItpkpM4PdbL4vEH8O0UC56ECWXv2J/6J0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ScUGKkM+UeSzgY8CMhwi8/yLLMbvJ0FnhzjziU28im+JhxuxMHaDVTMN80ixGtMTt
-         Am/zzb5mVpN9sx7OSMnAH1h57ECyeO2+QJbuALgfs9vdz5A8/gdyvvQFmJQih4fqtb
-         DSRsulWA1dpGg5pD7Fvr08H8nTo55Pl9X4WXKrFY=
+        s=default; t=1598453386;
+        bh=Ll4xsfiXa6dFreMGmr8jn0xtDKD1luWEnl5tzrpEESQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TmkqytJ1uLO963Cue4uNLvLBqkcqbxwCNpO+LlZadCR2QQapaEbddrJcUTfClnrue
+         ZbzdsVKMUFNFQTsmFGInc/detcyLH99Z0e9tomw1/7P67wWWT5rz5Q2aE66BP5fbgL
+         i1z4oOIkhjMBYuRov1to802Suxp4iT3qfLbV/m3E=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Charles Keepax <ckeepax@opensource.cirrus.com>,
         Richard Fitzgerald <rf@opensource.cirrus.com>,
@@ -50,10 +50,12 @@ To:     Charles Keepax <ckeepax@opensource.cirrus.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/3] mfd: madera: Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 16:49:33 +0200
-Message-Id: <20200826144935.10067-1-krzk@kernel.org>
+Subject: [PATCH 3/3] mfd: wcd934x: Simplify with dev_err_probe()
+Date:   Wed, 26 Aug 2020 16:49:35 +0200
+Message-Id: <20200826144935.10067-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200826144935.10067-1-krzk@kernel.org>
+References: <20200826144935.10067-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -64,36 +66,29 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/mfd/madera-core.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ drivers/mfd/wcd934x.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mfd/madera-core.c b/drivers/mfd/madera-core.c
-index 8a8d733fdce5..4ed6ad8ce002 100644
---- a/drivers/mfd/madera-core.c
-+++ b/drivers/mfd/madera-core.c
-@@ -369,19 +369,14 @@ EXPORT_SYMBOL_GPL(madera_of_match);
- static int madera_get_reset_gpio(struct madera *madera)
- {
- 	struct gpio_desc *reset;
--	int ret;
+diff --git a/drivers/mfd/wcd934x.c b/drivers/mfd/wcd934x.c
+index da910302d51a..c274d733b656 100644
+--- a/drivers/mfd/wcd934x.c
++++ b/drivers/mfd/wcd934x.c
+@@ -219,12 +219,9 @@ static int wcd934x_slim_probe(struct slim_device *sdev)
+ 		return	-ENOMEM;
  
- 	if (madera->pdata.reset)
- 		return 0;
- 
- 	reset = devm_gpiod_get_optional(madera->dev, "reset", GPIOD_OUT_LOW);
--	if (IS_ERR(reset)) {
--		ret = PTR_ERR(reset);
--		if (ret != -EPROBE_DEFER)
--			dev_err(madera->dev, "Failed to request /RESET: %d\n",
--				ret);
--		return ret;
+ 	ddata->irq = of_irq_get(np, 0);
+-	if (ddata->irq < 0) {
+-		if (ddata->irq != -EPROBE_DEFER)
+-			dev_err(ddata->dev, "Failed to get IRQ: err = %d\n",
+-				ddata->irq);
+-		return ddata->irq;
 -	}
-+	if (IS_ERR(reset))
-+		return dev_err_probe(madera->dev, PTR_ERR(reset),
-+				"Failed to request /RESET");
++	if (ddata->irq < 0)
++		return dev_err_probe(ddata->dev, ddata->irq,
++				     "Failed to get IRQ\n");
  
- 	/*
- 	 * A hard reset is needed for full reset of the chip. We allow running
+ 	reset_gpio = of_get_named_gpio(np, "reset-gpios", 0);
+ 	if (reset_gpio < 0) {
 -- 
 2.17.1
 
