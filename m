@@ -2,142 +2,303 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA82FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A605C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 934002078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:55:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B462078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:56:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="xEC+B9N9"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="aROh+Wr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgHZSzy (ORCPT
+        id S1726894AbgHZS4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:55:54 -0400
-Received: from mail-dm6nam08on2068.outbound.protection.outlook.com ([40.107.102.68]:61280
-        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726191AbgHZSzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:55:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QFDstxKU3gmQkvTC6x/5jm0R7NTXre2DvycczkH1/r1LfiBxsVZXbZPuvW1HN82LhP2ZbOGSrjnm2pw1ACAl5ZnWWRJu62xCIZKf+Uw2ktLXCsAI76TYCD3/tij1G9vEoQD4gQg0G52gn4F0CtHMtFHJi+B77KhO5EqWgV4N1EcHrE0ZHIgeRdokbn02KQGM0tN7N8HB1X5rPomwzwE7TwH+wHAsmrZbUyiP3GR+dX8qVAkSxFlIrJa5YoaWADb+nkMQd5T867NYcb3+CVOc11OJoQ0JEi2UluoyP2IsBY2AqnAwiNJi+komOfY248vKJMHWOhV1NS2JjgwHj2TAkw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+P4qKLtIbuJJ6rroXIW7pCSk1KYwY84mX2QWnuTPhAk=;
- b=fgd1T5r8zbsJG8CbRSS/juPVIdaiuQkzVGld9qhK8dmOSBz/4iDbmeeYsLEVVNGIT8ekr+loIKveDIpkYfay9yFWBdrAbUhR5dfaLYZvL2FnQqK/Mq0/7UYXQcM1FLy2IFV7qocUJGUuGPdO32NCb5mFZXo5trjUNS5tdo1A2Sdcv6ZXvkF3A+VhFWV8r5mQiugY6I+/2mzDMjZUHyu94y5eNuay92Nheqk4XQkRsXO/wFnE1wVzedXCbSe4D5XWxadGiQmh9XVGjak3/0ne649KBGVEEDtxq5WgsSGBZaK1BxkcngMZ3Lvn+JlmZ8JJcJwd3G+uGmA+4pazdYeVMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 26 Aug 2020 14:56:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgHZS4A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:56:00 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C95C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 11:56:00 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id h12so1532701pgm.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 11:56:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+P4qKLtIbuJJ6rroXIW7pCSk1KYwY84mX2QWnuTPhAk=;
- b=xEC+B9N9nSZlltgvUMcLBFYjeDjPkX0WnhUQO6ycGlEtg1AcEYp9uHtdrXRgMzXrpNQYJEwyP/a82SrgcIueiAA61d5EwYJKRFgVrem3q9RN4VHZ/O6PVEwRIKhb8gg1mttFvYOyOxffTVnUBIDIx4lcQXVSEBgwGDx4sP23Vtk=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR1201MB0188.namprd12.prod.outlook.com (2603:10b6:4:56::12)
- by DM6PR12MB3435.namprd12.prod.outlook.com (2603:10b6:5:39::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Wed, 26 Aug
- 2020 18:55:49 +0000
-Received: from DM5PR1201MB0188.namprd12.prod.outlook.com
- ([fe80::4df1:4ad8:38cd:128c]) by DM5PR1201MB0188.namprd12.prod.outlook.com
- ([fe80::4df1:4ad8:38cd:128c%7]) with mapi id 15.20.3305.026; Wed, 26 Aug 2020
- 18:55:49 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
-        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
-Subject: [v2] ASoC: AMD: Clean kernel log from deferred probe error messages
-Date:   Thu, 27 Aug 2020 00:24:20 +0530
-Message-Id: <20200826185454.5545-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MAXPR01CA0091.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:49::33) To DM5PR1201MB0188.namprd12.prod.outlook.com
- (2603:10b6:4:56::12)
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=JWJKSAOuKtu/D3AHg+GKJrz4+nDMNdk0sVj0sJOy520=;
+        b=aROh+Wr6ymo+6XlJaxOmYycsMN9aCBKU3gMUO1XgpABaQ4AYQMKL7M1Cr+4+b7HKZe
+         NxSa0pqkt15wSspQIaJX7fXdcN/gNs/hMbvTRKlJkhQfAK/lhaePj4cEkguvIwh0WIzQ
+         xppJtDqUhvzDJFqU4gUodWsUriunamj5bK0O1WKhNf3J1jaH6N/8Eh8Uo4cS5tG/Zxuz
+         i92espbL8TJ9WVKeTAx5T/sRJGR07qtrPk9VYVZBA5e8APNS/AVyfftnwzIKfxU49o/C
+         g/0OHu+3TJFA2IDbF3zCytnefOgiNraDSgMVOakHkZCUuH1l4TjxxPhsxFQmBBE0lbh6
+         REDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=JWJKSAOuKtu/D3AHg+GKJrz4+nDMNdk0sVj0sJOy520=;
+        b=GxjDGpERFWAHMzEq+uXxWRQ+AmseIZKwnXHmGXVCVhWADsu9Bm+bWb/tM91cOl/jFa
+         Y3XzNnyX1iA+pfqJgnBdEsrW0u91JN01Ph53WulEwtd7WGoVaNOwIHZwHFf1QbzhPVHj
+         WK+U5tF37EUO7UcSu9Q59isdzx6Z+4qOwliMO+t4CMou5jx3vThYBugjTamx7uM6am2V
+         Jw1/SW1+OGyF5ttwKyKGl4oM59Spastwyfv9gvBLwtfbgau3lbtGpYav4IcLZWuZa44T
+         sd0yJbb8IgUbj8EyJiLCXlNFuzcBFCn9U4ShDy3KYaR7aLtXb++hQMPJTTWHRuJR6iVi
+         9sPg==
+X-Gm-Message-State: AOAM531Uwg9zrogpEgr9JRt8PiihmuNMWmDRVaO0ZlPNC5HOBgKuLxqU
+        HwcBS8qDv+Dp6gj+3+JWvMA3pA==
+X-Google-Smtp-Source: ABdhPJyrFh2QXS2NKYpk6YTAmbE13BpLZFCtimpXqJgexgLxG9DRzweuKzpop0Y5uHbeCkJX3Pd9WA==
+X-Received: by 2002:a63:4b63:: with SMTP id k35mr12057868pgl.235.1598468159507;
+        Wed, 26 Aug 2020 11:55:59 -0700 (PDT)
+Received: from arch-ashland-svkelley ([2601:1c0:6a00:1804:88d3:6720:250a:6d10])
+        by smtp.gmail.com with ESMTPSA id b18sm2741353pjq.3.2020.08.26.11.55.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 11:55:58 -0700 (PDT)
+Message-ID: <519210aae580daa5332463d22d22a37d1d398370.camel@intel.com>
+Subject: Re: [PATCH v3 05/10] PCI/AER: Extend AER error handling to RCECs
+From:   sean.v.kelley@intel.com
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>, bhelgaas@google.com,
+        Jonathan.Cameron@huawei.com, rjw@rjwysocki.net,
+        ashok.raj@intel.com, tony.luck@intel.com, qiuxu.zhuo@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 26 Aug 2020 11:55:33 -0700
+In-Reply-To: <c235b1bb-4a2d-8959-d556-011620d5ae55@linux.intel.com>
+References: <20200812164659.1118946-1-sean.v.kelley@intel.com>
+         <20200812164659.1118946-6-sean.v.kelley@intel.com>
+         <c235b1bb-4a2d-8959-d556-011620d5ae55@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by MAXPR01CA0091.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:49::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 18:55:45 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [171.61.65.59]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: eb1de7dc-3a8e-4f05-aff6-08d849f1a59a
-X-MS-TrafficTypeDiagnostic: DM6PR12MB3435:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB3435ECD1FBF9D864EC408077F8540@DM6PR12MB3435.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1013;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: np1CGERMzHqKQqpXsHK6079T3Kl5cfGmK6G+8VaSJVDFzrcuDaOl3yI1UDMsOP9yy24Z4C7GNkZa/XlXIRuhGsNV3f82e/wkNIEv6iwbw3VeCQ+doj02N2sm8hA1uO6QwQY+np4d4zIQsBgtsDgeUfZbHQn2rtdwVpy21w145F2tW/8tthQD4jxS0FGbnC6Df5FifS3zi1kHgm79Msph4d8YzdswOZw1ZEbD4e3BSa9tPPb/pSR3SJQcuebG+ZHP1lT5RSOwn+9qv2S/G/UVILMG+PjYkk9UiDIuleg/GMqmOiyqmTtp0pOFpRAzqkRWKkw7P3DjZBrWpUd5ydscVk+Zv7gR63oz2V46RBTDyVULYpUIj2arEJjD+ZF37M59
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(346002)(396003)(366004)(136003)(83380400001)(15650500001)(6666004)(5660300002)(1076003)(2906002)(36756003)(6486002)(44832011)(478600001)(109986005)(4326008)(66556008)(2616005)(956004)(66476007)(86362001)(66946007)(54906003)(52116002)(8936002)(26005)(16576012)(8676002)(186003)(316002)(266003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 76aAp9BanvWU3wtp8sPtVMBHltDJxOnAOhR1NjpF3niX+XwMWny3sPZoK3NkkE8AtaKHy1fU5pLm7mRnjr5tsbN84aYKDilNk9UiD0ecYQhCbW/PwZpGKUB+suvByZZSc+ReXqh6zcVlKvaSCBziBtH8CPWprAwPoiInscuFeLHv5PAJDxLZejfZjw8a0HiQhQlpXu4gQqsd6o9PRRCx/u7e50TBsC5UUbSQ+k43nMdOzKo9kPTvtS4HryE/8pQ7PMBSa1zC67ZRQ8lRnUeQr9UFcfrDywFyGhLIGd7EbEso7Mq8Wt/cs0UHM5ST9qIkz6g7pxsrCj+Q0s+/X3+7HESdqY500OoHMaBKzxRat/kEufv8CK7zUsjtw9EG6ztsBE2OWAPiFWLIoFU0ZaXz9RC/e3V32joQ+jLYH5H926c5sF1uM8keCg95TBJd6BFSgOaAUtIaiaqc9Mr3TUox86IK1fFfWJmLCCByJl1mxtb8TmrERduv3yZZ/rXl06TwuNr1qcC/RkobENlwSHITo8vnSbIyrjdOpCYyec9mI7t/8cQFmvVb7qv/HkSpujpVOmr7504xp2CrxDe1bHkH+W20koTRudLVylSp3+zQSy6qHloryNk1auUR6p0m05AqXb4ATuta1Z4Qg0DfYZdFmQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb1de7dc-3a8e-4f05-aff6-08d849f1a59a
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR1201MB0188.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 18:55:49.1677
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4A1lH6ZT+splmlpxI5upgVNmz2U0jqpYKYhZAxJhoH7SypY8KUEF6VAriLVJzJydMWrzASZgaC00Ce0FE/XVqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3435
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the driver waits for DAIs to be probed and retries probing,
-have the error messages at debug level instead of error.
+Hi Sathya,
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
----
-v2: Add a debug level message for -EPROBE_DEFER
+On Wed, 2020-08-26 at 10:26 -0700, Kuppuswamy, Sathyanarayanan wrote:
+> 
+> On 8/12/20 9:46 AM, Sean V Kelley wrote:
+> > From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > 
+> > Currently the kernel does not handle AER errors for Root Complex
+> > integrated End Points (RCiEPs)[0]. These devices sit on a root bus
+> > within
+> > the Root Complex (RC). AER handling is performed by a Root Complex
+> > Event
+> > Collector (RCEC) [1] which is a effectively a type of RCiEP on the
+> > same
+> > root bus.
+> > 
+> > For an RCEC (technically not a Bridge), error messages "received"
+> > from
+> > associated RCiEPs must be enabled for "transmission" in order to
+> > cause a
+> > System Error via the Root Control register or (when the Advanced
+> > Error
+> > Reporting Capability is present) reporting via the Root Error
+> > Command
+> > register and logging in the Root Error Status register and Error
+> > Source
+> > Identification register.
+> > 
+> > In addition to the defined OS level handling of the reset flow for
+> > the
+> > associated RCiEPs of an RCEC, it is possible to also have non-
+> > native
+> > handling. In that case there is no need to take any actions on the
+> > RCEC
+> > because the firmware is responsible for them. This is true where
+> > APEI [2]
+> > is used to report the AER errors via a GHES[v2] HEST entry [3] and
+> > relevant AER CPER record [4] and non-native handling is in use.
+> > 
+> > We effectively end up with two different types of discovery for
+> > purposes of handling AER errors:
+> > 
+> > 1) Normal bus walk - we pass the downstream port above a bus to
+> > which
+> > the device is attached and it walks everything below that point.
+> > 
+> > 2) An RCiEP with no visible association with an RCEC as there is no
+> > need
+> > to walk devices. In that case, the flow is to just call the
+> > callbacks for
+> > the actual device.
+> > 
+> > A new walk function pci_walk_dev_affected(), similar to
+> > pci_bus_walk(),
+> > is provided that takes a pci_dev instead of a bus. If that dev
+> > corresponds
+> > to a downstream port it will walk the subordinate bus of that
+> > downstream
+> > port. If the dev does not then it will call the function on that
+> > device
+> > alone.
+> > 
+> > [0] ACPI PCI Express Base Specification 5.0-1 1.3.2.3 Root Complex
+> > Integrated Endpoint Rules.
+> > [1] ACPI PCI Express Base Specification 5.0-1 6.2 Error Signalling
+> > and
+> > Logging
+> > [2] ACPI Specification 6.3 Chapter 18 ACPI Platform Error Interface
+> > (APEI)
+> > [3] ACPI Specification 6.3 18.2.3.7 Generic Hardware Error Source
+> > [4] UEFI Specification 2.8, N.2.7 PCI Express Error Section
+> > 
+> > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> > ---
+> >   drivers/pci/pcie/err.c | 54 ++++++++++++++++++++++++++++++++++---
+> > -----
+> >   1 file changed, 44 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> > index 14bb8f54723e..f4cfb37c26c1 100644
+> > --- a/drivers/pci/pcie/err.c
+> > +++ b/drivers/pci/pcie/err.c
+> > @@ -146,38 +146,68 @@ static int report_resume(struct pci_dev *dev,
+> > void *data)
+> >   	return 0;
+> >   }
+> >   
+> > +/**
+> > + * pci_walk_dev_affected - walk devices potentially AER affected
+> > + * @dev      device which may be an RCEC with associated RCiEPs,
+> > + *           an RCiEP associated with an RCEC, or a Port.
+> > + * @cb       callback to be called for each device found
+> > + * @userdata arbitrary pointer to be passed to callback.
+> > + *
+> > + * If the device provided is a bridge, walk the subordinate bus,
+> > + * including any bridged devices on buses under this bus.
+> > + * Call the provided callback on each device found.
+> > + *
+> > + * If the device provided has no subordinate bus, call the
+> > provided
+> > + * callback on the device itself.
+> > + */
+> > +static void pci_walk_dev_affected(struct pci_dev *dev, int
+> > (*cb)(struct pci_dev *, void *),
+> > +				  void *userdata)
+> > +{
+> > +	if (dev->subordinate)
+> > +		pci_walk_bus(dev->subordinate, cb, userdata);
+> > +	else
+> > +		cb(dev, userdata);
+> > +}
+> > +
+> >   pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> >   			enum pci_channel_state state,
+> >   			pci_ers_result_t (*reset_link)(struct pci_dev
+> > *pdev))
+> >   {
+> >   	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+> > -	struct pci_bus *bus;
+> >   
+> >   	/*
+> >   	 * Error recovery runs on all subordinates of the first
+> > downstream port.
+> >   	 * If the downstream port detected the error, it is cleared at
+> > the end.
+> > +	 * For RCiEPs we should reset just the RCiEP itself.
+> >   	 */
+> >   	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> > -	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
+> > +	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> > +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END ||
+> > +	      pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC))
+> >   		dev = dev->bus->self;
+> > -	bus = dev->subordinate;
+> >   
+> >   	pci_dbg(dev, "broadcast error_detected message\n");
+> >   	if (state == pci_channel_io_frozen) {
+> > -		pci_walk_bus(bus, report_frozen_detected, &status);
+> > +		pci_walk_dev_affected(dev, report_frozen_detected,
+> > &status);
+> > +		if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END) {
+> > +			pci_warn(dev, "link reset not possible for
+> > RCiEP\n");
+> > +			status = PCI_ERS_RESULT_NONE;
+> > +			goto failed;
+> reset_link is not applicable for RC_END, but why do you want to fail
+> it?
 
- sound/soc/amd/acp3x-rt5682-max9836.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/amd/acp3x-rt5682-max9836.c b/sound/soc/amd/acp3x-rt5682-max9836.c
-index 406526e79af3..1a4e8ca0f99c 100644
---- a/sound/soc/amd/acp3x-rt5682-max9836.c
-+++ b/sound/soc/amd/acp3x-rt5682-max9836.c
-@@ -472,12 +472,17 @@ static int acp3x_probe(struct platform_device *pdev)
- 
- 	ret = devm_snd_soc_register_card(&pdev->dev, card);
- 	if (ret) {
--		dev_err(&pdev->dev,
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev,
- 				"devm_snd_soc_register_card(%s) failed: %d\n",
- 				card->name, ret);
--		return ret;
-+		else
-+			dev_dbg(&pdev->dev,
-+				"devm_snd_soc_register_card(%s) probe deferred: %d\n",
-+				card->name, ret);
- 	}
--	return 0;
-+
-+	return ret;
- }
- 
- static const struct acpi_device_id acp3x_audio_acpi_match[] = {
--- 
-2.20.1
+This patch is incorporated prior to the addition of the dev->rcec link
+for actually handling the RC_END case.  This is the first part before I
+bring in the rest and is the basis also of Jonathan's original work.
+
+See subsequent patches on top of err.c in this v3 series.
+
+
+> > +		}
+> > +
+> >   		status = reset_link(dev);
+> >   		if (status != PCI_ERS_RESULT_RECOVERED) {
+> >   			pci_warn(dev, "link reset failed\n");
+> >   			goto failed;
+> >   		}
+> >   	} else {
+> > -		pci_walk_bus(bus, report_normal_detected, &status);
+> > +		pci_walk_dev_affected(dev, report_normal_detected,
+> > &status);
+> >   	}
+> >   
+> >   	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
+> >   		status = PCI_ERS_RESULT_RECOVERED;
+> >   		pci_dbg(dev, "broadcast mmio_enabled message\n");
+> > -		pci_walk_bus(bus, report_mmio_enabled, &status);
+> > +		pci_walk_dev_affected(dev, report_mmio_enabled,
+> > &status);
+> >   	}
+> >   
+> >   	if (status == PCI_ERS_RESULT_NEED_RESET) {
+> > @@ -188,17 +218,21 @@ pci_ers_result_t pcie_do_recovery(struct
+> > pci_dev *dev,
+> >   		 */
+> >   		status = PCI_ERS_RESULT_RECOVERED;
+> >   		pci_dbg(dev, "broadcast slot_reset message\n");
+> > -		pci_walk_bus(bus, report_slot_reset, &status);
+> > +		pci_walk_dev_affected(dev, report_slot_reset, &status);
+> >   	}
+> >   
+> >   	if (status != PCI_ERS_RESULT_RECOVERED)
+> >   		goto failed;
+> >   
+> >   	pci_dbg(dev, "broadcast resume message\n");
+> > -	pci_walk_bus(bus, report_resume, &status);
+> > +	pci_walk_dev_affected(dev, report_resume, &status);
+> >   
+> > -	pci_aer_clear_device_status(dev);
+> > -	pci_aer_clear_nonfatal_status(dev);
+> you want to prevent clearing status for RC_END ? Can you explain?
+
+It's the RC_EC of the associated RC_END which is to be cleared.
+However, in this original patch from Jonathan prior to my subsequent
+addition of dev->rcec it is not possible. The important thing is not to
+attempt to clear the RC_END without the association.
+
+See subsequent patches on top of err.c in this v3 series.
+
+Thanks,
+
+Sean
+
+> > +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> > +	     pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM ||
+> > +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC)) {
+> > +		pci_aer_clear_device_status(dev);
+> > +		pci_aer_clear_nonfatal_status(dev);
+> > +	}
+> >   	pci_info(dev, "device recovery successful\n");
+> >   	return status;
+> >   
+> > 
 
