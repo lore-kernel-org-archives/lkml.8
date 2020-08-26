@@ -2,91 +2,123 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42115C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97888C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A7D620786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598443587;
-	bh=GhJDUyqvGdl3u8cr2e13f+3GHvyblBYsXLgfMHNqZCs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aBB5bwsB+AkAL50iQpGDBo6atApXhaKwik1rWmiW5fyK1af9vevb3MOeEM55CHEFa
-	 HCJz6KyJ18zlM05M4I0jm+pSgZS11/WXXmN+8L/vgds3NWB3w1zMIIBGOzfBV787Y7
-	 Ggdfh5ISea6oM9Lv65CkVlS1OVHETyKkFOu0GVlA=
+	by mail.kernel.org (Postfix) with ESMTP id 8208C20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbgHZMGZ (ORCPT
+        id S1729723AbgHZMG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:06:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729549AbgHZMDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:03:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A326A2087D;
-        Wed, 26 Aug 2020 12:03:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598443424;
-        bh=GhJDUyqvGdl3u8cr2e13f+3GHvyblBYsXLgfMHNqZCs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HEPSaFPkv/oIO6u/RWKZZJBYXTOCVhL30lBr08c0r+LuW4os3KHVl1invs/iHweOs
-         TWIQwiPOOEf89Nmu06sJ1lBt152otm3rRqTqm5tT1Y6BStj1g7pbRp7eG18dvCmdwW
-         wwVsuT6tYou43wjKpjbh1KeyNWCnnLYit/oHuBB4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alaa Hleihel <alaa@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 05/16] net/sched: act_ct: Fix skb double-free in tcf_ct_handle_fragments() error flow
-Date:   Wed, 26 Aug 2020 14:02:42 +0200
-Message-Id: <20200826114911.486591180@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200826114911.216745274@linuxfoundation.org>
-References: <20200826114911.216745274@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 26 Aug 2020 08:06:26 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:55440 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729519AbgHZMGX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:06:23 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QC4Kvp019378;
+        Wed, 26 Aug 2020 08:06:17 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 332w765g4u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 08:06:17 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07QC6Gfb002516
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 26 Aug 2020 08:06:16 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 26 Aug 2020 08:06:15 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 26 Aug 2020 08:06:15 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 26 Aug 2020 08:06:14 -0400
+Received: from saturn.ad.analog.com ([10.48.65.100])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07QC6ASE000563;
+        Wed, 26 Aug 2020 08:06:11 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: adc: fsl-imx25-gcq: Replace indio_dev->mlock with own device lock
+Date:   Wed, 26 Aug 2020 15:06:09 +0300
+Message-ID: <20200826120609.203724-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-26_08:2020-08-26,2020-08-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=612 spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 priorityscore=1501 bulkscore=0 clxscore=1011
+ impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008260098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alaa Hleihel <alaa@mellanox.com>
+From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
 
-[ Upstream commit eda814b97dfb8d9f4808eb2f65af9bd3705c4cae ]
+As part of the general cleanup of indio_dev->mlock, this change replaces
+it with a local lock, to protect against any other accesses during the
+reading of sample. Reading a sample requires multiple consecutive regmap
+operations and a completion callback, so this requires that no other
+read occurs until it completes.
 
-tcf_ct_handle_fragments() shouldn't free the skb when ip_defrag() call
-fails. Otherwise, we will cause a double-free bug.
-In such cases, just return the error to the caller.
-
-Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
-Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- net/sched/act_ct.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/adc/fsl-imx25-gcq.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/net/sched/act_ct.c
-+++ b/net/sched/act_ct.c
-@@ -704,7 +704,7 @@ static int tcf_ct_handle_fragments(struc
- 		err = ip_defrag(net, skb, user);
- 		local_bh_enable();
- 		if (err && err != -EINPROGRESS)
--			goto out_free;
-+			return err;
+diff --git a/drivers/iio/adc/fsl-imx25-gcq.c b/drivers/iio/adc/fsl-imx25-gcq.c
+index 8cb51cf7a816..2a56ed0fc793 100644
+--- a/drivers/iio/adc/fsl-imx25-gcq.c
++++ b/drivers/iio/adc/fsl-imx25-gcq.c
+@@ -38,6 +38,7 @@ struct mx25_gcq_priv {
+ 	struct completion completed;
+ 	struct clk *clk;
+ 	int irq;
++	struct mutex lock;
+ 	struct regulator *vref[4];
+ 	u32 channel_vref_mv[MX25_NUM_CFGS];
+ };
+@@ -137,9 +138,9 @@ static int mx25_gcq_read_raw(struct iio_dev *indio_dev,
  
- 		if (!err)
- 			*defrag = true;
-
+ 	switch (mask) {
+ 	case IIO_CHAN_INFO_RAW:
+-		mutex_lock(&indio_dev->mlock);
++		mutex_lock(&priv->lock);
+ 		ret = mx25_gcq_get_raw_value(&indio_dev->dev, chan, priv, val);
+-		mutex_unlock(&indio_dev->mlock);
++		mutex_unlock(&priv->lock);
+ 		return ret;
+ 
+ 	case IIO_CHAN_INFO_SCALE:
+@@ -314,6 +315,8 @@ static int mx25_gcq_probe(struct platform_device *pdev)
+ 		return PTR_ERR(priv->regs);
+ 	}
+ 
++	mutex_init(&priv->lock);
++
+ 	init_completion(&priv->completed);
+ 
+ 	ret = mx25_gcq_setup_cfgs(pdev, priv);
+-- 
+2.25.1
 
