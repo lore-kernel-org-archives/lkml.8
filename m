@@ -2,539 +2,169 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86ADEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24FB12078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079CD2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:53:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mixtli.metztli.it header.i=@mixtli.metztli.it header.b="aXTOxWQn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skogtun.org header.i=@skogtun.org header.b="ljVfY4RE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHZUwf (ORCPT
+        id S1726856AbgHZUxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:52:35 -0400
-Received: from mail7.static.mailgun.info ([104.130.122.7]:56187 "EHLO
-        mail7.static.mailgun.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgHZUwf (ORCPT
+        Wed, 26 Aug 2020 16:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgHZUxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:52:35 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mixtli.metztli.it; q=dns/txt;
- s=mx; t=1598475153; h=From: Date: Message-Id: To: Subject: Sender;
- bh=4mM7lZI0WJB8/HIQLK95PAbDBu1JGlWchh8x/AU54+s=; b=aXTOxWQn1pJ2uKfgLo5mkDPjB1ZQclnxh6S17bKaCz98YA63+FKi4BV9so2bU6ODjjJg2jtJ
- TFi07jD+a+C8J/mMhrptdkRYjePGHrb0yZRRPfcbMk2YX/wpuGNFAYBxab2fbQhbgzWQlXLV
- DuNvSYPBW1ZhMfZcryMI3x+0neM=
-X-Mailgun-Sending-Ip: 104.130.122.7
-X-Mailgun-Sid: WyIxYzIzYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgIjE3YjU0Il0=
-Received: from huitzilopochtli.metztli-it.com
- (99-130-254-3.lightspeed.sntcca.sbcglobal.net [99.130.254.3]) by
- smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
- 5f46cb82e82a078aef5d5181 (version=TLS1.3, cipher=TLS_AES_128_GCM_SHA256);
- Wed, 26 Aug 2020 20:52:18 GMT
-Received: by huitzilopochtli.metztli-it.com (Postfix, from userid 1000)
-        id 07BC868EF679; Wed, 26 Aug 2020 13:52:15 -0700 (PDT)
-Subject: Re: [ANNOUNCE] Reiser5: Selective File Migration - User Interface
-To:     <edward.shishkin@gmail.com>, <reiserfs-devel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-X-Mailer: mail (GNU Mailutils 3.9)
-Message-Id: <20200826205216.07BC868EF679@huitzilopochtli.metztli-it.com>
-Date:   Wed, 26 Aug 2020 13:52:15 -0700 (PDT)
-From:   Metztli Information Technology <jose.r.r@metztli.com>
+        Wed, 26 Aug 2020 16:53:32 -0400
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26CB2C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:53:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=skogtun.org
+        ; s=ds201912; h=Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:
+        References:Cc:To:Subject:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+        :List-Post:List-Owner:List-Archive;
+        bh=JICICfSzhFTN9gnTi1KJ0e+tPTQlVk7Qx43lqZ7fPPY=; b=ljVfY4REyCnSUkas2cf0fF/1l1
+        fYVsX7HEKI4U6cx1WnLnb9b5NiXJB4Dvcn/lZnoaesZWM6FrIb2KU/cQIWe7cWIHeRoIu0AdH7w+w
+        xIQGrL838UWXYl9cJ26/vy5lYzRxZWJBTOII+29W3Le1joTjVBsieEUTyYpHtdwpEn1FeDpORIxG5
+        L/W7T9kDfh1zWp0E2oP7TxiHXUWFiXNeb7/C1Iw2WtSwTNsieN+g4Zmy9X1Jm/6bENTm2tSoiD8I8
+        G/uI5vDcc7krxYJ2naSBbfFHriQmg0vb25fHeaEINh6z2yfbPkuCekJK7PJPNPAHor9emtPPh2MAL
+        xbnqK6Dw==;
+Received: from [2a01:79c:cebf:7fb0:de97:df61:fecc:46bb] (port=56316)
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <harald@skogtun.org>)
+        id 1kB2QE-0001MU-AL; Wed, 26 Aug 2020 22:53:30 +0200
+Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to
+ mainline
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+References: <20200817161132.GA4711@amd>
+ <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
+ <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com>
+ <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com>
+ <20200820092349.GA3792@amd>
+ <CAHk-=wjX=ck_u8uvp=PjGCQ3M9igE-yqyRPsJ54th1gQWpwMnA@mail.gmail.com>
+ <20200821091900.hzbivycs5ky5d3iw@duo.ucw.cz> <87tuwr59te.fsf@intel.com>
+ <7efa547d-b7a4-b873-f1aa-4f19eb849fa3@skogtun.org>
+ <CAHk-=wj3WskPCtHncCWLdaP6xVecLp8bDBTT57vyiU-0=Ld6QQ@mail.gmail.com>
+ <d4db4a52-3001-cb02-4888-a9dfd55cdd7c@skogtun.org>
+ <656b8f9f-d696-c75d-aef6-2b8b5170f2f6@skogtun.org>
+ <CAHk-=wiAK=AiqTD47o-BFFZciQXpEC0SiiDnXLWJUcQtCo-Pig@mail.gmail.com>
+ <101bff45-0ebd-8fb6-7c99-963aa4fcc588@skogtun.org>
+ <CAPM=9twLvHu_XLJ89GVXpNo=PHPZLJuRpHggkfzvvuVf+xrwoA@mail.gmail.com>
+From:   Harald Arnesen <harald@skogtun.org>
+Message-ID: <0f06d704-c14e-0d86-c8bb-8c7b3a34758a@skogtun.org>
+Date:   Wed, 26 Aug 2020 22:53:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <CAPM=9twLvHu_XLJ89GVXpNo=PHPZLJuRpHggkfzvvuVf+xrwoA@mail.gmail.com>
+Content-Type: multipart/mixed;
+ boundary="------------7C9CE45B82D9C27910FABF78"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 5, 2020 at 4:13 AM Edward Shishkin <edward.shishkin@gmail.com> wrote:
->
->
->
->                    Reiser5: selective file migration.
->                 Setting/clearing file "immobile" status
->
->
-> Earlier any migration of data blocks in reiser5 logical volumes
-> occurred only in the context of some volume balancing procedure, which
-> actually is a massive migration, aiming to keep fairness of
-> distribution on the whole logical volume. Typically such migrations
-> complete some volume operations, e.g. adding a device to a logical
-> volume, removing a device from a logical volume, increasing data
-> capacity of a device, flushing a proxy-device, etc).
->
-> Now user can perform selective data migration. That is, migrate only
-> data of some specified regular file to any specified device-component
-> of the logical volume.
->
-> Also, for any specified regular file user can mark it as "immobile",
-> so that volume balancing procedures will ignore that file.
->
-> Finally, for any specified regular file user can clear its "immobile"
-> status, so that the file will be movable again by volume balancing
-> procedures.
->
-> In particular, using this functionality, user is able to push out
-> "hot" files on any high-performance device (e.g. proxy device) and pin
-> them there.
->
-> To test the new functionality use reiser4-for-5.7.4.patch of
-> v5-unstable branch(*) and reiser4progs-2.0.2 (or newer stuff)
->
-> (*) https://sourceforge.net/projects/reiser4/files/v5-unstable/
->
->
-> ------------------------ File Migration: API -------------------------
->
->
-> /*
->   * Migrate file to specified target device.
->   * @fd: file descriptor
->   * @idx: serial number of target device in the logical volume
->   */
->
-> /*
->   * Provide correct path here.
->   * This header file can be found in reiser4 kernel module, or
->   * reiser4progs sources
->   */
-> #include "reiser4/ioctl.h"
->
-> struct reiser4_vol_op_args args;
-> memset(&args, 0, sizeof(args));
-> args.opcode = REISER4_MIGRATE_FILE;
-> args.val = idx;
-> result = ioctl(fd, REISER4_IOC_VOLUME, &args);
->
->
-> ----------------------------------------------------------------------
->
->
-> COMMENT. After ioctl successful completion the file is not necessarily
-> written to the target device! To make sure of it, call fsync(2) after
-> successful ioctl completion, or open the file with O_SYNC flag before
-> migration.
->
-> COMMENT. File migration is a volume operation (like adding, removing a
-> device to/from a logical volumes), and all volume operations are
-> serialized. So, any attempt to migrate a file, while performing other
-> operation on that volume will fail. If some file migration procedure
-> fails (with EBUSY, or other errors), or was interrupted by user, then
-> it should be repeated in the current mount session. File migration
-> procedures interrupted by system crash, hared reset, etc) should be
-> repeated in the next mount sessions.
->
->
-> ------------------ Set file immobile status: API ---------------------
->
->
-> /*
->   * Set file "immobile".
->   * @fd: file descriptor
->   */
->
-> /*
->   * Provide correct path here.
->   * This header file can be found in reiser4 kernel module, or
->   * reiser4progs sources
->   */
-> #include "reiser4/ioctl.h"
->
-> struct reiser4_vol_op_args args;
-> memset(&args, 0, sizeof(args));
-> args.opcode = REISER4_SET_FILE_IMMOBILE;
-> result = ioctl(fd, REISER4_IOC_VOLUME, &args);
->
-> COMMENT. The immobile status guarantees that any data block of that
-> file won't migrate to another device-component of the logical volume.
-> Note, however, that such block can be easily relocated within device
-> where it currently resides (once the file system finds better location
-> for that block, etc).
->
->
-> ----------------------------------------------------------------------
->
->
-> NOTE: All balancing procedures, which complete device removal, will
-> ignore "immobile" status of any file. After device removal successful
-> completion all data blocks of "immobile" files will be relocated to
-> the remaining devices in accordance with current distribution policy.
->
-> NOTE: Any selective file migration described above will ignore
-> "immobile" status of the file! So the "immobile" status is honored
-> only by volume balancing procedures, completing some operations such
-> as adding a device to the logical volume, changing capacity of some
-> device or flushing a proxy device.
->
->
-> ----------------- Clear File immobile status: API --------------------
->
->
-> /*
->   * Clear file "immobile" status.
->   * @fd: file descriptor
->   */
->
-> /*
->   * Provide correct path here.
->   * This header file can be found in reiser4 kernel module, or
->   * reiser4progs sources
->   */
-> #include "reiser4/ioctl.h"
->
-> struct reiser4_vol_op_args args;
-> memset(&args, 0, sizeof(args));
-> args.opcode = REISER4_CLR_FILE_IMMOBILE;
-> result = ioctl(fd, REISER4_IOC_VOLUME, &args);
->
->
-> ----------------------------------------------------------------------
->
->
-> NOTE: Selective file migration can make your distribution unfair!
-> Currently it is strongly recommended to migrate files only to devices,
-> which don't participate in regular data distribution e.g. proxy device
->
-> In the future it will be possible to turn off builtin distribution on
-> any volume. in this case user will be responsible for appointing a
-> destination device for any file on that volume.
->
->
->                 File migration by volume.reiser4 tool
->
->
-> You can use volume.reiser4(8) utility for file migration as well as
-> for setting/clearing file "immobile" status.
->
-> To migrate a regular file just execute
->
-> #volume.reiser4 -m N FILENAME
->
-> where N is serial number of target device (i.e. device, that the file
-> is supposed to migrate to), FILENAME is name of the file to migrate.
->
-> To set immobile status simply execute
->
-> #volume.reiser4 -i FILENAME
->
-> To clear immobile status:
->
-> #volume.reiser4 -e FILENAME
->
->
->                 Holding "hot" files on Proxy Device
->
->
-> It makes sense to relocate data of "hot" files to one, or more
-> devices, which have the highest performance in the logical volume,
-> e.g. to proxy device. For this you will need to mark every such file
-> as "immobile" and move it to the desired device, so that balancing
-> procedures (including flushing a proxy device) will ignore those
-> files. See Appendix below for example.
->
->
->                                 FAQ
->
->
-> Q: How to find out serial number of device /dev/sdc1 in my logical
->     volume mounted at /mnt
->
-> A: Find out total number of devices in your logical volume, executing
->     "volume.reiser4 /mnt". Then print all volume components by
->     executing "volume.reiser4 /mnt -p i" in a loop for i = 0,.., N-1,
->     where N - number of devices in your logical volume. Find out, which
->     i is corresponding to /dev/sdc1
->
->     If you find this too complicated, feel free to send a patch for
->     more simple procedure of serial number calculation :)
->
->
->            Migration and immobile status of directories (TODO)
->
->
-> Relocation of individual files and marking them as immobile/mobile is
-> rather expensive operations. If you want all files of some directory
-> to be stored on the same specified device, it makes sense to mark that
-> directory by a special way, so that data of all regular files -
-> children will be automatically dispatched to that device and all
-> directories - children will inherit the immobile property from the
-> parent directory. Reiser4 has all needed means for this (so-called
-> per-inode "heir set").
->
->
->                                Appendix
->
->
->    Migrating a file to specified device and pinning it there (examples)
->
->
-> In this example we'll move a file to 1) proxy and 2) regular data
-> brick and pin it there.
->
-> Create ID of logical volume:
->
-> # VOL_ID=`uuidgen`
->
-> Prepare 2 bricks for our logical volume, /dev/vdc2 for meta-data
-> brick and /dev/vdc3 for proxy-device:
->
-> # DEV1=/dev/vdc2
-> # DEV2=/dev/vdc3
->
-> # mkfs.reiser4 -U $VOL_ID -y    -t 256K $DEV1
-> # mkfs.reiser4 -U $VOL_ID -y -a -t 256K $DEV2
->
-> Mount a logical volume consisting of one meta-data brick:
->
-> # MNT=/mnt/test
-> # mount $DEV1 $MNT
->
-> Add proxy-device to the logical volume
->
-> # volume.reiser4 -x $DEV2 $MNT
->
-> Create a 400K file (100 logical blocks) on our logical volume:
->
-> # dd if=/dev/zero of=${MNT}/myfile bs=4K count=100
-> # sync
->
-> Print all bricks:
->
-> # volume.reiser4 $MNT -p0
->
-> Brick Info:
-> internal ID:    0 (meta-data brick)
-> external ID:    6ee9927e-04c3-4683-a451-f1329de66222
-> device name:    /dev/vdc2
-> num replicas:   0
-> block count:    2621440
-> blocks used:    116
-> system blocks:  115
-> data capacity:  1843119
-> space usage:    0.000
-> volinfo addr:   0 (none)
-> in DSA:         Yes
-> is proxy:       No
->
-> # volume.reiser4 $MNT -p1
->
-> Brick Info:
-> internal ID:    1 (data brick)
-> external ID:    2cc41c8a-b3cd-4690-b3fc-bd840e067131
-> device name:    /dev/vdc3
-> num replicas:   0
-> block count:    2621440
-> blocks used:    215
-> system blocks:  115
-> data capacity:  2621325
-> space usage:    0.000
-> volinfo addr:   0 (none)
-> in DSA:         No
-> is proxy:       Yes
->
-> As we can see, the proxy device /dev/vdc3 contains 100
-> data blocks (blocks used - system blocks) = 215 - 115
->
-> Flush proxy device:
->
-> # volume.reiser4 -b $MNT
->
-> Print all bricks:
->
-> # sync
-> # volume.reiser4 $MNT -p0
->
-> Brick Info:
-> internal ID:    0 (meta-data brick)
-> external ID:    6ee9927e-04c3-4683-a451-f1329de66222
-> device name:    /dev/vdc2
-> num replicas:   0
-> block count:    2621440
-> blocks used:    216
-> system blocks:  115
-> data capacity:  1843119
-> space usage:    0.000
-> volinfo addr:   0 (none)
-> in DSA:         Yes
-> is proxy:       No
->
-> # volume.reiser4 $MNT -p1
->
-> Brick Info:
-> internal ID:    1 (data brick)
-> external ID:    2cc41c8a-b3cd-4690-b3fc-bd840e067131
-> device name:    /dev/vdc3
-> num replicas:   0
-> block count:    2621440
-> blocks used:    115
-> system blocks:  115
-> data capacity:  2621325
-> space usage:    0.000
-> volinfo addr:   0 (none)
-> in DSA:         No
-> is proxy:       Yes
->
-> As we can see all 100 data blocks were migrated to the
-> meta-data brick /dev/vdc2 (block used = system blocks + data blocks +
-> meta-data blocks = 115 + 100 + 1 = 216)
->
-> Mark myfile as immobile and migrate it to the proxy-device:
->
-> # volume.reiser4 -i ${MNT}/myfile
-> # volume.reiser4 -m 1 ${MNT}/myfile
->
-> Print all bricks:
->
-> # sync
-> # volume.reiser4 $MNT -p0
->
-> Brick Info:
-> internal ID:    0 (meta-data brick)
-> external ID:    6ee9927e-04c3-4683-a451-f1329de66222
-> device name:    /dev/vdc2
-> num replicas:   0
-> block count:    2621440
-> blocks used:    116
-> system blocks:  115
-> data capacity:  1843119
-> space usage:    0.000
-> volinfo addr:   0 (none)
-> in DSA:         Yes
-> is proxy:       No
->
-> # volume.reiser4 $MNT -p1
->
-> Brick Info:
-> internal ID:    1 (data brick)
-> external ID:    2cc41c8a-b3cd-4690-b3fc-bd840e067131
-> device name:    /dev/vdc3
-> num replicas:   0
-> block count:    2621440
-> blocks used:    215
-> system blocks:  115
-> data capacity:  2621325
-> space usage:    0.000
-> volinfo addr:   0 (none)
-> in DSA:         No
-> is proxy:       Yes
->
-> As we can see, the proxy device /dev/vdc3 again contains
-> all the data blocks. NOTE: file was migrated in spite of
-> immobile status, because selective migration ignores that
-> status.
->
-> Now flush proxy device and make sure that the file remains
-> on the proxy device:
->
-> # volume.reiser4 -b $MNT
->
-> # sync
-> # volume.reiser4 $MNT -p0
-> # volume.reiser4 $MNT -p1
->
-> As we can see, flushing procedure respects immobile status.
->
-> Finally, remove the proxy device from the logical volume:
->
-> # volume.reiser4 -r $DEV2 $MNT
->
-> Print the single remaining brick of our logical volume:
->
-> # volume.reiser4 $MNT -p0
->
-> Brick Info:
-> internal ID:    0 (meta-data brick)
-> external ID:    6ee9927e-04c3-4683-a451-f1329de66222
-> device name:    /dev/vdc2
-> num replicas:   0
-> block count:    2621440
-> blocks used:    216
-> system blocks:  115
-> data capacity:  1843119
-> space usage:    0.000
-> volinfo addr:   0 (none)
-> in DSA:         Yes
-> is proxy:       No
->
-> As we can see, file was migrated to the remaining brick /dev/vdc2 in
-> spite of its immobile status. This is because operation of removing a
-> device ignores that status.
->
-> NOTE: the file remains immobile!
->
-> Now add /dev/vdc3 as regular device (not proxy) and move the file to
-> that device:
->
-> # volume.reiser4 -a $DEV2 $MNT
-> # volume.reiser4 -m 1 ${MNT}/myfile
->
-> Print info about all bricks:
->
-> # sync
-> # volume.reiser4 $MNT -p0
->
-> Brick Info:
-> internal ID:    0 (meta-data brick)
-> external ID:    6ee9927e-04c3-4683-a451-f1329de66222
-> device name:    /dev/vdc2
-> num replicas:   0
-> block count:    2621440
-> blocks used:    116
-> system blocks:  115
-> data capacity:  1843119
-> space usage:    0.000
-> volinfo addr:   0 (none)
-> in DSA:         Yes
-> is proxy:       No
->
-> # volume.reiser4 $MNT -p1
->
-> Brick Info:
-> internal ID:    1 (data brick)
-> external ID:    2cc41c8a-b3cd-4690-b3fc-bd840e067131
-> device name:    /dev/vdc3
-> num replicas:   0
-> block count:    2621440
-> blocks used:    215
-> system blocks:  115
-> data capacity:  2621325
-> space usage:    0.000
-> volinfo addr:   0 (none)
-> in DSA:         Yes
-> is proxy:       No
->
-> As we can see, all data blocks of the file now reside at /dev/vdc3
+This is a multi-part message in MIME format.
+--------------7C9CE45B82D9C27910FABF78
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-FYI Although not officially, the Debian metaframework Buster AMD64 distribution might be the first to support native installation of Reiser4 SFRN 5.1.3, kernel and reiser4progs 2.0.3, file system utilities.
+Dave Airlie [26.08.2020 22:47]:
 
-I have already made a couple of successful Metztli Reiser4 SFRN 5 native installations onto ~100 GB slices, which root file system is formatted in 'Reiser5' and 1 GB /boot in JFS.
-https://metztli.it/reiser5 (Screenshot 600x338 size)
+> On Thu, 27 Aug 2020 at 06:44, Harald Arnesen <harald@skogtun.org> wrote:
+>>
+>> Linus Torvalds [26.08.2020 20:04]:
+>>
+>> > On Wed, Aug 26, 2020 at 2:30 AM Harald Arnesen <harald@skogtun.org> wrote:
+>> >> Somehow related to lightdm or xfce4? However, it is a regression, since
+>> >> kernel 5.8 works.
+>> > Yeah, apparently there's something else wrong with the relocation changes too.
+>> >
+>> > That said, does that patch at
+>> >
+>> >   https://lore.kernel.org/intel-gfx/20200821123746.16904-1-joro@8bytes.org/
+>> >
+>> > change things at all? If there are two independent bugs, maybe
+>> > applying that patch might at least give you an oops that gets saved in
+>> > the logs?
+>> >
+>> > (it might be worth waiting a bit after the machine locks up in case
+>> > the machine is alive enough so sync logs after a bit.. If ssh works,
+>> > that's obviously better yet)
+>>
+>> No, doesn't help. And I was wrong, ssh does not work at all when the
+>> display locks up.
+> 
+> Did you say what hw you had? is it the same hw as Pavel or different?
+> 
+> Dave.
+> 
 
-The upgraded netboot installation media metztli-reiser4-sfrn5.iso is available at:
-https://sourceforge.net/projects/debian-reiser4/
-as well as
-https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso
-https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso.SHA256SUM
-
-Likely the brick/volume feature(s) will be useful in Cloud fabric infrastructures, like Google's, where reiser4 excels.
-
-The current SFRN 5.1.3 -patched Zstd -compressed kernel in the installation media is Debian's 5.7.10.
-
-The installer defaults to create the root system reiser5 -formatted partition as:
-mkfs.reiser4 -yo "create=reg42" 
-
-Your continued work on Reiser4 is appreciated, Sir.
-
-
-Best Professional Regards.
+It's a Thinkpad T520.
+Output from 'lspci' attached.
 
 -- 
-Jose R R
-http://metztli.it
----------------------------------------------------------------------------------------------
-Download Metztli Reiser4: Debian Buster w/ Linux 5.7.10 AMD64
----------------------------------------------------------------------------------------------
-feats ZSTD compression https://sf.net/projects/metztli-reiser4/
--------------------------------------------------------------------------------------------
-Official current Reiser4 resources: https://reiser4.wiki.kernel.org/
+Hilsen Harald
+
+--------------7C9CE45B82D9C27910FABF78
+Content-Type: text/plain; charset=UTF-8;
+ name="hw.txt"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="hw.txt"
+
+MDA6MDAuMCBIb3N0IGJyaWRnZTogSW50ZWwgQ29ycG9yYXRpb24gMm5kIEdlbmVyYXRpb24g
+Q29yZSBQcm9jZXNzb3IgRmFtaWx5IERSQU0gQ29udHJvbGxlciAocmV2IDA5KQowMDowMi4w
+IFZHQSBjb21wYXRpYmxlIGNvbnRyb2xsZXI6IEludGVsIENvcnBvcmF0aW9uIDJuZCBHZW5l
+cmF0aW9uIENvcmUgUHJvY2Vzc29yIEZhbWlseSBJbnRlZ3JhdGVkIEdyYXBoaWNzIENvbnRy
+b2xsZXIgKHJldiAwOSkKMDA6MTYuMCBDb21tdW5pY2F0aW9uIGNvbnRyb2xsZXI6IEludGVs
+IENvcnBvcmF0aW9uIDYgU2VyaWVzL0MyMDAgU2VyaWVzIENoaXBzZXQgRmFtaWx5IE1FSSBD
+b250cm9sbGVyICMxIChyZXYgMDQpCjAwOjE5LjAgRXRoZXJuZXQgY29udHJvbGxlcjogSW50
+ZWwgQ29ycG9yYXRpb24gODI1NzlMTSBHaWdhYml0IE5ldHdvcmsgQ29ubmVjdGlvbiAoTGV3
+aXN2aWxsZSkgKHJldiAwNCkKMDA6MWEuMCBVU0IgY29udHJvbGxlcjogSW50ZWwgQ29ycG9y
+YXRpb24gNiBTZXJpZXMvQzIwMCBTZXJpZXMgQ2hpcHNldCBGYW1pbHkgVVNCIEVuaGFuY2Vk
+IEhvc3QgQ29udHJvbGxlciAjMiAocmV2IDA0KQowMDoxYi4wIEF1ZGlvIGRldmljZTogSW50
+ZWwgQ29ycG9yYXRpb24gNiBTZXJpZXMvQzIwMCBTZXJpZXMgQ2hpcHNldCBGYW1pbHkgSGln
+aCBEZWZpbml0aW9uIEF1ZGlvIENvbnRyb2xsZXIgKHJldiAwNCkKMDA6MWMuMCBQQ0kgYnJp
+ZGdlOiBJbnRlbCBDb3Jwb3JhdGlvbiA2IFNlcmllcy9DMjAwIFNlcmllcyBDaGlwc2V0IEZh
+bWlseSBQQ0kgRXhwcmVzcyBSb290IFBvcnQgMSAocmV2IGI0KQowMDoxYy4xIFBDSSBicmlk
+Z2U6IEludGVsIENvcnBvcmF0aW9uIDYgU2VyaWVzL0MyMDAgU2VyaWVzIENoaXBzZXQgRmFt
+aWx5IFBDSSBFeHByZXNzIFJvb3QgUG9ydCAyIChyZXYgYjQpCjAwOjFjLjMgUENJIGJyaWRn
+ZTogSW50ZWwgQ29ycG9yYXRpb24gNiBTZXJpZXMvQzIwMCBTZXJpZXMgQ2hpcHNldCBGYW1p
+bHkgUENJIEV4cHJlc3MgUm9vdCBQb3J0IDQgKHJldiBiNCkKMDA6MWMuNCBQQ0kgYnJpZGdl
+OiBJbnRlbCBDb3Jwb3JhdGlvbiA2IFNlcmllcy9DMjAwIFNlcmllcyBDaGlwc2V0IEZhbWls
+eSBQQ0kgRXhwcmVzcyBSb290IFBvcnQgNSAocmV2IGI0KQowMDoxZC4wIFVTQiBjb250cm9s
+bGVyOiBJbnRlbCBDb3Jwb3JhdGlvbiA2IFNlcmllcy9DMjAwIFNlcmllcyBDaGlwc2V0IEZh
+bWlseSBVU0IgRW5oYW5jZWQgSG9zdCBDb250cm9sbGVyICMxIChyZXYgMDQpCjAwOjFmLjAg
+SVNBIGJyaWRnZTogSW50ZWwgQ29ycG9yYXRpb24gUU02NyBFeHByZXNzIENoaXBzZXQgTFBD
+IENvbnRyb2xsZXIgKHJldiAwNCkKMDA6MWYuMiBTQVRBIGNvbnRyb2xsZXI6IEludGVsIENv
+cnBvcmF0aW9uIDYgU2VyaWVzL0MyMDAgU2VyaWVzIENoaXBzZXQgRmFtaWx5IDYgcG9ydCBN
+b2JpbGUgU0FUQSBBSENJIENvbnRyb2xsZXIgKHJldiAwNCkKMDA6MWYuMyBTTUJ1czogSW50
+ZWwgQ29ycG9yYXRpb24gNiBTZXJpZXMvQzIwMCBTZXJpZXMgQ2hpcHNldCBGYW1pbHkgU01C
+dXMgQ29udHJvbGxlciAocmV2IDA0KQowMzowMC4wIE5ldHdvcmsgY29udHJvbGxlcjogSW50
+ZWwgQ29ycG9yYXRpb24gQ2VudHJpbm8gVWx0aW1hdGUtTiA2MzAwIChyZXYgMzUpCjBkOjAw
+LjAgU3lzdGVtIHBlcmlwaGVyYWw6IFJpY29oIENvIEx0ZCBQQ0llIFNEWEMvTU1DIEhvc3Qg
+Q29udHJvbGxlciAocmV2IDA4KQowZDowMC4zIEZpcmVXaXJlIChJRUVFIDEzOTQpOiBSaWNv
+aCBDbyBMdGQgUjVDODMyIFBDSWUgSUVFRSAxMzk0IENvbnRyb2xsZXIgKHJldiAwNCkK
+--------------7C9CE45B82D9C27910FABF78--
