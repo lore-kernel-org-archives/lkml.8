@@ -2,120 +2,165 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76960C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 117E2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0062071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52FF2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:57:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0RLwk4Ot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgHZI4z (ORCPT
+        id S1727941AbgHZI5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 04:56:55 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:33544 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727793AbgHZI4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 04:56:53 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A7F9DE2FCF4426178BA4;
-        Wed, 26 Aug 2020 16:56:50 +0800 (CST)
-Received: from [127.0.0.1] (10.74.173.29) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 26 Aug 2020
- 16:56:40 +0800
-Subject: Re: [PATCH RESEND 04/10] crypto: hisilicon/zip - replace 'sprintf'
- with 'scnprintf'
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "davem@davemloft.net" <davem@davemloft.net>
-References: <1598238709-58699-1-git-send-email-shenyang39@huawei.com>
- <1598238709-58699-5-git-send-email-shenyang39@huawei.com>
- <d1102aca2bdc4df4acc31d8b082cacce@AcuMS.aculab.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "xuzaibo@huawei.com" <xuzaibo@huawei.com>,
-        "wangzhou1@hisilicon.com" <wangzhou1@hisilicon.com>
-From:   "shenyang (M)" <shenyang39@huawei.com>
-Message-ID: <abc0c78e-3232-9081-c330-3d5b8db9e683@huawei.com>
-Date:   Wed, 26 Aug 2020 16:56:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Wed, 26 Aug 2020 04:57:34 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35356 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727798AbgHZI5d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 04:57:33 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07Q8uxk8013542;
+        Wed, 26 Aug 2020 10:57:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=nfnzZRDCN46NnRol+LMu+aCQr7PtIZM6+ud79PtgOvE=;
+ b=0RLwk4OtEiJSTlh+zVA4Y8TG4jTUXDYAYEG2q+wUoaotWfyREEf0g+nJEFpVlbwCg2Hc
+ sHrLpRGW5GRr+/LtewwQLS3KtJ7zu10mVx3/cmalv0gwIsL8fpD04lOpXzY6n+38uhYG
+ pS5fqhfzE2onG4uwGCr18yaAdkKAqsW1qNbMFvrrlm0xc6a09eFxu9MNn7bHAUxP0CXC
+ U2mVhZ6GUKQkKnAg0JkUEMhJHoGA+Zm7BnDJZzsN21B4wui4b6S2mldg4GUJQ+77P6S7
+ 3RDrGigrtRbQDp+nB8OLukZS95lv9OV1WOyK2c2R01t3Gh+VCvKDcgBlcB5tsXlqvyPC fw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 332t8ft355-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 10:57:19 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 24E4310002A;
+        Wed, 26 Aug 2020 10:57:17 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0E39A21CA7D;
+        Wed, 26 Aug 2020 10:57:17 +0200 (CEST)
+Received: from [10.211.2.168] (10.75.127.44) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 26 Aug
+ 2020 10:57:15 +0200
+Subject: Re: [PATCH] iio: stm32-dac: Replace indio_dev->mlock with own device
+ lock
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <jic23@kernel.org>, <alexandre.torgue@st.com>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+References: <20200826063850.47625-1-alexandru.ardelean@analog.com>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <1c32f6b5-deb6-e310-4bc4-a871719cc8f3@st.com>
+Date:   Wed, 26 Aug 2020 10:57:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <d1102aca2bdc4df4acc31d8b082cacce@AcuMS.aculab.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200826063850.47625-1-alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.173.29]
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-26_06:2020-08-25,2020-08-26 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/26/20 8:38 AM, Alexandru Ardelean wrote:
+> From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> 
+> As part of the general cleanup of indio_dev->mlock, this change replaces
+> it with a local lock on the device's state structure.
+> 
+> The patch also does a minor whitespace change to align the 'lock' with the
+> 'common' field via tabs.
+> 
+> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  drivers/iio/dac/stm32-dac.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
+> index 092c796fa3d9..fc636812c17e 100644
+> --- a/drivers/iio/dac/stm32-dac.c
+> +++ b/drivers/iio/dac/stm32-dac.c
+> @@ -26,9 +26,11 @@
+>  /**
+>   * struct stm32_dac - private data of DAC driver
+>   * @common:		reference to DAC common data
+> + * @lock:		lock to protect the data buffer during regmap ops
 
+Hi Alexandru,
 
-On 2020/8/24 16:29, David Laight wrote:
-> From: Yang Shen
->> Sent: 24 August 2020 04:12
->>
->> Replace 'sprintf' with 'scnprintf' to avoid overrun.
->>
->> Signed-off-by: Yang Shen <shenyang39@huawei.com>
->> Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
->> ---
->>  drivers/crypto/hisilicon/zip/zip_main.c | 11 +++++++----
->>  1 file changed, 7 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
->> index df1a16f..1883d1b 100644
->> --- a/drivers/crypto/hisilicon/zip/zip_main.c
->> +++ b/drivers/crypto/hisilicon/zip/zip_main.c
->> @@ -428,7 +428,7 @@ static ssize_t hisi_zip_ctrl_debug_read(struct file *filp, char __user *buf,
->>  		return -EINVAL;
->>  	}
->>  	spin_unlock_irq(&file->lock);
->> -	ret = sprintf(tbuf, "%u\n", val);
->> +	ret = scnprintf(tbuf, HZIP_BUF_SIZE, "%u\n", val);
->
-> Should that be sizeof (tbuf).
->
->>  	return simple_read_from_buffer(buf, count, pos, tbuf, ret);
->>  }
->>
->> @@ -514,13 +514,16 @@ static int hisi_zip_core_debug_init(struct hisi_qm *qm)
->>  	struct debugfs_regset32 *regset;
->>  	struct dentry *tmp_d;
->>  	char buf[HZIP_BUF_SIZE];
->> -	int i;
->> +	int i, ret;
->>
->>  	for (i = 0; i < HZIP_CORE_NUM; i++) {
->>  		if (i < HZIP_COMP_CORE_NUM)
->> -			sprintf(buf, "comp_core%d", i);
->> +			ret = scnprintf(buf, HZIP_BUF_SIZE, "comp_core%d", i);
->>  		else
->> -			sprintf(buf, "decomp_core%d", i - HZIP_COMP_CORE_NUM);
->> +			ret = scnprintf(buf, HZIP_BUF_SIZE, "decomp_core%d",
->> +					i - HZIP_COMP_CORE_NUM);
->> +		if (!ret)
->> +			return -ENOMEM;
->
-> and that is just so wrong - did you even try to test
-> the 'buffer too small' code path?
->
-> 	David
->
+I think the same patch has been sent by Sergiu already [1].
+Jonathan and I had a minor comment at that time: E.g. could you please
+update the comment ?
 
-Do you means the check is unnecessary?
+[1] https://lkml.org/lkml/2020/5/18/254
 
-Yang
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
->
->
-> .
->
+>   */
+>  struct stm32_dac {
+> -	struct stm32_dac_common *common;
+> +	struct stm32_dac_common	*common;
 
+Is above change needed?
+
+Best Regards,
+Fabrice
+
+> +	struct mutex		lock;
+>  };
+>  
+>  static int stm32_dac_is_enabled(struct iio_dev *indio_dev, int channel)
+> @@ -58,10 +60,10 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
+>  	int ret;
+>  
+>  	/* already enabled / disabled ? */
+> -	mutex_lock(&indio_dev->mlock);
+> +	mutex_lock(&dac->lock);
+>  	ret = stm32_dac_is_enabled(indio_dev, ch);
+>  	if (ret < 0 || enable == !!ret) {
+> -		mutex_unlock(&indio_dev->mlock);
+> +		mutex_unlock(&dac->lock);
+>  		return ret < 0 ? ret : 0;
+>  	}
+>  
+> @@ -69,13 +71,13 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
+>  		ret = pm_runtime_get_sync(dev);
+>  		if (ret < 0) {
+>  			pm_runtime_put_noidle(dev);
+> -			mutex_unlock(&indio_dev->mlock);
+> +			mutex_unlock(&dac->lock);
+>  			return ret;
+>  		}
+>  	}
+>  
+>  	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, msk, en);
+> -	mutex_unlock(&indio_dev->mlock);
+> +	mutex_unlock(&dac->lock);
+>  	if (ret < 0) {
+>  		dev_err(&indio_dev->dev, "%s failed\n", en ?
+>  			"Enable" : "Disable");
+> @@ -327,6 +329,8 @@ static int stm32_dac_probe(struct platform_device *pdev)
+>  	indio_dev->info = &stm32_dac_iio_info;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  
+> +	mutex_init(&dac->lock);
+> +
+>  	ret = stm32_dac_chan_of_init(indio_dev);
+>  	if (ret < 0)
+>  		return ret;
+> 
