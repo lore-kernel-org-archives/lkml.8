@@ -2,65 +2,106 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9973C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9959C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 995492087D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8342087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:03:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="onrC78Sb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PfZ2hYH1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgHZLDg (ORCPT
+        id S1728873AbgHZLDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:03:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47426 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728668AbgHZLAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:00:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C457DACA0;
-        Wed, 26 Aug 2020 11:00:47 +0000 (UTC)
-Date:   Wed, 26 Aug 2020 13:00:15 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     xunlei <xlpang@linux.alibaba.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] mm: memcg: Fix memcg reclaim soft lockup
-Message-ID: <20200826110015.GO22869@dhcp22.suse.cz>
-References: <1598426822-93737-1-git-send-email-xlpang@linux.alibaba.com>
- <20200826081102.GM22869@dhcp22.suse.cz>
- <99efed0e-050a-e313-46ab-8fe6228839d5@linux.alibaba.com>
+        Wed, 26 Aug 2020 07:03:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56724 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728693AbgHZLDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 07:03:12 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598439782;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZaAkTdOab/XFooWlber6W3bQre4hvoIBpg4is6GPMvI=;
+        b=onrC78SbMNK189bx5B9J/G6s8NfSzOML8/QswGPLaM7CNLUadKjp4RZkqQj1RpwAnqf9ND
+        WHrr0sfogurwO1T9+nL2EocVhhdSgZ0KPGI/iuexx/2JUw0YevIydPq4BgtmRVhBYRr2H9
+        kzNgRK7OBnzZ3BpBp2bRNNIjEyY+2G0JVleePH9tjONso7qd32vc+4yxT0SovbmgDtn7kX
+        BJpgVC6m9/waC/lQVCd9lNZKfx7RbcHmiwjuCHpFim0i4wEaR0GZkqDXWSSOJg7RJpHX5h
+        tUQjMpAvUqHIn7Kv266SPEKtJ5Pdfwe2BFa3tlGUAsQUziWsuUenKnL6a4+DPw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598439782;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZaAkTdOab/XFooWlber6W3bQre4hvoIBpg4is6GPMvI=;
+        b=PfZ2hYH1I2ewe0aCaU53HrJiEJCFqmFzJ7d2d3J0q6ZM3xseBlhIbp4F8hJcGr9lQ4766W
+        KACq5LU557imvSAA==
+To:     syzbot <syzbot+51c9bdfa559769d2f897@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, anna.schumaker@netapp.com,
+        bfields@fieldses.org, bp@alien8.de, davem@davemloft.net,
+        douly.fnst@cn.fujitsu.com, hpa@zytor.com, jlayton@kernel.org,
+        konrad.wilk@oracle.com, len.brown@intel.com,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        mingo@kernel.org, mingo@redhat.com, netdev@vger.kernel.org,
+        paulmck@kernel.org, peterz@infradead.org, puwen@hygon.cn,
+        rafael.j.wysocki@intel.com, syzkaller-bugs@googlegroups.com,
+        trond.myklebust@hammerspace.com, trond.myklebust@primarydata.com,
+        vbabka@suse.cz, x86@kernel.org, David Howells <dhowells@redhat.com>
+Subject: Re: WARNING: ODEBUG bug in __do_softirq
+In-Reply-To: <000000000000e7fab005adc3f636@google.com>
+References: <000000000000e7fab005adc3f636@google.com>
+Date:   Wed, 26 Aug 2020 13:03:02 +0200
+Message-ID: <87v9h5vfdl.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <99efed0e-050a-e313-46ab-8fe6228839d5@linux.alibaba.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 26-08-20 18:41:18, xunlei wrote:
-> On 2020/8/26 下午4:11, Michal Hocko wrote:
-> > On Wed 26-08-20 15:27:02, Xunlei Pang wrote:
-> >> We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
-> >> the target memcg doesn't have any reclaimable memory.
-> > 
-> > Do you have any scenario when this happens or is this some sort of a
-> > test case?
-> 
-> It can happen on tiny guest scenarios.
+On Wed, Aug 26 2020 at 01:54, syzbot wrote:
 
-OK, you made me more curious. If this is a tiny guest and this is a hard
-limit reclaim path then we should trigger an oom killer which should
-kill the offender and that in turn bail out from the try_charge lopp
-(see should_force_charge). So how come this repeats enough in your setup
-that it causes soft lockups?
--- 
-Michal Hocko
-SUSE Labs
+Cc+: David Howells
+
+> syzbot has found a reproducer for the following issue on:
+>
+> HEAD commit:    3a00d3df Add linux-next specific files for 20200825
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=15080fa9900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=9ef0a5f95935d447
+> dashboard link: https://syzkaller.appspot.com/bug?extid=51c9bdfa559769d2f897
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17927a2e900000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132b8ede900000
+>
+> The issue was bisected to:
+>
+> commit 5b317cbf2bcb85a1e96ce87717cb991ecab1dd4d
+> Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> Date:   Fri Feb 22 09:17:11 2019 +0000
+>
+>     Merge branch 'pm-cpufreq-fixes'
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=171ead5d200000
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=149ead5d200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=109ead5d200000
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+51c9bdfa559769d2f897@syzkaller.appspotmail.com
+> Fixes: 5b317cbf2bcb ("Merge branch 'pm-cpufreq-fixes'")
+>
+> ------------[ cut here ]------------
+> ODEBUG: free active (active state 0) object type: work_struct hint: afs_manage_cell+0x0/0x11c0 fs/afs/cell.c:498
+
+AFS is leaking an active work struct in a to be freed data struct.
+
+Thanks,
+
+        tglx
