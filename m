@@ -2,79 +2,141 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0D0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB47C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA0D6207DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E83B207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:56:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="saLNRmhE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgHZTyB (ORCPT
+        id S1726943AbgHZT4z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:54:01 -0400
-Received: from smtprelay0156.hostedemail.com ([216.40.44.156]:53306 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726798AbgHZTyB (ORCPT
+        Wed, 26 Aug 2020 15:56:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgHZT4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:54:01 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 40A721801BD68;
-        Wed, 26 Aug 2020 19:54:00 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: elbow93_170ed9027067
-X-Filterd-Recvd-Size: 2163
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 26 Aug 2020 19:53:58 +0000 (UTC)
-Message-ID: <9bfb4c4bd1415a8ce527a913730672508a8e8330.camel@perches.com>
-Subject: Re: [PATCH v3 2/2] dynamic debug: allow printing to trace event
-From:   Joe Perches <joe@perches.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        jbaron@akamai.com, mingo@redhat.com,
-        Nicolas Boichat <drinkcat@chromium.org>, kernel@axis.com,
-        corbet@lwn.net, pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        john.ogness@linutronix.de, linux-kernel@vger.kernel.org
-Date:   Wed, 26 Aug 2020 12:53:57 -0700
-In-Reply-To: <20200826153203.1a65c35d@oasis.local.home>
-References: <20200825153338.17061-1-vincent.whitchurch@axis.com>
-         <20200825153338.17061-3-vincent.whitchurch@axis.com>
-         <651f7ec449dfb28006bbc0b018d4f6e506bcda80.camel@perches.com>
-         <20200826153203.1a65c35d@oasis.local.home>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Wed, 26 Aug 2020 15:56:54 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70822C061574;
+        Wed, 26 Aug 2020 12:56:53 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id k25so2812887edj.13;
+        Wed, 26 Aug 2020 12:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tk0FdBRl4yrZP8KpNGRoyatrwcoEEVz5bzGl7M6mn84=;
+        b=saLNRmhED3dlhcNReWUFAiieOMjkTrBEzsAb/2uRF4gwjrDeJqB9Xg6FPBr2zQdaug
+         TryKkusVjcz+tJ2o46njmZMb4efeTX4A6fqd40/ST8lQU5xVj+CzHOOLEf8TqQj+zFrI
+         FUAcSKjdBGoLp/kD/7W8MO6PkM0M1Kwe3FutAYpg5HuC1tVEN+XA63/Ta42bIpwUwpFY
+         6KISPdQgBHBKUdx5B7x4KuG+ZANYYBaywAbXKdqawrwKorn6waSYOKmyIvMUy/FBaTu3
+         OPW/oqlmnWrYxIZBD8Sb6vE7WgG/oltlFnRGmwhFkXLFgkgP2r8eAJ164CX9Gj/Z7xBI
+         8rGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tk0FdBRl4yrZP8KpNGRoyatrwcoEEVz5bzGl7M6mn84=;
+        b=UoKAkv2sq3hWmzYGOMpdX3GZXcEeuvHWIR3KbHGnYHGu/0Hn6zmI4VWlRcXDypt1j4
+         S9qmocQHT3xxnyrNclrQNtE7r1Dw63quaVrXkw8jCfpOnQfKowxJ1na87s/cjbKFEn8U
+         AK23rlN1EQGHaCd4R8Lqk1sF23KEnsfTk74hmS08M0secfIcEC5swvzsntpNvChOo1Bu
+         54hY6EUgYX5yfvP27b8/fweEZ8E6t4MYkr09zosKGB//qz6Fj1nq810OHExOVQmvbLMJ
+         Iv3AeMwdGLB2RXhPOYKP+7Lqcr6/qjed0nU73Jq7JrL9beJKxbAXKxO5zz5fR1W5nbq8
+         mcTg==
+X-Gm-Message-State: AOAM5330WXo/MDLmdOmzfkNmmAZuhqamPYVreWcgXuf0MQUgIxl2Jv5A
+        fhoWrjnGG7SShsH+TY9+EhY=
+X-Google-Smtp-Source: ABdhPJzjoMwMKQyvECLPjHomEXVw4I0MeN1eDxKP02jaERKv3xOiex2NsMXPzcHWtpjHpqmv7twIfw==
+X-Received: by 2002:aa7:cb0a:: with SMTP id s10mr16788025edt.134.1598471811840;
+        Wed, 26 Aug 2020 12:56:51 -0700 (PDT)
+Received: from skbuf ([86.126.22.216])
+        by smtp.gmail.com with ESMTPSA id f6sm1725454edy.2.2020.08.26.12.56.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 12:56:51 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 22:56:49 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        tanveer <tanveer.alam@puresoftware.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
+Message-ID: <20200826195649.g6k574y6ofzbagnm@skbuf>
+References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
+ <20200822183342.6sdhp6yq6i7yvdia@skbuf>
+ <CAHp75VeNXy1jWNWMuZc0bfXruKc3=0H4ezwpE8jbj6GLYk5QBA@mail.gmail.com>
+ <CAHp75VetYbnOHv3LQhq4Gvs1CFe8LnZPzFAVoNmBi5DyAmZ9Jg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VetYbnOHv3LQhq4Gvs1CFe8LnZPzFAVoNmBi5DyAmZ9Jg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-26 at 15:32 -0400, Steven Rostedt wrote:
-> On Tue, 25 Aug 2020 08:53:25 -0700
-> Joe Perches <joe@perches.com> wrote:
-> 
-> > > The print buffer is statically allocated and managed using code borrowed
-> > > from __ftrace_trace_stack() and is limited to 256 bytes (four of these
-> > > are allocated per CPU to handle the various contexts); anything larger
-> > > will be truncated.  
-> > 
-> > There is an effort to avoid using trace_printk and the like
-> > so perhaps this feature should have the same compile time
-> > guard.
-> 
-> No, this is fine for being in a production kernel. Basically, these are
-> simply debug printk()s that can also be put into the trace buffer. The
-> key difference to trace_printk() is that they are an event that needs
-> to be enabled to write into the buffer.
+On Wed, Aug 26, 2020 at 10:36:15PM +0300, Andy Shevchenko wrote:
+> On Wed, Aug 26, 2020 at 10:34 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Sat, Aug 22, 2020 at 9:37 PM Vladimir Oltean <olteanv@gmail.com> wrote:
+> > > On Fri, Aug 21, 2020 at 06:40:29PM +0530, kuldip dwivedi wrote:
+> >
+> > > Just noticed this now.
+> > > So for device tree, spi-fsl-dspi supports the following compatibles:
+> > >
+> > > fsl,vf610-dspi
+> > > fsl,ls1021a-v1.0-dspi
+> > > fsl,ls1012a-dspi
+> > > fsl,ls1028a-dspi
+> > > fsl,ls1043a-dspi
+> > > fsl,ls1046a-dspi
+> > > fsl,ls2080a-dspi
+> > > fsl,ls2085a-dspi
+> > > fsl,lx2160a-dspi
+> > >
+> > > Depending on the compatible string, the driver knows whether to use DMA
+> > > or XSPI mode, and what the FIFO size is.
+>
+> FIFO size can be read from the property
 
-It just seems like a backdoor way to convert various pr_debug functions
-(dev_dbg/netdev_dbg, et al) into tracing.
+My personal preference is for the driver to hold the expert information
+about the hardware parameters, and not the device tree. Today you need
+to know only about this set of parameters, tomorrow you need something
+new, but you also need to work with old DT blobs... It's a mess.
 
-What's the real value?  Timing data?  Something else?
+> (or better if you can derive it directly from HW, like DesignWare
+> does).
 
+Nope, can't do that. This IP block doesn't even have an ID or revision
+register.
 
+> DMA is just defined by FixedDMA resources (your platform with DMA
+> provides them, otherwise no such resources).
+>
+
+This is a case of knowing that tomatoes are fruit, but being wise enough
+to not put them in a fruit salad.
+
+I would not be happy to see this driver make the decision to use DMA
+based just on the presence of DMA channels in the firmware blob. On some
+platforms, there are DMA channels but due to an erratum they don't work.
+While on other platforms, using the DMA channels would simply cause a
+performance downgrade.
+Same thing about interrupts, in fact. The firmware blob tells the driver
+what the interrupt line is, but it doesn't mean that the driver has to
+use it.
+
+Thanks,
+-Vladimir
