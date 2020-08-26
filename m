@@ -6,91 +6,133 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7303C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 893D020738
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E6D2087D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgHZVne (ORCPT
+        id S1726825AbgHZVra convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:43:34 -0400
-Received: from mga02.intel.com ([134.134.136.20]:34921 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbgHZVnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:43:33 -0400
-IronPort-SDR: AhWLQ9p7DrUzLrL7YVs59BeQkoynZqH+C6DMeyacO+lMIa+GzvkYbWwrOEe7Z/T/nBR2k4l+4B
- tPNqE5gRC5rQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144149708"
-X-IronPort-AV: E=Sophos;i="5.76,357,1592895600"; 
-   d="scan'208";a="144149708"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 14:43:32 -0700
-IronPort-SDR: OD9JTnBIG8pJs82RcAuk1kcyOG2KRmMTOf5aJfbgxvnxYGM5qj1Olf51blrN/XgKqL1TuqeRP5
- ecFeGk8vkYwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,357,1592895600"; 
-   d="scan'208";a="329367051"
-Received: from irsmsx602.ger.corp.intel.com ([163.33.146.8])
-  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 14:43:30 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- irsmsx602.ger.corp.intel.com (163.33.146.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 26 Aug 2020 22:43:29 +0100
-Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
- fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
- Wed, 26 Aug 2020 14:43:27 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-        "hch@infradead.org" <hch@infradead.org>
-CC:     "wangxiongfeng2@huawei.com" <wangxiongfeng2@huawei.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "Mario.Limonciello@dell.com" <Mario.Limonciello@dell.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Huffman, Amber" <amber.huffman@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Topic: [PATCH] PCI/ASPM: Enable ASPM for links under VMD domain
-Thread-Index: AQHWd7clLgwBVuAUCESee06o/u7QiKlI1l4AgAKTLgA=
-Date:   Wed, 26 Aug 2020 21:43:27 +0000
-Message-ID: <cd5aa2fef13f14b30c139d03d5256cf93c7195dc.camel@intel.com>
-References: <20200821123222.32093-1-kai.heng.feng@canonical.com>
-         <20200825062320.GA27116@infradead.org>
-In-Reply-To: <20200825062320.GA27116@infradead.org>
-Accept-Language: en-US
+        Wed, 26 Aug 2020 17:47:30 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:27651 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726753AbgHZVr2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:47:28 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-257-g12td2zPN3C-gOdetsRJcQ-1; Wed, 26 Aug 2020 22:47:25 +0100
+X-MC-Unique: g12td2zPN3C-gOdetsRJcQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 26 Aug 2020 22:47:24 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 26 Aug 2020 22:47:24 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Thomas Gleixner' <tglx@linutronix.de>,
+        'Alexander Graf' <graf@amazon.com>, 'X86 ML' <x86@kernel.org>
+CC:     'Andy Lutomirski' <luto@kernel.org>,
+        'LKML' <linux-kernel@vger.kernel.org>,
+        'Andrew Cooper' <andrew.cooper3@citrix.com>,
+        "'Paul E. McKenney'" <paulmck@kernel.org>,
+        'Alexandre Chartre' <alexandre.chartre@oracle.com>,
+        'Frederic Weisbecker' <frederic@kernel.org>,
+        'Paolo Bonzini' <pbonzini@redhat.com>,
+        'Sean Christopherson' <sean.j.christopherson@intel.com>,
+        'Masami Hiramatsu' <mhiramat@kernel.org>,
+        'Petr Mladek' <pmladek@suse.com>,
+        'Steven Rostedt' <rostedt@goodmis.org>,
+        'Joel Fernandes' <joel@joelfernandes.org>,
+        'Boris Ostrovsky' <boris.ostrovsky@oracle.com>,
+        'Juergen Gross' <jgross@suse.com>,
+        "'Mathieu Desnoyers'" <mathieu.desnoyers@efficios.com>,
+        'Josh Poimboeuf' <jpoimboe@redhat.com>,
+        'Will Deacon' <will@kernel.org>,
+        'Tom Lendacky' <thomas.lendacky@amd.com>,
+        'Wei Liu' <wei.liu@kernel.org>,
+        'Michael Kelley' <mikelley@microsoft.com>,
+        'Jason Chen CJ' <jason.cj.chen@intel.com>,
+        "'Zhao Yakui'" <yakui.zhao@intel.com>,
+        "'Peter Zijlstra (Intel)'" <peterz@infradead.org>,
+        'Avi Kivity' <avi@scylladb.com>,
+        "'Herrenschmidt, Benjamin'" <benh@amazon.com>,
+        "'robketr@amazon.de'" <robketr@amazon.de>,
+        "'amos@scylladb.com'" <amos@scylladb.com>,
+        'Brian Gerst' <brgerst@gmail.com>,
+        "'stable@vger.kernel.org'" <stable@vger.kernel.org>,
+        'Alex bykov' <alex.bykov@scylladb.com>
+Subject: RE: x86/irq: Unbreak interrupt affinity setting
+Thread-Topic: x86/irq: Unbreak interrupt affinity setting
+Thread-Index: AQHWe+aKb+AhwM2rPkq6/MK3Hcp5nKlK5iEAgAAGXqA=
+Date:   Wed, 26 Aug 2020 21:47:23 +0000
+Message-ID: <42ae8716e425495c964ae7372bd7ff52@AcuMS.aculab.com>
+References: <20200826115357.3049-1-graf@amazon.com>
+ <87k0xlv5w5.fsf@nanos.tec.linutronix.de>
+ <fd87a87d-7d8a-9959-6c81-f49003a43c21@amazon.com>
+ <87blixuuny.fsf@nanos.tec.linutronix.de>
+ <873649utm4.fsf@nanos.tec.linutronix.de>
+ <87wo1ltaxz.fsf@nanos.tec.linutronix.de>
+ <db3e28b59d404f55aff83120c077d6f6@AcuMS.aculab.com>
+In-Reply-To: <db3e28b59d404f55aff83120c077d6f6@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.212.222.2]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D8000C6336A84F43B2F822D3244D885C@intel.com>
-Content-Transfer-Encoding: base64
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA4LTI1IGF0IDA2OjIzICswMDAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
-ZToNCj4gT24gRnJpLCBBdWcgMjEsIDIwMjAgYXQgMDg6MzI6MjBQTSArMDgwMCwgS2FpLUhlbmcg
-RmVuZyB3cm90ZToNCj4gPiBOZXcgSW50ZWwgbGFwdG9wcyB3aXRoIFZNRCBjYW5ub3QgcmVhY2gg
-ZGVlcGVyIHBvd2VyIHNhdmluZyBzdGF0ZSwNCj4gPiByZW5kZXJzIHZlcnkgc2hvcnQgYmF0dGVy
-eSB0aW1lLg0KPiANCj4gU28gd2hhdCBhYm91dCBqdXN0IGRpc2FibGluZyBWTUQgZ2l2ZW4gaG93
-IGJsb29keSBwb2ludGxlc3MgaXQgaXM/DQo+IEhhc24ndCBhbnlvbmUgbGVhcm5lZCBmcm9tIHRo
-ZSBBSENJIHJlbWFwcGluZyBkZWJhY2xlPw0KPiANCj4gSSdtIHJlYWxseSBwaXNzZWQgYXQgYWxs
-IHRoaXMgcG9pbnRsZXNzIGNyYXAgaW50ZWwgY29tZXMgdXAgd2l0aCBqdXN0DQo+IHRvIG1ha2Ug
-bGlmZSBoYXJkIGZvciBhYnNvbHV0ZWx5IG5vIGdhaW4uICBJcyBpdCBzbyBoYXJkIHRvIGp1c3Qg
-bGVhdmUNCj4gYSBOVk1lIGRldmljZSBhcyBhIHN0YW5kYXJkIE5WTWUgZGV2aWNlIGluc3RlYWQg
-b2YgZipeJmluZyBldmVyeXRoaW5nDQo+IHVwIGluIHRoZSBjaGlwc2V0IHRvIG1ha2UgT1Mgc3Vw
-cG9ydCBhIHBhaW4gYW5kIEkvTyBzbG93ZXIgdGhhbiBieQ0KPiBkb2luZyBub3RoaW5nPw0KDQoN
-CkZlZWwgZnJlZSB0byByZXZpZXcgbXkgc2V0IHRvIGRpc2FibGUgdGhlIE1TSSByZW1hcHBpbmcg
-d2hpY2ggd2lsbCBtYWtlDQppdCBwZXJmb3JtIGFzIHdlbGwgYXMgZGlyZWN0LWF0dGFjaGVkOg0K
-DQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtcGNpL2xpc3QvP3Nl
-cmllcz0zMjU2ODENCg==
+From: David Laight
+> Sent: 26 August 2020 22:37
+> 
+> From: Thomas Gleixner
+> > Sent: 26 August 2020 21:22
+> ...
+> > Moving interrupts on x86 happens in several steps. A new vector on a
+> > different CPU is allocated and the relevant interrupt source is
+> > reprogrammed to that. But that's racy and there might be an interrupt
+> > already in flight to the old vector. So the old vector is preserved until
+> > the first interrupt arrives on the new vector and the new target CPU. Once
+> > that happens the old vector is cleaned up, but this cleanup still depends
+> > on the vector number being stored in pt_regs::orig_ax, which is now -1.
+> 
+> I suspect that it is much more 'racy' than that for PCI-X interrupts.
+> On the hardware side there is an interrupt disable bit, and address
+> and a value.
+> To raise an interrupt the hardware must write the value to the address.
+> 
+> If the cpu needs to move an interrupt both the address and value
+> need changing, but the cpu wont write the address and value using
+> the same TLP, so the hardware could potentially write a value to
+> the wrong address.
+> Worse than that, the hardware could easily only look at the address
+> and value in the clocks after checking the interrupt is enabled.
+> So masking the interrupt immediately prior to changing the vector
+> info may not be enough.
+> 
+> It is likely that a read-back of the mask before updating the vector
+> is enough.
+
+But not enough to assume you won't receive an interrupt after reading
+back that interrupts are masked.
+
+(I've implemented the hardware side for an fpga ...)
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
