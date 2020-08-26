@@ -2,151 +2,142 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D949C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C210BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F22F02078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA712078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:50:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j/pjIvXd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nymJ5+tO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgHZUs7 (ORCPT
+        id S1726753AbgHZUuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:48:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33472 "EHLO
+        Wed, 26 Aug 2020 16:50:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbgHZUs5 (ORCPT
+        with ESMTP id S1726740AbgHZUuE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:48:57 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EADF4C061574;
-        Wed, 26 Aug 2020 13:48:56 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id m8so1695938pfh.3;
-        Wed, 26 Aug 2020 13:48:56 -0700 (PDT)
+        Wed, 26 Aug 2020 16:50:04 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4843C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:50:03 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a65so3174510wme.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:50:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tv0E7VEXIkQxRxC2tyGVkZwz5WNoEXRqgSzsj3/ZwkI=;
-        b=j/pjIvXdy0U6X2AoFct7fKM9qcZP0zYIKCTMmOyGHHm+493V+xErPYnmAGvO1hlhv9
-         ZhOyrwNlNblk1IaTuKHfjLUNpn58fTi2+dweuwlPV3nNXBD2h5sNV0PPth5Mf9MM07E3
-         Iqlujkhs/3QSb+LmhJGK21XbWpsn4vgWGEUeBqq257kvAuaEmXYRkoqR8KsQLUsNToQ+
-         Ac5rt5LgChqRHOEuY5dCc4Q4/HoYI6bGljJVCyzGeTteD5fDHSDBA2aldaXLt2O0+SmH
-         ZcnAe20fdcRlYxXtoXiuQyaI23UoSCzD0tF/aQtnm2WOrx3JnIwc/mAtKFbhdiUrCVSg
-         +NQQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9BaKjLl1F4E3WG9x32pZx6L6jhUxxfqUOzRaIPS/D6E=;
+        b=nymJ5+tO1YbnKkRM6ldq0ucFxtXQI6RGWyaXiSrMjx8eo4S5NB1wQK+6i9tf1RAJlZ
+         v9TsyVWBeaf0bR/w01DZBM1tm3mo9pXF4Ix5dlbr5cXMVqO3DjptiwYuwlcQcq7u+pHI
+         b6fytSdIKh94YcyMPAWrZsy+hk0lRGShtLNRFvhA2bUD6NiADs8Ab89nx+w4hHQhkB/R
+         mwDrJoyEOtf6VUweXzJOnaL4XxZjh4NVTV7WbNVa42viMex5DhMkV9tt1jrK1Zuoj3fU
+         2eMjukQiW71GOcmlbb6mIjQExf0cP8IouXhYqr4TMDIIC1cBkOKmrqpQhy5fN+zs4D3y
+         qYgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tv0E7VEXIkQxRxC2tyGVkZwz5WNoEXRqgSzsj3/ZwkI=;
-        b=czwF9wYLMIyEmR1XnW+bQ1Ogx9cSB/Tdi/wpkTTwLPmb7e2Ss0+ROMG1U6w+eyXmwz
-         CqLOqv0VXqvpBZNjC4PEQxPJ6HGb+JIMWBnmqQUg4N25guUYfijL/jEHZegRICYEjteW
-         XvhjpU3CIqj7fr+LEEl1lBjkvMtOIVmwGrtm3pxxL8ges46p9hYwwlsvir8gnrpIUA0w
-         qJkHiEtH7la5pw4uOdbQH7Z/v9+Bb4LaayUr0EBFmh2dfO2duFJ1pMRl8Ml4TTaFO6ci
-         i+b+NLH6Y0SkzxUUfadiOj/esdDzok9yqdBwAsGBxBG5xsuInXmyktCqFPxuUZAtUagH
-         hkOw==
-X-Gm-Message-State: AOAM533OpgGKj6TxOczqW6jijKBoO0qLfYVLPEqOVbR2B1xNv+OL4E4b
-        7BD3zxEzj4Eytcn45A+s2mF4eEWZybE=
-X-Google-Smtp-Source: ABdhPJwt/SD17mxaDWp5u2cU7pWiSlYBVdKBrMAAo1t79R8GN0oTAgexNbN0gIOfXmfCoBrhV+X0sw==
-X-Received: by 2002:aa7:854f:: with SMTP id y15mr13504447pfn.298.1598474936340;
-        Wed, 26 Aug 2020 13:48:56 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d4sm2861388pju.56.2020.08.26.13.48.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Aug 2020 13:48:55 -0700 (PDT)
-Subject: Re: [PATCH 5.7 00/15] 5.7.19-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200826114849.295321031@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <d62c438f-3f04-5e94-c158-cd5f77f26ece@roeck-us.net>
-Date:   Wed, 26 Aug 2020 13:48:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9BaKjLl1F4E3WG9x32pZx6L6jhUxxfqUOzRaIPS/D6E=;
+        b=BCmZBVbDc3uC352ec9Lk3VPJEqDPs9ZgpxyNUqguFK7DNV7X62+rnJtNHDO4jdFr1K
+         QMCAvbktq4yjS+sKBhcQg+4ZxGD+Z963Vz05/Lj85GYhGo1BzS+CDgp+FP0fKngwz6B9
+         rZdS+JRJ9cZxn6SfP52/LJkNOkCF1kUTeuF98f91fF/B5WA1sxAy+vHrKxZ4iSJ58S/t
+         oi02dwuEyKH4yQj77JYB3WSiUKkm8tXfGRYKbyxbm91u47t+S6+XdLv8+odXXlToyyNI
+         E3rk+uosa+BlR2+RYAraAU2W2Tu8hS5EI+Ifv4Rw0cpOgiWgq95xwN/qGCGo0BTV45ip
+         4bGQ==
+X-Gm-Message-State: AOAM530D1ckNh3KyavS4oNu8UpelDg0SNcKIxuAjmdTmTEbVJCXe39jK
+        OIE3+Drl3tW6B89Bm8F8aeg=
+X-Google-Smtp-Source: ABdhPJz3HjRuL1A3zOhrETsONMNElibpsRplzpBg6UruDUil6V+PW+KHVLHLDaytHVipTY65dWhR4w==
+X-Received: by 2002:a1c:c20a:: with SMTP id s10mr1426600wmf.55.1598475002040;
+        Wed, 26 Aug 2020 13:50:02 -0700 (PDT)
+Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
+        by smtp.gmail.com with ESMTPSA id e2sm509657wrt.66.2020.08.26.13.50.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 13:50:01 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 17:49:54 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Sidong Yang <realwakka@gmail.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Emil Velikov <emil.l.velikov@gmail.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] drm/vkms: fix warning in vkms_get_vblank_timestamp
+Message-ID: <20200826204954.u6aqwcmwpsudrkh4@smtp.gmail.com>
+References: <20200825144248.1751-1-realwakka@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200826114849.295321031@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825144248.1751-1-realwakka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/20 5:02 AM, Greg Kroah-Hartman wrote:
-> -------------------
-> Note, ok, this is really going to be the final 5.7.y kernel release.  I
-> mean it this time....
-> -------------------
-> 
-> This is the start of the stable review cycle for the 5.7.19 release.
-> There are 15 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 28 Aug 2020 11:48:35 +0000.
-> Anything received after that time might be too late.
-> 
+Hi Sidong,
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 431 pass: 431 fail: 0
+Thanks for this patch.
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+The code looks good to me; however, I see some issues in the patch
+format and commit message. Please, see inline comments.
 
-Guenter
+On 08/25, Sidong Yang wrote:
+> From: Sidong Yang <realwakka@gmail.com>, Haneen Mohammed <hamohammed.sa@gmail.com>
+
+You need to fix the Author name.
+> 
+> When vkms_get_vblank_timestamp() is called very first time without
+> enabling vblank before, vblank time has just intial value and it makes
+> warning message. this patch prevents warning message by setting vblank
+> time to current time.
+
+I consider *fix* a somewhat strong term to this change. In my opinion,
+it would be better to choose another term in the commit message like
+*avoid* timestamp warning when vblanks aren't enabled.
+
+In the body of the commit message, I think interesting to include the
+exactly warning message that this patch addresses. You could also
+describe the initial values that triggers this warning and why this
+approach is reasonable, as VKMS has fake clocks.
+
+> 
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> Cc: Haneen Mohammed <hamohammed.sa@gmail.com>
+> Cc: Melissa Wen <melissa.srw@gmail.com>
+> 
+> Signed-off-by: Sidong Yang <realwakka@gmail.com>
+> ---
+>  drivers/gpu/drm/vkms/vkms_crtc.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+> index ac85e17428f8..09c012d54d58 100644
+> --- a/drivers/gpu/drm/vkms/vkms_crtc.c
+> +++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+> @@ -86,6 +86,11 @@ static bool vkms_get_vblank_timestamp(struct drm_crtc *crtc,
+>  	struct vkms_output *output = &vkmsdev->output;
+>  	struct drm_vblank_crtc *vblank = &dev->vblank[pipe];
+>  
+> +	if (!READ_ONCE(vblank->enabled)) {
+> +		*vblank_time = ktime_get();
+> +		return true;
+> +	}
+> +
+
+Apart from issues in commit message and format, I checked the code and it
+works fine.
+
+Reviewed-by: Melissa Wen <melissa.srw@gmail.com>
+
+>  	*vblank_time = READ_ONCE(output->vblank_hrtimer.node.expires);
+>  
+>  	if (WARN_ON(*vblank_time == vblank->time))
+> -- 
+> 2.17.1
+> 
