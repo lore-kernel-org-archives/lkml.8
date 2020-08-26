@@ -2,104 +2,214 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EF8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3E0C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60D4F20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:28:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 628B820737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:30:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="JHtANQ1U"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="sr8oIIhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgHZS2o (ORCPT
+        id S1726904AbgHZSaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:28:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39902 "EHLO
+        Wed, 26 Aug 2020 14:30:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgHZS2l (ORCPT
+        with ESMTP id S1726786AbgHZSaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:28:41 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A349EC061756;
-        Wed, 26 Aug 2020 11:28:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ayROP4MQKiCNpNKT6GTubMn3ATg0Pxrq17ErVXh+buk=; b=JHtANQ1UL5uHlW5ZRQQ1RWhb5l
-        VWwp7qajTArQCrjN7yuOSdtWq0CJYECBPhC5LKEN/9voxKMpidJ2kQfoLUH0EwObGcIiSrTpKv+X3
-        PrN0KvByWYlstelbhZFoHtNsof65sOnT9kfsxG/lDypPGwbw8Y0bkc/LFLzI/2Unqjxc=;
-Received: from p200300ccff0d72001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0d:7200:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1kB09z-0008KM-RV; Wed, 26 Aug 2020 20:28:36 +0200
-Date:   Wed, 26 Aug 2020 20:28:34 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH 1/2] power: supply: Add support for RN5T618/RC5T619
- charger and fuel gauge
-Message-ID: <20200826202834.42b1673f@aktux>
-In-Reply-To: <20200826174817.vhus3j4i4t7u7jc4@earth.universe>
-References: <20200815165610.10647-1-andreas@kemnade.info>
-        <20200815165610.10647-2-andreas@kemnade.info>
-        <20200826174817.vhus3j4i4t7u7jc4@earth.universe>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 26 Aug 2020 14:30:16 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51798C061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 11:30:16 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q93so1410580pjq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 11:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=RYNiO2wbp28snYb6ucmfg9wAWK91lJJjUR4Ps+atoWg=;
+        b=sr8oIIhGSy6LiOPhDbKD6vaE4U93eTTyly7jzNYo37IwBZstod6BjGboufyhegngot
+         vV1DLGhCje5igwurpYfGE6YZ94QtMZaSk31PEEuvCerS6Ql+TxV7l3PpqEQCD9LzEEwg
+         J0CvkH5owz5E46YVV+juC1pNrenTYNzHkDx9FMIjoXj6QhiXfO4TZTp4rUJEb/cJ8Mi+
+         ubeRnX3qALsJVvw+mqtfpBckhkOUyVA4iADNmr+G7rUZPXa/Hc9O29pLhnkRPFffA0MZ
+         wXvXns4v7r9cNOJ6qduT3YGdw6mwncdJIO5WKcGoTwBN48EeVyFrpcY4/T9qL4jVSjLa
+         QFww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=RYNiO2wbp28snYb6ucmfg9wAWK91lJJjUR4Ps+atoWg=;
+        b=TbYzpOwpuGDpp3yMwNYQF54YS2bRSr+KYd8Zqib4vIoQx6kLeDcdZ5BrUuhHkKwYf1
+         plV4nU1S+J94rhBnRm+3Mib//A0DE55aQAzYCQwU1MhGFMUOr6K9oWd2dqTExZttIOU8
+         P/jsq7p4Enk7RQOSPfjZnA6kZAmgEM6tstk1aQlmuuuwH69ilTkfjEn4RXeODF/VqHAd
+         SS4Z5WrX1uzKyEY+UHgJDRI0D5jobew9UBvc6aYW2kTUdvc0/Otw1jC4Q29A3/Omc4fM
+         c1R5tyN51HmDl2lC3BKUhd8FLwk4W5Sy4ulktODrZKQOyJs6towpSmoZuH0yVfw33zom
+         KBrA==
+X-Gm-Message-State: AOAM5332MvJXlyzuAFp+pOtbeOi2AbO5I92Uc1WBC/CncsCNGsE/lrwd
+        2S+W8bwPlczNvSqwotDqXU6jaA==
+X-Google-Smtp-Source: ABdhPJzDA/jZZBGEJbCmoZS/FqpQh5OBB1ZUvLtCywbMDNtDbq7jYqvYr+WIdiUkEGIZWHRDkxvhPw==
+X-Received: by 2002:a17:90a:7348:: with SMTP id j8mr7121490pjs.137.1598466615795;
+        Wed, 26 Aug 2020 11:30:15 -0700 (PDT)
+Received: from arch-ashland-svkelley ([2601:1c0:6a00:1804:88d3:6720:250a:6d10])
+        by smtp.gmail.com with ESMTPSA id a10sm2968823pfl.28.2020.08.26.11.30.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 11:30:14 -0700 (PDT)
+Message-ID: <7261b75710e55a10f08e04b4ff8de7158cebb0ed.camel@intel.com>
+Subject: Re: [PATCH V2 2/9] PCI: Extend Root Port Driver to support RCEC
+From:   sean.v.kelley@intel.com
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>, bhelgaas@google.com,
+        Jonathan.Cameron@huawei.com, rjw@rjwysocki.net,
+        ashok.raj@intel.com, tony.luck@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Date:   Wed, 26 Aug 2020 11:29:50 -0700
+In-Reply-To: <fe1e4832-a634-66d8-96dc-4ad980dabd1a@linux.intel.com>
+References: <20200804194052.193272-1-sean.v.kelley@intel.com>
+         <20200804194052.193272-3-sean.v.kelley@intel.com>
+         <fe1e4832-a634-66d8-96dc-4ad980dabd1a@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 19:48:17 +0200
-Sebastian Reichel <sebastian.reichel@collabora.com> wrote:
+Hi Sathya,
 
-> Hi,
-> 
-> Driver looks mostly good.
-> 
-> On Sat, Aug 15, 2020 at 06:56:09PM +0200, Andreas Kemnade wrote:
-> > [...]
-> > +static int rn5t618_battery_current_now(struct rn5t618_power_info *info,
-> > +				       union power_supply_propval *val)
-> > +{
-> > +	u16 res;
-> > +	int ret;
-> > +
-> > +	ret = rn5t618_battery_read_doublereg(info, RN5T618_CC_AVEREG1, &res);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	val->intval = res;
-> > +	/* 2's complement */
-> > +	if (val->intval & (1 << 13))
-> > +		val->intval = val->intval - (1 << 14);
-> > +
-> > +	/* negate current to be positive when discharging */
-> > +	val->intval *= -1000;  
-> 
-> mh, the sign is not documented (which should be fixed). At least
-> sbs-battery does it the other way around (negative current when
-> discharging, positive otherwise). Some drivers do not support
-> signed current and always report positive values (e.g. ACPI driver).
-> 
-> What did you use as reference for swapping the sign?
-> 
-Well, I have searched for documentation, found nothing and used the
-bq27xxx driver as reference  which I am used to from the GTA04/GTA02,
-so things behave equal. That are the devices where a was most
-intensively looking at those values.
-I thought that there would be some unwritten rule about that.
+Thanks for reviewing.
 
-Regards,
-Andreas
+If you haven't see it already there are newer patches under v3 here:
+
+https://lore.kernel.org/linux-pci/20200812164659.1118946-1-sean.v.kelley@intel.com/
+
+Comments below:
+
+On Wed, 2020-08-26 at 09:16 -0700, Kuppuswamy, Sathyanarayanan wrote:
+> 
+> On 8/4/20 12:40 PM, Sean V Kelley wrote:
+> > From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> > 
+> > If a Root Complex Integrated Endpoint (RCiEP) is implemented,
+> > errors may
+> > optionally be sent to a corresponding Root Complex Event Collector
+> > (RCEC).
+> > Each RCiEP must be associated with no more than one RCEC. Interface
+> > errors
+> > are reported to the OS by RCECs.
+> > 
+> > For an RCEC (technically not a Bridge), error messages "received"
+> > from
+> > associated RCiEPs must be enabled for "transmission" in order to
+> > cause a
+> > System Error via the Root Control register or (when the Advanced
+> > Error
+> > Reporting Capability is present) reporting via the Root Error
+> > Command
+> > register and logging in the Root Error Status register and Error
+> > Source
+> > Identification register.
+> > 
+> > Given the commonality with Root Ports and the need to also support
+> > AER
+> > and PME services for RCECs, extend the Root Port driver to support
+> > RCEC
+> > devices through the addition of the RCEC Class ID to the driver
+> > structure.
+> > 
+> > Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+> > Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> > Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> > ---
+> >   drivers/pci/pcie/portdrv_core.c | 8 ++++----
+> >   drivers/pci/pcie/portdrv_pci.c  | 5 ++++-
+> >   2 files changed, 8 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/portdrv_core.c
+> > b/drivers/pci/pcie/portdrv_core.c
+> > index 50a9522ab07d..5d4a400094fc 100644
+> > --- a/drivers/pci/pcie/portdrv_core.c
+> > +++ b/drivers/pci/pcie/portdrv_core.c
+> > @@ -234,11 +234,11 @@ static int get_port_device_capability(struct
+> > pci_dev *dev)
+> >   #endif
+> >   
+> >   	/*
+> > -	 * Root ports are capable of generating PME too.  Root Complex
+> > -	 * Event Collectors can also generate PMEs, but we don't handle
+> > -	 * those yet.
+> > +	 * Root ports and Root Complex Event Collectors are capable
+> > +	 * of generating PME too.
+> >   	 */
+> > -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
+> > +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+> > +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
+> >   	    (pcie_ports_native || host->native_pme)) {
+> >   		services |= PCIE_PORT_SERVICE_PME;
+> What about AER service? Don't you need to enable it for RCEC
+
+It is enabled via set_device_error_reporting() in aer.c and in not seen
+in this patch but in the lines above the code section you are
+commenting on is:
+
+#ifdef CONFIG_PCIEAER
+        if (dev->aer_cap && pci_aer_available() &&
+            (pcie_ports_native || host->native_aer)) {
+                services |= PCIE_PORT_SERVICE_AER;
+
+                /*
+                 * Disable AER on this port in case it's been enabled
+by the
+                 * BIOS (the AER service driver will enable it when
+necessary).
+                 */
+                pci_disable_pcie_error_reporting(dev);
+        }
+#endif
+
+Let me know if I'm missing something here.
+
+
+Thanks!
+
+Sean
+
+
+> >   
+> > diff --git a/drivers/pci/pcie/portdrv_pci.c
+> > b/drivers/pci/pcie/portdrv_pci.c
+> > index 3a3ce40ae1ab..4d880679b9b1 100644
+> > --- a/drivers/pci/pcie/portdrv_pci.c
+> > +++ b/drivers/pci/pcie/portdrv_pci.c
+> > @@ -106,7 +106,8 @@ static int pcie_portdrv_probe(struct pci_dev
+> > *dev,
+> >   	if (!pci_is_pcie(dev) ||
+> >   	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
+> >   	     (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
+> > -	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
+> > +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM) &&
+> > +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
+> >   		return -ENODEV;
+> >   
+> >   	status = pcie_port_device_register(dev);
+> > @@ -195,6 +196,8 @@ static const struct pci_device_id
+> > port_pci_ids[] = {
+> >   	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
+> >   	/* subtractive decode PCI-to-PCI bridge, class type is 060401h
+> > */
+> >   	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
+> > +	/* handle any Root Complex Event Collector */
+> > +	{ PCI_DEVICE_CLASS(((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00), ~0)
+> > },
+> >   	{ },
+> >   };
+> >   
+> > 
+
