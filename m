@@ -2,111 +2,96 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 403B4C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26CAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 084E52078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:08:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598472526;
-	bh=p0i0gDJ2jS4t7JJ4ocLozJvGErG8heeVM4U3k61ApPg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M3ruNYw+YAq8lEgAmtKICNvWPXN6OLfli/kgRmJmc1Ups9u5ln18QvJxjORv3BISG
-	 g+rVmUyo2Ci/YywTvfQL3+q0k/Yf5D5+AqH2FR09BNZwITR/e9PW58payCSxFklNGk
-	 8u0ou6AaHbks8mHu1KZMHgDAiuCO0bs5Ki7yx/wk=
+	by mail.kernel.org (Postfix) with ESMTP id B664F2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:09:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b="IungCNGp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgHZUIo (ORCPT
+        id S1727024AbgHZUJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:08:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbgHZUIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:08:36 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C20802080C;
-        Wed, 26 Aug 2020 20:08:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598472515;
-        bh=p0i0gDJ2jS4t7JJ4ocLozJvGErG8heeVM4U3k61ApPg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PKGrrwPE5hIfuaNKgGIpKkhl0nZqny54lvbaklqusmvYoVIQySnCHWsyZ4d1GJ5tz
-         IOnx9dgeJXpxP4577acpOrimdDYTH7Zf4G4en6bnC46fQSHWY9HgpNM4LbXalcXkc+
-         mUtcNFmR/5XeZktf4hhwYi9TzjN3XjyGOL3uu9ww=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v2 2/2] Input: gpio_keys - Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 22:08:27 +0200
-Message-Id: <20200826200827.30931-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826200827.30931-1-krzk@kernel.org>
-References: <20200826200827.30931-1-krzk@kernel.org>
+        Wed, 26 Aug 2020 16:09:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgHZUJK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 16:09:10 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAE36C061574;
+        Wed, 26 Aug 2020 13:09:07 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C39266EEB; Wed, 26 Aug 2020 16:09:01 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C39266EEB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1598472541;
+        bh=bOOt3zm1gFKfZCQYnWvAjCoBU/NfeqJ2yjHfacdjZAs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IungCNGpsTp02s8WmHcduBXrVPdjq5S95KDlnn8+yyR6WbzrGCuGp+GjLVmzz+UdR
+         fVlkSc9Pnf5x5G8s+8PBoShJhcB/dMr4o5j0FML36r8weLcOe4dviGRtdp/y8j4fzB
+         Guj/STXp4qx4fxsPzOMxiXQXkBb7PYX3njdIEhu0=
+Date:   Wed, 26 Aug 2020 16:09:01 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Frank van der Linden <fllinden@amazon.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] nfsd: Remove unnecessary assignment in nfs4xdr.c
+Message-ID: <20200826200901.GA28877@fieldses.org>
+References: <20200812141252.21059-1-alex.dewar90@gmail.com>
+ <20200812203631.GA13358@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com>
+ <20200820233745.fhfsbx63td3u5guy@medion>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820233745.fhfsbx63td3u5guy@medion>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe() and devm_fwnode_gpiod_get_optional().   Less code and
-the error value gets printed.
+On Fri, Aug 21, 2020 at 12:37:45AM +0100, Alex Dewar wrote:
+> On Wed, Aug 12, 2020 at 08:36:31PM +0000, Frank van der Linden wrote:
+> > On Wed, Aug 12, 2020 at 03:12:51PM +0100, Alex Dewar wrote:
+> > > 
+> > > In nfsd4_encode_listxattrs(), the variable p is assigned to at one point
+> > > but this value is never used before p is reassigned. Fix this.
+> > > 
+> > > Addresses-Coverity: ("Unused value")
+> > > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> > > ---
+> > >  fs/nfsd/nfs4xdr.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> > > index 259d5ad0e3f47..1a0341fd80f9a 100644
+> > > --- a/fs/nfsd/nfs4xdr.c
+> > > +++ b/fs/nfsd/nfs4xdr.c
+> > > @@ -4859,7 +4859,7 @@ nfsd4_encode_listxattrs(struct nfsd4_compoundres *resp, __be32 nfserr,
+> > >                         goto out;
+> > >                 }
+> > > 
+> > > -               p = xdr_encode_opaque(p, sp, slen);
+> > > +               xdr_encode_opaque(p, sp, slen);
+> > > 
+> > >                 xdrleft -= xdrlen;
+> > >                 count++;
+> > > --
+> > > 2.28.0
+> > > 
+> > 
+> > Yep, I guess my linting missed that, thanks for the fix.
+> > 
+> > - Frank
+> 
+> Ping? The second patch in this series had a mistake in it, but I think
+> this one's still good to go :-)
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
----
-
-Changes since v1:
-1. Use devm_fwnode_gpiod_get_optional
----
- drivers/input/keyboard/gpio_keys.c | 21 ++++-----------------
- 1 file changed, 4 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index f2d4e4daa818..a07ac6fa25ed 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -494,23 +494,10 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 	spin_lock_init(&bdata->lock);
- 
- 	if (child) {
--		bdata->gpiod = devm_fwnode_gpiod_get(dev, child,
--						     NULL, GPIOD_IN, desc);
--		if (IS_ERR(bdata->gpiod)) {
--			error = PTR_ERR(bdata->gpiod);
--			if (error == -ENOENT) {
--				/*
--				 * GPIO is optional, we may be dealing with
--				 * purely interrupt-driven setup.
--				 */
--				bdata->gpiod = NULL;
--			} else {
--				if (error != -EPROBE_DEFER)
--					dev_err(dev, "failed to get gpio: %d\n",
--						error);
--				return error;
--			}
--		}
-+		bdata->gpiod = devm_fwnode_gpiod_get_optional(dev, child, NULL,
-+							      GPIOD_IN, desc);
-+		if (IS_ERR(bdata->gpiod))
-+			return dev_err_probe(dev, error, "failed to get gpio\n");
- 	} else if (gpio_is_valid(button->gpio)) {
- 		/*
- 		 * Legacy GPIO number, so request the GPIO here and
--- 
-2.17.1
-
+Thanks, applied for 5.10.--b.
