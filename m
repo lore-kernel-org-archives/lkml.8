@@ -2,162 +2,109 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F10AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF01DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33BA1206EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:51:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCFED206EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgHZKvX (ORCPT
+        id S1728385AbgHZKyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:51:23 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:32193 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728572AbgHZKuk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:50:40 -0400
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 26 Aug
- 2020 18:50:36 +0800
-Received: from localhost.localdomain (61.148.243.98) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 26 Aug
- 2020 18:50:35 +0800
-From:   FelixCuioc <FelixCui-oc@zhaoxin.com>
-To:     Joerg Roedel <joro@8bytes.org>, <iommu@lists.linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>, <kbuild@lists.01.org>
-CC:     <kbuild-all@lists.01.org>, <CobeChen-oc@zhaoxin.com>,
-        <RaymondPang-oc@zhaoxin.com>, <TonyWWang-oc@zhaoxin.com>
-Subject: [PATCH v2 2/3] iommu/vt-d:Add support for probing ACPI device in RMRR
-Date:   Wed, 26 Aug 2020 06:50:24 -0400
-Message-ID: <20200826105025.3912-3-FelixCui-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826105025.3912-1-FelixCui-oc@zhaoxin.com>
-References: <20200826105025.3912-1-FelixCui-oc@zhaoxin.com>
+        Wed, 26 Aug 2020 06:54:37 -0400
+Received: from mga11.intel.com ([192.55.52.93]:18502 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727122AbgHZKyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:54:31 -0400
+IronPort-SDR: Ye1IpGSoaXH7e/xOJojUxbcCgcQsGh4QcYufxD19OJqdGHRQkmm0/l0qC+H6s7gtYGoGzbUwUt
+ jzX4SSIe6QCQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="153841061"
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="153841061"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 03:54:31 -0700
+IronPort-SDR: mgEodjz+6d20xaZrH90nyEZMnEV3Ido8z0JxOQ8gjYPl982Y2KFBIbdrnOx+wWwfggbwMoaIbg
+ 2IDBuNrdvfag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="329182251"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 03:54:28 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kAt4U-00BXuN-RC; Wed, 26 Aug 2020 13:54:26 +0300
+Date:   Wed, 26 Aug 2020 13:54:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Wolfram Sang <wsa@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: consider devices with of_match_table during i2c
+ device probing
+Message-ID: <20200826105426.GJ1891694@smile.fi.intel.com>
+References: <20200826042938.3259-1-sergey.senozhatsky@gmail.com>
+ <20200826050851.GA1081@ninjato>
+ <20200826052544.GA500@jagdpanzerIV.localdomain>
+ <20200826095356.GG1891694@smile.fi.intel.com>
+ <20200826095617.GH1891694@smile.fi.intel.com>
+ <20200826102411.GC8849@jagdpanzerIV.localdomain>
+ <20200826103807.GD8849@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [61.148.243.98]
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826103807.GD8849@jagdpanzerIV.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After acpi device in RMRR is detected,it is necessary
-to establish a mapping for these devices.
-In acpi_device_create_direct_mappings(),create a mapping
-for the acpi device in RMRR.
-Add a helper to achieve the acpi namespace device can
-access the RMRR region.
+On Wed, Aug 26, 2020 at 07:38:07PM +0900, Sergey Senozhatsky wrote:
+> On (20/08/26 19:24), Sergey Senozhatsky wrote:
+> > > But then the question is why we have this code in the ->probe() at all?
+> > > ->match() is run before probe by bus core, no?
+> > 
+> > That's a good question.
+> 
+> Everything seem to be working OK on my test board with this patch:
 
-Signed-off-by: FelixCuioc <FelixCui-oc@zhaoxin.com>
----
- drivers/iommu/intel/iommu.c | 27 +++++++++++++++++++++++++++
- drivers/iommu/iommu.c       |  6 ++++++
- include/linux/iommu.h       |  3 +++
- 3 files changed, 36 insertions(+)
+I'm okay with it, but I want to hear Wolfram about this.
+If it gets a green light to go, feel free to add
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index f774ef63d473..b31f02f41c96 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -4797,6 +4797,20 @@ static int __init platform_optin_force_iommu(void)
- 
- 	return 1;
- }
-+static int acpi_device_create_direct_mappings(struct device *pn_dev, struct device *acpi_device)
-+{
-+	struct iommu_group *group;
-+
-+	acpi_device->bus->iommu_ops = &intel_iommu_ops;
-+	group = iommu_group_get(pn_dev);
-+	if (!group) {
-+		pr_warn("ACPI name space devices create direct mappings wrong!\n");
-+		return -1;
-+	}
-+	__acpi_device_create_direct_mappings(group, acpi_device);
-+
-+	return 0;
-+}
- 
- static int __init probe_acpi_namespace_devices(void)
- {
-@@ -4812,6 +4826,7 @@ static int __init probe_acpi_namespace_devices(void)
- 			struct acpi_device_physical_node *pn;
- 			struct iommu_group *group;
- 			struct acpi_device *adev;
-+			struct device *pn_dev = NULL;
- 
- 			if (dev->bus != &acpi_bus_type)
- 				continue;
-@@ -4822,6 +4837,7 @@ static int __init probe_acpi_namespace_devices(void)
- 					    &adev->physical_node_list, node) {
- 				group = iommu_group_get(pn->dev);
- 				if (group) {
-+					pn_dev = pn->dev;
- 					iommu_group_put(group);
- 					continue;
- 				}
-@@ -4830,7 +4846,18 @@ static int __init probe_acpi_namespace_devices(void)
- 				ret = iommu_probe_device(pn->dev);
- 				if (ret)
- 					break;
-+				pn_dev = pn->dev;
-+			}
-+			if (pn_dev == NULL) {
-+				dev->bus->iommu_ops = &intel_iommu_ops;
-+				ret = iommu_probe_device(dev);
-+				if (ret) {
-+					pr_err("acpi_device probe fail! ret:%d\n", ret);
-+					return ret;
-+				}
-+				return 0;
- 			}
-+			ret = acpi_device_create_direct_mappings(pn_dev, dev);
- 			mutex_unlock(&adev->physical_node_lock);
- 
- 			if (ret)
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 609bd25bf154..4f714a2d5ef7 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -779,6 +779,12 @@ static bool iommu_is_attach_deferred(struct iommu_domain *domain,
- 	return false;
- }
- 
-+void  __acpi_device_create_direct_mappings(struct iommu_group *group, struct device *acpi_device)
-+{
-+	iommu_create_device_direct_mappings(group, acpi_device);
-+}
-+EXPORT_SYMBOL_GPL(__acpi_device_create_direct_mappings);
-+
- /**
-  * iommu_group_add_device - add a device to an iommu group
-  * @group: the group into which to add the device (reference should be held)
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index fee209efb756..9be134775886 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -514,6 +514,9 @@ extern void iommu_domain_window_disable(struct iommu_domain *domain, u32 wnd_nr)
- extern int report_iommu_fault(struct iommu_domain *domain, struct device *dev,
- 			      unsigned long iova, int flags);
- 
-+extern void __acpi_device_create_direct_mappings(struct iommu_group *group,
-+						struct device *acpi_device);
-+
- static inline void iommu_flush_tlb_all(struct iommu_domain *domain)
- {
- 	if (domain->ops->flush_iotlb_all)
+> ---
+> 
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 5ec082e2039d..77eea5c0bc71 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -475,17 +475,6 @@ static int i2c_device_probe(struct device *dev)
+>  
+>  	driver = to_i2c_driver(dev->driver);
+>  
+> -	/*
+> -	 * An I2C ID table is not mandatory, if and only if, a suitable OF
+> -	 * or ACPI ID table is supplied for the probing device.
+> -	 */
+> -	if (!driver->id_table &&
+> -	    !acpi_driver_match_device(dev, dev->driver) &&
+> -	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
+> -		status = -ENODEV;
+> -		goto put_sync_adapter;
+> -	}
+> -
+>  	if (client->flags & I2C_CLIENT_WAKE) {
+>  		int wakeirq;
+>  
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
