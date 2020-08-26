@@ -2,126 +2,83 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F1EC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0E312078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:54:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XIKNSfD1"
+	by mail.kernel.org (Postfix) with ESMTP id 5A60E20825
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:55:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgHZPyz (ORCPT
+        id S1728174AbgHZPzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:54:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34410 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726803AbgHZPyv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:54:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598457289;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rj3yRvfO9+lX66rFGH3OmR+ew75YBPEa+QrnmV2WCI8=;
-        b=XIKNSfD15Uk54Lo+Nw/FWuEJw3USQnGJutuyCXBOFeFNTHPDBQFcv3Nml0ZUzlBKk5d/MZ
-        ByTkQEUpd/ZqBZopRlCAymi39JpE4ygn1ml7xEgLLXN/yhJmw8bPWrzbDVh/B/Vgct0fau
-        kEhdPqK9v+7ZU5Fszd9blvHMsGha5A0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-421-YKA-DGg6MqmtGY9OvzxmxA-1; Wed, 26 Aug 2020 11:54:45 -0400
-X-MC-Unique: YKA-DGg6MqmtGY9OvzxmxA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50650425D3;
-        Wed, 26 Aug 2020 15:54:44 +0000 (UTC)
-Received: from krava (unknown [10.40.192.33])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7AE105C1C2;
-        Wed, 26 Aug 2020 15:54:42 +0000 (UTC)
-Date:   Wed, 26 Aug 2020 17:54:41 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        eranian@google.com, ak@linux.intel.com
-Subject: Re: [PATCH 0/4] TopDown metrics support for Ice Lake (perf tool)
-Message-ID: <20200826155441.GA783610@krava>
-References: <20200820164532.8011-1-kan.liang@linux.intel.com>
+        Wed, 26 Aug 2020 11:55:16 -0400
+Received: from mga18.intel.com ([134.134.136.126]:18824 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726803AbgHZPzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 11:55:10 -0400
+IronPort-SDR: zgFv1I5c4/t1Q8NdD/Ix5F+zSFXgO9th07AHnI7ZPgD7OVEr+rV/ffbB0PQaLXYFK1gYkFlzpT
+ NMiIoHkdgg9Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="143985066"
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="143985066"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 08:55:10 -0700
+IronPort-SDR: fvLsOD2XMoMTI8CwlzG9v6oMPe4Fs+jHmWvidaxwI72ZZBN5XcXQpqYJHNWk7bGswAONcg0riO
+ RX+QyS6HboJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="329271341"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 08:55:09 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kAxlT-00BbMf-25; Wed, 26 Aug 2020 18:55:07 +0300
+Date:   Wed, 26 Aug 2020 18:55:07 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v1] driver core: Annotate dev_err_probe() with
+ __must_check
+Message-ID: <20200826155507.GV1891694@smile.fi.intel.com>
+References: <20200826104459.81979-1-andriy.shevchenko@linux.intel.com>
+ <9635eaa4ccc1141fb0dd8c3687f46da7149206ad.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820164532.8011-1-kan.liang@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <9635eaa4ccc1141fb0dd8c3687f46da7149206ad.camel@perches.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 09:45:28AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The kernel patches have been merged into the tip's perf/core branch.
-> The patch set is on top of commit 2cb5383b30d4 ("perf/x86/intel: Support
-> per-thread RDPMC TopDown metrics") of the tip's perf/core branch.
-> 
-> The changes for the perf tool include:
-> - Extend --topdown option to support per thread TopDown metrics
-> - Support sample-read topdown metric group
-> - Add a complete document for the TopDown usage.
-> 
-> Ice Lake has support for measuring the level 1 TopDown metrics
-> directly in hardware. This is implemented by an additional METRICS
-> register, and a new Fixed Counter 3 that measures pipeline SLOTS.
-> 
-> New in Icelake
-> - Do not require generic counters. This allows to collect TopDown always
->   in addition to other events.
-> - Measuring TopDown per thread/process instead of only per core
-> 
-> For the Ice Lake implementation of performance metrics, the values in
-> PERF_METRICS MSR are derived from fixed counter 3. Software should start
-> both registers, PERF_METRICS and fixed counter 3, from zero.
-> Additionally, software is recommended to periodically clear both
-> registers in order to maintain accurate measurements. The latter is
-> required for certain scenarios that involve sampling metrics at high
-> rates. Software should always write fixed counter 3 before write to
-> PERF_METRICS.
-> 
-> IA32_PERF_GLOBAL_STATUS. OVF_PERF_METRICS[48]: If this bit is set,
-> it indicates that some PERF_METRICS-related counter has overflowed and
-> a PMI is triggered. Software has to synchronize, e.g. re-start,
-> PERF_METRICS as well as fixed counter 3. Otherwise, PERF_METRICS may
-> return invalid values.
-> 
-> Limitation
-> - To get accurate result and avoid reading the METRICS register multiple
->   times, the TopDown metrics events and SLOTS event have to be in the
->   same group.
-> - METRICS and SLOTS registers have to be cleared after each read by SW.
->   That is to prevent the lose of precision.
-> - Cannot do sampling read SLOTS and TopDown metric events
-> 
-> Please refer SDM Vol3, 18.3.9.3 Performance Metrics for the details of
-> TopDown metrics.
-> 
-> Andi Kleen (2):
->   perf stat: Support new per thread TopDown metrics
->   perf, tools: Add documentation for topdown metrics
-> 
-> Kan Liang (2):
->   perf tools: Rename group to topdown
->   perf record: Support sample-read topdown metric group
+On Wed, Aug 26, 2020 at 08:44:30AM -0700, Joe Perches wrote:
+> On Wed, 2020-08-26 at 13:44 +0300, Andy Shevchenko wrote:
 
-I don't have Ice lake to actualy check, but it looks good
+...
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+> > -int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
+> > +int __must_check dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
+> 
+> Generally, the __must_check should go before the return type
+> and the extern isn't necessary and is also generally not used
+> in device.h, so I'd prefer:
+> 
+> __printf(3, 4)
+> __must_check int dev_err_probe(...);
 
-thanks,
-jirka
+I grepped the current code... I don't see support of your preference.
+Maybe I missed something? (I'm talking about include/*)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
