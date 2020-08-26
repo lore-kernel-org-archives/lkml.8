@@ -2,109 +2,134 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99589C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E88C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E290207DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BB7C2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:47:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WFkrzFpr"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EfWyyyYv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lwTtm5+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgHZTqc (ORCPT
+        id S1727049AbgHZTro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:46:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbgHZTq2 (ORCPT
+        Wed, 26 Aug 2020 15:47:44 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:32946 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbgHZTrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:46:28 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD10C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:46:27 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m8so1577416pfh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:46:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lIC466wcHw5fR4eYEVc57sBZjLUX/gzzPPg8yLp1ZZU=;
-        b=WFkrzFpr1SUiFaPbGhhpAKHAmVxv3wzkj4tDR+4PHOR9/MlIRPYJGnmI664QGeO/Cx
-         jh56BsF4d4+yUYLb3tteEQtrETtrsW7Vukw+0hQQ46Y1kVm7YzGQ12QR8x1BVWPj5ZyL
-         5rDrqojD9sPXkIKEP7O2wCAa1fCxfWjqV9Rc4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lIC466wcHw5fR4eYEVc57sBZjLUX/gzzPPg8yLp1ZZU=;
-        b=Wdx47mLvK05/gnGEaqypFyPvtlKQdrsY7wFuV+hH+17NvcJ2VO2VVkAHVPx63n7dEC
-         IbojhoSVlbvTszk/1CwyijSKRvXGGj6pSFQG6cNAdrV5Lc5vYDp4okNvh3LT95JgGBW/
-         NkOCrqwAw8yHTeDORt8AQmD2R/KReulYvHRSeJPEX5lv2Uhm7iCWOdtzlGz0OYzl4lnz
-         VRnddvqPi68Fn5LKE5nAjsoZvNqFYhjL8sZ6wc4o9PdBy+xERdx8LTgQwxTi9+uczOuD
-         k+fFyFT2jxoawRsKP9Cw1pYOk8/mo9o1tOPpBXuJwc5C8jgDu/M/XP3eSgmrVy6yO23z
-         wpLQ==
-X-Gm-Message-State: AOAM530VQKXU9+2mgG7rNvJNC39prwO3fmcBir1uxmvmA/fLAFVbRI2C
-        fayWmJNLMks/FxyheIFBnjWilA==
-X-Google-Smtp-Source: ABdhPJzfdv5XUXwJl1UOhKF/pH+9I5ADCLKzvf0FKe3PbEuFazJPlW1HymFX95ObV8KRL+rwcPkouA==
-X-Received: by 2002:a62:5212:: with SMTP id g18mr8576508pfb.8.1598471186120;
-        Wed, 26 Aug 2020 12:46:26 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ds19sm2262912pjb.43.2020.08.26.12.46.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 12:46:25 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 12:46:24 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
-        linux-fsdevel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        linux-kernel@vger.kernel.org, Aleksa Sarai <asarai@suse.de>,
-        io-uring@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
-Message-ID: <202008261245.245E36654@keescook>
-References: <20200813153254.93731-1-sgarzare@redhat.com>
- <20200813153254.93731-3-sgarzare@redhat.com>
+        Wed, 26 Aug 2020 15:47:41 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598471258;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Lyh+OM9Dem9Z/kcK7+gNQJTzyczEFOEY6bG0/Arpun0=;
+        b=EfWyyyYv7YWdGg6ZlsB2Gvul0V5au5smJUJLpNMYZSeBiiHKLri6m/Tv5rd3ih560hoGVx
+        nzH0lvvST7eWiS1oI2n1KsOHqXKtzHTxLZKpI9SJMhuG+jI5LovFGtPMOPIS2OeEiw7isO
+        tmHV0B3teBdD8CSsdyyCabr4Y3t9FTxtENq7B0e0cMS6jhcUUVWnX0K+s+ywdP/VhxrhzZ
+        AvJFcEhdDRbeNtKQ1LbQq2JWDBLeMZ2p9QqkeojW3Ekaz6euFWW9jBElfBZUz5/VBdDbaW
+        wxAj9R70KvXLkL4n184+rXcNFpLiSbh7hiA6EXnDFal4H8EYpyU37gQ+3u6LTQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598471258;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Lyh+OM9Dem9Z/kcK7+gNQJTzyczEFOEY6bG0/Arpun0=;
+        b=lwTtm5+nHxlSQCA2aszVTEr9Qr/quwfcz0JOyWbmJI+tlH+mPCSRq5hNRIajB+9Hp6kRhm
+        8ERxa7qPC4M270AA==
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 29/46] irqdomain/msi: Allow to override msi_domain_alloc/free_irqs()
+In-Reply-To: <87blix2pna.wl-maz@kernel.org>
+References: <20200826111628.794979401@linutronix.de> <20200826112333.526797548@linutronix.de> <87blix2pna.wl-maz@kernel.org>
+Date:   Wed, 26 Aug 2020 21:47:38 +0200
+Message-ID: <87zh6htcit.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813153254.93731-3-sgarzare@redhat.com>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 05:32:53PM +0200, Stefano Garzarella wrote:
-> +/*
-> + * io_uring_restriction->opcode values
-> + */
-> +enum {
-> +	/* Allow an io_uring_register(2) opcode */
-> +	IORING_RESTRICTION_REGISTER_OP,
-> +
-> +	/* Allow an sqe opcode */
-> +	IORING_RESTRICTION_SQE_OP,
-> +
-> +	/* Allow sqe flags */
-> +	IORING_RESTRICTION_SQE_FLAGS_ALLOWED,
-> +
-> +	/* Require sqe flags (these flags must be set on each submission) */
-> +	IORING_RESTRICTION_SQE_FLAGS_REQUIRED,
-> +
-> +	IORING_RESTRICTION_LAST
-> +};
+On Wed, Aug 26 2020 at 20:06, Marc Zyngier wrote:
+> On Wed, 26 Aug 2020 12:16:57 +0100,
+> Thomas Gleixner <tglx@linutronix.de> wrote:
+>>  /**
+>> - * msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated tp @dev
+>> - * @domain:	The domain to managing the interrupts
+>> + * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
+>> + * @domain:	The domain to allocate from
+>>   * @dev:	Pointer to device struct of the device for which the interrupts
+>> - *		are free
+>> + *		are allocated
+>> + * @nvec:	The number of interrupts to allocate
+>> + *
+>> + * Returns 0 on success or an error code.
+>>   */
+>> -void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+>> +int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+>> +			  int nvec)
+>> +{
+>> +	struct msi_domain_info *info = domain->host_data;
+>> +	struct msi_domain_ops *ops = info->ops;
+>
+> Rework leftovers, I imagine.
 
-Same thought on enum literals, but otherwise, looks good:
+Hmm, no. How would it call ops->domain_alloc_irqs() without getting the
+ops. I know, that the diff is horrible, but don't blame me for it. diff
+sucks at times.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+>> +
+>> +	return ops->domain_alloc_irqs(domain, dev, nvec);
+>> +}
+>> +
+>> +void __msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+>>  {
+>>  	struct msi_desc *desc;
+>>  
+>> @@ -513,6 +525,20 @@ void msi_domain_free_irqs(struct irq_dom
+>>  }
+>>  
+>>  /**
+>> + * __msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated tp @dev
+>
+> Spurious __.
 
+Yup.
 
--- 
-Kees Cook
+Thanks,
+
+        tglx
