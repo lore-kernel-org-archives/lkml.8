@@ -2,93 +2,161 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E998C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526AE2224D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598453411;
-	bh=Ll4xsfiXa6dFreMGmr8jn0xtDKD1luWEnl5tzrpEESQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nUave23WMNzLVJ95DA8qc5jsbQJGvZh7/ymfvHW3nPO+aPPtllvHbKzyIUo5LJd7I
-	 NYS/49a0YIG0Wi5u+vWECQrmo61IJQN8ehHVPywp6xw1aJS05ZCbu7ygydZts7Q/mm
-	 WIO5SU7qfPMcP+9Seu/X4LZqPW0cdcnfO4qjwbEU=
+	by mail.kernel.org (Postfix) with ESMTP id 19FD022B40
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mUgBvapb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgHZOuG (ORCPT
+        id S1727941AbgHZOuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:50:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727884AbgHZOtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:49:46 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52E6B22B3F;
-        Wed, 26 Aug 2020 14:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453386;
-        bh=Ll4xsfiXa6dFreMGmr8jn0xtDKD1luWEnl5tzrpEESQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmkqytJ1uLO963Cue4uNLvLBqkcqbxwCNpO+LlZadCR2QQapaEbddrJcUTfClnrue
-         ZbzdsVKMUFNFQTsmFGInc/detcyLH99Z0e9tomw1/7P67wWWT5rz5Q2aE66BP5fbgL
-         i1z4oOIkhjMBYuRov1to802Suxp4iT3qfLbV/m3E=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
-        linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 3/3] mfd: wcd934x: Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 16:49:35 +0200
-Message-Id: <20200826144935.10067-3-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826144935.10067-1-krzk@kernel.org>
-References: <20200826144935.10067-1-krzk@kernel.org>
+        Wed, 26 Aug 2020 10:50:21 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56720 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727897AbgHZOt7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:49:59 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QEiHGV129989;
+        Wed, 26 Aug 2020 10:49:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=FAa4RpnCZuYK+s+ZNYXHPAGY6k5np3T/aNePxfajimw=;
+ b=mUgBvapbVqImeBl2yNFuD1RSCWJlJFK4C3Fhw6W02LUIcwhlD/KEvTn4dtF9CPusMO8A
+ xHnoY0GfNPbY5be7dHMof775eYY1i7k9X/74sWA+mmK2+EJbdEOnLBCfvd4G8wfQnUBO
+ PAKkwv+kNPaSI3s1gvQUyb+j58nh6qT45OSKHwz9gpz/CrxOnZi0e1PdTy5zlBvTnnLe
+ +oEJHnNga72aWe6qUsmbRilPh8Jdq4QHnwMBbXuwZUFyiLk2vuYB81rpFZlx8CthBnQE
+ qT4CetzXBwq94aWKisyWpIlb+HFFkkz/Ph7VQU91ET7ERYXqEUxqys+Z0Xd1mfDlWbjK xQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 335srnr5mm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 10:49:54 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07QEjegj133786;
+        Wed, 26 Aug 2020 10:49:54 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 335srnr5m0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 10:49:53 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07QEmXBB014148;
+        Wed, 26 Aug 2020 14:49:52 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma02wdc.us.ibm.com with ESMTP id 332ujqamn5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 14:49:52 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07QEnjss33292604
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Aug 2020 14:49:46 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 014B46E053;
+        Wed, 26 Aug 2020 14:49:49 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AEEAC6E050;
+        Wed, 26 Aug 2020 14:49:47 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com (unknown [9.85.170.64])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 26 Aug 2020 14:49:47 +0000 (GMT)
+Subject: Re: [PATCH v10 01/16] s390/vfio-ap: add version vfio_ap module
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+ <20200821195616.13554-2-akrowiak@linux.ibm.com>
+ <20200825120432.13a1b444.cohuck@redhat.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <ca016eca-1ee7-2d0f-c2ec-3ef147b6216a@linux.ibm.com>
+Date:   Wed, 26 Aug 2020 10:49:47 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <20200825120432.13a1b444.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-26_09:2020-08-26,2020-08-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501
+ bulkscore=0 impostorscore=0 clxscore=1015 adultscore=0 suspectscore=3
+ mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008260110
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/mfd/wcd934x.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/mfd/wcd934x.c b/drivers/mfd/wcd934x.c
-index da910302d51a..c274d733b656 100644
---- a/drivers/mfd/wcd934x.c
-+++ b/drivers/mfd/wcd934x.c
-@@ -219,12 +219,9 @@ static int wcd934x_slim_probe(struct slim_device *sdev)
- 		return	-ENOMEM;
- 
- 	ddata->irq = of_irq_get(np, 0);
--	if (ddata->irq < 0) {
--		if (ddata->irq != -EPROBE_DEFER)
--			dev_err(ddata->dev, "Failed to get IRQ: err = %d\n",
--				ddata->irq);
--		return ddata->irq;
--	}
-+	if (ddata->irq < 0)
-+		return dev_err_probe(ddata->dev, ddata->irq,
-+				     "Failed to get IRQ\n");
- 
- 	reset_gpio = of_get_named_gpio(np, "reset-gpios", 0);
- 	if (reset_gpio < 0) {
--- 
-2.17.1
+On 8/25/20 6:04 AM, Cornelia Huck wrote:
+> On Fri, 21 Aug 2020 15:56:01 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> Let's set a version for the vfio_ap module so that automated regression
+>> tests can determine whether dynamic configuration tests can be run or
+>> not.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_drv.c | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
+>> index be2520cc010b..f4ceb380dd61 100644
+>> --- a/drivers/s390/crypto/vfio_ap_drv.c
+>> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+>> @@ -17,10 +17,12 @@
+>>   
+>>   #define VFIO_AP_ROOT_NAME "vfio_ap"
+>>   #define VFIO_AP_DEV_NAME "matrix"
+>> +#define VFIO_AP_MODULE_VERSION "1.2.0"
+>>   
+>>   MODULE_AUTHOR("IBM Corporation");
+>>   MODULE_DESCRIPTION("VFIO AP device driver, Copyright IBM Corp. 2018");
+>>   MODULE_LICENSE("GPL v2");
+>> +MODULE_VERSION(VFIO_AP_MODULE_VERSION);
+>>   
+>>   static struct ap_driver vfio_ap_drv;
+>>   
+> Setting a version manually has some drawbacks:
+> - tools wanting to check for capabilities need to keep track which
+>    versions support which features
+> - you need to remember to actually bump the version when adding a new,
+>    visible feature
+> (- selective downstream backports may get into a pickle, but that's
+> arguably not your problem)
+>
+> Is there no way for a tool to figure out whether this is supported?
+> E.g., via existence of a sysfs file, or via a known error that will
+> occur. If not, it's maybe better to expose known capabilities via a
+> generic interface.
+
+This patch series introduces a new mediated device sysfs attribute,
+guest_matrix, so the automated tests could check for the existence
+of that interface. The problem I have with that is it will work for
+this version of the vfio_ap device driver - which may be all that is
+ever needed - but does not account for future enhancements
+which may need to be detected by tooling or automated tests.
+It seems to me that regardless of how a tool detects whether
+a feature is supported or not, it will have to keep track of that
+somehow.
+
+Can you provide more details about this generic interface of
+which you speak?
+
+>
 
