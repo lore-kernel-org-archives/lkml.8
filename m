@@ -2,192 +2,163 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA6372071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:13:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9058B2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:13:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2u4vytYI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PSjOt7VF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4tdmmS7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbgHZMNZ (ORCPT
+        id S1729760AbgHZMNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:13:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35502 "EHLO
+        Wed, 26 Aug 2020 08:13:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729388AbgHZMBb (ORCPT
+        with ESMTP id S1729864AbgHZMND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:01:31 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C153AC061757;
-        Wed, 26 Aug 2020 05:01:30 -0700 (PDT)
-Message-Id: <20200826112332.255792469@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598443275;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=+SoMFjSy3jxF5f7dqPyd8PSV+JeMGK6juDfUnA5hngg=;
-        b=2u4vytYI/UB7itfPfJyvcdtqgCSKW46Ox/zzv2XerZ/InxrGE2GWHhUDKlY8KgMdB7HXL0
-        aLOdvn+B7AKdSbMuJNLtpZnHpUhROBD88RM3sZNaYgn4L9mRZ01tMg9oUEB7hNqxxpaxWu
-        PuWPB9GE8gYW2nV/GNNUJXz2QRA1aGEbBgme8ZLddYRvk8mJdtNuM8JAPZV39AP5FWFg+e
-        6mCaujWeR7ty5TW1jh05CxG1dO0TpdiTKJadJRyoTzko/NyP4r516waUKG+f3i3UxKVb33
-        jOoOW+eKn8eNokn5EzeqiaAzG15RYHWhPZq+zVKV7VaRVNEAB9gP2x3UcAMe9Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598443275;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=+SoMFjSy3jxF5f7dqPyd8PSV+JeMGK6juDfUnA5hngg=;
-        b=PSjOt7VFjQr229YKNjiivKh8I6ovDgS9HVBurRV+6P90PPJdlYxwtL6KbmLSwDXPUAQZH4
-        W8RvnGxIZdv3mZBw==
-Date:   Wed, 26 Aug 2020 13:16:44 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [patch V2 16/46] x86/irq: Consolidate UV domain allocation
-References: <20200826111628.794979401@linutronix.de>
+        Wed, 26 Aug 2020 08:13:03 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C5BC061574;
+        Wed, 26 Aug 2020 05:13:03 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id q14so1552638wrn.9;
+        Wed, 26 Aug 2020 05:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=moFYsbC846LP1g5s/UEInDQ9XX1XjMRNrZrZCmJ3G1E=;
+        b=d4tdmmS7mLH6wb0Ad9FaA154xnrjsqFP5axJ5Gfa8VP0TfsKdTeT5jFEaRoRjdRsOO
+         Oe7Yn7kM71WqpQyzPc0uftt/CbTA7X1VJs9HBsITXrF3P4We8+pwjv9Zu6CEp4sBr5hG
+         7WinhWLGdwyUFA5UJVgn1RdJqL2NmeXko7VCWsTpJ4IA4MH81zX0AubFt3Y2fbP7WWs6
+         zsquuNr7uQENJWKOq5T3X0v+wVEo8+xmrwXgiRvB3kNHQ0M6GcI+vLnDMgGslGzxdHJt
+         M43GeaRxp89nq1wu+mU6nS9Bbbz7qxXA6OYRQf+Xy9niW7ANEx8fp44CzqOB9KQWfRuV
+         H0Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=moFYsbC846LP1g5s/UEInDQ9XX1XjMRNrZrZCmJ3G1E=;
+        b=gCuop3w6he+3oCEvPxf6fORB79qXjMFgw6e2Tp91mqYGgw6SdttytWxwkUOa3yoXAW
+         P/th871UjXWqX30R7z7wQeyFdYI7jL9GVL9UUJxZ5rrRPPDMxBUsHFeRaXKZOQWQ/8RX
+         AIrQ36baRSEE3WsMEvGOjKtRw/LX1C1JNpLgLglSnmaWqsYoQvcbJWXP9m0YCfPJMqIt
+         GnwYCXsaUaoEc18cOgUxYkJBtiliaLG+RB/tu+yU3Lpc4nZlxyCNf5EosYpk8qGTQlhR
+         W5L7q5+Fs/RAI5grf5qhzvhIYaLA724oYnsVJOImi8j5PaC5YTwawW+ybg+/D+ge7BPN
+         QA/A==
+X-Gm-Message-State: AOAM533KfYKsDZlcZhOiZpUHJkFq5bFHwI8mclh2aGkn+cNkCtiiDA5F
+        Jb9uDn9eEDxwn3nF8uIVtqc=
+X-Google-Smtp-Source: ABdhPJyDfDAHIaoOc7H8/lHZUnbWL+KeSH8e4U0TKTxtxE+/o5a/KwnrIwO7Rx8HaxYlC8TAXtJqIQ==
+X-Received: by 2002:a5d:574e:: with SMTP id q14mr4916236wrw.281.1598443981771;
+        Wed, 26 Aug 2020 05:13:01 -0700 (PDT)
+Received: from [10.55.3.147] ([173.38.220.45])
+        by smtp.gmail.com with ESMTPSA id q6sm5470867wma.22.2020.08.26.05.13.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2020 05:13:01 -0700 (PDT)
+Subject: Re: [net-next v5 1/2] seg6: inherit DSCP of inner IPv4 packets
+To:     David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     andrea.mayer@uniroma2.it
+References: <20200825160236.1123-1-ahabdels@gmail.com>
+ <efaf3273-e147-c27e-d5b8-241930335b82@gmail.com>
+ <75f7be67-2362-e931-6793-1ce12c69b4ea@gmail.com>
+ <71351d27-0719-6ed9-f5c6-4aee20547c58@gmail.com>
+From:   Ahmed Abdelsalam <ahabdels@gmail.com>
+Message-ID: <ab0869f7-9e69-b6fd-af5c-8e3ce432452b@gmail.com>
+Date:   Wed, 26 Aug 2020 14:12:59 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
+In-Reply-To: <71351d27-0719-6ed9-f5c6-4aee20547c58@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
 
-Move the UV specific fields into their own struct for readability sake. Get
-rid of the #ifdeffery as it does not matter at all whether the alloc info
-is a couple of bytes longer or not.
+On 26/08/2020 02:45, David Ahern wrote:
+> On 8/25/20 5:45 PM, Ahmed Abdelsalam wrote:
+>>
+>> Hi David
+>>
+>> The seg6 encap is implemented through the seg6_lwt rather than
+>> seg6_local_lwt.
+> 
+> ok. I don't know the seg6 code; just taking a guess from a quick look.
+> 
+>> We can add a flag(SEG6_IPTUNNEL_DSCP) in seg6_iptunnel.h if we do not
+>> want to go the sysctl direction.
+> 
+> sysctl is just a big hammer with side effects.
+> 
+> It struck me that the DSCP propagation is very similar to the TTL
+> propagation with MPLS which is per route entry (MPLS_IPTUNNEL_TTL and
+> stored as ttl_propagate in mpls_iptunnel_encap). Hence the question of
+> whether SR could make this a per route attribute. Consistency across
+> implementations is best.
+>SRv6 does not have an issue of having this per route.
+Actually, as SRv6 leverage IPv6 encapsulation, I would say it should 
+consistent with ip6_tunnel not MPLS.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+In ip6_tunnel, both ttl and flowinfo (tclass and flowlabel) are provided.
 
----
- arch/x86/include/asm/hw_irq.h |   21 ++++++++++++---------
- arch/x86/platform/uv/uv_irq.c |   16 ++++++++--------
- 2 files changed, 20 insertions(+), 17 deletions(-)
+Ideally, SRv6 code should have done the same with:
+TTL       := VLAUE | DEFAULT | inherit.
+TCLASS    := 0x00 .. 0xFF | inherit
+FLOWLABEL := { 0x00000 .. 0xfffff | inherit | compute.
 
---- a/arch/x86/include/asm/hw_irq.h
-+++ b/arch/x86/include/asm/hw_irq.h
-@@ -53,6 +53,14 @@ struct ioapic_alloc_info {
- 	struct IO_APIC_route_entry	*entry;
- };
- 
-+struct uv_alloc_info {
-+	int		limit;
-+	int		blade;
-+	unsigned long	offset;
-+	char		*name;
-+
-+};
-+
- /**
-  * irq_alloc_info - X86 specific interrupt allocation info
-  * @type:	X86 specific allocation type
-@@ -64,7 +72,8 @@ struct ioapic_alloc_info {
-  * @data:	Allocation specific data
-  *
-  * @ioapic:	IOAPIC specific allocation data
-- */
-+ * @uv:		UV specific allocation data
-+*/
- struct irq_alloc_info {
- 	enum irq_alloc_type	type;
- 	u32			flags;
-@@ -76,6 +85,8 @@ struct irq_alloc_info {
- 
- 	union {
- 		struct ioapic_alloc_info	ioapic;
-+		struct uv_alloc_info		uv;
-+
- 		int		unused;
- #ifdef	CONFIG_PCI_MSI
- 		struct {
-@@ -83,14 +94,6 @@ struct irq_alloc_info {
- 			irq_hw_number_t	msi_hwirq;
- 		};
- #endif
--#ifdef	CONFIG_X86_UV
--		struct {
--			int		uv_limit;
--			int		uv_blade;
--			unsigned long	uv_offset;
--			char		*uv_name;
--		};
--#endif
- 	};
- };
- 
---- a/arch/x86/platform/uv/uv_irq.c
-+++ b/arch/x86/platform/uv/uv_irq.c
-@@ -90,15 +90,15 @@ static int uv_domain_alloc(struct irq_do
- 
- 	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, arg);
- 	if (ret >= 0) {
--		if (info->uv_limit == UV_AFFINITY_CPU)
-+		if (info->uv.limit == UV_AFFINITY_CPU)
- 			irq_set_status_flags(virq, IRQ_NO_BALANCING);
- 		else
- 			irq_set_status_flags(virq, IRQ_MOVE_PCNTXT);
- 
--		chip_data->pnode = uv_blade_to_pnode(info->uv_blade);
--		chip_data->offset = info->uv_offset;
-+		chip_data->pnode = uv_blade_to_pnode(info->uv.blade);
-+		chip_data->offset = info->uv.offset;
- 		irq_domain_set_info(domain, virq, virq, &uv_irq_chip, chip_data,
--				    handle_percpu_irq, NULL, info->uv_name);
-+				    handle_percpu_irq, NULL, info->uv.name);
- 	} else {
- 		kfree(chip_data);
- 	}
-@@ -193,10 +193,10 @@ int uv_setup_irq(char *irq_name, int cpu
- 
- 	init_irq_alloc_info(&info, cpumask_of(cpu));
- 	info.type = X86_IRQ_ALLOC_TYPE_UV;
--	info.uv_limit = limit;
--	info.uv_blade = mmr_blade;
--	info.uv_offset = mmr_offset;
--	info.uv_name = irq_name;
-+	info.uv.limit = limit;
-+	info.uv.blade = mmr_blade;
-+	info.uv.offset = mmr_offset;
-+	info.uv.name = irq_name;
- 
- 	return irq_domain_alloc_irqs(domain, 1,
- 				     uv_blade_to_memory_nid(mmr_blade), &info);
+>> Perhaps this would require various changes to seg6 infrastructure
+>> including seg6_iptunnel_policy, seg6_build_state, fill_encap,
+>> get_encap_size, etc.
+>>
+>> We have proposed a patch before to support optional parameters for SRv6
+>> behaviors [1].
+>> Unfortunately, this patch was rejected.
+>>
+> 
+> not sure I follow why the patch was rejected. Does it change behavior of
+> existing code?
+>
 
+The comment from David miller was "People taking advantage of this new 
+flexibility will write applications that DO NOT WORK on older kernels."
 
+Perhaps, here we can a bit of discussion. Because also applications that 
+leverage SRv6 encapsulation will not work on kernels before 4.10. 
+Applications that leverage SRv6 VPN behvaiors will not work on kernels 
+before 4.14. Applications that leverages SRv6 capabilites in iptables 
+will not work on kernels before 4.16.
+
+So when people write an application they have minimum requirement (e.g., 
+kernel 5.x)
+
+I would like to get David miller feedback as well as yours on how we 
+should proceed and I can work on these features.
+
+> I would expect that new attributes can be added without affecting
+> handling of current ones. Looking at seg6_iptunnel.c the new attribute
+> would be ignored on older kernels but should be fine on new ones and
+> forward.
+> 
+> ###
+> 
+> Since seg6 does not have strict attribute checking the only way to find
+> out if it is supported is to send down the config and then read it back.
+> If the attribute is missing, the kernel does not support. Ugly, but one
+> way to determine support. The next time an attribute is added to seg6
+> code, strict checking should be enabled so that going forward as new
+> attributes are added older kernels with strict checking would reject it.
+> 
