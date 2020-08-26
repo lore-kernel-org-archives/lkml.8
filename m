@@ -2,157 +2,151 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D722C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 067A0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78F55206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC9320737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:13:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkPU8zA6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEspkbfW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgHZBvv (ORCPT
+        id S1726682AbgHZCN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 21:51:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54518 "EHLO
+        Tue, 25 Aug 2020 22:13:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgHZBvs (ORCPT
+        with ESMTP id S1726611AbgHZCNZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 21:51:48 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FDAC061574;
-        Tue, 25 Aug 2020 18:51:48 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id r15so144621wrp.13;
-        Tue, 25 Aug 2020 18:51:48 -0700 (PDT)
+        Tue, 25 Aug 2020 22:13:25 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E581C061574;
+        Tue, 25 Aug 2020 19:13:21 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id h2so161221plr.0;
+        Tue, 25 Aug 2020 19:13:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6lKBXswTrzhA0xBsr6HB8AlB5+bACM8/QHtln5EsmDM=;
-        b=rkPU8zA6FnvPI7YRdwlrF32Z+jufZRPGDhsVbublBxI+2WdfyrQZ4OMYugj2LjMgRs
-         tcBC2iVxYnWeg8Zk6YWzQfE0csZvqLsQKSxRKrpJnxvpSdJ9HVsaxBuVVCZ33a7Fy89F
-         YzL00nv71TEx1KwJewv+LaAx654GeLawZ3dB08BJtkewTW0RxdimmA59/2c32/oJxdK5
-         dSKP0GfmMvAUQJfWlO1JkSN5McliJO+sig5zbM32H0/Kuj9D+O0+2QWE9ikcOBAgMoCE
-         knF+3yVSHzD+dH7rwDtBk3Dij3c2i2NaVRbX/WHThEgypBISYgNE6EdHQjalStrd+n7R
-         ERAQ==
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ya98ef+/yWr62GPjK6TeHgnvBk1gqF36gDLfJaPgUqI=;
+        b=jEspkbfWJ/4f9AqvNGkGAQcsMzoRdYhaH80VvRphgvfdIbE/QNtlCZlTWpgrJNoSdw
+         Ah+yvzZwOjlfzGCdtLhcQ2Wt2kWoGiezM+8NJFSSxNSH3gGs51sajTPKqt60cf7cMAAq
+         SgtVirUTYmZgBAtl7cEWwOnqaA/3aXQRPamkSnJhH6y9RT43LdcF9QE1k004w8Ap2ylS
+         ZmQPiPOAM16iwV89hiIQSoKXi/RGYPaK1x7Q/ywB2tKH9zz+uWa0HU7p4ZyQ5DCJ2gDx
+         sSZVAyLs4NK87SmwvSGC/DGBD1ZBonbSMb3Gw8WMlf07/kGvkQ+js4KydsmsTymLQM/W
+         KlKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6lKBXswTrzhA0xBsr6HB8AlB5+bACM8/QHtln5EsmDM=;
-        b=Smmunnpt1LjXpGp/N/t0FV0JpDIO+k456WlcUpDewg1p2nTBOA1P67S7CZhYS2eSnR
-         +OOu2WflF/myrmiKXjLyTDaOm9yWRQ/+m8rWhp4lfGRIQPptsKuzcIbQK/gfqzrsmgb2
-         BdQeToImOPECJssEo1/TBCGYzI7wfdeorUnpu7sSaErjF0BZxrIBwxej/FG4QVGmlh2X
-         1BHiv36vlSmis5BKaAtrqFc4MD1qxap9ZHiDz2gBaMW3K4hIGCY8DekMKBubBcRoWA2R
-         RBoRwxM4sCife/uTbJfjeAzX/lJkNnPNGkYKMD/Hi0cHsiYPB61eiVR70QtO+4h+3P/C
-         fPwA==
-X-Gm-Message-State: AOAM530oFG3ifVTPrO+3udsr1xhmkYJh0IEhN4H2KNWhmkrJD+j5JUa9
-        fGPsJZQ/BpxSlrw+43if6fdezIzMsx/vRGp6QYY=
-X-Google-Smtp-Source: ABdhPJyeqlKj5YPc50Em7rO4ODLMTr2DC/m+jfMJDMOpF+XoOI2kKLAaJQ+LNrc4dhPoiuNEDU0+R/Ls8lv1xf0wUss=
-X-Received: by 2002:adf:db43:: with SMTP id f3mr14164955wrj.219.1598406706678;
- Tue, 25 Aug 2020 18:51:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ya98ef+/yWr62GPjK6TeHgnvBk1gqF36gDLfJaPgUqI=;
+        b=BlSvy9d/C44oc9g/coeQs132Pe+ZK7MbOaHuBHbGR+rOPRGmadxflGlEkCXZV9erLr
+         jL2Gxx8l9SVzTBjWrAzRknllxDAAXuke33bXyEn7MRiOF2JSKjMoStc/OQWzrH9jG2JP
+         8L5nnE+76ZkV0Lmjt9GaaTSveQIJOqegwzeDohMlH38J8aZfDYquX3KgcKCCdxFyTnOz
+         DT6gaQeCRz/FQMg7uX0giIX1x04bzgBWC13Fs4AjTh1BAiQZodhz/J58B4miRYcHvGDy
+         zoIWcSU1Q+66rLLz/q7lB22l1OetrljoKfVaoUKejEuiG7jqaXCtqcyXxuLdijyKFF9r
+         VVnQ==
+X-Gm-Message-State: AOAM5329rg8t+11CxWF98V8oVBfT+h0uSH3kuGTfKPa8sew60HKt8B+h
+        A0MZt9cpqNdso0xF7UnxJl4=
+X-Google-Smtp-Source: ABdhPJxrZEpGnKI21fTrcPfhI0GDg36KQnJqOnvWy6MnQhufEYwtSUb4XhoYIpbmAS4C6xuVJHrwnw==
+X-Received: by 2002:a17:90a:1a42:: with SMTP id 2mr3819867pjl.16.1598407998965;
+        Tue, 25 Aug 2020 19:13:18 -0700 (PDT)
+Received: from localhost ([124.156.176.71])
+        by smtp.gmail.com with ESMTPSA id v1sm341780pjh.16.2020.08.25.19.13.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 25 Aug 2020 19:13:18 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 10:13:19 +0800
+From:   Yue Hu <zbestahu@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, huyue2@yulong.com, zbestahu@163.com
+Subject: Re: [PATCH] thermal: sysfs: fall back to vzalloc for cooling
+ device's statistics
+Message-ID: <20200826101319.00003048.zbestahu@gmail.com>
+In-Reply-To: <40b69f97-46e5-d62e-0d2f-604dfd4dafa1@linaro.org>
+References: <20200818063005.13828-1-zbestahu@gmail.com>
+        <40b69f97-46e5-d62e-0d2f-604dfd4dafa1@linaro.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-References: <20200817091617.28119-1-allen.cryptic@gmail.com>
- <20200817091617.28119-2-allen.cryptic@gmail.com> <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
- <202008171228.29E6B3BB@keescook> <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
- <202008171246.80287CDCA@keescook> <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
- <1597780833.3978.3.camel@HansenPartnership.com> <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
- <1597849185.3875.7.camel@HansenPartnership.com> <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
- <1597873172.4030.2.camel@HansenPartnership.com>
-In-Reply-To: <1597873172.4030.2.camel@HansenPartnership.com>
-From:   Allen Pais <allen.cryptic@gmail.com>
-Date:   Wed, 26 Aug 2020 07:21:35 +0530
-Message-ID: <CAEogwTCH8qqjAnSpT0GDn+NuAps8dNbfcPVQ9h8kfOWNbzrD0w@mail.gmail.com>
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-To:     James Bottomley <James.Bottomley@hansenpartnership.com>
-Cc:     Allen <allen.lkml@gmail.com>, Jens Axboe <axboe@kernel.dk>,
-        Kees Cook <keescook@chromium.org>, jdike@addtoit.com,
-        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
-        stefanr@s5r6.in-berlin.de, airlied@linux.ie,
-        Daniel Vetter <daniel@ffwll.ch>, sre@kernel.org,
-        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
-        jassisinghbrar@gmail.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        mporter@kernel.crashing.org, alex.bou9@gmail.com,
-        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
-        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux1394-devel@lists.sourceforge.net,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
-        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
-        Romain Perier <romain.perier@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 3:09 AM James Bottomley
-<James.Bottomley@hansenpartnership.com> wrote:
->
-> On Wed, 2020-08-19 at 21:54 +0530, Allen wrote:
-> > > [...]
-> > > > > Since both threads seem to have petered out, let me suggest in
-> > > > > kernel.h:
-> > > > >
-> > > > > #define cast_out(ptr, container, member) \
-> > > > >     container_of(ptr, typeof(*container), member)
-> > > > >
-> > > > > It does what you want, the argument order is the same as
-> > > > > container_of with the only difference being you name the
-> > > > > containing structure instead of having to specify its type.
-> > > >
-> > > > Not to incessantly bike shed on the naming, but I don't like
-> > > > cast_out, it's not very descriptive. And it has connotations of
-> > > > getting rid of something, which isn't really true.
-> > >
-> > > Um, I thought it was exactly descriptive: you're casting to the
-> > > outer container.  I thought about following the C++ dynamic casting
-> > > style, so out_cast(), but that seemed a bit pejorative.  What about
-> > > outer_cast()?
-> > >
-> > > > FWIW, I like the from_ part of the original naming, as it has
-> > > > some clues as to what is being done here. Why not just
-> > > > from_container()? That should immediately tell people what it
-> > > > does without having to look up the implementation, even before
-> > > > this becomes a part of the accepted coding norm.
-> > >
-> > > I'm not opposed to container_from() but it seems a little less
-> > > descriptive than outer_cast() but I don't really care.  I always
-> > > have to look up container_of() when I'm using it so this would just
-> > > be another macro of that type ...
-> > >
-> >
-> >  So far we have a few which have been suggested as replacement
-> > for from_tasklet()
-> >
-> > - out_cast() or outer_cast()
-> > - from_member().
-> > - container_from() or from_container()
-> >
-> > from_container() sounds fine, would trimming it a bit work? like
-> > from_cont().
->
-> I'm fine with container_from().  It's the same form as container_of()
-> and I think we need urgent agreement to not stall everything else so
-> the most innocuous name is likely to get the widest acceptance.
+On Mon, 24 Aug 2020 12:40:35 +0200
+Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
 
-Kees,
+> On 18/08/2020 08:30, Yue Hu wrote:
+> > From: Yue Hu <huyue2@yulong.com>
+> > 
+> > We observed warning about kzalloc() when register thermal cooling device
+> > in backlight_device_register(). backlight display can be a cooling device
+> > since reducing screen brightness will can help reduce temperature.
+> > 
+> > However, ->get_max_state of backlight will assign max brightness of 1024
+> > to states. The memory size can be getting 1MB+ due to states * states.  
+> 
+> What are the benefits of a 1024 states cooling device ? Is the
+> difference noticeable with a such small step ?
 
-  Will you be  sending the newly proposed API to Linus? I have V2
-which uses container_from()
-ready to be sent out.
+Okay, this issue is happened under MSM/Android platform. QCOM spmi wled driver
+will define the max brightness. We needs to fix the issue to get thermal statistics.
 
-Thanks.
+Thx.
+
+> 
+> 
+> > That is so large to trigger kmalloc() warning.
+> > 
+> > So, let's remove it and try vzalloc() if kzalloc() fails.
+> > 
+> > Signed-off-by: Yue Hu <huyue2@yulong.com>
+> > ---
+> >  drivers/thermal/thermal_sysfs.c | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
+> > index aa99edb..9bae0b6 100644
+> > --- a/drivers/thermal/thermal_sysfs.c
+> > +++ b/drivers/thermal/thermal_sysfs.c
+> > @@ -16,6 +16,8 @@
+> >  #include <linux/device.h>
+> >  #include <linux/err.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/vmalloc.h>
+> > +#include <linux/mm.h>
+> >  #include <linux/string.h>
+> >  #include <linux/jiffies.h>
+> >  
+> > @@ -919,7 +921,9 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
+> >  	var += sizeof(*stats->time_in_state) * states;
+> >  	var += sizeof(*stats->trans_table) * states * states;
+> >  
+> > -	stats = kzalloc(var, GFP_KERNEL);
+> > +	stats = kzalloc(var, GFP_KERNEL | __GFP_NOWARN);
+> > +	if (!stats)
+> > +		stats = vzalloc(var);
+> >  	if (!stats)
+> >  		return;
+> >  
+> > @@ -938,7 +942,7 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
+> >  
+> >  static void cooling_device_stats_destroy(struct thermal_cooling_device *cdev)
+> >  {
+> > -	kfree(cdev->stats);
+> > +	kvfree(cdev->stats);
+> >  	cdev->stats = NULL;
+> >  }
+> >  
+> >   
+> 
+> 
+
