@@ -2,164 +2,137 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E994C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C20C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01BA32078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 558522078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:52:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iErvcybf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgHZQuj (ORCPT
+        id S1726943AbgHZQwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:50:39 -0400
-Received: from mga18.intel.com ([134.134.136.126]:23604 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727943AbgHZQuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:50:32 -0400
-IronPort-SDR: AeYTCsvcaJ87PfmSNpVKnB4e3+jgzy6QvAK5BVxuG54B/iADXRjtzyHk/GZb8/3S3RKe99SHPU
- LFokhlMa2pbQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="144004299"
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="144004299"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:50:30 -0700
-IronPort-SDR: O+tRoc/59eCGpVLJON72igRMmtjnFMq9wo28apgxlygz1/37A+zdeFZDDyibhT3bW+C7JSBdFz
- MbToSWPlnzpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="444115517"
-Received: from orsmsx606-2.jf.intel.com (HELO ORSMSX606.amr.corp.intel.com) ([10.22.229.86])
-  by orsmga004.jf.intel.com with ESMTP; 26 Aug 2020 09:50:30 -0700
-Received: from orsmsx606.amr.corp.intel.com (10.22.229.19) by
- ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 26 Aug 2020 09:50:30 -0700
-Received: from orsmsx101.amr.corp.intel.com (10.22.225.128) by
- orsmsx606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 26 Aug 2020 09:50:30 -0700
-Received: from [10.212.160.45] (10.212.160.45) by ORSMSX101.amr.corp.intel.com
- (10.22.225.128) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 26 Aug
- 2020 09:50:29 -0700
-Subject: Re: [patch V2 15/46] x86/irq: Consolidate DMAR irq allocation
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     <x86@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        <iommu@lists.linux-foundation.org>, <linux-hyperv@vger.kernel.org>,
-        "Haiyang Zhang" <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        "Russ Anderson" <rja@hpe.com>, <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        <xen-devel@lists.xenproject.org>, Juergen Gross <jgross@suse.com>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200826111628.794979401@linutronix.de>
- <20200826112332.163462706@linutronix.de>
-From:   "Dey, Megha" <megha.dey@intel.com>
-Message-ID: <812d9647-ad2e-95e9-aa99-b54ff7ebc52d@intel.com>
-Date:   Wed, 26 Aug 2020 09:50:27 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 26 Aug 2020 12:52:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30333 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726851AbgHZQwM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:52:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598460730;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Fseon1CUZlvG+qAn5/Dq00exA8K9BCSeKO7lSLO6dwU=;
+        b=iErvcybf2p99F5Iz6U8B5Y1UpOnElvgCj2Na0QGa3MeOZDULj37q3uhFTTtaiSl8jkwKEm
+        F92Gj/8wPpJ7EXRWWfyMR97iivTQQB5aMc+lZVtm2AhvaESmulNi/xQ2Qtec/l+Nfq9Uj5
+        OLzzmjG+9iaDxtgxd7QNrLtMBph8/u8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-579-CGPhPkXwNDaMQykNbqtiGg-1; Wed, 26 Aug 2020 12:52:06 -0400
+X-MC-Unique: CGPhPkXwNDaMQykNbqtiGg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ADF7D80BCA0;
+        Wed, 26 Aug 2020 16:52:02 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-112-37.ams2.redhat.com [10.36.112.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9D3D619C78;
+        Wed, 26 Aug 2020 16:51:50 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     "Yu\, Yu-cheng" <yu-cheng.yu@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list\:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for shadow stack
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+        <20200825002540.3351-26-yu-cheng.yu@intel.com>
+        <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
+        <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
+        <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+        <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+        <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+        <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+        <20200826164604.GW6642@arm.com>
+Date:   Wed, 26 Aug 2020 18:51:48 +0200
+In-Reply-To: <20200826164604.GW6642@arm.com> (Dave Martin's message of "Wed,
+        26 Aug 2020 17:46:05 +0100")
+Message-ID: <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20200826112332.163462706@linutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.212.160.45]
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+* Dave Martin:
 
-On 8/26/2020 4:16 AM, Thomas Gleixner wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
+> On Tue, Aug 25, 2020 at 04:34:27PM -0700, Yu, Yu-cheng wrote:
+>> On 8/25/2020 4:20 PM, Dave Hansen wrote:
+>> >On 8/25/20 2:04 PM, Yu, Yu-cheng wrote:
+>> >>>>I think this is more arch-specific.=C2=A0 Even if it becomes a new s=
+yscall,
+>> >>>>we still need to pass the same parameters.
+>> >>>
+>> >>>Right, but without the copying in and out of memory.
+>> >>>
+>> >>Linux-api is already on the Cc list.=C2=A0 Do we need to add more peop=
+le to
+>> >>get some agreements for the syscall?
+>> >What kind of agreement are you looking for?  I'd suggest just coding it
+>> >up and posting the patches.  Adding syscalls really is really pretty
+>> >straightforward and isn't much code at all.
+>> >
+>>=20
+>> Sure, I will do that.
 >
-> None of the DMAR specific fields are required.
->
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->
-> ---
->   arch/x86/include/asm/hw_irq.h |    6 ------
->   arch/x86/kernel/apic/msi.c    |   10 +++++-----
->   2 files changed, 5 insertions(+), 11 deletions(-)
->
-> --- a/arch/x86/include/asm/hw_irq.h
-> +++ b/arch/x86/include/asm/hw_irq.h
-> @@ -83,12 +83,6 @@ struct irq_alloc_info {
->   			irq_hw_number_t	msi_hwirq;
->   		};
->   #endif
-> -#ifdef	CONFIG_DMAR_TABLE
-> -		struct {
-> -			int		dmar_id;
-> -			void		*dmar_data;
-> -		};
-> -#endif
->   #ifdef	CONFIG_X86_UV
->   		struct {
->   			int		uv_limit;
-> --- a/arch/x86/kernel/apic/msi.c
-> +++ b/arch/x86/kernel/apic/msi.c
-> @@ -329,15 +329,15 @@ static struct irq_chip dmar_msi_controll
->   static irq_hw_number_t dmar_msi_get_hwirq(struct msi_domain_info *info,
->   					  msi_alloc_info_t *arg)
->   {
-> -	return arg->dmar_id;
-> +	return arg->hwirq;
+> Alternatively, would a regular prctl() work here?
 
-Shouldn't this return the arg->devid which gets set in dmar_alloc_hwirq?
+Is this something appliation code has to call, or just the dynamic
+loader?
 
--Megha
+prctl in glibc is a variadic function, so if there's a mismatch between
+the kernel/userspace syscall convention and the userspace calling
+convention (for variadic functions) for specific types, it can't be made
+to work in a generic way.
 
->   }
->   
->   static int dmar_msi_init(struct irq_domain *domain,
->   			 struct msi_domain_info *info, unsigned int virq,
->   			 irq_hw_number_t hwirq, msi_alloc_info_t *arg)
->   {
-> -	irq_domain_set_info(domain, virq, arg->dmar_id, info->chip, NULL,
-> -			    handle_edge_irq, arg->dmar_data, "edge");
-> +	irq_domain_set_info(domain, virq, arg->devid, info->chip, NULL,
-> +			    handle_edge_irq, arg->data, "edge");
->   
->   	return 0;
->   }
-> @@ -384,8 +384,8 @@ int dmar_alloc_hwirq(int id, int node, v
->   
->   	init_irq_alloc_info(&info, NULL);
->   	info.type = X86_IRQ_ALLOC_TYPE_DMAR;
-> -	info.dmar_id = id;
-> -	info.dmar_data = arg;
-> +	info.devid = id;
-> +	info.data = arg;
->   
->   	return irq_domain_alloc_irqs(domain, 1, node, &info);
->   }
->
->
+The loader can use inline assembly for system calls and does not have
+this issue, but applications would be implcated by it.
+
+Thanks,
+Florian
+
