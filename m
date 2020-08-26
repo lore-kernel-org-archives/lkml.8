@@ -2,108 +2,102 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD268C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E57C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98AEA20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD2D920838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598443619;
-	bh=D1uJfmjgC/26o2z3u1zFuw7ebz3MKhc1sl8fKcEtvqE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hC1wZncZ32V4s8gciKtlKnvQrH45box9kztwsa3px/m9R7BMWYJn0Wq9o2Kz9r/DY
-	 FPFVUBHd/EN8hC5rJQpeFpzzExK5TjLn5rXkNYttNfjrcLs/WWFD+ECiHrFVwfYyA3
-	 MiEm8cTUdB+CxCcmHvFeMiuWlNL1weAQOFOAMiTo=
+	s=default; t=1598443625;
+	bh=m70pihujtOzNrITCAtsjJHbDditmk7OXkxxp0kaa41g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AIemuiPrp+Fir45VpJ6PAmLbQJ9wmw0yDvjI6crqpw4v6dGx3ZkWJToQtBpqkEbnP
+	 j8MpNjLMoH9vUHvi1ZHMt83yUTw65Bh+8s6W3NvNJfS0SON6H/EY383+9JsKtGMVaM
+	 vGXxvrMOrLsW81CliRd7WtG1VsbVu1+6MftogygA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbgHZMGy (ORCPT
+        id S1729759AbgHZMHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:06:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38506 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 08:07:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729525AbgHZMD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:03:28 -0400
-Received: from localhost (unknown [122.171.38.130])
+        id S1729523AbgHZMD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:03:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA8C920897;
-        Wed, 26 Aug 2020 12:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 944C02087D;
+        Wed, 26 Aug 2020 12:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598443407;
-        bh=D1uJfmjgC/26o2z3u1zFuw7ebz3MKhc1sl8fKcEtvqE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=duxjQB0p/RG9lpGyNMl+3wLI/iY6Ywj0fIehqcHQRy6ik4BDUpo57UKpANLlRQY8O
-         1EqLuq51Wy4AoOO/kkgVX/g7QDGd7sZiqZsXWQyan50Wc2rpumt4wwqr+KMxZIN7m/
-         5Y2Bz85mXHQCqsQvBiD9JNTOcc2O9QLUW0B6pt0Q=
-Date:   Wed, 26 Aug 2020 17:33:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 1/4] regmap: sdw: move to -EOPNOTSUPP
-Message-ID: <20200826120323.GD2639@vkoul-mobl>
-References: <20200825171656.75836-2-pierre-louis.bossart@linux.intel.com>
- <20200825214858.GK5379@sirena.org.uk>
- <6f7e5830-4dd8-1ecc-20c3-df75bc9ef265@linux.intel.com>
- <20200826095600.GA4965@sirena.org.uk>
- <s5ha6yhu3af.wl-tiwai@suse.de>
- <20200826101301.GB4965@sirena.org.uk>
- <s5h8se1u2or.wl-tiwai@suse.de>
+        s=default; t=1598443406;
+        bh=m70pihujtOzNrITCAtsjJHbDditmk7OXkxxp0kaa41g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zLLE8wOJe9H09p/7RbVS1aJEF/11RNCOvBqjYCiVw5xeyUPqR8tc1TavBy69vGfgy
+         IQTGxq3KQPYqvBcN+ixuyA5UaokQvz8vVJdSU5cJmp21kxPEprfeTp/tcEj/M+OTqU
+         3JheqQ/o+Jbhmkhdwo1mCPv7FuRmMOX38dkZOjOk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.8 12/16] ethtool: Account for hw_features in netlink interface
+Date:   Wed, 26 Aug 2020 14:02:49 +0200
+Message-Id: <20200826114911.820605430@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200826114911.216745274@linuxfoundation.org>
+References: <20200826114911.216745274@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <s5h8se1u2or.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-08-20, 12:22, Takashi Iwai wrote:
-> On Wed, 26 Aug 2020 12:13:01 +0200,
-> Mark Brown wrote:
-> > 
-> > On Wed, Aug 26, 2020 at 12:09:28PM +0200, Takashi Iwai wrote:
-> > > Mark Brown wrote:
-> > 
-> > > > checkpatch is broken.
-> > 
-> > > Heh, I'm not objecting it :)
-> > 
-> > > OTOH, it's also true that ENOTSUPP is no good error code if returned
-> > > to user-space.  Unfortunately many codes (including what I wrote) use
-> > > this code mistakenly, and they can't be changed any longer...
-> > 
-> > It's also used internally in various places without being returned to
-> > userspace, that's what's going on here - the regmap core has some
-> > specific checks for -ENOTSUPP.
-> 
-> Sure, for such an internal usage any code can be used.
-> The question is a case like this -- where the return code might be
-> carried to outside.  Though, looking through the grep output, all
-> callers simply return -EINVAL for any errors, so it doesn't matter
-> much for now.
-> 
-> 
-> BTW, there are a few callers of devm_regmap_init_sdw() checking the
-> return value with NULL.  This will crash as the function returns the
-> error pointer, and they must be checked with IS_ERR() instead.
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-Yes that is correct, all expect wsa codec do the incorrect thing. Will
-send patches for these shortly
+[ Upstream commit 2847bfed888fbb8bf4c8e8067fd6127538c2c700 ]
 
-Thanks
--- 
-~Vinod
+ethtool-netlink ignores dev->hw_features and may confuse the drivers by
+asking them to enable features not in the hw_features bitmask. For
+example:
+
+1. ethtool -k eth0
+   tls-hw-tx-offload: off [fixed]
+2. ethtool -K eth0 tls-hw-tx-offload on
+   tls-hw-tx-offload: on
+3. ethtool -k eth0
+   tls-hw-tx-offload: on [fixed]
+
+Fitler out dev->hw_features from req_wanted to fix it and to resemble
+the legacy ethtool behavior.
+
+Fixes: 0980bfcd6954 ("ethtool: set netdev features with FEATURES_SET request")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/ethtool/features.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/net/ethtool/features.c
++++ b/net/ethtool/features.c
+@@ -273,7 +273,8 @@ int ethnl_set_features(struct sk_buff *s
+ 		goto out_rtnl;
+ 	}
+ 
+-	dev->wanted_features = ethnl_bitmap_to_features(req_wanted);
++	dev->wanted_features &= ~dev->hw_features;
++	dev->wanted_features |= ethnl_bitmap_to_features(req_wanted) & dev->hw_features;
+ 	__netdev_update_features(dev);
+ 	ethnl_features_to_bitmap(new_active, dev->features);
+ 	mod = !bitmap_equal(old_active, new_active, NETDEV_FEATURE_COUNT);
+
+
