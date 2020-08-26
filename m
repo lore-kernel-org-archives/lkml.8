@@ -2,188 +2,160 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE19C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE81C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A16122067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7088E20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:05:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G9o+O+AR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbgHZHFO (ORCPT
+        id S1726864AbgHZHFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:05:14 -0400
-Received: from mga01.intel.com ([192.55.52.88]:24662 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726719AbgHZHFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:05:12 -0400
-IronPort-SDR: 8A/AJ86Qc2Da2ndvc/Zax5Jdfe6nI0ETIIOd7XZZGvcbG0v+rdxitl1g6+ItbqkK481LYjU27m
- LrgqdP2muogQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="174294095"
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="174294095"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 00:05:11 -0700
-IronPort-SDR: t9zAxUm+0FHTf119H7H8PV8/d7t15hFwVjWcUpPmVuSJw246+3dLtlSGJIJdZMZ+UVL+wne0mJ
- l9sOlDzxYKFg==
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="474661934"
-Received: from jguenthe-mobl.ger.corp.intel.com (HELO localhost) ([10.252.32.223])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 00:05:04 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Cc:     Sean Paul <sean@poorly.run>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        =?utf-8?Q?Jos=C3=A9?= Roberto de Souza <jose.souza@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC v4 16/20] drm/i915/dp: Extract drm_dp_get_sink_count()
-In-Reply-To: <20200825195027.74681-17-lyude@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200825195027.74681-1-lyude@redhat.com> <20200825195027.74681-17-lyude@redhat.com>
-Date:   Wed, 26 Aug 2020 10:05:01 +0300
-Message-ID: <87o8mx6g6a.fsf@intel.com>
+        Wed, 26 Aug 2020 03:05:55 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54390 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgHZHFv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 03:05:51 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07Q75noN064369;
+        Wed, 26 Aug 2020 02:05:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598425549;
+        bh=6E81PBhhTm2Fd9GLC0elzJej9ab66NBkRVDF3kvJ2Ho=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=G9o+O+AR0hH78Q8eHr9AIslSwHaOq33L0puZqtoxJ/TEtjKaGPYfWBDQntfqcAc/x
+         xdNC8A1YH+eFixgP5T0nA3n1uZBanvPsEjEMnui97qwcm1mfLn0Z778hgRi/14JJIh
+         39H93UIcj7SK/MfnJHfMKg6GLG4IDrfq6+N2ZByI=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07Q75nJe124795;
+        Wed, 26 Aug 2020 02:05:49 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
+ Aug 2020 02:05:49 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 26 Aug 2020 02:05:49 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07Q75lh7066890;
+        Wed, 26 Aug 2020 02:05:47 -0500
+Subject: Re: [RFC PATCH 2/3] dmaengine: add peripheral configuration
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200824084712.2526079-1-vkoul@kernel.org>
+ <20200824084712.2526079-3-vkoul@kernel.org>
+ <50ed780f-4c1a-2da2-71e4-423f3b224e25@ti.com>
+ <20200825071023.GB2639@vkoul-mobl>
+ <38bc6986-6d1d-7c35-b2df-967326fc5ca7@ti.com>
+ <20200825110202.GF2639@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <5d55965f-bb3d-4f3c-803c-e90493f8c197@ti.com>
+Date:   Wed, 26 Aug 2020 10:07:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200825110202.GF2639@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020, Lyude Paul <lyude@redhat.com> wrote:
-> And of course, we'll also need to read the sink count from other drivers
-> as well if we're checking whether or not it's supported. So, let's
-> extract the code for this into another helper.
->
-> v2:
-> * Fix drm_dp_dpcd_readb() ret check
-> * Add back comment and move back sink_count assignment in intel_dp_get_dpcd()
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Reviewed-by: Sean Paul <sean@poorly.run>
-> ---
->  drivers/gpu/drm/drm_dp_helper.c         | 22 ++++++++++++++++++++++
->  drivers/gpu/drm/i915/display/intel_dp.c | 11 +++++------
->  include/drm/drm_dp_helper.h             |  1 +
->  3 files changed, 28 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-> index 863e0babc1903..67ad05eb05b7e 100644
-> --- a/drivers/gpu/drm/drm_dp_helper.c
-> +++ b/drivers/gpu/drm/drm_dp_helper.c
-> @@ -736,6 +736,28 @@ bool drm_dp_has_sink_count(struct drm_connector *connector,
->  }
->  EXPORT_SYMBOL(drm_dp_has_sink_count);
->  
-> +/**
-> + * drm_dp_get_sink_count() - Retrieve the sink count for a given sink
+Hi Vinod,
 
-From the department of bikeshedding...
+On 25/08/2020 14.02, Vinod Koul wrote:
+>> The only thing which might be an issue is that with the DMA_PREP_CMD t=
+he
+>> config_data is dma_addr_t (via dmaengine_prep_slave_single).
+>=20
+> Yes I came to same conclusion
+>=20
+>>> I did have a prototype with metadata but didnt work very well, the
+>>> problem is it assumes metadata for tx/rx but here i send the data
+>>> everytime from client data.
+>>
+>> Yes, the intended use case for metadata (per descriptor!) is for
+>> channels where each transfer might have different metadata needed for
+>> the given transfer (tx/rx).
+>>
+>> In your case you have semi static peripheral configuration data, which=
 
-Should we have a naming scheme where it's obvious whether a function
-will do DPCD access, or just shuffle existing data?
+>> is not really changing between transfers.
+>>
+>> A compromise would be to add:
+>> void *peripheral_config;
+>> to the dma_slave_config, move the set_config inside of the device
+>> specific struct you are passing from a client to the core?
+>=20
+> That sounds more saner to me and uses existing interfaces cleanly. I
+> think I like this option ;-)
 
-For example, drm_dp_read_foo() for anything with DPCD access
-vs. drm_dp_get_foo() or even simpler for anything that only processes
-pre-read data?
+The other option would be to use the descriptor metadata support and
+that might be even cleaner.
 
-> + * @aux: The DP AUX channel to use
-> + *
-> + * Returns: The current sink count reported by @aux, or a negative error code
-> + * otherwise.
-> + */
-> +int drm_dp_get_sink_count(struct drm_dp_aux *aux)
-> +{
-> +	u8 count;
-> +	int ret;
-> +
-> +	ret = drm_dp_dpcd_readb(aux, DP_SINK_COUNT, &count);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret != 1)
-> +		return -EIO;
+In gpi_create_tre() via gpi_prep_slave_sg() you would set up the
+desc->tre[1] and desc->tre[2] for TX
+desc->tre[2] for RX
+in the desc, you add a new variable, let's say first_tre and
+set it to 1 for TX, 2 for RX.
 
-Makes me wonder if that shouldn't be at drm_dp_dpcd_read() level, for
-reads returning 0..len-1 bytes. Not necessarily part of this series, but
-seems silly to set a precedent to start handling that return value all
-over the place.
+If you need to send a config, you attach it via either way metadata
+support allows you (get the pointer to desc->tre[0] or give a config
+struct to the DMA driver.
 
-BR,
-Jani.
+In the metadata handler, you check if the transfer is TX, if it is, then
+you update desc->tre[0] (or give the pointer to the client) and update
+the first_tre to 0.
 
-> +
-> +	return DP_GET_SINK_COUNT(count);
-> +}
-> +EXPORT_SYMBOL(drm_dp_get_sink_count);
-> +
->  /*
->   * I2C-over-AUX implementation
->   */
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index 35a4779a442e2..4337321a3be4f 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -4648,6 +4648,8 @@ intel_dp_has_sink_count(struct intel_dp *intel_dp)
->  static bool
->  intel_dp_get_dpcd(struct intel_dp *intel_dp)
->  {
-> +	int ret;
-> +
->  	if (!intel_dp_read_dpcd(intel_dp))
->  		return false;
->  
-> @@ -4664,11 +4666,8 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
->  	}
->  
->  	if (intel_dp_has_sink_count(intel_dp)) {
-> -		u8 count;
-> -		ssize_t r;
-> -
-> -		r = drm_dp_dpcd_readb(&intel_dp->aux, DP_SINK_COUNT, &count);
-> -		if (r < 1)
-> +		ret = drm_dp_get_sink_count(&intel_dp->aux);
-> +		if (ret < 0)
->  			return false;
->  
->  		/*
-> @@ -4676,7 +4675,7 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
->  		 * a member variable in intel_dp will track any changes
->  		 * between short pulse interrupts.
->  		 */
-> -		intel_dp->sink_count = DP_GET_SINK_COUNT(count);
-> +		intel_dp->sink_count = ret;
->  
->  		/*
->  		 * SINK_COUNT == 0 and DOWNSTREAM_PORT_PRESENT == 1 implies that
-> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-> index a1413a531eaf4..0c141fc81aaa8 100644
-> --- a/include/drm/drm_dp_helper.h
-> +++ b/include/drm/drm_dp_helper.h
-> @@ -1635,6 +1635,7 @@ struct drm_dp_desc;
->  bool drm_dp_has_sink_count(struct drm_connector *connector,
->  			   const u8 dpcd[DP_RECEIVER_CAP_SIZE],
->  			   const struct drm_dp_desc *desc);
-> +int drm_dp_get_sink_count(struct drm_dp_aux *aux);
->  
->  void drm_dp_remote_aux_init(struct drm_dp_aux *aux);
->  void drm_dp_aux_init(struct drm_dp_aux *aux);
+In issue_pending, or a small helper which can be used to start the
+transfer you would do the queuing instead of prepare time:
+for (i =3D gpi_desc->first_tre; i < MAX_TRE; i++)
+	gpi_queue_xfer(gpii, gpii_chan,  &gpi_desc->tre[i], &wp);
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+With this change it should work neatly without any change to
+dma_slave_config.
+
+>=20
+>>>> I'm concerned about the size increase of dma_slave_config (it grows =
+by
+>>>>> 30 bytes) and for DMAs with hundreds of channels (UDMA) it will add=
+ up
+>>>> to a sizeable amount.
+>>>
+>>> I agree that is indeed a valid concern, that is the reason I tagged t=
+his
+>>> as a RFC patch ;-)
+>>>
+>>> I see the prep_cmd is a better approach for this, anyone else has bet=
+ter
+>>> suggestions?
+>>>
+>>> Thanks for looking in.
+>>>
+>>
+>> - P=C3=A9ter
+>>
+>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>=20
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
