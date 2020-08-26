@@ -2,147 +2,158 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B32C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B842C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 309182076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCCC4206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:57:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LF7DOkQ3"
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="Hv8RIL2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgHZGzd (ORCPT
+        id S1726757AbgHZG5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:55:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726040AbgHZGzc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:55:32 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B555C061574;
-        Tue, 25 Aug 2020 23:55:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=34hr4y/kC5XT7kH5TAn/CeLpg6Bsmo1oeMdH990fres=; b=LF7DOkQ3G2kCDU78sX7HAD45tz
-        wgLHVNfL9PsBnR63Gfu140LkwYAxCtOkfYnnCJYHga+N1T4iaMc11QuZcWzYyE3+AlNVAIFfxHePo
-        oFuJ7mSFhDm4ddt3M8KwOjZmx17DnPwrvndMEZRuu78xzYcSe5saVNjYmS5ypiaz4+AyQ0EORlNkC
-        UIRf4sZAkWzXiI7UMNADoAR4nqgIsmK9meeqetG5cugExwMKkn37O5cngvhDBmwp58yWSe7Eit8ud
-        8EAdshk3+VvyLbBQl5kgQmRM6TRVeKdDAVh6T1IvTYoxKmrpUM5sZKFdat0YL+ZL1yqx594tLcHZa
-        Z0KP8Qsw==;
-Received: from 213-225-6-196.nat.highway.a1.net ([213.225.6.196] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kApL9-0003Wc-K5; Wed, 26 Aug 2020 06:55:23 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: [PATCH 13/19] ide: switch to __register_blkdev for command set probing
-Date:   Wed, 26 Aug 2020 08:24:40 +0200
-Message-Id: <20200826062446.31860-14-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200826062446.31860-1-hch@lst.de>
-References: <20200826062446.31860-1-hch@lst.de>
+        Wed, 26 Aug 2020 02:57:05 -0400
+Received: from mail-bn7nam10on2086.outbound.protection.outlook.com ([40.107.92.86]:65048
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726240AbgHZG5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 02:57:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cn30LxKM8z7Tt3gScfYbTLn8uxaGSxT6Ct3+7bzhG7Uv7T3GShTnjcG5gLPcKQW934n2h6B7tJAEoW3mUKRTckK7niLGllg/KPwZnFkoztIEkXebub7UeLcCe8KjJQtzuXuwm8Yxl2uyMlKMVH07dSvvSa8kt4U1liU3w17zuTofc+bIJhBjeRrIvAoNt6f7Yv3bjhvyYMajF0TSXAgRSXNG1GVGCivZIrBgXE4oVCzB8FElVerw2ZWLzlFrZMaB4yrkgky/F8r6B9pF0FA3A1ZBaB5IKbBe1OtwC9drFrfgLaZ3hXpHDaEoByAXBBZlfFWM688O8UjfvRG9qToOhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3Fhpw1NzwhIgDoNo+9dv9V+uRU7cWG978cYzdB/3ig8=;
+ b=WBtl1gMtoXiQJl7H34PhPgh1+chdKiE2H7cAmG/aP02QdJDatjVUDkKu+yQA1C/rZkwRk5QZmgesFRNgJIHmXIy10uifwlh2OkHa87nGnH2PT1IgY6YFcPkWFn8RkVZFlUZH7xwKv/a0h+yOY4REXrOpTi2bfqctyi2wBzoOKw5Me2XY5R7qIh/8deAITjhpjP7L9oqF94kGlfKE/ka0YVR2auFZ2vKw9Iea+vQlkeQODkGGsjd17EgroUEOx/Q7f6T8kv2X1xc/RvMM7K+YqmV7J/rH0DRmXQEb8t0pvpQaDr2fIWU0Qt8id5bhwDdeISBqIKTkoDiiPJ7WYSQkmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3Fhpw1NzwhIgDoNo+9dv9V+uRU7cWG978cYzdB/3ig8=;
+ b=Hv8RIL2z1d6HEwgpwFRXJfx4i6l1eNntFwPDFUFPa42bvDwOWuSWHIFCBWvbkfxqfGL5v09vU7tGPSwy4+qaXTd01onDh2EezPFezIKm2/jIAjRzPrITWUhbJ3IcxVtS2b/kGnxTQZqA+G9JX0YRnky19LUxyTH9Xx45BNCQIG8=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=windriver.com;
+Received: from BY5PR11MB4241.namprd11.prod.outlook.com (2603:10b6:a03:1ca::13)
+ by BY5PR11MB4102.namprd11.prod.outlook.com (2603:10b6:a03:181::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Wed, 26 Aug
+ 2020 06:56:56 +0000
+Received: from BY5PR11MB4241.namprd11.prod.outlook.com
+ ([fe80::8d64:f85b:1cce:a1c0]) by BY5PR11MB4241.namprd11.prod.outlook.com
+ ([fe80::8d64:f85b:1cce:a1c0%5]) with mapi id 15.20.3305.032; Wed, 26 Aug 2020
+ 06:56:56 +0000
+Subject: Re: [PATCH] USB: core: limit access to rawdescriptors which were not
+ allocated
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200825161659.19008-1-yanfei.xu@windriver.com>
+ <20200825180026.GA375466@rowland.harvard.edu>
+From:   "Xu, Yanfei" <yanfei.xu@windriver.com>
+Message-ID: <476ed63c-0578-54a5-9ab1-5b26e1d9f5c6@windriver.com>
+Date:   Wed, 26 Aug 2020 14:56:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+In-Reply-To: <20200825180026.GA375466@rowland.harvard.edu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HK0PR01CA0050.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::14) To BY5PR11MB4241.namprd11.prod.outlook.com
+ (2603:10b6:a03:1ca::13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by HK0PR01CA0050.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 06:56:54 +0000
+X-Originating-IP: [60.247.85.82]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ac2a739e-5d99-449f-e3e2-08d8498d3874
+X-MS-TrafficTypeDiagnostic: BY5PR11MB4102:
+X-Microsoft-Antispam-PRVS: <BY5PR11MB410209E9D31FA182595BB47FE4540@BY5PR11MB4102.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uLvxHRBbt4ZVlYRsIhzo9spQYijkCxVJquO2nyqqcLeGYoXvBiwyP0YKNNVo0CTCYsB+yRgZWpoatugaxTP8iDlIjX6SQl4Scro9a2hHvgMLfr9gqkKJnLzZADLubORZyq+EUwGqlQkNem3UHZKHN5b6kgpYt8Kn1ff6gEyJtQWWAta0Qgmlp8db2J/hDrKMlHhh+pU5iUyukuK4mrGyI61+RrLlAjJfxgLTzj9J7WOLIlEtSdczEUOcayCK4z21XmItqLGD9o5P14zP19Fs8U/3LSlN6odvTfmtLpzP4D3hnksHnh72Iaw6JHnVjlNU7Qv9/eiqzhbmRQiSUeXgiGVU4OgVOcpXjr98VV9J5jURmFWxaNVRFAO5c1Lw5Cv8
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4241.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39840400004)(136003)(346002)(376002)(396003)(4326008)(8676002)(956004)(36756003)(2616005)(478600001)(8936002)(5660300002)(86362001)(2906002)(52116002)(6666004)(83380400001)(31686004)(16576012)(316002)(66946007)(6486002)(53546011)(26005)(186003)(66476007)(66556008)(31696002)(6916009)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 996hnzZr23iVTZdz+PZi6HrSLaODy6SgDTxu3I9D/AKLkNQq+65ivJ2mgvSu+Z9BANDw+ZGB3YgJ8f+3c4cL47FvjSp7jb86R2XaujrDSHqgCuzeyVtMosMQHULDfBzfKKA2wji2OHKtCv9xl7mH9unOTa3KRLFrRyhB9c8U2FqfKwgCCB6QAXVqr6n1BWcBckFYzIIMn5Yfmy5uIGs4Og29/07qj058Y+zqL41QpxAb1A41hGSFTN37Sux6qLPsbxEGNrABFqtzbU/EVLOvRDVDcOfcNMrIaJHLGSu9yYzcuGs+s8H1joarnXRWtEhiTAaMH37iW5Zvvt2GNN4TEqR1DUjKQsPwz7KCIqz0mzxSpT0etBFJg83LwpgtoZ2gZPbQmKDg69kc8QFW1e7ADFDgxkjFVXcG9zL5apck0yRtkwJPlFpdZgGTpKm4ogPcoq3/gmx1yiT+tAKccHDHoF6TurqhGe4LU30U7ETEBKi3ZJFuTtQUZGDtreAE7XkezAv7atoNFbBa4YiTzgxw463/qcwA3837K50NQ0xdufOCiqS/+tDboyYpbvAyAcau79xQ10hfPCI923iAG7kxYssUhW0QucCulhah+eSckLPlyKjnN6s9LOgH57CWaTmVqi0+HpXI1wJGNUUnOd/+PA==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac2a739e-5d99-449f-e3e2-08d8498d3874
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4241.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 06:56:56.2954
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IE/ZlOdaYbyW7WxKYIfO9IDrGn2qolTuTcedUWt0iE8k+mZB1UfFmDxTlr+rBxKnvBBKR/6QyfqThmQgRqUL/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ide is the last user of the blk_register_region framework except for the
-tracking of allocated gendisk.  Switch to __register_blkdev, even if that
-doesn't allow us to trivially find out which command set to probe for.
-That means we now always request all modules when a user tries to access
-an unclaimed ide device node, but except for a few potentially loaded
-modules for a fringe use case of a deprecated and soon to be removed
-driver that doesn't make a difference.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/ide/ide-probe.c | 34 ++++++----------------------------
- 1 file changed, 6 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/ide/ide-probe.c b/drivers/ide/ide-probe.c
-index 076d34b381720f..1c1567bb519429 100644
---- a/drivers/ide/ide-probe.c
-+++ b/drivers/ide/ide-probe.c
-@@ -902,31 +902,12 @@ static int init_irq (ide_hwif_t *hwif)
- 	return 1;
- }
- 
--static int ata_lock(dev_t dev, void *data)
-+static void ata_probe(dev_t dev)
- {
--	/* FIXME: we want to pin hwif down */
--	return 0;
--}
--
--static struct kobject *ata_probe(dev_t dev, int *part, void *data)
--{
--	ide_hwif_t *hwif = data;
--	int unit = *part >> PARTN_BITS;
--	ide_drive_t *drive = hwif->devices[unit];
--
--	if ((drive->dev_flags & IDE_DFLAG_PRESENT) == 0)
--		return NULL;
--
--	if (drive->media == ide_disk)
--		request_module("ide-disk");
--	if (drive->media == ide_cdrom || drive->media == ide_optical)
--		request_module("ide-cd");
--	if (drive->media == ide_tape)
--		request_module("ide-tape");
--	if (drive->media == ide_floppy)
--		request_module("ide-floppy");
--
--	return NULL;
-+	request_module("ide-disk");
-+	request_module("ide-cd");
-+	request_module("ide-tape");
-+	request_module("ide-floppy");
- }
- 
- void ide_init_disk(struct gendisk *disk, ide_drive_t *drive)
-@@ -967,7 +948,7 @@ static int hwif_init(ide_hwif_t *hwif)
- 		return 0;
- 	}
- 
--	if (register_blkdev(hwif->major, hwif->name))
-+	if (__register_blkdev(hwif->major, hwif->name, ata_probe))
- 		return 0;
- 
- 	if (!hwif->sg_max_nents)
-@@ -989,8 +970,6 @@ static int hwif_init(ide_hwif_t *hwif)
- 		goto out;
- 	}
- 
--	blk_register_region(MKDEV(hwif->major, 0), MAX_DRIVES << PARTN_BITS,
--			    THIS_MODULE, ata_probe, ata_lock, hwif);
- 	return 1;
- 
- out:
-@@ -1582,7 +1561,6 @@ static void ide_unregister(ide_hwif_t *hwif)
- 	/*
- 	 * Remove us from the kernel's knowledge
- 	 */
--	blk_unregister_region(MKDEV(hwif->major, 0), MAX_DRIVES<<PARTN_BITS);
- 	kfree(hwif->sg_table);
- 	unregister_blkdev(hwif->major, hwif->name);
- 
--- 
-2.28.0
+On 8/26/20 2:00 AM, Alan Stern wrote:
+> On Wed, Aug 26, 2020 at 12:16:59AM +0800, yanfei.xu@windriver.com wrote:
+>> From: Yanfei Xu <yanfei.xu@windriver.com>
+>>
+>> When using systemcall to read the rawdescriptors, make sure we won't
+>> access to the rawdescriptors never allocated, which are number
+>> exceed the USB_MAXCONFIG.
+>>
+>> Reported-by: syzbot+256e56ddde8b8957eabd@syzkaller.appspotmail.com
+>> Signed-off-by: Yanfei Xu <yanfei.xu@windriver.com>
+>> ---
+>>   drivers/usb/core/sysfs.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
+>> index a2ca38e25e0c..1a7a625e5f55 100644
+>> --- a/drivers/usb/core/sysfs.c
+>> +++ b/drivers/usb/core/sysfs.c
+>> @@ -895,7 +895,8 @@ read_descriptors(struct file *filp, struct kobject *kobj,
+>>   	 * configurations (config plus subsidiary descriptors).
+>>   	 */
+>>   	for (cfgno = -1; cfgno < udev->descriptor.bNumConfigurations &&
+>> -			nleft > 0; ++cfgno) {
+>> +			nleft > 0 &&
+>> +			cfgno < USB_MAXCONFIG; ++cfgno) {
+>>   		if (cfgno < 0) {
+>>   			src = &udev->descriptor;
+>>   			srclen = sizeof(struct usb_device_descriptor);
+> 
+> This is not the right way to fix the problem.
+> 
+> Instead, we should make sure that udev->descriptor.bNumConfigurations is
+> always <= USB_MAXCONFIG.  That's what this code in
+> usb_get_configuration() is supposed to do:
+> 
+> 	int ncfg = dev->descriptor.bNumConfigurations;
+> 	...
+> 
+> 	if (ncfg > USB_MAXCONFIG) {
+> 		dev_warn(ddev, "too many configurations: %d, "
+> 		    "using maximum allowed: %d\n", ncfg, USB_MAXCONFIG);
+> 		dev->descriptor.bNumConfigurations = ncfg = USB_MAXCONFIG;
+> 	}
+> 
+> If you want to fix the bug, you need to figure out why this isn't
+> working.
+Thanks for you suggestion. The patch is not right. I'll try to look
+into the root cause.
 
+Regard,
+Yanfei.
+> 
+> Alan Stern
+> 
