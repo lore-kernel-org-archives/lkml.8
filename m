@@ -2,133 +2,156 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D28F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E778214F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:55:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSNxJCCl"
+	by mail.kernel.org (Postfix) with ESMTP id 872F8214F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598453764;
+	bh=rRbCqiqY/EoWxKJlqRKXx+DB87uOlZjjkyQIPWEqbf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dp61flg6/RRyMqNH3s/E1g9YsJ6zIoSa7chLDTwA6eXAEMuqJAi34irdY7ybVt2ma
+	 1HzZdCSwHPDtDvlV7TWyZ68QG0rVl8tLllkrGsRcIB+4kbluWBFAI5RnxjKWSTn8EQ
+	 Hr7L0xTj+eS38e9B5TKXuaeZSgvK9ldVRAj9LEpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbgHZOz6 (ORCPT
+        id S1728127AbgHZOzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728289AbgHZOyH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:54:07 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93ADAC061574;
-        Wed, 26 Aug 2020 07:54:07 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id t9so1104550pfq.8;
-        Wed, 26 Aug 2020 07:54:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zBLkp4ACPTazmjPNrlv/57ssiAbYaRhM1wboTYBBHDY=;
-        b=uSNxJCClbqUuUEiL7mllj0REZCxj02jP+VSTCg3tcnylJDmNQH4a5oyn88Bt+3eHUt
-         bP6O5AD3MwNhFSH8Q0PFYDNR2VCysyCxqesgLG4NhSisN4fNx6swSxxr5Rn4iHq8S0fR
-         m8O5J5JhMom+ifRYFniXvRy6s3w5+Nct8qgQR1IHBC8WIjz1HmP73703CEUIx9Hr5CkA
-         q4E8oFBATyEdLyBKzG0ktNJA7Hpu1B2BrpUU2qNkZI2cRBpf1nDFb8H3uBFyGUBmqzWM
-         Okp80aCvl7+nj+4TXB2CG6EZhUETKljPPNG7PbsdJILAJIxpt4bc5ekzMY00SjK2awhR
-         u17w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zBLkp4ACPTazmjPNrlv/57ssiAbYaRhM1wboTYBBHDY=;
-        b=sXRgl2oImYdviApXrAyqE7eSnSr+FgvsSgy5WLzLRgddQUDNkdr2kIhf1/lv+Xblz8
-         taHfUlYWr+JKeuemeJJvjaE8l/qyyhhtRKHIJSldgm9DdlHHfr7ECrUAmk8OEOjj7WQd
-         E0KQ13XFZC0p0S/+ExNmMAtATjOZfSuch+z02iShtLu/VJgw9k/fbxylzO+NIFbAiatU
-         nzrQdzHpJNyW+dWmBToB0BN6dc3VdPWIYb0/NRA/TXyd/U9E1UHvI5+FP1IBnnRPXBlx
-         jYAcWfrkAo2vOYJh0wF+VCeuyAaEtWBsMXSFq2K5mv2RDInsFVgOeMrYnly7WGpW9Nbx
-         4SeQ==
-X-Gm-Message-State: AOAM530a37Xj9ULPjlJ8gdxVXpTPUGEH1LctpgR44T4AoU2yNCxza9vc
-        LHmMFBUn1PbzEuxhzpFWMi3NUF7nTfA=
-X-Google-Smtp-Source: ABdhPJxDJLTwl2v7C8g+nyXKqYtHmkN28jUfxjmjM3NvMv1M+2qk9vPQk9UmGDyP90WNq4KKmAi2Dg==
-X-Received: by 2002:aa7:8182:: with SMTP id g2mr12519947pfi.261.1598453646914;
-        Wed, 26 Aug 2020 07:54:06 -0700 (PDT)
-Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
-        by smtp.gmail.com with ESMTPSA id r7sm3327140pfl.186.2020.08.26.07.54.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 07:54:06 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linux-arch@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v2 18/23] s390: use asm-generic/mmu_context.h for no-op implementations
-Date:   Thu, 27 Aug 2020 00:52:44 +1000
-Message-Id: <20200826145249.745432-19-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
-References: <20200826145249.745432-1-npiggin@gmail.com>
+        Wed, 26 Aug 2020 10:55:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44654 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726876AbgHZOzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:55:51 -0400
+Received: from earth.universe (unknown [95.33.152.255])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8ABA82078D;
+        Wed, 26 Aug 2020 14:55:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598453750;
+        bh=rRbCqiqY/EoWxKJlqRKXx+DB87uOlZjjkyQIPWEqbf4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X8cD5/7vqOTBKlyJGK/ohJXXUAgbuhvnHY0TuGm9SQaFeKcxNKJxCG+dzVps2XABR
+         sLu4Kul6WZriqBJv1bZpdSkORrdZEUYpxifZC5mJ4+aqDqtNeOuh+HmtS5eUIHVUJ+
+         tAZSoeHUgcXgfZU4VLh3bKkVzvdnAm+EVK+ZtXV8=
+Received: by earth.universe (Postfix, from userid 1000)
+        id E61E63C0C82; Wed, 26 Aug 2020 16:55:48 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 16:55:48 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] power: supply: add wireless power_supply_type
+Message-ID: <20200826145548.hpt7bofoznuqc2z3@earth.universe>
+References: <1597343648-11136-1-git-send-email-gurus@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="57nokb3z2iq74u5g"
+Content-Disposition: inline
+In-Reply-To: <1597343648-11136-1-git-send-email-gurus@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
- arch/s390/include/asm/mmu_context.h | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/include/asm/mmu_context.h b/arch/s390/include/asm/mmu_context.h
-index c9f3d8a52756..66f9cf0a07e3 100644
---- a/arch/s390/include/asm/mmu_context.h
-+++ b/arch/s390/include/asm/mmu_context.h
-@@ -15,6 +15,7 @@
- #include <asm/ctl_reg.h>
- #include <asm-generic/mm_hooks.h>
- 
-+#define init_new_context init_new_context
- static inline int init_new_context(struct task_struct *tsk,
- 				   struct mm_struct *mm)
- {
-@@ -69,8 +70,6 @@ static inline int init_new_context(struct task_struct *tsk,
- 	return 0;
- }
- 
--#define destroy_context(mm)             do { } while (0)
--
- static inline void set_user_asce(struct mm_struct *mm)
- {
- 	S390_lowcore.user_asce = mm->context.asce;
-@@ -125,9 +124,7 @@ static inline void finish_arch_post_lock_switch(void)
- 	set_fs(current->thread.mm_segment);
- }
- 
--#define enter_lazy_tlb(mm,tsk)	do { } while (0)
--#define deactivate_mm(tsk,mm)	do { } while (0)
--
-+#define activate_mm activate_mm
- static inline void activate_mm(struct mm_struct *prev,
-                                struct mm_struct *next)
- {
-@@ -136,4 +133,6 @@ static inline void activate_mm(struct mm_struct *prev,
- 	set_user_asce(next);
- }
- 
-+#include <asm-generic/mmu_context.h>
-+
- #endif /* __S390_MMU_CONTEXT_H */
--- 
-2.23.0
+--57nokb3z2iq74u5g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
+
+On Thu, Aug 13, 2020 at 11:34:08AM -0700, Guru Das Srinagesh wrote:
+> From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+>=20
+> Currently, power_supply framework supports only Battery, UPS,
+> Mains and USB power_supply_type. Add wireless power_supply_type
+> so that the drivers which supports wireless can register a power
+> supply class device with POWER_SUPPLY_TYPE_WIRELESS.
+>=20
+> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
+> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> ---
+
+Thanks, queued.
+
+-- Sebastian
+
+>  Documentation/ABI/testing/sysfs-class-power | 2 +-
+>  drivers/power/supply/power_supply_sysfs.c   | 1 +
+>  include/linux/power_supply.h                | 1 +
+>  3 files changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/=
+ABI/testing/sysfs-class-power
+> index 40213c7..651599f 100644
+> --- a/Documentation/ABI/testing/sysfs-class-power
+> +++ b/Documentation/ABI/testing/sysfs-class-power
+> @@ -34,7 +34,7 @@ Description:
+>  		Describes the main type of the supply.
+> =20
+>  		Access: Read
+> -		Valid values: "Battery", "UPS", "Mains", "USB"
+> +		Valid values: "Battery", "UPS", "Mains", "USB", "Wireless"
+> =20
+>  =3D=3D=3D=3D=3D Battery Properties =3D=3D=3D=3D=3D
+> =20
+> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/su=
+pply/power_supply_sysfs.c
+> index 3d38308..a616b9d 100644
+> --- a/drivers/power/supply/power_supply_sysfs.c
+> +++ b/drivers/power/supply/power_supply_sysfs.c
+> @@ -56,6 +56,7 @@ static const char * const POWER_SUPPLY_TYPE_TEXT[] =3D {
+>  	[POWER_SUPPLY_TYPE_USB_PD]		=3D "USB_PD",
+>  	[POWER_SUPPLY_TYPE_USB_PD_DRP]		=3D "USB_PD_DRP",
+>  	[POWER_SUPPLY_TYPE_APPLE_BRICK_ID]	=3D "BrickID",
+> +	[POWER_SUPPLY_TYPE_WIRELESS]		=3D "Wireless",
+>  };
+> =20
+>  static const char * const POWER_SUPPLY_USB_TYPE_TEXT[] =3D {
+> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
+> index 97cc4b8..ef03299 100644
+> --- a/include/linux/power_supply.h
+> +++ b/include/linux/power_supply.h
+> @@ -186,6 +186,7 @@ enum power_supply_type {
+>  	POWER_SUPPLY_TYPE_USB_PD,		/* Power Delivery Port */
+>  	POWER_SUPPLY_TYPE_USB_PD_DRP,		/* PD Dual Role Port */
+>  	POWER_SUPPLY_TYPE_APPLE_BRICK_ID,	/* Apple Charging Method */
+> +	POWER_SUPPLY_TYPE_WIRELESS,		/* Wireless */
+>  };
+> =20
+>  enum power_supply_usb_type {
+> --=20
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>=20
+
+--57nokb3z2iq74u5g
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9Gd+oACgkQ2O7X88g7
++pokwhAAmxMme7G++GKR3lMafSysEFnG5OVKnLg3ePC2kZrHtbriuB1lhu780hTx
+yMlCYABv5/eabd08rQVKLPAca2uK6DTfXxJRMasIpbGJlreYvGGMAzJCAWpSKEZO
+MAF2JzDHda9Q3MFaRcpbFIUSz1Xsdhzkr7gN3VZF00CM3vPwAQTTb1wj90MjakvD
+zBfi6Ehqkb01JxiftaWFDGNAu2zAi91V0a1yA/bh4DmbPJRr+r95nvA1M2oL7rKc
+1X9ERX3WNqpNdZMMLrhx3hRsAEIDhjSXsud1kJHRLHIp+TKEeiLxrt5OLZSi9di9
+q+IMzRpk1j+Orv0yK6VvabjC6FEoc3dUxOq2QfAToJxXVzBJLC4fGu1paSowz/7u
+jwHrlt9XtS0rz9jo+PEEGnl+xTQOx4O0N6fsm7CU+Zg1rGmK7JxkNSh/yBCs3GIP
+eDg/Ymhw8anaeA8SUEszXkxPRo10h5H0EDa+nzzXP+lgD+f4apD2MSb55OFBErgK
+6nIwF5K1qD5hWS2LkN05juADG17ouVBqcIwjzng2vbXmUdFVSdl6e4KVtxdlzcOU
+AM3Cv/sLyMAbKK7/r4s0H9LNJ05yGhf66Hvqmrg1cSZy0hgUbfuOwqE4MXkLYAcD
+CnMdxjOfxwB6ubbYyJHc17XzhKwZ6Qn8M+q2WrVw2T+l1tZXRxQ=
+=Xsv1
+-----END PGP SIGNATURE-----
+
+--57nokb3z2iq74u5g--
