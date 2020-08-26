@@ -2,119 +2,121 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3993C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E78FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:04:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA76F20825
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598425338;
-	bh=M5Et+sNUR2nj/RmUbPme9QTKTvS/vWmlIg/6Kw079BM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AfHYuxiC3gO38Yn7S5NWq7faX2QEFQ+DpzM8ooNydrF7lQhOCiDJb5znRN1aS+qb0
-	 l5tuQSrOZYPHqgEXdDfQIIPQu4ZJ2NTx4tW/YRpOncvrO90hgMxgIMTbOn6kGmtEfA
-	 OduL2mUE9JaXPHuYRA+02wggmkijBgyYh+KqfcPA=
+	by mail.kernel.org (Postfix) with ESMTP id 5B8E62067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:04:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="Z9haUe+k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgHZHCQ (ORCPT
+        id S1726834AbgHZHEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:02:16 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44414 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbgHZHAk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:00:40 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c15so620126wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 00:00:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RHWmtyQkL2Gd7DQBgRTCb7zJvVv0AbfFavH+YrU+dDE=;
-        b=k94ZV2KI5xbc/l5DBwfp4ArwcBaJJqFNQ5rMqDeBm7JqsWetwF8gKA4I90Ez3MYHks
-         weWQeygbA6GQp+krrJcOLP9gRxvOZDfPDLc9diqC28Y3/6bypvYVZki9qr5jjykIVGaF
-         qWkoQQ1zVQNVY5fGPVm7YSxx/g5ZYliv3ITl5aiaGVUudSZKl3C89WrqzY8y6Jt2bSNI
-         OCTi2St4hPoABFCw8GjOB2RfGKYQE+tWFE5FLvyadVAL5v/U45P7cZPQ03B9RDz1xcMn
-         2stYjr3u7Ry3VLKCfTZcx3PeRorcCBTwyynrVfdCgJaDx81IF+ovrYzx2H6U9HqNGWPL
-         pdEg==
-X-Gm-Message-State: AOAM532n54Dtt4CME9nLECNmfshJRLubZu1x80fHXXouZx7YXPIUxIot
-        6WUGa9iUMvQ54Znr4UA81Oc=
-X-Google-Smtp-Source: ABdhPJywWnmjvr7ryXpthx0BBDXvxzqXt1J69LWiqXq4Np8F+Hf4lfRnLQwtvfows6TLUo07slvldA==
-X-Received: by 2002:adf:f289:: with SMTP id k9mr14252752wro.203.1598425238303;
-        Wed, 26 Aug 2020 00:00:38 -0700 (PDT)
-Received: from pi3 ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id z6sm3079983wml.41.2020.08.26.00.00.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 00:00:37 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 09:00:35 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, myungjoo.ham@samsung.com,
-        cw00.choi@samsung.com, andriy.shevchenko@intel.com,
-        thomas.langer@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com
-Subject: Re: [PATCH v1 5/9] extcon: extcon-ptn5150: Switch to GENMASK() for
- port attachment macro
-Message-ID: <20200826070035.GE12271@pi3>
-References: <20200818065727.50520-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200818065727.50520-6-vadivel.muruganx.ramuthevar@linux.intel.com>
-MIME-Version: 1.0
+        Wed, 26 Aug 2020 03:04:14 -0400
+Received: from mail-eopbgr50110.outbound.protection.outlook.com ([40.107.5.110]:65195
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726751AbgHZHEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 03:04:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=K26D+is/YdbWnb1Pi7vtsmBdmjlaTbumKYuJjbhg3unxopX6RxwcacfkH1mICI6W4X3R5cdqYOL502yYqzzNroqKriGEeC5gM3hmR27LGHaB86dUwr7Boipy2Qh0YnvPtTwdtzwR7nsZRqLrfP6mLETOf6AtxDIF9SvLN3o1zeQkhqCXyCM67szUfx+q+O9WMxhAhoFN1dcPKzxdF2XSVTleLw2C04+D9szslk7ekh9BhiXaw+naQNE6NzH7IxUjEo2pY2FAMlOFX2dw4oMh6Xmso5aPY72Pnp4CFth5HBZYk6NYHaxDCcL468m5PYktB0etqKH/IdWqgRUKor176A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2MFGdBTVaSxo/0snqsSPGuQHI5k6d6ekW5sdAyUe+ZM=;
+ b=EMMGUANTPIYriGi11hgDswn/ClNSLLTSHi8MPCQmViyMPwcRLdCZZIUUROFD8e5nPqZJ7y6PWRxhMbldGZMhl+zUjsjpf1oFvhFXN8D1nMKlaMBfi/p+3M47bTBPyJk57fTQJy/MBQQkwHIMWPylheMHY/VoFbpEu9ZQ7PKbypkrFAO71soHP8YlstN1uQupF1t50rR1LKgTf0L/TRbPYEU9lhadgAZvrApVNzJN4vs4Y++lPmsrzmK+qTvVAQrO8X59N6njCI/CwMQgyT/7dOLXxHBf7TPZzJmgXBqNq+uNVOsGD3CIygi3zEUSEgpbxmu7lKNldwOFd+Y6exEPYw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2MFGdBTVaSxo/0snqsSPGuQHI5k6d6ekW5sdAyUe+ZM=;
+ b=Z9haUe+k0481/oTlMmFdTv7RBpFEScnEtLr5ggE6/llGAT4aDRlLKU8qRtO4fdR6EfuGcK18/ki6ZEXZJotwrkz9ImeHj1jRrhT4mRiiTaBMlqqMc9mj1uOBwoyjhQMxFR4Mmdtmj6TXDFDoN3noe/UhfJIJwULcjkviSX8QJo8=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=axentia.se;
+Received: from VE1PR02MB5487.eurprd02.prod.outlook.com (2603:10a6:803:115::17)
+ by VI1PR02MB5358.eurprd02.prod.outlook.com (2603:10a6:803:92::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Wed, 26 Aug
+ 2020 07:04:10 +0000
+Received: from VE1PR02MB5487.eurprd02.prod.outlook.com
+ ([fe80::808c:ab48:64b2:ecf0]) by VE1PR02MB5487.eurprd02.prod.outlook.com
+ ([fe80::808c:ab48:64b2:ecf0%3]) with mapi id 15.20.3326.019; Wed, 26 Aug 2020
+ 07:04:10 +0000
+Subject: Re: [PATCH] iio: dpot-dac: fix code comment in dpot_dac_read_raw()
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200826000844.GA16807@embeddedor>
+From:   Peter Rosin <peda@axentia.se>
+Organization: Axentia Technologies AB
+Message-ID: <3fb79fa8-e86b-111b-a4a7-5da767d40b52@axentia.se>
+Date:   Wed, 26 Aug 2020 09:04:05 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+In-Reply-To: <20200826000844.GA16807@embeddedor>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200818065727.50520-6-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: HE1PR05CA0207.eurprd05.prod.outlook.com
+ (2603:10a6:3:f9::31) To VE1PR02MB5487.eurprd02.prod.outlook.com
+ (2603:10a6:803:115::17)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.13.3] (85.226.217.78) by HE1PR05CA0207.eurprd05.prod.outlook.com (2603:10a6:3:f9::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 07:04:09 +0000
+X-Originating-IP: [85.226.217.78]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a24b5f59-8530-4cdb-ec68-08d8498e3b06
+X-MS-TrafficTypeDiagnostic: VI1PR02MB5358:
+X-Microsoft-Antispam-PRVS: <VI1PR02MB53582411C60E2E8423E99703BC540@VI1PR02MB5358.eurprd02.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FHFDPaNbFRZJ3QqohMXisMMq/4DWnFlD6IgxtRVsGPoQluYfFF6EZDHQyi3293mlGLIn4Kjeb8ethAWOO37pQDWq8x535KbtAdHHP18nTcw20Pu6qUoAxrcQgRoZX4KHrvNfAYxFHPFYLOaSGv5IwsNwNagdT1XWoYE9CvhsTcoStVsmyXtVjewep4ujJORr4PgdsYvOkx5QtxBcNM04d8vUoADyKDmpgee7D2/qmLgGDdm9KCG9GZRCAYMSJYls6/ThTYbiJu+e38SCOXPFELCuHinNwIsQPva7AyjEyxCzxi9gf4pV/StXNu6iprYfNA0kZ8m1Qgq08XSi+IvTbO8g7N2+l5rGfiC7PMU1C26gkcFLn2Ho5HRhfGEOxyaV
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR02MB5487.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(366004)(39830400003)(346002)(396003)(376002)(2616005)(110136005)(66556008)(31696002)(52116002)(66946007)(4744005)(16576012)(4326008)(31686004)(478600001)(86362001)(6486002)(36916002)(8936002)(6666004)(186003)(8676002)(53546011)(956004)(5660300002)(66476007)(26005)(36756003)(2906002)(16526019)(316002)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: fpr38LN0ccT5IhFwYU1JWqI1c1SyPt7L/y97d9Sf2YZvcrIgBSt1WAf3ozsYxfdXefz9lawKrVcqS2BWe5IjKegHK3S1rIF7NgNyNRPfZ3r1NtrEfZbpY6riEtyek9s6ZE4m70JuLU7RmeyO7Pr1esJs60NxE46MgcVNQAKSC61vUljX3UeU+WRs9kqJqmUfwHInpgjtk52/hbmvvBPJ9mcTHxYAFiJCi5+BDxb8ISwhwsKnbgrjjKr0rS0+TTdCRw2+ylFqLB61jx3KMKIIAYrnYQvGrqnKUVAvKdqCa4rD/mO+dNaECX9h1IUMjF58x1EXk0pOhsgwQiIS3Le/61z9sa9bWY8Ih+9pDaCMcAYYAWnQELWMxX+Hxem2XxiLSkwvjokFpNYSVjNDSptasUPTPCl1NaDqtL2xEioyuJvRp2TFT+snQQTL57HV+MpmYV7LZ4aIWQLAK1f3GMqxr27WNA0HpRBM6QrNorAxd9OFgrSwsWHM8LUvyS6gpQSZzDYHJmjYlI4hiUdxBITIqoS1Fb01KE2VmhzS3YseuReLPv0FtAJy45rUK0HZpWSgJBxRKSF7aSa/ddwpptDO9amM+m5NawUlLeZtFU3KiOS4+CJSHmIQg0u4Fhan+4akaiwuowCdrWI2czBokE8yWA==
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: a24b5f59-8530-4cdb-ec68-08d8498e3b06
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR02MB5487.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 07:04:10.0696
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iJ24Kg+aCEWDTnxS9uVUN6KTeFcVyhD8iKXH/f8UxoNZ4qP/SRMcfbWK+HNtdvYD
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB5358
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 02:57:23PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Switch to GENMASK() macro for the port attachment.
+Hi!
 
-Squash it.
+On 2020-08-26 02:08, Gustavo A. R. Silva wrote:
+> After the replacement of the /* fall through */ comment with the
+> fallthrough pseudo-keyword macro, the natural reading of a code
+> comment was broken.
+> 
+> Fix the natural reading of such a comment and make it intelligible.
+> 
+> Reported-by: Peter Rosin <peda@axentia.se>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Best regards,
-Krzysztof
+Excellent, thanks for the quick turnaround!
 
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  drivers/extcon/extcon-ptn5150.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
-> index 50fff148b772..31b7cbf1551d 100644
-> --- a/drivers/extcon/extcon-ptn5150.c
-> +++ b/drivers/extcon/extcon-ptn5150.c
-> @@ -38,9 +38,7 @@ enum ptn5150_reg {
->  #define PTN5150_REG_DEVICE_ID_VERSION		GENMASK(7, 3)
->  #define PTN5150_REG_DEVICE_ID_VENDOR		GENMASK(2, 0)
->  
-> -#define PTN5150_REG_CC_PORT_ATTACHMENT_SHIFT	2
-> -#define PTN5150_REG_CC_PORT_ATTACHMENT_MASK	\
-> -	(0x7 << PTN5150_REG_CC_PORT_ATTACHMENT_SHIFT)
-> +#define PTN5150_REG_CC_PORT_ATTACHMENT		GENMASK(4, 2)
->  
->  #define PTN5150_REG_CC_VBUS_DETECTION		BIT(7)
->  
-> @@ -108,9 +106,8 @@ static void ptn5150_irq_work(struct work_struct *work)
->  			unsigned int port_status;
->  			unsigned int vbus;
->  
-> -			port_status = ((reg_data &
-> -					PTN5150_REG_CC_PORT_ATTACHMENT_MASK) >>
-> -					PTN5150_REG_CC_PORT_ATTACHMENT_SHIFT);
-> +			port_status = FIELD_GET(PTN5150_REG_CC_PORT_ATTACHMENT,
-> +						reg_data);
->  
->  			switch (port_status) {
->  			case PTN5150_DFP_ATTACHED:
-> -- 
-> 2.11.0
-> 
+And just to be explicit, this fix is for 5.9.
+
+Acked-by: Peter Rosin <peda@axentia.se>
+
+Cheers,
+Peter
