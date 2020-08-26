@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C80AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0394C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 331DA20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE3820838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598443559;
-	bh=MqAyc3vVX6Sn4o+E+TZtYRzJyGODsIk2bdb5U1rmkkw=;
+	s=default; t=1598443564;
+	bh=m70pihujtOzNrITCAtsjJHbDditmk7OXkxxp0kaa41g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lhNsBX9Awgg/SGTXLMUTUyUPrXMdeI18THZ8wCLEYHw9twVAItUBHor51Ce2uJZgy
-	 MuTPcQ3mhBaFJy76XA2KB0wIgMKcQeMMPBh6BIibqQTkAG2kMBBOZsGKpHbNNJ6dW3
-	 I1QLNb5wt++vpCTF8nfblxjXBF63VQcbSp2U/9Hw=
+	b=truMansWAg/3A8OBotdBD22mwIZYwxjjqQ+uqsG4fP/k9RkMnqszNFf0NGMeTrGp+
+	 kar2QkIZtr9mOkYayIevN5iKaX9aNFO8JnYJbvA0NpNCmZHV9HftD2yxQweW/l8q3g
+	 h2OjVaN9kUlRc3MbsvOBiGZPyR1AwLAOzablpK4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbgHZMEX (ORCPT
+        id S1729590AbgHZMEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:04:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37886 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 08:04:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729501AbgHZMDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:03:08 -0400
+        id S1729489AbgHZMDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:03:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B7C020838;
-        Wed, 26 Aug 2020 12:03:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90F562087C;
+        Wed, 26 Aug 2020 12:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598443388;
-        bh=MqAyc3vVX6Sn4o+E+TZtYRzJyGODsIk2bdb5U1rmkkw=;
+        s=default; t=1598443380;
+        bh=m70pihujtOzNrITCAtsjJHbDditmk7OXkxxp0kaa41g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1lU78uE67qOwZhtahGsII2fUoD+L1gAuTKk1xaJorQdjIR02Ka/wvXuq27Sbu5/G7
-         zljhyxovSTNt6l2rblc1599USUaunc30XhYyyHAyFrDgGRJCh1HImj6joF7ZPCAyZK
-         2A3eUX0FdlGB6bixXUa2bTjaRBoVqgJVlgxk6Rsk=
+        b=fv6OSRy2nB4N04VI2VKCR5MycB/Yw7ADMzkkSy5o1SqMFgOvnkqyyIn/2AoihFWh5
+         uLeHPbH+hcwKo/SlnXx2o89lae2eBdAQA/AG6D8OPORO4GOLWQmLcaPNSoaPB6oIuf
+         n/IktWThhkvR41Q/W6FNiP25Pg9PpiRqL7g/Zr1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>
-Subject: [PATCH 5.7 15/15] binfmt_flat: revert "binfmt_flat: dont offset the data start"
-Date:   Wed, 26 Aug 2020 14:02:43 +0200
-Message-Id: <20200826114850.032392369@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 12/15] ethtool: Account for hw_features in netlink interface
+Date:   Wed, 26 Aug 2020 14:02:40 +0200
+Message-Id: <20200826114849.896256729@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200826114849.295321031@linuxfoundation.org>
 References: <20200826114849.295321031@linuxfoundation.org>
@@ -59,93 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-commit 2217b982624680d19a80ebb4600d05c8586c4f96 upstream.
+[ Upstream commit 2847bfed888fbb8bf4c8e8067fd6127538c2c700 ]
 
-binfmt_flat loader uses the gap between text and data to store data
-segment pointers for the libraries. Even in the absence of shared
-libraries it stores at least one pointer to the executable's own data
-segment. Text and data can go back to back in the flat binary image and
-without offsetting data segment last few instructions in the text
-segment may get corrupted by the data segment pointer.
+ethtool-netlink ignores dev->hw_features and may confuse the drivers by
+asking them to enable features not in the hw_features bitmask. For
+example:
 
-Fix it by reverting commit a2357223c50a ("binfmt_flat: don't offset the
-data start").
+1. ethtool -k eth0
+   tls-hw-tx-offload: off [fixed]
+2. ethtool -K eth0 tls-hw-tx-offload on
+   tls-hw-tx-offload: on
+3. ethtool -k eth0
+   tls-hw-tx-offload: on [fixed]
 
-Cc: stable@vger.kernel.org
-Fixes: a2357223c50a ("binfmt_flat: don't offset the data start")
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Fitler out dev->hw_features from req_wanted to fix it and to resemble
+the legacy ethtool behavior.
+
+Fixes: 0980bfcd6954 ("ethtool: set netdev features with FEATURES_SET request")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/binfmt_flat.c |   20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ net/ethtool/features.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -571,7 +571,7 @@ static int load_flat_file(struct linux_b
- 			goto err;
- 		}
- 
--		len = data_len + extra;
-+		len = data_len + extra + MAX_SHARED_LIBS * sizeof(unsigned long);
- 		len = PAGE_ALIGN(len);
- 		realdatastart = vm_mmap(NULL, 0, len,
- 			PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE, 0);
-@@ -585,7 +585,9 @@ static int load_flat_file(struct linux_b
- 			vm_munmap(textpos, text_len);
- 			goto err;
- 		}
--		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
-+		datapos = ALIGN(realdatastart +
-+				MAX_SHARED_LIBS * sizeof(unsigned long),
-+				FLAT_DATA_ALIGN);
- 
- 		pr_debug("Allocated data+bss+stack (%u bytes): %lx\n",
- 			 data_len + bss_len + stack_len, datapos);
-@@ -615,7 +617,7 @@ static int load_flat_file(struct linux_b
- 		memp_size = len;
- 	} else {
- 
--		len = text_len + data_len + extra;
-+		len = text_len + data_len + extra + MAX_SHARED_LIBS * sizeof(u32);
- 		len = PAGE_ALIGN(len);
- 		textpos = vm_mmap(NULL, 0, len,
- 			PROT_READ | PROT_EXEC | PROT_WRITE, MAP_PRIVATE, 0);
-@@ -630,7 +632,9 @@ static int load_flat_file(struct linux_b
- 		}
- 
- 		realdatastart = textpos + ntohl(hdr->data_start);
--		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
-+		datapos = ALIGN(realdatastart +
-+				MAX_SHARED_LIBS * sizeof(u32),
-+				FLAT_DATA_ALIGN);
- 
- 		reloc = (__be32 __user *)
- 			(datapos + (ntohl(hdr->reloc_start) - text_len));
-@@ -647,9 +651,8 @@ static int load_flat_file(struct linux_b
- 					 (text_len + full_data
- 						  - sizeof(struct flat_hdr)),
- 					 0);
--			if (datapos != realdatastart)
--				memmove((void *)datapos, (void *)realdatastart,
--						full_data);
-+			memmove((void *) datapos, (void *) realdatastart,
-+					full_data);
- #else
- 			/*
- 			 * This is used on MMU systems mainly for testing.
-@@ -705,7 +708,8 @@ static int load_flat_file(struct linux_b
- 		if (IS_ERR_VALUE(result)) {
- 			ret = result;
- 			pr_err("Unable to read code+data+bss, errno %d\n", ret);
--			vm_munmap(textpos, text_len + data_len + extra);
-+			vm_munmap(textpos, text_len + data_len + extra +
-+				MAX_SHARED_LIBS * sizeof(u32));
- 			goto err;
- 		}
+--- a/net/ethtool/features.c
++++ b/net/ethtool/features.c
+@@ -273,7 +273,8 @@ int ethnl_set_features(struct sk_buff *s
+ 		goto out_rtnl;
  	}
+ 
+-	dev->wanted_features = ethnl_bitmap_to_features(req_wanted);
++	dev->wanted_features &= ~dev->hw_features;
++	dev->wanted_features |= ethnl_bitmap_to_features(req_wanted) & dev->hw_features;
+ 	__netdev_update_features(dev);
+ 	ethnl_features_to_bitmap(new_active, dev->features);
+ 	mod = !bitmap_equal(old_active, new_active, NETDEV_FEATURE_COUNT);
 
 
