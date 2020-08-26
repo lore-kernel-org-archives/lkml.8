@@ -2,120 +2,96 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A20EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83954C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E241C20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7AE20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vY5kFz9q"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fpQJ5YLB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pkoroG5Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgHZSaz (ORCPT
+        id S1726858AbgHZScE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:30:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40234 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbgHZSat (ORCPT
+        Wed, 26 Aug 2020 14:32:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60692 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgHZScD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:30:49 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58462C061574;
-        Wed, 26 Aug 2020 11:30:49 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id l63so2597751edl.9;
-        Wed, 26 Aug 2020 11:30:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gUzRrKeBm76GXoaIjO5FwcKwXY3xhRCmZGDO9IKNZ24=;
-        b=vY5kFz9qaN/SdhYc9bkkwmAgLFcK1jk+Ll3pf4wP+mPs0DxVVIkuZWflbqhaT4kFM9
-         P6ogFBmytpoG9x9oM/9PPbUtfllkGox7bpU6pXHZS8MYgoPN5zEVxl4ZdSo6GF9XrFPs
-         BwWG/XOPuHLOshCFbnmhxj1U41lJvg2NFcVyGHBKAi2507PKGJvIVIqZj02Cp7BQEy8A
-         plScB8qx56HImXr/+pWZU2d5Cs+FyQ6yCzjwWANya1tOr/WRAfxXu7jBn+0BwkoH7f1D
-         2DAciOmsyNlXG/BIrzSGXy7IwVJHJKAIzbz4QJ6dO/U3ZFXhBBQdwW9I13MgQOKMC/kB
-         6nIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gUzRrKeBm76GXoaIjO5FwcKwXY3xhRCmZGDO9IKNZ24=;
-        b=Gn+n8EC4UExPp8ElcrMpqJhP/51daUj+QlA0zwnd7UAsloYNAiOOaMAg6U5wiJFoV+
-         X+yqL/6BqCShZOumSBjwZQh7+qVxGJ5XzIrDtuT6zA8wpb1jXpmhi2LATuuf0Hv+Tqqt
-         pOtPddw/2U2n6Li5+TDp7a+jR85sThmRTzZZj3HuKmEUXhgaBJF/SlCqvkKRXewpmY/+
-         ddbEzoftOczB6sbjIXUbC291IA/dlJOrN1ZKCM69qc2/z/JwZYON8VnH00iRPwC6OyLQ
-         KGhsBzqJ9BiHwcl59WYbzGSeWZ9IqBhWzhE/oEQNhuYxs5tFxC96KhDed+WKYEITu6yQ
-         RjIw==
-X-Gm-Message-State: AOAM530g6t/Odm2/fsT8Jv48j6gqrLipJzEQESs4L1Gm41dZ1ApFlvLE
-        LlnOQjk5tj/hWBKaTkS8VLna1vH84tc=
-X-Google-Smtp-Source: ABdhPJwr9xy0CA8pse0SVzU64Qo4kG1Ogl74mI54Xs+VnFJmrPLgL2VYTsYbjyZEq7CE965Tr3NICQ==
-X-Received: by 2002:a05:6402:1d2a:: with SMTP id dh10mr965264edb.278.1598466647576;
-        Wed, 26 Aug 2020 11:30:47 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id jx14sm2925692ejb.20.2020.08.26.11.30.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 11:30:46 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 21:30:44 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Kuldip Dwivedi <kuldip.dwivedi@puresoftware.com>,
-        Qiang Zhao <qiang.zhao@nxp.com>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        Tanveer Alam <tanveer.alam@puresoftware.com>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
-Message-ID: <20200826183044.4g6jvfrgkhpxki3k@skbuf>
-References: <20200821140718.GH4870@sirena.org.uk>
- <c810740d75f64e308fd362e6c6a5f437@mail.gmail.com>
- <20200822152118.rlwbcgfk4abjldtg@skbuf>
- <VE1PR04MB6768699B6D7A507A5BF82F9191540@VE1PR04MB6768.eurprd04.prod.outlook.com>
- <20200826114758.4agph53ag2fin6um@skbuf>
- <20200826142312.GH4965@sirena.org.uk>
- <20200826144744.c4yzgoovk6f4t3id@skbuf>
- <2e19f8979be4f962045a1597bdbe7886@mail.gmail.com>
- <20200826160950.i3k2oy6w2dlvmj34@skbuf>
- <20200826170205.GL4965@sirena.org.uk>
+        Wed, 26 Aug 2020 14:32:03 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598466720;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mcTYQk36xBHukMp+WJuA1pj5lQ7N0s5iLLvD6sbf4dI=;
+        b=fpQJ5YLBnvP7eAvuuPZvNlzVE1yTFcC3m3p/OK2mKng6MKzf3xJQ97zpjk50GBCGR++Mre
+        +pgDtjis/z2lxl0mueMP/XNS2M2nPBkot5+qPqiVJCBQ/W9GT2KLQsWzsblyXqI7xk9Y8J
+        roh1ow11MUTyUeBFLCHpFkeHlpyiJXB8f/ujjD+ENJKWULtVlh++5rPVPYIdNBW5xJzjAU
+        xedCxtQd/w/Z7ftQZGGv+P6MRtuQ1A/w2yA7RqrxqjzWO3u1m3+x5VkFhOgAd7OyZmLGfU
+        8pUhoxzbcQe/wCfP728HKYhDmfO5rY17aQ6x1+J8OjTq+KXAReAUeZfIxeDzdg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598466720;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mcTYQk36xBHukMp+WJuA1pj5lQ7N0s5iLLvD6sbf4dI=;
+        b=pkoroG5YpMQGTbQ7l7+BLWF/OnpZqytmtTgmIbXHObF2YG1hspbzv/wff3q1nSoqlXa6Ac
+        WfvFdMD10A4T26DQ==
+To:     "Dey\, Megha" <megha.dey@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 15/46] x86/irq: Consolidate DMAR irq allocation
+In-Reply-To: <812d9647-ad2e-95e9-aa99-b54ff7ebc52d@intel.com>
+References: <20200826111628.794979401@linutronix.de> <20200826112332.163462706@linutronix.de> <812d9647-ad2e-95e9-aa99-b54ff7ebc52d@intel.com>
+Date:   Wed, 26 Aug 2020 20:32:00 +0200
+Message-ID: <878se1uulb.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826170205.GL4965@sirena.org.uk>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 06:02:05PM +0100, Mark Brown wrote:
-> On Wed, Aug 26, 2020 at 07:09:50PM +0300, Vladimir Oltean wrote:
-> 
-> > I don't even know if NXP0005 is made up or if it's written down
-> > somewhere in the PNP ID registry. NXP0006 seems to be assigned to the
-> 
-> Well, any ID is made up to some extent.  I am concerned about the
-> allocation of IDs too, it needs to be coordinated with NXP since it's
-> being allocated from their namespace, but unfortunately in general
-> there's no sensible way to go from a chip/feature name to an ACPI name
-> due to ACPI's specification mechanism.  There's also not any kind of
-> central list of IDs.
-> 
-> > In the ACPI spec there's also a _HRV (Hardware Revision) object, which
-> > comes as a simple DWORD. We could use acpi_evaluate_integer() to read
-> > that, and use it as index into the array of fsl_dspi_devtype_data, if
-> > we declare that as ABI within the driver (and new SoCs would be added
-> > only at the end of the enum). Then we could use the NXP0005 _HID for
-> > everything DSPI.
-> 
-> That's not something that it's particularly idiomatic to actually use in
-> ACPI and you end up with the same namespacing problem assigning IDs so
-> I'm not sure it makes life any better.
+On Wed, Aug 26 2020 at 09:50, Megha Dey wrote:
+>> @@ -329,15 +329,15 @@ static struct irq_chip dmar_msi_controll
+>>   static irq_hw_number_t dmar_msi_get_hwirq(struct msi_domain_info *info,
+>>   					  msi_alloc_info_t *arg)
+>>   {
+>> -	return arg->dmar_id;
+>> +	return arg->hwirq;
+>
+> Shouldn't this return the arg->devid which gets set in dmar_alloc_hwirq?
 
-So what's the idiomatic thing to do in this case, allocate the first
-free PNP ID now for DSPI controller on LS2085A, then another one for
-DSPI on LX2160A later, etc etc?
-
-Thanks,
--Vladimir
+Indeed.
