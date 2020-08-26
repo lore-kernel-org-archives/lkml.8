@@ -2,170 +2,169 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52881C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 579F320791
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEDC20791
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:38:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YYjx3AVh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgHZWi0 (ORCPT
+        id S1726294AbgHZWip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 18:38:26 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:39672 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726765AbgHZWiX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 18:38:23 -0400
-Received: by mail-io1-f70.google.com with SMTP id v10so2348851iot.6
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 15:38:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=z29wO0Ex0+rV9PlYlCXGwrCYo33qvhLT9sFtsrRFHus=;
-        b=FgiuGl/gaMv5GEEY+bJBR3jg/g3Zn8j6oJDOqcsf0zL8pbrq8eDa/SVwNayustDUL0
-         4bCGlGDOADke+3pNQ3v+3bzE6yTfBMEvfF3ZmGEBXmKkXZbGV5dU2DR47O+/7RcMXn8M
-         Xcucg+ijTNUfldQ67OyI6XWbSH2vvvhqX9+qn87B4MoCMNercGb7zBBURJukxBqZ+78x
-         C1l/g+XKMd68MIVNdg3FfiXmY3nU7NTB4b1qiQi55c/fSAfVe1esrQ9C7FBlwLOWzZZo
-         NBwz28N8cvfBQmgR1iEh/oFAm65r9lABda2JQtBgpUyy9sY/IrDG1b3fixCA0+S9nUPS
-         wgMw==
-X-Gm-Message-State: AOAM533szmGrIgbSmp/9i14aIU1Zb0LboeajsE7mipsG7OFp7falzCwU
-        fXvFwB0g4Rq493Dgdl51Hfl5iVC7Fr6q1zPIy0q7jI5KER0H
-X-Google-Smtp-Source: ABdhPJzlGKIw3FvjpEPxKs4VaW+IwCDliEWSZwSkhLdJ6Em0ZA43rRsriwtexKsjHMvNneilab6nMjd1nZ4V1TfG/2VQnBNxwa5n
+        Wed, 26 Aug 2020 18:38:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:40287 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725980AbgHZWip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 18:38:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BcLPD5XXxz9sSP;
+        Thu, 27 Aug 2020 08:38:40 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1598481521;
+        bh=1x4FCQ0LAj50zy7UhVV7cFjx5dWto9itEBWu0qpUJDY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YYjx3AVhgGoKq7Z8CU9EPZWL8rEppaeG9St+rZ9eO2c+aWZ9YzNR2COeFQ04J+Kbr
+         5iq34v9FsyMZu2YL6z9+RXUn4JkRqHvTfig2+0IiJLmIhkB8kDjHEvReN1guqc8baW
+         YHZLmziW+SQ+lY3EphxujJsMVK7IrFlFmqKx7jZ66sFyHErGxrXYkBvSVhnlquOtmS
+         4fc2XzfwTazwFe61nTpAsKH2aEH/NbkzWBBosr/nn5bgZ9OWlOfe9d4bgmCP/XTFc8
+         6PQ8flZyfR8uzdxWZsBjYek0jQg5Bq+Bc3E4DzIPxJ9TFsEQB1CEcs5+84yKWXvlJj
+         /bQm3nw8ePpEw==
+Date:   Thu, 27 Aug 2020 08:38:39 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warnings from perf build in Linus' tree
+Message-ID: <20200827083839.276cc0d0@canb.auug.org.au>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2439:: with SMTP id g25mr14420642iob.5.1598481502069;
- Wed, 26 Aug 2020 15:38:22 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 15:38:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001c687805adcf7a37@google.com>
-Subject: kernel BUG at fs/ext4/page-io.c:LINE!
-From:   syzbot <syzbot+9e6957d9489b099e95bf@syzkaller.appspotmail.com>
-To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/J2kbYrSdFrhfNIp2WYrruP.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+--Sig_/J2kbYrSdFrhfNIp2WYrruP.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-syzbot found the following issue on:
+Hi all,
 
-HEAD commit:    4af7b32f Merge git://git.kernel.org/pub/scm/linux/kernel/g..
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=1425b649900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3d400a47d1416652
-dashboard link: https://syzkaller.appspot.com/bug?extid=9e6957d9489b099e95bf
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+Doing the perf native (PowerPC le) build today produces these warnings:
 
-Unfortunately, I don't have any reproducer for this issue yet.
+util/dsos.c: In function 'dsos__findnew_id':
+util/dsos.c:39:14: note: the layout of aggregates containing vectors with 8=
+-byte alignment has changed in GCC 5
+   39 |  dso->id.maj =3D id->maj;
+      |  ~~~~~~~~~~~~^~~~~~~~~
+util/namespaces.c: In function 'nsinfo__new':
+util/namespaces.c:139:12: note: the layout of aggregates containing vectors=
+ with 8-byte alignment has changed in GCC 5
+  139 |   nsi->pid =3D pid;
+      |   ~~~~~~~~~^~~~~
+util/evlist.c: In function 'perf_evlist__set_id_pos':
+util/evlist.c:116:17: note: the layout of aggregates containing vectors wit=
+h 8-byte alignment has changed in GCC 5
+  116 |  evlist->id_pos =3D first->id_pos;
+      |  ~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+util/annotate.c: In function 'annotation__init_column_widths':
+util/annotate.c:2701:44: note: the layout of aggregates containing vectors =
+with 2-byte alignment has changed in GCC 5
+ 2701 |  notes->widths.addr =3D notes->widths.target =3D
+      |                       ~~~~~~~~~~~~~~~~~~~~~^
+ 2702 |   notes->widths.min_addr =3D hex_width(symbol__size(sym));
+      |   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+util/session.c: In function 'perf_event__read_swap':
+util/session.c:620:20: note: the layout of aggregates containing vectors wi=
+th 8-byte alignment has changed in GCC 5
+  620 |  event->read.pid   =3D bswap_32(event->read.pid);
+      |                    ^
+util/jitdump.c: In function 'jit_process':
+util/jitdump.c:329:23: note: the layout of aggregates containing vectors wi=
+th 8-byte alignment has changed in GCC 5
+  329 |    jr->load.pid       =3D bswap_32(jr->load.pid);
+      |                       ^
+util/auxtrace.c: In function 'auxtrace_queues__add_buffer.part.0':
+util/auxtrace.c:360:12: note: the layout of aggregates containing vectors w=
+ith 8-byte alignment has changed in GCC 5
+  360 | static int auxtrace_queues__add_buffer(struct auxtrace_queues *queu=
+es,
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+util/synthetic-events.c: In function 'perf_event__synthesize_sample':
+util/synthetic-events.c:1441:22: note: the layout of aggregates containing =
+vectors with 8-byte alignment has changed in GCC 5
+ 1441 |   u.val32[0] =3D sample->pid;
+      |                ~~~~~~^~~~~
+util/probe-finder.c: In function 'line_range_search_cb':
+util/probe-finder.c:1887:17: note: the layout of aggregates containing vect=
+ors with 8-byte alignment has changed in GCC 5
+ 1887 |   lr->start =3D lf->lno_s;
+      |               ~~^~~~~~~
+util/machine.c: In function 'machine__process_mmap2_event':
+util/machine.c:1716:5: note: the layout of aggregates containing vectors wi=
+th 8-byte alignment has changed in GCC 5
+ 1716 | int machine__process_mmap2_event(struct machine *machine,
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+util/intel-pt-decoder/intel-pt-decoder.c: In function 'intel_pt_get_next_pa=
+cket':
+util/intel-pt-decoder/intel-pt-decoder.c:916:21: note: the layout of aggreg=
+ates containing vectors with 8-byte alignment has changed in GCC 5
+  916 |   decoder->pkt_step =3D ret;
+      |   ~~~~~~~~~~~~~~~~~~^~~~~
+util/pmu.c: In function '__perf_pmu__new_alias':
+util/pmu.c:308:12: note: the layout of aggregates containing vectors with 2=
+-byte alignment has changed in GCC 5
+  308 | static int __perf_pmu__new_alias(struct list_head *list, char *dir,=
+ char *name,
+      |            ^~~~~~~~~~~~~~~~~~~~~
+util/intel-pt.c: In function 'intel_pt_synth_pebs_sample':
+util/intel-pt.c:1284:14: note: the layout of aggregates containing vectors =
+with 8-byte alignment has changed in GCC 5
+ 1284 |  sample->pid =3D ptq->pid;
+      |  ~~~~~~~~~~~~^~~~~~~~~~
+util/parse-events.c: In function 'parse_events__modifier_event':
+util/parse-events.c:1885:5: note: the layout of aggregates containing vecto=
+rs with 8-byte alignment has changed in GCC 5
+ 1885 | int parse_events__modifier_event(struct list_head *list, char *str,=
+ bool add)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/sfr/next/next/tools/perf/util/namespaces.c: In function 'nsinfo__new':
+/home/sfr/next/next/tools/perf/util/namespaces.c:139:12: note: the layout o=
+f aggregates containing vectors with 8-byte alignment has changed in GCC 5
+  139 |   nsi->pid =3D pid;
+      |   ~~~~~~~~~^~~~~
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9e6957d9489b099e95bf@syzkaller.appspotmail.com
+I assume they are because I have changed all my toolcahins to gcc
+v10 today.
 
-------------[ cut here ]------------
-kernel BUG at fs/ext4/page-io.c:126!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 25034 Comm: syz-executor.2 Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:ext4_finish_bio+0x6a0/0x820 fs/ext4/page-io.c:126
-Code: 10 4c 8b 60 28 48 89 44 24 50 e9 2b fb ff ff e8 c6 65 68 ff 48 c7 c6 60 b8 5d 88 4c 89 e7 e8 a7 c8 96 ff 0f 0b e8 b0 65 68 ff <0f> 0b e8 a9 65 68 ff 48 c7 c6 60 b7 5d 88 4c 89 e7 e8 8a c8 96 ff
-RSP: 0018:ffffc90000da8b28 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000001000 RCX: ffffffff820bd8f6
-RDX: ffff88809a8e4380 RSI: ffffffff820bdbd0 RDI: 0000000000000001
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffff8880857a8ddf
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff8880857a8dd8
-R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
-FS:  00007fb6570cf700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffcfa3e6800 CR3: 00000000a3c6b000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- ext4_end_bio+0x179/0x5e0 fs/ext4/page-io.c:368
- bio_endio+0x3cf/0x7f0 block/bio.c:1447
- req_bio_endio block/blk-core.c:259 [inline]
- blk_update_request+0x68c/0x1230 block/blk-core.c:1576
- scsi_end_request+0x7e/0x8f0 drivers/scsi/scsi_lib.c:566
- scsi_io_completion+0x1df/0x1310 drivers/scsi/scsi_lib.c:938
- scsi_softirq_done+0x327/0x3c0 drivers/scsi/scsi_lib.c:1464
- blk_done_softirq+0x2db/0x430 block/blk-mq.c:586
- __do_softirq+0x2de/0xa24 kernel/softirq.c:298
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0x9d/0xd0 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:393 [inline]
- __irq_exit_rcu kernel/softirq.c:423 [inline]
- irq_exit_rcu+0x1f3/0x230 kernel/softirq.c:435
- common_interrupt+0xa3/0x1f0 arch/x86/kernel/irq.c:239
- asm_common_interrupt+0x1e/0x40 arch/x86/include/asm/idtentry.h:572
-RIP: 0010:partial_name_hash include/linux/stringhash.h:45 [inline]
-RIP: 0010:kernfs_name_hash+0x93/0x120 fs/kernfs/dir.c:304
-Code: 48 c1 e8 03 83 e2 07 42 0f b6 04 20 38 d0 7f 08 84 c0 0f 85 8f 00 00 00 49 0f be 77 ff 31 ff 48 89 f0 48 c1 ee 04 48 c1 e0 04 <48> 01 c6 4c 01 f6 48 8d 04 b6 4c 8d 34 46 89 ee e8 98 97 8b ff 49
-RSP: 0018:ffffc9000659f950 EFLAGS: 00000202
-RAX: 0000000000000620 RBX: ffffffff89007753 RCX: ffffc9000ce73000
-RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000000000
-RBP: 000000000000000a R08: 000000000000000a R09: ffff88808acdfbcf
-R10: 0000000000000000 R11: 0000000000000001 R12: dffffc0000000000
-R13: 000000008900773f R14: 000000666c06666f R15: ffffffff89007749
- kernfs_add_one+0x1e6/0x4c0 fs/kernfs/dir.c:785
- __kernfs_create_file+0x299/0x350 fs/kernfs/file.c:1031
- sysfs_add_file_mode_ns+0x226/0x540 fs/sysfs/file.c:305
- create_files fs/sysfs/group.c:64 [inline]
- internal_create_group+0x328/0xb20 fs/sysfs/group.c:149
- internal_create_groups.part.0+0x90/0x140 fs/sysfs/group.c:189
- internal_create_groups fs/sysfs/group.c:185 [inline]
- sysfs_create_groups+0x25/0x50 fs/sysfs/group.c:215
- device_add_groups drivers/base/core.c:2024 [inline]
- device_add_attrs drivers/base/core.c:2183 [inline]
- device_add+0x12fc/0x1c40 drivers/base/core.c:2881
- netdev_register_kobject+0x17d/0x3b0 net/core/net-sysfs.c:1898
- register_netdevice+0xd29/0x1540 net/core/dev.c:9829
- __tun_chr_ioctl.isra.0+0x2c09/0x41b0 drivers/net/tun.c:2804
- vfs_ioctl fs/ioctl.c:48 [inline]
- __do_sys_ioctl fs/ioctl.c:753 [inline]
- __se_sys_ioctl fs/ioctl.c:739 [inline]
- __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:739
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d4d9
-Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb6570cec78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000019e00 RCX: 000000000045d4d9
-RDX: 00000000200000c0 RSI: 00000000400454ca RDI: 0000000000000006
-RBP: 000000000118cf80 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cf4c
-R13: 00007ffdc2238a7f R14: 00007fb6570cf9c0 R15: 000000000118cf4c
-Modules linked in:
----[ end trace 59bc8db21b5f0a1a ]---
-RIP: 0010:ext4_finish_bio+0x6a0/0x820 fs/ext4/page-io.c:126
-Code: 10 4c 8b 60 28 48 89 44 24 50 e9 2b fb ff ff e8 c6 65 68 ff 48 c7 c6 60 b8 5d 88 4c 89 e7 e8 a7 c8 96 ff 0f 0b e8 b0 65 68 ff <0f> 0b e8 a9 65 68 ff 48 c7 c6 60 b7 5d 88 4c 89 e7 e8 8a c8 96 ff
-RSP: 0018:ffffc90000da8b28 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000001000 RCX: ffffffff820bd8f6
-RDX: ffff88809a8e4380 RSI: ffffffff820bdbd0 RDI: 0000000000000001
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffff8880857a8ddf
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff8880857a8dd8
-R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
-FS:  00007fb6570cf700(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007ffcfa3e6800 CR3: 00000000a3c6b000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/J2kbYrSdFrhfNIp2WYrruP.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+-----BEGIN PGP SIGNATURE-----
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9G5G8ACgkQAVBC80lX
+0GwNRwf9G1zbd8OE1SDujx2Bk7PC4VYak4TxBjUjluC7FluPSY32IPhYqPnU5aEx
+cuaxNPg3QDctPa1DY/gtOjCAT/qzeGn+FeeLO04Ek9AIPr4jMnN2Fb/Vrq7W7/gv
+zVrxbY4sVwNXgiOpGgJd9Nsd06FH8ZezUtUcZKhNkXyufCx22w6zrh2rOO4SApTe
+mp75wJWzb2WsH+fIQ0t+sBuv86qbNMJ2CMCoiUN6vAh7h2vY4ZARu4hp93bvsPfr
+gNV4/B0SdTZLKwOSxR8H4O37Tk8JTZqgyd0SexZ/JRigEEdBJ0XuxfYDgbhlJa/U
+wXyy5ATb75bbjCD+4OM5Is1CrswXBQ==
+=GQX2
+-----END PGP SIGNATURE-----
+
+--Sig_/J2kbYrSdFrhfNIp2WYrruP.--
