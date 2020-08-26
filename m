@@ -2,111 +2,135 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51EDEC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26F2C20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:32:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z8UOpPzB"
+	by mail.kernel.org (Postfix) with ESMTP id 6BDA02087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598477618;
+	bh=YW+rIBasGHh+otBTvN1XkgP5e9k6NldvJXC4gJyKR58=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rN1mJYOJ0PpkZZSMvI/XrSE0WFAeBLghRkyjhy9roHobDoUemCEV+G4EHNhO85grm
+	 he/gDybYDS+JsKD2WZaL87flFePyIezmRkArIZH8BKfVijPSmF6dVN2CDcvLmEpQuu
+	 PNO1SB49SGh9K6zZ8OkZLEHckcg+p0CPyWLvenfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgHZVcm (ORCPT
+        id S1726854AbgHZVdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:32:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbgHZVck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:32:40 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20A22C061756
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 14:32:39 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 17so1778123pfw.9
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 14:32:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=rkzp89VoreQ7eX4za8vZnmEXUlZ/cYLkTpUfs73UjoU=;
-        b=Z8UOpPzBnC2c8OmrazqsmRXFlhv8HP/90v6LNuP3tQE1gAaLXwgaslidJi89qgdWM+
-         ruqDUD5YPR9PFsRpBkGVD4JtjPHy5rOnyq32Ts0d4TLpbyLc26ntSl+7yE9R78oikNrA
-         BHg4sjVmiHlVxrsRSnSYgHXDYwVF9cSgOd5b0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=rkzp89VoreQ7eX4za8vZnmEXUlZ/cYLkTpUfs73UjoU=;
-        b=VFQzEn4wjoyDAZdr8jX79fRVEbG9C043cbbHXVc1ErJK0aEXI3WuCkCwtADEOzg+p6
-         kse7QwN6f32qb3BPnxchofuIQ2eLko5mWwqMdCBc8u8BM6Sz1wpxTkybavsGNn0Fln2+
-         9EDTGCFsd7u03BOHnBLp+XgNUoA5dg9tdOveN+GsnIipqcyTL6iI9LCMGwB7wxgWQ11l
-         i9J/zft9//4nu3SwRm+53fy0Iu3jUBmpMYAb00rlEENGBp8hms6LHNJ+vm4jo6vjAEuL
-         GL2YFJxoJ8WnM3DMg88/CB5E0t8SAd6mcysjb/7ZVG5L0dsZGd1QHMVnKy9N2YRWiC49
-         MqJw==
-X-Gm-Message-State: AOAM530Jl31jjVUSekC+SUwTtWC6tlkh2iAq+5IezaRFGE20bKq7WgIj
-        gPlvICZLH38ZRyon9p1cDw8B8A==
-X-Google-Smtp-Source: ABdhPJx4a16Orr6CneM5HujT4O58wtmFJ2JxoTu12gg6RVZKdauSqY00wUhdCy7pKPx8KrI9RhEi6g==
-X-Received: by 2002:a62:5cc4:: with SMTP id q187mr13657946pfb.95.1598477559338;
-        Wed, 26 Aug 2020 14:32:39 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id e62sm119583pfh.144.2020.08.26.14.32.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 14:32:38 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200826043616.GF3715@yoga>
-References: <20200826024711.220080-1-swboyd@chromium.org> <20200826024711.220080-6-swboyd@chromium.org> <20200826043616.GF3715@yoga>
-Subject: Re: [PATCH v1 5/9] phy: qcom-qmp: Get dp_com I/O resource by index
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Date:   Wed, 26 Aug 2020 14:32:37 -0700
-Message-ID: <159847755731.334488.13614233203912102191@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+        Wed, 26 Aug 2020 17:33:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbgHZVdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:33:36 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 619A820737;
+        Wed, 26 Aug 2020 21:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598477615;
+        bh=YW+rIBasGHh+otBTvN1XkgP5e9k6NldvJXC4gJyKR58=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ze75GSnVu1xfS6xKQa3PMkeLwc9wY7nMYazNki7oeT0LUlePw0Jm59U12hcPyfRAt
+         tyxRrFUh8E/er/Ben6cRUvuYwXkO+DOUu9MHR0AOVwliboMYJNmNpYWzZMp5WyvLL0
+         KrNgTCJoAN8jXt3bFS1kKpKI0lYGg8z85cSB+20Y=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kB32z-006yv7-Gz; Wed, 26 Aug 2020 22:33:34 +0100
+Date:   Wed, 26 Aug 2020 22:33:31 +0100
+Message-ID: <87y2m1149g.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 29/46] irqdomain/msi: Allow to override msi_domain_alloc/free_irqs()
+In-Reply-To: <87zh6htcit.fsf@nanos.tec.linutronix.de>
+References: <20200826111628.794979401@linutronix.de>
+        <20200826112333.526797548@linutronix.de>
+        <87blix2pna.wl-maz@kernel.org>
+        <87zh6htcit.fsf@nanos.tec.linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2020-08-25 21:36:16)
-> On Tue 25 Aug 21:47 CDT 2020, Stephen Boyd wrote:
->=20
-> > The dp_com resource is always at index 1 according to the dts files in
-> > the kernel. Get this resource by index so that we don't need to make
-> > future additions to the DT binding use 'reg-names'.
-> >=20
->=20
-> Afaict the DT binding for the USB/DP phy defines that there should be a
-> reg name of "dp_com" and the current dts files all specifies this. Am I
-> missing something?
+On Wed, 26 Aug 2020 20:47:38 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> On Wed, Aug 26 2020 at 20:06, Marc Zyngier wrote:
+> > On Wed, 26 Aug 2020 12:16:57 +0100,
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> >>  /**
+> >> - * msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated tp @dev
+> >> - * @domain:	The domain to managing the interrupts
+> >> + * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
+> >> + * @domain:	The domain to allocate from
+> >>   * @dev:	Pointer to device struct of the device for which the interrupts
+> >> - *		are free
+> >> + *		are allocated
+> >> + * @nvec:	The number of interrupts to allocate
+> >> + *
+> >> + * Returns 0 on success or an error code.
+> >>   */
+> >> -void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+> >> +int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+> >> +			  int nvec)
+> >> +{
+> >> +	struct msi_domain_info *info = domain->host_data;
+> >> +	struct msi_domain_ops *ops = info->ops;
+> >
+> > Rework leftovers, I imagine.
+> 
+> Hmm, no. How would it call ops->domain_alloc_irqs() without getting the
+> ops. I know, that the diff is horrible, but don't blame me for it. diff
+> sucks at times.
 
-Yes the binding enforces this but this patch is removing that
-enforcement and instead mandating that dp_com is always at index 1 (i.e.
-the second one) so that we can add the DP serdes region directly after
-and avoid adding yet another reg-names property. I changed the binding
-for this usb3-dp phy compatible to make reg-names optional as well. I
-don't see any gain from using reg-names.
+I can't read. Time to put the laptop away!
 
->=20
-> PS. Why isn't this a devm_platform_ioremap_resource{,_byname}()?
+Thanks,
 
-Sure. I'll roll that into this patch.
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
