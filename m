@@ -2,114 +2,116 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB49C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6966AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B20520737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lebqEwzM"
+	by mail.kernel.org (Postfix) with ESMTP id 4346220737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598461367;
+	bh=uWBwLrd7S1Yp+nZTjHPbZcVY0podVwESHryIx8RQH3Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JfyinUi69KQBqq805/ym3PLHqcVoJNIhwNHkyL1SPuewGjEu6YXdq7LPBEv35IzA1
+	 AGCWIR8V0RKlCbsTgfD7h2uKtf6cm+cpbVuxNX0XcKZa2z7luYjxxjFl1JspwE/yEu
+	 NNojHYmEKKyqq+vvIBpW2YkEvLLn2QavEztm6iIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgHZRCV (ORCPT
+        id S1727902AbgHZRCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:02:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgHZRAt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:00:49 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 334C1C061574
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:00:49 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id r13so2427792iln.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:00:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=26QxbXjs0m3B0fkeAQyxS9wdKxVZQIc+uM+Gzg+WrxE=;
-        b=lebqEwzMhnmkswoxV6vONuwriIJ3JbLyvJdUMvGSkvk4rWMzuvlc611vQT6UXue4kb
-         wuvGPZeBJwakM8I+RxywGmWpCfcM1xTEyQ69vOl82tWVJTod2B3ns3KNvKkqCrpgFY0l
-         eiy0e08N3NHS0uzIhvheHSOD5J5U4Y3SrC/Xd+VWhXW4VYZ7Nx+YHN8ue885Go737b5S
-         J9/7dQKzUKx6X5CmRhetUxkGMx2GuQpeLCzw3P9S7xWkqAUoLbFRkmIegcs6bMSm+bcq
-         DmgxmVlJbAyb9mGkZXT9lfX/0VEwS2S8sIPEldJiY43Zcb0JeubJsLM8DZoGErATcX8M
-         aK+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=26QxbXjs0m3B0fkeAQyxS9wdKxVZQIc+uM+Gzg+WrxE=;
-        b=eAR+EOZMYbuKvdK/OogPULPevH+sDNJ3VFPvpN8B+LXslSd2C9ygpXuzIhJdR4DzQl
-         ioyLmU+MAcs08xoMCksa7ReuHOc0qlX/pZvzckmZk5jSNH1D3hTq+tdX0YKhCrcWPljt
-         bsQtSZkXKbIgsYgvdd+EpO0tLQJxOm/PlVX/DBjHWfC4aS5V3gX5AFSO1HBIVnQUjWkB
-         i7VPww7C1zQehD1wblQIvyKLWQ5rAnFoy4qxKXzbpLjBjEqqwI/NWOReY5qKP/OwIb6W
-         YuWWQolHsIAL2Y4dVZ3crqxVTocktfP2grvlDmUDaApPEABWtv6qJuTjdj99GfnJPt4u
-         StXg==
-X-Gm-Message-State: AOAM5321Oz7xQCOssVK0jV63TFvD0zeKK7rBKhjxJ0TJy5bYnN5IM6f8
-        HYSpz7rdoJXXnkxg5j958AYiU4ZofkJfWg==
-X-Google-Smtp-Source: ABdhPJzXNx08f0nZ6xcJw6hnAsHg+EfmelTxJ3ljsr5xDxklbhFCTqfDudRRdcHUuI/h2miSh0PL+w==
-X-Received: by 2002:a92:c74e:: with SMTP id y14mr14195110ilp.251.1598461248027;
-        Wed, 26 Aug 2020 10:00:48 -0700 (PDT)
-Received: from frodo.hsd1.co.comcast.net ([2601:284:8203:5970::c4c])
-        by smtp.googlemail.com with ESMTPSA id p78sm1479606iod.0.2020.08.26.10.00.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 10:00:47 -0700 (PDT)
-From:   Jim Cromie <jim.cromie@gmail.com>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        jbaron@akamai.com
-Cc:     Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH 0/4] dyndbg: POC use dynamic_debug_exec_queries in DRM
-Date:   Wed, 26 Aug 2020 11:00:37 -0600
-Message-Id: <20200826170041.2497546-1-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 26 Aug 2020 13:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726745AbgHZRCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 13:02:43 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6CC420737;
+        Wed, 26 Aug 2020 17:02:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598461362;
+        bh=uWBwLrd7S1Yp+nZTjHPbZcVY0podVwESHryIx8RQH3Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VuKxJ0TDh87RUVYEuCIhxbMKSVimWIkMT/cm+vl7rbEQizVxzNQAUvGfs1f0rvQfo
+         xpg2hUM5K1+Wgs9Ad+ByUWisayz14qiD0gSbStn5wRlxzZ68IwzagYtw5xc20fabys
+         BjI4niK/EqQkZZwaGdzKSXnEfNpiPok6EaJjXHi8=
+Date:   Wed, 26 Aug 2020 18:02:05 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Kuldip Dwivedi <kuldip.dwivedi@puresoftware.com>,
+        Qiang Zhao <qiang.zhao@nxp.com>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Tanveer Alam <tanveer.alam@puresoftware.com>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
+Message-ID: <20200826170205.GL4965@sirena.org.uk>
+References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
+ <20200821140718.GH4870@sirena.org.uk>
+ <c810740d75f64e308fd362e6c6a5f437@mail.gmail.com>
+ <20200822152118.rlwbcgfk4abjldtg@skbuf>
+ <VE1PR04MB6768699B6D7A507A5BF82F9191540@VE1PR04MB6768.eurprd04.prod.outlook.com>
+ <20200826114758.4agph53ag2fin6um@skbuf>
+ <20200826142312.GH4965@sirena.org.uk>
+ <20200826144744.c4yzgoovk6f4t3id@skbuf>
+ <2e19f8979be4f962045a1597bdbe7886@mail.gmail.com>
+ <20200826160950.i3k2oy6w2dlvmj34@skbuf>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="S6vg04ofUPzW4qJg"
+Content-Disposition: inline
+In-Reply-To: <20200826160950.i3k2oy6w2dlvmj34@skbuf>
+X-Cookie: Should I do my BOBBIE VINTON medley?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset tests/demonstrates using dynamic_debug_exec_queries() to
-alter 2 drivers' pr_debugs without a user directly using >control.
 
-For drm.core, I copied drm.debug module parameter model, adding
-drm.debug2 as a POC user interface to control 2 pr_debug additions to
-drm_printk:drm_dbg,dev_dbg, allowing both category and >control to
-work in parallel.  This patch makes no attempt to integrate drm's
-category mechanism with the "format=^class" callsite selection; thats
-the "theory", but it needs testing.
+--S6vg04ofUPzW4qJg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-For i915/gvt, I repeated the pattern.  I focussed on gvt only, because
-it had the most compelling use of format strings as pr_debug classes;
-~120 pr_debugs in 9 classes.  These are mapped onto bits of the param.
+On Wed, Aug 26, 2020 at 07:09:50PM +0300, Vladimir Oltean wrote:
 
-bash-5.0# echo 0x0 > /sys/module/i915/parameters/debug_dyn 
-[ 3137.044185] set_dyndbg: result:0x0 from 0x0
-[ 3137.044185] 
-[ 3137.047370] dyndbg: query 0: "format='^gvt: cmd: ' -p"
-[ 3137.050302] dyndbg: entry, buf:'format='^gvt: cmd: ' -p'
-[ 3137.053331] dyndbg: start-of-word:0 'format='^gvt: cmd: ' -p'
+> I don't even know if NXP0005 is made up or if it's written down
+> somewhere in the PNP ID registry. NXP0006 seems to be assigned to the
 
-These patches were the test/use case for-59 fixes:
-https://lore.kernel.org/lkml/20200825173339.2082585-1-jim.cromie@gmail.com/
+Well, any ID is made up to some extent.  I am concerned about the
+allocation of IDs too, it needs to be coordinated with NXP since it's
+being allocated from their namespace, but unfortunately in general
+there's no sensible way to go from a chip/feature name to an ACPI name
+due to ACPI's specification mechanism.  There's also not any kind of
+central list of IDs.
 
+> In the ACPI spec there's also a _HRV (Hardware Revision) object, which
+> comes as a simple DWORD. We could use acpi_evaluate_integer() to read
+> that, and use it as index into the array of fsl_dspi_devtype_data, if
+> we declare that as ABI within the driver (and new SoCs would be added
+> only at the end of the enum). Then we could use the NXP0005 _HID for
+> everything DSPI.
 
-Jim Cromie (4):
-  drm-printk: POC caller of dynamic-debug-exec-queries
-  drm-printk: call pr_debug() from drm_dev_dbg, __drm_dbg
-  i915: add -DDYNAMIC_DEBUG_MODULE to i915/gvt/Makefile
-  i915: POC use dynamic_debug_exec_queries to control pr_debugs in gvt
+That's not something that it's particularly idiomatic to actually use in
+ACPI and you end up with the same namespacing problem assigning IDs so
+I'm not sure it makes life any better.
 
- drivers/gpu/drm/drm_print.c        | 54 ++++++++++++++++++---
- drivers/gpu/drm/i915/gvt/Makefile  |  5 +-
- drivers/gpu/drm/i915/i915_params.c | 76 ++++++++++++++++++++++++++++++
- 3 files changed, 127 insertions(+), 8 deletions(-)
+--S6vg04ofUPzW4qJg
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-2.26.2
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9GlY0ACgkQJNaLcl1U
+h9Bozgf/Sz7mY5RFESRs7ctTI2nM5uKnrKtvcFPSKn1Xsj12Sh164fQPPeOKpxnj
+bPxpi3txdmYil0BWOO3rZ1NqAVLNoI0+ojuCpGryNonUG+xWvSOLHcIcRGeewI5J
+0Z5aX/VR8NIWM9te2nAvwfm0xy1b/DqgLP91v/jd46B/cL2+hpq9OoejiuQgcQBU
+98TqyC8vb24xnV6nBbbUl4yUrkdhfABO0SqKibPnTWPTrhm6Al1gWvck6ZnfCZcm
+d0vKvMsblW5Z6nORNOVuEEc7V+3xihn1iD1x8W9tKTazKJrbgRWXtlbItTZJqEka
+yb+i0TPtKDvt15TC4GqRMFDI2UUavA==
+=n6mB
+-----END PGP SIGNATURE-----
+
+--S6vg04ofUPzW4qJg--
