@@ -2,154 +2,119 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C808C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 390222071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:40:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eKbMFYls"
+	by mail.kernel.org (Postfix) with ESMTP id 8AB3A2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbgHZGkL (ORCPT
+        id S1726838AbgHZGkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:40:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726039AbgHZGkK (ORCPT
+        Wed, 26 Aug 2020 02:40:39 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:10748 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726039AbgHZGkj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:40:10 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEE31C061574;
-        Tue, 25 Aug 2020 23:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=4xtHD/LVW7syPOvnagl2eLkMWsDcdFz+dmbJvQXXE2U=; b=eKbMFYlsgUXM0fA+NiB4PhHzGb
-        wrwkZXLtQYgaC1ka++8b3rG5Ue12E5ZRmL1ffxpGi9oAkm/0ka6fDZIjr+EDLwY4uYWbTLLhMdOLd
-        DOlU+kA364l0BcQnT7ejGZupP7jzMKNi0pinAwP81/TWsS/qPzKHeVJJ8pDPkGIXbjvn4pNCc6j/E
-        bxFWYccnzK/dA6Ywg51oO5eIiSxbAwnMhLVMEwWWm5torWykSQxiHhv6EDYkPaaYL2PvvbA8jYAHP
-        DahlR+jEIZaga/nYBefsNQGVwWP9NU2Krc44s8y50KEKXnCc8LRV8WyG72QyDAUnss8wWUeACsx3Z
-        QvermOUw==;
-Received: from 213-225-6-196.nat.highway.a1.net ([213.225.6.196] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAp6J-0002Cr-VJ; Wed, 26 Aug 2020 06:40:04 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: [PATCH 06/19] block: add an optional probe callback to major_names
-Date:   Wed, 26 Aug 2020 08:24:33 +0200
-Message-Id: <20200826062446.31860-7-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200826062446.31860-1-hch@lst.de>
-References: <20200826062446.31860-1-hch@lst.de>
+        Wed, 26 Aug 2020 02:40:39 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07Q6WGMF020652;
+        Wed, 26 Aug 2020 02:40:38 -0400
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3330954eya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 02:40:38 -0400
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 07Q6ea6p015258
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 26 Aug 2020 02:40:36 -0400
+Received: from SCSQCASHYB7.ad.analog.com (10.77.17.133) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 25 Aug 2020 23:40:35 -0700
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB7.ad.analog.com (10.77.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 25 Aug 2020 23:40:35 -0700
+Received: from zeus.spd.analog.com (10.66.68.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 25 Aug 2020 23:40:34 -0700
+Received: from saturn.ad.analog.com ([10.48.65.100])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07Q6eV7p018895;
+        Wed, 26 Aug 2020 02:40:31 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <ribalda@kernel.org>, <jic23@kernel.org>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: dac: ti-dac7612: Replace indio_dev->mlock with own device lock
+Date:   Wed, 26 Aug 2020 09:40:28 +0300
+Message-ID: <20200826064028.51540-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-26_03:2020-08-25,2020-08-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ phishscore=0 mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxlogscore=496 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008260050
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a callback to the major_names array that allows a driver to override
-how to probe for dev_t that doesn't currently have a gendisk registered.
-This will help separating the lookup of the gendisk by dev_t vs probe
-action for a not currently registered dev_t.
+From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+As part of the general cleanup of indio_dev->mlock, this change replaces
+it with a local lock on the device's state structure.
+
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- block/genhd.c         | 21 ++++++++++++++++++---
- include/linux/genhd.h |  5 ++++-
- 2 files changed, 22 insertions(+), 4 deletions(-)
+ drivers/iio/dac/ti-dac7612.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 00164304317cfa..4cbeff3ec1ef5a 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -402,6 +402,7 @@ static struct blk_major_name {
- 	struct blk_major_name *next;
- 	int major;
- 	char name[16];
-+	void (*probe)(dev_t devt);
- } *major_names[BLKDEV_MAJOR_HASH_SIZE];
- static DEFINE_MUTEX(major_names_lock);
+diff --git a/drivers/iio/dac/ti-dac7612.c b/drivers/iio/dac/ti-dac7612.c
+index 07c9f39d54f1..34c2aec204ef 100644
+--- a/drivers/iio/dac/ti-dac7612.c
++++ b/drivers/iio/dac/ti-dac7612.c
+@@ -21,6 +21,7 @@ struct dac7612 {
+ 	struct spi_device *spi;
+ 	struct gpio_desc *loaddacs;
+ 	uint16_t cache[2];
++	struct mutex lock;
  
-@@ -444,7 +445,8 @@ void blkdev_show(struct seq_file *seqf, off_t offset)
-  * See Documentation/admin-guide/devices.txt for the list of allocated
-  * major numbers.
-  */
--int register_blkdev(unsigned int major, const char *name)
-+int __register_blkdev(unsigned int major, const char *name,
-+		void (*probe)(dev_t devt))
- {
- 	struct blk_major_name **n, *p;
- 	int index, ret = 0;
-@@ -483,6 +485,7 @@ int register_blkdev(unsigned int major, const char *name)
- 	}
+ 	/*
+ 	 * DMA (thus cache coherency maintenance) requires the
+@@ -101,9 +102,9 @@ static int dac7612_write_raw(struct iio_dev *iio_dev,
+ 	if (val == priv->cache[chan->channel])
+ 		return 0;
  
- 	p->major = major;
-+	p->probe = probe;
- 	strlcpy(p->name, name, sizeof(p->name));
- 	p->next = NULL;
- 	index = major_to_index(major);
-@@ -505,8 +508,7 @@ int register_blkdev(unsigned int major, const char *name)
- 	mutex_unlock(&major_names_lock);
+-	mutex_lock(&iio_dev->mlock);
++	mutex_lock(&priv->lock);
+ 	ret = dac7612_cmd_single(priv, chan->channel, val);
+-	mutex_unlock(&iio_dev->mlock);
++	mutex_unlock(&priv->lock);
+ 
  	return ret;
  }
--
--EXPORT_SYMBOL(register_blkdev);
-+EXPORT_SYMBOL(__register_blkdev);
+@@ -145,6 +146,8 @@ static int dac7612_probe(struct spi_device *spi)
+ 	iio_dev->num_channels = ARRAY_SIZE(priv->cache);
+ 	iio_dev->name = spi_get_device_id(spi)->name;
  
- void unregister_blkdev(unsigned int major, const char *name)
- {
-@@ -1037,6 +1039,19 @@ static ssize_t disk_badblocks_store(struct device *dev,
- 
- static void request_gendisk_module(dev_t devt)
- {
-+	unsigned int major = MAJOR(devt);
-+	struct blk_major_name **n;
++	mutex_init(&priv->lock);
 +
-+	mutex_lock(&major_names_lock);
-+	for (n = &major_names[major_to_index(major)]; *n; n = &(*n)->next) {
-+		if ((*n)->major == major && (*n)->probe) {
-+			(*n)->probe(devt);
-+			mutex_unlock(&major_names_lock);
-+			return;
-+		}
-+	}
-+	mutex_unlock(&major_names_lock);
-+
- 	if (request_module("block-major-%d-%d", MAJOR(devt), MINOR(devt)) > 0)
- 		/* Make old-style 2.4 aliases work */
- 		request_module("block-major-%d", MAJOR(devt));
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 4ab853461dff25..c0bde190a3dd0c 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -369,7 +369,10 @@ extern void blk_unregister_region(dev_t devt, unsigned long range);
- 
- #define alloc_disk(minors) alloc_disk_node(minors, NUMA_NO_NODE)
- 
--int register_blkdev(unsigned int major, const char *name);
-+int __register_blkdev(unsigned int major, const char *name,
-+		void (*probe)(dev_t devt));
-+#define register_blkdev(major, name) \
-+	__register_blkdev(major, name, NULL)
- void unregister_blkdev(unsigned int major, const char *name);
- 
- int revalidate_disk(struct gendisk *disk);
+ 	for (i = 0; i < ARRAY_SIZE(priv->cache); i++) {
+ 		ret = dac7612_cmd_single(priv, i, 0);
+ 		if (ret)
 -- 
-2.28.0
+2.25.1
 
