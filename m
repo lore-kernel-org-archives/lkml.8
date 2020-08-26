@@ -7,90 +7,74 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0495EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD7F20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF68820707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:13:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgHZDEK (ORCPT
+        id S1726753AbgHZDN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 23:04:10 -0400
-Received: from mga03.intel.com ([134.134.136.65]:19502 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbgHZDEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 23:04:07 -0400
-IronPort-SDR: 2jIqBcp3y4W0sLumFVhb/cilxfjFFj3P7t/VL6v34owkoWumzsBAz2twhlaVtJ6/DK+3dHKvhT
- bG9ElVwbh2/A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="156218399"
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="156218399"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 20:04:05 -0700
-IronPort-SDR: vZCSZjAmN1KuXvBvUWo3r2HqIN/RlVKrI6kt6XOFXyb3zAw8dMvvOFV/gjdrdiE8CfeJKr2sLw
- OJqXAvCOklqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="402937427"
-Received: from allen-box.sh.intel.com ([10.239.159.139])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Aug 2020 20:04:00 -0700
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH 1/1] iommu/vt-d: Serialize IOMMU GCMD register modifications
-Date:   Wed, 26 Aug 2020 10:58:25 +0800
-Message-Id: <20200826025825.2322-1-baolu.lu@linux.intel.com>
+        Tue, 25 Aug 2020 23:13:29 -0400
+Received: from smtp23.cstnet.cn ([159.226.251.23]:56508 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726672AbgHZDN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 23:13:29 -0400
+Received: from localhost.localdomain (unknown [159.226.5.100])
+        by APP-03 (Coremail) with SMTP id rQCowADX3ho200Vfqr_JBA--.3629S2;
+        Wed, 26 Aug 2020 11:12:54 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     richardcochran@gmail.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ptp: ptp_ines: Remove redundant null check
+Date:   Wed, 26 Aug 2020 03:12:51 +0000
+Message-Id: <20200826031251.4362-1-vulab@iscas.ac.cn>
 X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: rQCowADX3ho200Vfqr_JBA--.3629S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jr4xAFWUAw4DZr43Kry7GFg_yoWxZrXEkw
+        10qF1I9r4UXw40yw12kw4rurWv9a4kXr1rX3Wvqa13A39rWr15ArWv9rWkXw1Duw43CFsx
+        Jr93Wr18Ca9I9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb2AYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Gryq6s0DMcIj6I8E87Iv67AKxVWaoV
+        W8JcWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8GwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jtYFZUUUUU=
+X-Originating-IP: [159.226.5.100]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAxAAA13qZUwcAQAAsT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The VT-d spec requires (10.4.4 Global Command Register, GCMD_REG General
-Description) that:
+Because kfree_skb already checked NULL skb parameter,
+so the additional check is unnecessary, just remove it.
 
-If multiple control fields in this register need to be modified, software
-must serialize the modifications through multiple writes to this register.
-
-However, in irq_remapping.c, modifications of IRE and CFI are done in one
-write. We need to do two separate writes with STS checking after each.
-
-Fixes: af8d102f999a4 ("x86/intel/irq_remapping: Clean up x2apic opt-out security warning mess")
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
 ---
- drivers/iommu/intel/irq_remapping.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/ptp/ptp_ines.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
-index 9564d23d094f..19d7e18876fe 100644
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -507,12 +507,16 @@ static void iommu_enable_irq_remapping(struct intel_iommu *iommu)
+diff --git a/drivers/ptp/ptp_ines.c b/drivers/ptp/ptp_ines.c
+index 7711651ff19e..2c1fb99aa37c 100644
+--- a/drivers/ptp/ptp_ines.c
++++ b/drivers/ptp/ptp_ines.c
+@@ -663,8 +663,7 @@ static void ines_txtstamp(struct mii_timestamper *mii_ts,
  
- 	/* Enable interrupt-remapping */
- 	iommu->gcmd |= DMA_GCMD_IRE;
--	iommu->gcmd &= ~DMA_GCMD_CFI;  /* Block compatibility-format MSIs */
- 	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
--
- 	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
- 		      readl, (sts & DMA_GSTS_IRES), sts);
+ 	spin_unlock_irqrestore(&port->lock, flags);
  
-+	/* Block compatibility-format MSIs */
-+	iommu->gcmd &= ~DMA_GCMD_CFI;
-+	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
-+	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
-+		      readl, !(sts & DMA_GSTS_CFIS), sts);
-+
- 	/*
- 	 * With CFI clear in the Global Command register, we should be
- 	 * protected from dangerous (i.e. compatibility) interrupts
+-	if (old_skb)
+-		kfree_skb(old_skb);
++	kfree_skb(old_skb);
+ 
+ 	schedule_delayed_work(&port->ts_work, 1);
+ }
 -- 
 2.17.1
 
