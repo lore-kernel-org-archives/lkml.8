@@ -2,75 +2,59 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC668C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C203E2087D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E9E20897
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LwLU6UgN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="deJ2I6kg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728638AbgHZJiQ (ORCPT
+        id S1728625AbgHZJiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728338AbgHZJer (ORCPT
+        Wed, 26 Aug 2020 05:38:14 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:20125 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728292AbgHZJer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Aug 2020 05:34:47 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A1EC061797
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:26 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id s13so1077575wmh.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gXj0QTNi35Mkf/0PfjV36Op7KYk+Sf8/3WVle5YvISs=;
-        b=LwLU6UgNWRhkAICyUcI0WTYo9m6TXWqPAHELcWqUYunSe14/NoTP2Wi3SxwnjRCPYp
-         P8ToArmn9LBzbGkBXZ5NsJr3JcJPxfj4PgpcLvujetjrJ+klZkFbwpqK7c0ENSxr3mNx
-         TZxfs6nglopjKXRQRLOaqoCUM9q4GccbGnin36RbIYanIqRUXWquVts5sYLDdBZYOzzb
-         vAyKkiZ+aFleQE2DfWIpFhUJ+MAVRqtkvonJgyFAONhAPazcEjwPOHxWz+EVcNksSV7I
-         vfNUXi6Qw+KqfZKelE0ChGdvsvJPlz3owrqDYGcVtd3723oXffVMm074IevYrbmxxaLj
-         Gs8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gXj0QTNi35Mkf/0PfjV36Op7KYk+Sf8/3WVle5YvISs=;
-        b=irfajyaE3NzR4+627dyFCuiJJTJW+X0bwBCUFtZIKXsxBa+9FYgEKMM/iXrGCHRtem
-         /vudEYlfdpeY06WhsD5amG/LtADlzexhin3eTiJlfBQP9XIN0vz0l7pAbLvsoUMy0W9g
-         AnnI1FlRa4ozB1BB/EG8qLJkKVr4tIF+JyZtE4DEEUnr5ot/IWKvlNkGqQPHW278/uCS
-         3ZsrkNURZdgpc188KRbV0lV40EtTSDHD5BLfXmniAgBKcFE+57O9SJqrv0x9vuXUukii
-         vWdm39pnQHoMuFCPstlo5iD8obvit6SRqyxm+azU8nIxDEQOaYLwyvzHaZg3OH9IwS3m
-         ga6Q==
-X-Gm-Message-State: AOAM533jvLHZsg4Wq7IeqfqmfKE/MedYNifLZhX63JOAkvqgLxa1034o
-        S14CDHlR56w6FxuaUnpHDmDGmA==
-X-Google-Smtp-Source: ABdhPJzhoiIojiVg/XClYdahPZ4ZyRm0woGPRNGbBc3tfiZLNL944VFpp2XhnfvuIRtgcAevDM0t/Q==
-X-Received: by 2002:a1c:c913:: with SMTP id f19mr5945307wmb.173.1598434464899;
-        Wed, 26 Aug 2020 02:34:24 -0700 (PDT)
-Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 02:34:24 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>
-Subject: [PATCH 16/30] wireless: rsi: rsi_91x_sdio: Fix a few kernel-doc related issues
-Date:   Wed, 26 Aug 2020 10:33:47 +0100
-Message-Id: <20200826093401.1458456-17-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200826093401.1458456-1-lee.jones@linaro.org>
-References: <20200826093401.1458456-1-lee.jones@linaro.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598434472;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
+        Subject:Sender;
+        bh=yBt+2etaBY9zgYdXE/iL82GyuWazNPY8Ty2z45dc9Fs=;
+        b=deJ2I6kgPVKJpRe618C4ByI1ZN6r0M+aHEnB1/bL421s84REdHHGWXgNlujL0Qf/7Y
+        yf9uv1c0/ncrqoEBzvPfau6FPsN5IkiVkYkcDXnOfDZy4lm3Hkisxtp4A/zVilJ61ojU
+        WWaaydq7SHCKmmpOHiLHIQPZ7HwmidWvTpKETwWzlfyx4KhQifd+m9YNykJW89x66IOH
+        ZEHCHvWLf3W0P8aF6etjAQEPdSjILgm5zy9PDh/4PtIhvCbSnzkBLQRlUfaQ+qDUbHpO
+        UenfjMmqXj/FInx+8jp1vJZZiuh5FV7BcsJO9yB5qmvrR/lh+yrQ309lco6OP+r1RJFE
+        mZww==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4W6NYn8D"
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id g0b6c1w7Q9YUkzf
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 26 Aug 2020 11:34:30 +0200 (CEST)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Niklas Cassel <nks@flawful.org>,
+        Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH v2] opp: Power on (virtual) power domains managed by the OPP core
+Date:   Wed, 26 Aug 2020 11:33:28 +0200
+Message-Id: <20200826093328.88268-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,61 +62,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- - File headers do not make for good kernel-doc candidates
- - Kernel-doc header lines should start with " *"
- - Fix doc-rot issue
+dev_pm_opp_attach_genpd() allows attaching an arbitrary number of
+power domains to an OPP table. In that case, the genpd core will
+create a virtual device for each of the power domains.
 
-Fixes the following W=1 kernel build warning(s):
+At the moment, the OPP core only calls
+dev_pm_genpd_set_performance_state() on these virtual devices.
+It does not attempt to power on the power domains. Therefore
+the required power domain might never get turned on.
 
- drivers/net/wireless/rsi/rsi_91x_sdio.c:25: warning: cannot understand function prototype: 'u16 dev_oper_mode = DEV_OPMODE_STA_BT_DUAL; '
- drivers/net/wireless/rsi/rsi_91x_sdio.c:802: warning: bad line:                                    from the device.
- drivers/net/wireless/rsi/rsi_91x_sdio.c:842: warning: Function parameter or member 'pfunction' not described in 'rsi_init_sdio_interface'
- drivers/net/wireless/rsi/rsi_91x_sdio.c:842: warning: Excess function parameter 'pkt' description in 'rsi_init_sdio_interface'
+So far, dev_pm_opp_attach_genpd() is only used in qcom-cpufreq-nvmem.c
+to attach the CPR power domain to the CPU OPP table. The CPR driver
+does not check if it was actually powered on so this did not cause
+any problems. However, other drivers (e.g. rpmpd) might ignore the
+performance state until the power domain is actually powered on.
 
-Cc: Amitkumar Karwar <amitkarwar@gmail.com>
-Cc: Siva Rebbagondla <siva8118@gmail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Since these virtual devices are managed exclusively by the OPP core,
+I would say that it should also be responsible to ensure they are
+enabled.
+
+This commit implements this similar to the non-virtual power domains;
+we create device links for each of attached power domains so that they
+are turned on whenever the consumer device is active.
+
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
 ---
- drivers/net/wireless/rsi/rsi_91x_sdio.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Related discussion: https://lore.kernel.org/linux-arm-msm/20200426123140.GA190483@gerhold.net/
 
-diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-index a04ff75c409f4..a7b8684143f46 100644
---- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
-@@ -1,4 +1,4 @@
--/**
-+/*
-  * Copyright (c) 2014 Redpine Signals Inc.
-  *
-  * Permission to use, copy, modify, and/or distribute this software for any
-@@ -799,7 +799,7 @@ static int rsi_sdio_host_intf_write_pkt(struct rsi_hw *adapter,
+v1: https://lore.kernel.org/linux-pm/20200730080146.25185-4-stephan@gerhold.net/
+Changes in v2:
+  - Use device links instead of enabling the power domains in
+    dev_pm_opp_set_rate()
+---
+ drivers/opp/core.c | 34 +++++++++++++++++++++++++++++++++-
+ drivers/opp/opp.h  |  1 +
+ 2 files changed, 34 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 8b3c3986f589..7e53a7b94c59 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -17,6 +17,7 @@
+ #include <linux/device.h>
+ #include <linux/export.h>
+ #include <linux/pm_domain.h>
++#include <linux/pm_runtime.h>
+ #include <linux/regulator/consumer.h>
  
- /**
-  * rsi_sdio_host_intf_read_pkt() - This function reads the packet
--				   from the device.
-+ *				   from the device.
-  * @adapter: Pointer to the adapter data structure.
-  * @pkt: Pointer to the packet data to be read from the the device.
-  * @length: Length of the data to be read from the device.
-@@ -832,11 +832,10 @@ int rsi_sdio_host_intf_read_pkt(struct rsi_hw *adapter,
-  * rsi_init_sdio_interface() - This function does init specific to SDIO.
-  *
-  * @adapter: Pointer to the adapter data structure.
-- * @pkt: Pointer to the packet data to be read from the the device.
-+ * @pfunction: Pointer to the sdio_func structure.
-  *
-  * Return: 0 on success, -1 on failure.
-  */
--
- static int rsi_init_sdio_interface(struct rsi_hw *adapter,
- 				   struct sdio_func *pfunction)
+ #include "opp.h"
+@@ -1964,10 +1965,13 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
+ 		if (!opp_table->genpd_virt_devs[index])
+ 			continue;
+ 
++		if (opp_table->genpd_virt_links && opp_table->genpd_virt_links[index])
++			device_link_del(opp_table->genpd_virt_links[index]);
+ 		dev_pm_domain_detach(opp_table->genpd_virt_devs[index], false);
+ 		opp_table->genpd_virt_devs[index] = NULL;
+ 	}
+ 
++	kfree(opp_table->genpd_virt_links);
+ 	kfree(opp_table->genpd_virt_devs);
+ 	opp_table->genpd_virt_devs = NULL;
+ }
+@@ -1999,8 +2003,10 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
  {
+ 	struct opp_table *opp_table;
+ 	struct device *virt_dev;
+-	int index = 0, ret = -EINVAL;
++	struct device_link *dev_link;
++	int index = 0, ret = -EINVAL, num_devs;
+ 	const char **name = names;
++	u32 flags;
+ 
+ 	opp_table = dev_pm_opp_get_opp_table(dev);
+ 	if (IS_ERR(opp_table))
+@@ -2049,6 +2055,32 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+ 		name++;
+ 	}
+ 
++	/* Create device links to enable the power domains when necessary */
++	opp_table->genpd_virt_links = kcalloc(opp_table->required_opp_count,
++					      sizeof(*opp_table->genpd_virt_links),
++					      GFP_KERNEL);
++	if (!opp_table->genpd_virt_links)
++		goto err;
++
++	/* Turn on power domain initially if consumer is active */
++	pm_runtime_get_noresume(dev);
++	flags = DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS;
++	if (pm_runtime_active(dev))
++		flags |= DL_FLAG_RPM_ACTIVE;
++
++	num_devs = index;
++	for (index = 0; index < num_devs; index++) {
++		dev_link = device_link_add(dev, opp_table->genpd_virt_devs[index],
++					   flags);
++		if (!dev_link) {
++			dev_err(dev, "Failed to create device link\n");
++			pm_runtime_put(dev);
++			goto err;
++		}
++		opp_table->genpd_virt_links[index] = dev_link;
++	}
++	pm_runtime_put(dev);
++
+ 	if (virt_devs)
+ 		*virt_devs = opp_table->genpd_virt_devs;
+ 	mutex_unlock(&opp_table->genpd_virt_dev_lock);
+diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+index 78e876ec803e..be5526cdbdba 100644
+--- a/drivers/opp/opp.h
++++ b/drivers/opp/opp.h
+@@ -186,6 +186,7 @@ struct opp_table {
+ 
+ 	struct mutex genpd_virt_dev_lock;
+ 	struct device **genpd_virt_devs;
++	struct device_link **genpd_virt_links;
+ 	struct opp_table **required_opp_tables;
+ 	unsigned int required_opp_count;
+ 
 -- 
-2.25.1
+2.28.0
 
