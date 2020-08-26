@@ -2,77 +2,103 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DBDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E487CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D96F2074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D332074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:29:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aixah.de header.i=@aixah.de header.b="F7Rn3/52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgHZQ2a (ORCPT
+        id S1728075AbgHZQ3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:28:30 -0400
-Received: from mga14.intel.com ([192.55.52.115]:49097 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbgHZQ21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:28:27 -0400
-IronPort-SDR: l4i/zvIIYnOeXgkG8OxcxxBIJQcUZCypo6h6kQrGrS/mKMRhidIg3V1lMEQbpzNBo3oGkb3hWX
- IFAd/P4fSU/Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="155587770"
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="155587770"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:28:26 -0700
-IronPort-SDR: W79ZjHSp/+wNkVT6wqAbHR3aD9BHQzbRfqyg0vr1a6wNvrR+SNijUX9dSb99Fp74GX4HtHAs54
- DCfadEgGcuqA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="336878223"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 Aug 2020 09:28:26 -0700
-Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.186])
-        by linux.intel.com (Postfix) with ESMTP id 89FB95806C4;
-        Wed, 26 Aug 2020 09:28:24 -0700 (PDT)
-Message-ID: <d2cc3c6da2d56fe01a8eeaa58a50b333288d216d.camel@gmail.com>
-Subject: Re: [PATCH] intel_idle: Add ICL support
-From:   Artem Bityutskiy <dedekind1@gmail.com>
-Reply-To: dedekind1@gmail.com
-To:     Guilhem Lettron <guilhem@barpilot.io>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 26 Aug 2020 19:28:23 +0300
-In-Reply-To: <c17c75993ebb5512e5a869fbe5b13f5c49685041.camel@gmail.com>
-References: <20200826120421.44356-1-guilhem@barpilot.io>
-         <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
-         <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
-         <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
-         <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
-         <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
-         <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
-         <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
-         <72fab2376722c6169549669016933217d3da34a0.camel@gmail.com>
-         <c17c75993ebb5512e5a869fbe5b13f5c49685041.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Wed, 26 Aug 2020 12:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbgHZQ3L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:29:11 -0400
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBE5C061574;
+        Wed, 26 Aug 2020 09:29:10 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4BcBBp3DBPzQlWV;
+        Wed, 26 Aug 2020 18:29:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aixah.de; s=MBO0001;
+        t=1598459344;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=uSOvEcQaqddPwizXQnRzqoFfD6pthJq2HRRXeaGIx8M=;
+        b=F7Rn3/52abVlbiyS+9PvjmJ6SOCVWHECo3aqTkkprLLdU93By4s4UXs/jsBBxN1SoCxXrW
+        +ySjwsVnkIOD45Bm5JppLMDrvq7lbscCoVXHdW+x43Wd9H3kAdAVK9iwp9Gf2lVvslwEcf
+        nH0yWKaapXuXZv+3fkOYoPmpHUwfwpfO4xbsR0SIPK5wZxNmz71L5sOxUq1VLQv8gGiSSe
+        9fSu5FMoMJWSWJvtTLiYZ4Y+ur3Nrq8cWHZKSju1tCbsFgaJGsxl8y+0Oa4eI8Te8dIMds
+        fPxhOyUGGiZ4GVQf1IpRn79XYY3IOQoJfDAFiSRkK9glUJ4rGNgpU3EKRduJRw==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id X6Skw1EjWZS6; Wed, 26 Aug 2020 18:29:02 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 16:29:01 +0000
+From:   Mira Ressel <aranea@aixah.de>
+To:     David Miller <davem@davemloft.net>
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] veth: Initialize dev->perm_addr
+Message-ID: <20200826162901.4js4u5u2whusp4l4@vega>
+References: <20200824143828.5964-1-aranea@aixah.de>
+ <20200824.102545.1450838041398463071.davem@davemloft.net>
+ <20200826152000.ckxrcfyetdvuvqum@vega>
+ <20200826.082857.584544823490249841.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826.082857.584544823490249841.davem@davemloft.net>
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -2.01 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 5F31466D
+X-Rspamd-UID: cce744
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-26 at 19:25 +0300, Artem Bityutskiy wrote:
-> C6
+On Wed, Aug 26, 2020 at 08:28:57AM -0700, David Miller wrote:
+> From: Mira Ressel <aranea@aixah.de>
+> Date: Wed, 26 Aug 2020 15:20:00 +0000
+> 
+> > I'm setting the peer->perm_addr, which would otherwise be zero, to its
+> > dev_addr, which has been either generated randomly by the kernel or
+> > provided by userland in a netlink attribute.
+> 
+> Which by definition makes it not necessarily a "permanent address" and
+> therefore is subject to being different across boots, which is exactly
+> what you don't want to happen for automatic address generation.
 
-Ok, too long day, I meant C10 here...
+That's true, but since veth devices aren't backed by any hardware, I
+unfortunately don't have a good source for a permanent address. The only
+inherently permanent thing about them is their name.
 
+People who use the default eui64-based address generation don't get
+persistent link-local addresses for their veth devices out of the box
+either -- the EUI64 is derived from the device's dev_addr, which is
+randomized by default.
+
+If that presents a problem for anyone, they can configure their userland
+to set the dev_addr to a static value, which handily fixes this problem
+for both address generation algorithms.
+
+I'm admittedly glancing over one problem here -- I'm only setting the
+perm_addr during device creation, whereas userland can change the
+dev_addr at any time. I'm not sure if it'd make sense here to update the
+perm_addr if the dev_addr is changed later on?
+
+-- 
+Regards,
+Mira
