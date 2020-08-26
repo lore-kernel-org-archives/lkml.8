@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F5CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D62C0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA8620767
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941852071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598426336;
-	bh=0x9ncJQIGlCkEuJhLzZ1EuCxyoWzRXNvdeYep6RQ+5Y=;
+	s=default; t=1598426339;
+	bh=FMzXVMoId/Kvxlbl2TmaHLiw3F9awa6K+3ThnX269Yk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GBkoGNN6UC6AQqVuXMFAex7ipdPZXQdzazNEa+hQGxF6/77GYFi96GZnIv+6QKln1
-	 8BSRqUMErqkl47EMSeGM52vNsCAvVoPXHJMM9b7JxXLbe5NiStfqRM+rLzYrHRHRWu
-	 LbHiZ1TPyr9C0zSzxLcVTv02xewcTjtMoYdLEfyE=
+	b=SXaY7BW9G641crSWV011MUFuDjHvrrVryQczqwogjVLI41gCVS/+t0MCa/rPjYfXP
+	 AFZKhZMEquyYDAL3XvKDY95tb3UHE4s9r+fUR1NaWho5NdSS1HBvBKrX4hojKV5bF2
+	 vECYZ593FUiLbWqTxcvPicjEKGrDZKUdbqogS3vM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgHZHSv (ORCPT
+        id S1726874AbgHZHS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:18:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33050 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 03:18:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbgHZHSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:18:49 -0400
+        id S1726700AbgHZHSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 03:18:50 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9AAA2071E;
+        by mail.kernel.org (Postfix) with ESMTPSA id DDE4D20825;
         Wed, 26 Aug 2020 07:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598426328;
-        bh=0x9ncJQIGlCkEuJhLzZ1EuCxyoWzRXNvdeYep6RQ+5Y=;
+        bh=FMzXVMoId/Kvxlbl2TmaHLiw3F9awa6K+3ThnX269Yk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p6g7zIemwUgyTu6hyjK0M5mkDRULyfTJb3rysCmGquEowsshS1qwOsgKFtB/mvI/p
-         vS9YgMe3RO+iAheZAuHPMMq8d4TgnqcqraQFSCdX5NdVGiNP5A70SmoOHFvbkBuAGq
-         lqT4FU1+HbqsF9+KfPt/Q+vO+61XoG8KS/9QYAjw=
+        b=xjO6fiqXSHAwZ8vrgT94VPaJJRzxmZOHMBARKfl503qKVbfR4zufLyvWbsyPmlZx+
+         FEn7Rug9hkzfQGHfiLEbSbBd4h4TayJ28oPXjk8I0XKhUs2TLbt8q15QENaY3pjVOK
+         B32YagfdHA8Zl3tPqXOcMWnH8p+y/rVUk5R9j19g=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kAphl-001Raf-V6; Wed, 26 Aug 2020 09:18:45 +0200
+        id 1kAphm-001Raj-19; Wed, 26 Aug 2020 09:18:46 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     linux-media@vger.kernel.org,
         Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 2/4] media: docs: use the new SPDX header for GFDL-1.1 on *.svg files
-Date:   Wed, 26 Aug 2020 09:18:37 +0200
-Message-Id: <f37dc4587f1adbf57c44c9e204c748d97c802fb8.1598426302.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 4/4] media: docs: use SPDX GPL-2.0 OR GFDL-1.1 instead of text on *.svg files
+Date:   Wed, 26 Aug 2020 09:18:39 +0200
+Message-Id: <8785b1e6721bd54ce85837bf2e3d9787cd8e9796.1598426302.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <929df929283e38b388f601c2ba521257e38cc566.1598426302.git.mchehab+huawei@kernel.org>
 References: <929df929283e38b388f601c2ba521257e38cc566.1598426302.git.mchehab+huawei@kernel.org>
@@ -60,226 +60,248 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SPDX v3.10 gained support for GFDL-1.1 with no invariant sections:
+There are some files that are dual licensed GPL and GFDL.
+
+As SPDX v3.10 gained support for GFDL-1.1 with no invariant sections:
 
 	https://spdx.org/licenses/GFDL-1.1-no-invariants-or-later.html
 
-So, remove the license text, replacing them by this new SPDX license.
+Let's remove the dual license text, replacing them by:
+
+	SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- .../userspace-api/media/typical_media_device.svg      | 11 +----------
- Documentation/userspace-api/media/v4l/crop.svg        | 11 +----------
- Documentation/userspace-api/media/v4l/fieldseq_bt.svg | 11 +----------
- Documentation/userspace-api/media/v4l/fieldseq_tb.svg | 11 +----------
- .../media/v4l/subdev-image-processing-crop.svg        | 11 +----------
- .../media/v4l/subdev-image-processing-full.svg        | 11 +----------
- .../subdev-image-processing-scaling-multi-source.svg  | 11 +----------
- Documentation/userspace-api/media/v4l/vbi_525.svg     | 11 +----------
- Documentation/userspace-api/media/v4l/vbi_625.svg     | 11 +----------
- Documentation/userspace-api/media/v4l/vbi_hsync.svg   | 11 +----------
- 10 files changed, 10 insertions(+), 100 deletions(-)
+ .../userspace-api/media/dvb/dvbstb.svg        | 28 +------------------
+ .../userspace-api/media/v4l/bayer.svg         | 28 +------------------
+ .../userspace-api/media/v4l/constraints.svg   | 28 +------------------
+ .../userspace-api/media/v4l/nv12mt.svg        | 28 +------------------
+ .../media/v4l/nv12mt_example.svg              | 28 +------------------
+ .../userspace-api/media/v4l/selection.svg     | 28 +------------------
+ 6 files changed, 6 insertions(+), 162 deletions(-)
 
-diff --git a/Documentation/userspace-api/media/typical_media_device.svg b/Documentation/userspace-api/media/typical_media_device.svg
-index 3420341ff7b6..fca7af8e438b 100644
---- a/Documentation/userspace-api/media/typical_media_device.svg
-+++ b/Documentation/userspace-api/media/typical_media_device.svg
-@@ -1,14 +1,5 @@
+diff --git a/Documentation/userspace-api/media/dvb/dvbstb.svg b/Documentation/userspace-api/media/dvb/dvbstb.svg
+index b333d0ff944f..87e68baa056b 100644
+--- a/Documentation/userspace-api/media/dvb/dvbstb.svg
++++ b/Documentation/userspace-api/media/dvb/dvbstb.svg
+@@ -1,31 +1,5 @@
  <?xml version="1.0" encoding="UTF-8"?>
 -<!--
--    Permission is granted to copy, distribute and/or modify this
--    document under the terms of the GNU Free Documentation License,
--    Version 1.1 or any later version published by the Free Software
--    Foundation, with no Invariant Sections, no Front-Cover Texts
--    and no Back-Cover Texts. A copy of the license is included at
--    Documentation/userspace-api/media/fdl-appendix.rst.
+-    This file is dual-licensed: you can use it either under the terms
+-    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
+-    dual licensing only applies to this file, and not this project as a
+-    whole.
 -
--    TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
+-    a) This file is free software; you can redistribute it and/or
+-       modify it under the terms of the GNU General Public License as
+-       published by the Free Software Foundation version 2 of
+-       the License.
+-
+-       This file is distributed in the hope that it will be useful,
+-       but WITHOUT ANY WARRANTY; without even the implied warranty of
+-       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-       GNU General Public License for more details.
+-
+-    Or, alternatively,
+-
+-    b) Permission is granted to copy, distribute and/or modify this
+-       document under the terms of the GNU Free Documentation License,
+-       Version 1.1 or any later version published by the Free Software
+-       Foundation, with no Invariant Sections, no Front-Cover Texts
+-       and no Back-Cover Texts. A copy of the license is included at
+-       Documentation/userspace-api/media/fdl-appendix.rst.
+-
+-    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
 --->
-+<!-- SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later -->
- <svg id="svg2" width="235mm" height="179mm" clip-path="url(#a)" fill-rule="evenodd" stroke-linejoin="round" stroke-width="28.222" preserveAspectRatio="xMidYMid" version="1.2" viewBox="0 0 22648.239 17899.829" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><metadata id="metadata1533"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title/></cc:Work></rdf:RDF></metadata><defs id="defs4"><clipPath id="a"><rect id="rect7" width="28000" height="21000"/></clipPath></defs><path id="path11" d="m10146 2636c-518.06 0-1035.1 515-1035.1 1031v4124c0 516 517.06 1032 1035.1 1032h8572.2c518.06 0 1036.1-516 1036.1-1032v-4124c0-516-518.06-1031-1036.1-1031h-8572.2z"
- fill="#fcf" style=""/><path id="path15" d="m1505.5 13443c-293 0-585 292-585 585v2340c0 293 292 586 585 586h3275c293 0 586-293 586-586v-2340c0-293-293-585-586-585h-3275z" fill="#ffc" style=""/><path id="path19" d="m517.15 22.013c-461 0-922 461-922 922v11169c0 461 461 923 922 923h3692c461 0 922-462 922-923v-11169c0-461-461-922-922-922h-3692z" fill="#e6e6e6" style=""/><path id="path23" d="m2371.5 6438h-2260v-1086h4520v1086h-2260z" fill="#ff8080" style=""/><path id="path25" d="m2371.5 6438h-2260v-1086h4520v1086h-2260z" fill="none" stroke="#3465af" style=""/><text id="text27" class="TextShape" x="-2089.4541" y="-2163.9871" font-family="Serif, serif" font-size="493.88px"><tspan id="tspan29" class="TextParagraph" font-family="Serif, serif" font-size="493.88px"><tspan id="tspan31" class="TextPosition" x="489.5459" y="6111.0132" font-family="Serif, serif" font-size="493.88px"><tspan id="tspan33"
- fill="#000000" font-family="Serif, serif" font-size="493.88px">Audio decoder</tspan></tspan></tspan></text>
-diff --git a/Documentation/userspace-api/media/v4l/crop.svg b/Documentation/userspace-api/media/v4l/crop.svg
-index 4cd47f98e7c8..5483227757e7 100644
---- a/Documentation/userspace-api/media/v4l/crop.svg
-+++ b/Documentation/userspace-api/media/v4l/crop.svg
-@@ -1,14 +1,5 @@
++<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
+ <svg id="svg2" width="15.847cm" height="8.4187cm" fill-rule="evenodd" stroke-linejoin="round" stroke-width="28.222" preserveAspectRatio="xMidYMid" version="1.2" viewBox="0 0 23770.123 12628.122" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><defs id="defs142"><marker id="Arrow1Lend" overflow="visible" orient="auto"><path id="path954" transform="matrix(-.8 0 0 -.8 -10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/></marker><marker id="marker1243" overflow="visible" orient="auto"><path id="path1241" transform="matrix(-.8 0 0 -.8 -10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/></marker></defs><metadata id="metadata519"><rdf:RDF><cc:Work
+ rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title/></cc:Work></rdf:RDF></metadata><rect id="rect197" class="BoundingBox" x="5355.1" y="13.122" width="18403" height="9603" fill="none"/><path id="path199" d="m14556 9614.1h-9200v-9600h18400v9600z" fill="#fff"/><path id="path201" d="m14556 9614.1h-9200v-9600h18400v9600z" fill="none" stroke="#000"/><rect id="rect206" class="BoundingBox" x="13.122" y="4013.1" width="4544" height="2403" fill="none"/><path id="path208" d="m2285.1 6414.1h-2271v-2400h4541v2400z" fill="#fff"/><path id="path210" d="m2285.1 6414.1h-2271v-2400h4541v2400z" fill="none" stroke="#000"/><text id="text212" class="TextShape" x="-2443.8779" y="-4585.8779"><tspan id="tspan214" class="TextParagraph" font-family="sans-serif" font-size="635px" font-weight="400"><tspan id="tspan216" class="TextPosition"
+ x="1281.1219" y="5435.1221"><tspan id="tspan218" fill="#000000">Antena</tspan></tspan></tspan></text>
+diff --git a/Documentation/userspace-api/media/v4l/bayer.svg b/Documentation/userspace-api/media/v4l/bayer.svg
+index 82e805c68c1f..c500a28f0817 100644
+--- a/Documentation/userspace-api/media/v4l/bayer.svg
++++ b/Documentation/userspace-api/media/v4l/bayer.svg
+@@ -1,31 +1,5 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+-<!--
+-    This file is dual-licensed: you can use it either under the terms
+-    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
+-    dual licensing only applies to this file, and not this project as a
+-    whole.
+-
+-    a) This file is free software; you can redistribute it and/or
+-       modify it under the terms of the GNU General Public License as
+-       published by the Free Software Foundation version 2 of
+-       the License.
+-
+-       This file is distributed in the hope that it will be useful,
+-       but WITHOUT ANY WARRANTY; without even the implied warranty of
+-       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-       GNU General Public License for more details.
+-
+-    Or, alternatively,
+-
+-    b) Permission is granted to copy, distribute and/or modify this
+-       document under the terms of the GNU Free Documentation License,
+-       Version 1.1 or any later version published by the Free Software
+-       Foundation, with no Invariant Sections, no Front-Cover Texts
+-       and no Back-Cover Texts. A copy of the license is included at
+-       Documentation/userspace-api/media/fdl-appendix.rst.
+-
+-    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
+--->
++<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
+ <svg id="svg2" width="164.15mm" height="46.771mm" fill-rule="evenodd" stroke-linejoin="round" stroke-width="28.222" preserveAspectRatio="xMidYMid" version="1.2" viewBox="0 0 16415.333 4677.1107" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><metadata id="metadata652"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title/></cc:Work></rdf:RDF></metadata><g id="g186" class="com.sun.star.drawing.CustomShape" transform="translate(-3285.9 -3185.9)"><g id="id6"><rect id="rect189" class="BoundingBox" x="3299" y="3199" width="1303" height="1203" fill="none"/><path id="path191" d="m3950 4400h-650v-1200h1300v1200h-650z" fill="#00f"/><path id="path193" d="m3950
+ 4400h-650v-1200h1300v1200h-650z" fill="none" stroke="#3465a4"/><text id="text195" class="TextShape"><tspan id="tspan197" class="TextParagraph" font-family="sans-serif" font-size="635px" font-weight="400"><tspan id="tspan199" class="TextPosition" x="3739" y="4021"><tspan id="tspan201" fill="#ffffff">B</tspan></tspan></tspan></text>
+ </g></g><g id="g203" class="com.sun.star.drawing.CustomShape" transform="translate(-3285.9 -3185.9)"><g id="id7"><rect id="rect206" class="BoundingBox" x="4599" y="3199" width="1303" height="1203" fill="none"/><path id="path208" d="m5250 4400h-650v-1200h1300v1200h-650z" fill="#0c0"/><path id="path210" d="m5250 4400h-650v-1200h1300v1200h-650z" fill="none" stroke="#3465a4"/><text id="text212" class="TextShape"><tspan id="tspan214" class="TextParagraph" font-family="sans-serif" font-size="635px" font-weight="400"><tspan id="tspan216" class="TextPosition" x="5003" y="4021"><tspan id="tspan218" fill="#ffffff">G</tspan></tspan></tspan></text>
+diff --git a/Documentation/userspace-api/media/v4l/constraints.svg b/Documentation/userspace-api/media/v4l/constraints.svg
+index 1dfe51a9839d..ac5f82bc6d1a 100644
+--- a/Documentation/userspace-api/media/v4l/constraints.svg
++++ b/Documentation/userspace-api/media/v4l/constraints.svg
+@@ -1,31 +1,5 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+-<!--
+-    This file is dual-licensed: you can use it either under the terms
+-    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
+-    dual licensing only applies to this file, and not this project as a
+-    whole.
+-
+-    a) This file is free software; you can redistribute it and/or
+-       modify it under the terms of the GNU General Public License as
+-       published by the Free Software Foundation version 2 of
+-       the License.
+-
+-       This file is distributed in the hope that it will be useful,
+-       but WITHOUT ANY WARRANTY; without even the implied warranty of
+-       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-       GNU General Public License for more details.
+-
+-    Or, alternatively,
+-
+-    b) Permission is granted to copy, distribute and/or modify this
+-       document under the terms of the GNU Free Documentation License,
+-       Version 1.1 or any later version published by the Free Software
+-       Foundation, with no Invariant Sections, no Front-Cover Texts
+-       and no Back-Cover Texts. A copy of the license is included at
+-       Documentation/userspace-api/media/fdl-appendix.rst.
+-
+-    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
+--->
++<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
+ <svg id="svg2" width="249.01mm" height="143.01mm" fill-rule="evenodd" stroke-linejoin="round" stroke-width="28.222" preserveAspectRatio="xMidYMid" version="1.2" viewBox="0 0 24900.998 14300.999" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><metadata id="metadata325"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title/></cc:Work></rdf:RDF></metadata><defs id="defs4" class="ClipPathGroup"><marker id="marker6261" overflow="visible" orient="auto"><path id="path6263" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#f00" fill-rule="evenodd" stroke="#f00" stroke-width="1pt"/></marker><marker id="marker6125" overflow="visible"
+ orient="auto"><path id="path6127" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#f00" fill-rule="evenodd" stroke="#f00" stroke-width="1pt"/></marker><marker id="marker6001" overflow="visible" orient="auto"><path id="path6003" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#f00" fill-rule="evenodd" stroke="#f00" stroke-width="1pt"/></marker><marker id="marker5693" overflow="visible" orient="auto"><path id="path5695" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#f00" fill-rule="evenodd" stroke="#f00" stroke-width="1pt"/></marker><marker id="marker5575" overflow="visible" orient="auto"><path id="path5577" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#000080" fill-rule="evenodd" stroke="#000080" stroke-width="1pt"/></marker><marker id="marker5469" overflow="visible"
+ orient="auto"><path id="path5471" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#000080" fill-rule="evenodd" stroke="#000080" stroke-width="1pt"/></marker><marker id="marker5259" overflow="visible" orient="auto"><path id="path5261" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#000080" fill-rule="evenodd" stroke="#000080" stroke-width="1pt"/></marker><marker id="Arrow2Mend" overflow="visible" orient="auto"><path id="path4241" transform="scale(-.6)" d="m8.7186 4.0337-10.926-4.0177 10.926-4.0177c-1.7455 2.3721-1.7354 5.6175-6e-7 8.0354z" fill="#000080" fill-rule="evenodd" stroke="#000080" stroke-linejoin="round" stroke-width=".625"/></marker></defs><g id="g204" class="com.sun.star.drawing.CustomShape" transform="translate(-1350,-3250)"><g id="id6"><rect id="rect207" class="BoundingBox" x="1350" y="3250" width="24901" height="14301"
+diff --git a/Documentation/userspace-api/media/v4l/nv12mt.svg b/Documentation/userspace-api/media/v4l/nv12mt.svg
+index d4bb4eb83f6a..30a15b5470be 100644
+--- a/Documentation/userspace-api/media/v4l/nv12mt.svg
++++ b/Documentation/userspace-api/media/v4l/nv12mt.svg
+@@ -1,31 +1,5 @@
  <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 -<!--
--    Permission is granted to copy, distribute and/or modify this
--    document under the terms of the GNU Free Documentation License,
--    Version 1.1 or any later version published by the Free Software
--    Foundation, with no Invariant Sections, no Front-Cover Texts
--    and no Back-Cover Texts. A copy of the license is included at
--    Documentation/userspace-api/media/fdl-appendix.rst.
+-    This file is dual-licensed: you can use it either under the terms
+-    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
+-    dual licensing only applies to this file, and not this project as a
+-    whole.
 -
--    TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
+-    a) This file is free software; you can redistribute it and/or
+-       modify it under the terms of the GNU General Public License as
+-       published by the Free Software Foundation version 2 of
+-       the License.
+-
+-       This file is distributed in the hope that it will be useful,
+-       but WITHOUT ANY WARRANTY; without even the implied warranty of
+-       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-       GNU General Public License for more details.
+-
+-    Or, alternatively,
+-
+-    b) Permission is granted to copy, distribute and/or modify this
+-       document under the terms of the GNU Free Documentation License,
+-       Version 1.1 or any later version published by the Free Software
+-       Foundation, with no Invariant Sections, no Front-Cover Texts
+-       and no Back-Cover Texts. A copy of the license is included at
+-       Documentation/userspace-api/media/fdl-appendix.rst.
+-
+-    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
 --->
-+<!-- SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later -->
++<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
  <svg
     xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:cc="http://creativecommons.org/ns#"
-diff --git a/Documentation/userspace-api/media/v4l/fieldseq_bt.svg b/Documentation/userspace-api/media/v4l/fieldseq_bt.svg
-index b663f6fcb70b..91ac2813b454 100644
---- a/Documentation/userspace-api/media/v4l/fieldseq_bt.svg
-+++ b/Documentation/userspace-api/media/v4l/fieldseq_bt.svg
-@@ -1,14 +1,5 @@
+diff --git a/Documentation/userspace-api/media/v4l/nv12mt_example.svg b/Documentation/userspace-api/media/v4l/nv12mt_example.svg
+index e5075af9f45a..d1e2023f4973 100644
+--- a/Documentation/userspace-api/media/v4l/nv12mt_example.svg
++++ b/Documentation/userspace-api/media/v4l/nv12mt_example.svg
+@@ -1,31 +1,5 @@
  <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 -<!--
--    Permission is granted to copy, distribute and/or modify this
--    document under the terms of the GNU Free Documentation License,
--    Version 1.1 or any later version published by the Free Software
--    Foundation, with no Invariant Sections, no Front-Cover Texts
--    and no Back-Cover Texts. A copy of the license is included at
--    Documentation/userspace-api/media/fdl-appendix.rst.
+-    This file is dual-licensed: you can use it either under the terms
+-    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
+-    dual licensing only applies to this file, and not this project as a
+-    whole.
 -
--    TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
+-    a) This file is free software; you can redistribute it and/or
+-       modify it under the terms of the GNU General Public License as
+-       published by the Free Software Foundation version 2 of
+-       the License.
+-
+-       This file is distributed in the hope that it will be useful,
+-       but WITHOUT ANY WARRANTY; without even the implied warranty of
+-       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-       GNU General Public License for more details.
+-
+-    Or, alternatively,
+-
+-    b) Permission is granted to copy, distribute and/or modify this
+-       document under the terms of the GNU Free Documentation License,
+-       Version 1.1 or any later version published by the Free Software
+-       Foundation, with no Invariant Sections, no Front-Cover Texts
+-       and no Back-Cover Texts. A copy of the license is included at
+-       Documentation/userspace-api/media/fdl-appendix.rst.
+-
+-    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
 --->
-+<!-- SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later -->
++<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
  <svg
     xmlns:dc="http://purl.org/dc/elements/1.1/"
     xmlns:cc="http://creativecommons.org/ns#"
-diff --git a/Documentation/userspace-api/media/v4l/fieldseq_tb.svg b/Documentation/userspace-api/media/v4l/fieldseq_tb.svg
-index f8b440a1cb60..7b4f8fb33757 100644
---- a/Documentation/userspace-api/media/v4l/fieldseq_tb.svg
-+++ b/Documentation/userspace-api/media/v4l/fieldseq_tb.svg
-@@ -1,14 +1,5 @@
- <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+diff --git a/Documentation/userspace-api/media/v4l/selection.svg b/Documentation/userspace-api/media/v4l/selection.svg
+index c0e00ab2ae6b..6305b53b8e54 100644
+--- a/Documentation/userspace-api/media/v4l/selection.svg
++++ b/Documentation/userspace-api/media/v4l/selection.svg
+@@ -1,31 +1,5 @@
+ <?xml version="1.0" encoding="UTF-8"?>
 -<!--
--    Permission is granted to copy, distribute and/or modify this
--    document under the terms of the GNU Free Documentation License,
--    Version 1.1 or any later version published by the Free Software
--    Foundation, with no Invariant Sections, no Front-Cover Texts
--    and no Back-Cover Texts. A copy of the license is included at
--    Documentation/userspace-api/media/fdl-appendix.rst.
+-    This file is dual-licensed: you can use it either under the terms
+-    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
+-    dual licensing only applies to this file, and not this project as a
+-    whole.
 -
--    TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later -->
- <svg
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cc="http://creativecommons.org/ns#"
-diff --git a/Documentation/userspace-api/media/v4l/subdev-image-processing-crop.svg b/Documentation/userspace-api/media/v4l/subdev-image-processing-crop.svg
-index 109bbcebd3b4..d92311281e01 100644
---- a/Documentation/userspace-api/media/v4l/subdev-image-processing-crop.svg
-+++ b/Documentation/userspace-api/media/v4l/subdev-image-processing-crop.svg
-@@ -1,14 +1,5 @@
- <?xml version="1.0" encoding="UTF-8" standalone="no"?>
--<!--
--    Permission is granted to copy, distribute and/or modify this
--    document under the terms of the GNU Free Documentation License,
--    Version 1.1 or any later version published by the Free Software
--    Foundation, with no Invariant Sections, no Front-Cover Texts
--    and no Back-Cover Texts. A copy of the license is included at
--    Documentation/userspace-api/media/fdl-appendix.rst.
+-    a) This file is free software; you can redistribute it and/or
+-       modify it under the terms of the GNU General Public License as
+-       published by the Free Software Foundation version 2 of
+-       the License.
 -
--    TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later -->
- <svg
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cc="http://creativecommons.org/ns#"
-diff --git a/Documentation/userspace-api/media/v4l/subdev-image-processing-full.svg b/Documentation/userspace-api/media/v4l/subdev-image-processing-full.svg
-index cfdb7532d5b6..864a594ff8d0 100644
---- a/Documentation/userspace-api/media/v4l/subdev-image-processing-full.svg
-+++ b/Documentation/userspace-api/media/v4l/subdev-image-processing-full.svg
-@@ -1,14 +1,5 @@
- <?xml version="1.0" encoding="UTF-8" standalone="no"?>
--<!--
--    Permission is granted to copy, distribute and/or modify this
--    document under the terms of the GNU Free Documentation License,
--    Version 1.1 or any later version published by the Free Software
--    Foundation, with no Invariant Sections, no Front-Cover Texts
--    and no Back-Cover Texts. A copy of the license is included at
--    Documentation/userspace-api/media/fdl-appendix.rst.
+-       This file is distributed in the hope that it will be useful,
+-       but WITHOUT ANY WARRANTY; without even the implied warranty of
+-       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-       GNU General Public License for more details.
 -
--    TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later -->
- <svg
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cc="http://creativecommons.org/ns#"
-diff --git a/Documentation/userspace-api/media/v4l/subdev-image-processing-scaling-multi-source.svg b/Documentation/userspace-api/media/v4l/subdev-image-processing-scaling-multi-source.svg
-index f7f1379d30a6..b75755d31f15 100644
---- a/Documentation/userspace-api/media/v4l/subdev-image-processing-scaling-multi-source.svg
-+++ b/Documentation/userspace-api/media/v4l/subdev-image-processing-scaling-multi-source.svg
-@@ -1,14 +1,5 @@
- <?xml version="1.0" encoding="UTF-8" standalone="no"?>
--<!--
--    Permission is granted to copy, distribute and/or modify this
--    document under the terms of the GNU Free Documentation License,
--    Version 1.1 or any later version published by the Free Software
--    Foundation, with no Invariant Sections, no Front-Cover Texts
--    and no Back-Cover Texts. A copy of the license is included at
--    Documentation/userspace-api/media/fdl-appendix.rst.
+-    Or, alternatively,
 -
--    TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later -->
- <svg
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cc="http://creativecommons.org/ns#"
-diff --git a/Documentation/userspace-api/media/v4l/vbi_525.svg b/Documentation/userspace-api/media/v4l/vbi_525.svg
-index b7d09057617e..b01086d466a6 100644
---- a/Documentation/userspace-api/media/v4l/vbi_525.svg
-+++ b/Documentation/userspace-api/media/v4l/vbi_525.svg
-@@ -1,14 +1,5 @@
- <?xml version="1.0" encoding="UTF-8" standalone="no"?>
--<!--
--    Permission is granted to copy, distribute and/or modify this
--    document under the terms of the GNU Free Documentation License,
--    Version 1.1 or any later version published by the Free Software
--    Foundation, with no Invariant Sections, no Front-Cover Texts
--    and no Back-Cover Texts. A copy of the license is included at
--    Documentation/userspace-api/media/fdl-appendix.rst.
+-    b) Permission is granted to copy, distribute and/or modify this
+-       document under the terms of the GNU Free Documentation License,
+-       Version 1.1 or any later version published by the Free Software
+-       Foundation, with no Invariant Sections, no Front-Cover Texts
+-       and no Back-Cover Texts. A copy of the license is included at
+-       Documentation/userspace-api/media/fdl-appendix.rst.
 -
--    TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
+-    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
 --->
-+<!-- SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later -->
- <svg
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cc="http://creativecommons.org/ns#"
-diff --git a/Documentation/userspace-api/media/v4l/vbi_625.svg b/Documentation/userspace-api/media/v4l/vbi_625.svg
-index e1f5e8552c37..41c1ce920d14 100644
---- a/Documentation/userspace-api/media/v4l/vbi_625.svg
-+++ b/Documentation/userspace-api/media/v4l/vbi_625.svg
-@@ -1,14 +1,5 @@
- <?xml version="1.0" encoding="UTF-8" standalone="no"?>
--<!--
--    Permission is granted to copy, distribute and/or modify this
--    document under the terms of the GNU Free Documentation License,
--    Version 1.1 or any later version published by the Free Software
--    Foundation, with no Invariant Sections, no Front-Cover Texts
--    and no Back-Cover Texts. A copy of the license is included at
--    Documentation/userspace-api/media/fdl-appendix.rst.
--
--    TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later -->
- <svg
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cc="http://creativecommons.org/ns#"
-diff --git a/Documentation/userspace-api/media/v4l/vbi_hsync.svg b/Documentation/userspace-api/media/v4l/vbi_hsync.svg
-index 77606a7b00a4..7fcf12a7ece0 100644
---- a/Documentation/userspace-api/media/v4l/vbi_hsync.svg
-+++ b/Documentation/userspace-api/media/v4l/vbi_hsync.svg
-@@ -1,14 +1,5 @@
- <?xml version="1.0" encoding="UTF-8" standalone="no"?>
--<!--
--    Permission is granted to copy, distribute and/or modify this
--    document under the terms of the GNU Free Documentation License,
--    Version 1.1 or any later version published by the Free Software
--    Foundation, with no Invariant Sections, no Front-Cover Texts
--    and no Back-Cover Texts. A copy of the license is included at
--    Documentation/userspace-api/media/fdl-appendix.rst.
--
--    TODO: replace it to GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later -->
- <svg
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cc="http://creativecommons.org/ns#"
++<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
+ <svg enable-background="new" version="1" viewBox="0 0 4226.3 1686.8" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+   <pattern id="ig" xlink:href="#ka" patternTransform="matrix(5.4432 0 0 10.1 1722.4 161.06)"/>
 -- 
 2.26.2
 
