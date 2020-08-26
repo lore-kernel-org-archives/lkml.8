@@ -2,116 +2,236 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E9DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A757BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933BB20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789F82078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UkAgccpf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C0qnNUol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgHZPtp (ORCPT
+        id S1727850AbgHZPwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgHZPt3 (ORCPT
+        Wed, 26 Aug 2020 11:52:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27737 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726739AbgHZPvz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:49:29 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C558C061574;
-        Wed, 26 Aug 2020 08:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=I18u0dNCe4slxMxufMguyF6f9uk6YgWYDMxiYXb8r/M=; b=UkAgccpf8C57KDxqkodEH9olO/
-        1uRw550MvDayPZHtymBnFfxwmNtcgF2M6M96967ti7Q0kRqhAJD7EntbGZL40Lyy/dSXmziTiz7Hk
-        lbnctZsn662cXzfd6hEb2utiYDSGSBQ9MMuBEMkU4epwpDT9aRW6rBD0kAE2/WhSDIlgYgN0uvYHv
-        c5TtMuUjgUaaySu/tXn9XT3Fdu34TLsipV80GR1LCDvPxHlwYwEnRuupZUec5g7a9rqmgnBVv2OwM
-        AfLYitWZTrvbKthc6NKOJtYTa0Bz0jsofeKe/qhWz/aTsyo6BYZPDxDJfSEiDV625F6g9O9aiVfKH
-        0a4QY2Ng==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAxfX-0005m4-3j; Wed, 26 Aug 2020 15:48:59 +0000
-Date:   Wed, 26 Aug 2020 16:48:59 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/8] mm: Convert find_get_entry to return the head page
-Message-ID: <20200826154859.GT17456@casper.infradead.org>
-References: <20200819184850.24779-1-willy@infradead.org>
- <20200819184850.24779-7-willy@infradead.org>
- <20200826150925.GE988805@cmpxchg.org>
+        Wed, 26 Aug 2020 11:51:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598457112;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0CQIcFVyw9d6N3pQqbVCJ1TDXVm7jg23jePpIY7vbsU=;
+        b=C0qnNUolbpZeD52OYBg6H340oSXA/aoi//kz7fvZmgSxDLQwwusRhG+wLlAMcV0kwEoe9Q
+        mlUoyDyj7mLlAapvOQEcHPU0qVbvoO81VkfKEXxRTcfAGe1iT9vUMgPSjYaNVve7LzoSd7
+        qOiE39EAbQ4Kn0PH9l1aE/zihvfjusM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-292-26Eayrs4P-ieDi9KfEC6rw-1; Wed, 26 Aug 2020 11:51:50 -0400
+X-MC-Unique: 26Eayrs4P-ieDi9KfEC6rw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A928885B66C;
+        Wed, 26 Aug 2020 15:51:48 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-36.rdu2.redhat.com [10.10.115.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BBA9A19144;
+        Wed, 26 Aug 2020 15:51:42 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 25834223C69; Wed, 26 Aug 2020 11:51:42 -0400 (EDT)
+Date:   Wed, 26 Aug 2020 11:51:42 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        virtio-fs-list <virtio-fs@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v3 11/18] fuse: implement FUSE_INIT map_alignment field
+Message-ID: <20200826155142.GA1043442@redhat.com>
+References: <20200819221956.845195-1-vgoyal@redhat.com>
+ <20200819221956.845195-12-vgoyal@redhat.com>
+ <CAJfpegsgHE0MkZLFgE4yrZXO5ThDxCj85-PjizrXPRC2CceT1g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200826150925.GE988805@cmpxchg.org>
+In-Reply-To: <CAJfpegsgHE0MkZLFgE4yrZXO5ThDxCj85-PjizrXPRC2CceT1g@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 11:09:25AM -0400, Johannes Weiner wrote:
-> On Wed, Aug 19, 2020 at 07:48:48PM +0100, Matthew Wilcox (Oracle) wrote:
-> > There are only three callers remaining of find_get_entry().
-> > find_get_swap_page() is happy to get the head page instead of the subpage.
-> > Add find_subpage() calls to find_lock_entry() and pagecache_get_page()
-> > to avoid auditing all their callers.
+On Wed, Aug 26, 2020 at 04:06:35PM +0200, Miklos Szeredi wrote:
+> On Thu, Aug 20, 2020 at 12:21 AM Vivek Goyal <vgoyal@redhat.com> wrote:
+> >
+> > The device communicates FUSE_SETUPMAPPING/FUSE_REMOVMAPPING alignment
+> > constraints via the FUST_INIT map_alignment field.  Parse this field and
+> > ensure our DAX mappings meet the alignment constraints.
+> >
+> > We don't actually align anything differently since our mappings are
+> > already 2MB aligned.  Just check the value when the connection is
+> > established.  If it becomes necessary to honor arbitrary alignments in
+> > the future we'll have to adjust how mappings are sized.
+> >
+> > The upshot of this commit is that we can be confident that mappings will
+> > work even when emulating x86 on Power and similar combinations where the
+> > host page sizes are different.
+> >
+> > Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > ---
+> >  fs/fuse/fuse_i.h          |  5 ++++-
+> >  fs/fuse/inode.c           | 18 ++++++++++++++++--
+> >  include/uapi/linux/fuse.h |  4 +++-
+> >  3 files changed, 23 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> > index 478c940b05b4..4a46e35222c7 100644
+> > --- a/fs/fuse/fuse_i.h
+> > +++ b/fs/fuse/fuse_i.h
+> > @@ -47,7 +47,10 @@
+> >  /** Number of dentries for each connection in the control filesystem */
+> >  #define FUSE_CTL_NUM_DENTRIES 5
+> >
+> > -/* Default memory range size, 2MB */
+> > +/*
+> > + * Default memory range size.  A power of 2 so it agrees with common FUSE_INIT
+> > + * map_alignment values 4KB and 64KB.
+> > + */
+> >  #define FUSE_DAX_SZ    (2*1024*1024)
+> >  #define FUSE_DAX_SHIFT (21)
+> >  #define FUSE_DAX_PAGES (FUSE_DAX_SZ/PAGE_SIZE)
+> > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> > index b82eb61d63cc..947abdd776ca 100644
+> > --- a/fs/fuse/inode.c
+> > +++ b/fs/fuse/inode.c
+> > @@ -980,9 +980,10 @@ static void process_init_reply(struct fuse_conn *fc, struct fuse_args *args,
+> >  {
+> >         struct fuse_init_args *ia = container_of(args, typeof(*ia), args);
+> >         struct fuse_init_out *arg = &ia->out;
+> > +       bool ok = true;
+> >
+> >         if (error || arg->major != FUSE_KERNEL_VERSION)
+> > -               fc->conn_error = 1;
+> > +               ok = false;
+> >         else {
+> >                 unsigned long ra_pages;
+> >
+> > @@ -1045,6 +1046,13 @@ static void process_init_reply(struct fuse_conn *fc, struct fuse_args *args,
+> >                                         min_t(unsigned int, FUSE_MAX_MAX_PAGES,
+> >                                         max_t(unsigned int, arg->max_pages, 1));
+> >                         }
+> > +                       if ((arg->flags & FUSE_MAP_ALIGNMENT) &&
+> > +                           (FUSE_DAX_SZ % (1ul << arg->map_alignment))) {
 > 
-> I believe this would cause a subtle bug in memcg charge moving for pte
-> mapped huge pages. We currently skip over tail pages in the range
-> (they don't have page->mem_cgroup set) and account for the huge page
-> once from the headpage. After this change, we would see the headpage
-> and account for it 512 times (or whatever the number is on non-x86).
-
-Hmm ... so if you have the last 511 pages of a huge page mapped, you
-actually don't charge for it at all today?
-
-I think you're right that I'd introduce this bug, and so that needs to
-be fixed.
-
-> But that aside, I don't quite understand the intent.
+> This just obfuscates "arg->map_alignment != FUSE_DAX_SHIFT".
 > 
-> Before, all these functions simply return the base page at @index,
-> whether it's a regular page or a tail page.
+> So the intention was that userspace can ask the kernel for a
+> particular alignment, right?
+
+My understanding is that device will specify alignment for
+the foffset/moffset fields in fuse_setupmapping_in/fuse_removemapping_one.
+And DAX mapping can be any size meeting that alignment contraint.
+
 > 
-> Afterwards, find_lock_entry(), find_get_page() et al still do, but
-> find_get_entry() returns headpage at @index & HPAGE_CACHE_INDEX_MASK.
+> In that case kernel can definitely succeed if the requested alignment
+> is smaller than the kernel provided one, no? 
+
+Yes. So if map_alignemnt is 64K and DAX mapping size is 2MB, that's just
+fine because it meets 4K alignment contraint. Just that we can't use
+4K size DAX mapping in that case.
+
+> It would also make
+> sense to make this a two way negotiation.  I.e. send the largest
+> alignment (FUSE_DAX_SHIFT in this implementation) that the kernel can
+> provide in fuse_init_in.   In that case the only error would be if
+> userspace ignored the given constraints.
+
+We could make it two way negotiation if it helps. So if we support
+multiple mapping sizes in future, say 4K, 64K, 2MB, 1GB. So idea is
+to send alignment of largest mapping size to device/user_space (1GB)
+in this case? And that will allow device to choose an alignment
+which best fits its needs?
+
+But problem here is that sending (log2(1GB)) does not mean we support
+all the alignments in that range. For example, if device selects say
+256MB as minimum alignment, kernel might not support it.
+
+So there seem to be two ways to handle this.
+
+A.Let device be conservative and always specify the minimum aligment
+  it can work with and let guest kernel automatically choose a mapping
+  size which meets that min_alignment contraint.
+
+B.Send all the mapping sizes supported by kernel to device and then
+  device chooses an alignment as it sees fit. We could probably send
+  a 64bit field and set a bit for every size we support as dax mapping.
+  If we were to go down this path, I think in that case client should
+  respond back with exact mapping size we should use (and not with
+  minimum alignment).
+
+I thought intent behind this patch was to implement A.
+
+Stefan/David, this patch came from you folks. What do you think?
+
 > 
-> Shouldn't we be consistent about how we handle huge pages when
-> somebody queries the tree for a given base page index?
+> Am I getting not getting something?
 > 
-> [ Wouldn't that mean that e.g. find_get_swap_page() would return tail
->   pages for regular files and head pages for shmem files? ]
+> > +                               pr_err("FUSE: map_alignment %u incompatible"
+> > +                                      " with dax mem range size %u\n",
+> > +                                      arg->map_alignment, FUSE_DAX_SZ);
+> > +                               ok = false;
+> > +                       }
+> >                 } else {
+> >                         ra_pages = fc->max_read / PAGE_SIZE;
+> >                         fc->no_lock = 1;
+> > @@ -1060,6 +1068,11 @@ static void process_init_reply(struct fuse_conn *fc, struct fuse_args *args,
+> >         }
+> >         kfree(ia);
+> >
+> > +       if (!ok) {
+> > +               fc->conn_init = 0;
+> > +               fc->conn_error = 1;
+> > +       }
+> > +
+> >         fuse_set_initialized(fc);
+> >         wake_up_all(&fc->blocked_waitq);
+> >  }
+> > @@ -1082,7 +1095,8 @@ void fuse_send_init(struct fuse_conn *fc)
+> >                 FUSE_WRITEBACK_CACHE | FUSE_NO_OPEN_SUPPORT |
+> >                 FUSE_PARALLEL_DIROPS | FUSE_HANDLE_KILLPRIV | FUSE_POSIX_ACL |
+> >                 FUSE_ABORT_ERROR | FUSE_MAX_PAGES | FUSE_CACHE_SYMLINKS |
+> > -               FUSE_NO_OPENDIR_SUPPORT | FUSE_EXPLICIT_INVAL_DATA;
+> > +               FUSE_NO_OPENDIR_SUPPORT | FUSE_EXPLICIT_INVAL_DATA |
+> > +               FUSE_MAP_ALIGNMENT;
+> >         ia->args.opcode = FUSE_INIT;
+> >         ia->args.in_numargs = 1;
+> >         ia->args.in_args[0].size = sizeof(ia->in);
+> > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> > index 373cada89815..5b85819e045f 100644
+> > --- a/include/uapi/linux/fuse.h
+> > +++ b/include/uapi/linux/fuse.h
+> > @@ -313,7 +313,9 @@ struct fuse_file_lock {
+> >   * FUSE_CACHE_SYMLINKS: cache READLINK responses
+> >   * FUSE_NO_OPENDIR_SUPPORT: kernel supports zero-message opendir
+> >   * FUSE_EXPLICIT_INVAL_DATA: only invalidate cached pages on explicit request
+> > - * FUSE_MAP_ALIGNMENT: map_alignment field is valid
+> > + * FUSE_MAP_ALIGNMENT: init_out.map_alignment contains log2(byte alignment) for
+> > + *                    foffset and moffset fields in struct
+> > + *                    fuse_setupmapping_out and fuse_removemapping_one.
+> 
+> fuse_setupmapping_in
 
-What I'd _like_ to do is convert all the callers to cope with tail
-pages never being returned from all the find_* functions.  That seems
-like a lot of disruption.
+Will fix it.
 
-My intent in this series is to get all the find_*_entr{y,ies}
-functions to the point where they don't return tail pages.
-Also find_get_pages_tag() because tags are only set on head pages.
+Vivek
 
-This is generally what the callers want anyway.  There's even a hack
-in find_get_entries() in current to terminate early on finding a THP
-(see commit 71725ed10c40696dc6bdccf8e225815dcef24dba).  If I want
-to remove that, I need to do _something_ to not put all the subpages
-of a THP into the pagevec.
-
-So the new rule will be that find_*_entry() don't return tail pages but
-find_*_page() do.  With the full THP patchset in place, THPs become quite
-common, so bugs in this area will surface quickly instead of lingering
-for years and only popping out in rare circumstances.
