@@ -2,79 +2,132 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA293C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FCC6C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 866C9214F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E739220707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:25:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TfeqLHcw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbgHZFWJ (ORCPT
+        id S1726076AbgHZFZs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 01:22:09 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60378 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbgHZFWJ (ORCPT
+        Wed, 26 Aug 2020 01:25:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbgHZFZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 01:22:09 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1kAnsp-0003bH-4M; Wed, 26 Aug 2020 05:22:03 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     jani.nikula@linux.intel.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/i915/lspcon: Limits to 8 bpc for RGB/YCbCr444
-Date:   Wed, 26 Aug 2020 13:21:15 +0800
-Message-Id: <20200826052143.17607-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 26 Aug 2020 01:25:47 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DA63C061574;
+        Tue, 25 Aug 2020 22:25:47 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g33so476322pgb.4;
+        Tue, 25 Aug 2020 22:25:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Z3LGnTCr/eYWP2X66RzavN5L3cyXT8al4eEGOaizoiY=;
+        b=TfeqLHcwx/4LJP7jMLoGi1fx+AaQXjeW4/KupkajuYLiaHsKTrpKRVYKr0xecpkpFY
+         Nao+/2wENu1uePJFif1Hfid7aqHP/XwcOWUboXGwabAXASPUdKnrQvsnaYp/ZAh8DzMz
+         lUB4V+Wc6PPGBdmkiNMgRK63PZouA3S0xfADC2JlTXPpxai7atEoe2xNYI/1Gu+Zce4N
+         cyYmzqU5VLOI5uTX72dDOXCJQjtYaFL2Q6OOKKE/PJELZvwZu59thE3ez9Yp5empA0sk
+         OAsVsGDLxDgMX1wVkxgeY8fgEgrVC9uBeIYdvBKVTuWp1jZywsYOo7dIhQBrBh/Jm8QC
+         vVMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Z3LGnTCr/eYWP2X66RzavN5L3cyXT8al4eEGOaizoiY=;
+        b=YMYHDGDc2McL++WNvRvBf4Gon43JIN0htMzEWd88FOaKM8xcaa3gImC3oR2Bm7i5CS
+         Q/l/DdAYXQFd6JzwEC1llnTj1ueLfAzTNQ/5Vfuz32EZVv7CDUWWqOLAi7WC47GEUeQY
+         P4u7XAPQcgFrDFzmbEneN91OHWjccdPyyeAFShucKpYFB/NnEQ7L40J51ySc3Ml17JH8
+         yRn4/dbFGQ/N42m4ODQH/btWBaUSCpQ43Q/5ibbWo10xwF/WrJYyofw4KtM+J+aas8Wk
+         rlRrC6XWtQU6NQ2fSzMI3tJW076/pzgY7hcUQ5PbyTqDcrLFrPQnsXInt0g/AvER2G/+
+         Vf3Q==
+X-Gm-Message-State: AOAM530Y34GU3qI60Xdl+FemeR67xwrzmB/o+3ZyYL+MQBho4q527O44
+        lSU77t0MGJeXiWCHLudvnI0=
+X-Google-Smtp-Source: ABdhPJw+ftD1vGst9Sng0HcdiMUhLsCbU70lfP1v2eg95myGqO9IKgxambJjK/6cp0fcI+4QzO0c9g==
+X-Received: by 2002:a62:2903:: with SMTP id p3mr4044358pfp.83.1598419547097;
+        Tue, 25 Aug 2020 22:25:47 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id 19sm790409pjk.28.2020.08.25.22.25.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 22:25:46 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 14:25:44 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: consider devices with of_match_table during i2c
+ device probing
+Message-ID: <20200826052544.GA500@jagdpanzerIV.localdomain>
+References: <20200826042938.3259-1-sergey.senozhatsky@gmail.com>
+ <20200826050851.GA1081@ninjato>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826050851.GA1081@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LSPCON only supports 8 bpc for RGB/YCbCr444.
+On (20/08/26 07:08), Wolfram Sang wrote:
+> On Wed, Aug 26, 2020 at 01:29:37PM +0900, Sergey Senozhatsky wrote:
+> > Unlike acpi_match_device(), acpi_driver_match_device() does
+> > consider devices that provide of_match_table and performs
+> > of_compatible() matching for such devices. The key point here is
+> > that ACPI of_compatible() matching - acpi_of_match_device() - is
+> > part of ACPI and does not depend on CONFIG_OF.
+> > 
+> > Consider the following case:
+> > o !CONFIG_OF system
+> > o probing of i2c device that provides .of_match_table, but no .id_table
+> > 
+> >  i2c_device_probe()
+> >  ...
+> >    if (!driver->id_table &&
+> >        !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
+> >        !i2c_of_match_device(dev->driver->of_match_table, client)) {
+> >        status = -ENODEV;
+> >        goto put_sync_adapter;
+> >    }
+> > 
+> > i2c_of_match_device() depends on CONFIG_OF and, thus, is always false.
+> > i2c_acpi_match_device() does ACPI match only, no of_comtatible() matching
+> > takes place, even though the device provides .of_match_table and ACPI,
+> > technically, is capable of matching such device. The result is -ENODEV.
+> > Probing will succeed, however, if we'd use .of_match_table aware ACPI
+> > matching.
+> > 
+> > Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> 
+> We have currently this in for-current which is even removing
+> i2c_acpi_match_device():
+> 
+> http://patchwork.ozlabs.org/project/linux-i2c/list/?series=196990&state=*
 
-Set the correct bpp otherwise it renders blank screen.
+Oh, nice!
+Can we go a bit further and use i2c_device_match() in i2c_device_probe()
+instead of a mix of APIs from different subsystems?
 
-Closes: https://gitlab.freedesktop.org/drm/intel/-/issues/2195
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
- drivers/gpu/drm/i915/display/intel_lspcon.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+E.g.
 
-diff --git a/drivers/gpu/drm/i915/display/intel_lspcon.c b/drivers/gpu/drm/i915/display/intel_lspcon.c
-index b781bf469644..c7a44fcaade8 100644
---- a/drivers/gpu/drm/i915/display/intel_lspcon.c
-+++ b/drivers/gpu/drm/i915/display/intel_lspcon.c
-@@ -196,7 +196,8 @@ void lspcon_ycbcr420_config(struct drm_connector *connector,
- 		crtc_state->port_clock /= 2;
- 		crtc_state->output_format = INTEL_OUTPUT_FORMAT_YCBCR444;
- 		crtc_state->lspcon_downsampling = true;
--	}
-+	} else
-+		crtc_state->pipe_bpp = 24;
- }
- 
- static bool lspcon_probe(struct intel_lspcon *lspcon)
--- 
-2.17.1
+        if (!driver->id_table &&
+-           !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
+-           !i2c_of_match_device(dev->driver->of_match_table, client)) {
++           !(client && i2c_device_match(&client->dev, dev->driver))) {
+                status = -ENODEV;
+                goto put_sync_adapter;
+        }
 
+	-ss
