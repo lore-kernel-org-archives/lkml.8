@@ -2,123 +2,106 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97888C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8208C20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12F6B20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598443596;
+	bh=b5EO4+AmusjhpfSUxjeTLp5l8RBm10R97KGtkUSvOuw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CHnZUKf/k6c4fNQKPBP5MNqgE4DGKo/f0UvG6hcsMp4Ce5H5/uNmiRmwMDR4u6zsF
+	 ys76uhu+HFW0imHvCkeLJfBavjKSIXfpH49weiNe90je9wGQPY5uYEk4bO2Z4Y44/8
+	 0rDl4iAJMgSCJivzzjXhDK8navNNxJxp9ETYolug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbgHZMG0 (ORCPT
+        id S1729727AbgHZMGe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:06:26 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:55440 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729519AbgHZMGX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:06:23 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QC4Kvp019378;
-        Wed, 26 Aug 2020 08:06:17 -0400
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 332w765g4u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 08:06:17 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07QC6Gfb002516
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 26 Aug 2020 08:06:16 -0400
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 26 Aug 2020 08:06:15 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 26 Aug 2020 08:06:15 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 26 Aug 2020 08:06:14 -0400
-Received: from saturn.ad.analog.com ([10.48.65.100])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07QC6ASE000563;
-        Wed, 26 Aug 2020 08:06:11 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <shawnguo@kernel.org>,
-        <s.hauer@pengutronix.de>,
-        Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: adc: fsl-imx25-gcq: Replace indio_dev->mlock with own device lock
-Date:   Wed, 26 Aug 2020 15:06:09 +0300
-Message-ID: <20200826120609.203724-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 26 Aug 2020 08:06:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38756 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729534AbgHZMDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:03:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E200D208E4;
+        Wed, 26 Aug 2020 12:03:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598443413;
+        bh=b5EO4+AmusjhpfSUxjeTLp5l8RBm10R97KGtkUSvOuw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TUpYACMQV1b1SSK7FoIJIDMYeGNqnXgCedExN2NJg8AszvM6sKeHp80dBPjH4JhjF
+         55Q9W5iDIN0QjZSjkzVqujz0YdSIPiz9xxnx1/tRrIayt8RkemRvwIOMwmO4xT3i/b
+         KmIlQxJkbIRTzMxs4vun4T4heImzg0x3vqLLuLeY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Roman Gershman <romange@gmail.com>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Subject: [PATCH 5.8 15/16] io_uring: fix missing ->mm on exit
+Date:   Wed, 26 Aug 2020 14:02:52 +0200
+Message-Id: <20200826114911.967258227@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200826114911.216745274@linuxfoundation.org>
+References: <20200826114911.216745274@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-26_08:2020-08-26,2020-08-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=612 spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
- malwarescore=0 priorityscore=1501 bulkscore=0 clxscore=1011
- impostorscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008260098
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-As part of the general cleanup of indio_dev->mlock, this change replaces
-it with a local lock, to protect against any other accesses during the
-reading of sample. Reading a sample requires multiple consecutive regmap
-operations and a completion callback, so this requires that no other
-read occurs until it completes.
+Upstream commits:
 
-Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+8eb06d7e8dd85 ("io_uring: fix missing ->mm on exit")
+cbcf72148da4a ("io_uring: return locked and pinned page accounting")
+
+do_exit() first drops current->mm and then runs task_work, from where
+io_sq_thread_acquire_mm() would try to set mm for a user dying process.
+
+[  208.004249] WARNING: CPU: 2 PID: 1854 at
+	kernel/kthread.c:1238 kthread_use_mm+0x244/0x270
+[  208.004287]  kthread_use_mm+0x244/0x270
+[  208.004288]  io_sq_thread_acquire_mm.part.0+0x54/0x80
+[  208.004290]  io_async_task_func+0x258/0x2ac
+[  208.004291]  task_work_run+0xc8/0x210
+[  208.004294]  do_exit+0x1b8/0x430
+[  208.004295]  do_group_exit+0x44/0xac
+[  208.004296]  get_signal+0x164/0x69c
+[  208.004298]  do_signal+0x94/0x1d0
+[  208.004299]  do_notify_resume+0x18c/0x340
+[  208.004300]  work_pending+0x8/0x3d4
+
+Reported-by: Roman Gershman <romange@gmail.com>
+Tested-by: Roman Gershman <romange@gmail.com>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iio/adc/fsl-imx25-gcq.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/io_uring.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/fsl-imx25-gcq.c b/drivers/iio/adc/fsl-imx25-gcq.c
-index 8cb51cf7a816..2a56ed0fc793 100644
---- a/drivers/iio/adc/fsl-imx25-gcq.c
-+++ b/drivers/iio/adc/fsl-imx25-gcq.c
-@@ -38,6 +38,7 @@ struct mx25_gcq_priv {
- 	struct completion completed;
- 	struct clk *clk;
- 	int irq;
-+	struct mutex lock;
- 	struct regulator *vref[4];
- 	u32 channel_vref_mv[MX25_NUM_CFGS];
- };
-@@ -137,9 +138,9 @@ static int mx25_gcq_read_raw(struct iio_dev *indio_dev,
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
--		mutex_lock(&indio_dev->mlock);
-+		mutex_lock(&priv->lock);
- 		ret = mx25_gcq_get_raw_value(&indio_dev->dev, chan, priv, val);
--		mutex_unlock(&indio_dev->mlock);
-+		mutex_unlock(&priv->lock);
- 		return ret;
- 
- 	case IIO_CHAN_INFO_SCALE:
-@@ -314,6 +315,8 @@ static int mx25_gcq_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->regs);
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -4363,7 +4363,8 @@ static int io_sq_thread_acquire_mm(struc
+ 				   struct io_kiocb *req)
+ {
+ 	if (io_op_defs[req->opcode].needs_mm && !current->mm) {
+-		if (unlikely(!mmget_not_zero(ctx->sqo_mm)))
++		if (unlikely(!(ctx->flags & IORING_SETUP_SQPOLL) ||
++			     !mmget_not_zero(ctx->sqo_mm)))
+ 			return -EFAULT;
+ 		kthread_use_mm(ctx->sqo_mm);
  	}
- 
-+	mutex_init(&priv->lock);
-+
- 	init_completion(&priv->completed);
- 
- 	ret = mx25_gcq_setup_cfgs(pdev, priv);
--- 
-2.25.1
+
 
