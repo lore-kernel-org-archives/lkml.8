@@ -2,115 +2,137 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756EBC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62539C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 441332078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:57:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598453863;
-	bh=T5xvC4E4MsMwGEUX1i7xJJFIfrS9fUuZLYOkjgS9wJs=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TC5hz5Z83mrFPcZjc5cQrRHWmRijEDTeLu8MIkBvVhjaWpo9djGy2mVYeIVigI74W
-	 3tr4Va17z0t/EiXrkFU24MXsL7mBSDnO1rJVkmTWeF3uAGQMo77bDCUlwAURHMx0i1
-	 Wynm55R7OniOYnC+tZqKEQNOuhjZTjhgUyha++JQ=
+	by mail.kernel.org (Postfix) with ESMTP id 3A61F2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:57:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fn3sDeur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbgHZO5l (ORCPT
+        id S1728511AbgHZO5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:57:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728185AbgHZOxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:53:09 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 274E822B47;
-        Wed, 26 Aug 2020 14:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453589;
-        bh=T5xvC4E4MsMwGEUX1i7xJJFIfrS9fUuZLYOkjgS9wJs=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=TcqQ7VNMtsK+sKv7CWZAgceEyGN4b2Kv4KecHfDzf2y6sQudrL/XO+CMTh0E0YAHT
-         nl4Y8124+m8Egy0EyY4N9B+q4hWpeo7q4e+KRsmcpuEW0ZA3wnnH+0gc4ebw5vvi+b
-         kj8Mh0mQoca0QAp+eL6ifjaReTfgXrfyoF5MrhPE=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 12/16] iio: dac: dpot-dac: Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 16:51:49 +0200
-Message-Id: <20200826145153.10444-12-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826145153.10444-1-krzk@kernel.org>
-References: <20200826145153.10444-1-krzk@kernel.org>
+        Wed, 26 Aug 2020 10:57:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbgHZOxG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:53:06 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A69DC061574;
+        Wed, 26 Aug 2020 07:53:06 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id h2so1006136plr.0;
+        Wed, 26 Aug 2020 07:53:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=i6IDKVv/shVEq6irgZZFcLvF1FRkf6GgTDbDcMbNEAs=;
+        b=Fn3sDeuriJkzPq8xhjmF8hfliMyPLrzu+HeDi8nNSywnpEb6tEK82GyFjtvfg7Jn2G
+         K3C+AVMEI43lXyXUzi5+1h/MnpOEAu5PD9nGyD55rToVneTmm9nWQwqYEVrpcDp6Cx4o
+         I3M9bZbNehxI42EaM06LKpI4gdGG8tH3GyY/WJx32aiPMX3NuKpH8voX25DtXVmK/ZO3
+         ULmKzAk4sf8kpnuZp+GFAkwbHP4xNDKUFp5kAFZZqBWzHrox1+JB24MC0T0hx61dxF1p
+         /0dD8SEFkVJZMWFtACiTaclunC1o1Uv1uubiqa/fu1a5S2C2QV7Prjdr03x512uSNhqi
+         Jf4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=i6IDKVv/shVEq6irgZZFcLvF1FRkf6GgTDbDcMbNEAs=;
+        b=TOkhqERlM8Q4+yBkpVAv3toNKjMAyRdUpbFIeuY6vf8fhxSsp75k/TFrLN5LqUEi+Z
+         DI9QXHirreg9mj//sP5TiHoEONt3SQxdfhCAAaDzZ/JOuO9nxtH6Nswx8U241E1BOsVx
+         B8CnMsv0xmmXmsjc0NpurpRhzVWlceXPPd7awuZf6RNm5hG6r8+quPipI9vIYoTM1RX6
+         clXcLvLUnZAvvAvbRBeg1c3Un8dEFeNEDiIcIVXhoLCj1Ju30M+BGKhLdBfAYRpcxqRu
+         +DPnQOEkLuFIfNQ2pfMQd8OsERn3on6+cf7kDn5q1ePJCfTmkykvhQzPLqULXw3vSLRZ
+         /hqw==
+X-Gm-Message-State: AOAM5305ygWhI+iMFFEpGDAsBVIkSnuyWQq849f1BrHznI3O8z+059A6
+        7K3aW6L/CpNnIPZrBnyPoWnx1kaZV7E=
+X-Google-Smtp-Source: ABdhPJzpYIR2LPns0GuFjTMbiHoFylGaEIOxfIsAUBjTAzVS5DVSDZOjUh4q5HoqzX5d/FcrlPnZYg==
+X-Received: by 2002:a17:90b:4a46:: with SMTP id lb6mr6525335pjb.107.1598453585598;
+        Wed, 26 Aug 2020 07:53:05 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id r7sm3327140pfl.186.2020.08.26.07.53.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:53:05 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org
+Subject: [PATCH v2 02/23] alpha: use asm-generic/mmu_context.h for no-op implementations
+Date:   Thu, 27 Aug 2020 00:52:28 +1000
+Message-Id: <20200826145249.745432-3-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
+References: <20200826145249.745432-1-npiggin@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: linux-alpha@vger.kernel.org
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- drivers/iio/dac/dpot-dac.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ arch/alpha/include/asm/mmu_context.h | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/iio/dac/dpot-dac.c b/drivers/iio/dac/dpot-dac.c
-index be61c3b01e8b..2258535b8a42 100644
---- a/drivers/iio/dac/dpot-dac.c
-+++ b/drivers/iio/dac/dpot-dac.c
-@@ -183,18 +183,14 @@ static int dpot_dac_probe(struct platform_device *pdev)
- 	indio_dev->num_channels = 1;
+diff --git a/arch/alpha/include/asm/mmu_context.h b/arch/alpha/include/asm/mmu_context.h
+index 6d7d9bc1b4b8..4eea7c616992 100644
+--- a/arch/alpha/include/asm/mmu_context.h
++++ b/arch/alpha/include/asm/mmu_context.h
+@@ -214,8 +214,6 @@ ev4_activate_mm(struct mm_struct *prev_mm, struct mm_struct *next_mm)
+ 	tbiap();
+ }
  
- 	dac->vref = devm_regulator_get(dev, "vref");
--	if (IS_ERR(dac->vref)) {
--		if (PTR_ERR(dac->vref) != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "failed to get vref regulator\n");
--		return PTR_ERR(dac->vref);
--	}
-+	if (IS_ERR(dac->vref))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dac->vref),
-+				     "failed to get vref regulator\n");
+-#define deactivate_mm(tsk,mm)	do { } while (0)
+-
+ #ifdef CONFIG_ALPHA_GENERIC
+ # define switch_mm(a,b,c)	alpha_mv.mv_switch_mm((a),(b),(c))
+ # define activate_mm(x,y)	alpha_mv.mv_activate_mm((x),(y))
+@@ -229,6 +227,7 @@ ev4_activate_mm(struct mm_struct *prev_mm, struct mm_struct *next_mm)
+ # endif
+ #endif
  
- 	dac->dpot = devm_iio_channel_get(dev, "dpot");
--	if (IS_ERR(dac->dpot)) {
--		if (PTR_ERR(dac->dpot) != -EPROBE_DEFER)
--			dev_err(dev, "failed to get dpot input channel\n");
--		return PTR_ERR(dac->dpot);
--	}
-+	if (IS_ERR(dac->dpot))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(dac->dpot),
-+				     "failed to get dpot input channel\n");
++#define init_new_context init_new_context
+ static inline int
+ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ {
+@@ -242,12 +241,7 @@ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ 	return 0;
+ }
  
- 	ret = iio_get_channel_type(dac->dpot, &type);
- 	if (ret < 0)
+-extern inline void
+-destroy_context(struct mm_struct *mm)
+-{
+-	/* Nothing to do.  */
+-}
+-
++#define enter_lazy_tlb enter_lazy_tlb
+ static inline void
+ enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+ {
+@@ -255,6 +249,8 @@ enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+ 	  = ((unsigned long)mm->pgd - IDENT_ADDR) >> PAGE_SHIFT;
+ }
+ 
++#include <asm-generic/mmu_context.h>
++
+ #ifdef __MMU_EXTERN_INLINE
+ #undef __EXTERN_INLINE
+ #undef __MMU_EXTERN_INLINE
 -- 
-2.17.1
+2.23.0
 
