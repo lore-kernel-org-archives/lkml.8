@@ -2,166 +2,273 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74E2C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD22DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A55E207DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9207F206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:52:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="JvLFDBMU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgHZGv2 (ORCPT
+        id S1726840AbgHZGwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:51:28 -0400
-Received: from mga17.intel.com ([192.55.52.151]:65017 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726040AbgHZGv1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:51:27 -0400
-IronPort-SDR: ZxJigQyeanaz+vhSSoUbExx+1i+rlULLvEoddYx3yIm5wqCpYx1B441DKAdeX64yGnaPIpSdWU
- P7ovp2b79/mg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="136307295"
+        Wed, 26 Aug 2020 02:52:09 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:60067 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbgHZGwJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 02:52:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1598424730; x=1629960730;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SI8j6m6I3e4k4zKG9EdeKsk+0HOf3F01qwpYDXe2Ni8=;
+  b=JvLFDBMUmqKUWkf4z89/Ilh5tld5H6qt9DdnMKTBIqH7QhImXUKgTTel
+   X6p/LraFfxkVCDCyPridQTlGmLWyWJgNydCQ7c8KmqiAHee2yYrcWaqFu
+   /ImLGXgUI3C95MA9pL8xO3W+StW+t43KQ8RulyojmnkmoNtmnxjknGVk7
+   +cnyKldDMDmOO9UhE6wm+hVKavyTiu1UcuAhNsH4QAAcUBR3o1tow/eaK
+   Ow4c18dro/1zYPtLz/UmE/ibwq2DF0KYqqpd5xxcSqHXbLP+Pm2eMi+oG
+   RV679jj2lcPhnImO2lYKtlAzw+q7kjrj56tGzB7G5Ve68PA+YmOSZQY9U
+   g==;
+IronPort-SDR: +BTtOBHd/Av6g0eiPDp5dgkPCHQaItVSWDbEGQ+TT7pi9LjMsDRQ50bowlH2BrDkwYeh2+2z+6
+ 7YgMqraxOGPeohFzOPWihOYjbeqDcG+evqUeKwn5IPUVhOS3AZzZ9M/9YKkDFQPocc15OoJxto
+ SkwTkPH5I9A3VS7akiQDASYkQyow0jXA2SfxKclcmI5I4HNa3RzOJS+dpjbe4MbEQwWnoGZZlA
+ 0MMSmo+isnknb6r+Y0fa2p2qwFWmVYhsFGyGMqljisDMpRklo2bYlQlmOwi/y+WAQcIqUqkUnj
+ ut0=
 X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="136307295"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 23:51:26 -0700
-IronPort-SDR: 18Kq/bo3KG+2JklofckLvITM98eBKy6PzKdqzNhgUaZo6F7C1RgDNcRA+WafVqssMiI4sPbMmj
- JzDOdx2sfeiQ==
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="474658678"
-Received: from jguenthe-mobl.ger.corp.intel.com (HELO localhost) ([10.252.32.223])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 23:51:19 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Cc:     Sean Paul <sean@poorly.run>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        =?utf-8?Q?Jos?= =?utf-8?Q?=C3=A9?= Roberto de Souza 
-        <jose.souza@intel.com>, Manasi Navare <manasi.d.navare@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC v4 09/20] drm/i915/dp: Extract drm_dp_has_mst()
-In-Reply-To: <20200825195027.74681-10-lyude@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200825195027.74681-1-lyude@redhat.com> <20200825195027.74681-10-lyude@redhat.com>
-Date:   Wed, 26 Aug 2020 09:51:16 +0300
-Message-ID: <87r1rt6gt7.fsf@intel.com>
+   d="scan'208";a="88565025"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2020 23:52:08 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 25 Aug 2020 23:51:18 -0700
+Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1979.3 via Frontend Transport; Tue, 25 Aug 2020 23:51:54 -0700
+From:   Eugen Hristev <eugen.hristev@microchip.com>
+To:     <robh+dt@kernel.org>, <sakari.ailus@iki.fi>,
+        <linux-media@vger.kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Eugen Hristev <eugen.hristev@microchip.com>
+Subject: [PATCH v3 1/3] dt-bindings: media: atmel: csi2dc: add bindings for microchip csi2dc
+Date:   Wed, 26 Aug 2020 09:51:40 +0300
+Message-ID: <20200826065142.205000-1-eugen.hristev@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020, Lyude Paul <lyude@redhat.com> wrote:
-> Just a tiny drive-by cleanup, we can consolidate i915's code for
-> checking for MST support into a helper to be shared across drivers.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Reviewed-by: Sean Paul <sean@poorly.run>
-> ---
->  drivers/gpu/drm/i915/display/intel_dp.c | 18 ++----------------
->  include/drm/drm_dp_mst_helper.h         | 22 ++++++++++++++++++++++
->  2 files changed, 24 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index 79c27f91f42c0..1e29d3a012856 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -4699,20 +4699,6 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
->  	return true;
->  }
->  
-> -static bool
-> -intel_dp_sink_can_mst(struct intel_dp *intel_dp)
-> -{
-> -	u8 mstm_cap;
-> -
-> -	if (intel_dp->dpcd[DP_DPCD_REV] < 0x12)
-> -		return false;
-> -
-> -	if (drm_dp_dpcd_readb(&intel_dp->aux, DP_MSTM_CAP, &mstm_cap) != 1)
-> -		return false;
-> -
-> -	return mstm_cap & DP_MST_CAP;
-> -}
-> -
->  static bool
->  intel_dp_can_mst(struct intel_dp *intel_dp)
->  {
-> @@ -4720,7 +4706,7 @@ intel_dp_can_mst(struct intel_dp *intel_dp)
->  
->  	return i915->params.enable_dp_mst &&
->  		intel_dp->can_mst &&
-> -		intel_dp_sink_can_mst(intel_dp);
-> +		drm_dp_has_mst(&intel_dp->aux, intel_dp->dpcd);
->  }
->  
->  static void
-> @@ -4729,7 +4715,7 @@ intel_dp_configure_mst(struct intel_dp *intel_dp)
->  	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
->  	struct intel_encoder *encoder =
->  		&dp_to_dig_port(intel_dp)->base;
-> -	bool sink_can_mst = intel_dp_sink_can_mst(intel_dp);
-> +	bool sink_can_mst = drm_dp_has_mst(&intel_dp->aux, intel_dp->dpcd);
->  
->  	drm_dbg_kms(&i915->drm,
->  		    "[ENCODER:%d:%s] MST support: port: %s, sink: %s, modparam: %s\n",
-> diff --git a/include/drm/drm_dp_mst_helper.h b/include/drm/drm_dp_mst_helper.h
-> index 8b9eb4db3381c..2d8983a713e8c 100644
-> --- a/include/drm/drm_dp_mst_helper.h
-> +++ b/include/drm/drm_dp_mst_helper.h
-> @@ -911,4 +911,26 @@ __drm_dp_mst_state_iter_get(struct drm_atomic_state *state,
->  	for ((__i) = 0; (__i) < (__state)->num_private_objs; (__i)++) \
->  		for_each_if(__drm_dp_mst_state_iter_get((__state), &(mgr), NULL, &(new_state), (__i)))
->  
-> +/**
-> + * drm_dp_has_mst() - check whether or not a sink supports MST
-> + * @aux: The DP AUX channel to use
-> + * @dpcd: A cached copy of the DPCD capabilities for this sink
-> + *
-> + * Returns: %True if the sink supports MST, %false otherwise
-> + */
-> +static inline bool
+Add bindings documentation for Microchip CSI2 Demultiplexer controller.
 
-I've become more and more critical of accumulating a lot of inlines in
-headers. Do we really want this in the header?
+CSI2DC is a demultiplexer from Synopsys IDI interface specification to
+parallel interface connection or direct memory access.
 
-> +drm_dp_has_mst(struct drm_dp_aux *aux,
-> +	       const u8 dpcd[DP_RECEIVER_CAP_SIZE])
-> +{
-> +	u8 mstm_cap;
-> +
-> +	if (dpcd[DP_DPCD_REV] < DP_DPCD_REV_12)
-> +		return false;
-> +
-> +	if (drm_dp_dpcd_readb(aux, DP_MSTM_CAP, &mstm_cap) != 1)
-> +		return false;
-> +
-> +	return !!(mstm_cap & DP_MST_CAP);
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
+Changes in v3:
+- Removed some text from description, as it was explained in the schema
+- fixed other things as per Rob's review
+- moved some text inside the schema, like the clock description
 
-The !! is superfluous.
+Changes in v2:
+- fixed warnings reported by dt_binding_check
 
-BR,
-Jani.
+ .../bindings/media/microchip,csi2dc.yaml      | 174 ++++++++++++++++++
+ 1 file changed, 174 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
 
-> +}
-> +
->  #endif
-
+diff --git a/Documentation/devicetree/bindings/media/microchip,csi2dc.yaml b/Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
+new file mode 100644
+index 000000000000..b4c1b8800a3b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
+@@ -0,0 +1,174 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/microchip,csi2dc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip CSI2 Demux Controller (CSI2DC)
++
++maintainers:
++  - Eugen Hristev <eugen.hristev@microchip.com>
++
++description:
++  CSI2DC - Camera Serial Interface 2 Demux Controller
++
++  CSI2DC is a hardware block that receives incoming data from an IDI interface
++  and filters packets based on their data type and virtual channel identifier,
++  then converts the byte stream into a cross clock domain to a pixel stream
++  to a parallel interface that can be read by a sensor controller.
++
++  CSI2DC provides two pipes, one video pipe and one data pipe. Video pipe
++  is connected to a sensor controller and the data pipe is accessible
++  as a DMA slave port to a DMA controller.
++
++  CSI2DC supports a single 'port' node as a source pad with Synopsys 32-bit
++  IDI interface. The connected endpoint must be a IDI interface compatible
++  device (like Synopsys CSI2HOST) , that can provide 32-bit IDI interface
++  connection as sink pad.
++  For media entity and endpoints please refer to the bindings defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt.
++  For Synopsys IDI interface please refer to
++  Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
++
++  CSI2DC supports one 'port' node as sink pad with parallel interface. This is
++  called video pipe.
++  This port has an 'endpoint' can then be used as a source pad for another
++  controller (next in pipeline).
++  Please refer to the bindings defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++  CSI2DC also supports direct access to the data through AHB, via DMA channel,
++  called data pipe.
++  Because of this, the sink 'port' child node (second) is not mandatory.
++  If the sink 'port' child node is missing, only data pipe is available.
++
++properties:
++  compatible:
++    const: microchip,sama7g5-csi2dc
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    description:
++      CSI2DC must have two clocks to function correctly. One clock is the
++      peripheral clock for the inside functionality of the hardware block.
++      This is named 'pclk'. The second clock must be the cross domain clock,
++      in which CSI2DC will perform clock crossing. This clock must be fed
++      by the next controller in pipeline, which usually is a sensor controller.
++      Normally this clock should be given by this sensor controller who
++      is also a clock source. This clock is named 'scck', sensor controller clock.
++    items:
++      - const: pclk
++      - const: scck
++
++  microchip,clk-gated:
++    type: boolean
++    description:
++      If present, indicates that the clock is gated.
++      Otherwise, the clock is free-running.
++
++  microchip,inter-line-delay:
++    allOf:
++    - $ref: /schemas/types.yaml#/definitions/uint32
++    - minimum: 1
++    - maximum: 16
++    default: 16
++    description:
++      Indicates how many clock cycles should be introduced between each line.
++
++  port@0:
++    type: object
++    description:
++      Input port node, single endpoint describing the input pad.
++
++    properties:
++      reg:
++        const: 0
++
++      endpoint:
++        type: object
++
++        properties:
++          remote-endpoint: true
++
++        required:
++          - remote-endpoint
++
++        additionalProperties: false
++
++    additionalProperties: false
++
++  port@1:
++    type: object
++    description:
++      Output port node, single endpoint, describing the output pad.
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++      reg:
++        const: 1
++
++    patternProperties:
++      "^endpoint@[0-3]$":
++        type: object
++
++        properties:
++          reg:
++            enum: [0, 1, 2, 3]
++            description: virtual channel for the endpoint
++
++          remote-endpoint: true
++
++        required:
++          - remote-endpoint
++          - reg
++
++        additionalProperties: false
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - port@0
++
++examples:
++  - |
++    csi2dc@e1404000 {
++        compatible = "microchip,sama7g5-csi2dc";
++        #address-cells = <1>;
++        #size-cells = <0>;
++        reg = <0xe1404000 0x500>;
++        clocks = <&pclk>, <&scck>;
++        clock-names = "pclk", "scck";
++
++        port@0 {
++               reg = <0>; /* must be 0, first child port */
++               csi2dc_in: endpoint { /* input from IDI interface */
++                     remote-endpoint = <&csi2host_out>;
++               };
++        };
++
++        port@1 {
++                #address-cells = <1>;
++                #size-cells = <0>;
++                reg = <1>; /* must be 1, second child port */
++                csi2dc_out: endpoint@2 {
++                        reg = <2>;  /* virtual channel identifier */
++                        remote-endpoint = <&xisc_in>; /* output to sensor controller */
++                };
++        };
++    };
++
++...
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.25.1
+
