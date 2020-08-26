@@ -2,79 +2,96 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9888C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09762C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B190420786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3E3220707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:31:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="E/wM8YPI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lLgG5Zuk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbgHZK2P (ORCPT
+        id S1728486AbgHZKb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:28:15 -0400
-Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:27375 "EHLO
-        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728198AbgHZK2K (ORCPT
+        Wed, 26 Aug 2020 06:31:27 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:42583 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728132AbgHZKbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:28:10 -0400
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS2.zhaoxin.com
- (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 26 Aug
- 2020 18:28:05 +0800
-Received: from localhost.localdomain (61.148.243.98) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 26 Aug
- 2020 18:28:03 +0800
-From:   FelixCuioc <FelixCui-oc@zhaoxin.com>
-To:     Joerg Roedel <joro@8bytes.org>, <iommu@lists.linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>, <kbuild@lists.01.org>
-CC:     <kbuild-all@lists.01.org>, <CobeChen-oc@zhaoxin.com>,
-        <RaymondPang-oc@zhaoxin.com>, <TonyWWang-oc@zhaoxin.com>
-Subject: [PATCH 3/3] iommu/vt-d:Add mutex_unlock() before returning
-Date:   Wed, 26 Aug 2020 06:27:52 -0400
-Message-ID: <20200826102752.3776-4-FelixCui-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826102752.3776-1-FelixCui-oc@zhaoxin.com>
-References: <20200826102752.3776-1-FelixCui-oc@zhaoxin.com>
+        Wed, 26 Aug 2020 06:31:25 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 7E1F613CD;
+        Wed, 26 Aug 2020 06:31:23 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Wed, 26 Aug 2020 06:31:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=fzXSyiJ0yKCBJMfU7qZRijHqxRF
+        7SJCllidhSQjnX5g=; b=E/wM8YPIqDoyZ08hyoegYIw3IUZ0c6QqL4Sl9Xi2wlz
+        N27VHRU4fhgB9zOi3Hn1L8LqlZEYCs87t5+z2UO+oQp0LJOJ5q78PkR0tdXFy8Ps
+        TavZK6NFaXD45tQFyx/3NVYhbprrxvENGDv1Attna2ErKpdeh4EVvSVGNMpW5C2t
+        s6spSI2cES63rDiJB0PvyTyYI5c1KVJTTAfgV4ZcsvBnBjCYysJVsU5bnk8E5CLw
+        DAugbXE0VcZ8IVra+hhjeXAtIlO310DqlfC47pc8/hf/Ttaedj56QfpAQHLOYQVZ
+        PGtdjhM/TAlFjb7XhrS2gpaH2RZAhq5WHdxpC9s00rw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=fzXSyi
+        J0yKCBJMfU7qZRijHqxRF7SJCllidhSQjnX5g=; b=lLgG5ZukFOcF5MdVRQwiAw
+        M9WcC3EibCmLVWp6OqEu4Lko5c7zO4aw5o3TGGwDC0sHOUkU4jZcNZQnpbau7M5x
+        zrCoZ9MstIvOP6hIcAOLAeegkcQud3L8OM3RoOw3W4YfE8q9vZeQQR7k1fv2CwxL
+        3Lumv3qtW2Zawa4+BZixAzvgWNFfnlaejGaJGProPMCCw71gA1dBrWUWhhs2Mk/y
+        JJR8VfhR8buGK2zt22wgz2OcHHwA546khHtOq/0E+bgLJhLhU1n/uOVhYHw0smEO
+        BogZSxEQDhGjvLAgEO2KSlgvEArc78teARcUaoGjdTqyN+78sEPvUXeeJii+lTXA
+        ==
+X-ME-Sender: <xms:-jlGX3Kw_cCOte_5xtvllTm93NP5vkNRInBmgMrJYqUvpHWoVO4ysw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvvddgvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
+    dttddtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
+    necuggftrfgrthhtvghrnhepveeuheejgfffgfeivddukedvkedtleelleeghfeljeeiue
+    eggeevueduudekvdetnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghr
+    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtg
+    homh
+X-ME-Proxy: <xmx:-jlGX7KomOU1GGlI_F32hsge41oVLQju52fSHA1LuLOM7skkQ_JoYw>
+    <xmx:-jlGX_sXCMFmmjF7iupGYo14IRhBt5cGAYjzbM77GSwWagqj5UfGZg>
+    <xmx:-jlGXwYkRYCMZpMmmzXQIlXU-qdT9WNpBA2KhxhR9Rki8UMTOZ0r7g>
+    <xmx:-zlGX-F1nciJtAUSJjD4D7JE3Al6e6ilsgRp0GAbM8SenD9v49lquQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1AF2F30600A9;
+        Wed, 26 Aug 2020 06:31:22 -0400 (EDT)
+Date:   Wed, 26 Aug 2020 12:31:37 +0200
+From:   Greg KH <greg@kroah.com>
+To:     xiangxia.m.yue@gmail.com
+Cc:     sashal@kernel.org, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        netdev@vger.kernel.org, jknoos@google.com
+Subject: Re: [PATCH net backport 5.6.14-5.8.3 v1] net: openvswitch: introduce
+ common code for flushing flows
+Message-ID: <20200826103137.GC3356257@kroah.com>
+References: <20200825052532.15301-1-xiangxia.m.yue@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [61.148.243.98]
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825052532.15301-1-xiangxia.m.yue@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the probe_acpi_namespace_devices function,when the physical
-node of the acpi device is NULL,the unlock function is missing.
-Add mutex_unlock(&adev->physical_node_lock).
+On Tue, Aug 25, 2020 at 01:25:32PM +0800, xiangxia.m.yue@gmail.com wrote:
+> From: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+> 
+> [ Upstream commit 77b981c82c1df7c7ad32a046f17f007450b46954 ]
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: FelixCuioc <FelixCui-oc@zhaoxin.com>
----
- drivers/iommu/intel/iommu.c | 1 +
- 1 file changed, 1 insertion(+)
+That is not what this commit is :(
 
-diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-index b31f02f41c96..25e9853cba1b 100644
---- a/drivers/iommu/intel/iommu.c
-+++ b/drivers/iommu/intel/iommu.c
-@@ -4851,6 +4851,7 @@ static int __init probe_acpi_namespace_devices(void)
- 			if (pn_dev == NULL) {
- 				dev->bus->iommu_ops = &intel_iommu_ops;
- 				ret = iommu_probe_device(dev);
-+				mutex_unlock(&adev->physical_node_lock);
- 				if (ret) {
- 					pr_err("acpi_device probe fail! ret:%d\n", ret);
- 					return ret;
--- 
-2.17.1
+Please fix up and resend with the correct commit.
 
+thanks,
+
+greg k-h
