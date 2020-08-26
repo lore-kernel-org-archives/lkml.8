@@ -2,73 +2,131 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA57FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB5520707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:50:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACC720707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:50:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emNGL6+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbgHZLuU (ORCPT
+        id S1729126AbgHZLuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:50:20 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:33050 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728802AbgHZLuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:50:17 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kAtw8-0002Yd-HZ; Wed, 26 Aug 2020 21:49:53 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 26 Aug 2020 21:49:52 +1000
-Date:   Wed, 26 Aug 2020 21:49:52 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Caleb Jorden <caljorden@hotmail.com>,
-        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
-Message-ID: <20200826114952.GA2375@gondor.apana.org.au>
-References: <20200826055150.2753.90553@ml01.vlan13.01.org>
- <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
- <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
+        Wed, 26 Aug 2020 07:50:37 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22003 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729053AbgHZLug (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 07:50:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598442635;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=i9wmniW5Tz8S3xsc1mKjzaTYOa00481Gr0C626oPAAA=;
+        b=emNGL6+xb4m8LzRZimrwkLgh2YGdq2S/N/VqZfVV39dkY5xt3unI1oNbqqysuE0rZ1psmg
+        jALpFaAK062N/3L8fxf3EOQJgBaWtSks5kNAOhXPb0iXj3S8YZSCC5CT6FaXTVYCXcUeeQ
+        HUcV+fN0pgZm4vwho6vq6aaDFa/Lrd4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-481-bea3UCd7Ns2hHcY0zuKRsQ-1; Wed, 26 Aug 2020 07:50:33 -0400
+X-MC-Unique: bea3UCd7Ns2hHcY0zuKRsQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 108151019625;
+        Wed, 26 Aug 2020 11:50:31 +0000 (UTC)
+Received: from krava (unknown [10.40.194.188])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 192CE18B59;
+        Wed, 26 Aug 2020 11:50:26 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 13:50:26 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCH] perf tools: Use %zd for size_t printf formats on 32b
+Message-ID: <20200826115026.GA766106@krava>
+References: <20200820212501.24421-1-chris@chris-wilson.co.uk>
+ <20200821121310.GF2667554@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200821121310.GF2667554@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:40:14PM +0200, Ard Biesheuvel wrote:
->
-> It would be helpful if someone could explain for the non-mac80211
-> enlightened readers how iwd's EAP-PEAPv0 + MSCHAPv2 support relies on
-> the algif_aead socket interface, and which AEAD algorithms it uses. I
-> assume this is part of libell?
+On Fri, Aug 21, 2020 at 09:13:10AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Aug 20, 2020 at 10:25:01PM +0100, Chris Wilson escreveu:
+> > A couple of trivial fixes for using %zd for size_t.
+> 
+> Added Jiri and Namhyung, that are perf tooling reviewers, and Alexey
+> Budankov, that added the ZSTD code.
+> 
+> Applied,
+> 
+> - Arnaldo
+>  
+> > Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 
-I see the problem.  libell/ell/checksum.c doesn't clear the MSG_MORE
-flag before doing the recv(2).
+LGTM
 
-I was hoping nobody out there was doing this but obviously I've
-been proven wrong.
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-So what I'm going to do is to specifically allow this case of
-a string of sendmsg(2)'s with MSG_MORE folloed by a recvmsg(2)
-in the same thread.  I'll add a WARN_ON_ONCE so user-space can
-eventually be fixed.
+thanks,
+jirka
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> > ---
+> >  tools/perf/util/session.c | 2 +-
+> >  tools/perf/util/zstd.c    | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> > index ffbc9d35a383..7a5f03764702 100644
+> > --- a/tools/perf/util/session.c
+> > +++ b/tools/perf/util/session.c
+> > @@ -87,7 +87,7 @@ static int perf_session__process_compressed_event(struct perf_session *session,
+> >  		session->decomp_last = decomp;
+> >  	}
+> >  
+> > -	pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
+> > +	pr_debug("decomp (B): %zd to %zd\n", src_size, decomp_size);
+> >  
+> >  	return 0;
+> >  }
+> > diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
+> > index d2202392ffdb..48dd2b018c47 100644
+> > --- a/tools/perf/util/zstd.c
+> > +++ b/tools/perf/util/zstd.c
+> > @@ -99,7 +99,7 @@ size_t zstd_decompress_stream(struct zstd_data *data, void *src, size_t src_size
+> >  	while (input.pos < input.size) {
+> >  		ret = ZSTD_decompressStream(data->dstream, &output, &input);
+> >  		if (ZSTD_isError(ret)) {
+> > -			pr_err("failed to decompress (B): %ld -> %ld, dst_size %ld : %s\n",
+> > +			pr_err("failed to decompress (B): %zd -> %zd, dst_size %zd : %s\n",
+> >  			       src_size, output.size, dst_size, ZSTD_getErrorName(ret));
+> >  			break;
+> >  		}
+> > -- 
+> > 2.20.1
+> > 
+> 
+> -- 
+> 
+> - Arnaldo
+> 
+
