@@ -7,69 +7,53 @@ X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF5DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 239A9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D241720737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E562320737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:27:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QG1O2p4C"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L37kJj+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgHZS0y (ORCPT
+        id S1727991AbgHZS1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:26:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48265 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727772AbgHZS0K (ORCPT
+        Wed, 26 Aug 2020 14:27:05 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26538 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727769AbgHZS0J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:26:10 -0400
+        Wed, 26 Aug 2020 14:26:09 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598466369;
+        s=mimecast20190719; t=1598466367;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cjCYjyuUxZGYNUW030cSadeeYTKBSa0bcZklgNncUWY=;
-        b=QG1O2p4CLNiBt1ZxFoS5LFQ8BDIZ8qOAz4mGsHh2zUZ0DrmCX0bwlA+olNSN4TVvPg3cdb
-        tlDS1eYG8+pAvlLqOBbF7TX2jVOErVHF16mHm4l7r4Gv4KDC5zdP810wiA24bNxWzz9KEi
-        9RQoLJ8F8/Bx1oX2gE3G4XxGS/QtuO8=
+        bh=EaqW4Gmy6cVcouD31SK1bgkpRdbI1OQBzcDJEb3YKEs=;
+        b=L37kJj+O95ef/a9rhF2dQEsF8noCLLuWcuzjFpfeexHYYqOZv6gn4/Nr7ZDf97ghHHkIfD
+        YkhLCPrh80mDyGKYwm3WuNVeyq4LjQxaHP7CnwFyntHw24k2QBTGmUuX/YpWssY0kTSuy9
+        QwBizErCS4Vo5HtdEud3zTCDARA9laM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-530-rlVHwifmM-iIHXI_ghtxGg-1; Wed, 26 Aug 2020 14:26:05 -0400
-X-MC-Unique: rlVHwifmM-iIHXI_ghtxGg-1
+ us-mta-187-zbUXqSwVPy2F3yx9j7-EkA-1; Wed, 26 Aug 2020 14:26:06 -0400
+X-MC-Unique: zbUXqSwVPy2F3yx9j7-EkA-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 54DF61015DC0;
-        Wed, 26 Aug 2020 18:26:02 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1E6010066FE;
+        Wed, 26 Aug 2020 18:26:04 +0000 (UTC)
 Received: from Whitewolf.redhat.com (ovpn-119-77.rdu2.redhat.com [10.10.119.77])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 624FD100238E;
-        Wed, 26 Aug 2020 18:26:00 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 06A40100238E;
+        Wed, 26 Aug 2020 18:26:03 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
         nouveau@lists.freedesktop.org
-Cc:     Sean Paul <sean@poorly.run>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
+Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        =?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v5 16/20] drm/i915/dp: Extract drm_dp_read_sink_count()
-Date:   Wed, 26 Aug 2020 14:24:52 -0400
-Message-Id: <20200826182456.322681-17-lyude@redhat.com>
+Subject: [PATCH v5 18/20] drm/nouveau/kms: Don't change EDID when it hasn't actually changed
+Date:   Wed, 26 Aug 2020 14:24:54 -0400
+Message-Id: <20200826182456.322681-19-lyude@redhat.com>
 In-Reply-To: <20200826182456.322681-1-lyude@redhat.com>
 References: <20200826182456.322681-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -80,117 +64,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-And of course, we'll also need to read the sink count from other drivers
-as well if we're checking whether or not it's supported. So, let's
-extract the code for this into another helper.
+Currently in nouveau_connector_ddc_detect() and
+nouveau_connector_detect_lvds(), we start the connector probing process
+by releasing the previous EDID and informing DRM of the change. However,
+since commit 5186421cbfe2 ("drm: Introduce epoch counter to
+drm_connector") drm_connector_update_edid_property() actually checks
+whether the new EDID we've specified is different from the previous one,
+and updates the connector's epoch accordingly if it is. But, because we
+always set the EDID to NULL first in nouveau_connector_ddc_detect() and
+nouveau_connector_detect_lvds() we end up making DRM think that the EDID
+changes every single time we do a connector probe - which isn't needed.
 
-v2:
-* Fix drm_dp_dpcd_readb() ret check
-* Add back comment and move back sink_count assignment in intel_dp_get_dpcd()
-v5:
-* Change name from drm_dp_get_sink_count() to drm_dp_read_sink_count()
-* Also, add "See also:" section to kdocs
+So, let's fix this by not clearing the EDID at the start of the
+connector probing process, and instead simply changing or removing it
+once near the end of the probing process. This will help prevent us from
+sending unneeded hotplug events to userspace when nothing has actually
+changed.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Sean Paul <sean@poorly.run>
+Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
 ---
- drivers/gpu/drm/drm_dp_helper.c         | 26 +++++++++++++++++++++++++
- drivers/gpu/drm/i915/display/intel_dp.c | 11 +++++------
- include/drm/drm_dp_helper.h             |  1 +
- 3 files changed, 32 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 54 ++++++++++-----------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index 65ff21ae0c271..46d88ef4f59ac 100644
---- a/drivers/gpu/drm/drm_dp_helper.c
-+++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -733,6 +733,8 @@ EXPORT_SYMBOL(drm_dp_set_subconnector_property);
-  * @dpcd: A cached copy of the connector's DPCD RX capabilities
-  * @desc: A cached copy of the connector's DP descriptor
-  *
-+ * See also: drm_dp_read_sink_count()
-+ *
-  * Returns: %True if the (e)DP connector has a valid sink count that should
-  * be probed, %false otherwise.
-  */
-@@ -748,6 +750,30 @@ bool drm_dp_read_sink_count_cap(struct drm_connector *connector,
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
+index 637e91594fbe8..49dd0cbc332ff 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -528,6 +528,17 @@ nouveau_connector_set_encoder(struct drm_connector *connector,
+ 	}
  }
- EXPORT_SYMBOL(drm_dp_read_sink_count_cap);
  
-+/**
-+ * drm_dp_read_sink_count() - Retrieve the sink count for a given sink
-+ * @aux: The DP AUX channel to use
-+ *
-+ * See also: drm_dp_read_sink_count_cap()
-+ *
-+ * Returns: The current sink count reported by @aux, or a negative error code
-+ * otherwise.
-+ */
-+int drm_dp_read_sink_count(struct drm_dp_aux *aux)
++static void
++nouveau_connector_set_edid(struct nouveau_connector *nv_connector,
++			   struct edid *edid)
 +{
-+	u8 count;
-+	int ret;
++	struct edid *old_edid = nv_connector->edid;
 +
-+	ret = drm_dp_dpcd_readb(aux, DP_SINK_COUNT, &count);
-+	if (ret < 0)
-+		return ret;
-+	if (ret != 1)
-+		return -EIO;
-+
-+	return DP_GET_SINK_COUNT(count);
++	drm_connector_update_edid_property(&nv_connector->base, edid);
++	kfree(old_edid);
++	nv_connector->edid = edid;
 +}
-+EXPORT_SYMBOL(drm_dp_read_sink_count);
 +
- /*
-  * I2C-over-AUX implementation
-  */
-diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index 38318ae935f88..0de94fc6289be 100644
---- a/drivers/gpu/drm/i915/display/intel_dp.c
-+++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -4648,6 +4648,8 @@ intel_dp_has_sink_count(struct intel_dp *intel_dp)
- static bool
- intel_dp_get_dpcd(struct intel_dp *intel_dp)
+ static enum drm_connector_status
+ nouveau_connector_detect(struct drm_connector *connector, bool force)
  {
-+	int ret;
-+
- 	if (!intel_dp_read_dpcd(intel_dp))
- 		return false;
+@@ -541,13 +552,6 @@ nouveau_connector_detect(struct drm_connector *connector, bool force)
+ 	int ret;
+ 	enum drm_connector_status conn_status = connector_status_disconnected;
  
-@@ -4664,11 +4666,8 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
+-	/* Cleanup the previous EDID block. */
+-	if (nv_connector->edid) {
+-		drm_connector_update_edid_property(connector, NULL);
+-		kfree(nv_connector->edid);
+-		nv_connector->edid = NULL;
+-	}
+-
+ 	/* Outputs are only polled while runtime active, so resuming the
+ 	 * device here is unnecessary (and would deadlock upon runtime suspend
+ 	 * because it waits for polling to finish). We do however, want to
+@@ -560,22 +564,23 @@ nouveau_connector_detect(struct drm_connector *connector, bool force)
+ 		ret = pm_runtime_get_sync(dev->dev);
+ 		if (ret < 0 && ret != -EACCES) {
+ 			pm_runtime_put_autosuspend(dev->dev);
++			nouveau_connector_set_edid(nv_connector, NULL);
+ 			return conn_status;
+ 		}
  	}
  
- 	if (intel_dp_has_sink_count(intel_dp)) {
--		u8 count;
--		ssize_t r;
+ 	nv_encoder = nouveau_connector_ddc_detect(connector);
+ 	if (nv_encoder && (i2c = nv_encoder->i2c) != NULL) {
++		struct edid *new_edid;
++
+ 		if ((vga_switcheroo_handler_flags() &
+ 		     VGA_SWITCHEROO_CAN_SWITCH_DDC) &&
+ 		    nv_connector->type == DCB_CONNECTOR_LVDS)
+-			nv_connector->edid = drm_get_edid_switcheroo(connector,
+-								     i2c);
++			new_edid = drm_get_edid_switcheroo(connector, i2c);
+ 		else
+-			nv_connector->edid = drm_get_edid(connector, i2c);
++			new_edid = drm_get_edid(connector, i2c);
+ 
+-		drm_connector_update_edid_property(connector,
+-							nv_connector->edid);
++		nouveau_connector_set_edid(nv_connector, new_edid);
+ 		if (!nv_connector->edid) {
+ 			NV_ERROR(drm, "DDC responded, but no EDID for %s\n",
+ 				 connector->name);
+@@ -609,6 +614,8 @@ nouveau_connector_detect(struct drm_connector *connector, bool force)
+ 		conn_status = connector_status_connected;
+ 		drm_dp_cec_set_edid(&nv_connector->aux, nv_connector->edid);
+ 		goto out;
++	} else {
++		nouveau_connector_set_edid(nv_connector, NULL);
+ 	}
+ 
+ 	nv_encoder = nouveau_connector_of_detect(connector);
+@@ -652,18 +659,12 @@ nouveau_connector_detect_lvds(struct drm_connector *connector, bool force)
+ 	struct nouveau_drm *drm = nouveau_drm(dev);
+ 	struct nouveau_connector *nv_connector = nouveau_connector(connector);
+ 	struct nouveau_encoder *nv_encoder = NULL;
++	struct edid *edid = NULL;
+ 	enum drm_connector_status status = connector_status_disconnected;
+ 
+-	/* Cleanup the previous EDID block. */
+-	if (nv_connector->edid) {
+-		drm_connector_update_edid_property(connector, NULL);
+-		kfree(nv_connector->edid);
+-		nv_connector->edid = NULL;
+-	}
 -
--		r = drm_dp_dpcd_readb(&intel_dp->aux, DP_SINK_COUNT, &count);
--		if (r < 1)
-+		ret = drm_dp_read_sink_count(&intel_dp->aux);
-+		if (ret < 0)
- 			return false;
+ 	nv_encoder = find_encoder(connector, DCB_OUTPUT_LVDS);
+ 	if (!nv_encoder)
+-		return connector_status_disconnected;
++		goto out;
  
- 		/*
-@@ -4676,7 +4675,7 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
- 		 * a member variable in intel_dp will track any changes
- 		 * between short pulse interrupts.
- 		 */
--		intel_dp->sink_count = DP_GET_SINK_COUNT(count);
-+		intel_dp->sink_count = ret;
+ 	/* Try retrieving EDID via DDC */
+ 	if (!drm->vbios.fp_no_ddc) {
+@@ -682,7 +683,8 @@ nouveau_connector_detect_lvds(struct drm_connector *connector, bool force)
+ 	 * valid - it's not (rh#613284)
+ 	 */
+ 	if (nv_encoder->dcb->lvdsconf.use_acpi_for_edid) {
+-		if ((nv_connector->edid = nouveau_acpi_edid(dev, connector))) {
++		edid = nouveau_acpi_edid(dev, connector);
++		if (edid) {
+ 			status = connector_status_connected;
+ 			goto out;
+ 		}
+@@ -702,12 +704,10 @@ nouveau_connector_detect_lvds(struct drm_connector *connector, bool force)
+ 	 * stored for the panel stored in them.
+ 	 */
+ 	if (!drm->vbios.fp_no_ddc) {
+-		struct edid *edid =
+-			(struct edid *)nouveau_bios_embedded_edid(dev);
++		edid = (struct edid *)nouveau_bios_embedded_edid(dev);
+ 		if (edid) {
+-			nv_connector->edid =
+-					kmemdup(edid, EDID_LENGTH, GFP_KERNEL);
+-			if (nv_connector->edid)
++			edid = kmemdup(edid, EDID_LENGTH, GFP_KERNEL);
++			if (edid)
+ 				status = connector_status_connected;
+ 		}
+ 	}
+@@ -720,7 +720,7 @@ nouveau_connector_detect_lvds(struct drm_connector *connector, bool force)
+ 		status = connector_status_unknown;
+ #endif
  
- 		/*
- 		 * SINK_COUNT == 0 and DOWNSTREAM_PORT_PRESENT == 1 implies that
-diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-index 4c56ce4dc54fc..bc5cb8c503fbc 100644
---- a/include/drm/drm_dp_helper.h
-+++ b/include/drm/drm_dp_helper.h
-@@ -1635,6 +1635,7 @@ struct drm_dp_desc;
- bool drm_dp_read_sink_count_cap(struct drm_connector *connector,
- 				const u8 dpcd[DP_RECEIVER_CAP_SIZE],
- 				const struct drm_dp_desc *desc);
-+int drm_dp_read_sink_count(struct drm_dp_aux *aux);
- 
- void drm_dp_remote_aux_init(struct drm_dp_aux *aux);
- void drm_dp_aux_init(struct drm_dp_aux *aux);
+-	drm_connector_update_edid_property(connector, nv_connector->edid);
++	nouveau_connector_set_edid(nv_connector, edid);
+ 	nouveau_connector_set_encoder(connector, nv_encoder);
+ 	return status;
+ }
 -- 
 2.26.2
 
