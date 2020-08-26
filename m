@@ -2,89 +2,111 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B4FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 848E520767
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:34:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BtdjxSGo"
+	by mail.kernel.org (Postfix) with ESMTP id 86DEE206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHZHej (ORCPT
+        id S1726798AbgHZHfl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:34:39 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:42415 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725957AbgHZHej (ORCPT
+        Wed, 26 Aug 2020 03:35:41 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:60809 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726717AbgHZHfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:34:39 -0400
-X-UUID: de0e2075e069470eb3b21b3fc0d4ebf2-20200826
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=5F2u2VX8q773AZrGxIKFo0mNHhzUD6g58juvoBIk0sM=;
-        b=BtdjxSGo7DqQ8It57yghfwy3OZ4a3Qsiz53axPWMPW2MUmBQUw58pejoy/uCk7MZ7q6jODzMSVv+67nlpyoNyiA70XPlsKpvPJjIpB6WE6JqTLAMaHBTYrjJUbhtZIpMZvRVu0j+wnpO/BTPoqqoEtwHFcHYOO10pJkCqRPJXIo=;
-X-UUID: de0e2075e069470eb3b21b3fc0d4ebf2-20200826
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1021931807; Wed, 26 Aug 2020 15:34:34 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 26 Aug 2020 15:34:31 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 26 Aug 2020 15:34:31 +0800
-Message-ID: <1598427273.27965.0.camel@mtksdaap41>
-Subject: Re: [PATCH v2] nvmem: mtk-efuse: Remove EFUSE register write support
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Chih-En Hsu <chih-en.hsu@mediatek.com>
-CC:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <Andrew-CT.Chen@mediatek.com>, <srv_heupstream@mediatek.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <Michael.Mei@mediatek.com>
-Date:   Wed, 26 Aug 2020 15:34:33 +0800
-In-Reply-To: <20200826062148.27293-1-chih-en.hsu@mediatek.com>
-References: <20200826062148.27293-1-chih-en.hsu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 26 Aug 2020 03:35:41 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-180-RnQPf0V8PLuz68E-GvnDxg-1; Wed, 26 Aug 2020 08:35:36 +0100
+X-MC-Unique: RnQPf0V8PLuz68E-GvnDxg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 26 Aug 2020 08:35:30 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 26 Aug 2020 08:35:30 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kent Overstreet' <kent.overstreet@gmail.com>
+CC:     'Marcelo Ricardo Leitner' <marcelo.leitner@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "'linux-sctp@vger.kernel.org'" <linux-sctp@vger.kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        'Catalin Marinas' <catalin.marinas@arm.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        'Neil Horman' <nhorman@tuxdriver.com>
+Subject: RE: [PATCH 00/13] lib/generic-radix-tree: genradix bug fix and
+ optimisations.
+Thread-Topic: [PATCH 00/13] lib/generic-radix-tree: genradix bug fix and
+ optimisations.
+Thread-Index: AdZ67b0yl7qlbV/xQHyOe3+CAeHrEgAABLWAAAIsYaD///zZAP/+9nJQ
+Date:   Wed, 26 Aug 2020 07:35:30 +0000
+Message-ID: <425b461bdd4c429c905f99d2ab7451f2@AcuMS.aculab.com>
+References: <21289d79b0474811b21ed8478c465159@AcuMS.aculab.com>
+ <20200825154127.GB2444@localhost.localdomain>
+ <17da427b99b444ce9d310d6542ae197e@AcuMS.aculab.com>
+ <20200825163224.GA499490@zaphod.evilpiepirate.org>
+In-Reply-To: <20200825163224.GA499490@zaphod.evilpiepirate.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIENoaWgtRW46DQoNCk9uIFdlZCwgMjAyMC0wOC0yNiBhdCAxNDoyMSArMDgwMCwgQ2hpaC1F
-biBIc3Ugd3JvdGU6DQo+IFRoaXMgcGF0Y2ggaXMgdG8gcmVtb3ZlIGZ1bmN0aW9uICJtdGtfcmVn
-X3dyaXRlIiBzaW5jZQ0KPiBNZWRpYXRlayBFRlVTRSBoYXJkd2FyZSBvbmx5IHN1cHBvcnRzIHJl
-YWQgZnVuY3Rpb25hbGl0eQ0KPiBmb3IgTlZNRU0gY29uc3VtZXJzLg0KPiANCg0KUmV2aWV3ZWQt
-Ynk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+DQoNCj4gRml4ZXM6IDRjN2U0ZmUzNzc2NiAo
-Im52bWVtOiBtZWRpYXRlazogQWRkIE1lZGlhdGVrIEVGVVNFIGRyaXZlciIpDQo+IFNpZ25lZC1v
-ZmYtYnk6IENoaWgtRW4gSHN1IDxjaGloLWVuLmhzdUBtZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAg
-ZHJpdmVycy9udm1lbS9tdGstZWZ1c2UuYyB8IDE0IC0tLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUg
-Y2hhbmdlZCwgMTQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9udm1l
-bS9tdGstZWZ1c2UuYyBiL2RyaXZlcnMvbnZtZW0vbXRrLWVmdXNlLmMNCj4gaW5kZXggODU2ZDlj
-M2ZjMzhlLi42YTUzN2Q5NTlmMTQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbnZtZW0vbXRrLWVm
-dXNlLmMNCj4gKysrIGIvZHJpdmVycy9udm1lbS9tdGstZWZ1c2UuYw0KPiBAQCAtMjgsMTkgKzI4
-LDYgQEAgc3RhdGljIGludCBtdGtfcmVnX3JlYWQodm9pZCAqY29udGV4dCwNCj4gIAlyZXR1cm4g
-MDsNCj4gIH0NCj4gIA0KPiAtc3RhdGljIGludCBtdGtfcmVnX3dyaXRlKHZvaWQgKmNvbnRleHQs
-DQo+IC0JCQkgdW5zaWduZWQgaW50IHJlZywgdm9pZCAqX3ZhbCwgc2l6ZV90IGJ5dGVzKQ0KPiAt
-ew0KPiAtCXN0cnVjdCBtdGtfZWZ1c2VfcHJpdiAqcHJpdiA9IGNvbnRleHQ7DQo+IC0JdTMyICp2
-YWwgPSBfdmFsOw0KPiAtCWludCBpID0gMCwgd29yZHMgPSBieXRlcyAvIDQ7DQo+IC0NCj4gLQl3
-aGlsZSAod29yZHMtLSkNCj4gLQkJd3JpdGVsKCp2YWwrKywgcHJpdi0+YmFzZSArIHJlZyArIChp
-KysgKiA0KSk7DQo+IC0NCj4gLQlyZXR1cm4gMDsNCj4gLX0NCj4gLQ0KPiAgc3RhdGljIGludCBt
-dGtfZWZ1c2VfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIHsNCj4gIAlz
-dHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiBAQCAtNjEsNyArNDgsNiBAQCBzdGF0
-aWMgaW50IG10a19lZnVzZV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAg
-CWVjb25maWcuc3RyaWRlID0gNDsNCj4gIAllY29uZmlnLndvcmRfc2l6ZSA9IDQ7DQo+ICAJZWNv
-bmZpZy5yZWdfcmVhZCA9IG10a19yZWdfcmVhZDsNCj4gLQllY29uZmlnLnJlZ193cml0ZSA9IG10
-a19yZWdfd3JpdGU7DQo+ICAJZWNvbmZpZy5zaXplID0gcmVzb3VyY2Vfc2l6ZShyZXMpOw0KPiAg
-CWVjb25maWcucHJpdiA9IHByaXY7DQo+ICAJZWNvbmZpZy5kZXYgPSBkZXY7DQoNCg==
+From: Kent Overstreet
+> Sent: 25 August 2020 17:32
+> 
+> On Tue, Aug 25, 2020 at 04:00:35PM +0000, David Laight wrote:
+> > From: 'Marcelo Ricardo Leitner'
+> > > Sent: 25 August 2020 16:41
+> > >
+> > > On Tue, Aug 25, 2020 at 02:52:34PM +0000, David Laight wrote:
+> > > > The genradix code is used by SCTP for accessing per-stream data.
+> > > > This means there are quite a lot of lookups but the code wasn't
+> > > > really optimised at all.
+> > >
+> > > My test box is down for the moment and will bring it on later today or
+> > > tomorrow, so I can't test it yet. What should we expect as performance
+> > > gains here?
+> >
+> > Not sure, probably not much, but it ought to show up :-)
+> > There'll be bigger gains on a cpu that has software ilog2().
+> >
+> > I've only checked SCTP still works.
+> > I've requested 32k streams on a listener - to force a level-2 tree.
+> > I've also done at least one check with a massive pad in the sctp
+> > stream structure.
+> 
+> Have you benchmarked at all? Or were you looking at the generated assembly?
+
+I've been reading a lot of assembly.
+(Some of the code generated by modern gcc is crap.)
+With horrible casts it is the easiest way to check the code is right!
+
+I'm going to try marking the lookup functions with '__attribute__ ((pure))'.
+That should help the sctp code that does repeated SCTP_SI().
+In reality I want to mark them __attribute__ ((const)) - including the
+inline wrappers, but that isn't allowed if they read memory.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
