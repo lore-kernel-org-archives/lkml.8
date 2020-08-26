@@ -2,95 +2,129 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA12C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8BBD207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:21:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JcmJGGf2"
+	by mail.kernel.org (Postfix) with ESMTP id 5EFC920737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:25:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598477120;
+	bh=Q0O6TnBoNE2nBlAUMPG/fk21VNq26J91dkH47lSjCOQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LbjqOSKu0/CSrilbOX1Kv9XH02aXGFmt6LXFSWEaeHc07KqxZ4iRGu5Jhp67ZmGy9
+	 wv1h3uwI2TCRA1myTlsJpLP7IlgeVGDq1N5UUB9vNjtmuqIlQ/+KUwZK7zszBVF0H0
+	 ZWbafgtMXrKKzwV3vp93iapJhFWOEzf1Zq/17Li0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbgHZVVx (ORCPT
+        id S1726836AbgHZVZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:21:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgHZVVw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:21:52 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB8C3C061574;
-        Wed, 26 Aug 2020 14:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=Xsfx+KabYUh+DH5+P2LawgczRML7gRo0hmmmop5VVHQ=; b=JcmJGGf2yA5/kdHpckUJrt/PTG
-        1AeBqLH5ZuPIzzV1aSlS+fpiw8WWJwvaOthEnyoxDSElm7nPQwKTnSmk+guFm+BdgXHG2jmgM3evD
-        Dju/YtKirQ0VMCl8l35SNVWt/7qtd34/1EGYbh7eit5LmnRIUEqYXm1UraOVYVuWGn0tsnCsLkXAn
-        ZXneyhuQvgKZrwETjYgKiuDzI37JZuAWjiL3MwlK0loltDVfDKbYbgxX0ZldCW7euUHWETtKmBbG1
-        MTJNw+2Y29RMafHfIbtLtK36zkJK5euVtlgt9Vo/8IeNl4qxx1mcdwdxJU4Fw/jdZIGHCUFRgU3CI
-        Dxq70WLA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kB2rb-00013Y-4X; Wed, 26 Aug 2020 21:21:47 +0000
-To:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Changbin Du <changbin.du@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] kconfig: streamline_config.pl: check defined(ENV variable)
- before using it
-Message-ID: <be80ceda-596b-03aa-394f-166cc6388aa0@infradead.org>
-Date:   Wed, 26 Aug 2020 14:21:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 26 Aug 2020 17:25:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41746 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726753AbgHZVZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:25:15 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7964D207BC;
+        Wed, 26 Aug 2020 21:25:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598477114;
+        bh=Q0O6TnBoNE2nBlAUMPG/fk21VNq26J91dkH47lSjCOQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Vk8M4tWQMHrPnTjptTs08FyGEZ0eAS+QYVS/XDjw5g6cX+g4hiCqLeC7MLx/MT3fV
+         aBf/ZbRt12CU0BCBdNu9ODvqoggevIrKbtYaixSbKTEsTNSaggCunaC+i1oEMu238H
+         xjuRtiMWm+/KF1lJ73ePRr9jEt6iw2wSAqgA1eGA=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kB2uu-006yo7-PF; Wed, 26 Aug 2020 22:25:12 +0100
+Date:   Wed, 26 Aug 2020 22:25:11 +0100
+Message-ID: <871rjt2j7s.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 41/46] platform-msi: Provide default irq_chip:: Ack
+In-Reply-To: <20200826112334.698236296@linutronix.de>
+References: <20200826111628.794979401@linutronix.de>
+        <20200826112334.698236296@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Wed, 26 Aug 2020 12:17:09 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> For the upcoming device MSI support it's required to have a default
+> irq_chip::ack implementation (irq_chip_ack_parent) so the drivers do not
+> need to care.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> 
+> ---
+>  drivers/base/platform-msi.c |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> --- a/drivers/base/platform-msi.c
+> +++ b/drivers/base/platform-msi.c
+> @@ -95,6 +95,8 @@ static void platform_msi_update_chip_ops
+>  		chip->irq_mask = irq_chip_mask_parent;
+>  	if (!chip->irq_unmask)
+>  		chip->irq_unmask = irq_chip_unmask_parent;
+> +	if (!chip->irq_ack)
+> +		chip->irq_ack = irq_chip_ack_parent;
+>  	if (!chip->irq_eoi)
+>  		chip->irq_eoi = irq_chip_eoi_parent;
+>  	if (!chip->irq_set_affinity)
+> 
+> 
 
-A user reported:
-'Use of uninitialized value $ENV{"LMC_KEEP"} in split at
- ./scripts/kconfig/streamline_config.pl line 596.'
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-so first check that $ENV{LMC_KEEP} is defined before trying
-to use it.
+	M.
 
-Fixes: c027b02d89fd ("streamline_config.pl: add LMC_KEEP to preserve some kconfigs")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Changbin Du <changbin.du@gmail.com>
-Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- scripts/kconfig/streamline_config.pl |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
---- linux-next-20200825.orig/scripts/kconfig/streamline_config.pl
-+++ linux-next-20200825/scripts/kconfig/streamline_config.pl
-@@ -593,7 +593,10 @@ while ($repeat) {
- }
- 
- my %setconfigs;
--my @preserved_kconfigs = split(/:/,$ENV{LMC_KEEP});
-+my @preserved_kconfigs;
-+if (defined($ENV{'LMC_KEEP'})) {
-+	@preserved_kconfigs = split(/:/,$ENV{LMC_KEEP});
-+}
- 
- sub in_preserved_kconfigs {
-     my $kconfig = $config2kfile{$_[0]};
-
+-- 
+Without deviation from the norm, progress is not possible.
