@@ -2,101 +2,108 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD043C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB959C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 697F020707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:32:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598423575;
-	bh=tlmi1dXDnwffZjtMmqckGcLrR8NIpwc3mBYPK75NtQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ht0pawfaPEC9+lvKR6n4oEmR2lwtsyFBgwKBkHHlZjYRNnCqTXESHRxlc9XPKyiWx
-	 a9tgMVhjX/dYI+TyykHZFZYk8s98d8oXN9r4PU2aIZlw8cHM7ME57S85H0SGNpJYP/
-	 UjZFa3+9wb/jNAC/xIpPoRdRtWqAJ99SeEt0T/XQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8FAEE20707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:33:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hJ7usYVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbgHZGcw (ORCPT
+        id S1726749AbgHZGdi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:32:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbgHZGcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:32:51 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2070620707;
-        Wed, 26 Aug 2020 06:32:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598423571;
-        bh=tlmi1dXDnwffZjtMmqckGcLrR8NIpwc3mBYPK75NtQc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aO+yIuBS6V6tG2ZgXpu76vXf7CjrchXrcfFtHilQ/ixmTi/qAs4uVsF3b+VHxWg4K
-         woRVhTPjqkMpI3uM18tj2FXD0PkCDlhdefR9/Spqna3399ooBCwwkS9XflrLCCOzbf
-         NdXDFvVMSVUaOe5VuJIpFvNpV9W3NEO4R1oLIacQ=
-Date:   Wed, 26 Aug 2020 12:02:46 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
-Message-ID: <20200826063246.GW2639@vkoul-mobl>
-References: <20200824084712.2526079-1-vkoul@kernel.org>
- <20200824084712.2526079-2-vkoul@kernel.org>
- <20200824174009.GA2948650@bogus>
- <20200825145131.GS2639@vkoul-mobl>
+        Wed, 26 Aug 2020 02:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726186AbgHZGdi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 02:33:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E6CC061574;
+        Tue, 25 Aug 2020 23:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=BQ4CpzfWadwZaE1eVDKbctMggquiS6KqfZ6j9IqjVrY=; b=hJ7usYVtBMK1Utl0NhqloD27al
+        wRs+XR6pFpF4xRObEsxz4gmW1UWfEXF9PcUEsOS3KUumK17uZnxY/xwdTkSG3k+37tH1LQgHgbGgU
+        y3NENpeUmn587R/DgaqpHlHQBnK2AC800feAkM4YbK2TpzeyFKfFbXT5IluFMTQ5Hi9p2O9u4m1Eh
+        AD5PrxrECjMWSyId6MkqZ7TFwv6XNUjghCEf7LgcoHnlLC83QK+N/TwX7aF3DPkHQYwkNh3Egt5pP
+        xIlpeQyhiE1ii18RhhFXfSVz6klFMLL5M9phXtn986IMaBslzyeaMHPAyTn5w7JRcmXLOJavGtzDV
+        VfxR7esw==;
+Received: from 213-225-6-196.nat.highway.a1.net ([213.225.6.196] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAozy-0001AA-Vy; Wed, 26 Aug 2020 06:33:31 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: [PATCH 03/19] block: cleanup del_gendisk a bit
+Date:   Wed, 26 Aug 2020 08:24:30 +0200
+Message-Id: <20200826062446.31860-4-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200826062446.31860-1-hch@lst.de>
+References: <20200826062446.31860-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825145131.GS2639@vkoul-mobl>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-08-20, 20:21, Vinod Koul wrote:
-> Hey Rob,
-> 
-> On 24-08-20, 11:40, Rob Herring wrote:
-> > On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
-> > > Add devicetree binding documentation for GPI DMA controller
-> > > implemented on Qualcomm SoCs
-> > > 
-> > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > > ---
-> > >  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++++++
-> > >  1 file changed, 87 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.yaml
-> > > 
-> > 
-> > 
-> > My bot found errors running 'make dt_binding_check' on your patch:
-> > 
-> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ring transfer size compare to channel transfer ring. Event ring length = ev-factor * transfer ring size', 'maxItems': 1} is not valid under any of the given schemas (Possible causes of the failure):
-> > 	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required property
-> 
-> Okay updating dt-schema I do see this, now the question is what is this
-> and what does it mean ;-) I am not sure I comprehend the error message.
-> I see this for all the new properties I added as required for this
-> device node
+Merge three hidden gendisk checks into one.
 
-Okay I think I have figured it out, I need to provide ref to
-/schemas/types.yaml#definitions/uint32 for this to work, which does
-makes sense to me.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ block/genhd.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-  qcom,max-num-gpii:
-    $ref: /schemas/types.yaml#definitions/uint32
-    maxItems: 1
-    description:
-      Number of GPII instances
-
-Looks good to schema tool
+diff --git a/block/genhd.c b/block/genhd.c
+index cb9a51be35b053..df6485223a2c3d 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -973,22 +973,22 @@ void del_gendisk(struct gendisk *disk)
+ 	disk->flags &= ~GENHD_FL_UP;
+ 	up_write(&disk->lookup_sem);
  
+-	if (!(disk->flags & GENHD_FL_HIDDEN))
++	WARN_ON(!disk->queue);
++
++	if (!(disk->flags & GENHD_FL_HIDDEN)) {
+ 		sysfs_remove_link(&disk_to_dev(disk)->kobj, "bdi");
+-	if (disk->queue) {
++
+ 		/*
+ 		 * Unregister bdi before releasing device numbers (as they can
+ 		 * get reused and we'd get clashes in sysfs).
+ 		 */
+-		if (!(disk->flags & GENHD_FL_HIDDEN))
+-			bdi_unregister(disk->queue->backing_dev_info);
++		bdi_unregister(disk->queue->backing_dev_info);
+ 		blk_unregister_queue(disk);
++		blk_unregister_region(disk_devt(disk), disk->minors);
+ 	} else {
+-		WARN_ON(1);
++		blk_unregister_queue(disk);
+ 	}
+ 
+-	if (!(disk->flags & GENHD_FL_HIDDEN))
+-		blk_unregister_region(disk_devt(disk), disk->minors);
+ 	/*
+ 	 * Remove gendisk pointer from idr so that it cannot be looked up
+ 	 * while RCU period before freeing gendisk is running to prevent
 -- 
-~Vinod
+2.28.0
+
