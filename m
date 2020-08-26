@@ -2,139 +2,92 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D93CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 544A02074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598458896;
-	bh=dDLOLCFwJwFMFInKs5uNLmhAwr7cRYvAHsvcordLT6c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dM+ewunw7TMwm/zOPeVoG6DGU9h8FLjnIxtjvOFz1w+FSNqSDyWCZrPyj0xLMKZxk
-	 u0MSy//o+GTPe33+rKndIaO6oMEzed8zdZRC94W3OJMcJk+cvtWPNb1i9U+wt61/hT
-	 xjdSCyZxXGuLKtWNv6+NvYZWPXhqw0tzJCvthjt0=
+	by mail.kernel.org (Postfix) with ESMTP id 354902074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:22:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tc4j+KoK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgHZQVf (ORCPT
+        id S1728008AbgHZQWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:21:35 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37158 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726763AbgHZQVd (ORCPT
+        Wed, 26 Aug 2020 12:22:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47966 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbgHZQWY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:21:33 -0400
-Received: by mail-ot1-f67.google.com with SMTP id k2so1969378ots.4;
-        Wed, 26 Aug 2020 09:21:32 -0700 (PDT)
+        Wed, 26 Aug 2020 12:22:24 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32FD3C061574;
+        Wed, 26 Aug 2020 09:22:21 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id k10so1313615lfm.5;
+        Wed, 26 Aug 2020 09:22:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BtT/4wVpsckCYLZ8n/zzlgxrXxVC3on9xl+ly7YJvbg=;
+        b=tc4j+KoKAigY4Z31jsSv57tW3V+T42yEU2FIfYieeA5dzNcnB8hrMO44XVDwJWxYYD
+         Oqz7xSHf8Mb/estAk8V0sRxEU9sTLpWC5DaqYtInGLTxCD3mEgx7b4xd7oRFKX1sSdRH
+         omt55CPM+Twp0UEVoLgkOSP/TTwX3GjKwEi7TkSWAwNcCJDLnRIUYW0/H8OAbINcNxjf
+         Sa+F6yVzZMkKNCuYpEg4f5Xao+gezUQr50RvfYsHetjUoNkMII9mbq5C3AnCuEct+ZE/
+         3OznTVV7sJg1olYrxpgFo9wY8/PKK7/6/qWnWs/QU9qH450MuY2+bMEmmD4Ve0+yoMR8
+         PbYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TbB4aAw95Mh9bTjzGZ253tT1XzFun2QcNkXJEK0ggWg=;
-        b=TaMSxtDHu6+IMgGuxqja9s78djX3PfTEaXekszqf/cmbrIauFeYw7Z6vcnPpwFyNJE
-         OuGsLMy3d4ESyy6lbLw+x3POs5vHVYExoyuE3ABsMbCg62K6VxPdPNkRpHhkn1j+g1wQ
-         pfaCmTqfYqg9BK4gg749DZ8v5SFbXKeOoB0P66S7Df2wPDeOKi6UPSpNCiq8mC0wFjbT
-         JUlihPO9lUeAa7IffbLk6ZELt+ZhqAEV6/z2nRiUy345ryuhEfjWg2HGUiO8QYVUlGd1
-         R3CXLjB8sojRm0VHWW6C/sqpJyJl9CDgd9Mcpa8pnQP6EtGiMqH/FVu84LUSMQspXP6X
-         soug==
-X-Gm-Message-State: AOAM533MImgTt87U4qdfCF0hU2u6N6uTIYW9s7BReRSyOrGPsjmXWpyM
-        1Gne/mf08meigrgv0iVWoAbbZGWhXZeviVOs2Vc=
-X-Google-Smtp-Source: ABdhPJwE43X2zK+eq5dh7BAAc3PBhxtcts0J2cCUcuOavhPyEeuub5fqGAborirceeCJK+/EhO9LdA1Fq+GEOhci2IA=
-X-Received: by 2002:a05:6830:1242:: with SMTP id s2mr9921888otp.167.1598458892069;
- Wed, 26 Aug 2020 09:21:32 -0700 (PDT)
+        bh=BtT/4wVpsckCYLZ8n/zzlgxrXxVC3on9xl+ly7YJvbg=;
+        b=jBbmkjumxy943VqQ0ba0IujkxFOBFWmKuPg19Q6+F1MFg4OunvYgnEdgy9wzKi46Dn
+         IWSrS0hCDJhV7+eBDRcw9gUdE9UTiVv3lQ8s4pEyRjSbIhgEQQC1q7znDqmzWRSfujUT
+         FsxmHb4aOfXVFDACQuuHrDXNqA6xda8le79AIZ1ewwfbCeavWd448rxWlTVGe6ksYL6O
+         5tcVExl0umzi5ZscUALbhbVnBqakpBnUYGlufVvQ0THUfchfhSBYqw4ztL7ffv12r8uu
+         rE4cC3sa8OvJ3/urDi7Hjga/nERJopCfV4xHIZpCgbuOOxaH7sk2zAmmAZev/sda30iq
+         vQYA==
+X-Gm-Message-State: AOAM533thep1bdiegtaGbwMEgVX2Z05YEtmtEdhscNX5LrlCXr+lB2qk
+        mjz0IlHTfjzOzWnPLFViFXJj3ezVIFIp0RE0BAGCPl8V
+X-Google-Smtp-Source: ABdhPJy6WsGLpYT6ef2HZAU1XlNg+2DvK0xpGmvBdrIYxBRMiBqa3AqHN/PqIRkKYIYYI+bsiT7mel1SOnHT5CZmekE=
+X-Received: by 2002:a05:6512:74b:: with SMTP id c11mr7549812lfs.119.1598458938599;
+ Wed, 26 Aug 2020 09:22:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200826120421.44356-1-guilhem@barpilot.io> <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
- <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
- <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
- <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
- <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
- <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
- <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com> <CAJZ5v0j4FXH26rZCjM9Csd56skPVbRpM7iFcKYAFMmLFX54+bg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0j4FXH26rZCjM9Csd56skPVbRpM7iFcKYAFMmLFX54+bg@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 26 Aug 2020 18:21:21 +0200
-Message-ID: <CAJZ5v0jkgVn88H9K0n0SX_xLPCgMYXXSVHXLLYaWvynGOMLf=g@mail.gmail.com>
-Subject: Re: [PATCH] intel_idle: Add ICL support
-To:     Guilhem Lettron <guilhem@barpilot.io>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200826085907.43095-1-colin.king@canonical.com>
+In-Reply-To: <20200826085907.43095-1-colin.king@canonical.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 26 Aug 2020 09:22:07 -0700
+Message-ID: <CAADnVQL26-gaPy2yreDj=P00_Z0q6VunsP95goD6GfhhM_DuBA@mail.gmail.com>
+Subject: Re: [PATCH][next] selftests/bpf: fix spelling mistake "scoket" -> "socket"
+To:     Colin King <colin.king@canonical.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 6:02 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Wed, Aug 26, 2020 at 1:59 AM Colin King <colin.king@canonical.com> wrote:
 >
-> On Wed, Aug 26, 2020 at 4:04 PM Guilhem Lettron <guilhem@barpilot.io> wrote:
-> >
-> > On Wed, 26 Aug 2020 at 15:41, Zhang Rui <rui.zhang@intel.com> wrote:
-> > >
-> > >
-> > > This is really hard to read.
-> > > can you please attach the two turbostat output as attachments?
-> >
-> > of course :)
+> From: Colin Ian King <colin.king@canonical.com>
 >
-> Thanks!
->
-> A couple of things happen here AFAICS.
->
-> First, your processor seems to be unable to enter package C-states
-> below PC3, so probably there is a device (most likely a PCI one)
-> preventing it from doing that in the system.  If all goes well, it
-> should be able to get to at least PC8 without suspending the whole
-> system.  That needs to be dealt with in the first place before we can
-> draw meaningful conclusions regarding which set of C-states to expose
-> and whether or not the one exposed via ACPI is sufficient.
->
-> To that end, I would try to upgrade the graphics firmware and see if
-> you can get some nonzero PC8 residency then.
->
-> Second, ACPI exposes C1, C7s and C10 only and so you don't get any
-> CPU-C6 residency without the patch, but instead you get more CPU-C7
-> residency and more CPU-C1 residency.  It is hard to say which is
-> better in principle, but if you look at what is asked for by the
-> governor, it turns out that deep C-states (C8-C10) are requested
-> around 54% of the time with the patch, whereas without it the ACPI_C3
-> state (corresponding to C10) is requested approximately 24% of the
-> time, which is much less often.  That appears to translate to the
-> difference in PC2 residency (~30% with the patch vs ~17% without it).
->
-> Note, however, that (with the patch) C10 itself is asked for around
-> 11% of the time which in turn is much less than the ~24% for the
-> corresponding ACPI_C3 (without the patch).
->
-> Overall, it looks like exposing C8 is beneficial from the energy usage
-> perspective, because (in the future, when the "blocking" device is
-> taken care of and the system can enter PC8 and deeper package
-> C-states) it may allow PC8 to be entered more often in principle, even
-> though it may reduce the amount of time spent in PC10 too (PC10 may be
-> generally difficult to enter, though).  [Here I'm assuming that the
-> processor enters PC3 or PC2 instead of PC8 or deeper which cannot be
-> entered due to some resource dependency.]
->
-> OTOH exposing C1E doesn't seem to make much of a difference and
-> exposing C6 only causes it to be asked for instead of C7s, so exposing
-> the latter alone should be sufficient in theory.
+> There is a spelling mistake an a check error message. Fix it.
 
-I need to correct myself here.
+Kinda ironic that you've made a spelling mistake in the commit log
+that fixes spelling in the test.
+Whatever scripts you use to detect spelling errors, please use it
+on your commit messages as well.
 
-With the patch C7s is exposed with the target residency of C8 which is
-why it is almost never selected by the governor and that's why C6 is
-kind of "instead" of it.
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-So it looks like it might be beneficial to expose C8 (instead of C7s)
-and C6 with the target residency significantly less than that of C8.
-
-> So IMO the set of C-states exposed by ACPI looks almost enough, but
-> the jury is out until you can make the system be able to enter at
-> least PC8.
+Applied with s/an/in/ in the commit log.
