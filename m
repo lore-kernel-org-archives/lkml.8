@@ -2,197 +2,84 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAC8C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65E4C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06C2D2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:10:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="qT+TAY8l"
+	by mail.kernel.org (Postfix) with ESMTP id 78B2E207DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:12:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgHZUK0 (ORCPT
+        id S1726943AbgHZUMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:10:26 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:22674 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbgHZUKZ (ORCPT
+        Wed, 26 Aug 2020 16:12:42 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:36345 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbgHZUMl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:10:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598472625; x=1630008625;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=aU2RaGMPuG6AQMjQ4p0fBBiz8S4VHOimEKgTasXFcpE=;
-  b=qT+TAY8lOvnJVPkPOB+gIcwNForgvxyIpJkLbdAlp/rzo5IdjdnqxfXL
-   KwfCmPeSch9YzDociQMBGiCdTiPPj+H3vR4feVwz0bW37zpmXi1v18eaS
-   p+YTS2awMwTPtHqyo73IpXPUXoDAMYv0lr4ciBVdz3jXBMSFlEpg1rw/d
-   g=;
-X-IronPort-AV: E=Sophos;i="5.76,356,1592870400"; 
-   d="scan'208";a="50106232"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 26 Aug 2020 20:10:10 +0000
-Received: from EX13MTAUWC002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (Postfix) with ESMTPS id B320AA239C;
-        Wed, 26 Aug 2020 20:10:01 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 26 Aug 2020 20:09:59 +0000
-Received: from vpn-10-85-95-61.fra53.corp.amazon.com (10.43.161.85) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 26 Aug 2020 20:09:52 +0000
-Subject: Re: [PATCH] x86/irq: Preserve vector in orig_ax for APIC code
-To:     Thomas Gleixner <tglx@linutronix.de>, X86 ML <x86@kernel.org>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Will Deacon" <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Avi Kivity <avi@scylladb.com>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>, <robketr@amazon.de>,
-        <amos@scylladb.com>, Brian Gerst <brgerst@gmail.com>,
-        <stable@vger.kernel.org>
-References: <20200826115357.3049-1-graf@amazon.com>
- <87k0xlv5w5.fsf@nanos.tec.linutronix.de>
- <fd87a87d-7d8a-9959-6c81-f49003a43c21@amazon.com>
- <87blixuuny.fsf@nanos.tec.linutronix.de>
- <873649utm4.fsf@nanos.tec.linutronix.de>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <9f351750-f652-f9c5-ca79-fc90273ee3c8@amazon.com>
-Date:   Wed, 26 Aug 2020 22:09:49 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:78.0)
- Gecko/20100101 Thunderbird/78.1.1
+        Wed, 26 Aug 2020 16:12:41 -0400
+Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MbAUg-1kmITn0iK0-00bdw3; Wed, 26 Aug 2020 22:12:39 +0200
+Received: by mail-qk1-f173.google.com with SMTP id u3so3440987qkd.9;
+        Wed, 26 Aug 2020 13:12:38 -0700 (PDT)
+X-Gm-Message-State: AOAM5317UekgUosnUoWFP7mlWCUCEydvVZR/6CF3e2uUkS/WnaEmGNwe
+        dZsSjErWYegXVl4YL4rdNGdTTQ2rNAxShpK+f1s=
+X-Google-Smtp-Source: ABdhPJxhc4alN5hdSxUDe7JMPS2m96WmDmutFJ3jt08/0N904t71Mio1+gRavVxjcvQwSOw7b+NsbxP4jRJgZhk8Yd0=
+X-Received: by 2002:a37:8405:: with SMTP id g5mr15405358qkd.286.1598472757982;
+ Wed, 26 Aug 2020 13:12:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <873649utm4.fsf@nanos.tec.linutronix.de>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.85]
-X-ClientProxiedBy: EX13D15UWB004.ant.amazon.com (10.43.161.61) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="windows-1252"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+References: <20200826145249.745432-1-npiggin@gmail.com>
+In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 26 Aug 2020 22:12:22 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3MNKa3RhG6TUg59+yHvVEa3DLNyqpWSO1c_HLRLP_YRQ@mail.gmail.com>
+Message-ID: <CAK8P3a3MNKa3RhG6TUg59+yHvVEa3DLNyqpWSO1c_HLRLP_YRQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/23] Use asm-generic for mmu_context no-op functions
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:wT87E8wdVK6j8liRYR2q8D1pbfFNMWA4alW5k0Jpk8WL7UMFy9B
+ 9Vir2Vid0yZmedB8ASFUty3Swptv4umKmxND5+HMpST23Df5b9hD2j8BIkuqKsJQ9kVsqQ9
+ DmlHXJMtuhZz5rYJwKWR59FKLrZmyiY6kZarwI+k6aSggU7gS9Vckz1uQg6YoC5bTY4EUWs
+ F4Zk00AEEzw4aARKwX1oA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DS3C4dfbomA=:tYDr0mMAZbefkq/N+ocGKj
+ 8iQmmEYU+SnMbiG3V0uuBcQgcMv7vkEd0+XmLdwBShtVrDX7sVEaX9dScXcR2NjtxESyUQW13
+ FS26BrtsSMJ7DLfyK/jVcrlgol0z1Eiwl0/6UxWbtMoM1zMH1ZyUovLFCUZrwoX2RNws+QG+7
+ 9iFl4Sj5AXyfWl75Tk6WiK1lnyI7b3yDEBn37g+IhT2i13EJQl2TAmAsPwy7l3nsZ/PE0Tlh/
+ MmN38prxW3VYO32SsmBztCXLRQU41qw1lTpNUGmUmQwc9XxaiWC2gVbJwna3qoT8+IQxIM5ra
+ Cx6WBzvhLTB7bFUJe4mnpB5yOhx8fBTWea4RSxeBpjNbLlQWycWRzW2o/D//95/Oyb+P+RWJb
+ QBBvn6jb4s5TUK7EWY8FVkRgWTkziC15V3M4gVLPf9P5ExuKHzrtQBaW8pg2VVYHHShpdf0nx
+ Hi0XmWYzb9I+es0N2DPU6rnKUK1VJSXoSraee1nNH5xJc9RxV1V5uLC8VJdvE4fXj/SfidxIU
+ ZPmpq8OcBFbapK0PbAe+M8isSRE5u30g4H8/DaEhFtmqnmAOuufwe8FJ0OSniP8bgR3gwO3Fl
+ rrB7YIhM19Aw4Oc4anwxDQ3BHVAXW1H2b+SJfrHwoOROpnBHUnDNjW0p/zyP4hucZV0FKuWto
+ YFid3g5ICrZp9ZZSleaf/U993K/TU0iH4Vvtb7YInU0J8l4ScRanZTSP8ApwA7U5fI3860HnG
+ gfM02JNodHu79CY3c3lXRxvcC45Fj7bhg65Ta1fyau1cw9SJPwGZAVwVO/ItccyYGjKJR4sm5
+ UaSYUnu4G+DpHuBJNw7J6AzcLYlumtXof3GmSyde4RmFUNng66Dcbo6c+kDcto7bY+2IKzG
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 26, 2020 at 4:53 PM Nicholas Piggin <npiggin@gmail.com> wrote:
+>
+> It would be nice to be able to modify mmu_context functions or add a
+> hook without updating all architectures, many of which will be no-ops.
+>
+> The motivation for this series is a change to lazy mmu handling, but
+> this series stands on its own as a good cleanup whether or not we end
+> up making that change.
+>
+> Arnd, is this something you could take through your asm-generic tree?
+> (assuming arch maintainers are okay with it)
 
+Yes, I can definitely take this. The patches all look good to me, so
+feel free to add "Acked-by: Arnd Bergmann <arnd@arndb.de" if you
+like (not really needed if I merge them later though) and send me a
+pull request once you feel you have collected enough Ack from others.
 
-On 26.08.20 20:53, Thomas Gleixner wrote:
-> =
-
-> =
-
-> On Wed, Aug 26 2020 at 20:30, Thomas Gleixner wrote:
->> And it does not solve the issue that we abuse orig_ax which Andy
->> mentioned.
-> =
-
-> Ha! After staring some more, it's not required at all, which is the most
-> elegant solution.
-> =
-
-> The vector check is pointless in that condition because there is never a
-> condition where an interrupt is moved from vector A to vector B on the
-> same CPU.
-> =
-
-> That's a left over from the old allocation model which supported
-> multi-cpu affinities, but this was removed as it just created trouble
-> for no real benefit.
-> =
-
-> Today the effective affinity which is a single CPU out of the requested
-> affinity. If an affinity mask change still contains the current target
-> CPU then there is no move happening at all. It just stays on that vector
-> on that CPU.
-> =
-
-> Thanks,
-> =
-
->          tglx
-> ---
-> =
-
-> --- a/arch/x86/kernel/apic/vector.c
-> +++ b/arch/x86/kernel/apic/vector.c
-> @@ -909,7 +909,7 @@ void send_cleanup_vector(struct irq_cfg
->                  __send_cleanup_vector(apicd);
->   }
-> =
-
-> -static void __irq_complete_move(struct irq_cfg *cfg, unsigned vector)
-> +void irq_complete_move(struct irq_cfg *cfg)
->   {
->          struct apic_chip_data *apicd;
-> =
-
-> @@ -917,15 +917,10 @@ static void __irq_complete_move(struct i
->          if (likely(!apicd->move_in_progress))
->                  return;
-> =
-
-> -       if (vector =3D=3D apicd->vector && apicd->cpu =3D=3D smp_processo=
-r_id())
-> +       if (apicd->cpu =3D=3D smp_processor_id())
->                  __send_cleanup_vector(apicd);
->   }
-> =
-
-> -void irq_complete_move(struct irq_cfg *cfg)
-> -{
-> -       __irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
-> -}
-> -
->   /*
->    * Called from fixup_irqs() with @desc->lock held and interrupts disabl=
-ed.
->    */
-> =
-
-
-
-As expected, this also fixes the issue at hand. Do you want to send a =
-
-real patch? :)
-
-Tested-by: Alexander Graf <graf@amazon.com>
-
-
-Alex
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
-
+     Arnd
