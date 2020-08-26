@@ -2,160 +2,129 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE81C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A257C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7088E20678
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C74B2067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:07:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="G9o+O+AR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=trendmicro.com header.i=@trendmicro.com header.b="Q7umbbDa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbgHZHFz (ORCPT
+        id S1726717AbgHZHH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:05:55 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54390 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbgHZHFv (ORCPT
+        Wed, 26 Aug 2020 03:07:29 -0400
+Received: from sjdcvmout02.udc.trendmicro.com ([66.180.82.11]:39948 "EHLO
+        sjdcvmout02.udc.trendmicro.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725786AbgHZHHZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:05:51 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07Q75noN064369;
-        Wed, 26 Aug 2020 02:05:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598425549;
-        bh=6E81PBhhTm2Fd9GLC0elzJej9ab66NBkRVDF3kvJ2Ho=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=G9o+O+AR0hH78Q8eHr9AIslSwHaOq33L0puZqtoxJ/TEtjKaGPYfWBDQntfqcAc/x
-         xdNC8A1YH+eFixgP5T0nA3n1uZBanvPsEjEMnui97qwcm1mfLn0Z778hgRi/14JJIh
-         39H93UIcj7SK/MfnJHfMKg6GLG4IDrfq6+N2ZByI=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07Q75nJe124795;
-        Wed, 26 Aug 2020 02:05:49 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
- Aug 2020 02:05:49 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 26 Aug 2020 02:05:49 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07Q75lh7066890;
-        Wed, 26 Aug 2020 02:05:47 -0500
-Subject: Re: [RFC PATCH 2/3] dmaengine: add peripheral configuration
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200824084712.2526079-1-vkoul@kernel.org>
- <20200824084712.2526079-3-vkoul@kernel.org>
- <50ed780f-4c1a-2da2-71e4-423f3b224e25@ti.com>
- <20200825071023.GB2639@vkoul-mobl>
- <38bc6986-6d1d-7c35-b2df-967326fc5ca7@ti.com>
- <20200825110202.GF2639@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <5d55965f-bb3d-4f3c-803c-e90493f8c197@ti.com>
-Date:   Wed, 26 Aug 2020 10:07:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200825110202.GF2639@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 26 Aug 2020 03:07:25 -0400
+Received: from sjdcvmout02.udc.trendmicro.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 95B0D640BE;
+        Wed, 26 Aug 2020 00:07:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=trendmicro.com;
+        s=tmoutbound; t=1598425644;
+        bh=kuHtmExW8Yw02JbwLf+n/UO/6GZaBIwKid1I4hrmEQM=; h=From:To:Date;
+        b=Q7umbbDaqToR96Tl7LuX6sw1fRG3nYOFudY37SxqRtrgN/LW7cXBCAB2fAIc5l/rD
+         93sZjdjtJsmkToL8V17HI3Fy137GfI2R2OHQVe1kHbIaHTuh7RclZ79F/n/F1hMEWn
+         TOD9rPvf4pCgRgEfC7s2yUs26chicJi92XzXCqEs=
+Received: from sjdcvmout02.udc.trendmicro.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 921FD64067;
+        Wed, 26 Aug 2020 00:07:13 -0700 (PDT)
+Received: from SJDC-EXNABU01.us.trendnet.org (unknown [10.45.175.97])
+        by sjdcvmout02.udc.trendmicro.com (Postfix) with ESMTPS;
+        Wed, 26 Aug 2020 00:07:13 -0700 (PDT)
+Received: from ADC-EXAPAC12.tw.trendnet.org (10.28.2.229) by
+ SJDC-EXNABU01.us.trendnet.org (10.45.175.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1979.3; Wed, 26 Aug 2020 00:07:12 -0700
+Received: from ADC-EXAPAC11.tw.trendnet.org (10.28.2.228) by
+ ADC-EXAPAC12.tw.trendnet.org (10.28.2.229) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1979.3; Wed, 26 Aug 2020 07:07:09 +0000
+Received: from ADC-EXAPAC11.tw.trendnet.org ([fe80::e9de:ebb1:bcf0:5913]) by
+ ADC-EXAPAC11.tw.trendnet.org ([fe80::e9de:ebb1:bcf0:5913%18]) with mapi id
+ 15.01.1979.003; Wed, 26 Aug 2020 07:07:09 +0000
+From:   "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
+To:     "peterz@infradead.org" <peterz@infradead.org>
+CC:     Masami Hiramatsu <mhiramat@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: RE: x86/kprobes: kretprobe fails to triggered if kprobe at function
+ entry is not optimized (trigger by int3 breakpoint)
+Thread-Topic: x86/kprobes: kretprobe fails to triggered if kprobe at function
+ entry is not optimized (trigger by int3 breakpoint)
+Thread-Index: AdZ5/y9ucVi7Kf0NSwa8vnc6Q/ol0wAL6hEAAAENaQAAHQZRAAAMWPyAACXNoJA=
+Date:   Wed, 26 Aug 2020 07:07:09 +0000
+Message-ID: <d3027772a6834f89a1ddc07c0fefaa0a@trendmicro.com>
+References: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
+ <20200825005426.f592075d13be740cb3c9aa77@kernel.org>
+ <7396e7b2079644a6aafd9670a111232b@trendmicro.com>
+ <20200825151538.f856d701a34f4e0561a64932@kernel.org>
+ <20200825120911.GX1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200825120911.GX1362448@hirez.programming.kicks-ass.net>
+Accept-Language: zh-TW, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.28.4.6]
+X-TM-AS-Product-Ver: IMSVA-9.1.0.1960-8.6.0.1013-25626.005
+X-TM-AS-Result: No--19.029-5.0-31-10
+X-TMASE-MatchedRID: 98bUcqHGRvbUL3YCMmnG4vHkpkyUphL9Ud7Bjfo+5jRd964B0EJ1lSio
+        vVyGVXbFKmeI7ghTOjcfhLGyUXA59/KFri4StE39LFirdaqw+KE2G/FPZyfo2eD3XFrJfgvzrKo
+        fIiDqo7megzVPOSQLWBgIvzKkEDfZM5HyYnErO2L0VCHd+VQiHsRJLE/FNr2DjiLABC6i+1hgnM
+        5OW7uHdM/ymgF2tZzvhmZWBnxHZ3lBfzHhcQGKcamukiZOfPi2gE4FBVDR3kM8qL0sJ8BVQMnVM
+        c+t6fuTzM2aIr4VkeyHvsREzkPkKKA4ukC2XUZKIfL45CnfneZVogWRsEaR/misn1mjz82fdD+P
+        c7R2toEs2xnl9FoUry6pAEHv9hRcIf+ogqnxgeDWxKMzYVwHVzoSfZud5+GgVj3J63pAR3yqSAN
+        PD7m9/OHLiIj0hrvXHuJmtbnD+5h//2guIJ+U2MK1Ib9JAALxfS0Ip2eEHnym8jxRk5/juPc8OJ
+        c7+0VJ9xS3mVzWUuC1PimItaljun7cGd19dSFd
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--19.029000-10.000000
+X-TMASE-Version: IMSVA-9.1.0.1960-8.6.1013-25626.005
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 663136F2045C0C09973C77CE489421AD1B67191AFAC6FF281615FF44B84AA26B2000:8
+X-TM-AS-GCONF: 00
+X-imss-scan-details: No--19.029-5.0-31-10
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-12:0,22:0,33:0,34:0-0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
 
-On 25/08/2020 14.02, Vinod Koul wrote:
->> The only thing which might be an issue is that with the DMA_PREP_CMD t=
-he
->> config_data is dma_addr_t (via dmaengine_prep_slave_single).
->=20
-> Yes I came to same conclusion
->=20
->>> I did have a prototype with metadata but didnt work very well, the
->>> problem is it assumes metadata for tx/rx but here i send the data
->>> everytime from client data.
->>
->> Yes, the intended use case for metadata (per descriptor!) is for
->> channels where each transfer might have different metadata needed for
->> the given transfer (tx/rx).
->>
->> In your case you have semi static peripheral configuration data, which=
+> -----Original Message-----
+> From: peterz@infradead.org <peterz@infradead.org>
+> Sent: Tuesday, August 25, 2020 8:09 PM
+> To: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Eddy Wu (RD-TW) <Eddy_Wu@trendmicro.com>; linux-kernel@vger.kernel.or=
+g; x86@kernel.org; David S. Miller
+> <davem@davemloft.net>
+> Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at funct=
+ion entry is not optimized (trigger by int3 breakpoint)
+>
+> Surely we can do a lockless list for this. We have llist_add() and
+> llist_del_first() to make a lockless LIFO/stack.
+>
 
->> is not really changing between transfers.
->>
->> A compromise would be to add:
->> void *peripheral_config;
->> to the dma_slave_config, move the set_config inside of the device
->> specific struct you are passing from a client to the core?
->=20
-> That sounds more saner to me and uses existing interfaces cleanly. I
-> think I like this option ;-)
+llist operations require atomic cmpxchg, for some arch doesn't have CONFIG_=
+ARCH_HAVE_NMI_SAFE_CMPXCHG, in_nmi() check might still needed.
+(HAVE_KRETPROBES && !CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG): arc, arm, csky, mi=
+ps
 
-The other option would be to use the descriptor metadata support and
-that might be even cleaner.
+TREND MICRO EMAIL NOTICE
 
-In gpi_create_tre() via gpi_prep_slave_sg() you would set up the
-desc->tre[1] and desc->tre[2] for TX
-desc->tre[2] for RX
-in the desc, you add a new variable, let's say first_tre and
-set it to 1 for TX, 2 for RX.
+The information contained in this email and any attachments is confidential=
+ and may be subject to copyright or other intellectual property protection.=
+ If you are not the intended recipient, you are not authorized to use or di=
+sclose this information, and we request that you notify us by reply mail or=
+ telephone and delete the original message from your mail system.
 
-If you need to send a config, you attach it via either way metadata
-support allows you (get the pointer to desc->tre[0] or give a config
-struct to the DMA driver.
-
-In the metadata handler, you check if the transfer is TX, if it is, then
-you update desc->tre[0] (or give the pointer to the client) and update
-the first_tre to 0.
-
-In issue_pending, or a small helper which can be used to start the
-transfer you would do the queuing instead of prepare time:
-for (i =3D gpi_desc->first_tre; i < MAX_TRE; i++)
-	gpi_queue_xfer(gpii, gpii_chan,  &gpi_desc->tre[i], &wp);
-
-With this change it should work neatly without any change to
-dma_slave_config.
-
->=20
->>>> I'm concerned about the size increase of dma_slave_config (it grows =
-by
->>>>> 30 bytes) and for DMAs with hundreds of channels (UDMA) it will add=
- up
->>>> to a sizeable amount.
->>>
->>> I agree that is indeed a valid concern, that is the reason I tagged t=
-his
->>> as a RFC patch ;-)
->>>
->>> I see the prep_cmd is a better approach for this, anyone else has bet=
-ter
->>> suggestions?
->>>
->>> Thanks for looking in.
->>>
->>
->> - P=C3=A9ter
->>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->=20
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+For details about what personal information we collect and why, please see =
+our Privacy Notice on our website at: Read privacy policy<http://www.trendm=
+icro.com/privacy>
