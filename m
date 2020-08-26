@@ -2,91 +2,165 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFEBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B898CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 635982224D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E75A20707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:48:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598449724;
+	bh=vBw61VVDerIRpeNkpWTLTYoAEivM+1lj5FA6uWlnPBs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IG83p8PFDsbryuT0F2dL3I71xcDcYGsmyWkOD2/PKTzw1AvDEIExGEmC+kN18lxoK
+	 kC5MxgKG+ufCwaroCi/HKtJzVTCK5DpKYRdyRZDdn2/YT2O0idKDOTYAFcDvfbTew8
+	 236Y48F3D5+8Cyf2PFgRvqyovMyF5FeVdnXHWIDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgHZNsV (ORCPT
+        id S1730467AbgHZNsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:48:21 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:35963 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730426AbgHZNrK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:47:10 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R411e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U6wHc3g_1598449622;
-Received: from localhost(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U6wHc3g_1598449622)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 26 Aug 2020 21:47:07 +0800
-From:   Xunlei Pang <xlpang@linux.alibaba.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc:     Xunlei Pang <xlpang@linux.alibaba.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH v2] mm: memcg: Fix memcg reclaim soft lockup
-Date:   Wed, 26 Aug 2020 21:47:02 +0800
-Message-Id: <1598449622-108748-1-git-send-email-xlpang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 26 Aug 2020 09:48:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730440AbgHZNrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:47:18 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 068E1221E2;
+        Wed, 26 Aug 2020 13:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598449637;
+        bh=vBw61VVDerIRpeNkpWTLTYoAEivM+1lj5FA6uWlnPBs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IV1TG9ly3T6iLJxeDzcuxzUUZUGSzo2VQivOnfXj2OZMV9WaVl89pasXIMPwLBXyX
+         JgNZZY4duxEDPv2P4dCJp8TjSf2zeut7ks30bXzI5gdiFuqO+D9bi5F0TyjXmwcxTz
+         2+30E/5JPLlNVMhUVoMAV/tfkAYh0KIaC9hEflfk=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: [RFC PATCH 06/14] csky: kprobes: Use generic kretprobe trampoline handler
+Date:   Wed, 26 Aug 2020 22:47:12 +0900
+Message-Id: <159844963272.510284.10155471504071845322.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159844957216.510284.17683703701627367133.stgit@devnote2>
+References: <159844957216.510284.17683703701627367133.stgit@devnote2>
+User-Agent: StGit/0.19
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
-the target memcg doesn't have any reclaimable memory.
-
-It can be easily reproduced as below:
- watchdog: BUG: soft lockup - CPU#0 stuck for 111s![memcg_test:2204]
- CPU: 0 PID: 2204 Comm: memcg_test Not tainted 5.9.0-rc2+ #12
- Call Trace:
-  shrink_lruvec+0x49f/0x640
-  shrink_node+0x2a6/0x6f0
-  do_try_to_free_pages+0xe9/0x3e0
-  try_to_free_mem_cgroup_pages+0xef/0x1f0
-  try_charge+0x2c1/0x750
-  mem_cgroup_charge+0xd7/0x240
-  __add_to_page_cache_locked+0x2fd/0x370
-  add_to_page_cache_lru+0x4a/0xc0
-  pagecache_get_page+0x10b/0x2f0
-  filemap_fault+0x661/0xad0
-  ext4_filemap_fault+0x2c/0x40
-  __do_fault+0x4d/0xf9
-  handle_mm_fault+0x1080/0x1790
-
-It only happens on our 1-vcpu instances, because there's no chance
-for oom reaper to run to reclaim the to-be-killed process.
-
-Add cond_resched() at the upper shrink_node_memcgs() to solve this
-issue, and any other possible issue like meomry.min protection.
-
-Suggested-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- mm/vmscan.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/csky/kernel/probes/kprobes.c |   78 +------------------------------------
+ 1 file changed, 3 insertions(+), 75 deletions(-)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 99e1796..bbdc38b 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2617,6 +2617,8 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+diff --git a/arch/csky/kernel/probes/kprobes.c b/arch/csky/kernel/probes/kprobes.c
+index f0f733b7ac5a..a891fb422e76 100644
+--- a/arch/csky/kernel/probes/kprobes.c
++++ b/arch/csky/kernel/probes/kprobes.c
+@@ -404,87 +404,15 @@ int __init arch_populate_kprobe_blacklist(void)
  
- 		mem_cgroup_calculate_protection(target_memcg, memcg);
+ void __kprobes __used *trampoline_probe_handler(struct pt_regs *regs)
+ {
+-	struct kretprobe_instance *ri = NULL;
+-	struct hlist_head *head, empty_rp;
+-	struct hlist_node *tmp;
+-	unsigned long flags, orig_ret_address = 0;
+-	unsigned long trampoline_address =
+-		(unsigned long)&kretprobe_trampoline;
+-	kprobe_opcode_t *correct_ret_addr = NULL;
+-
+-	INIT_HLIST_HEAD(&empty_rp);
+-	kretprobe_hash_lock(current, &head, &flags);
+-
+-	/*
+-	 * It is possible to have multiple instances associated with a given
+-	 * task either because multiple functions in the call path have
+-	 * return probes installed on them, and/or more than one
+-	 * return probe was registered for a target function.
+-	 *
+-	 * We can handle this because:
+-	 *     - instances are always pushed into the head of the list
+-	 *     - when multiple return probes are registered for the same
+-	 *	 function, the (chronologically) first instance's ret_addr
+-	 *	 will be the real return address, and all the rest will
+-	 *	 point to kretprobe_trampoline.
+-	 */
+-	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+-		if (ri->task != current)
+-			/* another task is sharing our hash bucket */
+-			continue;
+-
+-		orig_ret_address = (unsigned long)ri->ret_addr;
+-
+-		if (orig_ret_address != trampoline_address)
+-			/*
+-			 * This is the real return address. Any other
+-			 * instances associated with this task are for
+-			 * other calls deeper on the call stack
+-			 */
+-			break;
+-	}
+-
+-	kretprobe_assert(ri, orig_ret_address, trampoline_address);
+-
+-	correct_ret_addr = ri->ret_addr;
+-	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+-		if (ri->task != current)
+-			/* another task is sharing our hash bucket */
+-			continue;
+-
+-		orig_ret_address = (unsigned long)ri->ret_addr;
+-		if (ri->rp && ri->rp->handler) {
+-			__this_cpu_write(current_kprobe, &ri->rp->kp);
+-			get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
+-			ri->ret_addr = correct_ret_addr;
+-			ri->rp->handler(ri, regs);
+-			__this_cpu_write(current_kprobe, NULL);
+-		}
+-
+-		recycle_rp_inst(ri, &empty_rp);
+-
+-		if (orig_ret_address != trampoline_address)
+-			/*
+-			 * This is the real return address. Any other
+-			 * instances associated with this task are for
+-			 * other calls deeper on the call stack
+-			 */
+-			break;
+-	}
+-
+-	kretprobe_hash_unlock(current, &flags);
+-
+-	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+-		hlist_del(&ri->hlist);
+-		kfree(ri);
+-	}
+-	return (void *)orig_ret_address;
++	return (void *)kretprobe_trampoline_handler(regs,
++			(unsigned long)&kretprobe_trampoline, NULL);
+ }
  
-+		cond_resched();
-+
- 		if (mem_cgroup_below_min(memcg)) {
- 			/*
- 			 * Hard protection.
--- 
-1.8.3.1
+ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+ 				      struct pt_regs *regs)
+ {
+ 	ri->ret_addr = (kprobe_opcode_t *)regs->lr;
++	ri->fp = NULL;
+ 	regs->lr = (unsigned long) &kretprobe_trampoline;
+ }
+ 
 
