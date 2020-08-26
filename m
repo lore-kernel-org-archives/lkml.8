@@ -2,192 +2,120 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD9B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 803C42080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2667420838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qNsS4/2c"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GDiKgTSH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbgHZMRh (ORCPT
+        id S1729803AbgHZMRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:17:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20456 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729204AbgHZMRg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:17:36 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QB3ICa112291;
-        Wed, 26 Aug 2020 07:24:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=xrlSE8I/COK0D2YzSZC8jDllNcYvqK1EXk4ZYuX00Vc=;
- b=qNsS4/2cUIv7fdcRD+PNW6bA372jfherwSW8p81CQVuSUioZQ9FBt1PmMu/L9C5/mMCG
- ypyXIeyfgymqHIqEHLShjGjuaSg1KQG2Ap7178CX5wE1hy5LovgLH78GUFl/c+3D3Xtp
- f2jrUCkQVG9iAC21nKbf1R2YEiq0po3xbdVbl0kxhpuHypK1c7hmEyWWB7S4eMuIZLkc
- Q35N45m/S8E0fncu31ev3cq/EFjkYvlhTX0mDLfcz0Dwy+/oisdbX2Rko/YA+6FuA8qY
- kmHqF6wlSkOPBOnzZgrkn0dSYXx3AiCR8iIQ8l+XGOPBos9aYIAlxY2h/CHd8oQNva8n 4A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335pfn8psp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 07:24:53 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07QB6Y5I124743;
-        Wed, 26 Aug 2020 07:24:53 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335pfn8ps8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 07:24:53 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07QBN2lt022536;
-        Wed, 26 Aug 2020 11:24:52 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma01wdc.us.ibm.com with ESMTP id 332uwah973-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 11:24:52 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07QBOptV45023642
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 11:24:51 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8D24AE060;
-        Wed, 26 Aug 2020 11:24:51 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 45C32AE05C;
-        Wed, 26 Aug 2020 11:24:48 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.43.94])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Aug 2020 11:24:47 +0000 (GMT)
-Subject: Re: [RFC] perf/jevents: Add new structure to pass json fields.
-To:     Jiri Olsa <jolsa@redhat.com>, John Garry <john.garry@huawei.com>
-Cc:     acme@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, maddy@linux.ibm.com,
-        ravi.bangoria@linux.ibm.com
-References: <20200825074041.378520-1-kjain@linux.ibm.com>
- <bc078472-e859-b7dc-c451-d737dd573edf@huawei.com>
- <20200826110046.GF703542@krava>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <5d91b929-cffd-265a-dd0c-f63bc3d1565d@linux.ibm.com>
-Date:   Wed, 26 Aug 2020 16:54:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 26 Aug 2020 08:17:49 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:55630 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729204AbgHZMRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:17:48 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598444267; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=r/4qUAmqAI0V7gRbqKrmT3zgfbrjj739xnjXpNtJKmA=;
+ b=GDiKgTSHWLx1s+asZxT8GL9dkYuH39hOzz7wP1w1AYNoAQnZCdZmEPhAWjg+adJZEUvR2A8D
+ QqZL+gjPCfFKFfVVfCYrjASBeUlZoun7xGNsKTpLStOR1sC/B//zHhHq87HLmaldDZc8mviT
+ 4ofeG/+soviVgA8amqiA0rbAKK4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f4652dcf4c0f8ce20da78b3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 12:17:32
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3762FC433A1; Wed, 26 Aug 2020 12:17:31 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5D919C433CA;
+        Wed, 26 Aug 2020 12:17:30 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200826110046.GF703542@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-26_08:2020-08-26,2020-08-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
- mlxscore=0 malwarescore=0 adultscore=0 bulkscore=0 phishscore=0
- suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008260089
+Date:   Wed, 26 Aug 2020 17:47:30 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] iommu: Add support to filter non-strict/lazy mode based
+ on device names
+In-Reply-To: <e3e4da33-a44f-0a07-9e2e-0f806875ab0b@arm.com>
+References: <20200825154249.20011-1-saiprakash.ranjan@codeaurora.org>
+ <e3e4da33-a44f-0a07-9e2e-0f806875ab0b@arm.com>
+Message-ID: <d9b1f1b614057d87279c26e13cbbb1f5@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/26/20 4:30 PM, Jiri Olsa wrote:
-> On Tue, Aug 25, 2020 at 09:14:11AM +0100, John Garry wrote:
+On 2020-08-26 17:07, Robin Murphy wrote:
+> On 2020-08-25 16:42, Sai Prakash Ranjan wrote:
+>> Currently the non-strict or lazy mode of TLB invalidation can only be 
+>> set
+>> for all or no domains. This works well for development platforms where
+>> setting to non-strict/lazy mode is fine for performance reasons but on
+>> production devices, we need a more fine grained control to allow only
+>> certain peripherals to support this mode where we can be sure that it 
+>> is
+>> safe. So add support to filter non-strict/lazy mode based on the 
+>> device
+>> names that are passed via cmdline parameter "iommu.nonstrict_device".
 > 
-> SNIP
+> There seems to be considerable overlap here with both the existing
+> patches for per-device default domain control [1], and the broader
+> ongoing development on how to define, evaluate and handle "trusted"
+> vs. "untrusted" devices (e.g. [2],[3]). I'd rather see work done to
+> make sure those integrate properly together and work well for
+> everyone's purposes, than add more disjoint mechanisms that only
+> address small pieces of the overall issue.
 > 
->>>   				goto free_strings;
->>>   		}
->>> -		err = func(data, name, real_event(name, event), desc, long_desc,
->>> -			   pmu, unit, perpkg, metric_expr, metric_name,
->>> -			   metric_group, deprecated, metric_constraint);
->>> +		je->event = real_event(je->name, je->event);
->>> +		err = func(data, je);
->>>   free_strings:
->>> -		free(event);
->>> -		free(desc);
->>> -		free(name);
->>> -		free(long_desc);
->>>   		free(extra_desc);
->>> -		free(pmu);
->>>   		free(filter);
->>> -		free(perpkg);
->>> -		free(deprecated);
->>> -		free(unit);
->>> -		free(metric_expr);
->>> -		free(metric_name);
->>> -		free(metric_group);
->>> -		free(metric_constraint);
->>>   		free(arch_std);
->>> +		free(je);
->>>   		if (err)
->>>   			break;
->>> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
->>> index 2afc8304529e..e696edf70e9a 100644
->>> --- a/tools/perf/pmu-events/jevents.h
->>> +++ b/tools/perf/pmu-events/jevents.h
->>
->> Somewhat unrelated - this file only seems to be included in jevents.c, so I
->> don't see why it exists...
+> Robin.
 > 
-> ah right.. I won't mind getting rid of it
+> [1]
+> https://lore.kernel.org/linux-iommu/20200824051726.7xaJRTTszJuzdFWGJ8YNsshCtfNR0BNeMrlILAyqt_0@z/
+> [2]
+> https://lore.kernel.org/linux-iommu/20200630044943.3425049-1-rajatja@google.com/
+> [3]
+> https://lore.kernel.org/linux-iommu/20200626002710.110200-2-rajatja@google.com/
+> 
 
-Hi John and  Jiri
-     Thanks for reviewing the patch. I can remove this file and add these structure inside jevents.c
+Thanks for the links, [1] definitely sounds interesting, I was under the 
+impression
+that changing such via sysfs is late, but seems like other Sai has got 
+it working
+for the default domain type. So we can extend that and add a strict 
+attribute as well,
+we should be definitely OK with system booting with default strict mode 
+for all
+peripherals as long as we have an option to change that later, Doug?
 
 Thanks,
-Kajol Jain
->  
->>> @@ -2,14 +2,28 @@
->>>   #ifndef JEVENTS_H
->>>   #define JEVENTS_H 1
->>> +#include "pmu-events.h"
->>> +
->>> +struct json_event {
->>> +	char *name;
->>> +	char *event;
->>> +	char *desc;
->>> +	char *topic;
->>> +	char *long_desc;
->>> +	char *pmu;
->>> +	char *unit;
->>> +	char *perpkg;
->>> +	char *metric_expr;
->>> +	char *metric_name;
->>> +	char *metric_group;
->>> +	char *deprecated;
->>> +	char *metric_constraint;
->>
->> This looks very much like struct event_struct, so could look to consolidate:
->>
->> struct event_struct {
->> 	struct list_head list;
->> 	char *name;
->> 	char *event;
->> 	char *desc;
->> 	char *long_desc;
->> 	char *pmu;
->> 	char *unit;
->> 	char *perpkg;
->> 	char *metric_expr;
->> 	char *metric_name;
->> 	char *metric_group;
->> 	char *deprecated;
->> 	char *metric_constraint;
->> };
-> 
-> as Andi said they come from different layers, I think it's
-> better to keep them separated even if they share some fields
-> 
-> thanks,
-> jirka
-> 
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
