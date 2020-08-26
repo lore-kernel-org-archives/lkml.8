@@ -2,236 +2,236 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CE7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0F8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E725221E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598453605;
-	bh=Y7G4DkYRnj4ZC6IYiwugOSDmIVV0GnhDCg89XlxnjaM=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H92O+KbTxRdUIaKAflhH+PuN/h1lGXM+zvKM05cYPgTf+7yfaFZMOnNEP2SQSALA4
-	 YriGhIowJQ7wORmYLNMvk4TselQOGq/+e8df2Nx4K0vMEyfft8RxZ60TD+HG1hRd/I
-	 Pws86OEYD8d4GV3xinlEGUtFt31x6CypKbX3SW1M=
+	by mail.kernel.org (Postfix) with ESMTP id 392D62224D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:53:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFLQL9pF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgHZOxS (ORCPT
+        id S1728253AbgHZOx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:53:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbgHZOwr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:52:47 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC7DF22B3F;
-        Wed, 26 Aug 2020 14:52:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453566;
-        bh=Y7G4DkYRnj4ZC6IYiwugOSDmIVV0GnhDCg89XlxnjaM=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=P2tzGz1PbCoU4kS+sLpzj1slIGGJOedVGNQUHWnnySa0173mP0PIvh/lMi9P1HJ/U
-         rbC4oZik38HRxpeaCleLq+P7EY0GBgxMi6DXrZ4ey/6PsgisG3H+8/LRdoy0Z17RUK
-         ES9Hj0kUVggFLJd/pQkCSs2w+CPSvnLOAo0jd6OQ=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 08/16] iio: adc: stm32: Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 16:51:45 +0200
-Message-Id: <20200826145153.10444-8-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826145153.10444-1-krzk@kernel.org>
-References: <20200826145153.10444-1-krzk@kernel.org>
+        Wed, 26 Aug 2020 10:53:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728184AbgHZOxD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:53:03 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60BC0C061756;
+        Wed, 26 Aug 2020 07:53:02 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id p15so1005002pli.6;
+        Wed, 26 Aug 2020 07:53:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=dCbHJAKt6s3Rg7aETluYBz2dgq5UZfILUQ6bXeRl1rk=;
+        b=JFLQL9pF17QewiL9TU4uewxOTLOFRNMQOli4TMrEuETfwo/6esVbfyU6Ahe1MfaHkH
+         cTd+2///YrMYsvPAmRjXJ1duj4WyJw0/PWFbevsAci3/nVXGUIHmbh4FChbxTwo7doiQ
+         d5n4jvE9I/mcTol6e2hEfq6S9Uze1e2gMjvlMdFxpfDHlHmwo89kKUeQTw3UYIakmkOk
+         YYs6+LfR725QpB4O9TTDVK96Zdctt/B0/6f9XemqLXdUPGPwf1G7lma7psuLf2IbTjqE
+         siGafEgsR9TJ8VpG6eXtUXONVzZQ2x6/1GkrxSEz45dLKEhKlYhfUSTPRbw3jJZ5OvNs
+         rXVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=dCbHJAKt6s3Rg7aETluYBz2dgq5UZfILUQ6bXeRl1rk=;
+        b=J2As71WoKOjsvholk/qFJAhm3UyvkjvnnxVpS6BrADTQjPt+A6UE9hxCngQSf7lT+G
+         ORU7Aux5Gk4Im7LeuQENF7xfa9NKhoWsSjn+RigUuvB6p9/URO5nvSKJy/B1i13VCqZS
+         lRd6nBh2OUBOGgTZ1pQsWu2iH2m5wQUt4astdYw6iDrCmOF2KaoOEhMJwUHZ5hgZGqRK
+         x0JuxNTwYFeN8+mhzulHWNGzkpUX/jTPlHqzBAAULEcCvrqVd9qygMfGrUkV2yOh4tzU
+         E3eCrkZLI23vXA2m0lSKdOUOk42bi7w75TJg+dvvdtpLWwvYtdcnd+JCwuwYKrdYfrNL
+         D3BA==
+X-Gm-Message-State: AOAM533SWUJunBj7YEU49RiVG//lsaGv/p+jxsylWPjOXGZ/prJlfNma
+        SdVe0qZ8BARiY+rw9btfAE1Mhpr+HKU=
+X-Google-Smtp-Source: ABdhPJz1B2LT8vTgec8GC+tIrYzicFVFqQk7kgNC8WGWbvfQf4pVrR0CYZjevi8n5mGkopGMi9zsug==
+X-Received: by 2002:a17:90a:5298:: with SMTP id w24mr6072843pjh.221.1598453581516;
+        Wed, 26 Aug 2020 07:53:01 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id r7sm3327140pfl.186.2020.08.26.07.52.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:53:01 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2 01/23] asm-generic: add generic MMU versions of mmu context functions
+Date:   Thu, 27 Aug 2020 00:52:27 +1000
+Message-Id: <20200826145249.745432-2-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
+References: <20200826145249.745432-1-npiggin@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
+Many of these are no-ops on many architectures, so extend mmu_context.h
+to cover MMU and NOMMU, and split the NOMMU bits out to nommu_context.h
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arch@vger.kernel.org
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- drivers/iio/adc/stm32-adc-core.c  | 62 ++++++++++++-------------------
- drivers/iio/adc/stm32-adc.c       | 10 ++---
- drivers/iio/adc/stm32-dfsdm-adc.c | 10 ++---
- 3 files changed, 30 insertions(+), 52 deletions(-)
+ arch/microblaze/include/asm/mmu_context.h |  2 +-
+ arch/sh/include/asm/mmu_context.h         |  2 +-
+ include/asm-generic/mmu_context.h         | 57 +++++++++++++++++------
+ include/asm-generic/nommu_context.h       | 19 ++++++++
+ 4 files changed, 64 insertions(+), 16 deletions(-)
+ create mode 100644 include/asm-generic/nommu_context.h
 
-diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-index 0e2068ec068b..184d5491c7ed 100644
---- a/drivers/iio/adc/stm32-adc-core.c
-+++ b/drivers/iio/adc/stm32-adc-core.c
-@@ -582,11 +582,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
- 	priv->syscfg = syscon_regmap_lookup_by_phandle(np, "st,syscfg");
- 	if (IS_ERR(priv->syscfg)) {
- 		ret = PTR_ERR(priv->syscfg);
--		if (ret != -ENODEV) {
--			if (ret != -EPROBE_DEFER)
--				dev_err(dev, "Can't probe syscfg: %d\n", ret);
--			return ret;
--		}
-+		if (ret != -ENODEV)
-+			return dev_err_probe(dev, ret, "Can't probe syscfg\n");
+diff --git a/arch/microblaze/include/asm/mmu_context.h b/arch/microblaze/include/asm/mmu_context.h
+index f74f9da07fdc..34004efb3def 100644
+--- a/arch/microblaze/include/asm/mmu_context.h
++++ b/arch/microblaze/include/asm/mmu_context.h
+@@ -2,5 +2,5 @@
+ #ifdef CONFIG_MMU
+ # include <asm/mmu_context_mm.h>
+ #else
+-# include <asm-generic/mmu_context.h>
++# include <asm-generic/nommu_context.h>
+ #endif
+diff --git a/arch/sh/include/asm/mmu_context.h b/arch/sh/include/asm/mmu_context.h
+index f664e51e8a15..461b1304580b 100644
+--- a/arch/sh/include/asm/mmu_context.h
++++ b/arch/sh/include/asm/mmu_context.h
+@@ -133,7 +133,7 @@ static inline void switch_mm(struct mm_struct *prev,
+ #define set_TTB(pgd)			do { } while (0)
+ #define get_TTB()			(0)
+ 
+-#include <asm-generic/mmu_context.h>
++#include <asm-generic/nommu_context.h>
+ 
+ #endif /* CONFIG_MMU */
+ 
+diff --git a/include/asm-generic/mmu_context.h b/include/asm-generic/mmu_context.h
+index 6be9106fb6fb..86cea80a50df 100644
+--- a/include/asm-generic/mmu_context.h
++++ b/include/asm-generic/mmu_context.h
+@@ -3,44 +3,73 @@
+ #define __ASM_GENERIC_MMU_CONTEXT_H
+ 
+ /*
+- * Generic hooks for NOMMU architectures, which do not need to do
+- * anything special here.
++ * Generic hooks to implement no-op functionality.
+  */
+ 
+-#include <asm-generic/mm_hooks.h>
+-
+ struct task_struct;
+ struct mm_struct;
+ 
++/*
++ * enter_lazy_tlb - Called when "tsk" is about to enter lazy TLB mode.
++ *
++ * @mm:  the currently active mm context which is becoming lazy
++ * @tsk: task which is entering lazy tlb
++ *
++ * tsk->mm will be NULL
++ */
++#ifndef enter_lazy_tlb
+ static inline void enter_lazy_tlb(struct mm_struct *mm,
+ 			struct task_struct *tsk)
+ {
+ }
++#endif
+ 
++/**
++ * init_new_context - Initialize context of a new mm_struct.
++ * @tsk: task struct for the mm
++ * @mm:  the new mm struct
++ */
++#ifndef init_new_context
+ static inline int init_new_context(struct task_struct *tsk,
+ 			struct mm_struct *mm)
+ {
+ 	return 0;
+ }
++#endif
+ 
++/**
++ * destroy_context - Undo init_new_context when the mm is going away
++ * @mm: old mm struct
++ */
++#ifndef destroy_context
+ static inline void destroy_context(struct mm_struct *mm)
+ {
+ }
++#endif
+ 
+-static inline void deactivate_mm(struct task_struct *task,
+-			struct mm_struct *mm)
+-{
+-}
+-
+-static inline void switch_mm(struct mm_struct *prev,
+-			struct mm_struct *next,
+-			struct task_struct *tsk)
++/**
++ * activate_mm - called after exec switches the current task to a new mm, to switch to it
++ * @prev_mm: previous mm of this task
++ * @next_mm: new mm
++ */
++#ifndef activate_mm
++static inline void activate_mm(struct mm_struct *prev_mm,
++			       struct mm_struct *next_mm)
+ {
++	switch_mm(prev_mm, next_mm, current);
+ }
++#endif
+ 
+-static inline void activate_mm(struct mm_struct *prev_mm,
+-			       struct mm_struct *next_mm)
++/**
++ * dectivate_mm - called when an mm is released after exit or exec switches away from it
++ * @tsk: the task
++ * @mm:  the old mm
++ */
++#ifndef deactivate_mm
++static inline void deactivate_mm(struct task_struct *tsk,
++			struct mm_struct *mm)
+ {
+ }
++#endif
+ 
+ #endif /* __ASM_GENERIC_MMU_CONTEXT_H */
+diff --git a/include/asm-generic/nommu_context.h b/include/asm-generic/nommu_context.h
+new file mode 100644
+index 000000000000..4f916f9e16cd
+--- /dev/null
++++ b/include/asm-generic/nommu_context.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_GENERIC_NOMMU_H
++#define __ASM_GENERIC_NOMMU_H
 +
- 		priv->syscfg = NULL;
- 	}
- 
-@@ -596,12 +594,9 @@ static int stm32_adc_core_switches_probe(struct device *dev,
- 		priv->booster = devm_regulator_get_optional(dev, "booster");
- 		if (IS_ERR(priv->booster)) {
- 			ret = PTR_ERR(priv->booster);
--			if (ret != -ENODEV) {
--				if (ret != -EPROBE_DEFER)
--					dev_err(dev, "can't get booster %d\n",
--						ret);
--				return ret;
--			}
-+			if (ret != -ENODEV)
-+				dev_err_probe(dev, ret, "can't get booster\n");
++/*
++ * Generic hooks for NOMMU architectures, which do not need to do
++ * anything special here.
++ */
++#include <asm-generic/mm_hooks.h>
 +
- 			priv->booster = NULL;
- 		}
- 	}
-@@ -612,11 +607,10 @@ static int stm32_adc_core_switches_probe(struct device *dev,
- 		priv->vdd = devm_regulator_get_optional(dev, "vdd");
- 		if (IS_ERR(priv->vdd)) {
- 			ret = PTR_ERR(priv->vdd);
--			if (ret != -ENODEV) {
--				if (ret != -EPROBE_DEFER)
--					dev_err(dev, "can't get vdd %d\n", ret);
--				return ret;
--			}
-+			if (ret != -ENODEV)
-+				return dev_err_probe(dev, ret,
-+						     "can't get vdd\n");
++static inline void switch_mm(struct mm_struct *prev,
++			struct mm_struct *next,
++			struct task_struct *tsk)
++{
++}
 +
- 			priv->vdd = NULL;
- 		}
- 	}
-@@ -669,40 +663,32 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 	priv->common.phys_base = res->start;
- 
- 	priv->vdda = devm_regulator_get(&pdev->dev, "vdda");
--	if (IS_ERR(priv->vdda)) {
--		ret = PTR_ERR(priv->vdda);
--		if (ret != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "vdda get failed, %d\n", ret);
--		return ret;
--	}
-+	if (IS_ERR(priv->vdda))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->vdda),
-+				     "vdda get failed\n");
- 
- 	priv->vref = devm_regulator_get(&pdev->dev, "vref");
--	if (IS_ERR(priv->vref)) {
--		ret = PTR_ERR(priv->vref);
--		if (ret != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "vref get failed, %d\n", ret);
--		return ret;
--	}
-+	if (IS_ERR(priv->vref))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->vref),
-+				     "vref get failed\n");
- 
- 	priv->aclk = devm_clk_get(&pdev->dev, "adc");
- 	if (IS_ERR(priv->aclk)) {
- 		ret = PTR_ERR(priv->aclk);
--		if (ret != -ENOENT) {
--			if (ret != -EPROBE_DEFER)
--				dev_err(&pdev->dev, "Can't get 'adc' clock\n");
--			return ret;
--		}
-+		if (ret != -ENOENT)
-+			return dev_err_probe(&pdev->dev, ret,
-+					     "Can't get 'adc' clock\n");
++#include <asm-generic/mmu_context.h>
 +
- 		priv->aclk = NULL;
- 	}
- 
- 	priv->bclk = devm_clk_get(&pdev->dev, "bus");
- 	if (IS_ERR(priv->bclk)) {
- 		ret = PTR_ERR(priv->bclk);
--		if (ret != -ENOENT) {
--			if (ret != -EPROBE_DEFER)
--				dev_err(&pdev->dev, "Can't get 'bus' clock\n");
--			return ret;
--		}
-+		if (ret != -ENOENT)
-+			return dev_err_probe(&pdev->dev, ret,
-+					     "Can't get 'bus' clock\n");
-+
- 		priv->bclk = NULL;
- 	}
- 
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index 3eb9ebe8372f..b3f31f147347 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -1805,13 +1805,9 @@ static int stm32_adc_dma_request(struct device *dev, struct iio_dev *indio_dev)
- 	adc->dma_chan = dma_request_chan(dev, "rx");
- 	if (IS_ERR(adc->dma_chan)) {
- 		ret = PTR_ERR(adc->dma_chan);
--		if (ret != -ENODEV) {
--			if (ret != -EPROBE_DEFER)
--				dev_err(dev,
--					"DMA channel request failed with %d\n",
--					ret);
--			return ret;
--		}
-+		if (ret != -ENODEV)
-+			return dev_err_probe(dev, ret,
-+					     "DMA channel request failed with\n");
- 
- 		/* DMA is optional: fall back to IRQ mode */
- 		adc->dma_chan = NULL;
-diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index 5e10fb4f3704..c7e0109315f8 100644
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -1473,13 +1473,9 @@ static int stm32_dfsdm_adc_init(struct device *dev, struct iio_dev *indio_dev)
- 	/* Optionally request DMA */
- 	ret = stm32_dfsdm_dma_request(dev, indio_dev);
- 	if (ret) {
--		if (ret != -ENODEV) {
--			if (ret != -EPROBE_DEFER)
--				dev_err(dev,
--					"DMA channel request failed with %d\n",
--					ret);
--			return ret;
--		}
-+		if (ret != -ENODEV)
-+			return dev_err_probe(dev, ret,
-+					     "DMA channel request failed with\n");
- 
- 		dev_dbg(dev, "No DMA support\n");
- 		return 0;
++#endif /* __ASM_GENERIC_NOMMU_H */
 -- 
-2.17.1
+2.23.0
 
