@@ -2,220 +2,144 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D31C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D54C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A86E820738
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3B920738
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:42:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PyCFzgkN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pFHzn3Ft"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHZVm0 (ORCPT
+        id S1727000AbgHZVmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:42:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41710 "EHLO
+        Wed, 26 Aug 2020 17:42:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgHZVmZ (ORCPT
+        with ESMTP id S1726753AbgHZVmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:42:25 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D80C061574;
-        Wed, 26 Aug 2020 14:42:24 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id d11so4824348ejt.13;
-        Wed, 26 Aug 2020 14:42:24 -0700 (PDT)
+        Wed, 26 Aug 2020 17:42:32 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9369C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 14:42:31 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id y65so2979159qtd.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 14:42:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=qkQL+Dz21LFiMHXtvS7buva83SIiDacIGRIi5LVRWg8=;
-        b=PyCFzgkN4OSai9YlhJND550USk3u7FaciC9YgUIZvY0Dh8d5TA0I24RDsNx6i7gQIt
-         43S8wVNDsP9AW3izt9SO0uBb+igdIKuhEB9S9recizqdcc9vwij9FM3ShhZkWckO1N14
-         SR+MdGCz0v1X9nSFShTSMQ3QQmsRDPyW5OiIze0AIfebwEKaTXtdGSftF99HKtHuv+Lm
-         xnspvSP0TAOxJb57VIv4Z1fnzrve8CwGT/gdAxHVPtPo2dKgtPUHss9jeXI34ynG/B2Z
-         5WVyjXhHSfTi6KpxG7FK4HNBW2et8UQeEkghOGdMDQbhZfvIgKymf42g1MrUo2IcMTXz
-         m/bA==
+        bh=I8OxgVPu3Ggp6k0pbUz5wgXSCJd17wLp4qYHq+jsd/8=;
+        b=pFHzn3Ft2sIoh5OQnAHj3rSAq/bkfrzvFjVIDKPQm+90kuMBtT9VE0nKtPD4KO7+fp
+         iChJxd1chGImg00Ybpnk0kiab8+UloEUYeqxbVMvwm1C7wy0g1fXOEsc0RS5CAQ1CiCQ
+         rrVKk6JHNkCbdijTo6zzWULXmkI/jFN6uOtDdCqzMjfCeZxaF3AxGKhX9/dkPE6mjmRt
+         RlgQI2YAnbjetxdtx4TGaPGcNtQcZ4X0+hARl1/yiqwnL+jVYKTHUjUe5xHgKSi89Q3c
+         2dASLack8eJzWnsIlblI1oCg41DypEI6mhxAY1VReWrS5qd41V/FgnFAZPMYXqen/8Ak
+         zTNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=qkQL+Dz21LFiMHXtvS7buva83SIiDacIGRIi5LVRWg8=;
-        b=QcDaZSsBDpkvJiM0aDNctydEWXKpoF8AXMt2dt1GZhlcRUmofGQ/SZVcXgmXIhheyP
-         4sKCF5Vc/yqewR/XkHr8/N/nyO73+c20RjntF3vxqs/NGhgPHvns9K0Gk4isbUpuX3Qd
-         5689aFECNyF4pOeKTj1IKZGge/J2QRCymyDX/NCtxXRECYDPSYMh6/kk8rxpjYRw07wz
-         ACd/saql6fA4yf2n9L69WXxnKN/UPuh68cae9NJiveb+7KXe2qQwZwMRhyZAZZTuPedk
-         phL+UuHP7LCvB086BDWuXOdEynsBCzRzx7zQDIOTxNXOMUJwbQ/9YeoGrNX2RxdXglH6
-         O0VQ==
-X-Gm-Message-State: AOAM530AHDpFDK0EstjrkacQ6WmIFCC8Tz/YrUKYM0d4B3f87E0F1Dsx
-        OuH1oqMPFeoh/cIiJ2X1Lpo=
-X-Google-Smtp-Source: ABdhPJwDStQ0rjD3Lur2BK6467nAxbWULaSG6srrhmhkiq7NgIt/9VvkrfTyfXgZXbN5LfIVRGWiBA==
-X-Received: by 2002:a17:906:2349:: with SMTP id m9mr17411173eja.425.1598478143345;
-        Wed, 26 Aug 2020 14:42:23 -0700 (PDT)
-Received: from BV030612LT ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id ci27sm173363ejc.23.2020.08.26.14.42.21
+        bh=I8OxgVPu3Ggp6k0pbUz5wgXSCJd17wLp4qYHq+jsd/8=;
+        b=lUqcT9cuD+AfAT+xsgSoN6YKQ4fZt6mAoSjyKQY5/5twuV6aaEPVfqQZ5SHIys8VWU
+         qEfcvrKcJieqkBHfDDnskUJpg66ALLy5FkhEgouHxrGQEfs673mLrgCKGk5/M2CmzB9X
+         G7BswsogzIDNS8zVs2SY7N+dOatnQO5gQ5D/8Lng1ezR0QcPpsvAlssMqtbAGnrG6U1i
+         fabWj18ohSRzPZWspxKv0CTAJABl1Ri3kjh3zkDLqjLThjauODGVRgLQTg9U/bvETOca
+         +eS661oVWQtCFZoCPdl3SiA6PpGJedINPNEvIpvHz8BTE2PxWOhapUa7Oia7QMa9g0mr
+         Rjcw==
+X-Gm-Message-State: AOAM530IquzV6ypc6UiO31F7eo7wxush+mhWaCILSQCb0NaRdwnWvIXb
+        JyfuXHgX/7QvYiROsDAFAWo=
+X-Google-Smtp-Source: ABdhPJz8HiX+pM3V46AsSQ6mTm7xSV8qGd0J1oSK1Tx/IAg4MP/csGC4m8yPKylDqeq3Zudlg8yMMg==
+X-Received: by 2002:ac8:5504:: with SMTP id j4mr16547550qtq.357.1598478150655;
+        Wed, 26 Aug 2020 14:42:30 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id b23sm203069qtp.41.2020.08.26.14.42.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 14:42:22 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 00:42:20 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: interrupt-controller: Add Actions
- SIRQ controller binding
-Message-ID: <20200826214220.GA2444747@BV030612LT>
-References: <cover.1597852360.git.cristian.ciocaltea@gmail.com>
- <6bd99d4a7e50904b57bb3ad050725fbb418874b7.1597852360.git.cristian.ciocaltea@gmail.com>
- <20200825220913.GA1423455@bogus>
+        Wed, 26 Aug 2020 14:42:30 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 14:42:28 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] compiler-clang: add build check for clang 10.0.1
+Message-ID: <20200826214228.GB1005132@ubuntu-n2-xlarge-x86>
+References: <20200826201420.3414123-1-ndesaulniers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825220913.GA1423455@bogus>
+In-Reply-To: <20200826201420.3414123-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-Thanks for the review!
-
-On Tue, Aug 25, 2020 at 04:09:13PM -0600, Rob Herring wrote:
-> On Wed, Aug 19, 2020 at 07:37:56PM +0300, Cristian Ciocaltea wrote:
-> > Actions Semi Owl SoCs SIRQ interrupt controller is found in S500, S700
-> > and S900 SoCs and provides support for handling up to 3 external
-> > interrupt lines.
-> > 
-> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > ---
-> > Changes in v5:
-> >  - Updated controller description statements both in the commit message
-> >    and the binding doc
-> > 
-> >  .../actions,owl-sirq.yaml                     | 68 +++++++++++++++++++
-> >  1 file changed, 68 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> > new file mode 100644
-> > index 000000000000..cf9b7a514e4e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/actions,owl-sirq.yaml
-> > @@ -0,0 +1,68 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/interrupt-controller/actions,owl-sirq.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Actions Semi Owl SoCs SIRQ interrupt controller
-> > +
-> > +maintainers:
-> > +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > +  - Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > +
-> > +description: |
-> > +  This interrupt controller is found in the Actions Semi Owl SoCs (S500, S700
-> > +  and S900) and provides support for handling up to 3 external interrupt lines.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +        - enum:
-> > +          - actions,s500-sirq
-> > +          - actions,s700-sirq
-> > +          - actions,s900-sirq
-> > +        - const: actions,owl-sirq
-> > +      - const: actions,owl-sirq
+On Wed, Aug 26, 2020 at 01:14:19PM -0700, Nick Desaulniers wrote:
+> During Plumbers 2020, we voted to just support the latest release of
+> Clang for now.  Add a compile time check for this.
 > 
-> This should be dropped. You should always have the SoC specific 
-> compatible.
+> Older clang's may work, but we will likely drop workarounds for older
+> versions.
 
-Sure, I will get rid of the 'owl-sirq' compatible.
+I think this part of the commit message is a little wishy-washy. If we
+are breaking the build for clang < 10.0.1, we are not saying "may work",
+we are saying "won't work". Because of this, we should take the
+opportunity to clean up behind us and revert/remove parts of:
 
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupt-controller: true
-> > +
-> > +  '#interrupt-cells':
-> > +    const: 2
-> > +    description:
-> > +      The first cell is the input IRQ number, between 0 and 2, while the second
-> > +      cell is the trigger type as defined in interrupt.txt in this directory.
-> > +
-> > +  'actions,ext-interrupts':
-> > +    description: |
-> > +      Contains the GIC SPI IRQ numbers mapped to the external interrupt
-> > +      lines. They shall be specified sequentially from output 0 to 2.
-> > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > +    minItems: 3
-> > +    maxItems: 3
+87e0d4f0f37f ("kbuild: disable clang's default use of -fmerge-all-constants")
+b0fe66cf0950 ("ARM: 8905/1: Emit __gnu_mcount_nc when using Clang 10.0.0 or newer")
+b9249cba25a5 ("arm64: bti: Require clang >= 10.0.1 for in-kernel BTI support")
+3acf4be23528 ("arm64: vdso: Fix compilation with clang older than 8")
+
+This could be a series or a part of this commit, I do not have a
+strong preference. If we are not going to clean up behind us, this
+should be a warning and not an error.
+
+> Link: https://github.com/ClangBuiltLinux/linux/issues/9
+> Link: https://github.com/ClangBuiltLinux/linux/issues/941
+> Suggested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+
+Otherwise, I agree with Kees's comments. With them addressed, feel free
+to add:
+
+Acked-by: Nathan Chancellor <natechancellor@gmail.com>
+
+> ---
+>  include/linux/compiler-clang.h | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> Can't you use 'interrupts' here?
-
-This was actually my initial idea, but it might confuse the users since
-this is not following the parent controller IRQ specs, i.e. the trigger
-type is set internally by the SIRQ driver, it's not taken from DT.
-
-Please see the DTS sample bellow where both devices are on the same
-level and have GIC as interrupt parent. The 'interrupts' property
-in the sirq node looks incomplete now. That is why I decided to use
-a custom name for it, although I'm not sure it's the most relevant one,
-I am open to any other suggestion.
-
-i2c0: i2c@b0170000 {
-  [...]
-  interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-  [...]
-};
-
-sirq: interrupt-controller@b01b0200 {
-  [...]
-  interrupt-controller;
-  #interrupt-cells = <2>;
-  interrupts = <13>, /* SIRQ0 */
-               <14>, /* SIRQ1 */
-               <15>; /* SIRQ2 */
-};
-
-Regards,
-Cristi
-
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupt-controller
-> > +  - '#interrupt-cells'
-> > +  - 'actions,ext-interrupts'
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    sirq: interrupt-controller@b01b0200 {
-> > +      compatible = "actions,s500-sirq", "actions,owl-sirq";
-> > +      reg = <0xb01b0200 0x4>;
-> > +      interrupt-controller;
-> > +      #interrupt-cells = <2>;
-> > +      actions,ext-interrupts = <13>, /* SIRQ0 */
-> > +                               <14>, /* SIRQ1 */
-> > +                               <15>; /* SIRQ2 */
-> > +    };
-> > +
-> > +...
-> > -- 
-> > 2.28.0
-> > 
+> diff --git a/include/linux/compiler-clang.h b/include/linux/compiler-clang.h
+> index cee0c728d39a..7338d3ffd240 100644
+> --- a/include/linux/compiler-clang.h
+> +++ b/include/linux/compiler-clang.h
+> @@ -3,6 +3,14 @@
+>  #error "Please don't include <linux/compiler-clang.h> directly, include <linux/compiler.h> instead."
+>  #endif
+>  
+> +#define CLANG_VERSION (__clang_major__ * 10000	\
+> +		     + __clang_minor__ * 100	\
+> +		     + __clang_patchlevel__)
+> +
+> +#if CLANG_VERSION < 100001
+> +# error Sorry, your compiler is too old - please upgrade it.
+> +#endif
+> +
+>  /* Compiler specific definitions for Clang compiler */
+>  
+>  /* same as gcc, this was present in clang-2.6 so we can assume it works
+> -- 
+> 2.28.0.297.g1956fa8f8d-goog
+> 
