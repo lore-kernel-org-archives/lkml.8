@@ -2,168 +2,82 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4359F2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:07:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598450867;
-	bh=CW3ET0nSECTYGqqMM8aQQ5O+97kyrZkhTGoMjySb5I4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=A5FORO3ahGZayX5pxDV1K4AkM8If8C3InjfGGHbuDHenPx5L7H6POIf5qb8Ak7O4l
-	 6nUx6LerASxgCZGPZrbpaxr63JmyPIncW0mtwbLtNMKPjtlOFZ6GPprZVGBfVBqyaF
-	 UugkY0Z4ErALdncqDHWGSjtp6bzQwWDpG2ctU/Fc=
+	by mail.kernel.org (Postfix) with ESMTP id 101422078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:09:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kEgGCFJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbgHZOHp (ORCPT
+        id S1726986AbgHZOJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:07:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgHZOHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:07:37 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        Wed, 26 Aug 2020 10:09:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55334 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgHZOJW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:09:22 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B855EC061574;
+        Wed, 26 Aug 2020 07:09:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=sCuKJXsoVUftjxMjMCgzhnNkoywvdvw00UKnFJnBbtc=; b=kEgGCFJwHUE6qZhuZ6jKfBYJQU
+        FWr6K2fZ+qYnlQNIUH7HqQCgOiS7uYA9obXr2PTZjbrlJ3r+bHGgYXN8MvzVbNC4N47DsCxdHP+/S
+        9oHnGmaadcsWK8HDf5rFKrl8VZ6pDOFLzui8h9mua07287m74DVdfyFP7AgwJf6EK2O3Z6tFPTZar
+        VZwpucKk6XExR/XbaOKvSPwluDAYQWpfqF0HvmA3juhbwd86ARtXcbgg1QuqvABFB3zry8R+o5usH
+        yxVU/CVapqJ88CjtPgg/M3Ocnvya6DcMjazVi6UlJbvfrxiFiMZ5X7xlCxgctoyBURfMkqTCrkhUo
+        nX95P5FQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAw6h-0003Az-CQ; Wed, 26 Aug 2020 14:08:55 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 488702078D;
-        Wed, 26 Aug 2020 14:07:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598450853;
-        bh=CW3ET0nSECTYGqqMM8aQQ5O+97kyrZkhTGoMjySb5I4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=aX6ETimyCOT0RH3P+ja5amiQaxLFhthtdXD6sHGTUGS6GoQVwfT98dsBNVjN5F6a2
-         p1o7Ut5wzo2CQgwsAc/V92dI1TC3zADL+0gNTsSwtzzM9Eqx5FeVKWfHx7OTm2c+lB
-         V3aGvQ7Fu3amMi1pWBsHN0j/+EX6n2XTy39KLn1Y=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 297123522612; Wed, 26 Aug 2020 07:07:33 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 07:07:33 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     peterz@infradead.org
-Cc:     syzbot <syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com>,
-        fweisbec@gmail.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Subject: Re: INFO: rcu detected stall in smp_call_function
-Message-ID: <20200826140733.GM2855@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000903d5805ab908fc4@google.com>
- <20200729125811.GA70158@hirez.programming.kicks-ass.net>
- <20200825132411.GR35926@hirez.programming.kicks-ass.net>
- <20200825154841.GQ2855@paulmck-ThinkPad-P72>
- <20200826095144.GD1362448@hirez.programming.kicks-ass.net>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6AFD930015A;
+        Wed, 26 Aug 2020 16:08:52 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1AACD203A64CA; Wed, 26 Aug 2020 16:08:52 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 16:08:52 +0200
+From:   peterz@infradead.org
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: Re: [RFC PATCH 03/14] arm: kprobes: Use generic kretprobe trampoline
+ handler
+Message-ID: <20200826140852.GG1362448@hirez.programming.kicks-ass.net>
+References: <159844957216.510284.17683703701627367133.stgit@devnote2>
+ <159844960343.510284.15315372011917043979.stgit@devnote2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200826095144.GD1362448@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <159844960343.510284.15315372011917043979.stgit@devnote2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 11:51:44AM +0200, peterz@infradead.org wrote:
-> On Tue, Aug 25, 2020 at 08:48:41AM -0700, Paul E. McKenney wrote:
-> 
-> > > Paul, I wanted to use this function, but found it has very weird
-> > > semantics.
-> > > 
-> > > Why do you need it to (remotely) call @func when p is current? The user
-> > > in rcu_print_task_stall() explicitly bails in this case, and the other
-> > > in rcu_wait_for_one_reader() will attempt an IPI.
-> > 
-> > Good question.  Let me look at the invocations:
-> > 
-> > o	trc_wait_for_one_reader() bails on current before
-> > 	invoking try_invoke_on_locked_down_task():
-> > 
-> > 	if (t == current) {
-> > 		t->trc_reader_checked = true;
-> > 		trc_del_holdout(t);
-> > 		WARN_ON_ONCE(t->trc_reader_nesting);
-> > 		return;
-> > 	}
-> > 
-> > o	rcu_print_task_stall() might well invoke on the current task,
-> > 	low though the probability of this happening might be.	(The task
-> > 	has to be preempted within an RCU read-side critical section
-> > 	and resume in time for the scheduling-clock irq that will report
-> > 	the RCU CPU stall to interrupt it.)
-> > 
-> > 	And you are right, no point in an IPI in this case.
-> > 
-> > > Would it be possible to change this function to:
-> > > 
-> > >  - blocked task: call @func with p->pi_lock held
-> > >  - queued, !running task: call @func with rq->lock held
-> > >  - running task: fail.
-> > > 
-> > > ?
-> > 
-> > Why not a direct call in the current-task case, perhaps as follows,
-> > including your change above?  This would allow the RCU CPU stall
-> > case to work naturally and without the IPI.
-> > 
-> > Would that work for your use case?
-> 
-> It would in fact, but at this point I'd almost be inclined to stick the
-> IPI in as well. But small steps I suppose. So yes.
+On Wed, Aug 26, 2020 at 10:46:43PM +0900, Masami Hiramatsu wrote:
+>  static __used __kprobes void *trampoline_handler(struct pt_regs *regs)
+>  {
+> +	return (void *)kretprobe_trampoline_handler(regs,
+> +				(unsigned long)&kretprobe_trampoline,
+> +				regs->ARM_fp);
+>  }
 
-If interrupts are disabled, won't a self-IPI deadlock?
-
-But good point that the current-task case could be the only case invoking
-the function with interrupts enabled, which now that you mention it does
-sound like an accident waiting to happen.  So how about the following
-instead?
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8471a0f..f8ed04c 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2997,7 +2997,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
-  * state while invoking @func(@arg).  This function can use ->on_rq and
-  * task_curr() to work out what the state is, if required.  Given that
-  * @func can be invoked with a runqueue lock held, it had better be quite
-- * lightweight.
-+ * lightweight.  Note that the current task is implicitly locked down.
-  *
-  * Returns:
-  *	@false if the task slipped out from under the locks.
-@@ -3006,12 +3006,17 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
-  */
- bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct task_struct *t, void *arg), void *arg)
- {
--	bool ret = false;
- 	struct rq_flags rf;
-+	bool ret = false;
- 	struct rq *rq;
- 
--	lockdep_assert_irqs_enabled();
--	raw_spin_lock_irq(&p->pi_lock);
-+	if (p == current) {
-+		local_irq_save(rf.flags);
-+		ret = func(p, arg);
-+		local_irq_restore(rf.flags);
-+		return ret;
-+	}
-+	raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
- 	if (p->on_rq) {
- 		rq = __task_rq_lock(p, &rf);
- 		if (task_rq(p) == rq)
-@@ -3028,7 +3033,7 @@ bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct t
- 				ret = func(p, arg);
- 		}
- 	}
--	raw_spin_unlock_irq(&p->pi_lock);
-+	raw_spin_unlock_irqrestore(&p->pi_lock, rf.flags);
- 	return ret;
- }
- 
+Does it make sense to have the generic code have a weak
+trampoline_handler() implemented like the above? It looks like a number
+of architectures have this trivial variant and it seems pointless to
+duplicate this.
