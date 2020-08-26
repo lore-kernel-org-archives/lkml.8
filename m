@@ -2,848 +2,110 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526B4208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598449852;
-	bh=S1IXHKpcHKuWcE95oFil0kk5uPXYS5eOcuxHXJAOrJA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvoz7LG5N+RJX+NlI9m9bpsl3UwbeNo8QN3Sodmo94aa0dhflaRIczkF5tTfnTMDM
-	 UL8cBkZNN72KkCKXIlgkCokIvm/WC8xvHDy+ViyGkGb/kiqg0eMGE3LZhBs5FrNiLL
-	 mD0CPZgnMPq+5VCT7i25JrJHCZlz7WTgQN+faxFs=
+	by mail.kernel.org (Postfix) with ESMTP id 68C0A208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:51:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730552AbgHZNut (ORCPT
+        id S1730553AbgHZNvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:50:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56618 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 09:51:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:46614 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730409AbgHZNq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:46:58 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8067A22B43;
-        Wed, 26 Aug 2020 13:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598449616;
-        bh=S1IXHKpcHKuWcE95oFil0kk5uPXYS5eOcuxHXJAOrJA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TLx/t47aRY2wVZsNjL2rMZtAdeEvwYuqJfQ4V+wS/iPQ4Be0BU1UEl0DfM68NwxIv
-         fcLZWBN0KOfzGa6kuA88GuFOzGoNzIepNHjXcDbaC+iSu1NH8vmUWveTzGTCStYgNr
-         h9O8JLwHS5izNnoJnzp2iTCo4bUmO7/Ns/9hcsU4=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kAvlN-002L52-HC; Wed, 26 Aug 2020 15:46:53 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-spdx@vger.kernel.org
-Subject: [PATCH v2 1/2] LICENSE: add GFDL deprecated licenses
-Date:   Wed, 26 Aug 2020 15:46:51 +0200
-Message-Id: <a729c45bda6499e07112fc420015838ddd02557a.1598449136.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1598449136.git.mchehab+huawei@kernel.org>
-References: <cover.1598449136.git.mchehab+huawei@kernel.org>
+        id S1730371AbgHZNva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:51:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56820101E;
+        Wed, 26 Aug 2020 06:51:29 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CB003F68F;
+        Wed, 26 Aug 2020 06:51:27 -0700 (PDT)
+Subject: Re: [PATCH] iommu: Add support to filter non-strict/lazy mode based
+ on device names
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20200825154249.20011-1-saiprakash.ranjan@codeaurora.org>
+ <e3e4da33-a44f-0a07-9e2e-0f806875ab0b@arm.com>
+ <d9b1f1b614057d87279c26e13cbbb1f5@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <a03ce8f0-cab5-2782-ac50-930cf94b7dcd@arm.com>
+Date:   Wed, 26 Aug 2020 14:51:22 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <d9b1f1b614057d87279c26e13cbbb1f5@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some files under Documentation which uses
-deprecated versions of GNU Free Documentation License, on
-both versions 1.1 and 1.2.
+On 2020-08-26 13:17, Sai Prakash Ranjan wrote:
+> On 2020-08-26 17:07, Robin Murphy wrote:
+>> On 2020-08-25 16:42, Sai Prakash Ranjan wrote:
+>>> Currently the non-strict or lazy mode of TLB invalidation can only be 
+>>> set
+>>> for all or no domains. This works well for development platforms where
+>>> setting to non-strict/lazy mode is fine for performance reasons but on
+>>> production devices, we need a more fine grained control to allow only
+>>> certain peripherals to support this mode where we can be sure that it is
+>>> safe. So add support to filter non-strict/lazy mode based on the device
+>>> names that are passed via cmdline parameter "iommu.nonstrict_device".
+>>
+>> There seems to be considerable overlap here with both the existing
+>> patches for per-device default domain control [1], and the broader
+>> ongoing development on how to define, evaluate and handle "trusted"
+>> vs. "untrusted" devices (e.g. [2],[3]). I'd rather see work done to
+>> make sure those integrate properly together and work well for
+>> everyone's purposes, than add more disjoint mechanisms that only
+>> address small pieces of the overall issue.
+>>
+>> Robin.
+>>
+>> [1]
+>> https://lore.kernel.org/linux-iommu/20200824051726.7xaJRTTszJuzdFWGJ8YNsshCtfNR0BNeMrlILAyqt_0@z/ 
+>>
+>> [2]
+>> https://lore.kernel.org/linux-iommu/20200630044943.3425049-1-rajatja@google.com/ 
+>>
+>> [3]
+>> https://lore.kernel.org/linux-iommu/20200626002710.110200-2-rajatja@google.com/ 
+>>
+>>
+> 
+> Thanks for the links, [1] definitely sounds interesting, I was under the 
+> impression
+> that changing such via sysfs is late, but seems like other Sai has got 
+> it working
+> for the default domain type. So we can extend that and add a strict 
+> attribute as well,
+> we should be definitely OK with system booting with default strict mode 
+> for all
+> peripherals as long as we have an option to change that later, Doug?
 
-On all cases, the license is with no Invariant Sections,
-Front-Cover Texts or Back-Cover Texts.
+Right, IIRC there was initially a proposal of a command line option 
+there too, and it faced the same criticism around not being very generic 
+or scalable. I believe sysfs works as a reasonable compromise since in 
+many cases it can be tweaked relatively early from an initrd, and 
+non-essential devices can effectively be switched at any time by 
+removing and reprobing their driver.
 
-Add the text file for them, as we'll start using SPDX
-for those.
+As for a general approach for internal devices where you do believe the 
+hardware is honest but don't necessarily trust whatever firmware it 
+happens to be running, I'm pretty sure that's come up already, but I'll 
+be sure to mention it at Rajat's imminent LPC talk if nobody else does.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- LICENSES/deprecated/GFDL-1.1 | 355 +++++++++++++++++++++++++++++++
- LICENSES/deprecated/GFDL-1.2 | 397 +++++++++++++++++++++++++++++++++++
- 2 files changed, 752 insertions(+)
- create mode 100644 LICENSES/deprecated/GFDL-1.1
- create mode 100644 LICENSES/deprecated/GFDL-1.2
-
-diff --git a/LICENSES/deprecated/GFDL-1.1 b/LICENSES/deprecated/GFDL-1.1
-new file mode 100644
-index 000000000000..a03f60403947
---- /dev/null
-+++ b/LICENSES/deprecated/GFDL-1.1
-@@ -0,0 +1,355 @@
-+                GNU Free Documentation License
-+                   Version 1.1, March 2000
-+
-+ Copyright (C) 2000  Free Software Foundation, Inc.
-+     51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-+ Everyone is permitted to copy and distribute verbatim copies
-+ of this license document, but changing it is not allowed.
-+
-+
-+0. PREAMBLE
-+
-+The purpose of this License is to make a manual, textbook, or other
-+written document "free" in the sense of freedom: to assure everyone
-+the effective freedom to copy and redistribute it, with or without
-+modifying it, either commercially or noncommercially.  Secondarily,
-+this License preserves for the author and publisher a way to get
-+credit for their work, while not being considered responsible for
-+modifications made by others.
-+
-+This License is a kind of "copyleft", which means that derivative
-+works of the document must themselves be free in the same sense.  It
-+complements the GNU General Public License, which is a copyleft
-+license designed for free software.
-+
-+We have designed this License in order to use it for manuals for free
-+software, because free software needs free documentation: a free
-+program should come with manuals providing the same freedoms that the
-+software does.  But this License is not limited to software manuals;
-+it can be used for any textual work, regardless of subject matter or
-+whether it is published as a printed book.  We recommend this License
-+principally for works whose purpose is instruction or reference.
-+
-+
-+1. APPLICABILITY AND DEFINITIONS
-+
-+This License applies to any manual or other work that contains a
-+notice placed by the copyright holder saying it can be distributed
-+under the terms of this License.  The "Document", below, refers to any
-+such manual or work.  Any member of the public is a licensee, and is
-+addressed as "you".
-+
-+A "Modified Version" of the Document means any work containing the
-+Document or a portion of it, either copied verbatim, or with
-+modifications and/or translated into another language.
-+
-+A "Secondary Section" is a named appendix or a front-matter section of
-+the Document that deals exclusively with the relationship of the
-+publishers or authors of the Document to the Document's overall subject
-+(or to related matters) and contains nothing that could fall directly
-+within that overall subject.  (For example, if the Document is in part a
-+textbook of mathematics, a Secondary Section may not explain any
-+mathematics.)  The relationship could be a matter of historical
-+connection with the subject or with related matters, or of legal,
-+commercial, philosophical, ethical or political position regarding
-+them.
-+
-+The "Invariant Sections" are certain Secondary Sections whose titles
-+are designated, as being those of Invariant Sections, in the notice
-+that says that the Document is released under this License.
-+
-+The "Cover Texts" are certain short passages of text that are listed,
-+as Front-Cover Texts or Back-Cover Texts, in the notice that says that
-+the Document is released under this License.
-+
-+A "Transparent" copy of the Document means a machine-readable copy,
-+represented in a format whose specification is available to the
-+general public, whose contents can be viewed and edited directly and
-+straightforwardly with generic text editors or (for images composed of
-+pixels) generic paint programs or (for drawings) some widely available
-+drawing editor, and that is suitable for input to text formatters or
-+for automatic translation to a variety of formats suitable for input
-+to text formatters.  A copy made in an otherwise Transparent file
-+format whose markup has been designed to thwart or discourage
-+subsequent modification by readers is not Transparent.  A copy that is
-+not "Transparent" is called "Opaque".
-+
-+Examples of suitable formats for Transparent copies include plain
-+ASCII without markup, Texinfo input format, LaTeX input format, SGML
-+or XML using a publicly available DTD, and standard-conforming simple
-+HTML designed for human modification.  Opaque formats include
-+PostScript, PDF, proprietary formats that can be read and edited only
-+by proprietary word processors, SGML or XML for which the DTD and/or
-+processing tools are not generally available, and the
-+machine-generated HTML produced by some word processors for output
-+purposes only.
-+
-+The "Title Page" means, for a printed book, the title page itself,
-+plus such following pages as are needed to hold, legibly, the material
-+this License requires to appear in the title page.  For works in
-+formats which do not have any title page as such, "Title Page" means
-+the text near the most prominent appearance of the work's title,
-+preceding the beginning of the body of the text.
-+
-+
-+2. VERBATIM COPYING
-+
-+You may copy and distribute the Document in any medium, either
-+commercially or noncommercially, provided that this License, the
-+copyright notices, and the license notice saying this License applies
-+to the Document are reproduced in all copies, and that you add no other
-+conditions whatsoever to those of this License.  You may not use
-+technical measures to obstruct or control the reading or further
-+copying of the copies you make or distribute.  However, you may accept
-+compensation in exchange for copies.  If you distribute a large enough
-+number of copies you must also follow the conditions in section 3.
-+
-+You may also lend copies, under the same conditions stated above, and
-+you may publicly display copies.
-+
-+
-+3. COPYING IN QUANTITY
-+
-+If you publish printed copies of the Document numbering more than 100,
-+and the Document's license notice requires Cover Texts, you must enclose
-+the copies in covers that carry, clearly and legibly, all these Cover
-+Texts: Front-Cover Texts on the front cover, and Back-Cover Texts on
-+the back cover.  Both covers must also clearly and legibly identify
-+you as the publisher of these copies.  The front cover must present
-+the full title with all words of the title equally prominent and
-+visible.  You may add other material on the covers in addition.
-+Copying with changes limited to the covers, as long as they preserve
-+the title of the Document and satisfy these conditions, can be treated
-+as verbatim copying in other respects.
-+
-+If the required texts for either cover are too voluminous to fit
-+legibly, you should put the first ones listed (as many as fit
-+reasonably) on the actual cover, and continue the rest onto adjacent
-+pages.
-+
-+If you publish or distribute Opaque copies of the Document numbering
-+more than 100, you must either include a machine-readable Transparent
-+copy along with each Opaque copy, or state in or with each Opaque copy
-+a publicly-accessible computer-network location containing a complete
-+Transparent copy of the Document, free of added material, which the
-+general network-using public has access to download anonymously at no
-+charge using public-standard network protocols.  If you use the latter
-+option, you must take reasonably prudent steps, when you begin
-+distribution of Opaque copies in quantity, to ensure that this
-+Transparent copy will remain thus accessible at the stated location
-+until at least one year after the last time you distribute an Opaque
-+copy (directly or through your agents or retailers) of that edition to
-+the public.
-+
-+It is requested, but not required, that you contact the authors of the
-+Document well before redistributing any large number of copies, to give
-+them a chance to provide you with an updated version of the Document.
-+
-+
-+4. MODIFICATIONS
-+
-+You may copy and distribute a Modified Version of the Document under
-+the conditions of sections 2 and 3 above, provided that you release
-+the Modified Version under precisely this License, with the Modified
-+Version filling the role of the Document, thus licensing distribution
-+and modification of the Modified Version to whoever possesses a copy
-+of it.  In addition, you must do these things in the Modified Version:
-+
-+A. Use in the Title Page (and on the covers, if any) a title distinct
-+   from that of the Document, and from those of previous versions
-+   (which should, if there were any, be listed in the History section
-+   of the Document).  You may use the same title as a previous version
-+   if the original publisher of that version gives permission.
-+B. List on the Title Page, as authors, one or more persons or entities
-+   responsible for authorship of the modifications in the Modified
-+   Version, together with at least five of the principal authors of the
-+   Document (all of its principal authors, if it has less than five).
-+C. State on the Title page the name of the publisher of the
-+   Modified Version, as the publisher.
-+D. Preserve all the copyright notices of the Document.
-+E. Add an appropriate copyright notice for your modifications
-+   adjacent to the other copyright notices.
-+F. Include, immediately after the copyright notices, a license notice
-+   giving the public permission to use the Modified Version under the
-+   terms of this License, in the form shown in the Addendum below.
-+G. Preserve in that license notice the full lists of Invariant Sections
-+   and required Cover Texts given in the Document's license notice.
-+H. Include an unaltered copy of this License.
-+I. Preserve the section entitled "History", and its title, and add to
-+   it an item stating at least the title, year, new authors, and
-+   publisher of the Modified Version as given on the Title Page.  If
-+   there is no section entitled "History" in the Document, create one
-+   stating the title, year, authors, and publisher of the Document as
-+   given on its Title Page, then add an item describing the Modified
-+   Version as stated in the previous sentence.
-+J. Preserve the network location, if any, given in the Document for
-+   public access to a Transparent copy of the Document, and likewise
-+   the network locations given in the Document for previous versions
-+   it was based on.  These may be placed in the "History" section.
-+   You may omit a network location for a work that was published at
-+   least four years before the Document itself, or if the original
-+   publisher of the version it refers to gives permission.
-+K. In any section entitled "Acknowledgements" or "Dedications",
-+   preserve the section's title, and preserve in the section all the
-+   substance and tone of each of the contributor acknowledgements
-+   and/or dedications given therein.
-+L. Preserve all the Invariant Sections of the Document,
-+   unaltered in their text and in their titles.  Section numbers
-+   or the equivalent are not considered part of the section titles.
-+M. Delete any section entitled "Endorsements".  Such a section
-+   may not be included in the Modified Version.
-+N. Do not retitle any existing section as "Endorsements"
-+   or to conflict in title with any Invariant Section.
-+
-+If the Modified Version includes new front-matter sections or
-+appendices that qualify as Secondary Sections and contain no material
-+copied from the Document, you may at your option designate some or all
-+of these sections as invariant.  To do this, add their titles to the
-+list of Invariant Sections in the Modified Version's license notice.
-+These titles must be distinct from any other section titles.
-+
-+You may add a section entitled "Endorsements", provided it contains
-+nothing but endorsements of your Modified Version by various
-+parties--for example, statements of peer review or that the text has
-+been approved by an organization as the authoritative definition of a
-+standard.
-+
-+You may add a passage of up to five words as a Front-Cover Text, and a
-+passage of up to 25 words as a Back-Cover Text, to the end of the list
-+of Cover Texts in the Modified Version.  Only one passage of
-+Front-Cover Text and one of Back-Cover Text may be added by (or
-+through arrangements made by) any one entity.  If the Document already
-+includes a cover text for the same cover, previously added by you or
-+by arrangement made by the same entity you are acting on behalf of,
-+you may not add another; but you may replace the old one, on explicit
-+permission from the previous publisher that added the old one.
-+
-+The author(s) and publisher(s) of the Document do not by this License
-+give permission to use their names for publicity for or to assert or
-+imply endorsement of any Modified Version.
-+
-+
-+5. COMBINING DOCUMENTS
-+
-+You may combine the Document with other documents released under this
-+License, under the terms defined in section 4 above for modified
-+versions, provided that you include in the combination all of the
-+Invariant Sections of all of the original documents, unmodified, and
-+list them all as Invariant Sections of your combined work in its
-+license notice.
-+
-+The combined work need only contain one copy of this License, and
-+multiple identical Invariant Sections may be replaced with a single
-+copy.  If there are multiple Invariant Sections with the same name but
-+different contents, make the title of each such section unique by
-+adding at the end of it, in parentheses, the name of the original
-+author or publisher of that section if known, or else a unique number.
-+Make the same adjustment to the section titles in the list of
-+Invariant Sections in the license notice of the combined work.
-+
-+In the combination, you must combine any sections entitled "History"
-+in the various original documents, forming one section entitled
-+"History"; likewise combine any sections entitled "Acknowledgements",
-+and any sections entitled "Dedications".  You must delete all sections
-+entitled "Endorsements."
-+
-+
-+6. COLLECTIONS OF DOCUMENTS
-+
-+You may make a collection consisting of the Document and other documents
-+released under this License, and replace the individual copies of this
-+License in the various documents with a single copy that is included in
-+the collection, provided that you follow the rules of this License for
-+verbatim copying of each of the documents in all other respects.
-+
-+You may extract a single document from such a collection, and distribute
-+it individually under this License, provided you insert a copy of this
-+License into the extracted document, and follow this License in all
-+other respects regarding verbatim copying of that document.
-+
-+
-+7. AGGREGATION WITH INDEPENDENT WORKS
-+
-+A compilation of the Document or its derivatives with other separate
-+and independent documents or works, in or on a volume of a storage or
-+distribution medium, does not as a whole count as a Modified Version
-+of the Document, provided no compilation copyright is claimed for the
-+compilation.  Such a compilation is called an "aggregate", and this
-+License does not apply to the other self-contained works thus compiled
-+with the Document, on account of their being thus compiled, if they
-+are not themselves derivative works of the Document.
-+
-+If the Cover Text requirement of section 3 is applicable to these
-+copies of the Document, then if the Document is less than one quarter
-+of the entire aggregate, the Document's Cover Texts may be placed on
-+covers that surround only the Document within the aggregate.
-+Otherwise they must appear on covers around the whole aggregate.
-+
-+
-+8. TRANSLATION
-+
-+Translation is considered a kind of modification, so you may
-+distribute translations of the Document under the terms of section 4.
-+Replacing Invariant Sections with translations requires special
-+permission from their copyright holders, but you may include
-+translations of some or all Invariant Sections in addition to the
-+original versions of these Invariant Sections.  You may include a
-+translation of this License provided that you also include the
-+original English version of this License.  In case of a disagreement
-+between the translation and the original English version of this
-+License, the original English version will prevail.
-+
-+
-+9. TERMINATION
-+
-+You may not copy, modify, sublicense, or distribute the Document except
-+as expressly provided for under this License.  Any other attempt to
-+copy, modify, sublicense or distribute the Document is void, and will
-+automatically terminate your rights under this License.  However,
-+parties who have received copies, or rights, from you under this
-+License will not have their licenses terminated so long as such
-+parties remain in full compliance.
-+
-+
-+10. FUTURE REVISIONS OF THIS LICENSE
-+
-+The Free Software Foundation may publish new, revised versions
-+of the GNU Free Documentation License from time to time.  Such new
-+versions will be similar in spirit to the present version, but may
-+differ in detail to address new problems or concerns.  See
-+https://www.gnu.org/licenses/.
-+
-+Each version of the License is given a distinguishing version number.
-+If the Document specifies that a particular numbered version of this
-+License "or any later version" applies to it, you have the option of
-+following the terms and conditions either of that specified version or
-+of any later version that has been published (not as a draft) by the
-+Free Software Foundation.  If the Document does not specify a version
-+number of this License, you may choose any version ever published (not
-+as a draft) by the Free Software Foundation.
-+
-+
-+ADDENDUM: How to use this License for your documents
-+
-+To use this License in a document you have written, include a copy of
-+the License in the document and put the following copyright and
-+license notices just after the title page:
-+
-+      Copyright (c)  YEAR  YOUR NAME.
-+      Permission is granted to copy, distribute and/or modify this document
-+      under the terms of the GNU Free Documentation License, Version 1.1
-+      or any later version published by the Free Software Foundation;
-+      with the Invariant Sections being LIST THEIR TITLES, with the
-+      Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.
-+      A copy of the license is included in the section entitled "GNU
-+      Free Documentation License".
-+
-+If you have no Invariant Sections, write "with no Invariant Sections"
-+instead of saying which ones are invariant.  If you have no
-+Front-Cover Texts, write "no Front-Cover Texts" instead of
-+"Front-Cover Texts being LIST"; likewise for Back-Cover Texts.
-+
-+If your document contains nontrivial examples of program code, we
-+recommend releasing these examples in parallel under your choice of
-+free software license, such as the GNU General Public License,
-+to permit their use in free software.
-diff --git a/LICENSES/deprecated/GFDL-1.2 b/LICENSES/deprecated/GFDL-1.2
-new file mode 100644
-index 000000000000..68d93f4f67fd
---- /dev/null
-+++ b/LICENSES/deprecated/GFDL-1.2
-@@ -0,0 +1,397 @@
-+                GNU Free Documentation License
-+                  Version 1.2, November 2002
-+
-+
-+ Copyright (C) 2000,2001,2002  Free Software Foundation, Inc.
-+     51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-+ Everyone is permitted to copy and distribute verbatim copies
-+ of this license document, but changing it is not allowed.
-+
-+
-+0. PREAMBLE
-+
-+The purpose of this License is to make a manual, textbook, or other
-+functional and useful document "free" in the sense of freedom: to
-+assure everyone the effective freedom to copy and redistribute it,
-+with or without modifying it, either commercially or noncommercially.
-+Secondarily, this License preserves for the author and publisher a way
-+to get credit for their work, while not being considered responsible
-+for modifications made by others.
-+
-+This License is a kind of "copyleft", which means that derivative
-+works of the document must themselves be free in the same sense.  It
-+complements the GNU General Public License, which is a copyleft
-+license designed for free software.
-+
-+We have designed this License in order to use it for manuals for free
-+software, because free software needs free documentation: a free
-+program should come with manuals providing the same freedoms that the
-+software does.  But this License is not limited to software manuals;
-+it can be used for any textual work, regardless of subject matter or
-+whether it is published as a printed book.  We recommend this License
-+principally for works whose purpose is instruction or reference.
-+
-+
-+1. APPLICABILITY AND DEFINITIONS
-+
-+This License applies to any manual or other work, in any medium, that
-+contains a notice placed by the copyright holder saying it can be
-+distributed under the terms of this License.  Such a notice grants a
-+world-wide, royalty-free license, unlimited in duration, to use that
-+work under the conditions stated herein.  The "Document", below,
-+refers to any such manual or work.  Any member of the public is a
-+licensee, and is addressed as "you".  You accept the license if you
-+copy, modify or distribute the work in a way requiring permission
-+under copyright law.
-+
-+A "Modified Version" of the Document means any work containing the
-+Document or a portion of it, either copied verbatim, or with
-+modifications and/or translated into another language.
-+
-+A "Secondary Section" is a named appendix or a front-matter section of
-+the Document that deals exclusively with the relationship of the
-+publishers or authors of the Document to the Document's overall subject
-+(or to related matters) and contains nothing that could fall directly
-+within that overall subject.  (Thus, if the Document is in part a
-+textbook of mathematics, a Secondary Section may not explain any
-+mathematics.)  The relationship could be a matter of historical
-+connection with the subject or with related matters, or of legal,
-+commercial, philosophical, ethical or political position regarding
-+them.
-+
-+The "Invariant Sections" are certain Secondary Sections whose titles
-+are designated, as being those of Invariant Sections, in the notice
-+that says that the Document is released under this License.  If a
-+section does not fit the above definition of Secondary then it is not
-+allowed to be designated as Invariant.  The Document may contain zero
-+Invariant Sections.  If the Document does not identify any Invariant
-+Sections then there are none.
-+
-+The "Cover Texts" are certain short passages of text that are listed,
-+as Front-Cover Texts or Back-Cover Texts, in the notice that says that
-+the Document is released under this License.  A Front-Cover Text may
-+be at most 5 words, and a Back-Cover Text may be at most 25 words.
-+
-+A "Transparent" copy of the Document means a machine-readable copy,
-+represented in a format whose specification is available to the
-+general public, that is suitable for revising the document
-+straightforwardly with generic text editors or (for images composed of
-+pixels) generic paint programs or (for drawings) some widely available
-+drawing editor, and that is suitable for input to text formatters or
-+for automatic translation to a variety of formats suitable for input
-+to text formatters.  A copy made in an otherwise Transparent file
-+format whose markup, or absence of markup, has been arranged to thwart
-+or discourage subsequent modification by readers is not Transparent.
-+An image format is not Transparent if used for any substantial amount
-+of text.  A copy that is not "Transparent" is called "Opaque".
-+
-+Examples of suitable formats for Transparent copies include plain
-+ASCII without markup, Texinfo input format, LaTeX input format, SGML
-+or XML using a publicly available DTD, and standard-conforming simple
-+HTML, PostScript or PDF designed for human modification.  Examples of
-+transparent image formats include PNG, XCF and JPG.  Opaque formats
-+include proprietary formats that can be read and edited only by
-+proprietary word processors, SGML or XML for which the DTD and/or
-+processing tools are not generally available, and the
-+machine-generated HTML, PostScript or PDF produced by some word
-+processors for output purposes only.
-+
-+The "Title Page" means, for a printed book, the title page itself,
-+plus such following pages as are needed to hold, legibly, the material
-+this License requires to appear in the title page.  For works in
-+formats which do not have any title page as such, "Title Page" means
-+the text near the most prominent appearance of the work's title,
-+preceding the beginning of the body of the text.
-+
-+A section "Entitled XYZ" means a named subunit of the Document whose
-+title either is precisely XYZ or contains XYZ in parentheses following
-+text that translates XYZ in another language.  (Here XYZ stands for a
-+specific section name mentioned below, such as "Acknowledgements",
-+"Dedications", "Endorsements", or "History".)  To "Preserve the Title"
-+of such a section when you modify the Document means that it remains a
-+section "Entitled XYZ" according to this definition.
-+
-+The Document may include Warranty Disclaimers next to the notice which
-+states that this License applies to the Document.  These Warranty
-+Disclaimers are considered to be included by reference in this
-+License, but only as regards disclaiming warranties: any other
-+implication that these Warranty Disclaimers may have is void and has
-+no effect on the meaning of this License.
-+
-+
-+2. VERBATIM COPYING
-+
-+You may copy and distribute the Document in any medium, either
-+commercially or noncommercially, provided that this License, the
-+copyright notices, and the license notice saying this License applies
-+to the Document are reproduced in all copies, and that you add no other
-+conditions whatsoever to those of this License.  You may not use
-+technical measures to obstruct or control the reading or further
-+copying of the copies you make or distribute.  However, you may accept
-+compensation in exchange for copies.  If you distribute a large enough
-+number of copies you must also follow the conditions in section 3.
-+
-+You may also lend copies, under the same conditions stated above, and
-+you may publicly display copies.
-+
-+
-+3. COPYING IN QUANTITY
-+
-+If you publish printed copies (or copies in media that commonly have
-+printed covers) of the Document, numbering more than 100, and the
-+Document's license notice requires Cover Texts, you must enclose the
-+copies in covers that carry, clearly and legibly, all these Cover
-+Texts: Front-Cover Texts on the front cover, and Back-Cover Texts on
-+the back cover.  Both covers must also clearly and legibly identify
-+you as the publisher of these copies.  The front cover must present
-+the full title with all words of the title equally prominent and
-+visible.  You may add other material on the covers in addition.
-+Copying with changes limited to the covers, as long as they preserve
-+the title of the Document and satisfy these conditions, can be treated
-+as verbatim copying in other respects.
-+
-+If the required texts for either cover are too voluminous to fit
-+legibly, you should put the first ones listed (as many as fit
-+reasonably) on the actual cover, and continue the rest onto adjacent
-+pages.
-+
-+If you publish or distribute Opaque copies of the Document numbering
-+more than 100, you must either include a machine-readable Transparent
-+copy along with each Opaque copy, or state in or with each Opaque copy
-+a computer-network location from which the general network-using
-+public has access to download using public-standard network protocols
-+a complete Transparent copy of the Document, free of added material.
-+If you use the latter option, you must take reasonably prudent steps,
-+when you begin distribution of Opaque copies in quantity, to ensure
-+that this Transparent copy will remain thus accessible at the stated
-+location until at least one year after the last time you distribute an
-+Opaque copy (directly or through your agents or retailers) of that
-+edition to the public.
-+
-+It is requested, but not required, that you contact the authors of the
-+Document well before redistributing any large number of copies, to give
-+them a chance to provide you with an updated version of the Document.
-+
-+
-+4. MODIFICATIONS
-+
-+You may copy and distribute a Modified Version of the Document under
-+the conditions of sections 2 and 3 above, provided that you release
-+the Modified Version under precisely this License, with the Modified
-+Version filling the role of the Document, thus licensing distribution
-+and modification of the Modified Version to whoever possesses a copy
-+of it.  In addition, you must do these things in the Modified Version:
-+
-+A. Use in the Title Page (and on the covers, if any) a title distinct
-+   from that of the Document, and from those of previous versions
-+   (which should, if there were any, be listed in the History section
-+   of the Document).  You may use the same title as a previous version
-+   if the original publisher of that version gives permission.
-+B. List on the Title Page, as authors, one or more persons or entities
-+   responsible for authorship of the modifications in the Modified
-+   Version, together with at least five of the principal authors of the
-+   Document (all of its principal authors, if it has fewer than five),
-+   unless they release you from this requirement.
-+C. State on the Title page the name of the publisher of the
-+   Modified Version, as the publisher.
-+D. Preserve all the copyright notices of the Document.
-+E. Add an appropriate copyright notice for your modifications
-+   adjacent to the other copyright notices.
-+F. Include, immediately after the copyright notices, a license notice
-+   giving the public permission to use the Modified Version under the
-+   terms of this License, in the form shown in the Addendum below.
-+G. Preserve in that license notice the full lists of Invariant Sections
-+   and required Cover Texts given in the Document's license notice.
-+H. Include an unaltered copy of this License.
-+I. Preserve the section Entitled "History", Preserve its Title, and add
-+   to it an item stating at least the title, year, new authors, and
-+   publisher of the Modified Version as given on the Title Page.  If
-+   there is no section Entitled "History" in the Document, create one
-+   stating the title, year, authors, and publisher of the Document as
-+   given on its Title Page, then add an item describing the Modified
-+   Version as stated in the previous sentence.
-+J. Preserve the network location, if any, given in the Document for
-+   public access to a Transparent copy of the Document, and likewise
-+   the network locations given in the Document for previous versions
-+   it was based on.  These may be placed in the "History" section.
-+   You may omit a network location for a work that was published at
-+   least four years before the Document itself, or if the original
-+   publisher of the version it refers to gives permission.
-+K. For any section Entitled "Acknowledgements" or "Dedications",
-+   Preserve the Title of the section, and preserve in the section all
-+   the substance and tone of each of the contributor acknowledgements
-+   and/or dedications given therein.
-+L. Preserve all the Invariant Sections of the Document,
-+   unaltered in their text and in their titles.  Section numbers
-+   or the equivalent are not considered part of the section titles.
-+M. Delete any section Entitled "Endorsements".  Such a section
-+   may not be included in the Modified Version.
-+N. Do not retitle any existing section to be Entitled "Endorsements"
-+   or to conflict in title with any Invariant Section.
-+O. Preserve any Warranty Disclaimers.
-+
-+If the Modified Version includes new front-matter sections or
-+appendices that qualify as Secondary Sections and contain no material
-+copied from the Document, you may at your option designate some or all
-+of these sections as invariant.  To do this, add their titles to the
-+list of Invariant Sections in the Modified Version's license notice.
-+These titles must be distinct from any other section titles.
-+
-+You may add a section Entitled "Endorsements", provided it contains
-+nothing but endorsements of your Modified Version by various
-+parties--for example, statements of peer review or that the text has
-+been approved by an organization as the authoritative definition of a
-+standard.
-+
-+You may add a passage of up to five words as a Front-Cover Text, and a
-+passage of up to 25 words as a Back-Cover Text, to the end of the list
-+of Cover Texts in the Modified Version.  Only one passage of
-+Front-Cover Text and one of Back-Cover Text may be added by (or
-+through arrangements made by) any one entity.  If the Document already
-+includes a cover text for the same cover, previously added by you or
-+by arrangement made by the same entity you are acting on behalf of,
-+you may not add another; but you may replace the old one, on explicit
-+permission from the previous publisher that added the old one.
-+
-+The author(s) and publisher(s) of the Document do not by this License
-+give permission to use their names for publicity for or to assert or
-+imply endorsement of any Modified Version.
-+
-+
-+5. COMBINING DOCUMENTS
-+
-+You may combine the Document with other documents released under this
-+License, under the terms defined in section 4 above for modified
-+versions, provided that you include in the combination all of the
-+Invariant Sections of all of the original documents, unmodified, and
-+list them all as Invariant Sections of your combined work in its
-+license notice, and that you preserve all their Warranty Disclaimers.
-+
-+The combined work need only contain one copy of this License, and
-+multiple identical Invariant Sections may be replaced with a single
-+copy.  If there are multiple Invariant Sections with the same name but
-+different contents, make the title of each such section unique by
-+adding at the end of it, in parentheses, the name of the original
-+author or publisher of that section if known, or else a unique number.
-+Make the same adjustment to the section titles in the list of
-+Invariant Sections in the license notice of the combined work.
-+
-+In the combination, you must combine any sections Entitled "History"
-+in the various original documents, forming one section Entitled
-+"History"; likewise combine any sections Entitled "Acknowledgements",
-+and any sections Entitled "Dedications".  You must delete all sections
-+Entitled "Endorsements".
-+
-+
-+6. COLLECTIONS OF DOCUMENTS
-+
-+You may make a collection consisting of the Document and other documents
-+released under this License, and replace the individual copies of this
-+License in the various documents with a single copy that is included in
-+the collection, provided that you follow the rules of this License for
-+verbatim copying of each of the documents in all other respects.
-+
-+You may extract a single document from such a collection, and distribute
-+it individually under this License, provided you insert a copy of this
-+License into the extracted document, and follow this License in all
-+other respects regarding verbatim copying of that document.
-+
-+
-+7. AGGREGATION WITH INDEPENDENT WORKS
-+
-+A compilation of the Document or its derivatives with other separate
-+and independent documents or works, in or on a volume of a storage or
-+distribution medium, is called an "aggregate" if the copyright
-+resulting from the compilation is not used to limit the legal rights
-+of the compilation's users beyond what the individual works permit.
-+When the Document is included in an aggregate, this License does not
-+apply to the other works in the aggregate which are not themselves
-+derivative works of the Document.
-+
-+If the Cover Text requirement of section 3 is applicable to these
-+copies of the Document, then if the Document is less than one half of
-+the entire aggregate, the Document's Cover Texts may be placed on
-+covers that bracket the Document within the aggregate, or the
-+electronic equivalent of covers if the Document is in electronic form.
-+Otherwise they must appear on printed covers that bracket the whole
-+aggregate.
-+
-+
-+8. TRANSLATION
-+
-+Translation is considered a kind of modification, so you may
-+distribute translations of the Document under the terms of section 4.
-+Replacing Invariant Sections with translations requires special
-+permission from their copyright holders, but you may include
-+translations of some or all Invariant Sections in addition to the
-+original versions of these Invariant Sections.  You may include a
-+translation of this License, and all the license notices in the
-+Document, and any Warranty Disclaimers, provided that you also include
-+the original English version of this License and the original versions
-+of those notices and disclaimers.  In case of a disagreement between
-+the translation and the original version of this License or a notice
-+or disclaimer, the original version will prevail.
-+
-+If a section in the Document is Entitled "Acknowledgements",
-+"Dedications", or "History", the requirement (section 4) to Preserve
-+its Title (section 1) will typically require changing the actual
-+title.
-+
-+
-+9. TERMINATION
-+
-+You may not copy, modify, sublicense, or distribute the Document except
-+as expressly provided for under this License.  Any other attempt to
-+copy, modify, sublicense or distribute the Document is void, and will
-+automatically terminate your rights under this License.  However,
-+parties who have received copies, or rights, from you under this
-+License will not have their licenses terminated so long as such
-+parties remain in full compliance.
-+
-+
-+10. FUTURE REVISIONS OF THIS LICENSE
-+
-+The Free Software Foundation may publish new, revised versions
-+of the GNU Free Documentation License from time to time.  Such new
-+versions will be similar in spirit to the present version, but may
-+differ in detail to address new problems or concerns.  See
-+https://www.gnu.org/licenses/.
-+
-+Each version of the License is given a distinguishing version number.
-+If the Document specifies that a particular numbered version of this
-+License "or any later version" applies to it, you have the option of
-+following the terms and conditions either of that specified version or
-+of any later version that has been published (not as a draft) by the
-+Free Software Foundation.  If the Document does not specify a version
-+number of this License, you may choose any version ever published (not
-+as a draft) by the Free Software Foundation.
-+
-+
-+ADDENDUM: How to use this License for your documents
-+
-+To use this License in a document you have written, include a copy of
-+the License in the document and put the following copyright and
-+license notices just after the title page:
-+
-+    Copyright (c)  YEAR  YOUR NAME.
-+    Permission is granted to copy, distribute and/or modify this document
-+    under the terms of the GNU Free Documentation License, Version 1.2
-+    or any later version published by the Free Software Foundation;
-+    with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
-+    A copy of the license is included in the section entitled "GNU
-+    Free Documentation License".
-+
-+If you have Invariant Sections, Front-Cover Texts and Back-Cover Texts,
-+replace the "with...Texts." line with this:
-+
-+    with the Invariant Sections being LIST THEIR TITLES, with the
-+    Front-Cover Texts being LIST, and with the Back-Cover Texts being LIST.
-+
-+If you have Invariant Sections without Cover Texts, or some other
-+combination of the three, merge those two alternatives to suit the
-+situation.
-+
-+If your document contains nontrivial examples of program code, we
-+recommend releasing these examples in parallel under your choice of
-+free software license, such as the GNU General Public License,
-+to permit their use in free software.
--- 
-2.26.2
-
+Robin.
