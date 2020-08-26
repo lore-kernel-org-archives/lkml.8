@@ -2,89 +2,241 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C25C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7769F21775
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598450981;
-	bh=tFCjOr0R190PpkARyCST3lICzYxM/ZthkVfxCLXvO3U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RWgplfijlpfenKa8a8KU2KRsgXs92dv7Blg2j1b5Znk3nJXus0zZ5How4DQ3cEshB
-	 UzRdMxlN+Tgf9i69dlat+VM1bNSX2tmWHyWq8f15kQ7arab1sZUSiAVrPE9q/Uf/CJ
-	 kCqNckNHxW0m2uwELvVHdlrRlsvMZdr2qnf0cS4U=
+	by mail.kernel.org (Postfix) with ESMTP id 3DAB12078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:10:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="c2eno+ca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbgHZOJj (ORCPT
+        id S1730463AbgHZOKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:09:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726999AbgHZOJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:09:38 -0400
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14B672177B;
-        Wed, 26 Aug 2020 14:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598450978;
-        bh=tFCjOr0R190PpkARyCST3lICzYxM/ZthkVfxCLXvO3U=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iXopgi9PAVg0rrLF6wEKxQewKaaUQDYBze+2jEaVk3n/xv5J5iZPg1oo+H/0nE+hc
-         KIKTV3/yGeCT7/HvF/J1fb2gV8lgEbgzBUkr1M4TMcV96LCqPWZ9wlViOwyWc76+M6
-         r+c8g+Lw0+uu2f7K6K2iUb1xLLhkIGlP63ci6O6Y=
-Received: by mail-ot1-f50.google.com with SMTP id i11so1580248otr.5;
-        Wed, 26 Aug 2020 07:09:38 -0700 (PDT)
-X-Gm-Message-State: AOAM530rVZz0VwL5d+lzp4fVJKrrANga4zkcBXFaa150wVo8btuE6gsU
-        KCuBM62kD5QmYy0GrMbJfaCtEMXYy6ISuEntJw==
-X-Google-Smtp-Source: ABdhPJxb7HPcDBydxGstFvQOelSqMG94Ig9YQ9BwLO3iFb/F7xuuVOY2fu9j0ePFE7T0hzpHztUfdayGVmXN8L1pIJk=
-X-Received: by 2002:a9d:7f84:: with SMTP id t4mr10340661otp.192.1598450977458;
- Wed, 26 Aug 2020 07:09:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200820052827.2642164-1-ikjn@chromium.org> <20200826085450.508556-1-ikjn@chromium.org>
-In-Reply-To: <20200826085450.508556-1-ikjn@chromium.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 26 Aug 2020 08:09:26 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLVe2yg8RdSZprV00xu0X32Tk69t_jC1Td-TF+z1BYheA@mail.gmail.com>
-Message-ID: <CAL_JsqLVe2yg8RdSZprV00xu0X32Tk69t_jC1Td-TF+z1BYheA@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: spi: Convert spi-mtk-nor to json-schema
-To:     Ikjoon Jang <ikjn@chromium.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bayi Cheng <bayi.cheng@mediatek.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        Wed, 26 Aug 2020 10:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgHZOKW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:10:22 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5738C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:10:21 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id p4so1975721qkf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:10:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=4SOxWdwKrVd7Rs8H8CO46YzvqktHGZXPaEWImz9lP9k=;
+        b=c2eno+caDxPjGqUaShOtwkH+Ua48sWEUnbnfaCKsi5NelMzzT/qYhVCKwJksUtcG0p
+         +qSIAsA5H8+4SyTzTnu5hJsx8VVfSnjgDirRhIvT8gk10eiDtPKpmnR+1wkSUUOc7CXd
+         6bK602fned3kG28/v9wFl42h6+nwD0hC67+ugTYdQKuvYo6Je4ikXSbO/wMhe/VbehDG
+         v27jiXWuRCU2tiWEUYQ/TM+mPoIRXJbmT75sLqCK1K8GOL+/UQKEUeVZcsTK80p1EsfW
+         hAGgcm8iFgQIMvY7r0nSQ2DPYPLykTRsLgzqnWcCVtLZ9dEgRnzURMjSl7SCARLxU728
+         8i3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=4SOxWdwKrVd7Rs8H8CO46YzvqktHGZXPaEWImz9lP9k=;
+        b=Xa23GV5sPAqcDJ1hvRWL4gTslRthnvgAld7Hd+vYZGAiEgf0Ba1wxZ72KyEQS85G3Y
+         q23vyAiOo8Q8juW/q/EXZD5Fl9ElCSeMxtCTZvRBDcgZuuYkqkCEbbjMTGkC35eeC02M
+         xT29JSF7THibeBv1yA83BeHW6gIgPcSF/S5pbXgKl5Sy2NfyX2/sxbf5lpK6UEOhr8oL
+         H7sjP8Frl6r2bTDVbHjRUoPfVBV//ratgFk3UzQAdU1JbU5IgzzbuK7b8m9ld6ZYXRV2
+         aFaJLQbugK83sxTpf1E/vZtuzdEoBMgZM/cMW3FRu+VHx6VetwQaojIZWv1K9WBHE0At
+         3iZQ==
+X-Gm-Message-State: AOAM532kGF72M55eiKCm3fZJTIAQ8QhzTyEw5lLf9KTOER8DGKbjXW52
+        eVErpSybTYbjZ4DNBRVzhNdhrYl7JZLPP/P1
+X-Google-Smtp-Source: ABdhPJwkSNT72+PEdYl3Nm1abDOh/V+5kPeI+dZtxPtbEPcesP4QqqA85A+ELO0dTvB7bCighuhYFQ==
+X-Received: by 2002:a37:5fc4:: with SMTP id t187mr14697742qkb.224.1598451019676;
+        Wed, 26 Aug 2020 07:10:19 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id r8sm1773767qke.117.2020.08.26.07.10.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:10:18 -0700 (PDT)
+Message-ID: <ae3814b877ea264b0231321d12d946761941e004.camel@ndufresne.ca>
+Subject: Re: [PATCH v3 3/3] media: v4l: xilinx: Add Xilinx UHD-SDI Rx
+ Subsystem driver
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Vishal Sagar <vsagar@xilinx.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Hyun Kwon <hyunk@xilinx.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "joe@perches.com" <joe@perches.com>,
+        Sandip Kothari <sandipk@xilinx.com>,
+        Dinesh Kumar <dineshk@xilinx.com>
+Date:   Wed, 26 Aug 2020 10:10:17 -0400
+In-Reply-To: <20200819165641.GS6049@pendragon.ideasonboard.com>
+References: <20200618053304.14551-1-vishal.sagar@xilinx.com>
+         <20200618053304.14551-4-vishal.sagar@xilinx.com>
+         <50cc4f4b-e788-c5ad-cd6a-b428b96d5377@xs4all.nl>
+         <20200715213315.GF6144@pendragon.ideasonboard.com>
+         <BY5PR02MB6867211CA1F22DC01D6A8F15A75D0@BY5PR02MB6867.namprd02.prod.outlook.com>
+         <20200819165641.GS6049@pendragon.ideasonboard.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 2:54 AM Ikjoon Jang <ikjn@chromium.org> wrote:
->
-> Convert Mediatek ARM SOC's serial NOR flash controller binding
-> to json-schema format.
->
-> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-> ---
-> v2: remove unnecessary quotes, set interrupts as required,
->     add unevaluatedProperties:false
-> ---
->  .../bindings/spi/mediatek,spi-mtk-nor.yaml    | 85 +++++++++++++++++++
->  .../devicetree/bindings/spi/spi-mtk-nor.txt   | 47 ----------
->  2 files changed, 85 insertions(+), 47 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
->  delete mode 100644 Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
+Le mercredi 19 août 2020 à 19:56 +0300, Laurent Pinchart a écrit :
+> Hi Vishal,
+> 
+> (Hans, there's a question for you below)
+> 
+> On Wed, Aug 19, 2020 at 01:47:49PM +0000, Vishal Sagar wrote:
+> > On Thursday, July 16, 2020 3:03 AM Laurent Pinchart wrote:
+> > > On Thu, Jun 25, 2020 at 11:43:01AM +0200, Hans Verkuil wrote:
+> > > > On 18/06/2020 07:33, Vishal Sagar wrote:
+> > > > > The Xilinx UHD-SDI Rx subsystem soft IP is used to capture native SDI
+> > > > > streams from SDI sources like SDI broadcast equipment like cameras and
+> > > > > mixers. This block outputs either native SDI, native video or
+> > > > > AXI4-Stream compliant data stream for further processing. Please refer
+> > > > > to PG290 for details.
+> > > > > 
+> > > > > The driver is used to configure the IP to add framer, search for
+> > > > > specific modes, get the detected mode, stream parameters, errors, etc.
+> > > > > It also generates events for video lock/unlock, bridge over/under flow.
+> > > > > 
+> > > > > The driver supports 10/12 bpc YUV 422 media bus format currently. It
+> > > > > also decodes the stream parameters based on the ST352 packet embedded in the
+> > > > > stream. In case the ST352 packet isn't present in the stream, the core's
+> > > > > detected properties are used to set stream properties.
+> > > > > 
+> > > > > The driver currently supports only the AXI4-Stream IP configuration.
+> > > > > 
+> > > > > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> > > > > ---
+> > > > > v3
+> > > > > - fixed KConfig with better description
+> > > > > - removed unnecessary header files
+> > > > > - converted uppercase to lowercase for all hex values
+> > > > > - merged core struct to state struct
+> > > > > - removed most one line functions and replaced with direct reg
+> > > > >   read/write or macros
+> > > > > - dt property bpp to bpc. default 10. not mandatory.
+> > > > > - fixed subscribe events, log_status, s_stream
+> > > > > - merged overflow/underflow to one event
+> > > > > - moved all controls to xilinx-sdirxss.h
+> > > > > - max events from 128 to 8
+> > > > > - used FIELD_GET() instead of custom macro
+> > > > > - updated the controls documentation
+> > > > > - added spinlock
+> > > > > - removed 3GB control and added mode to detect bitmask
+> > > > > - fixed format for (width, height, colorspace, xfer func, etc)
+> > > > > - added dv_timings_cap, s/g_dv_timings
+> > > > > - fixed set/get_format
+> > > > > - fix v4l control registrations
+> > > > > - fix order of registration / deregistration in probe() remove()
+> > > > > - fixed other comments from Hyun, Laurent and Hans
+> > > > > - things yet to close
+> > > > >   - adding source port for connector (Laurent's suggestion)
+> > > > >   - adding new FIELD type for Transport Stream V4L2_FIELD_ALTERNATE_PROG (Han's suggestion)
+> > > > >   - Update / remove EDH or CRC related controls
+> > > > > 
+> > > > > v2
+> > > > > - Added DV timing support based on Hans Verkuilś feedback
+> > > > > - More documentation to custom v4l controls and events
+> > > > > - Fixed Hyunś comments
+> > > > > - Added macro for masking and shifting as per Joe Perches comments
+> > > > > - Updated to latest as per Xilinx github repo driver like
+> > > > >   adding new DV timings not in mainline yet uptill 03/21/20
+> > > > > 
+> > > > >  drivers/media/platform/xilinx/Kconfig         |   11 +
+> > > > >  drivers/media/platform/xilinx/Makefile        |    1 +
+> > > > >  .../media/platform/xilinx/xilinx-sdirxss.c    | 2121 +++++++++++++++++
+> > > > >  include/uapi/linux/v4l2-controls.h            |    6 +
+> > > > >  include/uapi/linux/xilinx-sdirxss.h           |  283 +++
+> > > > >  5 files changed, 2422 insertions(+)
+> > > > >  create mode 100644 drivers/media/platform/xilinx/xilinx-sdirxss.c
+> > > > >  create mode 100644 include/uapi/linux/xilinx-sdirxss.h
+> 
+> [snip]
+> 
+> > > > > diff --git a/drivers/media/platform/xilinx/xilinx-sdirxss.c b/drivers/media/platform/xilinx/xilinx-sdirxss.c
+> > > > > new file mode 100644
+> > > > > index 000000000000..e39aab7c656a
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/media/platform/xilinx/xilinx-sdirxss.c
+> > > > > @@ -0,0 +1,2121 @@
+> 
+> [snip]
+> 
+> > > > > +	case V4L2_CID_XILINX_SDIRX_TS_IS_INTERLACED:
+> > > > > +		ctrl->val = xsdirxss->ts_is_interlaced;
+> > > > > +		break;
+> > > > 
+> > > > I assume this control will disappear once you added support for
+> > > > FIELD_ALTERNATE_PROG?
+> > > 
+> > > I'm not sure FIELD_ALTERNATE_PROG is a good idea. The v4l2_field
+> > > specifies today how frames are split into multiple buffers. There's an
+> > > implicit assumption that a frame split into two buffers is captured with
+> > > interlacing. In the SDI case, the two concepts get decoupled, a
+> > > progressive frame can be transmitted (and captured) in two separate
+> > > parts. If we add a *_PROG field, we'll need to duplicate most of the
+> > > v4l2_field values with a _PROG suffix, as the progressive frame can be
+> > > captured in alternate buffers on a video node, but also in separate odd
+> > > and even buffers on two video nodes. Tt the hardware level, data is
+> > > transmitted with odd lines on one link, and even lines on a second link.
+> > > There are then two instances of this IP core, one for each link. One
+> > > instance would receive and process the even lines, the other instance
+> > > the odd lines. The output of the two instances can then be connected to
+> > > two separate DMA engines, or combined in the FPGA fabric, depending on
+> > > how the user designs the system.
+> > 
+> > My apologies to give incorrect info regarding this.
+> > In the progressive segmented frame, a progressive captured frame is sent
+> > across to receiver over an interlaced transport. The 2 fields received
+> > are similar to how V4L2_FIELD_ALTERNATE is except that the fields weren't
+> > captured at 2 different times.
+> 
+> I've now read more about progressive segmented frames, and I was indeed
+> wrong about the fact that the two segments are transported over
+> different links.
+> 
+> I still wonder, however, if a _PROG suffix is the best option. Wouldn't
+> we need to also add V4L2_FIELD_TOP_PROG, V4L2_FIELD_BOTTOM_PROG,
+> V4L2_FIELD_SEQ_TB_PROG and V4L2_FIELD_SEQ_BT_PROG, not necessarily for
+> this driver, but for other devices that would support capturing the
+> odd/even segments only, or support capturing both segments in a single
+> buffer, one after the other ?
+> 
+> Maybe that's unavoidable, as enum v4l2_field combines both the buffer
+> layout and the fact that the frame is interlaced or progressive. If we
+> had to redesign it we could do better, but having to keep backward
+> compatibility, duplicating most values with a _PROG suffix may be the
+> best option.
+> 
+> Hans, any opinion ?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Can't your receiver store these two fragment directly into a
+progressive buffer instead of leaking this HW specific thing into uAPI
+? All you'd need is support for stride (bytesperline) at the HW
+writeback level, and then you can hide this complexicuty to userspace
+by filling the top/bottom line only. You simply multiply the stride by
+two in this context.
+
+> 
+> > So I will add the V4L2_FIELD_ALTERNATE_PROG in next patch version.
+> 
+> [snip]
+> 
+
