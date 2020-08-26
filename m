@@ -2,102 +2,166 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE701C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38087C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9473221741
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB9321741
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:54:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jgWPg7Yh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="npDO1sJ/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728411AbgHZOyz (ORCPT
+        id S1728049AbgHZOys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:54:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34278 "EHLO
+        Wed, 26 Aug 2020 10:54:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728420AbgHZOyt (ORCPT
+        with ESMTP id S1727959AbgHZOy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:54:49 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EF2CC061574;
-        Wed, 26 Aug 2020 07:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ZzsUdze8ZxaoitbjHVszLwTb08J5c1Hia45JcEtljE4=; b=jgWPg7Yh9RXA+VJEzrAs7yZ/cv
-        +6tN1LkkGojOebzqvD2JVawUFjCGG8yz0u3rvFz6guuz0w3WLWXCE2k+oUxZZAW0Pw8Z4yBYImyEb
-        eDFlYc5+atk/9+/V+mG6AfdNRYL1RsPPEgmLItcpiUa60+BoQv8XhlBO6Mg9Y50S1qMzHBW7biAD6
-        IKG4ppnZvdtgSSnPglew/3F6cvM+/E0QB+NL0Bz4Cd/IsDMhZIcs2xcP6T3HvkjVevxf54/EddYV7
-        1s2e3+aaPq/jvT8+AYFsONTFGnqNFl/zEhPqPGbwgccPvl9AACur8zEmREPk7vnlcEvygyUxxt5YY
-        lRKWXq3Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAwoY-0001wl-7b; Wed, 26 Aug 2020 14:54:14 +0000
-Date:   Wed, 26 Aug 2020 15:54:14 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/8] mm: Use find_get_swap_page in memcontrol
-Message-ID: <20200826145414.GS17456@casper.infradead.org>
-References: <20200819184850.24779-1-willy@infradead.org>
- <20200819184850.24779-3-willy@infradead.org>
- <20200826142002.GA988805@cmpxchg.org>
+        Wed, 26 Aug 2020 10:54:27 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A304C061757;
+        Wed, 26 Aug 2020 07:54:27 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bh1so1008268plb.12;
+        Wed, 26 Aug 2020 07:54:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=g4c//fvG4fjXYLBPyQJ141PEsJK2A9XDWhulJsN1c2g=;
+        b=npDO1sJ/9Lj/B2a9PZJG70emc1czb76ScCXnQ2oCD1xY+i1qLbbqM6g9M7zppI5izy
+         +H+esxZ+abKKnJ5VdUfsAi6AFEbYwDt7k3pcmYxC4WK8g76ILaH3yedmYAh5ddC/tzBI
+         wJOfm8z4D9+QM/OwCTdUl16NQhm40qGVfU73NJ1ZzU96KMhh5X0HVZYcD7kp5ktLLWGe
+         HJnEUyoyS4FjoLwWmSjBl+63WW4Ck6wfJ+zkn/SkZVzUXtq9Djbcm6p/76OxocPdqgt+
+         5XjZgVR8vtdU6hRrFcu6mF9I5Y4mMocjBbQoV9CYyb92jNN3BfJSYyOBqQvhF1iydVy2
+         hRXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=g4c//fvG4fjXYLBPyQJ141PEsJK2A9XDWhulJsN1c2g=;
+        b=EqNHThxrkIpkL+dFvz76PQaly5Bnc0hxJUV9RSPAuNTfvy/xWNZGZqzvvDJVlP0vhD
+         L1xRThGFjka4yODrvleo+rJcqr17ceDmhdIqLWGES8Tvlg0+S00VXU0V5V6iP0fZBt+9
+         RUtA27lxhSPTxvJ+5+0QX420TCwohOumwZJ3YXxj3qpfBpS3gF6suE9dOmjzvoxhmzd+
+         u80SpmcOznUbMbtG5LiCcZWVNwfdfkWzG5G3tq2jFxarVYpXn+rGu2Wzp52bNadwPhBb
+         Ix1KC5piM2EjrirtrjTgH932loGyHBKFuUniM6/0VuCVS2BsMsRSNbXeb6xa0fqMkWLg
+         OtSA==
+X-Gm-Message-State: AOAM533rC8FPzNSjdxUDMHotwdizg5XYqiAD/uwrY5l3BFV2/KYPx9xw
+        N1IPsAk7m35WtV8jXKsn5ciJ1l00rGs=
+X-Google-Smtp-Source: ABdhPJxvlK/X1ouPjuda7L40DWOtJsOi9bxydEWaZH+cGgSmUaZIqEtdMn3J1zKle1a/UidEnCdOFg==
+X-Received: by 2002:a17:902:7b82:: with SMTP id w2mr12358648pll.258.1598453666968;
+        Wed, 26 Aug 2020 07:54:26 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id r7sm3327140pfl.186.2020.08.26.07.54.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:54:26 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        linux-xtensa@linux-xtensa.org
+Subject: [PATCH v2 23/23] xtensa: use asm-generic/mmu_context.h for no-op implementations
+Date:   Thu, 27 Aug 2020 00:52:49 +1000
+Message-Id: <20200826145249.745432-24-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
+References: <20200826145249.745432-1-npiggin@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826142002.GA988805@cmpxchg.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 10:20:02AM -0400, Johannes Weiner wrote:
-> On Wed, Aug 19, 2020 at 07:48:44PM +0100, Matthew Wilcox (Oracle) wrote:
-> > +	return find_get_swap_page(vma->vm_file->f_mapping,
-> > +			linear_page_index(vma, addr));
-> 
-> The refactor makes sense to me, but the name is confusing. We're not
-> looking for a swap page, we're primarily looking for a file page in
-> the page cache mapping that's handed in. Only in the special case
-> where it's a shmem mapping and there is a swap entry do we consult the
-> auxiliary swap cache.
-> 
-> How about find_get_page_or_swapcache()? find_get_page_shmemswap()?
-> Maybe you have a better idea. It's a fairly specialized operation that
-> isn't widely used, so a longer name isn't a bad thing IMO.
+Cc: Chris Zankel <chris@zankel.net>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: linux-xtensa@linux-xtensa.org
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ arch/xtensa/include/asm/mmu_context.h   | 11 +++--------
+ arch/xtensa/include/asm/nommu_context.h | 26 +------------------------
+ 2 files changed, 4 insertions(+), 33 deletions(-)
 
-Yeah, I had trouble with the naming here too.
+diff --git a/arch/xtensa/include/asm/mmu_context.h b/arch/xtensa/include/asm/mmu_context.h
+index 74923ef3b228..e337ba9686e9 100644
+--- a/arch/xtensa/include/asm/mmu_context.h
++++ b/arch/xtensa/include/asm/mmu_context.h
+@@ -111,6 +111,7 @@ static inline void activate_context(struct mm_struct *mm, unsigned int cpu)
+  * to -1 says the process has never run on any core.
+  */
+ 
++#define init_new_context init_new_context
+ static inline int init_new_context(struct task_struct *tsk,
+ 		struct mm_struct *mm)
+ {
+@@ -136,24 +137,18 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 		activate_context(next, cpu);
+ }
+ 
+-#define activate_mm(prev, next)	switch_mm((prev), (next), NULL)
+-#define deactivate_mm(tsk, mm)	do { } while (0)
+-
+ /*
+  * Destroy context related info for an mm_struct that is about
+  * to be put to rest.
+  */
++#define destroy_context destroy_context
+ static inline void destroy_context(struct mm_struct *mm)
+ {
+ 	invalidate_page_directory();
+ }
+ 
+ 
+-static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+-{
+-	/* Nothing to do. */
+-
+-}
++#include <asm-generic/mmu_context.h>
+ 
+ #endif /* CONFIG_MMU */
+ #endif /* _XTENSA_MMU_CONTEXT_H */
+diff --git a/arch/xtensa/include/asm/nommu_context.h b/arch/xtensa/include/asm/nommu_context.h
+index 37251b2ef871..7c9d1918dc41 100644
+--- a/arch/xtensa/include/asm/nommu_context.h
++++ b/arch/xtensa/include/asm/nommu_context.h
+@@ -7,28 +7,4 @@ static inline void init_kio(void)
+ {
+ }
+ 
+-static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+-{
+-}
+-
+-static inline int init_new_context(struct task_struct *tsk,struct mm_struct *mm)
+-{
+-	return 0;
+-}
+-
+-static inline void destroy_context(struct mm_struct *mm)
+-{
+-}
+-
+-static inline void activate_mm(struct mm_struct *prev, struct mm_struct *next)
+-{
+-}
+-
+-static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+-				struct task_struct *tsk)
+-{
+-}
+-
+-static inline void deactivate_mm(struct task_struct *tsk, struct mm_struct *mm)
+-{
+-}
++#include <asm-generic/nommu_context.h>
+-- 
+2.23.0
 
-get_page_even_from_swap()
-find_get_shmem_page()
-
-or maybe refactor the whole thing:
-
-	struct page *page = find_get_entry(mapping, index);
-	page = find_swap_page(mapping, page);
-
-struct page *find_swap_page(struct address_space *mapping, struct page *page)
-{
-	swp_entry_t swp;
-	struct swap_info_struct *si;
-
-	if (!xa_is_value(page))
-		return page;
-	if (!shmem_mapping(mapping))
-		return NULL;
-
-	...
-}
