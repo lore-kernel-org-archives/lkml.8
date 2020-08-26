@@ -2,171 +2,143 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE1EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CC3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11EB9207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598467755;
-	bh=mVZkuCpW5IDJPASJsDhEVkmS5T61Wr9y6RaE+LLwF3A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DhBSjRAyKl6ApUrxDw2LLHIPyh+vpg5XesM9v8hNWCs4yc7avJqAe3KltEkjtlT/Z
-	 heZYMPoGPMX2DjHAiI6s0few045TVZYFnHGkn2+kp0brRrDyPEsYGzSU0125F8htmH
-	 wQL9wEJwNWJfqSdb/Ms/idRfXKSA1mqDX8fB44uM=
+	by mail.kernel.org (Postfix) with ESMTP id DC806207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:49:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgHZStK (ORCPT
+        id S1726968AbgHZStZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:49:10 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:43751 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgHZSs6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:48:58 -0400
-Received: by mail-il1-f193.google.com with SMTP id e11so2677872ils.10;
-        Wed, 26 Aug 2020 11:48:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xlJZhntJx9sYhVEnGyncNAeUJZzJkWsXffEWR9WDmyk=;
-        b=G5u2s6EcTHA3RP1bBGtLQ+3wOFCRBMIYWl7z/Qs82LMCZcT3GtCkyzFaPyqInQzY6o
-         y0ejS8nRsPZ5Ud02ZBtcXbNNWnLM5rgA0CpSi6gqvpTApsWnfAlykt6TwTu9HLL6e1ct
-         f3VO5bAKUC/nAlR/rJXRj1/SSJT9F4T6HdwLFJKvVOUxUKP3cm9W5pijxN+fdJfQfcK8
-         hP8jM0CmKAKECXZNME3ihGznHtKSG2SJBBxdqQxHFPorRsAruLaIauWaPuha76OFdL6j
-         AFDVazxzZM6YDut0PiOwM4/HE5UsgEWb5isJNwB8GDTXx3SWvR95Gcda1M/qLiAdpasg
-         p+Yg==
-X-Gm-Message-State: AOAM532lENznlUuRbEGfpFFlFlSqh8XnOyzCJwBhBKRnSMzNoVIrn9ak
-        Z5g9TkUN893ziG78eTPGpfq8cibs0hvV
-X-Google-Smtp-Source: ABdhPJyTsipJUvMDB9SXrXoSpMRRUAS0c3IXuXNE6XI7rJPQ/mAKHW1RswyLCGuSV8DiQFjaYzZsTA==
-X-Received: by 2002:a92:505:: with SMTP id q5mr13115471ile.15.1598467737533;
-        Wed, 26 Aug 2020 11:48:57 -0700 (PDT)
-Received: from xps15.herring.priv ([64.188.179.249])
-        by smtp.googlemail.com with ESMTPSA id c2sm1609226iow.6.2020.08.26.11.48.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 11:48:57 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 3/3] dt-bindings: interrupt-controller: Remove obsolete 'img,meta-intc'
-Date:   Wed, 26 Aug 2020 12:48:51 -0600
-Message-Id: <20200826184851.3431531-3-robh@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200826184851.3431531-1-robh@kernel.org>
-References: <20200826184851.3431531-1-robh@kernel.org>
+        Wed, 26 Aug 2020 14:49:25 -0400
+Received: from mga12.intel.com ([192.55.52.136]:11669 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbgHZStX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:49:23 -0400
+IronPort-SDR: KHu55cxrHrf0j8RUFm2jUI9+iDTzDovNZYYix61wcSZ7wRcRDpLzJFnaVK/egBpTSWbl0qn2GZ
+ 85s5Q4Nf/R3g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="135915855"
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="135915855"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 11:49:23 -0700
+IronPort-SDR: kz1B6Bl9Evoh0DAuECATySIb6A0aSvHXJVx+ZQr3fJEHh3x2b1adDajhdyc7g2skce1j/DGDrQ
+ EzPikqGDu3IQ==
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="500347882"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.251.141.162]) ([10.251.141.162])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 11:49:22 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+ <20200825002540.3351-26-yu-cheng.yu@intel.com>
+ <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
+ <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
+ <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+ <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+ <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+ <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+ <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
+Date:   Wed, 26 Aug 2020 11:49:21 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver and metag arch were removed in 2018.
+On 8/26/2020 10:04 AM, Andy Lutomirski wrote:
+> On Wed, Aug 26, 2020 at 9:52 AM Florian Weimer <fweimer@redhat.com> wrote:
+>>
+>> * Dave Martin:
+>>
+>>> On Tue, Aug 25, 2020 at 04:34:27PM -0700, Yu, Yu-cheng wrote:
+>>>> On 8/25/2020 4:20 PM, Dave Hansen wrote:
+>>>>> On 8/25/20 2:04 PM, Yu, Yu-cheng wrote:
+>>>>>>>> I think this is more arch-specific.  Even if it becomes a new syscall,
+>>>>>>>> we still need to pass the same parameters.
+>>>>>>>
+>>>>>>> Right, but without the copying in and out of memory.
+>>>>>>>
+>>>>>> Linux-api is already on the Cc list.  Do we need to add more people to
+>>>>>> get some agreements for the syscall?
+>>>>> What kind of agreement are you looking for?  I'd suggest just coding it
+>>>>> up and posting the patches.  Adding syscalls really is really pretty
+>>>>> straightforward and isn't much code at all.
+>>>>>
+>>>>
+>>>> Sure, I will do that.
+>>>
+>>> Alternatively, would a regular prctl() work here?
+>>
+>> Is this something appliation code has to call, or just the dynamic
+>> loader?
+>>
+>> prctl in glibc is a variadic function, so if there's a mismatch between
+>> the kernel/userspace syscall convention and the userspace calling
+>> convention (for variadic functions) for specific types, it can't be made
+>> to work in a generic way.
+>>
+>> The loader can use inline assembly for system calls and does not have
+>> this issue, but applications would be implcated by it.
+>>
+> 
+> I would expect things like Go and various JITs to call it directly.
+> 
+> If we wanted to be fancy and add a potentially more widely useful
+> syscall, how about:
+> 
+> mmap_special(void *addr, size_t length, int prot, int flags, int type);
+> 
+> Where type is something like MMAP_SPECIAL_X86_SHSTK.  Fundamentally,
+> this is really just mmap() except that we want to map something a bit
+> magical, and we don't want to require opening a device node to do it.
+> 
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../interrupt-controller/img,meta-intc.txt    | 82 -------------------
- 1 file changed, 82 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt
+One benefit of MMAP_SPECIAL_* is there are more free bits than MAP_*.
+Does ARM have similar needs for memory mapping, Dave?
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt
-deleted file mode 100644
-index 42431f44697f..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt
-+++ /dev/null
-@@ -1,82 +0,0 @@
--* Meta External Trigger Controller Binding
--
--This binding specifies what properties must be available in the device tree
--representation of a Meta external trigger controller.
--
--Required properties:
--
--    - compatible: Specifies the compatibility list for the interrupt controller.
--      The type shall be <string> and the value shall include "img,meta-intc".
--
--    - num-banks: Specifies the number of interrupt banks (each of which can
--      handle 32 interrupt sources).
--
--    - interrupt-controller: The presence of this property identifies the node
--      as an interrupt controller. No property value shall be defined.
--
--    - #interrupt-cells: Specifies the number of cells needed to encode an
--      interrupt source. The type shall be a <u32> and the value shall be 2.
--
--    - #address-cells: Specifies the number of cells needed to encode an
--      address. The type shall be <u32> and the value shall be 0. As such,
--      'interrupt-map' nodes do not have to specify a parent unit address.
--
--Optional properties:
--
--    - no-mask: The controller doesn't have any mask registers.
--
--* Interrupt Specifier Definition
--
--  Interrupt specifiers consists of 2 cells encoded as follows:
--
--    - <1st-cell>: The interrupt-number that identifies the interrupt source.
--
--    - <2nd-cell>: The Linux interrupt flags containing level-sense information,
--                  encoded as follows:
--                    1 = edge triggered
--                    4 = level-sensitive
--
--* Examples
--
--Example 1:
--
--	/*
--	 * Meta external trigger block
--	 */
--	intc: intc {
--		// This is an interrupt controller node.
--		interrupt-controller;
--
--		// No address cells so that 'interrupt-map' nodes which
--		// reference this interrupt controller node do not need a parent
--		// address specifier.
--		#address-cells = <0>;
--
--		// Two cells to encode interrupt sources.
--		#interrupt-cells = <2>;
--
--		// Number of interrupt banks
--		num-banks = <2>;
--
--		// No HWMASKEXT is available (specify on Chorus2 and Comet ES1)
--		no-mask;
--
--		// Compatible with Meta hardware trigger block.
--		compatible = "img,meta-intc";
--	};
--
--Example 2:
--
--	/*
--	 * An interrupt generating device that is wired to a Meta external
--	 * trigger block.
--	 */
--	uart1: uart@02004c00 {
--		// Interrupt source '5' that is level-sensitive.
--		// Note that there are only two cells as specified in the
--		// interrupt parent's '#interrupt-cells' property.
--		interrupts = <5 4 /* level */>;
--
--		// The interrupt controller that this device is wired to.
--		interrupt-parent = <&intc>;
--	};
--- 
-2.25.1
-
+Yu-cheng
