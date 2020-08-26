@@ -2,450 +2,613 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC44C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EDEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18D722071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:27:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J/D97GrE"
+	by mail.kernel.org (Postfix) with ESMTP id A2AD62071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:27:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgHZQ1N (ORCPT
+        id S1727993AbgHZQ1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:27:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726990AbgHZQ0x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:26:53 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C877C061756
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:26:53 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id 186so568877vkx.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nBtM5QJ/xiVuP3K1PE564TMlBtbJGnuvhvG8Ae7aYWM=;
-        b=J/D97GrEOsPoUD2L5M6VIi5iFiNZP5CSQIZGrh2C2r4K8rx9GYGCe70QVOn0hnt30y
-         eHsXL/NjlKoxwmNQf+DE9ODovHv92BT9hZUH6eoOIdXYa6lcGahg2P4POtFYvWw+w5D6
-         460MsFeglFZrVJiV0Afcb4qu/suVp/PuSQm5qFzO0EYMWMumdXgMtZggYOK/MU7QTTqY
-         ylXzu5epDETwYAPcs+6Zod619iigzHokmqauf5fzNCRcl8GfIEtGU2AtB4dZVOwU4hI5
-         /i6a3dmlTjoc+ncICS1bjJkWB+eD1YraSHZHeZ23a9mnRmqUvukGrFvMbuyLUndMXMRJ
-         L+0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nBtM5QJ/xiVuP3K1PE564TMlBtbJGnuvhvG8Ae7aYWM=;
-        b=WLokgqX8aNiL16HvyBaON3Gmvkua6f9bIGwrA1qadkNQXBD/b0H4EjOKQcnrOrHiKm
-         /Vu4NfEl3xa2xAfP1yhXyi1bLizPXiWfIfgnrIMq1vDRHHC8NaC0DDr2AQow8aJGQ6zc
-         0+oDotJ5hCst0vGmDmG8Fiou1MFoyM4g7Cs4qqW52SflJgyB1hSXX39+4WQyZydaWQwN
-         YAxmCvE8JYHdl8p9KnqXXgddEsAjziXEI6nBDd4AsNKkeLvmo+f8WZ9+isBaSh4+iu7P
-         Ui2JcksLiCxoy4gY7XZseGUAX7PqOGboPR0MUPlD2XmLCYhBbY4pp3B5X7R5z1dTghFa
-         JWIg==
-X-Gm-Message-State: AOAM531oon/dlvF/9wU8dGl7yIaNtEtCFzxdVHTjD6HOvbMYhbmURyfa
-        2THSLs1MfYdQzRkp125+crbN+Is+9Cw7HKFyGVIIgg==
-X-Google-Smtp-Source: ABdhPJy7feJMatq9jkl30SBZNHF64hdYBt3o4B+iBw98xqtgg1VXUgnbIeOd8SM1thTwE1LBpCgkqv9cCU2OCbbbZog=
-X-Received: by 2002:a1f:93c1:: with SMTP id v184mr9780571vkd.62.1598459211968;
- Wed, 26 Aug 2020 09:26:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200813222155.268183-1-pc@us.ibm.com> <CAP-5=fU4P7o1TwVz+PzcrJsBKnrHW4yrNx3R165i9d3BwgP2RQ@mail.gmail.com>
- <cfa27e83-ac2c-7495-b453-ceeaf2412311@linux.ibm.com> <20200814124307.GF13995@kernel.org>
-In-Reply-To: <20200814124307.GF13995@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 26 Aug 2020 09:26:40 -0700
-Message-ID: <CAP-5=fWw-W3wfy_WeirM_jbEmsbQCC8L_AGo2zsMvv2MW1x04A@mail.gmail.com>
-Subject: Re: [PATCH] perf stat: update POWER9 metrics to utilize other metrics
-To:     Paul Clarke <pc@us.ibm.com>
-Cc:     kajoljain <kjain@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, maddy@linux.ibm.com,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 26 Aug 2020 12:27:35 -0400
+Received: from mga01.intel.com ([192.55.52.88]:5867 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727906AbgHZQ1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:27:31 -0400
+IronPort-SDR: AW+jIvmWP5utOI8MQaYg/oSSjuXnxXnRd3HmEuXAniHE7kWsIKt2Cek4UoazwUUHZZsG3pl0Re
+ TOllZgmlXMOg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="174377629"
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="174377629"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:27:29 -0700
+IronPort-SDR: 7bjxR9Jgktn3/wOYcQ1l9OjNDDMP5i8+iUjMGtm4MeE/VOtbpvazw/HE7lG3FrCannBjIGUQbk
+ h+i8asYOSZgA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="312938559"
+Received: from marshy.an.intel.com ([10.122.105.159])
+  by orsmga002.jf.intel.com with ESMTP; 26 Aug 2020 09:27:26 -0700
+From:   richard.gong@linux.intel.com
+To:     catalin.marinas@arm.com, will@kernel.org, dinguyen@kernel.org,
+        robh+dt@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Richard Gong <richard.gong@intel.com>
+Subject: [PATCH] arm64: dts: diamonmesa: add device tree for Intel Diamond Mesa
+Date:   Wed, 26 Aug 2020 11:46:50 -0500
+Message-Id: <1598460410-21880-1-git-send-email-richard.gong@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 5:43 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, Aug 14, 2020 at 11:20:42AM +0530, kajoljain escreveu:
-> >
-> >
-> > On 8/14/20 9:13 AM, Ian Rogers wrote:
-> > > On Thu, Aug 13, 2020 at 3:21 PM Paul A. Clarke <pc@us.ibm.com> wrote:
-> > >>
-> > >> These changes take advantage of the new capability added in
-> > >> merge commit 00e4db51259a5f936fec1424b884f029479d3981
-> > >> "Allow using computed metrics in calculating other metrics".
-> > >>
-> > >> The net is a simplification of the expressions for a handful
-> > >> of metrics, but no functional change.
-> > >>
-> > >> Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
-> > >
-> >
-> > Hi Paul,
-> >   The patch looks good to me.
-> >
-> > Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
->
-> Thanks, applied. Added Ian's Acked-by as well.
->
-> - Arnaldo
+From: Richard Gong <richard.gong@intel.com>
 
-Hi Paul,
+Add the device tree files for Intel Diamond Mesa SoC
 
-I've synced perf and testing on a remote machine (not easy for me to
-log into) I see failures in perf test "10.3: Parsing of PMU event
-table metrics" like:
-...
-parsing metric: dfu_stall_cpi - dflong_stall_cpi
-Parse event failed metric 'dfu_other_stall_cpi' id 'dflong_stall_cpi'
-expr 'dfu_stall_cpi - dflong_stall_cpi'
-Error string 'parser error' help '(null)'
-Parse event failed metric 'dfu_other_stall_cpi' id 'dfu_stall_cpi'
-expr 'dfu_stall_cpi - dflong_stall_cpi'
-Error string 'parser error' help '(null)'
-...
-This may be that the test doesn't handle the metric in terms of metric
-addition and so I'll look for a fix. I thought I'd send a heads up in
-case you had already seen/addressed this. Is perf test on PowerPC
-clean for you at the moment?
-
-Thanks,
-Ian
-
-
-> > Thanks,
-> > Kajol Jain
-> >
-> > > Acked-by: Ian Rogers <irogers@google.com>
-> > > (Re-sent with plain text enabled to avoid lkml bounce)
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > >
-> > >>
-> > >> ---
-> > >>  .../arch/powerpc/power9/metrics.json          | 48 +++++++++-------=
+Signed-off-by: Richard Gong <richard.gong@intel.com>
 ---
-> > >>  1 file changed, 24 insertions(+), 24 deletions(-)
-> > >>
-> > >> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json =
-b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> > >> index 80816d6402e9..f8784c608479 100644
-> > >> --- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> > >> +++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
-> > >> @@ -60,7 +60,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Stalls due to short latency decimal fl=
-oating ops.",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_DFU - PM_CMPLU_STALL_DFLONG)=
-/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "dfu_stall_cpi - dflong_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "dfu_other_stall_cpi"
-> > >>      },
-> > >> @@ -72,7 +72,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Completion stall by Dcache miss which =
-resolved off node memory/cache",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_DMISS_L3MISS - PM_CMPLU_STAL=
-L_DMISS_L21_L31 - PM_CMPLU_STALL_DMISS_LMEM - PM_CMPLU_STALL_DMISS_REMOTE)/=
-PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "dmiss_non_local_stall_cpi - dmiss_remote_sta=
-ll_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "dmiss_distant_stall_cpi"
-> > >>      },
-> > >> @@ -90,7 +90,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Completion stall due to cache miss tha=
-t resolves in the L2 or L3 without conflict",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_DMISS_L2L3 - PM_CMPLU_STALL_=
-DMISS_L2L3_CONFLICT)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "dmiss_l2l3_stall_cpi - dmiss_l2l3_conflict_s=
-tall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "dmiss_l2l3_noconflict_stall_cpi"
-> > >>      },
-> > >> @@ -114,7 +114,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Completion stall by Dcache miss which =
-resolved outside of local memory",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_DMISS_L3MISS - PM_CMPLU_STAL=
-L_DMISS_L21_L31 - PM_CMPLU_STALL_DMISS_LMEM)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "dmiss_l3miss_stall_cpi - dmiss_l21_l31_stall=
-_cpi - dmiss_lmem_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "dmiss_non_local_stall_cpi"
-> > >>      },
-> > >> @@ -126,7 +126,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Stalls due to short latency double pre=
-cision ops.",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_DP - PM_CMPLU_STALL_DPLONG)/=
-PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "dp_stall_cpi - dplong_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "dp_other_stall_cpi"
-> > >>      },
-> > >> @@ -155,7 +155,7 @@
-> > >>          "MetricName": "emq_full_stall_cpi"
-> > >>      },
-> > >>      {
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_ERAT_MISS + PM_CMPLU_STALL_E=
-MQ_FULL)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "erat_miss_stall_cpi + emq_full_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "emq_stall_cpi"
-> > >>      },
-> > >> @@ -173,7 +173,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Completion stall due to execution unit=
-s for other reasons.",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_EXEC_UNIT - PM_CMPLU_STALL_F=
-XU - PM_CMPLU_STALL_DP - PM_CMPLU_STALL_DFU - PM_CMPLU_STALL_PM - PM_CMPLU_=
-STALL_CRYPTO - PM_CMPLU_STALL_VFXU - PM_CMPLU_STALL_VDP)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "exec_unit_stall_cpi - scalar_stall_cpi - vec=
-tor_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "exec_unit_other_stall_cpi"
-> > >>      },
-> > >> @@ -197,7 +197,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Stalls due to short latency integer op=
-s",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_FXU - PM_CMPLU_STALL_FXLONG)=
-/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "fxu_stall_cpi - fxlong_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "fxu_other_stall_cpi"
-> > >>      },
-> > >> @@ -221,7 +221,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Instruction Completion Table other sta=
-lls",
-> > >> -        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS -=
- PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DIS=
-P_HELD)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "nothing_dispatched_cpi - ict_noslot_ic_miss_=
-cpi - ict_noslot_br_mpred_icmiss_cpi - ict_noslot_br_mpred_cpi - ict_noslot=
-_disp_held_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "ict_noslot_cyc_other_cpi"
-> > >>      },
-> > >> @@ -245,7 +245,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
-> > >> -        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DIS=
-P_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBE=
-GIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "ict_noslot_disp_held_cpi - ict_noslot_disp_h=
-eld_hb_full_cpi - ict_noslot_disp_held_sync_cpi - ict_noslot_disp_held_tbeg=
-in_cpi - ict_noslot_disp_held_issq_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "ict_noslot_disp_held_other_cpi"
-> > >>      },
-> > >> @@ -263,7 +263,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
-> > >> -        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3=
- - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "ict_noslot_ic_miss_cpi - ict_noslot_ic_l3_cp=
-i - ict_noslot_ic_l3miss_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "ict_noslot_ic_l2_cpi"
-> > >>      },
-> > >> @@ -286,7 +286,7 @@
-> > >>          "MetricName": "ict_noslot_ic_miss_cpi"
-> > >>      },
-> > >>      {
-> > >> -        "MetricExpr": "(PM_NTC_ISSUE_HELD_DARQ_FULL + PM_NTC_ISSUE_=
-HELD_ARB + PM_NTC_ISSUE_HELD_OTHER)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "ntc_issue_held_darq_full_cpi + ntc_issue_hel=
-d_arb_cpi + ntc_issue_held_other_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "issue_hold_cpi"
-> > >>      },
-> > >> @@ -327,7 +327,7 @@
-> > >>          "MetricName": "lrq_other_stall_cpi"
-> > >>      },
-> > >>      {
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_LMQ_FULL + PM_CMPLU_STALL_ST=
-_FWD + PM_CMPLU_STALL_LHS + PM_CMPLU_STALL_LSU_MFSPR + PM_CMPLU_STALL_LARX =
-+ PM_CMPLU_STALL_LRQ_OTHER)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "lmq_full_stall_cpi + st_fwd_stall_cpi + lhs_=
-stall_cpi + lsu_mfspr_stall_cpi + larx_stall_cpi + lrq_other_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "lrq_stall_cpi"
-> > >>      },
-> > >> @@ -338,7 +338,7 @@
-> > >>          "MetricName": "lsaq_arb_stall_cpi"
-> > >>      },
-> > >>      {
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_LRQ_FULL + PM_CMPLU_STALL_SR=
-Q_FULL + PM_CMPLU_STALL_LSAQ_ARB)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "lrq_full_stall_cpi + srq_full_stall_cpi + ls=
-aq_arb_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "lsaq_stall_cpi"
-> > >>      },
-> > >> @@ -362,7 +362,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Completion LSU stall for other reasons=
-",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_LSU - PM_CMPLU_STALL_LSU_FIN=
- - PM_CMPLU_STALL_STORE_FINISH - PM_CMPLU_STALL_STORE_DATA - PM_CMPLU_STALL=
-_EIEIO - PM_CMPLU_STALL_STCX - PM_CMPLU_STALL_SLB - PM_CMPLU_STALL_TEND - P=
-M_CMPLU_STALL_PASTE - PM_CMPLU_STALL_TLBIE - PM_CMPLU_STALL_STORE_PIPE_ARB =
-- PM_CMPLU_STALL_STORE_FIN_ARB - PM_CMPLU_STALL_LOAD_FINISH + PM_CMPLU_STAL=
-L_DCACHE_MISS - PM_CMPLU_STALL_LMQ_FULL - PM_CMPLU_STALL_ST_FWD - PM_CMPLU_=
-STALL_LHS - PM_CMPLU_STALL_LSU_MFSPR - PM_CMPLU_STALL_LARX - PM_CMPLU_STALL=
-_LRQ_OTHER + PM_CMPLU_STALL_ERAT_MISS + PM_CMPLU_STALL_EMQ_FULL - PM_CMPLU_=
-STALL_LRQ_FULL - PM_CMPLU_STALL_SRQ_FULL - PM_CMPLU_STALL_LSAQ_ARB) / PM_RU=
-N_INST_CMPL",
-> > >> +        "MetricExpr": "lsu_stall_cpi - lsu_fin_stall_cpi - store_fi=
-nish_stall_cpi - srq_stall_cpi - load_finish_stall_cpi + lsu_stall_dcache_m=
-iss_cpi - lrq_stall_cpi + emq_stall_cpi - lsaq_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "lsu_other_stall_cpi"
-> > >>      },
-> > >> @@ -434,13 +434,13 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Cycles unaccounted for.",
-> > >> -        "MetricExpr": "(PM_RUN_CYC - PM_1PLUS_PPC_CMPL - PM_CMPLU_S=
-TALL_THRD - PM_CMPLU_STALL - PM_ICT_NOSLOT_CYC)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "run_cpi - completion_cpi - thread_block_stal=
-l_cpi - stall_cpi - nothing_dispatched_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "other_cpi"
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Completion stall for other reasons",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL - PM_CMPLU_STALL_NTC_DISP_FI=
-N - PM_CMPLU_STALL_NTC_FLUSH - PM_CMPLU_STALL_LSU - PM_CMPLU_STALL_EXEC_UNI=
-T - PM_CMPLU_STALL_BRU)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "stall_cpi - ntc_disp_fin_stall_cpi - ntc_flu=
-sh_stall_cpi - lsu_stall_cpi - exec_unit_stall_cpi - bru_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "other_stall_cpi"
-> > >>      },
-> > >> @@ -469,7 +469,7 @@
-> > >>          "MetricName": "run_cyc_cpi"
-> > >>      },
-> > >>      {
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_FXU + PM_CMPLU_STALL_DP + PM=
-_CMPLU_STALL_DFU + PM_CMPLU_STALL_PM + PM_CMPLU_STALL_CRYPTO)/PM_RUN_INST_C=
-MPL",
-> > >> +        "MetricExpr": "fxu_stall_cpi + dp_stall_cpi + dfu_stall_cpi=
- + pm_stall_cpi + crypto_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "scalar_stall_cpi"
-> > >>      },
-> > >> @@ -492,7 +492,7 @@
-> > >>          "MetricName": "srq_full_stall_cpi"
-> > >>      },
-> > >>      {
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_STORE_DATA + PM_CMPLU_STALL_=
-EIEIO + PM_CMPLU_STALL_STCX + PM_CMPLU_STALL_SLB + PM_CMPLU_STALL_TEND + PM=
-_CMPLU_STALL_PASTE + PM_CMPLU_STALL_TLBIE + PM_CMPLU_STALL_STORE_PIPE_ARB +=
- PM_CMPLU_STALL_STORE_FIN_ARB)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "store_data_stall_cpi + eieio_stall_cpi + stc=
-x_stall_cpi + slb_stall_cpi + tend_stall_cpi + paste_stall_cpi + tlbie_stal=
-l_cpi + store_pipe_arb_stall_cpi + store_fin_arb_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "srq_stall_cpi"
-> > >>      },
-> > >> @@ -558,7 +558,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Vector stalls due to small latency dou=
-ble precision ops",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_VDP - PM_CMPLU_STALL_VDPLONG=
-)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "vdp_stall_cpi - vdplong_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "vdp_other_stall_cpi"
-> > >>      },
-> > >> @@ -575,7 +575,7 @@
-> > >>          "MetricName": "vdplong_stall_cpi"
-> > >>      },
-> > >>      {
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_VFXU + PM_CMPLU_STALL_VDP)/P=
-M_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "vfxu_stall_cpi + vdp_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "vector_stall_cpi"
-> > >>      },
-> > >> @@ -587,7 +587,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Vector stalls due to small latency int=
-eger ops",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_VFXU - PM_CMPLU_STALL_VFXLON=
-G)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "vfxu_stall_cpi - vfxlong_stall_cpi",
-> > >>          "MetricGroup": "cpi_breakdown",
-> > >>          "MetricName": "vfxu_other_stall_cpi"
-> > >>      },
-> > >> @@ -1844,7 +1844,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "% of DL1 reloads from Private L3, othe=
-r core per Inst",
-> > >> -        "MetricExpr": "(PM_DATA_FROM_L31_MOD + PM_DATA_FROM_L31_SHR=
-) * 100 / PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "dl1_reload_from_l31_mod_rate_percent + dl1_r=
-eload_from_l31_shr_rate_percent",
-> > >>          "MetricName": "dl1_reload_from_l31_rate_percent"
-> > >>      },
-> > >>      {
-> > >> @@ -1979,7 +1979,7 @@
-> > >>      },
-> > >>      {
-> > >>          "BriefDescription": "Completion stall because a different t=
-hread was using the completion pipe",
-> > >> -        "MetricExpr": "(PM_CMPLU_STALL_THRD - PM_CMPLU_STALL_EXCEPT=
-ION - PM_CMPLU_STALL_ANY_SYNC - PM_CMPLU_STALL_SYNC_PMU_INT - PM_CMPLU_STAL=
-L_SPEC_FINISH - PM_CMPLU_STALL_FLUSH_ANY_THREAD - PM_CMPLU_STALL_LSU_FLUSH_=
-NEXT - PM_CMPLU_STALL_NESTED_TBEGIN - PM_CMPLU_STALL_NESTED_TEND - PM_CMPLU=
-_STALL_MTFPSCR)/PM_RUN_INST_CMPL",
-> > >> +        "MetricExpr": "thread_block_stall_cpi - exception_stall_cpi=
- - any_sync_stall_cpi - sync_pmu_int_stall_cpi - spec_finish_stall_cpi - fl=
-ush_any_thread_stall_cpi - lsu_flush_next_stall_cpi - nested_tbegin_stall_c=
-pi - nested_tend_stall_cpi - mtfpscr_stall_cpi",
-> > >>          "MetricName": "other_thread_cmpl_stall"
-> > >>      },
-> > >>      {
-> > >> --
-> > >> 2.18.4
-> > >>
->
-> --
->
-> - Arnaldo
+ arch/arm64/Kconfig.platforms                       |   5 +
+ arch/arm64/boot/dts/intel/Makefile                 |   1 +
+ arch/arm64/boot/dts/intel/socfpga_diamondmesa.dts  |  41 ++
+ arch/arm64/boot/dts/intel/socfpga_diamondmesa.dtsi | 466 +++++++++++++++++++++
+ 4 files changed, 513 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_diamondmesa.dts
+ create mode 100644 arch/arm64/boot/dts/intel/socfpga_diamondmesa.dtsi
+
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index d235b27..ffae871 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -13,6 +13,11 @@ config ARCH_AGILEX
+ 	help
+ 	  This enables support for Intel's Agilex SoCFPGA Family.
+ 
++config ARCH_DIAMONDMESA
++	bool "Intel's Diamond Mesa SoCFPGA Family"
++	help
++	  This enables support for Intel's Diamond Mesa SoCFPGA Family.
++
+ config ARCH_SUNXI
+ 	bool "Allwinner sunxi 64-bit SoC Family"
+ 	select ARCH_HAS_RESET_CONTROLLER
+diff --git a/arch/arm64/boot/dts/intel/Makefile b/arch/arm64/boot/dts/intel/Makefile
+index 296ecee..f725c60 100644
+--- a/arch/arm64/boot/dts/intel/Makefile
++++ b/arch/arm64/boot/dts/intel/Makefile
+@@ -1,4 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ dtb-$(CONFIG_ARCH_AGILEX) += socfpga_agilex_socdk.dtb \
+ 			     socfpga_agilex_socdk_nand.dtb
++dtb-$(CONFIG_ARCH_DIAMONDMESA) += socfpga_diamondmesa.dtb
+ dtb-$(CONFIG_ARCH_KEEMBAY) += keembay-evm.dtb
+diff --git a/arch/arm64/boot/dts/intel/socfpga_diamondmesa.dts b/arch/arm64/boot/dts/intel/socfpga_diamondmesa.dts
+new file mode 100644
+index 00000000..6ba7166
+--- /dev/null
++++ b/arch/arm64/boot/dts/intel/socfpga_diamondmesa.dts
+@@ -0,0 +1,41 @@
++// SPDX-License-Identifier:     GPL-2.0
++/*
++ * Copyright (C) 2020 Intel Corporation
++ */
++#include "socfpga_diamondmesa.dtsi"
++
++/ {
++	model = "SoCFPGA Diamond Mesa Simics";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		bootargs = "earlycon";
++		stdout-path = "serial0:4800n8";
++	};
++
++	memory {
++		device_type = "memory";
++		/* We expect the bootloader to fill in the reg */
++		reg = <0 0 0 0x4000000>;
++	};
++};
++
++&uart0 {
++	clock-frequency = <76800>;
++	status = "okay";
++};
++
++&mmc {
++	clock-frequency = <50000000>;
++	cap-sd-highspeed;
++	broken-cd;
++	bus-width = <4>;
++	status = "okay";
++};
++
++&watchdog0 {
++	status = "okay";
++};
+diff --git a/arch/arm64/boot/dts/intel/socfpga_diamondmesa.dtsi b/arch/arm64/boot/dts/intel/socfpga_diamondmesa.dtsi
+new file mode 100644
+index 00000000..d2fa1a5
+--- /dev/null
++++ b/arch/arm64/boot/dts/intel/socfpga_diamondmesa.dtsi
+@@ -0,0 +1,466 @@
++// SPDX-License-Identifier:     GPL-2.0
++/*
++ * Copyright (C) 2020 Intel Corporation
++ */
++
++/dts-v1/;
++#include <dt-bindings/reset/altr,rst-mgr-s10.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/clock/agilex-clock.h>
++
++/ {
++	compatible = "intel,socfpga-agilex";
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		service_reserved: svcbuffer@0 {
++			compatible = "shared-dma-pool";
++			reg = <0x0 0x0 0x0 0x2000000>;
++			alignment = <0x1000>;
++			no-map;
++		};
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x0>;
++		};
++
++		cpu1: cpu@1 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x1>;
++		};
++
++		cpu2: cpu@2 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x2>;
++		};
++
++		cpu3: cpu@3 {
++			compatible = "arm,cortex-a53";
++			device_type = "cpu";
++			enable-method = "psci";
++			reg = <0x3>;
++		};
++	};
++
++	pmu {
++		compatible = "arm,armv8-pmuv3";
++		interrupts = <0 170 4>,
++			     <0 171 4>,
++			     <0 172 4>,
++			     <0 173 4>;
++		interrupt-affinity = <&cpu0>,
++				     <&cpu1>,
++				     <&cpu2>,
++				     <&cpu3>;
++		interrupt-parent = <&intc>;
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	intc: intc@fffc1000 {
++		compatible = "arm,gic-400", "arm,cortex-a15-gic";
++		#interrupt-cells = <3>;
++		interrupt-controller;
++		reg = <0x0 0xfffc1000 0x0 0x1000>,
++		      <0x0 0xfffc2000 0x0 0x2000>,
++		      <0x0 0xfffc4000 0x0 0x2000>,
++		      <0x0 0xfffc6000 0x0 0x2000>;
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		device_type = "soc";
++		interrupt-parent = <&intc>;
++		ranges = <0 0 0 0xffffffff>;
++
++		/* Use fixed frequency clocks for now */
++		clocks {
++			wdt_clk: wdt-clk {
++				#clock-cells = <0>;
++				compatible = "fixed-clock";
++				clock-frequency = <100000000>;
++			};
++		};
++
++		gmac0: ethernet@ff800000 {
++			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
++			reg = <0xff800000 0x2000>;
++			interrupts = <0 90 4>;
++			interrupt-names = "macirq";
++			mac-address = [00 00 00 00 00 00];
++			resets = <&rst EMAC0_RESET>, <&rst EMAC0_OCP_RESET>;
++			reset-names = "stmmaceth", "stmmaceth-ocp";
++			tx-fifo-depth = <16384>;
++			rx-fifo-depth = <16384>;
++			snps,multicast-filter-bins = <256>;
++			iommus = <&smmu 1>;
++			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
++			clock-frequency = <250000000>;
++			status = "disabled";
++		};
++
++		gmac1: ethernet@ff802000 {
++			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
++			reg = <0xff802000 0x2000>;
++			interrupts = <0 91 4>;
++			interrupt-names = "macirq";
++			mac-address = [00 00 00 00 00 00];
++			resets = <&rst EMAC1_RESET>, <&rst EMAC1_OCP_RESET>;
++			reset-names = "stmmaceth", "stmmaceth-ocp";
++			tx-fifo-depth = <16384>;
++			rx-fifo-depth = <16384>;
++			snps,multicast-filter-bins = <256>;
++			iommus = <&smmu 2>;
++			altr,sysmgr-syscon = <&sysmgr 0x48 8>;
++			clock-frequency = <250000000>;
++			status = "disabled";
++		};
++
++		gmac2: ethernet@ff804000 {
++			compatible = "altr,socfpga-stmmac-a10-s10", "snps,dwmac-3.74a", "snps,dwmac";
++			reg = <0xff804000 0x2000>;
++			interrupts = <0 92 4>;
++			interrupt-names = "macirq";
++			mac-address = [00 00 00 00 00 00];
++			resets = <&rst EMAC2_RESET>, <&rst EMAC2_OCP_RESET>;
++			reset-names = "stmmaceth", "stmmaceth-ocp";
++			tx-fifo-depth = <16384>;
++			rx-fifo-depth = <16384>;
++			snps,multicast-filter-bins = <256>;
++			iommus = <&smmu 3>;
++			altr,sysmgr-syscon = <&sysmgr 0x4c 16>;
++			clock-frequency = <250000000>;
++			status = "disabled";
++		};
++
++		gpio0: gpio@ffc03200 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0xffc03200 0x100>;
++			resets = <&rst GPIO0_RESET>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++
++			porta: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <24>;
++				reg = <0>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 110 4>;
++			};
++		};
++
++		gpio1: gpio@ffc03300 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0xffc03300 0x100>;
++			resets = <&rst GPIO1_RESET>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++
++			portb: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <24>;
++				reg = <0>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 111 4>;
++			};
++		};
++
++		i2c0: i2c@ffc02800 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02800 0x100>;
++			interrupts = <0 103 4>;
++			resets = <&rst I2C0_RESET>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++		};
++
++		i2c1: i2c@ffc02900 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02900 0x100>;
++			interrupts = <0 104 4>;
++			resets = <&rst I2C1_RESET>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++		};
++
++		i2c2: i2c@ffc02a00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02a00 0x100>;
++			interrupts = <0 105 4>;
++			resets = <&rst I2C2_RESET>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++		};
++
++		i2c3: i2c@ffc02b00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02b00 0x100>;
++			interrupts = <0 106 4>;
++			resets = <&rst I2C3_RESET>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++		};
++
++		i2c4: i2c@ffc02c00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,designware-i2c";
++			reg = <0xffc02c00 0x100>;
++			interrupts = <0 107 4>;
++			resets = <&rst I2C4_RESET>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++		};
++
++		mmc: dwmmc0@ff808000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "altr,socfpga-dw-mshc";
++			reg = <0xff808000 0x1000>;
++			interrupts = <0 96 4>;
++			fifo-depth = <0x400>;
++			resets = <&rst SDMMC_RESET>;
++			reset-names = "reset";
++			iommus = <&smmu 5>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++		};
++
++		ocram: sram@ffe00000 {
++			compatible = "mmio-sram";
++			reg = <0xffe00000 0x40000>;
++			status = "disabled";
++		};
++
++		pdma: pdma@ffda0000 {
++			compatible = "arm,pl330", "arm,primecell";
++			reg = <0xffda0000 0x1000>;
++			interrupts = <0 81 4>,
++				     <0 82 4>,
++				     <0 83 4>,
++				     <0 84 4>,
++				     <0 85 4>,
++				     <0 86 4>,
++				     <0 87 4>,
++				     <0 88 4>,
++				     <0 89 4>;
++			#dma-cells = <1>;
++			#dma-channels = <8>;
++			#dma-requests = <32>;
++			resets = <&rst DMA_RESET>, <&rst DMA_OCP_RESET>;
++			reset-names = "dma", "dma-ocp";
++			clock-frequency = <100000000>;
++			status = "disabled";
++		};
++
++		rst: rstmgr@ffd11000 {
++			#reset-cells = <1>;
++			compatible = "altr,stratix10-rst-mgr";
++			reg = <0xffd11000 0x100>;
++		};
++
++		smmu: iommu@fa000000 {
++			compatible = "arm,mmu-500", "arm,smmu-v2";
++			reg = <0xfa000000 0x40000>;
++			#global-interrupts = <2>;
++			#iommu-cells = <1>;
++			interrupt-parent = <&intc>;
++			interrupts = <0 128 4>,	/* Global Secure Fault */
++				<0 129 4>, /* Global Non-secure Fault */
++				/* Non-secure Context Interrupts (32) */
++				<0 138 4>, <0 139 4>, <0 140 4>, <0 141 4>,
++				<0 142 4>, <0 143 4>, <0 144 4>, <0 145 4>,
++				<0 146 4>, <0 147 4>, <0 148 4>, <0 149 4>,
++				<0 150 4>, <0 151 4>, <0 152 4>, <0 153 4>,
++				<0 154 4>, <0 155 4>, <0 156 4>, <0 157 4>,
++				<0 158 4>, <0 159 4>, <0 160 4>, <0 161 4>,
++				<0 162 4>, <0 163 4>, <0 164 4>, <0 165 4>,
++				<0 166 4>, <0 167 4>, <0 168 4>, <0 169 4>;
++			stream-match-mask = <0x7ff0>;
++			status = "disabled";
++		};
++
++		spi0: spi@ffda4000 {
++			compatible = "snps,dw-apb-ssi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0xffda4000 0x1000>;
++			interrupts = <0 99 4>;
++			resets = <&rst SPIM0_RESET>;
++			reg-io-width = <4>;
++			num-cs = <4>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++		};
++
++		spi1: spi@ffda5000 {
++			compatible = "snps,dw-apb-ssi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0xffda5000 0x1000>;
++			interrupts = <0 100 4>;
++			resets = <&rst SPIM1_RESET>;
++			reg-io-width = <4>;
++			num-cs = <4>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++		};
++		sysmgr: sysmgr@ffd12000 {
++			compatible = "altr,sys-mgr-s10","altr,sys-mgr";
++			reg = <0xffd12000 0x500>;
++			status = "disabled";
++		};
++
++		/* Local timer */
++		timer {
++			compatible = "arm,armv8-timer";
++			interrupts = <1 13 0xf08>,
++				     <1 14 0xf08>,
++				     <1 11 0xf08>,
++				     <1 10 0xf08>;
++			clock-frequency = <200000000>;
++		};
++
++		timer0: timer0@ffc03000 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 113 4>;
++			reg = <0xffc03000 0x100>;
++			clock-frequency = <100000000>;
++			clock-names = "timer";
++			status = "disabled";
++		};
++
++		timer1: timer1@ffc03100 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 114 4>;
++			reg = <0xffc03100 0x100>;
++			clock-frequency = <100000000>;
++			clock-names = "timer";
++			status = "disabled";
++		};
++
++		timer2: timer2@ffd00000 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 115 4>;
++			reg = <0xffd00000 0x100>;
++			clock-frequency = <100000000>;
++			clock-names = "timer";
++			status = "disabled";
++		};
++
++		timer3: timer3@ffd00100 {
++			compatible = "snps,dw-apb-timer";
++			interrupts = <0 116 4>;
++			reg = <0xffd00100 0x100>;
++			clock-frequency = <100000000>;
++			clock-names = "timer";
++			status = "disabled";
++		};
++
++		uart0: serial0@ffc02000 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0xffc02000 0x100>;
++			interrupts = <0 108 4>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			resets = <&rst UART0_RESET>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++		};
++
++		uart1: serial1@ffc02100 {
++			compatible = "snps,dw-apb-uart";
++			reg = <0xffc02100 0x100>;
++			interrupts = <0 109 4>;
++			reg-shift = <2>;
++			reg-io-width = <4>;
++			resets = <&rst UART1_RESET>;
++			clock-frequency = <100000000>;
++			status = "disabled";
++		};
++
++		watchdog0: watchdog@ffd00200 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00200 0x100>;
++			interrupts = <0 117 4>;
++			resets = <&rst WATCHDOG0_RESET>;
++			clock-frequency = <&wdt_clk>;
++			status = "disabled";
++		};
++
++		watchdog1: watchdog@ffd00300 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00300 0x100>;
++			interrupts = <0 118 4>;
++			resets = <&rst WATCHDOG1_RESET>;
++			clock-frequency = <&wdt_clk>;
++			status = "disabled";
++		};
++
++		watchdog2: watchdog@ffd00400 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00400 0x100>;
++			interrupts = <0 125 4>;
++			resets = <&rst WATCHDOG2_RESET>;
++			clock-frequency = <&wdt_clk>;
++			status = "disabled";
++		};
++
++		watchdog3: watchdog@ffd00500 {
++			compatible = "snps,dw-wdt";
++			reg = <0xffd00500 0x100>;
++			interrupts = <0 126 4>;
++			resets = <&rst WATCHDOG3_RESET>;
++			clock-frequency = <&wdt_clk>;
++			status = "disabled";
++		};
++
++		firmware {
++			svc {
++				compatible = "intel,agilex-svc";
++				method = "smc";
++				memory-region = <&service_reserved>;
++			};
++		};
++	};
++};
+-- 
+2.7.4
+
