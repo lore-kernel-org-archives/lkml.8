@@ -2,96 +2,201 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A48DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D85F720707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQw18JNO"
+	by mail.kernel.org (Postfix) with ESMTP id DBA6F208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598449836;
+	bh=2c7kLmBWxeG5b+bZP/Vwev5mREKep9OqRfHbzY3d2IQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hiAC4nhy4tqLdw1Bm74krimWExsvAsTLTUB7ttVDR7Dk3d+hd22o7hM0qu6ZMFkLV
+	 Rc0PQMc63oMLl7vvvbjX6EdhszfYE1meQmgbRhdRqHFvnUIqvfK0R04L5HY2y13ZjM
+	 WGfn487LAldb6etam8oXhSi+5c4q4Km37u52s+qI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbgHZNuU (ORCPT
+        id S1730538AbgHZNub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbgHZNtg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:49:36 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C212C061574
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:49:35 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id x77so8909lfa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:49:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XYm7Tduo8NWl5UNwRfQK8+cTzqgeaWnEyTZDJt6ZL0A=;
-        b=cQw18JNOYdqf3sOurYRlourg5Md8zuitXIUOSC1+hAVeZIFeF7Y+VybvHHm/AsDTFh
-         x1R5+XVIFzrI5xR2M2+xU86dR9yFVT1Rw+Gr+TtzOykldPfvxeoilXjnA6PGisH539I0
-         DgtcYc1Dix0XcbBSo+sxcGJU2WLLHLrLJVnJTyoVzIUy5pUhG4Rk2T5RbgJywhruD56q
-         bg9+5MO5PUvW2zxb/fUIvTKZt9uRLAkSQDhh0CBm0882P2knFBlD2eqi4B/cz47hbsJk
-         dsz+t4E8spMvWm92CmYiLuxgckD9MVzt12YvP5PR8e88Is8XB/G272nfv35rPsD6FiSa
-         aFOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XYm7Tduo8NWl5UNwRfQK8+cTzqgeaWnEyTZDJt6ZL0A=;
-        b=UftigrXWzNXusBXWPW6UufDxm2kLLNhE1DnVbKWQnlveQ86feky6zjaoJVMp6PdH4o
-         SPLh5YNMGbXMwI1lS3Qorn8rvYcu0D889BsXzsl/430EF7kq7oBW7WqL74KfwsNd75zY
-         UMhhlorquW6S7ZpeOw7CdXGePmpGMtOsVSPFGsZUgJOay4nLaHHnCv4RlemjY0ya/nti
-         wUUJMdauTWSbJqlvdB6F9Y/nAG4no5BwFvuOTXQYcadSgi3nTSakcK7JG7IHpiW+Z0Bc
-         BAmgLaySbe1Z6Cz/bXebNxULO5mgW6KGldRysg0jStqTVePwQDoU5yF5H5+PvR/DI0o+
-         4xmQ==
-X-Gm-Message-State: AOAM5301e2FcAXvdcp/x97UET6GegtU0bbOfXNoh0Z8u+RODODxzExT4
-        KQLCdOzG3OZ2Gp9euGELJSVr/sjZawMRQbmTpZo=
-X-Google-Smtp-Source: ABdhPJxVedw5wDUoff9RgpfDnP2MJ8QistoF1SlV7wu7KGXETn4R6i8GLZTyfubdJ9A4bPs35o56F2wDe8uwVYlwGPY=
-X-Received: by 2002:a19:306:: with SMTP id 6mr7488144lfd.214.1598449772436;
- Wed, 26 Aug 2020 06:49:32 -0700 (PDT)
+        Wed, 26 Aug 2020 09:50:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56802 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730428AbgHZNrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:47:13 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 592E322BEA;
+        Wed, 26 Aug 2020 13:47:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598449630;
+        bh=2c7kLmBWxeG5b+bZP/Vwev5mREKep9OqRfHbzY3d2IQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZYWMzWcjXOiK1J4w+5K7nZTegwvyJ6ASu9e/dnz7EEs8bJI7SZvMBA5GO5F6lynkN
+         ZK3UHThXzWZhEdJKFpBBhdvZGJ3+TLWLn0Qa4QwXQJ3COlancfyzsx8Ws+mFeB2IRB
+         OSv6/FLZ2W09njvsgDsKnrdErU7jx1mRMgQ9puvI=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kAvlc-006rUp-Qw; Wed, 26 Aug 2020 14:47:09 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: [PATCH v2] HID: core: Sanitize event code and type when mapping input
+Date:   Wed, 26 Aug 2020 14:46:58 +0100
+Message-Id: <20200826134658.1046338-1-maz@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200824091013.20640-1-matthias.schiffer@ew.tq-group.com>
- <20200824091013.20640-2-matthias.schiffer@ew.tq-group.com>
- <CAOMZO5DSX1pf3xxo=CGvgPmHcjMJoWFx74grVJBckSmjtF-RGg@mail.gmail.com>
- <4b7d57738ce8e2130c4740a0f3f973fbaf60a7cf.camel@ew.tq-group.com>
- <CAOMZO5DYrkEb_G+EYAGrc+qjSsbjRdeBUU3tJUfkU6tjgNm_7g@mail.gmail.com>
- <7a59492e46f34d213b83f7182c7db73954c5a9c7.camel@ew.tq-group.com>
- <CAOMZO5CP=wtJ5ZScyb0NrRMW0FR0FAGVKRFq9JpFcAoZppn_bA@mail.gmail.com>
- <53f5f17735fc2f0ca061a321969bbb131e55efff.camel@ew.tq-group.com>
- <CAOMZO5ADeXEHWiG7Xja1W1GnahV08ZEYSkNsrOzautn2mROCNA@mail.gmail.com>
- <aa0b7ad149a7bd4e681e4ebee12ffaaab2803832.camel@ew.tq-group.com>
- <CAOMZO5B_Jm8SX9N9V5oq+LAa0Yc4CmrEp2n=2t3XUyBCtnGVTA@mail.gmail.com> <d433e8a47d721a65903db68c38eb1c337c81e395.camel@ew.tq-group.com>
-In-Reply-To: <d433e8a47d721a65903db68c38eb1c337c81e395.camel@ew.tq-group.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 26 Aug 2020 10:49:21 -0300
-Message-ID: <CAOMZO5AfuPXfOmRSXAmyG-bdqGSzvTRm51NuTJ-B2PzKbLy9mw@mail.gmail.com>
-Subject: Re: (EXT) Re: (EXT) Re: (EXT) Re: (EXT) Re: (EXT) Re: [PATCH 2/2]
- ARM: dts: imx6qdl: tqma6: minor fixes
-To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: dmitry.torokhov@gmail.com, jikos@kernel.org, benjamin.tissoires@redhat.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 10:13 AM Matthias Schiffer
-<matthias.schiffer@ew.tq-group.com> wrote:
+When calling into hid_map_usage(), the passed event code is
+blindly stored as is, even if it doesn't fit in the associated bitmap.
 
-> Using GPIOs for chipselect would require different pinmuxing. Also, why
-> use GPIOs, when the SPI controller has this built in?
+This event code can come from a variety of sources, including devices
+masquerading as input devices, only a bit more "programmable".
 
-In the initial chips with the ECSPI controller there was a bug with
-the native chipselect controller and we had to use GPIO.
+Instead of taking the event code at face value, check that it actually
+fits the corresponding bitmap, and if it doesn't:
+- spit out a warning so that we know which device is acting up
+- NULLify the bitmap pointer so that we catch unexpected uses
+
+Code paths that can make use of untrusted inputs can now check
+that the mapping was indeed correct and bail out if not.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+* From v1:
+  - Dropped the input.c changes, and turned hid_map_usage() into
+    the validation primitive.
+  - Handle mapping failures in hidinput_configure_usage() and
+    mt_touch_input_mapping() (on top of hid_map_usage_clear() which
+    was already handled)
+
+ drivers/hid/hid-input.c      |  4 ++++
+ drivers/hid/hid-multitouch.c |  2 ++
+ include/linux/hid.h          | 40 +++++++++++++++++++++++++-----------
+ 3 files changed, 34 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index b8eabf206e74..88e19996427e 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1132,6 +1132,10 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 	}
+ 
+ mapped:
++	/* Mapping failed, bail out */
++	if (!bit)
++		return;
++
+ 	if (device->driver->input_mapped &&
+ 	    device->driver->input_mapped(device, hidinput, field, usage,
+ 					 &bit, &max) < 0) {
+diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+index 3f94b4954225..e3152155c4b8 100644
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -856,6 +856,8 @@ static int mt_touch_input_mapping(struct hid_device *hdev, struct hid_input *hi,
+ 			code = BTN_0  + ((usage->hid - 1) & HID_USAGE);
+ 
+ 		hid_map_usage(hi, usage, bit, max, EV_KEY, code);
++		if (!*bit)
++			return -1;
+ 		input_set_capability(hi->input, EV_KEY, code);
+ 		return 1;
+ 
+diff --git a/include/linux/hid.h b/include/linux/hid.h
+index 875f71132b14..ff4ccf7ba694 100644
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -959,34 +959,49 @@ static inline void hid_device_io_stop(struct hid_device *hid) {
+  * @max: maximal valid usage->code to consider later (out parameter)
+  * @type: input event type (EV_KEY, EV_REL, ...)
+  * @c: code which corresponds to this usage and type
++ *
++ * The value pointed to by @bit will be set to NULL if either @type is
++ * an unhandled event type, or if @c is out of range for @type. This
++ * can be used as an error condition.
+  */
+ static inline void hid_map_usage(struct hid_input *hidinput,
+ 		struct hid_usage *usage, unsigned long **bit, int *max,
+ 		__u8 type, __u16 c)
+ {
+ 	struct input_dev *input = hidinput->input;
+-
+-	usage->type = type;
+-	usage->code = c;
++	unsigned long *bmap = NULL;
++	u16 limit = 0;
+ 
+ 	switch (type) {
+ 	case EV_ABS:
+-		*bit = input->absbit;
+-		*max = ABS_MAX;
++		bmap = input->absbit;
++		limit = ABS_MAX;
+ 		break;
+ 	case EV_REL:
+-		*bit = input->relbit;
+-		*max = REL_MAX;
++		bmap = input->relbit;
++		limit = REL_MAX;
+ 		break;
+ 	case EV_KEY:
+-		*bit = input->keybit;
+-		*max = KEY_MAX;
++		bmap = input->keybit;
++		limit = KEY_MAX;
+ 		break;
+ 	case EV_LED:
+-		*bit = input->ledbit;
+-		*max = LED_MAX;
++		bmap = input->ledbit;
++		limit = LED_MAX;
+ 		break;
+ 	}
++
++	if (unlikely(c > limit || !bmap)) {
++		pr_warn_ratelimited("%s: Invalid code %d type %d\n",
++				    input->name, c, type);
++		*bit = NULL;
++		return;
++	}
++
++	usage->type = type;
++	usage->code = c;
++	*max = limit;
++	*bit = bmap;
+ }
+ 
+ /**
+@@ -1000,7 +1015,8 @@ static inline void hid_map_usage_clear(struct hid_input *hidinput,
+ 		__u8 type, __u16 c)
+ {
+ 	hid_map_usage(hidinput, usage, bit, max, type, c);
+-	clear_bit(c, *bit);
++	if (*bit)
++		clear_bit(usage->code, *bit);
+ }
+ 
+ /**
+-- 
+2.27.0
+
