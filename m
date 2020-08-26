@@ -2,118 +2,93 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.2 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65763C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F48A206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:19:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jkj2lJ/w"
+	by mail.kernel.org (Postfix) with ESMTP id C87782078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgHZQTZ (ORCPT
+        id S1727909AbgHZQTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:19:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgHZQTU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:19:20 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80DB8C061574;
-        Wed, 26 Aug 2020 09:19:20 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id d22so1234382pfn.5;
-        Wed, 26 Aug 2020 09:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ilq96LncB63Fy/CIWeCW+LtnzaRpV/8JBgOE+6AYhNY=;
-        b=jkj2lJ/wIshXTsGOEM64SsGQiF7RQEp7AAMTx/xiXkBBHv2KNeujd9MOPiD5kyQY8K
-         hf6yqxBesJFomueFy75MOk012wz7xpqJ0MwXVnD5pgU3v+SuGh9PQoHMTlzllEWlNso2
-         c2jmgT7yi0ZERQqXEdy4W3JE3P3vqVcJsoSp0jYSzSZoaxhBYV8ujdHHKWFn8BSpF9ya
-         mDIP+nyshLpiaJo8ZWYtQ58DI3chffKPgs6EUoLzrkDi0/ei3lYuVqKQ67l63bUgPAEA
-         9L/IrVAGvC03lLBPyY9u2Lj3waTfRLL82ppuYy0hqNnVehBouQnPIJkCoKDYDMIc/WkZ
-         kifQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ilq96LncB63Fy/CIWeCW+LtnzaRpV/8JBgOE+6AYhNY=;
-        b=r4YsJIIdD8f65cfsvkamlYuy5vLjM4vI1P3391jhbSrSEbJNbeXFCVpHZ8CND7tgfr
-         1ej4Symqf93qz1BLWX1ecUnGrSwAyO1Eq74ww8VlippxDqrdRLOuXPpHqjThBoi9P5a2
-         /sa75+914hWpPjDayo6aJrS8DTYYY5/9Yflca3vp+UokQkUTNCYpflhZ2ssJbvv4TDKw
-         gnALAZObpaxArPChwfiVurgB+JTVHjjEpyjfbJYofgUlFlipOTM7JheW0wUUEb/hHXuy
-         ReWFKZb6UtMazl6JtC2oKJ3NoOwUJXtA03dDRCLpLGEPy5KDLfAeDlewYVnKRYiVMaHp
-         bNag==
-X-Gm-Message-State: AOAM5322X2KxYR7ObvgQqYJCD1ZxX8YpVcf1FxjJNWn9/5V67T5B4e7t
-        47yqe/dxP0l1CHU7zo2rgi9DKctdDoHSGa+ZsiU=
-X-Google-Smtp-Source: ABdhPJza63eLcR7I3PDHKJp/Uyg9y5yJyruqodtcmJ8VwI4Uaxaj+0hTzcGzEO/9K2txWYSgQ2JOVl14QF3S4xXzvnA=
-X-Received: by 2002:a63:f24a:: with SMTP id d10mr11083692pgk.4.1598458760092;
- Wed, 26 Aug 2020 09:19:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200826134315.GA3882506@kroah.com> <CGME20200826150239eucas1p24c59716cc31edfeb2eece84d97936b93@eucas1p2.samsung.com>
- <1425ab4f-ef7e-97d9-238f-0328ab51eb35@samsung.com> <20200826153347.GB4187816@kroah.com>
- <CAHp75VepkugjZ4pvdNgxzT4T83ewL1AFtSZZtVq6aL+7=sqskA@mail.gmail.com> <de6aea2f-5f31-4391-0c36-8fd5fd63ab05@samsung.com>
-In-Reply-To: <de6aea2f-5f31-4391-0c36-8fd5fd63ab05@samsung.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 26 Aug 2020 19:19:03 +0300
-Message-ID: <CAHp75Vc=Z3y6eq0M174w314Lje=cujEk70qjbu+mVdobZsYt=Q@mail.gmail.com>
-Subject: Re: [GIT PULL] USB fixes for 5.9-rc3
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Brooke Basile <brookebasile@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Ilja Van Sprundel <ivansprundel@ioactive.com>,
-        Kees Cook <keescook@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+        Wed, 26 Aug 2020 12:19:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:16687 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgHZQTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:19:40 -0400
+IronPort-SDR: 3ih83erqta+LZ6aiy7Wg7VRaOE+VURhP0QP5m/hWXLqdIGtwhrHDYnkTyzrrNNmqZijoANHbV5
+ 2N8A5+nOiN0A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153748697"
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="153748697"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:19:38 -0700
+IronPort-SDR: GHtPkWF/dFgeM56edoykkNBMUlh1+IRjy3B5ToTjEq80wBupCLYE0qwEIUBGicPxkJ4NZTcHbs
+ lIWrq8cjhYoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="336876099"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 26 Aug 2020 09:19:38 -0700
+Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.186])
+        by linux.intel.com (Postfix) with ESMTP id AB2025805ED;
+        Wed, 26 Aug 2020 09:19:36 -0700 (PDT)
+Message-ID: <72fab2376722c6169549669016933217d3da34a0.camel@gmail.com>
+Subject: Re: [PATCH] intel_idle: Add ICL support
+From:   Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To:     Guilhem Lettron <guilhem@barpilot.io>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 26 Aug 2020 19:19:35 +0300
+In-Reply-To: <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
+References: <20200826120421.44356-1-guilhem@barpilot.io>
+         <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
+         <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
+         <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
+         <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
+         <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
+         <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
+         <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 7:17 PM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
-> On 26.08.2020 17:53, Andy Shevchenko wrote:
-> > On Wed, Aug 26, 2020 at 6:36 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >> On Wed, Aug 26, 2020 at 05:02:38PM +0200, Marek Szyprowski wrote:
-> >>> On 26.08.2020 15:43, Greg KH wrote:
-> >>>
-> >>>> Brooke Basile (2):
-> >>>>         USB: gadget: u_f: add overflow checks to VLA macros
-> >>> Sorry, but the above patch breaks USB Ethernet Gadget operation. It also
-> >>> didn't get the proper testing in linux-next (next-20200826 is the first
-> >>> one with this patch).
-> >>>
-> >>> This is how it explodes on Samsung Exynos (ARM 32bit) based board with
-> >>> g_ether module loaded:
-> >> Odd, for a "normal" descriptor, the logic should have remained the same
-> >> as without this patch.
-> >> Brooke, any ideas?
-> > I have an idea.
-> >
-> > Does below fix this?
->
-> Yep, that's it. I've also moved offset assignment in the first part
-> after size_t size = array_size(n, sizeof(type));
->
-> Feel free to add:
->
-> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
->
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Indeed, when I compare them:
 
-Will send a formal patch soon. Thanks for reporting and testing!
+acpi_idle (without the patch):
 
--- 
-With Best Regards,
-Andy Shevchenko
+CPU%c1  CPU%c6  CPU%c7  CoreTmp PkgTmp  GFX%rc6 Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10 PkgWatt
+29.48   0.00    60.71   58      58      97.96   16.96   0.00    0.00    0.00    0.00    0.00    0.00    6.08
+
+intel_idle (with the patch):
+
+CPU%c1  CPU%c6  CPU%c7  CoreTmp PkgTmp  GFX%rc6 Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10 PkgWatt
+56      56      96.64   300     68.29   48.58   0.00    0.00    0.00    0.00    0.00    0.00    7.38    0.00
+
+With intel_idle we reach PC10, without it we only go as deep as PC2 - huge difference.
+
+I really wonder why the BIOS does not expose deeper C-states... And if
+it does not, is this for a reason? And how windows works then?
+
+May be there is a BIOS update that fixes this problem? May be Windows
+user get it quickly because stuff like this is often well-integrated in
+Windows? Would you please check if there is newer BIOS?
+
+Artem.
+
