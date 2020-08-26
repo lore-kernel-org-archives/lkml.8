@@ -2,179 +2,157 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F6DC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D722C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 651442075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F55206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:51:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="pJhf4HaY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rkPU8zA6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbgHZBus (ORCPT
+        id S1727011AbgHZBvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 21:50:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54212 "EHLO
+        Tue, 25 Aug 2020 21:51:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgHZBt4 (ORCPT
+        with ESMTP id S1726599AbgHZBvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 21:49:56 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D45CC061757
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 18:49:56 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id b17so174341wru.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 18:49:56 -0700 (PDT)
+        Tue, 25 Aug 2020 21:51:48 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FDAC061574;
+        Tue, 25 Aug 2020 18:51:48 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r15so144621wrp.13;
+        Tue, 25 Aug 2020 18:51:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=p4z/80YMT7r/2XPt+q1H560KQo/33xQgEXp21sNkmO4=;
-        b=pJhf4HaYxbpq0Az8ZRTtZewR7KRrnMlpRJJoVod4OUsQFPPO6h94qY2T7lCXbJnc2J
-         rOc9KDyeB5iL735kUZS7QLrwf2/gjG6msLAUUOsGFDmcayGsXM+3En+n++2Er7TUdozq
-         pjztsU65wqrb7nPJGhk8yJINiN+yF+ygjNSUgwXe0292sGzHwsKhhJaxFFkIxVwTGbpg
-         zyKGGrPADDRZUr88pEKElho+Zk+F7chW+zFHVQKG6jsQHIZhom1X/t++zZkWF99rLdMQ
-         98Aw6iziI/KubH6D91LkfdGDT0FzsZiSv3H7O+idoIAWIL5dNz4c8QmAouazotBBITtb
-         zU3A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6lKBXswTrzhA0xBsr6HB8AlB5+bACM8/QHtln5EsmDM=;
+        b=rkPU8zA6FnvPI7YRdwlrF32Z+jufZRPGDhsVbublBxI+2WdfyrQZ4OMYugj2LjMgRs
+         tcBC2iVxYnWeg8Zk6YWzQfE0csZvqLsQKSxRKrpJnxvpSdJ9HVsaxBuVVCZ33a7Fy89F
+         YzL00nv71TEx1KwJewv+LaAx654GeLawZ3dB08BJtkewTW0RxdimmA59/2c32/oJxdK5
+         dSKP0GfmMvAUQJfWlO1JkSN5McliJO+sig5zbM32H0/Kuj9D+O0+2QWE9ikcOBAgMoCE
+         knF+3yVSHzD+dH7rwDtBk3Dij3c2i2NaVRbX/WHThEgypBISYgNE6EdHQjalStrd+n7R
+         ERAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=p4z/80YMT7r/2XPt+q1H560KQo/33xQgEXp21sNkmO4=;
-        b=O1cFuOl6VD4SkzoBXg36Q+u1dbWQdiFnivZz/nJJ3Vm0UB2gA9GoOrCav3aq12hL67
-         cImBsOQcfPWGmONFT1+SH4cJ5T/hwJ8ErFRq7yUhMZmcfz1sBc4xuwU3V/YyJJ84YY4O
-         VHNmLL/0B2GjA8g+ipk6VM7JpQzL/bTjI7Watw6HQBVxQBq6+tjqcmjmu/ARxwWfSiyg
-         RyajbZ0W744RAnqHN7s/ddpPw5q8DGfvi+ddrNs2KnND5tpOa8jY+xT/tGAPgX3VqieH
-         042UrI44wqYan3572RRyI3NhtOXyeRQa9G/Y5mv1xISWLHCs/g3ysOumbz44caPq4VKd
-         0JdA==
-X-Gm-Message-State: AOAM531G2WnEIQNcnGD5qn8EM1MFzfZ1PbIAFfbfHAAR7KKCE3jKQlB/
-        sxntKI3yCiQ110KLXOoABw75ByJa0Z9SuVyOCUk=
-X-Google-Smtp-Source: ABdhPJwLo0u0fGc8+tWN58LJlQ1Cdd8blAm5no4gadCnQY3WbtMGLn97rB4tU1ljN5J2HQQYr6DiuQ==
-X-Received: by 2002:adf:9ec5:: with SMTP id b5mr12277714wrf.190.1598406594695;
-        Tue, 25 Aug 2020 18:49:54 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id c10sm1263661wmk.30.2020.08.25.18.49.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 18:49:54 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Westphal <fw@strlen.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Stephen Suryaputra <ssuryaextr@gmail.com>,
-        netdev@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>
-Subject: [PATCH v2 3/6] netlink/compat: Append NLMSG_DONE/extack to frag_list
-Date:   Wed, 26 Aug 2020 02:49:46 +0100
-Message-Id: <20200826014949.644441-4-dima@arista.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200826014949.644441-1-dima@arista.com>
-References: <20200826014949.644441-1-dima@arista.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6lKBXswTrzhA0xBsr6HB8AlB5+bACM8/QHtln5EsmDM=;
+        b=Smmunnpt1LjXpGp/N/t0FV0JpDIO+k456WlcUpDewg1p2nTBOA1P67S7CZhYS2eSnR
+         +OOu2WflF/myrmiKXjLyTDaOm9yWRQ/+m8rWhp4lfGRIQPptsKuzcIbQK/gfqzrsmgb2
+         BdQeToImOPECJssEo1/TBCGYzI7wfdeorUnpu7sSaErjF0BZxrIBwxej/FG4QVGmlh2X
+         1BHiv36vlSmis5BKaAtrqFc4MD1qxap9ZHiDz2gBaMW3K4hIGCY8DekMKBubBcRoWA2R
+         RBoRwxM4sCife/uTbJfjeAzX/lJkNnPNGkYKMD/Hi0cHsiYPB61eiVR70QtO+4h+3P/C
+         fPwA==
+X-Gm-Message-State: AOAM530oFG3ifVTPrO+3udsr1xhmkYJh0IEhN4H2KNWhmkrJD+j5JUa9
+        fGPsJZQ/BpxSlrw+43if6fdezIzMsx/vRGp6QYY=
+X-Google-Smtp-Source: ABdhPJyeqlKj5YPc50Em7rO4ODLMTr2DC/m+jfMJDMOpF+XoOI2kKLAaJQ+LNrc4dhPoiuNEDU0+R/Ls8lv1xf0wUss=
+X-Received: by 2002:adf:db43:: with SMTP id f3mr14164955wrj.219.1598406706678;
+ Tue, 25 Aug 2020 18:51:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200817091617.28119-1-allen.cryptic@gmail.com>
+ <20200817091617.28119-2-allen.cryptic@gmail.com> <b5508ca4-0641-7265-2939-5f03cbfab2e2@kernel.dk>
+ <202008171228.29E6B3BB@keescook> <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
+ <202008171246.80287CDCA@keescook> <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
+ <1597780833.3978.3.camel@HansenPartnership.com> <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
+ <1597849185.3875.7.camel@HansenPartnership.com> <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
+ <1597873172.4030.2.camel@HansenPartnership.com>
+In-Reply-To: <1597873172.4030.2.camel@HansenPartnership.com>
+From:   Allen Pais <allen.cryptic@gmail.com>
+Date:   Wed, 26 Aug 2020 07:21:35 +0530
+Message-ID: <CAEogwTCH8qqjAnSpT0GDn+NuAps8dNbfcPVQ9h8kfOWNbzrD0w@mail.gmail.com>
+Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc:     Allen <allen.lkml@gmail.com>, Jens Axboe <axboe@kernel.dk>,
+        Kees Cook <keescook@chromium.org>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, 3chas3@gmail.com,
+        stefanr@s5r6.in-berlin.de, airlied@linux.ie,
+        Daniel Vetter <daniel@ffwll.ch>, sre@kernel.org,
+        kys@microsoft.com, deller@gmx.de, dmitry.torokhov@gmail.com,
+        jassisinghbrar@gmail.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, maximlevitsky@gmail.com, oakad@yahoo.com,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        mporter@kernel.crashing.org, alex.bou9@gmail.com,
+        broonie@kernel.org, martyn@welchs.me.uk, manohar.vanga@gmail.com,
+        mitch@sfgoth.com, David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux1394-devel@lists.sourceforge.net,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-hyperv@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-ntb@googlegroups.com, linux-s390@vger.kernel.org,
+        linux-spi@vger.kernel.org, devel@driverdev.osuosl.org,
+        Romain Perier <romain.perier@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Modules those use netlink may supply a 2nd skb, (via frag_list)
-that contains an alternative data set meant for applications
-using 32bit compatibility mode.
+On Thu, Aug 20, 2020 at 3:09 AM James Bottomley
+<James.Bottomley@hansenpartnership.com> wrote:
+>
+> On Wed, 2020-08-19 at 21:54 +0530, Allen wrote:
+> > > [...]
+> > > > > Since both threads seem to have petered out, let me suggest in
+> > > > > kernel.h:
+> > > > >
+> > > > > #define cast_out(ptr, container, member) \
+> > > > >     container_of(ptr, typeof(*container), member)
+> > > > >
+> > > > > It does what you want, the argument order is the same as
+> > > > > container_of with the only difference being you name the
+> > > > > containing structure instead of having to specify its type.
+> > > >
+> > > > Not to incessantly bike shed on the naming, but I don't like
+> > > > cast_out, it's not very descriptive. And it has connotations of
+> > > > getting rid of something, which isn't really true.
+> > >
+> > > Um, I thought it was exactly descriptive: you're casting to the
+> > > outer container.  I thought about following the C++ dynamic casting
+> > > style, so out_cast(), but that seemed a bit pejorative.  What about
+> > > outer_cast()?
+> > >
+> > > > FWIW, I like the from_ part of the original naming, as it has
+> > > > some clues as to what is being done here. Why not just
+> > > > from_container()? That should immediately tell people what it
+> > > > does without having to look up the implementation, even before
+> > > > this becomes a part of the accepted coding norm.
+> > >
+> > > I'm not opposed to container_from() but it seems a little less
+> > > descriptive than outer_cast() but I don't really care.  I always
+> > > have to look up container_of() when I'm using it so this would just
+> > > be another macro of that type ...
+> > >
+> >
+> >  So far we have a few which have been suggested as replacement
+> > for from_tasklet()
+> >
+> > - out_cast() or outer_cast()
+> > - from_member().
+> > - container_from() or from_container()
+> >
+> > from_container() sounds fine, would trimming it a bit work? like
+> > from_cont().
+>
+> I'm fine with container_from().  It's the same form as container_of()
+> and I think we need urgent agreement to not stall everything else so
+> the most innocuous name is likely to get the widest acceptance.
 
-In such a case, netlink_recvmsg will use this 2nd skb instead of the
-original one.
+Kees,
 
-Without this patch, such compat applications will retrieve
-all netlink dump data, but will then get an unexpected EOF.
+  Will you be  sending the newly proposed API to Linus? I have V2
+which uses container_from()
+ready to be sent out.
 
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- net/netlink/af_netlink.c | 48 ++++++++++++++++++++++++++++------------
- 1 file changed, 34 insertions(+), 14 deletions(-)
-
-diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
-index b5f30d7d30d0..b096f2b4a50d 100644
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -2186,13 +2186,36 @@ EXPORT_SYMBOL(__nlmsg_put);
-  * It would be better to create kernel thread.
-  */
- 
-+static int netlink_dump_done(struct netlink_sock *nlk, struct sk_buff *skb,
-+			     struct netlink_callback *cb,
-+			     struct netlink_ext_ack *extack)
-+{
-+	struct nlmsghdr *nlh;
-+
-+	nlh = nlmsg_put_answer(skb, cb, NLMSG_DONE, sizeof(nlk->dump_done_errno),
-+			       NLM_F_MULTI | cb->answer_flags);
-+	if (WARN_ON(!nlh))
-+		return -ENOBUFS;
-+
-+	nl_dump_check_consistent(cb, nlh);
-+	memcpy(nlmsg_data(nlh), &nlk->dump_done_errno,
-+			sizeof(nlk->dump_done_errno));
-+
-+	if (extack->_msg && nlk->flags & NETLINK_F_EXT_ACK) {
-+		nlh->nlmsg_flags |= NLM_F_ACK_TLVS;
-+		if (!nla_put_string(skb, NLMSGERR_ATTR_MSG, extack->_msg))
-+			nlmsg_end(skb, nlh);
-+	}
-+
-+	return 0;
-+}
-+
- static int netlink_dump(struct sock *sk)
- {
- 	struct netlink_sock *nlk = nlk_sk(sk);
- 	struct netlink_ext_ack extack = {};
- 	struct netlink_callback *cb;
- 	struct sk_buff *skb = NULL;
--	struct nlmsghdr *nlh;
- 	struct module *module;
- 	int err = -ENOBUFS;
- 	int alloc_min_size;
-@@ -2258,22 +2281,19 @@ static int netlink_dump(struct sock *sk)
- 		return 0;
- 	}
- 
--	nlh = nlmsg_put_answer(skb, cb, NLMSG_DONE,
--			       sizeof(nlk->dump_done_errno),
--			       NLM_F_MULTI | cb->answer_flags);
--	if (WARN_ON(!nlh))
-+	if (netlink_dump_done(nlk, skb, cb, &extack))
- 		goto errout_skb;
- 
--	nl_dump_check_consistent(cb, nlh);
--
--	memcpy(nlmsg_data(nlh), &nlk->dump_done_errno,
--	       sizeof(nlk->dump_done_errno));
--
--	if (extack._msg && nlk->flags & NETLINK_F_EXT_ACK) {
--		nlh->nlmsg_flags |= NLM_F_ACK_TLVS;
--		if (!nla_put_string(skb, NLMSGERR_ATTR_MSG, extack._msg))
--			nlmsg_end(skb, nlh);
-+#ifdef CONFIG_COMPAT_NETLINK_MESSAGES
-+	/* frag_list skb's data is used for compat tasks
-+	 * and the regular skb's data for normal (non-compat) tasks.
-+	 * See netlink_recvmsg().
-+	 */
-+	if (unlikely(skb_shinfo(skb)->frag_list)) {
-+		if (netlink_dump_done(nlk, skb_shinfo(skb)->frag_list, cb, &extack))
-+			goto errout_skb;
- 	}
-+#endif
- 
- 	if (sk_filter(sk, skb))
- 		kfree_skb(skb);
--- 
-2.27.0
-
+Thanks.
