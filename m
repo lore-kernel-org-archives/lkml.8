@@ -2,192 +2,134 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B59C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0648FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEC302080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE27320737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598464386;
-	bh=Zd24Yb4vjHVqZMcBZUg6fD4NfTY3pGvnVh3ocrW4duI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Ij+LcGaRR+pMOP8vC2k4+m+Im1TgYxfFDdlqiTUnpX9kvZKaQ4P5BkANWqmLkSlOB
-	 /WTMxLdtp81VNLGAvjUG/y7FrLPl09PGclEqCOq6/qCUGAynU+maXDSwK4vk2hmgL4
-	 1Gn1k/Xne2CHLc75Opqt5MVCkJDmiFBnkOlIzRVI=
+	s=default; t=1598464848;
+	bh=WId3BTrlpx4dFQDQ6F8bBoE8Z80/dTcpERIP1b6Ga9k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cJ2JAtwWqDUzwISA8QjBq8TKcr0Dm5TlscNb8z2WN5mBrDg2lw+etWMqtgH+fYIA6
+	 9NTvy1sQE5u1rv+cdO/WRBWJvI6+Cscu53TElNZ2BhmWEJx3aQR/laoDC6inf6BYwW
+	 0qogPQ6llFAaaaAkJkZYJ0QdfwG7Cnniuvz9CPDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbgHZRw7 (ORCPT
+        id S1726770AbgHZSAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:52:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54778 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 14:00:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgHZRw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:52:56 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726187AbgHZSAh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:00:37 -0400
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72EF020737;
-        Wed, 26 Aug 2020 17:52:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF5D22080C
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 18:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598464375;
-        bh=Zd24Yb4vjHVqZMcBZUg6fD4NfTY3pGvnVh3ocrW4duI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=oGt4PCbs/J/rOYxOmxVGNKn7rv/v0UjhddU8AUqIHs964IXq8BnhDLiJ8XBgsLFx1
-         fDs78zRjxBJ5BWor2KAViU/xDWDheyIrw+P6gipyU7fSHwO4aM88Xcdj50rMQZX/ZH
-         UqTBYKrd/AAdlTV6iOrNrXmua3DyfNFcLED9v+Q0=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kAzbR-006vbP-Jg; Wed, 26 Aug 2020 18:52:53 +0100
-Date:   Wed, 26 Aug 2020 18:52:46 +0100
-Message-ID: <87lfi170r5.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 5/9] fsl-msi: Provide default retrigger callback
-In-Reply-To: <70107b944534c6a0eeff83e43b05865e@kernel.org>
-References: <20200824102317.1038259-1-maz@kernel.org>
-        <20200824102317.1038259-6-maz@kernel.org>
-        <jhj7dtlejxc.mognet@arm.com>
-        <70107b944534c6a0eeff83e43b05865e@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, gregory.clement@bootlin.com, jason@lakedaemon.net, laurentiu.tudor@nxp.com, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        s=default; t=1598464837;
+        bh=WId3BTrlpx4dFQDQ6F8bBoE8Z80/dTcpERIP1b6Ga9k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=WlCZi8EnojE9mq3JsTMdB/EpU2IwvMKwp4nkRpPehl/Wjl/ingt87cxtdjE8cPlt6
+         +4uXgelDmcDTttV78THznZZSXI8M7WhMwgPrUNGbRk/h+zbH2gI1pHiFBOxxT1vwtJ
+         Vojt3Y3rXd1laRtNb2Uv+FxqgBAn8TJh82ki5g10=
+Received: by mail-wr1-f45.google.com with SMTP id a5so2742292wrm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 11:00:36 -0700 (PDT)
+X-Gm-Message-State: AOAM5300351o9y8w6hl7L34Aw49lVRE4lj41ittwmXT9GxG8jymyrWYP
+        63UbWLCdC+I26hF1YL26bdQWwRlvTCylgzqwE+gtGg==
+X-Google-Smtp-Source: ABdhPJx+8ruOOWOEt9g6LP17Jqc4u8yMfiB8jgl3qmPXylIwXxEaVMQkkFlxfJ5W/ZHpeKHB79EY3NJ71151MgqzJLM=
+X-Received: by 2002:adf:f442:: with SMTP id f2mr6093709wrp.184.1598464835295;
+ Wed, 26 Aug 2020 11:00:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200826115357.3049-1-graf@amazon.com> <87k0xlv5w5.fsf@nanos.tec.linutronix.de>
+ <CALCETrX-8a61k03+XJop=k11-TkE+7JOiGTH=81sHXPmXsA+Tw@mail.gmail.com> <87eentuwn8.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87eentuwn8.fsf@nanos.tec.linutronix.de>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 26 Aug 2020 11:00:23 -0700
+X-Gmail-Original-Message-ID: <CALCETrWG9UZUuygcTtYi51UFnaENW8Cv8xhuMXSZprP+_dQrFA@mail.gmail.com>
+Message-ID: <CALCETrWG9UZUuygcTtYi51UFnaENW8Cv8xhuMXSZprP+_dQrFA@mail.gmail.com>
+Subject: Re: [PATCH] x86/irq: Preserve vector in orig_ax for APIC code
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Alexander Graf <graf@amazon.com>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Avi Kivity <avi@scylladb.com>,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>, robketr@amazon.de,
+        Amos Kong <amos@scylladb.com>, Brian Gerst <brgerst@gmail.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 17:37:30 +0100,
-Marc Zyngier <maz@kernel.org> wrote:
-> 
-> Hi Valentin,
-> 
-> On 2020-08-26 12:16, Valentin Schneider wrote:
-> > Hi Marc,
-> > 
-> > Many thanks for picking this up!
-> > Below's the only comment I have, the rest LGTM.
-> > 
-> > On 24/08/20 11:23, Marc Zyngier wrote:
-> >> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> >> ---
-> >>  drivers/bus/fsl-mc/fsl-mc-msi.c | 2 ++
-> >>  1 file changed, 2 insertions(+)
-> >> 
-> >> diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c
-> >> b/drivers/bus/fsl-mc/fsl-mc-msi.c
-> >> index 8edadf05cbb7..5306ba7dea3e 100644
-> >> --- a/drivers/bus/fsl-mc/fsl-mc-msi.c
-> >> +++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
-> >> @@ -144,6 +144,8 @@ static void fsl_mc_msi_update_chip_ops(struct
-> >> msi_domain_info *info)
-> >>        */
-> >>       if (!chip->irq_write_msi_msg)
-> >>               chip->irq_write_msi_msg = fsl_mc_msi_write_msg;
-> >> +	if (!chip->irq_retrigger)
-> >> +		chip->irq_retrigger = irq_chip_retrigger_hierarchy;
-> > 
-> > AFAICT the closest generic hook we could use here is
-> > 
-> >   msi_create_irq_domain() -> msi_domain_update_chip_ops()
-> > 
-> > which happens just below the fsl-specific ops update.
-> > 
-> > 
-> > However, placing a default .irq_retrigger callback in there would
-> > affect any
-> > and all MSI domain. IOW that would cover PCI and platform MSIs
-> > (covered by
-> > separate patches in this series), but also some x86 ("dmar" &
-> > "hpet") and
-> > TI thingies.
-> > 
-> > I can't tell right now how bad of an idea it is, but I figured I'd
-> > throw
-> > this out there.
-> 
-> The problem with this approach is that it requires the resend path to be
-> cooperative and actually check for more than the top-level irq_data.
-> Otherwise you'd never actually trigger the HW resend if it is below
-> the top level.
-> 
-> But I like the idea though. Something like this should do the trick, and
-> is admittedly a bug fix:
+On Wed, Aug 26, 2020 at 10:47 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Andy,
+>
+> On Wed, Aug 26 2020 at 09:13, Andy Lutomirski wrote:
+> > On Wed, Aug 26, 2020 at 7:27 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> The below nasty hack cures it, but I hate it with a passion. I'll look
+> >> deeper for a sane variant.
+> >>
+> > Fundamentally, the way we overload orig_ax is problematic.  I have a
+> > half-written series to improve it, but my series is broken.  I think
+> > it's fixable, though.
+> >
+> > First is this patch to use some __csh bits to indicate the entry type.
+> > As far as I know, this patch is correct:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/entry&id=dfff54208072a27909ae97ebce644c251a233ff2
+>
+> Yes, that looks about right.
+>
+> > Then I wrote this incorrect patch:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/entry&id=3a5087acb8a2cc1e88b1a55fa36c2f8bef370572
+> >
+> > That one is wrong because the orig_ax wreckage seems to have leaked
+> > into user ABI -- user programs think that orig_ax has certain
+> > semantics on user-visible entries.
+>
+> Yes, orig_ax is pretty much user ABI for a very long time.
+>
+> > But I think that the problem in this thread could be fixed quite
+> > nicely by the first patch, plus a new CS_ENTRY_IRQ and allocating
+> > eight bits of __csh to store the vector.  Then we could read out the
+> > vector.
+>
+> That works. Alternatively I can just store the vector in the irq
+> descriptor itself. That's trivial enough and can be done completely in C
+> independent of the stuff above.
 
-Well, not quite.
+The latter sounds quite sensible to me.  It does seem vaguely
+ridiculous to be trying to fish the vector out of pt_regs in the APIC
+code.
 
-> 
-> diff --git a/kernel/irq/resend.c b/kernel/irq/resend.c
-> index c48ce19a257f..d11c729f9679 100644
-> --- a/kernel/irq/resend.c
-> +++ b/kernel/irq/resend.c
-> @@ -86,6 +86,18 @@ static int irq_sw_resend(struct irq_desc *desc)
->  }
->  #endif
-> 
-> +static int try_retrigger(struct irq_desc *desc)
-> +{
-> +#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
-> +	return irq_chip_retrigger_hierarchy(&desc->irq_data);
-
-This only checks the parent, so we still need to evaluate the
-top-level. Something like this:
-
-diff --git a/kernel/irq/resend.c b/kernel/irq/resend.c
-index c48ce19a257f..8ccd32a0cc80 100644
---- a/kernel/irq/resend.c
-+++ b/kernel/irq/resend.c
-@@ -86,6 +86,18 @@ static int irq_sw_resend(struct irq_desc *desc)
- }
- #endif
- 
-+static int try_retrigger(struct irq_desc *desc)
-+{
-+	if (desc->irq_data.chip->irq_retrigger)
-+		return desc->irq_data.chip->irq_retrigger(&desc->irq_data);
-+
-+#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
-+	return irq_chip_retrigger_hierarchy(&desc->irq_data);
-+#else
-+	return 0;
-+#endif
-+}
-+
- /*
-  * IRQ resend
-  *
-@@ -113,8 +125,7 @@ int check_irq_resend(struct irq_desc *desc, bool inject)
- 
- 	desc->istate &= ~IRQS_PENDING;
- 
--	if (!desc->irq_data.chip->irq_retrigger ||
--	    !desc->irq_data.chip->irq_retrigger(&desc->irq_data))
-+	if (!try_retrigger(desc))
- 		err = irq_sw_resend(desc);
- 
- 	/* If the retrigger was successfull, mark it with the REPLAY bit */
-
-With that, I believe we can drop most of the patches in this series
-and only keep the GIC ones.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+--Andy
