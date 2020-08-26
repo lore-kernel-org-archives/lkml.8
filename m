@@ -2,207 +2,141 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B21C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DD9C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9844206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D4E206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:12:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LQj7nEji"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hYKvrPyv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHZFLk (ORCPT
+        id S1726707AbgHZFM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 01:11:40 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:47509 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbgHZFLi (ORCPT
+        Wed, 26 Aug 2020 01:12:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbgHZFM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 01:11:38 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200826051135euoutp02e5d551df7b2b5d99978f8dd4ab4f2aac~uuVXLc0l72850028500euoutp02L;
-        Wed, 26 Aug 2020 05:11:35 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200826051135euoutp02e5d551df7b2b5d99978f8dd4ab4f2aac~uuVXLc0l72850028500euoutp02L
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598418695;
-        bh=UoWZxsq2ehgW6OJCcDlHRW36cf3DBAGPj6G6QPuhOk4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LQj7nEji6ZHBRvG8OclXTVyjMFZD6W6NYuQ+HDNHW8GbULvR3lgq9bL46Hz6+9pdC
-         rjiuAMKGgPvryc2dRdzCXSOcAaPwniLnH7ijo6P+OxB3rfyhntALLGj1ieadr7Fr53
-         4UKfOJUur5HLD/zQJR8dqjn2qp0ke5Q6VakWpH8o=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200826051134eucas1p2e7e95ebb5be135386f7e12e5fd00a133~uuVWRFIe-0099700997eucas1p27;
-        Wed, 26 Aug 2020 05:11:34 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 7E.36.05997.60FE54F5; Wed, 26
-        Aug 2020 06:11:34 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9~uuVVoxr7O2361423614eucas1p2M;
-        Wed, 26 Aug 2020 05:11:34 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200826051134eusmtrp16606dc6df146f0b38b332affe9d28037~uuVVoC1Bn2068720687eusmtrp1v;
-        Wed, 26 Aug 2020 05:11:34 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-0d-5f45ef06ddf3
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 40.7A.06314.60FE54F5; Wed, 26
-        Aug 2020 06:11:34 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200826051134eusmtip2c4cbe24fe8f6a11cc1119606acfc10e1~uuVVapPyv0656206562eusmtip2a;
-        Wed, 26 Aug 2020 05:11:33 +0000 (GMT)
-From:   Lukasz Stelmach <l.stelmach@samsung.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com
-Subject: Re: [PATCH 3/3] ARM: defconfig: Enable ax88796c driver
-Date:   Wed, 26 Aug 2020 07:11:18 +0200
-In-Reply-To: <20200825185152.GC2693@kozik-lap> (Krzysztof Kozlowski's
-        message of "Tue, 25 Aug 2020 20:51:52 +0200")
-Message-ID: <dleftjk0xmuh3d.fsf%l.stelmach@samsung.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 26 Aug 2020 01:12:56 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBF1C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 22:12:55 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id k18so562591qtm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 22:12:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=yfilLBz5JZdi/avFWO9tv5bRcdRvux+Y1JNGa63+Zro=;
+        b=hYKvrPyvirHQ+xAzWDhhq/Ve3fZvfDkw5fuDGO3+OfWWm1ofs9zDsoDjyMvL+nPnSD
+         gs0YfdCzHTHaFwZTQP+iqBv82s7JY+1XrsnNfWmUyj4qJF40prRBc63skwRCZJbNHsuA
+         Me92vZt7MTLa083lH4yQNIH/6bOKrvKscPPAXJvjmhYeTA1Xguf/YUQBzFyNDYoU+3Lj
+         vzHg4aUmM3RX451EBuADsyD3WpYoPIXv+r/3t/HK1qvwno5cQ0DT0P3qnAHKQZf7utgB
+         zkPp/qpPx/xiQe/xa8V8yerURt0qsvUun9nocWJKFvK84ZN0zm8AXmtk2s3USdvh6xQC
+         VHng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yfilLBz5JZdi/avFWO9tv5bRcdRvux+Y1JNGa63+Zro=;
+        b=kOyprwa39/HBdd0xFkKvGfpmwwkwSn7s+RZgdoMOCCyA/hyJBnSy8Zo9TyyxUwc3L4
+         L/PO3kzzPBFpdVLR3N3iFzqyPJYUH65NFs9hfQPCGrDT71LR4Hyedd/uPPwMTGgVkLD8
+         wvlQtwCGwEN/ed5AMVC3yy+HCfbvn2Ft6jYlWA/f06ObH63SHk5sWz9TuXC83OzSQ7PA
+         /Jmg5Te0u6LXxsuFgD7dgrR9/X3JUgZcKy5anh4Jnb0kdS+gJRyEZ6J0ymn9Y8BX/CUU
+         cwsYB2rW9JR+4VU72hOjt70oulrfQPjAJe/fl4J6yADRZQMbW3vuWtfIXHZYtZc8YsrA
+         Tieg==
+X-Gm-Message-State: AOAM533IqWIFmlAbT2HFEy7PbWBlV7OUnUDs9wUfFbhyosmJzs//Q9hI
+        9Be590RTN9XugbHDqahsNRies5tHz6UZCYQl3rXwOrvq
+X-Google-Smtp-Source: ABdhPJxGUZBBfmxks+iAEFmtTgt/Wjzl0KmJDjKRrAC0gaBWPCGHEAsFKNWw7ZZqj5Ufn6gZsd0UcTpwmn2DeOsDsRE=
+X-Received: by 2002:ac8:36b4:: with SMTP id a49mr9983461qtc.124.1598418774817;
+ Tue, 25 Aug 2020 22:12:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-        protocol="application/pgp-signature"
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCKsWRmVeSWpSXmKPExsWy7djP87ps713jDZ68NLTYOGM9q8Wc8y0s
-        FvOPnGO16H/8mtni/PkN7BYXtvWxWmx6fI3V4vKuOWwWM87vY7I4NHUvo8XaI3fZLY4tELNo
-        3XuE3YHX4/K1i8weW1beZPLYtKqTzWPzknqPvi2rGD0+b5ILYIvisklJzcksSy3St0vgyji4
-        7TVbwQTxinUzepkaGJtEuhg5OSQETCT2Pmpi72Lk4hASWMEocWn5BUYI5wujxJ9pL9ggnM+M
-        Eif/TWeDaZl84DITRGI5o8SH08ugnOeMEq/PHGXpYuTgYBPQk1i7NgKkQURAU+L63++sIDXM
-        ArOYJS5u+c4CkhAWsJc4urqHEcRmEVCV+HPyFtgGToFSiXcntjKD2LwC5hLTnk1mArFFBSwl
-        try4zw4RF5Q4OfMJ2BxmgVyJmeffgN0tIfCXXaLr7AlmiFNdJG6f3s8CYQtLvDq+hR3ClpE4
-        PbkH7FAJgXqJyZPMIHp7GCW2zfkBVW8tcefcL6iXHSVaDq5nhqjnk7jxVhBiL5/EpG3TocK8
-        Eh1tQhDVKhLr+vdATZGS6H21ghHC9pBY/BfCFhJoZJT49UZuAqPCLCTfzELyzSygqczAoFu/
-        Sx8irC2xbOFrZgjbVmLduvcsCxhZVzGKp5YW56anFhvlpZbrFSfmFpfmpesl5+duYgSmt9P/
-        jn/ZwbjrT9IhRgEORiUe3gVsrvFCrIllxZW5hxhVgCY92rD6AqMUS15+XqqSCK/T2dNxQrwp
-        iZVVqUX58UWlOanFhxilOViUxHmNF72MFRJITyxJzU5NLUgtgskycXBKNTAuPyOzxdmK/3KA
-        2yWVJY0atuWyUcknbZbtOyby807ky8+b7BsuMEvpZIcsK5xzabuS0LHQG8JypxjFH/DPN3YJ
-        /fOxtULta69BdSv7rAU/L9jJPbQorv1TX99n4ub5nqFLMcr+V//DndPi5aM7vjUaP631rS95
-        O5mpZvlmZQMD8zmGNY+DK5VYijMSDbWYi4oTAQTkyOB3AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNIsWRmVeSWpSXmKPExsVy+t/xe7ps713jDbZc5bDYOGM9q8Wc8y0s
-        FvOPnGO16H/8mtni/PkN7BYXtvWxWmx6fI3V4vKuOWwWM87vY7I4NHUvo8XaI3fZLY4tELNo
-        3XuE3YHX4/K1i8weW1beZPLYtKqTzWPzknqPvi2rGD0+b5ILYIvSsynKLy1JVcjILy6xVYo2
-        tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQyzi47TVbwQTxinUzepkaGJtEuhg5
-        OSQETCQmH7jM1MXIxSEksJRR4uiOD0AOB1BCSmLl3HSIGmGJP9e62CBqnjJKPHreDVbDJqAn
-        sXZtBEiNiICmxPW/31lBapgF+pgl7i78yQiSEBawlzi6ugfMFhLQlbi3eh8riM0ioCrx5+Qt
-        NpA5nAKlEtO32oCEeQXMJaY9m8wEYosKWEpseXGfHSIuKHFy5hMWEJtZIFvi6+rnzBMYBWYh
-        Sc1CkpoFNJUZ6KT1u/QhwtoSyxa+ZoawbSXWrXvPsoCRdRWjSGppcW56brGhXnFibnFpXrpe
-        cn7uJkZgZG479nPzDsZLG4MPMQpwMCrx8C5gc40XYk0sK67MPcSoAjTm0YbVFxilWPLy81KV
-        RHidzp6OE+JNSaysSi3Kjy8qzUktPsRoCvTmRGYp0eR8YDLJK4k3NDU0t7A0NDc2NzazUBLn
-        7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAWHHFi2XGperEM8snrIh3qy/Wm2O0++S3BKvPU0oe
-        i586cz9inlW/d3yz65XGjl/a7l8CL21gdgxOkNKy+Ln88N8j7H8kzLd/X3iPv2XfSrfvfscq
-        Lnv47ePPnde10lKCq/TmoZ2hvOLaJ6vKol6u4Hmk/Xx7df6s6acad1f2p6R9eH5yxsxCLyWW
-        4oxEQy3mouJEAP4Td0XuAgAA
-X-CMS-MailID: 20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9
-X-Msg-Generator: CA
-X-RootMTR: 20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9
-References: <20200825185152.GC2693@kozik-lap>
-        <CGME20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9@eucas1p2.samsung.com>
+References: <1598331582-19923-1-git-send-email-iamjoonsoo.kim@lge.com> <e83100ae-d687-3b4e-8256-aee242191ada@suse.cz>
+In-Reply-To: <e83100ae-d687-3b4e-8256-aee242191ada@suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Wed, 26 Aug 2020 14:12:44 +0900
+Message-ID: <CAAmzW4MRizKRbdt_ZBqs_+OQGsP4f2F6iYDk88u78kYqOZA9NQ@mail.gmail.com>
+Subject: Re: [PATCH for v5.9] mm/page_alloc: handle a missing case for
+ memalloc_nocma_{save/restore} APIs
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        kernel-team@lge.com, Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-It was <2020-08-25 wto 20:51>, when Krzysztof Kozlowski wrote:
-> On Tue, Aug 25, 2020 at 07:03:11PM +0200, =C5=81ukasz Stelmach wrote:
->> Enable ax88796c driver for the ethernet chip on Exynos3250-based
->> ARTIK5 boards.
->>=20
->> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
->> ---
->>  arch/arm/configs/exynos_defconfig   | 2 ++
->>  arch/arm/configs/multi_v7_defconfig | 2 ++
->>  2 files changed, 4 insertions(+)
->>=20
->> Please DO NOT merge before these two
->
-> Sure, it can wait but shouldn't actually DT wait? It's only defconfig so
-> it does not change anything except automated systems booting these
-> defconfigs... The boards might be broken by DT.
-
-I was told, to ask for deferred merge of defconfig and it makes sense to
-me. DT won't break anything if the driver isn't compiled. However, I can
-see that you have a word you may decide about DT too. My point is to
-wait until spi-s3c64xx patches are merged and not to break ARTIK5
-boards.
-
->>=20
->>   https://lore.kernel.org/lkml/20200821161401.11307-2-l.stelmach@samsung=
-.com/
->>   https://lore.kernel.org/lkml/20200821161401.11307-3-l.stelmach@samsung=
-.com/
->>=20
->> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos=
-_defconfig
->> index 6e8b5ff0859c..82480b2bf545 100644
->> --- a/arch/arm/configs/exynos_defconfig
->> +++ b/arch/arm/configs/exynos_defconfig
->> @@ -107,6 +107,8 @@ CONFIG_MD=3Dy
->>  CONFIG_BLK_DEV_DM=3Dy
->>  CONFIG_DM_CRYPT=3Dm
->>  CONFIG_NETDEVICES=3Dy
->> +CONFIG_NET_VENDOR_ASIX=3Dy
->> +CONFIG_SPI_AX88796C=3Dy
->>  CONFIG_SMSC911X=3Dy
->>  CONFIG_USB_RTL8150=3Dm
->>  CONFIG_USB_RTL8152=3Dy
->> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/mult=
-i_v7_defconfig
->> index e9e76e32f10f..a8b4e95d4148 100644
->> --- a/arch/arm/configs/multi_v7_defconfig
->> +++ b/arch/arm/configs/multi_v7_defconfig
->> @@ -241,6 +241,8 @@ CONFIG_SATA_HIGHBANK=3Dy
->>  CONFIG_SATA_MV=3Dy
->>  CONFIG_SATA_RCAR=3Dy
->>  CONFIG_NETDEVICES=3Dy
->> +CONFIG_NET_VENDOR_ASIX=3Dy
->> +CONFIG_SPI_AX88796C=3Dm
->>  CONFIG_VIRTIO_NET=3Dy
->>  CONFIG_B53_SPI_DRIVER=3Dm
->>  CONFIG_B53_MDIO_DRIVER=3Dm
->> --=20
->> 2.26.2
->>=20
+2020=EB=85=84 8=EC=9B=94 25=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 6:43, V=
+lastimil Babka <vbabka@suse.cz>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
 >
 >
+> On 8/25/20 6:59 AM, js1304@gmail.com wrote:
+> > From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> >
+> > memalloc_nocma_{save/restore} APIs can be used to skip page allocation
+> > on CMA area, but, there is a missing case and the page on CMA area coul=
+d
+> > be allocated even if APIs are used. This patch handles this case to fix
+> > the potential issue.
+> >
+> > Missing case is an allocation from the pcplist. MIGRATE_MOVABLE pcplist
+> > could have the pages on CMA area so we need to skip it if ALLOC_CMA isn=
+'t
+> > specified.
+> >
+> > This patch implements this behaviour by checking allocated page from
+> > the pcplist rather than skipping an allocation from the pcplist entirel=
+y.
+> > Skipping the pcplist entirely would result in a mismatch between waterm=
+ark
+> > check and actual page allocation.
+>
+> Are you sure? I think a mismatch exists already. Pages can be on the pcpl=
+ist but
+> they are not considered as free in the watermark check. So passing waterm=
+ark
+> check means there should be also pages on free lists. So skipping pcplist=
+s would
+> be safe, no?
 
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
+You are right.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> > And, it requires to break current code
+> > layering that order-0 page is always handled by the pcplist. I'd prefer
+> > to avoid it so this patch uses different way to skip CMA page allocatio=
+n
+> > from the pcplist.
+>
+> Well it would be much simpler and won't affect most of allocations. Bette=
+r than
+> flushing pcplists IMHO.
 
------BEGIN PGP SIGNATURE-----
+Hmm...Still, I'd prefer my approach. There are two reasons. First,
+layering problem
+mentioned above. In rmqueue(), there is a code for MIGRATE_HIGHATOMIC.
+As the name shows, it's for high order atomic allocation. But, after
+skipping pcplist
+allocation as you suggested, we could get there with order 0 request.
+We can also
+change this code, but, I'd hope to maintain current layering. Second,
+a performance
+reason. After the flag for nocma is up, a burst of nocma allocation
+could come. After
+flushing the pcplist one times, we can use the free page on the
+pcplist as usual until
+the context is changed.
 
-iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl9F7vYACgkQsK4enJil
-gBAFHQgAmtB7lnKmjz1HmpsDGOZW6GL7+dy6DzX/WdcZYKl/BqPGkdJdS3mmZ2vL
-ReeRKBNGMi1tF5ke//+PK2ymKNUlM+oNogikadhqey9bPRNNehuAHT5A3iL+KulJ
-ynt0tiCPR1+1Map3UNgiMzAhcLmLZnJ+CIDeTq8z+USD7noFT05O3G4rNGnh5wMc
-iIyx3zVUCCVVoqEE1HlulzOgXc1p1E9ZnoH331iBVEr3aTUDoLvSoymMRx6eA2zA
-ggmUcoaFC5qjBza+qipukpqir4OZ40lisI3pgD8YPtJlJkZz4B7JitjcIb5s/7hT
-8h5mI4Wf/w2tA+GWcoYAnMfKZR+O2Q==
-=cYnG
------END PGP SIGNATURE-----
---=-=-=--
+How about my reasoning?
+
+Thanks.
