@@ -2,114 +2,143 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB03C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E1CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0EF9206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 389E12075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgHZJHd (ORCPT
+        id S1727915AbgHZJJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:07:33 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36117 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727906AbgHZJH1 (ORCPT
+        Wed, 26 Aug 2020 05:09:31 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:38375 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727122AbgHZJJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:07:27 -0400
-Received: by mail-ot1-f67.google.com with SMTP id x24so929890otp.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:07:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NCgdszg+UDbPAT++dmMRAeFSvMyoZiAg0p8cGDxBeXA=;
-        b=URvpSH5MdnxF4/D5EmkYTyU545P/hunAd6e7+146PuS8NFespW1m9LkHN3TTS9FJe4
-         UWntCc4oaV1mR/148buKH7x7zlEYY79aagEN47/AP6lpzxSVwUkGu0l/pp75FaWfi5hW
-         obhcFULNfgVfoTjSSn43DDTBJyG34kFqgcWnCEUiOCkEWdGHL6MXzoEtS9KaSm1D3MJm
-         lOYt+cBOoxSbIGo6QRGWq7voxXbcMJjo32c8oA2ECBLk+dOwYugOKayd54uXokvi0INM
-         GhceqUG6Tl4k9fUImuG7YhAHlbXewVNrmTCx909g2IFjMt6/UmHnrC3eaxH64fEKzGaL
-         3zlQ==
-X-Gm-Message-State: AOAM531g9/+uOcbNBgxkiQeD9QlTJRdKrr/Fq6lJM3CNdHkQMycTdAa6
-        MccqWFp4ysbTuS/+fASujaqrYFuZcV0+5PcTPj0=
-X-Google-Smtp-Source: ABdhPJz/V9TF3DtKRsO706Gjnv1cdrtKt4MphsCq88tyd7IS2DJEHZObzq9y6iSw60e6ZK0QgK+6jiW4XNaNSxOHEEs=
-X-Received: by 2002:a9d:32e5:: with SMTP id u92mr8650513otb.107.1598432847127;
- Wed, 26 Aug 2020 02:07:27 -0700 (PDT)
+        Wed, 26 Aug 2020 05:09:30 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U6v-68g_1598432963;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6v-68g_1598432963)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 26 Aug 2020 17:09:24 +0800
+Subject: Re: [PATCH v18 27/32] mm/swap.c: optimizing __pagevec_lru_add
+ lru_lock
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, willy@infradead.org,
+        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        shakeelb@google.com, iamjoonsoo.kim@lge.com,
+        richard.weiyang@gmail.com, kirill@shutemov.name,
+        alexander.duyck@gmail.com, rong.a.chen@intel.com, mhocko@suse.com,
+        vdavydov.dev@gmail.com, shy828301@gmail.com
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1598273705-69124-28-git-send-email-alex.shi@linux.alibaba.com>
+Message-ID: <57cea811-13bd-c026-01dc-69bd9eafa014@linux.alibaba.com>
+Date:   Wed, 26 Aug 2020 17:07:53 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-References: <20200728022746.87612-1-miaoqinglang@huawei.com>
-In-Reply-To: <20200728022746.87612-1-miaoqinglang@huawei.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 26 Aug 2020 11:07:15 +0200
-Message-ID: <CAMuHMdWfqh_AKyE+od_0yVPP6Lkv8LUAR1dWf8Df94W7b4qxLA@mail.gmail.com>
-Subject: Re: [PATCH -next] m68k/amiga: missing platform_device_unregister() on
- error in amiga_init_devices()
-To:     Qinglang Miao <miaoqinglang@huawei.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1598273705-69124-28-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Qinglang,
+The patch need update since a bug found.
 
-On Tue, Jul 28, 2020 at 4:24 AM Qinglang Miao <miaoqinglang@huawei.com> wrote:
-> Add the missing platform_device_unregister() before return
-> from amiga_init_devices() in the error handling case.
->
-> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+From 547d95205e666c7c5a81c44b7b1f8e1b6c7b1749 Mon Sep 17 00:00:00 2001
+From: Alex Shi <alex.shi@linux.alibaba.com>
+Date: Sat, 1 Aug 2020 22:49:31 +0800
+Subject: [PATCH] mm/swap.c: optimizing __pagevec_lru_add lru_lock
 
-Thanks for your patch!
+The current relock logical will change lru_lock when if found a new
+lruvec, so if 2 memcgs are reading file or alloc page equally, they
+could hold the lru_lock alternately.
 
-> --- a/arch/m68k/amiga/platform.c
-> +++ b/arch/m68k/amiga/platform.c
-> @@ -188,8 +188,10 @@ static int __init amiga_init_devices(void)
->                         return PTR_ERR(pdev);
->                 error = platform_device_add_data(pdev, &a1200_ide_pdata,
->                                                  sizeof(a1200_ide_pdata));
+This patch will record the needed lru_lock and only hold them once in
+above scenario. That could reduce the lock contention.
 
-The only reason why platform_device_add_data() can fail is because the
-system ran out of memory.  If that's the case this early, the whole
-system will fail to work anyway, and it doesn't matter that the IDE
-driver will crash later due to missing platform data.
+Suggested-by: Konstantin Khlebnikov <koct9i@gmail.com>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+---
+ mm/swap.c | 42 +++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 35 insertions(+), 7 deletions(-)
 
-So I don't think it helps to increase kernel size by adding more error
-handling.
-
-> -               if (error)
-> +               if (error) {
-> +                       platform_device_unregister(pdev);
->                         return error;
-> +               }
->         }
->
->         if (AMIGAHW_PRESENT(A4000_IDE)) {
-> @@ -199,8 +201,10 @@ static int __init amiga_init_devices(void)
->                         return PTR_ERR(pdev);
->                 error = platform_device_add_data(pdev, &a4000_ide_pdata,
->                                                  sizeof(a4000_ide_pdata));
-> -               if (error)
-> +               if (error) {
-> +                       platform_device_unregister(pdev);
-
-Likewise.
-
->                         return error;
-> +               }
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/mm/swap.c b/mm/swap.c
+index 2ac78e8fab71..dba3f0aba2a0 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -958,24 +958,52 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec)
+ 	trace_mm_lru_insertion(page, lru);
+ }
+ 
++struct add_lruvecs {
++	struct list_head lists[PAGEVEC_SIZE];
++	struct lruvec *vecs[PAGEVEC_SIZE];
++};
++
+ /*
+  * Add the passed pages to the LRU, then drop the caller's refcount
+  * on them.  Reinitialises the caller's pagevec.
+  */
+ void __pagevec_lru_add(struct pagevec *pvec)
+ {
+-	int i;
++	int i, j, total;
+ 	struct lruvec *lruvec = NULL;
+ 	unsigned long flags = 0;
++	struct page *page;
++	struct add_lruvecs lruvecs;
++
++	for (i = total = 0; i < pagevec_count(pvec); i++) {
++		page = pvec->pages[i];
++		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
++		lruvecs.vecs[i] = NULL;
++
++		/* Try to find a same lruvec */
++		for (j = 0; j < total; j++)
++			if (lruvec == lruvecs.vecs[j])
++				break;
++		/* A new lruvec */
++		if (j == total) {
++			INIT_LIST_HEAD(&lruvecs.lists[total]);
++			lruvecs.vecs[total] = lruvec;
++			total++;
++		}
+ 
+-	for (i = 0; i < pagevec_count(pvec); i++) {
+-		struct page *page = pvec->pages[i];
++		list_add(&page->lru, &lruvecs.lists[j]);
++	}
+ 
+-		lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
+-		__pagevec_lru_add_fn(page, lruvec);
++	for (i = 0; i < total; i++) {
++		spin_lock_irqsave(&lruvecs.vecs[i]->lru_lock, flags);
++		while (!list_empty(&lruvecs.lists[i])) {
++			page = lru_to_page(&lruvecs.lists[i]);
++			list_del(&page->lru);
++			__pagevec_lru_add_fn(page, lruvecs.vecs[i]);
++		}
++		spin_unlock_irqrestore(&lruvecs.vecs[i]->lru_lock, flags);
+ 	}
+-	if (lruvec)
+-		unlock_page_lruvec_irqrestore(lruvec, flags);
++
+ 	release_pages(pvec->pages, pvec->nr);
+ 	pagevec_reinit(pvec);
+ }
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+1.8.3.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
