@@ -2,148 +2,187 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED60AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 170D7C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBC7F2067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CC72067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:53:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wz3K0+h+"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Zk8JZqFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgHZJwQ (ORCPT
+        id S1728301AbgHZJxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:52:16 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:37998 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728121AbgHZJwP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:52:15 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07Q9malW168699;
-        Wed, 26 Aug 2020 09:52:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=puG6dn/0ZJ/S9eYVShDLSjSPKteNXnTDwq9+go1akjA=;
- b=wz3K0+h++jsK1mSFm80F42A8wKBHb/1KQIqOGgwGSfnKYECH26biQ3pFDGAS55vS4Xf3
- RM7QuvSza1jG41Z7CMlMx8ULnxzPOaZeSQIEjZFdiwvPhf0oSD63jesA2Ponpu5y4NXO
- tFR4CMbj++gRzz8ZhugnxdLtVU+ym/1LJcUXsWRzE0RxF6m1CFIUpRnJlk7e/0Xno4n9
- Nu/2Vt35D+QE4YxjTzlQV+xqTHeq/EE3a5+FzjiX/3IXF5JfODJU2RTuBijkXi4z/NR+
- W4wYdgqXNx9sEERAVC9PBQtrjSAvR/mAxZffqeLel7F7nIEwI+9am4zdeXET1YdQ9x1D Qg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 335gw819ft-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 09:52:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07Q9ko6O101234;
-        Wed, 26 Aug 2020 09:50:09 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 333r9kxw1r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 09:50:09 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07Q9o7ql023582;
-        Wed, 26 Aug 2020 09:50:08 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Aug 2020 02:50:07 -0700
-Date:   Wed, 26 Aug 2020 12:50:00 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Anant Thazhemadam <anant.thazhemadam@gmail.com>
-Cc:     devel@driverdev.osuosl.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: media-atomisp : fix "dubious: !x | !y" sparse
- warning
-Message-ID: <20200826095000.GW1793@kadam>
-References: <20200825220437.11214-1-anant.thazhemadam@gmail.com>
+        Wed, 26 Aug 2020 05:53:05 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:19561 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728041AbgHZJxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 05:53:03 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598435582; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Ev2LMeIqc88r/l6TuJddWcgSSo6NoXnUMGqZE8WEPUg=; b=Zk8JZqFxMjw7QLOgH+/DqJAngJ7SuWU4KoULIreyJd3Au08lvmcFNi2FPzKYcRxwgEixKRpA
+ nF87OnRqsyk1GflpBTdgHld8DfYtfo6dvdEfBiOfC7Wq/gOMlaNdSr85ISzChpECKMeS1cIa
+ l1HlKwZF7Hbje2PYnLyCplenRWc=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f4630fdca327a6430dc8269 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 09:53:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id BABF2C433A0; Wed, 26 Aug 2020 09:53:00 +0000 (UTC)
+Received: from [192.168.29.129] (unknown [49.36.73.208])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BFE8AC433C6;
+        Wed, 26 Aug 2020 09:52:54 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BFE8AC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce
+ IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
+        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
+        mka@chromium.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, agross@kernel.org,
+        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
+ <1598113021-4149-4-git-send-email-mkshah@codeaurora.org>
+ <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com>
+ <874koqxv6t.fsf@nanos.tec.linutronix.de>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org>
+Date:   Wed, 26 Aug 2020 15:22:51 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825220437.11214-1-anant.thazhemadam@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008260077
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 lowpriorityscore=0
- mlxscore=0 phishscore=0 bulkscore=0 impostorscore=0 adultscore=0
- malwarescore=0 clxscore=1011 spamscore=0 mlxlogscore=999
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008260078
+In-Reply-To: <874koqxv6t.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 03:34:26AM +0530, Anant Thazhemadam wrote:
-> Upon running sparse, "warning: dubious: !x | !y" is brought to notice
-> for this file. This patch fixes that warning.
-> 
-> If there's a specific reason that this change is considered undesirable, 
-> please do let me know why.
-> Thanks.
+Hi,
 
-Please don't put this sort of comments in the commit message.  You can
-put it under the --- cut off
+On 8/26/2020 3:08 AM, Thomas Gleixner wrote:
+> On Tue, Aug 25 2020 at 03:12, Stephen Boyd wrote:
+>> Quoting Maulik Shah (2020-08-22 09:16:58)
+>>> diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
+>>> index c6c7e18..2cc800b 100644
+>>> --- a/kernel/irq/pm.c
+>>> +++ b/kernel/irq/pm.c
+>>> @@ -69,12 +69,17 @@ void irq_pm_remove_action(struct irq_desc *desc, struct irqaction *action)
+>>>   
+>>>   static bool suspend_device_irq(struct irq_desc *desc)
+>>>   {
+>>> +       unsigned long chipflags = irq_desc_get_chip(desc)->flags;
+>>> +
+>>>          if (!desc->action || irq_desc_is_chained(desc) ||
+>>>              desc->no_suspend_depth)
+>>>                  return false;
+>>>   
+>>>          if (irqd_is_wakeup_set(&desc->irq_data)) {
+>>>                  irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
+>>> +
+>>> +               if (chipflags & IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)
+>>> +                       irq_enable(desc);
+>> Where is the corresponding change to resume_irq()? Don't we need to
+>> disable an irq if it was disabled on suspend and forcibly enabled here?
+I should have added comment explaining why i did not added.
+I thought of having corresponding change to resume_irq() but i did not 
+kept intentionally since i didn't
+observe any issue in my testing.
 
-> 
-> Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
-> ---
-  ^^^
-here.  Then it will be removed instead of going into the permanent git
-log.
+Actually the drivers which called (disable_irq() + enable_irq_wake()), 
+are invoking enable_irq()
+in the resume path everytime. With the driver's call to enable_irq() 
+things are restoring back already.
 
-Please always say int the commit message how the patch will affect the
-runtime behavior of the kernel.  In this case it will not affect it at
-all.  It's just a clean up.  Her is my proposed commit message if you
-want:
+If above is not true in some corner case, then the IRQ handler of driver 
+won't get invoked, in such case,
+why even to wake up with such IRQs in the first place, right?
 
-Subject: [PATCH] staging: media-atomisp : silence "dubious: !x | !y" warning
+However If we don't want to rely on the drivers doing things correctly, 
+state can be restored in resume_irq()
+I explored this, During suspend,
 
-Upon running sparse, "warning: dubious: !x | !y" is brought to notice
-for this file.  Logical and bitwise OR are basically the same in this
-context so it doesn't cause a runtime bug.  But let's change it to
-logical OR to make it cleaner and silence the Sparse warning.
+1. Some IRQs are unmasked/enabled + marked for wakeup
+2. Some IRQs are masked/disabled + marked for wakeup
 
-regards,
-dan carpenter
+So have to track and restore only IRQs in category (2).
+With current patch we don't have way to track IRQ is in (1) or (2).
+It may be done with the new IRQD flag saying like 
+IRQD_IRQ_ENABLED_ON_SUSPEND
 
+During suspend,
+First check if the IRQ was in disabled/masked state to invoke 
+irq_enable() only for category (2) and set the new flag.
 
+     if (irqd_irq_disabled(&desc->irq_data) && (chipflags & 
+IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)) {
+         irq_enable(desc);
+         irq_state_set_enabled_on_suspend(desc); => this will set new 
+IRQD_IRQ_ENABLED_ON_SUSPEND
+     }
 
+During resume,
+Simply calling irq_disable(desc); don't work in resume_irq(), since by 
+default this API tries to lazily disable at HW, which won't quite 
+restore the state,
+So instead of adding below
 
+     if (irqd_irq_disabled(&desc->irq_data) && (chipflags & 
+IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)
+     && (irqd_is_enabled_on_suspend(desc)))
+     {
+         irq_disable(desc);
+         irq_state_clear_enabled_on_suspend(desc); => clear flag
+     }
 
->  .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c    | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-> index 358cb7d2cd4c..3b850bb2d39d 100644
-> --- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-> +++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
-> @@ -58,7 +58,7 @@ sh_css_vf_downscale_log2(
->  	unsigned int ds_log2 = 0;
->  	unsigned int out_width;
->  
-> -	if ((!out_info) | (!vf_info))
-> +	if ((!out_info) || (!vf_info))
->  		return -EINVAL;
->  
->  	out_width = out_info->res.width;
-> -- 
-> 2.25.1
-> 
-> _______________________________________________
-> devel mailing list
-> devel@linuxdriverproject.org
-> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+we can replicate the irq_disable() with removal of lazy part, something 
+like,
+
+     if (irqd_irq_disabled(&desc->irq_data) && (chipflags & 
+IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND) &&
+     (irqd_is_enabled_on_suspend(desc))) { ==> The new flag used to 
+determine if IRQ was enabled during suspend path, then only restore.
+         irq_state_set_disabled(desc);
+         if (desc->irq_data.chip->irq_disable) {
+desc->irq_data.chip->irq_disable(&desc->irq_data);
+             irq_state_set_masked(desc);
+         } else {
+         mask_irq(desc);
+     }
+     irq_state_clear_enabled_on_suspend(desc);
+}
+
+which is matching exactly reverse of what is done in suspend entry.
+Let me know if above is good i can include this in v6.
+
+Thanks,
+Maulik
+
+> That part was below the POC code I provided in the fine print:
+>
+>   "plus the counterpart in the resume path. This also ensures that state is
+>    consistent."
+>
+> Who reads the fine print? :)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
