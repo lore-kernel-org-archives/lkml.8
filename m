@@ -2,178 +2,200 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CCEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6940AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4FC20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 365C220838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:23:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nLSKDQaB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tj1ZX9Qa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgHZLWT (ORCPT
+        id S1728938AbgHZLXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:22:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57518 "EHLO
+        Wed, 26 Aug 2020 07:23:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728902AbgHZLVZ (ORCPT
+        with ESMTP id S1728906AbgHZLVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:21:25 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C4A1C061799;
-        Wed, 26 Aug 2020 04:19:46 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id y26so782934lfe.2;
-        Wed, 26 Aug 2020 04:19:46 -0700 (PDT)
+        Wed, 26 Aug 2020 07:21:40 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA4D4C061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:21:27 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id o21so1397456wmc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:21:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uu4WskBztKVUoVSil4cy4MR9LWqcw8xk2hr+l0UQ5ho=;
-        b=nLSKDQaBmzQREFSjfYHKCqFSUKm9X0iKZKktP8MRR7TUCwjXuSJJQWe4LWG8yLQR5B
-         6ya721Xer1i/YscNwBz3wTajvo9dCz7ieCkXcXzy4pLGrwOxfu2LJ4wCam9Tacykvw5i
-         RHga6ZekM3QBEWrT0WnzqT3K73yNX+D/45UWy5PUzN3iQeEMNBieoWxxtND4qaSYXy2H
-         O1SMNuSUhs2bbLEusZUxwdWD9wrryrVS9yA34iQ/p/dnOVnRDpuTq2N/erfwBHywv+Wx
-         GO8s99zdB/EYGMwGsdhphInw4RWcHUmk2wNPyfSxs/Pon7KfXSW4mfBiqDnQBE839FX/
-         Z/Lg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=SEDuZLoEMjEHog4pApJjNCMgFg9dzBqJXIk1pFgNb80=;
+        b=tj1ZX9QaB4QGO9d4/spzrqx89NYfYamXLXhILYwshGhtiGjacdxXcGR/ehyTyM9sU/
+         cH2MkkHG8d4hUjmtFhEUgcIrg/US6K/ZezMARZ3YETc2gT8IolPxBNJpBHBk/7I9YcMx
+         8ppmQhFRyLlquFbvQyz6iSJVqJ7Y9XgwPZca62eQJtkzoR3uG9SjxR/6or9jaocJLico
+         gTv+O7jcD+kq3DpraaKuNZOcdxdQL+K/dRZV1l2aQT+mqirwCICbLGGkN+kKuYsCOsit
+         Vd5YRrNP0DmW8AOFBDRzM1LLtt4IifdYL6i7093b3j/NPtKkiNEw8JbuVCErU2VwuSOL
+         pU5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uu4WskBztKVUoVSil4cy4MR9LWqcw8xk2hr+l0UQ5ho=;
-        b=uTuCaSNhOkJwnKb2eS65M5aK7RC+RS1dUb4Cdf0f3t6zh+mdOaaudwy47F1yQA851T
-         qQBBu7GQ+sBn2Bq0Kntbt6CQv6yxq+v7nv4gOnQs4a4uaVzABK9HpO3ufc8nJBiwNzN+
-         G5dSTQA6dYzSdnvKo5kcLoi797MLFByEXzQ8BUObZXhVnLsUS1sD2TT6bUb13FfFFvAZ
-         H9hpvx1CYnBVJDh0fnqfW+sOYstPQ7c7g03/VfMHKzW9Q6JPXV2r+qDsdMaMHlcRfR1d
-         wd4ZWajFZBvRbONMP4GkX2UMozZDNXN9EJVeKAN3MVd4kMxKF10uF1Q1Pq9t27Ngoirn
-         cRwg==
-X-Gm-Message-State: AOAM531e4eOgD/T1SxnaDFp7xAksEAnaBWBvMOm/ZdTzAR5y1otQFgmE
-        /goc6Lg3UCeTuyp40r7cKXzS3ZBheU/eR6Ko+RU=
-X-Google-Smtp-Source: ABdhPJxuVHbetnc2ILjUr/BDvb4NcfasRruvdoGDD4w183KvosLLP3yazMpa2v2J3UgwEYKy/joOCyF1a6VogES9xps=
-X-Received: by 2002:ac2:5a0c:: with SMTP id q12mr2905449lfn.173.1598440784506;
- Wed, 26 Aug 2020 04:19:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=SEDuZLoEMjEHog4pApJjNCMgFg9dzBqJXIk1pFgNb80=;
+        b=scOj7/Phzc9L0xyY8VY2pyRJGhA3Ev1A2TTjbfjsnWQvRaPDXbg6TjgNE0pzFLpjfn
+         3KgEEAQPfQhRrq8MYXLxiO7m77OLuUGi8P36bVMXnLDgR0VoE83Vd3rMBFLCJgqvVH9z
+         ImAqwq3jHw4VxhdcC/VHFP1TG4tO5QwSefK4N1xg/CNzwHt6NWscKj2E4TzJEsz7GNFw
+         4+02gBQiekY2zvbFa0c8TORxVHUN/19MLidZTgMmaRLQI9r+nVxKlW/5ml+G+LDr5qVB
+         RXwuKCMgDUl8AFNGhZbpsKjYXpcQqnC5S4ucW27wnEIHWeEgM5W50NAT2NcUazn5pWSe
+         EPxg==
+X-Gm-Message-State: AOAM531zzM5PQHD/Cv7Z5c6A3PNUqU0gcUNphnI2SuAkpDq07/k4WYHL
+        ATNwB2rN19MBKDUP9pykFTj/YA==
+X-Google-Smtp-Source: ABdhPJzMnJP2DhJKlKa0q/INIKLrcWwlyHS0fmuV/bjwj4iefa5IJkdfbtDVq8kV6WpCJ0owLKxtUw==
+X-Received: by 2002:a1c:bc45:: with SMTP id m66mr6121110wmf.36.1598440886485;
+        Wed, 26 Aug 2020 04:21:26 -0700 (PDT)
+Received: from dell ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id 3sm4623945wms.36.2020.08.26.04.21.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 04:21:25 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 12:21:24 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     merez@codeaurora.org
+Cc:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, wil6210@qti.qualcomm.com
+Subject: Re: [PATCH 25/32] wireless: ath: wil6210: wmi: Fix formatting and
+ demote non-conforming function headers
+Message-ID: <20200826112124.GN3248864@dell>
+References: <20200821071644.109970-1-lee.jones@linaro.org>
+ <20200821071644.109970-26-lee.jones@linaro.org>
+ <330bc340a4d16f383c9adef2324db60e@codeaurora.org>
 MIME-Version: 1.0
-References: <20200825145556.637323-1-gnurou@gmail.com> <20200825145556.637323-3-gnurou@gmail.com>
- <CAAEAJfD1kUJODa+-STV6Q+=9qWH8v2=KZzAA4ppgfbQxstO+Mg@mail.gmail.com>
-In-Reply-To: <CAAEAJfD1kUJODa+-STV6Q+=9qWH8v2=KZzAA4ppgfbQxstO+Mg@mail.gmail.com>
-From:   Alexandre Courbot <gnurou@gmail.com>
-Date:   Wed, 26 Aug 2020 20:19:33 +0900
-Message-ID: <CAAVeFuJgBqN7KYhNi=mMNxy6wHTZOn5E1=pHP3q=n8X++b5pmg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] media: v4l2-mem2mem: simplify poll logic a bit
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <330bc340a4d16f383c9adef2324db60e@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ezequiel, thanks for the review!
+On Wed, 26 Aug 2020, merez@codeaurora.org wrote:
 
-On Wed, Aug 26, 2020 at 1:15 PM Ezequiel Garcia
-<ezequiel@vanguardiasur.com.ar> wrote:
->
-> Hi Alexandre,
->
-> On Tue, 25 Aug 2020 at 11:56, Alexandre Courbot <gnurou@gmail.com> wrote:
-> >
-> > Factorize redundant checks into a single code block, remove the early
-> > return, and declare variables in their innermost block. Hopefully this
-> > makes this code a little bit easier to follow.
-> >
->
-> This _definitely_ makes the poll handling more readable.
->
-> Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
->
-> See below a nitpick.
->
-> > Signed-off-by: Alexandre Courbot <gnurou@gmail.com>
+> On 2020-08-21 10:16, Lee Jones wrote:
+> > Fixes the following W=1 kernel build warning(s):
+> > 
+> >  drivers/net/wireless/ath/wil6210/wmi.c:52: warning: Incorrect use of
+> > kernel-doc format:  * Addressing - theory of operations
+> >  drivers/net/wireless/ath/wil6210/wmi.c:70: warning: Incorrect use of
+> > kernel-doc format:  * @sparrow_fw_mapping provides memory remapping
+> > table for sparrow
+> >  drivers/net/wireless/ath/wil6210/wmi.c:80: warning: cannot understand
+> > function prototype: 'const struct fw_map sparrow_fw_mapping[] = '
+> >  drivers/net/wireless/ath/wil6210/wmi.c:107: warning: Cannot
+> > understand  * @sparrow_d0_mac_rgf_ext - mac_rgf_ext section for
+> > Sparrow D0
+> >  drivers/net/wireless/ath/wil6210/wmi.c:115: warning: Cannot
+> > understand  * @talyn_fw_mapping provides memory remapping table for
+> > Talyn
+> >  drivers/net/wireless/ath/wil6210/wmi.c:158: warning: Cannot
+> > understand  * @talyn_mb_fw_mapping provides memory remapping table for
+> > Talyn-MB
+> >  drivers/net/wireless/ath/wil6210/wmi.c:236: warning: Function
+> > parameter or member 'x' not described in 'wmi_addr_remap'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:255: warning: Function
+> > parameter or member 'section' not described in 'wil_find_fw_mapping'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:278: warning: Function
+> > parameter or member 'wil' not described in 'wmi_buffer_block'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:278: warning: Function
+> > parameter or member 'ptr_' not described in 'wmi_buffer_block'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:278: warning: Function
+> > parameter or member 'size' not described in 'wmi_buffer_block'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:307: warning: Function
+> > parameter or member 'wil' not described in 'wmi_addr'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:307: warning: Function
+> > parameter or member 'ptr' not described in 'wmi_addr'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function
+> > parameter or member 'wil' not described in 'wil_find_cid_ringid_sta'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function
+> > parameter or member 'vif' not described in 'wil_find_cid_ringid_sta'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function
+> > parameter or member 'cid' not described in 'wil_find_cid_ringid_sta'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function
+> > parameter or member 'ringid' not described in
+> > 'wil_find_cid_ringid_sta'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function
+> > parameter or member 'vif' not described in 'wmi_evt_ignore'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function
+> > parameter or member 'id' not described in 'wmi_evt_ignore'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function
+> > parameter or member 'd' not described in 'wmi_evt_ignore'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function
+> > parameter or member 'len' not described in 'wmi_evt_ignore'
+> >  drivers/net/wireless/ath/wil6210/wmi.c:2588: warning: Function
+> > parameter or member 'wil' not described in 'wmi_rxon'
+> > 
+> > Cc: Maya Erez <merez@codeaurora.org>
+> > Cc: Kalle Valo <kvalo@codeaurora.org>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: linux-wireless@vger.kernel.org
+> > Cc: wil6210@qti.qualcomm.com
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
 > > ---
-> >  drivers/media/v4l2-core/v4l2-mem2mem.c | 35 +++++++++++---------------
-> >  1 file changed, 15 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
-> > index 0d0192119af20..aeac9707123d0 100644
-> > --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-> > +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-> > @@ -841,7 +841,6 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
-> >                                        struct poll_table_struct *wait)
-> >  {
-> >         struct vb2_queue *src_q, *dst_q;
-> > -       struct vb2_buffer *src_vb = NULL, *dst_vb = NULL;
-> >         __poll_t rc = 0;
-> >         unsigned long flags;
-> >
-> > @@ -863,33 +862,29 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
-> >                 return EPOLLERR;
-> >
-> >         spin_lock_irqsave(&src_q->done_lock, flags);
-> > -       if (!list_empty(&src_q->done_list))
-> > -               src_vb = list_first_entry(&src_q->done_list, struct vb2_buffer,
-> > -                                               done_entry);
-> > -       if (src_vb && (src_vb->state == VB2_BUF_STATE_DONE
-> > -                       || src_vb->state == VB2_BUF_STATE_ERROR))
-> > -               rc |= EPOLLOUT | EPOLLWRNORM;
-> > +       if (!list_empty(&src_q->done_list)) {
-> > +               struct vb2_buffer *src_vb = list_first_entry(
-> > +                       &src_q->done_list, struct vb2_buffer, done_entry);
-> > +               if (src_vb->state == VB2_BUF_STATE_DONE ||
-> > +                   src_vb->state == VB2_BUF_STATE_ERROR)
-> > +                       rc |= EPOLLOUT | EPOLLWRNORM;
-> > +       }
-> >         spin_unlock_irqrestore(&src_q->done_lock, flags);
-> >
-> >         spin_lock_irqsave(&dst_q->done_lock, flags);
-> > -       if (list_empty(&dst_q->done_list)) {
-> > +       if (!list_empty(&dst_q->done_list)) {
-> > +               struct vb2_buffer *dst_vb = list_first_entry(
-> > +                       &dst_q->done_list, struct vb2_buffer, done_entry);
-> > +               if (dst_vb->state == VB2_BUF_STATE_DONE ||
-> > +                   dst_vb->state == VB2_BUF_STATE_ERROR)
-> > +                       rc |= EPOLLIN | EPOLLRDNORM;
-> > +       } else if (dst_q->last_buffer_dequeued) {
-> >                 /*
-> >                  * If the last buffer was dequeued from the capture queue,
-> >                  * return immediately. DQBUF will return -EPIPE.
-> >                  */
->
-> The part about "returning immediately" doesn't make
-> much sense now. Could we rephrase this, keeping the -EPIPE
-> comment?
+> >  drivers/net/wireless/ath/wil6210/wmi.c | 28 ++++++++++++++------------
+> >  1 file changed, 15 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/drivers/net/wireless/ath/wil6210/wmi.c
+> > b/drivers/net/wireless/ath/wil6210/wmi.c
+> > index c7136ce567eea..3a6ee85acf6c7 100644
+> > --- a/drivers/net/wireless/ath/wil6210/wmi.c
+> > +++ b/drivers/net/wireless/ath/wil6210/wmi.c
+> > @@ -31,7 +31,7 @@ MODULE_PARM_DESC(led_id,
+> >  #define WIL_WAIT_FOR_SUSPEND_RESUME_COMP 200
+> >  #define WIL_WMI_PCP_STOP_TO_MS 5000
+> > 
+> > -/**
+> > +/*
+> >   * WMI event receiving - theory of operations
+> >   *
+> >   * When firmware about to report WMI event, it fills memory area
+> 
+> The correct format for such documentation blocks is:
+> /**
+>  * DOC: Theory of Operation
+> 
+> This comment is also applicable for the rest of such documentation blocks
+> changed in this patch.
 
-I understood this sentence as referring to the system call and not
-just this function, but maybe we can rephrase this as "... make
-user-space wake up immediately"?
+Ah yes, good point.  Will fix.
 
->
-> Thanks,
-> Ezequiel
->
-> > -               if (dst_q->last_buffer_dequeued) {
-> > -                       spin_unlock_irqrestore(&dst_q->done_lock, flags);
-> > -                       rc |= EPOLLIN | EPOLLRDNORM;
-> > -                       return rc;
-> > -               }
-> > -       }
-> > -
-> > -       if (!list_empty(&dst_q->done_list))
-> > -               dst_vb = list_first_entry(&dst_q->done_list, struct vb2_buffer,
-> > -                                               done_entry);
-> > -       if (dst_vb && (dst_vb->state == VB2_BUF_STATE_DONE
-> > -                       || dst_vb->state == VB2_BUF_STATE_ERROR))
-> >                 rc |= EPOLLIN | EPOLLRDNORM;
-> > +       }
-> >         spin_unlock_irqrestore(&dst_q->done_lock, flags);
-> >
-> >         return rc;
-> > --
-> > 2.28.0
-> >
+> > @@ -66,7 +66,7 @@ MODULE_PARM_DESC(led_id,
+> >   * AHB address must be used.
+> >   */
+> > 
+> > -/**
+> > +/*
+> >   * @sparrow_fw_mapping provides memory remapping table for sparrow
+> >   *
+> >   * array size should be in sync with the declaration in the wil6210.h
+> For files in net/ and drivers/net/ the preferred style for long (multi-line)
+> comments is a different and
+> the text should be in the same line as /*, as follows:
+> /* sparrow_fw_mapping provides memory remapping table for sparrow
+> I would also remove the @ from @sparrow_fw_mapping.
+> This comment is also applicable for the rest of such documentation blocks
+> changed in this patch.
+
+Sounds fair.  Will also fix.
+
+Thank you.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
