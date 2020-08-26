@@ -2,96 +2,63 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB10C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F35C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C507C2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 294A82078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgHZRaI (ORCPT
+        id S1727042AbgHZRaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:30:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53140 "EHLO mx2.suse.de"
+        Wed, 26 Aug 2020 13:30:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726802AbgHZRaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:30:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 43EE5AD83;
-        Wed, 26 Aug 2020 17:30:32 +0000 (UTC)
-Date:   Wed, 26 Aug 2020 19:29:53 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Xunlei Pang <xlpang@linux.alibaba.com>,
+        id S1726767AbgHZRaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 13:30:15 -0400
+Received: from gaia (unknown [46.69.195.127])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 665D72078B;
+        Wed, 26 Aug 2020 17:30:13 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 18:30:10 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Rong Chen <rong.a.chen@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2] mm: memcg: Fix memcg reclaim soft lockup
-Message-ID: <20200826172953.GT22869@dhcp22.suse.cz>
-References: <1598449622-108748-1-git-send-email-xlpang@linux.alibaba.com>
- <20200826164332.GB995045@cmpxchg.org>
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [mm] c566586818:
+ BUG:kernel_hang_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
+Message-ID: <20200826173010.GD24545@gaia>
+References: <34a960a0-ec0b-3c26-ec73-e415a8197757@intel.com>
+ <9D9FBD8D-DF19-4DA9-B0B1-260BA72D3712@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200826164332.GB995045@cmpxchg.org>
+In-Reply-To: <9D9FBD8D-DF19-4DA9-B0B1-260BA72D3712@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 26-08-20 12:43:32, Johannes Weiner wrote:
-> On Wed, Aug 26, 2020 at 09:47:02PM +0800, Xunlei Pang wrote:
-> > We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
-> > the target memcg doesn't have any reclaimable memory.
-> > 
-> > It can be easily reproduced as below:
-> >  watchdog: BUG: soft lockup - CPU#0 stuck for 111s![memcg_test:2204]
-> >  CPU: 0 PID: 2204 Comm: memcg_test Not tainted 5.9.0-rc2+ #12
-> >  Call Trace:
-> >   shrink_lruvec+0x49f/0x640
-> >   shrink_node+0x2a6/0x6f0
-> >   do_try_to_free_pages+0xe9/0x3e0
-> >   try_to_free_mem_cgroup_pages+0xef/0x1f0
-> >   try_charge+0x2c1/0x750
-> >   mem_cgroup_charge+0xd7/0x240
-> >   __add_to_page_cache_locked+0x2fd/0x370
-> >   add_to_page_cache_lru+0x4a/0xc0
-> >   pagecache_get_page+0x10b/0x2f0
-> >   filemap_fault+0x661/0xad0
-> >   ext4_filemap_fault+0x2c/0x40
-> >   __do_fault+0x4d/0xf9
-> >   handle_mm_fault+0x1080/0x1790
-> > 
-> > It only happens on our 1-vcpu instances, because there's no chance
-> > for oom reaper to run to reclaim the to-be-killed process.
-> > 
-> > Add cond_resched() at the upper shrink_node_memcgs() to solve this
-> > issue, and any other possible issue like meomry.min protection.
-> > 
-> > Suggested-by: Michal Hocko <mhocko@suse.com>
-> > Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
+On Tue, Aug 25, 2020 at 11:02:40PM -0400, Qian Cai wrote:
+> On Aug 25, 2020, at 8:44 PM, Rong Chen <rong.a.chen@intel.com> wrote:
+> > I rebuilt the kernel on commit c566586818 but the error changed to
+> > "RIP: 0010:clear_page_orig+0x12/0x40", and the error can be
+> > reproduced on parent commit:
 > 
-> This generally makes sense to me but really should have a comment:
-> 
-> 	/*
-> 	 * This loop can become CPU-bound when there are thousands
-> 	 * of cgroups that aren't eligible for reclaim - either
-> 	 * because they don't have any pages, or because their
-> 	 * memory is explicitly protected. Avoid soft lockups.
-> 	 */
-> 	 cond_resched();
-> 
-> The placement in the middle of the multi-part protection checks is a
-> bit odd too. It would be better to have it either at the top of the
-> loop, or at the end, by replacing the continues with goto next.
+> Catalin, any thought? Sounds like those early kmemleak allocations
+> cause some sort of memory corruption?
 
-Yes makes sense. I would stick it to the begining of the loop to make it
-stand out and make it obvious wrt code flow.
+I can't immediately see how but Rong implies that the error also happens
+on the parent commit. Does it mean the bisection isn't entirely right?
 
 -- 
-Michal Hocko
-SUSE Labs
+Catalin
