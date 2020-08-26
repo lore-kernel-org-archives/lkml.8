@@ -2,313 +2,313 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FB2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 931B521741
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD39208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:33:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=barpilot-io.20150623.gappssmtp.com header.i=@barpilot-io.20150623.gappssmtp.com header.b="pV2YDm4g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730349AbgHZNdS (ORCPT
+        id S1730355AbgHZNd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:33:18 -0400
-Received: from lizzard.sbs.de ([194.138.37.39]:59674 "EHLO lizzard.sbs.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730288AbgHZNcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:32:25 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by lizzard.sbs.de (8.15.2/8.15.2) with ESMTPS id 07QDVu6R019658
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 15:31:56 +0200
-Received: from [167.87.242.222] ([167.87.242.222])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 07QDVsHP027829;
-        Wed, 26 Aug 2020 15:31:54 +0200
-Subject: Re: [RESEND PATCH v3 5/8] mtd: spi-nor: cadence-quadspi: Handle probe
- deferral while requesting DMA channel
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Jin, Le (RC-CN DF FA R&D)" <le.jin@siemens.com>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Ramuthevar Vadivel Murugan 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, simon.k.r.goldschmidt@gmail.com,
-        dinguyen@kernel.org, marex@denx.de
-References: <20200601070444.16923-1-vigneshr@ti.com>
- <20200601070444.16923-6-vigneshr@ti.com>
- <6c8d9bff-3a67-0e6c-d4d1-36b7ed5007b9@web.de>
- <8cebd31a-2366-4584-b1d1-faa30c18ed6a@ti.com>
- <dbba9f0c-4621-2d58-8fb8-4cbe788558f9@siemens.com>
- <eff1b49e-e392-8887-b3a0-3caedc5b81cc@siemens.com>
- <8995f5c5-bd6a-c0e5-1e4f-1744aedd2bcd@siemens.com>
- <5e215c3c-5603-a796-9dea-13b7c2840ed0@ti.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <c090b23a-488f-6eb3-206b-a7678b70a4e2@siemens.com>
-Date:   Wed, 26 Aug 2020 15:31:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 26 Aug 2020 09:33:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730338AbgHZNco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:32:44 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2A9FC061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:32:43 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id s2so2116363ioo.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:32:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=barpilot-io.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ss1ahBsuacpjwRSXltHzxXXPlZjpMb8fBUu+mx+WaA0=;
+        b=pV2YDm4gGeVOLDRs9SoD9t/ey5oo6Jn5i+yiYXajiVDqp00hf+19vn2QF6njFX2ucf
+         ecfmFkg+1ejYXGBuai2oFmAfYG1WJ+HEPesLXFXHyu7nDs1CcAKuAbJS+zcmZjNd7GQT
+         l8kCZQRVbxcnuNsCyV/78ljoJ2BESDoK+I9r7/7KVxfvmLK8eHwBSI23zIB5ztr/Zts7
+         JLbkD87muiOgdeK0rpdH//kdkj/Q/Bu5NshHUs5vEXfFrrglmVt2IaVHfkyqmMfBRtzj
+         7R+xbfsjPfm0X8NwiOkDcWaDcNffD8QPJ06KTXGUfNtr1EIib7DPxImjGJkBsipQ+liW
+         vB+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ss1ahBsuacpjwRSXltHzxXXPlZjpMb8fBUu+mx+WaA0=;
+        b=qNFRIUwUa1aH0hcx36PSWcveLzDf02LWFK9DO1QZZ11LETLcCn+wZ0QU92fRAcEiiZ
+         5jPUzjsr4tb9IYVe2ii5v4/WFqs32X8+KxSBsIGRmW6RXY43YWy3Dr6vXfKh0o2552dP
+         7C0nr4X0BDW5LmhMRKXOuuFDaL/VUk5Lg5YJw/obD9zBF7CIoxcq65T5UVn1pHN7G8/3
+         u1PLyDldRQU+kSoxXxRiS/woVCnGxkFJmLY8ZV481RA07VEdPAUGWcbuz7Vx4ZdlFmta
+         zbIk6pZFsK6lq+W1QcwHaL8yC2en0KCW//FB1rAgqLc9Ephh775WM+GuQEvyM83TWgRH
+         ynkQ==
+X-Gm-Message-State: AOAM530Clnb1KYar2oWQES7FSAapNsmlZEgeKOug+isgDdmBwCJeZTnc
+        xKMPV8AMNaD2ayEI/eCkhyheLUJ9ktF4UdjH+6MK6g==
+X-Google-Smtp-Source: ABdhPJyifgZETWPgeEmgkWQCxtIe38cCNfUgOnfz3mne9gTA7+p1ZkpyygVpWr209UqK3E9ChtDREgSeJZxzN7X6nKY=
+X-Received: by 2002:a6b:e009:: with SMTP id z9mr12846483iog.124.1598448762210;
+ Wed, 26 Aug 2020 06:32:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5e215c3c-5603-a796-9dea-13b7c2840ed0@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200826120421.44356-1-guilhem@barpilot.io> <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
+ <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
+ <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com> <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
+In-Reply-To: <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
+From:   Guilhem Lettron <guilhem@barpilot.io>
+Date:   Wed, 26 Aug 2020 15:32:31 +0200
+Message-ID: <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
+Subject: Re: [PATCH] intel_idle: Add ICL support
+To:     dedekind1@gmail.com
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26.08.20 14:18, Vignesh Raghavendra wrote:
-> 
-> 
-> On 8/26/20 3:42 PM, Jan Kiszka wrote:
->> On 24.08.20 19:20, Jan Kiszka wrote:
->>> On 24.08.20 14:49, Jan Kiszka wrote:
->>>> On 24.08.20 13:45, Vignesh Raghavendra wrote:
->>>>>
->>>>>
->>>>> On 8/22/20 11:35 PM, Jan Kiszka wrote:
->>>>>> On 01.06.20 09:04, Vignesh Raghavendra wrote:
->>>>>>> dma_request_chan_by_mask() can throw EPROBE_DEFER if DMA provider
->>>>>>> is not yet probed. Currently driver just falls back to using PIO mode
->>>>>>> (which is less efficient) in this case. Instead return probe deferral
->>>>>>> error as is so that driver will be re probed once DMA provider is
->>>>>>> available.
->>>>>>>
->>>>>>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
->>>>>>> Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
->>>>>>> ---
->>>>> [...]
->>>>>>>
->>>>>>>  static const struct spi_nor_controller_ops cqspi_controller_ops = {
->>>>>>> @@ -1269,8 +1274,11 @@ static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
->>>>>>>  			dev_dbg(nor->dev, "using direct mode for %s\n",
->>>>>>>  				mtd->name);
->>>>>>>
->>>>>>> -			if (!cqspi->rx_chan)
->>>>>>> -				cqspi_request_mmap_dma(cqspi);
->>>>>>> +			if (!cqspi->rx_chan) {
->>>>>>> +				ret = cqspi_request_mmap_dma(cqspi);
->>>>>>> +				if (ret == -EPROBE_DEFER)
->>>>>>> +					goto err;
->>>>>>> +			}
->>>>>>>  		}
->>>>>>>  	}
->>>>>>>
->>>>>>>
->>>>>>
->>>>>> This seem to break reading the SPI flash on our IOT2050 [1] (didn't test
->>>>>> the eval board yet).
->>>>>>
->>>>>> Without that commit, read happens via PIO, and that works. With the
->>>>>> commit, the pattern
->>>>>>
->>>>>> with open("out.bin", "wb") as out:
->>>>>>     pos = 0
->>>>>>     while pos < 2:
->>>>>>         with open("/dev/mtd0", "rb") as mtd:
->>>>>>            mtd.seek(pos * 0x10000)
->>>>>>            out.write(mtd.read(0x10000))
->>>>>>         pos += 1
->>>>>>
->>>>>> gives the wrong result for the second block while
->>>>>
->>>>> Interesting... Could you please explain wrong result? Is the data move
->>>>> around or completely garbage?
->>>>
->>>> It looks like some stripes contain data from other parts of the flash or
->>>> kernel RAM. It's not just garbage, there are readable strings included.
->>>>
->>>>>
->>>>> Does this fail even on AM654 EVM? Could you share full script for me to
->>>>> test locally?
->>>>
->>>> The scripts are complete (python). Just binary-diff the outputs.
->>>>
->>>> I'll try on the EVM later.
->>>
->>> Done so now, could reproduce.
->>
->> ..."could *not* reproduce" there. Sorry if that caused confusion.
->>
-> 
-> Oh, thanks! I was wondering why I cannot see this issue on AM654 EVM at my end...
-> 
->>>
->>> But the OSPIs are definitely different. EVM reports
->>>
->>> spi-nor spi0.0: mt35xu512aba (65536 Kbytes)
->>>
->>> with 4K erase size. Our our board, we have
->>>
->>> spi-nor spi7.0: w25q128 (16384 Kbytes)
->>>
->>> with 64K erase size.
->>>
->>> Here is some extract of the hex-diffs between out.bin and out2.bin (the 
->>> latter being the good one):
->>>
->>> --- /dev/fd/63  2020-08-24 17:16:58.776409282 +0000
->>> +++ /dev/fd/62  2020-08-24 17:16:58.776409282 +0000
->>> @@ -6,18 +6,18 @@
->>>  00000050  0f 30 0d 06 03 55 04 07  0c 06 44 61 6c 6c 61 73  |.0...U....Dallas|
->>>  00000060  31 27 30 25 06 03 55 04  0a 0c 1e 54 65 78 61 73  |1'0%..U....Texas|
->>>  00000070  20 49 6e 73 74 72 75 6d  65 6e 74 73 20 49 6e 63  | Instruments Inc|
->>> -00000080  84 8b 96 2c 0c 12 18 03  01 05 05 04 01 02 00 00  |...,............|
->>> -00000090  07 06 44 45 20 01 0d 14  2a 01 00 32 05 24 30 48  |..DE ...*..2.$0H|
->>> -000000a0  60 6c 30 14 01 00 00 0f  ac 04 01 00 00 0f ac 04  |`l0.............|
->>> -000000b0  01 00 00 0f ac 02 0c 00  2d 1a 6f 18 17 ff ff ff  |........-.o.....|
->>> +00000080  6f 72 70 6f 72 61 74 65  64 31 13 30 11 06 03 55  |orporated1.0...U|
->>> +00000090  04 0b 0c 0a 50 72 6f 63  65 73 73 6f 72 73 31 13  |....Processors1.|
->>> +000000a0  30 11 06 03 55 04 03 0c  0a 54 49 20 73 75 70 70  |0...U....TI supp|
->>> +000000b0  6f 72 74 31 1d 30 1b 06  09 2a 86 48 86 f7 0d 01  |ort1.0...*.H....|
->>>  000000c0  09 01 16 0e 73 75 70 70  6f 72 74 40 74 69 2e 63  |....support@ti.c|
->>>  000000d0  6f 6d 30 1e 17 0d 32 30  30 37 32 32 31 31 30 30  |om0...2007221100|
->>>  000000e0  30 30 5a 17 0d 32 30 30  38 32 31 31 31 30 30 30  |00Z..20082111000|
->>>  000000f0  30 5a 30 81 9d 31 0b 30  09 06 03 55 04 06 13 02  |0Z0..1.0...U....|
->>> -00000100  00 00 27 a4 00 00 42 43  5e 00 62 32 2f 00 b4 96  |..'...BC^.b2/...|
->>> -00000110  24 44 0c 00 c6 00 43 0a  00 00 0b f0 43 a5 2a 01  |$D....C.....C.*.|
->>> -00000120  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
->>> -*
->>> +00000100  55 53 31 0b 30 09 06 03  55 04 08 0c 02 54 58 31  |US1.0...U....TX1|
->>> +00000110  0f 30 0d 06 03 55 04 07  0c 06 44 61 6c 6c 61 73  |.0...U....Dallas|
->>> +00000120  31 27 30 25 06 03 55 04  0a 0c 1e 54 65 78 61 73  |1'0%..U....Texas|
->>> +00000130  20 49 6e 73 74 72 75 6d  65 6e 74 73 20 49 6e 63  | Instruments Inc|
->>>  00000140  6f 72 70 6f 72 61 74 65  64 31 13 30 11 06 03 55  |orporated1.0...U|
->>>  00000150  04 0b 0c 0a 50 72 6f 63  65 73 73 6f 72 73 31 13  |....Processors1.|
->>>  00000160  30 11 06 03 55 04 03 0c  0a 54 49 20 73 75 70 70  |0...U....TI supp|
->>>
->>> [...]
->>>
->>>  000017a0  02 8a e5 06 c8 8c e2 14  c2 8a e5 7c 01 00 ea ed  |...........|....|
->>>  000017b0  1f 8f e2 66 02 00 ea 5b  45 72 72 6f 72 5d 20 52  |...f...[Error] R|
->>> -000017c0  69 64 20 55 54 43 20 49  44 21 21 21 0a 00 00 5b  |id UTC ID!!!...[|
->>> -000017d0  45 72 72 6f 72 5d 20 49  6e 76 61 6c 69 64 20 50  |Error] Invalid P|
->>> -000017e0  65 65 72 20 43 68 61 6e  6e 65 6c 20 4e 75 6d 62  |eer Channel Numb|
->>> -000017f0  65 72 21 21 21 0a 00 41  73 73 65 72 74 69 6f 6e  |er!!!..Assertion|
->>> +000017c0  4d 20 41 6c 6c 6f 63 20  54 58 20 43 68 20 66 61  |M Alloc TX Ch fa|
->>> +000017d0  69 6c 65 64 21 21 21 0a  00 00 00 73 72 63 2f 75  |iled!!!....src/u|
->>> +000017e0  64 6d 61 5f 63 68 2e 63  00 00 00 75 74 63 49 6e  |dma_ch.c...utcIn|
->>> +000017f0  66 6f 20 21 3d 20 4e 55  4c 4c 5f 50 54 52 00 75  |fo != NULL_PTR.u|
->>>  00001800  74 63 49 64 20 3c 3d 20  55 44 4d 41 5f 4e 55 4d  |tcId <= UDMA_NUM|
->>>  00001810  5f 55 54 43 5f 49 4e 53  54 41 4e 43 45 00 00 72  |_UTC_INSTANCE..r|
->>>
->>
->> I've done [1] for now in order to make the OSPI usable again here. It
->> looks like reading an mtd device in one chunk (single read syscall) is
->> fine, ie. "dd if=/dev/mtd3 of=content2 bs=<sizeof-mtd3>", while reading
->> it in multiple chunks is problematic, e.g. "dd if=/dev/mtd3 of=content2
->> bs=4096". Interestingly, the deviation is already on the first block,
->> which may speak against a setup issue for a second transfer.
-> 
-> I cannot think of a reasonable explanation for this. I wonder how the first chunk 
-> gets affected when reading in multiple chunks.
-> 
->>
->> The content I've seen in the corrupted output may come from other parts
->> of the memory. I've found my WIFI SSID there, which is definitely not
->> part of our OSPI image.
->>
-> 
-> Hmm, one guess it that QSPI on IoT board is 16MB and hence 
+On Wed, 26 Aug 2020 at 15:18, Artem Bityutskiy <dedekind1@gmail.com> wrote:
+>
+> On Wed, 2020-08-26 at 16:16 +0300, Artem Bityutskiy wrote:
+> > Just get a reasonably new turbostat (it is part of the kernel tree, you
+> > can compile it yourself) and run it for few seconds (like 'turbostat
+> > sleep 10'), get the output (will be a lot of it), and we can check what
+> > is actually going on with regards to C-states.
+>
+> Oh, and if you could do that with and without your patch, we could even
+> compare things. But try to do it at least with the default (acpi_idle)
+> configuration.
 
-It is 16M, true.
+with my patch:
 
-> does not support 4 byte addressing vs the OSPI on AM654 EVM. 
-> There could be bug around that case.
-> 
-> So, could you apply diff [1] on linux-next and then execute 
-> falling testcase and post the register dump printed?
-> 
-> [1]:
-> 
+turbostat version 20.03.20 - Len Brown <lenb@kernel.org>
+CPUID(0): GenuineIntel 0x1b CPUID levels; 0x80000008 xlevels;
+family:model:stepping 0x6:7e:5 (6:126:5)
+CPUID(1): SSE3 MONITOR - EIST TM2 TSC MSR ACPI-TM HT TM
+CPUID(6): APERF, TURBO, DTS, PTM, HWP, No-HWPnotify, HWPwindow,
+HWPepp, HWPpkg, EPB
+cpu2: MSR_IA32_MISC_ENABLE: 0x00850089 (TCC EIST MWAIT PREFETCH TURBO)
+CPUID(7): SGX
+cpu2: MSR_IA32_FEATURE_CONTROL: 0x00020005 (Locked )
+CPUID(0x15): eax_crystal: 2 ebx_tsc: 78 ecx_crystal_hz: 38400000
+TSC: 1497 MHz (38400000 Hz * 78 / 2 / 1000000)
+CPUID(0x16): base_mhz: 1500 max_mhz: 3900 bus_mhz: 100
+cpu2: MSR_MISC_PWR_MGMT: 0x00401c40 (ENable-EIST_Coordination
+DISable-EPB DISable-OOB)
+RAPL: 17476 sec. Joule Counter Range, at 15 Watts
+cpu2: MSR_PLATFORM_INFO: 0x4043cf1810f00
+4 * 100.0 = 400.0 MHz max efficiency frequency
+15 * 100.0 = 1500.0 MHz base frequency
+cpu2: MSR_IA32_POWER_CTL: 0x0024005d (C1E auto-promotion: DISabled)
+cpu2: MSR_TURBO_RATIO_LIMIT: 0x2323232323232627
+35 * 100.0 = 3500.0 MHz max turbo 8 active cores
+35 * 100.0 = 3500.0 MHz max turbo 7 active cores
+35 * 100.0 = 3500.0 MHz max turbo 6 active cores
+35 * 100.0 = 3500.0 MHz max turbo 5 active cores
+35 * 100.0 = 3500.0 MHz max turbo 4 active cores
+35 * 100.0 = 3500.0 MHz max turbo 3 active cores
+38 * 100.0 = 3800.0 MHz max turbo 2 active cores
+39 * 100.0 = 3900.0 MHz max turbo 1 active cores
+cpu2: MSR_CONFIG_TDP_NOMINAL: 0x0000000d (base_ratio=13)
+cpu2: MSR_CONFIG_TDP_LEVEL_1: 0x000a0060 (PKG_MIN_PWR_LVL1=0
+PKG_MAX_PWR_LVL1=0 LVL1_RATIO=10 PKG_TDP_LVL1=96)
+cpu2: MSR_CONFIG_TDP_LEVEL_2: 0x000f00c8 (PKG_MIN_PWR_LVL2=0
+PKG_MAX_PWR_LVL2=0 LVL2_RATIO=15 PKG_TDP_LVL2=200)
+cpu2: MSR_CONFIG_TDP_CONTROL: 0x00000000 ( lock=0)
+cpu2: MSR_TURBO_ACTIVATION_RATIO: 0x0000000c (MAX_NON_TURBO_RATIO=12 lock=0)
+cpu2: MSR_PKG_CST_CONFIG_CONTROL: 0x74008008 (UNdemote-C1, demote-C1,
+locked, pkg-cstate-limit=8 (unlimited))
+current_driver: intel_idle
+current_governor: menu
+current_governor_ro: menu
+cpu2: POLL: CPUIDLE CORE POLL IDLE
+cpu2: C1: MWAIT 0x00
+cpu2: C1E: MWAIT 0x01
+cpu2: C6: MWAIT 0x20
+cpu2: C7s: MWAIT 0x33
+cpu2: C8: MWAIT 0x40
+cpu2: C9: MWAIT 0x50
+cpu2: C10: MWAIT 0x60
+cpu2: cpufreq driver: intel_cpufreq
+cpu2: cpufreq governor: schedutil
+cpufreq intel_pstate no_turbo: 0
+cpu2: MSR_MISC_FEATURE_CONTROL: 0x00000000 (L2-Prefetch
+L2-Prefetch-pair L1-Prefetch L1-IP-Prefetch)
+cpu0: MSR_PM_ENABLE: 0x00000001 (HWP)
+cpu0: MSR_HWP_CAPABILITIES: 0x010e0d27 (high 39 guar 13 eff 14 low 1)
+cpu0: MSR_HWP_REQUEST: 0x80002727 (min 39 max 39 des 0 epp 0x80 window
+0x0 pkg 0x0)
+cpu0: MSR_HWP_REQUEST_PKG: 0x8000ff01 (min 1 max 255 des 0 epp 0x80 window 0x0)
+cpu0: MSR_HWP_STATUS: 0x00000000 (No-Guaranteed_Perf_Change, No-Excursion_Min)
+cpu0: MSR_IA32_ENERGY_PERF_BIAS: 0x00000006 (balanced)
+cpu0: MSR_RAPL_POWER_UNIT: 0x000a0e03 (0.125000 Watts, 0.000061
+Joules, 0.000977 sec.)
+cpu0: MSR_PKG_POWER_INFO: 0x00000078 (15 W TDP, RAPL 0 - 0 W, 0.000000 sec.)
+cpu0: MSR_PKG_POWER_LIMIT: 0x5a8118009d80c8 (UNlocked)
+cpu0: PKG Limit #1: ENabled (25.000000 Watts, 24.000000 sec, clamp ENabled)
+cpu0: PKG Limit #2: ENabled (35.000000 Watts, 10.000000* sec, clamp DISabled)
+cpu0: MSR_DRAM_POWER_LIMIT: 0x5400de00000000 (UNlocked)
+cpu0: DRAM Limit: DISabled (0.000000 Watts, 0.000977 sec, clamp DISabled)
+cpu0: MSR_PP0_POLICY: 0
+cpu0: MSR_PP0_POWER_LIMIT: 0x00000000 (UNlocked)
+cpu0: Cores Limit: DISabled (0.000000 Watts, 0.000977 sec, clamp DISabled)
+cpu0: MSR_PP1_POLICY: 0
+cpu0: MSR_PP1_POWER_LIMIT: 0x00000000 (UNlocked)
+cpu0: GFX Limit: DISabled (0.000000 Watts, 0.000977 sec, clamp DISabled)
+cpu0: MSR_IA32_TEMPERATURE_TARGET: 0x05640000 (100 C)
+cpu0: MSR_IA32_PACKAGE_THERM_STATUS: 0x88290800 (59 C)
+cpu0: MSR_IA32_PACKAGE_THERM_INTERRUPT: 0x00000003 (100 C, 100 C)
+cpu2: MSR_PKGC3_IRTL: 0x00000000 (NOTvalid, 0 ns)
+cpu2: MSR_PKGC6_IRTL: 0x00000000 (NOTvalid, 0 ns)
+cpu2: MSR_PKGC7_IRTL: 0x00000000 (NOTvalid, 0 ns)
+cpu2: MSR_PKGC8_IRTL: 0x00000000 (NOTvalid, 0 ns)
+cpu2: MSR_PKGC9_IRTL: 0x00000000 (NOTvalid, 0 ns)
+cpu2: MSR_PKGC10_IRTL: 0x00000000 (NOTvalid, 0 ns)
+10.003466 sec
+Core CPU Avg_MHz Busy% Bzy_MHz TSC_MHz IRQ SMI POLL C1 C1E C6 C7s C8
+C9 C10 POLL% C1% C1E% C6% C7s% C8% C9% C10% CPU%c1 CPU%c6 CPU%c7
+CoreTmp PkgTmp GFX%rc6 GFXMHz Totl%C0 Any%C0 GFX%C0 CPUGFX% Pkg%pc2
+Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10 CPU%LPI SYS%LPI
+PkgWatt CorWatt GFXWatt RAMWatt PKG_% RAM_%
+- - 219 8.59 2549 1498 48489 160 71 1256 11389 21414 5 31317 489 8252
+0.00 0.10 1.61 17.26 0.01 52.02 0.53 19.27 16.07 26.24 49.10 56 56
+96.64 300 68.29 48.58 3.08 2.10 30.36 0.04 0.00 0.00 0.00 0.00 0.00
+0.00 0.00 7.38 4.91 0.07 0.00 0.00 0.00
+0 0 189 5.83 3239 1498 6131 20 26 222 1922 2648 0 4232 0 298 0.00 0.20
+1.97 16.85 0.00 69.76 0.00 4.51 20.30 20.57 53.30 56 56 96.64 300
+68.29 48.58 3.08 2.10 30.36 0.04 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+7.38 4.91 0.07 0.00 0.00 0.00
+0 4 397 12.02 3307 1498 4248 20 5 173 1252 1552 0 3266 2 1367 0.00
+0.08 1.22 10.13 0.00 46.47 0.01 28.39 14.11
+1 1 302 8.53 3545 1498 6108 20 11 155 1215 3588 0 4462 0 2 0.00 0.11
+1.90 28.91 0.00 59.04 0.00 0.08 14.13 31.04 46.31 55
+1 5 149 6.29 2378 1498 3953 20 8 144 1391 1710 0 3239 9 1304 0.00 0.06
+1.48 10.45 0.00 49.50 0.23 31.45 16.37
+2 2 159 7.86 2022 1498 3688 20 5 111 1088 1450 0 3122 1 1191 0.00 0.14
+0.95 9.49 0.00 49.73 0.07 31.64 13.61 19.24 59.29 54
+2 6 175 7.44 2355 1498 6107 20 4 137 1726 2424 0 3863 4 651 0.00 0.06
+1.90 15.83 0.00 56.39 0.04 18.00 14.03
+3 3 213 11.84 1797 1498 13814 20 7 170 1431 6125 2 5634 464 2422 0.00
+0.09 1.89 34.67 0.01 31.54 3.82 16.28 16.54 34.11 37.51 52
+3 7 167 8.91 1871 1498 4440 20 5 144 1364 1917 3 3499 9 1017 0.00 0.07
+1.55 11.78 0.03 53.73 0.07 23.83 19.47
 
-Apparently always this:
+without (3.9-rc2):
 
-[  197.602226] cadence-qspi 47040000.spi: REG off 0:  val 80083881
-[  197.608181] cadence-qspi 47040000.spi: REG off 1:  val 3
-[  197.613512] cadence-qspi 47040000.spi: REG off 2:  val 2
-[  197.618833] cadence-qspi 47040000.spi: REG off 3:  val a0a0a0a
-[  197.624677] cadence-qspi 47040000.spi: REG off 4:  val 5
-[  197.629998] cadence-qspi 47040000.spi: REG off 5:  val 101002
-[  197.635759] cadence-qspi 47040000.spi: REG off 6:  val 80
-[  197.641165] cadence-qspi 47040000.spi: REG off 7:  val 0
-[  197.646488] cadence-qspi 47040000.spi: REG off 8:  val 0
-[  197.651809] cadence-qspi 47040000.spi: REG off 9:  val 0
+turbostat version 20.03.20 - Len Brown <lenb@kernel.org>
+CPUID(0): GenuineIntel 0x1b CPUID levels; 0x80000008 xlevels;
+family:model:stepping 0x6:7e:5 (6:126:5)
+CPUID(1): SSE3 MONITOR - EIST TM2 TSC MSR ACPI-TM HT TM
+CPUID(6): APERF, TURBO, DTS, PTM, HWP, No-HWPnotify, HWPwindow,
+HWPepp, HWPpkg, EPB
+cpu1: MSR_IA32_MISC_ENABLE: 0x00850089 (TCC EIST MWAIT PREFETCH TURBO)
+CPUID(7): SGX
+cpu1: MSR_IA32_FEATURE_CONTROL: 0x00020005 (Locked )
+CPUID(0x15): eax_crystal: 2 ebx_tsc: 78 ecx_crystal_hz: 38400000
+TSC: 1497 MHz (38400000 Hz * 78 / 2 / 1000000)
+CPUID(0x16): base_mhz: 1500 max_mhz: 3900 bus_mhz: 100
+cpu1: MSR_MISC_PWR_MGMT: 0x00401c40 (ENable-EIST_Coordination
+DISable-EPB DISable-OOB)
+RAPL: 17476 sec. Joule Counter Range, at 15 Watts
+cpu1: MSR_PLATFORM_INFO: 0x4043cf1810f00
+4 * 100.0 = 400.0 MHz max efficiency frequency
+15 * 100.0 = 1500.0 MHz base frequency
+cpu1: MSR_IA32_POWER_CTL: 0x0024005f (C1E auto-promotion: ENabled)
+cpu1: MSR_TURBO_RATIO_LIMIT: 0x2323232323232627
+35 * 100.0 = 3500.0 MHz max turbo 8 active cores
+35 * 100.0 = 3500.0 MHz max turbo 7 active cores
+35 * 100.0 = 3500.0 MHz max turbo 6 active cores
+35 * 100.0 = 3500.0 MHz max turbo 5 active cores
+35 * 100.0 = 3500.0 MHz max turbo 4 active cores
+35 * 100.0 = 3500.0 MHz max turbo 3 active cores
+38 * 100.0 = 3800.0 MHz max turbo 2 active cores
+39 * 100.0 = 3900.0 MHz max turbo 1 active cores
+cpu1: MSR_CONFIG_TDP_NOMINAL: 0x0000000d (base_ratio=13)
+cpu1: MSR_CONFIG_TDP_LEVEL_1: 0x000a0060 (PKG_MIN_PWR_LVL1=0
+PKG_MAX_PWR_LVL1=0 LVL1_RATIO=10 PKG_TDP_LVL1=96)
+cpu1: MSR_CONFIG_TDP_LEVEL_2: 0x000f00c8 (PKG_MIN_PWR_LVL2=0
+PKG_MAX_PWR_LVL2=0 LVL2_RATIO=15 PKG_TDP_LVL2=200)
+cpu1: MSR_CONFIG_TDP_CONTROL: 0x00000000 ( lock=0)
+cpu1: MSR_TURBO_ACTIVATION_RATIO: 0x0000000c (MAX_NON_TURBO_RATIO=12 lock=0)
+cpu1: MSR_PKG_CST_CONFIG_CONTROL: 0x74008008 (UNdemote-C1, demote-C1,
+locked, pkg-cstate-limit=8 (unlimited))
+current_driver: intel_idle
+current_governor: menu
+current_governor_ro: menu
+cpu1: POLL: CPUIDLE CORE POLL IDLE
+cpu1: C1_ACPI: ACPI FFH MWAIT 0x0
+cpu1: C2_ACPI: ACPI FFH MWAIT 0x31
+cpu1: C3_ACPI: ACPI FFH MWAIT 0x60
+cpu1: cpufreq driver: intel_cpufreq
+cpu1: cpufreq governor: schedutil
+cpufreq intel_pstate no_turbo: 0
+cpu1: MSR_MISC_FEATURE_CONTROL: 0x00000000 (L2-Prefetch
+L2-Prefetch-pair L1-Prefetch L1-IP-Prefetch)
+cpu0: MSR_PM_ENABLE: 0x00000001 (HWP)
+cpu0: MSR_HWP_CAPABILITIES: 0x010e0d27 (high 39 guar 13 eff 14 low 1)
+cpu0: MSR_HWP_REQUEST: 0x80002727 (min 39 max 39 des 0 epp 0x80 window
+0x0 pkg 0x0)
+cpu0: MSR_HWP_REQUEST_PKG: 0x8000ff01 (min 1 max 255 des 0 epp 0x80 window 0x0)
+cpu0: MSR_HWP_STATUS: 0x00000000 (No-Guaranteed_Perf_Change, No-Excursion_Min)
+cpu0: MSR_IA32_ENERGY_PERF_BIAS: 0x00000006 (balanced)
+cpu0: MSR_RAPL_POWER_UNIT: 0x000a0e03 (0.125000 Watts, 0.000061
+Joules, 0.000977 sec.)
+cpu0: MSR_PKG_POWER_INFO: 0x00000078 (15 W TDP, RAPL 0 - 0 W, 0.000000 sec.)
+cpu0: MSR_PKG_POWER_LIMIT: 0x42817000dd8170 (UNlocked)
+cpu0: PKG Limit #1: ENabled (46.000000 Watts, 28.000000 sec, clamp ENabled)
+cpu0: PKG Limit #2: ENabled (46.000000 Watts, 0.002441* sec, clamp DISabled)
+cpu0: MSR_DRAM_POWER_LIMIT: 0x5400de00000000 (UNlocked)
+cpu0: DRAM Limit: DISabled (0.000000 Watts, 0.000977 sec, clamp DISabled)
+cpu0: MSR_PP0_POLICY: 0
+cpu0: MSR_PP0_POWER_LIMIT: 0x00000000 (UNlocked)
+cpu0: Cores Limit: DISabled (0.000000 Watts, 0.000977 sec, clamp DISabled)
+cpu0: MSR_PP1_POLICY: 0
+cpu0: MSR_PP1_POWER_LIMIT: 0x00000000 (UNlocked)
+cpu0: GFX Limit: DISabled (0.000000 Watts, 0.000977 sec, clamp DISabled)
+cpu0: MSR_IA32_TEMPERATURE_TARGET: 0x00640000 (100 C)
+cpu0: MSR_IA32_PACKAGE_THERM_STATUS: 0x881d0800 (71 C)
+cpu0: MSR_IA32_PACKAGE_THERM_INTERRUPT: 0x00000003 (100 C, 100 C)
+cpu1: MSR_PKGC3_IRTL: 0x00000000 (NOTvalid, 0 ns)
+cpu1: MSR_PKGC6_IRTL: 0x00000000 (NOTvalid, 0 ns)
+cpu1: MSR_PKGC7_IRTL: 0x00000000 (NOTvalid, 0 ns)
+cpu1: MSR_PKGC8_IRTL: 0x00000000 (NOTvalid, 0 ns)
+cpu1: MSR_PKGC9_IRTL: 0x00000000 (NOTvalid, 0 ns)
+cpu1: MSR_PKGC10_IRTL: 0x00000000 (NOTvalid, 0 ns)
+10.002424 sec
+Core CPU Avg_MHz Busy% Bzy_MHz TSC_MHz IRQ SMI POLL C1_ACPI C2_ACPI
+C3_ACPI POLL% C1_ACPI% C2_ACPI% C3_ACPI% CPU%c1 CPU%c6 CPU%c7 CoreTmp
+PkgTmp GFX%rc6 GFXMHz Totl%C0 Any%C0 GFX%C0 CPUGFX% Pkg%pc2 Pkg%pc3
+Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10 CPU%LPI SYS%LPI PkgWatt
+CorWatt GFXWatt RAMWatt PKG_% RAM_%
+- - 204 9.81 2083 1497 50389 176 820 25733 20628 14751 0.01 10.71
+36.19 42.84 29.48 0.00 60.71 58 58 97.96 300 73.65 52.84 1.861.41
+16.96 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 6.08 3.79 0.03 0.00 0.00
+0.00
+0 0 218 7.90 2760 1497 6824 22 4 3882 3146 864 0.00 12.68 53.86 24.76
+26.32 0.00 65.77 58 58 97.96 300 73.65 52.84 1.861.41 16.96 0.00 0.00
+0.00 0.00 0.00 0.00 0.00 0.00 6.08 3.79 0.03 0.00 0.00 0.00
+0 4 144 6.91 2084 1497 4409 22 7 2410 2078 1608 0.00 7.55 32.26 52.88 27.32
+1 1 154 8.09 1903 1497 4783 22 3 2528 2178 1801 0.00 7.54 34.66 49.51
+42.41 0.00 49.50 57
+1 5 290 14.49 2000 1497 14750 22 755 5964 4261 4558 0.04 22.47 27.57 35.05 36.01
+2 2 209 11.35 1840 1497 4663 22 1 2771 2132 1467 0.00 8.39 31.37 48.69
+28.70 0.00 59.96 55
+2 6 232 13.35 1738 1497 5625 22 40 3313 2140 1338 0.00 10.36 33.13 42.87 26.70
+3 3 221 9.01 2451 1497 4944 22 7 2627 2536 1447 0.00 9.32 41.41 39.55
+23.38 0.00 67.61 54
+3 7 167 7.39 2266 1497 4391 22 3 2238 2157 1668 0.00 7.39 35.25 49.42 25.00
 
-> 
-> ---><8---
-> 
-> 
-> diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-> index 508b219eabf80..b9739ae919340 100644
-> --- a/drivers/spi/spi-cadence-quadspi.c
-> +++ b/drivers/spi/spi-cadence-quadspi.c
-> @@ -907,6 +907,10 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
->         struct dma_async_tx_descriptor *tx;
->         dma_cookie_t cookie;
->         dma_addr_t dma_dst;
-> +       int i;
-> +
-> +       for (i = 0; i < 10; i++)
-> +               dev_err(dev, "REG off %x:  val %x\n", i, readl(cqspi->iobase + (i << 2)));
->  
->         if (!cqspi->rx_chan || !virt_addr_valid(buf)) {
->                 memcpy_fromio(buf, cqspi->ahb_base + from, len);
-> 
->  
-> Also, there seems to be DMA mapping related issue, that was always present in 
-> older driver as well. Could you see if diff [2] fixes the issue?
-> 
-> [2] Use DMA device for mapping:
-> 
-> ---><8---
-> 
-> 
-> diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-> index b9739ae919340..a546aa4598758 100644
-> --- a/drivers/spi/spi-cadence-quadspi.c
-> +++ b/drivers/spi/spi-cadence-quadspi.c
-> @@ -901,6 +901,7 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
->  {
->         struct cqspi_st *cqspi = f_pdata->cqspi;
->         struct device *dev = &cqspi->pdev->dev;
-> +       struct device *ddev = cqspi->rx_chan->device->dev;
->         enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
->         dma_addr_t dma_src = (dma_addr_t)cqspi->mmap_phys_base + from;
->         int ret = 0;
-> @@ -917,8 +918,8 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
->                 return 0;
->         }
->  
-> -       dma_dst = dma_map_single(dev, buf, len, DMA_FROM_DEVICE);
-> -       if (dma_mapping_error(dev, dma_dst)) {
-> +       dma_dst = dma_map_single(ddev, buf, len, DMA_FROM_DEVICE);
-> +       if (dma_mapping_error(ddev, dma_dst)) {
->                 dev_err(dev, "dma mapping failed\n");
->                 return -ENOMEM;
->         }
-> @@ -952,7 +953,7 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
->         }
->  
->  err_unmap:
-> -       dma_unmap_single(dev, dma_dst, len, DMA_FROM_DEVICE);
-> +       dma_unmap_single(ddev, dma_dst, len, DMA_FROM_DEVICE);
->  
->         return ret;
->  }
-> 
 
-That seems to help! Wasn't able to reproduce the issue with this applied
-so far.
+>
+> Artem.
+>
 
-Thanks,
-Jan
-
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+Guilhem Lettron
