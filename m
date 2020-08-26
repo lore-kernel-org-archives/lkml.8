@@ -2,91 +2,77 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77452C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00284C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 493842078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:00:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vh8X+msp"
+	by mail.kernel.org (Postfix) with ESMTP id BEFED2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgHZTA4 (ORCPT
+        id S1727015AbgHZTBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:00:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgHZTAx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:00:53 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C86CC061574;
-        Wed, 26 Aug 2020 12:00:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=JTeiHpI9co8/sk3zm+dbWTU5RH8x8HjRlmbdmUsEWAA=; b=vh8X+msp/Vupas3v7jeX+S7Px9
-        13YwPPFGaulusQHlWXot74+cIamxFiSmgBkVDynnN9eUJ1KqDz568hVwY4lGG0aQXbGJk80T7fyGn
-        Be3o2tN+yw2Ls1zLNSBINNMHhXkr/6/lIuIpzoBxQwa75CsHRtj3WcSmhWLLQmosxoQSAzcZAIgud
-        KpN7FOHfFrdwxQ7rlq5ZXftd3UVCor+VZLAmreVxJehHWlQm8WzGrjBlf3EqrpmhYUPGPVCUuaHpu
-        dwyn4Qie2tm+UGPXu8RfioxupN9HsyZE8zyuiVEWWfZOSUvMy3JOpgtAKgIlPIML5va8BSom1GFS+
-        AvBT8paA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kB0fD-0008WJ-28; Wed, 26 Aug 2020 19:00:51 +0000
-Subject: Re: [PATCH 2/2] usb: dwc3: Add driver for Xilinx platforms
-To:     Manish Narani <manish.narani@xilinx.com>,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        michal.simek@xilinx.com, balbi@kernel.org, p.zabel@pengutronix.de
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        git@xilinx.com
-References: <1598467441-124203-1-git-send-email-manish.narani@xilinx.com>
- <1598467441-124203-3-git-send-email-manish.narani@xilinx.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <2b7054ec-1b20-0bbc-3cf2-53a32f6fb52d@infradead.org>
-Date:   Wed, 26 Aug 2020 12:00:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 26 Aug 2020 15:01:38 -0400
+Received: from albireo.enyo.de ([37.24.231.21]:37884 "EHLO albireo.enyo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726734AbgHZTBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:01:32 -0400
+Received: from [172.17.203.2] (helo=deneb.enyo.de)
+        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        id 1kB0fd-00039M-Py; Wed, 26 Aug 2020 19:01:17 +0000
+Received: from fw by deneb.enyo.de with local (Exim 4.92)
+        (envelope-from <fw@deneb.enyo.de>)
+        id 1kB0fd-0004bF-Mv; Wed, 26 Aug 2020 21:01:17 +0200
+From:   Florian Weimer <fw@deneb.enyo.de>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alan Cox <alan@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Reshetova\, Elena" <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [RFC PATCH] mm: extend memfd with ability to create "secret" memory areas
+References: <20200130162340.GA14232@rapoport-lnx>
+        <CALCETrVOWodgnRBFpPLEnc_Bfg=fgfAJiD1p-eE1uwCMc6c9Tg@mail.gmail.com>
+        <6e020a65-b516-9407-228f-2a3a32947ab9@intel.com>
+        <CALCETrUwO_y_b=kazRjen-de50r9b9TVXUXz_WT_hD3d3tTWxQ@mail.gmail.com>
+Date:   Wed, 26 Aug 2020 21:01:17 +0200
+In-Reply-To: <CALCETrUwO_y_b=kazRjen-de50r9b9TVXUXz_WT_hD3d3tTWxQ@mail.gmail.com>
+        (Andy Lutomirski's message of "Wed, 26 Aug 2020 09:54:57 -0700")
+Message-ID: <87y2m1qlj6.fsf@mid.deneb.enyo.de>
 MIME-Version: 1.0
-In-Reply-To: <1598467441-124203-3-git-send-email-manish.narani@xilinx.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/20 11:44 AM, Manish Narani wrote:
-> diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
-> index 7a2304565a73..416063ee9d05 100644
-> --- a/drivers/usb/dwc3/Kconfig
-> +++ b/drivers/usb/dwc3/Kconfig
-> @@ -139,4 +139,12 @@ config USB_DWC3_QCOM
->  	  for peripheral mode support.
->  	  Say 'Y' or 'M' if you have one such device.
->  
-> +config USB_DWC3_XILINX
-> +       tristate "Xilinx Platforms"
-> +       depends on (ARCH_ZYNQMP || ARCH_VERSAL) && OF
-> +       default USB_DWC3
-> +       help
-> +         Support Xilinx SoCs with DesignWare Core USB3 IP.
-> +	 Say 'Y' or 'M' if you have one such device.
-> +
->  endif
+* Andy Lutomirski:
 
-Indent help text (2 lines) with one tab + 2 spaces, please,
-according to Documentation/process/coding-style.rst.
+>> I _believe_ there are also things like AES-NI that can get strong
+>> protection from stuff like this.  They load encryption keys into (AVX)
+>> registers and then can do encrypt/decrypt operations without the keys
+>> leaving the registers.  If the key was loaded from a secret memory area
+>> right into the registers, I think the protection from cache attacks
+>> would be pretty strong.
+>
+> Except for context switches :)
 
-thanks.
+An rseq sequence could request that the AVX registers should be
+cleared on context switch.  (I'm mostly kidding.)
 
--- 
-~Randy
-
+I think the main issue is that we do not have a good established
+programming model to actually use such features and completely avoid
+making copies of secret data.
