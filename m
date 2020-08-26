@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F82C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E11720786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA3820838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598443458;
-	bh=RmXL/1u0VAWNbKLafrCpKWutDzDTHZH6Cc5wbc73xbs=;
+	s=default; t=1598443459;
+	bh=O8ZwRVfglmC1HCV5rl0wMfnoGxS661gLxObTPdOyfoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a1fJGiqw1yOKoH0LtbCJSSKqq+lIJ+mqTVdTw+4ss/RRLu/ejh5AhT+QTBCYK3khU
-	 TkP4Q+ukWlT+BVcHcTFu3DRo3pWaPmdITsWTT+ltIWZM/K2l6PrdKYFYq3AXRw9zil
-	 4X4ALIi3Mg5QoQDSLvRZRyAW53p+DjGyF691peIs=
+	b=qsZyYM5ozp/FsZaW1rnIygVXcYPvmsUSZ6PkV/6fQBsr6JMPV3SeuFD27p7olcRVr
+	 PfhnkvHycSNzH4uAAsd6v8/MUpJye55tuR9k6EnJ//iMMwn83MZ5T7XMCntmRC/Kg0
+	 MCgSxRRH4PMdiJZ+yy/VjFPK0IgEyt/Ke0MMhPkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbgHZMEO (ORCPT
+        id S1729606AbgHZMER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:04:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37486 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 08:04:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729484AbgHZMC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:02:57 -0400
+        id S1729496AbgHZMDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:03:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D73420786;
-        Wed, 26 Aug 2020 12:02:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D65420838;
+        Wed, 26 Aug 2020 12:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598443377;
-        bh=RmXL/1u0VAWNbKLafrCpKWutDzDTHZH6Cc5wbc73xbs=;
+        s=default; t=1598443382;
+        bh=O8ZwRVfglmC1HCV5rl0wMfnoGxS661gLxObTPdOyfoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2mb+jiFtFoM8nZsakS4jNxo2a/D2iin9vayTfEOXlIWYi4Xk1g5f4+BG9H/ODY/3v
-         x56+98IGMAvsUix4H3CapMt04DRwsKrPgYCirVqZ66k9AEpr+NF3KVvrrQfb4NKgaR
-         vBrl9wRtd1M4Ky3rbGfRyejtpCwMwJ1yyQN1VQGI=
+        b=zYluZ/NuCv/MliwDnMie7fwWN3Vzdw+PagAvBHjb1ww24omVpgxnRxfr4eNRPfhgT
+         I3BgQr72xqfQa0IpaZmlgb06XhnImSDB2LtejSQkThxUsZPTTQkdf9mZIDYA15Lq/B
+         ucxvI/GyCaP1s/qVvI4BQOU1l/JqHSFTYPGpLtzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        Richard Alpe <richard.alpe@ericsson.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+0e7181deafa7e0b79923@syzkaller.appspotmail.com
-Subject: [PATCH 5.7 09/15] tipc: fix uninit skb->data in tipc_nl_compat_dumpit()
-Date:   Wed, 26 Aug 2020 14:02:37 +0200
-Message-Id: <20200826114849.751629016@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 13/15] ethtool: Dont omit the netlink reply if no features were changed
+Date:   Wed, 26 Aug 2020 14:02:41 +0200
+Message-Id: <20200826114849.943950651@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200826114849.295321031@linuxfoundation.org>
 References: <20200826114849.295321031@linuxfoundation.org>
@@ -63,67 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit 47733f9daf4fe4f7e0eb9e273f21ad3a19130487 ]
+[ Upstream commit f01204ec8be7ea5e8f0230a7d4200e338d563bde ]
 
-__tipc_nl_compat_dumpit() has two callers, and it expects them to
-pass a valid nlmsghdr via arg->data. This header is artificial and
-crafted just for __tipc_nl_compat_dumpit().
+The legacy ethtool userspace tool shows an error when no features could
+be changed. It's useful to have a netlink reply to be able to show this
+error when __netdev_update_features wasn't called, for example:
 
-tipc_nl_compat_publ_dump() does so by putting a genlmsghdr as well
-as some nested attribute, TIPC_NLA_SOCK. But the other caller
-tipc_nl_compat_dumpit() does not, this leaves arg->data uninitialized
-on this call path.
+1. ethtool -k eth0
+   large-receive-offload: off
+2. ethtool -K eth0 rx-fcs on
+3. ethtool -K eth0 lro on
+   Could not change any device features
+   rx-lro: off [requested on]
+4. ethtool -K eth0 lro on
+   # The output should be the same, but without this patch the kernel
+   # doesn't send the reply, and ethtool is unable to detect the error.
 
-Fix this by just adding a similar nlmsghdr without any payload in
-tipc_nl_compat_dumpit().
+This commit makes ethtool-netlink always return a reply when requested,
+and it still avoids unnecessary calls to __netdev_update_features if the
+wanted features haven't changed.
 
-This bug exists since day 1, but the recent commit 6ea67769ff33
-("net: tipc: prepare attrs in __tipc_nl_compat_dumpit()") makes it
-easier to appear.
-
-Reported-and-tested-by: syzbot+0e7181deafa7e0b79923@syzkaller.appspotmail.com
-Fixes: d0796d1ef63d ("tipc: convert legacy nl bearer dump to nl compat")
-Cc: Jon Maloy <jmaloy@redhat.com>
-Cc: Ying Xue <ying.xue@windriver.com>
-Cc: Richard Alpe <richard.alpe@ericsson.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Ying Xue <ying.xue@windriver.com>
+Fixes: 0980bfcd6954 ("ethtool: set netdev features with FEATURES_SET request")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/netlink_compat.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ net/ethtool/features.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -275,8 +275,9 @@ err_out:
- static int tipc_nl_compat_dumpit(struct tipc_nl_compat_cmd_dump *cmd,
- 				 struct tipc_nl_compat_msg *msg)
- {
--	int err;
-+	struct nlmsghdr *nlh;
- 	struct sk_buff *arg;
-+	int err;
- 
- 	if (msg->req_type && (!msg->req_size ||
- 			      !TLV_CHECK_TYPE(msg->req, msg->req_type)))
-@@ -305,6 +306,15 @@ static int tipc_nl_compat_dumpit(struct
- 		return -ENOMEM;
+--- a/net/ethtool/features.c
++++ b/net/ethtool/features.c
+@@ -268,14 +268,11 @@ int ethnl_set_features(struct sk_buff *s
+ 	bitmap_and(req_wanted, req_wanted, req_mask, NETDEV_FEATURE_COUNT);
+ 	bitmap_andnot(new_wanted, old_wanted, req_mask, NETDEV_FEATURE_COUNT);
+ 	bitmap_or(req_wanted, new_wanted, req_wanted, NETDEV_FEATURE_COUNT);
+-	if (bitmap_equal(req_wanted, old_wanted, NETDEV_FEATURE_COUNT)) {
+-		ret = 0;
+-		goto out_rtnl;
++	if (!bitmap_equal(req_wanted, old_wanted, NETDEV_FEATURE_COUNT)) {
++		dev->wanted_features &= ~dev->hw_features;
++		dev->wanted_features |= ethnl_bitmap_to_features(req_wanted) & dev->hw_features;
++		__netdev_update_features(dev);
  	}
+-
+-	dev->wanted_features &= ~dev->hw_features;
+-	dev->wanted_features |= ethnl_bitmap_to_features(req_wanted) & dev->hw_features;
+-	__netdev_update_features(dev);
+ 	ethnl_features_to_bitmap(new_active, dev->features);
+ 	mod = !bitmap_equal(old_active, new_active, NETDEV_FEATURE_COUNT);
  
-+	nlh = nlmsg_put(arg, 0, 0, tipc_genl_family.id, 0, NLM_F_MULTI);
-+	if (!nlh) {
-+		kfree_skb(arg);
-+		kfree_skb(msg->rep);
-+		msg->rep = NULL;
-+		return -EMSGSIZE;
-+	}
-+	nlmsg_end(arg, nlh);
-+
- 	err = __tipc_nl_compat_dumpit(cmd, msg, arg);
- 	if (err) {
- 		kfree_skb(msg->rep);
 
 
