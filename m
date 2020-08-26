@@ -2,116 +2,180 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F85C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6844F207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:32:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598430724;
-	bh=+zgvqau40KD6zoirbrmJVE9a/bFPfvd4D/v0f4gdpg0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QWkgdHZ8xJcVJjGZYGjnfyFxo+jmjVIcqTny3D0mVxg3R5T38w9genj9BPeF3JXRR
-	 vmf8mJydFlMSzqmF3pbZN+rhDyMAvQImNfVf92scZ+VQbMNdFrUkUI+fBFvIRVDneM
-	 xBP5LuIM75pdVDKwR3fhLnSx1Ouvuyr7Xqah7WNg=
+	by mail.kernel.org (Postfix) with ESMTP id AF8FA20707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:32:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="th8H/aEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbgHZIcD (ORCPT
+        id S1727037AbgHZIcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 04:32:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726884AbgHZIcC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 04:32:02 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6328F20707;
-        Wed, 26 Aug 2020 08:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598430722;
-        bh=+zgvqau40KD6zoirbrmJVE9a/bFPfvd4D/v0f4gdpg0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eHNvNWFO+gU8BFaCL0EtG2rT/AVfXwkqWtRtCRSY59S9Sz/5O1xW+6E138Fj1pyOa
-         F8gswCtGY64ln7vX1d1Q9rUXCdgacbqatvlhfTfqJmwxLEhyrlOLNXLR5EeoXXDps3
-         jfUAbaiG0OQXxHBXg1qXgy3Tn1g+CFIff66n92Mg=
-Date:   Wed, 26 Aug 2020 17:31:58 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     peterz@infradead.org
-Cc:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function
- entry is not optimized (trigger by int3 breakpoint)
-Message-Id: <20200826173158.19bc6f5c3b05fbb3f6d0aa3e@kernel.org>
-In-Reply-To: <20200825120911.GX1362448@hirez.programming.kicks-ass.net>
-References: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
-        <20200825005426.f592075d13be740cb3c9aa77@kernel.org>
-        <7396e7b2079644a6aafd9670a111232b@trendmicro.com>
-        <20200825151538.f856d701a34f4e0561a64932@kernel.org>
-        <20200825120911.GX1362448@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 26 Aug 2020 04:32:08 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.52]:24972 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbgHZIcE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 04:32:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598430717;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=5qbPZwOrGjfVjPer5Q3VTjDIEHM+8e+46OrFUHxkQFA=;
+        b=th8H/aEs0w3hgC1F/cXwliYNoI4Yp5N+h4FASob8o2FwyT1nXSTBgBkJa2ASEqhhql
+        4BtOAbGbQFC3qqLr5Lh+lwrrp5brDfNcgTFTTFIh9pLSXf99rT48YKzMeZEQ82Qmn4U5
+        xuuck+/4YfeX4lx1qNGaOr95qc5NGWxy6I8QQO4Mm9NugRz+l98UFE+c6/+AKM3zruuE
+        9Arw4ENLCSqxJYUmFoD0oNXQrCacito7VW2Zr7BMeGA3BM9yaGVivUg/Y5RsLaWfjFrj
+        fu7BYXZFsNsYsKMI6GWw89O4Ffp8Xrt6h5ZlwzFEnW6C0lgfURPzTwOAeK3Fw7IKh5Qq
+        gr7w==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/Fboo="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id g0b6c1w7Q8VskYv
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 26 Aug 2020 10:31:54 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 10:31:48 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Niklas Cassel <nks@flawful.org>
+Subject: Re: [RFC PATCH 3/3] opp: Power on (virtual) power domains managed by
+ the OPP core
+Message-ID: <20200826083148.GA869@gerhold.net>
+References: <20200730080146.25185-1-stephan@gerhold.net>
+ <20200730080146.25185-4-stephan@gerhold.net>
+ <20200824112744.jsyaxrfbybyjpwex@vireshk-i7>
+ <20200824115549.GB208090@gerhold.net>
+ <CAPDyKFojtArMRfO+Z8YaWCWw2fFYcO62x3eL1paNi5pKRg3Jww@mail.gmail.com>
+ <20200824150831.GA842@gerhold.net>
+ <20200825044308.4y3w2urcikban7if@vireshk-i7>
+ <CAPDyKFp+71_WGwvdZ6DYamsDjgoRk57H5MjDAdQUtCtJpEHp2Q@mail.gmail.com>
+ <20200825073348.GA1048@gerhold.net>
+ <CAPDyKFr-gfpVypFs_13hb9Pi5FfQoB32fg=C_gtdSKVDN1U=gQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFr-gfpVypFs_13hb9Pi5FfQoB32fg=C_gtdSKVDN1U=gQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
-
-On Tue, 25 Aug 2020 14:09:11 +0200
-peterz@infradead.org wrote:
-
+On Tue, Aug 25, 2020 at 02:42:54PM +0200, Ulf Hansson wrote:
+> On Tue, 25 Aug 2020 at 09:34, Stephan Gerhold <stephan@gerhold.net> wrote:
+> >
+> > On Tue, Aug 25, 2020 at 08:43:42AM +0200, Ulf Hansson wrote:
+> > > On Tue, 25 Aug 2020 at 06:43, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > >
+> > > > On 24-08-20, 17:08, Stephan Gerhold wrote:
+> > > > > On Mon, Aug 24, 2020 at 04:36:57PM +0200, Ulf Hansson wrote:
+> > > > > > That said, perhaps should rely on the consumer to deploy runtime PM
+> > > > > > support, but let the OPP core to set up the device links for the genpd
+> > > > > > virtual devices!?
+> > > > > >
+> > > > >
+> > > > > Yes, that would be the alternative option.
+> > > >
+> > > > That is the right option IMO.
+> > > >
+> > > > > I would be fine with it as long as it also works for the CPUfreq case.
+> > > > >
+> > > > > I don't think anything manages runtime PM for the CPU device, just
+> > > > > like no-one calls dev_pm_opp_set_rate(cpu_dev, 0). So with my patch the
+> > > > > power domain is essentially kept always-on (except for system suspend).
+> > > > > At least in my case this is intended.
+> > > > >
+> > > > > If device links also keep the power domains on if the consumer device
+> > > > > does not make use of runtime PM it should work fine for my case.
+> > > >
+> > > > With device link, you only need to do rpm enable/disable on the consumer device
+> > > > and it will get propagated by itself.
+> > >
+> > > Note that the default state for the genpd virtual device(s) is that
+> > > runtime PM has been enabled for them. This means it's left in runtime
+> > > suspended state, which allows its PM domain to be powered off (if all
+> > > other devices and child domains for it allow that too, of course).
+> > >
+> > > >
+> > > > > Personally, I think my original patch (without device links) fits better
+> > > > > into the OPP API, for the following two reasons.
+> > > > >
+> > > > > With device links:
+> > > > >
+> > > > >   1. Unlike regulators/interconnects, attached power domains would be
+> > > > >      controlled by runtime PM instead of dev_pm_opp_set_rate(opp_dev, 0).
+> > > > >
+> > > > >   2. ... some driver using OPP tables might not make use of runtime PM.
+> > > > >      In that case, the power domains would stay on the whole time,
+> > > > >      even if dev_pm_opp_set_rate(opp_dev, 0) was called.
+> > > > >
+> > > > > With my patch, the power domain state is directly related to the
+> > > > > dev_pm_opp_set_rate(opp_dev, 0) call, which is more intuitive than
+> > > > > relying on the runtime PM state in my opinion.
+> > > >
+> > > > So opp-set-rate isn't in the best of shape TBH, some things are left for the
+> > > > drivers while other are done by it. Regulator-enable/disable was moved to it
+> > > > some time back as people needed something like that. While on the other hand,
+> > > > clk_enable/disable doesn't happen there, nor does rpm enable/disable.
+> > > >
+> > > > Maybe one day we may want to do that, but lets make sure someone wants to do
+> > > > that first.
+> > > >
+> > > > Anyway, even in that case both of the changes would be required. We must make
+> > > > device links nevertheless first. And later on if required, we may want to do rpm
+> > > > enable/disable on the consumer device itself.
+> > >
+> > > This sounds like a reasonable step-by-step approach.
+> > >
+> > > Then, to create the device links, we should use DL_FLAG_PM_RUNTIME,
+> > > DL_FLAG_STATELESS.
+> > >
+> >
+> > OK, I will give this a try later this week.
+> >
+> > > But whether we should use DL_FLAG_RPM_ACTIVE as well, to initially
+> > > runtime resume the supplier (the genpd virtual device), is harder to
+> > > know - as that kind of depends on expectations by the consumer device
+> > > driver.
+> > >
+> >
+> > I'm not sure I understand the purpose of that flag. I thought we want to
+> > link the PM state of the virtual genpd device (supplier) to the PM state
+> > of the device of the OPP table (consumer).
 > 
-> @@ -1934,50 +1884,28 @@ unsigned long __weak arch_deref_entry_point(void *entry)
->  static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
->  {
->  	struct kretprobe *rp = container_of(p, struct kretprobe, kp);
-> -	unsigned long hash, flags = 0;
->  	struct kretprobe_instance *ri;
-> +	struct llist_node *llist;
->  
-> -	/*
-> -	 * To avoid deadlocks, prohibit return probing in NMI contexts,
-> -	 * just skip the probe and increase the (inexact) 'nmissed'
-> -	 * statistical counter, so that the user is informed that
-> -	 * something happened:
-> -	 */
-> -	if (unlikely(in_nmi())) {
-> +	llist = llist_del_first(&rp->free_instances);
-> +	if (!llist) {
->  		rp->nmissed++;
->  		return 0;
->  	}
+> Correct, but this is about synchronizing the initial runtime PM state
+> of the consumer and supplier.
+> 
+> >
+> > Shouldn't it just determine the initial state based on the state of the
+> > consumer device?
+> 
+> We could do that. Then something along the lines of the below, should work:
+> 
+> pm_runtime_get_noresume(consumer) - to prevent runtime suspend, temporarily.
+> 
+> if(pm_runtime_active(consumer))
+>     create links with DL_FLAG_RPM_ACTIVE
+> else
+>     create links without DL_FLAG_RPM_ACTIVE
+> 
+> pm_runtime_put(consumer)
+> 
 
-Would we need a lock around llist_del_first(&rp->free_instance) here?
+This seems to work as expected, thanks for the suggestion!
+I will submit a v2 with that shortly.
 
-linux/llist.h said,
-
- * Cases where locking is not needed:
- * If there are multiple producers and multiple consumers, llist_add can be
- * used in producers and llist_del_all can be used in consumers simultaneously
- * without locking. Also a single consumer can use llist_del_first while
-                               ^^^^^^^^^^^^^^^^^^^^^^^
- * multiple producers simultaneously use llist_add, without any locking.
- *
- * Cases where locking is needed:
- * If we have multiple consumers with llist_del_first used in one consumer, and
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- * llist_del_first or llist_del_all used in other consumers, then a lock is
- * needed.
-
-pre_handler_kretprobe() can be invoked simultaneously on the different CPUs
-if those are calling the same probed function.
-
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Thanks!
+Stephan
