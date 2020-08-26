@@ -5,68 +5,73 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EEBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4424BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B761F208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECD220B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uUJKLbTU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E6/EOJ6w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728649AbgHZJid (ORCPT
+        id S1728657AbgHZJih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:38:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40980 "EHLO
+        Wed, 26 Aug 2020 05:38:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728327AbgHZJer (ORCPT
+        with ESMTP id S1728329AbgHZJer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Aug 2020 05:34:47 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3437C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:24 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id q14so1083558wrn.9
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:24 -0700 (PDT)
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD51C06138E
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:22 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id t2so1086322wma.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Bx7yNWclgWagoUc19DO980I/LQpudxltdUcBDgMx82s=;
-        b=uUJKLbTU9CLl0GGHDJpGfj9qHXqTE3vmdSY72df5VY22nwMKPTB/gJEbRC16KsVj7V
-         lqf/Msco72OZwC3/z43E9HJuCf6O4FXc4Ln2h+/SPuM85Apb34/d9LJm1+eeVSKbALFc
-         c2rVrF2Sh84an294dpobLgvr2n7+wlJehzkTlL83PcF2HIXgrzahwnvouyL2GQg8BVCy
-         YzEczRcmVW4jKWDL4pBiFlrSkNOCzvJm1JnA04lj/UemOevD3v2UMxrTXE53HxYDN0d2
-         mIfNdwOUuKYx7/GFEVMKTyGbyVQd+W2euTeJ/u8fddVeUrdSAHX+9rPgTn/5CayY333+
-         iGVQ==
+        bh=P2cOlNLAlJyCxc93Ww/EdcxwprT/u096tFpvtTUHaj4=;
+        b=E6/EOJ6wDOrgx9PD4VumxceDaZjVO9H0XlF5v5ZN2N091FR4cecJ8IQISgb3YS5DgR
+         S004H2goEX0Cfuo5HLmWBBl6FbxxinmNGCoTqRbiuKrF0gTKk1msqQQiCR4pNOHUqN5V
+         ea6Zenfh75vE4bk2AGt+qXGEEGqLvobBmMmgg7hBicMqhs4wdCTrVEumLM4aSbpidIix
+         Wv4B08RJlXaozPB7KpaALRNl7PhUY3zk+Bzwxwv7h4I40q9qAjiOkg3wHN7ySDm5NMt2
+         d6B/Go/tW9ihIoMHHfOR4paRfhsJWojjgF4/PnYoINFkURRPRewWN6Z8dNEB5FPnAV8Z
+         Uypw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Bx7yNWclgWagoUc19DO980I/LQpudxltdUcBDgMx82s=;
-        b=RYhoPB5pvntKtviUQKJ6BV9g1kaQB6U0F2j83J3YAKJiJ0blgAzLRay0xocHj0vX7N
-         mA4pPPH5G8Xr1Be5Ww9bI4Kbv7WisVi9kVwBRF1wNVDsOIU/WITYxQeZb5NebiFraCbg
-         2wPBbR+RStzsInhWKuIrDF/kkzmB9NsLndgoReQwRXjj5n/JBJrBuMij6d8SwLE0udqd
-         rnvovbuBoKmA1VyaM0CMO09CgSFQ2fcPsHryFI25SRxwR4d8QfqVjfD4OQfsP6r55NIp
-         mi2k3p23jT0vjtImTNY6qw7s1JoY7Vjnpg9DcZ1Rw89Hxzp4oCSClu2e140Q9AmHzs6o
-         vR4w==
-X-Gm-Message-State: AOAM531NQgOykuDFLY/khKzKFzljzk9ze1OI5Ugcw2Ty2IOLpddJ5hhT
-        kGBt/U8wC9LuQk4z+aYqFN6l3g==
-X-Google-Smtp-Source: ABdhPJwQFvrvdmFHV9OPBjwjVStS/qGSXw/JVNaDpgJRCYX+jtI39dQIrk6xIFkbAjhbnJEZSJLl9g==
-X-Received: by 2002:a5d:4050:: with SMTP id w16mr1517291wrp.412.1598434463554;
-        Wed, 26 Aug 2020 02:34:23 -0700 (PDT)
+        bh=P2cOlNLAlJyCxc93Ww/EdcxwprT/u096tFpvtTUHaj4=;
+        b=b/vQIr3KkreWPY8VZ42VOhG9wT5RkxZGmeyJpXowerJu9wD8aXwzWw+awalSxXbDIT
+         3KqBJOiX8JMjuz0G37WhVgbsd3oW0qcg961HOKaYgnGlG+VnBJcFw5qmelTakBo3sU4Z
+         V5XQc9wMJo/THml7ZrRfJU2XXJjUextw9fV0XHPd83IHGdgX+NtSQD4K3tjX3N2TLDws
+         2BtiXsnAfHWlR4/J+QCPlupiOWXCWdROZTdrjFk3SpxpEcbFH9pTaSaWk6nLaQSUcROu
+         mepW2/q4NeVzK7KdMj0rI0UWYOCnrZC9GvMpDu5d6NIIeMBWR54SHTIyH4mUQxvswV3w
+         JLCg==
+X-Gm-Message-State: AOAM531RZRTj7RH153DqTJlo2qWjb3Hr8yr7fLp9Gz9FDQQZ5Y2VgGMx
+        hr2ofLhSVurDt9X6IDLGx5gasw==
+X-Google-Smtp-Source: ABdhPJxceLFWyqsmMvG8GeNkuTW8rs1GiY3zLzfFP71pXMr3CP+9eWfqKwYcHMv7Y6OX5ErnrUvsEQ==
+X-Received: by 2002:a05:600c:230f:: with SMTP id 15mr6103115wmo.186.1598434461430;
+        Wed, 26 Aug 2020 02:34:21 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.22
+        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 02:34:22 -0700 (PDT)
+        Wed, 26 Aug 2020 02:34:20 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Luciano Coelho <luciano.coelho@nokia.com>
-Subject: [PATCH 15/30] wireless: ti: wlcore: debugfs: Remove unused variable 'res'
-Date:   Wed, 26 Aug 2020 10:33:46 +0100
-Message-Id: <20200826093401.1458456-16-lee.jones@linaro.org>
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
+Subject: [PATCH 13/30] wireless: broadcom: brcm80211: brcmfmac: fwsignal: Finish documenting 'brcmf_fws_mac_descriptor'
+Date:   Wed, 26 Aug 2020 10:33:44 +0100
+Message-Id: <20200826093401.1458456-14-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200826093401.1458456-1-lee.jones@linaro.org>
 References: <20200826093401.1458456-1-lee.jones@linaro.org>
@@ -79,38 +84,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:389: warning: Function parameter or member 'name' not described in 'brcmf_fws_mac_descriptor'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:389: warning: Function parameter or member 'requested_packet' not described in 'brcmf_fws_mac_descriptor'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:389: warning: Function parameter or member 'suppr_transit_count' not described in 'brcmf_fws_mac_descriptor'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:389: warning: Function parameter or member 'send_tim_signal' not described in 'brcmf_fws_mac_descriptor'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:389: warning: Function parameter or member 'traffic_pending_bmp' not described in 'brcmf_fws_mac_descriptor'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c:389: warning: Function parameter or member 'traffic_lastreported_bmp' not described in 'brcmf_fws_mac_descriptor'
+
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Franky Lin <franky.lin@broadcom.com>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Cc: Wright Feng <wright.feng@cypress.com>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Luciano Coelho <luciano.coelho@nokia.com>
 Cc: linux-wireless@vger.kernel.org
+Cc: brcm80211-dev-list.pdl@broadcom.com
+Cc: brcm80211-dev-list@cypress.com
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/ti/wlcore/debugfs.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/wireless/ti/wlcore/debugfs.h b/drivers/net/wireless/ti/wlcore/debugfs.h
-index fc3bb0d2ab8da..b143293e694f9 100644
---- a/drivers/net/wireless/ti/wlcore/debugfs.h
-+++ b/drivers/net/wireless/ti/wlcore/debugfs.h
-@@ -78,13 +78,13 @@ static ssize_t sub## _ ##name## _read(struct file *file,		\
- 	struct wl1271 *wl = file->private_data;				\
- 	struct struct_type *stats = wl->stats.fw_stats;			\
- 	char buf[DEBUGFS_FORMAT_BUFFER_SIZE] = "";			\
--	int res, i;							\
-+	int i;								\
- 									\
- 	wl1271_debugfs_update_stats(wl);				\
- 									\
- 	for (i = 0; i < len; i++)					\
--		res = snprintf(buf, sizeof(buf), "%s[%d] = %d\n",	\
--			       buf, i, stats->sub.name[i]);		\
-+		snprintf(buf, sizeof(buf), "%s[%d] = %d\n",		\
-+			 buf, i, stats->sub.name[i]);			\
- 									\
- 	return wl1271_format_buffer(userbuf, count, ppos, "%s", buf);	\
- }									\
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
+index 902b2f65d4605..775e0612fa17a 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwsignal.c
+@@ -354,6 +354,7 @@ enum brcmf_fws_mac_desc_state {
+ /**
+  * struct brcmf_fws_mac_descriptor - firmware signalling data per node/interface
+  *
++ * @name: name of the descriptor.
+  * @occupied: slot is in use.
+  * @mac_handle: handle for mac entry determined by firmware.
+  * @interface_id: interface index.
+@@ -362,10 +363,15 @@ enum brcmf_fws_mac_desc_state {
+  * @generation: generation bit.
+  * @ac_bitmap: ac queue bitmap.
+  * @requested_credit: credits requested by firmware.
++ * @requested_packet: packet requested by firmware.
+  * @ea: ethernet address.
+  * @seq: per-node free-running sequence.
+  * @psq: power-save queue.
+  * @transit_count: packet in transit to firmware.
++ * @suppr_transit_count: suppressed packet in transit to firmware.
++ * @send_tim_signal: if set tim signal will be sent.
++ * @traffic_pending_bmp: traffic pending bitmap.
++ * @traffic_lastreported_bmp: traffic last reported bitmap.
+  */
+ struct brcmf_fws_mac_descriptor {
+ 	char name[16];
 -- 
 2.25.1
 
