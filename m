@@ -2,151 +2,136 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 067A0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEC9320737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:13:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jEspkbfW"
+	by mail.kernel.org (Postfix) with ESMTP id 49DD62074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:14:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgHZCN0 (ORCPT
+        id S1726717AbgHZCON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 22:13:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57826 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726611AbgHZCNZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 22:13:25 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E581C061574;
-        Tue, 25 Aug 2020 19:13:21 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id h2so161221plr.0;
-        Tue, 25 Aug 2020 19:13:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ya98ef+/yWr62GPjK6TeHgnvBk1gqF36gDLfJaPgUqI=;
-        b=jEspkbfWJ/4f9AqvNGkGAQcsMzoRdYhaH80VvRphgvfdIbE/QNtlCZlTWpgrJNoSdw
-         Ah+yvzZwOjlfzGCdtLhcQ2Wt2kWoGiezM+8NJFSSxNSH3gGs51sajTPKqt60cf7cMAAq
-         SgtVirUTYmZgBAtl7cEWwOnqaA/3aXQRPamkSnJhH6y9RT43LdcF9QE1k004w8Ap2ylS
-         ZmQPiPOAM16iwV89hiIQSoKXi/RGYPaK1x7Q/ywB2tKH9zz+uWa0HU7p4ZyQ5DCJ2gDx
-         sSZVAyLs4NK87SmwvSGC/DGBD1ZBonbSMb3Gw8WMlf07/kGvkQ+js4KydsmsTymLQM/W
-         KlKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ya98ef+/yWr62GPjK6TeHgnvBk1gqF36gDLfJaPgUqI=;
-        b=BlSvy9d/C44oc9g/coeQs132Pe+ZK7MbOaHuBHbGR+rOPRGmadxflGlEkCXZV9erLr
-         jL2Gxx8l9SVzTBjWrAzRknllxDAAXuke33bXyEn7MRiOF2JSKjMoStc/OQWzrH9jG2JP
-         8L5nnE+76ZkV0Lmjt9GaaTSveQIJOqegwzeDohMlH38J8aZfDYquX3KgcKCCdxFyTnOz
-         DT6gaQeCRz/FQMg7uX0giIX1x04bzgBWC13Fs4AjTh1BAiQZodhz/J58B4miRYcHvGDy
-         zoIWcSU1Q+66rLLz/q7lB22l1OetrljoKfVaoUKejEuiG7jqaXCtqcyXxuLdijyKFF9r
-         VVnQ==
-X-Gm-Message-State: AOAM5329rg8t+11CxWF98V8oVBfT+h0uSH3kuGTfKPa8sew60HKt8B+h
-        A0MZt9cpqNdso0xF7UnxJl4=
-X-Google-Smtp-Source: ABdhPJxrZEpGnKI21fTrcPfhI0GDg36KQnJqOnvWy6MnQhufEYwtSUb4XhoYIpbmAS4C6xuVJHrwnw==
-X-Received: by 2002:a17:90a:1a42:: with SMTP id 2mr3819867pjl.16.1598407998965;
-        Tue, 25 Aug 2020 19:13:18 -0700 (PDT)
-Received: from localhost ([124.156.176.71])
-        by smtp.gmail.com with ESMTPSA id v1sm341780pjh.16.2020.08.25.19.13.16
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 25 Aug 2020 19:13:18 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 10:13:19 +0800
-From:   Yue Hu <zbestahu@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, huyue2@yulong.com, zbestahu@163.com
-Subject: Re: [PATCH] thermal: sysfs: fall back to vzalloc for cooling
- device's statistics
-Message-ID: <20200826101319.00003048.zbestahu@gmail.com>
-In-Reply-To: <40b69f97-46e5-d62e-0d2f-604dfd4dafa1@linaro.org>
-References: <20200818063005.13828-1-zbestahu@gmail.com>
-        <40b69f97-46e5-d62e-0d2f-604dfd4dafa1@linaro.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 25 Aug 2020 22:14:13 -0400
+Received: from smtp.h3c.com ([60.191.123.56]:31932 "EHLO h3cspam01-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726611AbgHZCOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 22:14:12 -0400
+Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
+        by h3cspam01-ex.h3c.com with ESMTPS id 07Q2Ddmm051523
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 10:13:39 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from localhost.localdomain (10.99.212.201) by
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 26 Aug 2020 10:13:40 +0800
+From:   Xianting Tian <tian.xianting@h3c.com>
+To:     <axboe@kernel.dk>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Xianting Tian <tian.xianting@h3c.com>
+Subject: [PATCH] [v2] blk-mq: use BLK_MQ_NO_TAG for no tag
+Date:   Wed, 26 Aug 2020 10:06:51 +0800
+Message-ID: <20200826020651.9856-1-tian.xianting@h3c.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.99.212.201]
+X-ClientProxiedBy: BJSMTP02-EX.srv.huawei-3com.com (10.63.20.133) To
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
+X-DNSRBL: 
+X-MAIL: h3cspam01-ex.h3c.com 07Q2Ddmm051523
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020 12:40:35 +0200
-Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+Replace various magic -1 constants for tags with BLK_MQ_NO_TAG.
+And move the definition of BLK_MQ_NO_TAG from 'block/blk-mq-tag.h'
+to 'include/linux/blk-mq.h'
 
-> On 18/08/2020 08:30, Yue Hu wrote:
-> > From: Yue Hu <huyue2@yulong.com>
-> > 
-> > We observed warning about kzalloc() when register thermal cooling device
-> > in backlight_device_register(). backlight display can be a cooling device
-> > since reducing screen brightness will can help reduce temperature.
-> > 
-> > However, ->get_max_state of backlight will assign max brightness of 1024
-> > to states. The memory size can be getting 1MB+ due to states * states.  
-> 
-> What are the benefits of a 1024 states cooling device ? Is the
-> difference noticeable with a such small step ?
+Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
+---
+ block/blk-core.c       | 4 ++--
+ block/blk-mq-sched.c   | 2 +-
+ block/blk-mq-tag.h     | 6 ------
+ include/linux/blk-mq.h | 8 +++++++-
+ 4 files changed, 10 insertions(+), 10 deletions(-)
 
-Okay, this issue is happened under MSM/Android platform. QCOM spmi wled driver
-will define the max brightness. We needs to fix the issue to get thermal statistics.
-
-Thx.
-
-> 
-> 
-> > That is so large to trigger kmalloc() warning.
-> > 
-> > So, let's remove it and try vzalloc() if kzalloc() fails.
-> > 
-> > Signed-off-by: Yue Hu <huyue2@yulong.com>
-> > ---
-> >  drivers/thermal/thermal_sysfs.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-> > index aa99edb..9bae0b6 100644
-> > --- a/drivers/thermal/thermal_sysfs.c
-> > +++ b/drivers/thermal/thermal_sysfs.c
-> > @@ -16,6 +16,8 @@
-> >  #include <linux/device.h>
-> >  #include <linux/err.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/vmalloc.h>
-> > +#include <linux/mm.h>
-> >  #include <linux/string.h>
-> >  #include <linux/jiffies.h>
-> >  
-> > @@ -919,7 +921,9 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
-> >  	var += sizeof(*stats->time_in_state) * states;
-> >  	var += sizeof(*stats->trans_table) * states * states;
-> >  
-> > -	stats = kzalloc(var, GFP_KERNEL);
-> > +	stats = kzalloc(var, GFP_KERNEL | __GFP_NOWARN);
-> > +	if (!stats)
-> > +		stats = vzalloc(var);
-> >  	if (!stats)
-> >  		return;
-> >  
-> > @@ -938,7 +942,7 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
-> >  
-> >  static void cooling_device_stats_destroy(struct thermal_cooling_device *cdev)
-> >  {
-> > -	kfree(cdev->stats);
-> > +	kvfree(cdev->stats);
-> >  	cdev->stats = NULL;
-> >  }
-> >  
-> >   
-> 
-> 
+diff --git a/block/blk-core.c b/block/blk-core.c
+index d9d632639..c7eaf7504 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -116,8 +116,8 @@ void blk_rq_init(struct request_queue *q, struct request *rq)
+ 	rq->__sector = (sector_t) -1;
+ 	INIT_HLIST_NODE(&rq->hash);
+ 	RB_CLEAR_NODE(&rq->rb_node);
+-	rq->tag = -1;
+-	rq->internal_tag = -1;
++	rq->tag = BLK_MQ_NO_TAG;
++	rq->internal_tag = BLK_MQ_NO_TAG;
+ 	rq->start_time_ns = ktime_get_ns();
+ 	rq->part = NULL;
+ 	refcount_set(&rq->ref, 1);
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index a19cdf159..439481f59 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -522,7 +522,7 @@ void blk_mq_sched_insert_request(struct request *rq, bool at_head,
+ 		goto run;
+ 	}
+ 
+-	WARN_ON(e && (rq->tag != -1));
++	WARN_ON(e && (rq->tag != BLK_MQ_NO_TAG));
+ 
+ 	if (blk_mq_sched_bypass_insert(hctx, !!e, rq)) {
+ 		/*
+diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
+index b1acac518..8fc48aa72 100644
+--- a/block/blk-mq-tag.h
++++ b/block/blk-mq-tag.h
+@@ -45,12 +45,6 @@ static inline struct sbq_wait_state *bt_wait_ptr(struct sbitmap_queue *bt,
+ 	return sbq_wait_ptr(bt, &hctx->wait_index);
+ }
+ 
+-enum {
+-	BLK_MQ_NO_TAG		= -1U,
+-	BLK_MQ_TAG_MIN		= 1,
+-	BLK_MQ_TAG_MAX		= BLK_MQ_NO_TAG - 1,
+-};
+-
+ extern bool __blk_mq_tag_busy(struct blk_mq_hw_ctx *);
+ extern void __blk_mq_tag_idle(struct blk_mq_hw_ctx *);
+ 
+diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
+index 9d2d5ad36..2499d8aae 100644
+--- a/include/linux/blk-mq.h
++++ b/include/linux/blk-mq.h
+@@ -209,6 +209,12 @@ enum hctx_type {
+ 	HCTX_MAX_TYPES,
+ };
+ 
++enum {
++	BLK_MQ_NO_TAG		= -1U,
++	BLK_MQ_TAG_MIN		= 1,
++	BLK_MQ_TAG_MAX		= BLK_MQ_NO_TAG - 1,
++};
++
+ /**
+  * struct blk_mq_tag_set - tag set that can be shared between request queues
+  * @map:	   One or more ctx -> hctx mappings. One map exists for each
+@@ -569,7 +575,7 @@ static inline void *blk_mq_rq_to_pdu(struct request *rq)
+ static inline blk_qc_t request_to_qc_t(struct blk_mq_hw_ctx *hctx,
+ 		struct request *rq)
+ {
+-	if (rq->tag != -1)
++	if (rq->tag != BLK_MQ_NO_TAG)
+ 		return rq->tag | (hctx->queue_num << BLK_QC_T_SHIFT);
+ 
+ 	return rq->internal_tag | (hctx->queue_num << BLK_QC_T_SHIFT) |
+-- 
+2.17.1
 
