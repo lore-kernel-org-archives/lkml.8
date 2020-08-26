@@ -2,214 +2,524 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F30C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7BE5C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51440206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937F5206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:50:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="orRTRkVi"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="B2yTBTjC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbgHZBsR (ORCPT
+        id S1726870AbgHZBt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 21:48:17 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:59399 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbgHZBsO (ORCPT
+        Tue, 25 Aug 2020 21:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbgHZBty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 21:48:14 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 250F48066C;
-        Wed, 26 Aug 2020 13:48:07 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1598406487;
-        bh=uHY5e9cKyi9PX257b+FS3jOiMsle0701ETS/XNRGGa0=;
-        h=From:To:CC:Subject:Date:In-Reply-To;
-        b=orRTRkViM4xzx0xOF7Tie1qJbVdMkbcQ5+6uGWyTn3T1fX+Es5q2Q0cAT3s8h7j4/
-         137yrjaUH4AAYiYz7MyP4mhKuAmv8T553rVtRhAoYQ+SlTzwse5N1Pss6Nr5PYrDED
-         BDVPvRLmfh+yKc/TWT/YbVmDZQabHthhLIohjjCTeht+ApXhQl4AJZWg1eX/MtyePz
-         /skm3ozWl/XBZxvanKRBNC1BLu/cpg+F6NIgfejs9Mr7NnS1r1jirjtqxCw9JVvvwE
-         1NSHH9SfdYLIcvv/yYVbt0Xjay7bIkmezvhoG3yEAqQy5IOqWs6kVw2QtMQKtSaWzZ
-         gBR5/dWs4yl1w==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f45bf560001>; Wed, 26 Aug 2020 13:48:06 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 26 Aug 2020 13:48:06 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Wed, 26 Aug 2020 13:48:06 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Heiner Kallweit <hkallweit1@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "paulus@samba.org" <paulus@samba.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: fsl_espi errors on v5.7.15
-Thread-Topic: fsl_espi errors on v5.7.15
-Thread-Index: AQHWceVnik7XsBYbp0S+yHVGh1hdQak2WMaAgAQdSwCAAz9MAIAAfdcAgAD5u4CAB+sMAIAAYfwAgAA6JQCAAPtUgIAAOXyA
-Date:   Wed, 26 Aug 2020 01:48:06 +0000
-Message-ID: <519c3068-6c73-c17a-2016-1afe2a1d12f7@alliedtelesis.co.nz>
-In-Reply-To: <31e91237-4f87-66da-dac3-2304779e5749@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5BEB6839103C79428A57278D4A8457EC@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Tue, 25 Aug 2020 21:49:54 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1648C061786
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 18:49:53 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id 2so147959wrj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 18:49:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=PLtmDFaoox/6Kk3QstmLj3GA+oZMK+tPOxejIsZwndo=;
+        b=B2yTBTjChJHlEPJyYmch43xTP+WqJy47P0yAxwVdYGGeNTHzjdQS/KtPPbDewcXZJY
+         jSl0rzaIpDC0P+95TJOPguXChZmW6N+XDglOnUSt3dA9+4WPLIhckQmuqc4Qu4TfbGPf
+         WHHYu84cl49PHtnek+vQWW8BQ5dRe8obxrVGAtvIiG7SEU+EoiD5suhL5uBUBkZ2SPGQ
+         TwgDeL4hxPiiNae8iLhjAXFJ2ZZsnCrz1oPQPecJ7swhkSIb0WR/cikT2Q2++S9rYcp+
+         yYHuVsPmOdvPNvxMnrX9ouZLjrpQ6DYv9M6pcphKe8e4glN1optVj8RVxRYZyYBAocv9
+         EEPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=PLtmDFaoox/6Kk3QstmLj3GA+oZMK+tPOxejIsZwndo=;
+        b=VhoKX0nJUAybNUMmE9YpPYqJLlDZWV8orqdsE6HyN42ADKKPFiXot1vYe/3Zxt2Wd4
+         28B0vuRqGKEKhTDLLTsa+uCxMMG/8cBv6APC23Den0pu9AJIH+iH3cfoAjO+q2DfqY9t
+         4NqZP3l7xDfficHF6mjxGs1mXhI2escxU49FnOvc+LenZOYxfOGFNSqc8ONTTxX0nylU
+         7FHzwWJSRxoTeH/TaKEYEjC9aUaopUbj8ePIUEgBu38O2knP6TwgYooJQyv4tukWdr8a
+         1qZ8hKu/XDiN9vpbNkUaNJN5VQyabMLO/6onmPtPpaUYGqIh7lMEPQeCQqu5xMbVRsPh
+         8kmA==
+X-Gm-Message-State: AOAM53327ymxQfaUnHCoiWInsPSK974MnqBOGWua1ZsJwCQ1R/GIztwh
+        CL8S9piYZFK7K+ORmS8GDVDWezTz/WK0y7wwZ2w=
+X-Google-Smtp-Source: ABdhPJzrYE0pGCV0e8LI2s6USUHaJ7hEQrakPAwCAuOW0uFBZs+2sFediF6ooArklsD8irgfURYqAQ==
+X-Received: by 2002:a5d:6942:: with SMTP id r2mr9116886wrw.76.1598406592031;
+        Tue, 25 Aug 2020 18:49:52 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id c10sm1263661wmk.30.2020.08.25.18.49.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 18:49:51 -0700 (PDT)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        netdev@vger.kernel.org
+Subject: [PATCH v2 1/6] xfrm/compat: Add 64=>32-bit messages translator
+Date:   Wed, 26 Aug 2020 02:49:44 +0100
+Message-Id: <20200826014949.644441-2-dima@arista.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200826014949.644441-1-dima@arista.com>
+References: <20200826014949.644441-1-dima@arista.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiAyNi8wOC8yMCAxMDoyMiBhbSwgQ2hyaXMgUGFja2hhbSB3cm90ZToNCj4gT24gMjUvMDgv
-MjAgNzoyMiBwbSwgSGVpbmVyIEthbGx3ZWl0IHdyb3RlOg0KPg0KPiA8c25pcD4NCj4+IEkndmUg
-YmVlbiBzdGFyaW5nIGF0IHNwaS1mc2wtZXNwaS5jIGZvciB3aGlsZSBub3cgYW5kIEkgdGhpbmsg
-SSd2ZQ0KPj4+IGlkZW50aWZpZWQgYSBjb3VwbGUgb2YgZGVmaWNpZW5jaWVzIHRoYXQgbWF5IG9y
-IG1heSBub3QgYmUgcmVsYXRlZCANCj4+PiB0byBteQ0KPj4+IGlzc3VlLg0KPj4+DQo+Pj4gRmly
-c3QgSSB0aGluayB0aGUgJ1RyYW5zZmVyIGRvbmUgYnV0IFNQSUVfRE9OIGlzbid0IHNldCcgbWVz
-c2FnZSBjYW4gYmUNCj4+PiBnZW5lcmF0ZWQgc3B1cmlvdXNseS4gSW4gZnNsX2VzcGlfaXJxKCkg
-d2UgcmVhZCB0aGUgRVNQSV9TUElFIHJlZ2lzdGVyLg0KPj4+IFdlIGFsc28gd3JpdGUgYmFjayB0
-byBpdCB0byBjbGVhciB0aGUgY3VycmVudCBldmVudHMuIFdlIHJlLXJlYWQgaXQgaW4NCj4+PiBm
-c2xfZXNwaV9jcHVfaXJxKCkgYW5kIGNvbXBsYWluIHdoZW4gU1BJRV9ET04gaXMgbm90IHNldC4g
-QnV0IHdlIGNhbg0KPj4+IG5hdHVyYWxseSBlbmQgdXAgaW4gdGhhdCBzaXR1YXRpb24gaWYgd2Un
-cmUgZG9pbmcgYSBsYXJnZSByZWFkLiANCj4+PiBDb25zaWRlcg0KPj4+IHRoZSBtZXNzYWdlcyBm
-b3IgcmVhZGluZyBhIGJsb2NrIG9mIGRhdGEgZnJvbSBhIHNwaS1ub3IgY2hpcA0KPj4+DQo+Pj4g
-wqAgwqB0eCA9IFJFQURfT1AgKyBBRERSDQo+Pj4gwqAgwqByeCA9IGRhdGENCj4+Pg0KPj4+IFdl
-IHNldHVwIHRoZSB0cmFuc2ZlciBhbmQgcHVtcCBvdXQgdGhlIHR4X2J1Zi4gVGhlIGZpcnN0IGlu
-dGVycnVwdCBnb2VzDQo+Pj4gb2ZmIGFuZCBFU1BJX1NQSUUgaGFzIFNQSU1fRE9OIGFuZCBTUElN
-X1JYVCBzZXQuIFdlIGVtcHR5IHRoZSByeCBmaWZvLA0KPj4+IGNsZWFyIEVTUElfU1BJRSBhbmQg
-d2FpdCBmb3IgdGhlIG5leHQgaW50ZXJydXB0LiBUaGUgbmV4dCBpbnRlcnJ1cHQNCj4+PiBmaXJl
-cyBhbmQgdGhpcyB0aW1lIHdlIGhhdmUgRVNQSV9TUElFIHdpdGgganVzdCBTUElNX1JYVCBzZXQu
-IFRoaXMNCj4+PiBjb250aW51ZXMgdW50aWwgd2UndmUgcmVjZWl2ZWQgYWxsIHRoZSBkYXRhIGFu
-ZCB3ZSBmaW5pc2ggd2l0aCANCj4+PiBFU1BJX1NQSUUNCj4+PiBoYXZpbmcgb25seSBTUElNX1JY
-VCBzZXQuIFdoZW4gd2UgcmUtcmVhZCBpdCB3ZSBjb21wbGFpbiB0aGF0IFNQSUVfRE9ODQo+Pj4g
-aXNuJ3Qgc2V0Lg0KPj4+DQo+Pj4gVGhlIG90aGVyIGRlZmljaWVuY3kgaXMgdGhhdCB3ZSBvbmx5
-IGdldCBhbiBpbnRlcnJ1cHQgd2hlbiB0aGUgDQo+Pj4gYW1vdW50IG9mDQo+Pj4gZGF0YSBpbiB0
-aGUgcnggZmlmbyBpcyBhYm92ZSBGU0xfRVNQSV9SWFRIUi4gSWYgdGhlcmUgYXJlIGZld2VyIHRo
-YW4NCj4+PiBGU0xfRVNQSV9SWFRIUiBsZWZ0IHRvIGJlIHJlY2VpdmVkIHdlIHdpbGwgbmV2ZXIg
-cHVsbCB0aGVtIG91dCBvZiANCj4+PiB0aGUgZmlmby4NCj4+Pg0KPj4gU1BJTV9ET04gd2lsbCB0
-cmlnZ2VyIGFuIGludGVycnVwdCBvbmNlIHRoZSBsYXN0IGNoYXJhY3RlcnMgaGF2ZSBiZWVuDQo+
-PiB0cmFuc2ZlcnJlZCwgYW5kIHJlYWQgdGhlIHJlbWFpbmluZyBjaGFyYWN0ZXJzIGZyb20gdGhl
-IEZJRk8uDQo+DQo+IFRoZSBUMjA4MFJNIHRoYXQgSSBoYXZlIHNheXMgdGhlIGZvbGxvd2luZyBh
-Ym91dCB0aGUgRE9OIGJpdA0KPg0KPiAiTGFzdCBjaGFyYWN0ZXIgd2FzIHRyYW5zbWl0dGVkLiBU
-aGUgbGFzdCBjaGFyYWN0ZXIgd2FzIHRyYW5zbWl0dGVkIA0KPiBhbmQgYSBuZXcgY29tbWFuZCBj
-YW4gYmUgd3JpdHRlbiBmb3IgdGhlIG5leHQgZnJhbWUuIg0KPg0KPiBUaGF0IGRvZXMgYXQgbGVh
-c3Qgc2VlbSB0byBmaXQgd2l0aCBteSBhc3NlcnRpb24gdGhhdCBpdCdzIGFsbCBhYm91dCANCj4g
-dGhlIFRYIGRpcmVjdGlvbi4gQnV0IHRoZSBmYWN0IHRoYXQgaXQgZG9lc24ndCBoYXBwZW4gYWxs
-IHRoZSB0aW1lIA0KPiB0aHJvd3Mgc29tZSBkb3VidCBvbiBpdC4NCj4NCj4+IEkgdGhpbmsgdGhl
-IHJlYXNvbiBJJ20gc2VlaW5nIHNvbWUgdmFyaWFiaWxpdHkgaXMgYmVjYXVzZSBvZiBob3cgZmFz
-dA0KPj4+IChvciBzbG93KSB0aGUgaW50ZXJydXB0cyBnZXQgcHJvY2Vzc2VkIGFuZCBob3cgZmFz
-dCB0aGUgc3BpLW5vciBjaGlwIA0KPj4+IGNhbg0KPj4+IGZpbGwgdGhlIENQVXMgcnggZmlmby4N
-Cj4+Pg0KPj4gVG8gcnVsZSBvdXQgdGltaW5nIGlzc3VlcyBhdCBoaWdoIGJ1cyBmcmVxdWVuY2ll
-cyBJIGluaXRpYWxseSBhc2tlZA0KPj4gZm9yIHJlLXRlc3RpbmcgYXQgbG93ZXIgZnJlcXVlbmNp
-ZXMuIElmIHlvdSBlLmcuIGxpbWl0IHRoZSBidXMgdG8gMSBNSHoNCj4+IG9yIGV2ZW4gbGVzcywg
-dGhlbiB0aW1pbmcgc2hvdWxkbid0IGJlIGFuIGlzc3VlLg0KPiBZZXMgSSd2ZSBjdXJyZW50bHkg
-Z290IHNwaS1tYXgtZnJlcXVlbmN5ID0gPDEwMDAwMDA+OyBpbiBteSBkdHMuIEkgDQo+IHdvdWxk
-IGFsc28gZXhwZWN0IGEgc2xvd2VyIGZyZXF1ZW5jeSB3b3VsZCBmaXQgbXkgIkRPTiBpcyBmb3Ig
-VFgiIA0KPiBuYXJyYXRpdmUuDQo+PiBMYXN0IHJlbGV2YW50IGZ1bmN0aW9uYWwgY2hhbmdlcyBo
-YXZlIGJlZW4gZG9uZSBhbG1vc3QgNCB5ZWFycyBhZ28uDQo+PiBBbmQgeW91cnMgaXMgdGhlIGZp
-cnN0IHN1Y2ggcmVwb3J0IEkgc2VlLiBTbyBxdWVzdGlvbiBpcyB3aGF0IGNvdWxkIA0KPj4gYmUg
-c28NCj4+IHNwZWNpYWwgd2l0aCB5b3VyIHNldHVwIHRoYXQgaXQgc2VlbXMgeW91J3JlIHRoZSBv
-bmx5IG9uZSBiZWluZyANCj4+IGFmZmVjdGVkLg0KPj4gVGhlIHNjZW5hcmlvcyB5b3UgZGVzY3Jp
-YmUgYXJlIHN0YW5kYXJkLCB0aGVyZWZvcmUgbXVjaCBtb3JlIHBlb3BsZQ0KPj4gc2hvdWxkIGJl
-IGFmZmVjdGVkIGluIGNhc2Ugb2YgYSBkcml2ZXIgYnVnLg0KPiBBZ3JlZWQuIEJ1dCBldmVuIG9u
-IG15IGhhcmR3YXJlICh3aGljaCBtYXkgaGF2ZSBhIGxhdGVudCBpc3N1ZSBkZXNwaXRlIA0KPiBi
-ZWluZyBpbiB0aGUgZmllbGQgZm9yIGdvaW5nIG9uIDUgeWVhcnMpIHRoZSBpc3N1ZSBvbmx5IHRy
-aWdnZXJzIHVuZGVyIA0KPiBzb21lIGZhaXJseSBzcGVjaWZpYyBjaXJjdW1zdGFuY2VzLg0KPj4g
-WW91IHNhaWQgdGhhdCBrZXJuZWwgY29uZmlnIGltcGFjdHMgaG93IGZyZXF1ZW50bHkgdGhlIGlz
-c3VlIGhhcHBlbnMuDQo+PiBUaGVyZWZvcmUgcXVlc3Rpb24gaXMgd2hhdCdzIHRoZSBkaWZmIGlu
-IGtlcm5lbCBjb25maWcsIGFuZCBob3cgY291bGQNCj4+IHRoZSBkaWZmZXJlbmNlcyBiZSByZWxh
-dGVkIHRvIFNQSS4NCj4NCj4gSXQgZGlkIHNlZW0gdG8gYmUgc29tZXdoYXQgcmFuZG9tLiBUaGlu
-Z3MgbGlrZSBDT05GSUdfUFJFRU1QVCBoYXZlIGFuIA0KPiBpbXBhY3QgYnV0IGV2ZXJ5IHRpbWUg
-SSBmb3VuZCBzb21ldGhpbmcgdGhhdCBzZWVtZWQgdG8gYmUgaGF2aW5nIGFuIA0KPiBpbXBhY3Qg
-SSd2ZSBiZWVuIGFibGUgdG8gZGlzcHJvdmUgaXQuIEkgYWN0dWFsbHkgdGhpbmsgaXRzIGFib3V0
-IGhvdyANCj4gYnVzeSB0aGUgc3lzdGVtIGlzIHdoaWNoIG1heSBvciBtYXkgbm90IGFmZmVjdCB3
-aGVuIHdlIGdldCByb3VuZCB0byANCj4gcHJvY2Vzc2luZyB0aGUgaW50ZXJydXB0cy4NCj4NCj4g
-SSBoYXZlIG1hbmFnZWQgdG8gZ2V0IHRoZSAnVHJhbnNmZXIgZG9uZSBidXQgU1BJRV9ET04gaXNu
-J3Qgc2V0IScgdG8gDQo+IG9jY3VyIG9uIHRoZSBUMjA4MFJEQi4NCj4NCj4gSSd2ZSBoYWQgdG8g
-YWRkIHRoZSBmb2xsb3dpbmcgdG8gZXhwb3NlIHRoZSBlbnZpcm9ubWVudCBhcyBhIG10ZCANCj4g
-cGFydGl0aW9uDQo+DQo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Qy
-MDh4cmRiLmR0c2kgDQo+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MjA4eHJkYi5kdHNp
-DQo+IGluZGV4IGZmODdlNjdjNzBkYS4uZmJmOTVmYzFmZDY4IDEwMDY0NA0KPiAtLS0gYS9hcmNo
-L3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDh4cmRiLmR0c2kNCj4gKysrIGIvYXJjaC9wb3dlcnBj
-L2Jvb3QvZHRzL2ZzbC90MjA4eHJkYi5kdHNpDQo+IEBAIC0xMTYsNiArMTE2LDE1IEBAIGZsYXNo
-QDAgew0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBjb21wYXRpYmxlID0gIm1pY3JvbixuMjVxNTEyYXgzIiwgDQo+ICJqZWRl
-YyxzcGktbm9yIjsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVnID0gPDA+Ow0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzcGktbWF4LWZyZXF1ZW5j
-eSA9IDwxMDAwMDAwMD47IC8qIA0KPiBpbnB1dCBjbG9jayAqLw0KPiArDQo+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGFydGl0
-aW9uQHUtYm9vdCB7DQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVnID0gPDB4MDAwMDAwMDAg
-MHgwMDEwMDAwMD47DQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbGFiZWwgPSAidS1ib290IjsN
-Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIH07DQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwYXJ0aXRpb25AdS1ib290LWVudiB7DQo+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgcmVnID0gPDB4MDAxMDAwMDAgMHgwMDAxMDAwMD47DQo+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgbGFiZWwgPSAidS1ib290LWVudiI7DQo+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Ow0KPiDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIH07DQo+IMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Ow0KPg0KPiBBbmQgSSdtIHVzaW5nIHRoZSBmb2xsb3dp
-bmcgc2NyaXB0IHRvIHBva2UgYXQgdGhlIGVudmlyb25tZW50ICh3YXJuaW5nIA0KPiBpZiBhbnlv
-bmUgZG9lcyB0cnkgdGhpcyBhbmQgdGhlIGJ1ZyBoaXRzIGl0IGNhbiByZW5kZXIgeW91ciB1LWJv
-b3QgDQo+IGVudmlyb25tZW50IGludmFsaWQpLg0KPg0KPiBjYXQgZmxhc2gvZndfZW52X3Rlc3Qu
-c2gNCj4gIyEvYmluL3NoDQo+DQo+IGdlbmVyYXRlX2Z3X2Vudl9jb25maWcoKQ0KPiB7DQo+IMKg
-IGNhdCAvcHJvYy9tdGQgfCBzZWQgJ3MvWzoiXS8vZycgfCB3aGlsZSByZWFkIGRldiBzaXplIGVy
-YXNlc2l6ZSBuYW1lIA0KPiA7IGRvDQo+IMKgwqDCoMKgIGVjaG8gIiRkZXYgJHNpemUgJGVyYXNl
-c2l6ZSAkbmFtZSINCj4gwqDCoMKgwqAgWyAiJG5hbWUiID0gInUtYm9vdC1lbnYiIF0gJiYgZWNo
-byAiL2Rldi8kZGV2IDB4MDAwMCAweDIwMDAgDQo+ICRlcmFzZXNpemUiID4vZmxhc2gvZndfZW52
-LmNvbmZpZw0KPiDCoCBkb25lDQo+IH0NCj4NCj4gY3ljbGVzPTEwDQo+IFsgJCMgLWdlIDEgXSAm
-JiBjeWNsZXM9JDENCj4NCj4gZ2VuZXJhdGVfZndfZW52X2NvbmZpZw0KPg0KPiBmd19wcmludGVu
-diAtYyAvZmxhc2gvZndfZW52LmNvbmZpZw0KPg0KPiBkbWVzZyAtYyA+L2Rldi9udWxsDQo+IHg9
-MA0KPiB3aGlsZSBbICR4IC1sdCAkY3ljbGVzIF07IGRvDQo+IMKgwqDCoCBmd19wcmludGVudiAt
-YyAvZmxhc2gvZndfZW52LmNvbmZpZyA+L2Rldi9udWxsIHx8IGJyZWFrDQo+IMKgwqDCoCBmd19z
-ZXRlbnYgLWMgL2ZsYXNoL2Z3X2Vudi5jb25maWcgZm9vICRSQU5ET00gfHwgYnJlYWs7DQo+IMKg
-wqDCoCBkbWVzZyAtYyB8IGdyZXAgLXEgZnNsX2VzcGkgJiYgYnJlYWs7DQo+IMKgwqDCoCBsZXQg
-eD14KzENCj4gZG9uZQ0KPg0KPiBlY2hvICJSYW4gJHggY3ljbGVzIg0KDQpJJ3ZlIGFsc28gbm93
-IHNlZW4gdGhlIFJYIEZJRk8gbm90IGVtcHR5IGVycm9yIG9uIHRoZSBUMjA4MFJEQg0KDQpmc2xf
-ZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQh
-DQpmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24n
-dCBzZXQhDQpmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RP
-TiBpc24ndCBzZXQhDQpmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBT
-UElFX0RPTiBpc24ndCBzZXQhDQpmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25l
-IGJ1dCByeC90eCBmaWZvJ3MgYXJlbid0IGVtcHR5IQ0KZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTog
-U1BJRV9SWENOVCA9IDEsIFNQSUVfVFhDTlQgPSAzMg0KDQpXaXRoIG15IGN1cnJlbnQgd29ya2Fy
-b3VuZCBvZiBlbXB0eWluZyB0aGUgUlggRklGTy4gSXQgc2VlbXMgc3Vydml2YWJsZS4gDQpJbnRl
-cmVzdGluZ2x5IGl0IG9ubHkgZXZlciBzZWVtcyB0byBiZSAxIGV4dHJhIGJ5dGUgaW4gdGhlIFJY
-IEZJRk8gYW5kIA0KaXQgc2VlbXMgdG8gYmUgYWZ0ZXIgZWl0aGVyIGEgUkVBRF9TUiBvciBhIFJF
-QURfRlNSLg0KDQpmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiB0eCA3MA0KZnNsX2VzcGkgZmZlMTEw
-MDAwLnNwaTogcnggMDMNCmZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IEV4dHJhIFJYIDAwDQpmc2xf
-ZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCBTUElFX0RPTiBpc24ndCBzZXQh
-DQpmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBUcmFuc2ZlciBkb25lIGJ1dCByeC90eCBmaWZvJ3Mg
-YXJlbid0IGVtcHR5IQ0KZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogU1BJRV9SWENOVCA9IDEsIFNQ
-SUVfVFhDTlQgPSAzMg0KZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogdHggMDUNCmZzbF9lc3BpIGZm
-ZTExMDAwMC5zcGk6IHJ4IDAwDQpmc2xfZXNwaSBmZmUxMTAwMDAuc3BpOiBFeHRyYSBSWCAwMw0K
-ZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogVHJhbnNmZXIgZG9uZSBidXQgU1BJRV9ET04gaXNuJ3Qg
-c2V0IQ0KZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogVHJhbnNmZXIgZG9uZSBidXQgcngvdHggZmlm
-bydzIGFyZW4ndCBlbXB0eSENCmZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IFNQSUVfUlhDTlQgPSAx
-LCBTUElFX1RYQ05UID0gMzINCmZzbF9lc3BpIGZmZTExMDAwMC5zcGk6IHR4IDA1DQpmc2xfZXNw
-aSBmZmUxMTAwMDAuc3BpOiByeCAwMA0KZnNsX2VzcGkgZmZlMTEwMDAwLnNwaTogRXh0cmEgUlgg
-MDMNCg0KIEZyb20gYWxsIHRoZSBNaWNyb24gU1BJLU5PUiBkYXRhc2hlZXRzIEkndmUgZ290IGFj
-Y2VzcyB0byBpdCBpcyANCnBvc3NpYmxlIHRvIGNvbnRpbnVhbGx5IHJlYWQgdGhlIFNSL0ZTUi4g
-QnV0IEkndmUgbm8gaWRlYSB3aHkgaXQgaGFwcGVucyANCnNvbWUgdGltZXMgYW5kIG5vdCBvdGhl
-cnMuDQo=
+XFRM is disabled for compatible users because of the UABI difference.
+The difference is in structures paddings and in the result the size
+of netlink messages differ.
+
+Possibility for compatible application to manage xfrm tunnels was
+disabled by: the commmit 19d7df69fdb2 ("xfrm: Refuse to insert 32 bit
+userspace socket policies on 64 bit systems") and the commit 74005991b78a
+("xfrm: Do not parse 32bits compiled xfrm netlink msg on 64bits host").
+
+This is my second attempt to resolve the xfrm/compat problem by adding
+the 64=>32 and 32=>64 bit translators those non-visibly to a user
+provide translation between compatible user and kernel.
+Previous attempt was to interrupt the message ABI according to a syscall
+by xfrm_user, which resulted in over-complicated code [1].
+
+Florian Westphal provided the idea of translator and some draft patches
+in the discussion. In these patches, his idea is reused and some of his
+initial code is also present.
+
+Provide the kernel-to-user translator under XFRM_USER_COMPAT, that
+creates for 64-bit xfrm-user message a 32-bit translation and puts it
+in skb's frag_list. net/compat.c layer provides MSG_CMSG_COMPAT to
+decide if the message should be taken from skb or frag_list.
+(used by wext-core which has also an ABI difference)
+
+Kernel sends 64-bit xfrm messages to the userspace for:
+- multicast (monitor events)
+- netlink dumps
+
+Wire up the translator to xfrm_nlmsg_multicast().
+
+[1]: https://lkml.kernel.org/r/20180726023144.31066-1-dima@arista.com
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+---
+ include/net/xfrm.h     |  10 ++
+ net/xfrm/Kconfig       |  10 ++
+ net/xfrm/Makefile      |   1 +
+ net/xfrm/xfrm_compat.c | 302 +++++++++++++++++++++++++++++++++++++++++
+ net/xfrm/xfrm_user.c   |   9 +-
+ 5 files changed, 331 insertions(+), 1 deletion(-)
+ create mode 100644 net/xfrm/xfrm_compat.c
+
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index 2737d24ec244..9810b5090338 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -2000,6 +2000,16 @@ static inline int xfrm_tunnel_check(struct sk_buff *skb, struct xfrm_state *x,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_XFRM_USER_COMPAT
++extern int xfrm_alloc_compat(struct sk_buff *skb);
++extern const int xfrm_msg_min[XFRM_NR_MSGTYPES];
++#else
++static inline int xfrm_alloc_compat(struct sk_buff *skb)
++{
++	return 0;
++}
++#endif
++
+ #if IS_ENABLED(CONFIG_IPV6)
+ static inline bool xfrm6_local_dontfrag(const struct sock *sk)
+ {
+diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
+index 5b9a5ab48111..e79b48dab61b 100644
+--- a/net/xfrm/Kconfig
++++ b/net/xfrm/Kconfig
+@@ -28,6 +28,16 @@ config XFRM_USER
+ 
+ 	  If unsure, say Y.
+ 
++config XFRM_USER_COMPAT
++	tristate "Compatible ABI support"
++	depends on XFRM_USER && COMPAT_FOR_U64_ALIGNMENT
++	select WANT_COMPAT_NETLINK_MESSAGES
++	help
++	  Transformation(XFRM) user configuration interface like IPsec
++	  used by compatible Linux applications.
++
++	  If unsure, say N.
++
+ config XFRM_INTERFACE
+ 	tristate "Transformation virtual interface"
+ 	depends on XFRM && IPV6
+diff --git a/net/xfrm/Makefile b/net/xfrm/Makefile
+index 2d4bb4b9f75e..494aa744bfb9 100644
+--- a/net/xfrm/Makefile
++++ b/net/xfrm/Makefile
+@@ -9,6 +9,7 @@ obj-$(CONFIG_XFRM) := xfrm_policy.o xfrm_state.o xfrm_hash.o \
+ obj-$(CONFIG_XFRM_STATISTICS) += xfrm_proc.o
+ obj-$(CONFIG_XFRM_ALGO) += xfrm_algo.o
+ obj-$(CONFIG_XFRM_USER) += xfrm_user.o
++obj-$(CONFIG_XFRM_USER_COMPAT) += xfrm_compat.o
+ obj-$(CONFIG_XFRM_IPCOMP) += xfrm_ipcomp.o
+ obj-$(CONFIG_XFRM_INTERFACE) += xfrm_interface.o
+ obj-$(CONFIG_XFRM_ESPINTCP) += espintcp.o
+diff --git a/net/xfrm/xfrm_compat.c b/net/xfrm/xfrm_compat.c
+new file mode 100644
+index 000000000000..b9eb65dde0db
+--- /dev/null
++++ b/net/xfrm/xfrm_compat.c
+@@ -0,0 +1,302 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * XFRM compat layer
++ * Author: Dmitry Safonov <dima@arista.com>
++ * Based on code and translator idea by: Florian Westphal <fw@strlen.de>
++ */
++#include <linux/compat.h>
++#include <linux/xfrm.h>
++#include <net/xfrm.h>
++
++struct compat_xfrm_lifetime_cfg {
++	compat_u64 soft_byte_limit, hard_byte_limit;
++	compat_u64 soft_packet_limit, hard_packet_limit;
++	compat_u64 soft_add_expires_seconds, hard_add_expires_seconds;
++	compat_u64 soft_use_expires_seconds, hard_use_expires_seconds;
++}; /* same size on 32bit, but only 4 byte alignment required */
++
++struct compat_xfrm_lifetime_cur {
++	compat_u64 bytes, packets, add_time, use_time;
++}; /* same size on 32bit, but only 4 byte alignment required */
++
++struct compat_xfrm_userpolicy_info {
++	struct xfrm_selector sel;
++	struct compat_xfrm_lifetime_cfg lft;
++	struct compat_xfrm_lifetime_cur curlft;
++	__u32 priority, index;
++	u8 dir, action, flags, share;
++	/* 4 bytes additional padding on 64bit */
++};
++
++struct compat_xfrm_usersa_info {
++	struct xfrm_selector sel;
++	struct xfrm_id id;
++	xfrm_address_t saddr;
++	struct compat_xfrm_lifetime_cfg lft;
++	struct compat_xfrm_lifetime_cur curlft;
++	struct xfrm_stats stats;
++	__u32 seq, reqid;
++	u16 family;
++	u8 mode, replay_window, flags;
++	/* 4 bytes additional padding on 64bit */
++};
++
++struct compat_xfrm_user_acquire {
++	struct xfrm_id id;
++	xfrm_address_t saddr;
++	struct xfrm_selector sel;
++	struct compat_xfrm_userpolicy_info policy;
++	/* 4 bytes additional padding on 64bit */
++	__u32 aalgos, ealgos, calgos, seq;
++};
++
++struct compat_xfrm_userspi_info {
++	struct compat_xfrm_usersa_info info;
++	/* 4 bytes additional padding on 64bit */
++	__u32 min, max;
++};
++
++struct compat_xfrm_user_expire {
++	struct compat_xfrm_usersa_info state;
++	/* 8 bytes additional padding on 64bit */
++	u8 hard;
++};
++
++struct compat_xfrm_user_polexpire {
++	struct compat_xfrm_userpolicy_info pol;
++	/* 8 bytes additional padding on 64bit */
++	u8 hard;
++};
++
++#define XMSGSIZE(type) sizeof(struct type)
++
++static const int compat_msg_min[XFRM_NR_MSGTYPES] = {
++	[XFRM_MSG_NEWSA       - XFRM_MSG_BASE] = XMSGSIZE(compat_xfrm_usersa_info),
++	[XFRM_MSG_DELSA       - XFRM_MSG_BASE] = XMSGSIZE(xfrm_usersa_id),
++	[XFRM_MSG_GETSA       - XFRM_MSG_BASE] = XMSGSIZE(xfrm_usersa_id),
++	[XFRM_MSG_NEWPOLICY   - XFRM_MSG_BASE] = XMSGSIZE(compat_xfrm_userpolicy_info),
++	[XFRM_MSG_DELPOLICY   - XFRM_MSG_BASE] = XMSGSIZE(xfrm_userpolicy_id),
++	[XFRM_MSG_GETPOLICY   - XFRM_MSG_BASE] = XMSGSIZE(xfrm_userpolicy_id),
++	[XFRM_MSG_ALLOCSPI    - XFRM_MSG_BASE] = XMSGSIZE(compat_xfrm_userspi_info),
++	[XFRM_MSG_ACQUIRE     - XFRM_MSG_BASE] = XMSGSIZE(compat_xfrm_user_acquire),
++	[XFRM_MSG_EXPIRE      - XFRM_MSG_BASE] = XMSGSIZE(compat_xfrm_user_expire),
++	[XFRM_MSG_UPDPOLICY   - XFRM_MSG_BASE] = XMSGSIZE(compat_xfrm_userpolicy_info),
++	[XFRM_MSG_UPDSA       - XFRM_MSG_BASE] = XMSGSIZE(compat_xfrm_usersa_info),
++	[XFRM_MSG_POLEXPIRE   - XFRM_MSG_BASE] = XMSGSIZE(compat_xfrm_user_polexpire),
++	[XFRM_MSG_FLUSHSA     - XFRM_MSG_BASE] = XMSGSIZE(xfrm_usersa_flush),
++	[XFRM_MSG_FLUSHPOLICY - XFRM_MSG_BASE] = 0,
++	[XFRM_MSG_NEWAE       - XFRM_MSG_BASE] = XMSGSIZE(xfrm_aevent_id),
++	[XFRM_MSG_GETAE       - XFRM_MSG_BASE] = XMSGSIZE(xfrm_aevent_id),
++	[XFRM_MSG_REPORT      - XFRM_MSG_BASE] = XMSGSIZE(xfrm_user_report),
++	[XFRM_MSG_MIGRATE     - XFRM_MSG_BASE] = XMSGSIZE(xfrm_userpolicy_id),
++	[XFRM_MSG_NEWSADINFO  - XFRM_MSG_BASE] = sizeof(u32),
++	[XFRM_MSG_GETSADINFO  - XFRM_MSG_BASE] = sizeof(u32),
++	[XFRM_MSG_NEWSPDINFO  - XFRM_MSG_BASE] = sizeof(u32),
++	[XFRM_MSG_GETSPDINFO  - XFRM_MSG_BASE] = sizeof(u32),
++	[XFRM_MSG_MAPPING     - XFRM_MSG_BASE] = XMSGSIZE(xfrm_user_mapping)
++};
++
++static struct nlmsghdr *xfrm_nlmsg_put_compat(struct sk_buff *skb,
++			const struct nlmsghdr *nlh_src, u16 type)
++{
++	int payload = compat_msg_min[type];
++	int src_len = xfrm_msg_min[type];
++	struct nlmsghdr *nlh_dst;
++
++	/* Compat messages are shorter or equal to native (+padding) */
++	if (WARN_ON_ONCE(src_len < payload))
++		return ERR_PTR(-EMSGSIZE);
++
++	nlh_dst = nlmsg_put(skb, nlh_src->nlmsg_pid, nlh_src->nlmsg_seq,
++			    nlh_src->nlmsg_type, payload, nlh_src->nlmsg_flags);
++	if (!nlh_dst)
++		return ERR_PTR(-EMSGSIZE);
++
++	memset(nlmsg_data(nlh_dst), 0, payload);
++
++	switch (nlh_src->nlmsg_type) {
++	/* Compat message has the same layout as native */
++	case XFRM_MSG_DELSA:
++	case XFRM_MSG_DELPOLICY:
++	case XFRM_MSG_FLUSHSA:
++	case XFRM_MSG_FLUSHPOLICY:
++	case XFRM_MSG_NEWAE:
++	case XFRM_MSG_REPORT:
++	case XFRM_MSG_MIGRATE:
++	case XFRM_MSG_NEWSADINFO:
++	case XFRM_MSG_NEWSPDINFO:
++	case XFRM_MSG_MAPPING:
++		WARN_ON_ONCE(src_len != payload);
++		memcpy(nlmsg_data(nlh_dst), nlmsg_data(nlh_src), src_len);
++		break;
++	/* 4 byte alignment for trailing u64 on native, but not on compat */
++	case XFRM_MSG_NEWSA:
++	case XFRM_MSG_NEWPOLICY:
++	case XFRM_MSG_UPDSA:
++	case XFRM_MSG_UPDPOLICY:
++		WARN_ON_ONCE(src_len != payload + 4);
++		memcpy(nlmsg_data(nlh_dst), nlmsg_data(nlh_src), payload);
++		break;
++	case XFRM_MSG_EXPIRE: {
++		const struct xfrm_user_expire *src_ue  = nlmsg_data(nlh_src);
++		struct compat_xfrm_user_expire *dst_ue = nlmsg_data(nlh_dst);
++
++		/* compat_xfrm_user_expire has 4-byte smaller state */
++		memcpy(dst_ue, src_ue, sizeof(dst_ue->state));
++		dst_ue->hard = src_ue->hard;
++		break;
++	}
++	case XFRM_MSG_ACQUIRE: {
++		const struct xfrm_user_acquire *src_ua  = nlmsg_data(nlh_src);
++		struct compat_xfrm_user_acquire *dst_ua = nlmsg_data(nlh_dst);
++
++		memcpy(dst_ua, src_ua, offsetof(struct compat_xfrm_user_acquire, aalgos));
++		dst_ua->aalgos = src_ua->aalgos;
++		dst_ua->ealgos = src_ua->ealgos;
++		dst_ua->calgos = src_ua->calgos;
++		dst_ua->seq    = src_ua->seq;
++		break;
++	}
++	case XFRM_MSG_POLEXPIRE: {
++		const struct xfrm_user_polexpire *src_upe  = nlmsg_data(nlh_src);
++		struct compat_xfrm_user_polexpire *dst_upe = nlmsg_data(nlh_dst);
++
++		/* compat_xfrm_user_polexpire has 4-byte smaller state */
++		memcpy(dst_upe, src_upe, sizeof(dst_upe->pol));
++		dst_upe->hard = src_upe->hard;
++		break;
++	}
++	case XFRM_MSG_ALLOCSPI: {
++		const struct xfrm_userspi_info *src_usi = nlmsg_data(nlh_src);
++		struct compat_xfrm_userspi_info *dst_usi = nlmsg_data(nlh_dst);
++
++		/* compat_xfrm_user_polexpire has 4-byte smaller state */
++		memcpy(dst_usi, src_usi, sizeof(src_usi->info));
++		dst_usi->min = src_usi->min;
++		dst_usi->max = src_usi->max;
++		break;
++	}
++	/* Not being sent by kernel */
++	case XFRM_MSG_GETSA:
++	case XFRM_MSG_GETPOLICY:
++	case XFRM_MSG_GETAE:
++	case XFRM_MSG_GETSADINFO:
++	case XFRM_MSG_GETSPDINFO:
++	default:
++		WARN_ONCE(1, "unsupported nlmsg_type %d", nlh_src->nlmsg_type);
++		return ERR_PTR(-EOPNOTSUPP);
++	}
++
++	return nlh_dst;
++}
++
++static int xfrm_nla_cpy(struct sk_buff *dst, const struct nlattr *src, int len)
++{
++	return nla_put(dst, src->nla_type, len, nla_data(src));
++}
++
++static int xfrm_xlate64_attr(struct sk_buff *dst, const struct nlattr *src)
++{
++	switch (src->nla_type) {
++	case XFRMA_ALG_AUTH:
++	case XFRMA_ALG_CRYPT:
++	case XFRMA_ALG_COMP:
++	case XFRMA_ENCAP:
++	case XFRMA_TMPL:
++		return xfrm_nla_cpy(dst, src, nla_len(src));
++	case XFRMA_SA:
++		return xfrm_nla_cpy(dst, src, XMSGSIZE(compat_xfrm_usersa_info));
++	case XFRMA_POLICY:
++		return xfrm_nla_cpy(dst, src, XMSGSIZE(compat_xfrm_userpolicy_info));
++	case XFRMA_SEC_CTX:
++		return xfrm_nla_cpy(dst, src, nla_len(src));
++	case XFRMA_LTIME_VAL:
++		return nla_put_64bit(dst, src->nla_type, nla_len(src),
++			nla_data(src), XFRMA_PAD);
++	case XFRMA_REPLAY_VAL:
++	case XFRMA_REPLAY_THRESH:
++	case XFRMA_ETIMER_THRESH:
++	case XFRMA_SRCADDR:
++	case XFRMA_COADDR:
++		return xfrm_nla_cpy(dst, src, nla_len(src));
++	case XFRMA_LASTUSED:
++		return nla_put_64bit(dst, src->nla_type, nla_len(src),
++			nla_data(src), XFRMA_PAD);
++	case XFRMA_POLICY_TYPE:
++	case XFRMA_MIGRATE:
++	case XFRMA_ALG_AEAD:
++	case XFRMA_KMADDRESS:
++	case XFRMA_ALG_AUTH_TRUNC:
++	case XFRMA_MARK:
++	case XFRMA_TFCPAD:
++	case XFRMA_REPLAY_ESN_VAL:
++	case XFRMA_SA_EXTRA_FLAGS:
++	case XFRMA_PROTO:
++	case XFRMA_ADDRESS_FILTER:
++	case XFRMA_OFFLOAD_DEV:
++	case XFRMA_SET_MARK:
++	case XFRMA_SET_MARK_MASK:
++	case XFRMA_IF_ID:
++		return xfrm_nla_cpy(dst, src, nla_len(src));
++	default:
++		BUILD_BUG_ON(XFRMA_MAX != XFRMA_IF_ID);
++		WARN_ONCE(1, "unsupported nla_type %d", src->nla_type);
++		return -EOPNOTSUPP;
++	}
++}
++
++/* Take kernel-built (64bit layout) and create 32bit layout for userspace */
++static int xfrm_xlate64(struct sk_buff *dst, const struct nlmsghdr *nlh_src)
++{
++	u16 type = nlh_src->nlmsg_type - XFRM_MSG_BASE;
++	const struct nlattr *nla, *attrs;
++	struct nlmsghdr *nlh_dst;
++	int len, remaining;
++
++	nlh_dst = xfrm_nlmsg_put_compat(dst, nlh_src, type);
++	if (IS_ERR(nlh_dst))
++		return PTR_ERR(nlh_dst);
++
++	attrs = nlmsg_attrdata(nlh_src, xfrm_msg_min[type]);
++	len = nlmsg_attrlen(nlh_src, xfrm_msg_min[type]);
++
++	nla_for_each_attr(nla, attrs, len, remaining) {
++		int err = xfrm_xlate64_attr(dst, nla);
++
++		if (err)
++			return err;
++	}
++
++	nlmsg_end(dst, nlh_dst);
++
++	return 0;
++}
++
++int xfrm_alloc_compat(struct sk_buff *skb)
++{
++	const struct nlmsghdr *nlh_src = nlmsg_hdr(skb);
++	u16 type = nlh_src->nlmsg_type - XFRM_MSG_BASE;
++	struct sk_buff *new = NULL;
++	int err;
++
++	if (WARN_ON_ONCE(type >= ARRAY_SIZE(xfrm_msg_min)))
++		return -EOPNOTSUPP;
++
++	if (skb_shinfo(skb)->frag_list == NULL) {
++		new = alloc_skb(skb->len + skb_tailroom(skb), GFP_ATOMIC);
++		if (!new)
++			return -ENOMEM;
++		skb_shinfo(skb)->frag_list = new;
++	}
++
++	err = xfrm_xlate64(skb_shinfo(skb)->frag_list, nlh_src);
++	if (err) {
++		if (new) {
++			kfree_skb(new);
++			skb_shinfo(skb)->frag_list = NULL;
++		}
++		return err;
++	}
++
++	return 0;
++}
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index fbb7d9d06478..90c57d4a0b47 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -1083,12 +1083,19 @@ static inline int xfrm_nlmsg_multicast(struct net *net, struct sk_buff *skb,
+ 				       u32 pid, unsigned int group)
+ {
+ 	struct sock *nlsk = rcu_dereference(net->xfrm.nlsk);
++	int err;
+ 
+ 	if (!nlsk) {
+ 		kfree_skb(skb);
+ 		return -EPIPE;
+ 	}
+ 
++	err = xfrm_alloc_compat(skb);
++	if (err) {
++		kfree_skb(skb);
++		return err;
++	}
++
+ 	return nlmsg_multicast(nlsk, skb, pid, group, GFP_ATOMIC);
+ }
+ 
+@@ -2533,7 +2540,7 @@ static int xfrm_send_migrate(const struct xfrm_selector *sel, u8 dir, u8 type,
+ 
+ #define XMSGSIZE(type) sizeof(struct type)
+ 
+-static const int xfrm_msg_min[XFRM_NR_MSGTYPES] = {
++const int xfrm_msg_min[XFRM_NR_MSGTYPES] = {
+ 	[XFRM_MSG_NEWSA       - XFRM_MSG_BASE] = XMSGSIZE(xfrm_usersa_info),
+ 	[XFRM_MSG_DELSA       - XFRM_MSG_BASE] = XMSGSIZE(xfrm_usersa_id),
+ 	[XFRM_MSG_GETSA       - XFRM_MSG_BASE] = XMSGSIZE(xfrm_usersa_id),
+-- 
+2.27.0
+
