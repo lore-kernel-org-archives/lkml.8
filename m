@@ -2,165 +2,109 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C25C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99589C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB652076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E290207DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:46:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ps/pJgcT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WFkrzFpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbgHZToR (ORCPT
+        id S1727020AbgHZTqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:44:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51764 "EHLO
+        Wed, 26 Aug 2020 15:46:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726940AbgHZToQ (ORCPT
+        with ESMTP id S1726783AbgHZTq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:44:16 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C116DC061574;
-        Wed, 26 Aug 2020 12:44:15 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id v2so2867029ilq.4;
-        Wed, 26 Aug 2020 12:44:15 -0700 (PDT)
+        Wed, 26 Aug 2020 15:46:28 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD10C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:46:27 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id m8so1577416pfh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:46:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lJ9q/iTfnCsZrkSkcmh8UHaAoIWOgUVnnZaiByIljT0=;
-        b=Ps/pJgcT6hlQjSiv9LSDBFUBLEqMhQjJl+vRmYXQWoVU8FEt85TyheW93v4c1xKGn/
-         Anw5MGEuck1Lw8tOFZoHxtEaoxnCWoz8uxKNhvVxhLt+YphOBqavRg8DvHi4gVLDpJcQ
-         W70rn7508qLaTn6d9FhUW8fZwkyu+CkONk1SFPOv9lniXIv0xYoBp3tMPOrfY4rb383t
-         n+bYcmhHNKNXw0DztTgcTxgPH7HSyrQl+OQFOQkCrktG37+gm086BRyxfgUHercSBzx/
-         70sVcuJy44Tn1oIqxDtgzULX/9cii27Iygnv0Rs35vn6icujZTGyyAU2BAqnhJtO3wcU
-         HnDg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lIC466wcHw5fR4eYEVc57sBZjLUX/gzzPPg8yLp1ZZU=;
+        b=WFkrzFpr1SUiFaPbGhhpAKHAmVxv3wzkj4tDR+4PHOR9/MlIRPYJGnmI664QGeO/Cx
+         jh56BsF4d4+yUYLb3tteEQtrETtrsW7Vukw+0hQQ46Y1kVm7YzGQ12QR8x1BVWPj5ZyL
+         5rDrqojD9sPXkIKEP7O2wCAa1fCxfWjqV9Rc4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lJ9q/iTfnCsZrkSkcmh8UHaAoIWOgUVnnZaiByIljT0=;
-        b=tP3xqVqJVBWgbiN709DipcbMnp8XvnqapX1VMT3PfSlXtATyxhGz5yk0pCRGvWkz2T
-         uH+DfLydZKVZ6WlyVEmZFQ0Ymwt0gs4Rd7mzsCfoKyyla1QCIIaZD8O/x7131O2i1RKF
-         HUDK+nybp/gCWVB2N/NICk+DAqbsCiZeBxm6YnGyZNjAF+M/nwx4UkW759h1dCMR9FNN
-         CsDPn5pI3pYLPBmIp3fUFJi+6Ktcju8/aVlZd2vT8HyAjCJY21XFmQ34y6Kd3g2GH//I
-         445s6o7QAs1PT7maruk7bPmNp4YMN1R1e6bX9DtfgKZMWnnP/ojM1TzePxeRel76x0du
-         N0IA==
-X-Gm-Message-State: AOAM5333/fI7N24v2CsO8Yndr8j2aiu8FskIMjEUK+ULWZQzVUWULcif
-        m4suG5eerIxREicwZ0mrj6Ve3pi0u7U44FO3swM=
-X-Google-Smtp-Source: ABdhPJyGdPysh4JKvoSDONuj1Ue7wOLo62LEhwvjaBQ4WLmEDtNbWJ0lmUlU7vm1HojwsowSWTK8yJUtc2vFc3XGcvo=
-X-Received: by 2002:a92:6a0c:: with SMTP id f12mr13581043ilc.213.1598471055050;
- Wed, 26 Aug 2020 12:44:15 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lIC466wcHw5fR4eYEVc57sBZjLUX/gzzPPg8yLp1ZZU=;
+        b=Wdx47mLvK05/gnGEaqypFyPvtlKQdrsY7wFuV+hH+17NvcJ2VO2VVkAHVPx63n7dEC
+         IbojhoSVlbvTszk/1CwyijSKRvXGGj6pSFQG6cNAdrV5Lc5vYDp4okNvh3LT95JgGBW/
+         NkOCrqwAw8yHTeDORt8AQmD2R/KReulYvHRSeJPEX5lv2Uhm7iCWOdtzlGz0OYzl4lnz
+         VRnddvqPi68Fn5LKE5nAjsoZvNqFYhjL8sZ6wc4o9PdBy+xERdx8LTgQwxTi9+uczOuD
+         k+fFyFT2jxoawRsKP9Cw1pYOk8/mo9o1tOPpBXuJwc5C8jgDu/M/XP3eSgmrVy6yO23z
+         wpLQ==
+X-Gm-Message-State: AOAM530VQKXU9+2mgG7rNvJNC39prwO3fmcBir1uxmvmA/fLAFVbRI2C
+        fayWmJNLMks/FxyheIFBnjWilA==
+X-Google-Smtp-Source: ABdhPJzfdv5XUXwJl1UOhKF/pH+9I5ADCLKzvf0FKe3PbEuFazJPlW1HymFX95ObV8KRL+rwcPkouA==
+X-Received: by 2002:a62:5212:: with SMTP id g18mr8576508pfb.8.1598471186120;
+        Wed, 26 Aug 2020 12:46:26 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id ds19sm2262912pjb.43.2020.08.26.12.46.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 12:46:25 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 12:46:24 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-fsdevel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <asarai@suse.de>,
+        io-uring@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] io_uring: add IOURING_REGISTER_RESTRICTIONS opcode
+Message-ID: <202008261245.245E36654@keescook>
+References: <20200813153254.93731-1-sgarzare@redhat.com>
+ <20200813153254.93731-3-sgarzare@redhat.com>
 MIME-Version: 1.0
-References: <20200825002540.3351-1-yu-cheng.yu@intel.com> <20200825002540.3351-26-yu-cheng.yu@intel.com>
- <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
- <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com> <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
- <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com> <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
- <ef7f9e24-f952-d78c-373e-85435f742688@intel.com> <20200826164604.GW6642@arm.com>
- <87ft892vvf.fsf@oldenburg2.str.redhat.com> <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
- <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
-In-Reply-To: <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
-From:   "H.J. Lu" <hjl.tools@gmail.com>
-Date:   Wed, 26 Aug 2020 12:43:39 -0700
-Message-ID: <CAMe9rOprn69GcJ9btgDZA+ej3+vstNE0xd4wT27_2vcso0A4Og@mail.gmail.com>
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813153254.93731-3-sgarzare@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 11:49 AM Yu, Yu-cheng <yu-cheng.yu@intel.com> wrote:
->
-> On 8/26/2020 10:04 AM, Andy Lutomirski wrote:
-> > On Wed, Aug 26, 2020 at 9:52 AM Florian Weimer <fweimer@redhat.com> wrote:
-> >>
-> >> * Dave Martin:
-> >>
-> >>> On Tue, Aug 25, 2020 at 04:34:27PM -0700, Yu, Yu-cheng wrote:
-> >>>> On 8/25/2020 4:20 PM, Dave Hansen wrote:
-> >>>>> On 8/25/20 2:04 PM, Yu, Yu-cheng wrote:
-> >>>>>>>> I think this is more arch-specific.  Even if it becomes a new syscall,
-> >>>>>>>> we still need to pass the same parameters.
-> >>>>>>>
-> >>>>>>> Right, but without the copying in and out of memory.
-> >>>>>>>
-> >>>>>> Linux-api is already on the Cc list.  Do we need to add more people to
-> >>>>>> get some agreements for the syscall?
-> >>>>> What kind of agreement are you looking for?  I'd suggest just coding it
-> >>>>> up and posting the patches.  Adding syscalls really is really pretty
-> >>>>> straightforward and isn't much code at all.
-> >>>>>
-> >>>>
-> >>>> Sure, I will do that.
-> >>>
-> >>> Alternatively, would a regular prctl() work here?
-> >>
-> >> Is this something appliation code has to call, or just the dynamic
-> >> loader?
-> >>
-> >> prctl in glibc is a variadic function, so if there's a mismatch between
-> >> the kernel/userspace syscall convention and the userspace calling
-> >> convention (for variadic functions) for specific types, it can't be made
-> >> to work in a generic way.
-> >>
-> >> The loader can use inline assembly for system calls and does not have
-> >> this issue, but applications would be implcated by it.
-> >>
-> >
-> > I would expect things like Go and various JITs to call it directly.
-> >
-> > If we wanted to be fancy and add a potentially more widely useful
-> > syscall, how about:
-> >
-> > mmap_special(void *addr, size_t length, int prot, int flags, int type);
-> >
-> > Where type is something like MMAP_SPECIAL_X86_SHSTK.  Fundamentally,
-> > this is really just mmap() except that we want to map something a bit
-> > magical, and we don't want to require opening a device node to do it.
-> >
->
-> One benefit of MMAP_SPECIAL_* is there are more free bits than MAP_*.
-> Does ARM have similar needs for memory mapping, Dave?
->
+On Thu, Aug 13, 2020 at 05:32:53PM +0200, Stefano Garzarella wrote:
+> +/*
+> + * io_uring_restriction->opcode values
+> + */
+> +enum {
+> +	/* Allow an io_uring_register(2) opcode */
+> +	IORING_RESTRICTION_REGISTER_OP,
+> +
+> +	/* Allow an sqe opcode */
+> +	IORING_RESTRICTION_SQE_OP,
+> +
+> +	/* Allow sqe flags */
+> +	IORING_RESTRICTION_SQE_FLAGS_ALLOWED,
+> +
+> +	/* Require sqe flags (these flags must be set on each submission) */
+> +	IORING_RESTRICTION_SQE_FLAGS_REQUIRED,
+> +
+> +	IORING_RESTRICTION_LAST
+> +};
 
-arch/arm64/include/uapi/asm/mman.h:
+Same thought on enum literals, but otherwise, looks good:
 
-#define PROT_BTI   0x10     /* BTI guarded page */
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 
 -- 
-H.J.
+Kees Cook
