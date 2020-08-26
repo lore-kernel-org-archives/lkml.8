@@ -2,132 +2,156 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C20C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41880C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B4F820838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:46:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qbnJCv7I"
+	by mail.kernel.org (Postfix) with ESMTP id 19B5D206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598424415;
+	bh=hVffajsF2+XdKaXPf34BPboBIlD4e9nfaQNS/KKUDNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mWdSwZzlFWsSid++OSH2VwrkP5wx99rTOsk5Ps65nhPmEjka8PpB/fKpFEaroWiBE
+	 /EFk+PlTbwCv/QyqdT7h9lbhZ4fprs9V2oPnJZrlN/PFdNsc+mi/K9vSexHpLGz0Jk
+	 tRLtH48XUtcRpJUiLbVnjQUyvKejt1uK+Do4VuBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbgHZGqp (ORCPT
+        id S1726788AbgHZGqw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:46:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbgHZGqo (ORCPT
+        Wed, 26 Aug 2020 02:46:52 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37673 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726014AbgHZGqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:46:44 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18C51C061574;
-        Tue, 25 Aug 2020 23:46:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=fsJnsxp6Lv7GfuelQJCt9no0qZxkObiCeO/OIGyJg2A=; b=qbnJCv7Iv64K+4ANXeV+pz4CQx
-        qteaJldANyblscmlsgt75xRTbSCBFA1q5HSCtn1jhFLqtCWfLj6b3Biiozjh+2XDTE8SYtdmluKXX
-        yH0rVJhqDyY9rav/e+5qXcYi/z3nlVkihLZ+2uLpqvFdUUtD/Xum0+ZdPrwwaWJqO4xusNov5FL9G
-        r2Ul54B5p4Wwlix9LuHtd44fbNtxbx6lgLUbWstPZi6sdOzctqi70lyPxKZkOVJTMN+9yGEfnc3/V
-        8Erohtba1m/j6CpXO/cssXIvT5WVSHPTY9mRs9gMxFeyR3BmksL7Wp61A+0mdwuQiz/NqQRQn2Vds
-        rOglIGgw==;
-Received: from 213-225-6-196.nat.highway.a1.net ([213.225.6.196] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kApCh-0002ks-8p; Wed, 26 Aug 2020 06:46:39 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: [PATCH 09/19] sd: use __register_blkdev to avoid a modprobe for an unregistered dev_t
-Date:   Wed, 26 Aug 2020 08:24:36 +0200
-Message-Id: <20200826062446.31860-10-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200826062446.31860-1-hch@lst.de>
-References: <20200826062446.31860-1-hch@lst.de>
+        Wed, 26 Aug 2020 02:46:51 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x9so618599wmi.2;
+        Tue, 25 Aug 2020 23:46:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=woDwpwEGnSTSc4kljToA4r5StN2rkeplc2dBRDufFZA=;
+        b=axwIzwdJXwjZsXIrMW6pOdz/Fl6s46kYixkoGoQQN/7r9Q/vxadPrX3i+bebYsbCiu
+         F4qZsZvN95U99837oYJKDflwgzafkp8BGFvkifvpW9oEhMLE333cpq/DJ6shNJJfSU5K
+         fnmuUSViSObLp0Ewaib3nIfSmb8PtCnnfdI5BujC6YtDd+HCiTYKVXGRsyhEHO+jm7pY
+         zQmoJVHnBmZRFKyutbDAAbYCLy1mkWk3CT00a6x0Cu1r3oCwcCfSknTc66vPeMBdwA5U
+         nLq76H0aID+17EaVGxsDpqxCaKdydyCQWRbilU7I08vj/SVRvwa1e2WoBzJMws98UpK1
+         2LPQ==
+X-Gm-Message-State: AOAM531ug6AshDEqLNSwI/selChhVUmSRNzRglZTYEfaWpy+w8gqY/Fn
+        x7ybN70ny7ur9SgYvotdq0ZJbNX2crg=
+X-Google-Smtp-Source: ABdhPJwwnq5+FT5AJu3knzHTD/+s17qG77/RpFqNYzEjYg24N/OVflA007W8XbHJWMrOxuCfflZj9Q==
+X-Received: by 2002:a7b:cf13:: with SMTP id l19mr5238783wmg.115.1598424408857;
+        Tue, 25 Aug 2020 23:46:48 -0700 (PDT)
+Received: from pi3 ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id g17sm3402102wrr.28.2020.08.25.23.46.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 23:46:48 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 08:46:45 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com
+Subject: Re: [PATCH 3/3] ARM: defconfig: Enable ax88796c driver
+Message-ID: <20200826064645.GA12103@pi3>
+References: <20200825185152.GC2693@kozik-lap>
+ <CGME20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9@eucas1p2.samsung.com>
+ <dleftjk0xmuh3d.fsf%l.stelmach@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <dleftjk0xmuh3d.fsf%l.stelmach@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch from using blk_register_region to the probe callback passed to
-__register_blkdev to disable the request_module call for an unclaimed
-dev_t in the SD majors.
+On Wed, Aug 26, 2020 at 07:11:18AM +0200, Lukasz Stelmach wrote:
+> It was <2020-08-25 wto 20:51>, when Krzysztof Kozlowski wrote:
+> > On Tue, Aug 25, 2020 at 07:03:11PM +0200, Łukasz Stelmach wrote:
+> >> Enable ax88796c driver for the ethernet chip on Exynos3250-based
+> >> ARTIK5 boards.
+> >> 
+> >> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+> >> ---
+> >>  arch/arm/configs/exynos_defconfig   | 2 ++
+> >>  arch/arm/configs/multi_v7_defconfig | 2 ++
+> >>  2 files changed, 4 insertions(+)
+> >> 
+> >> Please DO NOT merge before these two
+> >
+> > Sure, it can wait but shouldn't actually DT wait? It's only defconfig so
+> > it does not change anything except automated systems booting these
+> > defconfigs... The boards might be broken by DT.
+> 
+> I was told, to ask for deferred merge of defconfig and it makes sense to
+> me. DT won't break anything if the driver isn't compiled. However, I can
+> see that you have a word you may decide about DT too. My point is to
+> wait until spi-s3c64xx patches are merged and not to break ARTIK5
+> boards.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/scsi/sd.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+The config is chosen and adjusted by each person, during build. Merging
+defconfig does not necessarily affect them. However merging DT affects -
+you cannot disable it without source code modification.
 
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 95018e650f2d0c..ece87b1aab1b78 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -596,13 +596,11 @@ static struct scsi_driver sd_template = {
- };
- 
- /*
-- * Dummy kobj_map->probe function.
-- * The default ->probe function will call modprobe, which is
-- * pointless as this module is already loaded.
-+ * Don't request a new module, as that could deadlock in multipath
-+ * environment.
-  */
--static struct kobject *sd_default_probe(dev_t devt, int *partno, void *data)
-+static void sd_default_probe(dev_t devt)
- {
--	return NULL;
- }
- 
- /*
-@@ -3479,9 +3477,6 @@ static int sd_remove(struct device *dev)
- 
- 	free_opal_dev(sdkp->opal_dev);
- 
--	blk_register_region(devt, SD_MINORS, NULL,
--			    sd_default_probe, NULL, NULL);
--
- 	mutex_lock(&sd_ref_mutex);
- 	dev_set_drvdata(dev, NULL);
- 	put_device(&sdkp->dev);
-@@ -3671,11 +3666,9 @@ static int __init init_sd(void)
- 	SCSI_LOG_HLQUEUE(3, printk("init_sd: sd driver entry point\n"));
- 
- 	for (i = 0; i < SD_MAJORS; i++) {
--		if (register_blkdev(sd_major(i), "sd") != 0)
-+		if (__register_blkdev(sd_major(i), "sd", sd_default_probe))
- 			continue;
- 		majors++;
--		blk_register_region(sd_major(i), SD_MINORS, NULL,
--				    sd_default_probe, NULL, NULL);
- 	}
- 
- 	if (!majors)
-@@ -3748,10 +3741,8 @@ static void __exit exit_sd(void)
- 
- 	class_unregister(&sd_disk_class);
- 
--	for (i = 0; i < SD_MAJORS; i++) {
--		blk_unregister_region(sd_major(i), SD_MINORS);
-+	for (i = 0; i < SD_MAJORS; i++)
- 		unregister_blkdev(sd_major(i), "sd");
--	}
- }
- 
- module_init(init_sd);
--- 
-2.28.0
+Anyway, no problem for me with waiting with defconfig.
+
+Best regards,
+Krzysztof
+
+
+> 
+> >> 
+> >>   https://lore.kernel.org/lkml/20200821161401.11307-2-l.stelmach@samsung.com/
+> >>   https://lore.kernel.org/lkml/20200821161401.11307-3-l.stelmach@samsung.com/
+> >> 
+> >> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
+> >> index 6e8b5ff0859c..82480b2bf545 100644
+> >> --- a/arch/arm/configs/exynos_defconfig
+> >> +++ b/arch/arm/configs/exynos_defconfig
+> >> @@ -107,6 +107,8 @@ CONFIG_MD=y
+> >>  CONFIG_BLK_DEV_DM=y
+> >>  CONFIG_DM_CRYPT=m
+> >>  CONFIG_NETDEVICES=y
+> >> +CONFIG_NET_VENDOR_ASIX=y
+> >> +CONFIG_SPI_AX88796C=y
+> >>  CONFIG_SMSC911X=y
+> >>  CONFIG_USB_RTL8150=m
+> >>  CONFIG_USB_RTL8152=y
+> >> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+> >> index e9e76e32f10f..a8b4e95d4148 100644
+> >> --- a/arch/arm/configs/multi_v7_defconfig
+> >> +++ b/arch/arm/configs/multi_v7_defconfig
+> >> @@ -241,6 +241,8 @@ CONFIG_SATA_HIGHBANK=y
+> >>  CONFIG_SATA_MV=y
+> >>  CONFIG_SATA_RCAR=y
+> >>  CONFIG_NETDEVICES=y
+> >> +CONFIG_NET_VENDOR_ASIX=y
+> >> +CONFIG_SPI_AX88796C=m
+> >>  CONFIG_VIRTIO_NET=y
+> >>  CONFIG_B53_SPI_DRIVER=m
+> >>  CONFIG_B53_MDIO_DRIVER=m
+> >> -- 
+> >> 2.26.2
+> >> 
+> >
+> >
+> 
+> -- 
+> Łukasz Stelmach
+> Samsung R&D Institute Poland
+> Samsung Electronics
+
 
