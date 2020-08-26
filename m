@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56235C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20F992083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14192214F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598465883;
-	bh=bFWXrahWZE4RHtfb+fZwx6Jtt7jkIi/qT02KwyGXOCU=;
+	s=default; t=1598465888;
+	bh=DPQF77aMjkh7Faa6F4bZ0KOUmZpaZ+wObfMV6Kit2jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mh8z5e8T980cUHXu4JS4wSF1Fb2flHOp+owAo8dqmdjvnFpbNzvh7siXHZuy0Qd1u
-	 oKyR6TrpeIzNQIXN8o0S2Kv1CuUM6CgG3eAweN8vp+FcfOauEDPwNVtBv+vsxynR/B
-	 /ZpFE8jhv5NELc1xoy0z6H9A4JquhbYJgq9APEq4=
+	b=lZl4W14LDiAFclbIXtnBdwufhegDx2tK5YD5BYWbQNJGjTzSVVjn6fPsqXfPvYxVo
+	 uw7mtoMylpI1tjIB4KGXi40Yl5my3UrWdZgtnYeqDcyCqDu0nX9ChK02uwGRPE7diI
+	 Rr6wnHq/FyGB0DAquEYgHfGtoWRp4a4MXeCldFjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgHZSSB (ORCPT
+        id S1727095AbgHZSSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:18:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40514 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 14:18:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbgHZSRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:17:47 -0400
+        id S1726442AbgHZSR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:17:57 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1D672083B;
-        Wed, 26 Aug 2020 18:17:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DD1B2083B;
+        Wed, 26 Aug 2020 18:17:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598465867;
-        bh=bFWXrahWZE4RHtfb+fZwx6Jtt7jkIi/qT02KwyGXOCU=;
+        s=default; t=1598465876;
+        bh=DPQF77aMjkh7Faa6F4bZ0KOUmZpaZ+wObfMV6Kit2jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ddqnq4zB7lPpM7hzVw1IloUX1PupoBZcOzkPV3jMtjXridhGL/WBng3zm33pTk6v/
-         dgkG5XGalcVMSSbYyjt9mElmrSSi60XlrBZuAwkMkzwiGxWGT/VVygfdN1TUZQ/pT9
-         ZnlQ86TvdUWo0Xzii6iUDBEOIkSqSezzlrjUTfUY=
+        b=PbBpUBLm5MDXI2Ck3SvUjsj1zYVbR0BAcdelKMYhlfODxf3q+tLb5Lp6ORHN95uST
+         XoajrjKgJuamZ601iFTHooRBYfL7QFtDoyYRl41TVhWmst6/hN8VLpzIUu31pCu6OE
+         lubuHAw0LDBp6o/cIj+gn/wkmptlkKGWqDFyN/VQ=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -51,9 +51,9 @@ To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 06/24] Input: pwm-vibra - Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 20:16:48 +0200
-Message-Id: <20200826181706.11098-6-krzk@kernel.org>
+Subject: [PATCH 08/24] Input: elan_i2c - Simplify with dev_err_probe()
+Date:   Wed, 26 Aug 2020 20:16:50 +0200
+Message-Id: <20200826181706.11098-8-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
@@ -67,39 +67,29 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/misc/pwm-vibra.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ drivers/input/mouse/elan_i2c_core.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/input/misc/pwm-vibra.c b/drivers/input/misc/pwm-vibra.c
-index 81e777a04b88..e45cd6801208 100644
---- a/drivers/input/misc/pwm-vibra.c
-+++ b/drivers/input/misc/pwm-vibra.c
-@@ -135,21 +135,13 @@ static int pwm_vibrator_probe(struct platform_device *pdev)
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index c599e21a8478..d703b0d5a3bd 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -1229,13 +1229,8 @@ static int elan_probe(struct i2c_client *client,
+ 	mutex_init(&data->sysfs_mutex);
  
- 	vibrator->vcc = devm_regulator_get(&pdev->dev, "vcc");
- 	err = PTR_ERR_OR_ZERO(vibrator->vcc);
--	if (err) {
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "Failed to request regulator: %d",
--				err);
--		return err;
+ 	data->vcc = devm_regulator_get(dev, "vcc");
+-	if (IS_ERR(data->vcc)) {
+-		error = PTR_ERR(data->vcc);
+-		if (error != -EPROBE_DEFER)
+-			dev_err(dev, "Failed to get 'vcc' regulator: %d\n",
+-				error);
+-		return error;
 -	}
-+	if (err)
-+		return dev_err_probe(&pdev->dev, err, "Failed to request regulator\n");
++	if (IS_ERR(data->vcc))
++		return dev_err_probe(dev, PTR_ERR(data->vcc), "Failed to get 'vcc' regulator\n");
  
- 	vibrator->pwm = devm_pwm_get(&pdev->dev, "enable");
- 	err = PTR_ERR_OR_ZERO(vibrator->pwm);
--	if (err) {
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "Failed to request main pwm: %d",
--				err);
--		return err;
--	}
-+	if (err)
-+		return dev_err_probe(&pdev->dev, err, "Failed to request main pwm\n");
- 
- 	INIT_WORK(&vibrator->play_work, pwm_vibrator_play_work);
- 
+ 	error = regulator_enable(data->vcc);
+ 	if (error) {
 -- 
 2.17.1
 
