@@ -2,119 +2,95 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3350EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1190B20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:04:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qeU+YGnR"
+	by mail.kernel.org (Postfix) with ESMTP id 7CD7F20707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:04:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgHZDEG (ORCPT
+        id S1726840AbgHZDEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 23:04:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgHZDEE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 23:04:04 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A5A3C061574;
-        Tue, 25 Aug 2020 20:04:04 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id m34so307947pgl.11;
-        Tue, 25 Aug 2020 20:04:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tWZBSAFPB25Ix8dxJn0Apg8q5RD1rLXKwul0a9thtfs=;
-        b=qeU+YGnR6JDsoGqwquHCY9zcM2jhoA3P3cgTEY8sz4dSdMJld9Q/4yAcx1Slz95rA6
-         lVl34RkyDejG9atiuiQZ7BJZb96z1kCMNKamgcBMeCp0xT9rrasgdlgaYbXgpGhBwsgY
-         d1F/ZSgVN/Xzy0vxJyDp521+HpbqwK/9loN8pHXCV3YklhjCLGonakXYtdcaeAh65myp
-         8prbYv7Z23r1JJrcZfW5YaEoobBP60lVxM/R0C1eTHR/DUffJLfLTxju5kpSmc+JJlLv
-         6VsWAssMTaVUa4lEJQkCVHbgwxdGsVqoatb5GxQcyVmDAvnrdO1pAAxLybnCwXmzHszI
-         7GzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tWZBSAFPB25Ix8dxJn0Apg8q5RD1rLXKwul0a9thtfs=;
-        b=QYYeYUdV3dx/OPo/zEaBikOafjXoh0SVS9VLJk1/sQvoaEul1RRHHyfA6Q4akR4Qf/
-         WtjjAZlubS06jBUQGCxz+HG+BcoBm/OjQup+cC9q667SnZhDqy//6t10Pac11XPEGrom
-         N/KxSmfB5fXfKABv0ADYliblQEgujMz6nww6IOdpP0eMo7J/xeB7sFfqMRKsd5xg4LMU
-         XezGDuhmENbgpacADorCxV/VLZ3gQfmCMDO/jS3eW0tD2w3L7JlIBNAv3Sd6uHv33GDb
-         s6ho5FhNtlytufLRF5T0pQte1d3jEz/1etxQ5i4ffH4uO0tH242lCVJgFyItyT/Pn8eT
-         6jvQ==
-X-Gm-Message-State: AOAM530qP8Nseb4jDGIH+f6AvTBthWoBAR+YV38EMGwWjgXKgBC1ToVr
-        3Al/0xs/shMV5t0fTRorbEQ=
-X-Google-Smtp-Source: ABdhPJxaloAhp6tK707mtwlbVKfSHOpsGeu3FG2FKBWoAK1Ry5aBidpHaLlK+ODw3SH6MJqvkYQTaQ==
-X-Received: by 2002:a63:1523:: with SMTP id v35mr9264734pgl.317.1598411043590;
-        Tue, 25 Aug 2020 20:04:03 -0700 (PDT)
-Received: from shane-XPS-13-9380.hsd1.ca.comcast.net ([2601:646:8880:9ae0:117e:686d:dc72:3bd8])
-        by smtp.gmail.com with ESMTPSA id s10sm411776pjl.37.2020.08.25.20.04.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 20:04:02 -0700 (PDT)
-From:   Xie He <xie.he.0141@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-x25@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>, Martin Schiller <ms@dev.tdt.de>
-Subject: [PATCH net] drivers/net/wan/lapbether: Set network_header before transmitting
-Date:   Tue, 25 Aug 2020 20:03:53 -0700
-Message-Id: <20200826030353.75645-1-xie.he.0141@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 25 Aug 2020 23:04:10 -0400
+Received: from mga03.intel.com ([134.134.136.65]:19502 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726672AbgHZDEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 23:04:07 -0400
+IronPort-SDR: 2jIqBcp3y4W0sLumFVhb/cilxfjFFj3P7t/VL6v34owkoWumzsBAz2twhlaVtJ6/DK+3dHKvhT
+ bG9ElVwbh2/A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="156218399"
+X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
+   d="scan'208";a="156218399"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 20:04:05 -0700
+IronPort-SDR: vZCSZjAmN1KuXvBvUWo3r2HqIN/RlVKrI6kt6XOFXyb3zAw8dMvvOFV/gjdrdiE8CfeJKr2sLw
+ OJqXAvCOklqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
+   d="scan'208";a="402937427"
+Received: from allen-box.sh.intel.com ([10.239.159.139])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Aug 2020 20:04:00 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH 1/1] iommu/vt-d: Serialize IOMMU GCMD register modifications
+Date:   Wed, 26 Aug 2020 10:58:25 +0800
+Message-Id: <20200826025825.2322-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the skb's network_header before it is passed to the underlying
-Ethernet device for transmission.
+The VT-d spec requires (10.4.4 Global Command Register, GCMD_REG General
+Description) that:
 
-This patch fixes the following issue:
+If multiple control fields in this register need to be modified, software
+must serialize the modifications through multiple writes to this register.
 
-When we use this driver with AF_PACKET sockets, there would be error
-messages of:
-   protocol 0805 is buggy, dev (Ethernet interface name)
-printed in the system "dmesg" log.
+However, in irq_remapping.c, modifications of IRE and CFI are done in one
+write. We need to do two separate writes with STS checking after each.
 
-This is because skbs passed down to the Ethernet device for transmission
-don't have their network_header properly set, and the dev_queue_xmit_nit
-function in net/core/dev.c complains about this.
-
-Reason of setting the network_header to this place (at the end of the
-Ethernet header, and at the beginning of the Ethernet payload):
-
-Because when this driver receives an skb from the Ethernet device, the
-network_header is also set at this place.
-
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Fixes: af8d102f999a4 ("x86/intel/irq_remapping: Clean up x2apic opt-out security warning mess")
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
 ---
- drivers/net/wan/lapbether.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/iommu/intel/irq_remapping.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index cc297ea9c6ec..e61616b0b91c 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -210,6 +210,8 @@ static void lapbeth_data_transmit(struct net_device *ndev, struct sk_buff *skb)
+diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
+index 9564d23d094f..19d7e18876fe 100644
+--- a/drivers/iommu/intel/irq_remapping.c
++++ b/drivers/iommu/intel/irq_remapping.c
+@@ -507,12 +507,16 @@ static void iommu_enable_irq_remapping(struct intel_iommu *iommu)
  
- 	skb->dev = dev = lapbeth->ethdev;
+ 	/* Enable interrupt-remapping */
+ 	iommu->gcmd |= DMA_GCMD_IRE;
+-	iommu->gcmd &= ~DMA_GCMD_CFI;  /* Block compatibility-format MSIs */
+ 	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
+-
+ 	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
+ 		      readl, (sts & DMA_GSTS_IRES), sts);
  
-+	skb_reset_network_header(skb);
++	/* Block compatibility-format MSIs */
++	iommu->gcmd &= ~DMA_GCMD_CFI;
++	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
++	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
++		      readl, !(sts & DMA_GSTS_CFIS), sts);
 +
- 	dev_hard_header(skb, dev, ETH_P_DEC, bcast_addr, NULL, 0);
- 
- 	dev_queue_xmit(skb);
+ 	/*
+ 	 * With CFI clear in the Global Command register, we should be
+ 	 * protected from dangerous (i.e. compatibility) interrupts
 -- 
-2.25.1
+2.17.1
 
