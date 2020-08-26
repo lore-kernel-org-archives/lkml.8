@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EDCC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E36D2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106CC20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:13:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1Xqx86E3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SfxmzM35"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cZkMF/YW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c+I8epgL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbgHZMMt (ORCPT
+        id S1729934AbgHZMMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:12:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35508 "EHLO
+        Wed, 26 Aug 2020 08:12:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729396AbgHZMBc (ORCPT
+        with ESMTP id S1729398AbgHZMBc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Aug 2020 08:01:32 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD3EEC0613ED;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8830C061786;
         Wed, 26 Aug 2020 05:01:31 -0700 (PDT)
-Message-Id: <20200826112332.564274859@linutronix.de>
+Message-Id: <20200826112331.634777249@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598443278;
+        s=2020; t=1598443267;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=i8DAYBEwyev5Sb9kBzuYKhZP/VSkuBj1GjlCA99AJoU=;
-        b=1Xqx86E3q2b2ZixfziDqUULh/NKjOj9iSwzOxek01OxyvIOgg8cUw3scQFIUzhIik+ULyn
-        eYFFOzQaAtAetJ50JADbspwYOvRf4DuZsIZmaC2YhkoUJhcr8Aw+N6rO1uVGgC7/3shr1d
-        OLBVnD9q8QM5PVW3FFw8KiTObe68Q+oWSoYrp0u3NbRzILlSdX1zl6PFApXfxKlDu7mgcY
-        VM+FjD84hB1Ylny24sp4NpcF0El5FTnNFvQ/lQe1ts3dGeGXohTL9r/sSDLTTc8KMOCHR9
-        EFTxeabk4c1fokQ9HBmZl2X1/37ciY0jgRDlOoW6Jicw2OjZ+uXg/oIDQCh3Sw==
+        bh=uwvQNHvaNg/Fdy2Gl3KxXB78ZUpQmA3m1yJB61BHx4U=;
+        b=cZkMF/YWULZ4Uotab3k3IXi4r4hFFnpiFtt6iNZpjY2glC7/xkFk3cB9PgaOU/8JGRxOjj
+        S7I9iF8wESVzg+xDMZUKVy8Vbe6zq6LwxfCfOp+LsiBpSu672pJYhA6gZdh8IxY2xC6rKX
+        3u6zI+8BnB3zMleeiIPXmH/Awu4yF5kC4ReV65SghuOIimGB2BYzAAK9x10MHqSwRaGKkj
+        LB3rdDrHqSkWruYzPDa2OvgoiLXf78uxrzp0kxWXqNqww4EKoeJth428QKttN0aAkXjd92
+        XLLJA91DUCN7cD4uJ1Gh1vWIc9GqgAIi7jZWF3Ewak/+mo/C3yFdrghRZhkL4g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598443278;
+        s=2020e; t=1598443267;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=i8DAYBEwyev5Sb9kBzuYKhZP/VSkuBj1GjlCA99AJoU=;
-        b=SfxmzM35p6LRaIAQ/4CDORuaZiaqNGlLQeEksCh9t6iTSH1SdW+K2Nr2PXf5/KBUbLnT8s
-        4r2ubQSnF63IJVDg==
-Date:   Wed, 26 Aug 2020 13:16:47 +0200
+        bh=uwvQNHvaNg/Fdy2Gl3KxXB78ZUpQmA3m1yJB61BHx4U=;
+        b=c+I8epgL/HK82KFtaXiIHgczMaYB4MS5Q6XB/264Q9Abn3goTn6OI8aEnTusT/a/dZRKM7
+        fW0BwXcA8NuxczDQ==
+Date:   Wed, 26 Aug 2020 13:16:38 +0200
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
@@ -78,7 +78,7 @@ Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
         Baolu Lu <baolu.lu@intel.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: [patch V2 19/46] x86/msi: Use generic MSI domain ops
+Subject: [patch V2 10/46] iommu/amd: Consolidate irq domain getter
 References: <20200826111628.794979401@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -90,122 +90,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-pci_msi_get_hwirq() and pci_msi_set_desc are not longer special. Enable the
-generic MSI domain ops in the core and PCI MSI code unconditionally and get
-rid of the x86 specific implementations in the X86 MSI code and in the
-hyperv PCI driver.
+The irq domain request mode is now indicated in irq_alloc_info::type.
+
+Consolidate the two getter functions into one.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 ---
- arch/x86/include/asm/msi.h          |    2 --
- arch/x86/kernel/apic/msi.c          |   15 ---------------
- drivers/pci/controller/pci-hyperv.c |    8 --------
- drivers/pci/msi.c                   |    4 ----
- kernel/irq/msi.c                    |    6 ------
- 5 files changed, 35 deletions(-)
+ drivers/iommu/amd/iommu.c |   65 ++++++++++++++--------------------------------
+ 1 file changed, 21 insertions(+), 44 deletions(-)
 
---- a/arch/x86/include/asm/msi.h
-+++ b/arch/x86/include/asm/msi.h
-@@ -9,6 +9,4 @@ typedef struct irq_alloc_info msi_alloc_
- int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
- 		    msi_alloc_info_t *arg);
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -3505,77 +3505,54 @@ static void irte_ga_clear_allocated(stru
  
--void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
--
- #endif /* _ASM_X86_MSI_H */
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -204,12 +204,6 @@ void native_teardown_msi_irq(unsigned in
- 	irq_domain_free_irqs(irq, 1);
- }
- 
--static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
--					 msi_alloc_info_t *arg)
--{
--	return arg->hwirq;
--}
--
- int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
- 		    msi_alloc_info_t *arg)
+ static int get_devid(struct irq_alloc_info *info)
  {
-@@ -228,17 +222,8 @@ int pci_msi_prepare(struct irq_domain *d
- }
- EXPORT_SYMBOL_GPL(pci_msi_prepare);
- 
--void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
--{
--	arg->desc = desc;
--	arg->hwirq = pci_msi_domain_calc_hwirq(desc);
--}
--EXPORT_SYMBOL_GPL(pci_msi_set_desc);
+-	int devid = -1;
 -
- static struct msi_domain_ops pci_msi_domain_ops = {
--	.get_hwirq	= pci_msi_get_hwirq,
- 	.msi_prepare	= pci_msi_prepare,
--	.set_desc	= pci_msi_set_desc,
+ 	switch (info->type) {
+ 	case X86_IRQ_ALLOC_TYPE_IOAPIC:
+-		devid     = get_ioapic_devid(info->ioapic_id);
+-		break;
++	case X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT:
++		return get_ioapic_devid(info->ioapic_id);
+ 	case X86_IRQ_ALLOC_TYPE_HPET:
+-		devid     = get_hpet_devid(info->hpet_id);
+-		break;
++	case X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT:
++		return get_hpet_devid(info->hpet_id);
+ 	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
+ 	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
+-		devid = get_device_id(&info->msi_dev->dev);
+-		break;
++		return get_device_id(&info->msi_dev->dev);
+ 	default:
+-		BUG_ON(1);
+-		break;
++		WARN_ON_ONCE(1);
++		return -1;
+ 	}
+-
+-	return devid;
+ }
+ 
+-static struct irq_domain *get_ir_irq_domain(struct irq_alloc_info *info)
++static struct irq_domain *get_irq_domain_for_devid(struct irq_alloc_info *info,
++						   int devid)
+ {
+-	struct amd_iommu *iommu;
+-	int devid;
++	struct amd_iommu *iommu = amd_iommu_rlookup_table[devid];
+ 
+-	if (!info)
++	if (!iommu)
+ 		return NULL;
+ 
+ 	switch (info->type) {
+ 	case X86_IRQ_ALLOC_TYPE_IOAPIC_GET_PARENT:
+ 	case X86_IRQ_ALLOC_TYPE_HPET_GET_PARENT:
+-		break;
++		return iommu->ir_domain;
++	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
++	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
++		return iommu->msi_domain;
+ 	default:
++		WARN_ON_ONCE(1);
+ 		return NULL;
+ 	}
+-
+-	devid = get_devid(info);
+-	if (devid >= 0) {
+-		iommu = amd_iommu_rlookup_table[devid];
+-		if (iommu)
+-			return iommu->ir_domain;
+-	}
+-
+-	return NULL;
+ }
+ 
+ static struct irq_domain *get_irq_domain(struct irq_alloc_info *info)
+ {
+-	struct amd_iommu *iommu;
+ 	int devid;
+ 
+ 	if (!info)
+ 		return NULL;
+ 
+-	switch (info->type) {
+-	case X86_IRQ_ALLOC_TYPE_PCI_MSI:
+-	case X86_IRQ_ALLOC_TYPE_PCI_MSIX:
+-		devid = get_device_id(&info->msi_dev->dev);
+-		if (devid < 0)
+-			return NULL;
+-
+-		iommu = amd_iommu_rlookup_table[devid];
+-		if (iommu)
+-			return iommu->msi_domain;
+-		break;
+-	default:
+-		break;
+-	}
+-
+-	return NULL;
++	devid = get_devid(info);
++	if (devid < 0)
++		return NULL;
++	return get_irq_domain_for_devid(info, devid);
+ }
+ 
+ struct irq_remap_ops amd_iommu_irq_ops = {
+@@ -3584,7 +3561,7 @@ struct irq_remap_ops amd_iommu_irq_ops =
+ 	.disable		= amd_iommu_disable,
+ 	.reenable		= amd_iommu_reenable,
+ 	.enable_faulting	= amd_iommu_enable_faulting,
+-	.get_ir_irq_domain	= get_ir_irq_domain,
++	.get_ir_irq_domain	= get_irq_domain,
+ 	.get_irq_domain		= get_irq_domain,
  };
  
- static struct msi_domain_info pci_msi_domain_info = {
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1531,16 +1531,8 @@ static struct irq_chip hv_msi_irq_chip =
- 	.irq_unmask		= hv_irq_unmask,
- };
- 
--static irq_hw_number_t hv_msi_domain_ops_get_hwirq(struct msi_domain_info *info,
--						   msi_alloc_info_t *arg)
--{
--	return arg->hwirq;
--}
--
- static struct msi_domain_ops hv_msi_ops = {
--	.get_hwirq	= hv_msi_domain_ops_get_hwirq,
- 	.msi_prepare	= pci_msi_prepare,
--	.set_desc	= pci_msi_set_desc,
- 	.msi_free	= hv_msi_free,
- };
- 
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -1401,16 +1401,12 @@ static int pci_msi_domain_handle_error(s
- 	return error;
- }
- 
--#ifdef GENERIC_MSI_DOMAIN_OPS
- static void pci_msi_domain_set_desc(msi_alloc_info_t *arg,
- 				    struct msi_desc *desc)
- {
- 	arg->desc = desc;
- 	arg->hwirq = pci_msi_domain_calc_hwirq(desc);
- }
--#else
--#define pci_msi_domain_set_desc		NULL
--#endif
- 
- static struct msi_domain_ops pci_msi_domain_ops_default = {
- 	.set_desc	= pci_msi_domain_set_desc,
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -187,7 +187,6 @@ static const struct irq_domain_ops msi_d
- 	.deactivate	= msi_domain_deactivate,
- };
- 
--#ifdef GENERIC_MSI_DOMAIN_OPS
- static irq_hw_number_t msi_domain_ops_get_hwirq(struct msi_domain_info *info,
- 						msi_alloc_info_t *arg)
- {
-@@ -206,11 +205,6 @@ static void msi_domain_ops_set_desc(msi_
- {
- 	arg->desc = desc;
- }
--#else
--#define msi_domain_ops_get_hwirq	NULL
--#define msi_domain_ops_prepare		NULL
--#define msi_domain_ops_set_desc		NULL
--#endif /* !GENERIC_MSI_DOMAIN_OPS */
- 
- static int msi_domain_ops_init(struct irq_domain *domain,
- 			       struct msi_domain_info *info,
 
 
