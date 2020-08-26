@@ -2,83 +2,450 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B11EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC44C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF6B2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18D722071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:27:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J/D97GrE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgHZQ0F (ORCPT
+        id S1727927AbgHZQ1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:26:05 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21701 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbgHZQ0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:26:01 -0400
-IronPort-SDR: HVyb42HM/w1r6PPf5FjMxL+bq8NkEMID4RltH6oPvh6nnfwd21KIYsGfTI6H5A5cw0yMwJNyXH
- I/v73WWWkjTw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="143996600"
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="143996600"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:26:00 -0700
-IronPort-SDR: SzGVEoo0yBQ9+G/otfIWxh49XHzowrTI9qRPFfpArRSmyrg9MovtC0ktnV4krye94kexzglYxD
- hiYfhk9gjUrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="499786658"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 26 Aug 2020 09:25:59 -0700
-Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.186])
-        by linux.intel.com (Postfix) with ESMTP id 128AB5806C4;
-        Wed, 26 Aug 2020 09:25:57 -0700 (PDT)
-Message-ID: <c17c75993ebb5512e5a869fbe5b13f5c49685041.camel@gmail.com>
-Subject: Re: [PATCH] intel_idle: Add ICL support
-From:   Artem Bityutskiy <dedekind1@gmail.com>
-Reply-To: dedekind1@gmail.com
-To:     Guilhem Lettron <guilhem@barpilot.io>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 26 Aug 2020 19:25:56 +0300
-In-Reply-To: <72fab2376722c6169549669016933217d3da34a0.camel@gmail.com>
-References: <20200826120421.44356-1-guilhem@barpilot.io>
-         <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
-         <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
-         <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
-         <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
-         <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
-         <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
-         <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
-         <72fab2376722c6169549669016933217d3da34a0.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Wed, 26 Aug 2020 12:27:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgHZQ0x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:26:53 -0400
+Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C877C061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:26:53 -0700 (PDT)
+Received: by mail-vk1-xa44.google.com with SMTP id 186so568877vkx.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:26:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nBtM5QJ/xiVuP3K1PE564TMlBtbJGnuvhvG8Ae7aYWM=;
+        b=J/D97GrEOsPoUD2L5M6VIi5iFiNZP5CSQIZGrh2C2r4K8rx9GYGCe70QVOn0hnt30y
+         eHsXL/NjlKoxwmNQf+DE9ODovHv92BT9hZUH6eoOIdXYa6lcGahg2P4POtFYvWw+w5D6
+         460MsFeglFZrVJiV0Afcb4qu/suVp/PuSQm5qFzO0EYMWMumdXgMtZggYOK/MU7QTTqY
+         ylXzu5epDETwYAPcs+6Zod619iigzHokmqauf5fzNCRcl8GfIEtGU2AtB4dZVOwU4hI5
+         /i6a3dmlTjoc+ncICS1bjJkWB+eD1YraSHZHeZ23a9mnRmqUvukGrFvMbuyLUndMXMRJ
+         L+0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nBtM5QJ/xiVuP3K1PE564TMlBtbJGnuvhvG8Ae7aYWM=;
+        b=WLokgqX8aNiL16HvyBaON3Gmvkua6f9bIGwrA1qadkNQXBD/b0H4EjOKQcnrOrHiKm
+         /Vu4NfEl3xa2xAfP1yhXyi1bLizPXiWfIfgnrIMq1vDRHHC8NaC0DDr2AQow8aJGQ6zc
+         0+oDotJ5hCst0vGmDmG8Fiou1MFoyM4g7Cs4qqW52SflJgyB1hSXX39+4WQyZydaWQwN
+         YAxmCvE8JYHdl8p9KnqXXgddEsAjziXEI6nBDd4AsNKkeLvmo+f8WZ9+isBaSh4+iu7P
+         Ui2JcksLiCxoy4gY7XZseGUAX7PqOGboPR0MUPlD2XmLCYhBbY4pp3B5X7R5z1dTghFa
+         JWIg==
+X-Gm-Message-State: AOAM531oon/dlvF/9wU8dGl7yIaNtEtCFzxdVHTjD6HOvbMYhbmURyfa
+        2THSLs1MfYdQzRkp125+crbN+Is+9Cw7HKFyGVIIgg==
+X-Google-Smtp-Source: ABdhPJy7feJMatq9jkl30SBZNHF64hdYBt3o4B+iBw98xqtgg1VXUgnbIeOd8SM1thTwE1LBpCgkqv9cCU2OCbbbZog=
+X-Received: by 2002:a1f:93c1:: with SMTP id v184mr9780571vkd.62.1598459211968;
+ Wed, 26 Aug 2020 09:26:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200813222155.268183-1-pc@us.ibm.com> <CAP-5=fU4P7o1TwVz+PzcrJsBKnrHW4yrNx3R165i9d3BwgP2RQ@mail.gmail.com>
+ <cfa27e83-ac2c-7495-b453-ceeaf2412311@linux.ibm.com> <20200814124307.GF13995@kernel.org>
+In-Reply-To: <20200814124307.GF13995@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 26 Aug 2020 09:26:40 -0700
+Message-ID: <CAP-5=fWw-W3wfy_WeirM_jbEmsbQCC8L_AGo2zsMvv2MW1x04A@mail.gmail.com>
+Subject: Re: [PATCH] perf stat: update POWER9 metrics to utilize other metrics
+To:     Paul Clarke <pc@us.ibm.com>
+Cc:     kajoljain <kjain@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, maddy@linux.ibm.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-26 at 19:19 +0300, Artem Bityutskiy wrote:
-> May be there is a BIOS update that fixes this problem? May be Windows
-> user get it quickly because stuff like this is often well-integrated in
-> Windows? Would you please check if there is newer BIOS?
+On Fri, Aug 14, 2020 at 5:43 AM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Fri, Aug 14, 2020 at 11:20:42AM +0530, kajoljain escreveu:
+> >
+> >
+> > On 8/14/20 9:13 AM, Ian Rogers wrote:
+> > > On Thu, Aug 13, 2020 at 3:21 PM Paul A. Clarke <pc@us.ibm.com> wrote:
+> > >>
+> > >> These changes take advantage of the new capability added in
+> > >> merge commit 00e4db51259a5f936fec1424b884f029479d3981
+> > >> "Allow using computed metrics in calculating other metrics".
+> > >>
+> > >> The net is a simplification of the expressions for a handful
+> > >> of metrics, but no functional change.
+> > >>
+> > >> Signed-off-by: Paul A. Clarke <pc@us.ibm.com>
+> > >
+> >
+> > Hi Paul,
+> >   The patch looks good to me.
+> >
+> > Reviewed-by: Kajol Jain<kjain@linux.ibm.com>
+>
+> Thanks, applied. Added Ian's Acked-by as well.
+>
+> - Arnaldo
 
-Oh, wait a second. So ACPI_C3 is C6, the deepest C-state one can
-request. Sorry, I missed this first. Scratch my questions about Windows
-and newer BIOS.
+Hi Paul,
 
-So ACPI does expose the deepest C-state, but something prevents your
-system from going into PC10.
+I've synced perf and testing on a remote machine (not easy for me to
+log into) I see failures in perf test "10.3: Parsing of PMU event
+table metrics" like:
+...
+parsing metric: dfu_stall_cpi - dflong_stall_cpi
+Parse event failed metric 'dfu_other_stall_cpi' id 'dflong_stall_cpi'
+expr 'dfu_stall_cpi - dflong_stall_cpi'
+Error string 'parser error' help '(null)'
+Parse event failed metric 'dfu_other_stall_cpi' id 'dfu_stall_cpi'
+expr 'dfu_stall_cpi - dflong_stall_cpi'
+Error string 'parser error' help '(null)'
+...
+This may be that the test doesn't handle the metric in terms of metric
+addition and so I'll look for a fix. I thought I'd send a heads up in
+case you had already seen/addressed this. Is perf test on PowerPC
+clean for you at the moment?
 
+Thanks,
+Ian
+
+
+> > Thanks,
+> > Kajol Jain
+> >
+> > > Acked-by: Ian Rogers <irogers@google.com>
+> > > (Re-sent with plain text enabled to avoid lkml bounce)
+> > >
+> > > Thanks,
+> > > Ian
+> > >
+> > >
+> > >>
+> > >> ---
+> > >>  .../arch/powerpc/power9/metrics.json          | 48 +++++++++-------=
+---
+> > >>  1 file changed, 24 insertions(+), 24 deletions(-)
+> > >>
+> > >> diff --git a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json =
+b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > >> index 80816d6402e9..f8784c608479 100644
+> > >> --- a/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > >> +++ b/tools/perf/pmu-events/arch/powerpc/power9/metrics.json
+> > >> @@ -60,7 +60,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Stalls due to short latency decimal fl=
+oating ops.",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_DFU - PM_CMPLU_STALL_DFLONG)=
+/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "dfu_stall_cpi - dflong_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "dfu_other_stall_cpi"
+> > >>      },
+> > >> @@ -72,7 +72,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Completion stall by Dcache miss which =
+resolved off node memory/cache",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_DMISS_L3MISS - PM_CMPLU_STAL=
+L_DMISS_L21_L31 - PM_CMPLU_STALL_DMISS_LMEM - PM_CMPLU_STALL_DMISS_REMOTE)/=
+PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "dmiss_non_local_stall_cpi - dmiss_remote_sta=
+ll_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "dmiss_distant_stall_cpi"
+> > >>      },
+> > >> @@ -90,7 +90,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Completion stall due to cache miss tha=
+t resolves in the L2 or L3 without conflict",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_DMISS_L2L3 - PM_CMPLU_STALL_=
+DMISS_L2L3_CONFLICT)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "dmiss_l2l3_stall_cpi - dmiss_l2l3_conflict_s=
+tall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "dmiss_l2l3_noconflict_stall_cpi"
+> > >>      },
+> > >> @@ -114,7 +114,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Completion stall by Dcache miss which =
+resolved outside of local memory",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_DMISS_L3MISS - PM_CMPLU_STAL=
+L_DMISS_L21_L31 - PM_CMPLU_STALL_DMISS_LMEM)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "dmiss_l3miss_stall_cpi - dmiss_l21_l31_stall=
+_cpi - dmiss_lmem_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "dmiss_non_local_stall_cpi"
+> > >>      },
+> > >> @@ -126,7 +126,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Stalls due to short latency double pre=
+cision ops.",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_DP - PM_CMPLU_STALL_DPLONG)/=
+PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "dp_stall_cpi - dplong_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "dp_other_stall_cpi"
+> > >>      },
+> > >> @@ -155,7 +155,7 @@
+> > >>          "MetricName": "emq_full_stall_cpi"
+> > >>      },
+> > >>      {
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_ERAT_MISS + PM_CMPLU_STALL_E=
+MQ_FULL)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "erat_miss_stall_cpi + emq_full_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "emq_stall_cpi"
+> > >>      },
+> > >> @@ -173,7 +173,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Completion stall due to execution unit=
+s for other reasons.",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_EXEC_UNIT - PM_CMPLU_STALL_F=
+XU - PM_CMPLU_STALL_DP - PM_CMPLU_STALL_DFU - PM_CMPLU_STALL_PM - PM_CMPLU_=
+STALL_CRYPTO - PM_CMPLU_STALL_VFXU - PM_CMPLU_STALL_VDP)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "exec_unit_stall_cpi - scalar_stall_cpi - vec=
+tor_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "exec_unit_other_stall_cpi"
+> > >>      },
+> > >> @@ -197,7 +197,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Stalls due to short latency integer op=
+s",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_FXU - PM_CMPLU_STALL_FXLONG)=
+/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "fxu_stall_cpi - fxlong_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "fxu_other_stall_cpi"
+> > >>      },
+> > >> @@ -221,7 +221,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Instruction Completion Table other sta=
+lls",
+> > >> -        "MetricExpr": "(PM_ICT_NOSLOT_CYC - PM_ICT_NOSLOT_IC_MISS -=
+ PM_ICT_NOSLOT_BR_MPRED_ICMISS - PM_ICT_NOSLOT_BR_MPRED - PM_ICT_NOSLOT_DIS=
+P_HELD)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "nothing_dispatched_cpi - ict_noslot_ic_miss_=
+cpi - ict_noslot_br_mpred_icmiss_cpi - ict_noslot_br_mpred_cpi - ict_noslot=
+_disp_held_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "ict_noslot_cyc_other_cpi"
+> > >>      },
+> > >> @@ -245,7 +245,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "ICT_NOSLOT_DISP_HELD_OTHER_CPI",
+> > >> -        "MetricExpr": "(PM_ICT_NOSLOT_DISP_HELD - PM_ICT_NOSLOT_DIS=
+P_HELD_HB_FULL - PM_ICT_NOSLOT_DISP_HELD_SYNC - PM_ICT_NOSLOT_DISP_HELD_TBE=
+GIN - PM_ICT_NOSLOT_DISP_HELD_ISSQ)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "ict_noslot_disp_held_cpi - ict_noslot_disp_h=
+eld_hb_full_cpi - ict_noslot_disp_held_sync_cpi - ict_noslot_disp_held_tbeg=
+in_cpi - ict_noslot_disp_held_issq_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "ict_noslot_disp_held_other_cpi"
+> > >>      },
+> > >> @@ -263,7 +263,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "ICT_NOSLOT_IC_L2_CPI",
+> > >> -        "MetricExpr": "(PM_ICT_NOSLOT_IC_MISS - PM_ICT_NOSLOT_IC_L3=
+ - PM_ICT_NOSLOT_IC_L3MISS)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "ict_noslot_ic_miss_cpi - ict_noslot_ic_l3_cp=
+i - ict_noslot_ic_l3miss_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "ict_noslot_ic_l2_cpi"
+> > >>      },
+> > >> @@ -286,7 +286,7 @@
+> > >>          "MetricName": "ict_noslot_ic_miss_cpi"
+> > >>      },
+> > >>      {
+> > >> -        "MetricExpr": "(PM_NTC_ISSUE_HELD_DARQ_FULL + PM_NTC_ISSUE_=
+HELD_ARB + PM_NTC_ISSUE_HELD_OTHER)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "ntc_issue_held_darq_full_cpi + ntc_issue_hel=
+d_arb_cpi + ntc_issue_held_other_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "issue_hold_cpi"
+> > >>      },
+> > >> @@ -327,7 +327,7 @@
+> > >>          "MetricName": "lrq_other_stall_cpi"
+> > >>      },
+> > >>      {
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_LMQ_FULL + PM_CMPLU_STALL_ST=
+_FWD + PM_CMPLU_STALL_LHS + PM_CMPLU_STALL_LSU_MFSPR + PM_CMPLU_STALL_LARX =
++ PM_CMPLU_STALL_LRQ_OTHER)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "lmq_full_stall_cpi + st_fwd_stall_cpi + lhs_=
+stall_cpi + lsu_mfspr_stall_cpi + larx_stall_cpi + lrq_other_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "lrq_stall_cpi"
+> > >>      },
+> > >> @@ -338,7 +338,7 @@
+> > >>          "MetricName": "lsaq_arb_stall_cpi"
+> > >>      },
+> > >>      {
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_LRQ_FULL + PM_CMPLU_STALL_SR=
+Q_FULL + PM_CMPLU_STALL_LSAQ_ARB)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "lrq_full_stall_cpi + srq_full_stall_cpi + ls=
+aq_arb_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "lsaq_stall_cpi"
+> > >>      },
+> > >> @@ -362,7 +362,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Completion LSU stall for other reasons=
+",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_LSU - PM_CMPLU_STALL_LSU_FIN=
+ - PM_CMPLU_STALL_STORE_FINISH - PM_CMPLU_STALL_STORE_DATA - PM_CMPLU_STALL=
+_EIEIO - PM_CMPLU_STALL_STCX - PM_CMPLU_STALL_SLB - PM_CMPLU_STALL_TEND - P=
+M_CMPLU_STALL_PASTE - PM_CMPLU_STALL_TLBIE - PM_CMPLU_STALL_STORE_PIPE_ARB =
+- PM_CMPLU_STALL_STORE_FIN_ARB - PM_CMPLU_STALL_LOAD_FINISH + PM_CMPLU_STAL=
+L_DCACHE_MISS - PM_CMPLU_STALL_LMQ_FULL - PM_CMPLU_STALL_ST_FWD - PM_CMPLU_=
+STALL_LHS - PM_CMPLU_STALL_LSU_MFSPR - PM_CMPLU_STALL_LARX - PM_CMPLU_STALL=
+_LRQ_OTHER + PM_CMPLU_STALL_ERAT_MISS + PM_CMPLU_STALL_EMQ_FULL - PM_CMPLU_=
+STALL_LRQ_FULL - PM_CMPLU_STALL_SRQ_FULL - PM_CMPLU_STALL_LSAQ_ARB) / PM_RU=
+N_INST_CMPL",
+> > >> +        "MetricExpr": "lsu_stall_cpi - lsu_fin_stall_cpi - store_fi=
+nish_stall_cpi - srq_stall_cpi - load_finish_stall_cpi + lsu_stall_dcache_m=
+iss_cpi - lrq_stall_cpi + emq_stall_cpi - lsaq_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "lsu_other_stall_cpi"
+> > >>      },
+> > >> @@ -434,13 +434,13 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Cycles unaccounted for.",
+> > >> -        "MetricExpr": "(PM_RUN_CYC - PM_1PLUS_PPC_CMPL - PM_CMPLU_S=
+TALL_THRD - PM_CMPLU_STALL - PM_ICT_NOSLOT_CYC)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "run_cpi - completion_cpi - thread_block_stal=
+l_cpi - stall_cpi - nothing_dispatched_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "other_cpi"
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Completion stall for other reasons",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL - PM_CMPLU_STALL_NTC_DISP_FI=
+N - PM_CMPLU_STALL_NTC_FLUSH - PM_CMPLU_STALL_LSU - PM_CMPLU_STALL_EXEC_UNI=
+T - PM_CMPLU_STALL_BRU)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "stall_cpi - ntc_disp_fin_stall_cpi - ntc_flu=
+sh_stall_cpi - lsu_stall_cpi - exec_unit_stall_cpi - bru_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "other_stall_cpi"
+> > >>      },
+> > >> @@ -469,7 +469,7 @@
+> > >>          "MetricName": "run_cyc_cpi"
+> > >>      },
+> > >>      {
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_FXU + PM_CMPLU_STALL_DP + PM=
+_CMPLU_STALL_DFU + PM_CMPLU_STALL_PM + PM_CMPLU_STALL_CRYPTO)/PM_RUN_INST_C=
+MPL",
+> > >> +        "MetricExpr": "fxu_stall_cpi + dp_stall_cpi + dfu_stall_cpi=
+ + pm_stall_cpi + crypto_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "scalar_stall_cpi"
+> > >>      },
+> > >> @@ -492,7 +492,7 @@
+> > >>          "MetricName": "srq_full_stall_cpi"
+> > >>      },
+> > >>      {
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_STORE_DATA + PM_CMPLU_STALL_=
+EIEIO + PM_CMPLU_STALL_STCX + PM_CMPLU_STALL_SLB + PM_CMPLU_STALL_TEND + PM=
+_CMPLU_STALL_PASTE + PM_CMPLU_STALL_TLBIE + PM_CMPLU_STALL_STORE_PIPE_ARB +=
+ PM_CMPLU_STALL_STORE_FIN_ARB)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "store_data_stall_cpi + eieio_stall_cpi + stc=
+x_stall_cpi + slb_stall_cpi + tend_stall_cpi + paste_stall_cpi + tlbie_stal=
+l_cpi + store_pipe_arb_stall_cpi + store_fin_arb_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "srq_stall_cpi"
+> > >>      },
+> > >> @@ -558,7 +558,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Vector stalls due to small latency dou=
+ble precision ops",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_VDP - PM_CMPLU_STALL_VDPLONG=
+)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "vdp_stall_cpi - vdplong_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "vdp_other_stall_cpi"
+> > >>      },
+> > >> @@ -575,7 +575,7 @@
+> > >>          "MetricName": "vdplong_stall_cpi"
+> > >>      },
+> > >>      {
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_VFXU + PM_CMPLU_STALL_VDP)/P=
+M_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "vfxu_stall_cpi + vdp_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "vector_stall_cpi"
+> > >>      },
+> > >> @@ -587,7 +587,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Vector stalls due to small latency int=
+eger ops",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_VFXU - PM_CMPLU_STALL_VFXLON=
+G)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "vfxu_stall_cpi - vfxlong_stall_cpi",
+> > >>          "MetricGroup": "cpi_breakdown",
+> > >>          "MetricName": "vfxu_other_stall_cpi"
+> > >>      },
+> > >> @@ -1844,7 +1844,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "% of DL1 reloads from Private L3, othe=
+r core per Inst",
+> > >> -        "MetricExpr": "(PM_DATA_FROM_L31_MOD + PM_DATA_FROM_L31_SHR=
+) * 100 / PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "dl1_reload_from_l31_mod_rate_percent + dl1_r=
+eload_from_l31_shr_rate_percent",
+> > >>          "MetricName": "dl1_reload_from_l31_rate_percent"
+> > >>      },
+> > >>      {
+> > >> @@ -1979,7 +1979,7 @@
+> > >>      },
+> > >>      {
+> > >>          "BriefDescription": "Completion stall because a different t=
+hread was using the completion pipe",
+> > >> -        "MetricExpr": "(PM_CMPLU_STALL_THRD - PM_CMPLU_STALL_EXCEPT=
+ION - PM_CMPLU_STALL_ANY_SYNC - PM_CMPLU_STALL_SYNC_PMU_INT - PM_CMPLU_STAL=
+L_SPEC_FINISH - PM_CMPLU_STALL_FLUSH_ANY_THREAD - PM_CMPLU_STALL_LSU_FLUSH_=
+NEXT - PM_CMPLU_STALL_NESTED_TBEGIN - PM_CMPLU_STALL_NESTED_TEND - PM_CMPLU=
+_STALL_MTFPSCR)/PM_RUN_INST_CMPL",
+> > >> +        "MetricExpr": "thread_block_stall_cpi - exception_stall_cpi=
+ - any_sync_stall_cpi - sync_pmu_int_stall_cpi - spec_finish_stall_cpi - fl=
+ush_any_thread_stall_cpi - lsu_flush_next_stall_cpi - nested_tbegin_stall_c=
+pi - nested_tend_stall_cpi - mtfpscr_stall_cpi",
+> > >>          "MetricName": "other_thread_cmpl_stall"
+> > >>      },
+> > >>      {
+> > >> --
+> > >> 2.18.4
+> > >>
+>
+> --
+>
+> - Arnaldo
