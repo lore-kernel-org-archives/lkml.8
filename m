@@ -7,59 +7,62 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E15C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C294C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53436207F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11177207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="ZfeljoJg"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="QpW/Eb4e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgHZE3Q (ORCPT
+        id S1726442AbgHZE3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 00:29:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50492 "EHLO
+        Wed, 26 Aug 2020 00:29:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725267AbgHZE3P (ORCPT
+        with ESMTP id S1725267AbgHZE3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 00:29:15 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4921C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 21:29:15 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id c67so572826qkd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 21:29:15 -0700 (PDT)
+        Wed, 26 Aug 2020 00:29:17 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43EFBC061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 21:29:17 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id x6so1207603ybp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 21:29:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=e2sthLChL56CJC3JcU1bN90aRQyj9LySBce8eSFPDRQ=;
-        b=ZfeljoJgdAap9byIHIint/gzU7sEuB5x4h9+SYb3crYeFbbA1NFL/brKFik8vIK3a3
-         yD1QdgacNapvaxAScMoJnauD+D9rPVRgDB8vm6DloZuXRnOffHJggPmxqGj0QlLuuJLs
-         LwHFOv/WTd6z9j4jsx46jrKTCMA7PlUfws5gD+LIdbThT3IkYwXoh0Ml6ivqPRbkwOEf
-         pCOWWiZHc0LI+mzaJaiuSTKFnSiw8JuAigKuIjY0c2Ja3l5QW1R516rYft1866NqLkJI
-         OJjehycNrf9BnYd7JQwjpraqZmlorSd0KgdXDCeBvYk7bDA6Y7FhQvnC6+XbTTNWRryL
-         QaDg==
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=SFlBaRGOxuhPAwXvTJE/AiYZZaKxKu8ThTgPykAaza0=;
+        b=QpW/Eb4eHFUKZn4fBIE0SHouRgUjsXVAIxqiWBEjlYUOT24wKF+6F+kjisef/j6YJq
+         2KZ+cyGXn9FHWsqJZIi9U2i6q/j28YQLOFXT09Uayimgi27WNzM5/cmrOLDGFVGuWRkl
+         qIbiePLZQFCNJdadMNfs2QympR8r3o4FMA1hFNeSpGv4Q+Xvb+Z4WJE7PC1Jtgrw6Jdx
+         QNqj7iC59N0V/3bul866uuLz309Z1aSClTTDuB0u2MKeC+D/SfjCamYWE0LIuy+MIIc5
+         Yrfp5SDQeMqupjmK7pbjDJuHRUPRIfvcZM96C61Q0eGLi7xdfWW3OS/gU5omkchbR08l
+         Lu4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=e2sthLChL56CJC3JcU1bN90aRQyj9LySBce8eSFPDRQ=;
-        b=OH2LQWn30eonzLdTpVSUY8YBGYMCUXiMgNp5Jud7ku9NhiOw/cHoKQi8fqp1uXCIBG
-         R5COfP76Dlfa0H66RDrBWYE/bU7IV+p8niXLf0i+3aHM2v6+1WEXc9BHpSUKKWV7zM6T
-         ejLYHi5yLHy8pC4MlYY+JJprVeKMirgTXwshvmQCMElPi+AHmGSpqq3wiz/MHQD1rKy3
-         9PIUqjvO3+iVMEBf6/iLI6kBjEPt4GUhMZbBysdZ203PIGEJ3vdpJiYdjiqNB0ldV6nJ
-         ePj8/m5Vjl1Az/rIGjcEA1Z6hvivqIqa3ZzYieC1ORjHpz+eqSlteEziEDG8iZqcxLUS
-         Is9A==
-X-Gm-Message-State: AOAM531xTms53VHMyEdQInDHtBFOiF7zZsNdCjoCu9o3POFzubhTUyeG
-        QUc7aubR7P3kY6pZmOJ/lGzm1L8/pPaJ
-X-Google-Smtp-Source: ABdhPJwhtThJ2l1VTxtlAD92hKu424560dbu+JG7twten6GlJpZWpVn3f4xWeSGiL+y3Vsq6zjYGqtDK6S0t
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=SFlBaRGOxuhPAwXvTJE/AiYZZaKxKu8ThTgPykAaza0=;
+        b=dKyh+COy4pAZtgjVJCXbCU1/8VnI38IL+s6VMA67UePeRia1/RkhsrYwJDQASZrrm1
+         wk+J/v+Cbe0Q0Lj3XWU2x7orX4fr825+QsvdoII3FVsq7pS3sSPoUrHort0FaKbz7IWF
+         J7oVTLsZZwkMyC6PvUYDnnxRara30l398qOOmrrWZW9w7hBwdTD86wgjOxnnugMNnP6t
+         1MYmYH361u5yZyScjsFN9NzfDRd9O+hE1EvHu97Bpd/96NV1uzqdshvQ5YloIRwO/duR
+         Ey+01O2hqGdOBhXi2PLj5UAUy82YuOBPnVb5Ps0sFjIWtfYesORbMoxOQ8awEXFTs55p
+         IOOg==
+X-Gm-Message-State: AOAM532KvkMU53tRoI/Dn6kg4D6hW9afmBj9AvFe1NmpC+u8b9G4XJ8g
+        KLmo482tEQSW7uqPZjVYgxQeMBEw1xPW
+X-Google-Smtp-Source: ABdhPJzKU93p74GVyVbbASrTciFsRryyNFhnkIk2vRUZumZEUmB8DcjKCs18TvyxfzPY1FJ1tmbZBlqUdj/r
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:2:f693:9fff:fef4:4583])
- (user=irogers job=sendgmr) by 2002:a0c:f849:: with SMTP id
- g9mr12698699qvo.80.1598416154530; Tue, 25 Aug 2020 21:29:14 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 21:29:09 -0700
-Message-Id: <20200826042910.1902374-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:5755:: with SMTP id
+ l82mr19858272ybb.175.1598416156455; Tue, 25 Aug 2020 21:29:16 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 21:29:10 -0700
+In-Reply-To: <20200826042910.1902374-1-irogers@google.com>
+Message-Id: <20200826042910.1902374-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20200826042910.1902374-1-irogers@google.com>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH 1/2] perf expr: Force encapsulation on expr_id_data
+Subject: [PATCH 2/2] perf parse-events: Avoid an uninitialized read.
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -82,200 +85,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch resolves some undefined behavior where variables in
-expr_id_data were accessed (for debugging) without being defined. To
-better enforce the tagged union behavior, the struct is moved into
-expr.c and accessors provided. Tag values (kinds) are explicitly
-identified.
+With a fake_pmu the pmu_info isn't populated by perf_pmu__check_alias.
+In this case, don't try to copy the uninitialized values to the evsel.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/expr.c        | 64 ++++++++++++++++++++++++++++++-----
- tools/perf/util/expr.h        | 17 +++-------
- tools/perf/util/expr.y        |  2 +-
- tools/perf/util/metricgroup.c |  4 +--
- 4 files changed, 62 insertions(+), 25 deletions(-)
+ tools/perf/util/parse-events.c | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
-index 53482ef53c41..1ca0992db86b 100644
---- a/tools/perf/util/expr.c
-+++ b/tools/perf/util/expr.c
-@@ -17,6 +17,25 @@
- extern int expr_debug;
- #endif
- 
-+struct expr_id_data {
-+	union {
-+		double val;
-+		struct {
-+			double val;
-+			const char *metric_name;
-+			const char *metric_expr;
-+		} ref;
-+		struct expr_id	*parent;
-+	};
-+
-+	enum {
-+		EXPR_ID_DATA__VALUE,
-+		EXPR_ID_DATA__REF,
-+		EXPR_ID_DATA__REF_VALUE,
-+		EXPR_ID_DATA__PARENT,
-+	} kind;
-+};
-+
- static size_t key_hash(const void *key, void *ctx __maybe_unused)
- {
- 	const char *str = (const char *)key;
-@@ -48,6 +67,7 @@ int expr__add_id(struct expr_parse_ctx *ctx, const char *id)
- 		return -ENOMEM;
- 
- 	data_ptr->parent = ctx->parent;
-+	data_ptr->kind = EXPR_ID_DATA__PARENT;
- 
- 	ret = hashmap__set(&ctx->ids, id, data_ptr,
- 			   (const void **)&old_key, (void **)&old_data);
-@@ -69,7 +89,7 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
- 	if (!data_ptr)
- 		return -ENOMEM;
- 	data_ptr->val = val;
--	data_ptr->is_ref = false;
-+	data_ptr->kind = EXPR_ID_DATA__VALUE;
- 
- 	ret = hashmap__set(&ctx->ids, id, data_ptr,
- 			   (const void **)&old_key, (void **)&old_data);
-@@ -114,8 +134,7 @@ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
- 	 */
- 	data_ptr->ref.metric_name = ref->metric_name;
- 	data_ptr->ref.metric_expr = ref->metric_expr;
--	data_ptr->ref.counted = false;
--	data_ptr->is_ref = true;
-+	data_ptr->kind = EXPR_ID_DATA__REF;
- 
- 	ret = hashmap__set(&ctx->ids, name, data_ptr,
- 			   (const void **)&old_key, (void **)&old_data);
-@@ -148,17 +167,30 @@ int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
- 
- 	data = *datap;
- 
--	pr_debug2("lookup: is_ref %d, counted %d, val %f: %s\n",
--		  data->is_ref, data->ref.counted, data->val, id);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 9f7260e69113..3d7a48b488ed 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1533,19 +1533,23 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	evsel = __add_event(list, &parse_state->idx, &attr, true,
+ 			    get_config_name(head_config), pmu,
+ 			    &config_terms, auto_merge_stats, NULL);
+-	if (evsel) {
+-		evsel->unit = info.unit;
+-		evsel->scale = info.scale;
+-		evsel->per_pkg = info.per_pkg;
+-		evsel->snapshot = info.snapshot;
+-		evsel->metric_expr = info.metric_expr;
+-		evsel->metric_name = info.metric_name;
+-		evsel->pmu_name = name ? strdup(name) : NULL;
+-		evsel->use_uncore_alias = use_uncore_alias;
+-		evsel->percore = config_term_percore(&evsel->config_terms);
+-	}
 -
--	if (data->is_ref && !data->ref.counted) {
--		data->ref.counted = true;
-+	switch (data->kind) {
-+	case EXPR_ID_DATA__VALUE:
-+		pr_debug2("lookup(%s): val %f\n", id, data->val);
-+		break;
-+	case EXPR_ID_DATA__PARENT:
-+		pr_debug2("lookup(%s): parent %s\n", id, data->parent->id);
-+		break;
-+	case EXPR_ID_DATA__REF:
-+		pr_debug2("lookup(%s): ref metric name %s\n", id,
-+			data->ref.metric_name);
- 		pr_debug("processing metric: %s ENTRY\n", id);
--		if (expr__parse(&data->val, ctx, data->ref.metric_expr, 1)) {
-+		data->kind = EXPR_ID_DATA__REF_VALUE;
-+		if (expr__parse(&data->ref.val, ctx, data->ref.metric_expr, 1)) {
- 			pr_debug("%s failed to count\n", id);
- 			return -1;
- 		}
- 		pr_debug("processing metric: %s EXIT: %f\n", id, data->val);
-+		break;
-+	case EXPR_ID_DATA__REF_VALUE:
-+		pr_debug2("lookup(%s): ref val %f metric name %s\n", id,
-+			data->ref.val, data->ref.metric_name);
-+		break;
-+	default:
-+		assert(0);  /* Unreachable. */
- 	}
- 
- 	return 0;
-@@ -241,3 +273,17 @@ int expr__find_other(const char *expr, const char *one,
- 
- 	return ret;
+-	return evsel ? 0 : -ENOMEM;
++	if (!evsel)
++		return -ENOMEM;
++
++	evsel->pmu_name = name ? strdup(name) : NULL;
++	evsel->use_uncore_alias = use_uncore_alias;
++	evsel->percore = config_term_percore(&evsel->config_terms);
++
++	if (parse_state->fake_pmu)
++		return 0;
++
++	evsel->unit = info.unit;
++	evsel->scale = info.scale;
++	evsel->per_pkg = info.per_pkg;
++	evsel->snapshot = info.snapshot;
++	evsel->metric_expr = info.metric_expr;
++	evsel->metric_name = info.metric_name;
++	return 0;
  }
-+
-+double expr_id_data__value(const struct expr_id_data *data)
-+{
-+	if (data->kind == EXPR_ID_DATA__VALUE)
-+		return data->val;
-+	assert(data->kind == EXPR_ID_DATA__REF_VALUE);
-+	return data->ref.val;
-+}
-+
-+struct expr_id *expr_id_data__parent(struct expr_id_data *data)
-+{
-+	assert(data->kind == EXPR_ID_DATA__PARENT);
-+	return data->parent;
-+}
-diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
-index fc2b5e824a66..dcf8d19b83c8 100644
---- a/tools/perf/util/expr.h
-+++ b/tools/perf/util/expr.h
-@@ -23,19 +23,7 @@ struct expr_parse_ctx {
- 	struct expr_id	*parent;
- };
  
--struct expr_id_data {
--	union {
--		double val;
--		struct {
--			const char *metric_name;
--			const char *metric_expr;
--			bool counted;
--		} ref;
--		struct expr_id	*parent;
--	};
--
--	bool is_ref;
--};
-+struct expr_id_data;
- 
- struct expr_scanner_ctx {
- 	int start_token;
-@@ -57,4 +45,7 @@ int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
- int expr__find_other(const char *expr, const char *one,
- 		struct expr_parse_ctx *ids, int runtime);
- 
-+double expr_id_data__value(const struct expr_id_data *data);
-+struct expr_id *expr_id_data__parent(struct expr_id_data *data);
-+
- #endif
-diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-index d34b370391c6..b2ada8f8309a 100644
---- a/tools/perf/util/expr.y
-+++ b/tools/perf/util/expr.y
-@@ -93,7 +93,7 @@ expr:	  NUMBER
- 						YYABORT;
- 					}
- 
--					$$ = data->val;
-+					$$ = expr_id_data__value(data);
- 					free($1);
- 				}
- 	| expr '|' expr		{ $$ = (long)$1 | (long)$3; }
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 8831b964288f..339bfb19a10b 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -786,7 +786,7 @@ static int recursion_check(struct metric *m, const char *id, struct expr_id **pa
- 	if (ret)
- 		return ret;
- 
--	p = data->parent;
-+	p = expr_id_data__parent(data);
- 
- 	while (p->parent) {
- 		if (!strcmp(p->id, id)) {
-@@ -807,7 +807,7 @@ static int recursion_check(struct metric *m, const char *id, struct expr_id **pa
- 	}
- 
- 	p->id     = strdup(id);
--	p->parent = data->parent;
-+	p->parent = expr_id_data__parent(data);
- 	*parent   = p;
- 
- 	return p->id ? 0 : -ENOMEM;
+ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
