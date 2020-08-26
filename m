@@ -2,119 +2,142 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96646C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFF7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7335A2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598453793;
-	bh=Qo3LbyvmpBGQKG4D/yZypYAesoTm5jVx4P7R/QfNlcY=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CiVvTOVXyzbavVGcG1CZZwKgW/B8QcnOoG3tkbdQ+hvDw5ewJ3XssHDEiA5vUEEFZ
-	 pUxVmLhx9BSUiqZGNDvfal398QW7a/XjgaZMfrCboPiZuV35ewfTgYNP/Kp8lE+A2/
-	 hQWTwCHyvNygEWFgvToSIYTOc8Njl5ZU5SRlr3FM=
+	by mail.kernel.org (Postfix) with ESMTP id BDBC821741
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sJxfh2jJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgHZOxi (ORCPT
+        id S1728328AbgHZO4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:53:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40306 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgHZOxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:53:15 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86DCB2177B;
-        Wed, 26 Aug 2020 14:53:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453594;
-        bh=Qo3LbyvmpBGQKG4D/yZypYAesoTm5jVx4P7R/QfNlcY=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=qMZgura2EYsW2bxG0xHLWT3v4KZYKNJn4qop8HRQH5iq+4faVf9nQrwTotbcbEPkY
-         MZsl9iKjz8CrXVxC2l/VPlpgA+2HXRrHV7Y8WdFm9cVVtqlF94M9CeMdr1QLXcUsso
-         byEgtFP2Z/C+qUUmdT2VClwjlQ5CO1F4n3kxGbIo=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 13/16] iio: imu: inv_mpu6050: Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 16:51:50 +0200
-Message-Id: <20200826145153.10444-13-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826145153.10444-1-krzk@kernel.org>
-References: <20200826145153.10444-1-krzk@kernel.org>
+        Wed, 26 Aug 2020 10:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728245AbgHZOxg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:53:36 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FA7C061574;
+        Wed, 26 Aug 2020 07:53:35 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id g33so1147168pgb.4;
+        Wed, 26 Aug 2020 07:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wuGEwlNHfczwsScET5//DK/IY7Qs+PjjbY2XOsrR6EY=;
+        b=sJxfh2jJmRyJwyZjRYiK59/JqRgrFpTkVZ5xgJoltk4TDoYL+GlD9+tgJIxFMS58zE
+         bVZWwfb+obCUVs74Vy+38s/0c3jNR31aeAqt65bmhYQYtabBgIbEydsGfCwHbw22HIaZ
+         xBjgLEgMOymilWxmlOBg6wnsNLYEaQkNJYoynGXLUEPLUNM/pUihKqkfYim77mykoZHw
+         r/99g3M/GcaRxVtbvKEmtUHqBLQQegIIytdG4HCL8pOfpNjtwUfY4x9elFPCV0UbZrmn
+         nLcQ8bYgj5PDwHpwAmqejHERBakNqFdh+/LDrmy2R3t0JejiqkpszFSlXK0puSMx2qq5
+         EfeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wuGEwlNHfczwsScET5//DK/IY7Qs+PjjbY2XOsrR6EY=;
+        b=GBCuwogccHH+8e3ybkyIGK/nOOUJ1Xe+qa/YTSHTh3PWKWedhn/7GHRm2kcTTHUY0y
+         sxdS1T/d17gfIznZLDunLKq4IW68jqWOPwlHOnxJi/zSspmjU0Sc2uUvy8fcsrelZgkh
+         E2RWZD2tpKgEsg1hx0WsjGo3MymYkP2ewhlI0oYknqMQTy+iz2G2S7KIAqgeltZ1LZi5
+         x3YJ5af6A6MCFLIaZdaN2Pem+XqDDVSm9EVtZHfBC7XwW+j8UeEZDAvNQwwz8ArGRV0I
+         5Jor09um04UUuTyqpNSw+o+B9shnHe2SJoX0uZX7fu7Xvl8yyAZOHrA39azLQ8rgPgcu
+         p2fQ==
+X-Gm-Message-State: AOAM530rlspKk3eaApx3vg8y+XiuQi302EaqO3unPj22/tOD31oVQ7JV
+        G9yTB/2TrVF0xNQKPzJejYhqXf5IOK8=
+X-Google-Smtp-Source: ABdhPJwnwRk8+dVeXoz0Grl/YQQOhYKHOnjDr66zdyR/sD12wD+22g0P7kpG1iTmQ2c7J7Xd74ABaw==
+X-Received: by 2002:a65:6287:: with SMTP id f7mr1593741pgv.264.1598453615205;
+        Wed, 26 Aug 2020 07:53:35 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id r7sm3327140pfl.186.2020.08.26.07.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:53:34 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Michal Simek <monstr@monstr.eu>
+Subject: [PATCH v2 10/23] microblaze: use asm-generic/mmu_context.h for no-op implementations
+Date:   Thu, 27 Aug 2020 00:52:36 +1000
+Message-Id: <20200826145249.745432-11-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
+References: <20200826145249.745432-1-npiggin@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Michal Simek <monstr@monstr.eu>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+ arch/microblaze/include/asm/mmu_context_mm.h | 8 ++++----
+ arch/microblaze/include/asm/processor.h      | 3 ---
+ 2 files changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index 3fee3947f772..18a1898e3e34 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -1475,22 +1475,14 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
- 	}
+diff --git a/arch/microblaze/include/asm/mmu_context_mm.h b/arch/microblaze/include/asm/mmu_context_mm.h
+index a1c7dd48454c..c2c77f708455 100644
+--- a/arch/microblaze/include/asm/mmu_context_mm.h
++++ b/arch/microblaze/include/asm/mmu_context_mm.h
+@@ -33,10 +33,6 @@
+    to represent all kernel pages as shared among all contexts.
+  */
  
- 	st->vdd_supply = devm_regulator_get(dev, "vdd");
--	if (IS_ERR(st->vdd_supply)) {
--		if (PTR_ERR(st->vdd_supply) != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get vdd regulator %d\n",
--				(int)PTR_ERR(st->vdd_supply));
+-static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+-{
+-}
 -
--		return PTR_ERR(st->vdd_supply);
--	}
-+	if (IS_ERR(st->vdd_supply))
-+		return dev_err_probe(dev, PTR_ERR(st->vdd_supply),
-+				     "Failed to get vdd regulator\n");
+ # define NO_CONTEXT	256
+ # define LAST_CONTEXT	255
+ # define FIRST_CONTEXT	1
+@@ -105,6 +101,7 @@ static inline void get_mmu_context(struct mm_struct *mm)
+ /*
+  * We're finished using the context for an address space.
+  */
++#define destroy_context destroy_context
+ static inline void destroy_context(struct mm_struct *mm)
+ {
+ 	if (mm->context != NO_CONTEXT) {
+@@ -126,6 +123,7 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+  * After we have set current->mm to a new value, this activates
+  * the context for the new mm so we see the new mappings.
+  */
++#define activate_mm activate_mm
+ static inline void activate_mm(struct mm_struct *active_mm,
+ 			struct mm_struct *mm)
+ {
+@@ -136,5 +134,7 @@ static inline void activate_mm(struct mm_struct *active_mm,
  
- 	st->vddio_supply = devm_regulator_get(dev, "vddio");
--	if (IS_ERR(st->vddio_supply)) {
--		if (PTR_ERR(st->vddio_supply) != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get vddio regulator %d\n",
--				(int)PTR_ERR(st->vddio_supply));
+ extern void mmu_context_init(void);
+ 
++#include <asm-generic/mmu_context.h>
++
+ # endif /* __KERNEL__ */
+ #endif /* _ASM_MICROBLAZE_MMU_CONTEXT_H */
+diff --git a/arch/microblaze/include/asm/processor.h b/arch/microblaze/include/asm/processor.h
+index 1ff5a82b76b6..616211871a6e 100644
+--- a/arch/microblaze/include/asm/processor.h
++++ b/arch/microblaze/include/asm/processor.h
+@@ -122,9 +122,6 @@ unsigned long get_wchan(struct task_struct *p);
+ #  define KSTK_EIP(task)	(task_pc(task))
+ #  define KSTK_ESP(task)	(task_sp(task))
+ 
+-/* FIXME */
+-#  define deactivate_mm(tsk, mm)	do { } while (0)
 -
--		return PTR_ERR(st->vddio_supply);
--	}
-+	if (IS_ERR(st->vddio_supply))
-+		return dev_err_probe(dev, PTR_ERR(st->vddio_supply),
-+				     "Failed to get vddio regulator\n");
+ #  define STACK_TOP	TASK_SIZE
+ #  define STACK_TOP_MAX	STACK_TOP
  
- 	result = regulator_enable(st->vdd_supply);
- 	if (result) {
 -- 
-2.17.1
+2.23.0
 
