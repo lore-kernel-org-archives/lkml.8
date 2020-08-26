@@ -2,83 +2,112 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A04C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB58C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1901C20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7EB20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:02:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J6xLMitE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgHZLCK (ORCPT
+        id S1728620AbgHZLCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:02:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:44176 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728719AbgHZK5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:57:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A35C71FB;
-        Wed, 26 Aug 2020 03:57:32 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F20823F71F;
-        Wed, 26 Aug 2020 03:57:31 -0700 (PDT)
-References: <20200826104720.530040-1-mchehab+huawei@kernel.org>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] docs: scheduler: fix the directory name on two files
-In-reply-to: <20200826104720.530040-1-mchehab+huawei@kernel.org>
-Date:   Wed, 26 Aug 2020 11:57:24 +0100
-Message-ID: <jhj8se1ektn.mognet@arm.com>
+        Wed, 26 Aug 2020 07:02:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31782 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728803AbgHZK5P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:57:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598439434;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NgLSMjRHWPLLE0TzbEBLz1QQLMzRlMx2WrSWoJBXSIA=;
+        b=J6xLMitEESkJv+PdUTfXtmH7Bogfq9vf++W/DBpRO43OByXAi3VeAFMpniid3s8Daw35Jf
+        ne7So6/bOaq6h8BLQE8cYDN4GtLN0RnDHQEYVTFgMXKnAkpYVx15s34rJ72JQPNsD43RFb
+        I9olbRabbYlaBWq5EVflFkslRkNevA4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-427-zLsQ7xhKOae5M5-YPU7uIA-1; Wed, 26 Aug 2020 06:57:10 -0400
+X-MC-Unique: zLsQ7xhKOae5M5-YPU7uIA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4B64189E602;
+        Wed, 26 Aug 2020 10:57:08 +0000 (UTC)
+Received: from krava (unknown [10.40.194.188])
+        by smtp.corp.redhat.com (Postfix) with SMTP id AE8271002D42;
+        Wed, 26 Aug 2020 10:57:06 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 12:57:05 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     acme@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, maddy@linux.ibm.com,
+        ravi.bangoria@linux.ibm.com
+Subject: Re: [RFC] perf/jevents: Add new structure to pass json fields.
+Message-ID: <20200826105705.GD703542@krava>
+References: <20200825074041.378520-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825074041.378520-1-kjain@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 25, 2020 at 01:10:41PM +0530, Kajol Jain wrote:
 
-On 26/08/20 11:47, Mauro Carvalho Chehab wrote:
-> The name of the directory where the schedule docs are
-> stored are wrong on those files.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+SNIP
 
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
+> index 2afc8304529e..e696edf70e9a 100644
+> --- a/tools/perf/pmu-events/jevents.h
+> +++ b/tools/perf/pmu-events/jevents.h
+> @@ -2,14 +2,28 @@
+>  #ifndef JEVENTS_H
+>  #define JEVENTS_H 1
+>  
+> +#include "pmu-events.h"
+> +
+> +struct json_event {
+> +	char *name;
+> +	char *event;
+> +	char *desc;
+> +	char *topic;
+> +	char *long_desc;
+> +	char *pmu;
+> +	char *unit;
+> +	char *perpkg;
+> +	char *metric_expr;
+> +	char *metric_name;
+> +	char *metric_group;
+> +	char *deprecated;
+> +	char *metric_constraint;
+> +};
+> +
+>  int json_events(const char *fn,
+> -		int (*func)(void *data, char *name, char *event, char *desc,
+> -				char *long_desc,
+> -				char *pmu,
+> -				char *unit, char *perpkg, char *metric_expr,
+> -				char *metric_name, char *metric_group,
+> -				char *deprecated, char *metric_constraint),
+> -		void *data);
+> +		int (*func)(void *data, struct json_event *je),
+> +			void *data);
 
-> ---
->  Documentation/scheduler/sched-capacity.rst | 2 +-
->  Documentation/scheduler/sched-energy.rst   | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/scheduler/sched-capacity.rst b/Documentation/scheduler/sched-capacity.rst
-> index 00bf0d011e2a..9b7cbe43b2d1 100644
-> --- a/Documentation/scheduler/sched-capacity.rst
-> +++ b/Documentation/scheduler/sched-capacity.rst
-> @@ -365,7 +365,7 @@ giving it a high uclamp.min value.
->  .. note::
->
->    Wakeup CPU selection in CFS can be eclipsed by Energy Aware Scheduling
-> -  (EAS), which is described in Documentation/scheduling/sched-energy.rst.
-> +  (EAS), which is described in Documentation/scheduler/sched-energy.rst.
->
->  5.1.3 Load balancing
->  ~~~~~~~~~~~~~~~~~~~~
-> diff --git a/Documentation/scheduler/sched-energy.rst b/Documentation/scheduler/sched-energy.rst
-> index 78f850778982..001e09c95e1d 100644
-> --- a/Documentation/scheduler/sched-energy.rst
-> +++ b/Documentation/scheduler/sched-energy.rst
-> @@ -331,7 +331,7 @@ asymmetric CPU topologies for now. This requirement is checked at run-time by
->  looking for the presence of the SD_ASYM_CPUCAPACITY flag when the scheduling
->  domains are built.
->
-> -See Documentation/sched/sched-capacity.rst for requirements to be met for this
-> +See Documentation/scheduler/sched-capacity.rst for requirements to be met for this
->  flag to be set in the sched_domain hierarchy.
->
->  Please note that EAS is not fundamentally incompatible with SMP, but no
+please also add typedef for the function,
+it's used in other places as well
+
+thanks,
+jirka
+
