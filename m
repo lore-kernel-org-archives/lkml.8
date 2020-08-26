@@ -2,63 +2,55 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A62C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B396C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 748A420707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D489720707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:11:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgHZPLa (ORCPT
+        id S1726723AbgHZPLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:11:30 -0400
+        Wed, 26 Aug 2020 11:11:43 -0400
 Received: from mga04.intel.com ([192.55.52.120]:9758 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbgHZPLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:11:24 -0400
-IronPort-SDR: AxVSGKCavgPvVemR11xD3T77ZwggUX+pzQxoM26uzLvT03+reuVnP0dcMgO9LnBD0We9+Vu9Ua
- 5djlRqx0i+5Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153729694"
+        id S1728041AbgHZPL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 11:11:26 -0400
+IronPort-SDR: 8TcetRDtRqlaVLV3C5qbcHWcBlSJ9+4lJqhUnpVe3RTVw86gmX9deZDGLrKibxh24rjOqwUz3V
+ 1TE/2QOKhkSA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153729699"
 X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="153729694"
+   d="scan'208";a="153729699"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 08:11:23 -0700
-IronPort-SDR: 8BOuzBscj9k1lVGdB5yJS0/sLIDM5VLn6aH07+vWPTj0D+L0nElcFtADnHP9l4yhtte+n6Vrfd
- A7qzJE3PNBsQ==
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 08:11:25 -0700
+IronPort-SDR: IGgxmkZop+YsRcGGramX/nJvANvQUeHyyD2q3q/ecm42zKIu7W2EkwkP3wmno/+0Q1JcO3f81m
+ +5TVTJQlfGbQ==
 X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="299505123"
+   d="scan'208";a="299505130"
 Received: from gillelas-mobl1.amr.corp.intel.com (HELO [10.255.231.51]) ([10.255.231.51])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 08:11:22 -0700
-Subject: Re: [PATCH 1/4] regmap: sdw: move to -EOPNOTSUPP
-To:     Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>
-Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        alsa-devel@alsa-project.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Hui Wang <hui.wang@canonical.com>, vkoul@kernel.org,
-        srinivas.kandagatla@linaro.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        jank@cadence.com, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20200825171656.75836-2-pierre-louis.bossart@linux.intel.com>
- <20200825214858.GK5379@sirena.org.uk>
- <6f7e5830-4dd8-1ecc-20c3-df75bc9ef265@linux.intel.com>
- <20200826095600.GA4965@sirena.org.uk> <s5ha6yhu3af.wl-tiwai@suse.de>
- <20200826101301.GB4965@sirena.org.uk> <s5h8se1u2or.wl-tiwai@suse.de>
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 08:11:24 -0700
+Subject: Re: [PATCH 4/4] ASoC: rt715: Fix return check for
+ devm_regmap_init_sdw()
+To:     Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Oder Chiou <oder_chiou@realtek.com>,
+        Shuming Fan <shumingf@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+References: <20200826122811.3223663-1-vkoul@kernel.org>
+ <20200826122811.3223663-4-vkoul@kernel.org>
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <927c93bc-9ad8-7e5d-a5ea-d566e5f543df@linux.intel.com>
-Date:   Wed, 26 Aug 2020 10:05:50 -0500
+Message-ID: <e71ba625-ec1e-1adf-9e4c-b65a91562d9c@linux.intel.com>
+Date:   Wed, 26 Aug 2020 10:09:19 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <s5h8se1u2or.wl-tiwai@suse.de>
+In-Reply-To: <20200826122811.3223663-4-vkoul@kernel.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -69,31 +61,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
+On 8/26/20 7:28 AM, Vinod Koul wrote:
+> devm_regmap_init_sdw() returns a valid pointer on success or ERR_PTR on
+> failure which should be checked with IS_ERR. Also use PTR_ERR for
+> returning error codes.
 
->>>> checkpatch is broken.
->>
->>> Heh, I'm not objecting it :)
->>
->>> OTOH, it's also true that ENOTSUPP is no good error code if returned
->>> to user-space.  Unfortunately many codes (including what I wrote) use
->>> this code mistakenly, and they can't be changed any longer...
->>
->> It's also used internally in various places without being returned to
->> userspace, that's what's going on here - the regmap core has some
->> specific checks for -ENOTSUPP.
+Do you mind changing these two additional codecs that were missed in 
+this series? Thanks!
+
+rt700-sdw.c:	sdw_regmap = devm_regmap_init_sdw(slave, &rt700_sdw_regmap);
+rt700-sdw.c-	if (!sdw_regmap)
+rt700-sdw.c-		return -EINVAL;
+
+--
+rt711-sdw.c:	sdw_regmap = devm_regmap_init_sdw(slave, &rt711_sdw_regmap);
+rt711-sdw.c-	if (!sdw_regmap)
+rt711-sdw.c-		return -EINVAL;
+--
+
 > 
-> Sure, for such an internal usage any code can be used.
-> The question is a case like this -- where the return code might be
-> carried to outside.  Though, looking through the grep output, all
-> callers simply return -EINVAL for any errors, so it doesn't matter
-> much for now.
-
-I assumed this change to -EOPNOTSUPP reflected a consensus in 
-kernel-land, it's obviously not the case. This patch was supposed to be 
-a trivial clean-up...
-
-So to be clear, what is the direction for existing code
-a) keep -ENOTSUPP as is?
-b) move to -EOPNOTSUPP?
-
-And what is the preference for new code?
+> Reported-by: Takashi Iwai <tiwai@suse.de>
+> Fixes: d1ede0641b05 ("ASoC: rt715: add RT715 codec driver")
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>   sound/soc/codecs/rt715-sdw.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/rt715-sdw.c b/sound/soc/codecs/rt715-sdw.c
+> index d11b23d6b240..68a36739f1b0 100644
+> --- a/sound/soc/codecs/rt715-sdw.c
+> +++ b/sound/soc/codecs/rt715-sdw.c
+> @@ -527,8 +527,8 @@ static int rt715_sdw_probe(struct sdw_slave *slave,
+>   
+>   	/* Regmap Initialization */
+>   	sdw_regmap = devm_regmap_init_sdw(slave, &rt715_sdw_regmap);
+> -	if (!sdw_regmap)
+> -		return -EINVAL;
+> +	if (IS_ERR(sdw_regmap))
+> +		return PTR_ERR(sdw_regmap);
+>   
+>   	regmap = devm_regmap_init(&slave->dev, NULL, &slave->dev,
+>   		&rt715_regmap);
+> 
