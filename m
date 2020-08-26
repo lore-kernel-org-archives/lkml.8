@@ -2,112 +2,110 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE0BB20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0759520737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:07:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mcGogTOT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtFcrHvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgHZVGb (ORCPT
+        id S1726968AbgHZVHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36180 "EHLO
+        Wed, 26 Aug 2020 17:07:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgHZVGa (ORCPT
+        with ESMTP id S1726802AbgHZVHC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:06:30 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5EC3C061574;
-        Wed, 26 Aug 2020 14:06:29 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id q1so1456367pjd.1;
-        Wed, 26 Aug 2020 14:06:29 -0700 (PDT)
+        Wed, 26 Aug 2020 17:07:02 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C7AC061574;
+        Wed, 26 Aug 2020 14:07:02 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id q21so1804777edv.1;
+        Wed, 26 Aug 2020 14:07:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=BNVvx026q+w3S50fDZO4SFY1mveXLMUajizgrhaD8KQ=;
-        b=mcGogTOTXL0EQfUn4qrkiDJ1f6vcYVDd3HR1c0w0MfhBlcya/nkdxe0DqhfM2sCfB3
-         zKc3zbMM8mGt6FzT7j8KtLPgxmt0NNuMWPJZpsgsPZFcM+L6FJGMIcBTIF+PpquIttMh
-         ZCmgPrcAOUtVDdZULfWoeXuSpLC56VMNpIUY1gQlAeumhsTtj0fEY3NYdnBOhmYzVcCQ
-         rl83rJEW3bJOKamwuKHJFhdZvyvF95XGYjXrFI6QQREbxamyGj0lBbJXJAoj3W3Fcgl3
-         dDfgbA4vhAmgkN9Cv/dHodkGBOGR/iSxkTgA9sTrVLQr8F1WC0nnu/Zbxl49henHH9hT
-         jiag==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3Os1LN7Ue+Ms9CVeN7ASmdmMTYx1HCqAOOT3/+0mXhg=;
+        b=PtFcrHvI6+V4VyHgf02ZQVEQf/Nbjj3TPaB0qAz/abmIAwiZ2ezYJ5lgCSAGzQUAox
+         O8FEw5ZWgrVK5GXdTTtXj2jzNV5BchVbIsaDfmpuGAXeErGEb1LbI+7rhESOvCCAuEc4
+         UlOfXYO/G+Cj3Y6P2OXhC+N96u3CiacF7omuraKWHo7NH4ZTIeHReQJsArfygjJnYj4b
+         eM3Sj2pXvju6R/vwgxDsBFjRecPy+8nZ/ijvXkExngPCLaTGkNY09jN5olxpvRjOg5vB
+         XOwDSOaqwDjuGV2T1m/bb4NKsFkEv0ADJBl6py9SjSuNvcLB2/Xj74EBekm7RYo0Z2yr
+         ITEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=BNVvx026q+w3S50fDZO4SFY1mveXLMUajizgrhaD8KQ=;
-        b=qn4hRdpeqecCAXvFSyl0wo7lGCqZ0dULKqv94UCKpN7P7tJ3FmvLGNA11/zV2C+GR+
-         Y/tdFxe4FtEW7AEMhaNpJ486dyEYW11bw0wgPOBtThJ/XnkdR56YxCXRznCgotg0gf62
-         BvFmglZo6JKi0sOG6n5wN80nMSeWo8OCXGMO8zxjj4HM5mpJeJ98Vz/O/P330pfsqW5Y
-         L/dAVTOwsaK+IjJlurvj/LiuCnA3UmvMJxCucM97o1Mh3MRWEqIn5inmwgPv2ISLZWo7
-         NHeTwjyXq6v4LKu4cxfx5mH5m073+F0N5O6ApHe2jPQudSMzsCqaxqCvErbG0r9H89+6
-         sBRg==
-X-Gm-Message-State: AOAM531kMgqHkol+XUhceB4/R6bYNq+Wmj31rk2B11OvaEmL9SgubpsD
-        2ezUlaBk/liUF/yXC5/sgTCXsvJoj/A=
-X-Google-Smtp-Source: ABdhPJx8qMKzf+YUGkO9ycWzs15QYQEWlFfWtdsSQZwoixwMlBfLlynubJpb7Op32qbOOerq779IJw==
-X-Received: by 2002:a17:90b:3543:: with SMTP id lt3mr7942701pjb.180.1598475989306;
-        Wed, 26 Aug 2020 14:06:29 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 27sm3032823pgk.89.2020.08.26.14.06.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Aug 2020 14:06:28 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 14:06:28 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Paul Burton <paul.burton@mips.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        linux-mips@vger.kernel.org
-Subject: Re: [PATCH 4.19 66/81] MIPS: Disable Loongson MMI instructions for
- kernel build
-Message-ID: <20200826210628.GA173536@roeck-us.net>
-References: <20191016214805.727399379@linuxfoundation.org>
- <20191016214845.344235056@linuxfoundation.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3Os1LN7Ue+Ms9CVeN7ASmdmMTYx1HCqAOOT3/+0mXhg=;
+        b=EMG0BwzChp+zJ5fX55pvxCOLMyPpNSYUJ2LvwHaKcEI21rkRov0pBe2iBzChnFLFTm
+         v9fwNCD0rEgRJXnaNtekWLqvQQRehh6mjXXOIO1wT3tbFbfIo/4t7LZr4dOEDZY1qqL/
+         w8WV7xaRPy+xM3JTmeWpBWQ3gjXu1zJoe1FTFjQKzmHCyZjl8aISvJdsmb+5HoIltS5L
+         dSQRoxIaVRaE8d3LERNzypdJJl1DfeNoGvYwUk5r4kpvm+S3XoA3SkSDoa3N+QZiFMcw
+         Ad6XrClb5ff/Z1mF2K6fdMdF+XSK6gLe7xEhsQMybXlW3nHDe3Vo0A05HUesrWOU4zn5
+         9spw==
+X-Gm-Message-State: AOAM532l3MZt0TRucqovk4HKkQC/2LyA+g5koK1x8/0jZCC2dC3zq2hu
+        K8B1rFHxWK5mwm4P9xVyat2+fmdGvV4=
+X-Google-Smtp-Source: ABdhPJxiegS9IXlSGKx/12qlpIj+mvTmflGrxgGgaRzu0Q6o1wRNRQgOGRIVgaLIUSuqoAihTbBPJw==
+X-Received: by 2002:aa7:da02:: with SMTP id r2mr4198492eds.231.1598476019749;
+        Wed, 26 Aug 2020 14:06:59 -0700 (PDT)
+Received: from skbuf ([86.126.22.216])
+        by smtp.gmail.com with ESMTPSA id o7sm2882960edq.53.2020.08.26.14.06.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 14:06:59 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 00:06:57 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        tanveer <tanveer.alam@puresoftware.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
+Message-ID: <20200826210657.z526xjhhkq6vkxgr@skbuf>
+References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
+ <20200822183342.6sdhp6yq6i7yvdia@skbuf>
+ <CAHp75VeNXy1jWNWMuZc0bfXruKc3=0H4ezwpE8jbj6GLYk5QBA@mail.gmail.com>
+ <20200826204108.reuy7ieqabutwuwo@skbuf>
+ <20200826204547.GU4965@sirena.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191016214845.344235056@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200826204547.GU4965@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Aug 26, 2020 at 09:45:47PM +0100, Mark Brown wrote:
+> On Wed, Aug 26, 2020 at 11:41:08PM +0300, Vladimir Oltean wrote:
+> > On Wed, Aug 26, 2020 at 10:34:04PM +0300, Andy Shevchenko wrote:
+>
+> > > Theoretically you may declare your HID in the same / similar way as
+> > > PRP0001 and use same compatible strings and all other DT properties
+> > > (when they make sense and not duplicate ACPI functionality).
+> > > But better if ACPI people can tell you (I Cc'ed Rafael and ACPI
+> > > mailing list) if it is gonna work.
+>
+> > Something doesn't look right about PRP0001, what's the catch?
+>
+> Microsoft decided not to implement support for it in Windows, it's
+> essentially there for embedded style x86 platforms running Linux so they
+> don't need to reimplement so many wheels and can just reuse existing DT
+> bindings but it causes problems if you want to run Windows (and possibly
+> some of the enterprise Linux distros, I can't remember if any of them
+> had concerns about it) on the platform.
 
-On Wed, Oct 16, 2019 at 02:51:17PM -0700, Greg Kroah-Hartman wrote:
-> From: Paul Burton <paul.burton@mips.com>
-> 
-> commit 2f2b4fd674cadd8c6b40eb629e140a14db4068fd upstream.
-> 
-> GCC 9.x automatically enables support for Loongson MMI instructions when
-> using some -march= flags, and then errors out when -msoft-float is
-> specified with:
-> 
->   cc1: error: ‘-mloongson-mmi’ must be used with ‘-mhard-float’
-> 
-> The kernel shouldn't be using these MMI instructions anyway, just as it
-> doesn't use floating point instructions. Explicitly disable them in
-> order to fix the build with GCC 9.x.
-> 
-
-I still see this problem when trying to compile fuloong2e_defconfig with
-gcc 9.x or later. Reason seems to be that the patch was applied to
-arch/mips/loongson64/Platform, but fuloong2e_defconfig uses
-arch/mips/loongson2ef/Platform.
-
-Am I missing something ?
-
-Thanks,
-Guenter
+So if a silicon vendor doesn't care about Windows, what incentive does
+it have to even register an official ACPI/PNP ID for its devices?
