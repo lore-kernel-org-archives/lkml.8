@@ -2,120 +2,98 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D5BC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DFD020678
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:04:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598483043;
-	bh=XwRld9s4bWwSDqk7OpTV0iyuBoFpuxzcSD+6/QSrZvM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=m+tLNykEpcw13DFZYO3pwc8iAnkHwDGjydsxrc5CeoYd+cUGXFtE/Bzhhaugz0bWf
-	 PCFThnxCVUJDnkhyHlYpnRJu2jPeONDVJBpf78DsZ4VVE2274xMMz4lJ4VvyGaXXpG
-	 OUesq8jnFIr+UQ4txHpPN3uClb2EzVi4XPxJH318=
+	by mail.kernel.org (Postfix) with ESMTP id A6DA920678
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 23:10:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Sr7J5md8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgHZXEC (ORCPT
+        id S1726834AbgHZXKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 19:04:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37672 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 19:10:14 -0400
+Received: from ozlabs.org ([203.11.71.1]:39269 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbgHZXEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 19:04:00 -0400
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726186AbgHZXKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 19:10:12 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 650BD21741
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 23:03:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598483039;
-        bh=XwRld9s4bWwSDqk7OpTV0iyuBoFpuxzcSD+6/QSrZvM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MUn7URfhQyTV1VF8JhUC/cDazTURdvZBO9Rga7T98BYIbyOtKnJgA5z4kQss/r4TM
-         lzyTXT+Y2Y6WObbuB3pcozz7BXDy7XYQuSpF4AkYuPD3IlBXTOya5ID869/CuP62yP
-         Wl3TyDBUf2i9y5GOsPyy3m+B+WIsIrbIZcBxOZaE=
-Received: by mail-ej1-f51.google.com with SMTP id si26so5071923ejb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 16:03:59 -0700 (PDT)
-X-Gm-Message-State: AOAM531Hf1VEJj7DhW454Uf0g22iXghg0HfhdOWJeHQEVz/m/8VoFNZp
-        1wS19R62+gi/l8i/RqqPZq7Bc0tVEIypQC1d6A==
-X-Google-Smtp-Source: ABdhPJyg/7oRktjfShagR7wzytYd2W8ziwXzaMzApSrhbBtU/OM2q8Cna8GCDosKqDdIi9fWnzLjClLR0M24ndzIs6Q=
-X-Received: by 2002:a17:906:3a41:: with SMTP id a1mr17890476ejf.260.1598483037963;
- Wed, 26 Aug 2020 16:03:57 -0700 (PDT)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BcM5Z11lMz9sTg;
+        Thu, 27 Aug 2020 09:10:10 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1598483410;
+        bh=z5ctlCqfpQSiaaUKhhW3pm7OPm/2TmtJuwJi1Rv8Ufw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Sr7J5md8r6piGynzMzHZybOXBaT9XnvSMRz5slWVrfefUev98iL/dK3363+z6DFZx
+         nxKX2a81DtgPCAt181hfG3/x2TiVIjFzoifWbhVmPVqBZcWH5pmdNUqH54iij1v6GR
+         tICKhxdmXFLY9OpMHi/uUtygb+keb2pHkLB/3kY9jbRKq3a6iF2rfMLxZwkSPl/WeZ
+         3c+n//QfbKoQtLKyUfFOF4BNrBQALWo0OPMRCyzwUV9Hpfh5CLTaShy1IwMsQWUhu8
+         6cMQoKOuaAplok+mSqO/QIV0ZhyiIyLTVWE7ASvQsjA6sv//V61aKYwYtG667LVTQd
+         YJTV9xfZanyDw==
+Date:   Thu, 27 Aug 2020 09:10:09 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warnings from perf build in Linus' tree
+Message-ID: <20200827091009.54789c17@canb.auug.org.au>
+In-Reply-To: <20200827083839.276cc0d0@canb.auug.org.au>
+References: <20200827083839.276cc0d0@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200819025829.57545-1-wanghai38@huawei.com> <CAAOTY_8-iB9sg4+-AyFpGACc2pW+ZzsJqUbvgReNcfu5kSX6Qw@mail.gmail.com>
-In-Reply-To: <CAAOTY_8-iB9sg4+-AyFpGACc2pW+ZzsJqUbvgReNcfu5kSX6Qw@mail.gmail.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Thu, 27 Aug 2020 07:03:46 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9DUUZuZO3Nu+bq-t0SyabRRqwW3B+V=--K_nHJ9sAxMg@mail.gmail.com>
-Message-ID: <CAAOTY_9DUUZuZO3Nu+bq-t0SyabRRqwW3B+V=--K_nHJ9sAxMg@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/mediatek: remove duplicate include
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Wang Hai <wanghai38@huawei.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/sh0yxupyRf/2dvxaYK2bPMO";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Wang Hai:
+--Sig_/sh0yxupyRf/2dvxaYK2bPMO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Chun-Kuang Hu <chunkuang.hu@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8821=
-=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8A=E5=8D=887:23=E5=AF=AB=E9=81=93=EF=BC=
-=9A
+Hi all,
+
+On Thu, 27 Aug 2020 08:38:39 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> Hi, Wang Hai:
->
-> Wang Hai <wanghai38@huawei.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8819=E6=97=
-=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8811:00=E5=AF=AB=E9=81=93=EF=BC=9A
-> >
-> > Remove mtk_drm_ddp.h which is included more than once
-> >
->
-> Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
->
+> /home/sfr/next/next/tools/perf/util/namespaces.c: In function 'nsinfo__ne=
+w':
+> /home/sfr/next/next/tools/perf/util/namespaces.c:139:12: note: the layout=
+ of aggregates containing vectors with 8-byte alignment has changed in GCC 5
+>   139 |   nsi->pid =3D pid;
+>       |   ~~~~~~~~~^~~~~
+>=20
+> I assume they are because I have changed all my toolcahins to gcc
+> v10 today.
 
-Applied to mediatek-drm-fixes [1], thanks.
+=46rom gcc v9, so I have no idea what the GGC 5 note is about.
+--=20
+Cheers,
+Stephen Rothwell
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
-log/?h=3Dmediatek-drm-fixes
+--Sig_/sh0yxupyRf/2dvxaYK2bPMO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Regards,
-Chun-Kuang.
+-----BEGIN PGP SIGNATURE-----
 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Wang Hai <wanghai38@huawei.com>
-> > ---
-> >  drivers/gpu/drm/mediatek/mtk_drm_drv.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/m=
-ediatek/mtk_drm_drv.c
-> > index 040a8f393fe2..a34fd805ce6d 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-> > @@ -27,7 +27,6 @@
-> >
-> >  #include "mtk_drm_crtc.h"
-> >  #include "mtk_drm_ddp.h"
-> > -#include "mtk_drm_ddp.h"
-> >  #include "mtk_drm_ddp_comp.h"
-> >  #include "mtk_drm_drv.h"
-> >  #include "mtk_drm_gem.h"
-> > --
-> > 2.17.1
-> >
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9G69EACgkQAVBC80lX
+0GxNOgf/T5P7hf3R7SSGlGzduko4UfMAL/zp/p6R5+8ICzxDqs6IXJr4fcCDbjXp
+4ajuf3ZNCdEsEI2lL9PNfGJpMx/57lR/q6Fe5HrdT1EnZ+1Bif1xFX23vNPm1/Mf
+8NCxechKgNHvbPxAp/pjc/j8AvOMQlQWF5scQ56LeZa2pPU18KjwOcQGSgJYgMPQ
+2uxhkgS4GFou98mQ5iMwHk8VzkSekwFu7A+bi8oQHfSoG9PKvrJ16VQCZElT8pNE
+MgXKS0Cr0CvudVeV5FZPXSmGJTmmfpffmSswz0+6UAjlHKyXckpKtYYcDYBCVBFR
+IyNb1piBQhllMeFpyi39NDXMFnOQPw==
+=xhtC
+-----END PGP SIGNATURE-----
+
+--Sig_/sh0yxupyRf/2dvxaYK2bPMO--
