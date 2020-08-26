@@ -2,108 +2,211 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E18C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19040C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E307B2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598439031;
-	bh=TqPevqx6D2J7PXGgLZWIHZHYHYk8i8daoX9CkV8jVM0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oMr+TP+VAWNtfk09Z71PYoBifj8uSrvORJuyPFRYZWJPmTT51Ix8yQCub0dQc7wxb
-	 OFVF9ZWWjKR8ah06tt/GNduAFyByP3tc9h8GifQ88tR62vKYZBNRRDnPomGLwg3Uvr
-	 3e305f9fApIs8sdo8I4kg6Y9EHFZaj3caNwFdSdg=
+	by mail.kernel.org (Postfix) with ESMTP id EB0B6206EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnrqKy6k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbgHZKu3 (ORCPT
+        id S1728686AbgHZKug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:50:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38872 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbgHZKt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:49:56 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96C69206EB;
-        Wed, 26 Aug 2020 10:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598438996;
-        bh=TqPevqx6D2J7PXGgLZWIHZHYHYk8i8daoX9CkV8jVM0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2sgsrLL8+6Se7RV01jW3bbRE2mvcZfKUPxov22vTodcl7jsNoAEyoN0nVtDuiV9Uy
-         YbCjL5vyGCjtkW9Gxm5wwLDgAmsvpiB284grpS1ZcdGjsR1BQyldPXZ4OTsLiXQNpw
-         4Ie/fRL6Whnaa9pcDNOXdoOByiDooJoftVzQm78I=
-Date:   Wed, 26 Aug 2020 11:49:19 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     syzbot <syzbot+fbe34b643e462f65e542@syzkaller.appspotmail.com>
-Cc:     alsa-devel@alsa-project.org, asmadeus@codewreck.org,
-        daniel.baluta@nxp.com, davem@davemloft.net, ericvh@gmail.com,
-        kuba@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        lucho@ionkov.net, netdev@vger.kernel.org, perex@perex.cz,
-        rminnich@sandia.gov, syzkaller-bugs@googlegroups.com,
-        tiwai@suse.com, v9fs-developer@lists.sourceforge.net
-Subject: Re: INFO: task can't die in p9_fd_close
-Message-ID: <20200826104919.GE4965@sirena.org.uk>
-References: <000000000000ca0c6805adc56a38@google.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ryJZkp9/svQ58syV"
-Content-Disposition: inline
-In-Reply-To: <000000000000ca0c6805adc56a38@google.com>
-X-Cookie: Should I do my BOBBIE VINTON medley?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 26 Aug 2020 06:50:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728572AbgHZKtn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:49:43 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420E3C061757;
+        Wed, 26 Aug 2020 03:49:43 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id h2so706976plr.0;
+        Wed, 26 Aug 2020 03:49:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=fNxSfFiY1tuDXOCkxl1KwXHZGTRpS8Bl3VyT4+22yAo=;
+        b=LnrqKy6kUV8a9EKcK25PoRKI9k6qjlOBP+xLiHlzbrZettbU0f4DgQtgLdNC70ibBC
+         lK/Ehv7u5BEtVEnpEdZF6c+jdXIq2UTFBgNmFEFhR2dKt5ec+qQty6/Dmj0gkThl8LTh
+         /XVDkNNHvdJhaRRzHFx3w45IZP6adC8/MPVU66BJ8ZdCGpvIBBdpzs3TX3f0vDkuCRSX
+         +BymyRY9VnnzxBQqnNpejZJhjsVSu9bvBq9+GMcZ2UtRlVSvmRTdTIfm2Db+dAZyktGX
+         JQXQRNrIACVJV61C9+SiGGI/N7xv/5h8MVQBneqoHKWQVJnpu2IsAjW7X5rZ2oOUZ/4m
+         GTGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=fNxSfFiY1tuDXOCkxl1KwXHZGTRpS8Bl3VyT4+22yAo=;
+        b=CyWMzrMRgjHMqWp//p+g+V2mUa48DlBc054M6xDN218LN6FwC1crJG37EKaetiMfU+
+         wi4E1dIf3rBRVFIto7rgWsG4Q8bo6uWk+2H3tQOS22zkrVWTb0lJb7d8fkxwy78DCpKV
+         tXZ3TmV9YGqR8bW20oUET6oWxIVbbEWxId4Pu59VGCRwCBoQCR6yscIEJUZQwkCatIYf
+         IlmDimh4SMWnfC+NR78veSGwnGlJfAbDO6QaXFwqdl1ml+xmIU+a0RaHfCi8R8XoAywG
+         lmdt6oFzs1tH2JP/gduCVvUhtKiCW0Ubc5jcserpLSKQM3QenHezdcSkHkBouvWDcWsK
+         sm4g==
+X-Gm-Message-State: AOAM530srJ8GKapvrErirSr1wc1ssToY6dXaa9tKBPT+nen6bAUAmZEZ
+        HHasHLpi6IT+y4DU7PQg0rc=
+X-Google-Smtp-Source: ABdhPJwtA/oSnHx0Arv0mc9TbHEnQGYbVoG5raqyiIQx3CBTlOSm4BqHHLhZxJ02XDVfMRSXGVAX6Q==
+X-Received: by 2002:a17:90b:410d:: with SMTP id io13mr5052761pjb.63.1598438982873;
+        Wed, 26 Aug 2020 03:49:42 -0700 (PDT)
+Received: from localhost.localdomain ([2402:7500:56a:2197:d2eb:7e49:dfa1:a882])
+        by smtp.gmail.com with ESMTPSA id d127sm2540349pfc.175.2020.08.26.03.49.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Aug 2020 03:49:42 -0700 (PDT)
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+To:     matthias.bgg@gmail.com, robh+dt@kernel.org
+Cc:     lgirdwood@gmail.com, broonie@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, gene_chen@richtek.com,
+        Wilma.Wu@mediatek.com, shufan_lee@richtek.com,
+        cy_huang@richtek.com, benjamin.chao@mediatek.com
+Subject: [PATCH v4 2/2] dt-bindings: regulator: mt6360: Add DT binding documentation
+Date:   Wed, 26 Aug 2020 18:49:18 +0800
+Message-Id: <1598438958-26802-3-git-send-email-gene.chen.richtek@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1598438958-26802-1-git-send-email-gene.chen.richtek@gmail.com>
+References: <1598438958-26802-1-git-send-email-gene.chen.richtek@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Gene Chen <gene_chen@richtek.com>
 
---ryJZkp9/svQ58syV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add a devicetree binding documentation for the mt6360 regulator driver.
 
-On Wed, Aug 26, 2020 at 03:38:15AM -0700, syzbot wrote:
+Signed-off-by: Gene Chen <gene_chen@richtek.com>
+---
+ .../bindings/regulator/mt6360-regulator.yaml       | 113 +++++++++++++++++++++
+ 1 file changed, 113 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mt6360-regulator.yaml
 
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D10615b36900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Da61d44f28687f=
-508
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dfbe34b643e462f6=
-5e542
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D15920a05900=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D13a78539900000
->=20
-> The issue was bisected to:
->=20
-> commit af3acca3e35c01920fe476f730dca7345d0a48df
-> Author: Daniel Baluta <daniel.baluta@nxp.com>
-> Date:   Tue Feb 20 12:53:10 2018 +0000
->=20
->     ASoC: ak5558: Fix style for SPDX identifier
+diff --git a/Documentation/devicetree/bindings/regulator/mt6360-regulator.yaml b/Documentation/devicetree/bindings/regulator/mt6360-regulator.yaml
+new file mode 100644
+index 0000000..a462d99
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/mt6360-regulator.yaml
+@@ -0,0 +1,113 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/mt6360-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: MT6360 Regulator from MediaTek Integrated
++
++maintainers:
++  - Gene Chen <gene_chen@richtek.com>
++
++description: |
++  list of regulators provided by this controller, must be named
++  after their hardware counterparts buck1/2 or ldo1/2/3/5/6/7
++
++properties:
++  compatible:
++    const: mediatek,mt6360-regulator
++
++  LDO_VIN1-supply:
++    description: Input supply phandle(s) for LDO1/2/3
++  LDO_VIN2-supply:
++    description: Input supply phandle(s) for LDO5
++  LDO_VIN3-supply:
++    description: Input supply phandle(s) for LDO6/7
++
++patternProperties:
++  "^buck[12]$":
++    $ref: "regulator.yaml#"
++
++  "^ldo[123567]$":
++    $ref: "regulator.yaml#"
++
++required:
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/regulator/mediatek,mt6360-regulator.h>
++    regulator {
++      compatible = "mediatek,mt6360-regulator";
++      LDO_VIN3-supply = <&BUCK2>;
++      buck1 {
++        regulator-compatible = "BUCK1";
++        regulator-name = "mt6360,buck1";
++        regulator-min-microvolt = <300000>;
++        regulator-max-microvolt = <1300000>;
++        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++             MT6360_OPMODE_LP
++             MT6360_OPMODE_ULP>;
++      };
++      BUCK2: buck2 {
++        regulator-compatible = "BUCK2";
++        regulator-name = "mt6360,buck2";
++        regulator-min-microvolt = <300000>;
++        regulator-max-microvolt = <1300000>;
++        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++             MT6360_OPMODE_LP
++             MT6360_OPMODE_ULP>;
++      };
++      ldo6 {
++        regulator-compatible = "LDO6";
++        regulator-name = "mt6360,ldo6";
++        regulator-min-microvolt = <500000>;
++        regulator-max-microvolt = <2100000>;
++        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++             MT6360_OPMODE_LP>;
++      };
++      ldo7 {
++        regulator-compatible = "LDO7";
++        regulator-name = "mt6360,ldo7";
++        regulator-min-microvolt = <500000>;
++        regulator-max-microvolt = <2100000>;
++        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++             MT6360_OPMODE_LP>;
++      };
++      ldo1 {
++        regulator-compatible = "LDO1";
++        regulator-name = "mt6360,ldo1";
++        regulator-min-microvolt = <1200000>;
++        regulator-max-microvolt = <3600000>;
++        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++             MT6360_OPMODE_LP>;
++      };
++        ldo2 {
++        regulator-compatible = "LDO2";
++        regulator-name = "mt6360,ldo2";
++        regulator-min-microvolt = <1200000>;
++        regulator-max-microvolt = <3600000>;
++        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++             MT6360_OPMODE_LP>;
++      };
++      ldo3 {
++        regulator-compatible = "LDO3";
++        regulator-name = "mt6360,ldo3";
++        regulator-min-microvolt = <1200000>;
++        regulator-max-microvolt = <3600000>;
++        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++             MT6360_OPMODE_LP>;
++      };
++      ldo5 {
++        regulator-compatible = "LDO5";
++        regulator-name = "mt6360,ldo5";
++        regulator-min-microvolt = <2700000>;
++        regulator-max-microvolt = <3600000>;
++        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
++             MT6360_OPMODE_LP>;
++      };
++    };
++...
+-- 
+2.7.4
 
-This bisection is clearly not accurate, I'm guessing the bug is
-intermittent and it was just luck that landed it on this commit.
-
---ryJZkp9/svQ58syV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9GPi8ACgkQJNaLcl1U
-h9DyfAf8C2paLbOwHHdDVOi687LcmeI2dZuyjT7chCNm5YaFacrU8e5nRF/fnG6y
-G350XTQP7ygvtDz3oeIoEzMn8bJa7Xzeo03wiNm2JrUiMFRT6/S77JOk5g1d75xv
-tVwBelb7UdHY869OzQLeLc7exArpn9SsuSpRXkwqrY3EO4Ki/ZwwQPgOPrtYNdLM
-x1gX63pYxXoLCaHV3QHnselGfBIcz551NPsJJFowk4+ztuCDvaCp1pCYQpfaA+mS
-RU3Ttf+3q8xnCtvFF/Fz8deIGx9sXK9SMlc/uLC9GwhuP57oJ3G3O+JKLiaD9ONf
-rdK9/4syv9inh3Wwk3n22yqnKN96hw==
-=g5nP
------END PGP SIGNATURE-----
-
---ryJZkp9/svQ58syV--
