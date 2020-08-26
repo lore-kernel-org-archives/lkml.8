@@ -2,72 +2,91 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40436C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5FDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEE8A207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47476207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598469177;
-	bh=8Zc/chi3NxO+6elc47lH3tAJjLn9eDjGU2FGAXhKkhc=;
+	s=default; t=1598469193;
+	bh=AE8WdGpJPbWaT/Lz0OQ6sCivaAFfLcL5G+HUYMNndH4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yrKSDGHM5okrO31s5SY9QOrXxwe/L2hwG0rHx8qwXd1XuYfCuHCBEuey8GKKTfb8d
-	 lyFOp2pn1y54r2xIsQ1i7G3VOcx3E4sT7rtq/Zham5IEywbEYi1xq3G/QX0gpqv5Yz
-	 ZCX4jjiMkLnh/XC8uw6+/Laf4MLDN9ICPfHiLfy8=
+	b=0llz4AM6Soc9tqmv262cvq3gaIkVoD/3ERVDtzdc8e12pfyK8d6OK/0rm0bPu3QYf
+	 k9Deb2OxBo0cL0k2jyJOrnGxMZIiQaSOkkXT/t1dtFiSuuuQS708LQ7YGo/MWpS26L
+	 cdJBxBTfUk/5FrjkvgWHKiRNuy9z3cUC0WJJbSvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgHZTMz (ORCPT
+        id S1727040AbgHZTNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:12:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 15:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726880AbgHZTMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:12:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726880AbgHZTNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:13:00 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90240207BC;
-        Wed, 26 Aug 2020 19:12:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BABDF207BC;
+        Wed, 26 Aug 2020 19:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598469173;
-        bh=8Zc/chi3NxO+6elc47lH3tAJjLn9eDjGU2FGAXhKkhc=;
+        s=default; t=1598469179;
+        bh=AE8WdGpJPbWaT/Lz0OQ6sCivaAFfLcL5G+HUYMNndH4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yE0LDUHi83oMtbJyjIl8P75e9ikwuBST72n9tjbj70ZamvIXQ8YrwaaPY13cODlFB
-         6fJushKd31li5vOpUkPq4qtm/GJLRu0lqCY4oQs/DGyTHfYbVQC86ll3tKq8gdmMzE
-         pOdAu7NcCpS0hMnLbZ2hxIQU6wYRSYkqkHH0iTec=
-Date:   Wed, 26 Aug 2020 21:13:07 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-usb@vger.kernel.org
-Subject: Re: [GIT PULL] USB fixes for 5.9-rc3
-Message-ID: <20200826191307.GA71779@kroah.com>
-References: <20200826134315.GA3882506@kroah.com>
- <CAHk-=wiMMTpFxd9q7roL+L6dZb3JoQYCF0uP4+7RNHFHbfC29Q@mail.gmail.com>
+        b=Cyj6dxspCv8rogcCDSzXgfwWVul6bJpc3LnfQB7CHJ4CMDxBASbHcZtfaAtzjjhgt
+         s4Yb4w+dAeOTQG8kYdQQ4VNxfvEaHrNmPylfwhhpCw5QxN2PqtuhmHmFrft53FtKcw
+         wVuQDLZ0BZ458wjjKZYVMny/AkV9anY4rKYCrRJ8=
+Date:   Wed, 26 Aug 2020 14:18:59 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Alex Dewar <alex.dewar90@gmail.com>
+Cc:     dennis.dalessandro@intel.com, dledford@redhat.com,
+        gustavo@embeddedor.com, jgg@ziepe.ca, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, mike.marciniszyn@intel.com,
+        roland@purestorage.com
+Subject: Re: [PATCH v2 1/2] IB/qib: remove superfluous fallthrough statements
+Message-ID: <20200826191859.GB2671@embeddedor>
+References: <64d7e1c9-9c6a-93f3-ce0a-c24b1c236071@gmail.com>
+ <20200825171242.448447-1-alex.dewar90@gmail.com>
+ <20200825193327.GA5504@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wiMMTpFxd9q7roL+L6dZb3JoQYCF0uP4+7RNHFHbfC29Q@mail.gmail.com>
+In-Reply-To: <20200825193327.GA5504@embeddedor>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 10:18:23AM -0700, Linus Torvalds wrote:
-> On Wed, Aug 26, 2020 at 6:43 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+Hi,
+
+On Tue, Aug 25, 2020 at 02:33:27PM -0500, Gustavo A. R. Silva wrote:
+> On Tue, Aug 25, 2020 at 06:12:42PM +0100, Alex Dewar wrote:
+> > Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
+> > erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
+> > were later converted to fallthrough statements by commit df561f6688fe
+> > ("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
+> > warning about unreachable code.
 > >
-> > USB fixes for 5.9-rc3
 > 
-> I'm dropping this, since it seems to break things more than it fixes.
+> It's worth mentioning that this warning is triggered only by compilers
+> that don't support __attribute__((__fallthrough__)), which has been
+> supported since GCC 7.1.
 > 
-> I see that the breakage is already figured out, but I'll just wait for
-> the next fixes pull with the fix for the problem.
+> > Remove the fallthrough statements.
+> > 
+> > Addresses-Coverity: ("Unreachable code")
+> > Fixes: 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
+> > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> 
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
 
-No worries, I'll fix this up and send a new pull request later this
-week, sorry for the trouble,
+I can take this in my tree for 5.9-rc3.
 
-greg k-h
+Thanks
+--
+Gustavo
