@@ -2,175 +2,88 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 548B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7055C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF952075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:14:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598458474;
-	bh=oKZFw6OKcCRaJR4UDthOfPIs8jXcSZfT0W9tTH84ZMU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xkskYadSdrgBix8ks4x/sIxY9lEaexfEf0iVXRFIFlLy/68jjJxxlbf86Cv2qC7sf
-	 IgjrG270CLMdYGo4xlOpLL2zTVY3UHYaXKKyBoVxuZgcEs4g5TFQpcKHclGodZMxot
-	 XdiMn9eoE65eVE9O1U4bZJRInS7BsEYwRqlnxLKU=
+	by mail.kernel.org (Postfix) with ESMTP id 9DBD62075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgHZQOb (ORCPT
+        id S1727923AbgHZQOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:14:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgHZQOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:14:04 -0400
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ADD522BED
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 16:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598458443;
-        bh=oKZFw6OKcCRaJR4UDthOfPIs8jXcSZfT0W9tTH84ZMU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WYmronn5y6+3WxA+3lGOdD6xi9OvCfnQzq+xGa2yW2+XvVTlhh2B+67ZAgdDA3K3M
-         lRG0f8EVz/NKFcb5ip097k+vC59HLFTD8KHnLFvC45htahMSk8D1h1cOqpMV7V000/
-         2XITd34xZZCXHKCGDTQUbhYaEc+IWfZWckm7SF0c=
-Received: by mail-wr1-f48.google.com with SMTP id y3so2386865wrl.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:14:03 -0700 (PDT)
-X-Gm-Message-State: AOAM531/IYul2ZKOyqWpaTYteaafpaa4BFDwy4BaIP7SeUUBZYgjWMpH
-        YfegCoXHMo22WBDgF/wA943MjnisA4fTs4W5rppAgQ==
-X-Google-Smtp-Source: ABdhPJwAbzxxlNHiuVxEKmNVT3p/k5xoMod3W+X/CpF95phFRbTBDJNyJX7NjguSFEFJNVQgYBihhImtDD3p/yTOrHE=
-X-Received: by 2002:adf:f442:: with SMTP id f2mr5729898wrp.184.1598458441777;
- Wed, 26 Aug 2020 09:14:01 -0700 (PDT)
+        Wed, 26 Aug 2020 12:14:54 -0400
+Received: from smtprelay0065.hostedemail.com ([216.40.44.65]:51500 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727860AbgHZQOW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:14:22 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 420C018224506;
+        Wed, 26 Aug 2020 16:14:20 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: rail44_10129d627065
+X-Filterd-Recvd-Size: 2123
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 26 Aug 2020 16:14:19 +0000 (UTC)
+Message-ID: <973f4d54da796db4fcc9b643b10889cbc8839989.camel@perches.com>
+Subject: Re: [PATCH v1] driver core: Annotate dev_err_probe() with
+ __must_check
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Date:   Wed, 26 Aug 2020 09:14:17 -0700
+In-Reply-To: <20200826155507.GV1891694@smile.fi.intel.com>
+References: <20200826104459.81979-1-andriy.shevchenko@linux.intel.com>
+         <9635eaa4ccc1141fb0dd8c3687f46da7149206ad.camel@perches.com>
+         <20200826155507.GV1891694@smile.fi.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-References: <20200826115357.3049-1-graf@amazon.com> <87k0xlv5w5.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87k0xlv5w5.fsf@nanos.tec.linutronix.de>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 26 Aug 2020 09:13:49 -0700
-X-Gmail-Original-Message-ID: <CALCETrX-8a61k03+XJop=k11-TkE+7JOiGTH=81sHXPmXsA+Tw@mail.gmail.com>
-Message-ID: <CALCETrX-8a61k03+XJop=k11-TkE+7JOiGTH=81sHXPmXsA+Tw@mail.gmail.com>
-Subject: Re: [PATCH] x86/irq: Preserve vector in orig_ax for APIC code
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Alexander Graf <graf@amazon.com>, X86 ML <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Avi Kivity <avi@scylladb.com>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>, robketr@amazon.de,
-        Amos Kong <amos@scylladb.com>, Brian Gerst <brgerst@gmail.com>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 7:27 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Wed, Aug 26 2020 at 13:53, Alexander Graf wrote:
-> > Commit 633260fa143 ("x86/irq: Convey vector as argument and not in ptregs")
-> > changed the handover logic of the vector identifier from ~vector in orig_ax
-> > to purely register based. Unfortunately, this field has another consumer
-> > in the APIC code which the commit did not touch. The net result was that
-> > IRQ balancing did not work and instead resulted in interrupt storms, slowing
-> > down the system.
->
-> The net result is an observationof the symptom but that does not explain
-> what the underlying technical issue is.
->
-> > This patch restores the original semantics that orig_ax contains the vector.
-> > When we receive an interrupt now, the actual vector number stays stored in
-> > the orig_ax field which then gets consumed by the APIC code.
-> >
-> > To ensure that nobody else trips over this in the future, the patch also adds
-> > comments at strategic places to warn anyone who would refactor the code that
-> > there is another consumer of the field.
-> >
-> > With this patch in place, IRQ balancing works as expected and performance
-> > levels are restored to previous levels.
->
-> There's a lot of 'This patch and we' in that changelog. Care to grep
-> for 'This patch' in Documentation/process/ ?
->
-> > diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-> > index df8c017..22e829c 100644
-> > --- a/arch/x86/entry/entry_32.S
-> > +++ b/arch/x86/entry/entry_32.S
-> > @@ -727,7 +727,7 @@ SYM_CODE_START_LOCAL(asm_\cfunc)
-> >       ENCODE_FRAME_POINTER
-> >       movl    %esp, %eax
-> >       movl    PT_ORIG_EAX(%esp), %edx         /* get the vector from stack */
-> > -     movl    $-1, PT_ORIG_EAX(%esp)          /* no syscall to restart */
-> > +     /* keep vector on stack for APIC's irq_complete_move() */
->
-> Yes that's fixing your observed wreckage, but it introduces a worse one.
->
-> user space
->   -> interrupt
->        push vector into orig_ax (values are in the ranges of 0-127 and -128 - 255
->                                  except for the system vectors which do
->                                  not go through this code)
->       handle()
->       ...
->       exit_to_user_mode_loop()
->          arch_do_signal()
->             /* Did we come from a system call? */
->             if (syscall_get_nr(current, regs) >= 0) {
->
->                ---> BOOM for any vector 0-127 because syscall_get_nr()
->                          resolves to regs->orig_ax
->
-> Going to be fun to debug.
->
-> The below nasty hack cures it, but I hate it with a passion. I'll look
-> deeper for a sane variant.
->
+On Wed, 2020-08-26 at 18:55 +0300, Andy Shevchenko wrote:
+> On Wed, Aug 26, 2020 at 08:44:30AM -0700, Joe Perches wrote:
+> > On Wed, 2020-08-26 at 13:44 +0300, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > > -int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
+> > > +int __must_check dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
+> > 
+> > Generally, the __must_check should go before the return type
+> > and the extern isn't necessary and is also generally not used
+> > in device.h, so I'd prefer:
+> > 
+> > __printf(3, 4)
+> > __must_check int dev_err_probe(...);
+> 
+> I grepped the current code... I don't see support of your preference.
+> Maybe I missed something? (I'm talking about include/*)
 
-Fundamentally, the way we overload orig_ax is problematic.  I have a
-half-written series to improve it, but my series is broken.  I think
-it's fixable, though.
+Hey Andy.
 
-First is this patch to use some __csh bits to indicate the entry type.
-As far as I know, this patch is correct:
+The __must_check location is just personal belief
+as it makes grep significantly easier
 
-https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/entry&id=dfff54208072a27909ae97ebce644c251a233ff2
+<qualifiers> type function(args...)
 
-Then I wrote this incorrect patch:
+is a much easier grep pattern than
 
-https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/entry&id=3a5087acb8a2cc1e88b1a55fa36c2f8bef370572
+<qualifiers> type <qualifiers> function(args...)
 
-That one is wrong because the orig_ax wreckage seems to have leaked
-into user ABI -- user programs think that orig_ax has certain
-semantics on user-visible entries.
+extern function declarations are generally unnecessary
+and should be avoided.
 
-But I think that the problem in this thread could be fixed quite
-nicely by the first patch, plus a new CS_ENTRY_IRQ and allocating
-eight bits of __csh to store the vector.  Then we could read out the
-vector.
+cheers, Joe
 
-
---Andy
