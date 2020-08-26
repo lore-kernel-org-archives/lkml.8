@@ -2,140 +2,106 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB3CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D04C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 999A0206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6085A206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598458656;
+	bh=zQGwb1qDSUN0JCzsu/N2WQIyjpDwlafFIfOmIe689KM=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=ZcZdxvSKz0mckk11pb+E3RhPTsYJWcU/Iz7HC2hOfFWAICp9hi/I6jAq9MLRyHo7x
+	 HyKshzogbXOUP0BKNoS+Fk+w2dCrbY9tOCovMXx/63pSt7jGg6sWiwQapNIuWqU+un
+	 tZ4+r3gOSS1eBnhptapIhcywEFuy3mF27/PKSiZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgHZQQg (ORCPT
+        id S1727878AbgHZQRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:16:36 -0400
-Received: from mga12.intel.com ([192.55.52.136]:62689 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbgHZQQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:16:14 -0400
-IronPort-SDR: VdSLH9iIIXmMDUV7APn4CBKhRcL9w9bXoJPZooklM3zZtQpdQFX7TeOQFPOR6SqGkA2rEzuLI5
- k1N1qfbYePAQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="135874281"
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="135874281"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:16:14 -0700
-IronPort-SDR: OIYvC+XQ9djlCtX2sCZbdyEnMHzvhh87wxEjs2vhS/h1aHOXy5VTnF62nvEyJazh3CpsNftCTM
- Td4Dk+5T129g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="444102622"
-Received: from yliang6-mobl1.ccr.corp.intel.com (HELO [10.254.84.68]) ([10.254.84.68])
-  by orsmga004.jf.intel.com with ESMTP; 26 Aug 2020 09:16:13 -0700
-Subject: Re: [PATCH V2 2/9] PCI: Extend Root Port Driver to support RCEC
-To:     Sean V Kelley <sean.v.kelley@intel.com>, bhelgaas@google.com,
-        Jonathan.Cameron@huawei.com, rjw@rjwysocki.net,
-        ashok.raj@intel.com, tony.luck@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-References: <20200804194052.193272-1-sean.v.kelley@intel.com>
- <20200804194052.193272-3-sean.v.kelley@intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <fe1e4832-a634-66d8-96dc-4ad980dabd1a@linux.intel.com>
-Date:   Wed, 26 Aug 2020 09:16:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 26 Aug 2020 12:17:34 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38598 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726745AbgHZQRZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:17:25 -0400
+Received: by mail-ed1-f66.google.com with SMTP id b2so2248827edw.5;
+        Wed, 26 Aug 2020 09:17:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=laWDGcI0X9wsLJOKujDeA1CnpKtg4JiaZl3VvU6mRis=;
+        b=Yso8pcDs7StuKbqxo7YfPxzXF+ArWOAdQ7s5J3Di2/5xW4VxZjFl1qv8dkjURDPC8x
+         x/7BI+2vIOXPZsAq6S8KKIH/qf1ndtXv7ZQND6vWVGUkRv1OpVkrVcvozih75igf//D3
+         +KavaylnD8xSwYW5HGiduFpJ44mxm8dsnRKa1+BPPUdGYJa2AqJkWfrvRBVF9f1mbS9N
+         ErIfd5LNCxPhVLcVZ5TnbGCdt3MvF0T3yLSMt7ZHdyBupLGggCOsLYVOh2gdfMa7t+Xg
+         Zmc+U9rpNEOY56msVdCMoW+PEbKYsD/CQAy5lpQDq7S0dvWCvVGqWN3CJ5yyhgtdC3tc
+         B6fw==
+X-Gm-Message-State: AOAM531ReCFTiMTpgYE9Okec05LEG3e1i48ikCqT65udH8h827LEYa3m
+        1iRClSdRgAeKAw8lkKmDw+Q=
+X-Google-Smtp-Source: ABdhPJwDaFNcHPrTYdLriZtJcxNZ110E7a9YGPHsFImoDK7pqL5BMNNSt1z6y1v86s6eweEOR3zqAQ==
+X-Received: by 2002:aa7:d70a:: with SMTP id t10mr12649505edq.161.1598458642874;
+        Wed, 26 Aug 2020 09:17:22 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id p9sm2325797ejg.120.2020.08.26.09.17.21
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Aug 2020 09:17:22 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 18:17:19 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH 08/16] iio: adc: stm32: Simplify with dev_err_probe()
+Message-ID: <20200826161719.GB31748@kozik-lap>
+References: <20200826145153.10444-1-krzk@kernel.org>
+ <20200826145153.10444-8-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200804194052.193272-3-sean.v.kelley@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200826145153.10444-8-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/4/20 12:40 PM, Sean V Kelley wrote:
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+On Wed, Aug 26, 2020 at 04:51:45PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and also it prints the error value.
 > 
-> If a Root Complex Integrated Endpoint (RCiEP) is implemented, errors may
-> optionally be sent to a corresponding Root Complex Event Collector (RCEC).
-> Each RCiEP must be associated with no more than one RCEC. Interface errors
-> are reported to the OS by RCECs.
-> 
-> For an RCEC (technically not a Bridge), error messages "received" from
-> associated RCiEPs must be enabled for "transmission" in order to cause a
-> System Error via the Root Control register or (when the Advanced Error
-> Reporting Capability is present) reporting via the Root Error Command
-> register and logging in the Root Error Status register and Error Source
-> Identification register.
-> 
-> Given the commonality with Root Ports and the need to also support AER
-> and PME services for RCECs, extend the Root Port driver to support RCEC
-> devices through the addition of the RCEC Class ID to the driver
-> structure.
-> 
-> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->   drivers/pci/pcie/portdrv_core.c | 8 ++++----
->   drivers/pci/pcie/portdrv_pci.c  | 5 ++++-
->   2 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 50a9522ab07d..5d4a400094fc 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -234,11 +234,11 @@ static int get_port_device_capability(struct pci_dev *dev)
->   #endif
->   
->   	/*
-> -	 * Root ports are capable of generating PME too.  Root Complex
-> -	 * Event Collectors can also generate PMEs, but we don't handle
-> -	 * those yet.
-> +	 * Root ports and Root Complex Event Collectors are capable
-> +	 * of generating PME too.
->   	 */
-> -	if (pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT &&
-> +	if ((pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
-> +	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC) &&
->   	    (pcie_ports_native || host->native_pme)) {
->   		services |= PCIE_PORT_SERVICE_PME;
-What about AER service? Don't you need to enable it for RCEC?
->   
-> diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-> index 3a3ce40ae1ab..4d880679b9b1 100644
-> --- a/drivers/pci/pcie/portdrv_pci.c
-> +++ b/drivers/pci/pcie/portdrv_pci.c
-> @@ -106,7 +106,8 @@ static int pcie_portdrv_probe(struct pci_dev *dev,
->   	if (!pci_is_pcie(dev) ||
->   	    ((pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT) &&
->   	     (pci_pcie_type(dev) != PCI_EXP_TYPE_UPSTREAM) &&
-> -	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)))
-> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM) &&
-> +	     (pci_pcie_type(dev) != PCI_EXP_TYPE_RC_EC)))
->   		return -ENODEV;
->   
->   	status = pcie_port_device_register(dev);
-> @@ -195,6 +196,8 @@ static const struct pci_device_id port_pci_ids[] = {
->   	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x00), ~0) },
->   	/* subtractive decode PCI-to-PCI bridge, class type is 060401h */
->   	{ PCI_DEVICE_CLASS(((PCI_CLASS_BRIDGE_PCI << 8) | 0x01), ~0) },
-> +	/* handle any Root Complex Event Collector */
-> +	{ PCI_DEVICE_CLASS(((PCI_CLASS_SYSTEM_RCEC << 8) | 0x00), ~0) },
->   	{ },
->   };
->   
-> 
+>  drivers/iio/adc/stm32-adc-core.c  | 62 ++++++++++++-------------------
+>  drivers/iio/adc/stm32-adc.c       | 10 ++---
+>  drivers/iio/adc/stm32-dfsdm-adc.c | 10 ++---
+>  3 files changed, 30 insertions(+), 52 deletions(-)
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+For this one I have a follow up - I found more of places for conversion.
+I will send v2 for this one only.
+
+Best regards,
+Krzysztof
+
