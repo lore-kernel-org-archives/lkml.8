@@ -2,142 +2,167 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB35EC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:14:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB46C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD9FA2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:14:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C9832080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:15:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SaHBFhxs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgHZSOk (ORCPT
+        id S1726938AbgHZSO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:14:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:49688 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726241AbgHZSOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:14:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF4DA101E;
-        Wed, 26 Aug 2020 11:14:36 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6133E3F71F;
-        Wed, 26 Aug 2020 11:14:31 -0700 (PDT)
-Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
-To:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org
-Cc:     Heiko Stuebner <heiko@sntech.de>, kvm@vger.kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        dri-devel@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-tegra@vger.kernel.org, Julien Grall <julien.grall@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        linux-samsung-soc@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        linux-mediatek@lists.infradead.org,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        virtualization@lists.linux-foundation.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20191221150402.13868-1-murphyt7@tcd.ie>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <03caf286-09e8-a072-8d3a-b6bcca991516@arm.com>
-Date:   Wed, 26 Aug 2020 19:14:28 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 26 Aug 2020 14:14:58 -0400
+Received: from mail-co1nam11on2056.outbound.protection.outlook.com ([40.107.220.56]:41184
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726845AbgHZSOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:14:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lPbxvr3SLWPQZrnWepK6/LHPwDlfKTrft3+xEPRvFXCU8BD/WHUo4mtJmN6POpEK3DiNOwePvO6KDQySFY3iPDquLEd7EiLKiutbH8UQdQw2lTaa8Qt9tQLs8dUMPILAf87i9qBUFnjm/pXKxRXmq9xl2/1Hn7tiK+vEfKHehRx80L8n6AVghRsN40rKd3cFxssighWStnsK9OazQjkmWLaEigTGKRNTZPnzSIESljhsJX5SYA5HVIyzqqh5AVLWW6HmtiGeqqdSPlzANtj0nKmEBNkSRdu4bK0EKcH8p7cccAk0Q5soAJmeB4dDO/v0oTCLRCMxbwh1R26qK+t7aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BVILtDz/JeMcC9222j4m8DBYBN1Z2uVfJ5OOvYUEhfA=;
+ b=KKrowVlC+mZI4IdpT3+It8OkZp0JKFf734TE6V8GfcCRXsuTyo+P+p0214yC6cNEadq1o2LwTqWdQXWiSwkWdxPTcoHhRCwHDbT3amZd96KNTUdUjW+llYJfuTBkC5JL1TsnZ6jfgnKntweQ3GXCz2tQbgjAGZSCaH5mivqcRZTtpOvR2OBdc5AdwagiDxPIh7Qw5NWnpXRweL4hh6itBoCrZe/KXlEWsNr4ZWRN0hmCkBsz2cmuOFumENrF0+IplHLggJ07zI4iAifMjCarKLD14MfoyhJsHcfjX6d+pc5DcfUAAa4RTUqA9YdUk1T9GK0lAPa2O8x4juHXNc3Yqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BVILtDz/JeMcC9222j4m8DBYBN1Z2uVfJ5OOvYUEhfA=;
+ b=SaHBFhxshGcV5LsL6hNwCAM2LVULgdW4HT61bQwBE+R2R81crGSFwQdTl7ZkMjl3Zbe5ypwKXUGDqG3roxzzZwHvSEUUaK9EdnCYLTOTPusxQdtwgyS8s23bNzRTZNbLs8/l1CGquPyB2PYatkpW926Zo+erjh7JWrTVne9/fjQ=
+Received: from DM6PR11CA0009.namprd11.prod.outlook.com (2603:10b6:5:190::22)
+ by DM6PR02MB5436.namprd02.prod.outlook.com (2603:10b6:5:7d::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Wed, 26 Aug
+ 2020 18:14:47 +0000
+Received: from CY1NAM02FT035.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:5:190:cafe::bc) by DM6PR11CA0009.outlook.office365.com
+ (2603:10b6:5:190::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
+ Transport; Wed, 26 Aug 2020 18:14:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT035.mail.protection.outlook.com (10.152.75.186) with Microsoft SMTP
+ Server id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 18:14:46
+ +0000
+Received: from [149.199.38.66] (port=50203 helo=smtp.xilinx.com)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <anand.ashok.dumbre@xilinx.com>)
+        id 1kAzw7-0000G1-Bb; Wed, 26 Aug 2020 11:14:15 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by smtp.xilinx.com with smtp (Exim 4.63)
+        (envelope-from <anand.ashok.dumbre@xilinx.com>)
+        id 1kAzwc-0000P0-Eb; Wed, 26 Aug 2020 11:14:46 -0700
+Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07QIEgOK028983;
+        Wed, 26 Aug 2020 11:14:42 -0700
+Received: from [172.19.2.102] (helo=xsjanandash50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <anand.ashok.dumbre@xilinx.com>)
+        id 1kAzwY-0000OR-L5; Wed, 26 Aug 2020 11:14:42 -0700
+From:   Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, michal.simek@xilinx.com, git@xilinx.com,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     anandash@xilinx.com,
+        Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
+Subject: [PATCH v2] iio: core: Fix IIO_VAL_FRACTIONAL calculation for negative values
+Date:   Wed, 26 Aug 2020 11:14:36 -0700
+Message-Id: <1598465676-28912-1-git-send-email-anand.ashok.dumbre@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-In-Reply-To: <20191221150402.13868-1-murphyt7@tcd.ie>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: ad05ed34-96a7-491d-07ce-08d849ebea29
+X-MS-TrafficTypeDiagnostic: DM6PR02MB5436:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB543640FAB8EBC3504DA42A3CA9540@DM6PR02MB5436.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:597;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: InDum2mdLljtHonlv6N+sgGGnXzJ2iIhGSSHzWOPILRY2kQDxR9j4H1scnSJ9flfyFDDE99CFe9xgbEF04S0dsVnyCXvX9stmz8baPhqXkWATTUWKQQH4zOwlwwgwDl0slD4di2epC8uQzgiNHZbX5ZkqBBvWrkFYN5J0HwKB5x3t+3ndAQLeWb84slw7LiguEUATs8NoOVcxHwLTxPOXFHgXkbVm6FlyLqCHAbZUflketch0th+yb1czcN2qizIKIenhuaecdziLjXMloirC2w+14HgKu7OHoDNMG82XanUSgjKmLE/+w8KTG6SDKNxwGD/66iHutlzTiq/QdM4qMFMdDkK65zoslF31w0OJ8QsOgcgva91bMjZBX35d5qKjIl10k5pfYT0FXm4qlWIyQ==
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(396003)(39860400002)(136003)(346002)(376002)(46966005)(356005)(36756003)(2616005)(2906002)(6666004)(336012)(82310400002)(426003)(186003)(107886003)(478600001)(81166007)(9786002)(70206006)(83380400001)(8676002)(82740400003)(8936002)(70586007)(4326008)(47076004)(26005)(5660300002)(316002)(7696005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 18:14:46.7524
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ad05ed34-96a7-491d-07ce-08d849ebea29
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT035.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5436
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+Fixes IIO_VAL_FRACTIONAL for case when the result is negative and
+exponent is 0.
 
-On 2019-12-21 15:03, Tom Murphy wrote:
-> This patchset converts the intel iommu driver to the dma-iommu api.
-> 
-> While converting the driver I exposed a bug in the intel i915 driver which causes a huge amount of artifacts on the screen of my laptop. You can see a picture of it here:
-> https://github.com/pippy360/kernelPatches/blob/master/IMG_20191219_225922.jpg
-> 
-> This issue is most likely in the i915 driver and is most likely caused by the driver not respecting the return value of the dma_map_ops::map_sg function. You can see the driver ignoring the return value here:
-> https://github.com/torvalds/linux/blob/7e0165b2f1a912a06e381e91f0f4e495f4ac3736/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c#L51
-> 
-> Previously this didn’t cause issues because the intel map_sg always returned the same number of elements as the input scatter gather list but with the change to this dma-iommu api this is no longer the case. I wasn’t able to track the bug down to a specific line of code unfortunately.
-> 
-> Could someone from the intel team look at this?
-> 
-> 
-> I have been testing on a lenovo x1 carbon 5th generation. Let me know if there’s any more information you need.
-> 
-> To allow my patch set to be tested I have added a patch (patch 8/8) in this series to disable combining sg segments in the dma-iommu api which fixes the bug but it doesn't fix the actual problem.
-> 
-> As part of this patch series I copied the intel bounce buffer code to the dma-iommu path. The addition of the bounce buffer code took me by surprise. I did most of my development on this patch series before the bounce buffer code was added and my reimplementation in the dma-iommu path is very rushed and not properly tested but I’m running out of time to work on this patch set.
-> 
-> On top of that I also didn’t port over the intel tracing code from this commit:
-> https://github.com/torvalds/linux/commit/3b53034c268d550d9e8522e613a14ab53b8840d8#diff-6b3e7c4993f05e76331e463ab1fc87e1
-> So all the work in that commit is now wasted. The code will need to be removed and reimplemented in the dma-iommu path. I would like to take the time to do this but I really don’t have the time at the moment and I want to get these changes out before the iommu code changes any more.
+example: if the result is -0.75, tmp0 will be 0 and tmp1 = 75
+This causes the output to lose sign because of %d in snprintf
+which works for tmp0 <= -1.
 
-Further to what we just discussed at LPC, I've realised that tracepoints 
-are actually something I could do with *right now* for debugging my Arm 
-DMA ops series, so if I'm going to hack something up anyway I may as 
-well take responsibility for polishing it into a proper patch as well :)
+Signed-off-by: Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
+---
+changes since v1:
+	Changed -%d to -0 to make the fix clearer.
+	Removed the email footer.
+	Updated the commit description with an example
+--
+ drivers/iio/industrialio-core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Robin.
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index cdcd16f1..a239fa2 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -592,6 +592,7 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
+ {
+ 	unsigned long long tmp;
+ 	int tmp0, tmp1;
++	s64 tmp2;
+ 	bool scale_db = false;
+ 
+ 	switch (type) {
+@@ -614,10 +615,13 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
+ 		else
+ 			return scnprintf(buf, len, "%d.%09u", vals[0], vals[1]);
+ 	case IIO_VAL_FRACTIONAL:
+-		tmp = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
++		tmp2 = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
+ 		tmp1 = vals[1];
+ 		tmp0 = (int)div_s64_rem(tmp, 1000000000, &tmp1);
+-		return scnprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
++		if ((tmp2 < 0) && (tmp0 == 0))
++			return snprintf(buf, len, "-0.%09u", abs(tmp1));
++		else
++			return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
+ 	case IIO_VAL_FRACTIONAL_LOG2:
+ 		tmp = shift_right((s64)vals[0] * 1000000000LL, vals[1]);
+ 		tmp0 = (int)div_s64_rem(tmp, 1000000000LL, &tmp1);
+-- 
+2.7.4
 
-> 
-> Tom Murphy (8):
->    iommu/vt-d: clean up 32bit si_domain assignment
->    iommu/vt-d: Use default dma_direct_* mapping functions for direct
->      mapped devices
->    iommu/vt-d: Remove IOVA handling code from non-dma_ops path
->    iommu: Handle freelists when using deferred flushing in iommu drivers
->    iommu: Add iommu_dma_free_cpu_cached_iovas function
->    iommu: allow the dma-iommu api to use bounce buffers
->    iommu/vt-d: Convert intel iommu driver to the iommu ops
->    DO NOT MERGE: iommu: disable list appending in dma-iommu
-> 
->   drivers/iommu/Kconfig           |   1 +
->   drivers/iommu/amd_iommu.c       |  14 +-
->   drivers/iommu/arm-smmu-v3.c     |   3 +-
->   drivers/iommu/arm-smmu.c        |   3 +-
->   drivers/iommu/dma-iommu.c       | 183 +++++--
->   drivers/iommu/exynos-iommu.c    |   3 +-
->   drivers/iommu/intel-iommu.c     | 936 ++++----------------------------
->   drivers/iommu/iommu.c           |  39 +-
->   drivers/iommu/ipmmu-vmsa.c      |   3 +-
->   drivers/iommu/msm_iommu.c       |   3 +-
->   drivers/iommu/mtk_iommu.c       |   3 +-
->   drivers/iommu/mtk_iommu_v1.c    |   3 +-
->   drivers/iommu/omap-iommu.c      |   3 +-
->   drivers/iommu/qcom_iommu.c      |   3 +-
->   drivers/iommu/rockchip-iommu.c  |   3 +-
->   drivers/iommu/s390-iommu.c      |   3 +-
->   drivers/iommu/tegra-gart.c      |   3 +-
->   drivers/iommu/tegra-smmu.c      |   3 +-
->   drivers/iommu/virtio-iommu.c    |   3 +-
->   drivers/vfio/vfio_iommu_type1.c |   2 +-
->   include/linux/dma-iommu.h       |   3 +
->   include/linux/intel-iommu.h     |   1 -
->   include/linux/iommu.h           |  32 +-
->   23 files changed, 345 insertions(+), 908 deletions(-)
-> 
