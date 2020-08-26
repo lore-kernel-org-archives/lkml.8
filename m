@@ -2,109 +2,90 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A194C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F288C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02E5020786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:17:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598437039;
-	bh=5tJW1RUehpS5WybOA0ZAprsp+YpJ4fCRYflUkMT9GYI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gs6dnJBOIiAi1vQZ80ELooi/Iyl8+6fnWb8CcK9daX9InkE1XGEOAGM23Jysk7g0s
-	 VWY0ImB4cMarlWUTXYD/mCOIq6DqPGiF9SvH0ZelKocS7chq624Nn7/Hhvv9zQ3yba
-	 nupVKOQtr9zpq+6Mpp0KOrWKmmXsucIlgce3cs1Y=
+	by mail.kernel.org (Postfix) with ESMTP id 4C00820866
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:17:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NXU/ovLD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgHZKRR (ORCPT
+        id S1728274AbgHZKRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:17:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728006AbgHZKRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:17:13 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        Wed, 26 Aug 2020 06:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728006AbgHZKRS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:17:18 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BDCC061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 03:17:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=4eLAdOv3FI1lBHbOBS+5I59id8uj4O0VoOm0YOWkXQQ=; b=NXU/ovLD1wZshSvr1GLYnnKiJQ
+        WduEx4BRcZp7dWKGywo9s8Bu9R1ntMrWPAjljySA7Bhd80PUzJ24bIh2SB4ET4SXl9HkmcVEPhQ2u
+        KurAsLjYslUb+/wOH2tXdIBZaQARn9jVfTBdVp/+sxk9nQqN+FoJ6avE9U20G9rPUer9shXO6B/C3
+        Vuio3SjoNMW/ecEIy39MJxSNsAMNCYYLAbPNVMII4KQ0Q3VjzRokiOq/9v+S5zAg8OECjTFfGrYMe
+        cEbZsrCYEn28HVTmAW/li4IzzTLKDOTPk+m61vfKX2KqLwXulI+/Y3HvvHl8aIde7gvENAca5GbKC
+        AAxpFrfA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAsUD-00065Y-4W; Wed, 26 Aug 2020 10:16:57 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEF1E20786;
-        Wed, 26 Aug 2020 10:17:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598437033;
-        bh=5tJW1RUehpS5WybOA0ZAprsp+YpJ4fCRYflUkMT9GYI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ggqjLcsW5r39HmxmZeRwkMMcMvMbzKBucECTKjbLUEN9lPyFhb6B1Wb/65ghmw0qo
-         e1etyh5xkqZkG81NZsilBAgDxjMI+QBJIeT9f/qFH4PGjteBTD6/LK13ufuwQx+Kdj
-         MajUluJpge6kI0aZyWFntKE2M0iUAamBbiDY3Oyo=
-Date:   Wed, 26 Aug 2020 11:16:37 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, vkoul@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 4/4] regmap: sdw: add support for SoundWire 1.2 MBQ
-Message-ID: <20200826101637.GC4965@sirena.org.uk>
-References: <20200825171656.75836-1-pierre-louis.bossart@linux.intel.com>
- <20200825171656.75836-5-pierre-louis.bossart@linux.intel.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0744E301A66;
+        Wed, 26 Aug 2020 12:16:53 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D957F2BFE5A17; Wed, 26 Aug 2020 12:16:53 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 12:16:53 +0200
+From:   peterz@infradead.org
+To:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org
+Cc:     npiggin@gmail.com, elver@google.com, jgross@suse.com,
+        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
+        joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>
+Subject: [PATCH v2 12/11] mips: Implement arch_irqs_disabled()
+Message-ID: <20200826101653.GE1362448@hirez.programming.kicks-ass.net>
+References: <20200821084738.508092956@infradead.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dkEUBIird37B8yKS"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825171656.75836-5-pierre-louis.bossart@linux.intel.com>
-X-Cookie: Should I do my BOBBIE VINTON medley?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200821084738.508092956@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---dkEUBIird37B8yKS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, Aug 25, 2020 at 12:16:56PM -0500, Pierre-Louis Bossart wrote:
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Paul Burton <paulburton@kernel.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/mips/include/asm/irqflags.h |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-> One possible objection is that this code could have been handled with
-> regmap-sdw.c. However this is a new spec addition not handled by every
-> SoundWire 1.1 and non-SDCA device, so there's no reason to load code
-> that will never be used.
-
-> Also in practice it's extremely unlikely that CONFIG_REGMAP would not
-> be selected with CONFIG_REGMAP_MBQ selected. However there's no
-> functional dependency between the two modules so they can be selected
-> separately.
-
-The other thing I'm wondering here is about compatibility - is this
-something we can enumerate at runtime and if so couldn't this be done
-more like how we handle the various I2C and SMBus variants so the driver
-just says it wants a SoundWire regmap and then based on the capabilities
-of the device and the controller the regmap decides if it can use MBQ or
-not on the current system?
-
---dkEUBIird37B8yKS
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9GNoQACgkQJNaLcl1U
-h9CrSQf/WFN5slGq6hYdSlbxY9S5fg1zC1mvg9ty1w/5Mz/65Q//rzJpHBd+tYKc
-HZLr2kEjM7nBO1Zm3fngADbUmKwlCRFnWwEuzcCibOQbgopTmhVg1MIQOcg32RcU
-w2D7/0oZWoPul9tO3UR/cf3I5FgBkuRZfBayFeFb6FbwZVgb4F8BDA8Xobt215Zb
-mRVFxChQ7/0IDT6ju1CqDEk6zr1h5zIhqgVXO8YOkvOXh6ObxL1jXvrSMtOVZ2Ki
-Kqpf6i6sJxNwu7PF4f6EdhrDKQKLLncW/qrh6Phx383RkfHhdCqGwPAB4H8Vjb15
-j70LoMEibs5FCPo/+fD8AGxDkrOU4Q==
-=f/l0
------END PGP SIGNATURE-----
-
---dkEUBIird37B8yKS--
+--- a/arch/mips/include/asm/irqflags.h
++++ b/arch/mips/include/asm/irqflags.h
+@@ -137,6 +137,11 @@ static inline int arch_irqs_disabled_fla
+ 	return !(flags & 1);
+ }
+ 
++static inline int arch_irqs_disabled(void)
++{
++	return arch_irqs_disabled_flags(arch_local_save_flags());
++}
++
+ #endif /* #ifndef __ASSEMBLY__ */
+ 
+ /*
