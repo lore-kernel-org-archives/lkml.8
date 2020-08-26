@@ -2,83 +2,174 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E848C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2814206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:14:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D387E206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:15:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lJOMEX6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgHZJOo (ORCPT
+        id S1728005AbgHZJPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:14:44 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:35760 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727811AbgHZJOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:14:44 -0400
-Received: by ajax-webmail-mail-app2 (Coremail) ; Wed, 26 Aug 2020 17:14:35
- +0800 (GMT+08:00)
-X-Originating-IP: [210.32.144.184]
-Date:   Wed, 26 Aug 2020 17:14:35 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Hans Verkuil" <hverkuil-cisco@xs4all.nl>
-Cc:     kjlu@umn.edu, "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        "Fabio Estevam" <fabio.estevam@nxp.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] media: mx2_emmaprp: Fix memleak in emmaprp_probe
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.12 build 20200616(0f5d8152)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <72bb447e-f888-6182-7328-316551b50a24@xs4all.nl>
-References: <20200825093934.10585-1-dinghao.liu@zju.edu.cn>
- <72bb447e-f888-6182-7328-316551b50a24@xs4all.nl>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Wed, 26 Aug 2020 05:15:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1518 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727924AbgHZJPP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 05:15:15 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07Q929xl137857;
+        Wed, 26 Aug 2020 05:14:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=vA8Tx3iVI4lzD+KxacYxVdJLgZdZWXwDkLHluN4iPX4=;
+ b=lJOMEX6Ul4lTwBWfPuro4JteOf7VVAEuNGExwnyWhL1McPc/A50U3+nyNMXWg+RJGuJa
+ pvU/13JFYuNdyb27BbhnyQ8A4YoQ6f7h9PV5Ovmei4gC6RBINUW9jqRvf5Lt02xGxjpl
+ c7Zd3CpooqbiVX8e2p5iElF0BJQK3q2Y7aamTO5lJlhZMJuCsaL8xrcrTx1RCg1tAtVb
+ 77l+OD6wv6eWuE7ATzCXiF7njMHFy/TVSXRi3XySjVjFHPBNKyGJGakTFunczw8dPZU5
+ f56G7tZXy/q+W6b0eteW7zN8nyHBycVtacisyh0UFtcw3fgXRdocyg1S9p9HXbmXoPAJ zw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 335mkb8kv5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 05:14:52 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07Q93XuC143601;
+        Wed, 26 Aug 2020 05:14:52 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 335mkb8kpk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 05:14:51 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07Q9Driw006959;
+        Wed, 26 Aug 2020 09:14:37 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 332ujjtp19-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 09:14:37 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07Q9EZVV62128472
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Aug 2020 09:14:35 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1414BAE053;
+        Wed, 26 Aug 2020 09:14:35 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9A56BAE045;
+        Wed, 26 Aug 2020 09:14:33 +0000 (GMT)
+Received: from [9.85.74.150] (unknown [9.85.74.150])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 26 Aug 2020 09:14:33 +0000 (GMT)
+Subject: Re: [PATCH] Revert "powerpc/powernv/idle: Replace CPU feature check
+ with PVR check"
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+        npiggin@gmail.com, mikey@neuling.org, ego@linux.vnet.ibm.com,
+        svaidy@linux.ibm.com, linux-kernel@vger.kernel.org,
+        pratik.r.sampat@gmail.com
+References: <20200826082918.89306-1-psampat@linux.ibm.com>
+ <1fb7fcef-a39d-d36e-35d5-021a5c9ea82c@csgroup.eu>
+From:   Pratik Sampat <psampat@linux.ibm.com>
+Message-ID: <170e1919-bc45-6b99-dc4d-713418c98be1@linux.ibm.com>
+Date:   Wed, 26 Aug 2020 14:44:32 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Message-ID: <5db38faf.8f4c.1742a0c2f43.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: by_KCgBnEJ77J0Zf6JAzAg--.52837W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0EBlZdtPrBDAACsH
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbXvS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVCjxxvEw4WlV2xY6xkIecxEwVAFwVW8uwCS07vEc2IjII80xcxEwVAKI48JMI
-        AIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAIbVCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2IqxVCjr7xvwV
-        AFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_JF0_Jw1lV2xY6IIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCS07vEIxAIcVCF04
-        k26cxKx2IYs7xG6rWUJVWrZr1UMIAIbVCI42IY6I8E87Iv67AKxVWUJVW8JwCS07vEIxAI
-        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUU==
+In-Reply-To: <1fb7fcef-a39d-d36e-35d5-021a5c9ea82c@csgroup.eu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-26_03:2020-08-25,2020-08-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 clxscore=1011 priorityscore=1501 malwarescore=0 phishscore=0
+ adultscore=0 suspectscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008260068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiAyNS8wOC8yMDIwIDExOjM5LCBEaW5naGFvIExpdSB3cm90ZToKPiA+IFdoZW4gcGxhdGZv
-cm1fZ2V0X2lycSgpIGZhaWxzLCB3ZSBzaG91bGQgcmVsZWFzZQo+ID4gdmZkIGFuZCB1bnJlZ2lz
-dGVyIHBjZGV2LT52NGwyX2RldiBqdXN0IGxpa2UgdGhlCj4gPiBzdWJzZXF1ZW50IGVycm9yIHBh
-dGhzLgo+ID4gCj4gPiBGaXhlczogZDRlMTkyY2M0NDkxNCAoIm1lZGlhOiBteDJfZW1tYXBycDog
-Q2hlY2sgZm9yIHBsYXRmb3JtX2dldF9pcnEoKSBlcnJvciIpCj4gPiBTaWduZWQtb2ZmLWJ5OiBE
-aW5naGFvIExpdSA8ZGluZ2hhby5saXVAemp1LmVkdS5jbj4KPiA+IC0tLQo+ID4gIGRyaXZlcnMv
-bWVkaWEvcGxhdGZvcm0vbXgyX2VtbWFwcnAuYyB8IDIgKy0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvbWVkaWEvcGxhdGZvcm0vbXgyX2VtbWFwcnAuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
-bXgyX2VtbWFwcnAuYwo+ID4gaW5kZXggZGY3OGRmNTlkYTQ1Li4yZmQzMWVkODYwMDUgMTAwNjQ0
-Cj4gPiAtLS0gYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL214Ml9lbW1hcHJwLmMKPiA+ICsrKyBi
-L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXgyX2VtbWFwcnAuYwo+ID4gQEAgLTg1Myw3ICs4NTMs
-NyBAQCBzdGF0aWMgaW50IGVtbWFwcnBfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikKPiA+ICAKPiA+ICAJaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKTsKPiA+ICAJaWYg
-KGlycSA8IDApCj4gPiAtCQlyZXR1cm4gaXJxOwo+ID4gKwkJZ290byByZWxfdmRldjsKPiAKPiBZ
-b3UgbmVlZCB0byBhZGQgJ3JldCA9IGlycTsnIGhlcmUsIG90aGVyd2lzZSB0aGUgcGxhdGZvcm1f
-Z2V0X2lycSBlcnJvciBjb2RlCj4gaXMgbm90IGNvcnJlY3RseSBwcm9wYWdhdGVkLgo+IAoKVGhh
-bmtzIGZvciBwb2ludGluZyBvdXQgdGhhdCEgSSdsbCBmaXggdGhpcyBhbmQgcmVzZW5kIHRoZSBw
-YXRjaCBzb29uLgoKUmVnYXJkcywKRGluZ2hhbwo=
+
+
+On 26/08/20 2:07 pm, Christophe Leroy wrote:
+>
+>
+> Le 26/08/2020 à 10:29, Pratik Rajesh Sampat a écrit :
+>> Cpuidle stop state implementation has minor optimizations for P10
+>> where hardware preserves more SPR registers compared to P9.
+>> The current P9 driver works for P10, although does few extra
+>> save-restores. P9 driver can provide the required power management
+>> features like SMT thread folding and core level power savings
+>> on a P10 platform.
+>>
+>> Until the P10 stop driver is available, revert the commit which
+>> allows for only P9 systems to utilize cpuidle and blocks all
+>> idle stop states for P10.
+>> Cpu idle states are enabled and tested on the P10 platform
+>> with this fix.
+>>
+>> This reverts commit 8747bf36f312356f8a295a0c39ff092d65ce75ae.
+>>
+>> Fixes: 8747bf36f312 ("powerpc/powernv/idle: Replace CPU feature check 
+>> with PVR check")
+>> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+>> ---
+>>   @mpe: This revert would resolve a staging issue wherein the P10 stop
+>>   driver is not yet ready while cpuidle stop states need not be blocked
+>>   on 5.9 for Power10 systems which could cause SMT folding related
+>>   performance issues.
+>>
+>>   The P10 stop driver is in the works here:
+>> https://lists.ozlabs.org/pipermail/linuxppc-dev/2020-August/216773.html
+>>
+>>   arch/powerpc/platforms/powernv/idle.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/powerpc/platforms/powernv/idle.c 
+>> b/arch/powerpc/platforms/powernv/idle.c
+>> index 77513a80cef9..345ab062b21a 100644
+>> --- a/arch/powerpc/platforms/powernv/idle.c
+>> +++ b/arch/powerpc/platforms/powernv/idle.c
+>> @@ -1223,7 +1223,7 @@ static void __init pnv_probe_idle_states(void)
+>>           return;
+>>       }
+>>   -    if (pvr_version_is(PVR_POWER9))
+>> +    if (cpu_has_feature(CPU_FTR_ARCH_300))
+>
+> Why not something like:
+>
+>     if (pvr_version_is(PVR_POWER9) || pvr_version_is(PVR_POWER10))
+>         pnv_power9_idle_init(); 
+
+In order to use PVR_POWER10 I would need to define it under
+arch/powerpc/include/asm/reg.h, which is not present in 5.9 yet.
+
+However, if it okay with @mpe I could split out Nick's P10 stop driver
+(https://lists.ozlabs.org/pipermail/linuxppc-dev/2020-August/216773.html)
+into two parts:
+1. This could include minimal code to introduce the P10 PVR and the
+stop wrappers for it. Although this patch internally still calls into
+the P9 path. This should gracefully fix the issue.
+2. Then later in this patch we could introduce the p10 callback
+methods as they are in Nick's series.
+
+---
+Thanks
+Pratik
+
+>
+>>           pnv_power9_idle_init();
+>>         for (i = 0; i < nr_pnv_idle_states; i++)
+>>
+>
+> Christophe
+
