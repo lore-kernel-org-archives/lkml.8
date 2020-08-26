@@ -2,179 +2,162 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC42C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC1FC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74930207DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4532071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:38:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="d/2w0Mo9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vTGLn1x/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgHZGi2 (ORCPT
+        id S1727909AbgHZGih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:38:28 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:39429 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726784AbgHZGfg (ORCPT
+        Wed, 26 Aug 2020 02:38:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbgHZGiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:35:36 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200826063534euoutp02887e8f35a0f01d86af0c9eb20e38854c~uversa_yd1511215112euoutp02O
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:35:34 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200826063534euoutp02887e8f35a0f01d86af0c9eb20e38854c~uversa_yd1511215112euoutp02O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598423734;
-        bh=bm4jyzGdoL7eueSepHu8xbaOpsUiBlIaWdzcyPajcJ4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d/2w0Mo9bX1NLGeRcW20inr3skCuLL7er4lv14reNyRrglBDthd8/gQkWFS24dOgm
-         /FkPBSiw7lMpHbJ4ZhpkrP4NYeMHWC1Hpo6nMN7jO+GCE8fTwIFKuH0hWpajmmkDBP
-         Eemu9ZZGltfP0tECsmyJF+Jm3vN9FtwqssTf53WY=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200826063534eucas1p2871cf4916187b9bc380232b26bd6865e~uverSnhkK0402704027eucas1p2g;
-        Wed, 26 Aug 2020 06:35:34 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 6E.4D.06318.5B2064F5; Wed, 26
-        Aug 2020 07:35:33 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200826063533eucas1p1fad2f2afb117b026081468d2d840ab0f~uveq-NYT81942019420eucas1p1m;
-        Wed, 26 Aug 2020 06:35:33 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200826063533eusmtrp168812a4b34355f043831c99f380de8ca~uveq_iG8T1091110911eusmtrp1S;
-        Wed, 26 Aug 2020 06:35:33 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-d8-5f4602b5b2b9
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 50.D0.06314.5B2064F5; Wed, 26
-        Aug 2020 07:35:33 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200826063533eusmtip25d907c392a9195b908baf25bf473b36a~uveqX7eyd0300803008eusmtip2u;
-        Wed, 26 Aug 2020 06:35:32 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH v9 10/32] drm: mediatek: use common helper for a scatterlist
- contiguity check
-Date:   Wed, 26 Aug 2020 08:32:54 +0200
-Message-Id: <20200826063316.23486-11-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826063316.23486-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSfyyUcRzue+97772O43Us35S027Kx5cdkvaaZjPZu/sg//ZGtdPLuWO7o
-        zo+utbqdNB2HSy2RQtqJk1xSLuKII3XLj0njRDRTGePYSOrOi/57nufzfJ5nn+++OMI3sT3x
-        ZEk6LZUIUwQYF23uWTMfeck6GR/YmBtKqs19LLKxpIFNVqnVKPm3WYOQwysLGPm0rptFVrSH
-        kdbhKRapnx5hk0OGBxg5lD0AyPp3Fg6pvBFMWiZ6UdK4OMOOcKF0D3WAalutQKmWUguH0tfe
-        wqhXq5Ns6mueiUW9qL5OjW1OI1TxqBZQb74oMKrwTyBV0FQLqGX9wVheHPd4Ip2SnElLA8LP
-        c5N68jc4aUrny5XFxYgCDDuqgAMOiaNwtFzPUQEuzidqAOyd/b1NrACWLXSjDFkGcHzgF9hZ
-        6ar8yWIGWgBHZ1qQ3ZUJ6wRmd2FEEFTNq7awO5FjC1Y72U0I0YrAKsO6LRfH3Yh4OGBIsHtQ
-        4jCcvzuI2jGPCId1i2Uo0+YN6553IHbsYNNNeYUYo3/jQI2BbY+BRBQcKw1hZDf4w9TEYfAB
-        2F+cv3UBJLIBnDLXcxiSD+CQsmT7nDA4bl7H7EEI4QsbDAGMfAKuDfcgTL4zHJ13tcuIDd5u
-        vrct82DuTT7j9oGlpme7tcZPgwiDKZg7o8OY59EAqB0zYUXAu/R/WQUAtcCDzpCJRbQsWEJn
-        +cuEYlmGROR/IVWsB7bv1b9pWnkN3m4kdAICBwInXgUWHc9nCzNlcnEngDgicOdFfuw/x+cl
-        CuVXaGlqvDQjhZZ1gv04KvDgBVfNneUTImE6fZGm02jpzpSFO3gqgLh+vSAGWFz4SxzESBWV
-        x/iKGltD2id4czVZ8s/B0i6lBQmMWHLXLekcs2Y390iuKpseF2UeOvNdvWR9Hxlnnrz05I7R
-        qp/z3evxSC4ZWYzqMEh7P5xSNFfnLKuP+bl4xep8nLTavrzQaK8czbXTYdOCpn2u92vaFJrs
-        LIG/AJUlCYP8EKlM+A9H7DbLWgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNIsWRmVeSWpSXmKPExsVy+t/xe7pbmdziDfY+UrfoPXeSyWLjjPWs
-        Fot6e1ks/m+byGxx5et7NouVq48yWSzYb23x5cpDJotNj6+xWlzeNYfN4nLzRUaLtUfusls0
-        tRhb3L13gsXi4IcnrA78HmvmrWH02PttAYvHzll32T02repk89j+7QGrx/3u40wem5fUe9z+
-        95jZY/KN5Yweu282sHn0/zXw6NuyitHj8ya5AN4oPZui/NKSVIWM/OISW6VoQwsjPUNLCz0j
-        E0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYxjPX/YC5r4KhZOnszcwHiFu4uRk0NCwETi8MLX
-        TF2MXBxCAksZJbYs2ccEkZCRODmtgRXCFpb4c62LDaLoE6PEx7tXGUESbAKGEl1vIRIiAp2M
-        EtO6P7KDOMwCx5glNj5+zwxSJSwQK/F10UV2EJtFQFXi7dRLLCA2r4CdxOoPs1kgVshLrN5w
-        AKyeEyh+vLufDcQWErCVOL12BvMERr4FjAyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAiNq
-        27Gfm3cwXtoYfIhRgINRiYd3AZtrvBBrYllxZe4hRgkOZiURXqezp+OEeFMSK6tSi/Lji0pz
-        UosPMZoCHTWRWUo0OR8Y7Xkl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqY
-        ODilGhhVSyMMFBO4hNkYQq57ey+y1tgZ0mMnUL99W9yZ/T9/vL4eLJ34P9/748v+FXr/ZCw3
-        1f2cIvf8KZsP51kO2+nLuHzu3O10m9Nbu/3yKY3HuRJ7Vi/JMDWc7XAndq6Sb+WJ1Ry3Le7N
-        Cl1buy3rwRqVc1XifkfWvtkVsHf1n8Vxq2pN3ddtTHdSYinOSDTUYi4qTgQAYwLi+b4CAAA=
-X-CMS-MailID: 20200826063533eucas1p1fad2f2afb117b026081468d2d840ab0f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200826063533eucas1p1fad2f2afb117b026081468d2d840ab0f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200826063533eucas1p1fad2f2afb117b026081468d2d840ab0f
-References: <20200826063316.23486-1-m.szyprowski@samsung.com>
-        <CGME20200826063533eucas1p1fad2f2afb117b026081468d2d840ab0f@eucas1p1.samsung.com>
+        Wed, 26 Aug 2020 02:38:15 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE6FC061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 23:38:14 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id p186so370620vsa.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 23:38:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hDQRRI78D3Sk/YTewL1Qk0xdUUz1zPK2EJmRrgeUM0s=;
+        b=vTGLn1x/zJIY52K4Di+3Teh/ssAgCH5yCwousRZq+WecxuiBZEquiPQ9UNFYv6go+3
+         cxi9hrbf2PwEWTBq9ymWzvNM9qStJcOI/VzzqoFk3NpF4g3qH7J2F19ht/JJlu3ryxSN
+         QQLSDGi9S/5vRxqgCcBcSrmgspZbBbXmmZfE8YjUe415ruvrb1/taSGkJjYKYCnCwmBy
+         W7N5w2m83JU88vI4Y8ZBW1sRBlpZoDDr1BQl/dAiLyjyZNPvRccfwRVDjiW5oBZL5gCY
+         PIaopB27colyHJy/KItN20mbxURukeTX37yvpDdatb1doKoHcDElNQX5XjOOpgJiSKl9
+         pByg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hDQRRI78D3Sk/YTewL1Qk0xdUUz1zPK2EJmRrgeUM0s=;
+        b=Pf8I293H6eJAIvOqgvThR4ZEwXwu1He8kMnspSFVCnlkXaTkBa+P9HhHE5F1qnz30v
+         MK1cFiiheGL6nQHGKretLN7N42UOgzY2egE9LBKopzfGbcqN9VABWwNWel8yJawmOFh4
+         X3Sy6tvYmnp6si2XMuVxLxBkC9VJUzZZ7i7Csm5ae36+Vz9k7liIpnKzobRhuYvhghZa
+         u2hmF0k/LblfGm1nnaaDZd00eR/vS5DnzrdTl6HCtR9SPCz8z1r00cA84dEfcRuDxdS/
+         X6UkqCJ4e8BQVTd6chtOp1u/pnR838+YcEiyGxGKJHHfkZvJEkgIo2ruVzcXXGy1n5fB
+         5JPg==
+X-Gm-Message-State: AOAM531UoF9qP59+LBpe8n+8SDenBmUy/7W8fxiCQw3ljLbacwvyG4SD
+        XmFV9JKNKxmvX3e1sJeQG1nsm2jRfWBefGcClSGHXA==
+X-Google-Smtp-Source: ABdhPJxskoXtY/RFvHibrA9E3iOGod97S56DxYjdnW850ds8AvXYJR6KR4cZHsxljH82T1HmX9SZMy0I8dsWlSV6bzI=
+X-Received: by 2002:a67:fb43:: with SMTP id e3mr7397682vsr.91.1598423892321;
+ Tue, 25 Aug 2020 23:38:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200819104057.318230-1-ulf.hansson@linaro.org>
+ <20200819104057.318230-4-ulf.hansson@linaro.org> <20200825161602.GE12523@codeaurora.org>
+In-Reply-To: <20200825161602.GE12523@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 26 Aug 2020 08:37:35 +0200
+Message-ID: <CAPDyKFrMUf4y5kVjr=dW-wf2kqBwcGePf=55U1Ck8O6tp-OuqQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] PM / Domains: Add support for PM domain on/off
+ notifiers for genpd
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use common helper for checking the contiguity of the imported dma-buf and
-do this check before allocating resources, so the error path is simpler.
+On Tue, 25 Aug 2020 at 18:16, Lina Iyer <ilina@codeaurora.org> wrote:
+>
+> On Wed, Aug 19 2020 at 04:41 -0600, Ulf Hansson wrote:
+> >A device may have specific HW constraints that must be obeyed to, before
+> >its corresponding PM domain (genpd) can be powered off - and vice verse at
+> >power on. These constraints can't be managed through the regular runtime PM
+> >based deployment for a device, because the access pattern for it, isn't
+> >always request based. In other words, using the runtime PM callbacks to
+> >deal with the constraints doesn't work for these cases.
+> >
+> >For these reasons, let's instead add a PM domain power on/off notification
+> >mechanism to genpd. To add/remove a notifier for a device, the device must
+> >already have been attached to the genpd, which also means that it needs to
+> >be a part of the PM domain topology.
+> >
+> >To add/remove a notifier, let's introduce two genpd specific functions:
+> > - dev_pm_genpd_add|remove_notifier()
+> >
+> >Note that, to further clarify when genpd power on/off notifiers may be
+> >used, one can compare with the existing CPU_CLUSTER_PM_ENTER|EXIT
+> >notifiers. In the long run, the genpd power on/off notifiers should be able
+> >to replace them, but that requires additional genpd based platform support
+> >for the current users.
+> >
+> >Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> >---
+> > drivers/base/power/domain.c | 130 ++++++++++++++++++++++++++++++++++--
+> > include/linux/pm_domain.h   |  15 +++++
+> > 2 files changed, 141 insertions(+), 4 deletions(-)
+> >
+> >diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> >index 4b787e1ff188..9cb85a5e8342 100644
+> >--- a/drivers/base/power/domain.c
+> >+++ b/drivers/base/power/domain.c
+> >@@ -545,13 +545,21 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+> >       if (!genpd->gov)
+> >               genpd->state_idx = 0;
+> >
+> >+      /* Notify consumers that we are about to power off. */
+> >+      ret = raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_OFF,
+> >+                                    NULL);
+> >+      if (ret)
+> >+              return ret;
+> >+
+> >       /* Don't power off, if a child domain is waiting to power on. */
+> >-      if (atomic_read(&genpd->sd_count) > 0)
+> >-              return -EBUSY;
+> >+      if (atomic_read(&genpd->sd_count) > 0) {
+> >+              ret = -EBUSY;
+> >+              goto busy;
+> >+      }
+> >
+> >       ret = _genpd_power_off(genpd, true);
+> >       if (ret)
+> >-              return ret;
+> >+              goto busy;
+> >
+> >       genpd->status = GENPD_STATE_OFF;
+> >       genpd_update_accounting(genpd);
+> >@@ -564,6 +572,9 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
+> >       }
+> >
+> >       return 0;
+> >+busy:
+> >+      raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_ON, NULL);
+> It would be helpful to abstract these notification related calls into
+> functions of their own. So, for CPU PM domains, it would help to add
+> RCU_NONIDLE() around the notifiers, allowing the callbacks to add trace
+> functions.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/gpu/drm/mediatek/mtk_drm_gem.c | 28 ++++++--------------------
- 1 file changed, 6 insertions(+), 22 deletions(-)
+Thanks for the suggestion! It makes perfect sense to me - and would
+also be consistent with how CPU PM notifiers are managed,
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.c b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-index 6190cc3b7b0d..3654ec732029 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-@@ -212,37 +212,21 @@ struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
- 			struct dma_buf_attachment *attach, struct sg_table *sg)
- {
- 	struct mtk_drm_gem_obj *mtk_gem;
--	int ret;
--	struct scatterlist *s;
--	unsigned int i;
--	dma_addr_t expected;
- 
--	mtk_gem = mtk_drm_gem_init(dev, attach->dmabuf->size);
-+	/* check if the entries in the sg_table are contiguous */
-+	if (drm_prime_get_contiguous_size(sg) < attach->dmabuf->size) {
-+		DRM_ERROR("sg_table is not contiguous");
-+		return ERR_PTR(-EINVAL);
-+	}
- 
-+	mtk_gem = mtk_drm_gem_init(dev, attach->dmabuf->size);
- 	if (IS_ERR(mtk_gem))
- 		return ERR_CAST(mtk_gem);
- 
--	expected = sg_dma_address(sg->sgl);
--	for_each_sg(sg->sgl, s, sg->nents, i) {
--		if (!sg_dma_len(s))
--			break;
--
--		if (sg_dma_address(s) != expected) {
--			DRM_ERROR("sg_table is not contiguous");
--			ret = -EINVAL;
--			goto err_gem_free;
--		}
--		expected = sg_dma_address(s) + sg_dma_len(s);
--	}
--
- 	mtk_gem->dma_addr = sg_dma_address(sg->sgl);
- 	mtk_gem->sg = sg;
- 
- 	return &mtk_gem->base;
--
--err_gem_free:
--	kfree(mtk_gem);
--	return ERR_PTR(ret);
- }
- 
- void *mtk_drm_gem_prime_vmap(struct drm_gem_object *obj)
--- 
-2.17.1
+[,,,]
 
+Kind regards
+Uffe
