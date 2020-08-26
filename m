@@ -2,140 +2,57 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F022C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3315BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3CEE207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:53:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="txtxpwlT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7/Vp+Kz8"
+	by mail.kernel.org (Postfix) with ESMTP id 15A3422B43
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:53:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgHZSxN (ORCPT
+        id S1727013AbgHZSxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:53:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726809AbgHZSxK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:53:10 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45787C061574;
-        Wed, 26 Aug 2020 11:53:10 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598467987;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NgmNT6e9V972BbRaGJi5LACq7q2882bivAeuxcsKlO8=;
-        b=txtxpwlTPw0jyfbR6Wiwaf/MnCH0LQaemD8NHmqb8jwV/n8e83wQGwVlZN/5YtETRzcuXZ
-        zobHrmUVBsKUeqClsNcZNmVELkb/AuBn1dxtoGbmOLQ4e/pEIdkCCz/HvMI2JdHzeXXaRk
-        v3s3C5xGpuocoMwRt9poUfu7wx9CWkWafhdufLtxK39PD37gTIKDINn6oNUHE8F41h+vjF
-        b4Wy/DGWk0XZ2CwKzpxY5q+cZ5XtnbsEaSSnVPihfmseDcfrfBV8yTzB6jdfj0fQZL82T4
-        8ybbClqKwpsxDKncqYPxaQ1qjT8AZ/PAJYVxMnM3nt8hkLNbgZjjI+vzdsbMog==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598467987;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NgmNT6e9V972BbRaGJi5LACq7q2882bivAeuxcsKlO8=;
-        b=7/Vp+Kz8ctFKwZep8/fQNgT+OtdZU27B9OYyNQ/p8MeJLMRs8EHZV/AafwciXjGV88amMB
-        22AAeVUm1HAt9kDA==
-To:     Alexander Graf <graf@amazon.com>, X86 ML <x86@kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Avi Kivity <avi@scylladb.com>,
-        "Herrenschmidt\, Benjamin" <benh@amazon.com>, robketr@amazon.de,
-        amos@scylladb.com, Brian Gerst <brgerst@gmail.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] x86/irq: Preserve vector in orig_ax for APIC code
-In-Reply-To: <87blixuuny.fsf@nanos.tec.linutronix.de>
-References: <20200826115357.3049-1-graf@amazon.com> <87k0xlv5w5.fsf@nanos.tec.linutronix.de> <fd87a87d-7d8a-9959-6c81-f49003a43c21@amazon.com> <87blixuuny.fsf@nanos.tec.linutronix.de>
-Date:   Wed, 26 Aug 2020 20:53:07 +0200
-Message-ID: <873649utm4.fsf@nanos.tec.linutronix.de>
+        Wed, 26 Aug 2020 14:53:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726809AbgHZSxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:53:30 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A8DA2078A;
+        Wed, 26 Aug 2020 18:53:29 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 14:53:27 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     guoren@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
+        mingo@redhat.com, linux-kernel@vger.kernel.org,
+        linux-csky@vger.kernel.org, guoren@linux.alibaba.com,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] ftrace: Fixup lockdep assert held of text_mutex
+Message-ID: <20200826145327.7530b2e5@oasis.local.home>
+In-Reply-To: <mhng-5de4c6ca-7e77-4b55-9097-59296872e6de@palmerdabbelt-glaptop1>
+References: <20200813113743.001b6c31@oasis.local.home>
+        <mhng-5de4c6ca-7e77-4b55-9097-59296872e6de@palmerdabbelt-glaptop1>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26 2020 at 20:30, Thomas Gleixner wrote:
-> And it does not solve the issue that we abuse orig_ax which Andy
-> mentioned.
+On Mon, 24 Aug 2020 17:29:32 -0700 (PDT)
+Palmer Dabbelt <palmer@dabbelt.com> wrote:
 
-Ha! After staring some more, it's not required at all, which is the most
-elegant solution.
+> I pointed out in the patch notes that it seems reasonable to have the generic
+> code handle this case, would you be opposed to doing it that way?
 
-The vector check is pointless in that condition because there is never a
-condition where an interrupt is moved from vector A to vector B on the
-same CPU.
+For now, lets hold off and see if other archs start to do it the same
+way. Then we should look into making it more generic. It's an easy
+enough fix per arch, so there's no urgency to this.
 
-That's a left over from the old allocation model which supported
-multi-cpu affinities, but this was removed as it just created trouble
-for no real benefit.
-
-Today the effective affinity which is a single CPU out of the requested
-affinity. If an affinity mask change still contains the current target
-CPU then there is no move happening at all. It just stays on that vector
-on that CPU.
-
-Thanks,
-
-        tglx
----       
-
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -909,7 +909,7 @@ void send_cleanup_vector(struct irq_cfg
- 		__send_cleanup_vector(apicd);
- }
- 
--static void __irq_complete_move(struct irq_cfg *cfg, unsigned vector)
-+void irq_complete_move(struct irq_cfg *cfg)
- {
- 	struct apic_chip_data *apicd;
- 
-@@ -917,15 +917,10 @@ static void __irq_complete_move(struct i
- 	if (likely(!apicd->move_in_progress))
- 		return;
- 
--	if (vector == apicd->vector && apicd->cpu == smp_processor_id())
-+	if (apicd->cpu == smp_processor_id())
- 		__send_cleanup_vector(apicd);
- }
- 
--void irq_complete_move(struct irq_cfg *cfg)
--{
--	__irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
--}
--
- /*
-  * Called from fixup_irqs() with @desc->lock held and interrupts disabled.
-  */
+-- Steve
