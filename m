@@ -2,79 +2,71 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB49C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 273E72078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B20520737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fce5lMZP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lebqEwzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727863AbgHZRCO (ORCPT
+        id S1727866AbgHZRCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54148 "EHLO
+        Wed, 26 Aug 2020 13:02:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbgHZRAw (ORCPT
+        with ESMTP id S1727041AbgHZRAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:00:52 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9115FC061574
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:00:51 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id g13so2846151ioo.9
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:00:51 -0700 (PDT)
+        Wed, 26 Aug 2020 13:00:49 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 334C1C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:00:49 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id r13so2427792iln.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:00:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TT/nPbomDmh8NQShHOC8FZBWwCU19NUKn3EZB0b0q/I=;
-        b=Fce5lMZPmSr/R6QTYB7eE6nL3eFrkLLX7rJdVbaoCg7NYYWUOFtn4jZPNhguFFE0Ww
-         h0t8AECaIll/C9E6AEcxUoJ5le0j7fFyRKNONqAaRXBJnN0KLBLAQ6tGEt4vlttY7Irt
-         8ykSWtiAR+VTO+UpMmiH+94GgFSa8xkKNW414kXDcTWCcgUp7wHg+/0FAlbiTnFGQZRd
-         yWEHyK34HqJ8LhWzwexYM1kssLa7LBk/nCIcve+q3U4MBqz1RGTdHqBlk9an4wtlFMBy
-         jpM0KSbhTeS7lR3i9cIExK0K18jOaaBOZs9YPIGbC5Upj3gY2ddewNA8VEyQ0cNBtdjx
-         InCQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=26QxbXjs0m3B0fkeAQyxS9wdKxVZQIc+uM+Gzg+WrxE=;
+        b=lebqEwzMhnmkswoxV6vONuwriIJ3JbLyvJdUMvGSkvk4rWMzuvlc611vQT6UXue4kb
+         wuvGPZeBJwakM8I+RxywGmWpCfcM1xTEyQ69vOl82tWVJTod2B3ns3KNvKkqCrpgFY0l
+         eiy0e08N3NHS0uzIhvheHSOD5J5U4Y3SrC/Xd+VWhXW4VYZ7Nx+YHN8ue885Go737b5S
+         J9/7dQKzUKx6X5CmRhetUxkGMx2GuQpeLCzw3P9S7xWkqAUoLbFRkmIegcs6bMSm+bcq
+         DmgxmVlJbAyb9mGkZXT9lfX/0VEwS2S8sIPEldJiY43Zcb0JeubJsLM8DZoGErATcX8M
+         aK+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TT/nPbomDmh8NQShHOC8FZBWwCU19NUKn3EZB0b0q/I=;
-        b=Pn6Dr0tYDkhIRAdmoO7rdSjNWGoiPZvSiX8cBrruqxazE7YauGxrARrIadUF4T8+QF
-         DZ3PyFhFrC9DTZd2TQHlpbIKM7HqGxmodQw7yr4GvHkjTGaDJvLNCyY2aJ9iCwsauPzf
-         R2m+Exo7xqyXjQtyu19TMktFvmd8P3d1jsoLtNDy6Q+teyyKu9p4Nu6KyYX6XALBU3C1
-         CnIber6PfSv8Y7fEadE239j+5iELIVS9BrOliu6rLv5lxjZn0jXm3OkaT1qdJpfcWT68
-         XNgrurctcCf2ZaN3Du2Cq6rxj4B8o8OBvmi0H5F/i8NexVJPhwAGw5++qRNBup8+X4ha
-         fGDg==
-X-Gm-Message-State: AOAM531/Pp/R1Vuwl9fCtdPM/ncsyrSJ3hecTMiyQzUd6WD5I/J+4+hu
-        2ilsgxXdztFb5ksUFPC0P4N0/YQNKVli2A==
-X-Google-Smtp-Source: ABdhPJxy5A5rKdHB0JGFzyPbJaQvXJ1YHzMRzjOYm2I0ca1HWwoG3rk1JxilvNBEZOnEKffrPVxEDw==
-X-Received: by 2002:a6b:7411:: with SMTP id s17mr10699072iog.192.1598461250478;
-        Wed, 26 Aug 2020 10:00:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=26QxbXjs0m3B0fkeAQyxS9wdKxVZQIc+uM+Gzg+WrxE=;
+        b=eAR+EOZMYbuKvdK/OogPULPevH+sDNJ3VFPvpN8B+LXslSd2C9ygpXuzIhJdR4DzQl
+         ioyLmU+MAcs08xoMCksa7ReuHOc0qlX/pZvzckmZk5jSNH1D3hTq+tdX0YKhCrcWPljt
+         bsQtSZkXKbIgsYgvdd+EpO0tLQJxOm/PlVX/DBjHWfC4aS5V3gX5AFSO1HBIVnQUjWkB
+         i7VPww7C1zQehD1wblQIvyKLWQ5rAnFoy4qxKXzbpLjBjEqqwI/NWOReY5qKP/OwIb6W
+         YuWWQolHsIAL2Y4dVZ3crqxVTocktfP2grvlDmUDaApPEABWtv6qJuTjdj99GfnJPt4u
+         StXg==
+X-Gm-Message-State: AOAM5321Oz7xQCOssVK0jV63TFvD0zeKK7rBKhjxJ0TJy5bYnN5IM6f8
+        HYSpz7rdoJXXnkxg5j958AYiU4ZofkJfWg==
+X-Google-Smtp-Source: ABdhPJzXNx08f0nZ6xcJw6hnAsHg+EfmelTxJ3ljsr5xDxklbhFCTqfDudRRdcHUuI/h2miSh0PL+w==
+X-Received: by 2002:a92:c74e:: with SMTP id y14mr14195110ilp.251.1598461248027;
+        Wed, 26 Aug 2020 10:00:48 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8203:5970::c4c])
-        by smtp.googlemail.com with ESMTPSA id p78sm1479606iod.0.2020.08.26.10.00.48
+        by smtp.googlemail.com with ESMTPSA id p78sm1479606iod.0.2020.08.26.10.00.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 10:00:49 -0700 (PDT)
+        Wed, 26 Aug 2020 10:00:47 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         jbaron@akamai.com
-Cc:     Jim Cromie <jim.cromie@gmail.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH 1/4] drm-printk: POC caller of dynamic-debug-exec-queries
-Date:   Wed, 26 Aug 2020 11:00:38 -0600
-Message-Id: <20200826170041.2497546-2-jim.cromie@gmail.com>
+Cc:     Jim Cromie <jim.cromie@gmail.com>
+Subject: [PATCH 0/4] dyndbg: POC use dynamic_debug_exec_queries in DRM
+Date:   Wed, 26 Aug 2020 11:00:37 -0600
+Message-Id: <20200826170041.2497546-1-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200826170041.2497546-1-jim.cromie@gmail.com>
-References: <20200826170041.2497546-1-jim.cromie@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,82 +74,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Export of dynamic-debug-exec-queries exists for users like drm.
+This patchset tests/demonstrates using dynamic_debug_exec_queries() to
+alter 2 drivers' pr_debugs without a user directly using >control.
 
-This commit is a 1st user-test; it adds a 2nd knob, __drm_debug2,
-similar in function to __drm_debug.  module_param_cb wires it to a
-callback which maps the input value to one of: "module=drm* +/-p".
+For drm.core, I copied drm.debug module parameter model, adding
+drm.debug2 as a POC user interface to control 2 pr_debug additions to
+drm_printk:drm_dbg,dev_dbg, allowing both category and >control to
+work in parallel.  This patch makes no attempt to integrate drm's
+category mechanism with the "format=^class" callsite selection; thats
+the "theory", but it needs testing.
 
-The include is needed to see the exported function prototype.
+For i915/gvt, I repeated the pattern.  I focussed on gvt only, because
+it had the most compelling use of format strings as pr_debug classes;
+~120 pr_debugs in 9 classes.  These are mapped onto bits of the param.
 
-Notes:
+bash-5.0# echo 0x0 > /sys/module/i915/parameters/debug_dyn 
+[ 3137.044185] set_dyndbg: result:0x0 from 0x0
+[ 3137.044185] 
+[ 3137.047370] dyndbg: query 0: "format='^gvt: cmd: ' -p"
+[ 3137.050302] dyndbg: entry, buf:'format='^gvt: cmd: ' -p'
+[ 3137.053331] dyndbg: start-of-word:0 'format='^gvt: cmd: ' -p'
 
-The define DEBUG at top of drm-printk enables all pr_debug()s,
-independent of CONFIG_DYNAMIC_DEBUG_CORE.
+These patches were the test/use case for-59 fixes:
+https://lore.kernel.org/lkml/20200825173339.2082585-1-jim.cromie@gmail.com/
 
-drm-printk is an independent print control system using __drm_debug
-bits.  The plan is to find the low-level macros in which to insert a
-pr_debug call, their eventual callsites will have distinct METADATA,
-so will be itemized in control, and individually selectable.
 
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
----
- drivers/gpu/drm/drm_print.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Jim Cromie (4):
+  drm-printk: POC caller of dynamic-debug-exec-queries
+  drm-printk: call pr_debug() from drm_dev_dbg, __drm_dbg
+  i915: add -DDYNAMIC_DEBUG_MODULE to i915/gvt/Makefile
+  i915: POC use dynamic_debug_exec_queries to control pr_debugs in gvt
 
-diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
-index 111b932cf2a9..52abaf2ae053 100644
---- a/drivers/gpu/drm/drm_print.c
-+++ b/drivers/gpu/drm/drm_print.c
-@@ -27,6 +27,7 @@
- 
- #include <stdarg.h>
- 
-+#include <linux/dynamic_debug.h>
- #include <linux/io.h>
- #include <linux/moduleparam.h>
- #include <linux/seq_file.h>
-@@ -54,6 +55,40 @@ MODULE_PARM_DESC(debug, "Enable debug output, where each bit enables a debug cat
- "\t\tBit 8 (0x100) will enable DP messages (displayport code)");
- module_param_named(debug, __drm_debug, int, 0600);
- 
-+/* POC for callback -> ddebug_exec_queries */
-+unsigned int __drm_debug2;
-+EXPORT_SYMBOL(__drm_debug2);
-+
-+static int param_set_dyndbg(const char *val, const struct kernel_param *kp)
-+{
-+	int chgct, result;
-+
-+	result = kstrtouint(val, 0, (unsigned int *)kp->arg);
-+	pr_warn("set_dyndbg: result:%d from %s\n", result, val);
-+
-+	if (result)
-+		chgct = dynamic_debug_exec_queries("module=drm* +p", NULL);
-+	else
-+		chgct = dynamic_debug_exec_queries("module=drm* -p", NULL);
-+
-+	pr_warn("change ct:%d\n", chgct);
-+	return 0;
-+}
-+static int param_get_dyndbg(char *buffer, const struct kernel_param *kp)
-+{
-+	return scnprintf(buffer, PAGE_SIZE, "%u\n",
-+			 *((unsigned int *)kp->arg));
-+}
-+static const struct kernel_param_ops param_ops_dyndbg = {
-+	.set = param_set_dyndbg,
-+	.get = param_get_dyndbg,
-+};
-+
-+MODULE_PARM_DESC(debug_dyn, "Enable debug output, where each bit enables a debug category.\n"
-+		 "\t\tthese wont work yet\n");
-+module_param_cb(debug_dyn, &param_ops_dyndbg, &__drm_debug2, 0644);
-+
-+
- void __drm_puts_coredump(struct drm_printer *p, const char *str)
- {
- 	struct drm_print_iterator *iterator = p->arg;
+ drivers/gpu/drm/drm_print.c        | 54 ++++++++++++++++++---
+ drivers/gpu/drm/i915/gvt/Makefile  |  5 +-
+ drivers/gpu/drm/i915/i915_params.c | 76 ++++++++++++++++++++++++++++++
+ 3 files changed, 127 insertions(+), 8 deletions(-)
+
 -- 
 2.26.2
 
