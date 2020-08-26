@@ -2,174 +2,156 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4BCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A986BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA39321775
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vRQXfv32";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="74Nj30mT"
+	by mail.kernel.org (Postfix) with ESMTP id 8631C20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598443662;
+	bh=Te4z8Mng4HDeGnflKonPqgAUZimM7ubUbwDkxxuUAVg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=jFdqxEvOKRxPQAaMkSvWfn896p4PnVyTIdSGcnXDf1W35jNdZv+2OLqH5/3HEFjU1
+	 jlglx/LPG5/HiGl/8rBAuCYzeQu2Ovtq1aHTT4CT9DNbyhCak0HgfdkII52vaa4nkj
+	 Whs4DCnU7GCNaIKXJkYjvlrN5yt75Jqh5IcLcD1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbgHZMCv (ORCPT
+        id S1729618AbgHZMHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:02:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729415AbgHZMBn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:01:43 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17127C061798;
-        Wed, 26 Aug 2020 05:01:35 -0700 (PDT)
-Message-Id: <20200826112333.714566121@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598443293;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=lYvnoAPQWUQ+lzpgP+IiwnNeH1MqCUGgXZQosJYDQY0=;
-        b=vRQXfv327OIRrmBpatce9zJYvVSKGz9rxbKVO9yT1yZnm6MAF6kqafQ5Ay88u1vp4j2WKf
-        w1HKMPXq393uNFPMWAFwUrUnSGPfLNNupRnyNvd7TH+Fl8J9uLvWs6P/g0ycISyoIs+Tcb
-        Xt6VcPt1dmdoKxe5p3MOCjNBijQ102S2vBENRLBkHbnr1AEN02Hq+R0SIED2ZUbcUbevk9
-        v+LiIefGVV2qKYRfUnTSFxpchJDd7EsXz35rR2S2waJZLdik0ZbN4vMG1SAjwdWH/A/M2L
-        FgvDphPLESUO8O0ALaV+pVF2iWsyvxNjwOgliwpa1V8+7AboY1HO3WCFQFmepQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598443293;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=lYvnoAPQWUQ+lzpgP+IiwnNeH1MqCUGgXZQosJYDQY0=;
-        b=74Nj30mT4kacCMUvrAOn6Ir2cuRq9elzCKoOuyST4heReMM9HfcFNpttWcNgI6Q6Y5FKkP
-        jIh2F+rccKFEAbDA==
-Date:   Wed, 26 Aug 2020 13:16:59 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [patch V2 31/46] iommm/vt-d: Store irq domain in struct device
-References: <20200826111628.794979401@linutronix.de>
+        Wed, 26 Aug 2020 08:07:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729460AbgHZMCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:02:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50C95208A9;
+        Wed, 26 Aug 2020 12:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598443362;
+        bh=Te4z8Mng4HDeGnflKonPqgAUZimM7ubUbwDkxxuUAVg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XcWFINPG93jQ/KV5KUo8SepgSqENoQs0wCY2YIAgRHSr7i4cm9tycsbBAAJCyP2+j
+         kxNkfhS5QXTNyI0HweA+7pXUgJzLt6YU8lc+rYZ9Z3QNQ1SkrE3yw8XIwhQEwptDG6
+         f07uLp96/8QqKyqSrk6wxHk845mgopdaS/HG1T+o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        syzbot+a61aa19b0c14c8770bd9@syzkaller.appspotmail.com,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.7 03/15] net: nexthop: dont allow empty NHA_GROUP
+Date:   Wed, 26 Aug 2020 14:02:31 +0200
+Message-Id: <20200826114849.468079562@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200826114849.295321031@linuxfoundation.org>
+References: <20200826114849.295321031@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-As a first step to make X86 utilize the direct MSI irq domain operations
-store the irq domain pointer in the device struct when a device is probed.
+[ Upstream commit eeaac3634ee0e3f35548be35275efeca888e9b23 ]
 
-This is done from dmar_pci_bus_add_dev() because it has to work even when
-DMA remapping is disabled. It only overrides the irqdomain of devices which
-are handled by a regular PCI/MSI irq domain which protects PCI devices
-behind special busses like VMD which have their own irq domain.
+Currently the nexthop code will use an empty NHA_GROUP attribute, but it
+requires at least 1 entry in order to function properly. Otherwise we
+end up derefencing null or random pointers all over the place due to not
+having any nh_grp_entry members allocated, nexthop code relies on having at
+least the first member present. Empty NHA_GROUP doesn't make any sense so
+just disallow it.
+Also add a WARN_ON for any future users of nexthop_create_group().
 
-No functional change. It just avoids the redirection through
-arch_*_msi_irqs() and allows the PCI/MSI core to directly invoke the irq
-domain alloc/free functions instead of having to look up the irq domain for
-every single MSI interupt.
+ BUG: kernel NULL pointer dereference, address: 0000000000000080
+ #PF: supervisor read access in kernel mode
+ #PF: error_code(0x0000) - not-present page
+ PGD 0 P4D 0
+ Oops: 0000 [#1] SMP
+ CPU: 0 PID: 558 Comm: ip Not tainted 5.9.0-rc1+ #93
+ Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
+ RIP: 0010:fib_check_nexthop+0x4a/0xaa
+ Code: 0f 84 83 00 00 00 48 c7 02 80 03 f7 81 c3 40 80 fe fe 75 12 b8 ea ff ff ff 48 85 d2 74 6b 48 c7 02 40 03 f7 81 c3 48 8b 40 10 <48> 8b 80 80 00 00 00 eb 36 80 78 1a 00 74 12 b8 ea ff ff ff 48 85
+ RSP: 0018:ffff88807983ba00 EFLAGS: 00010213
+ RAX: 0000000000000000 RBX: ffff88807983bc00 RCX: 0000000000000000
+ RDX: ffff88807983bc00 RSI: 0000000000000000 RDI: ffff88807bdd0a80
+ RBP: ffff88807983baf8 R08: 0000000000000dc0 R09: 000000000000040a
+ R10: 0000000000000000 R11: ffff88807bdd0ae8 R12: 0000000000000000
+ R13: 0000000000000000 R14: ffff88807bea3100 R15: 0000000000000001
+ FS:  00007f10db393700(0000) GS:ffff88807dc00000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000080 CR3: 000000007bd0f004 CR4: 00000000003706f0
+ Call Trace:
+  fib_create_info+0x64d/0xaf7
+  fib_table_insert+0xf6/0x581
+  ? __vma_adjust+0x3b6/0x4d4
+  inet_rtm_newroute+0x56/0x70
+  rtnetlink_rcv_msg+0x1e3/0x20d
+  ? rtnl_calcit.isra.0+0xb8/0xb8
+  netlink_rcv_skb+0x5b/0xac
+  netlink_unicast+0xfa/0x17b
+  netlink_sendmsg+0x334/0x353
+  sock_sendmsg_nosec+0xf/0x3f
+  ____sys_sendmsg+0x1a0/0x1fc
+  ? copy_msghdr_from_user+0x4c/0x61
+  ___sys_sendmsg+0x63/0x84
+  ? handle_mm_fault+0xa39/0x11b5
+  ? sockfd_lookup_light+0x72/0x9a
+  __sys_sendmsg+0x50/0x6e
+  do_syscall_64+0x54/0xbe
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ RIP: 0033:0x7f10dacc0bb7
+ Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb cd 66 0f 1f 44 00 00 8b 05 9a 4b 2b 00 85 c0 75 2e 48 63 ff 48 63 d2 b8 2e 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 8b 15 b1 f2 2a 00 f7 d8 64 89 02 48
+ RSP: 002b:00007ffcbe628bf8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+ RAX: ffffffffffffffda RBX: 00007ffcbe628f80 RCX: 00007f10dacc0bb7
+ RDX: 0000000000000000 RSI: 00007ffcbe628c60 RDI: 0000000000000003
+ RBP: 000000005f41099c R08: 0000000000000001 R09: 0000000000000008
+ R10: 00000000000005e9 R11: 0000000000000246 R12: 0000000000000000
+ R13: 0000000000000000 R14: 00007ffcbe628d70 R15: 0000563a86c6e440
+ Modules linked in:
+ CR2: 0000000000000080
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+CC: David Ahern <dsahern@gmail.com>
+Fixes: 430a049190de ("nexthop: Add support for nexthop groups")
+Reported-by: syzbot+a61aa19b0c14c8770bd9@syzkaller.appspotmail.com
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
-V2: Add missing forward declaration
----
- drivers/iommu/intel/dmar.c          |    3 +++
- drivers/iommu/intel/irq_remapping.c |   16 ++++++++++++++++
- include/linux/intel-iommu.h         |    7 +++++++
- 3 files changed, 26 insertions(+)
+ net/ipv4/nexthop.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -316,6 +316,9 @@ static int dmar_pci_bus_add_dev(struct d
- 	if (ret < 0 && dmar_dev_scope_status == 0)
- 		dmar_dev_scope_status = ret;
+--- a/net/ipv4/nexthop.c
++++ b/net/ipv4/nexthop.c
+@@ -402,7 +402,7 @@ static int nh_check_attr_group(struct ne
+ 	struct nexthop_grp *nhg;
+ 	unsigned int i, j;
  
-+	if (ret >= 0)
-+		intel_irq_remap_add_device(info);
-+
- 	return ret;
- }
+-	if (len & (sizeof(struct nexthop_grp) - 1)) {
++	if (!len || len & (sizeof(struct nexthop_grp) - 1)) {
+ 		NL_SET_ERR_MSG(extack,
+ 			       "Invalid length for nexthop group attribute");
+ 		return -EINVAL;
+@@ -1104,6 +1104,9 @@ static struct nexthop *nexthop_create_gr
+ 	struct nexthop *nh;
+ 	int i;
  
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -1086,6 +1086,22 @@ static int reenable_irq_remapping(int ei
- 	return -1;
- }
- 
-+/*
-+ * Store the MSI remapping domain pointer in the device if enabled.
-+ *
-+ * This is called from dmar_pci_bus_add_dev() so it works even when DMA
-+ * remapping is disabled. Only update the pointer if the device is not
-+ * already handled by a non default PCI/MSI interrupt domain. This protects
-+ * e.g. VMD devices.
-+ */
-+void intel_irq_remap_add_device(struct dmar_pci_notify_info *info)
-+{
-+	if (!irq_remapping_enabled || pci_dev_has_special_msi_domain(info->dev))
-+		return;
++	if (WARN_ON(!num_nh))
++		return ERR_PTR(-EINVAL);
 +
-+	dev_set_msi_domain(&info->dev->dev, map_dev_to_ir(info->dev));
-+}
-+
- static void prepare_irte(struct irte *irte, int vector, unsigned int dest)
- {
- 	memset(irte, 0, sizeof(*irte));
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -425,6 +425,8 @@ struct q_inval {
- 	int             free_cnt;
- };
- 
-+struct dmar_pci_notify_info;
-+
- #ifdef CONFIG_IRQ_REMAP
- /* 1MB - maximum possible interrupt remapping table size */
- #define INTR_REMAP_PAGE_ORDER	8
-@@ -439,6 +441,11 @@ struct ir_table {
- 	struct irte *base;
- 	unsigned long *bitmap;
- };
-+
-+void intel_irq_remap_add_device(struct dmar_pci_notify_info *info);
-+#else
-+static inline void
-+intel_irq_remap_add_device(struct dmar_pci_notify_info *info) { }
- #endif
- 
- struct iommu_flush {
+ 	nh = nexthop_alloc();
+ 	if (!nh)
+ 		return ERR_PTR(-ENOMEM);
+
 
