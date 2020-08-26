@@ -2,109 +2,129 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C256C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71569C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621F4208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598450109;
-	bh=K5QLd/X1fnK2BhaLCj1T0f0LtdugxVd+h+B5AjNrEw4=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:
-	 Cc:Cc:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WZ0CT8wXUqA24bV1k0BeyeWbDIa3s8GPEVz8eqsN1dlJR6frIlIuFD+1W/kcPiN+4
-	 sknPADXV5SvhvbAUCZsWeUXCIEGgMLradbPcv9TELhqqkV8zKN4boZ6J0uI41Vzbgd
-	 i00NhS1WCQagY1NY+HhrVcpqCA8vPEIc2CqxY+JQ=
+	by mail.kernel.org (Postfix) with ESMTP id 478DF208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:55:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fgh0EBDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbgHZNzE (ORCPT
+        id S1730596AbgHZNz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:55:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60778 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730453AbgHZNx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:53:59 -0400
-Received: from localhost (unknown [70.37.104.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4D4C22B4B;
-        Wed, 26 Aug 2020 13:53:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598450039;
-        bh=K5QLd/X1fnK2BhaLCj1T0f0LtdugxVd+h+B5AjNrEw4=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:
-         Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=d9t+9O/5L1pVr1cn+LCeNjQnxckoIX4KWNn9hhvwRA9015CapL+hwvn8aRci0zkC7
-         9eRPuvnVVzxHNSdsjyrcW0BFEOemmwwv99edARWoGrSC4cIH7Z3eZ+nNIqiKAK4KbV
-         3lAt67YzGUbOvaFIcGgkbj5NwbXMV4oSg/XtdACs=
-Date:   Wed, 26 Aug 2020 13:53:58 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Kim Phillips <kim.phillips@amd.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Stephane Eranian <eranian@google.com>
-Cc:     Stephane Eranian <eranian@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Borislav Petkov <bp@alien8.de>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Michael Petlan <mpetlan@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86 <x86@kernel.org>
-Cc:     stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH 1/7 RESEND] perf/amd/uncore: Set all slices and threads to restore perf stat -a behaviour
-In-Reply-To: <20200817220628.7604-1-kim.phillips@amd.com>
-References: <20200817220628.7604-1-kim.phillips@amd.com>
-Message-Id: <20200826135358.C4D4C22B4B@mail.kernel.org>
+        Wed, 26 Aug 2020 09:55:27 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:53086 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730401AbgHZNxt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:53:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598450026;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=a6/9RWVH+HHXGBzEDVLsEfL1x5d6HiPRbZYXddcAxi4=;
+        b=Fgh0EBDHnwgzntyr2ZRCNIs93/lZx+s491I7tBV+igCpaSoTWUpvBSi77Bps6IRAlUia8h
+        9inKnEAv9UNvdF7GstDwxv8CS2UGJRWItATl5S7Zntby0paW7pYziVHncu19r7hqALGSa1
+        dcnA3GxjYXniB6KAKVby01uBNX5llck=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-210-21eCWtFsODCtr-C72N-74A-1; Wed, 26 Aug 2020 09:53:43 -0400
+X-MC-Unique: 21eCWtFsODCtr-C72N-74A-1
+Received: by mail-qk1-f199.google.com with SMTP id s186so1675424qka.17
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:53:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=a6/9RWVH+HHXGBzEDVLsEfL1x5d6HiPRbZYXddcAxi4=;
+        b=KUNkuKhde6X1umqVdQxWpCqigZQnmxj8v1eyFNfee3KUGNrhN6uSMs3tarHQw9zz18
+         3G6YMQaBdmz9SdgMUhLMEmW8bjJTPzkg+HrZ2fUqCgpZ+70sVvVpyO8XMkq6lgxj4Oy3
+         8XbVad89tuVxTPYMpWGA7uN5CLkf7s4TWozc3chHBTga2Ccn19bEk7BIkly4oxXfFMXy
+         GY97Rn3TLD/j/JxLKXAC909hb6OM2+1vRi0x1MYLSFS9xg9y8HE8Mr6OdjcdqLySbl6K
+         VAupmPzDePytKkBM4nr6UJzKNxAfjeZzRtP4rGoM/DlZE+XxGbUR6cRY8sE8DgvewQKr
+         +O7A==
+X-Gm-Message-State: AOAM532B5SxdvkoyVTSOEvg+8BhSn+nlk2ZlNb5cdS69/EI+0slNvvUy
+        lgEv+INOb+NKkz56KzLHF+wen66qtJx9MhbNidozTUgcScA9V9aNmBLzVpM8D1jk5OxcEhbu+em
+        4XELm9z9z7K9UpvwBZYf+lEc6
+X-Received: by 2002:aed:2f02:: with SMTP id l2mr14551678qtd.48.1598450023032;
+        Wed, 26 Aug 2020 06:53:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyLU0PrX4ZdOSvRvZ8983Or49LFMt1CgFYZh5EvWoyUBtaJfQNhfYmHygx4Cu2kvYhZdlFppg==
+X-Received: by 2002:aed:2f02:: with SMTP id l2mr14551653qtd.48.1598450022746;
+        Wed, 26 Aug 2020 06:53:42 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id o16sm1725687qkj.18.2020.08.26.06.53.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 06:53:42 -0700 (PDT)
+From:   trix@redhat.com
+To:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        rikard.falkeborn@gmail.com, rogerable@realtek.com,
+        lee.jones@linaro.org
+Cc:     linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH] misc: rtsx: improve status check
+Date:   Wed, 26 Aug 2020 06:53:37 -0700
+Message-Id: <20200826135337.17105-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+From: Tom Rix <trix@redhat.com>
 
-[This is an automated email]
+clang static analysis flags this error
 
-This commit has been processed because it contains a "Fixes:" tag
-fixing commit: 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for F17h L3 PMCs").
+rtsx_usb.c:505:10: warning: The left operand of '&'
+  is a garbage value
+        if (val & cd_mask[card])
+            ~~~ ^
 
-The bot has tested the following trees: v5.8.2, v5.7.16, v5.4.59, v4.19.140, v4.14.193.
+val is set when rtsx_usb_get_card_status() is successful.  The
+problem is how it checks its callers returns.
 
-v5.8.2: Build OK!
-v5.7.16: Build OK!
-v5.4.59: Failed to apply! Possible dependencies:
-    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
-    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
-    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
+	/* usb_control_msg may return positive when success */
+	if (ret < 0)
+		return ret;
 
-v4.19.140: Failed to apply! Possible dependencies:
-    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
-    6d0ef316b9f8 ("x86/events: Add Hygon Dhyana support to PMU infrastructure")
-    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
-    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
+This is correct for the usb_control_msg() the call. However,
+the call to rtsx_usb_get_status_with_bulk is only successful
+when 0 is returned.
 
-v4.14.193: Failed to apply! Possible dependencies:
-    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
-    6d0ef316b9f8 ("x86/events: Add Hygon Dhyana support to PMU infrastructure")
-    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
-    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
+So make status checking block specific.
 
+Fixes: 730876be2566 ("mfd: Add realtek USB card reader driver")
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/misc/cardreader/rtsx_usb.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
+diff --git a/drivers/misc/cardreader/rtsx_usb.c b/drivers/misc/cardreader/rtsx_usb.c
+index 59eda55d92a3..bd392b0c66af 100644
+--- a/drivers/misc/cardreader/rtsx_usb.c
++++ b/drivers/misc/cardreader/rtsx_usb.c
+@@ -304,14 +304,15 @@ int rtsx_usb_get_card_status(struct rtsx_ucr *ucr, u16 *status)
+ 		*status = *buf;
+ 
+ 		kfree(buf);
++
++		/* usb_control_msg may return positive when success */
++		if (ret < 0)
++			return ret;
+ 	} else {
+ 		ret = rtsx_usb_get_status_with_bulk(ucr, status);
++		if (ret)
++			return ret;
+ 	}
+-
+-	/* usb_control_msg may return positive when success */
+-	if (ret < 0)
+-		return ret;
+-
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(rtsx_usb_get_card_status);
 -- 
-Thanks
-Sasha
+2.18.1
+
