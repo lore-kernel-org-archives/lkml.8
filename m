@@ -2,163 +2,79 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF4BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77C4920838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:08:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598443681;
-	bh=XU7kw8EKx+dxjCQFJN0yOvyQfd9J0drOfXvIptB9kvM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=rdNq5rPI12QbLpNyuPpWhk3BN/2p9RsmRgKBU4TOGqEm/9CfmYAkrBoOuasEyZXmK
-	 P+trk/03yUrXz1yIUoiS36wbJYFqVt1Urahk6tVxDzdadcJ3p88RetgGlk3lFWQsIc
-	 fKBxfoeP+02hJM1KE1iHDwV3PiQ4+v1VHk7gvM5A=
+	by mail.kernel.org (Postfix) with ESMTP id 9665A20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbgHZMH6 (ORCPT
+        id S1729775AbgHZMIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36522 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 08:08:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47662 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729451AbgHZMCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:02:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04C3720838;
-        Wed, 26 Aug 2020 12:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598443352;
-        bh=XU7kw8EKx+dxjCQFJN0yOvyQfd9J0drOfXvIptB9kvM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ejtr0flzNgvuIogYGcEof0T8nvpcmzgFBmo0FvkhZCSHWWwBwFAPLbYfqnGs+DX2i
-         rsOhagXS9L8icHPy3Y4zFPThPL20osBRhKCmEv3y84cIqoutI1odl/AE2Rwg1/JJHg
-         3TnaY3jnbXDmCoiKAwzjuNNbxF/6rZOrACVX9emw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 5.7 00/15] 5.7.19-rc1 review
-Date:   Wed, 26 Aug 2020 14:02:28 +0200
-Message-Id: <20200826114849.295321031@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
+        id S1729460AbgHZMHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:07:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 37BC4AF2F;
+        Wed, 26 Aug 2020 12:08:12 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 14:07:40 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     xunlei <xlpang@linux.alibaba.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm: memcg: Fix memcg reclaim soft lockup
+Message-ID: <20200826120740.GP22869@dhcp22.suse.cz>
+References: <1598426822-93737-1-git-send-email-xlpang@linux.alibaba.com>
+ <20200826081102.GM22869@dhcp22.suse.cz>
+ <99efed0e-050a-e313-46ab-8fe6228839d5@linux.alibaba.com>
+ <20200826110015.GO22869@dhcp22.suse.cz>
+ <f0122b2d-4740-2caf-3c4f-009a513426e3@linux.alibaba.com>
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.7.19-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.19-rc1
-X-KernelTest-Deadline: 2020-08-28T11:48+00:00
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <f0122b2d-4740-2caf-3c4f-009a513426e3@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
--------------------
-Note, ok, this is really going to be the final 5.7.y kernel release.  I
-mean it this time....
--------------------
+On Wed 26-08-20 20:00:47, xunlei wrote:
+> On 2020/8/26 下午7:00, Michal Hocko wrote:
+> > On Wed 26-08-20 18:41:18, xunlei wrote:
+> >> On 2020/8/26 下午4:11, Michal Hocko wrote:
+> >>> On Wed 26-08-20 15:27:02, Xunlei Pang wrote:
+> >>>> We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
+> >>>> the target memcg doesn't have any reclaimable memory.
+> >>>
+> >>> Do you have any scenario when this happens or is this some sort of a
+> >>> test case?
+> >>
+> >> It can happen on tiny guest scenarios.
+> > 
+> > OK, you made me more curious. If this is a tiny guest and this is a hard
+> > limit reclaim path then we should trigger an oom killer which should
+> > kill the offender and that in turn bail out from the try_charge lopp
+> > (see should_force_charge). So how come this repeats enough in your setup
+> > that it causes soft lockups?
+> > 
+> 
+> should_force_charge() is false, the current trapped in endless loop is
+> not the oom victim.
 
-This is the start of the stable review cycle for the 5.7.19 release.
-There are 15 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+How is that possible? If the oom killer kills a task and that doesn't
+resolve the oom situation then it would go after another one until all
+tasks are killed. Or is your task living outside of the memcg it tries
+to charge?
 
-Responses should be made by Fri, 28 Aug 2020 11:48:35 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.19-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.7.19-rc1
-
-Max Filippov <jcmvbkbc@gmail.com>
-    binfmt_flat: revert "binfmt_flat: don't offset the data start"
-
-Michael Ellerman <mpe@ellerman.id.au>
-    powerpc/64s: Don't init FSCR_DSCR in __init_FSCR()
-
-Maxim Mikityanskiy <maximmi@mellanox.com>
-    ethtool: Don't omit the netlink reply if no features were changed
-
-Maxim Mikityanskiy <maximmi@mellanox.com>
-    ethtool: Account for hw_features in netlink interface
-
-Maxim Mikityanskiy <maximmi@mellanox.com>
-    ethtool: Fix preserving of wanted feature bits in netlink interface
-
-Shay Agroskin <shayagr@amazon.com>
-    net: ena: Make missed_tx stat incremental
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    tipc: fix uninit skb->data in tipc_nl_compat_dumpit()
-
-Xin Long <lucien.xin@gmail.com>
-    tipc: call rcu_read_lock() in tipc_aead_encrypt_done()
-
-Peilin Ye <yepeilin.cs@gmail.com>
-    net/smc: Prevent kernel-infoleak in __smc_diag_dump()
-
-David Laight <David.Laight@ACULAB.COM>
-    net: sctp: Fix negotiation of the number of data streams.
-
-Alaa Hleihel <alaa@mellanox.com>
-    net/sched: act_ct: Fix skb double-free in tcf_ct_handle_fragments() error flow
-
-Necip Fazil Yildiran <necip@google.com>
-    net: qrtr: fix usage of idr in port assignment to socket
-
-Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-    net: nexthop: don't allow empty NHA_GROUP
-
-Miaohe Lin <linmiaohe@huawei.com>
-    net: Fix potential wrong skb->protocol in skb_vlan_untag()
-
-Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-    gre6: Fix reception with IP6_TNL_F_RCV_DSCP_COPY
-
-
--------------
-
-Diffstat:
-
- Makefile                                     |  4 ++--
- arch/powerpc/kernel/cpu_setup_power.S        |  2 +-
- drivers/net/ethernet/amazon/ena/ena_netdev.c |  5 ++++-
- fs/binfmt_flat.c                             | 20 ++++++++++++--------
- net/core/skbuff.c                            |  4 ++--
- net/ethtool/features.c                       | 19 ++++++++++---------
- net/ipv4/nexthop.c                           |  5 ++++-
- net/ipv6/ip6_tunnel.c                        | 10 +++++++++-
- net/qrtr/qrtr.c                              | 20 +++++++++++---------
- net/sched/act_ct.c                           |  2 +-
- net/sctp/stream.c                            |  6 ++++--
- net/smc/smc_diag.c                           | 16 +++++++++-------
- net/tipc/crypto.c                            |  2 ++
- net/tipc/netlink_compat.c                    | 12 +++++++++++-
- 14 files changed, 82 insertions(+), 45 deletions(-)
-
-
+-- 
+Michal Hocko
+SUSE Labs
