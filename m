@@ -2,111 +2,106 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3232C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA27C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1F4A221E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598448740;
-	bh=N7hZxylonpulq+kvN5bIqiP/e2mXO2Jt1hFduoiS2vk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FQjJxBGKTFmHlcL2KqSRLY5FDdantnMO9rTorKE7F6ZqrquiOJtLa7mW+4SsWoSRH
-	 puHfGSPX+85nIGJrkmzDn7W7zlqoEMpFod0gEcHNytFZ4voUoGJDD2tPCfKJHdc3sX
-	 GHhzmKFsRA4o5KPivOBTeAJPwITFSGSlAXIk7GX8=
+	by mail.kernel.org (Postfix) with ESMTP id 0279922BEF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:32:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730320AbgHZNcC (ORCPT
+        id S1730332AbgHZNci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:32:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45786 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 09:32:38 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:33154 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730288AbgHZNb5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:31:57 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97A0621741;
-        Wed, 26 Aug 2020 13:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598448716;
-        bh=N7hZxylonpulq+kvN5bIqiP/e2mXO2Jt1hFduoiS2vk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HHHbW4O+lFudLOGG8w10yrHscW841Md6gaw0W5oaXoZM0peA8oJAYZJza+fpfjTek
-         I8e+fqSVTuGp3U9k4VGGuUeYAwzpaVI0jkaJwC4DQb+5m3+jra3hoNLkYd+ElQ8Dbm
-         b4xlH4UAyzGHgp7yjTOR593NTzAvN7l44aXcTst4=
-Date:   Wed, 26 Aug 2020 15:31:52 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] docs: trace: ring-buffer-design.rst: use the new SPDX
- tag
-Message-ID: <20200826153152.54ce996a@coco.lan>
-In-Reply-To: <20200826064733.33c22a2c@lwn.net>
-References: <290d101bee434e54acec13778c67c77802fbc953.1598426895.git.mchehab+huawei@kernel.org>
-        <20200826064733.33c22a2c@lwn.net>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1730289AbgHZNa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:30:57 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1kAvUu-00052u-Ib; Wed, 26 Aug 2020 23:29:53 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 26 Aug 2020 23:29:52 +1000
+Date:   Wed, 26 Aug 2020 23:29:52 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Andrew Zaborowski <andrew.zaborowski@intel.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Caleb Jorden <caljorden@hotmail.com>,
+        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [PATCH] crypto: af_alg - Work around empty control messages without
+ MSG_MORE
+Message-ID: <20200826132952.GA4752@gondor.apana.org.au>
+References: <20200826055150.2753.90553@ml01.vlan13.01.org>
+ <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
+ <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
+ <20200826114952.GA2375@gondor.apana.org.au>
+ <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
+ <20200826120832.GA2996@gondor.apana.org.au>
+ <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 26 Aug 2020 06:47:33 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+The iwd daemon uses libell which sets up the skcipher operation with
+two separate control messages.  This is fine by itself but the first
+control message is sent without MSG_MORE.  This means that the first
+control message is interpreted as an empty request.
 
-> On Wed, 26 Aug 2020 09:28:24 +0200
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> 
-> > SPDX v3.10 gained support for GFDL-1.2 with no invariant sections:
-> > 
-> > 	https://spdx.org/licenses/GFDL-1.2-invariants-only.html
-> > 
-> > Let's use it, instead of keeping a license text for this file.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > ---
-> >  Documentation/trace/ring-buffer-design.rst | 26 +---------------------
-> >  1 file changed, 1 insertion(+), 25 deletions(-)  
-> 
-> [CC expanded]
-> 
-> If we're going to do this, I think we should also add GFDL to the right
-> place in the LICENSES directory - deprecated/ or at best dual/.  But even
-> SPDX (https://spdx.org/licenses/GFDL-1.2.html) says this license is
-> deprecated.
+While libell should be fixed to use MSG_MORE where appropriate, this
+patch works around the bug in the kernel so that existing binaries
+continue to work.
 
-Right. I'll send a separate patch adding it to deprecated/
-together with GFDL-1.1-no-invariants-or-later, which is used
-at the media uAPI documentation. There, GFDL 1.1 is used both
-together with GPL (dual licensed is required for new files) and 
-alone (for the legacy document files).
+We will print a warning however.
 
-> 
-> Beyond that, https://spdx.org/licenses/GFDL-1.2-invariants-only.html seems
-> to disagree with your interpretation; it seems you would want 
-> GFDL-1.2-only-no-invariants ?
+Reported-by: Caleb Jorden <caljorden@hotmail.com>
+Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when...")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 
-Thanks for reviewing! Yeah, indeed I mangled this one. It
-should be, instead:
-
-	GFDL-1.2-no-invariants-only
-
-https://spdx.org/licenses/GFDL-1.2-no-invariants-only.html
-
-I'll send a second version fix it.
-
-Thanks,
-Mauro
+diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+index a6f581ab200c..3da21cadc326 100644
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -16,6 +16,7 @@
+ #include <linux/module.h>
+ #include <linux/net.h>
+ #include <linux/rwsem.h>
++#include <linux/sched.h>
+ #include <linux/sched/signal.h>
+ #include <linux/security.h>
+ 
+@@ -846,8 +847,14 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
+ 
+ 	lock_sock(sk);
+ 	if (ctx->init && (init || !ctx->more)) {
+-		err = -EINVAL;
+-		goto unlock;
++		if (ctx->used) {
++			err = -EINVAL;
++			goto unlock;
++		}
++
++		pr_info_once(
++			"%s sent an empty control message without MSG_MORE.\n",
++			current->comm);
+ 	}
+ 	ctx->init = true;
+ 
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
