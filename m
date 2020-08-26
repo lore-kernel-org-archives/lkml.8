@@ -2,115 +2,166 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BD4C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF36C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A32D820737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04EED20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598477391;
-	bh=M5xEKSXpVHecJggJ/7jEgp0eOy6bqawKlh1mdER1dPI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jCb2uIcZqvfOv8gde46HPaoWoZcOmmUm2jxfPNGTsBQw18FIPnbVXyZ1ZNCvTRKGH
-	 eU4bsxYjda73abo7AP+ARx/f/Z+4x8CJQXxHDPAJQTYP3BTsl5WLYdx9ivhSd/Etds
-	 0isRjQD27UbvqZB9Bxk/amHNjZSI63HfVitHZUhY=
+	s=default; t=1598477444;
+	bh=Mdh/uob6URxySyRHxrRvur9qhtL893eouBRnVJlaukA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Y/6JpGvc1CBoBeystRZUJgvNyZO1LhTxu0t2lVgcFufZmPeuTv3TCaplFA+jz6z+v
+	 WMLQ6+nZOKkrrGdIdJXUl5TI9uiSRwSkvxDhgp2FXDuf1MVCdYpcEc4HMqMSTRlWmE
+	 i1u/BqkqAOrAN0gDBso5sZLuw60j0mRyK2VEOdz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgHZV3u (ORCPT
+        id S1726988AbgHZVan convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:29:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbgHZV3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:29:47 -0400
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 26 Aug 2020 17:30:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21458 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726753AbgHZVal (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:30:41 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-Zs2im0ktOzWu__BFaEW2Sw-1; Wed, 26 Aug 2020 17:30:33 -0400
+X-MC-Unique: Zs2im0ktOzWu__BFaEW2Sw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 553202087D;
-        Wed, 26 Aug 2020 21:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598477387;
-        bh=M5xEKSXpVHecJggJ/7jEgp0eOy6bqawKlh1mdER1dPI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LzSG/Qk5a7WHKiWMn5Aie6eF3iIzNZ2Z16IWtEjn8XheIoyozAa5Wr9w7uXB2mb8k
-         zHIPktW2cWMSBpItG9L30fRv6EL6nq/ixJmE6ksFv6ljGb3QpVka71a5KHi+WwV0Bp
-         odTTB66Cn0nbD3qg9MYavogJg5f8w/NXotDnUybg=
-Received: by mail-ot1-f52.google.com with SMTP id 5so2721709otp.12;
-        Wed, 26 Aug 2020 14:29:47 -0700 (PDT)
-X-Gm-Message-State: AOAM533nPRQ7ovw2sGYlPPXoTf5Kz9I9RYzsaRLHIDpSmjNSXQhBX8wO
-        NvtozEIls4NUMAja9fUgDobif7BO33AmJJCT2Q==
-X-Google-Smtp-Source: ABdhPJzKDROM+sVn9p1+uBWIsSAzu4iTPQHq6XS0P/baAB/RdWr+zWp8c0Q/Clsw7CgWdmERsCd2ozKRfUZcCCkoyOU=
-X-Received: by 2002:a9d:32e5:: with SMTP id u92mr10408148otb.107.1598477386677;
- Wed, 26 Aug 2020 14:29:46 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B36F873116;
+        Wed, 26 Aug 2020 21:30:31 +0000 (UTC)
+Received: from krava.redhat.com (unknown [10.40.192.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D2D350B3F;
+        Wed, 26 Aug 2020 21:30:26 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Ian Rogers <irogers@google.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [PATCH] perf tools: Add bpf image check to __map__is_kmodule
+Date:   Wed, 26 Aug 2020 23:30:17 +0200
+Message-Id: <20200826213017.818788-1-jolsa@kernel.org>
 MIME-Version: 1.0
-References: <20200826183805.19369-1-andre.przywara@arm.com>
- <20200826183805.19369-4-andre.przywara@arm.com> <c401554a-36ce-7e05-5ef0-5c05a2ca2868@gmail.com>
- <44992125-7eaa-f35b-3344-16ae0d48f646@arm.com>
-In-Reply-To: <44992125-7eaa-f35b-3344-16ae0d48f646@arm.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 26 Aug 2020 15:29:35 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Ch8_WF1VOK2RsxsnyyGTcZDYD4CqNW5sm9=20TBb_jQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+Ch8_WF1VOK2RsxsnyyGTcZDYD4CqNW5sm9=20TBb_jQ@mail.gmail.com>
-Subject: Re: [PATCH 3/6] ARM: dts: broadcom: Fix SP804 node
-To:     =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jolsa@kernel.org
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:54 PM Andr=C3=A9 Przywara <andre.przywara@arm.co=
-m> wrote:
->
-> On 26/08/2020 19:42, Florian Fainelli wrote:
->
-> Hi,
->
-> > On 8/26/20 11:38 AM, Andre Przywara wrote:
-> >> The DT binding for SP804 requires to have an "arm,primecell" compatibl=
-e
-> >> string.
-> >> Add this string so that the Linux primecell bus driver picks the devic=
-e
-> >> up and activates the clock.
-> >>
-> >> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> >
-> > The commit subject should be:
-> >
-> > ARM: dts: NSP: Fix SP804 compatible node
-> >
-> > and we should probably have a Fixes tag that is:
-> >
-> > Fixes: a0efb0d28b77 ("ARM: dts: NSP: Add SP804 Support to DT")
-> >
-> > Could you please re-submit with those things corrected? Thanks
->
-> Sure, will include that in a v2.
->
-> Out of curiosity, do you have the hardware and can check the impact that
-> has?
-> Not sure we actually create the device without the primecell compatible?
+When validating kcore modules the do_validate_kcore_modules
+function checks on every kernel module dso against modules
+record. The __map__is_kmodule check is used to get only
+kernel module dso objects through.
 
-My first thought was no, but since the timer isn't using the driver
-model (i.e. amba bus), it doesn't need it.
+Currently the bpf images are slipping through the check and
+making the validation to fail, so report falls back from kcore
+usage to kallsyms.
 
-So I think without it, we'd create a platform device instead, but then
-there's some logic to prevent that IIRC.
+Adding __map__is_bpf_image check for bpf image and adding
+it to __map__is_kmodule check.
 
-Rob
+Fixes: 3c29d4483e85 ("perf annotate: Add basic support for bpf_image")
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/util/machine.c |  6 ------
+ tools/perf/util/map.c     | 16 ++++++++++++++++
+ tools/perf/util/map.h     |  9 ++++++++-
+ 3 files changed, 24 insertions(+), 7 deletions(-)
+
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 208b813e00ea..85587de027a5 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -736,12 +736,6 @@ int machine__process_switch_event(struct machine *machine __maybe_unused,
+ 	return 0;
+ }
+ 
+-static int is_bpf_image(const char *name)
+-{
+-	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) == 0 ||
+-	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1) == 0;
+-}
+-
+ static int machine__process_ksymbol_register(struct machine *machine,
+ 					     union perf_event *event,
+ 					     struct perf_sample *sample __maybe_unused)
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 1d7210804639..cc0faf8f1321 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -267,6 +267,22 @@ bool __map__is_bpf_prog(const struct map *map)
+ 	return name && (strstr(name, "bpf_prog_") == name);
+ }
+ 
++bool __map__is_bpf_image(const struct map *map)
++{
++	const char *name;
++
++	if (map->dso->binary_type == DSO_BINARY_TYPE__BPF_IMAGE)
++		return true;
++
++	/*
++	 * If PERF_RECORD_KSYMBOL is not included, the dso will not have
++	 * type of DSO_BINARY_TYPE__BPF_IMAGE. In such cases, we can
++	 * guess the type based on name.
++	 */
++	name = map->dso->short_name;
++	return name && is_bpf_image(name);
++}
++
+ bool __map__is_ool(const struct map *map)
+ {
+ 	return map->dso && map->dso->binary_type == DSO_BINARY_TYPE__OOL;
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index 9e312ae2d656..c2f5d28fe73a 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -147,12 +147,14 @@ int map__set_kallsyms_ref_reloc_sym(struct map *map, const char *symbol_name,
+ bool __map__is_kernel(const struct map *map);
+ bool __map__is_extra_kernel_map(const struct map *map);
+ bool __map__is_bpf_prog(const struct map *map);
++bool __map__is_bpf_image(const struct map *map);
+ bool __map__is_ool(const struct map *map);
+ 
+ static inline bool __map__is_kmodule(const struct map *map)
+ {
+ 	return !__map__is_kernel(map) && !__map__is_extra_kernel_map(map) &&
+-	       !__map__is_bpf_prog(map) && !__map__is_ool(map);
++	       !__map__is_bpf_prog(map) && !__map__is_ool(map) &&
++	       !__map__is_bpf_image(map);
+ }
+ 
+ bool map__has_symbols(const struct map *map);
+@@ -164,4 +166,9 @@ static inline bool is_entry_trampoline(const char *name)
+ 	return !strcmp(name, ENTRY_TRAMPOLINE_NAME);
+ }
+ 
++static inline bool is_bpf_image(const char *name)
++{
++	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) == 0 ||
++	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1) == 0;
++}
+ #endif /* __PERF_MAP_H */
+-- 
+2.25.4
+
