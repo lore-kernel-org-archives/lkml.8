@@ -2,104 +2,226 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-16.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 403572074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:49:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f9AZkUF8"
+	by mail.kernel.org (Postfix) with ESMTP id 8258B2074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:50:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598460606;
+	bh=jlPIwME3kxywrJX2VVZ2tRDpEIbadIzP/6aUPhfmDBE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xibOLRlRoHKorNeIaN6YCMSiempVs7ixiBIhjhjZDAJwIXbjnu3pvPdLHQQAkYLNC
+	 x1GolnfyvwePOv+qyqGC0ZbHWc/VpcIRJuCIJbELXBfLy2brZTQCM42ZgN12sToZM2
+	 Kdgtl63SpzsGRiBi3FaXI7ixPGM8Q/BFxjcnh+3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgHZQtE (ORCPT
+        id S1728300AbgHZQuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:49:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726929AbgHZQpe (ORCPT
+        Wed, 26 Aug 2020 12:50:04 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:21807 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727969AbgHZQt6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:45:34 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF597C0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:45:32 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id a8so940010plm.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:45:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jCF/a0xKIWqbt7wIUY8AEgGbHy28w20HVJLneFBKefA=;
-        b=f9AZkUF8HwjIrp6vPGOuGK5/BZQ33xA15gaimxyXyvQqbYPMj/aTBZyE79upHJXcyx
-         g0QJuEEu5J6Y1FHXlnQhPuuAeC0D40IYRf81gM2IaC7kqLRVpFie8Eft3ETUodKI4Clk
-         fRWIkJmznBpF/DtjU6iC04NjhKCfy5PL4vbyxzu7KGSFFTf45esVto7O31wAJ1QzCFxa
-         /XgqHeg+eK0QHle+WRUMi9uCgz70vNlJh3foE2Ey/zxfILokqIfynvcBv4K3fwOIaWFq
-         g0+3JbAgzeAoP34ux82szDlXvf3kv6Cp7FfXZBQtWFPAL8uOb7k8zLrJo3hPsaj2QDTA
-         MTOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jCF/a0xKIWqbt7wIUY8AEgGbHy28w20HVJLneFBKefA=;
-        b=MF3na+JKHkxCI9ANY8qpK4l5bEuwYqXRTlvXNIjO2sR/juGd0wED5tR2WjwofIi+fA
-         MQMz7M7iZG7Iz2KfXCAXn30vQn4lyIz9ogNYcFaYHxXokJ+cRNg1PQHPQHC5OIrAt+dY
-         j4AbzoY2rVp+vw9S5133Tbn69+CiteRWLlkjJqzlF4vlU0x2hpEXRIONm2hDSUV5IlGU
-         aIW+pHnLU/qKih/GPHiifTKyaKaRCMeAyYaqBga8aDq6xBLxphR0G4nxXKPlL503pZW5
-         ii8g5Ei7pzj38kZyOCMHN0R4tTDmfdRmBCiejGZg63rynK3G9hIhHuvDhqk2Sh5RWpBQ
-         SLeg==
-X-Gm-Message-State: AOAM5301STz0GRYhCpTgORGGVZvCkh7noajuGLbY+I4z8Vlpx+iw4ocp
-        s+enZd9yYB/k6lbbTCEwWkMfwg==
-X-Google-Smtp-Source: ABdhPJxEUc2ptVXTNpO+YXWFtlc9/9RA87PwcwkcXOQDJRawbIyXYC5dSKq0dPbyN6OxLL9jL1icBQ==
-X-Received: by 2002:a17:902:b28b:: with SMTP id u11mr3741410plr.117.1598460332525;
-        Wed, 26 Aug 2020 09:45:32 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id u3sm2548878pjn.29.2020.08.26.09.45.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 09:45:32 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     bjorn.andersson@linaro.org, ohad@wizery.com
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 01/13] remoteproc: Re-check state in rproc_shutdown()
-Date:   Wed, 26 Aug 2020 10:45:17 -0600
-Message-Id: <20200826164529.224476-2-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200826164529.224476-1-mathieu.poirier@linaro.org>
-References: <20200826164529.224476-1-mathieu.poirier@linaro.org>
+        Wed, 26 Aug 2020 12:49:58 -0400
+X-Greylist: delayed 3009 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Aug 2020 12:49:57 EDT
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 07QGnetR014600;
+        Thu, 27 Aug 2020 01:49:40 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 07QGnetR014600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1598460581;
+        bh=qUxLw8h62gV6lNU8hR9gKg9F4mIeUNwWOgjmbG+A2no=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hAaAFdF3Uv8HXibs8fO1sgTne0mzPKrTDLQxx3rNOjXXrg3y2mojINLp84ANjrkYI
+         Q71zmb4N9cP4a7hD/a81bbkU3SqBYXQjGXaqsLcrhKjmMRi/JUvUU7xpEGk2PtSh/q
+         9CwmLoqmwjz2T3leTam8HT4cldLf0S4peudRwHDKr/WOZTkGcb/PFHDD8TlTc0/7F2
+         4dh5Ald+/9RFBeJTqnhWTRlW+gxLJKmOLyaXdC0AZRzJb+Gg/Of+pR/CINFWFIBVJe
+         L27w2LNub8WufKrz6fCj1ljR9dOGYkVB+cE+ZLh5Cjz8eqNLwHaYQl4RecJsb5ymVC
+         nfc9ZCKlzoBMg==
+X-Nifty-SrcIP: [209.85.214.173]
+Received: by mail-pl1-f173.google.com with SMTP id q3so1158740pls.11;
+        Wed, 26 Aug 2020 09:49:40 -0700 (PDT)
+X-Gm-Message-State: AOAM531vlCthASNevgcpoVIHFtTrFJGyLUt1wPzRIBh/Kn/KRh0NfzcS
+        Fi2iqX0sxqjvZeKonGvlKtaQaZf9ucB84cyHd5M=
+X-Google-Smtp-Source: ABdhPJyZJsunhDhFPQuXquBSA5lbNs1cYEM/vJ29gPa1jTOEE3CUDN0gwYkzK2z3QlPBylPAg5quq9sZvkygbBaqic8=
+X-Received: by 2002:a17:90a:fb53:: with SMTP id iq19mr6982654pjb.153.1598460579840;
+ Wed, 26 Aug 2020 09:49:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200825135838.2938771-1-ndesaulniers@google.com>
+In-Reply-To: <20200825135838.2938771-1-ndesaulniers@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 27 Aug 2020 01:49:03 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQXo5-5W6hvNMEVPBPf3tRWaf-pQdSR-0OHyi4RCGhjsQ@mail.gmail.com>
+Message-ID: <CAK7LNAQXo5-5W6hvNMEVPBPf3tRWaf-pQdSR-0OHyi4RCGhjsQ@mail.gmail.com>
+Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
+        stable <stable@vger.kernel.org>, Andy Lavr <andy.lavr@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Joe Perches <joe@perches.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The state of the remote processor may have changed between the
-time a call to rproc_shutdown() was made and the time it is
-executed.  To avoid moving forward with an operation that may
-have been cancelled, recheck while holding the mutex.
+On Tue, Aug 25, 2020 at 10:58 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> LLVM implemented a recent "libcall optimization" that lowers calls to
+> `sprintf(dest, "%s", str)` where the return value is used to
+> `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+> in parsing format strings.  `stpcpy` is just like `strcpy` except it
+> returns the pointer to the new tail of `dest`.  This optimization was
+> introduced into clang-12.
+>
+> Implement this so that we don't observe linkage failures due to missing
+> symbol definitions for `stpcpy`.
+>
+> Similar to last year's fire drill with:
+> commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
+>
+> The kernel is somewhere between a "freestanding" environment (no full libc)
+> and "hosted" environment (many symbols from libc exist with the same
+> type, function signature, and semantics).
+>
+> As H. Peter Anvin notes, there's not really a great way to inform the
+> compiler that you're targeting a freestanding environment but would like
+> to opt-in to some libcall optimizations (see pr/47280 below), rather than
+> opt-out.
+>
+> Arvind notes, -fno-builtin-* behaves slightly differently between GCC
+> and Clang, and Clang is missing many __builtin_* definitions, which I
+> consider a bug in Clang and am working on fixing.
+>
+> Masahiro summarizes the subtle distinction between compilers justly:
+>   To prevent transformation from foo() into bar(), there are two ways in
+>   Clang to do that; -fno-builtin-foo, and -fno-builtin-bar.  There is
+>   only one in GCC; -fno-buitin-foo.
+>
+> (Any difference in that behavior in Clang is likely a bug from a missing
+> __builtin_* definition.)
+>
+> Masahiro also notes:
+>   We want to disable optimization from foo() to bar(),
+>   but we may still benefit from the optimization from
+>   foo() into something else. If GCC implements the same transform, we
+>   would run into a problem because it is not -fno-builtin-bar, but
+>   -fno-builtin-foo that disables that optimization.
+>
+>   In this regard, -fno-builtin-foo would be more future-proof than
+>   -fno-built-bar, but -fno-builtin-foo is still potentially overkill. We
+>   may want to prevent calls from foo() being optimized into calls to
+>   bar(), but we still may want other optimization on calls to foo().
+>
+> It seems that compilers today don't quite provide the fine grain control
+> over which libcall optimizations pseudo-freestanding environments would
+> prefer.
+>
+> Finally, Kees notes that this interface is unsafe, so we should not
+> encourage its use.  As such, I've removed the declaration from any
+> header, but it still needs to be exported to avoid linkage errors in
+> modules.
+>
+> Cc: stable@vger.kernel.org
+> Link: https://bugs.llvm.org/show_bug.cgi?id=47162
+> Link: https://bugs.llvm.org/show_bug.cgi?id=47280
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1126
+> Link: https://man7.org/linux/man-pages/man3/stpcpy.3.html
+> Link: https://pubs.opengroup.org/onlinepubs/9699919799/functions/stpcpy.html
+> Link: https://reviews.llvm.org/D85963
+> Suggested-by: Andy Lavr <andy.lavr@gmail.com>
+> Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Suggested-by: Joe Perches <joe@perches.com>
+> Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Reported-by: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+> Changes V3:
+> * Drop Sami's Tested by tag; newer patch.
+> * Add EXPORT_SYMBOL as per Andy.
+> * Rewrite commit message, rewrote part of what Masahiro said to be
+>   generic in terms of foo() and bar().
+> * Prefer %NUL-terminated to NULL terminated. NUL is the ASCII character
+>   '\0', as per Arvind and Rasmus.
+>
+> Changes V2:
+> * Added Sami's Tested by; though the patch changed implementation, the
+>   missing symbol at link time was the problem Sami was observing.
+> * Fix __restrict -> __restrict__ typo as per Joe.
+> * Drop note about restrict from commit message as per Arvind.
+> * Fix NULL -> NUL as per Arvind; NUL is ASCII '\0'. TIL
+> * Fix off by one error as per Arvind; I had another off by one error in
+>   my test program that was masking this.
+>
+>  lib/string.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>
+> diff --git a/lib/string.c b/lib/string.c
+> index 6012c385fb31..6bd0cf0fb009 100644
+> --- a/lib/string.c
+> +++ b/lib/string.c
+> @@ -272,6 +272,30 @@ ssize_t strscpy_pad(char *dest, const char *src, size_t count)
+>  }
+>  EXPORT_SYMBOL(strscpy_pad);
+>
+> +/**
+> + * stpcpy - copy a string from src to dest returning a pointer to the new end
+> + *          of dest, including src's %NUL-terminator. May overrun dest.
+> + * @dest: pointer to end of string being copied into. Must be large enough
+> + *        to receive copy.
+> + * @src: pointer to the beginning of string being copied from. Must not overlap
+> + *       dest.
+> + *
+> + * stpcpy differs from strcpy in a key way: the return value is the new
+> + * %NUL-terminated character. (for strcpy, the return value is a pointer to
+> + * src. This interface is considered unsafe as it doesn't perform bounds
+> + * checking of the inputs. As such it's not recommended for usage. Instead,
+> + * its definition is provided in case the compiler lowers other libcalls to
+> + * stpcpy.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- drivers/remoteproc/remoteproc_core.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 7f90eeea67e2..fb2632cbd2df 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1834,6 +1834,9 @@ void rproc_shutdown(struct rproc *rproc)
- 		return;
- 	}
- 
-+	if (rproc->state != RPROC_RUNNING)
-+		goto out;
-+
- 	/* if the remote proc is still needed, bail out */
- 	if (!atomic_dec_and_test(&rproc->power))
- 		goto out;
+I do not have time to keep track of the discussion fully,
+but could you give me a little more context why
+the usage of stpcpy() is not recommended ?
+
+The implementation of strcpy() is almost the same.
+It is unclear to me what makes stpcpy() unsafe..
+
+
+
+> + */
+> +char *stpcpy(char *__restrict__ dest, const char *__restrict__ src);
+> +char *stpcpy(char *__restrict__ dest, const char *__restrict__ src)
+> +{
+> +       while ((*dest++ = *src++) != '\0')
+> +               /* nothing */;
+> +       return --dest;
+> +}
+> +EXPORT_SYMBOL(stpcpy);
+> +
+>  #ifndef __HAVE_ARCH_STRCAT
+>  /**
+>   * strcat - Append one %NUL-terminated string to another
+> --
+> 2.28.0.297.g1956fa8f8d-goog
+>
+
+
 -- 
-2.25.1
-
+Best Regards
+Masahiro Yamada
