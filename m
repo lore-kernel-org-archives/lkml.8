@@ -2,166 +2,168 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF36C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E11C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04EED20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F2020B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:32:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598477444;
-	bh=Mdh/uob6URxySyRHxrRvur9qhtL893eouBRnVJlaukA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Y/6JpGvc1CBoBeystRZUJgvNyZO1LhTxu0t2lVgcFufZmPeuTv3TCaplFA+jz6z+v
-	 WMLQ6+nZOKkrrGdIdJXUl5TI9uiSRwSkvxDhgp2FXDuf1MVCdYpcEc4HMqMSTRlWmE
-	 i1u/BqkqAOrAN0gDBso5sZLuw60j0mRyK2VEOdz4=
+	s=default; t=1598477528;
+	bh=VdsE3G0WVplLGteqa6jAyZDVfUl58SftRfor4592Lhc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=bwn3M0Bkb1AXw/CKNYUR3rQyArXd7tt1Vq4l6lss6lC41I+udVRuhaBEyrPUTkHmK
+	 19dXgcWwl99R0+UIQ2fcStLXPdL87nRDEBX/lEXtkPN1krQaAhxAyC5iiBD7N1pLgf
+	 wUX3+HFnmIZajErGv8bDXdVxpFLQQR5wDZDota/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgHZVan convert rfc822-to-8bit (ORCPT
+        id S1726946AbgHZVcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:30:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21458 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726753AbgHZVal (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:30:41 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-388-Zs2im0ktOzWu__BFaEW2Sw-1; Wed, 26 Aug 2020 17:30:33 -0400
-X-MC-Unique: Zs2im0ktOzWu__BFaEW2Sw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 26 Aug 2020 17:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbgHZVcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:32:06 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B36F873116;
-        Wed, 26 Aug 2020 21:30:31 +0000 (UTC)
-Received: from krava.redhat.com (unknown [10.40.192.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D2D350B3F;
-        Wed, 26 Aug 2020 21:30:26 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH] perf tools: Add bpf image check to __map__is_kmodule
-Date:   Wed, 26 Aug 2020 23:30:17 +0200
-Message-Id: <20200826213017.818788-1-jolsa@kernel.org>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jolsa@kernel.org
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: kernel.org
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+        by mail.kernel.org (Postfix) with ESMTPSA id ADEB620737;
+        Wed, 26 Aug 2020 21:32:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598477525;
+        bh=VdsE3G0WVplLGteqa6jAyZDVfUl58SftRfor4592Lhc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i9DoDgsiUX+wkkK/l5339mYtR4k1TJ5aipWvRxq1xcBpRA5BvZDTI5nWZ01nieUzS
+         44gss4r1HcSekfb8E0GDg4TUzWrb4+Qd/PQRK38Z0kl1kIPdwfbz3o/yK6F6uNmfR6
+         kBeb9yp3s6zsMTc9qxjyWjE6liTypklbtWoSbVm0=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kB31Y-006ytl-2b; Wed, 26 Aug 2020 22:32:04 +0100
+Date:   Wed, 26 Aug 2020 22:32:02 +0100
+Message-ID: <87zh6h14bx.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 04/46] genirq/chip: Use the first chip in irq_chip_compose_msi_msg()
+In-Reply-To: <87o8mxt88z.fsf@nanos.tec.linutronix.de>
+References: <20200826111628.794979401@linutronix.de>
+        <20200826112331.047917603@linutronix.de>
+        <87a6yh2nln.wl-maz@kernel.org>
+        <87o8mxt88z.fsf@nanos.tec.linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When validating kcore modules the do_validate_kcore_modules
-function checks on every kernel module dso against modules
-record. The __map__is_kmodule check is used to get only
-kernel module dso objects through.
+On Wed, 26 Aug 2020 22:19:56 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> On Wed, Aug 26 2020 at 20:50, Marc Zyngier wrote:
+> > On Wed, 26 Aug 2020 12:16:32 +0100,
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> ---
+> >> V2: New patch. Note, that this might break other stuff which relies on the
+> >>     current behaviour, but the hierarchy composition of DT based chips is
+> >>     really hard to follow.
+> >
 
-Currently the bpf images are slipping through the check and
-making the validation to fail, so report falls back from kcore
-usage to kallsyms.
+[...]
 
-Adding __map__is_bpf_image check for bpf image and adding
-it to __map__is_kmodule check.
+> What about the below?
+> 
+> Thanks,
+> 
+>         tglx
+> ---
+> --- a/kernel/irq/internals.h
+> +++ b/kernel/irq/internals.h
+> @@ -473,6 +473,15 @@ static inline void irq_domain_deactivate
+>  }
+>  #endif
+>  
+> +static inline struct irq_data *irqd_get_parent_data(struct irq_data *irqd)
+> +{
+> +#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+> +	return irqd->parent_data;
+> +#else
+> +	return NULL;
+> +#endif
+> +}
+> +
 
-Fixes: 3c29d4483e85 ("perf annotate: Add basic support for bpf_image")
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/util/machine.c |  6 ------
- tools/perf/util/map.c     | 16 ++++++++++++++++
- tools/perf/util/map.h     |  9 ++++++++-
- 3 files changed, 24 insertions(+), 7 deletions(-)
+We obviously should have had this forever.
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 208b813e00ea..85587de027a5 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -736,12 +736,6 @@ int machine__process_switch_event(struct machine *machine __maybe_unused,
- 	return 0;
- }
- 
--static int is_bpf_image(const char *name)
--{
--	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) == 0 ||
--	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1) == 0;
--}
--
- static int machine__process_ksymbol_register(struct machine *machine,
- 					     union perf_event *event,
- 					     struct perf_sample *sample __maybe_unused)
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 1d7210804639..cc0faf8f1321 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -267,6 +267,22 @@ bool __map__is_bpf_prog(const struct map *map)
- 	return name && (strstr(name, "bpf_prog_") == name);
- }
- 
-+bool __map__is_bpf_image(const struct map *map)
-+{
-+	const char *name;
-+
-+	if (map->dso->binary_type == DSO_BINARY_TYPE__BPF_IMAGE)
-+		return true;
-+
-+	/*
-+	 * If PERF_RECORD_KSYMBOL is not included, the dso will not have
-+	 * type of DSO_BINARY_TYPE__BPF_IMAGE. In such cases, we can
-+	 * guess the type based on name.
-+	 */
-+	name = map->dso->short_name;
-+	return name && is_bpf_image(name);
-+}
-+
- bool __map__is_ool(const struct map *map)
- {
- 	return map->dso && map->dso->binary_type == DSO_BINARY_TYPE__OOL;
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 9e312ae2d656..c2f5d28fe73a 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -147,12 +147,14 @@ int map__set_kallsyms_ref_reloc_sym(struct map *map, const char *symbol_name,
- bool __map__is_kernel(const struct map *map);
- bool __map__is_extra_kernel_map(const struct map *map);
- bool __map__is_bpf_prog(const struct map *map);
-+bool __map__is_bpf_image(const struct map *map);
- bool __map__is_ool(const struct map *map);
- 
- static inline bool __map__is_kmodule(const struct map *map)
- {
- 	return !__map__is_kernel(map) && !__map__is_extra_kernel_map(map) &&
--	       !__map__is_bpf_prog(map) && !__map__is_ool(map);
-+	       !__map__is_bpf_prog(map) && !__map__is_ool(map) &&
-+	       !__map__is_bpf_image(map);
- }
- 
- bool map__has_symbols(const struct map *map);
-@@ -164,4 +166,9 @@ static inline bool is_entry_trampoline(const char *name)
- 	return !strcmp(name, ENTRY_TRAMPOLINE_NAME);
- }
- 
-+static inline bool is_bpf_image(const char *name)
-+{
-+	return strncmp(name, "bpf_trampoline_", sizeof("bpf_trampoline_") - 1) == 0 ||
-+	       strncmp(name, "bpf_dispatcher_", sizeof("bpf_dispatcher_") - 1) == 0;
-+}
- #endif /* __PERF_MAP_H */
+>  #ifdef CONFIG_GENERIC_IRQ_DEBUGFS
+>  #include <linux/debugfs.h>
+>  
+> --- a/kernel/irq/chip.c
+> +++ b/kernel/irq/chip.c
+> @@ -1541,18 +1541,17 @@ EXPORT_SYMBOL_GPL(irq_chip_release_resou
+>   */
+>  int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+> -	struct irq_data *pos = NULL;
+> +	struct irq_data *pos;
+>  
+> -#ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+> -	for (; data; data = data->parent_data)
+> -#endif
+> +	for (pos = NULL; !pos && data; data = irqd_get_parent_data(data)) {
+>  		if (data->chip && data->chip->irq_compose_msi_msg)
+>  			pos = data;
+> +	}
+> +
+>  	if (!pos)
+>  		return -ENOSYS;
+>  
+>  	pos->chip->irq_compose_msi_msg(pos, msg);
+> -
+>  	return 0;
+>  }
+
+Perfect, ship it! ;-)
+
+	M.
+
 -- 
-2.25.4
-
+Without deviation from the norm, progress is not possible.
