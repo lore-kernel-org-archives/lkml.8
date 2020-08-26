@@ -2,104 +2,253 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B799C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5EB2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:59:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598425188;
-	bh=ICKq0wW6o5ic4A0NjPYFnu9wDeQFyvOhYXTZgEqE8uc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ycT0Q2rkErbzc/v9hbtiO7VR6Km4+umgCt8Qyq5MMDq/E/0WRI8xDGhwPo4onwGSs
-	 SbDrvAc2ptKFq16+MTqsjjDYTParT/n53KMQsIrMoqo/hQ2SNG/Wt1rXVEUw2Jkgqi
-	 g7+dLvwSPSM64B7LlyMxE8dNhhlj8P8yFDbH/vJY=
+	by mail.kernel.org (Postfix) with ESMTP id 501E72067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:01:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rzKpEqCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgHZG7r (ORCPT
+        id S1726988AbgHZHBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:59:47 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40316 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726233AbgHZG7r (ORCPT
+        Wed, 26 Aug 2020 03:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726233AbgHZHAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:59:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id b18so630413wrs.7
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 23:59:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ENOsjhbbxKoeM0u7sxFhovClTCYdz/d5wJeIuEs7Zt4=;
-        b=bu2E3Y6wzbFE3H5T2NCxUNmqg08IwpndjAl4SXZ85e227bXss+SDteFzcaOvopuWGp
-         5oAiQmpWR4VntK0AY1kM50+lHPm52VLc7dzlSJvKnD/wydsPFvYmUhQbd/ZQQ3wk/hvs
-         1llmWvgWqTPf+q0RljXRt5m239HNYegsh0W6ioRE0htyeCjYDrGqPLCOCwUJWFWWNFYG
-         2QqTkbKBdJPh/fpd79+WfoPpSufoPdajwHIZtrA7rRyHPAPqEl8LMu949ylj55ldaP3q
-         xN12tEuYJTNVZAXhh7o1eEU4wjPFces/9uDGBomY8FvVlQupst08/pDIe48LgfpXg02e
-         UjDw==
-X-Gm-Message-State: AOAM5315BLLQ2gQstssPDdJcdRDydWci0CmscAShBSMESfdrkE2Oii48
-        Eb72C+lo5Vma+RLSdNcNV6b9NZMPzGw=
-X-Google-Smtp-Source: ABdhPJzkscer9VjYy2OQu2/FbPVbE8oBtkcvLlTiXlMkbfBETJdY3ymeA/+ynDK4neu8bDU3jG2E3A==
-X-Received: by 2002:adf:f98a:: with SMTP id f10mr13693229wrr.420.1598425184851;
-        Tue, 25 Aug 2020 23:59:44 -0700 (PDT)
-Received: from pi3 ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id m6sm3487152wrw.20.2020.08.25.23.59.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 23:59:44 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 08:59:42 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, myungjoo.ham@samsung.com,
-        cw00.choi@samsung.com, andriy.shevchenko@intel.com,
-        thomas.langer@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, yin1.li@intel.com
-Subject: Re: [PATCH v1 3/9] extcon: extcon-ptn5150: Switch to BIT() macro for
- cable attach
-Message-ID: <20200826065942.GC12271@pi3>
-References: <20200818065727.50520-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200818065727.50520-4-vadivel.muruganx.ramuthevar@linux.intel.com>
+        Wed, 26 Aug 2020 03:00:05 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F4ADC061574;
+        Wed, 26 Aug 2020 00:00:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=b0kflq4gxR1uluB51eHU7Q3usZbi6mcYYVDY4IfwBFI=; b=rzKpEqCy++ZPtb4em8gaTbMxl2
+        CnRQfJpJZsfl7SkMkI6mN5hqeDZwwjr4Di/oPHxY9JUPZipRA+yFQrIEeIJ8jXVFxF/GXwmaCF2ke
+        vfctFdgtqnN6LgjzApgP2Ce0KE4iBySiQYVT8Iac/T39JWmYpM46517kGxdgbxQEtZZjFmZ87v8jH
+        msGaTf8HgEO2dR5crMXKS6X3iU1zsbeCv3ltR472tJBzXBD2qhtBVPlWm4xZflAm9jbd2nCYzIA3g
+        BxaXc4bMhj+wFQiF9pTy9SOFY50tiSdG9JVDG/8A/IddFD7b+bId1adcCMtKkYrn0Z/DjJt/8hYLM
+        R5ruRb7w==;
+Received: from 213-225-6-196.nat.highway.a1.net ([213.225.6.196] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kApPR-0003kP-Nw; Wed, 26 Aug 2020 06:59:52 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: [PATCH 15/19] amiflop: use separate gendisks for Amiga vs MS-DOS mode
+Date:   Wed, 26 Aug 2020 08:24:42 +0200
+Message-Id: <20200826062446.31860-16-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200826062446.31860-1-hch@lst.de>
+References: <20200826062446.31860-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200818065727.50520-4-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 02:57:21PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Switch to BIT() macro for the cable attach.
+Use separate gendisks (which share a tag_set) for the native Amgiga vs
+the MS-DOS mode instead of redirecting the gendisk lookup using a probe
+callback.  This avoids potential problems with aliased block_device
+instances and will eventually allow for removing the blk_register_region
+framework.
 
-Squash it.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/block/amiflop.c | 98 +++++++++++++++++++++++------------------
+ 1 file changed, 55 insertions(+), 43 deletions(-)
 
-> 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  drivers/extcon/extcon-ptn5150.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
-> index c816a6c1e05c..fab862d9aad8 100644
-> --- a/drivers/extcon/extcon-ptn5150.c
-> +++ b/drivers/extcon/extcon-ptn5150.c
-> @@ -44,9 +44,7 @@ enum ptn5150_reg {
->  
->  #define PTN5150_REG_CC_VBUS_DETECTION		BIT(7)
->  
-> -#define PTN5150_REG_INT_CABLE_ATTACH_SHIFT	0
-> -#define PTN5150_REG_INT_CABLE_ATTACH_MASK	\
-> -	(0x1 << PTN5150_REG_INT_CABLE_ATTACH_SHIFT)
-> +#define PTN5150_REG_INT_CABLE_ATTACH_MASK	BIT(0)
->  
->  #define PTN5150_REG_INT_CABLE_DETACH_SHIFT	1
->  #define PTN5150_REG_INT_CABLE_DETACH_MASK	\
-> -- 
-> 2.11.0
-> 
+diff --git a/drivers/block/amiflop.c b/drivers/block/amiflop.c
+index 226219da3da6a7..de2bad8d1512f2 100644
+--- a/drivers/block/amiflop.c
++++ b/drivers/block/amiflop.c
+@@ -201,7 +201,7 @@ struct amiga_floppy_struct {
+ 	int busy;			/* true when drive is active */
+ 	int dirty;			/* true when trackbuf is not on disk */
+ 	int status;			/* current error code for unit */
+-	struct gendisk *gendisk;
++	struct gendisk *gendisk[2];
+ 	struct blk_mq_tag_set tag_set;
+ };
+ 
+@@ -1669,6 +1669,11 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
+ 		return -EBUSY;
+ 	}
+ 
++	if (unit[drive].type->code == FD_NODRIVE) {
++		mutex_unlock(&amiflop_mutex);
++		return -ENXIO;
++	}
++
+ 	if (mode & (FMODE_READ|FMODE_WRITE)) {
+ 		check_disk_change(bdev);
+ 		if (mode & FMODE_WRITE) {
+@@ -1695,7 +1700,7 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
+ 	unit[drive].dtype=&data_types[system];
+ 	unit[drive].blocks=unit[drive].type->heads*unit[drive].type->tracks*
+ 		data_types[system].sects*unit[drive].type->sect_mult;
+-	set_capacity(unit[drive].gendisk, unit[drive].blocks);
++	set_capacity(unit[drive].gendisk[system], unit[drive].blocks);
+ 
+ 	printk(KERN_INFO "fd%d: accessing %s-disk with %s-layout\n",drive,
+ 	       unit[drive].type->name, data_types[system].name);
+@@ -1772,36 +1777,68 @@ static const struct blk_mq_ops amiflop_mq_ops = {
+ 	.queue_rq = amiflop_queue_rq,
+ };
+ 
+-static struct gendisk *fd_alloc_disk(int drive)
++static int fd_alloc_disk(int drive, int system)
+ {
+ 	struct gendisk *disk;
+ 
+ 	disk = alloc_disk(1);
+ 	if (!disk)
+ 		goto out;
+-
+-	disk->queue = blk_mq_init_sq_queue(&unit[drive].tag_set, &amiflop_mq_ops,
+-						2, BLK_MQ_F_SHOULD_MERGE);
+-	if (IS_ERR(disk->queue)) {
+-		disk->queue = NULL;
++	disk->queue = blk_mq_init_queue(&unit[drive].tag_set);
++	if (IS_ERR(disk->queue))
+ 		goto out_put_disk;
+-	}
+ 
++	disk->major = FLOPPY_MAJOR;
++	disk->first_minor = drive + system;
++	disk->fops = &floppy_fops;
++	disk->events = DISK_EVENT_MEDIA_CHANGE;
++	if (system)
++		sprintf(disk->disk_name, "fd%d_msdos", drive);
++	else
++		sprintf(disk->disk_name, "fd%d", drive);
++	disk->private_data = &unit[drive];
++	set_capacity(disk, 880 * 2);
++
++	unit[drive].gendisk[system] = disk;
++	add_disk(disk);
++	return 0;
++
++out_put_disk:
++	disk->queue = NULL;
++	put_disk(disk);
++out:
++	return -ENOMEM;
++}
++
++static int fd_alloc_drive(int drive)
++{
+ 	unit[drive].trackbuf = kmalloc(FLOPPY_MAX_SECTORS * 512, GFP_KERNEL);
+ 	if (!unit[drive].trackbuf)
+-		goto out_cleanup_queue;
++		goto out;
+ 
+-	return disk;
++	memset(&unit[drive].tag_set, 0, sizeof(unit[drive].tag_set));
++	unit[drive].tag_set.ops = &amiflop_mq_ops;
++	unit[drive].tag_set.nr_hw_queues = 1;
++	unit[drive].tag_set.nr_maps = 1;
++	unit[drive].tag_set.queue_depth = 2;
++	unit[drive].tag_set.numa_node = NUMA_NO_NODE;
++	unit[drive].tag_set.flags = BLK_MQ_F_SHOULD_MERGE;
++	if (blk_mq_alloc_tag_set(&unit[drive].tag_set))
++		goto out_cleanup_trackbuf;
+ 
+-out_cleanup_queue:
+-	blk_cleanup_queue(disk->queue);
+-	disk->queue = NULL;
++	pr_cont(" fd%d", drive);
++
++	if (fd_alloc_disk(drive, 0) || fd_alloc_disk(drive, 1))
++		goto out_cleanup_tagset;
++	return 0;
++
++out_cleanup_tagset:
+ 	blk_mq_free_tag_set(&unit[drive].tag_set);
+-out_put_disk:
+-	put_disk(disk);
++out_cleanup_trackbuf:
++	kfree(unit[drive].trackbuf);
+ out:
+ 	unit[drive].type->code = FD_NODRIVE;
+-	return NULL;
++	return -ENOMEM;
+ }
+ 
+ static int __init fd_probe_drives(void)
+@@ -1812,29 +1849,16 @@ static int __init fd_probe_drives(void)
+ 	drives=0;
+ 	nomem=0;
+ 	for(drive=0;drive<FD_MAX_UNITS;drive++) {
+-		struct gendisk *disk;
+ 		fd_probe(drive);
+ 		if (unit[drive].type->code == FD_NODRIVE)
+ 			continue;
+ 
+-		disk = fd_alloc_disk(drive);
+-		if (!disk) {
++		if (fd_alloc_drive(drive) < 0) {
+ 			pr_cont(" no mem for fd%d", drive);
+ 			nomem = 1;
+ 			continue;
+ 		}
+-		unit[drive].gendisk = disk;
+ 		drives++;
+-
+-		pr_cont(" fd%d",drive);
+-		disk->major = FLOPPY_MAJOR;
+-		disk->first_minor = drive;
+-		disk->fops = &floppy_fops;
+-		disk->events = DISK_EVENT_MEDIA_CHANGE;
+-		sprintf(disk->disk_name, "fd%d", drive);
+-		disk->private_data = &unit[drive];
+-		set_capacity(disk, 880*2);
+-		add_disk(disk);
+ 	}
+ 	if ((drives > 0) || (nomem == 0)) {
+ 		if (drives == 0)
+@@ -1846,15 +1870,6 @@ static int __init fd_probe_drives(void)
+ 	return -ENOMEM;
+ }
+  
+-static struct kobject *floppy_find(dev_t dev, int *part, void *data)
+-{
+-	int drive = *part & 3;
+-	if (unit[drive].type->code == FD_NODRIVE)
+-		return NULL;
+-	*part = 0;
+-	return get_disk_and_module(unit[drive].gendisk);
+-}
+-
+ static int __init amiga_floppy_probe(struct platform_device *pdev)
+ {
+ 	int i, ret;
+@@ -1884,9 +1899,6 @@ static int __init amiga_floppy_probe(struct platform_device *pdev)
+ 	if (fd_probe_drives() < 1) /* No usable drives */
+ 		goto out_probe;
+ 
+-	blk_register_region(MKDEV(FLOPPY_MAJOR, 0), 256, THIS_MODULE,
+-				floppy_find, NULL, NULL);
+-
+ 	/* initialize variables */
+ 	timer_setup(&motor_on_timer, motor_on_callback, 0);
+ 	motor_on_timer.expires = 0;
+-- 
+2.28.0
+
