@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3418A2224D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE97A2224D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598453310;
-	bh=vQ5Zu72e2TzwYVaZX1BdryKwmtf97ebh0hkJi39RFDY=;
+	s=default; t=1598453317;
+	bh=r3PPVBNd/192HHhzA+kMklycTSRNcnFogFFpGxYkYNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wgGetZ1+Ow7i55zbGuTJnS0hHwjtivP3liZPz1lYlQaLB6GciQTz3DCQSREGXbmjp
-	 L+s3f+u8L6Zq/vHgo742dhAZi5BdUfwaXEoJPY0NDTEtQ69xezeVsG/6djdz9TaqkK
-	 nluFaYP+t8XQm4o2pl810q7n3a/OL1ipOKGhuU+I=
+	b=rpZwt7s5ArgKnEqESM/gwhqYab6Ij84yyUSOoMLSiXuBJmPpBdwvfc/40Ty6iEwew
+	 h0gXrUrVNCu7+IORk2GYQ/pdLDy326LqXfcyDiywcWOQ1E53QqB61eBgxVtZMgW8lG
+	 QjHi5XtJeildAJdQuEVkN/oniXwgeaRIXcBkWDbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgHZOs2 (ORCPT
+        id S1727827AbgHZOsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:48:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59682 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 10:48:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727784AbgHZOsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:48:25 -0400
+        id S1726863AbgHZOsa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:48:30 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A2E2214F1;
-        Wed, 26 Aug 2020 14:48:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 397782078D;
+        Wed, 26 Aug 2020 14:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453304;
-        bh=vQ5Zu72e2TzwYVaZX1BdryKwmtf97ebh0hkJi39RFDY=;
+        s=default; t=1598453309;
+        bh=r3PPVBNd/192HHhzA+kMklycTSRNcnFogFFpGxYkYNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QL57HJOfx0q3AoZ3G+ZrkuUZvrgY68YohwpgADn3uo8gpl56X0nhjVLon65/xsSLa
-         4SBFMzwwKOlRsKt4IzdizknK4jU9wKTVItzUHrTTUkmDzNJz780+GVEM7S1Z4ZBx0S
-         tR4WgYBwqR6u6fzWBIUrz974zl8wvUYaH67myEos=
+        b=B2Di67tovHkZYgOUD+e0BVllM0NCV2gCyD2vVmrhWMVcZiBLgcXQCDmpf6uYQuHRm
+         PKjL3pSeK8q1bBTzUm5Y6PhxJC19jwSKtwpt3xkKijBOqSOqg8sWT6BIa0DrYRJw/L
+         tO0+uOc/BNuq/Pu53ipM/wVeMkpiTclFFOOFYCF4=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
@@ -61,9 +61,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-rockchip@lists.infradead.org, linux-riscv@lists.infradead.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4/6] pwm: sifive: Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 16:47:45 +0200
-Message-Id: <20200826144747.9436-4-krzk@kernel.org>
+Subject: [PATCH 5/6] pwm: sprd: Simplify with dev_err_probe()
+Date:   Wed, 26 Aug 2020 16:47:46 +0200
+Message-Id: <20200826144747.9436-5-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200826144747.9436-1-krzk@kernel.org>
 References: <20200826144747.9436-1-krzk@kernel.org>
@@ -77,28 +77,27 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/pwm/pwm-sifive.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/pwm/pwm-sprd.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index 62de0bb85921..2485fbaaead2 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -254,11 +254,9 @@ static int pwm_sifive_probe(struct platform_device *pdev)
- 		return PTR_ERR(ddata->regs);
+diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
+index be2394227423..5123d948efd6 100644
+--- a/drivers/pwm/pwm-sprd.c
++++ b/drivers/pwm/pwm-sprd.c
+@@ -228,11 +228,8 @@ static int sprd_pwm_clk_init(struct sprd_pwm_chip *spc)
+ 			if (ret == -ENOENT)
+ 				break;
  
- 	ddata->clk = devm_clk_get(dev, NULL);
--	if (IS_ERR(ddata->clk)) {
--		if (PTR_ERR(ddata->clk) != -EPROBE_DEFER)
--			dev_err(dev, "Unable to find controller clock\n");
--		return PTR_ERR(ddata->clk);
--	}
-+	if (IS_ERR(ddata->clk))
-+		return dev_err_probe(dev, PTR_ERR(ddata->clk),
-+				     "Unable to find controller clock\n");
+-			if (ret != -EPROBE_DEFER)
+-				dev_err(spc->dev,
+-					"failed to get channel clocks\n");
+-
+-			return ret;
++			return dev_err_probe(spc->dev, ret,
++					     "failed to get channel clocks\n");
+ 		}
  
- 	ret = clk_prepare_enable(ddata->clk);
- 	if (ret) {
+ 		clk_pwm = chn->clks[SPRD_PWM_CHN_OUTPUT_CLK].clk;
 -- 
 2.17.1
 
