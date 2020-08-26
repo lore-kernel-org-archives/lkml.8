@@ -2,156 +2,137 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC12AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 872F8214F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598453764;
-	bh=rRbCqiqY/EoWxKJlqRKXx+DB87uOlZjjkyQIPWEqbf4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dp61flg6/RRyMqNH3s/E1g9YsJ6zIoSa7chLDTwA6eXAEMuqJAi34irdY7ybVt2ma
-	 1HzZdCSwHPDtDvlV7TWyZ68QG0rVl8tLllkrGsRcIB+4kbluWBFAI5RnxjKWSTn8EQ
-	 Hr7L0xTj+eS38e9B5TKXuaeZSgvK9ldVRAj9LEpU=
+	by mail.kernel.org (Postfix) with ESMTP id B70E42078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u9wJQQt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbgHZOzz (ORCPT
+        id S1728465AbgHZO4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:55:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726876AbgHZOzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:55:51 -0400
-Received: from earth.universe (unknown [95.33.152.255])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ABA82078D;
-        Wed, 26 Aug 2020 14:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453750;
-        bh=rRbCqiqY/EoWxKJlqRKXx+DB87uOlZjjkyQIPWEqbf4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X8cD5/7vqOTBKlyJGK/ohJXXUAgbuhvnHY0TuGm9SQaFeKcxNKJxCG+dzVps2XABR
-         sLu4Kul6WZriqBJv1bZpdSkORrdZEUYpxifZC5mJ4+aqDqtNeOuh+HmtS5eUIHVUJ+
-         tAZSoeHUgcXgfZU4VLh3bKkVzvdnAm+EVK+ZtXV8=
-Received: by earth.universe (Postfix, from userid 1000)
-        id E61E63C0C82; Wed, 26 Aug 2020 16:55:48 +0200 (CEST)
-Date:   Wed, 26 Aug 2020 16:55:48 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] power: supply: add wireless power_supply_type
-Message-ID: <20200826145548.hpt7bofoznuqc2z3@earth.universe>
-References: <1597343648-11136-1-git-send-email-gurus@codeaurora.org>
+        Wed, 26 Aug 2020 10:56:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34144 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728348AbgHZOyD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:54:03 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D100C061574;
+        Wed, 26 Aug 2020 07:54:03 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id kx11so973822pjb.5;
+        Wed, 26 Aug 2020 07:54:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CT6s1M0q19YFhy+cBpQPX3nn1CscA8mpaTfBdcn8vdo=;
+        b=u9wJQQt5hW3qa3ya9qPXmEQyMDTWMQZHbSO3RwJdp2sKyqS30CDXWxqirn98P9bvjq
+         5k9b4obnh5IAZeF3n7nfI5cHz7FVY+P1pluo2c6rNimHuQV8OYtaeX/V4Cced3rL7xFH
+         NCmQH0Rh0EknPo8Tvnt6+BRX7xfXxLWINB6359wCNE+lf1Khs+fny6WA4kqbxPx7sPP2
+         4Wu6b2bDlHb8ThVwsTbMsR4G4gOOz15ZBN+OjgIx4lyrvVzbF9xPrFpaYgkafvJyfa3m
+         0kzpltobbXHAvhfSdg/A1z2zfQnA54cJJtn0xYgsVjEazuZMO04Q6WmKCtnX2fM2uoeQ
+         xN4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CT6s1M0q19YFhy+cBpQPX3nn1CscA8mpaTfBdcn8vdo=;
+        b=XSpH4Ujdth5XR5wRmjVWM/8Ng6l6uSnjMYduhaphXl5VMHkzsMxXX1R0E0Gw1/oCf8
+         jBP41LuUdbbWbVNV6QQ911GxAT1bA8maNqhAMEn+/Ww5qm8C29yoLU5GO77Vno8Tpls5
+         /4zncNVxpbJc7w8633/R4+59Hp3pvqlZDNUiIqRxes4qo28Ah0wnKIFkZai15gI2hgHU
+         18mJXbbhTTkHb9MWplNzAvoOcDUq8nqktyqa4Fjm0lxGi/8yJQQn3FFCp/hd06x4o08N
+         fhI+AmiVZwlLLSgzOzw+PUqlAtCVsdKJLJ3cj1zFIlh7r4CaO66Iy0QyDAcRDpJ9t9ZN
+         FCvg==
+X-Gm-Message-State: AOAM531BTo9YYHPPd40s6o+ny0n68aw5NtRDMIys0WZj0QGUwO+wspky
+        uEJiaiy+kvJ7hI9LSdbU/+O/u24vNAg=
+X-Google-Smtp-Source: ABdhPJxvkuoGl75ZVpNr1RgzK005jvzedZlnd2QDmA+7r0p3ng9I2IdwjyZLrFMe98sls8FJaqrpYA==
+X-Received: by 2002:a17:902:c395:: with SMTP id g21mr12112718plg.264.1598453642763;
+        Wed, 26 Aug 2020 07:54:02 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id r7sm3327140pfl.186.2020.08.26.07.53.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:54:02 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: [PATCH v2 17/23] riscv: use asm-generic/mmu_context.h for no-op implementations
+Date:   Thu, 27 Aug 2020 00:52:43 +1000
+Message-Id: <20200826145249.745432-18-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
+References: <20200826145249.745432-1-npiggin@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="57nokb3z2iq74u5g"
-Content-Disposition: inline
-In-Reply-To: <1597343648-11136-1-git-send-email-gurus@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ arch/riscv/include/asm/mmu_context.h | 22 ++--------------------
+ 1 file changed, 2 insertions(+), 20 deletions(-)
 
---57nokb3z2iq74u5g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+diff --git a/arch/riscv/include/asm/mmu_context.h b/arch/riscv/include/asm/mmu_context.h
+index 67c463812e2d..250defa06f3a 100644
+--- a/arch/riscv/include/asm/mmu_context.h
++++ b/arch/riscv/include/asm/mmu_context.h
+@@ -13,34 +13,16 @@
+ #include <linux/mm.h>
+ #include <linux/sched.h>
+ 
+-static inline void enter_lazy_tlb(struct mm_struct *mm,
+-	struct task_struct *task)
+-{
+-}
+-
+-/* Initialize context-related info for a new mm_struct */
+-static inline int init_new_context(struct task_struct *task,
+-	struct mm_struct *mm)
+-{
+-	return 0;
+-}
+-
+-static inline void destroy_context(struct mm_struct *mm)
+-{
+-}
+-
+ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 	struct task_struct *task);
+ 
++#define activate_mm activate_mm
+ static inline void activate_mm(struct mm_struct *prev,
+ 			       struct mm_struct *next)
+ {
+ 	switch_mm(prev, next, NULL);
+ }
+ 
+-static inline void deactivate_mm(struct task_struct *task,
+-	struct mm_struct *mm)
+-{
+-}
++#include <asm-generic/mmu_context.h>
+ 
+ #endif /* _ASM_RISCV_MMU_CONTEXT_H */
+-- 
+2.23.0
 
-Hi,
-
-On Thu, Aug 13, 2020 at 11:34:08AM -0700, Guru Das Srinagesh wrote:
-> From: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
->=20
-> Currently, power_supply framework supports only Battery, UPS,
-> Mains and USB power_supply_type. Add wireless power_supply_type
-> so that the drivers which supports wireless can register a power
-> supply class device with POWER_SUPPLY_TYPE_WIRELESS.
->=20
-> Signed-off-by: Subbaraman Narayanamurthy <subbaram@codeaurora.org>
-> Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> ---
-
-Thanks, queued.
-
--- Sebastian
-
->  Documentation/ABI/testing/sysfs-class-power | 2 +-
->  drivers/power/supply/power_supply_sysfs.c   | 1 +
->  include/linux/power_supply.h                | 1 +
->  3 files changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-class-power b/Documentation/=
-ABI/testing/sysfs-class-power
-> index 40213c7..651599f 100644
-> --- a/Documentation/ABI/testing/sysfs-class-power
-> +++ b/Documentation/ABI/testing/sysfs-class-power
-> @@ -34,7 +34,7 @@ Description:
->  		Describes the main type of the supply.
-> =20
->  		Access: Read
-> -		Valid values: "Battery", "UPS", "Mains", "USB"
-> +		Valid values: "Battery", "UPS", "Mains", "USB", "Wireless"
-> =20
->  =3D=3D=3D=3D=3D Battery Properties =3D=3D=3D=3D=3D
-> =20
-> diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/su=
-pply/power_supply_sysfs.c
-> index 3d38308..a616b9d 100644
-> --- a/drivers/power/supply/power_supply_sysfs.c
-> +++ b/drivers/power/supply/power_supply_sysfs.c
-> @@ -56,6 +56,7 @@ static const char * const POWER_SUPPLY_TYPE_TEXT[] =3D {
->  	[POWER_SUPPLY_TYPE_USB_PD]		=3D "USB_PD",
->  	[POWER_SUPPLY_TYPE_USB_PD_DRP]		=3D "USB_PD_DRP",
->  	[POWER_SUPPLY_TYPE_APPLE_BRICK_ID]	=3D "BrickID",
-> +	[POWER_SUPPLY_TYPE_WIRELESS]		=3D "Wireless",
->  };
-> =20
->  static const char * const POWER_SUPPLY_USB_TYPE_TEXT[] =3D {
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 97cc4b8..ef03299 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -186,6 +186,7 @@ enum power_supply_type {
->  	POWER_SUPPLY_TYPE_USB_PD,		/* Power Delivery Port */
->  	POWER_SUPPLY_TYPE_USB_PD_DRP,		/* PD Dual Role Port */
->  	POWER_SUPPLY_TYPE_APPLE_BRICK_ID,	/* Apple Charging Method */
-> +	POWER_SUPPLY_TYPE_WIRELESS,		/* Wireless */
->  };
-> =20
->  enum power_supply_usb_type {
-> --=20
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->=20
-
---57nokb3z2iq74u5g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9Gd+oACgkQ2O7X88g7
-+pokwhAAmxMme7G++GKR3lMafSysEFnG5OVKnLg3ePC2kZrHtbriuB1lhu780hTx
-yMlCYABv5/eabd08rQVKLPAca2uK6DTfXxJRMasIpbGJlreYvGGMAzJCAWpSKEZO
-MAF2JzDHda9Q3MFaRcpbFIUSz1Xsdhzkr7gN3VZF00CM3vPwAQTTb1wj90MjakvD
-zBfi6Ehqkb01JxiftaWFDGNAu2zAi91V0a1yA/bh4DmbPJRr+r95nvA1M2oL7rKc
-1X9ERX3WNqpNdZMMLrhx3hRsAEIDhjSXsud1kJHRLHIp+TKEeiLxrt5OLZSi9di9
-q+IMzRpk1j+Orv0yK6VvabjC6FEoc3dUxOq2QfAToJxXVzBJLC4fGu1paSowz/7u
-jwHrlt9XtS0rz9jo+PEEGnl+xTQOx4O0N6fsm7CU+Zg1rGmK7JxkNSh/yBCs3GIP
-eDg/Ymhw8anaeA8SUEszXkxPRo10h5H0EDa+nzzXP+lgD+f4apD2MSb55OFBErgK
-6nIwF5K1qD5hWS2LkN05juADG17ouVBqcIwjzng2vbXmUdFVSdl6e4KVtxdlzcOU
-AM3Cv/sLyMAbKK7/r4s0H9LNJ05yGhf66Hvqmrg1cSZy0hgUbfuOwqE4MXkLYAcD
-CnMdxjOfxwB6ubbYyJHc17XzhKwZ6Qn8M+q2WrVw2T+l1tZXRxQ=
-=Xsv1
------END PGP SIGNATURE-----
-
---57nokb3z2iq74u5g--
