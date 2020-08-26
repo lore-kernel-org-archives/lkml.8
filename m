@@ -2,320 +2,122 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A3EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE60CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35D4A208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E8920897
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E7S6Pkng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728274AbgHZJe4 (ORCPT
+        id S1728412AbgHZJfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:34:56 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:42192 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728052AbgHZJd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:33:57 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C0A571A08B7;
-        Wed, 26 Aug 2020 11:33:54 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B3FDC1A08F4;
-        Wed, 26 Aug 2020 11:33:54 +0200 (CEST)
-Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6842C2030A;
-        Wed, 26 Aug 2020 11:33:54 +0200 (CEST)
-From:   Diana Craciun <diana.craciun@oss.nxp.com>
-To:     alex.williamson@redhat.com, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
-        laurentiu.tudor@nxp.com, Diana Craciun <diana.craciun@oss.nxp.com>,
-        Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Subject: [PATCH v4 08/10] vfio/fsl-mc: trigger an interrupt via eventfd
-Date:   Wed, 26 Aug 2020 12:33:13 +0300
-Message-Id: <20200826093315.5279-9-diana.craciun@oss.nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
-References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 26 Aug 2020 05:35:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41002 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728344AbgHZJew (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 05:34:52 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E88DC06179A
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:27 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id k20so1066321wmi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1sh6GJ0mJWJb3ICmo91l9UDo6bvtBy9zVj1QpKnJ7Ig=;
+        b=E7S6Pkng7Y0zFItSSiJ6u4PAD6CRFndCXBLJmIKAADhgYzB7tAwnaOstq39x7K8YiA
+         aYOiEa6IQ9pL2hp7r4/h6gkkN38ntfPXaVOzMazdJu+zmREhsaSzSyEHFJRalsGXtdGq
+         RH0GewQfte2wlRM98ENsZ362ARQtgwlM1+Sverg5BwZw6BS9GhUr+h+OwQTC+WD+R5LD
+         xP6mO7vA/v8yQcC0oB3mckaIE4cr9uwDkWUMvsQSMjSzBT8BmE3dJhUPo5k9PsJ3dL4n
+         7i40Rog29DFzVrx7zYzM4LzRshP1DRoEa6cMkG1OOmgevWJPDDV//yehqKjWH3ay8Sb8
+         WoAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1sh6GJ0mJWJb3ICmo91l9UDo6bvtBy9zVj1QpKnJ7Ig=;
+        b=GATM/IBCQPWSfDhQADnwzCf3+HB3TcYjndUKYx07sUk1hGvA/OyXF/XDHmKXOeHUEa
+         DP/+8S6ogOkGpxZxJoPodm9TwRoUeDGDlUEXBD1CIu//GSM8/wbVljTNE5E9MYZu2kGf
+         s2VdAfHCvdKrGeoTjtEVMilzZX+31Mc24ya309FPUEsXyfXxNIpxJN7fR/+zq+WjfrAU
+         afDp2TEmvYaTjU6ycg276Fs7kvKbQBc0szMeHV1LsSpd6GthRs7OxYHk7whMng8pGcIl
+         iiktMUE7JTFVNoHZvmyBFQfoE1pV3W3OoSDf4Ay1xlGEyJM4mxsdfTWsc8ITquMDOHxV
+         THfQ==
+X-Gm-Message-State: AOAM530O7eENy7hMCEQinpjtl8F7U//qrVxIKYK4ORKcdolSVDHBHLof
+        4ysHaWRv+tWSijqGXgb6J2h17g==
+X-Google-Smtp-Source: ABdhPJzKS5OctiAZPFx3Qk+kjCmzI82WamC6hYGDP51dNtvT2E3Ogaz8sYsUpYWCXWko3lNaCQH5Og==
+X-Received: by 2002:a1c:ed15:: with SMTP id l21mr6221723wmh.56.1598434465884;
+        Wed, 26 Aug 2020 02:34:25 -0700 (PDT)
+Received: from dell.default ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 02:34:25 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
+Subject: [PATCH 17/30] wireless: ath: ath9k: ar9002_initvals: Remove unused array 'ar9280PciePhy_clkreq_off_L1_9280'
+Date:   Wed, 26 Aug 2020 10:33:48 +0100
+Message-Id: <20200826093401.1458456-18-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200826093401.1458456-1-lee.jones@linaro.org>
+References: <20200826093401.1458456-1-lee.jones@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows to set an eventfd for fsl-mc device interrupts
-and also to trigger the interrupt eventfd from userspace for testing.
+Fixes the following W=1 kernel build warning(s):
 
-All fsl-mc device interrupts are MSIs. The MSIs are allocated from
-the MSI domain only once per DPRC and used by all the DPAA2 objects.
-The interrupts are managed by the DPRC in a pool of interrupts. Each
-device requests interrupts from this pool. The pool is allocated
-when the first virtual device is setting the interrupts.
-The pool of interrupts is protected by a lock.
+ drivers/net/wireless/ath/ath9k/ar9002_initvals.h:900:18: warning: ‘ar9280PciePhy_clkreq_off_L1_9280’ defined but not used [-Wunused-const-variable=]
 
-The DPRC has an interrupt of its own which indicates if the DPRC
-contents have changed. However, currently, the contents of a DPRC
-assigned to the guest cannot be changed at runtime, so this interrupt
-is not configured.
-
-Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
-Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+Cc: QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/vfio/fsl-mc/vfio_fsl_mc.c         |  18 ++-
- drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c    | 160 +++++++++++++++++++++-
- drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  10 ++
- 3 files changed, 186 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/ath9k/ar9002_initvals.h | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-index 42014297b484..73834f488a94 100644
---- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-@@ -147,12 +147,28 @@ static int vfio_fsl_mc_open(void *device_data)
- static void vfio_fsl_mc_release(void *device_data)
- {
- 	struct vfio_fsl_mc_device *vdev = device_data;
-+	int ret;
- 
- 	mutex_lock(&vdev->reflck->lock);
- 
--	if (!(--vdev->refcnt))
-+	if (!(--vdev->refcnt)) {
-+		struct fsl_mc_device *mc_dev = vdev->mc_dev;
-+		struct device *cont_dev = fsl_mc_cont_dev(&mc_dev->dev);
-+		struct fsl_mc_device *mc_cont = to_fsl_mc_device(cont_dev);
-+
- 		vfio_fsl_mc_regions_cleanup(vdev);
- 
-+		/* reset the device before cleaning up the interrupts */
-+		ret = dprc_reset_container(mc_cont->mc_io, 0,
-+		      mc_cont->mc_handle,
-+			  mc_cont->obj_desc.id,
-+			  DPRC_RESET_OPTION_NON_RECURSIVE);
-+
-+		vfio_fsl_mc_irqs_cleanup(vdev);
-+
-+		fsl_mc_cleanup_irq_pool(mc_cont);
-+	}
-+
- 	mutex_unlock(&vdev->reflck->lock);
- 
- 	module_put(THIS_MODULE);
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-index 058aa97aa54a..409f3507fcf3 100644
---- a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-@@ -29,12 +29,149 @@ static int vfio_fsl_mc_irq_unmask(struct vfio_fsl_mc_device *vdev,
- 	return -EINVAL;
- }
- 
-+int vfio_fsl_mc_irqs_allocate(struct vfio_fsl_mc_device *vdev)
-+{
-+	struct fsl_mc_device *mc_dev = vdev->mc_dev;
-+	struct vfio_fsl_mc_irq *mc_irq;
-+	int irq_count;
-+	int ret, i;
-+
-+    /* Device does not support any interrupt */
-+	if (mc_dev->obj_desc.irq_count == 0)
-+		return 0;
-+
-+	/* interrupts were already allocated for this device */
-+	if (vdev->mc_irqs)
-+		return 0;
-+
-+	irq_count = mc_dev->obj_desc.irq_count;
-+
-+	mc_irq = kcalloc(irq_count, sizeof(*mc_irq), GFP_KERNEL);
-+	if (!mc_irq)
-+		return -ENOMEM;
-+
-+	/* Allocate IRQs */
-+	ret = fsl_mc_allocate_irqs(mc_dev);
-+	if (ret) {
-+		kfree(mc_irq);
-+		return ret;
-+	}
-+
-+	for (i = 0; i < irq_count; i++) {
-+		mc_irq[i].count = 1;
-+		mc_irq[i].flags = VFIO_IRQ_INFO_EVENTFD;
-+	}
-+
-+	vdev->mc_irqs = mc_irq;
-+
-+	return 0;
-+}
-+
-+static irqreturn_t vfio_fsl_mc_irq_handler(int irq_num, void *arg)
-+{
-+	struct vfio_fsl_mc_irq *mc_irq = (struct vfio_fsl_mc_irq *)arg;
-+
-+	eventfd_signal(mc_irq->trigger, 1);
-+	return IRQ_HANDLED;
-+}
-+
-+static int vfio_set_trigger(struct vfio_fsl_mc_device *vdev,
-+						   int index, int fd)
-+{
-+	struct vfio_fsl_mc_irq *irq = &vdev->mc_irqs[index];
-+	struct eventfd_ctx *trigger;
-+	int hwirq;
-+	int ret;
-+
-+	hwirq = vdev->mc_dev->irqs[index]->msi_desc->irq;
-+	if (irq->trigger) {
-+		free_irq(hwirq, irq);
-+		kfree(irq->name);
-+		eventfd_ctx_put(irq->trigger);
-+		irq->trigger = NULL;
-+	}
-+
-+	if (fd < 0) /* Disable only */
-+		return 0;
-+
-+	irq->name = kasprintf(GFP_KERNEL, "vfio-irq[%d](%s)",
-+			    hwirq, dev_name(&vdev->mc_dev->dev));
-+	if (!irq->name)
-+		return -ENOMEM;
-+
-+	trigger = eventfd_ctx_fdget(fd);
-+	if (IS_ERR(trigger)) {
-+		kfree(irq->name);
-+		return PTR_ERR(trigger);
-+	}
-+
-+	irq->trigger = trigger;
-+
-+	ret = request_irq(hwirq, vfio_fsl_mc_irq_handler, 0,
-+		  irq->name, irq);
-+	if (ret) {
-+		kfree(irq->name);
-+		eventfd_ctx_put(trigger);
-+		irq->trigger = NULL;
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int vfio_fsl_mc_set_irq_trigger(struct vfio_fsl_mc_device *vdev,
- 				       unsigned int index, unsigned int start,
- 				       unsigned int count, u32 flags,
- 				       void *data)
- {
--	return -EINVAL;
-+	struct fsl_mc_device *mc_dev = vdev->mc_dev;
-+	int ret, hwirq;
-+	struct vfio_fsl_mc_irq *irq;
-+	struct device *cont_dev = fsl_mc_cont_dev(&mc_dev->dev);
-+	struct fsl_mc_device *mc_cont = to_fsl_mc_device(cont_dev);
-+
-+	if (start != 0 || count != 1)
-+		return -EINVAL;
-+
-+	mutex_lock(&vdev->reflck->lock);
-+	ret = fsl_mc_populate_irq_pool(mc_cont,
-+			FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS);
-+	if (ret)
-+		goto unlock;
-+
-+	ret = vfio_fsl_mc_irqs_allocate(vdev);
-+	if (ret)
-+		goto unlock;
-+	mutex_unlock(&vdev->reflck->lock);
-+
-+	if (!count && (flags & VFIO_IRQ_SET_DATA_NONE))
-+		return vfio_set_trigger(vdev, index, -1);
-+
-+	if (flags & VFIO_IRQ_SET_DATA_EVENTFD) {
-+		s32 fd = *(s32 *)data;
-+
-+		return vfio_set_trigger(vdev, index, fd);
-+	}
-+
-+	hwirq = vdev->mc_dev->irqs[index]->msi_desc->irq;
-+
-+	irq = &vdev->mc_irqs[index];
-+
-+	if (flags & VFIO_IRQ_SET_DATA_NONE) {
-+		vfio_fsl_mc_irq_handler(hwirq, irq);
-+
-+	} else if (flags & VFIO_IRQ_SET_DATA_BOOL) {
-+		u8 trigger = *(u8 *)data;
-+
-+		if (trigger)
-+			vfio_fsl_mc_irq_handler(hwirq, irq);
-+	}
-+
-+	return 0;
-+
-+unlock:
-+	mutex_unlock(&vdev->reflck->lock);
-+	return ret;
- }
- 
- int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
-@@ -61,3 +198,24 @@ int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
- 
- 	return ret;
- }
-+
-+/* Free All IRQs for the given MC object */
-+void vfio_fsl_mc_irqs_cleanup(struct vfio_fsl_mc_device *vdev)
-+{
-+	struct fsl_mc_device *mc_dev = vdev->mc_dev;
-+	int irq_count = mc_dev->obj_desc.irq_count;
-+	int i;
-+
-+	/* Device does not support any interrupt or the interrupts
-+	 * were not configured
-+	 */
-+	if (mc_dev->obj_desc.irq_count == 0 || !vdev->mc_irqs)
-+		return;
-+
-+	for (i = 0; i < irq_count; i++)
-+		vfio_set_trigger(vdev, i, -1);
-+
-+	fsl_mc_free_irqs(mc_dev);
-+	kfree(vdev->mc_irqs);
-+	vdev->mc_irqs = NULL;
-+}
-diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-index d5b6fe891a48..bbfca8b55f8a 100644
---- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-+++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-@@ -15,6 +15,13 @@
- #define VFIO_FSL_MC_INDEX_TO_OFFSET(index)	\
- 	((u64)(index) << VFIO_FSL_MC_OFFSET_SHIFT)
- 
-+struct vfio_fsl_mc_irq {
-+	u32         flags;
-+	u32         count;
-+	struct eventfd_ctx  *trigger;
-+	char            *name;
-+};
-+
- struct vfio_fsl_mc_reflck {
- 	struct kref		kref;
- 	struct mutex		lock;
-@@ -35,6 +42,7 @@ struct vfio_fsl_mc_device {
- 	struct vfio_fsl_mc_region	*regions;
- 	struct vfio_fsl_mc_reflck   *reflck;
- 	struct mutex         igate;
-+	struct vfio_fsl_mc_irq      *mc_irqs;
+diff --git a/drivers/net/wireless/ath/ath9k/ar9002_initvals.h b/drivers/net/wireless/ath/ath9k/ar9002_initvals.h
+index 4d18c66a67903..e01b5c3728b86 100644
+--- a/drivers/net/wireless/ath/ath9k/ar9002_initvals.h
++++ b/drivers/net/wireless/ath/ath9k/ar9002_initvals.h
+@@ -897,20 +897,6 @@ static const u32 ar9280Modes_original_tx_gain_9280_2[][5] = {
+ 	{0x00007844, 0x92592480, 0x92592480, 0x92592480, 0x92592480},
  };
  
- extern int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
-@@ -42,4 +50,6 @@ extern int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
- 			       unsigned int start, unsigned int count,
- 			       void *data);
- 
-+void vfio_fsl_mc_irqs_cleanup(struct vfio_fsl_mc_device *vdev);
-+
- #endif /* VFIO_FSL_MC_PRIVATE_H */
+-static const u32 ar9280PciePhy_clkreq_off_L1_9280[][2] = {
+-	/* Addr      allmodes  */
+-	{0x00004040, 0x9248fd00},
+-	{0x00004040, 0x24924924},
+-	{0x00004040, 0xa8000019},
+-	{0x00004040, 0x13160820},
+-	{0x00004040, 0xe5980560},
+-	{0x00004040, 0xc01dcffc},
+-	{0x00004040, 0x1aaabe41},
+-	{0x00004040, 0xbe105554},
+-	{0x00004040, 0x00043007},
+-	{0x00004044, 0x00000000},
+-};
+-
+ static const u32 ar9280PciePhy_clkreq_always_on_L1_9280[][2] = {
+ 	/* Addr      allmodes  */
+ 	{0x00004040, 0x9248fd00},
 -- 
-2.17.1
+2.25.1
 
