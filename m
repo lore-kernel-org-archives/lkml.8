@@ -2,103 +2,159 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92367C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E759EC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3EC2078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE4562078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CNAj0WU7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="P8c+z5DL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgHZQ6Q (ORCPT
+        id S1726876AbgHZQ7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:58:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53742 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbgHZQ6N (ORCPT
+        Wed, 26 Aug 2020 12:59:49 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:28830 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726745AbgHZQ7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:58:13 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A55C061756
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:58:13 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id j11so1170734plk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:58:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ruBxf096ym9usi++FSuEPp4K8G47UnSV5rxmh+VEh4=;
-        b=CNAj0WU7APXwzXX7Pgh0wY1PTwPfSLIPM5Jil5o+T5N4jUGo5+EKR/ChLR9FR90DTb
-         adL6ook8RKLqITnw6Uh9udX1zaxH4UMUnmaO9hKk849lcueGmnYaaxPsY/Jao2lDUFIx
-         9jFJKxNUCI1Xy/sGKlKpYagCZRlRYeSgkYeag8jL7QlgMlHj+d31DaUd3w3X5Wp7cJth
-         r//+rpBCTWorGq8bX9LyNC+pNGHmqBpgYaK+Q+iniIAaKUrmBdUlI3hbpSKf96WQ3fBO
-         /mr836uIMuRWulestTquHy5rOEhED5XzSDvnMOV9X4c0IHYkdjzoM9OGPkaSE5Ca7w0G
-         pWTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ruBxf096ym9usi++FSuEPp4K8G47UnSV5rxmh+VEh4=;
-        b=Esk+PlIZ+M6Q09ft03aj9Mj39HMoSMOxACZ5x/XOjF0iJ+X1Kkr+16rX90RLtIf1R3
-         Tspaamn0dCgjJMl6520BrP09ciktalNMC16WqhTXrQH6eJL5Ad2GMqh/HyNHNgGtytga
-         +/4qNqy/vZr9wHRwZKSC3ZmDtCBMF+lYe3pNTZau0R/DqmW8OARGr3vm2BgaPU6pQKar
-         JrezQ7kDiJpKbRQGZCne+unU/ea0Xst998XCKZKAAGxWa/+a25xMW/X5wd1FG0Nt7oal
-         sCw7tG2GwoK0dz9rsu5uUW43VNJKuag4zsw7IbnP9JR8o/QvddX+lqu1rF3JZ8QMaVdO
-         hHhw==
-X-Gm-Message-State: AOAM533oxR6b5+FHP9sZRY437r65PbIhnIborQnB9+YbDhOLB59d6PtA
-        nt7qa8ufYqG8KWEQHfWHsKLkir+vyuUaXnn0gLs75Q==
-X-Google-Smtp-Source: ABdhPJzTSgzt4IMtUGn18bHtBzPXj8CcOOTUT4AYBvrGLdEOW3RKHpfc5ZfYx8biM/CSPtPDInAtTaQtC+a7s9SwTpE=
-X-Received: by 2002:a17:902:be0f:: with SMTP id r15mr12843216pls.84.1598461092696;
- Wed, 26 Aug 2020 09:58:12 -0700 (PDT)
+        Wed, 26 Aug 2020 12:59:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598461185;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=+pqpHEhGcbUD6zkwsM5Wv+MICfwn4EzpafFO0jMt18s=;
+        b=P8c+z5DLitmM0m8PvcLgBxSpymQLOY4rWZFnDv4p3Ss5qV68DJibqSZhcQ56HN6qge
+        1xasWJCkazBvnz8bzaJel9eDMQR4K6Aj3S9oPzzhwTAbe5jNbEWJuGcnekKZOyDbpzw6
+        8f5h+Xn3fSxAtTJF5H+MXyxjzQF4X5oVJkqi69c+zvGPZwQdnpm/1jg6BrBWu+UhBqTn
+        UVWtj2w/Ey0lRORmbD9lI+/PCTiZPQiA7lo3iPEXSTk/aXadZYUElhY9RgW81PRwawzt
+        MVE7uc+lijv4zAIrhZJZ6CjS7u0LCvSc78X020Uii1aVEG+cnjOnuhaPxSrbHgVDGEcM
+        tXAA==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/Fboo="
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id g0b6c1w7QGxhpMl
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Wed, 26 Aug 2020 18:59:43 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 18:59:36 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] opp: Allow opp-supported-hw to contain multiple
+ versions
+Message-ID: <20200826165936.GA73657@gerhold.net>
+References: <cover.1598442485.git.viresh.kumar@linaro.org>
+ <c4d59ad206394e4f73ab7547c6cd99d95c032128.1598442485.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-References: <20200825135838.2938771-1-ndesaulniers@google.com>
- <CAK7LNAQXo5-5W6hvNMEVPBPf3tRWaf-pQdSR-0OHyi4RCGhjsQ@mail.gmail.com> <d56bf7b93f7a28c4a90e4e16fd412e6934704346.camel@perches.com>
-In-Reply-To: <d56bf7b93f7a28c4a90e4e16fd412e6934704346.camel@perches.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 26 Aug 2020 09:58:01 -0700
-Message-ID: <CAKwvOd=YrVtPsB7HYPO0N=K7QJm9KstayqqeYQERSaGtGy2Bjg@mail.gmail.com>
-Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
-To:     Joe Perches <joe@perches.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        stable <stable@vger.kernel.org>, Andy Lavr <andy.lavr@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c4d59ad206394e4f73ab7547c6cd99d95c032128.1598442485.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 9:57 AM Joe Perches <joe@perches.com> wrote:
->
-> On Thu, 2020-08-27 at 01:49 +0900, Masahiro Yamada wrote:
-> > I do not have time to keep track of the discussion fully,
-> > but could you give me a little more context why
-> > the usage of stpcpy() is not recommended ?
-> >
-> > The implementation of strcpy() is almost the same.
-> > It is unclear to me what makes stpcpy() unsafe..
+On Wed, Aug 26, 2020 at 05:20:29PM +0530, Viresh Kumar wrote:
+> The bindings allow multiple versions to be passed to "opp-supported-hw"
+> property, either of which can result in enabling of the OPP.
+> 
+> Update code to allow that.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-https://lore.kernel.org/lkml/202008150921.B70721A359@keescook/
+This is exactly what I was looking for!
+And it works just fine in my tests:
 
->
-> It's the same thing that makes strcpy unsafe:
->
-> Unchecked buffer lengths with no guarantee src is terminated.
+Tested-by: Stephan Gerhold <stephan@gerhold.net>
 
--- 
-Thanks,
-~Nick Desaulniers
+Thank you!
+Stephan
+
+> ---
+>  drivers/opp/of.c | 47 +++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 33 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index e39ddcc779af..5dac8bffd68c 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -434,9 +434,9 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_of_find_icc_paths);
+>  static bool _opp_is_supported(struct device *dev, struct opp_table *opp_table,
+>  			      struct device_node *np)
+>  {
+> -	unsigned int count = opp_table->supported_hw_count;
+> -	u32 version;
+> -	int ret;
+> +	unsigned int levels = opp_table->supported_hw_count;
+> +	int count, versions, ret, i, j;
+> +	u32 val;
+>  
+>  	if (!opp_table->supported_hw) {
+>  		/*
+> @@ -451,21 +451,40 @@ static bool _opp_is_supported(struct device *dev, struct opp_table *opp_table,
+>  			return true;
+>  	}
+>  
+> -	while (count--) {
+> -		ret = of_property_read_u32_index(np, "opp-supported-hw", count,
+> -						 &version);
+> -		if (ret) {
+> -			dev_warn(dev, "%s: failed to read opp-supported-hw property at index %d: %d\n",
+> -				 __func__, count, ret);
+> -			return false;
+> +	count = of_property_count_u32_elems(np, "opp-supported-hw");
+> +	if (count <= 0 || count % levels) {
+> +		dev_err(dev, "%s: Invalid opp-supported-hw property (%d)\n",
+> +			__func__, count);
+> +		return false;
+> +	}
+> +
+> +	versions = count / levels;
+> +
+> +	/* All levels in at least one of the versions should match */
+> +	for (i = 0; i < versions; i++) {
+> +		bool supported = true;
+> +
+> +		for (j = 0; j < levels; j++) {
+> +			ret = of_property_read_u32_index(np, "opp-supported-hw",
+> +							 i * levels + j, &val);
+> +			if (ret) {
+> +				dev_warn(dev, "%s: failed to read opp-supported-hw property at index %d: %d\n",
+> +					 __func__, i * levels + j, ret);
+> +				return false;
+> +			}
+> +
+> +			/* Check if the level is supported */
+> +			if (!(val & opp_table->supported_hw[j])) {
+> +				supported = false;
+> +				break;
+> +			}
+>  		}
+>  
+> -		/* Both of these are bitwise masks of the versions */
+> -		if (!(version & opp_table->supported_hw[count]))
+> -			return false;
+> +		if (supported)
+> +			return true;
+>  	}
+>  
+> -	return true;
+> +	return false;
+>  }
+>  
+>  static int opp_parse_supplies(struct dev_pm_opp *opp, struct device *dev,
+> -- 
+> 2.25.0.rc1.19.g042ed3e048af
+> 
