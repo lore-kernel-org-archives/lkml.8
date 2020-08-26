@@ -2,118 +2,72 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09770C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D268D20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:33:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8W5/xzw"
+	by mail.kernel.org (Postfix) with ESMTP id D7CCC2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:34:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598466860;
+	bh=2IrI3zDccPh7k4A7Ku/CCGl3h9hU0yX4/grdGm77idU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=vT3meY7GStQSD2gdTOLP2cQ4xJ3gGEZUmmZ+Lc3EQ/4i5F/b6hhnVEN2LTDulnZ51
+	 /ZCIPbTxODM2ShYS66WOTQZO6E362/inrUr4RyMBjwzN+EBhrPyheTUgIHCKGMTuvx
+	 igz0MInxSW5Cl73OouToCLzPTrGinutFNAPidxCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgHZSdp (ORCPT
+        id S1727103AbgHZSeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:33:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgHZSdn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:33:43 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08050C061756;
-        Wed, 26 Aug 2020 11:33:43 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id l23so2608466edv.11;
-        Wed, 26 Aug 2020 11:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=r5kmOizgxtwlauHhhTaD0zLARzpI1VK6AvYoiDVPxbI=;
-        b=G8W5/xzwifQCjyEKbG3xTJZCOrYyj91kZ7Mh8iovYXInrjXwbIWRxvBJbkhWUOZwst
-         YwsPhO8jN86sKW0tNXXJWZukIt16K7EG4Das5IrOifYSNFIqKFj02t8tN4IxtK6dSDGC
-         WS2nDA5qSX00tEutTvPjF6LstQlxJHcuWN0AQ0poRHC5F4PCwL5gLw/VZ4JzD7C8gyT8
-         x3PjwOdjqgup/KoxRco/669QBZdZiTg8+ku/JBV3maW7MFQmbgAmK46cnJpcGFGFAZBH
-         7ziT60smA77rfBzTOwL84v13bIEamkaqgXaVheJ5OTO+aDPM5If/5dyQGgOGFM1O4Dnb
-         V+MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=r5kmOizgxtwlauHhhTaD0zLARzpI1VK6AvYoiDVPxbI=;
-        b=O8S8HgAdhD/mHw6QhIxy44i1KT3ZkJcH5wsDPV+7ZEkmhmUioQK/OxcEFwQzzUq/zC
-         W9BMrEoQ8PTTGUUn7M1E4oQNZ8JxtE1fTqoOXBsBJYJZDrQFqTnAqZMX4620FsCFQaQc
-         /dp+EzRXJFOQr4CeXnkKmSQOiN9nViMJ7wHPiwOBfntBgPPM7QVyJH5gL1B7Pnsqs1BE
-         +tn/5Lfj9RnXAeDFvG15mPePvichieV2s2GdPxRXgwH1vwkid37FQLDv7AaeKFxU0Lyd
-         2qq+GSuXKmTqET9THdHK0JBn9Deq9v0V6W4kmMnI32M48rSSbHZCDDEGGQfwCgxGLau1
-         iF+g==
-X-Gm-Message-State: AOAM532W/izc2e+gim9wZ/LBpsDKIsVG5DJPhjBAuPip1XWryodUQ2HC
-        s4U1UsK6f9i+Dxt5jBa9YC8=
-X-Google-Smtp-Source: ABdhPJxwlkjns6BzliD8Bm85S3+ZbZxF+WzhfQY058593cbFboT2AQ7zW7fNRGXoi6i6eCB08y327A==
-X-Received: by 2002:a05:6402:1210:: with SMTP id c16mr16543655edw.71.1598466821634;
-        Wed, 26 Aug 2020 11:33:41 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id g11sm2648135edt.88.2020.08.26.11.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 11:33:40 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 21:33:38 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>,
-        kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        Tanveer Alam <tanveer.alam@puresoftware.com>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
-Message-ID: <20200826183338.rwacm5cstialye7p@skbuf>
-References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
- <20200821140718.GH4870@sirena.org.uk>
- <c810740d75f64e308fd362e6c6a5f437@mail.gmail.com>
- <20200822152118.rlwbcgfk4abjldtg@skbuf>
- <VE1PR04MB6768699B6D7A507A5BF82F9191540@VE1PR04MB6768.eurprd04.prod.outlook.com>
- <20200826114758.4agph53ag2fin6um@skbuf>
- <20200826142312.GH4965@sirena.org.uk>
- <20200826144744.c4yzgoovk6f4t3id@skbuf>
- <20200826165552.GK4965@sirena.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826165552.GK4965@sirena.org.uk>
+        Wed, 26 Aug 2020 14:34:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726783AbgHZSeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:34:15 -0400
+Subject: Re: [GIT PULL] virtio: bugfixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598466855;
+        bh=2IrI3zDccPh7k4A7Ku/CCGl3h9hU0yX4/grdGm77idU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=CT73xgJKU9ebCwnZp3Q1MFBBzKb5KM83wM/zdkExncYhIwOCkq8RMeDPBQdBNAoeC
+         lbdLssF9i+Xb9eXqL1V/t6mJRD7deuO1v4771hKMw13s4OTrfAavRsIW0+iKFOJCfA
+         NG5PyOa0jwfY9cXlm5TN/yiH5BI0HBXQlbuk/c9I=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200826092731-mutt-send-email-mst@kernel.org>
+References: <20200826092731-mutt-send-email-mst@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200826092731-mutt-send-email-mst@kernel.org>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+X-PR-Tracked-Commit-Id: cbb523594eb718944b726ba52bb43a1d66188a17
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e652049b2018e3a2e32d71c74cf7d359e07e7618
+Message-Id: <159846685526.8056.7551024561913275412.pr-tracker-bot@kernel.org>
+Date:   Wed, 26 Aug 2020 18:34:15 +0000
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        elic@nvidia.com, jasowang@redhat.com, lingshan.zhu@intel.com,
+        maxime.coquelin@redhat.com, mst@redhat.com,
+        natechancellor@gmail.com, rdunlap@infradead.org,
+        sgarzare@redhat.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 05:55:52PM +0100, Mark Brown wrote:
-> On Wed, Aug 26, 2020 at 05:47:44PM +0300, Vladimir Oltean wrote:
-> > On Wed, Aug 26, 2020 at 03:23:12PM +0100, Mark Brown wrote:
-> > > On Wed, Aug 26, 2020 at 02:47:58PM +0300, Vladimir Oltean wrote:
-> 
-> > > >   { "NXP0005", .driver_data = (kernel_ulong_t)&devtype_data[LS2085A], }
-> 
-> > > Based on some other stuff I've seen with ACPI on NXP stuff it looks like
-> > > they're following the same scheme but only caring about that one SoC for
-> > > the time being.
-> 
-> > So, no argument about caring only about ACPI on one particular SoC for
-> > the time being, but there's a big difference between a solution that
-> > works for N=1 and one that works for N=2...
-> 
-> > Showing my ignorance here, but is there something equivalent to
-> > of_machine_is_compatible() for ACPI?
-> 
-> The NXP0005 is the ACPI equivalent of a compatible (comprehensibility is
-> not ACPI's forte) and they're tying driver data to it there.
+The pull request you sent on Wed, 26 Aug 2020 09:27:31 -0400:
 
-Where I was trying to get here is that we could have a single _HID for
-the DSPI controller, and corroborate that with the ACPI equivalent of
-of_machine_is_compatible("fsl,ls2085a") at driver probe time before
-assigning the driver data.
+> https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
 
-Thanks,
--Vladimir
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e652049b2018e3a2e32d71c74cf7d359e07e7618
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
