@@ -2,635 +2,137 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E90BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1B32078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:17:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="NSImDiEg"
+	by mail.kernel.org (Postfix) with ESMTP id 809962075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgHZPRF (ORCPT
+        id S1727935AbgHZPSu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:17:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37676 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728127AbgHZPPv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:15:51 -0400
-Received: from mail-ed1-x54a.google.com (mail-ed1-x54a.google.com [IPv6:2a00:1450:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 514B5C061795
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 08:15:51 -0700 (PDT)
-Received: by mail-ed1-x54a.google.com with SMTP id m25so797168eds.16
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 08:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=U5oj/SuEX7HYHFTd45A2bSCZ+x4rBEIL/DUrQ9ebWks=;
-        b=NSImDiEgLQ0bgRY4/KrsGxkzN/U0wLAlmkemNE384qFQtpy4Spgr8MhbEdeBOQfgEK
-         R3X98rtjMrSzY0BNoREqe37Ryk5VV/n4QaEHZU36qW6vuVUJka5OpKJpyY/4D2GZakBb
-         Huh/P4VGBX2INCv1K7Z0VXVYWTaXobFUKHN82kdm/dC0Zd9XiuujO4xq0m1aCvHVdHHj
-         1azbPCKkg/rA2YwkRgU9blz0PBT2BX6kY6A1xDJwJxxs8KkVQkG1+whPRC8wGMJOFqJG
-         /g0JWseOc6ZT9IR5bEaAvgYWxxmjH9OuPW6P58fxdeIr7uxoii7euDYPj8A5WpXAaeza
-         /PzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=U5oj/SuEX7HYHFTd45A2bSCZ+x4rBEIL/DUrQ9ebWks=;
-        b=PvbCDxDhRSAXcR8wDhODUGJ8/pzlZtAtqrbU+CLdVds3Rcl9FTLLWOSUl4LJADkxMr
-         douNKfA1/feeLmJ5oj+YE5q6YGIzgK03kU7uWymzVZ4pcPSMpZD83+uAhxl/99R6/7aV
-         MFcpVafHYd9TNGZOLecjIPrHXQlhufHX/SLUomU2omOdNp8FEfkFsVTZHfJU9gr42cEY
-         W+z/SmONadtNwpVTHsdEKKz6aDG25NK5kgN7h9Eg8P/gOZ1WBJewGRB2eU75mdBNkm1q
-         HYYAWzFHEE1mQW1T0PrZyN20um1/ty2kUqttJPQdE2npRvkgxHinPnM3hhJu4Z1x/6oJ
-         mR+Q==
-X-Gm-Message-State: AOAM530D8fai1HkCtdQqs0kOfjIhtYKx52ue0utjtDg1MmKuSIY9bUKK
-        0xOzPXiPB0M4miv+2eIv9N2Es0Bc4w==
-X-Google-Smtp-Source: ABdhPJywN3pTPoKXUDJMuJIPHM7NTMPQXJJQymyhGbSaCPwsrC8rZwgZGcBVv7T5X7zDqQgfPsCsNB1p0w==
-X-Received: from jannh2.zrh.corp.google.com ([2a00:79e0:1b:201:1a60:24ff:fea6:bf44])
- (user=jannh job=sendgmr) by 2002:aa7:c6d1:: with SMTP id b17mr15647774eds.336.1598454948791;
- Wed, 26 Aug 2020 08:15:48 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 17:14:47 +0200
-In-Reply-To: <20200826151448.3404695-1-jannh@google.com>
-Message-Id: <20200826151448.3404695-5-jannh@google.com>
-Mime-Version: 1.0
-References: <20200826151448.3404695-1-jannh@google.com>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH v4 4/5] binfmt_elf, binfmt_elf_fdpic: Use a VMA list snapshot
-From:   Jann Horn <jannh@google.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 26 Aug 2020 11:18:50 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10523 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727883AbgHZPSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 11:18:45 -0400
+IronPort-SDR: sJR3OabF68OF93kicsNQIkyGv+qfkzmTQu234eocC/w8tKCQezOxiMXFnB0pdeV+TvTmaMvvgT
+ P8RPsjwpJqNQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153731861"
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="153731861"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 08:18:44 -0700
+IronPort-SDR: LFOOq02faltDs2sF7gkQT/rBXsdGjaw5I+KcUpzLmZZ7XJ90mijCpdb1DfxpTxWkqP1M2jymH8
+ or4UJgSKhp6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="329260583"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 08:18:42 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kAxA5-00BatB-CF; Wed, 26 Aug 2020 18:16:29 +0300
+Date:   Wed, 26 Aug 2020 18:16:29 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: do not acpi/of match device in i2c_device_probe()
+Message-ID: <20200826151629.GR1891694@smile.fi.intel.com>
+References: <20200826144920.110605-1-sergey.senozhatsky@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826144920.110605-1-sergey.senozhatsky@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In both binfmt_elf and binfmt_elf_fdpic, use a new helper
-dump_vma_snapshot() to take a snapshot of the VMA list (including the gate
-VMA, if we have one) while protected by the mmap_lock, and then use that
-snapshot instead of walking the VMA list without locking.
+On Wed, Aug 26, 2020 at 11:49:20PM +0900, Sergey Senozhatsky wrote:
+> i2c, apparently, can match the same device twice - the first
+> time in ->match bus hook (i2c_device_match()), and the second
+> one in ->probe (i2c_device_probe()) bus hook.
+> 
+> To make things more complicated, the second matching does not
+> do exactly same checks as the first one. Namely, i2c_device_match()
+> calls acpi_driver_match_device() which considers devices that
+> provide of_match_table and performs of_compatible() matching for
+> such devices. One important thing to note here is that ACPI
+> of_compatible() matching (acpi_of_match_device()) is part of ACPI
+> and does not depend on CONFIG_OF.
+> 
+> i2c_device_probe(), on the other hand, calls acpi_match_device()
+> which does not perform of_compatible() matching, but instead
+> i2c_device_probe() relies on CONFIG_OF API to perform of_match_table
+> matching, IOW ->probe matching, unlike ->match matching, depends on
+> CONFIG_OF. This can break i2c device probing on !CONFIG_OF systems
+> if the device does not provide .id_table.
+> 
+>  i2c_device_probe()
+>  ...
+>    if (!driver->id_table &&
+>        !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
+>        !i2c_of_match_device(dev->driver->of_match_table, client)) {
+>        status = -ENODEV;
+>        goto put_sync_adapter;
+>    }
+> 
+> i2c_of_match_device() on !CONFIG_OF systems is always false, so we never
+> perform of_match_table matching. i2c_acpi_match_device() does ACPI match
+> only, no of_compatible() matching takes place, even though the device
+> provides .of_match_table and ACPI is capable of matching such device.
+> 
+> It is not entirely clear why the device is matched again in bus
+> ->probe after successful and proper matching in bus ->match. Let's
+> remove ->probe matching.
 
-An alternative approach would be to keep the mmap_lock held across the
-entire core dumping operation; however, keeping the mmap_lock locked while
-we may be blocked for an unbounded amount of time (e.g. because we're
-dumping to a FUSE filesystem or so) isn't really optimal; the mmap_lock
-blocks things like the ->release handler of userfaultfd, and we don't
-really want critical system daemons to grind to a halt just because someone
-"gifted" them SCM_RIGHTS to an eternally-locked userfaultfd, or something
-like that.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+(assuming it's okay to go)
 
-Since both the normal ELF code and the FDPIC ELF code need this
-functionality (and if any other binfmt wants to add coredump support in the
-future, they'd probably need it, too), implement this with a common helper
-in fs/coredump.c.
+> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/i2c/i2c-core-base.c | 11 -----------
+>  1 file changed, 11 deletions(-)
+> 
+> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+> index 5ec082e2039d..77eea5c0bc71 100644
+> --- a/drivers/i2c/i2c-core-base.c
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -475,17 +475,6 @@ static int i2c_device_probe(struct device *dev)
+>  
+>  	driver = to_i2c_driver(dev->driver);
+>  
+> -	/*
+> -	 * An I2C ID table is not mandatory, if and only if, a suitable OF
+> -	 * or ACPI ID table is supplied for the probing device.
+> -	 */
+> -	if (!driver->id_table &&
+> -	    !acpi_driver_match_device(dev, dev->driver) &&
+> -	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
+> -		status = -ENODEV;
+> -		goto put_sync_adapter;
+> -	}
+> -
+>  	if (client->flags & I2C_CLIENT_WAKE) {
+>  		int wakeirq;
+>  
+> -- 
+> 2.28.0
+> 
 
-A downside of this approach is that we now need a bigger amount of kernel
-memory per userspace VMA in the normal ELF case, and that we need O(n)
-kernel memory in the FDPIC ELF case at all; but 40 bytes per VMA shouldn't
-be terribly bad.
-
-Signed-off-by: Jann Horn <jannh@google.com>
----
- fs/binfmt_elf.c          | 129 +++++++++------------------------------
- fs/binfmt_elf_fdpic.c    |  86 +++++++++++++-------------
- fs/coredump.c            |  69 +++++++++++++++++++++
- include/linux/coredump.h |   9 +++
- 4 files changed, 148 insertions(+), 145 deletions(-)
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 5fd11a25d320..0585794400a4 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1475,31 +1475,13 @@ static unsigned long vma_dump_size(struct vm_area_struct *vma,
- 		goto whole;
- 
- 	/*
--	 * If this looks like the beginning of a DSO or executable mapping,
--	 * check for an ELF header.  If we find one, dump the first page to
--	 * aid in determining what was mapped here.
-+	 * If this is the beginning of an executable file mapping,
-+	 * dump the first page to aid in determining what was mapped here.
- 	 */
- 	if (FILTER(ELF_HEADERS) &&
--	    vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ)) {
--		u32 __user *header = (u32 __user *) vma->vm_start;
--		u32 word;
--		/*
--		 * Doing it this way gets the constant folded by GCC.
--		 */
--		union {
--			u32 cmp;
--			char elfmag[SELFMAG];
--		} magic;
--		BUILD_BUG_ON(SELFMAG != sizeof word);
--		magic.elfmag[EI_MAG0] = ELFMAG0;
--		magic.elfmag[EI_MAG1] = ELFMAG1;
--		magic.elfmag[EI_MAG2] = ELFMAG2;
--		magic.elfmag[EI_MAG3] = ELFMAG3;
--		if (unlikely(get_user(word, header)))
--			word = 0;
--		if (word == magic.cmp)
--			return PAGE_SIZE;
--	}
-+	    vma->vm_pgoff == 0 && (vma->vm_flags & VM_READ) &&
-+	    (READ_ONCE(file_inode(vma->vm_file)->i_mode) & 0111) != 0)
-+		return PAGE_SIZE;
- 
- #undef	FILTER
- 
-@@ -2220,32 +2202,6 @@ static void free_note_info(struct elf_note_info *info)
- 
- #endif
- 
--static struct vm_area_struct *first_vma(struct task_struct *tsk,
--					struct vm_area_struct *gate_vma)
--{
--	struct vm_area_struct *ret = tsk->mm->mmap;
--
--	if (ret)
--		return ret;
--	return gate_vma;
--}
--/*
-- * Helper function for iterating across a vma list.  It ensures that the caller
-- * will visit `gate_vma' prior to terminating the search.
-- */
--static struct vm_area_struct *next_vma(struct vm_area_struct *this_vma,
--					struct vm_area_struct *gate_vma)
--{
--	struct vm_area_struct *ret;
--
--	ret = this_vma->vm_next;
--	if (ret)
--		return ret;
--	if (this_vma == gate_vma)
--		return NULL;
--	return gate_vma;
--}
--
- static void fill_extnum_info(struct elfhdr *elf, struct elf_shdr *shdr4extnum,
- 			     elf_addr_t e_shoff, int segs)
- {
-@@ -2272,9 +2228,8 @@ static void fill_extnum_info(struct elfhdr *elf, struct elf_shdr *shdr4extnum,
- static int elf_core_dump(struct coredump_params *cprm)
- {
- 	int has_dumped = 0;
--	int segs, i;
-+	int vma_count, segs, i;
- 	size_t vma_data_size = 0;
--	struct vm_area_struct *vma, *gate_vma;
- 	struct elfhdr elf;
- 	loff_t offset = 0, dataoff;
- 	struct elf_note_info info = { };
-@@ -2282,30 +2237,19 @@ static int elf_core_dump(struct coredump_params *cprm)
- 	struct elf_shdr *shdr4extnum = NULL;
- 	Elf_Half e_phnum;
- 	elf_addr_t e_shoff;
--	elf_addr_t *vma_filesz = NULL;
-+	struct core_vma_metadata *vma_meta;
-+
-+	if (dump_vma_snapshot(cprm, &vma_count, &vma_meta, vma_dump_size))
-+		return 0;
-+
-+	for (i = 0; i < vma_count; i++)
-+		vma_data_size += vma_meta[i].dump_size;
- 
--	/*
--	 * We no longer stop all VM operations.
--	 * 
--	 * This is because those proceses that could possibly change map_count
--	 * or the mmap / vma pages are now blocked in do_exit on current
--	 * finishing this core dump.
--	 *
--	 * Only ptrace can touch these memory addresses, but it doesn't change
--	 * the map_count or the pages allocated. So no possibility of crashing
--	 * exists while dumping the mm->vm_next areas to the core file.
--	 */
--  
- 	/*
- 	 * The number of segs are recored into ELF header as 16bit value.
- 	 * Please check DEFAULT_MAX_MAP_COUNT definition when you modify here.
- 	 */
--	segs = current->mm->map_count;
--	segs += elf_core_extra_phdrs();
--
--	gate_vma = get_gate_vma(current->mm);
--	if (gate_vma != NULL)
--		segs++;
-+	segs = vma_count + elf_core_extra_phdrs();
- 
- 	/* for notes section */
- 	segs++;
-@@ -2343,24 +2287,6 @@ static int elf_core_dump(struct coredump_params *cprm)
- 
- 	dataoff = offset = roundup(offset, ELF_EXEC_PAGESIZE);
- 
--	/*
--	 * Zero vma process will get ZERO_SIZE_PTR here.
--	 * Let coredump continue for register state at least.
--	 */
--	vma_filesz = kvmalloc(array_size(sizeof(*vma_filesz), (segs - 1)),
--			      GFP_KERNEL);
--	if (!vma_filesz)
--		goto end_coredump;
--
--	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
--			vma = next_vma(vma, gate_vma)) {
--		unsigned long dump_size;
--
--		dump_size = vma_dump_size(vma, cprm->mm_flags);
--		vma_filesz[i++] = dump_size;
--		vma_data_size += dump_size;
--	}
--
- 	offset += vma_data_size;
- 	offset += elf_core_extra_data_size();
- 	e_shoff = offset;
-@@ -2381,21 +2307,23 @@ static int elf_core_dump(struct coredump_params *cprm)
- 		goto end_coredump;
- 
- 	/* Write program headers for segments dump */
--	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
--			vma = next_vma(vma, gate_vma)) {
-+	for (i = 0; i < vma_count; i++) {
-+		struct core_vma_metadata *meta = vma_meta + i;
- 		struct elf_phdr phdr;
- 
- 		phdr.p_type = PT_LOAD;
- 		phdr.p_offset = offset;
--		phdr.p_vaddr = vma->vm_start;
-+		phdr.p_vaddr = meta->start;
- 		phdr.p_paddr = 0;
--		phdr.p_filesz = vma_filesz[i++];
--		phdr.p_memsz = vma->vm_end - vma->vm_start;
-+		phdr.p_filesz = meta->dump_size;
-+		phdr.p_memsz = meta->end - meta->start;
- 		offset += phdr.p_filesz;
--		phdr.p_flags = vma->vm_flags & VM_READ ? PF_R : 0;
--		if (vma->vm_flags & VM_WRITE)
-+		phdr.p_flags = 0;
-+		if (meta->flags & VM_READ)
-+			phdr.p_flags |= PF_R;
-+		if (meta->flags & VM_WRITE)
- 			phdr.p_flags |= PF_W;
--		if (vma->vm_flags & VM_EXEC)
-+		if (meta->flags & VM_EXEC)
- 			phdr.p_flags |= PF_X;
- 		phdr.p_align = ELF_EXEC_PAGESIZE;
- 
-@@ -2417,9 +2345,10 @@ static int elf_core_dump(struct coredump_params *cprm)
- 	if (!dump_skip(cprm, dataoff - cprm->pos))
- 		goto end_coredump;
- 
--	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
--			vma = next_vma(vma, gate_vma)) {
--		if (!dump_user_range(cprm, vma->vm_start, vma_filesz[i++]))
-+	for (i = 0; i < vma_count; i++) {
-+		struct core_vma_metadata *meta = vma_meta + i;
-+
-+		if (!dump_user_range(cprm, meta->start, meta->dump_size))
- 			goto end_coredump;
- 	}
- 	dump_truncate(cprm);
-@@ -2435,7 +2364,7 @@ static int elf_core_dump(struct coredump_params *cprm)
- end_coredump:
- 	free_note_info(&info);
- 	kfree(shdr4extnum);
--	kvfree(vma_filesz);
-+	kvfree(vma_meta);
- 	kfree(phdr4note);
- 	return has_dumped;
- }
-diff --git a/fs/binfmt_elf_fdpic.c b/fs/binfmt_elf_fdpic.c
-index 76e8c0defdc8..f9d35bc9f0af 100644
---- a/fs/binfmt_elf_fdpic.c
-+++ b/fs/binfmt_elf_fdpic.c
-@@ -1222,7 +1222,8 @@ struct elf_prstatus_fdpic
-  *
-  * I think we should skip something. But I am not sure how. H.J.
-  */
--static int maydump(struct vm_area_struct *vma, unsigned long mm_flags)
-+static unsigned long vma_dump_size(struct vm_area_struct *vma,
-+				   unsigned long mm_flags)
- {
- 	int dump_ok;
- 
-@@ -1251,7 +1252,7 @@ static int maydump(struct vm_area_struct *vma, unsigned long mm_flags)
- 			kdcore("%08lx: %08lx: %s (DAX private)", vma->vm_start,
- 			       vma->vm_flags, dump_ok ? "yes" : "no");
- 		}
--		return dump_ok;
-+		goto out;
- 	}
- 
- 	/* By default, dump shared memory if mapped from an anonymous file. */
-@@ -1260,13 +1261,13 @@ static int maydump(struct vm_area_struct *vma, unsigned long mm_flags)
- 			dump_ok = test_bit(MMF_DUMP_ANON_SHARED, &mm_flags);
- 			kdcore("%08lx: %08lx: %s (share)", vma->vm_start,
- 			       vma->vm_flags, dump_ok ? "yes" : "no");
--			return dump_ok;
-+			goto out;
- 		}
- 
- 		dump_ok = test_bit(MMF_DUMP_MAPPED_SHARED, &mm_flags);
- 		kdcore("%08lx: %08lx: %s (share)", vma->vm_start,
- 		       vma->vm_flags, dump_ok ? "yes" : "no");
--		return dump_ok;
-+		goto out;
- 	}
- 
- #ifdef CONFIG_MMU
-@@ -1275,14 +1276,16 @@ static int maydump(struct vm_area_struct *vma, unsigned long mm_flags)
- 		dump_ok = test_bit(MMF_DUMP_MAPPED_PRIVATE, &mm_flags);
- 		kdcore("%08lx: %08lx: %s (!anon)", vma->vm_start,
- 		       vma->vm_flags, dump_ok ? "yes" : "no");
--		return dump_ok;
-+		goto out;
- 	}
- #endif
- 
- 	dump_ok = test_bit(MMF_DUMP_ANON_PRIVATE, &mm_flags);
- 	kdcore("%08lx: %08lx: %s", vma->vm_start, vma->vm_flags,
- 	       dump_ok ? "yes" : "no");
--	return dump_ok;
-+
-+out:
-+	return dump_ok ? vma->vm_end - vma->vm_start : 0;
- }
- 
- /* An ELF note in memory */
-@@ -1524,31 +1527,30 @@ static void fill_extnum_info(struct elfhdr *elf, struct elf_shdr *shdr4extnum,
- /*
-  * dump the segments for an MMU process
-  */
--static bool elf_fdpic_dump_segments(struct coredump_params *cprm)
-+static bool elf_fdpic_dump_segments(struct coredump_params *cprm,
-+				    struct core_vma_metadata *vma_meta,
-+				    int vma_count)
- {
--	struct vm_area_struct *vma;
-+	int i;
- 
--	for (vma = current->mm->mmap; vma; vma = vma->vm_next) {
--		unsigned long addr;
-+	for (i = 0; i < vma_count; i++) {
-+		struct core_vma_metadata *meta = vma_meta + i;
- 
--		if (!maydump(vma, cprm->mm_flags))
--			continue;
--
--		if (!dump_user_range(cprm, vma->vm_start,
--				     vma->vma_end - vma->vm_start))
-+		if (!dump_user_range(cprm, meta->start, meta->dump_size))
- 			return false;
- 	}
- 	return true;
- }
- 
--static size_t elf_core_vma_data_size(unsigned long mm_flags)
-+static size_t elf_core_vma_data_size(unsigned long mm_flags,
-+				     struct core_vma_metadata *vma_meta,
-+				     int vma_count)
- {
--	struct vm_area_struct *vma;
- 	size_t size = 0;
-+	int i;
- 
--	for (vma = current->mm->mmap; vma; vma = vma->vm_next)
--		if (maydump(vma, mm_flags))
--			size += vma->vm_end - vma->vm_start;
-+	for (i = 0; i < vma_count; i++)
-+		size += vma_meta[i].dump_size;
- 	return size;
- }
- 
-@@ -1562,9 +1564,8 @@ static size_t elf_core_vma_data_size(unsigned long mm_flags)
- static int elf_fdpic_core_dump(struct coredump_params *cprm)
- {
- 	int has_dumped = 0;
--	int segs;
-+	int vma_count, segs;
- 	int i;
--	struct vm_area_struct *vma;
- 	struct elfhdr *elf = NULL;
- 	loff_t offset = 0, dataoff;
- 	struct memelfnote psinfo_note, auxv_note;
-@@ -1578,18 +1579,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	elf_addr_t e_shoff;
- 	struct core_thread *ct;
- 	struct elf_thread_status *tmp;
--
--	/*
--	 * We no longer stop all VM operations.
--	 *
--	 * This is because those proceses that could possibly change map_count
--	 * or the mmap / vma pages are now blocked in do_exit on current
--	 * finishing this core dump.
--	 *
--	 * Only ptrace can touch these memory addresses, but it doesn't change
--	 * the map_count or the pages allocated. So no possibility of crashing
--	 * exists while dumping the mm->vm_next areas to the core file.
--	 */
-+	struct core_vma_metadata *vma_meta = NULL;
- 
- 	/* alloc memory for large data structures: too large to be on stack */
- 	elf = kmalloc(sizeof(*elf), GFP_KERNEL);
-@@ -1599,6 +1589,9 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	if (!psinfo)
- 		goto end_coredump;
- 
-+	if (dump_vma_snapshot(cprm, &vma_count, &vma_meta, vma_dump_size))
-+		goto end_coredump;
-+
- 	for (ct = current->mm->core_state->dumper.next;
- 					ct; ct = ct->next) {
- 		tmp = elf_dump_thread_status(cprm->siginfo->si_signo,
-@@ -1618,8 +1611,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	tmp->next = thread_list;
- 	thread_list = tmp;
- 
--	segs = current->mm->map_count;
--	segs += elf_core_extra_phdrs();
-+	segs = vma_count + elf_core_extra_phdrs();
- 
- 	/* for notes section */
- 	segs++;
-@@ -1664,7 +1656,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	/* Page-align dumped data */
- 	dataoff = offset = roundup(offset, ELF_EXEC_PAGESIZE);
- 
--	offset += elf_core_vma_data_size(cprm->mm_flags);
-+	offset += elf_core_vma_data_size(cprm->mm_flags, vma_meta, vma_count);
- 	offset += elf_core_extra_data_size();
- 	e_shoff = offset;
- 
-@@ -1684,23 +1676,26 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 		goto end_coredump;
- 
- 	/* write program headers for segments dump */
--	for (vma = current->mm->mmap; vma; vma = vma->vm_next) {
-+	for (i = 0; i < vma_count; i++) {
-+		struct core_vma_metadata *meta = vma_meta + i;
- 		struct elf_phdr phdr;
- 		size_t sz;
- 
--		sz = vma->vm_end - vma->vm_start;
-+		sz = meta->end - meta->start;
- 
- 		phdr.p_type = PT_LOAD;
- 		phdr.p_offset = offset;
--		phdr.p_vaddr = vma->vm_start;
-+		phdr.p_vaddr = meta->start;
- 		phdr.p_paddr = 0;
--		phdr.p_filesz = maydump(vma, cprm->mm_flags) ? sz : 0;
-+		phdr.p_filesz = meta->dump_size;
- 		phdr.p_memsz = sz;
- 		offset += phdr.p_filesz;
--		phdr.p_flags = vma->vm_flags & VM_READ ? PF_R : 0;
--		if (vma->vm_flags & VM_WRITE)
-+		phdr.p_flags = 0;
-+		if (meta->flags & VM_READ)
-+			phdr.p_flags |= PF_R;
-+		if (meta->flags & VM_WRITE)
- 			phdr.p_flags |= PF_W;
--		if (vma->vm_flags & VM_EXEC)
-+		if (meta->flags & VM_EXEC)
- 			phdr.p_flags |= PF_X;
- 		phdr.p_align = ELF_EXEC_PAGESIZE;
- 
-@@ -1732,7 +1727,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 	if (!dump_skip(cprm, dataoff - cprm->pos))
- 		goto end_coredump;
- 
--	if (!elf_fdpic_dump_segments(cprm))
-+	if (!elf_fdpic_dump_segments(cprm, vma_meta, vma_count))
- 		goto end_coredump;
- 
- 	if (!elf_core_write_extra_data(cprm))
-@@ -1756,6 +1751,7 @@ static int elf_fdpic_core_dump(struct coredump_params *cprm)
- 		thread_list = thread_list->next;
- 		kfree(tmp);
- 	}
-+	kvfree(vma_meta);
- 	kfree(phdr4note);
- 	kfree(elf);
- 	kfree(psinfo);
-diff --git a/fs/coredump.c b/fs/coredump.c
-index 6042d15acd51..7b4486b701bb 100644
---- a/fs/coredump.c
-+++ b/fs/coredump.c
-@@ -936,3 +936,72 @@ void dump_truncate(struct coredump_params *cprm)
- 	}
- }
- EXPORT_SYMBOL(dump_truncate);
-+
-+static struct vm_area_struct *first_vma(struct task_struct *tsk,
-+					struct vm_area_struct *gate_vma)
-+{
-+	struct vm_area_struct *ret = tsk->mm->mmap;
-+
-+	if (ret)
-+		return ret;
-+	return gate_vma;
-+}
-+
-+/*
-+ * Helper function for iterating across a vma list.  It ensures that the caller
-+ * will visit `gate_vma' prior to terminating the search.
-+ */
-+static struct vm_area_struct *next_vma(struct vm_area_struct *this_vma,
-+				       struct vm_area_struct *gate_vma)
-+{
-+	struct vm_area_struct *ret;
-+
-+	ret = this_vma->vm_next;
-+	if (ret)
-+		return ret;
-+	if (this_vma == gate_vma)
-+		return NULL;
-+	return gate_vma;
-+}
-+
-+/*
-+ * Under the mmap_lock, take a snapshot of relevant information about the task's
-+ * VMAs.
-+ */
-+int dump_vma_snapshot(struct coredump_params *cprm, int *vma_count,
-+		      struct core_vma_metadata **vma_meta,
-+		      unsigned long (*dump_size_cb)(struct vm_area_struct *, unsigned long))
-+{
-+	struct vm_area_struct *vma, *gate_vma;
-+	struct mm_struct *mm = current->mm;
-+	int i;
-+
-+	if (mmap_read_lock_killable(mm))
-+		return -EINTR;
-+
-+	gate_vma = get_gate_vma(mm);
-+	*vma_count = mm->map_count + (gate_vma ? 1 : 0);
-+
-+	*vma_meta = kvmalloc_array(*vma_count, sizeof(**vma_meta), GFP_KERNEL);
-+	if (!*vma_meta) {
-+		mmap_read_unlock(mm);
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0, vma = first_vma(current, gate_vma); vma != NULL;
-+			vma = next_vma(vma, gate_vma), i++) {
-+		struct core_vma_metadata *m = (*vma_meta) + i;
-+
-+		m->start = vma->vm_start;
-+		m->end = vma->vm_end;
-+		m->flags = vma->vm_flags;
-+		m->dump_size = dump_size_cb(vma, cprm->mm_flags);
-+	}
-+
-+	mmap_read_unlock(mm);
-+
-+	if (WARN_ON(i != *vma_count))
-+		return -EFAULT;
-+
-+	return 0;
-+}
-diff --git a/include/linux/coredump.h b/include/linux/coredump.h
-index f0b71a74d0bc..21bbef9bd8d6 100644
---- a/include/linux/coredump.h
-+++ b/include/linux/coredump.h
-@@ -7,6 +7,12 @@
- #include <linux/fs.h>
- #include <asm/siginfo.h>
- 
-+struct core_vma_metadata {
-+	unsigned long start, end;
-+	unsigned long flags;
-+	unsigned long dump_size;
-+};
-+
- /*
-  * These are the only things you should do on a core-file: use only these
-  * functions to write out all the necessary info.
-@@ -18,6 +24,9 @@ extern int dump_align(struct coredump_params *cprm, int align);
- extern void dump_truncate(struct coredump_params *cprm);
- int dump_user_range(struct coredump_params *cprm, unsigned long start,
- 		    unsigned long len);
-+int dump_vma_snapshot(struct coredump_params *cprm, int *vma_count,
-+		      struct core_vma_metadata **vma_meta,
-+		      unsigned long (*dump_size_cb)(struct vm_area_struct *, unsigned long));
- #ifdef CONFIG_COREDUMP
- extern void do_coredump(const kernel_siginfo_t *siginfo);
- #else
 -- 
-2.28.0.297.g1956fa8f8d-goog
+With Best Regards,
+Andy Shevchenko
+
 
