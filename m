@@ -2,88 +2,109 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A72DC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3A0B207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:45:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oEpPptmh"
+	by mail.kernel.org (Postfix) with ESMTP id C76252078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:46:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598474786;
+	bh=OYUU0rJGxFEHOinAaW2j6zIQrhMSRz1MO1iyL7hSvy4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MUAExuWjbVPVluSGc334vFeWHXpr3YrJl/yZ3LAT/CIuEfN4hr06mRRJYQHBb4wUh
+	 460FxcDpK+IAWc2nVgO0oGjNAPY5nKdcncl2xnWMZqlAIDTpu08DiWtuk+HbDxcNa+
+	 El9sFeTZLqAD6rLF76Gcj79GnLGIq9UtT/sVm+Fg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgHZUpO (ORCPT
+        id S1726845AbgHZUqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgHZUpN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:45:13 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F7EBC061756
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:45:13 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id v13so2715757oiv.13
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:45:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QnLfeoLcCvYGQhSXCHvu6ntO3iZypCG03j0v0V/lE60=;
-        b=oEpPptmh8R/ckvOynlZJ0jBvRyvSgLg+QaTk85AvfB5WWtFS64+ArAY6dtSzIgW24p
-         UzviT/lXocVLE2aWZpLhJA+/l9NktOLBwDMVhswDM/teObIMU1J+8LDfA4qnVFaoBFrC
-         b/ucW8ynwOUH2jpcdHHAKtea59hSC+gyN2xU/o0yaIY+s+7jqQaNFGqo3rOR1Omq3mQp
-         /g31ng79Q59TbpLRpyYVd/s/Gwj6PiQuxNyXkK6WlSw+oWKm7VHGRU5VUkWSO5vGQO0c
-         WWjwA7GB3h0CfFeEjJfxmJJsxgD9PnFMkojRobSrFawZwkOYgCpR094C3Tu4v/aBfWBM
-         LwOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QnLfeoLcCvYGQhSXCHvu6ntO3iZypCG03j0v0V/lE60=;
-        b=guPa5OjV1EqCqkyWzNb34EwAKk6P9ABJQ0jGPTyRBy3Ok9AA49gAWgQDvAtVrpZ6Q9
-         mC+gByvRM6e1uyYFhmddxCVEeW0bYxZXROG1TccJA0M9aXrwAR67Qwk9XbCr3awQHsC8
-         iaJc2We1ooWiJvQLrqAIU1/BrAmNs5zU2rFnjV9/HuM4K9fNOmvj98kjZLskE4dL1dTf
-         ga+zrnLVMbsGUAjRrgv8GV9eFA9DMefp0L1IYR14h7nGUrNClXacqHG2WQjDTOdAha04
-         LSlnBKGiBbmLJrVvERiAZOXYFtyZJUAJ6LqJsWw8LEn/drpC2NKkjYZuXHk3Kcnor0Rl
-         FyFw==
-X-Gm-Message-State: AOAM532cs99JfWwQGy1i4/s0XGtGwzQDrV1PytG3A1Zf3leU8QjqwvQi
-        CoYvsQllaiXnp5yKOcQmzgp07nX+PTTXfcFonC/C4w==
-X-Google-Smtp-Source: ABdhPJztiKIs+AKmRQMjj8AupE0RfyXrDjWJ/I5FIYrFSEg+06xO6+xJgEtk14F9HUsJ3uBQwaGnAQSaytfPXKIFy8I=
-X-Received: by 2002:aca:b942:: with SMTP id j63mr4826397oif.28.1598474712710;
- Wed, 26 Aug 2020 13:45:12 -0700 (PDT)
+        Wed, 26 Aug 2020 16:46:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726609AbgHZUqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 16:46:25 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 051D52078D;
+        Wed, 26 Aug 2020 20:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598474784;
+        bh=OYUU0rJGxFEHOinAaW2j6zIQrhMSRz1MO1iyL7hSvy4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hfzQkAOrTZ1e30KpO/wAknFCm4uLPu7Ctx9VQNaxzW+epw05O4sGqxqzr+nM+1Ze0
+         GM37nb9IaY2DCnAZtJnTCeW2MFvUNj+IccTAGvw+1bZaC4Zztz97mDVOweX1sIGxCP
+         meyObtzPcfzAS4wRRXMo2iyvnqTNb2pBIcqTnrII=
+Date:   Wed, 26 Aug 2020 21:45:47 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        tanveer <tanveer.alam@puresoftware.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
+Message-ID: <20200826204547.GU4965@sirena.org.uk>
+References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
+ <20200822183342.6sdhp6yq6i7yvdia@skbuf>
+ <CAHp75VeNXy1jWNWMuZc0bfXruKc3=0H4ezwpE8jbj6GLYk5QBA@mail.gmail.com>
+ <20200826204108.reuy7ieqabutwuwo@skbuf>
 MIME-Version: 1.0
-References: <159846887637.18873.14677728679411578606.stgit@bmoger-ubuntu> <159846924650.18873.2599714820148493539.stgit@bmoger-ubuntu>
-In-Reply-To: <159846924650.18873.2599714820148493539.stgit@bmoger-ubuntu>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 26 Aug 2020 13:45:01 -0700
-Message-ID: <CALMp9eTo_HMPcobJos-KMKBCjOuT=P+j9=WSh7Cf3JrQb3xftQ@mail.gmail.com>
-Subject: Re: [PATCH v5 03/12] KVM: SVM: Change intercept_dr to generic intercepts
-To:     Babu Moger <babu.moger@amd.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        kvm list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="p8mP+8RrBGerSNjm"
+Content-Disposition: inline
+In-Reply-To: <20200826204108.reuy7ieqabutwuwo@skbuf>
+X-Cookie: Should I do my BOBBIE VINTON medley?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:14 PM Babu Moger <babu.moger@amd.com> wrote:
->
-> Modify intercept_dr to generic intercepts in vmcb_control_area. Use
-> the generic vmcb_set_intercept, vmcb_clr_intercept and vmcb_is_intercept
-> to set/clear/test the intercept_dr bits.
->
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+
+--p8mP+8RrBGerSNjm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Aug 26, 2020 at 11:41:08PM +0300, Vladimir Oltean wrote:
+> On Wed, Aug 26, 2020 at 10:34:04PM +0300, Andy Shevchenko wrote:
+
+> > Theoretically you may declare your HID in the same / similar way as
+> > PRP0001 and use same compatible strings and all other DT properties
+> > (when they make sense and not duplicate ACPI functionality).
+> > But better if ACPI people can tell you (I Cc'ed Rafael and ACPI
+> > mailing list) if it is gonna work.
+
+> Something doesn't look right about PRP0001, what's the catch?
+
+Microsoft decided not to implement support for it in Windows, it's
+essentially there for embedded style x86 platforms running Linux so they
+don't need to reimplement so many wheels and can just reuse existing DT
+bindings but it causes problems if you want to run Windows (and possibly
+some of the enterprise Linux distros, I can't remember if any of them
+had concerns about it) on the platform.
+
+--p8mP+8RrBGerSNjm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9GyfsACgkQJNaLcl1U
+h9C2Xgf/U5iXD2Fm8wqFbVSfKajaqTfB7OsyGR/oZoQPfSiJrkaSENbsx4sevNjQ
+ZrQ8z8Opo6Zi45t872miyS3Ib22XSU9/obKAkqaLxdVAWpGHvbf0qIv/mqh1VoQw
+gcuJojxCD2M0k84Oww40ud41LKKLVPhFxLeSwKPJhvsGC2f49Lki2TkdggeY/4lY
+r/TXKE96dl0TCwL1qvKFsC9Mc0LqIQKDKnsJSOSi9MwwEZQY+w/GWuhS3Iyl6EnX
+wmsiwv+fc4lnwc/Uq9Kd0qzNTqmgeZ1d7j3mSvWb6Ptpr9vN/3NC4QvcELcFzxD1
+z9VjMG1tUZOZPqskLzZ+fYa6hwf4Ww==
+=WdfB
+-----END PGP SIGNATURE-----
+
+--p8mP+8RrBGerSNjm--
