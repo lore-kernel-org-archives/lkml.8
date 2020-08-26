@@ -2,295 +2,147 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03877C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D34922177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9058B22B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:49:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="ZKF7HKI6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OggeQFpN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727851AbgHZOt0 (ORCPT
+        id S1727860AbgHZOth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:49:26 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.80]:28191 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgHZOtL (ORCPT
+        Wed, 26 Aug 2020 10:49:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727074AbgHZOt2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:49:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598453348;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=WtPyyCfNYRDGNlRLhnTbAOZUqz018Ne4S7uPqstOy3k=;
-        b=ZKF7HKI63jLWVLrusi6lW0rDx12aW26hCGhQUqpCuj8/t2eqlep86sAzuXgB59nfeH
-        mYYR7tcfWNxOogMqPUzBBIR6+Map0GZ2Jc5YNsjrZPBWAEsHwMGjCY2kYlGpC13jGPbO
-        ySXRBCZ3i5hcQGlLV2XcFexH3yxiIHwCKvKrMzToV3QXnEgynMIDB8rasLBZfUFN4gdg
-        lgOQtyWaWEJ3gvYgyBE0GbbP604wh/ercxpyJ2wefv2KSon2xUc2JaV9ofb4yI48pDSZ
-        iUxT2pCitRbQHiqd7Cez087tqFkLeaP22mcKQF6vzwWz/6xj+/eLNutqcLjVsLk+8pum
-        Cacw==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEodhPgRDZ8j7Ic/Fboo="
-X-RZG-CLASS-ID: mo00
-Received: from gerhold.net
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w7QElPnl9
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 26 Aug 2020 16:47:25 +0200 (CEST)
-Date:   Wed, 26 Aug 2020 16:47:18 +0200
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Cheng-Yi Chiang <cychiang@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        Rohit kumar <rohitkr@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Patrick Lai <plai@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        dianders@chromium.org, dgreid@chromium.org, tzungbi@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        alsa-devel@alsa-project.org, Ajit Pandey <ajitp@codeaurora.org>,
-        Tzung-Bi Shih <tzungbi@google.com>
-Subject: Re: [PATCH v6 2/2] ASoC: qcom: sc7180: Add machine driver for sound
- card registration
-Message-ID: <20200826144718.GA854@gerhold.net>
-References: <20200826110454.1811352-1-cychiang@chromium.org>
- <20200826110454.1811352-3-cychiang@chromium.org>
+        Wed, 26 Aug 2020 10:49:28 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E198C061574;
+        Wed, 26 Aug 2020 07:49:28 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id i13so1000998pjv.0;
+        Wed, 26 Aug 2020 07:49:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gei3eGyj/TCO0svrvjvzgxjgeg9dEgx8lLot5t+WCKQ=;
+        b=OggeQFpN8Ur5khUHkwMA7O7SqErBYYpznV7etHRBSCqbcD8GFdhVN9/3xtrmF9i2N7
+         IiyRysA8iehiPES/uOreenm+KFkuTDtEd+cpVjAuwfrKYeOZwwHtc44W0JTR/l4H7n9C
+         Vpb0AUNIgaT/ujfTLH+vMrBGW7766ZEoLCTKOnCq48v3gWLF+IV0wuy20Mbl5oU00q/v
+         xpU/D7NYv+inADKhd9U0sQr+C8ZC9dfG5XnT28iwqG7dg7WscTnY7YrN4YdxAq7AZou4
+         hmgdYPI5GsVVhMUWake9uplUpA5mBbxkOAoXfu5Udd1HQHNULDPnBwsgYJWp4IoES2Xc
+         Xevw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gei3eGyj/TCO0svrvjvzgxjgeg9dEgx8lLot5t+WCKQ=;
+        b=bAPLvPf12hN5lBtIPfMkzFq7GLMqPnTqweYLQT3dEOhcqNKUZ1GxdXjorn11kh78MN
+         ubN+AQlejpKb0aWWSuBgQjwwDlJw1rowcnrpJo04EEbHlfvCF4kvJbtC2jcS8f/m+rI9
+         cqt5ZSpHaLI5XBNFM4Q8jShTtmwQne1rBqBlOWJjCgidLvUZ1Lw/TrFhDdFTzsIRrYLY
+         BAPI4UrNHW0j4lvNujMDbNkDhsu8F9nCplTd+sNejxPoVmpo9rV79eG1wdVOG0aKNz1k
+         wl4io4vaN/dOD3uVmXux7TAnpQ1N6cTQGtveotRIJsY4O7093bEBvSzsD5kwWyoeg5ax
+         tYqA==
+X-Gm-Message-State: AOAM531xdTLXpZNSlbDZMfjHXrDac23Y/jTSSiBhpZKz6BJhctaTHzc7
+        y3p01PFcDkSMwyIlkYLWMBowuuiyk+U=
+X-Google-Smtp-Source: ABdhPJwP99rlLlcLD1eYGTg+i3JAy8A6E7AHdmdnVNzCUlHMSIoyL2hexawhLXhMLUqiUaweftLueQ==
+X-Received: by 2002:a17:90b:4a07:: with SMTP id kk7mr6645313pjb.125.1598453367815;
+        Wed, 26 Aug 2020 07:49:27 -0700 (PDT)
+Received: from localhost.localdomain ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id d13sm3343236pfq.118.2020.08.26.07.49.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:49:27 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: [PATCH] i2c: do not acpi/of match device in i2c_device_probe()
+Date:   Wed, 26 Aug 2020 23:49:20 +0900
+Message-Id: <20200826144920.110605-1-sergey.senozhatsky@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826110454.1811352-3-cychiang@chromium.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 07:04:54PM +0800, Cheng-Yi Chiang wrote:
-> From: Ajit Pandey <ajitp@codeaurora.org>
-> 
-> Add new driver to register sound card on sc7180 trogdor board and
-> do the required configuration for lpass cpu dai and external codecs
-> connected over MI2S interfaces.
-> 
-> Signed-off-by: Ajit Pandey <ajitp@codeaurora.org>
-> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
-> Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
-> ---
->  sound/soc/qcom/Kconfig  |  12 ++
->  sound/soc/qcom/Makefile |   2 +
->  sound/soc/qcom/sc7180.c | 244 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 258 insertions(+)
->  create mode 100644 sound/soc/qcom/sc7180.c
-> 
-> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-> index a607ace8b089..63678b746299 100644
-> --- a/sound/soc/qcom/Kconfig
-> +++ b/sound/soc/qcom/Kconfig
-> @@ -116,4 +116,16 @@ config SND_SOC_SDM845
->  	  SDM845 SoC-based systems.
->  	  Say Y if you want to use audio device on this SoCs.
->  
-> +config SND_SOC_SC7180
-> +	tristate "SoC Machine driver for SC7180 boards"
-> +	depends on SND_SOC_QCOM
-> +	select SND_SOC_QCOM_COMMON
-> +	select SND_SOC_LPASS_SC7180
-> +	select SND_SOC_MAX98357A
-> +	select SND_SOC_RT5682
-> +	help
-> +	  To add support for audio on Qualcomm Technologies Inc.
-> +	  SC7180 SoC-based systems.
-> +	  Say Y if you want to use audio device on this SoCs.
-> +
->  endif #SND_SOC_QCOM
-> diff --git a/sound/soc/qcom/Makefile b/sound/soc/qcom/Makefile
-> index 7972c9479ab0..0cdcbf367ef1 100644
-> --- a/sound/soc/qcom/Makefile
-> +++ b/sound/soc/qcom/Makefile
-> @@ -17,12 +17,14 @@ snd-soc-storm-objs := storm.o
->  snd-soc-apq8016-sbc-objs := apq8016_sbc.o
->  snd-soc-apq8096-objs := apq8096.o
->  snd-soc-sdm845-objs := sdm845.o
-> +snd-soc-sc7180-objs := sc7180.o
->  snd-soc-qcom-common-objs := common.o
->  
->  obj-$(CONFIG_SND_SOC_STORM) += snd-soc-storm.o
->  obj-$(CONFIG_SND_SOC_APQ8016_SBC) += snd-soc-apq8016-sbc.o
->  obj-$(CONFIG_SND_SOC_MSM8996) += snd-soc-apq8096.o
->  obj-$(CONFIG_SND_SOC_SDM845) += snd-soc-sdm845.o
-> +obj-$(CONFIG_SND_SOC_SC7180) += snd-soc-sc7180.o
->  obj-$(CONFIG_SND_SOC_QCOM_COMMON) += snd-soc-qcom-common.o
->  
->  #DSP lib
-> diff --git a/sound/soc/qcom/sc7180.c b/sound/soc/qcom/sc7180.c
-> new file mode 100644
-> index 000000000000..7849376f63ba
-> --- /dev/null
-> +++ b/sound/soc/qcom/sc7180.c
-> @@ -0,0 +1,244 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +//
-> +// Copyright (c) 2020, The Linux Foundation. All rights reserved.
-> +//
-> +// sc7180.c -- ALSA SoC Machine driver for SC7180
-> +
-> +#include <dt-bindings/sound/sc7180-lpass.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <sound/core.h>
-> +#include <sound/jack.h>
-> +#include <sound/pcm.h>
-> +#include <sound/pcm_params.h>
-> +#include <sound/soc.h>
-> +#include <uapi/linux/input-event-codes.h>
-> +
-> +#include "../codecs/rt5682.h"
-> +#include "common.h"
-> +#include "lpass.h"
-> +
-> +#define DEFAULT_SAMPLE_RATE_48K		48000
-> +#define DEFAULT_MCLK_RATE		19200000
-> +#define RT5682_PLL1_FREQ (48000 * 512)
-> +
-> +struct sc7180_snd_data {
-> +	struct snd_soc_jack jack;
-> +	u32 pri_mi2s_clk_count;
-> +};
-> +
-> +static void sc7180_jack_free(struct snd_jack *jack)
-> +{
-> +	struct snd_soc_component *component = jack->private_data;
-> +
-> +	snd_soc_component_set_jack(component, NULL, NULL);
-> +}
-> +
-> +static int sc7180_headset_init(struct snd_soc_component *component)
-> +{
-> +	struct snd_soc_card *card = component->card;
-> +	struct sc7180_snd_data *pdata = snd_soc_card_get_drvdata(card);
-> +	struct snd_jack *jack;
-> +	int rval;
-> +
-> +	rval = snd_soc_card_jack_new(
-> +			card, "Headset Jack",
-> +			SND_JACK_HEADSET |
-> +			SND_JACK_HEADPHONE |
-> +			SND_JACK_BTN_0 | SND_JACK_BTN_1 |
-> +			SND_JACK_BTN_2 | SND_JACK_BTN_3,
-> +			&pdata->jack, NULL, 0);
-> +
-> +	if (rval < 0) {
-> +		dev_err(card->dev, "Unable to add Headset Jack\n");
-> +		return rval;
-> +	}
-> +
-> +	jack = pdata->jack.jack;
-> +
-> +	snd_jack_set_key(jack, SND_JACK_BTN_0, KEY_PLAYPAUSE);
-> +	snd_jack_set_key(jack, SND_JACK_BTN_1, KEY_VOICECOMMAND);
-> +	snd_jack_set_key(jack, SND_JACK_BTN_2, KEY_VOLUMEUP);
-> +	snd_jack_set_key(jack, SND_JACK_BTN_3, KEY_VOLUMEDOWN);
-> +
-> +	jack->private_data = component;
-> +	jack->private_free = sc7180_jack_free;
-> +
-> +	rval = snd_soc_component_set_jack(component,
-> +					  &pdata->jack, NULL);
-> +	if (rval != 0 && rval != -EOPNOTSUPP) {
-> +		dev_warn(card->dev, "Failed to set jack: %d\n", rval);
-> +		return rval;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct snd_soc_aux_dev sc7180_headset_dev = {
-> +	.dlc = COMP_EMPTY(),
-> +	.init = sc7180_headset_init,
-> +};
-> +
+i2c, apparently, can match the same device twice - the first
+time in ->match bus hook (i2c_device_match()), and the second
+one in ->probe (i2c_device_probe()) bus hook.
 
-[...]
+To make things more complicated, the second matching does not
+do exactly same checks as the first one. Namely, i2c_device_match()
+calls acpi_driver_match_device() which considers devices that
+provide of_match_table and performs of_compatible() matching for
+such devices. One important thing to note here is that ACPI
+of_compatible() matching (acpi_of_match_device()) is part of ACPI
+and does not depend on CONFIG_OF.
 
-> +static struct snd_soc_card sc7180_card = {
-> +	.owner = THIS_MODULE,
-> +	.aux_dev = &sc7180_headset_dev,
-> +	.num_aux_devs = 1,
-> +	.dapm_widgets = sc7180_snd_widgets,
-> +	.num_dapm_widgets = ARRAY_SIZE(sc7180_snd_widgets),
-> +};
-> +
-> +static int sc7180_parse_aux_of(struct device *dev)
-> +{
-> +	sc7180_headset_dev.dlc.of_node = of_parse_phandle(
-> +			dev->of_node, "aux-dev", 0);
-> +
-> +	if (!sc7180_headset_dev.dlc.of_node)
-> +		return -EINVAL;
-> +	return 0;
-> +}
-> +
+i2c_device_probe(), on the other hand, calls acpi_match_device()
+which does not perform of_compatible() matching, but instead
+i2c_device_probe() relies on CONFIG_OF API to perform of_match_table
+matching, IOW ->probe matching, unlike ->match matching, depends on
+CONFIG_OF. This can break i2c device probing on !CONFIG_OF systems
+if the device does not provide .id_table.
 
-Thanks for noting that this conflicts with my patch set that adds the
-"aux-devs" property for the device tree [1], I didn't see this before.
+ i2c_device_probe()
+ ...
+   if (!driver->id_table &&
+       !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
+       !i2c_of_match_device(dev->driver->of_match_table, client)) {
+       status = -ENODEV;
+       goto put_sync_adapter;
+   }
 
-The use of aux-dev in this patch looks a bit weird to me...
+i2c_of_match_device() on !CONFIG_OF systems is always false, so we never
+perform of_match_table matching. i2c_acpi_match_device() does ACPI match
+only, no of_compatible() matching takes place, even though the device
+provides .of_match_table and ACPI is capable of matching such device.
 
-As I understand, the "auxiliary devices" of a sound card are intended to
-be used for components that should be probed even though they don't
-appear within one of the DAI links. Examples for that are especially
-analog amplifiers and other components that do not have digital audio
-input/output.
+It is not entirely clear why the device is matched again in bus
+->probe after successful and proper matching in bus ->match. Let's
+remove ->probe matching.
 
-On the other hand, in this patch it seems to be just a way to mark the
-DAI component that will provide the headphone jack detection. In your
-example, the component that provides the headphone jack then appears
-both as DAI component and as auxiliary device:
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/i2c/i2c-core-base.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-	aux-dev = <&alc5682>;
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 5ec082e2039d..77eea5c0bc71 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -475,17 +475,6 @@ static int i2c_device_probe(struct device *dev)
+ 
+ 	driver = to_i2c_driver(dev->driver);
+ 
+-	/*
+-	 * An I2C ID table is not mandatory, if and only if, a suitable OF
+-	 * or ACPI ID table is supplied for the probing device.
+-	 */
+-	if (!driver->id_table &&
+-	    !acpi_driver_match_device(dev, dev->driver) &&
+-	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
+-		status = -ENODEV;
+-		goto put_sync_adapter;
+-	}
+-
+ 	if (client->flags & I2C_CLIENT_WAKE) {
+ 		int wakeirq;
+ 
+-- 
+2.28.0
 
-	dai-link@0 {
-		link-name = "MultiMedia0";
-		reg = <0>;
-		cpu {
-			sound-dai = <&lpass_cpu 0>;
-		};
-		codec {
-			sound-dai = <&alc5682 0>;
-		};
-	};
-
-Adding &alc5682 to snd_soc_card->aux_dev is kind of pointless in this
-case because it will already be probed as part of the DAI link.
-
-The only thing you gain is that you have the init() callback which gives
-you the component that provides the headphone jack. But if someone wants
-to add an actual auxiliary device later (e.g. an analog amplifier),
-they would run into trouble...
-
-I wonder if it would be better to just have some sort of phandle, e.g.
-
-	audio-jack = <&alc5682>;
-
-but instead of creating an auxiliary device for this you would e.g.
-iterate over the list of components to find the one the phandle refers to.
-
-Or maybe someone else can comment if using an auxiliary device for this
-does really make sense?
-
-Thanks,
-Stephan
-
-[1]: https://lore.kernel.org/alsa-devel/20200826095141.94017-1-stephan@gerhold.net/
