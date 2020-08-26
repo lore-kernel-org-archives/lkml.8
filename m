@@ -2,92 +2,146 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFCFC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C698C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEF602067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE222078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:45:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="vY2tmCmo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgHZOpa (ORCPT
+        id S1727077AbgHZOp5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:45:30 -0400
-Received: from smtprelay0086.hostedemail.com ([216.40.44.86]:49674 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726700AbgHZOp2 (ORCPT
+        Wed, 26 Aug 2020 10:45:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726854AbgHZOp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:45:28 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 325391822326E;
-        Wed, 26 Aug 2020 14:45:27 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: owl38_5e0175327065
-X-Filterd-Recvd-Size: 2293
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf16.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 26 Aug 2020 14:45:25 +0000 (UTC)
-Message-ID: <7b78e43a01865ec0c296ad9acad0616a6c2c3b86.camel@perches.com>
-Subject: Re: [PATCH 29/29] tools: Avoid comma separated statements
-From:   Joe Perches <joe@perches.com>
-To:     Thomas Renninger <trenn@suse.com>,
-        Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org
-Cc:     Shuah Khan <shuah@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Date:   Wed, 26 Aug 2020 07:45:24 -0700
-In-Reply-To: <6011591.XMClsHuqKX@c100>
-References: <cover.1598331148.git.joe@perches.com>
-         <52b68acfeb441b483de188f7e100600291f8c3ec.1598331149.git.joe@perches.com>
-         <6011591.XMClsHuqKX@c100>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Wed, 26 Aug 2020 10:45:56 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FBCC061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:45:56 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id u1so1978777edi.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:45:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B3VGI4ZO4Lizn7CsokRl50LFyMV/C/p/NGzm7IxRmNw=;
+        b=vY2tmCmo4W0jtZqs5TvQwnmYEnIQJzhLDUBY7CYym88eFsRdpJ4ZxJrn7MvyB+MFio
+         bcxEvPMJy9wnjmR2lby9fDmqvN9fg3QVolvVd3QBvsX0462o88VSpraYnhKztalmhGd2
+         Euybs+3DAaFUIuwJWRy3ToEqMxmBdJEa96Q2r7KTvb1z5/lfff1Puuerrb05ezIkrRTk
+         E+twZsFag+XZzywBLPDuOLAzwZ5m9DSERvBFMzEr1Fo8FEjx7IePtPDKT6K/vxMpCEQB
+         KqFF0L3zjlU+ho8M6oi1XdKm5YzeqHgXo3TyWNQJRh/GRIf9XqI/LLA4xIABFjBsHYms
+         bzZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B3VGI4ZO4Lizn7CsokRl50LFyMV/C/p/NGzm7IxRmNw=;
+        b=og8966k6tf8X9pLbSltPspDA8UUWBPYl2RjefnX5E8oLuyHKZEJ6jLoe2LUStlvlkC
+         lzFSajt0+TxdceGxtEZPF9EgiJz3VQXMVBIlPmKGcfigGB0TnTUmQgCtEfdFXwqcSy2s
+         ZtxBlxkP/ga0LSEoN3PyoQWFp81dkOmrBSNOGGD72khhPKRqFABPPKf34sDf9ge/U340
+         SR+NDksF8qvZvUWDh8GK1b6k57/bcd45juX24aY/PRkoIYZmHSAlg7plM82ib5JjFmuX
+         9GR452VJCoGX/PIOL2HqkJqE660OTGZqkBRn1Apo2vhxYw1Trx1I0Lj/ULZzDnWYOniN
+         6KSg==
+X-Gm-Message-State: AOAM533gqqONOVtkyXNQaicIqqA9oS70Zv3Edzh3xLlyGMUoU9sPktsz
+        E98/QGm+YrYZ54MdwT2KyE511joVBf3qkocEe4Vv
+X-Google-Smtp-Source: ABdhPJz7Lmrx2VSlzkwy+2+vA0HLtnclpWweWaL589faXH/mQoRuZjSVZToxRxXNSNqrVFhEzngnyK3dFQc5fOxqniU=
+X-Received: by 2002:aa7:db10:: with SMTP id t16mr14707237eds.196.1598453154646;
+ Wed, 26 Aug 2020 07:45:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
+ <20200824132252.31261-1-peter.enderborg@sony.com> <20200824132252.31261-2-peter.enderborg@sony.com>
+ <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com> <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com>
+In-Reply-To: <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 26 Aug 2020 10:45:43 -0400
+Message-ID: <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] selinux: Add denied trace with permssion filter
+To:     peter enderborg <peter.enderborg@sony.com>
+Cc:     linux-kernel@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-26 at 11:30 +0200, Thomas Renninger wrote:
-> Hi,
-> 
-> getting rid of lines with multiple instructions, separated by comma is
-> certainly a good idea.
-> One nit pick, though:
-> 
-> Am Dienstag, 25. August 2020, 06:56:26 CEST schrieb Joe Perches:
-> > Use semicolons and braces.
-> > 
-> > Signed-off-by: Joe Perches <joe@perches.com>
-> > ---
-[]
-> I can remember patches being rejected with one line statements in a condition,
-> surounded by braces.
-> I just read up Documentation/process/coding-style.rst, to be sure this still is up-to-date.
-> It's not a must, but line 180 says:
-> "Do not unnecessarily use braces where a single statement will do."
+On Wed, Aug 26, 2020 at 10:34 AM peter enderborg
+<peter.enderborg@sony.com> wrote:
+> On 8/26/20 3:42 PM, Paul Moore wrote:
+> > On Mon, Aug 24, 2020 at 9:23 AM Peter Enderborg
+> > <peter.enderborg@sony.com> wrote:
+> >> This adds tracing of all denies. They are grouped with trace_seq for
+> >> each audit.
+> >>
+> >> A filter can be inserted with a write to it's filter section.
+> >>
+> >> echo "permission==\"entrypoint\"" > events/avc/selinux_denied/filter
+> >>
+> >> A output will be like:
+> >>           runcon-1046  [002] .N..   156.351738: selinux_denied:
+> >>           trace_seq=2 result=-13
+> >>           scontext=system_u:system_r:cupsd_t:s0-s0:c0.
+> >>           c1023 tcontext=system_u:object_r:bin_t:s0
+> >>           tclass=file permission=entrypoint
+> >>
+> >> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+> >> ---
+> >>  include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++++++
+> >>  security/selinux/avc.c     | 27 +++++++++++++++++++++++++--
+> >>  2 files changed, 62 insertions(+), 2 deletions(-)
+> > My most significant comment is that I don't think we want, or need,
+> > two trace points in the avc_audit_post_callback() function.  Yes, I
+> > understand they are triggered slightly differently, but from my
+> > perspective there isn't enough difference between the two tracepoints
+> > to warrant including both.  However, while the tracepoints may be
+>
+> We tried that but that was problematic too.
 
-Read the block immediately below that too:
+My apologies if I was on that thread, but can you remind me why it was
+a problem?  Why can't we use a single tracepoint to capture the AVC
+information?
 
-"This does not apply if only one branch of a conditional statement is a
-single statement; in the latter case use braces in both branches:"
+> Having partly overlapping traces is not unheard off.  Check
+> compaction.c where we have a     trace_mm_compaction_begin
+> and a more detailed trace_mm_compaction_migratepages.
+> (And a  trace_mm_compaction_end)
 
-> I haven't reviewed every line, but I expect you only split up comma separated instructions
-> into separate lines and added braces?
+It may not be unique to SELinux, but that doesn't mean I like it :)
 
-I do not.
+One of my concerns with adding tracepoints is that the code would get
+littered with tracepoints; I accepted that it the AVC decision
+codepath was an obvious place for one, so we added a tracepoint.
+Having two tracepoints here is getting awfully close to my original
+fears.
 
-While there was a defect using this style though in another patch,
-this is a style only change.
+> > redundant in my mind, this new event does do the permission lookup in
+> > the kernel so that the contexts/class/permissions are all available as
+> > a string which is a good thing.
+> >
+> > Without going into the details, would the tracing folks be okay with
+> > doing something similar with the existing selinux_audited tracepoint?
+> > It's extra work in the kernel, but since it would only be triggered
+> > when the tracepoint was active it seems bearable to me.
+>
+> I think the method for expanding lists is what we tried first on
+> suggestion from Steven Rostedt.  Maybe we can do a trace_event
+> from a TP_prink but that would be recursive.
 
-> Afaik there isn't a specific tag, but having:
-> cleanup only: No functional change
-> 
-> in the changelog would be nice for people looking for fixes to backport.
+Wait, why would you be adding a trace event to a trace event, or am I
+misunderstanding you?
 
-This is not a fix, so it's not for backporting.
+All I was talking about was adding the permission resolution code to
+the already existing SELinux AVC tracepoint.
 
-
+-- 
+paul moore
+www.paul-moore.com
