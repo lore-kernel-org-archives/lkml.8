@@ -2,244 +2,147 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED90AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32DE0207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:04:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="X+1RmTnr"
+	by mail.kernel.org (Postfix) with ESMTP id CBC9F2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:05:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgHZPE4 (ORCPT
+        id S1727833AbgHZPFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:04:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35848 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727062AbgHZPEw (ORCPT
+        Wed, 26 Aug 2020 11:05:19 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:41274 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726747AbgHZPFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:04:52 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1443AC061756
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 08:04:50 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id cs12so846525qvb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 08:04:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=nezFMoomRGnamLm6VDJCRAwVaIOSEqEXaCBNZ1rac9E=;
-        b=X+1RmTnruIVUnUU7CVCtK6V5nDNsGTm6qcgHknRv+PULUg1C02zGlVGI0ggRhYysvh
-         GyYKivjfBMG/hYHwWrYI7OYXz2bQwPTqsjADjw942pdsM/ItA9Xwp33xAdR+FqAtIjiT
-         dgkBQtGr44e6HNrVZvjXFxrnoL9bg5sS/zmyjOEXKypGH/NlTrUZb2LBM9WTrxP6sIka
-         FLW5TFz7bjLi/Ne24EFau+q5BkfD7cmu8K7lRWUdJ61wazcf2A0aIDCAPq3/pSaALAAg
-         RGLPBBwQYfU9ffsN3spnzi3cwzJd1Cb2kFjDXDEAp5UEPKpKhvubY9CISDXmmndrj1Ot
-         C8Nw==
+        Wed, 26 Aug 2020 11:05:17 -0400
+Received: by mail-il1-f197.google.com with SMTP id l71so1759720ild.8
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 08:05:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=nezFMoomRGnamLm6VDJCRAwVaIOSEqEXaCBNZ1rac9E=;
-        b=evniGpbcKmZ+/BHWlVyIPUYClukNN5lWTSqk2xMti3xYzzBWCy8l/7lLIHPvFiPU35
-         Ic3UHOe+iLkbR7yI5i8x39Yc/ZO6+pJhHii7nY+0KC1zxvFmyNCQmZvXBXT7h1OMy3Xy
-         56IftnNZHytv54ZjKj44qLAONNe/SLecvFD6V2HtKT3TJbptrxqa6UUllFsW/jKXxyc7
-         T1P30Yw6OUCZ4j9dr6jabuZlfCNBPJGmeWPm8fJ0E2L8O0YNB2NQWohSHBGYFvjMqWgQ
-         F1ZZKPvgn1kUrow25/Voii6h4+M1oTJyPvLlmQDFrce7/A5FiDRTpLOP7y8RHbChQn9/
-         TAMA==
-X-Gm-Message-State: AOAM533KoVGKVAMS51ZiTLI2LSv0FU59FpMa2Hw4bKZiG2ajsOn6EfFR
-        gBQDLGwWtf/NOd3+tR43bKHcXA==
-X-Google-Smtp-Source: ABdhPJwihJG5a50pGlMuhkm9VKTiGPEN9v+nBLi9u5Ou0tub8ralCIBPCVXcqiQ9WS2mAQZ1eUADlA==
-X-Received: by 2002:ad4:478c:: with SMTP id z12mr14679256qvy.145.1598454289427;
-        Wed, 26 Aug 2020 08:04:49 -0700 (PDT)
-Received: from skullcanyon ([192.222.193.21])
-        by smtp.gmail.com with ESMTPSA id a8sm2184730qth.69.2020.08.26.08.04.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 08:04:48 -0700 (PDT)
-Message-ID: <1a2cfa9063b814e1001c2a8eb47a731529ffd33d.camel@ndufresne.ca>
-Subject: Re: [PATCH v2] v4l2-ctrl: Add VP9 codec levels
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Neil Armstrong <narmstrong@baylibre.com>
-Date:   Wed, 26 Aug 2020 11:04:47 -0400
-In-Reply-To: <20200817085852.20415-1-stanimir.varbanov@linaro.org>
-References: <20200817085852.20415-1-stanimir.varbanov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=C1fBo0AIIoeJmPcNkMxDvmpqmGHM1WeQR4a7YLEupM4=;
+        b=ok3S5k0mji3FNBm1GUuGR8wW6ScNxZ4CoPrvVYNuDNxIq+yXQvyAfO0nEXysdVU3HE
+         70Df3P2Dl/fQ1JR/FwbEV5ccLFovVqBXVUTXo2TJ2Ss+FQ8ToNyNa1knZrcyCLLSHhPe
+         wSa0ccIumRYuPGNKuwoEXuXZBTHzdzSZpvZpR56Adr2U1tPKwP99uHei3m/aPXPPeC53
+         oBfxu5lXiMiSLIwJNldbbzFaeWT2jqa7BI9lp4l0Vj7IsTWIVO9rZVhMcbWjUE6vEN7b
+         NP7nI/hlDuh47q5AyRrdAt3nm5yH2utSPvYiK3QzPBqGJ3hWXrgLOK0tDhyRhnEx2ELr
+         3IGA==
+X-Gm-Message-State: AOAM530DZRx6c60yZC396ybFMETlRLMSz6dAosdUOHqUIgOrglkA8Emg
+        udirW1vBR94FjRTXEBgpbcPv7rUrJ2xygJ/9GerE8apf7/a/
+X-Google-Smtp-Source: ABdhPJytnBILIqgxXpimiQ1AWt02J0q1PZTp6FhK1UrFX4u/IZbp3zxEFj2yY6KHl12mU7/kfzBBDNyq6xJ9cHXq77eSqrwP2Kbw
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6602:1406:: with SMTP id t6mr13679866iov.184.1598454316811;
+ Wed, 26 Aug 2020 08:05:16 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 08:05:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000be4b9d05adc925cb@google.com>
+Subject: KASAN: stack-out-of-bounds Write in i801_isr
+From:   syzbot <syzbot+c8ff0b6d6c73d81b610e@syzkaller.appspotmail.com>
+To:     jdelvare@suse.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lundi 17 août 2020 à 11:58 +0300, Stanimir Varbanov a écrit :
-> Add menu control for VP9 codec levels. A total of 14 levels are
-> defined for Profile 0 (8bit) and Profile 2 (10bit). Each level
-> is a set of constrained bitstreams coded with targeted resolutions,
-> frame rates, and bitrates.
-> 
-> The definitions have been taken from webm project [1].
-> 
-> [1] https://www.webmproject.org/vp9/levels/
-> 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Hello,
 
-This patch looks fine to me. Will you post a patch for Venus to ensure
-this get introduced with an actual user ? I've CCed Neil as Amlogic
-codec do have VP9 support which may benefit of implementing this.
+syzbot found the following issue on:
 
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+HEAD commit:    fffe3ae0 Merge tag 'for-linus-hmm' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=158e1f19900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=50463ec6729f9706
+dashboard link: https://syzkaller.appspot.com/bug?extid=c8ff0b6d6c73d81b610e
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-> ---
-> v2: Added links to webmproject in commit message and docs.
-> 
->  .../media/v4l/ext-ctrls-codec.rst             | 43 +++++++++++++++++++
->  drivers/media/v4l2-core/v4l2-ctrls.c          | 21 +++++++++
->  include/uapi/linux/v4l2-controls.h            | 17 ++++++++
->  3 files changed, 81 insertions(+)
-> 
-> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> index d0d506a444b1..23a45172404a 100644
-> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> @@ -3316,6 +3316,49 @@ enum v4l2_mpeg_video_vp9_profile -
->      * - ``V4L2_MPEG_VIDEO_VP9_PROFILE_3``
->        - Profile 3
->  
-> +.. _v4l2-mpeg-video-vp9-level:
-> +
-> +``V4L2_CID_MPEG_VIDEO_VP9_LEVEL (enum)``
-> +
-> +enum v4l2_mpeg_video_vp9_level -
-> +    This control allows selecting the level for VP9 encoder.
-> +    This is also used to enumerate supported levels by VP9 encoder or decoder.
-> +    More information can be found at
-> +    `webmproject <https://www.webmproject.org/vp9/levels/>`__. Possible values are:
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_1_0``
-> +      - Level 1
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_1_1``
-> +      - Level 1.1
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_2_0``
-> +      - Level 2
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_2_1``
-> +      - Level 2.1
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_3_0``
-> +      - Level 3
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_3_1``
-> +      - Level 3.1
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_4_0``
-> +      - Level 4
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_4_1``
-> +      - Level 4.1
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_0``
-> +      - Level 5
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_1``
-> +      - Level 5.1
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_5_2``
-> +      - Level 5.2
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_0``
-> +      - Level 6
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_1``
-> +      - Level 6.1
-> +    * - ``V4L2_MPEG_VIDEO_VP9_LEVEL_6_2``
-> +      - Level 6.2
-> +
->  
->  High Efficiency Video Coding (HEVC/H.265) Control Reference
->  ===========================================================
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index 3f3fbcd60cc6..359dc737053d 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -474,6 +474,23 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
->  		"3",
->  		NULL,
->  	};
-> +	static const char * const vp9_level[] = {
-> +		"1",
-> +		"1.1",
-> +		"2",
-> +		"2.1",
-> +		"3",
-> +		"3.1",
-> +		"4",
-> +		"4.1",
-> +		"5",
-> +		"5.1",
-> +		"5.2",
-> +		"6",
-> +		"6.1",
-> +		"6.2",
-> +		NULL,
-> +	};
->  
->  	static const char * const flash_led_mode[] = {
->  		"Off",
-> @@ -685,6 +702,8 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
->  		return vp8_profile;
->  	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:
->  		return vp9_profile;
-> +	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:
-> +		return vp9_level;
->  	case V4L2_CID_JPEG_CHROMA_SUBSAMPLING:
->  		return jpeg_chroma_subsampling;
->  	case V4L2_CID_DV_TX_MODE:
-> @@ -938,6 +957,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_MPEG_VIDEO_VPX_P_FRAME_QP:		return "VPX P-Frame QP Value";
->  	case V4L2_CID_MPEG_VIDEO_VP8_PROFILE:			return "VP8 Profile";
->  	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:			return "VP9 Profile";
-> +	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:			return "VP9 Level";
->  	case V4L2_CID_MPEG_VIDEO_VP8_FRAME_HEADER:		return "VP8 Frame Header";
->  
->  	/* HEVC controls */
-> @@ -1294,6 +1314,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  	case V4L2_CID_MPEG_VIDEO_VPX_GOLDEN_FRAME_SEL:
->  	case V4L2_CID_MPEG_VIDEO_VP8_PROFILE:
->  	case V4L2_CID_MPEG_VIDEO_VP9_PROFILE:
-> +	case V4L2_CID_MPEG_VIDEO_VP9_LEVEL:
->  	case V4L2_CID_DETECT_MD_MODE:
->  	case V4L2_CID_MPEG_VIDEO_HEVC_PROFILE:
->  	case V4L2_CID_MPEG_VIDEO_HEVC_LEVEL:
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index 62271418c1be..1b0bc79c1bc3 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -650,6 +650,23 @@ enum v4l2_mpeg_video_vp9_profile {
->  	V4L2_MPEG_VIDEO_VP9_PROFILE_2				= 2,
->  	V4L2_MPEG_VIDEO_VP9_PROFILE_3				= 3,
->  };
-> +#define V4L2_CID_MPEG_VIDEO_VP9_LEVEL			(V4L2_CID_MPEG_BASE+513)
-> +enum v4l2_mpeg_video_vp9_level {
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_1_0	= 0,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_1_1	= 1,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_2_0	= 2,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_2_1	= 3,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_3_0	= 4,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_3_1	= 5,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_4_0	= 6,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_4_1	= 7,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_5_0	= 8,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_5_1	= 9,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_5_2	= 10,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_6_0	= 11,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_6_1	= 12,
-> +	V4L2_MPEG_VIDEO_VP9_LEVEL_6_2	= 13,
-> +};
->  
->  /* CIDs for HEVC encoding. */
->  
+Unfortunately, I don't have any reproducer for this issue yet.
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c8ff0b6d6c73d81b610e@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: stack-out-of-bounds in i801_isr_byte_done drivers/i2c/busses/i2c-i801.c:589 [inline]
+BUG: KASAN: stack-out-of-bounds in i801_isr drivers/i2c/busses/i2c-i801.c:660 [inline]
+BUG: KASAN: stack-out-of-bounds in i801_isr+0xb2d/0xbf0 drivers/i2c/busses/i2c-i801.c:641
+Write of size 1 at addr ffffc90006b8fd9e by task swapper/3/0
+
+CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.8.0-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0x5/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ i801_isr_byte_done drivers/i2c/busses/i2c-i801.c:589 [inline]
+ i801_isr drivers/i2c/busses/i2c-i801.c:660 [inline]
+ i801_isr+0xb2d/0xbf0 drivers/i2c/busses/i2c-i801.c:641
+ __handle_irq_event_percpu+0x223/0xa30 kernel/irq/handle.c:156
+ handle_irq_event_percpu kernel/irq/handle.c:196 [inline]
+ handle_irq_event+0x102/0x285 kernel/irq/handle.c:213
+ handle_fasteoi_irq+0x22f/0x9f0 kernel/irq/chip.c:714
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:50 [inline]
+ handle_irq arch/x86/kernel/irq.c:230 [inline]
+ __common_interrupt arch/x86/kernel/irq.c:249 [inline]
+ common_interrupt+0x96/0x1f0 arch/x86/kernel/irq.c:239
+ asm_common_interrupt+0x1e/0x40 arch/x86/include/asm/idtentry.h:572
+RIP: 0010:__do_softirq+0x1c2/0xa24 kernel/softirq.c:284
+Code: c7 c0 18 fb b4 89 48 c1 e8 03 42 80 3c 30 00 0f 85 b9 07 00 00 48 83 3d 63 f9 94 01 00 0f 84 6f 06 00 00 fb 66 0f 1f 44 00 00 <48> c7 44 24 08 c0 90 a0 89 b8 ff ff ff ff 0f bc 04 24 83 c0 01 89
+RSP: 0018:ffffc90000598f70 EFLAGS: 00000282
+RAX: 1ffffffff1369f63 RBX: ffff88802c238400 RCX: 1ffffffff155e989
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff88200197
+RBP: ffffc9000043fd70 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
+R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ do_softirq_own_stack+0x9d/0xd0 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:393 [inline]
+ __irq_exit_rcu kernel/softirq.c:423 [inline]
+ irq_exit_rcu+0x1f3/0x230 kernel/softirq.c:435
+ sysvec_apic_timer_interrupt+0x51/0xf0 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:581
+RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
+Code: ff 4c 89 ef e8 03 86 c8 f9 e9 8e fe ff ff 48 89 df e8 f6 85 c8 f9 eb 8a cc cc cc cc e9 07 00 00 00 0f 00 2d d4 9e 5d 00 fb f4 <c3> 90 e9 07 00 00 00 0f 00 2d c4 9e 5d 00 f4 c3 cc cc 55 53 e8 79
+RSP: 0018:ffffc9000043fe78 EFLAGS: 00000282
+RAX: 1ffffffff1369f64 RBX: ffff88802c238400 RCX: 1ffffffff155e989
+RDX: dffffc0000000000 RSI: 0000000000000000 RDI: ffffffff87eb1956
+RBP: dffffc0000000000 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffed1005847080
+R13: 0000000000000003 R14: ffffffff8aaf8888 R15: 0000000000000000
+ arch_safe_halt arch/x86/include/asm/paravirt.h:150 [inline]
+ default_idle+0x40/0x70 arch/x86/kernel/process.c:688
+ cpuidle_idle_call kernel/sched/idle.c:163 [inline]
+ do_idle+0x38f/0x6d0 kernel/sched/idle.c:276
+ cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:372
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:243
+
+
+Memory state around the buggy address:
+ ffffc90006b8fc80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90006b8fd00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+>ffffc90006b8fd80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+                            ^
+ ffffc90006b8fe00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+ ffffc90006b8fe80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
