@@ -2,228 +2,162 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0141C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AB6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 945E122B3F
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1B420707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:54:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VMH+xXtq"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oFXSr8rr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbgHZLyv (ORCPT
+        id S1729276AbgHZLy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:54:51 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:14884 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729257AbgHZLyU (ORCPT
+        Wed, 26 Aug 2020 07:54:57 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:34666 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728992AbgHZLyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:54:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598442859; x=1629978859;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=pKEDmrAi0WeO5TQzAX1yLEmkHIToya6bTxO+48zPR1E=;
-  b=VMH+xXtqI0CZEHZjoGD4ARMTq9dISHTNqjEUZg4tYv/wGA3Nv3H2FFA9
-   PAP/T0Gbu/yH9V0exXfKq08nqC2iv15DNJ4cinn9tTMe/cCV29N/yv1I6
-   O4j1aT+nRFPB2THduWVmQBrgFJS2p1MEXHI1E0GtbWiuTLCXfsaJ824Dw
-   s=;
-X-IronPort-AV: E=Sophos;i="5.76,355,1592870400"; 
-   d="scan'208";a="50004992"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 26 Aug 2020 11:54:14 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 0CF4D1A0453;
-        Wed, 26 Aug 2020 11:54:12 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 26 Aug 2020 11:54:11 +0000
-Received: from u79c5a0a55de558.ant.amazon.com (10.43.160.6) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 26 Aug 2020 11:54:04 +0000
-From:   Alexander Graf <graf@amazon.com>
-To:     X86 ML <x86@kernel.org>
-CC:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Avi Kivity" <avi@scylladb.com>,
-        "Herrenschmidt, Benjamin" <benh@amazon.com>, <robketr@amazon.de>,
-        <amos@scylladb.com>, Brian Gerst <brgerst@gmail.com>,
-        <stable@vger.kernel.org>
-Subject: [PATCH] x86/irq: Preserve vector in orig_ax for APIC code
-Date:   Wed, 26 Aug 2020 13:53:57 +0200
-Message-ID: <20200826115357.3049-1-graf@amazon.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 26 Aug 2020 07:54:33 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07QBsHd2011740;
+        Wed, 26 Aug 2020 06:54:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598442857;
+        bh=7JbYWbrP9n+hcQ/zh3iXK/TqWpH2A4yaS5facefQiAo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=oFXSr8rr31TE3eJ9f/HW9iGEl6X0XzJiaN+N6kQ4kgMn8V6Vh1mUkjaohMHgZ5jzq
+         ZDpQYhNO9r4PCUDdM4Hw8ip8M6NfP8wV8sa0IPHJjSUM6qyC27ECzPlhhgY9w+xC6S
+         oS8CUiZHoSxLWmueCL/rIBNbarRG2d2nEqr0n/HQ=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07QBsHTg028820
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 06:54:17 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
+ Aug 2020 06:54:17 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 26 Aug 2020 06:54:17 -0500
+Received: from [10.250.68.181] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07QBsG6i079719;
+        Wed, 26 Aug 2020 06:54:16 -0500
+Subject: Re: [PATCH 2/2] dt-bindings: leds: Add bindings for MT6360 LED
+To:     Gene Chen <gene.chen.richtek@gmail.com>,
+        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <matthias.bgg@gmail.com>
+CC:     <linux-leds@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <gene_chen@richtek.com>,
+        <Wilma.Wu@mediatek.com>, <shufan_lee@richtek.com>,
+        <cy_huang@richtek.com>, <benjamin.chao@mediatek.com>
+References: <1598441840-15226-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1598441840-15226-3-git-send-email-gene.chen.richtek@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <06b19a38-6850-01b1-7a43-b61aec4079b8@ti.com>
+Date:   Wed, 26 Aug 2020 06:54:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.6]
-X-ClientProxiedBy: EX13D25UWB001.ant.amazon.com (10.43.161.245) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+In-Reply-To: <1598441840-15226-3-git-send-email-gene.chen.richtek@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 633260fa143 ("x86/irq: Convey vector as argument and not in ptregs")
-changed the handover logic of the vector identifier from ~vector in orig_ax
-to purely register based. Unfortunately, this field has another consumer
-in the APIC code which the commit did not touch. The net result was that
-IRQ balancing did not work and instead resulted in interrupt storms, slowing
-down the system.
+Gene
 
-This patch restores the original semantics that orig_ax contains the vector.
-When we receive an interrupt now, the actual vector number stays stored in
-the orig_ax field which then gets consumed by the APIC code.
+On 8/26/20 6:37 AM, Gene Chen wrote:
+> From: Gene Chen <gene_chen@richtek.com>
+>
+> Add bindings document for LED support on MT6360 PMIC
 
-To ensure that nobody else trips over this in the future, the patch also adds
-comments at strategic places to warn anyone who would refactor the code that
-there is another consumer of the field.
+Usually bindings are 1/x in the patchset.
 
-With this patch in place, IRQ balancing works as expected and performance
-levels are restored to previous levels.
-
-Reported-by: Alex bykov <alex.bykov@scylladb.com>
-Reported-by: Avi Kivity <avi@scylladb.com>
-Fixes: 633260fa143 ("x86/irq: Convey vector as argument and not in ptregs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Alexander Graf <graf@amazon.com>
----
- arch/x86/entry/entry_32.S     |  2 +-
- arch/x86/entry/entry_64.S     | 17 +++++++++++------
- arch/x86/kernel/apic/vector.c |  2 +-
- 3 files changed, 13 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index df8c017..22e829c 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -727,7 +727,7 @@ SYM_CODE_START_LOCAL(asm_\cfunc)
- 	ENCODE_FRAME_POINTER
- 	movl	%esp, %eax
- 	movl	PT_ORIG_EAX(%esp), %edx		/* get the vector from stack */
--	movl	$-1, PT_ORIG_EAX(%esp)		/* no syscall to restart */
-+	/* keep vector on stack for APIC's irq_complete_move() */
- 	call	\cfunc
- 	jmp	handle_exception_return
- SYM_CODE_END(asm_\cfunc)
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 70dea93..d78fb1c 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -319,7 +319,7 @@ SYM_CODE_END(ret_from_fork)
-  * @cfunc:		C function to be called
-  * @has_error_code:	Hardware pushed error code on stack
-  */
--.macro idtentry_body cfunc has_error_code:req
-+.macro idtentry_body cfunc has_error_code:req preserve_error_code:req
- 
- 	call	error_entry
- 	UNWIND_HINT_REGS
-@@ -328,7 +328,9 @@ SYM_CODE_END(ret_from_fork)
- 
- 	.if \has_error_code == 1
- 		movq	ORIG_RAX(%rsp), %rsi	/* get error code into 2nd argument*/
--		movq	$-1, ORIG_RAX(%rsp)	/* no syscall to restart */
-+		.if \preserve_error_code == 0
-+			movq	$-1, ORIG_RAX(%rsp)	/* no syscall to restart */
-+		.endif
- 	.endif
- 
- 	call	\cfunc
-@@ -346,7 +348,7 @@ SYM_CODE_END(ret_from_fork)
-  * The macro emits code to set up the kernel context for straight forward
-  * and simple IDT entries. No IST stack, no paranoid entry checks.
-  */
--.macro idtentry vector asmsym cfunc has_error_code:req
-+.macro idtentry vector asmsym cfunc has_error_code:req preserve_error_code=0
- SYM_CODE_START(\asmsym)
- 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
- 	ASM_CLAC
-@@ -369,7 +371,7 @@ SYM_CODE_START(\asmsym)
- .Lfrom_usermode_no_gap_\@:
- 	.endif
- 
--	idtentry_body \cfunc \has_error_code
-+	idtentry_body \cfunc \has_error_code \preserve_error_code
- 
- _ASM_NOKPROBE(\asmsym)
- SYM_CODE_END(\asmsym)
-@@ -382,11 +384,14 @@ SYM_CODE_END(\asmsym)
-  * position of idtentry exceptions, and jump to one of the two idtentry points
-  * (common/spurious).
-  *
-+ * The original vector number on the stack has to stay untouched, so that the
-+ * APIC irq_complete_move() code can access it later on IRQ ack.
-+ *
-  * common_interrupt is a hotpath, align it to a cache line
-  */
- .macro idtentry_irq vector cfunc
- 	.p2align CONFIG_X86_L1_CACHE_SHIFT
--	idtentry \vector asm_\cfunc \cfunc has_error_code=1
-+	idtentry \vector asm_\cfunc \cfunc has_error_code=1 preserve_error_code=1
- .endm
- 
- /*
-@@ -440,7 +445,7 @@ SYM_CODE_START(\asmsym)
- 
- 	/* Switch to the regular task stack and use the noist entry point */
- .Lfrom_usermode_switch_stack_\@:
--	idtentry_body noist_\cfunc, has_error_code=0
-+	idtentry_body noist_\cfunc, has_error_code=0, preserve_error_code=0
- 
- _ASM_NOKPROBE(\asmsym)
- SYM_CODE_END(\asmsym)
-diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
-index dae32d9..e81b835 100644
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -924,7 +924,7 @@ static void __irq_complete_move(struct irq_cfg *cfg, unsigned vector)
- 
- void irq_complete_move(struct irq_cfg *cfg)
- {
--	__irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
-+	__irq_complete_move(cfg, (u8)get_irq_regs()->orig_ax);
- }
- 
- /*
--- 
-1.8.3.1
+And you should cc Rob Herring and the Device tree mail list other wise 
+the maintainer will not apply this patch without their ACKs
 
 
+> Signed-off-by: Gene Chen <gene_chen@richtek.com>
+> ---
+>   .../devicetree/bindings/leds/leds-mt6360.yaml      | 50 ++++++++++++++++++++++
+>   1 file changed, 50 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-mt6360.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-mt6360.yaml b/Documentation/devicetree/bindings/leds/leds-mt6360.yaml
+> new file mode 100644
+> index 0000000..4598be5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-mt6360.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-mt6360.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LED driver for MT6360 PMIC from MediaTek Integrated.
+> +
+> +maintainers:
+> +  - Gene Chen <gene_chen@richtek.com>
+> +
+> +description: |
+> +  This module is part of the MT6360 MFD device. For more details
+> +  see Documentation/devicetree/bindings/mfd/mt6360.yaml.
+
+I think you need to include this yaml using allof tag
 
 
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
+> +
+> +  The LED controller is represented as a sub-node of the PMIC node on
+> +  the device tree.
+> +
+> +  This device has six current sinks.
+> +
+> +properties:
+> +  compatible:
+> +    const: mediatek,mt6360-led
+> +
+> +  "#address-cells":
+> +    const: 1
+> +
+> +  "#size-cells":
+> +    const: 0
+> +
+> +patternProperties:
+> +  "^led@[0-5]$":
+> +    type: object
+> +    description: |
+> +      Properties for a single LED.
+> +
+> +    properties:
+> +      reg:
+> +        description:
+> +          Index of the LED.
+> +        minimum: 0
+> +        maximum: 5
+> +
+> +required:
+> +  - compatible
+> +  - "#address-cells"
+> +  - "#size-cells"
+> +additionalProperties: false
+> +
+Need a new line
 
 
+And an example
 
+> +...
