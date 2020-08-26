@@ -2,180 +2,99 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C19C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0EA2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE76B2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:26:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lCGvvJtx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbgHZHYz (ORCPT
+        id S1726793AbgHZH0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:24:55 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54362 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726233AbgHZHYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:24:55 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 02F4CECA6B47EDD70B14;
-        Wed, 26 Aug 2020 15:24:50 +0800 (CST)
-Received: from [127.0.0.1] (10.67.76.251) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Wed, 26 Aug 2020
- 15:24:43 +0800
-Subject: Re: [PATCH RESEND] fs: Move @f_count to different cacheline with
- @f_mode
-To:     Will Deacon <will@kernel.org>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Yuqi Jin <jinyuqi@huawei.com>
-References: <1592987548-8653-1-git-send-email-zhangshaokun@hisilicon.com>
- <20200821160252.GC21517@willie-the-truck>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <a75e514c-7e2d-54ed-45d4-327b2a514e67@hisilicon.com>
-Date:   Wed, 26 Aug 2020 15:24:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Wed, 26 Aug 2020 03:26:45 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46282 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbgHZH0o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 03:26:44 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07Q7QQAw044714;
+        Wed, 26 Aug 2020 02:26:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598426786;
+        bh=5vsDR7X3Aq0aAuUV19I1BIwRlagOD/K58mwMuCDkt0E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=lCGvvJtxFVazQGWve4gNBURcEZ5nWoiF6ggO3eDngkMnX1hUBgxMjNb5gWj41zWKE
+         pL2EdCy1IgBudhs3JeKeSV/y5W/GUZRt1DpAlGDBuJPo+9faRrD6JbUHtI5wVToSOS
+         9P1K6J3J3if+bYFYtPjDdlv7CFcguw1s0B4/UPKE=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07Q7QQGK022517
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 02:26:26 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
+ Aug 2020 02:26:26 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 26 Aug 2020 02:26:26 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07Q7QMK8115741;
+        Wed, 26 Aug 2020 02:26:23 -0500
+Subject: Re: [PATCH v8 2/3] drm: bridge: Add support for Cadence MHDP DPI/DP
+ bridge
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Swapnil Jakhade <sjakhade@cadence.com>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
+        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
+        <yamonkar@cadence.com>, <jsarha@ti.com>, <nsekhar@ti.com>,
+        <praneeth@ti.com>
+References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
+ <1596713672-8146-3-git-send-email-sjakhade@cadence.com>
+ <20200811023622.GC13513@pendragon.ideasonboard.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <0a6e7550-67ca-c72f-7c3a-1ed4586381a7@ti.com>
+Date:   Wed, 26 Aug 2020 10:26:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200821160252.GC21517@willie-the-truck>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.76.251]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200811023622.GC13513@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will£¬
+Hi,
 
-ÔÚ 2020/8/22 0:02, Will Deacon Ð´µÀ:
-> On Wed, Jun 24, 2020 at 04:32:28PM +0800, Shaokun Zhang wrote:
->> get_file_rcu_many, which is called by __fget_files, has used
->> atomic_try_cmpxchg now and it can reduce the access number of the global
->> variable to improve the performance of atomic instruction compared with
->> atomic_cmpxchg. 
->>
->> __fget_files does check the @f_mode with mask variable and will do some
->> atomic operations on @f_count, but both are on the same cacheline.
->> Many CPU cores do file access and it will cause much conflicts on @f_count. 
->> If we could make the two members into different cachelines, it shall relax
->> the siutations.
->>
->> We have tested this on ARM64 and X86, the result is as follows:
->> Syscall of unixbench has been run on Huawei Kunpeng920 with this patch:
->> 24 x System Call Overhead  1
->>
->> System Call Overhead                    3160841.4 lps   (10.0 s, 1 samples)
->>
->> System Benchmarks Partial Index              BASELINE       RESULT    INDEX
->> System Call Overhead                          15000.0    3160841.4   2107.2
->>                                                                    ========
->> System Benchmarks Index Score (Partial Only)                         2107.2
->>
->> Without this patch:
->> 24 x System Call Overhead  1
->>
->> System Call Overhead                    2222456.0 lps   (10.0 s, 1 samples)
->>
->> System Benchmarks Partial Index              BASELINE       RESULT    INDEX
->> System Call Overhead                          15000.0    2222456.0   1481.6
->>                                                                    ========
->> System Benchmarks Index Score (Partial Only)                         1481.6
->>
->> And on Intel 6248 platform with this patch:
->> 40 CPUs in system; running 24 parallel copies of tests
->>
->> System Call Overhead                        4288509.1 lps   (10.0 s, 1 samples)
->>
->> System Benchmarks Partial Index              BASELINE       RESULT    INDEX
->> System Call Overhead                          15000.0    4288509.1   2859.0
->>                                                                    ========
->> System Benchmarks Index Score (Partial Only)                         2859.0
->>
->> Without this patch:
->> 40 CPUs in system; running 24 parallel copies of tests
->>
->> System Call Overhead                        3666313.0 lps   (10.0 s, 1 samples)
->>
->> System Benchmarks Partial Index              BASELINE       RESULT    INDEX
->> System Call Overhead                          15000.0    3666313.0   2444.2
->>                                                                    ========
->> System Benchmarks Index Score (Partial Only)                         2444.2
->>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Peter Zijlstra <peterz@infradead.org>
->> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
->> Cc: Boqun Feng <boqun.feng@gmail.com>
->> Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
->> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
->> ---
->>  include/linux/fs.h | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/include/linux/fs.h b/include/linux/fs.h
->> index 3f881a892ea7..0faeab5622fb 100644
->> --- a/include/linux/fs.h
->> +++ b/include/linux/fs.h
->> @@ -955,7 +955,6 @@ struct file {
->>  	 */
->>  	spinlock_t		f_lock;
->>  	enum rw_hint		f_write_hint;
->> -	atomic_long_t		f_count;
->>  	unsigned int 		f_flags;
->>  	fmode_t			f_mode;
->>  	struct mutex		f_pos_lock;
->> @@ -979,6 +978,7 @@ struct file {
->>  	struct address_space	*f_mapping;
->>  	errseq_t		f_wb_err;
->>  	errseq_t		f_sb_err; /* for syncfs */
->> +	atomic_long_t		f_count;
->>  } __randomize_layout
->>    __attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
-> 
-> Hmm. So the microbenchmark numbers look lovely, but:
+On 11/08/2020 05:36, Laurent Pinchart wrote:
+>> +{
+>> +	u32 max_bw, req_bw, bpp;
+>> +
+>> +	bpp = cdns_mhdp_get_bpp(&mhdp->display_fmt);
+>> +	req_bw = mode->clock * bpp / 8;
+>> +	max_bw = lanes * rate;
+> mode->clock is in kHz, while rate is expressed in 10kHz unit if I'm not
+> mistaken.
 
-Thanks,
+Rate is in 10 kbps units. And 10 bits in DP gives you one byte (8b/10b encoding). So max_bw is in
+kBps, the same as req_bw.
 
-> 
->   - What impact does it actually have for real workloads?
+ Tomi
 
-It is exposed by we do the unixbench test. About the real workloads, if it has many
-threads and open the same file, it shall be useful like unixbench.
-If not the scenes, it should not be regression with the patch because we only change
-the poistion of @f_count with @f_mode.
-
->   - How do we avoid regressing performance by innocently changing the struct
->     again later on?
-
-It shall be commented this change on the @f_count, I'm not sure it is enough.
-
->   - This thing is tagged with __randomize_layout, so it doesn't help anybody
->     using that crazy plugin
-
-This patch isolated the @f_count with @f_mode absolutely and we don't care the
-base address of the structure, or I may miss something what you said.
-
->   - What about all the other atomics and locks that share cachelines?
-
-An interesting question, to be honest, about this issue, we did performance
-profile using unixbench and found it, then we want to relax the conflicts.
-For other scenes, this method may be useful if it is debugged by the same
-conflicts, but it can't be detected automatically.
-
-Thanks,
-Shaokun
-
-> 
-> Will
-> 
-> .
-> 
-
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
