@@ -2,129 +2,102 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB91FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA63C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB80120737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:47:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GnYw3mSI";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IHc4jvpr"
+	by mail.kernel.org (Postfix) with ESMTP id 93F7E20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgHZRro (ORCPT
+        id S1726995AbgHZRr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:47:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgHZRrm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:47:42 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C840C061574;
-        Wed, 26 Aug 2020 10:47:42 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598464059;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HX2HLBhi0wlAtyTIUgiN/1RIi5SlncWFJOMrq7y7hFY=;
-        b=GnYw3mSIxtBphZBY5CJDgXoe4DxWv+jiAw2ZDTjRA6EFla8Z7Le2rllgfyJIwRFSVFC4Fi
-        FuGUbb7E06pDhq8XeZBrRJDJWoz8jFqjhp8rvczAAU0V+N6MRcfK2DtLdZkD2H36RACoEq
-        2wtvL0P04c9Ha/Goxa96lPeHicM7oBK39M3UNGTLTQ+tlY6iscqgOpG6h5S5H9m8IVdPPa
-        x/GOnu+in3B7de/4k2evOehYHhHgXewwG6bwCTjhHwyKI3NkYxmRZl0Z9UyTFb/ANM7lVl
-        ci/Hn3VKGs7vx/3ddd4MZQL6d0dbJy7dh5So90cet8+ZR4uPcBgIqRcYTvJisg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598464059;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HX2HLBhi0wlAtyTIUgiN/1RIi5SlncWFJOMrq7y7hFY=;
-        b=IHc4jvprLTkzDK/iU1NAfc6TbfzG/pxd13owSiweS5f0L6e35whtCpEq4USngkoD265M8l
-        bTnoDIr/gRAXXfCQ==
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Alexander Graf <graf@amazon.com>, X86 ML <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Avi Kivity <avi@scylladb.com>,
-        "Herrenschmidt\, Benjamin" <benh@amazon.com>, robketr@amazon.de,
-        Amos Kong <amos@scylladb.com>, Brian Gerst <brgerst@gmail.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH] x86/irq: Preserve vector in orig_ax for APIC code
-In-Reply-To: <CALCETrX-8a61k03+XJop=k11-TkE+7JOiGTH=81sHXPmXsA+Tw@mail.gmail.com>
-References: <20200826115357.3049-1-graf@amazon.com> <87k0xlv5w5.fsf@nanos.tec.linutronix.de> <CALCETrX-8a61k03+XJop=k11-TkE+7JOiGTH=81sHXPmXsA+Tw@mail.gmail.com>
-Date:   Wed, 26 Aug 2020 19:47:39 +0200
-Message-ID: <87eentuwn8.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 26 Aug 2020 13:47:58 -0400
+Received: from mga06.intel.com ([134.134.136.31]:46505 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgHZRrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 13:47:48 -0400
+IronPort-SDR: tSkMt0h2C2xvxL20YBYOVsfOddsy0s7nIl8V1v/DHaRRZOCfBLxVXFSo4+gDbebgXZLOi0ThEN
+ UscQ4ZQsd38Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="217902690"
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="217902690"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 10:47:48 -0700
+IronPort-SDR: 8AHFNJF+3w8JSgd/qPHH74lfBlMW2ftlBY3qS9VhpxGUhQk3o9DQvNNzE5+uzuO7gqJVgD88Lg
+ oLXajWwEF7EQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="500328324"
+Received: from leike-mobl.ccr.corp.intel.com ([10.255.28.177])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Aug 2020 10:47:46 -0700
+Message-ID: <82c789766e71d29cf1a90f519d21ba310ae8fa95.camel@intel.com>
+Subject: Re: [PATCH] intel_idle: Add ICL support
+From:   Zhang Rui <rui.zhang@intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Guilhem Lettron <guilhem@barpilot.io>
+Cc:     Artem Bityutskiy <dedekind1@gmail.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 27 Aug 2020 01:47:44 +0800
+In-Reply-To: <CAJZ5v0gJscMWLsjCm_L6jCDdZ2hdRB2mPtUBSgd1va7Xm7GyVA@mail.gmail.com>
+References: <20200826120421.44356-1-guilhem@barpilot.io>
+         <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
+         <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
+         <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
+         <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
+         <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
+         <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
+         <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
+         <CAJZ5v0j4FXH26rZCjM9Csd56skPVbRpM7iFcKYAFMmLFX54+bg@mail.gmail.com>
+         <e9e6823d63fe2b9938e43a14c136b89aec0c503b.camel@gmail.com>
+         <CAJZ5v0gPY+7YBeWwszoNBwsbKLFOEeuLaekdX62_gvbHXB8xoA@mail.gmail.com>
+         <CAGX5Wg3bVpgaFXHb1=4ikGk0P+4=XRqROBU4pqw1mpsY06dbHQ@mail.gmail.com>
+         <CAJZ5v0gJscMWLsjCm_L6jCDdZ2hdRB2mPtUBSgd1va7Xm7GyVA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andy,
+On Wed, 2020-08-26 at 19:00 +0200, Rafael J. Wysocki wrote:
+> On Wed, Aug 26, 2020 at 6:46 PM Guilhem Lettron <guilhem@barpilot.io>
+> wrote:
+> > 
+> > I've done more tests, maybe it can give you more hints.
+> > I don't see that much differences between both (with and without
+> > patches) in this cases.
+> 
+> OK, thanks!
+> 
+> I'm assuming that the topmost two sets of data are for the "without
+> the patch" case whereas the other three correspond to the "with the
+> patch" case.
 
-On Wed, Aug 26 2020 at 09:13, Andy Lutomirski wrote:
-> On Wed, Aug 26, 2020 at 7:27 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->> The below nasty hack cures it, but I hate it with a passion. I'll look
->> deeper for a sane variant.
->>
-> Fundamentally, the way we overload orig_ax is problematic.  I have a
-> half-written series to improve it, but my series is broken.  I think
-> it's fixable, though.
->
-> First is this patch to use some __csh bits to indicate the entry type.
-> As far as I know, this patch is correct:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/entry&id=dfff54208072a27909ae97ebce644c251a233ff2
+I think the sample period is too short.
+Even with the same kernel, I can see the Busy% varies from 1% to 9%,
+and the PkgWatt varies from 0.4W to 2.4W.
 
-Yes, that looks about right.
+thanks,
+rui
 
-> Then I wrote this incorrect patch:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/commit/?h=x86/entry&id=3a5087acb8a2cc1e88b1a55fa36c2f8bef370572
->
-> That one is wrong because the orig_ax wreckage seems to have leaked
-> into user ABI -- user programs think that orig_ax has certain
-> semantics on user-visible entries.
+> 
+> If so, the processor clearly enters PC10 in both cases and the
+> residency percentages are similar.
+> 
+> The numbers of times the POLL state was selected in the first test
+> look kind of unusual (relatively very large), but other than this the
+> patch doesn't seem to make much of a difference, so I'm not going to
+> apply it.
+> 
+> Thanks!
 
-Yes, orig_ax is pretty much user ABI for a very long time.
-
-> But I think that the problem in this thread could be fixed quite
-> nicely by the first patch, plus a new CS_ENTRY_IRQ and allocating
-> eight bits of __csh to store the vector.  Then we could read out the
-> vector.
-
-That works. Alternatively I can just store the vector in the irq
-descriptor itself. That's trivial enough and can be done completely in C
-independent of the stuff above.
-
-Thanks,
-
-        tglx
