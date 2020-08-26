@@ -2,93 +2,72 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0DEC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40436C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15A00207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE8A207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598469177;
+	bh=8Zc/chi3NxO+6elc47lH3tAJjLn9eDjGU2FGAXhKkhc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yrKSDGHM5okrO31s5SY9QOrXxwe/L2hwG0rHx8qwXd1XuYfCuHCBEuey8GKKTfb8d
+	 lyFOp2pn1y54r2xIsQ1i7G3VOcx3E4sT7rtq/Zham5IEywbEYi1xq3G/QX0gpqv5Yz
+	 ZCX4jjiMkLnh/XC8uw6+/Laf4MLDN9ICPfHiLfy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgHZTMX (ORCPT
+        id S1726995AbgHZTMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:12:23 -0400
-Received: from mga06.intel.com ([134.134.136.31]:52611 "EHLO mga06.intel.com"
+        Wed, 26 Aug 2020 15:12:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbgHZTMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:12:23 -0400
-IronPort-SDR: W0jvpSkNuJYoPmQXNLmemNpDwS2+QhPOo3m2u8D16S4dMm28TFmdyhv+G4rShD4Ws+jZaUl7Ht
- eP2lziZw34+A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="217922063"
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="217922063"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 12:12:22 -0700
-IronPort-SDR: msCSdz+/zf0pVqfRitTQX+FMRwmN2/PH1nw9Z/bKyLxmU+6ZtpIS87VyiPBUl8MkHsD8BBkjES
- N8xSlaMcPOcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="329328323"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 12:12:19 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kB0qH-00BdTy-7i; Wed, 26 Aug 2020 22:12:17 +0300
-Date:   Wed, 26 Aug 2020 22:12:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 01/24] Input: bcm-keypad - Simplify with dev_err_probe()
-Message-ID: <20200826191217.GW1891694@smile.fi.intel.com>
-References: <20200826181706.11098-1-krzk@kernel.org>
+        id S1726880AbgHZTMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:12:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90240207BC;
+        Wed, 26 Aug 2020 19:12:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598469173;
+        bh=8Zc/chi3NxO+6elc47lH3tAJjLn9eDjGU2FGAXhKkhc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yE0LDUHi83oMtbJyjIl8P75e9ikwuBST72n9tjbj70ZamvIXQ8YrwaaPY13cODlFB
+         6fJushKd31li5vOpUkPq4qtm/GJLRu0lqCY4oQs/DGyTHfYbVQC86ll3tKq8gdmMzE
+         pOdAu7NcCpS0hMnLbZ2hxIQU6wYRSYkqkHH0iTec=
+Date:   Wed, 26 Aug 2020 21:13:07 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-usb@vger.kernel.org
+Subject: Re: [GIT PULL] USB fixes for 5.9-rc3
+Message-ID: <20200826191307.GA71779@kroah.com>
+References: <20200826134315.GA3882506@kroah.com>
+ <CAHk-=wiMMTpFxd9q7roL+L6dZb3JoQYCF0uP4+7RNHFHbfC29Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAHk-=wiMMTpFxd9q7roL+L6dZb3JoQYCF0uP4+7RNHFHbfC29Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 08:16:43PM +0200, Krzysztof Kozlowski wrote:
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
+On Wed, Aug 26, 2020 at 10:18:23AM -0700, Linus Torvalds wrote:
+> On Wed, Aug 26, 2020 at 6:43 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > USB fixes for 5.9-rc3
+> 
+> I'm dropping this, since it seems to break things more than it fixes.
+> 
+> I see that the breakage is already figured out, but I'll just wait for
+> the next fixes pull with the fix for the problem.
 
-> +++ b/drivers/input/keyboard/bcm-keypad.c
-> @@ -379,11 +379,9 @@ static int bcm_kp_probe(struct platform_device *pdev)
->  	kp->clk = devm_clk_get(&pdev->dev, "peri_clk");
->  	if (IS_ERR(kp->clk)) {
->  		error = PTR_ERR(kp->clk);
-> -		if (error != -ENOENT) {
-> -			if (error != -EPROBE_DEFER)
-> -				dev_err(&pdev->dev, "Failed to get clock\n");
-> -			return error;
-> -		}
-> +		if (error != -ENOENT)
-> +			return dev_err_probe(&pdev->dev, error, "Failed to get clock\n");
-> +
->  		dev_dbg(&pdev->dev,
->  			"No clock specified. Assuming it's enabled\n");
+No worries, I'll fix this up and send a new pull request later this
+week, sorry for the trouble,
 
-Shouldn't be this rather switch to devm_clk_get_optional() + dev_err_probe?
-
->  		kp->clk = NULL;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+greg k-h
