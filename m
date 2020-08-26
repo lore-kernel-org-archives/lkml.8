@@ -2,114 +2,192 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86554C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D8D9207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:13:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyJuVdzP"
+	by mail.kernel.org (Postfix) with ESMTP id 59D2A207DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:15:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598476510;
+	bh=1zCaXT3EyDHwbu4Y2W/LMbHARG53YBmDebObeojxBv8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ut29q2UQ3pobajgz/firt584mdlcXT7j33d+Hrt1Bkcg6x9pvu6dze77E0NYfFTvk
+	 fTGFAQoVAedrt5ofxHH5qT1hZVRncYGdJFTw/Gew2aJ0xenwYcj8CfaFfwPEVeRCt4
+	 2euf6SHzcCQGMXpPIyxUcMCdagWlCoSuPeEt7NMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgHZVNv (ORCPT
+        id S1727001AbgHZVPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:13:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37332 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbgHZVNu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:13:50 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 598D2C061574;
-        Wed, 26 Aug 2020 14:13:50 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id u1so3038919edi.4;
-        Wed, 26 Aug 2020 14:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=XTi6fOUfRKcZjiiZjjXLNZRSEdh0rD+km7AF/L9eAoY=;
-        b=JyJuVdzP36MrB9B8XqekEBFiFDnn6JvhSi6/bFWc/ezu0QCcOvm4KSOHVpM1X3AqvG
-         jwTAv0GtVteyzZ14vI4HCLBnh7d9Wz2a96lLbEjsc+tLU3CCnkBMGl3yr1hQYt7dNl1D
-         xJlKdFoWXmLPakXrWCwdy2YzUVAMU9Jd9uzQyU16N++Fjih1f0rV3llIMbsf1jPWFLPC
-         ksa8ePm+bOedPIsI56kFOlIoPtg/wkoOJiN22hc6xGUqZUBtsc0XmmT07B93Kb3JPQfG
-         eXv0jRUnJQVrLUAlYNm15pkxGyXM3dJau/9Josf+15Hgr9Ec921u2Nk2CciUx+k9v+b/
-         j/5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XTi6fOUfRKcZjiiZjjXLNZRSEdh0rD+km7AF/L9eAoY=;
-        b=er6vl1yXvwOgdzXx9q9oKq+VCKfckIgcoVBQAbpGrc8JbT7q58XE2eUrxRNa64lxhR
-         MY4oN7T7gLalCewybo4f0PVF0a5LylVa7oyA7PGAo+81Y1oJ0ghOy2XCGsQ8702iTMR8
-         SSsDyZuP3yMaArdLMswPIdihFGoA/fxidgV4IMtpda0IGmnfyuJVfW5VQQ7KjFwkj/eA
-         zEvZg9hlQofhBaeBpVB9sqG02msvZr+EPthShMyQFNTOkoDoYBlffc1WfYIN3qIM/u+E
-         OlENuM1VxKR1Vs8ronuuRXajjJhBFMtuu+BhfHLz+ThHhjlspUO3VGmrsyxlhHtggsNL
-         QALg==
-X-Gm-Message-State: AOAM530p6VmvTexToFaRqeHJ1zkyiiyW04MG9uRu34ijip9VaXqTkuQD
-        YRElW88iv5AjSh9uCqaKygG+77rGqTI=
-X-Google-Smtp-Source: ABdhPJzFSb4ie+UjFYMyn4m3xisVraXzgAOVO+1FJ209t6n1wMzjiMpYcj7C7FI4e96EpaxPDZmhfQ==
-X-Received: by 2002:aa7:cb0a:: with SMTP id s10mr17087309edt.134.1598476428548;
-        Wed, 26 Aug 2020 14:13:48 -0700 (PDT)
-Received: from [192.168.0.48] (HSI-KBW-046-005-005-126.hsi8.kabel-badenwuerttemberg.de. [46.5.5.126])
-        by smtp.gmail.com with ESMTPSA id h19sm83508ejy.79.2020.08.26.14.13.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 14:13:47 -0700 (PDT)
-Subject: Re: [ANNOUNCE] Reiser5: Selective File Migration - User Interface
-To:     Metztli Information Technology <jose.r.r@metztli.com>,
-        reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200826205216.07BC868EF679@huitzilopochtli.metztli-it.com>
-From:   Edward Shishkin <edward.shishkin@gmail.com>
-Message-ID: <4069a2ae-8b9c-9d9e-5b22-1b0984b0eba3@gmail.com>
-Date:   Wed, 26 Aug 2020 23:13:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
-MIME-Version: 1.0
-In-Reply-To: <20200826205216.07BC868EF679@huitzilopochtli.metztli-it.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 26 Aug 2020 17:15:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726765AbgHZVPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:15:03 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72FC0207CD;
+        Wed, 26 Aug 2020 21:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598476502;
+        bh=1zCaXT3EyDHwbu4Y2W/LMbHARG53YBmDebObeojxBv8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ADsZphIgjZ5T7GV618PiQVXF5hFPLkP4+5i1e3B56KbIqcMVPyjyf8P0j9JmK8PWb
+         QohrTdC7et2y9O4nWOumBOqtjLzCy796nFR3xwDWAsmBZ6OxN9+6AUatmg6OCKb66y
+         +fKoWXb/5fCzAknCF55f1UtfQANC7LSArE9wFids=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kB2l2-006yir-Pg; Wed, 26 Aug 2020 22:15:00 +0100
+Date:   Wed, 26 Aug 2020 22:14:58 +0100
+Message-ID: <8736492jot.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks selectable
+In-Reply-To: <20200826112333.992429909@linutronix.de>
+References: <20200826111628.794979401@linutronix.de>
+        <20200826112333.992429909@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 26 Aug 2020 12:17:02 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> The arch_.*_msi_irq[s] fallbacks are compiled in whether an architecture
+> requires them or not. Architectures which are fully utilizing hierarchical
+> irq domains should never call into that code.
+> 
+> It's not only architectures which depend on that by implementing one or
+> more of the weak functions, there is also a bunch of drivers which relies
+> on the weak functions which invoke msi_controller::setup_irq[s] and
+> msi_controller::teardown_irq.
+> 
+> Make the architectures and drivers which rely on them select them in Kconfig
+> and if not selected replace them by stub functions which emit a warning and
+> fail the PCI/MSI interrupt allocation.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+> V2: Make the architectures (and drivers) which need the fallbacks select them
+>     and not the other way round (Bjorn).
+> ---
+>  arch/ia64/Kconfig              |    1 +
+>  arch/mips/Kconfig              |    1 +
+>  arch/powerpc/Kconfig           |    1 +
+>  arch/s390/Kconfig              |    1 +
+>  arch/sparc/Kconfig             |    1 +
+>  arch/x86/Kconfig               |    1 +
+>  drivers/pci/Kconfig            |    3 +++
+>  drivers/pci/controller/Kconfig |    3 +++
+>  drivers/pci/msi.c              |    3 ++-
+>  include/linux/msi.h            |   31 ++++++++++++++++++++++++++-----
+>  10 files changed, 40 insertions(+), 6 deletions(-)
+> 
+
 [...]
 
-> 
-> FYI Although not officially, the Debian metaframework Buster AMD64 distribution might be the first to support native installation of Reiser4 SFRN 5.1.3, kernel and reiser4progs 2.0.3, file system utilities.
-> 
-> I have already made a couple of successful Metztli Reiser4 SFRN 5 native installations onto ~100 GB slices, which root file system is formatted in 'Reiser5' and 1 GB /boot in JFS.
-> https://metztli.it/reiser5 (Screenshot 600x338 size)
-> 
-> The upgraded netboot installation media metztli-reiser4-sfrn5.iso is available at:
-> https://sourceforge.net/projects/debian-reiser4/
-> as well as
-> https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso
-> https://metztli.it/buster-reiser5/metztli-reiser4-sfrn5.iso.SHA256SUM
-> 
-> Likely the brick/volume feature(s) will be useful in Cloud fabric infrastructures, like Google's, where reiser4 excels.
-> 
-> The current SFRN 5.1.3 -patched Zstd -compressed kernel in the installation media is Debian's 5.7.10.
+> --- a/drivers/pci/controller/Kconfig
+> +++ b/drivers/pci/controller/Kconfig
+> @@ -41,6 +41,7 @@ config PCI_TEGRA
+>  	bool "NVIDIA Tegra PCIe controller"
+>  	depends on ARCH_TEGRA || COMPILE_TEST
+>  	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCI_MSI_ARCH_FALLBACKS
+>  	help
+>  	  Say Y here if you want support for the PCIe host controller found
+>  	  on NVIDIA Tegra SoCs.
+> @@ -67,6 +68,7 @@ config PCIE_RCAR_HOST
+>  	bool "Renesas R-Car PCIe host controller"
+>  	depends on ARCH_RENESAS || COMPILE_TEST
+>  	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCI_MSI_ARCH_FALLBACKS
+>  	help
+>  	  Say Y here if you want PCIe controller support on R-Car SoCs in host
+>  	  mode.
+> @@ -103,6 +105,7 @@ config PCIE_XILINX_CPM
+>  	bool "Xilinx Versal CPM host bridge support"
+>  	depends on ARCH_ZYNQMP || COMPILE_TEST
+>  	select PCI_HOST_COMMON
+> +	select PCI_MSI_ARCH_FALLBACKS
+
+This guy actually doesn't implement MSIs at all (it seems to delegate
+them to an ITS present in the system, if I read the DT binding
+correctly). However its older brother from the same silicon dealer
+seems to need it. The patchlet below should fix it.
+
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index 9ad13919bcaa..f56ff049d469 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -96,6 +96,7 @@ config PCI_HOST_GENERIC
+ 
+ config PCIE_XILINX
+ 	bool "Xilinx AXI PCIe host bridge support"
++	select PCI_MSI_ARCH_FALLBACKS
+ 	depends on OF || COMPILE_TEST
+ 	help
+ 	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
+@@ -105,7 +106,6 @@ config PCIE_XILINX_CPM
+ 	bool "Xilinx Versal CPM host bridge support"
+ 	depends on ARCH_ZYNQMP || COMPILE_TEST
+ 	select PCI_HOST_COMMON
+-	select PCI_MSI_ARCH_FALLBACKS
+ 	help
+ 	  Say 'Y' here if you want kernel support for the
+ 	  Xilinx Versal CPM host bridge.
 
 
-wow, reiser5 from the box? I might want to try..
+With that fixed,
 
-> 
-> The installer defaults to create the root system reiser5 -formatted partition as:
-> mkfs.reiser4 -yo "create=reg42"
+Acked-by: Marc Zyngier <maz@kernel.org>
 
+	M.
 
-"reg42" is default profile in reiser4progs-2.0.3 (check by
-"mkfs.reiser4 -p") - there is no need to specify it via option.
-
-Have you had a chance to play with logical volumes (add/remove
-bricks, etc)?
-
-Thanks!
-Edward.
+-- 
+Without deviation from the norm, progress is not possible.
