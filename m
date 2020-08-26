@@ -2,89 +2,85 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA42C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C4FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85A5B2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF6052078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598469497;
-	bh=Msg94sVnxgYZ5tSLUPVzIC5igpCZ5D0lrYqNmAZsJcA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=QEg64+ffEqhOWqOqJPYlnXuHgaaiwV7gN6bWIh+tife1Y4Qlkubaq5opstgflmGdD
-	 b3JkDGFYF2OK0uld2Giha4UHjtQcTmZ9a3+OgyIdzTFPhbvmr6rQBbHDIJPQTU5qxC
-	 ls6BlYYNA0FHFJBemy1xweDszxSESc6YL2TYoWUA=
+	s=default; t=1598469574;
+	bh=F6Y1Xklmrbbf3bsS48BdgWI0k9w+fz3aEY1yMgt01O4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j/fzOpPF6iDHer81uS9MOWdHAq2dDF2xfRsDBCKbYVlnPSb9MN1o0IANV2SJtqigk
+	 z3bRu2iPUZjqk0CuvZaGPygU0+q2aCLHZwcOxCRPIr79RSukmbOUkN7wKbSISNOouR
+	 cKhKPjli2nzOaNbAYamHWm/AeZwn3BXf/mCzt/ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgHZTSK (ORCPT
+        id S1727068AbgHZTTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40832 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 15:19:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726825AbgHZTRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:17:51 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1726734AbgHZTT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:19:29 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF3A92078A;
-        Wed, 26 Aug 2020 19:17:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9D312078A;
+        Wed, 26 Aug 2020 19:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598469471;
-        bh=Msg94sVnxgYZ5tSLUPVzIC5igpCZ5D0lrYqNmAZsJcA=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=GI9cwYFg4+VacryxRyhDAMm+YB4HnfU4u0sj3WwZygN1bT12wVmIPZF3GE95KfUPu
-         5UcT0iiN4WvcHMq43eFULl07EScoxqm4OxutgKo92rgfKxcMt6cpQIi/e2wh2i8E4/
-         G1XMmMgMCyATAfz8Ub5IxTSuD0zaUzrTdhJa6EaM=
-Date:   Wed, 26 Aug 2020 20:17:14 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-spi@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Chuanhong Guo <gch981213@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Bayi Cheng <bayi.cheng@mediatek.com>,
-        linux-mediatek@lists.infradead.org
-In-Reply-To: <20200826085450.508556-1-ikjn@chromium.org>
-References: <20200820052827.2642164-1-ikjn@chromium.org> <20200826085450.508556-1-ikjn@chromium.org>
-Subject: Re: [PATCH v2] dt-bindings: spi: Convert spi-mtk-nor to json-schema
-Message-Id: <159846942993.39994.12565318588814253714.b4-ty@kernel.org>
+        s=default; t=1598469569;
+        bh=F6Y1Xklmrbbf3bsS48BdgWI0k9w+fz3aEY1yMgt01O4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vIL3cgtkt1CcbsrdZdmz0umqHMv1hzSTBKLpLxK/HDPFuGEhlIjqhtartZ81nfZeL
+         1y8QnUmpx3OUBJ8tWaDLheTw2Pep19qpjDAOkBi0UbaTO08B6fLs4BYCI8VxS34COE
+         FDFNlU+SnV4ACynvPbIKjcPOggry/Z6+Yb/q2qiE=
+Date:   Wed, 26 Aug 2020 14:25:29 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: dpot-dac: fix code comment in dpot_dac_read_raw()
+Message-ID: <20200826192529.GC2671@embeddedor>
+References: <20200826000844.GA16807@embeddedor>
+ <3fb79fa8-e86b-111b-a4a7-5da767d40b52@axentia.se>
+ <3528f053-70d8-bd12-8683-3c1ed0b4d6e7@embeddedor.com>
+ <13e9b0cf-9fae-5dcf-d0ac-4beaf18295d0@axentia.se>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13e9b0cf-9fae-5dcf-d0ac-4beaf18295d0@axentia.se>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 16:54:50 +0800, Ikjoon Jang wrote:
-> Convert Mediatek ARM SOC's serial NOR flash controller binding
-> to json-schema format.
+On Wed, Aug 26, 2020 at 04:16:23PM +0200, Peter Rosin wrote:
+> On 2020-08-26 16:17, Gustavo A. R. Silva wrote:
+> >> And just to be explicit, this fix is for 5.9.
+> >>
+> >> Acked-by: Peter Rosin <peda@axentia.se>
+> >>
+> > 
+> > If you don't mind I can add this to my tree for 5.9-rc4
+> > and send it directly to Linus.
+> 
+> Fine by me, Jonathan might think differently but I can't find a reason why.
+> Just about nothing is happening in that file and the risk for conflicts is
+> negligible.
+> 
 
-Applied to
+OK. In the meantime, I have added this to my -next tree and queued it up
+for 5.9-rc3.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[1/1] dt-bindings: spi: Convert spi-mtk-nor to json-schema
-      commit: 043ebcf3204ca1a0ce0d03cb7dc6e0d63d2cf512
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Thanks
+--
+Gustavo
