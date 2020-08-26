@@ -2,230 +2,107 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C122C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73EE120838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:01:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598439698;
-	bh=1yICH4LVnZnT/FX7uc6nwcVLqTUyUgRo9HLl/SEe4jA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SgiRYISicv8cUPqg3aQ0bGR8claIR7sOUFk8w8EDwUM8LdI1KkGliumTXWDInJ22C
-	 8Pfp83edJgbtKhSbd1TPT2fTQgz0ICxCnASNTeBaul/lyzoZEtSbTfMyQddaSSeLRU
-	 +crgDCAFuSGI/7Y0wRFYcj5VrhvuHqVBQT2bqzDA=
+	by mail.kernel.org (Postfix) with ESMTP id EC46E20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:01:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WkAub870"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgHZKzu (ORCPT
+        id S1728754AbgHZLBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:55:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728363AbgHZKzh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:55:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 26 Aug 2020 07:01:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48461 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728813AbgHZK5X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:57:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598439442;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=SCIE1nJRwsLpxlJGlMba1GQ2dcdVa5UOGyWvkgH6jso=;
+        b=WkAub870SJ8iX3pKIy+nsugnrdLFweKWw5XjAEmCJdyJ6I1iOsuJyxJUSXL2Bttt6k/urU
+        WaTQg/Nan+ausprQA+AcDyx4JbP+KLt+GIgNQqgFG9q4alXoLajVN2pjs01/NDcoJkLyws
+        0Yo+Il9j8o6X05OwXWbhMz1oauE9dtU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-533-x39uYmfYPcKYDCPC125n6g-1; Wed, 26 Aug 2020 06:57:17 -0400
+X-MC-Unique: x39uYmfYPcKYDCPC125n6g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A1A72080C;
-        Wed, 26 Aug 2020 10:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598439337;
-        bh=1yICH4LVnZnT/FX7uc6nwcVLqTUyUgRo9HLl/SEe4jA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GtSs29/HTC2wjjVsTO0a38/Pg0DwU65EoHalnEr2j9N4YnUgtaSi3j+CWzfx0r1p7
-         6wqpMu9iJjMeAic+0joytDnOE+HS2CBe00Coq53CyuFlTF2cpbD/s3Xm1zLfJUQKwF
-         nYtGxMgAyV1KA3WM42edkTE03TbBgsKhY1Oc53nk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, jslaby@suse.cz,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 4.9.234
-Date:   Wed, 26 Aug 2020 12:55:48 +0200
-Message-Id: <1598439348169223@kroah.com>
-X-Mailer: git-send-email 2.28.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F6CC189E602;
+        Wed, 26 Aug 2020 10:57:16 +0000 (UTC)
+Received: from krava (unknown [10.40.194.188])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B96F11972A;
+        Wed, 26 Aug 2020 10:57:13 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 12:57:12 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     acme@kernel.org, ak@linux.intel.com, yao.jin@linux.intel.com,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, maddy@linux.ibm.com,
+        ravi.bangoria@linux.ibm.com
+Subject: Re: [RFC] perf/jevents: Add new structure to pass json fields.
+Message-ID: <20200826105712.GE703542@krava>
+References: <20200825074041.378520-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825074041.378520-1-kjain@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 4.9.234 kernel.
+On Tue, Aug 25, 2020 at 01:10:41PM +0530, Kajol Jain wrote:
 
-All users of the 4.9 kernel series must upgrade.
+SNIP
 
-The updated 4.9.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.9.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
+>  	}
+>  }
+>  
+> -static int save_arch_std_events(void *data, char *name, char *event,
+> -				char *desc, char *long_desc, char *pmu,
+> -				char *unit, char *perpkg, char *metric_expr,
+> -				char *metric_name, char *metric_group,
+> -				char *deprecated, char *metric_constraint)
+> +static int save_arch_std_events(void *data, struct json_event *je)
+>  {
+>  	struct event_struct *es;
+>  
+> @@ -485,11 +476,8 @@ static char *real_event(const char *name, char *event)
+>  }
+>  
+>  static int
+> -try_fixup(const char *fn, char *arch_std, char **event, char **desc,
+> -	  char **name, char **long_desc, char **pmu, char **filter,
+> -	  char **perpkg, char **unit, char **metric_expr, char **metric_name,
+> -	  char **metric_group, unsigned long long eventcode,
+> -	  char **deprecated, char **metric_constraint)
+> +try_fixup(const char *fn, char *arch_std, unsigned long long eventcode,
+> +	  struct json_event *je)
+>  {
+>  	/* try to find matching event from arch standard values */
+>  	struct event_struct *es;
+> @@ -498,8 +486,7 @@ try_fixup(const char *fn, char *arch_std, char **event, char **desc,
+>  		if (!strcmp(arch_std, es->name)) {
+>  			if (!eventcode && es->event) {
+>  				/* allow EventCode to be overridden */
+> -				free(*event);
+> -				*event = NULL;
+> +				je->event = NULL;
 
-thanks,
+should you free je->event in here?
 
-greg k-h
-
-------------
-
- Makefile                                          |    2 
- arch/alpha/include/asm/io.h                       |    8 -
- arch/arm/kvm/mmu.c                                |    6 -
- arch/m68k/include/asm/m53xxacr.h                  |    6 -
- arch/powerpc/mm/fault.c                           |    7 +
- arch/powerpc/platforms/pseries/ras.c              |    1 
- arch/x86/include/asm/archrandom.h                 |    8 -
- arch/x86/include/asm/bitops.h                     |   29 +++---
- arch/x86/include/asm/percpu.h                     |    2 
- drivers/gpu/drm/imx/imx-ldb.c                     |    7 -
- drivers/input/mouse/psmouse-base.c                |    2 
- drivers/media/pci/ttpci/budget-core.c             |   11 +-
- drivers/media/platform/davinci/vpss.c             |   20 +++-
- drivers/net/dsa/b53/b53_common.c                  |    2 
- drivers/net/ethernet/freescale/fec_main.c         |    4 
- drivers/net/ethernet/intel/i40e/i40e_adminq_cmd.h |    2 
- drivers/net/ethernet/intel/i40e/i40e_common.c     |   35 ++++++-
- drivers/scsi/libfc/fc_disc.c                      |   12 ++
- drivers/scsi/ufs/ufs_quirks.h                     |    1 
- drivers/scsi/ufs/ufshcd.c                         |    2 
- drivers/virtio/virtio_ring.c                      |    3 
- drivers/xen/preempt.c                             |    2 
- fs/btrfs/ctree.h                                  |    2 
- fs/btrfs/export.c                                 |    8 -
- fs/btrfs/export.h                                 |    5 +
- fs/btrfs/super.c                                  |   18 ++--
- fs/eventpoll.c                                    |   19 ++--
- fs/ext4/namei.c                                   |   99 ++++++++--------------
- fs/jffs2/dir.c                                    |    6 +
- fs/romfs/storage.c                                |    4 
- fs/xfs/xfs_sysfs.h                                |    6 -
- fs/xfs/xfs_trans_dquot.c                          |    2 
- kernel/relay.c                                    |    1 
- kernel/trace/trace_hwlat.c                        |   37 ++++----
- mm/hugetlb.c                                      |   24 ++---
- mm/khugepaged.c                                   |    7 -
- mm/page_alloc.c                                   |    7 +
- sound/soc/intel/atom/sst-mfld-platform-pcm.c      |    5 -
- tools/perf/util/probe-finder.c                    |    2 
- 39 files changed, 237 insertions(+), 187 deletions(-)
-
-Al Viro (1):
-      do_epoll_ctl(): clean the failure exits up a bit
-
-Charan Teja Reddy (1):
-      mm, page_alloc: fix core hung in free_pcppages_bulk()
-
-Chuhong Yuan (1):
-      media: budget-core: Improve exception handling in budget_register()
-
-Darrick J. Wong (1):
-      xfs: fix inode quota reservation checks
-
-Dinghao Liu (1):
-      ASoC: intel: Fix memleak in sst_media_open
-
-Doug Berger (1):
-      mm: include CMA pages in lowmem_reserve at boot
-
-Eiichi Tsukata (1):
-      xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
-
-Eric Biggers (1):
-      ext4: clean up ext4_match() and callers
-
-Eric Sandeen (1):
-      ext4: fix potential negative array index in do_split()
-
-Evgeny Novikov (1):
-      media: vpss: clean up resources in init
-
-Fugang Duan (1):
-      net: fec: correct the error path for regulator disable in probe
-
-Greg Kroah-Hartman (1):
-      Linux 4.9.234
-
-Greg Ungerer (1):
-      m68knommu: fix overwriting of bits in ColdFire V3 cache control
-
-Hugh Dickins (2):
-      khugepaged: khugepaged_test_exit() check mmget_still_valid()
-      khugepaged: adjust VM_BUG_ON_MM() in __khugepaged_enter()
-
-Jan Beulich (1):
-      x86/asm: Add instruction suffixes to bitops
-
-Jan Kara (1):
-      ext4: fix checking of directory entry validity for inline directories
-
-Jann Horn (1):
-      romfs: fix uninitialized memory leak in romfs_dev_read()
-
-Javed Hasan (1):
-      scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
-
-Josef Bacik (1):
-      btrfs: don't show full path of bind mounts in subvol=
-
-Juergen Gross (1):
-      xen: don't reschedule in preemption off sections
-
-Kevin Hao (1):
-      tracing/hwlat: Honor the tracing_cpumask
-
-Liu Ying (1):
-      drm/imx: imx-ldb: Disable both channels for split mode in enc->disable()
-
-Luc Van Oostenryck (1):
-      alpha: fix annotation of io{read,write}{16,32}be()
-
-Mao Wenan (1):
-      virtio_ring: Avoid loop when vq is broken in virtqueue_poll
-
-Marc Zyngier (1):
-      epoll: Keep a reference on files added to the check list
-
-Marcos Paulo de Souza (1):
-      btrfs: export helpers for subvolume name/id resolution
-
-Masami Hiramatsu (1):
-      perf probe: Fix memory leakage when the probe point is not found
-
-Michael Ellerman (1):
-      powerpc: Allow 4224 bytes of stack expansion for the signal frame
-
-Peter Xu (1):
-      mm/hugetlb: fix calculation of adjust_range_if_pmd_sharing_possible
-
-Przemyslaw Patynowski (1):
-      i40e: Set RX_ONLY mode for unicast promiscuous on VLAN
-
-Stanley Chu (1):
-      scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
-
-Steven Rostedt (VMware) (1):
-      tracing: Clean up the hwlat binding code
-
-Tom Rix (1):
-      net: dsa: b53: check for timeout
-
-Uros Bizjak (1):
-      x86/asm: Remove unnecessary \n\t in front of CC_SET() from asm templates
-
-Vasant Hegde (1):
-      powerpc/pseries: Do not initiate shutdown when system is running on UPS
-
-Wei Yongjun (1):
-      kernel/relay.c: fix memleak on destroy relay channel
-
-Will Deacon (1):
-      KVM: arm/arm64: Don't reschedule in unmap_stage2_range()
-
-Xiongfeng Wang (1):
-      Input: psmouse - add a newline when printing 'proto' by sysfs
-
-Zhe Li (1):
-      jffs2: fix UAF problem
+jirka
 
