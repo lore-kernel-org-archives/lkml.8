@@ -2,143 +2,96 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B68C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A48DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCCE20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598449818;
-	bh=5eT2tYqtPolxsoXx3AsjQTsAwlPhDcgqhfxvjuptRAg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqsUqW4x9Sd/G7GRmJOyaHbCzC9/xPjvK6jvJ7nUyIJXKIZdFFaC5Xsb7LMJhjJsb
-	 3r7mkrvJ0eK1WPIAMavvnDPYqYj/XIQEY/xezyFbNvhAGmdm0Pg71kusgdmuB+bAdu
-	 p2AR+mmUc9I/HpKGGFCuX/s1+fyqg23ir9djs23o=
+	by mail.kernel.org (Postfix) with ESMTP id D85F720707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cQw18JNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbgHZNuR (ORCPT
+        id S1730530AbgHZNuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:50:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730448AbgHZNrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:47:39 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C730C22B40;
-        Wed, 26 Aug 2020 13:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598449658;
-        bh=5eT2tYqtPolxsoXx3AsjQTsAwlPhDcgqhfxvjuptRAg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xbfvK4PuTvCobrkQgLCraCCSjhB+pt4Q+1tOtjUi1xcCkB+8XuDM0GoTN/cLqcbo7
-         Ic1teJbPQLoJs+7bEb8o9TJ+l4u326hpALCkqyVd5MTHK+X4iLIlulcz/tuatTqyc+
-         KL5CU2j3N4XG9S1N4M2eZeEifKLYzJ/13W65yacM=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, "David S . Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: [RFC PATCH 08/14] mips: kprobes: Use generic kretprobe trampoline handler
-Date:   Wed, 26 Aug 2020 22:47:33 +0900
-Message-Id: <159844965352.510284.6763859883261470322.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159844957216.510284.17683703701627367133.stgit@devnote2>
-References: <159844957216.510284.17683703701627367133.stgit@devnote2>
-User-Agent: StGit/0.19
+        Wed, 26 Aug 2020 09:50:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730454AbgHZNtg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:49:36 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C212C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:49:35 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id x77so8909lfa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:49:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XYm7Tduo8NWl5UNwRfQK8+cTzqgeaWnEyTZDJt6ZL0A=;
+        b=cQw18JNOYdqf3sOurYRlourg5Md8zuitXIUOSC1+hAVeZIFeF7Y+VybvHHm/AsDTFh
+         x1R5+XVIFzrI5xR2M2+xU86dR9yFVT1Rw+Gr+TtzOykldPfvxeoilXjnA6PGisH539I0
+         DgtcYc1Dix0XcbBSo+sxcGJU2WLLHLrLJVnJTyoVzIUy5pUhG4Rk2T5RbgJywhruD56q
+         bg9+5MO5PUvW2zxb/fUIvTKZt9uRLAkSQDhh0CBm0882P2knFBlD2eqi4B/cz47hbsJk
+         dsz+t4E8spMvWm92CmYiLuxgckD9MVzt12YvP5PR8e88Is8XB/G272nfv35rPsD6FiSa
+         aFOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XYm7Tduo8NWl5UNwRfQK8+cTzqgeaWnEyTZDJt6ZL0A=;
+        b=UftigrXWzNXusBXWPW6UufDxm2kLLNhE1DnVbKWQnlveQ86feky6zjaoJVMp6PdH4o
+         SPLh5YNMGbXMwI1lS3Qorn8rvYcu0D889BsXzsl/430EF7kq7oBW7WqL74KfwsNd75zY
+         UMhhlorquW6S7ZpeOw7CdXGePmpGMtOsVSPFGsZUgJOay4nLaHHnCv4RlemjY0ya/nti
+         wUUJMdauTWSbJqlvdB6F9Y/nAG4no5BwFvuOTXQYcadSgi3nTSakcK7JG7IHpiW+Z0Bc
+         BAmgLaySbe1Z6Cz/bXebNxULO5mgW6KGldRysg0jStqTVePwQDoU5yF5H5+PvR/DI0o+
+         4xmQ==
+X-Gm-Message-State: AOAM5301e2FcAXvdcp/x97UET6GegtU0bbOfXNoh0Z8u+RODODxzExT4
+        KQLCdOzG3OZ2Gp9euGELJSVr/sjZawMRQbmTpZo=
+X-Google-Smtp-Source: ABdhPJxVedw5wDUoff9RgpfDnP2MJ8QistoF1SlV7wu7KGXETn4R6i8GLZTyfubdJ9A4bPs35o56F2wDe8uwVYlwGPY=
+X-Received: by 2002:a19:306:: with SMTP id 6mr7488144lfd.214.1598449772436;
+ Wed, 26 Aug 2020 06:49:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200824091013.20640-1-matthias.schiffer@ew.tq-group.com>
+ <20200824091013.20640-2-matthias.schiffer@ew.tq-group.com>
+ <CAOMZO5DSX1pf3xxo=CGvgPmHcjMJoWFx74grVJBckSmjtF-RGg@mail.gmail.com>
+ <4b7d57738ce8e2130c4740a0f3f973fbaf60a7cf.camel@ew.tq-group.com>
+ <CAOMZO5DYrkEb_G+EYAGrc+qjSsbjRdeBUU3tJUfkU6tjgNm_7g@mail.gmail.com>
+ <7a59492e46f34d213b83f7182c7db73954c5a9c7.camel@ew.tq-group.com>
+ <CAOMZO5CP=wtJ5ZScyb0NrRMW0FR0FAGVKRFq9JpFcAoZppn_bA@mail.gmail.com>
+ <53f5f17735fc2f0ca061a321969bbb131e55efff.camel@ew.tq-group.com>
+ <CAOMZO5ADeXEHWiG7Xja1W1GnahV08ZEYSkNsrOzautn2mROCNA@mail.gmail.com>
+ <aa0b7ad149a7bd4e681e4ebee12ffaaab2803832.camel@ew.tq-group.com>
+ <CAOMZO5B_Jm8SX9N9V5oq+LAa0Yc4CmrEp2n=2t3XUyBCtnGVTA@mail.gmail.com> <d433e8a47d721a65903db68c38eb1c337c81e395.camel@ew.tq-group.com>
+In-Reply-To: <d433e8a47d721a65903db68c38eb1c337c81e395.camel@ew.tq-group.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 26 Aug 2020 10:49:21 -0300
+Message-ID: <CAOMZO5AfuPXfOmRSXAmyG-bdqGSzvTRm51NuTJ-B2PzKbLy9mw@mail.gmail.com>
+Subject: Re: (EXT) Re: (EXT) Re: (EXT) Re: (EXT) Re: (EXT) Re: [PATCH 2/2]
+ ARM: dts: imx6qdl: tqma6: minor fixes
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- arch/mips/kernel/kprobes.c |   55 +++-----------------------------------------
- 1 file changed, 4 insertions(+), 51 deletions(-)
+On Wed, Aug 26, 2020 at 10:13 AM Matthias Schiffer
+<matthias.schiffer@ew.tq-group.com> wrote:
 
-diff --git a/arch/mips/kernel/kprobes.c b/arch/mips/kernel/kprobes.c
-index d043c2f897fc..b58f49b7555e 100644
---- a/arch/mips/kernel/kprobes.c
-+++ b/arch/mips/kernel/kprobes.c
-@@ -477,6 +477,7 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
- 				      struct pt_regs *regs)
- {
- 	ri->ret_addr = (kprobe_opcode_t *) regs->regs[31];
-+	ri->fp = NULL;
- 
- 	/* Replace the return addr with trampoline addr */
- 	regs->regs[31] = (unsigned long)kretprobe_trampoline;
-@@ -488,57 +489,9 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
- static int __kprobes trampoline_probe_handler(struct kprobe *p,
- 						struct pt_regs *regs)
- {
--	struct kretprobe_instance *ri = NULL;
--	struct hlist_head *head, empty_rp;
--	struct hlist_node *tmp;
--	unsigned long flags, orig_ret_address = 0;
--	unsigned long trampoline_address = (unsigned long)kretprobe_trampoline;
--
--	INIT_HLIST_HEAD(&empty_rp);
--	kretprobe_hash_lock(current, &head, &flags);
--
--	/*
--	 * It is possible to have multiple instances associated with a given
--	 * task either because an multiple functions in the call path
--	 * have a return probe installed on them, and/or more than one return
--	 * return probe was registered for a target function.
--	 *
--	 * We can handle this because:
--	 *     - instances are always inserted at the head of the list
--	 *     - when multiple return probes are registered for the same
--	 *	 function, the first instance's ret_addr will point to the
--	 *	 real return address, and all the rest will point to
--	 *	 kretprobe_trampoline
--	 */
--	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
--		if (ri->task != current)
--			/* another task is sharing our hash bucket */
--			continue;
--
--		if (ri->rp && ri->rp->handler)
--			ri->rp->handler(ri, regs);
--
--		orig_ret_address = (unsigned long)ri->ret_addr;
--		recycle_rp_inst(ri, &empty_rp);
--
--		if (orig_ret_address != trampoline_address)
--			/*
--			 * This is the real return address. Any other
--			 * instances associated with this task are for
--			 * other calls deeper on the call stack
--			 */
--			break;
--	}
--
--	kretprobe_assert(ri, orig_ret_address, trampoline_address);
--	instruction_pointer(regs) = orig_ret_address;
--
--	kretprobe_hash_unlock(current, &flags);
--
--	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
--		hlist_del(&ri->hlist);
--		kfree(ri);
--	}
-+	instruction_pointer(regs) = __kretprobe_trampoline_handler(regs,
-+				(unsigned long)kretprobe_trampoline,
-+				NULL);
- 	/*
- 	 * By returning a non-zero value, we are telling
- 	 * kprobe_handler() that we don't want the post_handler
+> Using GPIOs for chipselect would require different pinmuxing. Also, why
+> use GPIOs, when the SPI controller has this built in?
 
+In the initial chips with the ECSPI controller there was a bug with
+the native chipselect controller and we had to use GPIO.
