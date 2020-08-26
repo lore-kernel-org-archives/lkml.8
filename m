@@ -2,71 +2,108 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D52C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14F86C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12F12078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC52214F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598466873;
-	bh=Kn9WaOAKN7gXslPeBiPkoNqVfs7VTSHXV4/e5nBFjyI=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=KLNiMmuXTxicpyul2pG4hqu2nRgGsT71TN9CHC8XbhtpRU+ei2ccLUFIS2bUXby2y
-	 XRvdXQxWkFIzamEKe52qd3tMkzJG1zRI/IdA/Fz4xxdABeKN+FRbOGh2qzKcI1eHcu
-	 DTIXXs2arah+FkrARD35dG2+4/wvBKER1xymcw4M=
+	s=default; t=1598467002;
+	bh=otwpDEzZSRBssl/+1zrjH3xCNpCmo924Wtj31WjR9iY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X1k0N5Fp0DeuBahAUrK8M+2T84XkaaRUiFqKOvnR+wxCSVMYdBFD7Xv9lXoEJF6RX
+	 CKIN7LV0JSYzOyZ8xcGLdgocoEm5ZirG4d5PR2GQKg+8xHKwLl5rhj5A0DH2cW2FuJ
+	 68WtUmTs5WUyUyjXfUJSr8zwSuXmwEgnA5K24zAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgHZSeT (ORCPT
+        id S1726838AbgHZSgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41710 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 14:36:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbgHZSeQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:34:16 -0400
-Subject: Re: [GIT PULL] Hyper-V fixes for 5.9-rc3
+        id S1726191AbgHZSgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:36:41 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1545208E4;
+        Wed, 26 Aug 2020 18:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598466856;
-        bh=Kn9WaOAKN7gXslPeBiPkoNqVfs7VTSHXV4/e5nBFjyI=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Z9XIbgaVkfXWNe/BEoZsNeaIYzMzdqf4uZ3oD0dttVfK01Gol2aI4LW6cybrFeYin
-         8w1GsEslf6o2L+sLRDi+3UoEr+rrnCo9ByzkyEDFeo4MPgVbaGfhken3W/VM6xKkbY
-         I1xJqyu1iUMjCU4rcaGO9dnyBj+Dgs/c8C9E3LDo=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200826134111.465ose3oyoyx6h7b@liuwe-devbox-debian-v2>
-References: <20200826134111.465ose3oyoyx6h7b@liuwe-devbox-debian-v2>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200826134111.465ose3oyoyx6h7b@liuwe-devbox-debian-v2>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
-X-PR-Tracked-Commit-Id: b46b4a8a57c377b72a98c7930a9f6969d2d4784e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 51c4518ab77c6d3e917675891a9a529daabfaef1
-Message-Id: <159846685643.8056.6413043000779754006.pr-tracker-bot@kernel.org>
-Date:   Wed, 26 Aug 2020 18:34:16 +0000
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
-        sthemmin@microsoft.com, haiyangz@microsoft.com,
-        Michael Kelley <mikelley@microsoft.com>,
-        Linux on Hyper-V List <linux-hyperv@vger.kernel.org>,
-        Linux Kernel List <linux-kernel@vger.kernel.org>
+        s=default; t=1598467000;
+        bh=otwpDEzZSRBssl/+1zrjH3xCNpCmo924Wtj31WjR9iY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wRyeBbv7zw3Qgz+1MarwIiLtV5PmPxI6SOQ15jjIgjvRS1JPksfsHgut7rjXAQTYz
+         24bL3dNpGkC7ZXTX8dk0iOHeON5wfK3tKPIkzRuHeyNJc5GYWMhrNvXRrSkqr0u09F
+         wGMpiAVAZdgzpCuQh/1ErqEgaGRuewiXolUbQ2PY=
+Date:   Wed, 26 Aug 2020 19:36:03 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Kuldip Dwivedi <kuldip.dwivedi@puresoftware.com>,
+        Qiang Zhao <qiang.zhao@nxp.com>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Tanveer Alam <tanveer.alam@puresoftware.com>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
+Message-ID: <20200826183603.GP4965@sirena.org.uk>
+References: <c810740d75f64e308fd362e6c6a5f437@mail.gmail.com>
+ <20200822152118.rlwbcgfk4abjldtg@skbuf>
+ <VE1PR04MB6768699B6D7A507A5BF82F9191540@VE1PR04MB6768.eurprd04.prod.outlook.com>
+ <20200826114758.4agph53ag2fin6um@skbuf>
+ <20200826142312.GH4965@sirena.org.uk>
+ <20200826144744.c4yzgoovk6f4t3id@skbuf>
+ <2e19f8979be4f962045a1597bdbe7886@mail.gmail.com>
+ <20200826160950.i3k2oy6w2dlvmj34@skbuf>
+ <20200826170205.GL4965@sirena.org.uk>
+ <20200826183044.4g6jvfrgkhpxki3k@skbuf>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="/DkgDsqJFFamjKX0"
+Content-Disposition: inline
+In-Reply-To: <20200826183044.4g6jvfrgkhpxki3k@skbuf>
+X-Cookie: Should I do my BOBBIE VINTON medley?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 26 Aug 2020 13:41:11 +0000:
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git tags/hyperv-fixes-signed
+--/DkgDsqJFFamjKX0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/51c4518ab77c6d3e917675891a9a529daabfaef1
+On Wed, Aug 26, 2020 at 09:30:44PM +0300, Vladimir Oltean wrote:
+> On Wed, Aug 26, 2020 at 06:02:05PM +0100, Mark Brown wrote:
 
-Thank you!
+> > That's not something that it's particularly idiomatic to actually use in
+> > ACPI and you end up with the same namespacing problem assigning IDs so
+> > I'm not sure it makes life any better.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+> So what's the idiomatic thing to do in this case, allocate the first
+> free PNP ID now for DSPI controller on LS2085A, then another one for
+> DSPI on LX2160A later, etc etc?
+
+AFAICT yes, assuming you don't make it look like a PCI device and
+enumerate that way which is more how these things more normally end up
+getting done.
+
+--/DkgDsqJFFamjKX0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9Gq5MACgkQJNaLcl1U
+h9C6twf+PyPo8Vp/efexBeGZf6oJ4vE+zGVxxKbzWoPyzKTy2VlBDNQU7Oqd0r6+
+EZhJ1MRWMI9S2+IGprqddt8oc8IFgQpiFe+NOZf69AieZU5bTvhLRdCxSglm+7Zv
+ZvIjIZbYW9wV/MiUQCOADvdAdkETDr1U9NNJVpNG+1EGd/2Tt6NUBxdPcc/OKXFI
+p8bCtzZ/04cEaPZMuvm3IP7V6TgeTngxN1Z4bFtVKnPnlwAvW0fDTCvKlRCUrhSn
+3iWtim8aC8rdSju4yuT4djzX3VFl0xBrOsKMNQhLoTwYV8+uvtOnpiqmE5D685Gb
+Q6JLO1s9uXGKVgo0n4GWn8iIJS1dbQ==
+=R2TH
+-----END PGP SIGNATURE-----
+
+--/DkgDsqJFFamjKX0--
