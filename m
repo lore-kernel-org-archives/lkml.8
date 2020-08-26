@@ -2,102 +2,139 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA63C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2822FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93F7E20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F245B207DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="HEdiitSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgHZRr6 (ORCPT
+        id S1727013AbgHZRsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:47:58 -0400
-Received: from mga06.intel.com ([134.134.136.31]:46505 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgHZRrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:47:48 -0400
-IronPort-SDR: tSkMt0h2C2xvxL20YBYOVsfOddsy0s7nIl8V1v/DHaRRZOCfBLxVXFSo4+gDbebgXZLOi0ThEN
- UscQ4ZQsd38Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="217902690"
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="217902690"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 10:47:48 -0700
-IronPort-SDR: 8AHFNJF+3w8JSgd/qPHH74lfBlMW2ftlBY3qS9VhpxGUhQk3o9DQvNNzE5+uzuO7gqJVgD88Lg
- oLXajWwEF7EQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="500328324"
-Received: from leike-mobl.ccr.corp.intel.com ([10.255.28.177])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Aug 2020 10:47:46 -0700
-Message-ID: <82c789766e71d29cf1a90f519d21ba310ae8fa95.camel@intel.com>
-Subject: Re: [PATCH] intel_idle: Add ICL support
-From:   Zhang Rui <rui.zhang@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Guilhem Lettron <guilhem@barpilot.io>
-Cc:     Artem Bityutskiy <dedekind1@gmail.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Thu, 27 Aug 2020 01:47:44 +0800
-In-Reply-To: <CAJZ5v0gJscMWLsjCm_L6jCDdZ2hdRB2mPtUBSgd1va7Xm7GyVA@mail.gmail.com>
-References: <20200826120421.44356-1-guilhem@barpilot.io>
-         <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
-         <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
-         <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
-         <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
-         <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
-         <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
-         <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
-         <CAJZ5v0j4FXH26rZCjM9Csd56skPVbRpM7iFcKYAFMmLFX54+bg@mail.gmail.com>
-         <e9e6823d63fe2b9938e43a14c136b89aec0c503b.camel@gmail.com>
-         <CAJZ5v0gPY+7YBeWwszoNBwsbKLFOEeuLaekdX62_gvbHXB8xoA@mail.gmail.com>
-         <CAGX5Wg3bVpgaFXHb1=4ikGk0P+4=XRqROBU4pqw1mpsY06dbHQ@mail.gmail.com>
-         <CAJZ5v0gJscMWLsjCm_L6jCDdZ2hdRB2mPtUBSgd1va7Xm7GyVA@mail.gmail.com>
+        Wed, 26 Aug 2020 13:48:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgHZRrt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 13:47:49 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E89C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:47:48 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id oz20so4063089ejb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:47:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DZhvz/VcmtyOV5FpCQGhe3jSJp/wS6UPaYcPASL+W/w=;
+        b=HEdiitSKEBxMSHU8oTLa3sOT98ZqvBgSHQoEa8wKCD7Bep9IfA3SmowbtjCNMgkw9i
+         jku1yi1AxvYbxckP53qA3tB5mi0Xeepx/+gdavzei1K18KH4XJJ7ql/2GL6DWC7FoP0J
+         DFVlciGxbX1urrNma8ZDr07/YRWt/Uy8XWkxyo6yHLhilLIZNM9TZ2slZHDFGktyk3/Q
+         9E9A0VZvOP44jHPNyTpdKN92CKWEsGHxifxkxymJ/Nlu23ojN81Emuo0TqlFKCCQ0/bZ
+         QVpX4GgvoQA463xPcCxrkOn6bIi3vIyOL5CtkIXlfdLEfYTsyzwlhbzOju+HDjTrlITC
+         zxLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DZhvz/VcmtyOV5FpCQGhe3jSJp/wS6UPaYcPASL+W/w=;
+        b=faxF9RSDNNTi1EpUG/f4dPskO7jlwBpnye8SnChynkfz8nCyuY3W/UI+bDZ/W7v85Q
+         9OyBJX1WclbMJKEJYoOBxVawgt2uj8PE9Ezy+vo61DrQQgVpCPXMiji8cLhFTeThvooJ
+         43Q0RBeB3nT/benR7zuOkdLRWnoML26K7ZqJWwwcmNBTsfwvRiIMdccP+sGjPbc/5ZNm
+         WftRypG/4Bqa1ynmXP/unUmsfUVORkBtDLAC0nbjNQqHMSKnpX4YFvjY6s8LUZ0dUyIY
+         Enpx4FZVBDRjC4AyF4rwiSkaM+ZtbJ4iyYW0WW67r6hWcZCHk/gj5FC7XB2Rt7B12vxh
+         78Rw==
+X-Gm-Message-State: AOAM53136UeP/mharPOMZnq1yG1uOytXRSZE2INWN0OdqKtXHauV6q2r
+        pklZHzXFKMg4XUyPFO1Tc1DMfdU0EAWeUYOqbNGmfg==
+X-Google-Smtp-Source: ABdhPJzus1ddDpcAB3sDL3goLET4zr36SFUC2Lm7kSX43cr3KBZpmMROLLbNpz+1kIMWiaUywpNuyma7UHpBq/QSea8=
+X-Received: by 2002:a17:906:c10c:: with SMTP id do12mr13194774ejc.92.1598464066662;
+ Wed, 26 Aug 2020 10:47:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <1583589765-19344-1-git-send-email-hexiaolong2008@gmail.com>
+In-Reply-To: <1583589765-19344-1-git-send-email-hexiaolong2008@gmail.com>
+From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Date:   Wed, 26 Aug 2020 14:47:35 -0300
+Message-ID: <CAAEAJfA0w+xs95vnOiFnnMPpzh-0qJDey95bXdbv27O98cpWHA@mail.gmail.com>
+Subject: Re: [v2] dma-buf: heaps: bugfix for selftest failure
+To:     Leon He <hexiaolong2008@gmail.com>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-kselftest@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linaro-mm-sig@lists.linaro.org, Leon He <leon.he@unisoc.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-26 at 19:00 +0200, Rafael J. Wysocki wrote:
-> On Wed, Aug 26, 2020 at 6:46 PM Guilhem Lettron <guilhem@barpilot.io>
-> wrote:
-> > 
-> > I've done more tests, maybe it can give you more hints.
-> > I don't see that much differences between both (with and without
-> > patches) in this cases.
-> 
-> OK, thanks!
-> 
-> I'm assuming that the topmost two sets of data are for the "without
-> the patch" case whereas the other three correspond to the "with the
-> patch" case.
+Hi Leon, Shuah,
 
-I think the sample period is too short.
-Even with the same kernel, I can see the Busy% varies from 1% to 9%,
-and the PkgWatt varies from 0.4W to 2.4W.
+Thanks for the fix. I had this issue pending to fix,
+but have been lazy about it, I appreciate you are taking care of it!
 
-thanks,
-rui
+On Sat, 7 Mar 2020 at 11:03, Leon He <hexiaolong2008@gmail.com> wrote:
+>
+> From: Leon He <leon.he@unisoc.com>
+>
+> There are two errors in the dmabuf-heap selftest:
+> 1. The 'char name[5]' was not initialized to zero, which will cause
+>    strcmp(name, "vgem") failed in check_vgem().
+> 2. The return value of test_alloc_errors() should be reversed, other-
+>    wise the while loop in main() will be broken.
+>
+> Signed-off-by: Leon He <leon.he@unisoc.com>
+> ---
+>  tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> index cd5e1f6..836b185 100644
+> --- a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
+> @@ -22,7 +22,7 @@
+>  static int check_vgem(int fd)
+>  {
+>         drm_version_t version = { 0 };
+> -       char name[5];
+> +       char name[5] = { 0 };
+>         int ret;
+>
 
-> 
-> If so, the processor clearly enters PC10 in both cases and the
-> residency percentages are similar.
-> 
-> The numbers of times the POLL state was selected in the first test
-> look kind of unusual (relatively very large), but other than this the
-> patch doesn't seem to make much of a difference, so I'm not going to
-> apply it.
-> 
-> Thanks!
+As Shuah already mentioned, I think we want to use strncmp
+to be on the safe side.
 
+>         version.name_len = 4;
+> @@ -357,7 +357,7 @@ static int test_alloc_errors(char *heap_name)
+>         if (heap_fd >= 0)
+>                 close(heap_fd);
+>
+> -       return ret;
+> +       return !ret;
+
+I agree with Shuah, this change makes no sense, just drop it.
+
+I think the fact this test was broken and nobody noticed
+uncovers the fact that the test isn't being run.
+
+Any reason why this test isn't a regular TARGET?
+Or any idea how we can make sure this is run by CIs
+and any other testing system?
+
+Thanks!
+Ezequiel
+
+>  }
+>
+>  int main(void)
+> --
+> 2.7.4
+>
