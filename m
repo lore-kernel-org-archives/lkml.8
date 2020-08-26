@@ -7,67 +7,66 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D3EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8FE2087D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18BB22087D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NtAv25hj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JuY0r5yX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgHZJh6 (ORCPT
+        id S1728607AbgHZJiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:37:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40984 "EHLO
+        Wed, 26 Aug 2020 05:38:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728369AbgHZJfD (ORCPT
+        with ESMTP id S1728364AbgHZJe6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:35:03 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD52DC061347
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:29 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id h15so1081288wrt.12
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:29 -0700 (PDT)
+        Wed, 26 Aug 2020 05:34:58 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B5A5C061345
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:28 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id b79so483275wmb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5xYAPYXZqKI3g1GFZmnrzEgVa6jjBFa/aMcqWmXa5Dc=;
-        b=NtAv25hji32BSctbHNSG6hvgojalWPH/q2SbQ6HmZPxPxofhzszwXZbiKeVhObOPRu
-         9FGE5aT64rD+pIVxs5baems82rqFmheemeohT5g0YqsAUxq4VzJ0QDqpHV8+7kaKCHfM
-         7g09v5S3ArlX5RSV2C7h+c9p5TXpyTkOVveKkl1BdsSYSftFphmajGgdnfWZUd6TWOn3
-         V95i0Yav3ECduA2ieGEHHnkRoEckdthoggrF0Hc7vGnmtdWsoz+pbgAWGuTbW+bfOdVJ
-         k03tb/D35hhKdjGQUZLufVJhsvkPrSb9ks8YB8kPodnKxjU/Z0KyjAhF59cMnf/yDq1w
-         bW6g==
+        bh=WVfVHRbfLs77xvEowdNmRYJl1Eqf3t8uGBw9b5yOc7s=;
+        b=JuY0r5yXntpWWzZXsdA88BXsBYv590V4Ep8F6jfWf6kGIWp1JSFtrAQadAVxFywmbN
+         RtkCN5MVz8Kb5gEYOUJAvT5dlvGbvkWMLI/pGdjCNsDAXh6K9kvNfg/crGE7jeGkn9uH
+         YqfwFTj4gh/eR0PkX25QY/QvgCmNAqJjUMxUmUuBD7hHDWFW5mfuZcIj04QlMlM6jNji
+         KT1WWvFzTJ9kZXWxDpKk0Alp8YvzaEa1JeM4SwjWhQGblNi93mk/Xr4Q4s2zw+WJB36o
+         Knnsb802yKk5B/vVGx1+qzXlMyRLPWnxnY32BR97sUmGXn7J8XMufW1T5tzJAEiN7aV0
+         BN0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5xYAPYXZqKI3g1GFZmnrzEgVa6jjBFa/aMcqWmXa5Dc=;
-        b=igFoeg8yjtaZnVkn5JBpjV6TuYjis1jO0xIdBsw97k86TjzbuB4r0aal9oEA2zZXg5
-         bZ2a/6yQ7y9Uulc5n+gFQKShBTPvHAgqJojU4cstSe57mcr1mF3IUOLozPYwzspjE/pq
-         tmeROnPRDEc548XWOtAB87c8ehYro5aE9cc34iV3p0MPHjOHRWk+dIbXx349Xve9Cxmd
-         drl+iEqjmi4ZMSrbYSCnLSCHDQKhrl6F/ri5OZcAJzMEpWJjWN0XTwcxI8uE/2lnhXyI
-         P4m8EMfpJgdZUfcvJ3cI7pU+zVBu9ZIatFwXVjYooZxZ85WCKWDER6nChLKGg6ED5Ghk
-         94ng==
-X-Gm-Message-State: AOAM532zu8X5d7RUpzogA98m0T3Mcl4FBktuNjUmKVMx0j/eCJwjB9wD
-        DC/ygxAP/oEhLh8e9kKPw940JQ==
-X-Google-Smtp-Source: ABdhPJwlHgHvN4aaFIAjEP8d/rVGWNg4vJOAzlVz1zWIu7YkcH9UYqB9S9fIOyuB6XE6PgXJ4tP9XA==
-X-Received: by 2002:adf:f388:: with SMTP id m8mr15137432wro.338.1598434468397;
-        Wed, 26 Aug 2020 02:34:28 -0700 (PDT)
-Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=WVfVHRbfLs77xvEowdNmRYJl1Eqf3t8uGBw9b5yOc7s=;
+        b=APPGflrCV9Jy55MYsObs+DEwHBECWX3fQ/JdRwcBUl5XnEDeDbAvmNnATHQOeh7DUk
+         qZYJGY9AnstSr/xO9gzoirDuIyAjcL25n5OxJ333HmP9ICaTBc2MZ2YRGiTujqlL/HLH
+         O0x2WtmO+LN43o/wJiLZy/z/EiK4qVAGpCYJCfqZembZ5U6+4mTz4gsR5PVc2RrXF/Dq
+         y6UXRGbZDXaQPjvOVRm2maB2h/6WlHBSAEXYkqYNqWYdDbYpeql4fWbFdrQ/9JpC44PD
+         GC1qRmT5g31BfrgncJ/drkiJTKwWbWlpqbt0GpehCikHtnmNBQpaGSX/wAgTfZP+ds9f
+         bfRQ==
+X-Gm-Message-State: AOAM5309Fd5uTy6SueCvZJpytIU5c7U+URPruCGfLhRwqeHIpvIEP/kU
+        DP+EfpJ6UrutZVVLkKYOkbZHFQ==
+X-Google-Smtp-Source: ABdhPJyU2nSGobc0dtKGFmaO2f5zOBwubTya6uY4DUiS+jy3Wni+yfPQlhnFiLfmGxtP5tH2dPQoLg==
+X-Received: by 2002:a1c:7c11:: with SMTP id x17mr4307425wmc.122.1598434467042;
         Wed, 26 Aug 2020 02:34:27 -0700 (PDT)
+Received: from dell.default ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 02:34:26 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jouni Malinen <j@w1.fi>, Cong Wang <xiyou.wangcong@gmail.com>,
-        Taehee Yoo <ap420073@gmail.com>
-Subject: [PATCH 19/30] wireless: intersil: hostap: hostap_hw: Remove unused variable 'fc'
-Date:   Wed, 26 Aug 2020 10:33:50 +0100
-Message-Id: <20200826093401.1458456-20-lee.jones@linaro.org>
+        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
+Subject: [PATCH 18/30] wireless: ath: ath9k: ar9001_initvals: Remove unused array 'ar5416Bank6_9100'
+Date:   Wed, 26 Aug 2020 10:33:49 +0100
+Message-Id: <20200826093401.1458456-19-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200826093401.1458456-1-lee.jones@linaro.org>
 References: <20200826093401.1458456-1-lee.jones@linaro.org>
@@ -81,56 +80,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- In file included from drivers/net/wireless/intersil/hostap/hostap_cs.c:196:
- drivers/net/wireless/intersil/hostap/hostap_hw.c: In function ‘prism2_tx_80211’:
- drivers/net/wireless/intersil/hostap/hostap_hw.c:1806:18: warning: variable ‘fc’ set but not used [-Wunused-but-set-variable]
- 1806 | u16 tx_control, fc;
- | ^~
- In file included from drivers/net/wireless/intersil/hostap/hostap_plx.c:264:
- drivers/net/wireless/intersil/hostap/hostap_hw.c: In function ‘prism2_tx_80211’:
- drivers/net/wireless/intersil/hostap/hostap_hw.c:1806:18: warning: variable ‘fc’ set but not used [-Wunused-but-set-variable]
- 1806 | u16 tx_control, fc;
- | ^~
- In file included from drivers/net/wireless/intersil/hostap/hostap_pci.c:221:
- drivers/net/wireless/intersil/hostap/hostap_hw.c: In function ‘prism2_tx_80211’:
- drivers/net/wireless/intersil/hostap/hostap_hw.c:1806:18: warning: variable ‘fc’ set but not used [-Wunused-but-set-variable]
- 1806 | u16 tx_control, fc;
- | ^~
+ drivers/net/wireless/ath/ath9k/ar9001_initvals.h:462:18: warning: ‘ar5416Bank6_9100’ defined but not used [-Wunused-const-variable=]
 
-Cc: Jouni Malinen <j@w1.fi>
+Cc: QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Taehee Yoo <ap420073@gmail.com>
 Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/intersil/hostap/hostap_hw.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ .../net/wireless/ath/ath9k/ar9001_initvals.h  | 37 -------------------
+ 1 file changed, 37 deletions(-)
 
-diff --git a/drivers/net/wireless/intersil/hostap/hostap_hw.c b/drivers/net/wireless/intersil/hostap/hostap_hw.c
-index b6c497ce12e12..a8aa8f64abe0c 100644
---- a/drivers/net/wireless/intersil/hostap/hostap_hw.c
-+++ b/drivers/net/wireless/intersil/hostap/hostap_hw.c
-@@ -1803,7 +1803,7 @@ static int prism2_tx_80211(struct sk_buff *skb, struct net_device *dev)
- 	struct hfa384x_tx_frame txdesc;
- 	struct hostap_skb_tx_data *meta;
- 	int hdr_len, data_len, idx, res, ret = -1;
--	u16 tx_control, fc;
-+	u16 tx_control;
+diff --git a/drivers/net/wireless/ath/ath9k/ar9001_initvals.h b/drivers/net/wireless/ath/ath9k/ar9001_initvals.h
+index 59524e1d4678c..aa5f086fa3b0b 100644
+--- a/drivers/net/wireless/ath/ath9k/ar9001_initvals.h
++++ b/drivers/net/wireless/ath/ath9k/ar9001_initvals.h
+@@ -459,43 +459,6 @@ static const u32 ar5416Common_9100[][2] = {
+ 	{0x0000a3e0, 0x000001ce},
+ };
  
- 	iface = netdev_priv(dev);
- 	local = iface->local;
-@@ -1826,7 +1826,6 @@ static int prism2_tx_80211(struct sk_buff *skb, struct net_device *dev)
- 	/* skb->data starts with txdesc->frame_control */
- 	hdr_len = 24;
- 	skb_copy_from_linear_data(skb, &txdesc.frame_control, hdr_len);
-- 	fc = le16_to_cpu(txdesc.frame_control);
- 	if (ieee80211_is_data(txdesc.frame_control) &&
- 	    ieee80211_has_a4(txdesc.frame_control) &&
- 	    skb->len >= 30) {
+-static const u32 ar5416Bank6_9100[][3] = {
+-	/* Addr      5G          2G        */
+-	{0x0000989c, 0x00000000, 0x00000000},
+-	{0x0000989c, 0x00000000, 0x00000000},
+-	{0x0000989c, 0x00000000, 0x00000000},
+-	{0x0000989c, 0x00e00000, 0x00e00000},
+-	{0x0000989c, 0x005e0000, 0x005e0000},
+-	{0x0000989c, 0x00120000, 0x00120000},
+-	{0x0000989c, 0x00620000, 0x00620000},
+-	{0x0000989c, 0x00020000, 0x00020000},
+-	{0x0000989c, 0x00ff0000, 0x00ff0000},
+-	{0x0000989c, 0x00ff0000, 0x00ff0000},
+-	{0x0000989c, 0x00ff0000, 0x00ff0000},
+-	{0x0000989c, 0x00ff0000, 0x00ff0000},
+-	{0x0000989c, 0x005f0000, 0x005f0000},
+-	{0x0000989c, 0x00870000, 0x00870000},
+-	{0x0000989c, 0x00f90000, 0x00f90000},
+-	{0x0000989c, 0x007b0000, 0x007b0000},
+-	{0x0000989c, 0x00ff0000, 0x00ff0000},
+-	{0x0000989c, 0x00f50000, 0x00f50000},
+-	{0x0000989c, 0x00dc0000, 0x00dc0000},
+-	{0x0000989c, 0x00110000, 0x00110000},
+-	{0x0000989c, 0x006100a8, 0x006100a8},
+-	{0x0000989c, 0x004210a2, 0x004210a2},
+-	{0x0000989c, 0x0014000f, 0x0014000f},
+-	{0x0000989c, 0x00c40002, 0x00c40002},
+-	{0x0000989c, 0x003000f2, 0x003000f2},
+-	{0x0000989c, 0x00440016, 0x00440016},
+-	{0x0000989c, 0x00410040, 0x00410040},
+-	{0x0000989c, 0x000180d6, 0x000180d6},
+-	{0x0000989c, 0x0000c0aa, 0x0000c0aa},
+-	{0x0000989c, 0x000000b1, 0x000000b1},
+-	{0x0000989c, 0x00002000, 0x00002000},
+-	{0x0000989c, 0x000000d4, 0x000000d4},
+-	{0x000098d0, 0x0000000f, 0x0010000f},
+-};
+-
+ static const u32 ar5416Bank6TPC_9100[][3] = {
+ 	/* Addr      5G          2G        */
+ 	{0x0000989c, 0x00000000, 0x00000000},
 -- 
 2.25.1
 
