@@ -2,137 +2,245 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A87C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D65DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29701208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EBAF208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:44:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="N2ddSfTD"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="k4m5mEJB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbgHZOoY (ORCPT
+        id S1727001AbgHZOoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:44:24 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:43502 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726718AbgHZOoW (ORCPT
+        Wed, 26 Aug 2020 10:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbgHZOod (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:44:22 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598453062; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=U/m4jJyjO54IDfksgY4gT/Ig37eP0pugC9C6u4Tuz0M=; b=N2ddSfTDrx3ypW0qBMqUhSgVs+F/PnfFX+npbgycSyZ/jGmJJNN83ExBjygmLUG0jswJtVwr
- owXAmRwLqGhuIW8jFihTIROXF2B/HRlFewLZSwReTDLs16AIymHkwq2QpYzlBGsFSajgU9af
- b406LEEQaWyjNhgy/vABT2dIAuI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f4675240f94f6538daf66e3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 14:43:48
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 451C4C43387; Wed, 26 Aug 2020 14:43:47 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DDAC2C433CA;
-        Wed, 26 Aug 2020 14:43:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DDAC2C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "Rakesh Pillai" <pillair@codeaurora.org>
-Cc:     "'Peter Oh'" <peter.oh@eero.com>,
-        'Brian Norris' <briannorris@chromium.org>,
-        'linux-wireless' <linux-wireless@vger.kernel.org>,
-        'Doug Anderson' <dianders@chromium.org>,
-        'ath10k' <ath10k@lists.infradead.org>,
-        'LKML' <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ath10k: Add interrupt summary based CE processing
-References: <1593193967-29897-1-git-send-email-pillair@codeaurora.org>
-        <CAD=FV=V_ynwukeR92nbJXkuQ7OAW4mLaTjxko7fXt5aEfDUNhA@mail.gmail.com>
-        <CAD=FV=XJDmGbEJQ1U-VDuN2p0+V+uRm_1=DwBnDPmPQsXqS4ZA@mail.gmail.com>
-        <CA+ASDXNOCFZhdNMDk9XTuC2H+owQ0+wHipDbkJAGnU9q7BXz_w@mail.gmail.com>
-        <871rlcx8uv.fsf@codeaurora.org>
-        <CALhWmc1PbTKhrkaPn9yfpx3gZHAMuR-bPY=4_o4wQHv_H5D9dA@mail.gmail.com>
-        <CALhWmc3i9Z+KiG1cJNvpSWNsiFhOa5jBw=XfcFz_gKwi_5QibA@mail.gmail.com>
-        <CALhWmc1B0+SONV6_AF+nUzgxZdekPD3sZuhrsmwVQx1Q-cgT_g@mail.gmail.com>
-        <CALhWmc0qF5stKRcikjwbeFmE-32hNCDazgQdqTMidUyt7u-T1Q@mail.gmail.com>
-        <CALhWmc0JtQZE5CfLPb1WnwhE9wCYsjE-53kYWbwtFCs1k7FrCQ@mail.gmail.com>
-        <CALhWmc11OefTh6Ov5GqP-yHMVTUO4r9CxqkdHT1F3yzor72v7g@mail.gmail.com>
-        <000201d65f51$83d2ac60$8b780520$@codeaurora.org>
-Date:   Wed, 26 Aug 2020 17:43:42 +0300
-In-Reply-To: <000201d65f51$83d2ac60$8b780520$@codeaurora.org> (Rakesh Pillai's
-        message of "Tue, 21 Jul 2020 16:54:30 +0530")
-Message-ID: <877dtlcvs1.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Wed, 26 Aug 2020 10:44:33 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00EDDC061786
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:44:32 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id n18so1556966qtw.0
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=3fltz4Tid80yvbd7ycd5CEvXCm5Dl/pplKlQTmdAxKA=;
+        b=k4m5mEJBWpHKc8UCyiMSoWpLFbB9PLsFXQSse1GeHDwA4DKW/bxLFf2oq06iweP+iL
+         M8bgXdl0A9155UGa8Nz8VJmE6L39gWW8oVIXtrtnNW2XbaFdQ7/KhobmLnk55ujnHV/2
+         tPPob3cH4BlQEISinoXdsc01CEIIJiQYM7T+gkUDqRjYhkY6CbBd83M1+SskyHHbWLvL
+         rHtzPGZUMHG7eDyNL2Q4ZV/nAiZIzogvhqr+a2Knoik0r52ut2ISFzGOCWsps3sZCmxq
+         fBsjIPcK+lwVA+ap0kK3kVNC6i6d4qEdXhZRr9MSKdg1iPVBdKJXwariY86XZf+E2JPH
+         +9mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=3fltz4Tid80yvbd7ycd5CEvXCm5Dl/pplKlQTmdAxKA=;
+        b=W7ReLCpHBPgNRug6C9yZ0Bx35ks/dM8Z4zw7JaOTBgIp5n4Fn8xz2tH/Yqw5oRP8Vb
+         Epdl+ilQnyAYR4UEQ2AK97gtOOL+2gKjmdfn94FVdYQQYHL/v8Ud0YiivHsvQ5mv5koV
+         CJUxjLyNdnDF8V7WNBxyJ68PIulKi+DaWn3y6NRigO8Q4DgFPV0k2qAOSbwqUF0aVu8l
+         B7GLxwjW062kJRGazwEYcgOdmVmIrprsbWD/Pb+/W8KYej+N3rxFTZPw8fPUsrFd6kja
+         3Ubofs7INHrUaIKGNjJUt92lei21Q8iHYQOvUld3JKf4giYi+EfTY41K7FR+HkVEx904
+         /Kxg==
+X-Gm-Message-State: AOAM5326/JOZDHbYIWNg0CrCTtf36IHIF7B4faz+msfnLcAYWQQcSDLG
+        r4QR/hVWtp7x3o32g6fOGb9ijg==
+X-Google-Smtp-Source: ABdhPJzCRDv2m2NsfRzSYdU3punl1WmSuoZIWY3X6Qrw3w/UZAKmzNkoM0/3I601SkHanbswK7RLyw==
+X-Received: by 2002:ac8:33a1:: with SMTP id c30mr10693591qtb.156.1598453071797;
+        Wed, 26 Aug 2020 07:44:31 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id a203sm1862906qkg.30.2020.08.26.07.44.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:44:31 -0700 (PDT)
+Message-ID: <aade022eeea9d9196774d0f21cbdaa118de8f885.camel@ndufresne.ca>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Dave Airlie <airlied@gmail.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liuyao An <anliuyao@huawei.com>,
+        Network Development <netdev@vger.kernel.org>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Wed, 26 Aug 2020 10:44:28 -0400
+In-Reply-To: <20200825133025.13f047f0@coco.lan>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+         <20200819152120.GA106437@ravnborg.org>
+         <20200819153045.GA18469@pendragon.ideasonboard.com>
+         <CALAqxLUXnPRec3UYbMKge8yNKBagLOatOeRCagF=JEyPEfWeKA@mail.gmail.com>
+         <20200820090326.3f400a15@coco.lan>
+         <20200820100205.GA5962@pendragon.ideasonboard.com>
+         <CAPM=9twzsw7T=GD6Jc1EFenXq9ZhTgf_Nuo71uLfX2W33oa=6w@mail.gmail.com>
+         <20200825133025.13f047f0@coco.lan>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Guys, PLEASE edit your quotes. These long emails my use of patchwork
-horrible.)
+Le mardi 25 août 2020 à 13:30 +0200, Mauro Carvalho Chehab a écrit :
+> Em Tue, 25 Aug 2020 05:29:29 +1000
+> Dave Airlie <airlied@gmail.com> escreveu:
+> 
+> > On Thu, 20 Aug 2020 at 20:02, Laurent Pinchart
+> > <laurent.pinchart@ideasonboard.com> wrote:
+> > > Hi Mauro,
+> > > 
+> > > On Thu, Aug 20, 2020 at 09:03:26AM +0200, Mauro Carvalho Chehab wrote:  
+> > > > Em Wed, 19 Aug 2020 12:52:06 -0700 John Stultz escreveu:  
+> > > > > On Wed, Aug 19, 2020 at 8:31 AM Laurent Pinchart wrote:  
+> > > > > > On Wed, Aug 19, 2020 at 05:21:20PM +0200, Sam Ravnborg wrote:  
+> > > > > > > On Wed, Aug 19, 2020 at 01:45:28PM +0200, Mauro Carvalho Chehab wrote:  
+> > > > > > > > This patch series port the out-of-tree driver for Hikey 970 (which
+> > > > > > > > should also support Hikey 960) from the official 96boards tree:
+> > > > > > > > 
+> > > > > > > >    https://github.com/96boards-hikey/linux/tree/hikey970-v4.9
+> > > > > > > > 
+> > > > > > > > Based on his history, this driver seems to be originally written
+> > > > > > > > for Kernel 4.4, and was later ported to Kernel 4.9. The original
+> > > > > > > > driver used to depend on ION (from Kernel 4.4) and had its own
+> > > > > > > > implementation for FB dev API.
+> > > > > > > > 
+> > > > > > > > As I need to preserve the original history (with has patches from
+> > > > > > > > both HiSilicon and from Linaro),  I'm starting from the original
+> > > > > > > > patch applied there. The remaining patches are incremental,
+> > > > > > > > and port this driver to work with upstream Kernel.
+> > > > > > > >  
+> > > > > ...  
+> > > > > > > > - Due to legal reasons, I need to preserve the authorship of
+> > > > > > > >   each one responsbile for each patch. So, I need to start from
+> > > > > > > >   the original patch from Kernel 4.4;  
+> > > > > ...  
+> > > > > > > I do acknowledge you need to preserve history and all -
+> > > > > > > but this patchset is not easy to review.  
+> > > > > > 
+> > > > > > Why do we need to preserve history ? Adding relevant Signed-off-by and
+> > > > > > Co-developed-by should be enough, shouldn't it ? Having a public branch
+> > > > > > that contains the history is useful if anyone is interested, but I don't
+> > > > > > think it's required in mainline.  
+> > > > > 
+> > > > > Yea. I concur with Laurent here. I'm not sure what legal reasoning you
+> > > > > have on this but preserving the "absolute" history here is actively
+> > > > > detrimental for review and understanding of the patch set.
+> > > > > 
+> > > > > Preserving Authorship, Signed-off-by lines and adding Co-developed-by
+> > > > > lines should be sufficient to provide both atribution credit and DCO
+> > > > > history.  
+> > > > 
+> > > > I'm not convinced that, from legal standpoint, folding things would
+> > > > be enough. See, there are at least 3 legal systems involved here
+> > > > among the different patch authors:
+> > > > 
+> > > >       - civil law;
+> > > >       - common law;
+> > > >       - customary law + common law.
+> > > > 
+> > > > Merging stuff altogether from different law systems can be problematic,
+> > > > and trying to discuss this with experienced IP property lawyers will
+> > > > for sure take a lot of time and efforts. I also bet that different
+> > > > lawyers will have different opinions, because laws are subject to
+> > > > interpretation. With that matter I'm not aware of any court rules
+> > > > with regards to folded patches. So, it sounds to me that folding
+> > > > patches is something that has yet to be proofed in courts around
+> > > > the globe.
+> > > > 
+> > > > At least for US legal system, it sounds that the Country of
+> > > > origin of a patch is relevant, as they have a concept of
+> > > > "national technology" that can be subject to export regulations.
+> > > > 
+> > > > From my side, I really prefer to play safe and stay out of any such
+> > > > legal discussions.  
+> > > 
+> > > Let's be serious for a moment. If you think there are legal issues in
+> > > taking GPL-v2.0-only patches and squashing them while retaining
+> > > authorship information through tags, the Linux kernel if *full* of that.
+> > > You also routinely modify patches that you commit to the media subsystem
+> > > to fix "small issues".
+> > > 
+> > > The country of origin argument makes no sense either, the kernel code
+> > > base if full of code coming from pretty much all country on the planet.
+> > > 
+> > > Keeping the patches separate make this hard to review. Please squash
+> > > them.  
+> > 
+> > I'm inclined to agree with Laurent here.
+> > 
+> > Patches submitted as GPL-v2 with DCO lines and author names/companies
+> > should be fine to be squashed and rearranged,
+> > as long as the DCO and Authorship is kept somewhere in the new patch
+> > that is applied.
+> > 
+> > Review is more important here.
+> 
+> Sorry, but I can't agree that review is more important than to be able
+> to properly indicate copyrights in a valid way at the legal systems that
+> it would apply ;-)
 
-"Rakesh Pillai" <pillair@codeaurora.org> writes:
+Regardless of the "review-ability", our users distribute the Linux
+Kernel as a whole, so who contributed which specific line of code is
+already lost in a way. All we see in the distribution if a list of
+copyright holder and licenses. In this context, the per patches
+ownership have no legal implication. My two, non lawyer cents.
 
->> -----Original Message-----
->> From: Peter Oh <peter.oh@eero.com>
->> Sent: Tuesday, July 21, 2020 7:03 AM
->> To: Kalle Valo <kvalo@codeaurora.org>
->> Cc: Brian Norris <briannorris@chromium.org>; Doug Anderson
->> <dianders@chromium.org>; linux-wireless <linux-
->> wireless@vger.kernel.org>; Rakesh Pillai <pillair@codeaurora.org>; ath10k
->> <ath10k@lists.infradead.org>; LKML <linux-kernel@vger.kernel.org>
->> Subject: Re: [PATCH] ath10k: Add interrupt summary based CE processing
->> 
->> I'll take my word back.
->> It's not this patch problem, but by others.
->> I have 2 extra patches before the 3 patches so my system looks like
->> 
->> backports from ath.git 5.6-rc1 + linux kernel 4.4 (similar to OpenWrt)
->> On top of the working system, I cherry-picked these 5.
->> 
->> #1.
->> ath10k: Avoid override CE5 configuration for QCA99X0 chipsets
->> ath.git commit 521fc37be3d879561ca5ab42d64719cf94116af0
->> #2.
->> ath10k: Fix NULL pointer dereference in AHB device probe
->> wireless-drivers.git commit 1cfd3426ef989b83fa6176490a38777057e57f6c
->> #3.
->> ath10k: Add interrupt summary based CE processing
->> https://patchwork.kernel.org/patch/11628299/
->
-> This patch is applicable only for snoc target WCN3990, since there is
-> a check for per_ce_irq. For PCI targets, per_ce_irq is false, and
-> hence follows a different path.
+> 
+> In any case, there's an easy way to make the code easy to review:
+> I can write the patches against staging (where it is OK to submit
+> preserving the history) and then add a final patch moving it out
+> of staging.
+> 
+> You can then just review the last patch, as it will contain the
+> entire code on it.
+> 
+> Another alternative, as I'm already doing with Sam, is for me to
+> submit the folded code as a reply to 00/xx. You can then just 
+> review the final code, without concerning about how the code reached
+> there.
+> 
+> From review point of the view, this will be the same as reviewing
+> a folded patch, but, from legal standpoint, the entire copyright
+> chain will be preserved.
+> 
+> Thanks,
+> Mauro
 
-This information should be in the commit log. But I have a patch in the
-pending branch which removes per_ce_irq:
-
-[v2,2/2] ath10k: Get rid of "per_ce_irq" hw param
-
-https://patchwork.kernel.org/patch/11654621/
-
-So how will multilple hardware support work then?
-
-In theory I like the patch but there's no information in the patch if
-this works or breaks other hardware, especially QCA9884 or QCA6174 PCI
-devices. I really need some kind of assurance that this works with all
-ath10k devices, not just WCN3990 which you are working on.
-
-I have written about this in the wiki:
-
-https://wireless.wiki.kernel.org/en/users/drivers/ath10k/submittingpatches#hardware_families
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
