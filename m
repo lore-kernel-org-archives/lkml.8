@@ -2,63 +2,63 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79BCEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A1BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 530AF206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CCA62074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:50:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="OR7jYTnn"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="G5SLKC1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgHZBt5 (ORCPT
+        id S1726993AbgHZBuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 21:49:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54192 "EHLO
+        Tue, 25 Aug 2020 21:50:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgHZBtx (ORCPT
+        with ESMTP id S1726770AbgHZBtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 21:49:53 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87451C061757
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 18:49:52 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id x5so204904wmi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 18:49:52 -0700 (PDT)
+        Tue, 25 Aug 2020 21:49:55 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 114DFC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 18:49:55 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id 2so147983wrj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 18:49:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FSqpiVb2VHbicFs91NoR7CGMW6s7gPW0OnsX8hYxTdk=;
-        b=OR7jYTnnl/7sfX3AWTgCn4ixomtkfiZbj9dmPl59jLvYB4wAxvvAQYP9KwBCCr0PZk
-         jhYD8aHRPiVu/DvukwWmIbdCMZqLYcIkdS+nS5kfsoH/bNkhV2MoWoATWWK9VJG3DgRP
-         vQE6g3IBDMOdgAXtgs+LUzJocokrARZoJOPkh9iZDZKXc4Ajo+F984BG34yLGmoLwXtr
-         lVLW36hRIx5lgf3awKaV90QtJi+o8gImOq4Hfnw+G4557klA7+MibaQU0k506N4D/nSU
-         RLYWeBerdZs8aRymiT32FFpDrmATQCszSfD0t7SImQc+/1hIg28l4HkChBzjGSZkCJYV
-         c8EA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hqV9N4PnRzxhj1tk/i32inIsQ5DaM9n+01b3HzAWtM4=;
+        b=G5SLKC1ql/dsc2y6ZL6itoWZCs1rqbPxKNYeTKPNOOSKUCymG+f0FM/tTKla3RsWu6
+         xbCvKYKcZEor5Dt2866Bqua5wnsNZj5cq/dbBaXYH2oJwt49zIg7Bl0OZK9GHV4vl4yT
+         67QKjIdjz4vBGLOirWo1SpfhcdYYIqrJl3z4OpRdqs+nCJbVDhbg1afekUT70kj1qbl7
+         kPTM1hhv6XR76pOHqilpvAMPr9yzNaF/MGsy8Gd/qLVb1g0Vk2kKgcDHQbreXkLbFcJQ
+         /kv87Gi1w3ECzlIOJqlb9EcqgbMtTDMwjAE9Febr8sGR6xsfZjAejKucfT4O5baTjEOd
+         mlDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FSqpiVb2VHbicFs91NoR7CGMW6s7gPW0OnsX8hYxTdk=;
-        b=A2+j/vqBhhHfOp3zV97LSz3cBk19V3qG2rHRwyWutvbnzcRocNNRmpp46i2E6rETKW
-         V0FH0IYXf5LANNMmVqxwlrgCaxSK2yt6TXHN8kYn9RW8mYWdOgQ42Yfpgh5etTo+uXuS
-         yHe3StEcdSxReHLOgQAiZ7SYBOBnmIVq0uew9uLkAd4BgTsZLlbXUeSmdZWLyfVKC/l6
-         k2Gz+GGleeuX4YmvNSZWrCC45NzY5Enj4RA/SWVSzc+vTZoeOGYHfvLm/bSQPudYJo/p
-         zwHvtoaV6sbWYe35Ajfye0u4AiHIoT0fMBmEpYr3vULY4ESCEfpkgTz/JULy3+7rZnxJ
-         XS9A==
-X-Gm-Message-State: AOAM530IRWhojKqNlC7Ow50b3oz4BCllkWYTg/UTe4ovVWnaHblhymOb
-        GIhBmXhh7lTSIuWZ5ElfVKT6oAXZ5V/V4aiyGIc=
-X-Google-Smtp-Source: ABdhPJwNMNkrni4rBF7mJl0ZgMtnGn8jDQ5Kr9MAaUf7fQSiMZ34ZwUojW/wTvT0Oe3KXMiZbzqt9w==
-X-Received: by 2002:a7b:cc95:: with SMTP id p21mr4321648wma.167.1598406590787;
-        Tue, 25 Aug 2020 18:49:50 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hqV9N4PnRzxhj1tk/i32inIsQ5DaM9n+01b3HzAWtM4=;
+        b=AEvkeamu0loyWCFfRiHM3D9nke0drpy3aUvFmHXskhLVn9cVdHbeqec7oLxUgoh+A4
+         t+IyDhuIVIggwiDYURARlRad43ML1Gw/uTCpJDmu8LhCXW+NsE3okz6JGyhGy7+a60PH
+         pHCLazQgGnQk39nGctyPBEx5tG+XpnN23WH9By/Jev53Q4QAnoeekUqDTJeEovi6j1jl
+         0KYStN3PaFCVBZfqQLHHN468ER8iv1DMacx7Lpe+8ypTRaVpYmARkKheNuS2DNDcRO8+
+         WZpUhIf+y33mOgxLADvSzjeikGbmuCs4SFtUuGAgWETgLR6u19sRQKc4QEs5Ph83tS1p
+         10aw==
+X-Gm-Message-State: AOAM530equ9ble+/Up69c6aCs5hSfhcAtxTX30xcJ59scFaIYvqm0zgk
+        C69imJkaCFlDF6tK1ubmZhb/pIM2Vmjgv8iRx5E=
+X-Google-Smtp-Source: ABdhPJxJDpn1yedpzrMT7hq3tCucb4nRQwekOG5bMmg2xkCEMzc4OBQ/2aS+jcXvbp+swlp0OOvbaw==
+X-Received: by 2002:adf:b442:: with SMTP id v2mr4999276wrd.213.1598406593323;
+        Tue, 25 Aug 2020 18:49:53 -0700 (PDT)
 Received: from localhost.localdomain ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id c10sm1263661wmk.30.2020.08.25.18.49.49
+        by smtp.gmail.com with ESMTPSA id c10sm1263661wmk.30.2020.08.25.18.49.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 18:49:50 -0700 (PDT)
+        Tue, 25 Aug 2020 18:49:52 -0700 (PDT)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -69,27 +69,19 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Stephen Suryaputra <ssuryaextr@gmail.com>,
-        netdev@vger.kernel.org, Johannes Berg <johannes@sipsolutions.net>,
-        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
-Subject: [PATCH v2 0/6] xfrm: Add compat layer
-Date:   Wed, 26 Aug 2020 02:49:43 +0100
-Message-Id: <20200826014949.644441-1-dima@arista.com>
+        netdev@vger.kernel.org
+Subject: [PATCH v2 2/6] xfrm/compat: Attach xfrm dumps to 64=>32 bit translator
+Date:   Wed, 26 Aug 2020 02:49:45 +0100
+Message-Id: <20200826014949.644441-3-dima@arista.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200826014949.644441-1-dima@arista.com>
+References: <20200826014949.644441-1-dima@arista.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-
-Changes since v1:
-- reworked patches set to use translator
-- separated the compat layer into xfrm_compat.c,
-  compiled under XFRM_USER_COMPAT config
-- 32-bit messages now being sent in frag_list (like wext-core does)
-- instead of __packed add compat_u64 members in compat structures
-- selftest reworked to kselftest lib API
-- added netlink dump testing to the selftest
 
 XFRM is disabled for compatible users because of the UABI difference.
 The difference is in structures paddings and in the result the size
@@ -110,62 +102,131 @@ Florian Westphal provided the idea of translator and some draft patches
 in the discussion. In these patches, his idea is reused and some of his
 initial code is also present.
 
-There were a couple of attempts to solve xfrm compat problem:
-https://lkml.org/lkml/2017/1/20/733
-https://patchwork.ozlabs.org/patch/44600/
-http://netdev.vger.kernel.narkive.com/2Gesykj6/patch-net-next-xfrm-correctly-parse-netlink-msg-from-32bits-ip-command-on-64bits-host
+Currently nlmsg_unicast() is used by functions that dump structures that
+can be different in size for compat tasks, see dump_one_state() and
+dump_one_policy().
 
-All the discussions end in the conclusion that xfrm should have a full
-compatible layer to correctly work with 32-bit applications on 64-bit
-kernels:
-https://lkml.org/lkml/2017/1/23/413
-https://patchwork.ozlabs.org/patch/433279/
+The following nlmsg_unicast() users exist today in xfrm:
 
-In some recent lkml discussion, Linus said that it's worth to fix this
-problem and not giving people an excuse to stay on 32-bit kernel:
-https://lkml.org/lkml/2018/2/13/752
+         Function                          |    Message can be different
+                                           |       in size on compat
+-------------------------------------------|------------------------------
+    xfrm_get_spdinfo()                     |               N
+    xfrm_get_sadinfo()                     |               N
+    xfrm_get_sa()                          |               Y
+    xfrm_alloc_userspi()                   |               Y
+    xfrm_get_policy()                      |               Y
+    xfrm_get_ae()                          |               N
 
-There is also an selftest for ipsec tunnels.
-It doesn't depend on any library and compat version can be easy
-build with: make CFLAGS=-m32 net/ipsec
+Besides, dump_one_state() and dump_one_policy() can be used by filtered
+netlink dump for XFRM_MSG_GETSA, XFRM_MSG_GETPOLICY.
 
-Patches as a .git branch:
-https://github.com/0x7f454c46/linux/tree/xfrm-compat-v2
+Just as for xfrm multicast, allocate frag_list for compat skb journey
+down to recvmsg() which will give user the desired skb according to
+syscall bitness.
 
 [1]: https://lkml.kernel.org/r/20180726023144.31066-1-dima@arista.com
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+---
+ include/net/xfrm.h     |  6 ++++++
+ net/xfrm/xfrm_compat.c | 10 ++++++++--
+ net/xfrm/xfrm_user.c   | 20 ++++++++++++++++++++
+ 3 files changed, 34 insertions(+), 2 deletions(-)
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: Stephen Suryaputra <ssuryaextr@gmail.com>
-Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: netdev@vger.kernel.org
-
-Dmitry Safonov (6):
-  xfrm/compat: Add 64=>32-bit messages translator
-  xfrm/compat: Attach xfrm dumps to 64=>32 bit translator
-  netlink/compat: Append NLMSG_DONE/extack to frag_list
-  xfrm/compat: Add 32=>64-bit messages translator
-  xfrm/compat: Translate 32-bit user_policy from sockptr
-  selftest/net/xfrm: Add test for ipsec tunnel
-
- MAINTAINERS                            |    1 +
- include/net/xfrm.h                     |   32 +
- net/netlink/af_netlink.c               |   48 +-
- net/xfrm/Kconfig                       |   11 +
- net/xfrm/Makefile                      |    1 +
- net/xfrm/xfrm_compat.c                 |  609 +++++++
- net/xfrm/xfrm_state.c                  |   11 +-
- net/xfrm/xfrm_user.c                   |   79 +-
- tools/testing/selftests/net/.gitignore |    1 +
- tools/testing/selftests/net/Makefile   |    1 +
- tools/testing/selftests/net/ipsec.c    | 2195 ++++++++++++++++++++++++
- 11 files changed, 2953 insertions(+), 36 deletions(-)
- create mode 100644 net/xfrm/xfrm_compat.c
- create mode 100644 tools/testing/selftests/net/ipsec.c
-
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index 9810b5090338..9febf4f5d2ea 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -2002,12 +2002,18 @@ static inline int xfrm_tunnel_check(struct sk_buff *skb, struct xfrm_state *x,
+ 
+ #ifdef CONFIG_XFRM_USER_COMPAT
+ extern int xfrm_alloc_compat(struct sk_buff *skb);
++extern int __xfrm_alloc_compat(struct sk_buff *skb, const struct nlmsghdr *nlh);
+ extern const int xfrm_msg_min[XFRM_NR_MSGTYPES];
+ #else
+ static inline int xfrm_alloc_compat(struct sk_buff *skb)
+ {
+ 	return 0;
+ }
++static inline int __xfrm_alloc_compat(struct sk_buff *skb,
++				      const struct nlmsghdr *nlh)
++{
++	return 0;
++}
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_IPV6)
+diff --git a/net/xfrm/xfrm_compat.c b/net/xfrm/xfrm_compat.c
+index b9eb65dde0db..b34c8b56a571 100644
+--- a/net/xfrm/xfrm_compat.c
++++ b/net/xfrm/xfrm_compat.c
+@@ -272,9 +272,8 @@ static int xfrm_xlate64(struct sk_buff *dst, const struct nlmsghdr *nlh_src)
+ 	return 0;
+ }
+ 
+-int xfrm_alloc_compat(struct sk_buff *skb)
++int __xfrm_alloc_compat(struct sk_buff *skb, const struct nlmsghdr *nlh_src)
+ {
+-	const struct nlmsghdr *nlh_src = nlmsg_hdr(skb);
+ 	u16 type = nlh_src->nlmsg_type - XFRM_MSG_BASE;
+ 	struct sk_buff *new = NULL;
+ 	int err;
+@@ -300,3 +299,10 @@ int xfrm_alloc_compat(struct sk_buff *skb)
+ 
+ 	return 0;
+ }
++
++int xfrm_alloc_compat(struct sk_buff *skb)
++{
++	const struct nlmsghdr *nlh_src = nlmsg_hdr(skb);
++
++	return __xfrm_alloc_compat(skb, nlh_src);
++}
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index 90c57d4a0b47..d135c6949336 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -992,6 +992,13 @@ static int dump_one_state(struct xfrm_state *x, int count, void *ptr)
+ 		return err;
+ 	}
+ 	nlmsg_end(skb, nlh);
++
++	err = __xfrm_alloc_compat(skb, nlh);
++	if (err) {
++		nlmsg_cancel(skb, nlh);
++		return err;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -1365,6 +1372,12 @@ static int xfrm_alloc_userspi(struct sk_buff *skb, struct nlmsghdr *nlh,
+ 		goto out;
+ 	}
+ 
++	err = xfrm_alloc_compat(skb);
++	if (err) {
++		kfree_skb(resp_skb);
++		goto out;
++	}
++
+ 	err = nlmsg_unicast(net->xfrm.nlsk, resp_skb, NETLINK_CB(skb).portid);
+ 
+ out:
+@@ -1795,6 +1808,13 @@ static int dump_one_policy(struct xfrm_policy *xp, int dir, int count, void *ptr
+ 		return err;
+ 	}
+ 	nlmsg_end(skb, nlh);
++
++	err = __xfrm_alloc_compat(skb, nlh);
++	if (err) {
++		nlmsg_cancel(skb, nlh);
++		return err;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
 2.27.0
 
