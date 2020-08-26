@@ -2,178 +2,101 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F919C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73B4820715
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1119B2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:45:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OvXEmpgA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="efmbh3bc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbgHZDox (ORCPT
+        id S1726788AbgHZDpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 23:44:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbgHZDov (ORCPT
+        Tue, 25 Aug 2020 23:45:06 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41759 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726763AbgHZDpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 23:44:51 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F1FCC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 20:44:50 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id o21so321495oie.12
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 20:44:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vj9jHV3Nh5KlI/aHeO4Vw72Jl2llbstQbIn89ZgeTF8=;
-        b=OvXEmpgA9rzoCBGMIr3Z/Y0sZa6QDHXNlqji2Lq8CTzC+GG8HIK6vYiQ9BLOXEHAhe
-         cB8T1ocWUcH5iXddnTVdrYkF1mN8woDXJRGqeP8Y/HBY4YGibDA304UOUV+CZTl2wiTD
-         WJ8qspN4pZD0UID2fs7LcNRuvgOn7T1NCaRE1p5wlpDAxmyYLOqZfjUzjqi6QBcDwuho
-         cvoLzqFH+LSf43lQ9olZg/t54BfBCFz+zwmCAuCiuiDhcLjRTc5Skx21zLTWrU7RrJm6
-         +dnjrHs79Gv1s1mFCV4xEr7VO7N7S0VOIlK/XIjfiUHkievJZQ8VkhAMjVaJDsqsGOzr
-         r9Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vj9jHV3Nh5KlI/aHeO4Vw72Jl2llbstQbIn89ZgeTF8=;
-        b=jjQ7nJowWY5A+g6DjXfQyhnSOAb5APCpD4hO8GQiPHvJ3hDrPk+xGWZ13tzjPR6MvJ
-         WeCr6tTD/RGpCkolZA7LqfDq5b0jXYSmoIBrA7Ktc2vcThT1islvpD7Z8Xscvsymwdhk
-         qW8j92Y9SQyMt5xSokA8WblvkUe5NV2ZZErSCQV1GoJrzbMyH4rtmn4YZT/UIgOH7Ult
-         jp2WN0uohhzevjBO1PfAwDsthOvuapgM/Fzpfu9EthW9ABE7BXCJLXI4mnVc++C6qeqr
-         geM5U4BTpo5wBh0FQ7Uo8YTWEPatpyx+yToHJoB2PR3mCgwAlcTgVWZ/XtHzIg9rs+tr
-         ZO2g==
-X-Gm-Message-State: AOAM531V1ez11tJ1EgPRHjUSue3zcwPVfeP/jxPeAseXPDhuvMtXAlz6
-        LEwevWfQEiQUIk3/8CtRsUuUAw==
-X-Google-Smtp-Source: ABdhPJy3j8LJQFL8ybKeyBKKFeKk3XfOnAsGrQXI2jYprxc20qp9LlCi/15hLZePkPyAMba6XtIBRQ==
-X-Received: by 2002:aca:a9d0:: with SMTP id s199mr2680456oie.154.1598413489568;
-        Tue, 25 Aug 2020 20:44:49 -0700 (PDT)
-Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
-        by smtp.gmail.com with ESMTPSA id y3sm83744ooc.48.2020.08.25.20.44.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 20:44:48 -0700 (PDT)
-Date:   Tue, 25 Aug 2020 22:44:46 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>
-Subject: Re: [PATCH v1 3/9] phy: qcom-qmp: Remove 'initialized' in favor of
- 'init_count'
-Message-ID: <20200826034446.GE3715@yoga>
-References: <20200826024711.220080-1-swboyd@chromium.org>
- <20200826024711.220080-4-swboyd@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826024711.220080-4-swboyd@chromium.org>
+        Tue, 25 Aug 2020 23:45:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598413505;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc; bh=LT6POVV8HSmICCQ9Cr0CByMFS3SYARiZwXUJRkcEo+U=;
+        b=efmbh3bcZVcfnEoG96S2vyrJSM+aqAF1O6DKiEZTgSHo+t0LdE4KL5euB8iO2+wwCMhZ71
+        I62aFeCRPSlnEcDb34NXqm1rR7wP9/spXVAwKvEF6jW2vYR7kA87lIjOdnsjMOgEhZNtU2
+        aKdqJbVnrOjz0a4sAjwlGfRGfLhw2EQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-naIzhBe0MFmexAJKAilz9A-1; Tue, 25 Aug 2020 23:45:01 -0400
+X-MC-Unique: naIzhBe0MFmexAJKAilz9A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE3FA1005E5B;
+        Wed, 26 Aug 2020 03:44:59 +0000 (UTC)
+Received: from lszubowi.redhat.com (unknown [10.10.110.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B1C7A5D9E4;
+        Wed, 26 Aug 2020 03:44:56 +0000 (UTC)
+From:   Lenny Szubowicz <lszubowi@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-security-module@vger.kernel.org, ardb@kernel.org,
+        jmorris@namei.org, serge@hallyn.com, keescook@chromium.org,
+        zohar@linux.ibm.com, bp@alien8.de, pjones@redhat.com,
+        dhowells@redhat.com, prarit@redhat.com
+Subject: [PATCH 0/3] integrity: Load certs from EFI MOK config table
+Date:   Tue, 25 Aug 2020 23:44:52 -0400
+Message-Id: <20200826034455.28707-1-lszubowi@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 25 Aug 21:47 CDT 2020, Stephen Boyd wrote:
+Because of system-specific EFI firmware limitations,
+EFI volatile variables may not be capable of holding the
+required contents of the Machine Owner Key (MOK) certificate
+store. Therefore, an EFI boot loader may pass the MOK certs
+via a EFI configuration table created specifically for this
+purpose to avoid this firmware limitation.
 
-> We already track if any phy inside the qmp wrapper has been initialized
-> by means of the struct qcom_qmp::init_count member. Let's drop the
-> duplicate 'initialized' member to simplify the code a bit.
-> 
-> Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
-> Cc: Chandan Uddaraju <chandanu@codeaurora.org>
-> Cc: Vara Reddy <varar@codeaurora.org>
-> Cc: Tanmay Shah <tanmay@codeaurora.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+An EFI configuration table is a simpler and more robust mechanism
+compared to EFI variables and is well suited for one-way passage
+of static information from a pre-OS environment to the kernel.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This patch set does not remove the support for loading certs
+from the EFI MOK variables into the platform key ring.
+However, if both the EFI MOK config table and corresponding
+EFI MOK variables are present, the MOK table is used as the
+source of MOK certs.
 
-Regards,
-Bjorn
+The contents of the individual named MOK config table entries are
+made available to user space via read-only sysfs binary files under:
 
-> Cc: Manu Gautam <mgautam@codeaurora.org>
-> Cc: Sandeep Maheswaram <sanm@codeaurora.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Cc: Sean Paul <seanpaul@chromium.org>
-> Cc: Jonathan Marek <jonathan@marek.ca>
-> Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Cc: Rob Clark <robdclark@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 7ee9e966dc6d..4a23ba9361b3 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -1844,7 +1844,6 @@ struct qmp_phy {
->   * @phys: array of per-lane phy descriptors
->   * @phy_mutex: mutex lock for PHY common block initialization
->   * @init_count: phy common block initialization count
-> - * @phy_initialized: indicate if PHY has been initialized
->   * @ufs_reset: optional UFS PHY reset handle
->   */
->  struct qcom_qmp {
-> @@ -1861,7 +1860,6 @@ struct qcom_qmp {
->  
->  	struct mutex phy_mutex;
->  	int init_count;
-> -	bool phy_initialized;
->  
->  	struct reset_control *ufs_reset;
->  };
-> @@ -2748,7 +2746,6 @@ static int qcom_qmp_phy_enable(struct phy *phy)
->  		dev_err(qmp->dev, "phy initialization timed-out\n");
->  		goto err_pcs_ready;
->  	}
-> -	qmp->phy_initialized = true;
->  	return 0;
->  
->  err_pcs_ready:
-> @@ -2792,8 +2789,6 @@ static int qcom_qmp_phy_disable(struct phy *phy)
->  
->  	qcom_qmp_phy_com_exit(qmp);
->  
-> -	qmp->phy_initialized = false;
-> -
->  	return 0;
->  }
->  
-> @@ -2868,7 +2863,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_suspend(struct device *dev)
->  	if (cfg->type != PHY_TYPE_USB3)
->  		return 0;
->  
-> -	if (!qmp->phy_initialized) {
-> +	if (!qmp->init_count) {
->  		dev_vdbg(dev, "PHY not initialized, bailing out\n");
->  		return 0;
->  	}
-> @@ -2894,7 +2889,7 @@ static int __maybe_unused qcom_qmp_phy_runtime_resume(struct device *dev)
->  	if (cfg->type != PHY_TYPE_USB3)
->  		return 0;
->  
-> -	if (!qmp->phy_initialized) {
-> +	if (!qmp->init_count) {
->  		dev_vdbg(dev, "PHY not initialized, bailing out\n");
->  		return 0;
->  	}
-> -- 
-> Sent by a computer, using git, on the internet
-> 
+	/sys/firmware/efi/mok-variables/
+
+
+Lenny Szubowicz (3):
+  efi: Support for MOK variable config table
+  integrity: Move import of MokListRT certs to a separate routine
+  integrity: Load certs from the EFI MOK config table
+
+ arch/x86/kernel/setup.c                       |   1 +
+ arch/x86/platform/efi/efi.c                   |   3 +
+ drivers/firmware/efi/Makefile                 |   1 +
+ drivers/firmware/efi/arm-init.c               |   1 +
+ drivers/firmware/efi/efi.c                    |   6 +
+ drivers/firmware/efi/mokvar-table.c           | 360 ++++++++++++++++++
+ include/linux/efi.h                           |  34 ++
+ security/integrity/platform_certs/load_uefi.c |  85 ++++-
+ 8 files changed, 472 insertions(+), 19 deletions(-)
+ create mode 100644 drivers/firmware/efi/mokvar-table.c
+
+-- 
+2.27.0
+
