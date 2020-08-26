@@ -2,160 +2,68 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC80C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C67C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97BD92177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAui/jR/"
+	by mail.kernel.org (Postfix) with ESMTP id 3A0BE221E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgHZOeT (ORCPT
+        id S1727997AbgHZOeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:34:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59124 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbgHZOdM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:33:12 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03748C061574;
-        Wed, 26 Aug 2020 07:33:12 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id j11so979120plk.9;
-        Wed, 26 Aug 2020 07:33:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=AygPhIRiiTHUpr1pkdw/du88lBepQF3siyg0s1NHteQ=;
-        b=ZAui/jR/CwDpdtAKBUQOn6w/6EFshzTWU77n6wX1/tw2IAXE4Bb3QkFkgJCLRShaV5
-         utLegFIfttO2Gx0mEoLOLG2pvCgjQsIN4PY2NyY1+gNbrxMBy+DMr54xvJWl/mdEBVPr
-         QgxanJkkq9C/N2//qQ5L6N76Ha86ET2/i7M6iPWNJjuTjcgrLyzcBCYHhyIi9y/KuMUg
-         i1vMV+D8JvrJfbwTFGCai1OUyyLXF8Iqc2vUsPaKwnSC+oGJw/rYpPpYzW+QXSmlUvI1
-         pRN7yV0OMoNKOnrR0hAI/1nuDxkb9cYfJTTOjkQhqozkAfsPPWe1NBWBXhKmSD8d1c37
-         uitg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=AygPhIRiiTHUpr1pkdw/du88lBepQF3siyg0s1NHteQ=;
-        b=Wr67VZp23NEhvIHih+yioxfy6IMXqiKNmmXvyP5iMZti8z0dsdY+/euInw6PvKuWw3
-         Ft05yQE71xC53p4wftG0MSrNF+SuAMlJL2PtBWmFTJAPsesUy9NboGPNBRGeTX37TGLz
-         Eb4KsFraq9M0pJBMT1xL7+05Gukrad7S+HF2TWJy2lxn6046L1pLvIhKLDtwXNgcPLr8
-         JazM4Lp6CilcFwpNjVnlsYO35QWuHwqWkXi3kjPeWBcceiw+muolQp0TETNPW809lpCI
-         vJ3cWAE+T+r4VakKj8PsHKphg++nBNoe8xAe0poJRA+CgWx5MD5w7aTPcyH+vZxQBOMa
-         BZJw==
-X-Gm-Message-State: AOAM530hVGv0BFQKPPFp+76qCQ4GuOKmSz4TK0o43JhcnPPWd6YpLREW
-        vxTn96MWN89ytVKh+BPt46E=
-X-Google-Smtp-Source: ABdhPJxZdzZq9AvbLwTQl7LVD5O/slshPyqOTFJ84mHYa5luHRCEvJImAFN6vU1uDUdJELgynVfgLQ==
-X-Received: by 2002:a17:90b:4c84:: with SMTP id my4mr6193251pjb.213.1598452391561;
-        Wed, 26 Aug 2020 07:33:11 -0700 (PDT)
-Received: from localhost (61-68-212-105.tpgi.com.au. [61.68.212.105])
-        by smtp.gmail.com with ESMTPSA id a19sm3208848pfn.10.2020.08.26.07.33.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 07:33:10 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 00:33:05 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH 14/24] openrisc: use asm-generic/mmu_context.h for no-op
- implementations
-To:     Stafford Horne <shorne@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jonas Bonn <jonas@southpole.se>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, openrisc@lists.librecores.org,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-References: <20200728033405.78469-1-npiggin@gmail.com>
-        <20200728033405.78469-15-npiggin@gmail.com>
-        <20200729114554.GG80756@lianli.shorne-pla.net>
-In-Reply-To: <20200729114554.GG80756@lianli.shorne-pla.net>
+        Wed, 26 Aug 2020 10:34:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:47046 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727823AbgHZOdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:33:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F8181FB;
+        Wed, 26 Aug 2020 07:33:37 -0700 (PDT)
+Received: from [10.57.5.66] (unknown [10.57.5.66])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4136E3F68F;
+        Wed, 26 Aug 2020 07:33:36 -0700 (PDT)
+Subject: Re: [PATCH] perf: correct SNOOPX field offset
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acme@kernel.org
+References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+ <20200825174043.GQ1509399@tassilo.jf.intel.com>
+ <20200826142631.GA5351@redhat.com>
+From:   Al Grant <al.grant@foss.arm.com>
+Message-ID: <d68e68f5-a7c3-c276-6134-a68f068a2b80@foss.arm.com>
+Date:   Wed, 26 Aug 2020 15:33:35 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.0.1
 MIME-Version: 1.0
-Message-Id: <1598452354.xwvdyvp4t6.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200826142631.GA5351@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Stafford Horne's message of July 29, 2020 9:45 pm:
-> On Tue, Jul 28, 2020 at 01:33:55PM +1000, Nicholas Piggin wrote:
->> Cc: Jonas Bonn <jonas@southpole.se>
->> Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
->> Cc: Stafford Horne <shorne@gmail.com>
->> Cc: openrisc@lists.librecores.org
->> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
->> ---
->>  arch/openrisc/include/asm/mmu_context.h | 8 +++-----
->>  arch/openrisc/mm/tlb.c                  | 2 ++
->>  2 files changed, 5 insertions(+), 5 deletions(-)
->>=20
->> diff --git a/arch/openrisc/include/asm/mmu_context.h b/arch/openrisc/inc=
-lude/asm/mmu_context.h
->> index ced577542e29..a6702384c77d 100644
->> --- a/arch/openrisc/include/asm/mmu_context.h
->> +++ b/arch/openrisc/include/asm/mmu_context.h
->> @@ -17,13 +17,13 @@
->> =20
->>  #include <asm-generic/mm_hooks.h>
->> =20
->> +#define init_new_context init_new_context
->>  extern int init_new_context(struct task_struct *tsk, struct mm_struct *=
-mm);
->> +#define destroy_context destroy_context
->>  extern void destroy_context(struct mm_struct *mm);
->>  extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
->>  		      struct task_struct *tsk);
->> =20
->> -#define deactivate_mm(tsk, mm)	do { } while (0)
->> -
->>  #define activate_mm(prev, next) switch_mm((prev), (next), NULL)
->> =20
->>  /* current active pgd - this is similar to other processors pgd
->> @@ -32,8 +32,6 @@ extern void switch_mm(struct mm_struct *prev, struct m=
-m_struct *next,
->> =20
->>  extern volatile pgd_t *current_pgd[]; /* defined in arch/openrisc/mm/fa=
-ult.c */
->> =20
->> -static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_str=
-uct *tsk)
->> -{
->> -}
->> +#include <asm-generic/mmu_context.h>
->=20
-> This looks ok.
->=20
->>  #endif
->> diff --git a/arch/openrisc/mm/tlb.c b/arch/openrisc/mm/tlb.c
->> index 4b680aed8f5f..821aab4cf3be 100644
->> --- a/arch/openrisc/mm/tlb.c
->> +++ b/arch/openrisc/mm/tlb.c
->> @@ -159,6 +159,7 @@ void switch_mm(struct mm_struct *prev, struct mm_str=
-uct *next,
->>   * instance.
->>   */
->> =20
->> +#define init_new_context init_new_context
->>  int init_new_context(struct task_struct *tsk, struct mm_struct *mm)
->>  {
->>  	mm->context =3D NO_CONTEXT;
->> @@ -170,6 +171,7 @@ int init_new_context(struct task_struct *tsk, struct=
- mm_struct *mm)
->>   * drops it.
->>   */
->> =20
->> +#define destroy_context destroy_context
->>  void destroy_context(struct mm_struct *mm)
->>  {
->>  	flush_tlb_mm(mm);
->=20
-> I don't think we need the #define's in the .c file.  Do we?
+On 26/08/2020 15:26, Arnaldo Carvalho de Melo wrote:
+> Em Tue, Aug 25, 2020 at 10:40:43AM -0700, Andi Kleen escreveu:
+>> On Mon, Aug 24, 2020 at 10:28:34AM +0100, Al Grant wrote:
+>>> perf_event.h has macros that define the field offsets in the
+>>> data_src bitmask in perf records. The SNOOPX and REMOTE offsets
+>>> were both 37. These are distinct fields, and the bitfield layout
+>>> in perf_mem_data_src confirms that SNOOPX should be at offset 38.
+>>
+>> Looks good.
+>>
+>> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+>>
+>> Probably should have a Fixes: header
+> 
+> Please do so, find the patch that introduced the error, add the Fixes
+> tag, will help me not having to do it myself :-)
 
-You're right, I fixed that and the same issue in another arch.
-
-Thanks,
-Nick
+Fixes: 52839e653b562 ("perf tools: Add support for printing new mem_info 
+encodings")
