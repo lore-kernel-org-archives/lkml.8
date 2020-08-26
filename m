@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F05C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9898620737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273E72078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KJPDjh/C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fce5lMZP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgHZRCJ (ORCPT
+        id S1727863AbgHZRCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54160 "EHLO
+        Wed, 26 Aug 2020 13:02:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727107AbgHZRAz (ORCPT
+        with ESMTP id S1727095AbgHZRAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:00:55 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 952E1C061574
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:00:54 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id j2so608365ioj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:00:54 -0700 (PDT)
+        Wed, 26 Aug 2020 13:00:52 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9115FC061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:00:51 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id g13so2846151ioo.9
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:00:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1oMOfwKEWmeEjN59H8V2mAsUSePsbdq0+d1rTYV7cF4=;
-        b=KJPDjh/CsHrR6htvj8qR1P2z1AP7kbrQj+KgZDUBR0k0fiXnMtd4xcisqf+NCVtUJa
-         5WvbWO8VmZBIH5lnToxyIG2ucMnzMZaFPYUULUWnFEMUeFkfSEgSZej8eirrQCNRc8fA
-         5iB4aR78TvM4rU5PyJBkp+d9UnBfkjWT+WR01pGGzlAYKUciTKI9Hah3ONMJSuz/892u
-         JfFr26tO4jzqG9wLaxUVSjKCXqNdGqHcvjBisRNa6qhjpu7g6ZRE9s0fodG6rRP4Gy4o
-         5duMgFwrJLBZtNEOHuCyrNO8QQbRiOoFqGixd9T9wB9TP9a8PcSlNLIn/uaWgpAnSunE
-         a9ZA==
+        bh=TT/nPbomDmh8NQShHOC8FZBWwCU19NUKn3EZB0b0q/I=;
+        b=Fce5lMZPmSr/R6QTYB7eE6nL3eFrkLLX7rJdVbaoCg7NYYWUOFtn4jZPNhguFFE0Ww
+         h0t8AECaIll/C9E6AEcxUoJ5le0j7fFyRKNONqAaRXBJnN0KLBLAQ6tGEt4vlttY7Irt
+         8ykSWtiAR+VTO+UpMmiH+94GgFSa8xkKNW414kXDcTWCcgUp7wHg+/0FAlbiTnFGQZRd
+         yWEHyK34HqJ8LhWzwexYM1kssLa7LBk/nCIcve+q3U4MBqz1RGTdHqBlk9an4wtlFMBy
+         jpM0KSbhTeS7lR3i9cIExK0K18jOaaBOZs9YPIGbC5Upj3gY2ddewNA8VEyQ0cNBtdjx
+         InCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1oMOfwKEWmeEjN59H8V2mAsUSePsbdq0+d1rTYV7cF4=;
-        b=g6Ta6moWabPagOEfjpbdSLm64lY0J1Vr53ipeNhM3sZIImMy8DSd4yMuNVO0DxGzIt
-         iWh0oaQ53YYqVlEXWYHOFU8sIqPCJlPLj6RZpeug20pNZKbbvwg/IUHoOwFOReXYXzD1
-         irQfxjucGLq2gEJOWAPRMB8WsmfAENZ0sJ5JobpXHku7t2Oez8RNpTWVnllbatMSEWN7
-         oeREMDdvaS+QqLR8fvmYPJw83ZyrM+3+1BWQf1bKChJGOQKyTDGLA2zHLbFzuRP3e2AV
-         x2KnxVswbi1efLvv3gY1acSl/NbtkA1mHuWDcrz1idqXrbCwtn+9xY7lCPUvPZZR3Ga7
-         mBPw==
-X-Gm-Message-State: AOAM533itq5S68ZtiqLdQerfvuE/Iqq5JLpgUxi4X7dT6bnHhAshcbDG
-        lS//LTaOi8rA3h7x2f+yAgDqNl31utjSGg==
-X-Google-Smtp-Source: ABdhPJzx+6JA1HW/akyHMxAsm/O6krv6/v8LwlcppdbYy47niZhoGtCRaXULzeNoN8h2OHZ9wmxWMA==
-X-Received: by 2002:a02:c919:: with SMTP id t25mr16243562jao.38.1598461253305;
-        Wed, 26 Aug 2020 10:00:53 -0700 (PDT)
+        bh=TT/nPbomDmh8NQShHOC8FZBWwCU19NUKn3EZB0b0q/I=;
+        b=Pn6Dr0tYDkhIRAdmoO7rdSjNWGoiPZvSiX8cBrruqxazE7YauGxrARrIadUF4T8+QF
+         DZ3PyFhFrC9DTZd2TQHlpbIKM7HqGxmodQw7yr4GvHkjTGaDJvLNCyY2aJ9iCwsauPzf
+         R2m+Exo7xqyXjQtyu19TMktFvmd8P3d1jsoLtNDy6Q+teyyKu9p4Nu6KyYX6XALBU3C1
+         CnIber6PfSv8Y7fEadE239j+5iELIVS9BrOliu6rLv5lxjZn0jXm3OkaT1qdJpfcWT68
+         XNgrurctcCf2ZaN3Du2Cq6rxj4B8o8OBvmi0H5F/i8NexVJPhwAGw5++qRNBup8+X4ha
+         fGDg==
+X-Gm-Message-State: AOAM531/Pp/R1Vuwl9fCtdPM/ncsyrSJ3hecTMiyQzUd6WD5I/J+4+hu
+        2ilsgxXdztFb5ksUFPC0P4N0/YQNKVli2A==
+X-Google-Smtp-Source: ABdhPJxy5A5rKdHB0JGFzyPbJaQvXJ1YHzMRzjOYm2I0ca1HWwoG3rk1JxilvNBEZOnEKffrPVxEDw==
+X-Received: by 2002:a6b:7411:: with SMTP id s17mr10699072iog.192.1598461250478;
+        Wed, 26 Aug 2020 10:00:50 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8203:5970::c4c])
-        by smtp.googlemail.com with ESMTPSA id p78sm1479606iod.0.2020.08.26.10.00.50
+        by smtp.googlemail.com with ESMTPSA id p78sm1479606iod.0.2020.08.26.10.00.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 10:00:52 -0700 (PDT)
+        Wed, 26 Aug 2020 10:00:49 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         jbaron@akamai.com
@@ -69,9 +69,9 @@ Cc:     Jim Cromie <jim.cromie@gmail.com>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH 2/4] drm-printk: call pr_debug() from drm_dev_dbg, __drm_dbg
-Date:   Wed, 26 Aug 2020 11:00:39 -0600
-Message-Id: <20200826170041.2497546-3-jim.cromie@gmail.com>
+Subject: [PATCH 1/4] drm-printk: POC caller of dynamic-debug-exec-queries
+Date:   Wed, 26 Aug 2020 11:00:38 -0600
+Message-Id: <20200826170041.2497546-2-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200826170041.2497546-1-jim.cromie@gmail.com>
 References: <20200826170041.2497546-1-jim.cromie@gmail.com>
@@ -82,113 +82,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Put the pr_debug() after the vaf setup work, so as to use it.  And
-move the if-category-disabled-return after both, so the pr_debug()
-runs unconditionally.
+Export of dynamic-debug-exec-queries exists for users like drm.
 
-This lets both debug-printers execute independently, according to
-their respective controls, allowing later comparison to each other.
+This commit is a 1st user-test; it adds a 2nd knob, __drm_debug2,
+similar in function to __drm_debug.  module_param_cb wires it to a
+callback which maps the input value to one of: "module=drm* +/-p".
 
- #> echo module=drm +pmftl > /proc/dynamic_debug/control
-yields logging like:
+The include is needed to see the exported function prototype.
 
- [1772] drm:drm_dev_dbg:305: i915 0000:00:02.0: [drm:intel_atomic_get_global_obj_state [i915]]
-   Cat:16 Added new global object 000000006fa51dd6 state 00000000bbddcf9d to 000000005f6e1bc3
- [1772] drm:drm_dev_dbg:305: i915 0000:00:02.0: [drm:intel_atomic_get_global_obj_state [i915]]
-   Cat:16 Added new global object 000000002a5e020a state 000000002b3685ed to 000000005f6e1bc3
- [198] drm:drm_dev_dbg:305: i915 0000:00:02.0: [drm:drm_update_vblank_count [drm]]
-   Cat:32 updating vblank count on crtc 0: current=260920, diff=0, hw=192024 hw_last=192024
- [1772] drm:__drm_dbg:331: [drm:drm_atomic_nonblocking_commit [drm]] Cat:16 committing 000000005f6e1bc3 nonblocking
- [1772] drm:__drm_dbg:331: [drm:drm_mode_object_put.part.0 [drm]] Cat:1 OBJ ID: 113 (4)
- [1772] drm:__drm_dbg:331: [drm:drm_ioctl [drm]] Cat:1 comm="gnome-shell" pid=1772, dev=0xe200, auth=1, I915_GEM_CREATE
- [1772] drm:__drm_dbg:331: [drm:drm_ioctl [drm]] Cat:1 comm="gnome-shell" pid=1772, dev=0xe200, auth=1, I915_GEM_SET_DOMAIN
- [1772] drm:__drm_dbg:331: [drm:drm_ioctl [drm]] Cat:1 comm="gnome-shell" pid=1772, dev=0xe200, auth=1, I915_GEM_SET_TILING
- [1772] drm:__drm_dbg:331: [drm:drm_ioctl [drm]] Cat:1 comm="gnome-shell" pid=1772, dev=0xe200, auth=1, I915_GEM_MMAP_OFFSET
+Notes:
 
-Clearly, the mflt flags arent very helpful here, and callsite control
-is all or nothing (since theres only 2 callsites handling all the
-categories).  We are 1 below the function layer of interest, but
-theres room for optimism.
+The define DEBUG at top of drm-printk enables all pr_debug()s,
+independent of CONFIG_DYNAMIC_DEBUG_CORE.
+
+drm-printk is an independent print control system using __drm_debug
+bits.  The plan is to find the low-level macros in which to insert a
+pr_debug call, their eventual callsites will have distinct METADATA,
+so will be itemized in control, and individually selectable.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- drivers/gpu/drm/drm_print.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/drm_print.c | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
 diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
-index 52abaf2ae053..fa2bcf4ec475 100644
+index 111b932cf2a9..52abaf2ae053 100644
 --- a/drivers/gpu/drm/drm_print.c
 +++ b/drivers/gpu/drm/drm_print.c
 @@ -27,6 +27,7 @@
  
  #include <stdarg.h>
  
-+#define DYNAMIC_DEBUG_MODULE
- #include <linux/dynamic_debug.h>
++#include <linux/dynamic_debug.h>
  #include <linux/io.h>
  #include <linux/moduleparam.h>
-@@ -61,17 +62,17 @@ EXPORT_SYMBOL(__drm_debug2);
+ #include <linux/seq_file.h>
+@@ -54,6 +55,40 @@ MODULE_PARM_DESC(debug, "Enable debug output, where each bit enables a debug cat
+ "\t\tBit 8 (0x100) will enable DP messages (displayport code)");
+ module_param_named(debug, __drm_debug, int, 0600);
  
- static int param_set_dyndbg(const char *val, const struct kernel_param *kp)
++/* POC for callback -> ddebug_exec_queries */
++unsigned int __drm_debug2;
++EXPORT_SYMBOL(__drm_debug2);
++
++static int param_set_dyndbg(const char *val, const struct kernel_param *kp)
++{
++	int chgct, result;
++
++	result = kstrtouint(val, 0, (unsigned int *)kp->arg);
++	pr_warn("set_dyndbg: result:%d from %s\n", result, val);
++
++	if (result)
++		chgct = dynamic_debug_exec_queries("module=drm* +p", NULL);
++	else
++		chgct = dynamic_debug_exec_queries("module=drm* -p", NULL);
++
++	pr_warn("change ct:%d\n", chgct);
++	return 0;
++}
++static int param_get_dyndbg(char *buffer, const struct kernel_param *kp)
++{
++	return scnprintf(buffer, PAGE_SIZE, "%u\n",
++			 *((unsigned int *)kp->arg));
++}
++static const struct kernel_param_ops param_ops_dyndbg = {
++	.set = param_set_dyndbg,
++	.get = param_get_dyndbg,
++};
++
++MODULE_PARM_DESC(debug_dyn, "Enable debug output, where each bit enables a debug category.\n"
++		 "\t\tthese wont work yet\n");
++module_param_cb(debug_dyn, &param_ops_dyndbg, &__drm_debug2, 0644);
++
++
+ void __drm_puts_coredump(struct drm_printer *p, const char *str)
  {
--	int chgct, result;
-+	int chgct, rc, result;
- 
--	result = kstrtouint(val, 0, (unsigned int *)kp->arg);
--	pr_warn("set_dyndbg: result:%d from %s\n", result, val);
-+	rc = kstrtouint(val, 0, &result);
-+	pr_debug("set_dyndbg: rc:%d got:%d from %s\n", rc, result, val);
- 
- 	if (result)
- 		chgct = dynamic_debug_exec_queries("module=drm* +p", NULL);
- 	else
- 		chgct = dynamic_debug_exec_queries("module=drm* -p", NULL);
- 
--	pr_warn("change ct:%d\n", chgct);
-+	pr_debug("change ct:%d\n", chgct);
- 	return 0;
- }
- static int param_get_dyndbg(char *buffer, const struct kernel_param *kp)
-@@ -297,13 +298,16 @@ void drm_dev_dbg(const struct device *dev, enum drm_debug_category category,
- 	struct va_format vaf;
- 	va_list args;
- 
--	if (!drm_debug_enabled(category))
--		return;
--
- 	va_start(args, format);
- 	vaf.fmt = format;
- 	vaf.va = &args;
- 
-+	dev_dbg(dev, "[" DRM_NAME ":%ps] Cat:%d %pV",
-+		__builtin_return_address(0), category, &vaf);
-+
-+	if (!drm_debug_enabled(category))
-+		return;
-+
- 	if (dev)
- 		dev_printk(KERN_DEBUG, dev, "[" DRM_NAME ":%ps] %pV",
- 			   __builtin_return_address(0), &vaf);
-@@ -320,13 +324,16 @@ void __drm_dbg(enum drm_debug_category category, const char *format, ...)
- 	struct va_format vaf;
- 	va_list args;
- 
--	if (!drm_debug_enabled(category))
--		return;
--
- 	va_start(args, format);
- 	vaf.fmt = format;
- 	vaf.va = &args;
- 
-+	pr_debug("[" DRM_NAME ":%ps] Cat:%d %pV",
-+		 __builtin_return_address(0), category, &vaf);
-+
-+	if (!drm_debug_enabled(category))
-+		return;
-+
- 	printk(KERN_DEBUG "[" DRM_NAME ":%ps] %pV",
- 	       __builtin_return_address(0), &vaf);
- 
+ 	struct drm_print_iterator *iterator = p->arg;
 -- 
 2.26.2
 
