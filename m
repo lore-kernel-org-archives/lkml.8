@@ -2,134 +2,135 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A254C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18FAA2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598474876;
-	bh=i8Nzg2oejYholt+EiwM1o/VjUvfdhq04DttU2sfhjNU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=smWHnGEe519bFPzbUVzkylyRiIJDfPIoyw83w5nhrQRON5rP7yBPz6KIiITIs0RiO
-	 zN5XunEOOO+O5HnJSaZqmZeLxsAOaInCEPdA1iebIlVe4Zw3vJkoTwZnrNuHZb/bjK
-	 yifRkpEKKXPMwCwCou+BWBbK18+I5eHLnS8KxMb8=
+	by mail.kernel.org (Postfix) with ESMTP id 32AF42078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:48:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fgr2FDPu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgHZUry (ORCPT
+        id S1726972AbgHZUs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:47:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbgHZUrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:47:51 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E4FD2078A;
-        Wed, 26 Aug 2020 20:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598474870;
-        bh=i8Nzg2oejYholt+EiwM1o/VjUvfdhq04DttU2sfhjNU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZQ8obdSCSBUqtvuKshu3hHdexmJgOE2MHg4ZG2kHAAH1QoTRT//POD+SQxMFAixM9
-         5sAVsrqgoulIwzX0JrKCEJkKdy0k0eRUp2IEH/3NDSF7/HMaVHW+UJxUCeM64EWpfl
-         bkl0TcDNFWpsJTHJjuy5rUu7QMbtbeuxim3T/L/A=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kB2Ki-006yOu-Ey; Wed, 26 Aug 2020 21:47:48 +0100
-Date:   Wed, 26 Aug 2020 21:47:46 +0100
-Message-ID: <874kop2ky5.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 24/46] PCI: vmd: Mark VMD irqdomain with DOMAIN_BUS_VMD_MSI
-In-Reply-To: <20200826112333.047315047@linutronix.de>
-References: <20200826111628.794979401@linutronix.de>
-        <20200826112333.047315047@linutronix.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Wed, 26 Aug 2020 16:48:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbgHZUsZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 16:48:25 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85F70C061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:48:25 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id v6so3563195iow.11
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:48:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GYZ/IYnL+Ejk8On59DCFq1qjJvZujhshbpaYtFkE1R8=;
+        b=fgr2FDPuuOFPfNtfWqDsufpkMYmHHkvJqPJqR9DYQu2fBa6a8i94cTveYLvPe8rwPB
+         cBJKNqx5qPeAgOo5uNPQaI1rQeHzy4HiIdcioANP2/qrPeBMye11kYFHf8lkqhxYfS93
+         rlzwWk51dEw7macHuYgBf8aYM0cyMW00LF6iPKzr0pgqf331i1XC/qAm8sF6FH5STsik
+         jqo4ibr1DA6OjUZHdisZKVD9djHc7K2gYcCX8SExQXoWdmcMlVMDKV3/sZ0uGECvjFT0
+         VBvno0Qd9SEtJP1haonwQTmPrbsnw0ZMFeXFC1miWd1ZCtach4LnN24ujGEzXa1nuMet
+         eUcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GYZ/IYnL+Ejk8On59DCFq1qjJvZujhshbpaYtFkE1R8=;
+        b=iSpY9ydFAqLm6K6wayaakoUAxBtFOYzo7uzfca4aP9I4mMgesAnNeW1lxQYnOlIXzQ
+         VMhrS+29/mfOLtU8WZsJc2mSApPd82tqlR+xQmW8svDToJQlyOQLngKY5gGn1FW/iHGR
+         FwyV3h1WOA8stP+8krojYO1UdwUalGpXfPzHEixm0R5+I1WZvSUPJThbzddSepuv4YxY
+         ow+JymEQXZZlGuhar4/WmmmFEqGils88C+pN//WutFx573LM//YOH3TL6OGRdP2oWbjf
+         luk/9Gi52/Hbc60kUe24a5Zt6DHhLO6HzINQLSw7wmzC2Fvex/7Vain06Lnaw85acOPr
+         JwhA==
+X-Gm-Message-State: AOAM530S+tbF2jj960Bt2IicjVvAl5yBoJzjXGjdVWfoDWxKGFJYvD1Z
+        US/2koeJ6lTW5tyMp7iQ6yYLjQ==
+X-Google-Smtp-Source: ABdhPJyjH+VPjhzGpxN1j0RJJ5T32c17PK5Hy829DQuYywUr8Sqy6bzaiccBnyyeSJ1SgTbObhl/sw==
+X-Received: by 2002:a05:6638:2a3:: with SMTP id d3mr3127575jaq.0.1598474903204;
+        Wed, 26 Aug 2020 13:48:23 -0700 (PDT)
+Received: from google.com ([2601:285:8380:9270::f2a2])
+        by smtp.gmail.com with ESMTPSA id i144sm75064ioa.55.2020.08.26.13.48.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 13:48:22 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 14:48:19 -0600
+From:   Ross Zwisler <zwisler@google.com>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-kernel@vger.kernel.org,
+        Mattias Nissler <mnissler@chromium.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Benjamin Gordon <bmgordon@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Micah Morton <mortonm@google.com>,
+        Raul Rangel <rrangel@google.com>, Shuah Khan <shuah@kernel.org>
+Subject: Re: [PATCH v8 1/2] Add a "nosymfollow" mount option.
+Message-ID: <20200826204819.GA4414@google.com>
+References: <20200819164317.637421-1-zwisler@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819164317.637421-1-zwisler@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 12:16:52 +0100,
-Thomas Gleixner <tglx@linutronix.de> wrote:
+O Wed, Aug 19, 2020 at 10:43:16AM -0600, Ross Zwisler wrote:
+> From: Mattias Nissler <mnissler@chromium.org>
 > 
-> From: Thomas Gleixner <tglx@linutronix.de>
+> For mounts that have the new "nosymfollow" option, don't follow symlinks
+> when resolving paths. The new option is similar in spirit to the
+> existing "nodev", "noexec", and "nosuid" options, as well as to the
+> LOOKUP_NO_SYMLINKS resolve flag in the openat2(2) syscall. Various BSD
+> variants have been supporting the "nosymfollow" mount option for a long
+> time with equivalent implementations.
 > 
-> Devices on the VMD bus use their own MSI irq domain, but it is not
-> distinguishable from regular PCI/MSI irq domains. This is required
-> to exclude VMD devices from getting the irq domain pointer set by
-> interrupt remapping.
+> Note that symlinks may still be created on file systems mounted with
+> the "nosymfollow" option present. readlink() remains functional, so
+> user space code that is aware of symlinks can still choose to follow
+> them explicitly.
 > 
-> Override the default bus token.
+> Setting the "nosymfollow" mount option helps prevent privileged
+> writers from modifying files unintentionally in case there is an
+> unexpected link along the accessed path. The "nosymfollow" option is
+> thus useful as a defensive measure for systems that need to deal with
+> untrusted file systems in privileged contexts.
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> More information on the history and motivation for this patch can be
+> found here:
+> 
+> https://sites.google.com/a/chromium.org/dev/chromium-os/chromiumos-design-docs/hardening-against-malicious-stateful-data#TOC-Restricting-symlink-traversal
+> 
+> Signed-off-by: Mattias Nissler <mnissler@chromium.org>
+> Signed-off-by: Ross Zwisler <zwisler@google.com>
+> Reviewed-by: Aleksa Sarai <cyphar@cyphar.com>
 > ---
->  drivers/pci/controller/vmd.c |    6 ++++++
->  1 file changed, 6 insertions(+)
+> Changes since v7 [1]:
+>  * Rebased onto v5.9-rc1.
+>  * Added selftest in second patch.
+>  * Added Aleska's Reviewed-By tag.  Thank you for the review!
 > 
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -579,6 +579,12 @@ static int vmd_enable_domain(struct vmd_
->  		return -ENODEV;
->  	}
->  
-> +	/*
-> +	 * Override the irq domain bus token so the domain can be distinguished
-> +	 * from a regular PCI/MSI domain.
-> +	 */
-> +	irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_VMD_MSI);
-> +
+> After this lands I will upstream changes to util-linux[2] and man-pages
+> [3].
+> 
+> [1]: https://lkml.org/lkml/2020/8/11/896
+> [2]: https://github.com/rzwisler/util-linux/commit/7f8771acd85edb70d97921c026c55e1e724d4e15
+> [3]: https://github.com/rzwisler/man-pages/commit/b8fe8079f64b5068940c0144586e580399a71668
+> ---
 
-One day, we'll be able to set the token at domain creation time. In
-the meantime,
+Friendly ping on this.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Al, now that the changes to fs/namei.c have landed and we're past the merge
+window for v5.9, what are your thoughts on this patch and the associated test?
