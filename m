@@ -2,82 +2,109 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E46DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2475C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3B96206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D0120707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728013AbgHZJRq (ORCPT
+        id S1728013AbgHZJTC convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:17:46 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:36032 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727793AbgHZJRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:17:45 -0400
-Received: from localhost.localdomain (unknown [210.32.144.184])
-        by mail-app3 (Coremail) with SMTP id cC_KCgCXP6iuKEZfbc49Aw--.38158S4;
-        Wed, 26 Aug 2020 17:17:40 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     "David S. Miller" <davem@davemloft.net>, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ide: pci: Fix memleak in ide_pci_init_two
-Date:   Wed, 26 Aug 2020 17:17:33 +0800
-Message-Id: <20200826091733.924-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: cC_KCgCXP6iuKEZfbc49Aw--.38158S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrKF4kKr1fuFy7tryfXFW3trb_yoW3CwbEk3
-        9rursrWrWj9FyUJr12kr4xZry09a90vr1kWr42kr1xZa9xZa4kursxZF17CF48Wr17Cry2
-        yF4DJr4rA342kjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbI8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_
-        JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4fMxAIw28IcxkI7VAKI48J
-        MxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-        02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_
-        Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-        CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AK
-        xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-        fUOOzVUUUUU
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAg0EBlZdtPrBDAADsG
+        Wed, 26 Aug 2020 05:19:02 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:44529 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbgHZJS6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 05:18:58 -0400
+X-Originating-IP: 90.89.180.255
+Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
+        (Authenticated sender: kevin.lhopital@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 02DA62001E;
+        Wed, 26 Aug 2020 09:18:50 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 11:18:50 +0200
+From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Yong Deng <yong.deng@magewell.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 1/7] media: sun6i-csi: Fix the bpp for 10-bit bayer
+ formats
+Message-ID: <20200826111850.06cbe400@lhopital-XPS-13-9360>
+In-Reply-To: <CAGb2v65enzLHdK09-8Nm7=YU9-bRP=0Q+BXjXah6MZR2-y=zrA@mail.gmail.com>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+        <20200821145935.20346-2-kevin.lhopital@bootlin.com>
+        <CAGb2v65enzLHdK09-8Nm7=YU9-bRP=0Q+BXjXah6MZR2-y=zrA@mail.gmail.com>
+Organization: bootlin
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When do_ide_setup_pci_device() fails, host should be
-freed just like when ide_host_register() fails.
+Hello,
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/ide/setup-pci.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Le Tue, 25 Aug 2020 23:50:30 +0800,
+Chen-Yu Tsai <wens@csie.org> a écrit :
 
-diff --git a/drivers/ide/setup-pci.c b/drivers/ide/setup-pci.c
-index fdc8e813170c..e6cba7e24c39 100644
---- a/drivers/ide/setup-pci.c
-+++ b/drivers/ide/setup-pci.c
-@@ -585,8 +585,10 @@ int ide_pci_init_two(struct pci_dev *dev1, struct pci_dev *dev2,
- 		 * FIXME: Mom, mom, they stole me the helper function to undo
- 		 * do_ide_setup_pci_device() on the first device!
- 		 */
--		if (ret < 0)
-+		if (ret < 0) {
-+			ide_host_free(host);
- 			goto out_free_bars;
-+		}
- 
- 		/* fixup IRQ */
- 		if (ide_pci_is_in_compatibility_mode(pdev[i])) {
+> On Fri, Aug 21, 2020 at 11:00 PM Kévin L'hôpital
+> <kevin.lhopital@bootlin.com> wrote:
+> >
+> > 10-bit bayer formats are aligned to 16 bits in memory, so this is
+> > what needs to be used as bpp for calculating the size of the
+> > buffers to allocate.
+> >
+> > Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>  
+> 
+> Please add:
+> 
+> Fixes: 5cc7522d8965 ("media: sun6i: Add support for Allwinner CSI
+> V3s")
+> 
+> 
+I will add this, thank you very much for the review.
+Kévin
+> 
+> > ---
+> >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
+> > b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h index
+> > c626821aaedb..8b83d15de0d0 100644 ---
+> > a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h +++
+> > b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h @@ -100,7
+> > +100,7 @@ static inline int sun6i_csi_get_bpp(unsigned int
+> > pixformat) case V4L2_PIX_FMT_SGBRG10: case V4L2_PIX_FMT_SGRBG10:
+> >         case V4L2_PIX_FMT_SRGGB10:
+> > -               return 10;
+> > +               return 16;
+> >         case V4L2_PIX_FMT_SBGGR12:
+> >         case V4L2_PIX_FMT_SGBRG12:
+> >         case V4L2_PIX_FMT_SGRBG12:
+> > --
+> > 2.17.1
+> >  
+
+
+
 -- 
-2.17.1
-
+Kevin L'Hopital, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
