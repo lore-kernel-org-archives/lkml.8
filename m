@@ -2,194 +2,229 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FF0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8489C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBF692075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806D92075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:05:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u7y2Uh5Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ro0RoIoF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgHZQEl (ORCPT
+        id S1726876AbgHZQFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45030 "EHLO
+        Wed, 26 Aug 2020 12:05:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727902AbgHZQDZ (ORCPT
+        with ESMTP id S1726977AbgHZQEF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:03:25 -0400
+        Wed, 26 Aug 2020 12:04:05 -0400
 Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81550C061786
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:03:25 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id q1so1070911pjd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:03:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E380AC061574;
+        Wed, 26 Aug 2020 09:04:03 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id mt12so1091990pjb.4;
+        Wed, 26 Aug 2020 09:04:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gOJ2wsgRzvVRKckZeydkoWsG77ZYsewrKloG8nTk710=;
-        b=u7y2Uh5YZGN9nMLWxRDS6HRYwt2+2SPr2lWkM/5QvASQ4iAGJGcyoH52Lk9ebk3I+y
-         bdVfivs0fxD5OXqsIM6hrs3bJI7GwUZYkIhIjYiMyEuoeY4U05vxbNTksNII0z5OTYuY
-         tf2e9jPijn6R05nDnaYRtFNpfbiR/AWVfHhuzWC3uIwrmAh9IbCQd8Uob3kzQXPPrwlS
-         gRKbt1MxjyUapwHaVxWAFjs1jgyPR6fNXwKcZXOk2UmRu3giyuL0pYlRJX/ZAmlOoaQp
-         LgfjX8V83K66sgRxj8e/y24yYopZI7D874u7TmcD34ygtW34au7bsh3NEbTWUMWMFg1g
-         csUg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZYnA2SCibgRU/WISqM1t5OcPtNJ/1IEgy+sMsxjqVJc=;
+        b=Ro0RoIoFpw5yQk7ZvooJCT1WTUGt+wJ5SOxQ4f0Hz3xvWR0RlQ1z7jyCWeP7xkl/Ic
+         q00Wx1MNqZP9XDzgLXaU+axSjPQtLSrVzHcgfK1VnVirdcVsMEjOagJAVtBG6I4+YaG7
+         RuYWM/PGaRhBScXWkMIh7T9Uj4r49q+wyBx9JFJ7AYSSkjk7dIihmLN2A/6+uBobGbN0
+         Gfqvc30Zxf6OwyzpId329jBAUbvOSZMMVOmCwRMvxpcC4UvrqI0TyEHwHY8f4Z7zU2Vq
+         2qOWkwHkPhHZcsbJQREZFRFiQWCKOa/tFQP6T3XLIo0j1AHS0vRNEYMcz0lRvqZ7TbWy
+         9HXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gOJ2wsgRzvVRKckZeydkoWsG77ZYsewrKloG8nTk710=;
-        b=EY6KYxynRjvIIqLu1ltU/vEdO0I0+Xz5n2xUj4wBjZn7HzUbiiMVLbqPq/XvM6Acsg
-         2ip2LoJO3UgqFLer4cJ2EiWw4cg1oXautKS3HWX1vLBIoWe+axUMk0mm0N4Q+BUYv7Jr
-         vSW4zcP/YfLEOpoBBuFalRSF9/XiABnXXz4JzewvPC91KK+JnMwf4YRIYYAgqim3LqON
-         QIlogbeh8B4qiSF8CmOyjBnXbXISf+7oboX6oMV0tLI0BYcilTQm+y+nUq62mqFB2HyM
-         8J1vEr8Lno+cyJH9h83N4QyPb5uZ99DjKb0CRXQTO0hti2hRSy7R1xHx2EJMAP6MJoA3
-         jwzw==
-X-Gm-Message-State: AOAM531KTxNWbb+PO+uaLMi8bIpFHP+pFaiLzvhSQvBM5H/d2btcuvld
-        0cJ8ImnQVOAMhNDAWeO4CfJLpA==
-X-Google-Smtp-Source: ABdhPJx3zgfkCLWuhwB9Ncl+xylskuKGkxZ5BPvawfalxKyVUr95qHmDSMim1JB1vRjdaVphcFzgBw==
-X-Received: by 2002:a17:902:aa41:: with SMTP id c1mr12271225plr.224.1598457804850;
-        Wed, 26 Aug 2020 09:03:24 -0700 (PDT)
-Received: from nagraj.local ([49.206.21.239])
-        by smtp.gmail.com with ESMTPSA id u3sm2487555pjn.29.2020.08.26.09.03.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 09:03:23 -0700 (PDT)
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH v5 1/2] dt-bindings: display: panel: Add bindings for Novatek nt36672a
-Date:   Wed, 26 Aug 2020 21:33:07 +0530
-Message-Id: <20200826160308.18911-2-sumit.semwal@linaro.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200826160308.18911-1-sumit.semwal@linaro.org>
-References: <20200826160308.18911-1-sumit.semwal@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZYnA2SCibgRU/WISqM1t5OcPtNJ/1IEgy+sMsxjqVJc=;
+        b=bPpQ4zCR65ItC0VnoRpLkwt6+bkPXs3nwfD2XC1DMsGPOo6KtniUKaLExheqaLQtvt
+         Y2KLIwOSwmICh8ImyiCrWHL3SJsGqxfdJYTqP0wsYz1PmGC3fh7hhvdQBN2Ve9cJOHrb
+         KLmsFDcq/xWNWcAJdVY1s211qp6Qbt1dowfFIRvZyINQGv5lM0Sm4mkVyxH8pVZItjKH
+         jbfOnDtqze4b7JGIMlsdUNAx3iFrThbsPcO74gdTW0fwBK2dcmy2yi2vKKd1zzxIeonx
+         WCHfqmVcaulPRmmZ0lF+g2vX1tP35Mdmat37J4NUfrJ9wlet0XFAUgUMNGmJFv2RwnB6
+         AzMw==
+X-Gm-Message-State: AOAM532R34fDcXSNnKU3OsYVX06ZfB75sT9MZ1pdJvYZ87AZltWBxbmw
+        R57RbIDJzVeZvmZfdbvC+dy+D9kPUat1PhY0Q5k=
+X-Google-Smtp-Source: ABdhPJwddMhqWnxN6SgtsR1zQqgZSBxBX3NV/CXneRN/Ee/tMrxaF7NKqcX5ii/Sj9Izi1h8FF/iOg5M8g1U2crrIBE=
+X-Received: by 2002:a17:90b:509:: with SMTP id r9mr6883860pjz.228.1598457843192;
+ Wed, 26 Aug 2020 09:04:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200825101614.2462-1-william.sung@advantech.com.tw>
+In-Reply-To: <20200825101614.2462-1-william.sung@advantech.com.tw>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 26 Aug 2020 19:03:46 +0300
+Message-ID: <CAHp75VceTBHJ1p3amCQ0PpDSEP8L5+Tf-Qro69+G1WZBrt2oDw@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: dac: ad5593r: Dynamically set AD5593R channel modes
+To:     William Sung <william.sung@advantech.com.tw>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Campion Kang <Campion.Kang@advantech.com.tw>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Novatek nt36672a is a display driver IC that can drive DSI panel. It
-is also present in the Tianma video mode panel, which is a FHD+ panel
-with a resolution of 1080x2246 and 6.18 inches size. It is found in
-some of the Poco F1 phones.
+On Tue, Aug 25, 2020 at 1:19 PM William Sung
+<william.sung@advantech.com.tw> wrote:
+>
+> To use ad5593r more flexibly, we use the module parameter to setting the
+> channel modes dynamically whenever the module probe up. Users can pass
+> the channel modes to the module parameter for allocating the
+> functionality of channels as desired.
+>
+> For example:
+> * Use in the kernel command line:
+> Users can add the module parameter in the kernel command line such as
+>
+>     "ad5593r.ch_mode=88001122"
+>
+> "88001122" means the channel mode setting for each channel. The most
+> left side indicates the mode of channel 7, and the most right side
+> indicates the mode of channel 0.
+>
+> * Use when manually probe the module:
+> Similar to the kernel command line usage, users can enter
+>
+>     "modprobe ad5593r ch_mode=88001122"
+>
+> to start the ad5593r module with the desired channel mode setting.
 
-This patch adds the display driver for the IC, with support added for
-this tianma fhd video mode panel.
+> v2: Fix the patch description and remove redundant for loop
 
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+This should go after the cutter '---' line below.
 
----
-v2: remove ports node, making port@0 directly under panel@0 node.
-v3: updated to replace port@0 to just 'port'.
-v5: renamed to novatek,nt36672a, since the binding is for the IC and not
-      the panel.
----
- .../display/panel/novatek,nt36672a.yaml       | 81 +++++++++++++++++++
- 1 file changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/novatek,nt36672a.yaml
+> Signed-off-by: William Sung <william.sung@advantech.com.tw>
+> ---
 
-diff --git a/Documentation/devicetree/bindings/display/panel/novatek,nt36672a.yaml b/Documentation/devicetree/bindings/display/panel/novatek,nt36672a.yaml
-new file mode 100644
-index 000000000000..7f8d1097bee0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/novatek,nt36672a.yaml
-@@ -0,0 +1,81 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/novatek,nt36672a.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Novatek NT36672A based DSI display Panels
-+
-+maintainers:
-+  - Sumit Semwal <sumit.semwal@linaro.org>
-+
-+description: |
-+  The nt36672a IC from Novatek is a generic DSI Panel IC used to drive dsi
-+  panels.
-+  Right now, support is added only for a Tianma FHD+ LCD display panel with a
-+  resolution of 1080x2246. It is a video mode DSI panel.
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: tianma,fhd-video
-+      - const: novatek,nt36672a
-+    description: This indicates the panel manufacturer of the panel that is
-+      in turn using the NT36672A panel driver. This compatible string
-+      determines how the NT36672A panel driver is configured for the indicated
-+      panel. The novatek,nt36672a compatible shall always be provided as a fallback.
-+
-+  reg: true
-+  reset-gpios:
-+    description: phandle of gpio for reset line - This should be 8mA, gpio
-+      can be configured using mux, pinctrl, pinctrl-names (active high)
-+  vddio-supply:
-+    description: phandle of the regulator that provides the supply voltage
-+      Power IC supply
-+  vddpos-supply:
-+    description: phandle of the positive boost supply regulator
-+  vddneg-supply:
-+    description: phandle of the negative boost supply regulator
-+  port: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - vddi0-supply
-+  - vddpos-supply
-+  - vddneg-supply
-+  - reset-gpios
-+  - port
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |+
-+    #include <dt-bindings/gpio/gpio.h>
-+    dsi0 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      panel@0 {
-+        compatible = "tianma,fhd-video", "novatek,nt36672a";
-+        reg = <0>;
-+        vddi0-supply = <&vreg_l14a_1p88>;
-+        vddpos-supply = <&lab>;
-+        vddneg-supply = <&ibb>;
-+
-+        reset-gpios = <&tlmm 6 GPIO_ACTIVE_HIGH>;
-+
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        port {
-+          tianma_nt36672a_in_0: endpoint {
-+            remote-endpoint = <&dsi0_out>;
-+          };
-+        };
-+      };
-+    };
-+
-+...
+...
+
+> +/* Parameters for dynamic channel mode setting */
+> +static u8 update_channel_mode;
+> +static u8 new_channel_modes[AD559XR_CHANNEL_NR];
+
+Huh?! Global variables?!
+
+...
+
+> +static void ad5592r_set_def_channel_modes(struct ad5592r_state *st)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(st->channel_modes); i++)
+> +               st->channel_modes[i] = new_channel_modes[i];
+> +}
+
+NIH of memcpy() ?
+
+...
+
+> +void ad5592r_update_default_channel_modes(u8 *new_modes)
+> +{
+> +       int idx = 0;
+> +
+> +       update_channel_mode = 1;
+> +       for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++)
+> +               new_channel_modes[idx] = new_modes[idx];
+
+> +
+
+Redundant blank line.
+
+> +}
+
+Ditto (see memcpy() above).
+
+> +EXPORT_SYMBOL_GPL(ad5592r_update_default_channel_modes);
+
+What?!
+
+...
+
+> +/* Parameters for dynamic channel mode setting */
+> +static char *ch_mode = "";
+> +module_param(ch_mode, charp, 0400);
+
+We have sysfs ABI, what's wrong with it?
+
+...
+
+> +static void ad5593r_check_new_channel_mode(void)
+> +{
+> +       char *new_mode = NULL, tmp[2];
+> +       u8 new_ch_modes[AD559XR_CHANNEL_NR];
+
+> +       int idx = 0;
+
+Redundant assignment.
+Also for new_mode.
+
+> +
+
+> +       if (strlen(ch_mode) != AD559XR_CHANNEL_NR)
+
+This is interesting...
+
+> +               return;
+> +
+> +       new_mode = ch_mode;
+> +
+> +       /* Check if all channel modes are valid */
+> +       for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++) {
+> +               switch (new_mode[idx]) {
+> +               case '0':
+> +               case '1':
+> +               case '2':
+> +               case '3':
+> +               case '8':
+> +                       continue;
+> +               default:
+> +                       /* There is invalid mode exist, ignore the settings */
+
+> +                       pr_err("%s: invalid(%c) in index(%d)\n",
+> +                               __func__, new_mode[idx], idx);
+
+Oh...
+
+> +                       return;
+> +               }
+> +       }
+> +
+> +       /* Set the new modes to ad5592r-base driver to setup the new channel modes */
+> +       memset(tmp, 0, 2);
+> +       for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++) {
+> +               tmp[0] = new_mode[idx];
+
+> +               if (kstrtou8(tmp, 10, &new_ch_modes[AD559XR_CHANNEL_NR - idx - 1])) {
+
+Shadowing errors?
+
+> +                       /* Something error when converting the string to integer */
+> +                       /* Ignore this settings */
+
+Wrong style of comment.
+
+> +                       pr_err("%s: kstr error idx(%d)\n", __func__, idx);
+> +                       return;
+> +               }
+> +       }
+> +
+> +       ad5592r_update_default_channel_modes(new_ch_modes);
+> +}
+
 -- 
-2.28.0
-
+With Best Regards,
+Andy Shevchenko
