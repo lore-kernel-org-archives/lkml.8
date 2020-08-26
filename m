@@ -2,154 +2,114 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2836EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66635C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2D420707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:04:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8D620738
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:04:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=barpilot-io.20150623.gappssmtp.com header.i=@barpilot-io.20150623.gappssmtp.com header.b="0PVwqfMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbgHZNEG (ORCPT
+        id S1730186AbgHZNEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:04:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:45946 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730166AbgHZNED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:04:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F01631045;
-        Wed, 26 Aug 2020 06:04:02 -0700 (PDT)
-Received: from e108754-lin.cambridge.arm.com (unknown [10.1.199.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 836553F68F;
-        Wed, 26 Aug 2020 06:04:01 -0700 (PDT)
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     catalin.marinas@arm.com, will@kernel.org, sudeep.holla@arm.com
-Cc:     morten.rasmussen@arm.com, valentin.schneider@arm.com,
-        souvik.chakravarty@arm.com, viresh.kumar@linaro.org,
-        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] arm64: wrap and generalise counter read functions
-Date:   Wed, 26 Aug 2020 14:03:07 +0100
-Message-Id: <20200826130309.28027-3-ionela.voinescu@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826130309.28027-1-ionela.voinescu@arm.com>
-References: <20200826130309.28027-1-ionela.voinescu@arm.com>
+        Wed, 26 Aug 2020 09:04:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730168AbgHZNEE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:04:04 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98BD2C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:04:03 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id z17so1994289ioi.6
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:04:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=barpilot-io.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sMxeFJHei2gYrYNqMG5h+XFJh32oQngK7oPyThCi2kc=;
+        b=0PVwqfMpdny/+RG8OH5TGfK+xa3Fh9UNrAE35wFkj1RgEJq8nUxeGQ1UPdMYXiZ54H
+         G+IWINHXPR35nb/I1HPbPOdTgyfBj7fsMhpuWSxVqaDRs4Kg3NmHiKuo4JJDkLSOyud4
+         9ahSCrH9regrNBhJNAJXLbejjgvVVDrNu7gE0XVICASPX2Gnj2k/qbRIIVDuraxCbaIV
+         tQXvCT6ODVpsvmrSwVLR2BmA1G2x2ck/VZ+ft8eGLTzBd1ksYKdXR/czf9WCXsvHFQVR
+         A00jCfbQUhEJktjUyXuXQlfjzqA1jivjvxGyQaV5DZyuZ8JkYdm38/CPlDCiofmZ33RE
+         c2Rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sMxeFJHei2gYrYNqMG5h+XFJh32oQngK7oPyThCi2kc=;
+        b=myZchSJFgFzDZU3xEy6e93enCnvyJxZfwNJO4DySqBZ+bVC9bBhhxi1fERabsuGR+k
+         oEDHRUx7jdryIFZJn50118Mr3dHF+3BmCCi98Ea29wKSZ/By9bH4g4Dk030+xnoafiKe
+         Vu9/rssxOOXubcMXbdn5gEImcz41UYvdwhT11zGgLBSXjl0WRZDjxX/wQ98wQfkaCP9u
+         KkmfebTQlQHiVjDdvwPHnCN1pUsF3qw+Rc5pFRjceoAmfaXShUOOmnYXid6rRiXBs0+7
+         lerM/bV0FOCzGcxy9Wsg5crR8TZVpoa+vxuwkgoWIjBxSOibAfy5MC3pyQ4cYqdGcTnv
+         CvVw==
+X-Gm-Message-State: AOAM531R3+0d21Ge1R6BrK2TRBNAtYMqg+DuWCNvQWYVbh7Bx58nqSCo
+        o/k1rQEynkF3z4Yfs2pAjop/oDdPvac61zgvASr9TQ==
+X-Google-Smtp-Source: ABdhPJziGcwZmYjXLUNH5+qDsoSHPELg0P9dzg6N2Tx/7MipE0ZmkH1freiHSR4cCbl2IriCsj0FkUeBMHnImwgA+vQ=
+X-Received: by 2002:a6b:2c1:: with SMTP id 184mr3045269ioc.137.1598447042854;
+ Wed, 26 Aug 2020 06:04:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200826120421.44356-1-guilhem@barpilot.io> <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
+In-Reply-To: <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
+From:   Guilhem Lettron <guilhem@barpilot.io>
+Date:   Wed, 26 Aug 2020 15:03:52 +0200
+Message-ID: <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
+Subject: Re: [PATCH] intel_idle: Add ICL support
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for other uses of Activity Monitors (AMU) cycle counters,
-place counter read functionality in generic functions that can reused:
-read_corecnt() and read_constcnt().
+On Wed, 26 Aug 2020 at 14:43, Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Wed, Aug 26, 2020 at 2:05 PM Guilhem Lettron <guilhem@barpilot.io> wrote:
+> >
+> > Use the same C-states as SKL
+>
+> Why is this change needed?
 
-As a result, implement update_freq_counters_refs() to replace
-init_cpu_freq_invariance_counters() and both initialise and update
-the per-cpu reference variables.
+On my laptop, a Dell XPS 13 7390 2-in-1 with i7-1065G7, ACPI only
+report "C1_ACPI", "C2_ACPI" and "C3_ACPI".
+After this patch I have "C1", "C1E", "C6", "C7s", "C8", "C9" and "C10".
 
-Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
----
- arch/arm64/kernel/cpufeature.c |  4 ++--
- arch/arm64/kernel/topology.c   | 36 ++++++++++++++++++++++------------
- 2 files changed, 26 insertions(+), 14 deletions(-)
+I tested for some time on idle (without any application launched) and
+battery consumption drop ~1W/2W.
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 15a376689b2f..40d7a4c52558 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1522,7 +1522,7 @@ const struct cpumask *cpus_with_amu_counters(void)
- }
- 
- /* Initialize the use of AMU counters for frequency invariance */
--extern void init_cpu_freq_invariance_counters(void);
-+extern void update_freq_counters_refs(void);
- 
- static void cpu_amu_enable(struct arm64_cpu_capabilities const *cap)
- {
-@@ -1530,7 +1530,7 @@ static void cpu_amu_enable(struct arm64_cpu_capabilities const *cap)
- 		pr_info("detected CPU%d: Activity Monitors Unit (AMU)\n",
- 			smp_processor_id());
- 		cpumask_set_cpu(smp_processor_id(), &amu_cpus);
--		init_cpu_freq_invariance_counters();
-+		update_freq_counters_refs();
- 	}
- }
- 
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 2ef440938282..1241087e92c8 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -121,23 +121,33 @@ int __init parse_acpi_topology(void)
- }
- #endif
- 
--#ifdef CONFIG_ARM64_AMU_EXTN
-+#define COUNTER_READ_STORE(NAME, VAL) \
-+static inline u64 read_##NAME(void) \
-+{ \
-+	return VAL; \
-+} \
-+static inline void store_##NAME(void *val) \
-+{ \
-+	*(u64 *)val = read_##NAME(); \
-+}
- 
--#undef pr_fmt
--#define pr_fmt(fmt) "AMU: " fmt
-+#ifdef CONFIG_ARM64_AMU_EXTN
-+COUNTER_READ_STORE(corecnt, read_sysreg_s(SYS_AMEVCNTR0_CORE_EL0));
-+COUNTER_READ_STORE(constcnt, read_sysreg_s(SYS_AMEVCNTR0_CONST_EL0));
-+#else
-+COUNTER_READ_STORE(corecnt, 0);
-+COUNTER_READ_STORE(constcnt, 0);
-+#endif
- 
- static DEFINE_PER_CPU_READ_MOSTLY(unsigned long, arch_max_freq_scale);
- static DEFINE_PER_CPU(u64, arch_const_cycles_prev);
- static DEFINE_PER_CPU(u64, arch_core_cycles_prev);
- static cpumask_var_t amu_fie_cpus;
- 
--/* Initialize counter reference per-cpu variables for the current CPU */
--void init_cpu_freq_invariance_counters(void)
-+void update_freq_counters_refs(void)
- {
--	this_cpu_write(arch_core_cycles_prev,
--		       read_sysreg_s(SYS_AMEVCNTR0_CORE_EL0));
--	this_cpu_write(arch_const_cycles_prev,
--		       read_sysreg_s(SYS_AMEVCNTR0_CONST_EL0));
-+	this_cpu_write(arch_core_cycles_prev, read_corecnt());
-+	this_cpu_write(arch_const_cycles_prev, read_constcnt());
- }
- 
- static int validate_cpu_freq_invariance_counters(int cpu)
-@@ -272,11 +282,14 @@ void topology_scale_freq_tick(void)
- 	if (!cpumask_test_cpu(cpu, amu_fie_cpus))
- 		return;
- 
--	const_cnt = read_sysreg_s(SYS_AMEVCNTR0_CONST_EL0);
--	core_cnt = read_sysreg_s(SYS_AMEVCNTR0_CORE_EL0);
- 	prev_const_cnt = this_cpu_read(arch_const_cycles_prev);
- 	prev_core_cnt = this_cpu_read(arch_core_cycles_prev);
- 
-+	update_freq_counters_refs();
-+
-+	const_cnt = this_cpu_read(arch_const_cycles_prev);
-+	core_cnt = this_cpu_read(arch_core_cycles_prev);
-+
- 	if (unlikely(core_cnt <= prev_core_cnt ||
- 		     const_cnt <= prev_const_cnt))
- 		goto store_and_exit;
-@@ -301,4 +314,3 @@ void topology_scale_freq_tick(void)
- 	this_cpu_write(arch_core_cycles_prev, core_cnt);
- 	this_cpu_write(arch_const_cycles_prev, const_cnt);
- }
--#endif /* CONFIG_ARM64_AMU_EXTN */
--- 
-2.17.1
+But it can be a measurement problem or different context. So don't
+hesitate to tell me if I look wrong or if ACPI is a better option for
+this specific processor family.
 
+> > Signed-off-by: Guilhem Lettron <guilhem@barpilot.io>
+> > ---
+> >  drivers/idle/intel_idle.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+> > index 8e0fb1a5bdbd..1bb539f09a4f 100644
+> > --- a/drivers/idle/intel_idle.c
+> > +++ b/drivers/idle/intel_idle.c
+> > @@ -1145,6 +1145,8 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
+> >         X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,          &idle_cpu_skl),
+> >         X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,            &idle_cpu_skl),
+> >         X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,           &idle_cpu_skx),
+> > +       X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,             &idle_cpu_skl),
+> > +       X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,           &idle_cpu_skl),
+> >         X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,           &idle_cpu_icx),
+> >         X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,        &idle_cpu_knl),
+> >         X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,        &idle_cpu_knl),
+> > --
+> > 2.27.0
+> >
