@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E547C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A13C206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF302080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:16:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qXbgfVY/"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="m+XqbdUa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgHZRPr (ORCPT
+        id S1727115AbgHZRQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:15:47 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:55398 "EHLO
+        Wed, 26 Aug 2020 13:16:03 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:55441 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgHZRPm (ORCPT
+        with ESMTP id S1726783AbgHZRPy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:15:42 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200826171540euoutp015e6cf346d3684fa114376b36ea7a9084~u4NkOZpn81318813188euoutp01B
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 17:15:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200826171540euoutp015e6cf346d3684fa114376b36ea7a9084~u4NkOZpn81318813188euoutp01B
+        Wed, 26 Aug 2020 13:15:54 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200826171553euoutp016df3e17e8d72ca4f12b837f2a4eecce7~u4Nv-OD_i1318813188euoutp01G
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 17:15:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200826171553euoutp016df3e17e8d72ca4f12b837f2a4eecce7~u4Nv-OD_i1318813188euoutp01G
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598462140;
-        bh=76OUI6kZLvGNA+1rSSjmylaVxRhw/F8xCRxQ/TEodJM=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=qXbgfVY/sqRu9gt99eIf4YVtn3n40OixmB9D/+8lWPL5A8mlrwjaisQ5kxMsK1w1M
-         DMqfeCn0Uk9mMIe4JlvI3LuzW2yvR1DGQg7JbJrtq1hUSoG3Xlzj8bbH6xNYX4HldZ
-         KAtuWz3674U1rv9Pn2+0LitwNApW8uH/ldnlAfVg=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200826171540eucas1p1bcd0aeccbe67bc5ddb709b27d4f571e8~u4Njs6tIG1337913379eucas1p1J;
-        Wed, 26 Aug 2020 17:15:40 +0000 (GMT)
+        s=mail20170921; t=1598462153;
+        bh=fKIuwKFeT9zSibTNKAwdoCGoX7KTA5WkyoSjB9OenCg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m+XqbdUahk0pIcWaCRz/BFdaQkJR6SpDceQLHpU6bnu7oDFrk1+30rNIo14Q8jooc
+         Z8lsIq+lq6GgPFPcIaNfdlRNLWhONu1P1ET10lM5wtds85zBPwI7h1UTbjbg+n9kiA
+         OcCersVhcsN5bBefaZpuFxxGtaPkcuKJ/NpaamvM=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200826171552eucas1p2bff3aacf8ed7f544377ffaaf2110880d~u4Nvjb0CZ0758607586eucas1p2P;
+        Wed, 26 Aug 2020 17:15:52 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id A1.AE.06318.BB8964F5; Wed, 26
-        Aug 2020 18:15:39 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 4F.95.06456.8C8964F5; Wed, 26
+        Aug 2020 18:15:52 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200826171539eucas1p2e999972d3e7dd6dd701e312548933e87~u4NjBr9K90677706777eucas1p2K;
-        Wed, 26 Aug 2020 17:15:39 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200826171539eusmtrp22689a7514204a322c73ee17f1e7477c3~u4NjA3XYZ0859008590eusmtrp2V;
-        Wed, 26 Aug 2020 17:15:39 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-ca-5f4698bbc755
+        20200826171552eucas1p28ace6b1efbcdab420aaa4458ac8bad08~u4NvECRAE0562605626eucas1p2W;
+        Wed, 26 Aug 2020 17:15:52 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200826171552eusmtrp1f1b81e24af4fdd89efb482aec1afb9f8~u4NvDLk4H0677906779eusmtrp12;
+        Wed, 26 Aug 2020 17:15:52 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-b1-5f4698c8c36d
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 18.4C.06314.BB8964F5; Wed, 26
-        Aug 2020 18:15:39 +0100 (BST)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id E2.0E.06017.8C8964F5; Wed, 26
+        Aug 2020 18:15:52 +0100 (BST)
 Received: from AMDC3061.digital.local (unknown [106.120.51.75]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200826171538eusmtip1b3620b893e0bcf28afa09652cd6ced2d~u4NiWnxe90053800538eusmtip1e;
-        Wed, 26 Aug 2020 17:15:38 +0000 (GMT)
+        20200826171551eusmtip153cd029b426f6ae84f64bc754d16ddab~u4NucIc_w0053800538eusmtip1h;
+        Wed, 26 Aug 2020 17:15:51 +0000 (GMT)
 From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
 To:     linux-clk@vger.kernel.org
 Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
@@ -69,95 +69,109 @@ Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         m.szyprowski@samsung.com, b.zolnierkie@samsung.com,
         Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH 1/3] clk: samsung: Add clk ID definitions for the CPU parent
- clocks
-Date:   Wed, 26 Aug 2020 19:15:27 +0200
-Message-Id: <20200826171529.23618-1-s.nawrocki@samsung.com>
+Subject: [PATCH 2/3] clk: samsung: exynos5420/5250: Add IDs to the CPU
+ parent clk definitions
+Date:   Wed, 26 Aug 2020 19:15:28 +0200
+Message-Id: <20200826171529.23618-2-s.nawrocki@samsung.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSa0hTYRjHeXfO2TkOV6cp+bZKYyZ0Qc3LhxOKlqScIKKiIiRbMw8qOidn
-        ztuXhPCSqYkQilleyLSFqWuZ09JQ2yB1UyS1pRbNyEsjzEvebaej9O33/C88Dy8vgUjKMSkR
-        n5TCsEmKRJlQhLYYV8ze7WUR8hOTtmCquawRo0YWfmBUZY8Zo+7bZhHKYmnCKZ1tGKPmCiYw
-        aqitQkiVWToEVEPPOE4Nfginst/24FT3z1yM2hxuRilt2zo4tZv+NZqN04bycZzWae8K6ZdP
-        btNFei2g53XuF4SRouAYJjE+lWF9Q26K4h5UDKPJrc7py906QRboE+UDJwKSgXCq0ALygYiQ
-        kPUA6rQPcc6QkAsAFpuv8TwP4HqXz05hrfkFyhfqABzWVwv4wVGoWljCuJSQ9IOF74sAx67k
-        QWg1rgi5EEIuIjBf/1vAGS7kFajL6/sXQkkvaJzrRzgWk0HQmNcE+HUe8HnTO4QrQ/IxDu1j
-        rzDeOAOXn7Zvh1zgjEmP83wAbhkqBXzhDoAF7Z9xfigG8IuparsRBMfMq46bCMdNR2Fjmy8v
-        n4YlW58AJ0NyFxy17+FkxIElLaUIL4thXo6ETx+Ga9pSAc9SeG9yC+WZhlk5jwD/dFFw2V6D
-        FQP38v+7qgDQAjdGo1bGMuqAJCbNR61QqjVJsT63VEodcPyY3k3TYivoWI/uAiQBZM7iI/II
-        uQRTpKozlF0AEojMVRzW33tDIo5RZGQyrErOahIZdRfYT6AyN3FAzXSUhIxVpDAJDJPMsDuu
-        gHCSZgGvZlXndGZoYe2iyekPG5VWvRHjmdBp/r7pkev/rLJ6KqRFih0fqjHNp0deD/1Km92g
-        ZjVbHr935PVlw3nlzMZZb1Wt4dLVJz3pCFsZ/uZjf/Qh5zCmYfaki/9FUU79gD01ZMDTqvmW
-        PtIxGZhi1w8uGWvXNmx95zom9tVZrVkyVB2n8DuGsGrFXzEMNKAtAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrALMWRmVeSWpSXmKPExsVy+t/xu7q7Z7jFGzw+x2exccZ6VovrX56z
+In-Reply-To: <20200826171529.23618-1-s.nawrocki@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrOKsWRmVeSWpSXmKPExsWy7djPc7onZrjFG1z7rWOxccZ6VovrX56z
         Wsw/co7Vov/xa2aL8+c3sFtsenyN1eJjzz1Wi8u75rBZzDi/j8li7ZG77BYXT7latO49wm5x
-        +E07q8W/axtZLFbt+sPowO/x/kYru8fOWXfZPTat6mTz2Lyk3qNvyypGj8+b5ALYovRsivJL
-        S1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyps65xlKwg6fi
-        x+FNTA2MZ7i6GDk5JARMJH5vXMfSxcjFISSwlFHiypYnbF2MHEAJKYn5LUoQNcISf651sUHU
-        fGKU6Hp/hh0kwSZgKNF7tI8RxBYRkJW4dewnWBGzQCOLxNmJa1hBEsICwRLzl65nA7FZBFQl
-        jn08ywxi8wpYSxzr2MAIsUFeYvWGA8wTGHkWMDKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93E
-        CAztbcd+bt7BeGlj8CFGAQ5GJR5ejXi3eCHWxLLiytxDjBIczEoivE5nT8cJ8aYkVlalFuXH
-        F5XmpBYfYjQFWj6RWUo0OR8Yd3kl8YamhuYWlobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KL
-        YPqYODilGhhjXE+Ynyvw/m79hPnMg1Xrlx9cO3+Df+DyKpGfqarZryXXnRdSWR4Q8mNHAKPa
-        JK8DytOTH0cFGgbxlMZKKnYr886a7f/w4Bspo5PiWlJW1cenpidobFXb49Dt2axX9TttjtOO
-        tD2Xrdbxa+x48vtHHkPV1YObZJZezflqevTx98cNb+efi2lQYinOSDTUYi4qTgQAZbgSBoMC
-        AAA=
-X-CMS-MailID: 20200826171539eucas1p2e999972d3e7dd6dd701e312548933e87
+        +E07q8W/axtZLFbt+sPowO/x/kYru8fOWXfZPTat6mTz2Lyk3qNvyypGj8+b5ALYorhsUlJz
+        MstSi/TtErgy9i+5wF7wTajiXOMltgbGr/xdjJwcEgImErf33WXqYuTiEBJYwShx98lbKOcL
+        o8SKl/uZIZzPjBJzL78BynCAtcz+xg4RX84o8evID0aQUWAdU7b6gdhsAoYSvUf7wOIiArIS
+        t479ZANpYBb4yizRteUTE0hCWCBeYvXj1awgNouAqkTHwidgcV4Ba4krD2YwQdwnL7F6wwFm
+        EJtTwEbi19KzYBdJCGxilzjxaQUzRJGLxK1F89ggbGGJV8e3sEPYMhKnJ/ewQDQ0M0r07L7N
+        DuFMYJS4f3wBI0SVtcSdc7/YQH5jFtCUWL9LHyLsKPGs7R4LxMt8EjfeCoKEmYHMSdumM0OE
+        eSU62oQgqlUkfq+aDnWzlET3k/8sELaHRMOk09DQ6meUuP3lMNsERvlZCMsWMDKuYhRPLS3O
+        TU8tNsxLLdcrTswtLs1L10vOz93ECEw+p/8d/7SD8eulpEOMAhyMSjy8GvFu8UKsiWXFlbmH
+        GCU4mJVEeJ3Ono4T4k1JrKxKLcqPLyrNSS0+xCjNwaIkzmu86GWskEB6YklqdmpqQWoRTJaJ
+        g1OqgVFRWa9gzrOeyKzCNben1F7cmaCy7Mpy2RiWtZNXd+WFz9v6RGbz6bKan1mz7sRO3H5Y
+        gz1NL+D7id3pWlun2xesL9OebfzYd/vSuwpbOK9YBy5K1f1x/bX04iAFL6snV+4w/iyqDql+
+        +Ey/Mu5q8fnMJ9eVTu056+iQwti6u9+idk5Cj8r+/feUWIozEg21mIuKEwGCo4W8OgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42I5/e/4Xd0TM9ziDS6s47XYOGM9q8X1L89Z
+        LeYfOcdq0f/4NbPF+fMb2C02Pb7GavGx5x6rxeVdc9gsZpzfx2Sx9shddouLp1wtWvceYbc4
+        /Kad1eLftY0sFqt2/WF04Pd4f6OV3WPnrLvsHptWdbJ5bF5S79G3ZRWjx+dNcgFsUXo2Rfml
+        JakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2CXoZ+5dcYC/4JlRx
+        rvESWwPjV/4uRg4OCQETidnf2LsYuTiEBJYySjz/9YwRIi4lMb9FqYuRE8gUlvhzrYsNouYT
+        o8SqS5uZQRJsAoYSvUf7GEFsEQFZiVvHfoIVMQs0skicnbiGFWSQsECsRM/LBJAaFgFViY6F
+        T5hAbF4Ba4krD2YwQSyQl1i94QDYTE4BG4lfS8+C2UJANXc232KdwMi3gJFhFaNIamlxbnpu
+        sZFecWJucWleul5yfu4mRmAcbDv2c8sOxq53wYcYBTgYlXh4NeLd4oVYE8uKK3MPMUpwMCuJ
+        8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU6KiJzFKiyfnAGM0riTc0NTS3sDQ0NzY3NrNQEuft
+        EDgYIySQnliSmp2aWpBaBNPHxMEp1cDoZsnO+v+3ymnZD0phZSvyBdmMUrYob5c4u5XHq/O3
+        TqRSf0XviwK+1DdiW3KWJLybLfyr99m/dW92N01Oj+D6tiZ4yzPb4rtWTH0PTy3ZnBPHuHoJ
+        d27NwtdhzC8mv7ux5emFvtlllyY18U/xv/cvqzvrkm26wYrKCyE1b2auqOO3qircLZOuxFKc
+        kWioxVxUnAgAjRux0JkCAAA=
+X-CMS-MailID: 20200826171552eucas1p28ace6b1efbcdab420aaa4458ac8bad08
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200826171539eucas1p2e999972d3e7dd6dd701e312548933e87
+X-RootMTR: 20200826171552eucas1p28ace6b1efbcdab420aaa4458ac8bad08
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200826171539eucas1p2e999972d3e7dd6dd701e312548933e87
-References: <CGME20200826171539eucas1p2e999972d3e7dd6dd701e312548933e87@eucas1p2.samsung.com>
+X-CMS-RootMailID: 20200826171552eucas1p28ace6b1efbcdab420aaa4458ac8bad08
+References: <20200826171529.23618-1-s.nawrocki@samsung.com>
+        <CGME20200826171552eucas1p28ace6b1efbcdab420aaa4458ac8bad08@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add clock ID definitions for the CPU parent clocks for SoCs
-which don't have such definitions yet. This will allow us to
-reference the parent clocks directly by cached struct clk_hw
-pointers in the clock provider, rather than doing clk lookup
-by name.
+Use non-zero clock IDs in definitions of the CPU parent clocks
+for exynos5420, exynos5250 SoCs. This will allow us to reference
+the parent clocks directly in the driver by cached struct clk_hw
+pointers, rather than doing clk lookup by name.
 
 Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 ---
- include/dt-bindings/clock/exynos5250.h | 4 +++-
- include/dt-bindings/clock/exynos5420.h | 5 +++++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/clk/samsung/clk-exynos5250.c |  4 ++--
+ drivers/clk/samsung/clk-exynos5420.c | 11 ++++++-----
+ 2 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/include/dt-bindings/clock/exynos5250.h b/include/dt-bindings/clock/exynos5250.h
-index bc8a3c5..e259cc0 100644
---- a/include/dt-bindings/clock/exynos5250.h
-+++ b/include/dt-bindings/clock/exynos5250.h
-@@ -172,8 +172,10 @@
- #define CLK_MOUT_GPLL		1025
- #define CLK_MOUT_ACLK200_DISP1_SUB	1026
- #define CLK_MOUT_ACLK300_DISP1_SUB	1027
-+#define CLK_MOUT_APLL		1028
-+#define CLK_MOUT_MPLL		1029
+diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
+index 931c70a..7bcff76 100644
+--- a/drivers/clk/samsung/clk-exynos5250.c
++++ b/drivers/clk/samsung/clk-exynos5250.c
+@@ -253,14 +253,14 @@ static const struct samsung_mux_clock exynos5250_mux_clks[] __initconst = {
+ 	/*
+ 	 * CMU_CPU
+ 	 */
+-	MUX_F(0, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
++	MUX_F(CLK_MOUT_APLL, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
+ 					CLK_SET_RATE_PARENT, 0),
+ 	MUX(0, "mout_cpu", mout_cpu_p, SRC_CPU, 16, 1),
  
- /* must be greater than maximal clock id */
--#define CLK_NR_CLKS		1028
-+#define CLK_NR_CLKS		1030
+ 	/*
+ 	 * CMU_CORE
+ 	 */
+-	MUX(0, "mout_mpll", mout_mpll_p, SRC_CORE1, 8, 1),
++	MUX(CLK_MOUT_MPLL, "mout_mpll", mout_mpll_p, SRC_CORE1, 8, 1),
  
- #endif /* _DT_BINDINGS_CLOCK_EXYNOS_5250_H */
-diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
-index ff917c8..9fffc6c 100644
---- a/include/dt-bindings/clock/exynos5420.h
-+++ b/include/dt-bindings/clock/exynos5420.h
-@@ -231,6 +231,11 @@
- #define CLK_MOUT_SCLK_SPLL	660
- #define CLK_MOUT_MX_MSPLL_CCORE_PHY	661
- #define CLK_MOUT_SW_ACLK_G3D	662
-+#define CLK_MOUT_APLL		663
-+#define CLK_MOUT_MSPLL_CPU	664
-+#define CLK_MOUT_KPLL		665
-+#define CLK_MOUT_MSPLL_KFC	666
-+
+ 	/*
+ 	 * CMU_TOP
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index f76ebd6..d07cee2 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -596,13 +596,14 @@ static const struct samsung_gate_clock exynos5420_gate_clks[] __initconst = {
+ static const struct samsung_mux_clock exynos5x_mux_clks[] __initconst = {
+ 	MUX(0, "mout_user_pclk66_gpio", mout_user_pclk66_gpio_p,
+ 			SRC_TOP7, 4, 1),
+-	MUX(0, "mout_mspll_kfc", mout_mspll_cpu_p, SRC_TOP7, 8, 2),
+-	MUX(0, "mout_mspll_cpu", mout_mspll_cpu_p, SRC_TOP7, 12, 2),
+-
+-	MUX_F(0, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
++	MUX(CLK_MOUT_MSPLL_KFC, "mout_mspll_kfc", mout_mspll_cpu_p,
++	    SRC_TOP7, 8, 2),
++	MUX(CLK_MOUT_MSPLL_CPU, "mout_mspll_cpu", mout_mspll_cpu_p,
++	    SRC_TOP7, 12, 2),
++	MUX_F(CLK_MOUT_APLL, "mout_apll", mout_apll_p, SRC_CPU, 0, 1,
+ 	      CLK_SET_RATE_PARENT | CLK_RECALC_NEW_RATES, 0),
+ 	MUX(0, "mout_cpu", mout_cpu_p, SRC_CPU, 16, 1),
+-	MUX_F(0, "mout_kpll", mout_kpll_p, SRC_KFC, 0, 1,
++	MUX_F(CLK_MOUT_KPLL, "mout_kpll", mout_kpll_p, SRC_KFC, 0, 1,
+ 	      CLK_SET_RATE_PARENT | CLK_RECALC_NEW_RATES, 0),
+ 	MUX(0, "mout_kfc", mout_kfc_p, SRC_KFC, 16, 1),
  
- /* divider clocks */
- #define CLK_DOUT_PIXEL		768
 -- 
 2.7.4
 
