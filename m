@@ -2,106 +2,201 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9959C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7076DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8342087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:03:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="onrC78Sb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PfZ2hYH1"
+	by mail.kernel.org (Postfix) with ESMTP id 476DA2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598439837;
+	bh=dZBupqK1ICb+D03LduZMWk3v5MqcNKkHFnB2Fn2U8ew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=s4lAQaELwQpAaaBYthLnT+c7OvUzKqFdyASb/RrQYcryHxuQ2JsdAsWfqCKo561o6
+	 Oi2WzruAvP7pjaEEYdFHPUubBnzbGEmRK5/q+zU4VhZjFr3j2Ym6mxWk25Iq52r8Td
+	 RjCC2ncqVaY8xEBoDCKIuXa1RSK78fL77iw41REo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgHZLDw (ORCPT
+        id S1728852AbgHZLDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:03:52 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:56724 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728693AbgHZLDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:03:12 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598439782;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZaAkTdOab/XFooWlber6W3bQre4hvoIBpg4is6GPMvI=;
-        b=onrC78SbMNK189bx5B9J/G6s8NfSzOML8/QswGPLaM7CNLUadKjp4RZkqQj1RpwAnqf9ND
-        WHrr0sfogurwO1T9+nL2EocVhhdSgZ0KPGI/iuexx/2JUw0YevIydPq4BgtmRVhBYRr2H9
-        kzNgRK7OBnzZ3BpBp2bRNNIjEyY+2G0JVleePH9tjONso7qd32vc+4yxT0SovbmgDtn7kX
-        BJpgVC6m9/waC/lQVCd9lNZKfx7RbcHmiwjuCHpFim0i4wEaR0GZkqDXWSSOJg7RJpHX5h
-        tUQjMpAvUqHIn7Kv266SPEKtJ5Pdfwe2BFa3tlGUAsQUziWsuUenKnL6a4+DPw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598439782;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZaAkTdOab/XFooWlber6W3bQre4hvoIBpg4is6GPMvI=;
-        b=PfZ2hYH1I2ewe0aCaU53HrJiEJCFqmFzJ7d2d3J0q6ZM3xseBlhIbp4F8hJcGr9lQ4766W
-        KACq5LU557imvSAA==
-To:     syzbot <syzbot+51c9bdfa559769d2f897@syzkaller.appspotmail.com>,
-        akpm@linux-foundation.org, anna.schumaker@netapp.com,
-        bfields@fieldses.org, bp@alien8.de, davem@davemloft.net,
-        douly.fnst@cn.fujitsu.com, hpa@zytor.com, jlayton@kernel.org,
-        konrad.wilk@oracle.com, len.brown@intel.com,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        mingo@kernel.org, mingo@redhat.com, netdev@vger.kernel.org,
-        paulmck@kernel.org, peterz@infradead.org, puwen@hygon.cn,
-        rafael.j.wysocki@intel.com, syzkaller-bugs@googlegroups.com,
-        trond.myklebust@hammerspace.com, trond.myklebust@primarydata.com,
-        vbabka@suse.cz, x86@kernel.org, David Howells <dhowells@redhat.com>
-Subject: Re: WARNING: ODEBUG bug in __do_softirq
-In-Reply-To: <000000000000e7fab005adc3f636@google.com>
-References: <000000000000e7fab005adc3f636@google.com>
-Date:   Wed, 26 Aug 2020 13:03:02 +0200
-Message-ID: <87v9h5vfdl.fsf@nanos.tec.linutronix.de>
+        Wed, 26 Aug 2020 07:03:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728795AbgHZLBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 07:01:49 -0400
+Received: from kernel.org (unknown [87.70.91.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 973122083B;
+        Wed, 26 Aug 2020 11:01:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598439708;
+        bh=dZBupqK1ICb+D03LduZMWk3v5MqcNKkHFnB2Fn2U8ew=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kiv8zgwJI7uG2FhY/e8QqDG2hOoqnYuNOROcQg+SjF8hvfVdRzG1wHOGn6+X30FDO
+         ZWWHCGgtt+W1/ww34rQ+2mr81fCzhvdmP2nrQmcqhUPDEJoNN6IRnAO8LrR6+rqjFf
+         kjaCY34RDfsI87WbIfQ9Ghhg2byDUnNBjxwF7HUM=
+Date:   Wed, 26 Aug 2020 14:01:36 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v4 0/6] mm: introduce memfd_secret system call to create
+ "secret" memory areas
+Message-ID: <20200826110136.GA69706@kernel.org>
+References: <20200818141554.13945-1-rppt@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818141554.13945-1-rppt@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26 2020 at 01:54, syzbot wrote:
+Any comments on this?
 
-Cc+: David Howells
+On Tue, Aug 18, 2020 at 05:15:48PM +0300, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> Hi,
+> 
+> This is an implementation of "secret" mappings backed by a file descriptor. 
+> 
+> v4 changes:
+> * rebase on v5.9-rc1
+> * Do not redefine PMD_PAGE_ORDER in fs/dax.c, thanks Kirill
+> * Make secret mappings exclusive by default and only require flags to
+>   memfd_secret() system call for uncached mappings, thanks again Kirill :)
+> 
+> v3 changes:
+> * Squash kernel-parameters.txt update into the commit that added the
+>   command line option.
+> * Make uncached mode explicitly selectable by architectures. For now enable
+>   it only on x86.
+> 
+> v2 changes:
+> * Follow Michael's suggestion and name the new system call 'memfd_secret'
+> * Add kernel-parameters documentation about the boot option
+> * Fix i386-tinyconfig regression reported by the kbuild bot.
+>   CONFIG_SECRETMEM now depends on !EMBEDDED to disable it on small systems
+>   from one side and still make it available unconditionally on
+>   architectures that support SET_DIRECT_MAP.
+> 
+> 
+> The file descriptor backing secret memory mappings is created using a
+> dedicated memfd_secret system call The desired protection mode for the
+> memory is configured using flags parameter of the system call. The mmap()
+> of the file descriptor created with memfd_secret() will create a "secret"
+> memory mapping. The pages in that mapping will be marked as not present in
+> the direct map and will have desired protection bits set in the user page
+> table. For instance, current implementation allows uncached mappings.
+> 
+> Although normally Linux userspace mappings are protected from other users, 
+> such secret mappings are useful for environments where a hostile tenant is
+> trying to trick the kernel into giving them access to other tenants
+> mappings.
+> 
+> Additionally, the secret mappings may be used as a mean to protect guest
+> memory in a virtual machine host.
+> 
+> For demonstration of secret memory usage we've created a userspace library
+> [1] that does two things: the first is act as a preloader for openssl to
+> redirect all the OPENSSL_malloc calls to secret memory meaning any secret
+> keys get automatically protected this way and the other thing it does is
+> expose the API to the user who needs it. We anticipate that a lot of the
+> use cases would be like the openssl one: many toolkits that deal with
+> secret keys already have special handling for the memory to try to give
+> them greater protection, so this would simply be pluggable into the
+> toolkits without any need for user application modification.
+> 
+> I've hesitated whether to continue to use new flags to memfd_create() or to
+> add a new system call and I've decided to use a new system call after I've
+> started to look into man pages update. There would have been two completely
+> independent descriptions and I think it would have been very confusing.
+> 
+> Hiding secret memory mappings behind an anonymous file allows (ab)use of
+> the page cache for tracking pages allocated for the "secret" mappings as
+> well as using address_space_operations for e.g. page migration callbacks.
+> 
+> The anonymous file may be also used implicitly, like hugetlb files, to
+> implement mmap(MAP_SECRET) and use the secret memory areas with "native" mm
+> ABIs in the future.
+> 
+> As the fragmentation of the direct map was one of the major concerns raised
+> during the previous postings, I've added an amortizing cache of PMD-size
+> pages to each file descriptor and an ability to reserve large chunks of the
+> physical memory at boot time and then use this memory as an allocation pool
+> for the secret memory areas.
+> 
+> v3: https://lore.kernel.org/lkml/20200804095035.18778-1-rppt@kernel.org
+> v2: https://lore.kernel.org/lkml/20200727162935.31714-1-rppt@kernel.org
+> v1: https://lore.kernel.org/lkml/20200720092435.17469-1-rppt@kernel.org/
+> rfc-v2: https://lore.kernel.org/lkml/20200706172051.19465-1-rppt@kernel.org/
+> rfc-v1: https://lore.kernel.org/lkml/20200130162340.GA14232@rapoport-lnx/
+> 
+> Mike Rapoport (6):
+>   mm: add definition of PMD_PAGE_ORDER
+>   mmap: make mlock_future_check() global
+>   mm: introduce memfd_secret system call to create "secret" memory areas
+>   arch, mm: wire up memfd_secret system call were relevant
+>   mm: secretmem: use PMD-size pages to amortize direct map fragmentation
+>   mm: secretmem: add ability to reserve memory at boot
+> 
+>  arch/Kconfig                           |   7 +
+>  arch/arm64/include/asm/unistd.h        |   2 +-
+>  arch/arm64/include/asm/unistd32.h      |   2 +
+>  arch/arm64/include/uapi/asm/unistd.h   |   1 +
+>  arch/riscv/include/asm/unistd.h        |   1 +
+>  arch/x86/Kconfig                       |   1 +
+>  arch/x86/entry/syscalls/syscall_32.tbl |   1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl |   1 +
+>  fs/dax.c                               |  11 +-
+>  include/linux/pgtable.h                |   3 +
+>  include/linux/syscalls.h               |   1 +
+>  include/uapi/asm-generic/unistd.h      |   7 +-
+>  include/uapi/linux/magic.h             |   1 +
+>  include/uapi/linux/secretmem.h         |   8 +
+>  kernel/sys_ni.c                        |   2 +
+>  mm/Kconfig                             |   4 +
+>  mm/Makefile                            |   1 +
+>  mm/internal.h                          |   3 +
+>  mm/mmap.c                              |   5 +-
+>  mm/secretmem.c                         | 451 +++++++++++++++++++++++++
+>  20 files changed, 501 insertions(+), 12 deletions(-)
+>  create mode 100644 include/uapi/linux/secretmem.h
+>  create mode 100644 mm/secretmem.c
+> 
+> -- 
+> 2.26.2
+> 
 
-> syzbot has found a reproducer for the following issue on:
->
-> HEAD commit:    3a00d3df Add linux-next specific files for 20200825
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=15080fa9900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9ef0a5f95935d447
-> dashboard link: https://syzkaller.appspot.com/bug?extid=51c9bdfa559769d2f897
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17927a2e900000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132b8ede900000
->
-> The issue was bisected to:
->
-> commit 5b317cbf2bcb85a1e96ce87717cb991ecab1dd4d
-> Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Date:   Fri Feb 22 09:17:11 2019 +0000
->
->     Merge branch 'pm-cpufreq-fixes'
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=171ead5d200000
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=149ead5d200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=109ead5d200000
->
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+51c9bdfa559769d2f897@syzkaller.appspotmail.com
-> Fixes: 5b317cbf2bcb ("Merge branch 'pm-cpufreq-fixes'")
->
-> ------------[ cut here ]------------
-> ODEBUG: free active (active state 0) object type: work_struct hint: afs_manage_cell+0x0/0x11c0 fs/afs/cell.c:498
-
-AFS is leaking an active work struct in a to be freed data struct.
-
-Thanks,
-
-        tglx
+-- 
+Sincerely yours,
+Mike.
