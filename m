@@ -2,236 +2,245 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C983C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0975DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41D23221E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A0322B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:46:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598449600;
+	bh=BQJgGx0WZxmBAOL4TvjzTRBHVFKglf3uZbHr3G4N01w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=C6NDzlQ1cFKlK1tQQQ9Z7jk0/1IZ9w76j3eGYYzgf+ZfyWaXWgjSej9FpdWGxU3Ec
+	 Q5hDB3NQSRGBiqtJcBuBaqUS/96gYIDwNljcuRYKisQIATuiDE/+WleN6HSEYwGRUE
+	 7TGKFQeFonbhWx7tK2vl5lsIiPbYivw0fd/3r+Rs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbgHZNq2 (ORCPT
+        id S1730392AbgHZNqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:46:28 -0400
-Received: from mga09.intel.com ([134.134.136.24]:19963 "EHLO mga09.intel.com"
+        Wed, 26 Aug 2020 09:46:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730336AbgHZNqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:46:25 -0400
-IronPort-SDR: ydF/KBlzA6V3H/qKZZHhre0Y5nIBKUkjKuyVyg90zQOGq+ggyieoqcQp4sE7d2MNGDOjTdtSh4
- jhZn1drgj6fw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="157326414"
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="157326414"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 06:46:23 -0700
-IronPort-SDR: SrajiWtghCwhFesXaobYHfK2TrmzSgDEqOKZWwYhaEIkr/popCwDt/A7yuvPhcUc7InUiOPDzb
- 4X/tDtDDyYQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="444051308"
-Received: from kempfs-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.55.157])
-  by orsmga004.jf.intel.com with ESMTP; 26 Aug 2020 06:46:07 -0700
-Date:   Wed, 26 Aug 2020 16:46:06 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        andriy.shevchenko@linux.intel.com, asapek@google.com,
-        cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v36 11/24] x86/sgx: Add SGX enclave driver
-Message-ID: <20200826134606.GC6532@linux.intel.com>
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-12-jarkko.sakkinen@linux.intel.com>
- <20200825164412.GF12107@zn.tnic>
+        id S1730383AbgHZNq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:46:28 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFB012177B;
+        Wed, 26 Aug 2020 13:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598449588;
+        bh=BQJgGx0WZxmBAOL4TvjzTRBHVFKglf3uZbHr3G4N01w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BwFLmunYK6mlrChc57sc2K8c61HK70pbTeUkd0M+Dd79mUHqdDWWXuaswvuNVKrXX
+         4C4Ws0q6Gt0qIi70m36/pWe1rDeOkiL3NdZwILOHiCvo1xzTQV9rtoZTZyDbD1HwcC
+         nTW/BQKZdRKka1moe5i2MmLIAPnDqn8VCEoFwgqc=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: [RFC PATCH 01/14] kprobes: Add generic kretprobe trampoline handler
+Date:   Wed, 26 Aug 2020 22:46:23 +0900
+Message-Id: <159844958336.510284.585449082018552076.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159844957216.510284.17683703701627367133.stgit@devnote2>
+References: <159844957216.510284.17683703701627367133.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825164412.GF12107@zn.tnic>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 06:44:12PM +0200, Borislav Petkov wrote:
-> On Thu, Jul 16, 2020 at 04:52:50PM +0300, Jarkko Sakkinen wrote:
-> 
-> Just minor things below - I'm not even going to pretend I fully
-> understand what's going on but FWICT, it looks non-threateningly ok to
-> me.
-> 
-> > diff --git a/arch/x86/kernel/cpu/sgx/driver.c b/arch/x86/kernel/cpu/sgx/driver.c
-> > new file mode 100644
-> > index 000000000000..b52520407f5b
-> > --- /dev/null
-> > +++ b/arch/x86/kernel/cpu/sgx/driver.c
-> > @@ -0,0 +1,177 @@
-> > +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> > +// Copyright(c) 2016-18 Intel Corporation.
-> > +
-> > +#include <linux/acpi.h>
-> > +#include <linux/miscdevice.h>
-> > +#include <linux/mman.h>
-> > +#include <linux/security.h>
-> > +#include <linux/suspend.h>
-> > +#include <asm/traps.h>
-> > +#include "driver.h"
-> > +#include "encl.h"
-> > +
-> > +MODULE_DESCRIPTION("Intel SGX Enclave Driver");
-> > +MODULE_AUTHOR("Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>");
-> > +MODULE_LICENSE("Dual BSD/GPL");
-> 
-> That boilerplate stuff usually goes to the end of the file.
+Add a generic kretprobe trampoline handler for unifying
+the all cloned /arch/* kretprobe trampoline handlers.
 
-These all are cruft from the times when we still had a kernel module.
-I.e. I'll just remove them.
+The generic kretprobe trampoline handler is based on the
+x86 implementation, because it is the latest implementation.
+It has frame pointer checking, kprobe_busy_begin/end and
+return address fixup for user handlers.
 
-> 
-> ...
-> 
-> > +static struct sgx_encl_page *sgx_encl_load_page(struct sgx_encl *encl,
-> > +						unsigned long addr)
-> > +{
-> > +	struct sgx_encl_page *entry;
-> > +	unsigned int flags;
-> > +
-> > +	/* If process was forked, VMA is still there but vm_private_data is set
-> > +	 * to NULL.
-> > +	 */
-> > +	if (!encl)
-> > +		return ERR_PTR(-EFAULT);
-> > +
-> > +	flags = atomic_read(&encl->flags);
-> > +
-> 
-> ^ Superfluous newline.
-> 
-> > +	if ((flags & SGX_ENCL_DEAD) || !(flags & SGX_ENCL_INITIALIZED))
-> > +		return ERR_PTR(-EFAULT);
-> > +
-> > +	entry = xa_load(&encl->page_array, PFN_DOWN(addr));
-> > +	if (!entry)
-> > +		return ERR_PTR(-EFAULT);
-> > +
-> > +	/* Page is already resident in the EPC. */
-> > +	if (entry->epc_page)
-> > +		return entry;
-> > +
-> > +	return ERR_PTR(-EFAULT);
-> > +}
-> > +
-> > +static void sgx_mmu_notifier_release(struct mmu_notifier *mn,
-> > +				     struct mm_struct *mm)
-> > +{
-> > +	struct sgx_encl_mm *encl_mm =
-> > +		container_of(mn, struct sgx_encl_mm, mmu_notifier);
-> 
-> Just let it stick out.
-> 
-> > +	struct sgx_encl_mm *tmp = NULL;
-> > +
-> > +	/*
-> > +	 * The enclave itself can remove encl_mm.  Note, objects can't be moved
-> > +	 * off an RCU protected list, but deletion is ok.
-> > +	 */
-> > +	spin_lock(&encl_mm->encl->mm_lock);
-> > +	list_for_each_entry(tmp, &encl_mm->encl->mm_list, list) {
-> > +		if (tmp == encl_mm) {
-> > +			list_del_rcu(&encl_mm->list);
-> > +			break;
-> > +		}
-> > +	}
-> > +	spin_unlock(&encl_mm->encl->mm_lock);
-> > +
-> > +	if (tmp == encl_mm) {
-> > +		synchronize_srcu(&encl_mm->encl->srcu);
-> > +		mmu_notifier_put(mn);
-> > +	}
-> > +}
-> > +
-> > +static void sgx_mmu_notifier_free(struct mmu_notifier *mn)
-> > +{
-> > +	struct sgx_encl_mm *encl_mm =
-> > +		container_of(mn, struct sgx_encl_mm, mmu_notifier);
-> 
-> Ditto.
-> 
-> ...
-> 
-> > +/**
-> > + * sgx_encl_may_map() - Check if a requested VMA mapping is allowed
-> > + * @encl:		an enclave
-> > + * @start:		lower bound of the address range, inclusive
-> > + * @end:		upper bound of the address range, exclusive
-> > + * @vm_prot_bits:	requested protections of the address range
-> > + *
-> > + * Iterate through the enclave pages contained within [@start, @end) to verify
-> > + * the permissions requested by @vm_prot_bits do not exceed that of any enclave
-> > + * page to be mapped.
-> > + *
-> > + * Return:
-> > + *   0 on success,
-> > + *   -EACCES if VMA permissions exceed enclave page permissions
-> > + */
-> > +int sgx_encl_may_map(struct sgx_encl *encl, unsigned long start,
-> > +		     unsigned long end, unsigned long vm_flags)
-> > +{
-> > +	unsigned long vm_prot_bits = vm_flags & (VM_READ | VM_WRITE | VM_EXEC);
-> > +	unsigned long idx_start = PFN_DOWN(start);
-> > +	unsigned long idx_end = PFN_DOWN(end - 1);
-> > +	struct sgx_encl_page *page;
-> > +	XA_STATE(xas, &encl->page_array, idx_start);
-> > +
-> > +	/*
-> > +	 * Disallow RIE tasks as their VMA permissions might conflict with the
-> 
-> "RIE", hmm what is that?
-> 
-> /me looks at the test
-> 
-> Aaah, READ_IMPLIES_EXEC. Is "RIE" some widely accepted acronym I'm not
-> aware of?
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ include/linux/kprobes.h |   32 +++++++++++++--
+ kernel/kprobes.c        |  101 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 129 insertions(+), 4 deletions(-)
 
-I think it was used in some email discussions related to this piece of
-code but I'm happy to write it as READ_IMPLIES_EXEC :-)
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 9be1bff4f586..46a7afcf5ec0 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -187,10 +187,38 @@ static inline int kprobes_built_in(void)
+ 	return 1;
+ }
+ 
++extern struct kprobe kprobe_busy;
++void kprobe_busy_begin(void);
++void kprobe_busy_end(void);
++
+ #ifdef CONFIG_KRETPROBES
+ extern void arch_prepare_kretprobe(struct kretprobe_instance *ri,
+ 				   struct pt_regs *regs);
+ extern int arch_trampoline_kprobe(struct kprobe *p);
++
++/* If the trampoline handler called from a kprobe, use this version */
++unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
++				unsigned long trampoline_address,
++				void *frame_pointer);
++
++static nokprobe_inline
++unsigned long kretprobe_trampoline_handler(struct pt_regs *regs,
++				unsigned long trampoline_address,
++				void *frame_pointer)
++{
++	unsigned long ret;
++	/*
++	 * Set a dummy kprobe for avoiding kretprobe recursion.
++	 * Since kretprobe never runs in kprobe handler, any kprobe must not
++	 * be running at this point.
++	 */
++	kprobe_busy_begin();
++	ret = __kretprobe_trampoline_handler(regs, trampoline_address, frame_pointer);
++	kprobe_busy_end();
++
++	return ret;
++}
++
+ #else /* CONFIG_KRETPROBES */
+ static inline void arch_prepare_kretprobe(struct kretprobe *rp,
+ 					struct pt_regs *regs)
+@@ -354,10 +382,6 @@ static inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
+ 	return this_cpu_ptr(&kprobe_ctlblk);
+ }
+ 
+-extern struct kprobe kprobe_busy;
+-void kprobe_busy_begin(void);
+-void kprobe_busy_end(void);
+-
+ kprobe_opcode_t *kprobe_lookup_name(const char *name, unsigned int offset);
+ int register_kprobe(struct kprobe *p);
+ void unregister_kprobe(struct kprobe *p);
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 287b263c9cb9..cbd2ad1af7b7 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1927,6 +1927,107 @@ unsigned long __weak arch_deref_entry_point(void *entry)
+ }
+ 
+ #ifdef CONFIG_KRETPROBES
++
++unsigned long __kretprobe_trampoline_handler(struct pt_regs *regs,
++					unsigned long trampoline_address,
++					void *frame_pointer)
++{
++	struct kretprobe_instance *ri = NULL;
++	struct hlist_head *head, empty_rp;
++	struct hlist_node *tmp;
++	unsigned long flags, orig_ret_address = 0;
++	kprobe_opcode_t *correct_ret_addr = NULL;
++	bool skipped = false;
++
++	INIT_HLIST_HEAD(&empty_rp);
++	kretprobe_hash_lock(current, &head, &flags);
++
++	/*
++	 * It is possible to have multiple instances associated with a given
++	 * task either because multiple functions in the call path have
++	 * return probes installed on them, and/or more than one
++	 * return probe was registered for a target function.
++	 *
++	 * We can handle this because:
++	 *     - instances are always pushed into the head of the list
++	 *     - when multiple return probes are registered for the same
++	 *	 function, the (chronologically) first instance's ret_addr
++	 *	 will be the real return address, and all the rest will
++	 *	 point to kretprobe_trampoline.
++	 */
++	hlist_for_each_entry(ri, head, hlist) {
++		if (ri->task != current)
++			/* another task is sharing our hash bucket */
++			continue;
++		/*
++		 * Return probes must be pushed on this hash list correct
++		 * order (same as return order) so that it can be popped
++		 * correctly. However, if we find it is pushed it incorrect
++		 * order, this means we find a function which should not be
++		 * probed, because the wrong order entry is pushed on the
++		 * path of processing other kretprobe itself.
++		 */
++		if (ri->fp != frame_pointer) {
++			if (!skipped)
++				pr_warn("kretprobe is stacked incorrectly. Trying to fixup.\n");
++			skipped = true;
++			continue;
++		}
++
++		orig_ret_address = (unsigned long)ri->ret_addr;
++		if (skipped)
++			pr_warn("%ps must be blacklisted because of incorrect kretprobe order\n",
++				ri->rp->kp.addr);
++
++		if (orig_ret_address != trampoline_address)
++			/*
++			 * This is the real return address. Any other
++			 * instances associated with this task are for
++			 * other calls deeper on the call stack
++			 */
++			break;
++	}
++
++	kretprobe_assert(ri, orig_ret_address, trampoline_address);
++
++	correct_ret_addr = ri->ret_addr;
++	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
++		if (ri->task != current)
++			/* another task is sharing our hash bucket */
++			continue;
++		if (ri->fp != frame_pointer)
++			continue;
++
++		orig_ret_address = (unsigned long)ri->ret_addr;
++		if (ri->rp && ri->rp->handler) {
++			__this_cpu_write(current_kprobe, &ri->rp->kp);
++			ri->ret_addr = correct_ret_addr;
++			ri->rp->handler(ri, regs);
++			__this_cpu_write(current_kprobe, &kprobe_busy);
++		}
++
++		recycle_rp_inst(ri, &empty_rp);
++
++		if (orig_ret_address != trampoline_address)
++			/*
++			 * This is the real return address. Any other
++			 * instances associated with this task are for
++			 * other calls deeper on the call stack
++			 */
++			break;
++	}
++
++	kretprobe_hash_unlock(current, &flags);
++
++	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
++		hlist_del(&ri->hlist);
++		kfree(ri);
++	}
++
++	return orig_ret_address;
++}
++NOKPROBE_SYMBOL(__kretprobe_trampoline_handler)
++
+ /*
+  * This kprobe pre_handler is registered with every kretprobe. When probe
+  * hits it will set up the return probe.
 
-> 
-> > +	 * enclave page permissions.
-> > +	 */
-> > +	if (!!(current->personality & READ_IMPLIES_EXEC))
-> 
-> The "!!" is not really needed - you're in boolean context.
-> 
-> ...
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-
-Thanks for the remarks.
-
-/Jarkko
