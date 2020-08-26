@@ -2,92 +2,102 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E3AC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD203C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEB022067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:56:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C1E207DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:56:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598435800;
+	bh=Du92FRhluqAO2AfdX7nuJTjVbvuW6hgvo/vP+lWSr24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WP+oVwu2Z+lkZkN+tVYvZofzdzsBzXl5304MI46Cxdkl4FQrU9elpuizM61W8H+sf
+	 c1IdE75jOBrKmYkvdIh21HTGZEMN7Y7n7zDoE+A90+lcAY7tkOtCvff8yNV+PZ8U8v
+	 TdnTAv96PQEr2PQzJ7/Bp+i1I26Yr27AEoens21Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbgHZJ4X (ORCPT
+        id S1728412AbgHZJ4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:56:23 -0400
-Received: from mga14.intel.com ([192.55.52.115]:17377 "EHLO mga14.intel.com"
+        Wed, 26 Aug 2020 05:56:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728040AbgHZJ4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:56:22 -0400
-IronPort-SDR: 4LnHU0G6w3BK24UkRHCRm8lF5V6sG85o+rTWbSvOgxM4X06nqZZxnyVhItDUiEfzFTtSaeQePV
- pSmoy4xrYOTA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="155524058"
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="155524058"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 02:56:21 -0700
-IronPort-SDR: UFrZ7j1KCaMRxux51wJaYbmjrA+45n6UPGpfFOwS8bKCGGzUwQArZDOf1j4hX7wx1Fb1mrXK6y
- kjd9YHH6pMQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="329168253"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 02:56:19 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kAsAD-00BXGf-IQ; Wed, 26 Aug 2020 12:56:17 +0300
-Date:   Wed, 26 Aug 2020 12:56:17 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Wolfram Sang <wsa@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: consider devices with of_match_table during i2c
- device probing
-Message-ID: <20200826095617.GH1891694@smile.fi.intel.com>
-References: <20200826042938.3259-1-sergey.senozhatsky@gmail.com>
- <20200826050851.GA1081@ninjato>
- <20200826052544.GA500@jagdpanzerIV.localdomain>
- <20200826095356.GG1891694@smile.fi.intel.com>
+        id S1728063AbgHZJ4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 05:56:37 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B216E2067C;
+        Wed, 26 Aug 2020 09:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598435797;
+        bh=Du92FRhluqAO2AfdX7nuJTjVbvuW6hgvo/vP+lWSr24=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DdfWy0/QaWPFtQjk2lXSEtNgQqysT5/WhksLCOpQllp9p4OOtV7AP/mzQ5vFDWHlD
+         sLUtEGwkdKj9uLYZOrPFtQ+iGre0kpZEzY2CIznSxdCpVKuYPRtR5OoB5n6qgoQPey
+         0ln0FMJ6Ge1RBMERGg4vOwjJ2wuPY0FYYohFLmU4=
+Date:   Wed, 26 Aug 2020 10:56:01 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, vkoul@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 1/4] regmap: sdw: move to -EOPNOTSUPP
+Message-ID: <20200826095600.GA4965@sirena.org.uk>
+References: <20200825171656.75836-2-pierre-louis.bossart@linux.intel.com>
+ <20200825214858.GK5379@sirena.org.uk>
+ <6f7e5830-4dd8-1ecc-20c3-df75bc9ef265@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
 Content-Disposition: inline
-In-Reply-To: <20200826095356.GG1891694@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <6f7e5830-4dd8-1ecc-20c3-df75bc9ef265@linux.intel.com>
+X-Cookie: Should I do my BOBBIE VINTON medley?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:53:56PM +0300, Andy Shevchenko wrote:
-> On Wed, Aug 26, 2020 at 02:25:44PM +0900, Sergey Senozhatsky wrote:
-> > On (20/08/26 07:08), Wolfram Sang wrote:
 
-...
+--PEIAKu/WMn1b1Hv9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> You probably meant simply:
-> 
-> 	if (!i2c_device_match(dev, dev->driver)) {
-> 
-> >                 status = -ENODEV;
-> >                 goto put_sync_adapter;
-> >         }
-> 
-> On the first glance it will work the same way but slightly longer in case of ID
-> table matching.
-> 
-> Send a patch!
+On Tue, Aug 25, 2020 at 05:08:55PM -0500, Pierre-Louis Bossart wrote:
 
-But then the question is why we have this code in the ->probe() at all?
-->match() is run before probe by bus core, no?
+> > > -ENOTSUPP is not a valid error code, use recommended value instead.
 
-Wolfram?
+> > What makes you say this - it's what regmap uses internally for
+> > unsupported operations?
 
--- 
-With Best Regards,
-Andy Shevchenko
+> This was flagged by scripts/checkpatch.pl (must be a new addition).
 
+checkpatch is broken.
 
+--PEIAKu/WMn1b1Hv9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9GMa4ACgkQJNaLcl1U
+h9A/SQf9HoAkYdbr7u7FlIMWhzgxCUW+PydJy4E0E+RX1QXJxu5obdTE/47MxSIb
+bQ2qLl9g1OyqblmHty4BJSGCH/8mHqiNbnidixs3X1jUGkKepC/MWLPNDNTLRNMG
+67ckWqo71U4tODQcO2gEdmY4ADZo1b93YkataMFExkVYs+tcZ+0h88gzrxE6DKLM
+lIDq+0U3SL0V0i3kp+OJ5e8CU2Lku7cal/+EK8yGsLAe+4o8QVc2p2w1C9VZ6KUG
+PDcSyqQq/jTcjio3WnrDzFv54keLw4yh0nyDeQ5liWQYM2m6hwRaWPc7JZT5UxYe
+4x1gBq/4qbM70bYgCwcZilMV2T3UaA==
+=dXb/
+-----END PGP SIGNATURE-----
+
+--PEIAKu/WMn1b1Hv9--
