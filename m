@@ -2,137 +2,106 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E90BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70266C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 809962075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB612075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:20:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=aixah.de header.i=@aixah.de header.b="m3OnWH9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgHZPSu (ORCPT
+        id S1728073AbgHZPUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:18:50 -0400
-Received: from mga04.intel.com ([192.55.52.120]:10523 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbgHZPSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:18:45 -0400
-IronPort-SDR: sJR3OabF68OF93kicsNQIkyGv+qfkzmTQu234eocC/w8tKCQezOxiMXFnB0pdeV+TvTmaMvvgT
- P8RPsjwpJqNQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153731861"
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="153731861"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 08:18:44 -0700
-IronPort-SDR: LFOOq02faltDs2sF7gkQT/rBXsdGjaw5I+KcUpzLmZZ7XJ90mijCpdb1DfxpTxWkqP1M2jymH8
- or4UJgSKhp6Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="329260583"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 08:18:42 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kAxA5-00BatB-CF; Wed, 26 Aug 2020 18:16:29 +0300
-Date:   Wed, 26 Aug 2020 18:16:29 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Wed, 26 Aug 2020 11:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbgHZPUL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 11:20:11 -0400
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [IPv6:2001:67c:2050::465:101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 854FEC061574;
+        Wed, 26 Aug 2020 08:20:10 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Bc8gB5kB8zKmr4;
+        Wed, 26 Aug 2020 17:20:06 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aixah.de; s=MBO0001;
+        t=1598455205;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2qM1jxwRVIaxNoafXFNNPnXJ2t5niKuo4svPG6xAYZs=;
+        b=m3OnWH9t6OfefTnGMiRiHV9/l3Tpe8rHW+XDxtdta1v7PPy499mv3fbgknGlmmFWWLjiji
+        X7io67hyI4FWpIHvFJSTZnDWD7AtrStfsKO0Idi+ULqMruRdiLchiv35F/K7zz5Un4kGZY
+        OS/s+iBrQo1kczWjgCxvbWNGlgg6Q99beZCHwgsPWmn75tF4dL26jyoLo89GiFBLMSEL4m
+        WSRmQlrugMVWw7cvCstNNo2+S/jmnVlSAaqw+nJeaYWJ92c66erX5L6a0qdecHahJkEucX
+        +rR5fYpci0o2U6Mz3XLuM9KP7ZKvCsnj9V1bguZHtmeOrHVtSAo6LIvEk68TRQ==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id FJwc5ExwoScb; Wed, 26 Aug 2020 17:20:03 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 15:20:00 +0000
+From:   Mira Ressel <aranea@aixah.de>
+To:     David Miller <davem@davemloft.net>
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: do not acpi/of match device in i2c_device_probe()
-Message-ID: <20200826151629.GR1891694@smile.fi.intel.com>
-References: <20200826144920.110605-1-sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCH 1/2] veth: Initialize dev->perm_addr
+Message-ID: <20200826152000.ckxrcfyetdvuvqum@vega>
+References: <20200824143828.5964-1-aranea@aixah.de>
+ <20200824.102545.1450838041398463071.davem@davemloft.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200826144920.110605-1-sergey.senozhatsky@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200824.102545.1450838041398463071.davem@davemloft.net>
+X-MBO-SPAM-Probability: 
+X-Rspamd-Score: -2.75 / 15.00 / 15.00
+X-Rspamd-Queue-Id: BA09FCC9
+X-Rspamd-UID: 406851
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 11:49:20PM +0900, Sergey Senozhatsky wrote:
-> i2c, apparently, can match the same device twice - the first
-> time in ->match bus hook (i2c_device_match()), and the second
-> one in ->probe (i2c_device_probe()) bus hook.
+On Mon, Aug 24, 2020 at 10:25:45AM -0700, David Miller wrote:
+> From: Mira Ressel <aranea@aixah.de>
+> Date: Mon, 24 Aug 2020 14:38:26 +0000
 > 
-> To make things more complicated, the second matching does not
-> do exactly same checks as the first one. Namely, i2c_device_match()
-> calls acpi_driver_match_device() which considers devices that
-> provide of_match_table and performs of_compatible() matching for
-> such devices. One important thing to note here is that ACPI
-> of_compatible() matching (acpi_of_match_device()) is part of ACPI
-> and does not depend on CONFIG_OF.
-> 
-> i2c_device_probe(), on the other hand, calls acpi_match_device()
-> which does not perform of_compatible() matching, but instead
-> i2c_device_probe() relies on CONFIG_OF API to perform of_match_table
-> matching, IOW ->probe matching, unlike ->match matching, depends on
-> CONFIG_OF. This can break i2c device probing on !CONFIG_OF systems
-> if the device does not provide .id_table.
-> 
->  i2c_device_probe()
+> > Set the perm_addr of veth devices to whatever MAC has been assigned to
+> > the device. Otherwise, it remains all zero, with the consequence that
+> > ipv6_generate_stable_address() (which is used if the sysctl
+> > net.ipv6.conf.DEV.addr_gen_mode is set to 2 or 3) assigns every veth
+> > interface on a host the same link-local address.
+> > 
+> > The new behaviour matches that of several other virtual interface types
+> > (such as gre), and as far as I can tell, perm_addr isn't used by any
+> > other code sites that are relevant to veth.
+> > 
+> > Signed-off-by: Mira Ressel <aranea@aixah.de>
 >  ...
->    if (!driver->id_table &&
->        !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
->        !i2c_of_match_device(dev->driver->of_match_table, client)) {
->        status = -ENODEV;
->        goto put_sync_adapter;
->    }
+> > @@ -1342,6 +1342,8 @@ static int veth_newlink(struct net *src_net, struct net_device *dev,
+> >  	if (!ifmp || !tbp[IFLA_ADDRESS])
+> >  		eth_hw_addr_random(peer);
+> >  
+> > +	memcpy(peer->perm_addr, peer->dev_addr, peer->addr_len);
 > 
-> i2c_of_match_device() on !CONFIG_OF systems is always false, so we never
-> perform of_match_table matching. i2c_acpi_match_device() does ACPI match
-> only, no of_compatible() matching takes place, even though the device
-> provides .of_match_table and ACPI is capable of matching such device.
+> Semantically don't you want to copy over the peer->perm_addr?
 > 
-> It is not entirely clear why the device is matched again in bus
-> ->probe after successful and proper matching in bus ->match. Let's
-> remove ->probe matching.
+> Otherwise this loses the entire point of the permanent address, and
+> what the ipv6 address generation facility expects.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-(assuming it's okay to go)
+I'm confused. Am I misinterpreting what you're saying here, or did you
+make a typo?
 
-> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/i2c/i2c-core-base.c | 11 -----------
->  1 file changed, 11 deletions(-)
-> 
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 5ec082e2039d..77eea5c0bc71 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -475,17 +475,6 @@ static int i2c_device_probe(struct device *dev)
->  
->  	driver = to_i2c_driver(dev->driver);
->  
-> -	/*
-> -	 * An I2C ID table is not mandatory, if and only if, a suitable OF
-> -	 * or ACPI ID table is supplied for the probing device.
-> -	 */
-> -	if (!driver->id_table &&
-> -	    !acpi_driver_match_device(dev, dev->driver) &&
-> -	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
-> -		status = -ENODEV;
-> -		goto put_sync_adapter;
-> -	}
-> -
->  	if (client->flags & I2C_CLIENT_WAKE) {
->  		int wakeirq;
->  
-> -- 
-> 2.28.0
-> 
+I'm setting the peer->perm_addr, which would otherwise be zero, to its
+dev_addr, which has been either generated randomly by the kernel or
+provided by userland in a netlink attribute.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Regards,
+Mira
