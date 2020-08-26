@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE60CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDADC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4E8920897
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1789208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E7S6Pkng"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AwyjC/u6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgHZJfT (ORCPT
+        id S1728047AbgHZJfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:35:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41002 "EHLO
+        Wed, 26 Aug 2020 05:35:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728344AbgHZJew (ORCPT
+        with ESMTP id S1728417AbgHZJfX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:34:52 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E88DC06179A
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:27 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id k20so1066321wmi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:27 -0700 (PDT)
+        Wed, 26 Aug 2020 05:35:23 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ACD7C061360
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:38 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id b18so1092765wrs.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1sh6GJ0mJWJb3ICmo91l9UDo6bvtBy9zVj1QpKnJ7Ig=;
-        b=E7S6Pkng7Y0zFItSSiJ6u4PAD6CRFndCXBLJmIKAADhgYzB7tAwnaOstq39x7K8YiA
-         aYOiEa6IQ9pL2hp7r4/h6gkkN38ntfPXaVOzMazdJu+zmREhsaSzSyEHFJRalsGXtdGq
-         RH0GewQfte2wlRM98ENsZ362ARQtgwlM1+Sverg5BwZw6BS9GhUr+h+OwQTC+WD+R5LD
-         xP6mO7vA/v8yQcC0oB3mckaIE4cr9uwDkWUMvsQSMjSzBT8BmE3dJhUPo5k9PsJ3dL4n
-         7i40Rog29DFzVrx7zYzM4LzRshP1DRoEa6cMkG1OOmgevWJPDDV//yehqKjWH3ay8Sb8
-         WoAw==
+        bh=7UKR3rYf74POYGl3zWTm2JLEunC4uofhzAPfhP0pocI=;
+        b=AwyjC/u6v4PkRTDEUzW5YTwptUu33aZaKickGcM2cAwHsFaZSh3VUhKDX1bvVBJrSO
+         4bz4KBORUASDwdQfqAKx3d88J5wrfhGzYxAKrmqBGECjC3c7CnDdGYkY9lBhDFCymUQj
+         EDw6sSFzrbfef9cPsOW9n3jp+dy66uiSFPNf83D/FHYRlKG88XLNNq96ZivWt25TfrVT
+         sdHCBVi+qgdfiq6w8seV/4/KZ/BtO3IBixxQ1EQOKk/to29iEE5l7cDQF8IjNQg4bB7S
+         Rc3gzyrMcyijHr9sVaD/IuJGXpKovsNCxwzzB1BfVsNpF+pBAnlBEJs/Qp9ie+YpI0MZ
+         o1lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1sh6GJ0mJWJb3ICmo91l9UDo6bvtBy9zVj1QpKnJ7Ig=;
-        b=GATM/IBCQPWSfDhQADnwzCf3+HB3TcYjndUKYx07sUk1hGvA/OyXF/XDHmKXOeHUEa
-         DP/+8S6ogOkGpxZxJoPodm9TwRoUeDGDlUEXBD1CIu//GSM8/wbVljTNE5E9MYZu2kGf
-         s2VdAfHCvdKrGeoTjtEVMilzZX+31Mc24ya309FPUEsXyfXxNIpxJN7fR/+zq+WjfrAU
-         afDp2TEmvYaTjU6ycg276Fs7kvKbQBc0szMeHV1LsSpd6GthRs7OxYHk7whMng8pGcIl
-         iiktMUE7JTFVNoHZvmyBFQfoE1pV3W3OoSDf4Ay1xlGEyJM4mxsdfTWsc8ITquMDOHxV
-         THfQ==
-X-Gm-Message-State: AOAM530O7eENy7hMCEQinpjtl8F7U//qrVxIKYK4ORKcdolSVDHBHLof
-        4ysHaWRv+tWSijqGXgb6J2h17g==
-X-Google-Smtp-Source: ABdhPJzKS5OctiAZPFx3Qk+kjCmzI82WamC6hYGDP51dNtvT2E3Ogaz8sYsUpYWCXWko3lNaCQH5Og==
-X-Received: by 2002:a1c:ed15:: with SMTP id l21mr6221723wmh.56.1598434465884;
-        Wed, 26 Aug 2020 02:34:25 -0700 (PDT)
+        bh=7UKR3rYf74POYGl3zWTm2JLEunC4uofhzAPfhP0pocI=;
+        b=Z+aIrzenESmsX9gaIJjVsb24VuBFutUNZ+uDlISTuVF3AUIS+NOkLHj0R94H+rvOBk
+         88LDNzwOF4qN//+XtsL1fXYcUKLmsSt9AduXJwa1UtSl/kLFRsJBp0uSVqgvsPq6tSpi
+         YA4/j7hYWfe8agr2hVp+XiqmoXF1Uy/zkxK1YVESH96KJ3/jLT5kvwxJPLs7ZaZmOLJq
+         7018TY1BsqKSuzOWllwHfDGgjcSdItnihux2Kb5vfJhDs0VE76TQivDB7JM0vCHt+XtN
+         sg8eblAPz/QriALmyikdruwJFffQaUNVXI7UYR8G3UUVsc5lAL74ZIdVuhxmomAyuU10
+         Avsw==
+X-Gm-Message-State: AOAM531h4lNNpydgDyHCZn3KMckvrpi428N0HZLqf6p5lN/ZUPeMYTip
+        AEUoMoLPf9vDJ8dyNOgdJ21nOw==
+X-Google-Smtp-Source: ABdhPJx0+PGYRxM+X3LewS3JB02QeZrJW/r5M6uw0gn3QWnbZnHsBzFex7YLoQ9d6uScoAa3F2SEgA==
+X-Received: by 2002:adf:fc02:: with SMTP id i2mr8811277wrr.165.1598434476657;
+        Wed, 26 Aug 2020 02:34:36 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.24
+        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 02:34:25 -0700 (PDT)
+        Wed, 26 Aug 2020 02:34:35 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
-Subject: [PATCH 17/30] wireless: ath: ath9k: ar9002_initvals: Remove unused array 'ar9280PciePhy_clkreq_off_L1_9280'
-Date:   Wed, 26 Aug 2020 10:33:48 +0100
-Message-Id: <20200826093401.1458456-18-lee.jones@linaro.org>
+Subject: [PATCH 26/30] wireless: ath: ath9k: ar5008_initvals: Move ar5416Bank{0,1,2,3,7} to where they are used
+Date:   Wed, 26 Aug 2020 10:33:57 +0100
+Message-Id: <20200826093401.1458456-27-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200826093401.1458456-1-lee.jones@linaro.org>
 References: <20200826093401.1458456-1-lee.jones@linaro.org>
@@ -80,7 +80,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/ath/ath9k/ar9002_initvals.h:900:18: warning: ‘ar9280PciePhy_clkreq_off_L1_9280’ defined but not used [-Wunused-const-variable=]
+ drivers/net/wireless/ath/ath9k/ar5008_initvals.h:627:18: warning: ‘ar5416Bank7’ defined but not used [-Wunused-const-variable=]
+ 627 | static const u32 ar5416Bank7[][2] = {
+ | ^~~~~~~~~~~
+ drivers/net/wireless/ath/ath9k/ar5008_initvals.h:548:18: warning: ‘ar5416Bank3’ defined but not used [-Wunused-const-variable=]
+ 548 | static const u32 ar5416Bank3[][3] = {
+ | ^~~~~~~~~~~
+ drivers/net/wireless/ath/ath9k/ar5008_initvals.h:542:18: warning: ‘ar5416Bank2’ defined but not used [-Wunused-const-variable=]
+ 542 | static const u32 ar5416Bank2[][2] = {
+ | ^~~~~~~~~~~
+ drivers/net/wireless/ath/ath9k/ar5008_initvals.h:536:18: warning: ‘ar5416Bank1’ defined but not used [-Wunused-const-variable=]
+ 536 | static const u32 ar5416Bank1[][2] = {
+ | ^~~~~~~~~~~
+ drivers/net/wireless/ath/ath9k/ar5008_initvals.h:462:18: warning: ‘ar5416Bank0’ defined but not used [-Wunused-const-variable=]
+ 462 | static const u32 ar5416Bank0[][2] = {
+ | ^~~~~~~~~~~
 
 Cc: QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
 Cc: Kalle Valo <kvalo@codeaurora.org>
@@ -90,34 +104,119 @@ Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/ath/ath9k/ar9002_initvals.h | 14 --------------
- 1 file changed, 14 deletions(-)
+ .../net/wireless/ath/ath9k/ar5008_initvals.h  | 31 -------------------
+ drivers/net/wireless/ath/ath9k/ar5008_phy.c   | 31 ++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/ar9002_initvals.h b/drivers/net/wireless/ath/ath9k/ar9002_initvals.h
-index 4d18c66a67903..e01b5c3728b86 100644
---- a/drivers/net/wireless/ath/ath9k/ar9002_initvals.h
-+++ b/drivers/net/wireless/ath/ath9k/ar9002_initvals.h
-@@ -897,20 +897,6 @@ static const u32 ar9280Modes_original_tx_gain_9280_2[][5] = {
- 	{0x00007844, 0x92592480, 0x92592480, 0x92592480, 0x92592480},
+diff --git a/drivers/net/wireless/ath/ath9k/ar5008_initvals.h b/drivers/net/wireless/ath/ath9k/ar5008_initvals.h
+index 8d251600d8458..7da8365ae69a8 100644
+--- a/drivers/net/wireless/ath/ath9k/ar5008_initvals.h
++++ b/drivers/net/wireless/ath/ath9k/ar5008_initvals.h
+@@ -459,12 +459,6 @@ static const u32 ar5416Common[][2] = {
+ 	{0x0000a3e0, 0x000001ce},
  };
  
--static const u32 ar9280PciePhy_clkreq_off_L1_9280[][2] = {
+-static const u32 ar5416Bank0[][2] = {
 -	/* Addr      allmodes  */
--	{0x00004040, 0x9248fd00},
--	{0x00004040, 0x24924924},
--	{0x00004040, 0xa8000019},
--	{0x00004040, 0x13160820},
--	{0x00004040, 0xe5980560},
--	{0x00004040, 0xc01dcffc},
--	{0x00004040, 0x1aaabe41},
--	{0x00004040, 0xbe105554},
--	{0x00004040, 0x00043007},
--	{0x00004044, 0x00000000},
+-	{0x000098b0, 0x1e5795e5},
+-	{0x000098e0, 0x02008020},
 -};
 -
- static const u32 ar9280PciePhy_clkreq_always_on_L1_9280[][2] = {
+ static const u32 ar5416BB_RfGain[][3] = {
+ 	/* Addr      5G          2G        */
+ 	{0x00009a00, 0x00000000, 0x00000000},
+@@ -533,23 +527,6 @@ static const u32 ar5416BB_RfGain[][3] = {
+ 	{0x00009afc, 0x000000f9, 0x000000f9},
+ };
+ 
+-static const u32 ar5416Bank1[][2] = {
+-	/* Addr      allmodes  */
+-	{0x000098b0, 0x02108421},
+-	{0x000098ec, 0x00000008},
+-};
+-
+-static const u32 ar5416Bank2[][2] = {
+-	/* Addr      allmodes  */
+-	{0x000098b0, 0x0e73ff17},
+-	{0x000098e0, 0x00000420},
+-};
+-
+-static const u32 ar5416Bank3[][3] = {
+-	/* Addr      5G          2G        */
+-	{0x000098f0, 0x01400018, 0x01c00018},
+-};
+-
+ static const u32 ar5416Bank6TPC[][3] = {
+ 	/* Addr      5G          2G        */
+ 	{0x0000989c, 0x00000000, 0x00000000},
+@@ -587,13 +564,6 @@ static const u32 ar5416Bank6TPC[][3] = {
+ 	{0x000098d0, 0x0000000f, 0x0010000f},
+ };
+ 
+-static const u32 ar5416Bank7[][2] = {
+-	/* Addr      allmodes  */
+-	{0x0000989c, 0x00000500},
+-	{0x0000989c, 0x00000800},
+-	{0x000098cc, 0x0000000e},
+-};
+-
+ static const u32 ar5416Addac[][2] = {
  	/* Addr      allmodes  */
- 	{0x00004040, 0x9248fd00},
+ 	{0x0000989c, 0x00000000},
+@@ -634,4 +604,3 @@ static const u32 ar5416Addac[][2] = {
+ 	{0x0000989c, 0x00000000},
+ 	{0x000098c4, 0x00000000},
+ };
+-
+diff --git a/drivers/net/wireless/ath/ath9k/ar5008_phy.c b/drivers/net/wireless/ath/ath9k/ar5008_phy.c
+index dae95402eb3a9..55b2d9aa080d5 100644
+--- a/drivers/net/wireless/ath/ath9k/ar5008_phy.c
++++ b/drivers/net/wireless/ath/ath9k/ar5008_phy.c
+@@ -18,7 +18,6 @@
+ #include "hw-ops.h"
+ #include "../regd.h"
+ #include "ar9002_phy.h"
+-#include "ar5008_initvals.h"
+ 
+ /* All code below is for AR5008, AR9001, AR9002 */
+ 
+@@ -51,6 +50,36 @@ static const int m2ThreshLowExt_off = 127;
+ static const int m1ThreshExt_off = 127;
+ static const int m2ThreshExt_off = 127;
+ 
++static const u32 ar5416Bank0[][2] = {
++	/* Addr      allmodes  */
++	{0x000098b0, 0x1e5795e5},
++	{0x000098e0, 0x02008020},
++};
++
++static const u32 ar5416Bank1[][2] = {
++	/* Addr      allmodes  */
++	{0x000098b0, 0x02108421},
++	{0x000098ec, 0x00000008},
++};
++
++static const u32 ar5416Bank2[][2] = {
++	/* Addr      allmodes  */
++	{0x000098b0, 0x0e73ff17},
++	{0x000098e0, 0x00000420},
++};
++
++static const u32 ar5416Bank3[][3] = {
++	/* Addr      5G          2G        */
++	{0x000098f0, 0x01400018, 0x01c00018},
++};
++
++static const u32 ar5416Bank7[][2] = {
++	/* Addr      allmodes  */
++	{0x0000989c, 0x00000500},
++	{0x0000989c, 0x00000800},
++	{0x000098cc, 0x0000000e},
++};
++
+ static const struct ar5416IniArray bank0 = STATIC_INI_ARRAY(ar5416Bank0);
+ static const struct ar5416IniArray bank1 = STATIC_INI_ARRAY(ar5416Bank1);
+ static const struct ar5416IniArray bank2 = STATIC_INI_ARRAY(ar5416Bank2);
 -- 
 2.25.1
 
