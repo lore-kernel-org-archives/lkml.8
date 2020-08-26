@@ -6,54 +6,54 @@ X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D354EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E632C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDE68214F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81FB8206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbgHZOkZ (ORCPT
+        id S1727000AbgHZOka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:40:25 -0400
+        Wed, 26 Aug 2020 10:40:30 -0400
 Received: from mga11.intel.com ([192.55.52.93]:3727 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726734AbgHZOkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:40:20 -0400
-IronPort-SDR: nXjjw/d8Vf8jd0NiEb1r3ofsuQDuWCiNSWUCc6b7aChm4Vb61pwxWR0SIO/eK9TX0kH1kavBg+
- M3mWWRhERO6g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153869856"
+        id S1726874AbgHZOkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:40:22 -0400
+IronPort-SDR: ddinD+VX9dI5epistoKIqeEZXli0yYGOb2v+mSGsIYgUSJsxQcZMVzvbGxm0d6PkdZ6YwnIAtQ
+ VmaYvuTfkGFw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153869866"
 X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="153869856"
+   d="scan'208";a="153869866"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 07:40:20 -0700
-IronPort-SDR: uwrE/m7OJxY2wgP0ERnHQlSOIMq0Fak51rD/ut8OuryPrAsM34MBNqt2K0CCynweGLzV4+3tDo
- T5go1EsNN8Cw==
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 07:40:22 -0700
+IronPort-SDR: 3qQWmHAeoyu+Ah83AqVvZtMwmiF0fwP9YBedaITiYvRLqQEMSxRS2DLLjiu+Bf2T0sqk4dB+OS
+ AK/EvdCcWAvQ==
 X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="299494855"
+   d="scan'208";a="299494867"
 Received: from gillelas-mobl1.amr.corp.intel.com (HELO [10.255.231.51]) ([10.255.231.51])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 07:40:18 -0700
-Subject: Re: [PATCH 05/11] soundwire: bus: update multi-link definition with
- hw sync details
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 07:40:20 -0700
+Subject: Re: [PATCH 07/11] soundwire: intel: Only call sdw stream APIs for the
+ first cpu_dai
 To:     Vinod Koul <vkoul@kernel.org>,
         Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, mengdong.lin@intel.com, sanyog.r.kale@intel.com,
-        rander.wang@linux.intel.com, bard.liao@intel.com
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, sanyog.r.kale@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
 References: <20200818024120.20721-1-yung-chuan.liao@linux.intel.com>
- <20200818024120.20721-6-yung-chuan.liao@linux.intel.com>
- <20200826094420.GA2639@vkoul-mobl>
+ <20200818024120.20721-8-yung-chuan.liao@linux.intel.com>
+ <20200826094636.GB2639@vkoul-mobl>
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <d534afc3-3c38-275e-2f62-0432ffd91a36@linux.intel.com>
-Date:   Wed, 26 Aug 2020 09:09:14 -0500
+Message-ID: <5a7b75e5-4d64-9927-df81-68164ef2662a@linux.intel.com>
+Date:   Wed, 26 Aug 2020 09:35:19 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200826094420.GA2639@vkoul-mobl>
+In-Reply-To: <20200826094636.GB2639@vkoul-mobl>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -63,32 +63,32 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
->> + * @hw_sync_min_links: Number of links used by a stream above which
->> + * hardware-based synchronization is required. This value is only
->> + * meaningful if multi_link is set. If set to 1, hardware-based
->> + * synchronization will be used even if a stream only uses a single
->> + * SoundWire segment.
+>> -	ret = sdw_prepare_stream(dma->stream);
+>> +	/*
+>> +	 * All cpu dais belong to a stream. To ensure sdw_prepare_stream
+>> +	 * is called once per stream, we should call it only when
+>> +	 * dai = first_cpu_dai.
+>> +	 */
+>> +	if (first_cpu_dai == dai)
+>> +		ret = sdw_prepare_stream(dma->stream);
 > 
-> Soundwire spec does not say anything about multi-link so this is left to
-> implementer. Assuming that value of 1 would mean hw based sync will
-> be used even for single stream does not make sense in generic terms.
-> Maybe yes for Intel but may not be true for everyone?
+> Hmmm why not use the one place which is unique in the card to call this,
+> hint machine dais are only called once.
 
-hw-based sync is required for Intel even for single stream. It's been 
-part of the recommended programming flows since the beginning but 
-ignored so far.
+we are already calling directly sdw_startup_stream() and 
+sdw_shutdown_stream() from the machine driver.
 
-That said, this value is set by each master implementation, no one 
-forces non-Intel users to implement an Intel-specific requirement.
+We could call sdw_stream_enable() in the dailink .trigger as well, since 
+it only calls the stream API.
 
-> We already use m_rt_count in code for this, so the question is why is
-> that not sufficient?
+However for both .prepare() and .hw_free() there are a set of dai-level 
+configurations using static functions defined only in intel.c, and I 
+don't think we can move the code to the machine driver, or split the 
+prepare/hw_free in two (dailink and dai operations).
 
-Because as you rightly said above, Intel requires the hw_sync to be used 
-even for single stream, but we didn't want others to be forced to use 
-the hw-sync for single stream. the m_rt_count is not sufficient for Intel.
+I am not against your idea, I am not sure if it can be done.
 
-I think we are in agreement on not forcing everyone to follow what is 
-required by Intel, and that's precisely why we added this setting. If 
-you set it to two you would only use hw_sync when two masters are used.
+Would you be ok to merge this as a first step and let us work on an 
+optimization later (which would require ASoC/SoundWire synchronization)?
+
+
