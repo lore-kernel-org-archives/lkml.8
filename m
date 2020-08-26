@@ -2,82 +2,82 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA22C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E03EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5DCC2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 752C220707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:01:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbgHZNAk (ORCPT
+        id S1730125AbgHZNBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:00:40 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:33116 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbgHZNAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:00:36 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kAv2A-0004QZ-Po; Wed, 26 Aug 2020 23:00:11 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 26 Aug 2020 23:00:10 +1000
-Date:   Wed, 26 Aug 2020 23:00:10 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Andrew Zaborowski <andrew.zaborowski@intel.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Caleb Jorden <caljorden@hotmail.com>,
-        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
-Message-ID: <20200826130010.GA3232@gondor.apana.org.au>
-References: <20200826055150.2753.90553@ml01.vlan13.01.org>
- <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
- <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
- <20200826114952.GA2375@gondor.apana.org.au>
- <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
- <20200826120832.GA2996@gondor.apana.org.au>
- <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 26 Aug 2020 09:01:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730122AbgHZNBI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:01:08 -0400
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C6FBC061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:01:07 -0700 (PDT)
+Received: from ramsan ([84.195.186.194])
+        by andre.telenet-ops.be with bizsmtp
+        id LD142300V4C55Sk01D14Ge; Wed, 26 Aug 2020 15:01:04 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kAv32-0008Ah-Ke; Wed, 26 Aug 2020 15:01:04 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1kAv32-0006c8-Ib; Wed, 26 Aug 2020 15:01:04 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     linux-m68k@lists.linux-m68k.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] m68k: mm: Use PAGE_ALIGNED() helper
+Date:   Wed, 26 Aug 2020 15:01:03 +0200
+Message-Id: <20200826130103.25381-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 02:58:02PM +0200, Andrew Zaborowski wrote:
->
-> Running iwd's and ell's unit tests I can see that at least the
-> following algorithms give EINVAL errors:
-> ecb(aes)
-> cbc(aes)
-> ctr(aes)
-> 
-> The first one fails in recv() and only for some input lengths.  The
-> latter two fail in send().  The relevant ell code starts at
-> https://git.kernel.org/pub/scm/libs/ell/ell.git/tree/ell/cipher.c#n271
-> 
-> The tests didn't get to the point where aead is used.
+Use the existing PAGE_ALIGNED() helper instead of open-coding the same
+operation.
 
-Yes ell needs to set MSG_MORE after sending the control message.
-Any sendmsg(2) without a MSG_MORE will be interpreted as the end
-of a request.
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ arch/m68k/mm/motorola.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I'll work around this in the kernel though for the case where there
-is no actual data, with a WARN_ON_ONCE.
-
-Thanks,
+diff --git a/arch/m68k/mm/motorola.c b/arch/m68k/mm/motorola.c
+index 2bb006bdc31cd644..a9bdde54ca350197 100644
+--- a/arch/m68k/mm/motorola.c
++++ b/arch/m68k/mm/motorola.c
+@@ -226,7 +226,7 @@ static pte_t * __init kernel_page_table(void)
+ {
+ 	pte_t *pte_table = last_pte_table;
+ 
+-	if (((unsigned long)last_pte_table & ~PAGE_MASK) == 0) {
++	if (PAGE_ALIGNED(last_pte_table)) {
+ 		pte_table = (pte_t *)memblock_alloc_low(PAGE_SIZE, PAGE_SIZE);
+ 		if (!pte_table) {
+ 			panic("%s: Failed to allocate %lu bytes align=%lx\n",
+@@ -274,7 +274,7 @@ static pmd_t * __init kernel_ptr_table(void)
+ 	}
+ 
+ 	last_pmd_table += PTRS_PER_PMD;
+-	if (((unsigned long)last_pmd_table & ~PAGE_MASK) == 0) {
++	if (PAGE_ALIGNED(last_pmd_table)) {
+ 		last_pmd_table = (pmd_t *)memblock_alloc_low(PAGE_SIZE,
+ 							   PAGE_SIZE);
+ 		if (!last_pmd_table)
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.17.1
+
