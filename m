@@ -2,89 +2,132 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D76DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E37B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FFE7206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:11:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jQNvNVHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbgHZBI6 (ORCPT
+        id S1726790AbgHZBLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 21:08:58 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:32900 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726581AbgHZBI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 21:08:57 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id CCDC353284837DBC0E99;
-        Wed, 26 Aug 2020 09:08:55 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Wed, 26 Aug 2020
- 09:08:47 +0800
-From:   Yu Kuai <yukuai3@huawei.com>
-To:     <mripard@kernel.org>, <wens@csie.org>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <jernej.skrabec@siol.net>
-CC:     <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <yukuai3@huawei.com>,
-        <yi.zhang@huawei.com>
-Subject: [PATCH V2] drm/sun4i: add missing put_device() call in sun8i_r40_tcon_tv_set_mux()
-Date:   Wed, 26 Aug 2020 09:08:26 +0800
-Message-ID: <20200826010826.1785487-1-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.25.4
+        Tue, 25 Aug 2020 21:11:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48068 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726610AbgHZBL2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 21:11:28 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07Q1A691044031;
+        Wed, 26 Aug 2020 01:10:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
+ bh=VWKaRWmTmrlTrbnIky0PuQ3aZ0bL/HrXLsBsMQQqZo4=;
+ b=jQNvNVHYVl0Oq89XEgsmuaLNiJpGZJT9brk12EKPFxStCdsik5I4IBEl6Bg/H3NtYf2Z
+ cmzX1sVKVAwMR/9dtkl5+JbbWT934jfcpvNxDywlgqCg51YQs0e0n9qAHlHsLQ5ihWaP
+ jfDlzlh4U6ZT4v89eaYGfzPPP/w9t5HO2yAgiNyJ1PgteJXcHlLGZW6e7NrjGNIVpSeB
+ lU7mwgsqKocBkjf4K5fjzhl9uxqclIjlOPIoYhiqdyWwa04NYvZW7c+F0nPNNYYZ4/rV
+ FMmXYE4rJEyLxS6Vur9iT/YFuDO8s0NbT0Q+rWL/Ni1XlHheonNF35vprX/YllYb3zk6 rA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 333w6tv73f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 01:10:55 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07Q1AC7X034251;
+        Wed, 26 Aug 2020 01:10:54 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 333ru8x57n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Aug 2020 01:10:54 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07Q1AnBB002426;
+        Wed, 26 Aug 2020 01:10:49 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 25 Aug 2020 18:10:48 -0700
+Date:   Tue, 25 Aug 2020 21:19:46 -0400
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        mgorman@techsingularity.net, tj@kernel.org,
+        khlebnikov@yandex-team.ru, willy@infradead.org, hannes@cmpxchg.org,
+        lkp@intel.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, shakeelb@google.com,
+        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
+        kirill@shutemov.name, alexander.duyck@gmail.com,
+        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
+        shy828301@gmail.com
+Subject: Re: [PATCH v18 00/32] per memcg lru_lock
+Message-ID: <20200826011946.spknwjt44d2szrdo@ca-dmjordan1.us.oracle.com>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
+ <alpine.LSU.2.11.2008241231460.1065@eggly.anvils>
+ <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
+ <ec62a835-f79d-2b8c-99c7-120834703b42@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ec62a835-f79d-2b8c-99c7-120834703b42@linux.alibaba.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008260007
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008260006
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If sun8i_r40_tcon_tv_set_mux() succeed, sun8i_r40_tcon_tv_set_mux()
-doesn't have a corresponding put_device(). Thus add put_device()
-to fix the exception handling for this function implementation.
+On Tue, Aug 25, 2020 at 11:26:58AM +0800, Alex Shi wrote:
+> 在 2020/8/25 上午9:56, Daniel Jordan 写道:
+> > Alex, do you have a pointer to the modified readtwice case?
+> 
+> Sorry, no. my developer machine crashed, so I lost case my container and modified
+> case. I am struggling to get my container back from a account problematic repository. 
+> 
+> But some testing scripts is here, generally, the original readtwice case will
+> run each of threads on each of cpus. The new case will run one container on each cpus,
+> and just run one readtwice thead in each of containers.
 
-Fixes: 0305189afb32 ("drm/sun4i: tcon: Add support for R40 TCON")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
-Changes from V1:
- - correct misues of at_dma_xlate() in commit message.
+Ok, what you've sent so far gives me an idea of what you did.  My readtwice
+changes were similar, except I used the cgroup interface directly instead of
+docker and shared a filesystem between all the cgroups whereas it looks like
+you had one per memcg.  30 second runs on 5.9-rc2 and v18 gave 11% more data
+read with v18.  This was using 16 cgroups (32 dd tasks) on a 40 CPU, 2 socket
+machine.
 
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+> > Even better would be a description of the problem you're having in production
+> > with lru_lock.  We might be able to create at least a simulation of it to show
+> > what the expected improvement of your real workload is.
+> 
+> we are using thousands memcgs in a machine, but as a simulation, I guess above case
+> could be helpful to show the problem.
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index ced9a8287dd8..e40c542254f6 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -1433,14 +1433,18 @@ static int sun8i_r40_tcon_tv_set_mux(struct sun4i_tcon *tcon,
- 	if (IS_ENABLED(CONFIG_DRM_SUN8I_TCON_TOP) &&
- 	    encoder->encoder_type == DRM_MODE_ENCODER_TMDS) {
- 		ret = sun8i_tcon_top_set_hdmi_src(&pdev->dev, id);
--		if (ret)
-+		if (ret) {
-+			put_device(&pdev->dev);
- 			return ret;
-+		}
- 	}
- 
- 	if (IS_ENABLED(CONFIG_DRM_SUN8I_TCON_TOP)) {
- 		ret = sun8i_tcon_top_de_config(&pdev->dev, tcon->id, id);
--		if (ret)
-+		if (ret) {
-+			put_device(&pdev->dev);
- 			return ret;
-+		}
- 	}
- 
- 	return 0;
--- 
-2.25.4
+Using thousands of memcgs to do what?  Any particulars about the type of
+workload?  Surely it's more complicated than page cache reads :)
 
+> > I ran a few benchmarks on v17 last week (sysbench oltp readonly, kerndevel from
+> > mmtests, a memcg-ized version of the readtwice case I cooked up) and then today
+> > discovered there's a chance I wasn't running the right kernels, so I'm redoing
+> > them on v18.
+
+Neither kernel compile nor git checkout in the root cgroup changed much, just
+0.31% slower on elapsed time for the compile, so no significant regressions
+there.  Now for sysbench again.
