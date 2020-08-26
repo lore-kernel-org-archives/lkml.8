@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB86C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE1EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB8112078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11EB9207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:49:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598467745;
-	bh=lCWk/j9SvqFwahbxMoapvMtMKnFPnY4PtXWqojjq3VU=;
+	s=default; t=1598467755;
+	bh=mVZkuCpW5IDJPASJsDhEVkmS5T61Wr9y6RaE+LLwF3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2AisXSg1gd6ytAzKpgWlaEi7I1isqrKI+nkhTYCxBvfeaS0fBStBsh6wLaDyrz/eo
-	 i8xt+8u65v+T7LE2cjXqmkhY1K0oZaBwFoz0yr3X/ZlVQl/nWmvhhstoEeKEBfyELV
-	 Z0Pb65wLVfTAvJkdwMx4C0cLSmGAN7/+hB7Clg2Y=
+	b=DhBSjRAyKl6ApUrxDw2LLHIPyh+vpg5XesM9v8hNWCs4yc7avJqAe3KltEkjtlT/Z
+	 heZYMPoGPMX2DjHAiI6s0few045TVZYFnHGkn2+kp0brRrDyPEsYGzSU0125F8htmH
+	 wQL9wEJwNWJfqSdb/Ms/idRfXKSA1mqDX8fB44uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgHZStD (ORCPT
+        id S1727835AbgHZStK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:49:03 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41354 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727790AbgHZSs5 (ORCPT
+        Wed, 26 Aug 2020 14:49:10 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:43751 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgHZSs6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:48:57 -0400
-Received: by mail-io1-f67.google.com with SMTP id m23so3207027iol.8;
-        Wed, 26 Aug 2020 11:48:56 -0700 (PDT)
+        Wed, 26 Aug 2020 14:48:58 -0400
+Received: by mail-il1-f193.google.com with SMTP id e11so2677872ils.10;
+        Wed, 26 Aug 2020 11:48:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LNZy6DyKFktw1S4IEMG7/aKvHfRAsR8jlYGJnThSK/w=;
-        b=UX5DbWNL5Rt3p2nQWLnaQ2KLHq/EuP7NyrvLTzihq3d/Vfwo6dCPM4rcMFM3kCV4eV
-         Up2BIuzHY4/tS1EoEHjPq1rPNz+Plz9CS8oozZhenqEjACQzD37zU5QgV6IoDBZDsX/T
-         kSrBnVU1rgoy03rkBWqAPmX8Q6m4hHDmbbEtX9fjanIeFKHrLz9FJdA+dkdC9xTVcQuk
-         PjNDg+tXSUhUj0sIv4CxKOu3wFIO2wRNbjT+7VpIeLuZl4XuPCwflfbsSQwzEB4ePgGq
-         5yzGcfsviSdIJSjqXWgUE7zdJ0bjbgZSBCXosVlJrGgpDvs6YL01vxr956ruhItZfCzf
-         dlfQ==
-X-Gm-Message-State: AOAM531PvWBrK954HaGfvtEaYgpv9yM8z+6BJ/hfEm1PQP0KyJNVWyHK
-        AKRFDx49OhcwkxCrMot8cgxutmLOT75S
-X-Google-Smtp-Source: ABdhPJw3rZMqtCEoM6EXfLvn7ToJRVHLjEfMDKOeyf9q8tYTAfxr69JwYoHPnqFHtMqcAqf/pXRbgA==
-X-Received: by 2002:a6b:2c1:: with SMTP id 184mr4171903ioc.137.1598467735776;
-        Wed, 26 Aug 2020 11:48:55 -0700 (PDT)
+        bh=xlJZhntJx9sYhVEnGyncNAeUJZzJkWsXffEWR9WDmyk=;
+        b=G5u2s6EcTHA3RP1bBGtLQ+3wOFCRBMIYWl7z/Qs82LMCZcT3GtCkyzFaPyqInQzY6o
+         y0ejS8nRsPZ5Ud02ZBtcXbNNWnLM5rgA0CpSi6gqvpTApsWnfAlykt6TwTu9HLL6e1ct
+         f3VO5bAKUC/nAlR/rJXRj1/SSJT9F4T6HdwLFJKvVOUxUKP3cm9W5pijxN+fdJfQfcK8
+         hP8jM0CmKAKECXZNME3ihGznHtKSG2SJBBxdqQxHFPorRsAruLaIauWaPuha76OFdL6j
+         AFDVazxzZM6YDut0PiOwM4/HE5UsgEWb5isJNwB8GDTXx3SWvR95Gcda1M/qLiAdpasg
+         p+Yg==
+X-Gm-Message-State: AOAM532lENznlUuRbEGfpFFlFlSqh8XnOyzCJwBhBKRnSMzNoVIrn9ak
+        Z5g9TkUN893ziG78eTPGpfq8cibs0hvV
+X-Google-Smtp-Source: ABdhPJyTsipJUvMDB9SXrXoSpMRRUAS0c3IXuXNE6XI7rJPQ/mAKHW1RswyLCGuSV8DiQFjaYzZsTA==
+X-Received: by 2002:a92:505:: with SMTP id q5mr13115471ile.15.1598467737533;
+        Wed, 26 Aug 2020 11:48:57 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.249])
-        by smtp.googlemail.com with ESMTPSA id c2sm1609226iow.6.2020.08.26.11.48.54
+        by smtp.googlemail.com with ESMTPSA id c2sm1609226iow.6.2020.08.26.11.48.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 11:48:54 -0700 (PDT)
+        Wed, 26 Aug 2020 11:48:57 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Griffin <peter.griffin@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 2/3] dt-bindings: phy: Remove phy-stih41x-usb binding
-Date:   Wed, 26 Aug 2020 12:48:50 -0600
-Message-Id: <20200826184851.3431531-2-robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 3/3] dt-bindings: interrupt-controller: Remove obsolete 'img,meta-intc'
+Date:   Wed, 26 Aug 2020 12:48:51 -0600
+Message-Id: <20200826184851.3431531-3-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200826184851.3431531-1-robh@kernel.org>
 References: <20200826184851.3431531-1-robh@kernel.org>
@@ -68,48 +68,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver was removed in 2016 in commit fb954c48aea6 ("phy:
-stih41x-usb: Remove usb phy driver and dt binding  documentation.") and
-somehow the DT binding got dropped despite the subject.
+The driver and metag arch were removed in 2018.
 
-Cc: Peter Griffin <peter.griffin@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/phy/phy-stih41x-usb.txt          | 24 -------------------
- 1 file changed, 24 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
+ .../interrupt-controller/img,meta-intc.txt    | 82 -------------------
+ 1 file changed, 82 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt b/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt
 deleted file mode 100644
-index 744b4809542e..000000000000
---- a/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
+index 42431f44697f..000000000000
+--- a/Documentation/devicetree/bindings/interrupt-controller/img,meta-intc.txt
 +++ /dev/null
-@@ -1,24 +0,0 @@
--STMicroelectronics STiH41x USB PHY binding
--------------------------------------------
+@@ -1,82 +0,0 @@
+-* Meta External Trigger Controller Binding
 -
--This file contains documentation for the usb phy found in STiH415/6 SoCs from
--STMicroelectronics.
+-This binding specifies what properties must be available in the device tree
+-representation of a Meta external trigger controller.
 -
 -Required properties:
--- compatible	: should be "st,stih416-usb-phy" or "st,stih415-usb-phy"
--- st,syscfg	: should be a phandle of the syscfg node
--- clock-names	: must contain "osc_phy"
--- clocks	: must contain an entry for each name in clock-names.
--See: Documentation/devicetree/bindings/clock/clock-bindings.txt
--- #phy-cells	: must be 0 for this phy
--See: Documentation/devicetree/bindings/phy/phy-bindings.txt
 -
--Example:
+-    - compatible: Specifies the compatibility list for the interrupt controller.
+-      The type shall be <string> and the value shall include "img,meta-intc".
 -
--usb2_phy: usb2phy@0 {
--	compatible	= "st,stih416-usb-phy";
--	#phy-cells	= <0>;
--	st,syscfg	= <&syscfg_rear>;
--	clocks		= <&clk_sysin>;
--	clock-names	= "osc_phy";
--};
+-    - num-banks: Specifies the number of interrupt banks (each of which can
+-      handle 32 interrupt sources).
+-
+-    - interrupt-controller: The presence of this property identifies the node
+-      as an interrupt controller. No property value shall be defined.
+-
+-    - #interrupt-cells: Specifies the number of cells needed to encode an
+-      interrupt source. The type shall be a <u32> and the value shall be 2.
+-
+-    - #address-cells: Specifies the number of cells needed to encode an
+-      address. The type shall be <u32> and the value shall be 0. As such,
+-      'interrupt-map' nodes do not have to specify a parent unit address.
+-
+-Optional properties:
+-
+-    - no-mask: The controller doesn't have any mask registers.
+-
+-* Interrupt Specifier Definition
+-
+-  Interrupt specifiers consists of 2 cells encoded as follows:
+-
+-    - <1st-cell>: The interrupt-number that identifies the interrupt source.
+-
+-    - <2nd-cell>: The Linux interrupt flags containing level-sense information,
+-                  encoded as follows:
+-                    1 = edge triggered
+-                    4 = level-sensitive
+-
+-* Examples
+-
+-Example 1:
+-
+-	/*
+-	 * Meta external trigger block
+-	 */
+-	intc: intc {
+-		// This is an interrupt controller node.
+-		interrupt-controller;
+-
+-		// No address cells so that 'interrupt-map' nodes which
+-		// reference this interrupt controller node do not need a parent
+-		// address specifier.
+-		#address-cells = <0>;
+-
+-		// Two cells to encode interrupt sources.
+-		#interrupt-cells = <2>;
+-
+-		// Number of interrupt banks
+-		num-banks = <2>;
+-
+-		// No HWMASKEXT is available (specify on Chorus2 and Comet ES1)
+-		no-mask;
+-
+-		// Compatible with Meta hardware trigger block.
+-		compatible = "img,meta-intc";
+-	};
+-
+-Example 2:
+-
+-	/*
+-	 * An interrupt generating device that is wired to a Meta external
+-	 * trigger block.
+-	 */
+-	uart1: uart@02004c00 {
+-		// Interrupt source '5' that is level-sensitive.
+-		// Note that there are only two cells as specified in the
+-		// interrupt parent's '#interrupt-cells' property.
+-		interrupts = <5 4 /* level */>;
+-
+-		// The interrupt controller that this device is wired to.
+-		interrupt-parent = <&intc>;
+-	};
 -- 
 2.25.1
 
