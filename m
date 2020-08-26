@@ -2,148 +2,82 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEEBC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7085FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42A162083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:42:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598474558;
-	bh=jlRC0LblFWGAlwCR/La2tMi2HZWcZ4kco3I34s3mivA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=d1lskS6+3+EcPcjrDHR6y3PRWw1L4zZ8jlYKX1MQLyKIzijQdQJo9nf84qzXez4A6
-	 rb2vNkyfmRHZfYapPqfbT2xrQSbFpFnldJZKtMdhJxWWlahhL74wQDTZbsvfMK8FHO
-	 KjF9TYekxRCpZ/d4xL/evMX/UW3sltv/AF8mb7Jo=
+	by mail.kernel.org (Postfix) with ESMTP id 3715C2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:43:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="bsjc/5BL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgHZUmh (ORCPT
+        id S1726873AbgHZUnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:42:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbgHZUmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:42:36 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 854AB2078A;
-        Wed, 26 Aug 2020 20:42:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598474555;
-        bh=jlRC0LblFWGAlwCR/La2tMi2HZWcZ4kco3I34s3mivA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ONcdkIPjBp+d8E94IWKMDTXhW0goXo+jli8WynQR80HgaHZTxy+aJ+29IBRPAMzJX
-         CACSlXbAkc1nlVFMlvnC7iid0ew9kRNZ6UBtvkSyOfAV84NSGrqfoD6ddEmqnB4Akg
-         kyJ4kasENj6QUPmznJkuUHtqHt4tUwh/wBfiXdC0=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kB2Fd-006yJW-U0; Wed, 26 Aug 2020 21:42:34 +0100
-Date:   Wed, 26 Aug 2020 21:42:31 +0100
-Message-ID: <875z952l6w.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 23/46] irqdomain/msi: Provide DOMAIN_BUS_VMD_MSI
-In-Reply-To: <20200826112332.954409970@linutronix.de>
-References: <20200826111628.794979401@linutronix.de>
-        <20200826112332.954409970@linutronix.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Wed, 26 Aug 2020 16:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60812 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbgHZUnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 16:43:14 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C699AC061574;
+        Wed, 26 Aug 2020 13:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/v3xD7Yj6E46youW4kSUkt7tAjcS/uM9PSo7nM0jFJg=; b=bsjc/5BLixCdysHvhmxVpzDPZf
+        ucALOSbLSQR/5vgAz+N3vRjJvX9DYXS4++iZ4Ltq2PjyU6hO15ZyPXSEnFfBQpe7FPrB1RNuvBoUo
+        thO1sTZta4XjBFfWt6EdQRI26w0uoiAnQDqq9Uqd1p7RkYkTUkEzkj1N74q0U3E0Nf5k=;
+Received: from p200300ccff0d72001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0d:7200:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1kB2G3-00011s-61; Wed, 26 Aug 2020 22:42:59 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1kB2G2-0001Kh-MP; Wed, 26 Aug 2020 22:42:58 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        andreas@kemnade.info, Anson.Huang@nxp.com,
+        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
+        michael@walle.cc, rjones@gateworks.com, leoyang.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, j.neuschaefer@gmx.net,
+        letux-kernel@openphoenux.org
+Subject: [PATCH v2 0/2] ARM: dts: add Tolino Shine 2 HD
+Date:   Wed, 26 Aug 2020 22:42:49 +0200
+Message-Id: <20200826204251.5082-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 12:16:51 +0100,
-Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> PCI devices behind a VMD bus are not subject to interrupt remapping, but
-> the irq domain for VMD MSI cannot be distinguished from a regular PCI/MSI
-> irq domain.
-> 
-> Add a new domain bus token and allow it in the bus token check in
-> msi_check_reservation_mode() to keep the functionality the same once VMD
-> uses this token.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> 
-> ---
->  include/linux/irqdomain.h |    1 +
->  kernel/irq/msi.c          |    7 ++++++-
->  2 files changed, 7 insertions(+), 1 deletion(-)
-> 
-> --- a/include/linux/irqdomain.h
-> +++ b/include/linux/irqdomain.h
-> @@ -84,6 +84,7 @@ enum irq_domain_bus_token {
->  	DOMAIN_BUS_FSL_MC_MSI,
->  	DOMAIN_BUS_TI_SCI_INTA_MSI,
->  	DOMAIN_BUS_WAKEUP,
-> +	DOMAIN_BUS_VMD_MSI,
->  };
->  
->  /**
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -370,8 +370,13 @@ static bool msi_check_reservation_mode(s
->  {
->  	struct msi_desc *desc;
->  
-> -	if (domain->bus_token != DOMAIN_BUS_PCI_MSI)
-> +	switch(domain->bus_token) {
-> +	case DOMAIN_BUS_PCI_MSI:
-> +	case DOMAIN_BUS_VMD_MSI:
-> +		break;
-> +	default:
->  		return false;
-> +	}
->  
->  	if (!(info->flags & MSI_FLAG_MUST_REACTIVATE))
->  		return false;
+This adds a device tree for the Tolino Shine 2 HD Ebook reader.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+It is equipped with an i.MX6SL SoC. Except for backlight (via an EC) and
+the EPD, drivers are available and therefore things are defined in the
+dts.
 
-	M.
+Andreas Kemnade (2):
+  dt-bindings: arm: fsl: add compatible string for Tolino Shine 2 HD
+  ARM: dts: imx: add devicetree for Tolino Shine 2 HD
+
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts  | 588 ++++++++++++++++++
+ 3 files changed, 590 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6sl-tolino-shine2hd.dts
 
 -- 
-Without deviation from the norm, progress is not possible.
+2.20.1
+
