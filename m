@@ -2,83 +2,150 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B811AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C80AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB7F20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331DA20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598443559;
+	bh=MqAyc3vVX6Sn4o+E+TZtYRzJyGODsIk2bdb5U1rmkkw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lhNsBX9Awgg/SGTXLMUTUyUPrXMdeI18THZ8wCLEYHw9twVAItUBHor51Ce2uJZgy
+	 MuTPcQ3mhBaFJy76XA2KB0wIgMKcQeMMPBh6BIibqQTkAG2kMBBOZsGKpHbNNJ6dW3
+	 I1QLNb5wt++vpCTF8nfblxjXBF63VQcbSp2U/9Hw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbgHZMFq (ORCPT
+        id S1729624AbgHZMEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:05:46 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42821 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729677AbgHZMFB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:05:01 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q14so1528555wrn.9;
-        Wed, 26 Aug 2020 05:05:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yeR3qMxY8QK4/wvsoj5cuxH3mWn/t2ot23DexX4h7MA=;
-        b=IxdmjIAk61phj86Vx2aVeUtyV1ZPH6KSc6YbsU2upSKiejQ2+9+5qYpeJ0vwQ1Ft4K
-         yBA/x5JdIzT2RFVMchiz886iNCuDWnEyLHUHakwU3eL9BNqVIQGscVT6s/uhE7zHPeyZ
-         1Peh8dJwsx6AgyoXqQkD6BVloLi9NBXaLjv0z9xgAKm9EF+d62CaFjPNm7ifPMrfgxzF
-         Lt3RKsbOBJNyf9ZFCrLIRKpfeshH0BFblASsrNDaY5gKMIkxRGKi8GyDlLW/VtlG3S9A
-         sQl674qG4AUx1TxijPipxKuofwQyhfGH1BofPnrl+xkzqvyWbYaxo5smqopN51ieUnWm
-         E0oA==
-X-Gm-Message-State: AOAM532RTMuiB3z/59l1yZhmZQCDDr5vZLxbi5MTtxhb0hWRedR50Qi8
-        5RWPrFjQLB55qJTyzQgffj6b+4oQm6983A==
-X-Google-Smtp-Source: ABdhPJzsVm84CbbIOidcz8nD79LPK/Ny1lXC+ZG5qTLEMI14VHYwfiCaAadaxv6yHSvDMychEJr93w==
-X-Received: by 2002:adf:e452:: with SMTP id t18mr14333704wrm.109.1598443498258;
-        Wed, 26 Aug 2020 05:04:58 -0700 (PDT)
-Received: from localhost.localdomain (static-176-175-69-188.ftth.abo.bbox.fr. [176.175.69.188])
-        by smtp.googlemail.com with ESMTPSA id k24sm4728420wmj.19.2020.08.26.05.04.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 05:04:57 -0700 (PDT)
-From:   Guilhem Lettron <guilhem@barpilot.io>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guilhem Lettron <guilhem@barpilot.io>
-Subject: [PATCH] intel_idle: Add ICL support
-Date:   Wed, 26 Aug 2020 14:04:21 +0200
-Message-Id: <20200826120421.44356-1-guilhem@barpilot.io>
-X-Mailer: git-send-email 2.27.0
+        Wed, 26 Aug 2020 08:04:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37886 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729501AbgHZMDI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:03:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B7C020838;
+        Wed, 26 Aug 2020 12:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598443388;
+        bh=MqAyc3vVX6Sn4o+E+TZtYRzJyGODsIk2bdb5U1rmkkw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1lU78uE67qOwZhtahGsII2fUoD+L1gAuTKk1xaJorQdjIR02Ka/wvXuq27Sbu5/G7
+         zljhyxovSTNt6l2rblc1599USUaunc30XhYyyHAyFrDgGRJCh1HImj6joF7ZPCAyZK
+         2A3eUX0FdlGB6bixXUa2bTjaRBoVqgJVlgxk6Rsk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>
+Subject: [PATCH 5.7 15/15] binfmt_flat: revert "binfmt_flat: dont offset the data start"
+Date:   Wed, 26 Aug 2020 14:02:43 +0200
+Message-Id: <20200826114850.032392369@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200826114849.295321031@linuxfoundation.org>
+References: <20200826114849.295321031@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the same C-states as SKL
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-Signed-off-by: Guilhem Lettron <guilhem@barpilot.io>
+commit 2217b982624680d19a80ebb4600d05c8586c4f96 upstream.
+
+binfmt_flat loader uses the gap between text and data to store data
+segment pointers for the libraries. Even in the absence of shared
+libraries it stores at least one pointer to the executable's own data
+segment. Text and data can go back to back in the flat binary image and
+without offsetting data segment last few instructions in the text
+segment may get corrupted by the data segment pointer.
+
+Fix it by reverting commit a2357223c50a ("binfmt_flat: don't offset the
+data start").
+
+Cc: stable@vger.kernel.org
+Fixes: a2357223c50a ("binfmt_flat: don't offset the data start")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/idle/intel_idle.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/binfmt_flat.c |   20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-index 8e0fb1a5bdbd..1bb539f09a4f 100644
---- a/drivers/idle/intel_idle.c
-+++ b/drivers/idle/intel_idle.c
-@@ -1145,6 +1145,8 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
- 	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&idle_cpu_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&idle_cpu_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,		&idle_cpu_skx),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&idle_cpu_skl),
-+	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&idle_cpu_skl),
- 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&idle_cpu_icx),
- 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&idle_cpu_knl),
- 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&idle_cpu_knl),
--- 
-2.27.0
+--- a/fs/binfmt_flat.c
++++ b/fs/binfmt_flat.c
+@@ -571,7 +571,7 @@ static int load_flat_file(struct linux_b
+ 			goto err;
+ 		}
+ 
+-		len = data_len + extra;
++		len = data_len + extra + MAX_SHARED_LIBS * sizeof(unsigned long);
+ 		len = PAGE_ALIGN(len);
+ 		realdatastart = vm_mmap(NULL, 0, len,
+ 			PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE, 0);
+@@ -585,7 +585,9 @@ static int load_flat_file(struct linux_b
+ 			vm_munmap(textpos, text_len);
+ 			goto err;
+ 		}
+-		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
++		datapos = ALIGN(realdatastart +
++				MAX_SHARED_LIBS * sizeof(unsigned long),
++				FLAT_DATA_ALIGN);
+ 
+ 		pr_debug("Allocated data+bss+stack (%u bytes): %lx\n",
+ 			 data_len + bss_len + stack_len, datapos);
+@@ -615,7 +617,7 @@ static int load_flat_file(struct linux_b
+ 		memp_size = len;
+ 	} else {
+ 
+-		len = text_len + data_len + extra;
++		len = text_len + data_len + extra + MAX_SHARED_LIBS * sizeof(u32);
+ 		len = PAGE_ALIGN(len);
+ 		textpos = vm_mmap(NULL, 0, len,
+ 			PROT_READ | PROT_EXEC | PROT_WRITE, MAP_PRIVATE, 0);
+@@ -630,7 +632,9 @@ static int load_flat_file(struct linux_b
+ 		}
+ 
+ 		realdatastart = textpos + ntohl(hdr->data_start);
+-		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
++		datapos = ALIGN(realdatastart +
++				MAX_SHARED_LIBS * sizeof(u32),
++				FLAT_DATA_ALIGN);
+ 
+ 		reloc = (__be32 __user *)
+ 			(datapos + (ntohl(hdr->reloc_start) - text_len));
+@@ -647,9 +651,8 @@ static int load_flat_file(struct linux_b
+ 					 (text_len + full_data
+ 						  - sizeof(struct flat_hdr)),
+ 					 0);
+-			if (datapos != realdatastart)
+-				memmove((void *)datapos, (void *)realdatastart,
+-						full_data);
++			memmove((void *) datapos, (void *) realdatastart,
++					full_data);
+ #else
+ 			/*
+ 			 * This is used on MMU systems mainly for testing.
+@@ -705,7 +708,8 @@ static int load_flat_file(struct linux_b
+ 		if (IS_ERR_VALUE(result)) {
+ 			ret = result;
+ 			pr_err("Unable to read code+data+bss, errno %d\n", ret);
+-			vm_munmap(textpos, text_len + data_len + extra);
++			vm_munmap(textpos, text_len + data_len + extra +
++				MAX_SHARED_LIBS * sizeof(u32));
+ 			goto err;
+ 		}
+ 	}
+
 
