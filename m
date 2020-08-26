@@ -2,192 +2,181 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86554C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59D2A207DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEFD20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598476510;
-	bh=1zCaXT3EyDHwbu4Y2W/LMbHARG53YBmDebObeojxBv8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ut29q2UQ3pobajgz/firt584mdlcXT7j33d+Hrt1Bkcg6x9pvu6dze77E0NYfFTvk
-	 fTGFAQoVAedrt5ofxHH5qT1hZVRncYGdJFTw/Gew2aJ0xenwYcj8CfaFfwPEVeRCt4
-	 2euf6SHzcCQGMXpPIyxUcMCdagWlCoSuPeEt7NMM=
+	s=default; t=1598476582;
+	bh=sMkLczu1Uc3IGEeLRVx2s1pvyCZh+gMXSvUjEAxdE6s=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Jvy4FDFsVnAPY2NmTggt+y7ZpDHGAzR11bbMZhlbQc+Zy671AZVz98JfYh5YvOioj
+	 Vro2iI4DORobVMP2V7rICW6zoxA4r0008ijagU8zIvNfrvMSc5gfw2nsvkueOj4Ejz
+	 vvGdAlHQX8ox7su/yD+yBlgf62l5N6vG7kNcUnq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgHZVPG (ORCPT
+        id S1726767AbgHZVQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:15:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37616 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 17:16:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbgHZVPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:15:03 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1726753AbgHZVQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:16:16 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72FC0207CD;
-        Wed, 26 Aug 2020 21:15:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B07EA20737;
+        Wed, 26 Aug 2020 21:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598476502;
-        bh=1zCaXT3EyDHwbu4Y2W/LMbHARG53YBmDebObeojxBv8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ADsZphIgjZ5T7GV618PiQVXF5hFPLkP4+5i1e3B56KbIqcMVPyjyf8P0j9JmK8PWb
-         QohrTdC7et2y9O4nWOumBOqtjLzCy796nFR3xwDWAsmBZ6OxN9+6AUatmg6OCKb66y
-         +fKoWXb/5fCzAknCF55f1UtfQANC7LSArE9wFids=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kB2l2-006yir-Pg; Wed, 26 Aug 2020 22:15:00 +0100
-Date:   Wed, 26 Aug 2020 22:14:58 +0100
-Message-ID: <8736492jot.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks selectable
-In-Reply-To: <20200826112333.992429909@linutronix.de>
-References: <20200826111628.794979401@linutronix.de>
-        <20200826112333.992429909@linutronix.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        s=default; t=1598476575;
+        bh=sMkLczu1Uc3IGEeLRVx2s1pvyCZh+gMXSvUjEAxdE6s=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Q8pbz7l0Igw3ej24d3nq0VN/pJHkFcFQRAVIjbTzwZtnUv2I0J6/59mcUzDDFmHvT
+         Vrp4RCD0ASeLBCAprmR1xheNpfaFao3MXCTszb93tjQ9wtpTw1rVn57bUE3YZzXkmB
+         X8sMH6QgzJhBjGp128Dc0y5JxHwT31TZTlC2y0U4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4DA9E35226D9; Wed, 26 Aug 2020 14:16:15 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 14:16:15 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     peterz@infradead.org
+Cc:     syzbot <syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com>,
+        fweisbec@gmail.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Subject: Re: INFO: rcu detected stall in smp_call_function
+Message-ID: <20200826211615.GA22279@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <000000000000903d5805ab908fc4@google.com>
+ <20200729125811.GA70158@hirez.programming.kicks-ass.net>
+ <20200825132411.GR35926@hirez.programming.kicks-ass.net>
+ <20200825154841.GQ2855@paulmck-ThinkPad-P72>
+ <20200826095144.GD1362448@hirez.programming.kicks-ass.net>
+ <20200826140733.GM2855@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826140733.GM2855@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 12:17:02 +0100,
-Thomas Gleixner <tglx@linutronix.de> wrote:
+On Wed, Aug 26, 2020 at 07:07:33AM -0700, Paul E. McKenney wrote:
+> On Wed, Aug 26, 2020 at 11:51:44AM +0200, peterz@infradead.org wrote:
+> > On Tue, Aug 25, 2020 at 08:48:41AM -0700, Paul E. McKenney wrote:
+> > 
+> > > > Paul, I wanted to use this function, but found it has very weird
+> > > > semantics.
+> > > > 
+> > > > Why do you need it to (remotely) call @func when p is current? The user
+> > > > in rcu_print_task_stall() explicitly bails in this case, and the other
+> > > > in rcu_wait_for_one_reader() will attempt an IPI.
+> > > 
+> > > Good question.  Let me look at the invocations:
+> > > 
+> > > o	trc_wait_for_one_reader() bails on current before
+> > > 	invoking try_invoke_on_locked_down_task():
+> > > 
+> > > 	if (t == current) {
+> > > 		t->trc_reader_checked = true;
+> > > 		trc_del_holdout(t);
+> > > 		WARN_ON_ONCE(t->trc_reader_nesting);
+> > > 		return;
+> > > 	}
+> > > 
+> > > o	rcu_print_task_stall() might well invoke on the current task,
+> > > 	low though the probability of this happening might be.	(The task
+> > > 	has to be preempted within an RCU read-side critical section
+> > > 	and resume in time for the scheduling-clock irq that will report
+> > > 	the RCU CPU stall to interrupt it.)
+> > > 
+> > > 	And you are right, no point in an IPI in this case.
+> > > 
+> > > > Would it be possible to change this function to:
+> > > > 
+> > > >  - blocked task: call @func with p->pi_lock held
+> > > >  - queued, !running task: call @func with rq->lock held
+> > > >  - running task: fail.
+> > > > 
+> > > > ?
+> > > 
+> > > Why not a direct call in the current-task case, perhaps as follows,
+> > > including your change above?  This would allow the RCU CPU stall
+> > > case to work naturally and without the IPI.
+> > > 
+> > > Would that work for your use case?
+> > 
+> > It would in fact, but at this point I'd almost be inclined to stick the
+> > IPI in as well. But small steps I suppose. So yes.
 > 
-> From: Thomas Gleixner <tglx@linutronix.de>
+> If interrupts are disabled, won't a self-IPI deadlock?
 > 
-> The arch_.*_msi_irq[s] fallbacks are compiled in whether an architecture
-> requires them or not. Architectures which are fully utilizing hierarchical
-> irq domains should never call into that code.
+> But good point that the current-task case could be the only case invoking
+> the function with interrupts enabled, which now that you mention it does
+> sound like an accident waiting to happen.  So how about the following
+> instead?
 > 
-> It's not only architectures which depend on that by implementing one or
-> more of the weak functions, there is also a bunch of drivers which relies
-> on the weak functions which invoke msi_controller::setup_irq[s] and
-> msi_controller::teardown_irq.
+> 							Thanx, Paul
 > 
-> Make the architectures and drivers which rely on them select them in Kconfig
-> and if not selected replace them by stub functions which emit a warning and
-> fail the PCI/MSI interrupt allocation.
+> ------------------------------------------------------------------------
 > 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> V2: Make the architectures (and drivers) which need the fallbacks select them
->     and not the other way round (Bjorn).
-> ---
->  arch/ia64/Kconfig              |    1 +
->  arch/mips/Kconfig              |    1 +
->  arch/powerpc/Kconfig           |    1 +
->  arch/s390/Kconfig              |    1 +
->  arch/sparc/Kconfig             |    1 +
->  arch/x86/Kconfig               |    1 +
->  drivers/pci/Kconfig            |    3 +++
->  drivers/pci/controller/Kconfig |    3 +++
->  drivers/pci/msi.c              |    3 ++-
->  include/linux/msi.h            |   31 ++++++++++++++++++++++++++-----
->  10 files changed, 40 insertions(+), 6 deletions(-)
-> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 8471a0f..f8ed04c 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2997,7 +2997,7 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>   * state while invoking @func(@arg).  This function can use ->on_rq and
+>   * task_curr() to work out what the state is, if required.  Given that
+>   * @func can be invoked with a runqueue lock held, it had better be quite
+> - * lightweight.
+> + * lightweight.  Note that the current task is implicitly locked down.
+>   *
+>   * Returns:
+>   *	@false if the task slipped out from under the locks.
+> @@ -3006,12 +3006,17 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
+>   */
+>  bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct task_struct *t, void *arg), void *arg)
+>  {
+> -	bool ret = false;
+>  	struct rq_flags rf;
+> +	bool ret = false;
+>  	struct rq *rq;
+>  
+> -	lockdep_assert_irqs_enabled();
+> -	raw_spin_lock_irq(&p->pi_lock);
+> +	if (p == current) {
+> +		local_irq_save(rf.flags);
+> +		ret = func(p, arg);
+> +		local_irq_restore(rf.flags);
+> +		return ret;
+> +	}
 
-[...]
+Is this "if" statement anything more than an optimization, and a dubious
+one at that?  It looks to me like the current task would otherwise end
+up acquiring its own ->pi_lock, then acquiring the rq lock which cannot
+change due to interrupts being disabled.  And then invoking the same
+function with interrupts disabled, returning the same result.
 
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -41,6 +41,7 @@ config PCI_TEGRA
->  	bool "NVIDIA Tegra PCIe controller"
->  	depends on ARCH_TEGRA || COMPILE_TEST
->  	depends on PCI_MSI_IRQ_DOMAIN
-> +	select PCI_MSI_ARCH_FALLBACKS
->  	help
->  	  Say Y here if you want support for the PCIe host controller found
->  	  on NVIDIA Tegra SoCs.
-> @@ -67,6 +68,7 @@ config PCIE_RCAR_HOST
->  	bool "Renesas R-Car PCIe host controller"
->  	depends on ARCH_RENESAS || COMPILE_TEST
->  	depends on PCI_MSI_IRQ_DOMAIN
-> +	select PCI_MSI_ARCH_FALLBACKS
->  	help
->  	  Say Y here if you want PCIe controller support on R-Car SoCs in host
->  	  mode.
-> @@ -103,6 +105,7 @@ config PCIE_XILINX_CPM
->  	bool "Xilinx Versal CPM host bridge support"
->  	depends on ARCH_ZYNQMP || COMPILE_TEST
->  	select PCI_HOST_COMMON
-> +	select PCI_MSI_ARCH_FALLBACKS
+Am I missing something subtle here?
 
-This guy actually doesn't implement MSIs at all (it seems to delegate
-them to an ITS present in the system, if I read the DT binding
-correctly). However its older brother from the same silicon dealer
-seems to need it. The patchlet below should fix it.
+						Thanx, Paul
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 9ad13919bcaa..f56ff049d469 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -96,6 +96,7 @@ config PCI_HOST_GENERIC
- 
- config PCIE_XILINX
- 	bool "Xilinx AXI PCIe host bridge support"
-+	select PCI_MSI_ARCH_FALLBACKS
- 	depends on OF || COMPILE_TEST
- 	help
- 	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
-@@ -105,7 +106,6 @@ config PCIE_XILINX_CPM
- 	bool "Xilinx Versal CPM host bridge support"
- 	depends on ARCH_ZYNQMP || COMPILE_TEST
- 	select PCI_HOST_COMMON
--	select PCI_MSI_ARCH_FALLBACKS
- 	help
- 	  Say 'Y' here if you want kernel support for the
- 	  Xilinx Versal CPM host bridge.
-
-
-With that fixed,
-
-Acked-by: Marc Zyngier <maz@kernel.org>
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+> +	raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
+>  	if (p->on_rq) {
+>  		rq = __task_rq_lock(p, &rf);
+>  		if (task_rq(p) == rq)
+> @@ -3028,7 +3033,7 @@ bool try_invoke_on_locked_down_task(struct task_struct *p, bool (*func)(struct t
+>  				ret = func(p, arg);
+>  		}
+>  	}
+> -	raw_spin_unlock_irq(&p->pi_lock);
+> +	raw_spin_unlock_irqrestore(&p->pi_lock, rf.flags);
+>  	return ret;
+>  }
+>  
