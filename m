@@ -2,106 +2,81 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7763C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB17208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93D902080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730099AbgHZM6R (ORCPT
+        id S1730098AbgHZM7e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:58:17 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41461 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730043AbgHZM6P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:58:15 -0400
-Received: by mail-il1-f193.google.com with SMTP id q14so1634457ilj.8;
-        Wed, 26 Aug 2020 05:58:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/KmmQfwHULnlIqQl6u1SzgqJsX9j6BWCR4avQA0PcIY=;
-        b=mCjr4RfYZrTnvwg1wtiV5Dqk3bZjs2Hw/15jyQl0zV8Z6B1630SDVELnfbsd3djWyH
-         83Nhf8sM4AsZCKOt9AY3IBRS5o9rqUe89Fd0jKX/+D3bqwHNEDycyL4wAsboRttrNY1N
-         k3HYZNqD665QGzT683pR3iMUdxbShM6QFval8a9k5du5W7o2N7PtqAOBqYaWL9VAWrIM
-         oBEjnucZgn8CsYUPvIcQcxgV5/RBKDbm21lBZodxpv3N+1zf1CoOOmxowHFE7ZcDTMJ5
-         scREc10dxjkoptt3dv1XIj6FnKoo01GGqNjuhBrvwYj7N+3F2ea/xfbC5wDgeGsN3UPw
-         fAXA==
-X-Gm-Message-State: AOAM530K81PPqPJOoLRIu32/8T6TBtqm7vSoNR+QGdUaRozzSzGjdNAc
-        rM7YuCp8AAT29Pb/LES2Na7ZUofrsNi1lL5c
-X-Google-Smtp-Source: ABdhPJzSa39y60rj1/s3hqpO8RiVivbI9Dctz/s6tHNYXlw7c7JSCbGkeubk29JzRI2E0ZbuWggZDw==
-X-Received: by 2002:a92:6b04:: with SMTP id g4mr13592283ilc.192.1598446694641;
-        Wed, 26 Aug 2020 05:58:14 -0700 (PDT)
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com. [209.85.166.179])
-        by smtp.gmail.com with ESMTPSA id o1sm1310062ils.1.2020.08.26.05.58.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Aug 2020 05:58:14 -0700 (PDT)
-Received: by mail-il1-f179.google.com with SMTP id f75so1649009ilh.3;
-        Wed, 26 Aug 2020 05:58:13 -0700 (PDT)
-X-Received: by 2002:a92:ca8d:: with SMTP id t13mr13377470ilo.302.1598446693534;
- Wed, 26 Aug 2020 05:58:13 -0700 (PDT)
+        Wed, 26 Aug 2020 08:59:34 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10266 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728977AbgHZM7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:59:33 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 79EE2F5536B796CCC5C3;
+        Wed, 26 Aug 2020 20:59:31 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Wed, 26 Aug 2020
+ 20:59:24 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <rogerq@ti.com>, <tony@atomide.com>, <krzk@kernel.org>,
+        <ladis@linux-mips.org>, <bbrezillon@kernel.org>,
+        <peter.ujfalusi@ti.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] memory: omap-gpmc: Fix build error without CONFIG_OF
+Date:   Wed, 26 Aug 2020 20:59:19 +0800
+Message-ID: <20200826125919.22172-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20200818125338.58148-1-yuehaibing@huawei.com>
+References: <20200818125338.58148-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <20200826055150.2753.90553@ml01.vlan13.01.org> <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
- <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
- <20200826114952.GA2375@gondor.apana.org.au> <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
- <20200826120832.GA2996@gondor.apana.org.au>
-In-Reply-To: <20200826120832.GA2996@gondor.apana.org.au>
-From:   Andrew Zaborowski <andrew.zaborowski@intel.com>
-Date:   Wed, 26 Aug 2020 14:58:02 +0200
-X-Gmail-Original-Message-ID: <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
-Message-ID: <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
-Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Caleb Jorden <caljorden@hotmail.com>,
-        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 at 14:10, Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> On Wed, Aug 26, 2020 at 01:59:53PM +0200, Ard Biesheuvel wrote:
-> > On Wed, 26 Aug 2020 at 13:50, Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> > >
-> > > On Wed, Aug 26, 2020 at 12:40:14PM +0200, Ard Biesheuvel wrote:
-> > > >
-> > > > It would be helpful if someone could explain for the non-mac80211
-> > > > enlightened readers how iwd's EAP-PEAPv0 + MSCHAPv2 support relies on
-> > > > the algif_aead socket interface, and which AEAD algorithms it uses. I
-> > > > assume this is part of libell?
-> > >
-> > > I see the problem.  libell/ell/checksum.c doesn't clear the MSG_MORE
-> > > flag before doing the recv(2).
-> >
-> > But that code uses a hash not an aead, afaict.
->
-> Good point.  In that case can we please get a strace with a -s
-> option that's big enough to capture the crypto data?
+If CONFIG_OF is n, gcc fails:
 
-Running iwd's and ell's unit tests I can see that at least the
-following algorithms give EINVAL errors:
-ecb(aes)
-cbc(aes)
-ctr(aes)
+drivers/memory/omap-gpmc.o: In function `gpmc_omap_onenand_set_timings':
+omap-gpmc.c:(.text+0x2a88): undefined reference to `gpmc_read_settings_dt'
 
-The first one fails in recv() and only for some input lengths.  The
-latter two fail in send().  The relevant ell code starts at
-https://git.kernel.org/pub/scm/libs/ell/ell.git/tree/ell/cipher.c#n271
+Add gpmc_read_settings_dt() helper function to fix this.
 
-The tests didn't get to the point where aead is used.
+Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: add gpmc_read_settings_dt() stub
+---
+ drivers/memory/omap-gpmc.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Best regards
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index cd9e80748591..02c0c694ecaf 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -2310,6 +2310,9 @@ static void gpmc_probe_dt_children(struct platform_device *pdev)
+ 	}
+ }
+ #else
++void gpmc_read_settings_dt(struct device_node *np, struct gpmc_settings *p)
++{
++}
+ static int gpmc_probe_dt(struct platform_device *pdev)
+ {
+ 	return 0;
+-- 
+2.17.1
+
+
