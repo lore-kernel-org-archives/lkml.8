@@ -2,86 +2,90 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 767002078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC86B21775
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:10:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="K6SqQUN8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k7BgzdKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730553AbgHZOKx (ORCPT
+        id S1730497AbgHZOKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55562 "EHLO
+        Wed, 26 Aug 2020 10:10:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727115AbgHZOKs (ORCPT
+        with ESMTP id S1727008AbgHZOKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:10:48 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0A61C061756
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:10:47 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id b14so1956967qkn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:10:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=07tvp8tVnrNw0e+tjr1QQnFIWOj/9N9xxnjDg1Dj00Y=;
-        b=K6SqQUN8bdHK9sa+izhojjrbFpSuAwM1EM8gaAaK2UQZcDkd7jp4MSY9sWz+TgOC9q
-         Ew/yxmU3JV0Qj/Wi0mw9w6VbwioBytFjVidB+UdF1T4c6UHFwcWGrBe4CT0q4M3aErez
-         cVhOcHqjMFlaqBOXb9WKF666y6UVO1pGelyuA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=07tvp8tVnrNw0e+tjr1QQnFIWOj/9N9xxnjDg1Dj00Y=;
-        b=Diqflc9nwOYlZV+88B6JZV3mDYfEAML26EgA0w0ZgehxkwC/SVDYGPpI91nDwjgjUz
-         WEh9SaBPOHwDuYfOZw5+Cme5iQLWuMrEs87KhyXonrNlbgcT+JqTDgEkYfU8a4LSk+xR
-         rOICBUbWkYL9A/2tvbxaRalXYGloOMT672YiCVMuDaInLOXsqW/FnM6f2Dcv3JDW3LaI
-         1J/Y2AHflyZBAg+eNMZFR/IB8ie1WOwbiPJct4O7RMp1oTGhUhXMB22TdYNqP72H/7Ot
-         V3ZW8oLyiuXEiMVcEsIystoWwec7pVLbvvoMIRd7WDMvpSSXvB4HYfXArOjovcAsiRx0
-         YLlQ==
-X-Gm-Message-State: AOAM532qLPmlY6G/WVg3zqREEpeBBWV8JBOc5ZmIwofwu0/J1/m3rQWn
-        Wjg89t4G8P3j856d1yO6RLmxEw==
-X-Google-Smtp-Source: ABdhPJxZa4zJgLUey7TcyfqsJlg8vcBGdBaX+/p8GayLjM0Nnrm1I869irmbDo9IbceOBPOgmWa4iA==
-X-Received: by 2002:a37:7407:: with SMTP id p7mr14409179qkc.350.1598451047035;
+        Wed, 26 Aug 2020 10:10:47 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B738C061574;
         Wed, 26 Aug 2020 07:10:47 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:fd2b])
-        by smtp.gmail.com with ESMTPSA id b23sm2041262qtp.41.2020.08.26.07.10.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 07:10:46 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 15:10:44 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Xunlei Pang <xlpang@linux.alibaba.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2] mm: memcg: Fix memcg reclaim soft lockup
-Message-ID: <20200826141044.GA831829@chrisdown.name>
-References: <1598449622-108748-1-git-send-email-xlpang@linux.alibaba.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=AzWxCen/DOsEQXqFBCdcE4/JIaFFVV3Ee1zoRKCLtqs=; b=k7BgzdKV/oHF1hDGvvyJ8uNhTH
+        GHG4mC5roIqFInvdGRyHoGY6HyWEWhv1G57MB9E9x0nBuLS7itGaRnU12bvOdJKahxedudmNXnyAf
+        KxbZHEQe+i3Ot4e42e19YkA/ySjpPS+gyqzrn1UTam6hpYWjG8zgfa8TaY759RdzLqZlqdKF4Pa1Q
+        9bt8uYMrwUhgNtFKdq8FglA2ly+QRqiZZS/qltGWXL8bGdV4vs1uuucuF7DZYTC7YkrnWMqfCFV8n
+        ODGgGFgF1nhS/ZH0seRMbj5a4TPOlojm4XsPHxBPKCi7GSELUNI3mk/skSLLYPB0bW49cDS1HJOPW
+        MbJC5Q5A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAw8C-0003IW-SO; Wed, 26 Aug 2020 14:10:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 97C3B30015A;
+        Wed, 26 Aug 2020 16:10:25 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 876D8203A64CA; Wed, 26 Aug 2020 16:10:25 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 16:10:25 +0200
+From:   peterz@infradead.org
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: Re: [RFC PATCH 03/14] arm: kprobes: Use generic kretprobe trampoline
+ handler
+Message-ID: <20200826141025.GU35926@hirez.programming.kicks-ass.net>
+References: <159844957216.510284.17683703701627367133.stgit@devnote2>
+ <159844960343.510284.15315372011917043979.stgit@devnote2>
+ <20200826140852.GG1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1598449622-108748-1-git-send-email-xlpang@linux.alibaba.com>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+In-Reply-To: <20200826140852.GG1362448@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xunlei,
+On Wed, Aug 26, 2020 at 04:08:52PM +0200, peterz@infradead.org wrote:
+> On Wed, Aug 26, 2020 at 10:46:43PM +0900, Masami Hiramatsu wrote:
+> >  static __used __kprobes void *trampoline_handler(struct pt_regs *regs)
+> >  {
+> > +	return (void *)kretprobe_trampoline_handler(regs,
+> > +				(unsigned long)&kretprobe_trampoline,
+> > +				regs->ARM_fp);
+> >  }
+> 
+> Does it make sense to have the generic code have a weak
+> trampoline_handler() implemented like the above? It looks like a number
+> of architectures have this trivial variant and it seems pointless to
+> duplicate this.
 
-Xunlei Pang writes:
->Add cond_resched() at the upper shrink_node_memcgs() to solve this
->issue, and any other possible issue like meomry.min protection.
+Argh, I replied to the wrong variant, I mean the one that uses
+kernel_stack_pointer(regs).
 
-I understand the general intent of the patch, but could you clarify your 
-concern around memory protection?
+Then the architecture only needs to implement kernel_stack_pointer() if
+there is nothing else to do.
