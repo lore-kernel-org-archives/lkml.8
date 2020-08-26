@@ -2,106 +2,138 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA27C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0279922BEF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F79E21741
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598448796;
+	bh=b1nmyfPK5FQ7cjqNh+7j1qIyG/iexxlz9aw19IXSc24=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iQOeNjIGG/xuW1uMxRQzCeHYApwywJ4RXArjmx1LU70nlU/ugVaJaaJkRwQGkixA2
+	 lvOw9zK3goPPWszlxdlkAUgu/akf1gLC1vYPMWE7jwebMOW2LymINBliBPsNgDH8+H
+	 zWiSpUYgA8aE/l5FnzCrhY37GvfXbJ6AfiyS6Lk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730332AbgHZNci (ORCPT
+        id S1729540AbgHZNdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:32:38 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:33154 "EHLO fornost.hmeau.com"
+        Wed, 26 Aug 2020 09:33:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730289AbgHZNa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:30:57 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kAvUu-00052u-Ib; Wed, 26 Aug 2020 23:29:53 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 26 Aug 2020 23:29:52 +1000
-Date:   Wed, 26 Aug 2020 23:29:52 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Andrew Zaborowski <andrew.zaborowski@intel.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Caleb Jorden <caljorden@hotmail.com>,
-        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [PATCH] crypto: af_alg - Work around empty control messages without
- MSG_MORE
-Message-ID: <20200826132952.GA4752@gondor.apana.org.au>
-References: <20200826055150.2753.90553@ml01.vlan13.01.org>
- <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
- <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
- <20200826114952.GA2375@gondor.apana.org.au>
- <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
- <20200826120832.GA2996@gondor.apana.org.au>
- <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
+        id S1730289AbgHZNcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:32:41 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 656F2208E4;
+        Wed, 26 Aug 2020 13:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598448760;
+        bh=b1nmyfPK5FQ7cjqNh+7j1qIyG/iexxlz9aw19IXSc24=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tL+y8cFx68cVj/yVRenvmIZEEKy9hGzoiqxQdyuSQZ+isFRgrSnJXt0VWCkLRp8iR
+         ZHAsWilvx7FAxEBcpf2aXVgBsK+TolYL3TYHW44mW4q8bkqk/V6OAtFJBNzh/gEFeW
+         0lucH461F4WvGvITYPOsZwVziOE4hG8PHrScxR88=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kAvXa-006rI6-9y; Wed, 26 Aug 2020 14:32:38 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 26 Aug 2020 14:32:38 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] Input; Sanitize event code before modifying bitmaps
+In-Reply-To: <20200824195102.GY1665100@dtor-ws>
+References: <20200817112700.468743-1-maz@kernel.org>
+ <20200817112700.468743-2-maz@kernel.org> <20200824195102.GY1665100@dtor-ws>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <bcf65dce766d0376027e80bf205b095d@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: dmitry.torokhov@gmail.com, jikos@kernel.org, benjamin.tissoires@redhat.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The iwd daemon uses libell which sets up the skcipher operation with
-two separate control messages.  This is fine by itself but the first
-control message is sent without MSG_MORE.  This means that the first
-control message is interpreted as an empty request.
+Hi Dmitry,
 
-While libell should be fixed to use MSG_MORE where appropriate, this
-patch works around the bug in the kernel so that existing binaries
-continue to work.
+On 2020-08-24 20:51, Dmitry Torokhov wrote:
+> Hi Marc,
+> 
+> On Mon, Aug 17, 2020 at 12:26:59PM +0100, Marc Zyngier wrote:
+>> When calling into input_set_capability(), the passed event code is
+>> blindly used to set a bit in a number of bitmaps, without checking
+>> whether this actually fits the expected size of the bitmap.
+>> 
+>> This event code can come from a variety of sources, including devices
+>> masquerading as input devices, only a bit more "programmable".
+>> 
+>> Instead of taking the raw event code, sanitize it to the actual bitmap
+>> size and output a warning to let the user know.
+>> 
+>> These checks are, at least in spirit, in keeping with cb222aed03d7
+>> ("Input: add safety guards to input_set_keycode()").
+>> 
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> ---
+>>  drivers/input/input.c | 16 +++++++++++++++-
+>>  1 file changed, 15 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/input/input.c b/drivers/input/input.c
+>> index 3cfd2c18eebd..1e77cf47aa44 100644
+>> --- a/drivers/input/input.c
+>> +++ b/drivers/input/input.c
+>> @@ -1974,14 +1974,18 @@ EXPORT_SYMBOL(input_get_timestamp);
+>>   * In addition to setting up corresponding bit in appropriate 
+>> capability
+>>   * bitmap the function also adjusts dev->evbit.
+>>   */
+>> -void input_set_capability(struct input_dev *dev, unsigned int type, 
+>> unsigned int code)
+>> +void input_set_capability(struct input_dev *dev, unsigned int type, 
+>> unsigned int raw_code)
+>>  {
+>> +	unsigned int code = raw_code;
+>> +
+>>  	switch (type) {
+>>  	case EV_KEY:
+>> +		code &= KEY_MAX;
+>>  		__set_bit(code, dev->keybit);
+> 
+> 
+> I would much rather prefer we did not simply set some random bits in
+> this case, but instead complained loudly and refused to alter anything.
+> 
+> The function is not exported directly to userspace, so we expect 
+> callers
+> to give us sane inputs, and I believe WARN() splash in case of bad
+> inputs would be the best solution here.
 
-We will print a warning however.
+Fair enough. I've moved the checking to the HID layer (using
+hid_map_usage() as the validation primitive), which makes
+changing input_set_capability() irrelevant.
 
-Reported-by: Caleb Jorden <caljorden@hotmail.com>
-Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+I'll post v2 shortly in the form of a single patch.
 
-diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-index a6f581ab200c..3da21cadc326 100644
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -16,6 +16,7 @@
- #include <linux/module.h>
- #include <linux/net.h>
- #include <linux/rwsem.h>
-+#include <linux/sched.h>
- #include <linux/sched/signal.h>
- #include <linux/security.h>
- 
-@@ -846,8 +847,14 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 
- 	lock_sock(sk);
- 	if (ctx->init && (init || !ctx->more)) {
--		err = -EINVAL;
--		goto unlock;
-+		if (ctx->used) {
-+			err = -EINVAL;
-+			goto unlock;
-+		}
-+
-+		pr_info_once(
-+			"%s sent an empty control message without MSG_MORE.\n",
-+			current->comm);
- 	}
- 	ctx->init = true;
- 
+Thanks,
+
+         M.
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Jazz is not dead. It just smells funny...
