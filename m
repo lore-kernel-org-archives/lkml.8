@@ -2,141 +2,133 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF7AC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF62C433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC52B21741
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9629822B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:55:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e2E/2Tr4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n1rRwMLj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgHZOzK (ORCPT
+        id S1728362AbgHZOyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:55:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62588 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726934AbgHZOzG (ORCPT
+        Wed, 26 Aug 2020 10:54:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728312AbgHZOxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:55:06 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QEZ01A178064;
-        Wed, 26 Aug 2020 10:54:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=+vAD9mgWouUbLENGzMvN+3S309Vo6tTngoxoVO8howw=;
- b=e2E/2Tr4m8IfADvUC+FpAdyUoQaN8Yp7PrD7HLZ88VMZBO83j4SkdGcZsNes0/WaAa5H
- CJyRHIznggDg9TEyEOFJ2UPn4kXeRYr9Mrk4sLEl9ntQUdJZA7xDqq+w6y98E2CFwbKY
- mSfxaRoCfDMjSyB2SG6SCyp3LvPLLw07tSSBO9wNWER1lFswn7pChpcNesmrjxm1j+jp
- n7ifXC+DJDslCfLD/m88X2NV8uGZw3ma/7sCDH+AwcA23/ROhWD0yifZofK5sJK2iEXC
- TdzhhN62Cnrx1QgPl1SBbz1ciff6pbo55Oa56Mpbqv5yI/Y1veFLcsoCrGY/wmZMYgnZ ig== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 335s9x9cma-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 10:54:37 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07QEaAkh185748;
-        Wed, 26 Aug 2020 10:54:37 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 335s9x9ck0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 10:54:37 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07QErFbs015495;
-        Wed, 26 Aug 2020 14:54:35 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma05fra.de.ibm.com with ESMTP id 335j270ak1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 14:54:34 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07QEsWes9896430
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 14:54:32 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D7C25AE04D;
-        Wed, 26 Aug 2020 14:54:31 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D48FCAE057;
-        Wed, 26 Aug 2020 14:54:27 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.63.208])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Aug 2020 14:54:27 +0000 (GMT)
-From:   Kajol Jain <kjain@linux.ibm.com>
-To:     acme@kernel.org, peterz@infradead.org
-Cc:     jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        daniel@iogearbox.net, brho@google.com, srikar@linux.vnet.ibm.com,
-        kjain@linux.ibm.com
-Subject: [RFC v2] perf/core: Fixes hung issue on perf stat command during cpu hotplug
-Date:   Wed, 26 Aug 2020 20:24:11 +0530
-Message-Id: <20200826145411.489169-1-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 26 Aug 2020 10:53:43 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23DD7C061574;
+        Wed, 26 Aug 2020 07:53:43 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ls14so976628pjb.3;
+        Wed, 26 Aug 2020 07:53:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xunuSn00ryI5QmLOCpDWIS49LIJoLf4dCD7QK4hOYao=;
+        b=n1rRwMLjwoSs4LMnp2N+dPHCvP8ljePkQj/xCp/WwnZs+JpamY1B7d4lso6oW9I8ro
+         0Y5ebFndVJ17LONT++8e8+yVXxoOHhaB3D4tbz+8ceizvL9vz6E0p1/uCf+1wh3tmUY4
+         8yNpnr+Qlq1FF5vbKD0jVX/+YkoYybKlfjRQO6ajtH55LyHwMMGuPmiHDuJbRXm+GtA8
+         hWAjFkP91086rmNtJy9BIhrgYEYZytiJO0un0JZJ0pc+Krt6HuEmGtCo4EWK9tx6fLAv
+         NU+FndmpzJ1sX4NnoyS/K5rZK5agwKhZTDYqHBPsFBsigc7z5nGlab7HrdCVMdudok54
+         wK2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xunuSn00ryI5QmLOCpDWIS49LIJoLf4dCD7QK4hOYao=;
+        b=me/2eYHoO5pYrW7XKmPjBpw4Uc9aWXSnKYdrjRIvb3LHmJ0AbwogdNwZgkDVgpyPLw
+         bZnPaCLn/M5mx619q8UQYH9U5hMED5e8Lk3euYdPaBDoLoIhBaz4H2BKdDfHrFVxhYiQ
+         0eemXOQpcsn1tDP+LeyClxlsuPRUmUso1L7bFDgGdlpj3/q+8SIIZ2R7g5LqSD5Za1H/
+         M9NdKJAhYYoogippM2K4DrHX9T0dkeiuA/o/F+WuLpAE2dWkM5FRVzEm4HQpXiytxq1L
+         PWt11dgxj6WfH2TW+YCbDgcDqCNh4MEn3WZaUd53mmDsCjAoZfx5Zi+FE9BVokztWKob
+         j19Q==
+X-Gm-Message-State: AOAM531ixWTjg9E85nfTC+fIXtV9QV4Tjp/YJ7QNoeBX5dqoHdySmQ4I
+        ILPOSuqvZz+0h5y1bv9Z7ekeY6q1baQ=
+X-Google-Smtp-Source: ABdhPJx36zSrgQ5+rUw7Uw0wSE2Zq6lUqBfvC6vMJYlTn5AKbamM0eiHzpvcIALtfEZJLDqM2W1XEg==
+X-Received: by 2002:a17:90a:24f:: with SMTP id t15mr6516825pje.227.1598453622555;
+        Wed, 26 Aug 2020 07:53:42 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id r7sm3327140pfl.186.2020.08.26.07.53.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:53:42 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>
+Subject: [PATCH v2 12/23] nds32: use asm-generic/mmu_context.h for no-op implementations
+Date:   Thu, 27 Aug 2020 00:52:38 +1000
+Message-Id: <20200826145249.745432-13-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
+References: <20200826145249.745432-1-npiggin@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-26_09:2020-08-26,2020-08-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- impostorscore=0 bulkscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
- lowpriorityscore=0 priorityscore=1501 suspectscore=0 phishscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008260108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 2ed6edd33a21 ("perf: Add cond_resched() to task_function_call()")
-added assignment of ret value as -EAGAIN in case function
-call to 'smp_call_function_single' fails.
-For non-zero ret value, it did
-'ret = !ret ? data.ret : -EAGAIN;', which always
-assign -EAGAIN to ret and make second if condition useless.
-
-In scenarios like when executing a perf stat with --per-thread option, and
-if any of the monitoring cpu goes offline, the 'smp_call_function_single'
-function could return -ENXIO, and with the above check,
-task_function_call hung and increases CPU
-usage (because of repeated 'smp_call_function_single()')
-
-Recration scenario:
-	# perf stat -a --per-thread && (offline a CPU )
-
-Patch here removes the tertiary condition added as part of that
-commit and added a check for NULL and -EAGAIN.
-
-Fixes: 2ed6edd33a21("perf: Add cond_resched() to task_function_call()")
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Reported-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: Nick Hu <nickhu@andestech.com>
+Cc: Greentime Hu <green.hu@gmail.com>
+Cc: Vincent Chen <deanbo422@gmail.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- kernel/events/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/nds32/include/asm/mmu_context.h | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-Changelog:
-- Remove addition of else in the first patch for
-  if(ret != -EAGAIN) condition.
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 856d98c36f56..fe104fee097a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -115,8 +115,8 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
- 	for (;;) {
- 		ret = smp_call_function_single(task_cpu(p), remote_function,
- 					       &data, 1);
--		ret = !ret ? data.ret : -EAGAIN;
--
-+		if(!ret)
-+			ret = data.ret;
- 		if (ret != -EAGAIN)
- 			break;
+diff --git a/arch/nds32/include/asm/mmu_context.h b/arch/nds32/include/asm/mmu_context.h
+index b8fd3d189fdc..c651bc8cacdc 100644
+--- a/arch/nds32/include/asm/mmu_context.h
++++ b/arch/nds32/include/asm/mmu_context.h
+@@ -9,6 +9,7 @@
+ #include <asm/proc-fns.h>
+ #include <asm-generic/mm_hooks.h>
  
++#define init_new_context init_new_context
+ static inline int
+ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ {
+@@ -16,8 +17,6 @@ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ 	return 0;
+ }
+ 
+-#define destroy_context(mm)	do { } while(0)
+-
+ #define CID_BITS	9
+ extern spinlock_t cid_lock;
+ extern unsigned int cpu_last_cid;
+@@ -47,10 +46,6 @@ static inline void check_context(struct mm_struct *mm)
+ 		__new_context(mm);
+ }
+ 
+-static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+-{
+-}
+-
+ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 			     struct task_struct *tsk)
+ {
+@@ -62,7 +57,6 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 	}
+ }
+ 
+-#define deactivate_mm(tsk,mm)	do { } while (0)
+-#define activate_mm(prev,next)	switch_mm(prev, next, NULL)
++#include <asm-generic/mmu_context.h>
+ 
+ #endif
 -- 
-2.26.2
+2.23.0
 
