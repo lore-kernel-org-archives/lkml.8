@@ -2,129 +2,100 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9B3C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8029C20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 242182067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbgHZJyB (ORCPT
+        id S1728386AbgHZJyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:54:01 -0400
-Received: from mga04.intel.com ([192.55.52.120]:49869 "EHLO mga04.intel.com"
+        Wed, 26 Aug 2020 05:54:23 -0400
+Received: from mga11.intel.com ([192.55.52.93]:14627 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbgHZJyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:54:00 -0400
-IronPort-SDR: LjdUoW53qu+1uUy75Z8qe39RUcls+12BM29IMRIthutdQGl37GHMUXjZWm2HZY92ZDbUahb8km
- ejhtGbPm4Q0w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="153685914"
+        id S1727942AbgHZJyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 05:54:22 -0400
+IronPort-SDR: 2/TTzkZ5gG/wQasxgz+TL1FTFMj8gTg+Q4MwT1uvdUfwfM8T+laC2F16LoqFZUdTY5xF763keg
+ uKq/2by4RB8g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="153835283"
 X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="153685914"
+   d="scan'208";a="153835283"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 02:54:00 -0700
-IronPort-SDR: HqiwYhheKSRXgUX9Wqj4PebZedUQtOZ3bkxHdV1FhUOYsmxvnvpEGDPctHo7bU83QTOjOEQtXe
- 9DEKdUomlBKA==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 02:54:18 -0700
+IronPort-SDR: aKZ1nbtpzd2mAGNtCYvZa4u9d31Wtw/GoGfc/vEAuEh7HDFwSdsiBaOSutwoQNSWGqXc2g3v+Y
+ 6xI71ibo1P8Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="329167851"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 02:53:58 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kAs7w-00BXF7-He; Wed, 26 Aug 2020 12:53:56 +0300
-Date:   Wed, 26 Aug 2020 12:53:56 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Wolfram Sang <wsa@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: consider devices with of_match_table during i2c
- device probing
-Message-ID: <20200826095356.GG1891694@smile.fi.intel.com>
-References: <20200826042938.3259-1-sergey.senozhatsky@gmail.com>
- <20200826050851.GA1081@ninjato>
- <20200826052544.GA500@jagdpanzerIV.localdomain>
+   d="scan'208";a="373327012"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga001.jf.intel.com with ESMTP; 26 Aug 2020 02:54:18 -0700
+Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.186])
+        by linux.intel.com (Postfix) with ESMTP id D064D5806C4;
+        Wed, 26 Aug 2020 02:54:16 -0700 (PDT)
+Message-ID: <91190a53b9d78ffe08d4b001d021868ad7ba6d1c.camel@gmail.com>
+Subject: Re: [PATCH v2 2/5] cpufreq: intel_pstate: Always return last EPP
+ value from sysfs
+From:   Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Doug Smythies <dsmythies@telus.net>
+Date:   Wed, 26 Aug 2020 12:54:15 +0300
+In-Reply-To: <CAJZ5v0hkmcAuCsnfjCSWTarr4pkQry2VCtk2aWM74fOW2guzmg@mail.gmail.com>
+References: <4169555.5IIHXK4Dsd@kreacher> <2064342.aRc67yb0pC@kreacher>
+         <61ea43fce7dd8700d94f12236a86ffec6f76a898.camel@gmail.com>
+         <CAJZ5v0hkmcAuCsnfjCSWTarr4pkQry2VCtk2aWM74fOW2guzmg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826052544.GA500@jagdpanzerIV.localdomain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 02:25:44PM +0900, Sergey Senozhatsky wrote:
-> On (20/08/26 07:08), Wolfram Sang wrote:
-> > On Wed, Aug 26, 2020 at 01:29:37PM +0900, Sergey Senozhatsky wrote:
-> > > Unlike acpi_match_device(), acpi_driver_match_device() does
-> > > consider devices that provide of_match_table and performs
-> > > of_compatible() matching for such devices. The key point here is
-> > > that ACPI of_compatible() matching - acpi_of_match_device() - is
-> > > part of ACPI and does not depend on CONFIG_OF.
-> > > 
-> > > Consider the following case:
-> > > o !CONFIG_OF system
-> > > o probing of i2c device that provides .of_match_table, but no .id_table
-> > > 
-> > >  i2c_device_probe()
-> > >  ...
-> > >    if (!driver->id_table &&
-> > >        !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
-> > >        !i2c_of_match_device(dev->driver->of_match_table, client)) {
-> > >        status = -ENODEV;
-> > >        goto put_sync_adapter;
-> > >    }
-> > > 
-> > > i2c_of_match_device() depends on CONFIG_OF and, thus, is always false.
-> > > i2c_acpi_match_device() does ACPI match only, no of_comtatible() matching
-> > > takes place, even though the device provides .of_match_table and ACPI,
-> > > technically, is capable of matching such device. The result is -ENODEV.
-> > > Probing will succeed, however, if we'd use .of_match_table aware ACPI
-> > > matching.
+Thanks for answer Rafael, it looks like there are 2 different things
+now.
 
-Looks like you read same StackOverflow question :-)
+1. What kernel returns when I _read_ e_p_p file - truth or "cached" ?
 
-> > > Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-> > 
-> > We have currently this in for-current which is even removing
-> > i2c_acpi_match_device():
-> > 
-> > http://patchwork.ozlabs.org/project/linux-i2c/list/?series=196990&state=*
-> 
-> Oh, nice!
-> Can we go a bit further and use i2c_device_match() in i2c_device_probe()
-> instead of a mix of APIs from different subsystems?
+2. How kernel behaves when I _write_ to e_p_p file something it cannot
+provide - error or success.
 
-> E.g.
-> 
->         if (!driver->id_table &&
-> -           !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
-> -           !i2c_of_match_device(dev->driver->of_match_table, client)) {
-> +           !(client && i2c_device_match(&client->dev, dev->driver))) {
+For #1, I think we need to keep it simple and always return true policy
+value. Does not matter what someone wrote there. If some process wrote
+"powersave", but kernel uses EPP 0 anyway, the other process probably
+wants to know the truth and get "performance" when reading e_p_p.
 
-You probably meant simply:
+On Tue, 2020-08-25 at 16:51 +0200, Rafael J. Wysocki wrote:
+> An alternative is to fail writes to energy_performance_preference if
+> the driver works in the active mode and the scaling algorithm for the
+> scaling CPU is performance and *then* to make reads from it return the
+> value in the register.
 
-	if (!i2c_device_match(dev, dev->driver)) {
+Yes, this is #2. This sounds like the _right_ way to do it.
 
->                 status = -ENODEV;
->                 goto put_sync_adapter;
->         }
+Suppose my script wants to exercise the system with 4 different EPP
+policies. It changes the policy and runs measurements, each run takes
+few _days_.
 
-On the first glance it will work the same way but slightly longer in case of ID
-table matching.
+Now, my script asks for "powersave". Kernel _knows_ it cannot provide
+it (performance+active enabled). Why would it not return error ("can't
+do") instead of success ("yes, Sir!")?
 
-Send a patch!
+Note, I deliberately use simple words like "my script" instead of "a
+user-space process" to make it easier to convey the idea.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+Anyway, if kernel returns error, I can go and improve my script WRT
+controlling the performance+active mode knobs.
 
