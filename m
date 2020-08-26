@@ -2,116 +2,143 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6966AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6197BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4346220737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B7C20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598461367;
-	bh=uWBwLrd7S1Yp+nZTjHPbZcVY0podVwESHryIx8RQH3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JfyinUi69KQBqq805/ym3PLHqcVoJNIhwNHkyL1SPuewGjEu6YXdq7LPBEv35IzA1
-	 AGCWIR8V0RKlCbsTgfD7h2uKtf6cm+cpbVuxNX0XcKZa2z7luYjxxjFl1JspwE/yEu
-	 NNojHYmEKKyqq+vvIBpW2YkEvLLn2QavEztm6iIU=
+	s=default; t=1598461515;
+	bh=Fp4rNpiuId6Zd1SRZaw++Fjp3anMdRDaszmTeS7uFZQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=r67Sjudw8NjNvac6AY+m9W4j6WKc19QI6CxZNfPjt70po/j8dPvIUQXaDDIvzC2Iq
+	 6vBYz3e1g8YQmPCkezeISI1lWdNgkDqLy2sMbKQuVSiXU55DY//t/xn1GwmBbSp+OL
+	 w/iSdHDNgg27TPsLIBtq1Lye1MR5DWaOzmPtSLr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgHZRCp (ORCPT
+        id S1727017AbgHZRFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:02:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58602 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 13:05:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726745AbgHZRCn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:02:43 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726853AbgHZRFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 13:05:07 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6CC420737;
-        Wed, 26 Aug 2020 17:02:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38E7A22BF3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 17:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598461362;
-        bh=uWBwLrd7S1Yp+nZTjHPbZcVY0podVwESHryIx8RQH3Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VuKxJ0TDh87RUVYEuCIhxbMKSVimWIkMT/cm+vl7rbEQizVxzNQAUvGfs1f0rvQfo
-         xpg2hUM5K1+Wgs9Ad+ByUWisayz14qiD0gSbStn5wRlxzZ68IwzagYtw5xc20fabys
-         BjI4niK/EqQkZZwaGdzKSXnEfNpiPok6EaJjXHi8=
-Date:   Wed, 26 Aug 2020 18:02:05 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Kuldip Dwivedi <kuldip.dwivedi@puresoftware.com>,
-        Qiang Zhao <qiang.zhao@nxp.com>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        Tanveer Alam <tanveer.alam@puresoftware.com>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
-Message-ID: <20200826170205.GL4965@sirena.org.uk>
-References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
- <20200821140718.GH4870@sirena.org.uk>
- <c810740d75f64e308fd362e6c6a5f437@mail.gmail.com>
- <20200822152118.rlwbcgfk4abjldtg@skbuf>
- <VE1PR04MB6768699B6D7A507A5BF82F9191540@VE1PR04MB6768.eurprd04.prod.outlook.com>
- <20200826114758.4agph53ag2fin6um@skbuf>
- <20200826142312.GH4965@sirena.org.uk>
- <20200826144744.c4yzgoovk6f4t3id@skbuf>
- <2e19f8979be4f962045a1597bdbe7886@mail.gmail.com>
- <20200826160950.i3k2oy6w2dlvmj34@skbuf>
+        s=default; t=1598461506;
+        bh=Fp4rNpiuId6Zd1SRZaw++Fjp3anMdRDaszmTeS7uFZQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IXsZbehfS9rUMHIUdoa09eOQCVQ3Gh0ntq3FHoKtDEBmxNo4m64QNUZgFCYV/FBvm
+         pA0iOF4Eb1d4wGL5f7juoUUApYPt8PaUV0XRtuZ1fvkTFHbKiaCRhCTKGYqTqFGDje
+         m7p05GH9gD2W5ZWdl9vtHaNQM1v4gDB8YxzDl5VE=
+Received: by mail-wr1-f46.google.com with SMTP id y3so2565658wrl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:05:06 -0700 (PDT)
+X-Gm-Message-State: AOAM531fJa+ClQospIBdD+Pd8fV8FX3Oipi0APFHABP6dXAGNuF8WWrs
+        c+SkLxWHzvnOcE0pkG9vBHsfQe0qPcQvADTAl1JDyw==
+X-Google-Smtp-Source: ABdhPJxT1whGlvFPDBPqTZxg6JBM1ZNVE0c8Sb8po9BtCcEYhiPPubL7pcyJ9YiMCYEcuPYkefPEyiGW6FbklL+xVTI=
+X-Received: by 2002:a5d:570e:: with SMTP id a14mr1919991wrv.70.1598461504645;
+ Wed, 26 Aug 2020 10:05:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="S6vg04ofUPzW4qJg"
-Content-Disposition: inline
-In-Reply-To: <20200826160950.i3k2oy6w2dlvmj34@skbuf>
-X-Cookie: Should I do my BOBBIE VINTON medley?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com> <20200825002540.3351-26-yu-cheng.yu@intel.com>
+ <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
+ <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com> <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com> <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+ <ef7f9e24-f952-d78c-373e-85435f742688@intel.com> <20200826164604.GW6642@arm.com>
+ <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+In-Reply-To: <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 26 Aug 2020 10:04:53 -0700
+X-Gmail-Original-Message-ID: <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
+Message-ID: <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        "Yu, Yu-cheng" <yu-cheng.yu@intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 26, 2020 at 9:52 AM Florian Weimer <fweimer@redhat.com> wrote:
+>
+> * Dave Martin:
+>
+> > On Tue, Aug 25, 2020 at 04:34:27PM -0700, Yu, Yu-cheng wrote:
+> >> On 8/25/2020 4:20 PM, Dave Hansen wrote:
+> >> >On 8/25/20 2:04 PM, Yu, Yu-cheng wrote:
+> >> >>>>I think this is more arch-specific.  Even if it becomes a new syscall,
+> >> >>>>we still need to pass the same parameters.
+> >> >>>
+> >> >>>Right, but without the copying in and out of memory.
+> >> >>>
+> >> >>Linux-api is already on the Cc list.  Do we need to add more people to
+> >> >>get some agreements for the syscall?
+> >> >What kind of agreement are you looking for?  I'd suggest just coding it
+> >> >up and posting the patches.  Adding syscalls really is really pretty
+> >> >straightforward and isn't much code at all.
+> >> >
+> >>
+> >> Sure, I will do that.
+> >
+> > Alternatively, would a regular prctl() work here?
+>
+> Is this something appliation code has to call, or just the dynamic
+> loader?
+>
+> prctl in glibc is a variadic function, so if there's a mismatch between
+> the kernel/userspace syscall convention and the userspace calling
+> convention (for variadic functions) for specific types, it can't be made
+> to work in a generic way.
+>
+> The loader can use inline assembly for system calls and does not have
+> this issue, but applications would be implcated by it.
+>
 
---S6vg04ofUPzW4qJg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I would expect things like Go and various JITs to call it directly.
 
-On Wed, Aug 26, 2020 at 07:09:50PM +0300, Vladimir Oltean wrote:
+If we wanted to be fancy and add a potentially more widely useful
+syscall, how about:
 
-> I don't even know if NXP0005 is made up or if it's written down
-> somewhere in the PNP ID registry. NXP0006 seems to be assigned to the
+mmap_special(void *addr, size_t length, int prot, int flags, int type);
 
-Well, any ID is made up to some extent.  I am concerned about the
-allocation of IDs too, it needs to be coordinated with NXP since it's
-being allocated from their namespace, but unfortunately in general
-there's no sensible way to go from a chip/feature name to an ACPI name
-due to ACPI's specification mechanism.  There's also not any kind of
-central list of IDs.
+Where type is something like MMAP_SPECIAL_X86_SHSTK.  Fundamentally,
+this is really just mmap() except that we want to map something a bit
+magical, and we don't want to require opening a device node to do it.
 
-> In the ACPI spec there's also a _HRV (Hardware Revision) object, which
-> comes as a simple DWORD. We could use acpi_evaluate_integer() to read
-> that, and use it as index into the array of fsl_dspi_devtype_data, if
-> we declare that as ABI within the driver (and new SoCs would be added
-> only at the end of the enum). Then we could use the NXP0005 _HID for
-> everything DSPI.
-
-That's not something that it's particularly idiomatic to actually use in
-ACPI and you end up with the same namespacing problem assigning IDs so
-I'm not sure it makes life any better.
-
---S6vg04ofUPzW4qJg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9GlY0ACgkQJNaLcl1U
-h9Bozgf/Sz7mY5RFESRs7ctTI2nM5uKnrKtvcFPSKn1Xsj12Sh164fQPPeOKpxnj
-bPxpi3txdmYil0BWOO3rZ1NqAVLNoI0+ojuCpGryNonUG+xWvSOLHcIcRGeewI5J
-0Z5aX/VR8NIWM9te2nAvwfm0xy1b/DqgLP91v/jd46B/cL2+hpq9OoejiuQgcQBU
-98TqyC8vb24xnV6nBbbUl4yUrkdhfABO0SqKibPnTWPTrhm6Al1gWvck6ZnfCZcm
-d0vKvMsblW5Z6nORNOVuEEc7V+3xihn1iD1x8W9tKTazKJrbgRWXtlbItTZJqEka
-yb+i0TPtKDvt15TC4GqRMFDI2UUavA==
-=n6mB
------END PGP SIGNATURE-----
-
---S6vg04ofUPzW4qJg--
+--Andy
