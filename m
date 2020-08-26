@@ -2,179 +2,112 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34BB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:20:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 060C82071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:19:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXa+dODJ"
+	by mail.kernel.org (Postfix) with ESMTP id 748A02071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:20:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgHZHTh (ORCPT
+        id S1726968AbgHZHUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:19:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48432 "EHLO
+        Wed, 26 Aug 2020 03:20:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgHZHTf (ORCPT
+        with ESMTP id S1726802AbgHZHUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:19:35 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A52CC061574;
-        Wed, 26 Aug 2020 00:19:35 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id g1so590809pgm.9;
-        Wed, 26 Aug 2020 00:19:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qWLQ09H4pd8WgMgtgz12mw5W3VvW3dhG530iJhOXSE0=;
-        b=OXa+dODJtUqYwtqpQ7ayh7hD2+7v70th2/273W1+fTk2MmqVr26N7l3YZK+gVNeD/0
-         VJQGWHjYBPCccKWZ5YVAYwN/9y4ZFAyd6xLhPT4v16Qzl8uLtYEwJYFtwS+IV2T+uYRT
-         o696chC8iVjFQ0LJSsUiv6kscF9IHSXTtAA+LZaM69XQXkCOHKmEW0qVuTAVoGDTw8rI
-         sKBmyMC1a5Rt7wlCJz+Qs7XI8L/DKlv4IH8jFR3MVib6BMPkEUCTjfEyquqWtlz1cbbZ
-         Ja4CpU7sVeu/8jGj2Wbeme+jeEiCa6g/jBznhIWVa5JLTjmtiBQR2a5mNhXgh2O5GvYc
-         AUBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=qWLQ09H4pd8WgMgtgz12mw5W3VvW3dhG530iJhOXSE0=;
-        b=tn+9w6CiRtMbIpuveuhC37fUCmmj1OsAanDCA47jAXzMVjiucwRaMjaTvsBGfcybK+
-         yoOj75a2cOquqBqvq/uz4w/+tzckBbwLb8YMyDxqHg9oZlfd14XNJt6BSYl/+jZhcpya
-         0rMs7CuhMpL/+arKhc/AuOtqc4YrwsIdR80m/+9HUNa27vlF0E359c3wOsAVfMGLimdM
-         NgkvtubXDzck0wmcJMxlH5SmwdRUNXkxHNO/PS4CstmdSszhGwC2LINijFOJ88OnuoHq
-         57WJ8YltyWRjrAjoY02nq6/P0EC+Jigx+TPeorzauZsOtdbOtfAd1Z4tClXGhbylFzSU
-         ex8Q==
-X-Gm-Message-State: AOAM530NZR5Vps1S6xayj6En9fye9BMp8pHcu8XLjFnCuBtidwKixSRa
-        fHTF7uDBUKB1RKDBbVOmHps=
-X-Google-Smtp-Source: ABdhPJzu+RfzmpakKaJ6ICWRJIIn4iAY6rm05Qjiy2cIfh8eZg7ri+t6ytJ/DqHxJh9T+iOIaATKGQ==
-X-Received: by 2002:a62:1c86:: with SMTP id c128mr11084787pfc.78.1598426374880;
-        Wed, 26 Aug 2020 00:19:34 -0700 (PDT)
-Received: from localhost.localdomain ([45.124.203.19])
-        by smtp.gmail.com with ESMTPSA id mw8sm1125465pjb.47.2020.08.26.00.19.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 00:19:33 -0700 (PDT)
-From:   Joel Stanley <joel@jms.id.au>
-To:     Andrew Jeffery <andrew@aj.id.au>, Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        James Hartley <james.hartley@sondrel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, stable@vger.kernel.org
-Subject: [PATCH] ARM: config: aspeed: Fix selection of media drivers
-Date:   Wed, 26 Aug 2020 16:49:16 +0930
-Message-Id: <20200826071916.3081953-1-joel@jms.id.au>
-X-Mailer: git-send-email 2.28.0
+        Wed, 26 Aug 2020 03:20:41 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2747BC061574;
+        Wed, 26 Aug 2020 00:20:41 -0700 (PDT)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1kApj6-00AuC9-Q7; Wed, 26 Aug 2020 09:20:08 +0200
+Message-ID: <f579efc1375e46d9c2ff999ada1bcfed40ec2a8f.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 3/6] netlink/compat: Append NLMSG_DONE/extack to
+ frag_list
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        netdev@vger.kernel.org
+Date:   Wed, 26 Aug 2020 09:19:51 +0200
+In-Reply-To: <20200826014949.644441-4-dima@arista.com> (sfid-20200826_034955_677016_9C53E113)
+References: <20200826014949.644441-1-dima@arista.com>
+         <20200826014949.644441-4-dima@arista.com>
+         (sfid-20200826_034955_677016_9C53E113)
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the 5.7 merge window the media kconfig was restructued. For most
-platforms these changes set CONFIG_MEDIA_SUPPORT_FILTER=y which keeps
-unwanted drivers disabled.
+On Wed, 2020-08-26 at 02:49 +0100, Dmitry Safonov wrote:
+> Modules those use netlink may supply a 2nd skb, (via frag_list)
+> that contains an alternative data set meant for applications
+> using 32bit compatibility mode.
 
-The exception is if a config sets EMBEDDED or EXPERT (see b0cd4fb27665).
-In that case the filter is set to =n, causing a bunch of DVB tuner drivers
-(MEDIA_TUNER_*) to be accidentally enabled. This was noticed as it blew
-out the build time for the Aspeed defconfigs.
+Do note, however, that until this day the facility here was only used by
+(and originally intended for) wireless extensions, where it exclusively
+applies to *event* messages. Hence, we really didn't worry about dump or
+any other kind of netlink usage.
 
-Enabling the filter means the Aspeed config also needs to set
-CONFIG_MEDIA_PLATFORM_SUPPORT=y in order to have the CONFIG_VIDEO_ASPEED
-driver enabled.
+That said, it's really just a historic note explaining why it didn't
+work for you out of the box :)
 
-Fixes: 06b93644f4d1 ("media: Kconfig: add an option to filter in/out platform drivers")
-Fixes: b0cd4fb27665 ("media: Kconfig: on !EMBEDDED && !EXPERT, enable driver filtering")
-Cc: stable@vger.kernel.org
-CC: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
+> In such a case, netlink_recvmsg will use this 2nd skb instead of the
+> original one.
+> 
+> Without this patch, such compat applications will retrieve
+> all netlink dump data, but will then get an unexpected EOF.
+> 
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Signed-off-by: Florian Westphal <fw@strlen.de>
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> ---
+>  net/netlink/af_netlink.c | 48 ++++++++++++++++++++++++++++------------
+>  1 file changed, 34 insertions(+), 14 deletions(-)
+> 
+> diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
+> index b5f30d7d30d0..b096f2b4a50d 100644
+> --- a/net/netlink/af_netlink.c
+> +++ b/net/netlink/af_netlink.c
+> @@ -2186,13 +2186,36 @@ EXPORT_SYMBOL(__nlmsg_put);
+>   * It would be better to create kernel thread.
+>   */
+>  
+> +static int netlink_dump_done(struct netlink_sock *nlk, struct sk_buff *skb,
+> +			     struct netlink_callback *cb,
+> +			     struct netlink_ext_ack *extack)
+> +{
+> +	struct nlmsghdr *nlh;
+> +
+> +	nlh = nlmsg_put_answer(skb, cb, NLMSG_DONE, sizeof(nlk->dump_done_errno),
+> +			       NLM_F_MULTI | cb->answer_flags);
+> +	if (WARN_ON(!nlh))
+> +		return -ENOBUFS;
+> +
+> +	nl_dump_check_consistent(cb, nlh);
+> +	memcpy(nlmsg_data(nlh), &nlk->dump_done_errno,
+> +			sizeof(nlk->dump_done_errno));
 
-Another solution would be to revert b0cd4fb27665 ("media: Kconfig: on
-!EMBEDDED && !EXPERT, enable driver filtering"). I assume this was done
-to be helpful, but in practice it has enabled the TUNER drivers (and
-others) for the following configs that didn't have them before:
+nit: indentation here looks odd.
 
-$ git grep -lE "(CONFIG_EXPERT|CONFIG_EMBEDDED)"  arch/*/configs/ | xargs grep -l MEDIA_SUPPORT
-arch/arm/configs/aspeed_g4_defconfig
-arch/arm/configs/aspeed_g5_defconfig
-arch/arm/configs/at91_dt_defconfig
-arch/arm/configs/bcm2835_defconfig
-arch/arm/configs/davinci_all_defconfig
-arch/arm/configs/ezx_defconfig
-arch/arm/configs/imote2_defconfig
-arch/arm/configs/imx_v4_v5_defconfig
-arch/arm/configs/imx_v6_v7_defconfig
-arch/arm/configs/milbeaut_m10v_defconfig
-arch/arm/configs/multi_v7_defconfig
-arch/arm/configs/omap2plus_defconfig
-arch/arm/configs/pxa_defconfig
-arch/arm/configs/qcom_defconfig
-arch/arm/configs/sama5_defconfig
-arch/arm/configs/tegra_defconfig
-arch/mips/configs/ci20_defconfig
-arch/mips/configs/lemote2f_defconfig
-arch/mips/configs/loongson3_defconfig
-arch/mips/configs/pistachio_defconfig
+Other than that, looks reasonable to me.
 
-I've cc'd the maintainers of these defconfigs so they are aware.
+Reviewed-by: Johannes Berg <johannes@sipsolutions.net>
 
----
- arch/arm/configs/aspeed_g4_defconfig | 3 ++-
- arch/arm/configs/aspeed_g5_defconfig | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/configs/aspeed_g4_defconfig b/arch/arm/configs/aspeed_g4_defconfig
-index 303f75a3baec..58d293b63581 100644
---- a/arch/arm/configs/aspeed_g4_defconfig
-+++ b/arch/arm/configs/aspeed_g4_defconfig
-@@ -160,7 +160,8 @@ CONFIG_SENSORS_TMP421=y
- CONFIG_SENSORS_W83773G=y
- CONFIG_WATCHDOG_SYSFS=y
- CONFIG_MEDIA_SUPPORT=y
--CONFIG_MEDIA_CAMERA_SUPPORT=y
-+CONFIG_MEDIA_SUPPORT_FILTER=y
-+CONFIG_MEDIA_PLATFORM_SUPPORT=y
- CONFIG_V4L_PLATFORM_DRIVERS=y
- CONFIG_VIDEO_ASPEED=y
- CONFIG_DRM=y
-diff --git a/arch/arm/configs/aspeed_g5_defconfig b/arch/arm/configs/aspeed_g5_defconfig
-index b0d056d49abe..cc2449ed6e6d 100644
---- a/arch/arm/configs/aspeed_g5_defconfig
-+++ b/arch/arm/configs/aspeed_g5_defconfig
-@@ -175,7 +175,8 @@ CONFIG_SENSORS_TMP421=y
- CONFIG_SENSORS_W83773G=y
- CONFIG_WATCHDOG_SYSFS=y
- CONFIG_MEDIA_SUPPORT=y
--CONFIG_MEDIA_CAMERA_SUPPORT=y
-+CONFIG_MEDIA_SUPPORT_FILTER=y
-+CONFIG_MEDIA_PLATFORM_SUPPORT=y
- CONFIG_V4L_PLATFORM_DRIVERS=y
- CONFIG_VIDEO_ASPEED=y
- CONFIG_DRM=y
--- 
-2.28.0
+johannes
 
