@@ -2,126 +2,90 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D4BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C318AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:43:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9189B206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:42:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598460127;
-	bh=K0KRjosCNihhIUjy2CzAbSeunhdWGQrDEtxgSqHeoew=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NaERnEFO6bGudC+mdeQPWn66aCPmfgGNPsTBoh8MOVR1DYsFd8HAwJUZi7W/dxVj6
-	 Wlsct1/pjKbPmrJPgqhI7/ymbxewbPgZyPA1lhLSIe3bGm2kcj6/Gf5KST0Kb08O+6
-	 dXU5MLJ+41XXgh1aocvDErkLiCAgNh5iEks/2ZKU=
+	by mail.kernel.org (Postfix) with ESMTP id 91C1C206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:43:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CakgDGbR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgHZQmF (ORCPT
+        id S1728122AbgHZQnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:42:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43431 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgHZQl4 (ORCPT
+        Wed, 26 Aug 2020 12:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbgHZQnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:41:56 -0400
-Received: by mail-oi1-f195.google.com with SMTP id j21so2056131oii.10;
-        Wed, 26 Aug 2020 09:41:55 -0700 (PDT)
+        Wed, 26 Aug 2020 12:43:14 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EA01C061574;
+        Wed, 26 Aug 2020 09:43:08 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id a26so3791056ejc.2;
+        Wed, 26 Aug 2020 09:43:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qkFKNXoEvLaLjtg+VSz16h2fveq81SS9ALzUgSNtgqs=;
+        b=CakgDGbRZTzTHaByk+lLgKHAFfB0XFPxYb9/t80ox0YhHH6u4XkpStD+n9gvJwp9JU
+         VtqToaWErw3FJC5UxOOpsUCF16upp6oUyIAFWdDggM7wTBxaiX1QV+qpZxJLV45hNDxC
+         ayAhXmZ6ca7mOKsEwullJQ/liwoiVexsABkb4fhgdWMsCMdkkoov3yrdFEjoelWh2evY
+         fIzqGDHTHD2AbVrW30YWvblbDe05bXcj6o6ddg0Bx3HxeYynyXQ8MvIkdkiuSHM6GDff
+         0F7pwhT+7dkEWxpHRS6yLOP1JQ5RfpmEenZp48bc5QtfWss9mCqpr/uGMTNOm/xkRg3O
+         jijg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wsy5zXuBQviVStdVeCGrMTAX227JSl/kynJ+bRrUqhw=;
-        b=uL0EDsf6hJ5sYmTPNDda8Fn3aZoHQUNP/ul1Zg2uDqq8fYYbtzvot0ih3lIrn/Y9pB
-         g82NPkvOgM3zldlh9M67dEQi3MaMJjxny7+jZYgmcuZmtPOwzoKqFdmbyiZoSkTBRdgJ
-         ykan7vd4zD6+4pUMcAad6pefnvPiPMVNMChZC0WFZoPLukictI+qb8OIVNDQiNN7zc3K
-         3JHxX2lW86AO8oXWpdVvsF4iGom1xgGZ1l4XedbGEQbfw7GFLnzkYuF6yjyZ5KWyMTO0
-         lzB04jzWn0AcdB2+iixkegKEBzH/fysOj+H3WFszyvWxpthM+9wEz0gETrlZ5+5EBWpL
-         gs3w==
-X-Gm-Message-State: AOAM531YtMLODrgjU0sIfxFAWcXIwqop//BQHCZd16o1H1k/82iDZqH8
-        JYjcsPTY3dhjMAn2R/vAUE6We+cGhbOSWinDqw8=
-X-Google-Smtp-Source: ABdhPJy2nXYl0RJfHQH7KCX/v6XWxgIJw5+i8hypA0vKnYTy4GFLpfksuMvG0V355VFbpomGojLtzxqFcnWQisTKKjo=
-X-Received: by 2002:aca:3e8b:: with SMTP id l133mr1553553oia.110.1598460115467;
- Wed, 26 Aug 2020 09:41:55 -0700 (PDT)
+        bh=qkFKNXoEvLaLjtg+VSz16h2fveq81SS9ALzUgSNtgqs=;
+        b=s1d67bXwXfzoE7w7V46RRbgq2v0bYkIv1WWUqjqDPr/QiMq8CRfqDqx3UKYrX6McSj
+         WW/OzYVxGcvcUTsIJhGGC/Y8Y6htNHblu/r8FY7Ut/U2xgT7PAgBw4kN9RbknqJssWWL
+         k0w3Ch/vCCjnkrfThbbhIk1I8vtVvPsGQ6a+o6xHASzBVKAp/XetMXmb93btaybMzfLd
+         n8Y6iV1gn9bY4hUWvfwej6c9ayki4iTOswwGZ76ZG1XzYJiCq+ag/r0luB/GpAGrUlCJ
+         /ELN/sBwN6O+7G3vi8cH7CabVolP50XS5pUAaytW1als31QUOiRrq7z1LAvEX0CRGRCn
+         F28w==
+X-Gm-Message-State: AOAM5325euW2BwTDfxtdV436ejVLjtIougEq9qyL7bbL4aXckDkj4lrN
+        L7rMugrsQbrkfrHJah7eVOdctMCYyH/kU2o8GU4=
+X-Google-Smtp-Source: ABdhPJzSJAHgQkmx8WGIzyyLafbpaY1jDCkkSspzLKWqPbii9E6oNzLepZsKGVV6GZz8L/MNYEUf9aWeQHpJYteEUfs=
+X-Received: by 2002:a17:907:7094:: with SMTP id yj20mr16281482ejb.471.1598460187197;
+ Wed, 26 Aug 2020 09:43:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200826120421.44356-1-guilhem@barpilot.io> <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
- <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
- <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
- <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
- <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
- <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
- <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com> <72fab2376722c6169549669016933217d3da34a0.camel@gmail.com>
-In-Reply-To: <72fab2376722c6169549669016933217d3da34a0.camel@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 26 Aug 2020 18:41:44 +0200
-Message-ID: <CAJZ5v0jDY62HYWF-QKE8kH4kFx9Ympjwk1Dbhdm_VCFaP28RZg@mail.gmail.com>
-Subject: Re: [PATCH] intel_idle: Add ICL support
-To:     Artem Bityutskiy <dedekind1@gmail.com>
-Cc:     Guilhem Lettron <guilhem@barpilot.io>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200826145249.745432-1-npiggin@gmail.com> <20200826145249.745432-18-npiggin@gmail.com>
+In-Reply-To: <20200826145249.745432-18-npiggin@gmail.com>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Wed, 26 Aug 2020 19:42:50 +0300
+Message-ID: <CAOJsxLFoX5rk+k5GASBh5vxL-Vfj7OkD_UE3p=_cS3SwhBVEaQ@mail.gmail.com>
+Subject: Re: [PATCH v2 17/23] riscv: use asm-generic/mmu_context.h for no-op implementations
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     "list@ebiederm.org:DOCUMENTATION <linux-doc@vger.kernel.org>,
+        list@ebiederm.org:MEMORY MANAGEMENT <linux-mm@kvack.org>," 
+        <linux-arch@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 6:19 PM Artem Bityutskiy <dedekind1@gmail.com> wrote:
+On Wed, Aug 26, 2020 at 5:54 PM Nicholas Piggin <npiggin@gmail.com> wrote:
 >
-> Indeed, when I compare them:
->
-> acpi_idle (without the patch):
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: linux-riscv@lists.infradead.org
+> Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 
-Does this come from the Guilhem's data?  It's intel_idle in both
-cases, but in the "without the patch" case it uses ACPI.
-
-> CPU%c1  CPU%c6  CPU%c7  CoreTmp PkgTmp  GFX%rc6 Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10 PkgWatt
-> 29.48   0.00    60.71   58      58      97.96   16.96   0.00    0.00    0.00    0.00    0.00    0.00    6.08
-
-and I get the same data here, but
-
-> intel_idle (with the patch):
->
-> CPU%c1  CPU%c6  CPU%c7  CoreTmp PkgTmp  GFX%rc6 Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10 PkgWatt
-> 56      56      96.64   300     68.29   48.58   0.00    0.00    0.00    0.00    0.00    0.00    7.38    0.00
-
-you seem to have columns wrong here.
-
-I get something like this
-
-CPU%c1     CPU%c6     CPU%c7     CoreTmp PkgTmp     GFX%rc6 GFXMHz
-Totl%C0 Any%C0     GFX%C0     CPUGFX% Pkg%pc2    Pkg%pc3 Pkg%pc6
-Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
-16.07     26.24     49.10     56     56     96.64     300     68.29
- 48.58     3.08     2.10     30.36     0.04     0.00     0.00     0.00
-    0.00     0.00
-
-so still no PC10 residency (and it would be rather strange to get PC10
-residency without any PC6 or higher residency).  The 7.38 is the
-PkgWatt number AFAICS.
-
-> With intel_idle we reach PC10, without it we only go as deep as PC2 - huge difference.
-
-Not really.  We don't get any PC10 residency in both cases.
-
-> I really wonder why the BIOS does not expose deeper C-states...
-
-It does expose C10.
-
-> And if it does not, is this for a reason? And how windows works then?
-
-It can only expose 3 C-states and it chose to expose C1, C7s and C10.
-
-> May be there is a BIOS update that fixes this problem? May be Windows
-> user get it quickly because stuff like this is often well-integrated in
-> Windows? Would you please check if there is newer BIOS?
-
-I doubt it.
-
-Cheers!
+Reviewed-by: Pekka Enberg <penberg@kernel.or>
