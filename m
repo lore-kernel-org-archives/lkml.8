@@ -2,158 +2,198 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4C4C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F081BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47FBF2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598473307;
-	bh=YMfWFqC5hD4XcAvqBAU0k4rGeGVgIOGdihLkY7QIQuI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LgTWDMl+WmGtiZn+7XnG9dixiL9Nw4k+VuKhzS45Y3/U9dsBQHL/6O0fXBeT8fBm+
-	 OHYmVdOc9ko0OuwrdekeLJXllHON//MFJnDFaagSz69bcRjoO94Uq9xZMLJOVbtsbP
-	 isPr2WBb7OfMuacKpNNZBCf7Tg4Zo39NdjpkzKkA=
+	by mail.kernel.org (Postfix) with ESMTP id B98732076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:21:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jf1otqlj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cfxuptz1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgHZUVq (ORCPT
+        id S1726904AbgHZUVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:21:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41574 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726241AbgHZUVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:21:44 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A897E2076C;
-        Wed, 26 Aug 2020 20:21:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598473303;
-        bh=YMfWFqC5hD4XcAvqBAU0k4rGeGVgIOGdihLkY7QIQuI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NMTbNDQwmiy1TI7fQW+JBmDTTcazSYXOKy3VJ01rf1Ap90CQohqzakM3jl9iiJ6Du
-         SP+RZY3eNF4e+puBPocRu65f+SDsiCWCqgkjpNooqC9R8TqsTM97vhGhGVPC/oD/qy
-         7abz/f4FoDiNVRC+OaPlMVmemXAtkSFDMTV+ZL3M=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kB1vS-006y5k-3Z; Wed, 26 Aug 2020 21:21:42 +0100
-Date:   Wed, 26 Aug 2020 21:21:40 +0100
-Message-ID: <878se12m5n.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Wed, 26 Aug 2020 16:21:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726241AbgHZUVs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 16:21:48 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BE5C061574;
+        Wed, 26 Aug 2020 13:21:47 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598473304;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4Gx2C3ZUcKyZNb4xGzlZpmhk1STR769KFOAc3dj+CHM=;
+        b=jf1otqlj4EWIHhczPrAZqfb1pfsbG9Uka55qqs7Evh3UX8kO+R/QLpKIL2Aq295LgbrCjV
+        Hng3bxzADPluLhtSHaIEFN+io28sJE960ACYJI1CAzEpIh1K5myB/MBr4pg68i0FvqScjJ
+        3mYV5/cTKTroAr2dvC517qctXN1Uv2mEs92jDrx+U/tI93NPtPe5iSqQSvrfHiQByyl6sf
+        gdqwxpS/lzA2zo2jtTSHvlUGISfiBZRXPCoWkfOrHa4c0ZwvfePMoCqXXWlXnDgrc+Xz5W
+        JVceU1RjPJVaF1jArqvPBzEuNNOsKNog35QTvry+egZ2ifuR1kVxq6oq+YDTlg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598473304;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4Gx2C3ZUcKyZNb4xGzlZpmhk1STR769KFOAc3dj+CHM=;
+        b=cfxuptz1Bb2FJUAzBJutTGUCmnDt5kbGxLSpXhRrYrmbYw5kKdVhMa7kfVsgmgx2fyMeAu
+        THII0DICWYk/tjDA==
+To:     Alexander Graf <graf@amazon.com>, X86 ML <x86@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 19/46] x86/msi: Use generic MSI domain ops
-In-Reply-To: <20200826112332.564274859@linutronix.de>
-References: <20200826111628.794979401@linutronix.de>
-        <20200826112332.564274859@linutronix.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Juergen Gross <jgross@suse.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Avi Kivity <avi@scylladb.com>,
+        "Herrenschmidt\, Benjamin" <benh@amazon.com>, robketr@amazon.de,
+        amos@scylladb.com, Brian Gerst <brgerst@gmail.com>,
+        stable@vger.kernel.org, Alex bykov <alex.bykov@scylladb.com>
+Subject: x86/irq: Unbreak interrupt affinity setting
+In-Reply-To: <873649utm4.fsf@nanos.tec.linutronix.de>
+References: <20200826115357.3049-1-graf@amazon.com> <87k0xlv5w5.fsf@nanos.tec.linutronix.de> <fd87a87d-7d8a-9959-6c81-f49003a43c21@amazon.com> <87blixuuny.fsf@nanos.tec.linutronix.de> <873649utm4.fsf@nanos.tec.linutronix.de>
+Date:   Wed, 26 Aug 2020 22:21:44 +0200
+Message-ID: <87wo1ltaxz.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 12:16:47 +0100,
-Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> pci_msi_get_hwirq() and pci_msi_set_desc are not longer special. Enable the
-> generic MSI domain ops in the core and PCI MSI code unconditionally and get
-> rid of the x86 specific implementations in the X86 MSI code and in the
-> hyperv PCI driver.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> 
-> ---
->  arch/x86/include/asm/msi.h          |    2 --
->  arch/x86/kernel/apic/msi.c          |   15 ---------------
->  drivers/pci/controller/pci-hyperv.c |    8 --------
->  drivers/pci/msi.c                   |    4 ----
->  kernel/irq/msi.c                    |    6 ------
->  5 files changed, 35 deletions(-)
-> 
-> --- a/arch/x86/include/asm/msi.h
-> +++ b/arch/x86/include/asm/msi.h
-> @@ -9,6 +9,4 @@ typedef struct irq_alloc_info msi_alloc_
->  int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
->  		    msi_alloc_info_t *arg);
->  
-> -void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc);
-> -
->  #endif /* _ASM_X86_MSI_H */
-> --- a/arch/x86/kernel/apic/msi.c
-> +++ b/arch/x86/kernel/apic/msi.c
-> @@ -204,12 +204,6 @@ void native_teardown_msi_irq(unsigned in
->  	irq_domain_free_irqs(irq, 1);
->  }
->  
-> -static irq_hw_number_t pci_msi_get_hwirq(struct msi_domain_info *info,
-> -					 msi_alloc_info_t *arg)
-> -{
-> -	return arg->hwirq;
-> -}
-> -
->  int pci_msi_prepare(struct irq_domain *domain, struct device *dev, int nvec,
->  		    msi_alloc_info_t *arg)
->  {
-> @@ -228,17 +222,8 @@ int pci_msi_prepare(struct irq_domain *d
->  }
->  EXPORT_SYMBOL_GPL(pci_msi_prepare);
->  
-> -void pci_msi_set_desc(msi_alloc_info_t *arg, struct msi_desc *desc)
-> -{
-> -	arg->desc = desc;
-> -	arg->hwirq = pci_msi_domain_calc_hwirq(desc);
-> -}
-> -EXPORT_SYMBOL_GPL(pci_msi_set_desc);
+Several people reported that 5.8 broke the interrupt affinity setting
+mechanism.
 
-I think that at this stage, pci_msi_domain_calc_hwirq() can be made
-static, as it was only ever exported for this call site. Nice cleanup!
+The consolidation of the entry code reused the regular exception entry code
+for device interrupts and changed the way how the vector number is conveyed
+from ptregs->orig_ax to a function argument.
 
-Reviewed-by: Marc Zyngier <maz@kernel.org>
+The low level entry uses the hardware error code slot to push the vector
+number onto the stack which is retrieved from there into a function
+argument and the slot on stack is set to -1.
 
-	M.
+The reason for setting it to -1 is that the error code slot is at the
+position where pt_regs::orig_ax is. A positive value in pt_regs::orig_ax
+indicates that the entry came via a syscall. If it's not set to a negative
+value then a signal delivery on return to userspace would try to restart a
+syscall. But there are other places which rely on pt_regs::orig_ax being a
+valid indicator for syscall entry.
 
--- 
-Without deviation from the norm, progress is not possible.
+But setting pt_regs::orig_ax to -1 has a nasty side effect vs. the
+interrupt affinity setting mechanism, which was overlooked when this change
+was made.
+
+Moving interrupts on x86 happens in several steps. A new vector on a
+different CPU is allocated and the relevant interrupt source is
+reprogrammed to that. But that's racy and there might be an interrupt
+already in flight to the old vector. So the old vector is preserved until
+the first interrupt arrives on the new vector and the new target CPU. Once
+that happens the old vector is cleaned up, but this cleanup still depends
+on the vector number being stored in pt_regs::orig_ax, which is now -1.
+
+That -1 makes the check for cleanup: pt_regs::orig_ax == new_vector
+always false. As a consequence the interrupt is moved once, but then it
+cannot be moved anymore because the cleanup of the old vector never
+happens.
+
+There would be several ways to convey the vector information to that place
+in the guts of the interrupt handling, but on deeper inspection it turned
+out that this check is pointless and a leftover from the old affinity model
+of X86 which supported multi-CPU affinities. Under this model it was
+possible that an interrupt had an old and a new vector on the same CPU, so
+the vector match was required.
+
+Under the new model the effective affinity of an interrupt is always a
+single CPU from the requested affinity mask. If the affinity mask changes
+then either the interrupt stays on the CPU and on the same vector when that
+CPU is still in the new affinity mask or it is moved to a different CPU, but
+it is never moved to a different vector on the same CPU.
+
+Ergo the cleanup check for the matching vector number is not required and
+can be removed which makes the dependency on pt_regs:orig_ax go away.
+
+The remaining check for new_cpu == smp_processsor_id() is completely
+sufficient. If it matches then the interrupt was successfully migrated and
+the cleanup can proceed.
+
+For paranoia sake add a warning into the vector assignment code to
+validate that the assumption of never moving to a different vector on
+the same CPU holds.
+
+Reported-by: Alex bykov <alex.bykov@scylladb.com>
+Reported-by: Avi Kivity <avi@scylladb.com>
+Reported-by: Alexander Graf <graf@amazon.com>
+Fixes: 633260fa143 ("x86/irq: Convey vector as argument and not in ptregs")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/kernel/apic/vector.c |   16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
+
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -161,6 +161,7 @@ static void apic_update_vector(struct ir
+ 		apicd->move_in_progress = true;
+ 		apicd->prev_vector = apicd->vector;
+ 		apicd->prev_cpu = apicd->cpu;
++		WARN_ON_ONCE(apicd->cpu == newcpu);
+ 	} else {
+ 		irq_matrix_free(vector_matrix, apicd->cpu, apicd->vector,
+ 				managed);
+@@ -909,7 +910,7 @@ void send_cleanup_vector(struct irq_cfg
+ 		__send_cleanup_vector(apicd);
+ }
+ 
+-static void __irq_complete_move(struct irq_cfg *cfg, unsigned vector)
++void irq_complete_move(struct irq_cfg *cfg)
+ {
+ 	struct apic_chip_data *apicd;
+ 
+@@ -917,15 +918,16 @@ static void __irq_complete_move(struct i
+ 	if (likely(!apicd->move_in_progress))
+ 		return;
+ 
+-	if (vector == apicd->vector && apicd->cpu == smp_processor_id())
++	/*
++	 * If the interrupt arrived on the new target CPU, cleanup the
++	 * vector on the old target CPU. A vector check is not required
++	 * because an interrupt can never move from one vector to another
++	 * on the same CPU.
++	 */
++	if (apicd->cpu == smp_processor_id())
+ 		__send_cleanup_vector(apicd);
+ }
+ 
+-void irq_complete_move(struct irq_cfg *cfg)
+-{
+-	__irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
+-}
+-
+ /*
+  * Called from fixup_irqs() with @desc->lock held and interrupts disabled.
+  */
