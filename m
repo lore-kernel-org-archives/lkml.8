@@ -2,107 +2,123 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA98BC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABE102177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66E61221E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:36:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598452561;
+	bh=5o+Weq2TI4lpoW9aAd1oqeAnn8E4uK9m6ij1jx6/Jso=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JV4Bp4g9S5bE+2uWoA0VvlwoBPgF/euptHcOVQo2lR2T+k8oX5xJ9+W5+OU5//b+X
+	 wyN3D2PI/+0XDSDz1xB4pUVBceS7mmcuKc2Bf6X2TTnYc4Sb/AODPeSw0u52uVIAOk
+	 GBU1zKPbT7NN2XnUj3xP7hvlbEXR2X15Y9IXbHOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgHZOfy (ORCPT
+        id S1728115AbgHZOf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:35:54 -0400
-Received: from mga03.intel.com ([134.134.136.65]:46979 "EHLO mga03.intel.com"
+        Wed, 26 Aug 2020 10:35:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728073AbgHZOe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:34:57 -0400
-IronPort-SDR: 1ywbDJurWODDgZCJzSTnl43wQf42GDNfyQuHPjkAN0ou7tUDkS8w53p57eTzC5/NGC42cWrw9m
- axNc8JhQQp3w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="156286876"
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="156286876"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 07:34:54 -0700
-IronPort-SDR: AetVBk4ux2dukFFbj0nUEH9hh1LT0seBw931B9YtzzJi09W43bgqJEo2/XUTv8b4ZNBxkDjZ+G
- SeYo4Vv/eKrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="329244972"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 07:34:52 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kAwVm-00BaSQ-CO; Wed, 26 Aug 2020 17:34:50 +0300
-Date:   Wed, 26 Aug 2020 17:34:50 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Wolfram Sang <wsa@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: consider devices with of_match_table during i2c
- device probing
-Message-ID: <20200826143450.GQ1891694@smile.fi.intel.com>
-References: <20200826042938.3259-1-sergey.senozhatsky@gmail.com>
- <20200826050851.GA1081@ninjato>
- <20200826052544.GA500@jagdpanzerIV.localdomain>
- <20200826095356.GG1891694@smile.fi.intel.com>
- <20200826095617.GH1891694@smile.fi.intel.com>
- <20200826102411.GC8849@jagdpanzerIV.localdomain>
- <20200826103807.GD8849@jagdpanzerIV.localdomain>
- <20200826105426.GJ1891694@smile.fi.intel.com>
- <20200826112326.GC1081@ninjato>
- <20200826141810.GE8849@jagdpanzerIV.localdomain>
+        id S1726820AbgHZOfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:35:42 -0400
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD18A214F1;
+        Wed, 26 Aug 2020 14:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598452541;
+        bh=5o+Weq2TI4lpoW9aAd1oqeAnn8E4uK9m6ij1jx6/Jso=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XB9DLQ8Znxu1bqvlC1oq23FDxPprGSx+e/i56odL7DPq4b6eHm0qmNoy1CcePIjJG
+         KezPc1OvHfS0Z7iCq3BtlBHz9tAwN4ZjFw6dlf3YFS4FB8SuAclBY5zd14H/c2snSk
+         hrl5jxNOVqkgna5cgY9XLAyzsAii0rvBI58OJOyg=
+Received: by mail-oi1-f172.google.com with SMTP id z22so1709992oid.1;
+        Wed, 26 Aug 2020 07:35:41 -0700 (PDT)
+X-Gm-Message-State: AOAM530YaQ4FtK44uhoCK+tdoUZJ/CH5MH2lCjphMjtOXqE0oBTLrCbF
+        4u76pZcaq2EEbBxsEbkGBIAJBqPZCHp8sQsQkQ==
+X-Google-Smtp-Source: ABdhPJznMyrXHCgvGOzyNLJmvN6N6XMX+bu9hHdgp3ZYk8rqYBdiOPxYXKrvW0Oz4r/BHJoVj5hanNU41lF2nUGIbiU=
+X-Received: by 2002:aca:d5c4:: with SMTP id m187mr2683714oig.106.1598452540969;
+ Wed, 26 Aug 2020 07:35:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826141810.GE8849@jagdpanzerIV.localdomain>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200824084712.2526079-1-vkoul@kernel.org> <20200824084712.2526079-2-vkoul@kernel.org>
+ <20200824174009.GA2948650@bogus> <20200825145131.GS2639@vkoul-mobl> <20200826063246.GW2639@vkoul-mobl>
+In-Reply-To: <20200826063246.GW2639@vkoul-mobl>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 26 Aug 2020 08:35:29 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKwwirYhrQxCkoUCVnZa_7yNsBDaqgc5TWbLLpeGv17Zw@mail.gmail.com>
+Message-ID: <CAL_JsqKwwirYhrQxCkoUCVnZa_7yNsBDaqgc5TWbLLpeGv17Zw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: dmaengine: Document qcom,gpi dma binding
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 11:18:10PM +0900, Sergey Senozhatsky wrote:
-> On (20/08/26 13:23), Wolfram Sang wrote:
-> > On Wed, Aug 26, 2020 at 01:54:26PM +0300, Andy Shevchenko wrote:
-> > > On Wed, Aug 26, 2020 at 07:38:07PM +0900, Sergey Senozhatsky wrote:
-> > > > On (20/08/26 19:24), Sergey Senozhatsky wrote:
-> > > > > > But then the question is why we have this code in the ->probe() at all?
-> > > > > > ->match() is run before probe by bus core, no?
-> > > > > 
-> > > > > That's a good question.
-> > > > 
-> > > > Everything seem to be working OK on my test board with this patch:
-> > > 
-> > > I'm okay with it, but I want to hear Wolfram about this.
-> > > If it gets a green light to go, feel free to add
-> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > 
-> > Sergey,
-> > 
-> > Can you send a proper patch (with patch description) and me and Jean
-> > Delvare <jdelvare@suse.de> in the To: field?
-> > 
-> > The origins of this matching code are pretty old and Jean is more
-> > experienced there than I am. Nonetheless, I will check it, too, of
-> > course.
-> 
-> Oh, sure, will do. Is that OK if I'll base my patch on linux-next?
-> I'm also going to test the patch on more devices here on my side.
+On Wed, Aug 26, 2020 at 12:32 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 25-08-20, 20:21, Vinod Koul wrote:
+> > Hey Rob,
+> >
+> > On 24-08-20, 11:40, Rob Herring wrote:
+> > > On Mon, 24 Aug 2020 14:17:10 +0530, Vinod Koul wrote:
+> > > > Add devicetree binding documentation for GPI DMA controller
+> > > > implemented on Qualcomm SoCs
+> > > >
+> > > > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > > > ---
+> > > >  .../devicetree/bindings/dma/qcom-gpi.yaml     | 87 +++++++++++++++=
+++++
+> > > >  1 file changed, 87 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/dma/qcom-gpi.=
+yaml
+> > > >
+> > >
+> > >
+> > > My bot found errors running 'make dt_binding_check' on your patch:
+> > >
+> > > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/=
+dma/qcom-gpi.yaml: properties:qcom,ev-factor: {'description': 'Event ring t=
+ransfer size compare to channel transfer ring. Event ring length =3D ev-fac=
+tor * transfer ring size', 'maxItems': 1} is not valid under any of the giv=
+en schemas (Possible causes of the failure):
+> > >     /builds/robherring/linux-dt-review/Documentation/devicetree/bindi=
+ngs/dma/qcom-gpi.yaml: properties:qcom,ev-factor: 'not' is a required prope=
+rty
+> >
+> > Okay updating dt-schema I do see this, now the question is what is this
+> > and what does it mean ;-) I am not sure I comprehend the error message.
+> > I see this for all the new properties I added as required for this
+> > device node
+>
+> Okay I think I have figured it out, I need to provide ref to
+> /schemas/types.yaml#definitions/uint32 for this to work, which does
+> makes sense to me.
+>
+>   qcom,max-num-gpii:
+>     $ref: /schemas/types.yaml#definitions/uint32
+>     maxItems: 1
 
-Today's one includes above mentioned patches, I think it's okay.
-The i2c/for-next is currently listed
-ab70935d37bb i2c: Remove 'default n' from busses/Kconfig
-on top of current, don't see how it may interfere with this.
+uint32 is always 1 item, so drop. Is there a max value you can define?
+Otherwise, up to 2^32 - 1 is valid.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>     description:
+>       Number of GPII instances
+>
+> Looks good to schema tool
+>
+> --
+> ~Vinod
