@@ -2,174 +2,86 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD8DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE626C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:39:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E54206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598459857;
-	bh=pBc8gM5KOX/QRk7tf+c7+MrN051X6wSwRL8XjLMwkpA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=p0gixF4uD6lUhXabQ6Z9StKqwKS6j+jo/e3PTbN8ELq4ReGC5Pn8NtgT4C5IYitlV
-	 99puWbUl+cdcBKb8ROY2KVjXdiZNz/nFuaC9dSHx9fSlOOU3bAfnJEkGoClhR55aOK
-	 xIil81ZKBg7LAS/w8vYiJiWSN+Qwzt9EVTb3tL/s=
+	by mail.kernel.org (Postfix) with ESMTP id D9824206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbgHZQhe (ORCPT
+        id S1727111AbgHZQj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:37:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35812 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 12:39:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:46376 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726772AbgHZQhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:37:33 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D666206FA;
-        Wed, 26 Aug 2020 16:37:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598459852;
-        bh=pBc8gM5KOX/QRk7tf+c7+MrN051X6wSwRL8XjLMwkpA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZFZ8/xASQAxvIcEud6yRT7vUyq4aWJI1IWNLpTVMDlYbIMy6fjnvfBTeXUdx//xYw
-         V2YdkX+e4/z0cYtfxi5MXYXFYyWfVsAecZgNKOVo0AIyKG7Dldiu6GcpX4kvJA4pu6
-         JAGJW1Ier1tVZvfblXe2e3pC60/5zBEt6idCvOl4=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kAyQU-006uP9-GY; Wed, 26 Aug 2020 17:37:30 +0100
+        id S1726788AbgHZQj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:39:28 -0400
+IronPort-SDR: 9pFkQ+noWSconN0OeseWLYyQU28p52u+CJlj3Q7pORhOFZk5L79xnXHiOZhMyHv53bOowntrgN
+ 303oBD4GZbqA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="136397005"
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="136397005"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:39:27 -0700
+IronPort-SDR: FpgYX9uruP0VLQ+3WHVGGr1JmFIgM7kQvyCKrKKekqguF/nGxs4lLNgtERdLO2Tz64lItS5YmN
+ l4JbTc2zaDnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="329286792"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 09:39:27 -0700
+Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.186])
+        by linux.intel.com (Postfix) with ESMTP id B9E215805ED;
+        Wed, 26 Aug 2020 09:39:25 -0700 (PDT)
+Message-ID: <e9e6823d63fe2b9938e43a14c136b89aec0c503b.camel@gmail.com>
+Subject: Re: [PATCH] intel_idle: Add ICL support
+From:   Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Guilhem Lettron <guilhem@barpilot.io>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 26 Aug 2020 19:39:24 +0300
+In-Reply-To: <CAJZ5v0j4FXH26rZCjM9Csd56skPVbRpM7iFcKYAFMmLFX54+bg@mail.gmail.com>
+References: <20200826120421.44356-1-guilhem@barpilot.io>
+         <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
+         <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
+         <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
+         <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
+         <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
+         <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
+         <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
+         <CAJZ5v0j4FXH26rZCjM9Csd56skPVbRpM7iFcKYAFMmLFX54+bg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Aug 2020 17:37:30 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 5/9] fsl-msi: Provide default retrigger callback
-In-Reply-To: <jhj7dtlejxc.mognet@arm.com>
-References: <20200824102317.1038259-1-maz@kernel.org>
- <20200824102317.1038259-6-maz@kernel.org> <jhj7dtlejxc.mognet@arm.com>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <70107b944534c6a0eeff83e43b05865e@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, gregory.clement@bootlin.com, jason@lakedaemon.net, laurentiu.tudor@nxp.com, tglx@linutronix.de
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Valentin,
+On Wed, 2020-08-26 at 18:02 +0200, Rafael J. Wysocki wrote:
+> To that end, I would try to upgrade the graphics firmware and see if
+> you can get some nonzero PC8 residency then.
 
-On 2020-08-26 12:16, Valentin Schneider wrote:
-> Hi Marc,
-> 
-> Many thanks for picking this up!
-> Below's the only comment I have, the rest LGTM.
-> 
-> On 24/08/20 11:23, Marc Zyngier wrote:
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---
->>  drivers/bus/fsl-mc/fsl-mc-msi.c | 2 ++
->>  1 file changed, 2 insertions(+)
->> 
->> diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c 
->> b/drivers/bus/fsl-mc/fsl-mc-msi.c
->> index 8edadf05cbb7..5306ba7dea3e 100644
->> --- a/drivers/bus/fsl-mc/fsl-mc-msi.c
->> +++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
->> @@ -144,6 +144,8 @@ static void fsl_mc_msi_update_chip_ops(struct 
->> msi_domain_info *info)
->>        */
->>       if (!chip->irq_write_msi_msg)
->>               chip->irq_write_msi_msg = fsl_mc_msi_write_msg;
->> +	if (!chip->irq_retrigger)
->> +		chip->irq_retrigger = irq_chip_retrigger_hierarchy;
-> 
-> AFAICT the closest generic hook we could use here is
-> 
->   msi_create_irq_domain() -> msi_domain_update_chip_ops()
-> 
-> which happens just below the fsl-specific ops update.
-> 
-> 
-> However, placing a default .irq_retrigger callback in there would 
-> affect any
-> and all MSI domain. IOW that would cover PCI and platform MSIs (covered 
-> by
-> separate patches in this series), but also some x86 ("dmar" & "hpet") 
-> and
-> TI thingies.
-> 
-> I can't tell right now how bad of an idea it is, but I figured I'd 
-> throw
-> this out there.
+I am curious, somehow that patch makes a difference.
 
-The problem with this approach is that it requires the resend path to be
-cooperative and actually check for more than the top-level irq_data.
-Otherwise you'd never actually trigger the HW resend if it is below
-the top level.
+Guilhem, what do we actually compare: same kernel, just patched vs
+unpached? Or these are 2 different kernels, and one of them was
+patched.
 
-But I like the idea though. Something like this should do the trick, and
-is admittedly a bug fix:
+What does 'uname -r'  say for the "with" and "without" kernels?
 
-diff --git a/kernel/irq/resend.c b/kernel/irq/resend.c
-index c48ce19a257f..d11c729f9679 100644
---- a/kernel/irq/resend.c
-+++ b/kernel/irq/resend.c
-@@ -86,6 +86,18 @@ static int irq_sw_resend(struct irq_desc *desc)
-  }
-  #endif
+Did you compile both kernels yourself and the only difference between
+them is the intel_idle patch?
 
-+static int try_retrigger(struct irq_desc *desc)
-+{
-+#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
-+	return irq_chip_retrigger_hierarchy(&desc->irq_data);
-+#else
-+	if (desc->irq_data.chip->irq_retrigger)
-+		return desc->irq_data.chip->irq_retrigger(&desc->irq_data);
-+
-+	return 0;
-+#endif
-+}
-+
-  /*
-   * IRQ resend
-   *
-@@ -113,8 +125,7 @@ int check_irq_resend(struct irq_desc *desc, bool 
-inject)
-
-  	desc->istate &= ~IRQS_PENDING;
-
--	if (!desc->irq_data.chip->irq_retrigger ||
--	    !desc->irq_data.chip->irq_retrigger(&desc->irq_data))
-+	if (!try_retrigger(desc))
-  		err = irq_sw_resend(desc);
-
-  	/* If the retrigger was successfull, mark it with the REPLAY bit */
-
-In general, introducing a irq_chip_retrigger_hierarchy() call
-shouldn't be problematic as long as we don't overwrite an existing
-callback.
-
-I'll have a look at respining the series with that in mind.
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
