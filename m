@@ -2,212 +2,179 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC73C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBF1C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 763D721741
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:43:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Im6tr19K"
+	by mail.kernel.org (Postfix) with ESMTP id 492EA21741
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:43:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598449438;
+	bh=MQx/+pcESt0M2O0VHxn1QIOJuotT12ugSC5HBwX/f9U=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=bF2/RK0hzOE3EO6pH3aSrTAt4/u0kCQ9ULQFIM4Q+a1s+cNsfFdeitBjNCOCqbWo/
+	 yIXrsEdhBwj2cFpnGOwOQT7N+q0kGQHIqq8r9Q9PzH2mRHrCS+RE3UwFnH7fYagksT
+	 HOECKIcdaecI4GhWoxqwxPsrd/z01BfrTq5lBoAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730351AbgHZNnk (ORCPT
+        id S1730363AbgHZNnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:43:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730239AbgHZNnO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:43:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730242AbgHZNnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Aug 2020 09:43:14 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7501C061574
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:43:08 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id si26so2887441ejb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:43:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yBkyLTWyqIaebksfO31pBpW4njKPTB/MM6lF43DkRgQ=;
-        b=Im6tr19Ks7ww7kswNLb9uvjf7u3sjg01AO0zBctwcIkkQsOoV9X1dA4m6tAp9MattA
-         v1/N5EIqHgXo5OtbIE03E99TzBxDKci+32maUkp0T1athH8hEx8qDvcDy2yMTmzj++a0
-         VIh5Sfq0QLLuvLMj+4AVT1GjUIjN93YHRim+Ac3cMe2tUZ/nCC3ensE0X7tR7qjJ586S
-         Wwa6hrBrnafK8jd37TVt0nWUs3gLsLiglYZ8emo6uCkwoUPXJG1bGuiLNh2XnTRgYpRD
-         HbhtE1A/Z6wUsRdoCXV/114wKXhtw10sPE5D2EEo0tLD5D3E7h9qjraK/h6Jw/V/7Cbz
-         IhNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yBkyLTWyqIaebksfO31pBpW4njKPTB/MM6lF43DkRgQ=;
-        b=LgxsvOYFoKlvou2KymxE8aBQAr0pjsJIZQUnQOvVCMGzjdzDlBWhSYp/VoxbFgdzoc
-         m/gBTmlxy/ANF2NjnOqOFmnb0LcYyXax1+rESZeFzz+xKwQOIYQgITzyLoxZUJ2STT4C
-         Tg7edrPJiMV3P6Bsy0nZRKwxcZF7hOiPG+rhBAXoY8CCOx38IVRHaELjAROSVtWGqB8L
-         mAS+XRI7y6mBquazK2sM/IGq/Xrvg6633Ix7cl66fJNAO95FKUKsLCgbK4fz4HvkRHIW
-         AJvOUBWtnAE6eIf89RdOXFjyA2DRxhVjneY9OOhCjXv/szC5GNAO7IfYM8efKLxgXZUG
-         KX0w==
-X-Gm-Message-State: AOAM5313A8uNgC6Td16A5neYc+5LHli6XICsIzHas5IzIsJnSTwRn0yV
-        Sp+Hjib7o5OM+SLV0vhPvpheP4UxNXzrfXADpYy6tErbNeTR
-X-Google-Smtp-Source: ABdhPJxdzpgqh+03Fxp4xgtH+ZeMgN05JsgEA9Khjj7WG8+/5v7W84OolZeUhXWZSCx1h4QIOpLQX+saAPuLYV+uIuo=
-X-Received: by 2002:a17:906:130a:: with SMTP id w10mr1087905ejb.106.1598449385897;
- Wed, 26 Aug 2020 06:43:05 -0700 (PDT)
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E583C21741;
+        Wed, 26 Aug 2020 13:42:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598449380;
+        bh=MQx/+pcESt0M2O0VHxn1QIOJuotT12ugSC5HBwX/f9U=;
+        h=Date:From:To:Cc:Subject:From;
+        b=p1XZcPvEewpwhfCYF34BU6TplCWPARuwRG9CdyI60OLDJ1UbnkUJud8MPB9io4thh
+         dJz+6zhuROlq+4onefEvuSTkq7JMBMVd20igLDKjhB1k89WlVygEZ88OYiUdCP6iw9
+         M6wh1OupsdLdTnD1uElVHx+zpSWisu6G8TkKWUVg=
+Date:   Wed, 26 Aug 2020 15:43:15 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: [GIT PULL] USB fixes for 5.9-rc3
+Message-ID: <20200826134315.GA3882506@kroah.com>
 MIME-Version: 1.0
-References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
- <20200824132252.31261-1-peter.enderborg@sony.com> <20200824132252.31261-2-peter.enderborg@sony.com>
-In-Reply-To: <20200824132252.31261-2-peter.enderborg@sony.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 26 Aug 2020 09:42:54 -0400
-Message-ID: <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] selinux: Add denied trace with permssion filter
-To:     Peter Enderborg <peter.enderborg@sony.com>
-Cc:     linux-kernel@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 9:23 AM Peter Enderborg
-<peter.enderborg@sony.com> wrote:
->
-> This adds tracing of all denies. They are grouped with trace_seq for
-> each audit.
->
-> A filter can be inserted with a write to it's filter section.
->
-> echo "permission==\"entrypoint\"" > events/avc/selinux_denied/filter
->
-> A output will be like:
->           runcon-1046  [002] .N..   156.351738: selinux_denied:
->           trace_seq=2 result=-13
->           scontext=system_u:system_r:cupsd_t:s0-s0:c0.
->           c1023 tcontext=system_u:object_r:bin_t:s0
->           tclass=file permission=entrypoint
->
-> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
-> ---
->  include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++++++
->  security/selinux/avc.c     | 27 +++++++++++++++++++++++++--
->  2 files changed, 62 insertions(+), 2 deletions(-)
+The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
 
-My most significant comment is that I don't think we want, or need,
-two trace points in the avc_audit_post_callback() function.  Yes, I
-understand they are triggered slightly differently, but from my
-perspective there isn't enough difference between the two tracepoints
-to warrant including both.  However, while the tracepoints may be
-redundant in my mind, this new event does do the permission lookup in
-the kernel so that the contexts/class/permissions are all available as
-a string which is a good thing.
+  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
 
-Without going into the details, would the tracing folks be okay with
-doing something similar with the existing selinux_audited tracepoint?
-It's extra work in the kernel, but since it would only be triggered
-when the tracepoint was active it seems bearable to me.
+are available in the Git repository at:
 
-> diff --git a/include/trace/events/avc.h b/include/trace/events/avc.h
-> index 94bca8bef8d2..9a28559956de 100644
-> --- a/include/trace/events/avc.h
-> +++ b/include/trace/events/avc.h
-> @@ -54,6 +54,43 @@ TRACE_EVENT(selinux_audited,
->         )
->  );
->
-> +TRACE_EVENT(selinux_denied,
-> +
-> +       TP_PROTO(struct selinux_audit_data *sad,
-> +               char *scontext,
-> +               char *tcontext,
-> +               const char *tclass,
-> +               const char *permission,
-> +               int64_t seq
-> +       ),
-> +
-> +       TP_ARGS(sad, scontext, tcontext, tclass, permission, seq),
-> +
-> +       TP_STRUCT__entry(
-> +               __field(int, result)
-> +               __string(scontext, scontext)
-> +               __string(tcontext, tcontext)
-> +               __string(permission, permission)
-> +               __string(tclass, tclass)
-> +               __field(u64, seq)
-> +       ),
-> +
-> +       TP_fast_assign(
-> +               __entry->result = sad->result;
-> +               __entry->seq    = seq;
-> +               __assign_str(tcontext, tcontext);
-> +               __assign_str(scontext, scontext);
-> +               __assign_str(permission, permission);
-> +               __assign_str(tclass, tclass);
-> +       ),
-> +
-> +       TP_printk("trace_seq=%lld result=%d scontext=%s tcontext=%s tclass=%s permission=%s",
-> +                __entry->seq, __entry->result, __get_str(scontext), __get_str(tcontext),
-> +                __get_str(tclass), __get_str(permission)
-> +
-> +       )
-> +);
-> +
->  #endif
->
->  /* This part must be outside protection */
-> diff --git a/security/selinux/avc.c b/security/selinux/avc.c
-> index 1debddfb5af9..ca53baca15e1 100644
-> --- a/security/selinux/avc.c
-> +++ b/security/selinux/avc.c
-> @@ -92,6 +92,7 @@ struct selinux_avc {
->  };
->
->  static struct selinux_avc selinux_avc;
-> +static atomic64_t trace_seqno;
->
->  void selinux_avc_init(struct selinux_avc **avc)
->  {
-> @@ -731,9 +732,31 @@ static void avc_audit_post_callback(struct audit_buffer *ab, void *a)
->         tclass = secclass_map[sad->tclass-1].name;
->         audit_log_format(ab, " tclass=%s", tclass);
->
-> -       if (sad->denied)
-> +       if (sad->denied) {
->                 audit_log_format(ab, " permissive=%u", sad->result ? 0 : 1);
-> -
-> +               if (trace_selinux_denied_enabled()) {
-> +                       int i, perm;
-> +                       const char **perms;
-> +                       u32 denied = sad->denied;
-> +                       int64_t seq;
-> +
-> +                       seq = atomic_long_inc_return(&trace_seqno);
-> +                       perms = secclass_map[sad->tclass-1].perms;
-> +                       i = 0;
-> +                       perm = 1;
-> +                       while (i < (sizeof(denied) * 8)) {
-> +                               if ((perm & denied & sad->requested) && perms[i]) {
-> +                                       trace_selinux_denied(sad, scontext, tcontext,
-> +                                                            tclass, perms[i], seq);
-> +                                       denied &= ~perm;
-> +                                       if (!denied)
-> +                                               break;
-> +                               }
-> +                               i++;
-> +                               perm <<= 1;
-> +                       }
-> +               }
-> +       }
->         trace_selinux_audited(sad, scontext, tcontext, tclass);
->         kfree(tcontext);
->         kfree(scontext);
-> --
-> 2.17.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.9-rc3
 
--- 
-paul moore
-www.paul-moore.com
+for you to fetch changes up to 23e26d0577535f5ffe4ff8ed6d06e009553c0bca:
+
+  usb: typec: tcpm: Fix Fix source hard reset response for TDA 2.3.1.1 and TDA 2.3.1.2 failures (2020-08-25 16:02:35 +0200)
+
+----------------------------------------------------------------
+USB fixes for 5.9-rc3
+
+Here are a small set of USB fixes for 5.9-rc3.
+
+Like most set of USB bugfixes, they include the usual:
+	- usb gadget driver fixes
+	- xhci driver fixes
+	- typec fixes
+	- new qurks and ids
+	- fixes for USB patches merged in 5.9-rc1
+
+Nothing huge, all of these have been in linux-next with no reported
+issues:
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Alan Stern (1):
+      USB: yurex: Fix bad gfp argument
+
+Andy Shevchenko (1):
+      usb: hcd: Fix use after free in usb_hcd_pci_remove()
+
+Badhri Jagan Sridharan (1):
+      usb: typec: tcpm: Fix Fix source hard reset response for TDA 2.3.1.1 and TDA 2.3.1.2 failures
+
+Bastien Nocera (2):
+      USB: Also match device drivers using the ->match vfunc
+      USB: Fix device driver race
+
+Brooke Basile (2):
+      USB: gadget: u_f: add overflow checks to VLA macros
+      USB: gadget: f_ncm: add bounds checks to ncm_unwrap_ntb()
+
+Christophe JAILLET (1):
+      usb: gadget: f_tcm: Fix some resource leaks in some error paths
+
+Ding Hui (1):
+      xhci: Always restore EP_SOFT_CLEAR_TOGGLE even if ep reset failed
+
+Evgeny Novikov (1):
+      USB: lvtest: return proper error code in probe
+
+Greg Kroah-Hartman (1):
+      Merge tag 'fixes-for-v5.9-rc2' of git://git.kernel.org/.../balbi/usb into usb-linus
+
+Hans de Goede (4):
+      usb: typec: ucsi: Fix AB BA lock inversion
+      usb: typec: ucsi: Fix 2 unlocked ucsi_run_command calls
+      usb: typec: ucsi: Rework ppm_lock handling
+      usb: typec: ucsi: Hold con->lock for the entire duration of ucsi_register_port()
+
+Heikki Krogerus (1):
+      tools: usb: move to tools buildsystem
+
+JC Kuo (2):
+      usb: host: xhci-tegra: otg usb2/usb3 port init
+      usb: host: xhci-tegra: fix tegra_xusb_get_phy()
+
+Kai-Heng Feng (2):
+      USB: quirks: Add no-lpm quirk for another Raydium touchscreen
+      xhci: Do warm-reset when both CAS and XDEV_RESUME are set
+
+Li Jun (1):
+      usb: host: xhci: fix ep context print mismatch in debugfs
+
+M. Vefa Bicakci (1):
+      usbip: Implement a match function to fix usbip
+
+Thinh Nguyen (4):
+      usb: dwc3: gadget: Don't setup more than requested
+      usb: dwc3: gadget: Fix handling ZLP
+      usb: dwc3: gadget: Handle ZLP for sg requests
+      usb: uas: Add quirk for PNY Pro Elite
+
+Tom Rix (1):
+      USB: cdc-acm: rework notification_buffer resizing
+
+Vinod Koul (1):
+      usb: renesas-xhci: remove version check
+
+周琰杰 (Zhou Yanjie) (1):
+      USB: PHY: JZ4770: Fix static checker warning.
+
+ drivers/usb/class/cdc-acm.c          |  22 ++++---
+ drivers/usb/core/driver.c            |  40 ++++++++++++-
+ drivers/usb/core/generic.c           |   5 +-
+ drivers/usb/core/hcd-pci.c           |   5 +-
+ drivers/usb/core/quirks.c            |   2 +
+ drivers/usb/dwc3/gadget.c            | 107 +++++++++++++++++++++++++++++------
+ drivers/usb/gadget/function/f_ncm.c  |  81 ++++++++++++++++++++++----
+ drivers/usb/gadget/function/f_tcm.c  |   7 ++-
+ drivers/usb/gadget/u_f.h             |  38 +++++++++----
+ drivers/usb/host/xhci-debugfs.c      |   8 +--
+ drivers/usb/host/xhci-hub.c          |  19 ++++---
+ drivers/usb/host/xhci-pci-renesas.c  |  19 +------
+ drivers/usb/host/xhci-tegra.c        |   4 +-
+ drivers/usb/host/xhci.c              |   3 +-
+ drivers/usb/misc/lvstest.c           |   2 +-
+ drivers/usb/misc/yurex.c             |   2 +-
+ drivers/usb/phy/phy-jz4770.c         |   1 +
+ drivers/usb/storage/unusual_uas.h    |   7 +++
+ drivers/usb/typec/tcpm/tcpm.c        |  28 ++++++++-
+ drivers/usb/typec/ucsi/displayport.c |   9 +--
+ drivers/usb/typec/ucsi/ucsi.c        | 103 +++++++++++++++++----------------
+ drivers/usb/usbip/stub_dev.c         |   6 ++
+ tools/usb/Build                      |   2 +
+ tools/usb/Makefile                   |  53 ++++++++++++++---
+ 24 files changed, 408 insertions(+), 165 deletions(-)
+ create mode 100644 tools/usb/Build
