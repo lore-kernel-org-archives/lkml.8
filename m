@@ -2,76 +2,152 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E8FC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6092220782
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:30:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598401824;
-	bh=ixCG2vKnHUn3IXKUemQTz8B4pSBTiPhOEAgVHjKggTU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=F4p8ZUzxqMboethmJfKSdRlPPXgNd9vCqYcPZzR3PA51/lSCyEQTafbP9CsdXGN0k
-	 9Uy4N6lR8qWpNezH41EnF24UPqwE/01TsX3CbKntsgKnMZ+5n0ToFQ4Y3oMc3xs9JP
-	 xw5A1MIh1ZMzJu5MhODy/2Qq4z8q07Uvg63wMbz0=
+	by mail.kernel.org (Postfix) with ESMTP id 8EEE02074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:40:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AC8EL9XK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HcP8s3ga"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbgHZAaX (ORCPT
+        id S1726661AbgHZAkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 20:30:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726570AbgHZAaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 20:30:22 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83AFE20707;
-        Wed, 26 Aug 2020 00:30:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598401821;
-        bh=ixCG2vKnHUn3IXKUemQTz8B4pSBTiPhOEAgVHjKggTU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sGSZuBhDppBOsRS01Xmh/8Wc/SwSYNn/+uSEEE4szFdERhtlnYGqMKE96lSfC+292
-         rwmE+pZMBkuyaW27fgSVA4arPDf9E0VDZaaoq9eMPX1g3LjpaxYbDuA+yit8R8Peol
-         I3qAlzhzzjsnSVQyeoxmq9OUF+OuzkuW1EJk9rz0=
-Date:   Tue, 25 Aug 2020 17:30:21 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Johannes Weiner <hannes@cmpxchg.org>
-Subject: Re: mmotm 2020-08-24-16-06 uploaded
-Message-Id: <20200825173021.fcf20a4f3043ed5d5b4ac3b5@linux-foundation.org>
-In-Reply-To: <20200825084543.GA16605@linux>
-References: <20200824230725.8gXQoJFD-%akpm@linux-foundation.org>
-        <20200825084543.GA16605@linux>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Aug 2020 20:40:49 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:53680 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbgHZAks (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 20:40:48 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598402446;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HaO5x8/tx8/TEeeBdOIpPppICl91lELHJsr2/I9eQcY=;
+        b=AC8EL9XKyi6CLE1Xbltikg0JVYhPusspSySFRJ/n1/rTROjJe+xoci2RSwdjc5dA1ieKij
+        NkIXwIGltidHm3JqidLy12dfo6vFG490kM2KXIiANr5SQSCM8cU619VDbsoVkNFWSoIGve
+        mT8PndcyS/UMVcfhloz6tf3DFBY2XwHC+fYav0+pAWnTrixFb0jiD+xM7jyPWOd3IIbZ08
+        IyKhe0EMOkNEUhh+DkpBj21hrqPTaXF4RhTFBoVBCiaI9aXUqbFGOqLUMMptklMBrpWqI6
+        kRGG9M2Ow7pBjDADiTr6pnv8o7oNA1f/dRt65xmRdGo1/YJr3w3pt5AMbgbs9w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598402446;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HaO5x8/tx8/TEeeBdOIpPppICl91lELHJsr2/I9eQcY=;
+        b=HcP8s3gaJehpKU/8ojIwFwBR9YDG31Rb8SAhDver5CXJwj9FH/O/ddbvXEX7NxgP6/xeRM
+        8UDtfi6/dv01JiAA==
+To:     Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org
+Cc:     Ashok Raj <ashok.raj@intel.com>,
+        Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] x86/hotplug: Silence APIC only after all irq's are migrated
+In-Reply-To: <1597970523-24797-1-git-send-email-ashok.raj@intel.com>
+References: <1597970523-24797-1-git-send-email-ashok.raj@intel.com>
+Date:   Wed, 26 Aug 2020 02:40:45 +0200
+Message-ID: <87mu2iw86q.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 10:45:48 +0200 Oscar Salvador <osalvador@suse.de> wrote:
+Ashok,
 
-> On Mon, Aug 24, 2020 at 04:07:25PM -0700, akpm@linux-foundation.org wrote:
-> > A full copy of the full kernel tree with the linux-next and mmotm patches
-> > already applied is available through git within an hour of the mmotm
-> > release.  Individual mmotm releases are tagged.  The master branch always
-> > points to the latest release, so it's constantly rebasing.
-> > 
-> > 	https://github.com/hnaz/linux-mm
-> 
-> Is it me or this is out of sync?
-> 
+On Thu, Aug 20 2020 at 17:42, Ashok Raj wrote:
+> When offlining CPUs, fixup_irqs() migrates all interrupts away from the
+> outgoing CPU to an online CPU. It's always possible the device sent an
+> interrupt to the previous CPU destination. Pending interrupt bit in IRR in
+> LAPIC identifies such interrupts. apic_soft_disable() will not capture any
+> new interrupts in IRR. This causes interrupts from device to be lost during
+> CPU offline. The issue was found when explicitly setting MSI affinity to a
+> CPU and immediately offlining it. It was simple to recreate with a USB
+> ethernet device and doing I/O to it while the CPU is offlined. Lost
+> interrupts happen even when Interrupt Remapping is enabled.
 
-Seems that way.  Maybe Johannes's script needs a new battery?
+New lines exist for a reason. They help to structure information. For
+the content, please see below.
+
+> Current code does apic_soft_disable() before migrating interrupts.
+>
+> native_cpu_disable()
+> {
+> 	...
+> 	apic_soft_disable();
+> 	cpu_disable_common();
+> 	  --> fixup_irqs(); // Too late to capture anything in IRR.
+> }
+>
+> Just flipping the above call sequence seems to hit the IRR checks
+> and the lost interrupt is fixed for both legacy MSI and when
+> interrupt remapping is enabled.
+
+Seems to hit? Come on, we really want changelogs which are based on
+facts and not on assumptions.
+
+Aside of that, yes that's a really subtle one and thanks for tracking it
+down! For some reason I never looked at that ordering, but now that you
+stick it in front of me, it's pretty clear that this is the root cause.
+
+>  	/*
+>  	 * Disable the local APIC. Otherwise IPI broadcasts will reach
+>  	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
+> -	 * messages.
+> +	 * messages. It's important to do apic_soft_disable() after
+> +	 * fixup_irqs(), because fixup_irqs() called from cpu_disable_common()
+> +	 * depends on IRR being set.
+
+That sentence does not make sense to me.
+
+> +       .... After apic_soft_disable() CPU preserves
+> +	 * currently set IRR/ISR but new interrupts will not set IRR.
+
+I agree with the IRR part, but ISR is simply impossible to be set in
+this situation.
+
+> +	 * This causes interrupts sent to outgoing CPU before completion
+> +	 * of IRQ migration to be lost. Check SDM Vol 3 "10.4.7.2 Local
+> +	 * APIC State after It Has been Software Disabled" section for more
+> +	 * details.
+
+Please do not use the SDM chapter number of today. It's going to be a
+different one with the next version.
+
+Something like this perhaps?
+
+  	/*
+  	 * Disable the local APIC. Otherwise IPI broadcasts will reach
+  	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
+ 	 * messages.
+         *
+         * Disabling the APIC must happen after cpu_disable_common()
+  	 * which invokes fixup_irqs().
+         *
+         * Disabling the APIC preserves already set bits in IRR, but
+         * an interrupt arriving after disabling the local APIC does not
+         * set the corresponding IRR bit.
+         *
+         * fixup_irqs() scans IRR for set bits so it can raise a not
+  	 * yet handled interrupt on the new destination CPU via an IPI
+         * but obviously it can't do so for IRR bits which are not set.
+         * IOW, interrupts arriving after disabling the local APIC will
+         * be lost.
+         */
+
+Hmm?
+
+The changelog wants to have a corresponding update.
+
+Thanks,
+
+        tglx
