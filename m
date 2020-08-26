@@ -2,104 +2,129 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A433C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9B3C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4822067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gry5Gqjf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T18EHlog"
+	by mail.kernel.org (Postfix) with ESMTP id 8029C20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbgHZJxT (ORCPT
+        id S1728378AbgHZJyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728015AbgHZJxS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:53:18 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500C5C061574;
-        Wed, 26 Aug 2020 02:53:17 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598435595;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mv4TqayOvYT1PZy4IB6XdyAxCqLJFuyrG/iBXdVvDGo=;
-        b=gry5Gqjf5XbHVcJKaDXMPK4boPx5u/IEBob5D9Wn36xeFWifKRFQGrLYl80/EuQiMfzysE
-        R0d4KWtrjVjHsKfDbzzjWDT5squtWA8CAJmXu6ssTTvFAl1Dp0Qb/5Gseu91lYmL0/YUjO
-        NbsGg1x1qsfcwMmq40s6f8QzME/wE8mMh0jkO28671y+OSXzdMJAa+d/pRnJ+IIBJUer6F
-        myfzP6CTQbmP/AgP0sGex0XapaKloSSKztkVFL6Agugb80R0gctiC6HeZ9PqzrabjLNIkQ
-        pAIkMvt8UaWwzx1EMmCW7rVmlO3SHuNH8U5WRqRwrLaG8IAQqyASWZnve1tyYQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598435595;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mv4TqayOvYT1PZy4IB6XdyAxCqLJFuyrG/iBXdVvDGo=;
-        b=T18EHlogGsekmXEOkS3bdJRDQU5OgZArZ4psx/80SWGB5Jkvh72YqFLOhYbYkZrSz/1STi
-        ppR6UR793IwPtlAg==
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Joerg Roedel <joro@8bytes.org>, linux-hyperv@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch RFC 10/38] x86/ioapic: Consolidate IOAPIC allocation
-In-Reply-To: <20200826084019.GA6174@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200821002424.119492231@linutronix.de> <20200821002946.297823391@linutronix.de> <20200826084019.GA6174@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-Date:   Wed, 26 Aug 2020 11:53:15 +0200
-Message-ID: <871rjtwx6c.fsf@nanos.tec.linutronix.de>
+        Wed, 26 Aug 2020 05:54:01 -0400
+Received: from mga04.intel.com ([192.55.52.120]:49869 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728015AbgHZJyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 05:54:00 -0400
+IronPort-SDR: LjdUoW53qu+1uUy75Z8qe39RUcls+12BM29IMRIthutdQGl37GHMUXjZWm2HZY92ZDbUahb8km
+ ejhtGbPm4Q0w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="153685914"
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="153685914"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 02:54:00 -0700
+IronPort-SDR: HqiwYhheKSRXgUX9Wqj4PebZedUQtOZ3bkxHdV1FhUOYsmxvnvpEGDPctHo7bU83QTOjOEQtXe
+ 9DEKdUomlBKA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="329167851"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 02:53:58 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kAs7w-00BXF7-He; Wed, 26 Aug 2020 12:53:56 +0300
+Date:   Wed, 26 Aug 2020 12:53:56 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Wolfram Sang <wsa@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: consider devices with of_match_table during i2c
+ device probing
+Message-ID: <20200826095356.GG1891694@smile.fi.intel.com>
+References: <20200826042938.3259-1-sergey.senozhatsky@gmail.com>
+ <20200826050851.GA1081@ninjato>
+ <20200826052544.GA500@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826052544.GA500@jagdpanzerIV.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26 2020 at 16:40, Boqun Feng wrote:
-> I hit a compiler error while I was trying to compile this patchset:
->
-> arch/x86/kernel/devicetree.c: In function =E2=80=98dt_irqdomain_alloc=E2=
-=80=99:
-> arch/x86/kernel/devicetree.c:232:6: error: =E2=80=98struct irq_alloc_info=
-=E2=80=99 has no member named =E2=80=98ioapic_id=E2=80=99; did you mean =E2=
-=80=98ioapic=E2=80=99?
->   232 |  tmp.ioapic_id =3D mpc_ioapic_id(mp_irqdomain_ioapic_idx(domain));
+On Wed, Aug 26, 2020 at 02:25:44PM +0900, Sergey Senozhatsky wrote:
+> On (20/08/26 07:08), Wolfram Sang wrote:
+> > On Wed, Aug 26, 2020 at 01:29:37PM +0900, Sergey Senozhatsky wrote:
+> > > Unlike acpi_match_device(), acpi_driver_match_device() does
+> > > consider devices that provide of_match_table and performs
+> > > of_compatible() matching for such devices. The key point here is
+> > > that ACPI of_compatible() matching - acpi_of_match_device() - is
+> > > part of ACPI and does not depend on CONFIG_OF.
+> > > 
+> > > Consider the following case:
+> > > o !CONFIG_OF system
+> > > o probing of i2c device that provides .of_match_table, but no .id_table
+> > > 
+> > >  i2c_device_probe()
+> > >  ...
+> > >    if (!driver->id_table &&
+> > >        !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
+> > >        !i2c_of_match_device(dev->driver->of_match_table, client)) {
+> > >        status = -ENODEV;
+> > >        goto put_sync_adapter;
+> > >    }
+> > > 
+> > > i2c_of_match_device() depends on CONFIG_OF and, thus, is always false.
+> > > i2c_acpi_match_device() does ACPI match only, no of_comtatible() matching
+> > > takes place, even though the device provides .of_match_table and ACPI,
+> > > technically, is capable of matching such device. The result is -ENODEV.
+> > > Probing will succeed, however, if we'd use .of_match_table aware ACPI
+> > > matching.
 
-Yeah, noticed myself already and 0day complained as well :)
+Looks like you read same StackOverflow question :-)
+
+> > > Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> > 
+> > We have currently this in for-current which is even removing
+> > i2c_acpi_match_device():
+> > 
+> > http://patchwork.ozlabs.org/project/linux-i2c/list/?series=196990&state=*
+> 
+> Oh, nice!
+> Can we go a bit further and use i2c_device_match() in i2c_device_probe()
+> instead of a mix of APIs from different subsystems?
+
+> E.g.
+> 
+>         if (!driver->id_table &&
+> -           !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
+> -           !i2c_of_match_device(dev->driver->of_match_table, client)) {
+> +           !(client && i2c_device_match(&client->dev, dev->driver))) {
+
+You probably meant simply:
+
+	if (!i2c_device_match(dev, dev->driver)) {
+
+>                 status = -ENODEV;
+>                 goto put_sync_adapter;
+>         }
+
+On the first glance it will work the same way but slightly longer in case of ID
+table matching.
+
+Send a patch!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
