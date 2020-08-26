@@ -2,61 +2,207 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF40C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E06C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B06C2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:29:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72352078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:30:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="mb9DX2PD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgHZP31 (ORCPT
+        id S1727935AbgHZPaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:29:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39774 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbgHZP30 (ORCPT
+        Wed, 26 Aug 2020 11:30:23 -0400
+Received: from grey-smtp-cloud9.xs4all.net ([194.109.24.44]:56933 "EHLO
+        grey-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726874AbgHZPaU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:29:26 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65154C061574;
-        Wed, 26 Aug 2020 08:29:26 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 18072135985CB;
-        Wed, 26 Aug 2020 08:12:39 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 08:28:57 -0700 (PDT)
-Message-Id: <20200826.082857.584544823490249841.davem@davemloft.net>
-To:     aranea@aixah.de
-Cc:     kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] veth: Initialize dev->perm_addr
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200826152000.ckxrcfyetdvuvqum@vega>
-References: <20200824143828.5964-1-aranea@aixah.de>
-        <20200824.102545.1450838041398463071.davem@davemloft.net>
-        <20200826152000.ckxrcfyetdvuvqum@vega>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 26 Aug 2020 11:30:20 -0400
+X-Greylist: delayed 432 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Aug 2020 11:30:18 EDT
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id AxGRkkRmJuuXOAxGSkEYdq; Wed, 26 Aug 2020 17:23:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1598455385; bh=trldSuk5qoiwVr84MQPYlc7WezHhEKq+3G3EIoKlsW4=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=mb9DX2PDKBhnc9UkSLHtuSDLcn6+A2IClGrzLNwofSoiBuior11OkCJwhgUhy8D3V
+         TT7OgiVV/22wnzYq6Si/64C49NKjlv1dsheT1HVcy9KgotM6sosmAxZOHRgejUUhAa
+         TFtfHYSrOG8V19FTIsw0bJ8oomgidsmfhvGsy2+tIhODba/JBE217vmte6FkALn2os
+         Rp8HImHWAbs6mutMbsGPMwsQ+P5uR7vTkSpvaL6GxdzNi1S9MBnhZV028O+QadGExo
+         jXTB5XfF917dDZgNkQI1vz2LedeLY/z4GAACCrtqEZFIBZo1oFde+luH8v7wYQ4Ig5
+         dilPJnUk1n0ig==
+Subject: Re: [PATCH 2/2] media: v4l2-mem2mem: simplify poll logic a bit
+To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+        Alexandre Courbot <gnurou@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200825145556.637323-1-gnurou@gmail.com>
+ <20200825145556.637323-3-gnurou@gmail.com>
+ <CAAEAJfD1kUJODa+-STV6Q+=9qWH8v2=KZzAA4ppgfbQxstO+Mg@mail.gmail.com>
+ <CAAVeFuJgBqN7KYhNi=mMNxy6wHTZOn5E1=pHP3q=n8X++b5pmg@mail.gmail.com>
+ <CAAEAJfCfjzGDOhD2WHYny-wVwL19qc_VA9c3uVNiHxpYdEHsLQ@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <3dd23b1e-debd-bd50-e8a1-25837d2fd01e@xs4all.nl>
+Date:   Wed, 26 Aug 2020 17:23:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <CAAEAJfCfjzGDOhD2WHYny-wVwL19qc_VA9c3uVNiHxpYdEHsLQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Aug 2020 08:12:39 -0700 (PDT)
+X-CMAE-Envelope: MS4wfJRD2YFZD851Cya/ZVCglVkkKzP9XY+Am1EoxtVTE82JN0l6JGs8Wa9DTygHmsIuI2eMSu2aqeYm9kV1UIY15Pkdw0qtD8uqpLN7RgZcs9uZTwvDZl4k
+ LDYKr2QRy2JD1wDFrus+PahAoQ2RfKNl7yk2oktQ/rFkeWqta2jS3gtrergF2RlatO9lKR4dStq+5g0K2eigSIHlx/1J05jIXAYfsDbqrfYzuvfmVyDbV+3W
+ ud2gDP2wopXnyCdpAVjRcPEU+vKIUgJAgOjh/FQoJmAJpr8gwJDViMY+k5s5vGqxKc1adetvIFAhGoYJifEviufEQ7nVyN2QQ+5jsgpvm/X4oWF9h/sAqwe3
+ 2TayL524LPuy07ZoO9izXzhZD6E6sUyRGYy/q/4fKZQbHiBeIOVPOymQP96TkOQ7FvKyLoCSDQPGyKMbyY7cuVLRZRYnA73wTmbxbJuUFX7BihP0WdFtP1bN
+ Ea/6E3f1PknqcqCK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mira Ressel <aranea@aixah.de>
-Date: Wed, 26 Aug 2020 15:20:00 +0000
+On 26/08/2020 16:32, Ezequiel Garcia wrote:
+> On Wed, 26 Aug 2020 at 08:19, Alexandre Courbot <gnurou@gmail.com> wrote:
+>>
+>> Hi Ezequiel, thanks for the review!
+>>
+>> On Wed, Aug 26, 2020 at 1:15 PM Ezequiel Garcia
+>> <ezequiel@vanguardiasur.com.ar> wrote:
+>>>
+>>> Hi Alexandre,
+>>>
+>>> On Tue, 25 Aug 2020 at 11:56, Alexandre Courbot <gnurou@gmail.com> wrote:
+>>>>
+>>>> Factorize redundant checks into a single code block, remove the early
+>>>> return, and declare variables in their innermost block. Hopefully this
+>>>> makes this code a little bit easier to follow.
+>>>>
+>>>
+>>> This _definitely_ makes the poll handling more readable.
+>>>
+>>> Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+>>>
+>>> See below a nitpick.
+>>>
+>>>> Signed-off-by: Alexandre Courbot <gnurou@gmail.com>
+>>>> ---
+>>>>  drivers/media/v4l2-core/v4l2-mem2mem.c | 35 +++++++++++---------------
+>>>>  1 file changed, 15 insertions(+), 20 deletions(-)
+>>>>
+>>>> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
+>>>> index 0d0192119af20..aeac9707123d0 100644
+>>>> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
+>>>> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+>>>> @@ -841,7 +841,6 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
+>>>>                                        struct poll_table_struct *wait)
+>>>>  {
+>>>>         struct vb2_queue *src_q, *dst_q;
+>>>> -       struct vb2_buffer *src_vb = NULL, *dst_vb = NULL;
+>>>>         __poll_t rc = 0;
+>>>>         unsigned long flags;
+>>>>
+>>>> @@ -863,33 +862,29 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
+>>>>                 return EPOLLERR;
+>>>>
+>>>>         spin_lock_irqsave(&src_q->done_lock, flags);
+>>>> -       if (!list_empty(&src_q->done_list))
+>>>> -               src_vb = list_first_entry(&src_q->done_list, struct vb2_buffer,
+>>>> -                                               done_entry);
+>>>> -       if (src_vb && (src_vb->state == VB2_BUF_STATE_DONE
+>>>> -                       || src_vb->state == VB2_BUF_STATE_ERROR))
+>>>> -               rc |= EPOLLOUT | EPOLLWRNORM;
+>>>> +       if (!list_empty(&src_q->done_list)) {
+>>>> +               struct vb2_buffer *src_vb = list_first_entry(
+>>>> +                       &src_q->done_list, struct vb2_buffer, done_entry);
+>>>> +               if (src_vb->state == VB2_BUF_STATE_DONE ||
+>>>> +                   src_vb->state == VB2_BUF_STATE_ERROR)
+>>>> +                       rc |= EPOLLOUT | EPOLLWRNORM;
+>>>> +       }
+>>>>         spin_unlock_irqrestore(&src_q->done_lock, flags);
+>>>>
+>>>>         spin_lock_irqsave(&dst_q->done_lock, flags);
+>>>> -       if (list_empty(&dst_q->done_list)) {
+>>>> +       if (!list_empty(&dst_q->done_list)) {
+>>>> +               struct vb2_buffer *dst_vb = list_first_entry(
+>>>> +                       &dst_q->done_list, struct vb2_buffer, done_entry);
+>>>> +               if (dst_vb->state == VB2_BUF_STATE_DONE ||
+>>>> +                   dst_vb->state == VB2_BUF_STATE_ERROR)
+>>>> +                       rc |= EPOLLIN | EPOLLRDNORM;
+>>>> +       } else if (dst_q->last_buffer_dequeued) {
+>>>>                 /*
+>>>>                  * If the last buffer was dequeued from the capture queue,
+>>>>                  * return immediately. DQBUF will return -EPIPE.
+>>>>                  */
+>>>
+>>> The part about "returning immediately" doesn't make
+>>> much sense now. Could we rephrase this, keeping the -EPIPE
+>>> comment?
+>>
+>> I understood this sentence as referring to the system call and not
+>> just this function, but maybe we can rephrase this as "... make
+>> user-space wake up immediately"?
+>>
+> 
+> But is this really about user-space wakeup? I am under the impression
+> that past poll_wait on both queues, we are already about to return
+> (and wakeup).
+> 
+> The way I see it, the original commit intention was to skip any
+> done_list handling, returning immediately on the last buffer condition.
+> 
+> How about just
+> 
+> """
+> If the last buffer was dequeued from the capture queue,
+> signal userspace. DQBUF will return -EPIPE.
 
-> I'm setting the peer->perm_addr, which would otherwise be zero, to its
-> dev_addr, which has been either generated randomly by the kernel or
-> provided by userland in a netlink attribute.
+I'd write 'DQBUF(CAPTURE)' here to emphasize that only the capture
+queue will return -EPIPE when you try to dequeue from it.
 
-Which by definition makes it not necessarily a "permanent address" and
-therefore is subject to being different across boots, which is exactly
-what you don't want to happen for automatic address generation.
+Also note that the original text was a copy-and-paste from vb2_core_poll().
+The phrase 'return immediately' makes sense in that context since that
+poll code deals with a single queue. In this case you have two queues,
+and 'return immediately' no longer applies (in fact, that effectively is
+the bug that being fixed here!).
+
+Regards,
+
+	Hans
+
+> """
+> 
+> ?
+> 
+>>>
+>>> Thanks,
+>>> Ezequiel
+>>>
+>>>> -               if (dst_q->last_buffer_dequeued) {
+>>>> -                       spin_unlock_irqrestore(&dst_q->done_lock, flags);
+>>>> -                       rc |= EPOLLIN | EPOLLRDNORM;
+>>>> -                       return rc;
+>>>> -               }
+>>>> -       }
+>>>> -
+>>>> -       if (!list_empty(&dst_q->done_list))
+>>>> -               dst_vb = list_first_entry(&dst_q->done_list, struct vb2_buffer,
+>>>> -                                               done_entry);
+>>>> -       if (dst_vb && (dst_vb->state == VB2_BUF_STATE_DONE
+>>>> -                       || dst_vb->state == VB2_BUF_STATE_ERROR))
+>>>>                 rc |= EPOLLIN | EPOLLRDNORM;
+>>>> +       }
+>>>>         spin_unlock_irqrestore(&dst_q->done_lock, flags);
+>>>>
+>>>>         return rc;
+>>>> --
+>>>> 2.28.0
+>>>>
+
