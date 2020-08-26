@@ -2,94 +2,208 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A504C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A08C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:17:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF3602078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598469454;
-	bh=tje2jJ12gd9XIemyHJQgMO4DHFwCLig6InjjheE2uhk=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=bs9tSqSQ8mXd6sg9oJa5cqVXVo7B8LeGZ5PkB1VOPLQ7UulzSSQb0h0YLhWq+BDXo
-	 UObOMhK8AK2cFPzQj75I8B+hFKRmoAAFIMMkS3ebqkR0aD5WHQNfCMtA6HXkIN22tb
-	 Q1hqWf/b2cbL+NZT8U1dSzqPlRwabyJF+R3iTtUI=
+	by mail.kernel.org (Postfix) with ESMTP id 817E42078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:17:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gc9pDjXC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgHZTRb (ORCPT
+        id S1727943AbgHZTRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:17:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbgHZTR1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:17:27 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 26 Aug 2020 15:17:41 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57059 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726988AbgHZTRa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:17:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598469447;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JwcANZhA8W6K53dylWiceQBVhU3tV8RvSRl3XFIVabA=;
+        b=gc9pDjXClXSuNWCSuZK2KQCmfAyun7G35NgEifGhLQSerwyVN2qn07NPM4ZDZdLGhKPEaf
+        HUACVDU8gs+rxaugyxkShjDBYLYQqIOXfHR7MJjwtHzfz1bx6MxkFYHuH+Nxe+cLYbWdVY
+        janOoxl0p1IEKACc94j8DwGg+ottlfg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-141-UyPiH8JVNKCHGWvTJiA_xA-1; Wed, 26 Aug 2020 15:17:23 -0400
+X-MC-Unique: UyPiH8JVNKCHGWvTJiA_xA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56E212078B;
-        Wed, 26 Aug 2020 19:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598469446;
-        bh=tje2jJ12gd9XIemyHJQgMO4DHFwCLig6InjjheE2uhk=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=DUJ9kj1n3SZ8m6ES5OKTBqsRNGHhONmJF42ZVse4w8PHTqm2f203MRlmMNl3QMkTp
-         sUj8vKPh5gUZBygvT6feb2rdhyDFBFmhtuOm3I3y83CGzHyGiTfZy89b7tHPMLoZYH
-         kTswt1rnNuZ3Jyb0GjW/rOLRoLm7/4v8OKpA2DYM=
-Date:   Wed, 26 Aug 2020 20:16:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     linux-kernel@vger.kernel.org, lee.jones@linaro.org,
-        Xu Yilun <yilun.xu@intel.com>
-Cc:     hao.wu@intel.com, lgoncalv@redhat.com,
-        matthew.gerlach@linux.intel.com, trix@redhat.com,
-        russell.h.weight@intel.com
-In-Reply-To: <1597822497-25107-1-git-send-email-yilun.xu@intel.com>
-References: <1597822497-25107-1-git-send-email-yilun.xu@intel.com>
-Subject: Re: [PATCH v4 0/2] add regmap-spi-avmm & Intel Max10 BMC chip support
-Message-Id: <159846941049.39902.15220563960562003689.b4-ty@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21AEE1DDFC;
+        Wed, 26 Aug 2020 19:17:22 +0000 (UTC)
+Received: from work-vm (ovpn-112-133.ams2.redhat.com [10.36.112.133])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6267618B59;
+        Wed, 26 Aug 2020 19:17:14 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 20:17:11 +0100
+From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     Vivek Goyal <vgoyal@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        virtio-fs-list <virtio-fs@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v3 11/18] fuse: implement FUSE_INIT map_alignment field
+Message-ID: <20200826191711.GF3932@work-vm>
+References: <20200819221956.845195-1-vgoyal@redhat.com>
+ <20200819221956.845195-12-vgoyal@redhat.com>
+ <CAJfpegsgHE0MkZLFgE4yrZXO5ThDxCj85-PjizrXPRC2CceT1g@mail.gmail.com>
+ <20200826155142.GA1043442@redhat.com>
+ <20200826173408.GA11480@stefanha-x1.localdomain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826173408.GA11480@stefanha-x1.localdomain>
+User-Agent: Mutt/1.14.6 (2020-07-11)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 15:34:55 +0800, Xu Yilun wrote:
-> This patchset adds the regmap-spi-avmm to support the Intel SPI Slave to
-> AVMM Bus Bridge (spi-avmm) IP block. It also implements the usercase - the
-> driver of Intel Max10 BMC chip which integrates this IP block.
+* Stefan Hajnoczi (stefanha@redhat.com) wrote:
+> On Wed, Aug 26, 2020 at 11:51:42AM -0400, Vivek Goyal wrote:
+> > On Wed, Aug 26, 2020 at 04:06:35PM +0200, Miklos Szeredi wrote:
+> > > On Thu, Aug 20, 2020 at 12:21 AM Vivek Goyal <vgoyal@redhat.com> wrote:
+> > > >
+> > > > The device communicates FUSE_SETUPMAPPING/FUSE_REMOVMAPPING alignment
+> > > > constraints via the FUST_INIT map_alignment field.  Parse this field and
+> > > > ensure our DAX mappings meet the alignment constraints.
+> > > >
+> > > > We don't actually align anything differently since our mappings are
+> > > > already 2MB aligned.  Just check the value when the connection is
+> > > > established.  If it becomes necessary to honor arbitrary alignments in
+> > > > the future we'll have to adjust how mappings are sized.
+> > > >
+> > > > The upshot of this commit is that we can be confident that mappings will
+> > > > work even when emulating x86 on Power and similar combinations where the
+> > > > host page sizes are different.
+> > > >
+> > > > Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
+> > > > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > > > ---
+> > > >  fs/fuse/fuse_i.h          |  5 ++++-
+> > > >  fs/fuse/inode.c           | 18 ++++++++++++++++--
+> > > >  include/uapi/linux/fuse.h |  4 +++-
+> > > >  3 files changed, 23 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+> > > > index 478c940b05b4..4a46e35222c7 100644
+> > > > --- a/fs/fuse/fuse_i.h
+> > > > +++ b/fs/fuse/fuse_i.h
+> > > > @@ -47,7 +47,10 @@
+> > > >  /** Number of dentries for each connection in the control filesystem */
+> > > >  #define FUSE_CTL_NUM_DENTRIES 5
+> > > >
+> > > > -/* Default memory range size, 2MB */
+> > > > +/*
+> > > > + * Default memory range size.  A power of 2 so it agrees with common FUSE_INIT
+> > > > + * map_alignment values 4KB and 64KB.
+> > > > + */
+> > > >  #define FUSE_DAX_SZ    (2*1024*1024)
+> > > >  #define FUSE_DAX_SHIFT (21)
+> > > >  #define FUSE_DAX_PAGES (FUSE_DAX_SZ/PAGE_SIZE)
+> > > > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> > > > index b82eb61d63cc..947abdd776ca 100644
+> > > > --- a/fs/fuse/inode.c
+> > > > +++ b/fs/fuse/inode.c
+> > > > @@ -980,9 +980,10 @@ static void process_init_reply(struct fuse_conn *fc, struct fuse_args *args,
+> > > >  {
+> > > >         struct fuse_init_args *ia = container_of(args, typeof(*ia), args);
+> > > >         struct fuse_init_out *arg = &ia->out;
+> > > > +       bool ok = true;
+> > > >
+> > > >         if (error || arg->major != FUSE_KERNEL_VERSION)
+> > > > -               fc->conn_error = 1;
+> > > > +               ok = false;
+> > > >         else {
+> > > >                 unsigned long ra_pages;
+> > > >
+> > > > @@ -1045,6 +1046,13 @@ static void process_init_reply(struct fuse_conn *fc, struct fuse_args *args,
+> > > >                                         min_t(unsigned int, FUSE_MAX_MAX_PAGES,
+> > > >                                         max_t(unsigned int, arg->max_pages, 1));
+> > > >                         }
+> > > > +                       if ((arg->flags & FUSE_MAP_ALIGNMENT) &&
+> > > > +                           (FUSE_DAX_SZ % (1ul << arg->map_alignment))) {
+> > > 
+> > > This just obfuscates "arg->map_alignment != FUSE_DAX_SHIFT".
+> > > 
+> > > So the intention was that userspace can ask the kernel for a
+> > > particular alignment, right?
+> > 
+> > My understanding is that device will specify alignment for
+> > the foffset/moffset fields in fuse_setupmapping_in/fuse_removemapping_one.
+> > And DAX mapping can be any size meeting that alignment contraint.
+> > 
+> > > 
+> > > In that case kernel can definitely succeed if the requested alignment
+> > > is smaller than the kernel provided one, no? 
+> > 
+> > Yes. So if map_alignemnt is 64K and DAX mapping size is 2MB, that's just
+> > fine because it meets 4K alignment contraint. Just that we can't use
+> > 4K size DAX mapping in that case.
+> > 
+> > > It would also make
+> > > sense to make this a two way negotiation.  I.e. send the largest
+> > > alignment (FUSE_DAX_SHIFT in this implementation) that the kernel can
+> > > provide in fuse_init_in.   In that case the only error would be if
+> > > userspace ignored the given constraints.
+> > 
+> > We could make it two way negotiation if it helps. So if we support
+> > multiple mapping sizes in future, say 4K, 64K, 2MB, 1GB. So idea is
+> > to send alignment of largest mapping size to device/user_space (1GB)
+> > in this case? And that will allow device to choose an alignment
+> > which best fits its needs?
+> > 
+> > But problem here is that sending (log2(1GB)) does not mean we support
+> > all the alignments in that range. For example, if device selects say
+> > 256MB as minimum alignment, kernel might not support it.
+> > 
+> > So there seem to be two ways to handle this.
+> > 
+> > A.Let device be conservative and always specify the minimum aligment
+> >   it can work with and let guest kernel automatically choose a mapping
+> >   size which meets that min_alignment contraint.
+> > 
+> > B.Send all the mapping sizes supported by kernel to device and then
+> >   device chooses an alignment as it sees fit. We could probably send
+> >   a 64bit field and set a bit for every size we support as dax mapping.
+> >   If we were to go down this path, I think in that case client should
+> >   respond back with exact mapping size we should use (and not with
+> >   minimum alignment).
+> > 
+> > I thought intent behind this patch was to implement A.
+> > 
+> > Stefan/David, this patch came from you folks. What do you think?
 > 
-> Patch #1 implements the regmap-spi-avmm.
-> Patch #2 implements the mfd driver of Intel Max10 BMC chip.
+> Yes, I agree with Vivek.
 > 
-> [...]
+> The FUSE server is telling the client the minimum alignment for
+> foffset/moffset. The client can map any size it likes as long as
+> foffset/moffset meet the alignment constraint. I can't think of a reason
+> to do two-way negotiation.
 
-Applied to
+Agreed, because there's not much that the server can do about it if the
+client would like a smaller granularity - the servers granularity might
+be dictated by it's mmap/pagesize/filesystem.  If the client wants a
+larger granularity that's it's choice when it sends the setupmapping
+calls.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
+Dave
 
-Thanks!
+> Stefan
 
-[1/2] regmap: add Intel SPI Slave to AVMM Bus Bridge support
-      commit: 7f9fb67358a2bcaacbdfeee12e0f19e98c8bdf55
-[2/2] mfd: intel-m10-bmc: add Max10 BMC chip support for Intel FPGA PAC
-      commit: 53be8bbc2f4058d4a6bfff3dadf34164bcaafa87
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+-- 
+Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
