@@ -6,65 +6,61 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09770C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B28C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7CCC2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A380D2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598466860;
-	bh=2IrI3zDccPh7k4A7Ku/CCGl3h9hU0yX4/grdGm77idU=;
+	s=default; t=1598466865;
+	bh=pFCKkYkRl6Q7QCAzdDuMZrVZN8ZTnPedKYVWXpg2RWo=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=vT3meY7GStQSD2gdTOLP2cQ4xJ3gGEZUmmZ+Lc3EQ/4i5F/b6hhnVEN2LTDulnZ51
-	 /ZCIPbTxODM2ShYS66WOTQZO6E362/inrUr4RyMBjwzN+EBhrPyheTUgIHCKGMTuvx
-	 igz0MInxSW5Cl73OouToCLzPTrGinutFNAPidxCk=
+	b=XeOk+9btWbWOOFl3iAtr5nK+fTytco4uydCmD1uiklaZ2VHHS1R2LVlGj+zuk16CL
+	 ApB5KiYM9atA5xDyVekGRk2GhBnm83RlBZdssnzHgLC9FHb1zJwvgF1zIBh1UWTRh8
+	 OFERwQZLSwMMjItSxoTW9eHej17TzIIHHr+9Mn4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHZSeT (ORCPT
+        id S1727780AbgHZSeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41666 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 14:34:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726783AbgHZSeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:34:15 -0400
-Subject: Re: [GIT PULL] virtio: bugfixes
+        id S1726878AbgHZSeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:34:17 -0400
+Subject: Re: [GIT PULL] Char/Misc driver fixes for 5.9-rc3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598466855;
-        bh=2IrI3zDccPh7k4A7Ku/CCGl3h9hU0yX4/grdGm77idU=;
+        s=default; t=1598466856;
+        bh=pFCKkYkRl6Q7QCAzdDuMZrVZN8ZTnPedKYVWXpg2RWo=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=CT73xgJKU9ebCwnZp3Q1MFBBzKb5KM83wM/zdkExncYhIwOCkq8RMeDPBQdBNAoeC
-         lbdLssF9i+Xb9eXqL1V/t6mJRD7deuO1v4771hKMw13s4OTrfAavRsIW0+iKFOJCfA
-         NG5PyOa0jwfY9cXlm5TN/yiH5BI0HBXQlbuk/c9I=
+        b=SjdxneVz7QVsMPZZG4ZoxUqkv/JzFJXe6tFPgx5i+KPtl+Bm2kJ1rdJzEyd3Y2dgh
+         OFh0Fpwu/vddoBD/3z4qOy7Vx7Ejm/8EapVqqW68U5XQKJVVvXkqBf19jC9H5EK1CO
+         o9A74o2QgxPyS1NvsffJmbqTMsYBdsbctLW8DvkI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200826092731-mutt-send-email-mst@kernel.org>
-References: <20200826092731-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200826134211.GA3881983@kroah.com>
+References: <20200826134211.GA3881983@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200826092731-mutt-send-email-mst@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
-X-PR-Tracked-Commit-Id: cbb523594eb718944b726ba52bb43a1d66188a17
+X-PR-Tracked-Message-Id: <20200826134211.GA3881983@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.9-rc3
+X-PR-Tracked-Commit-Id: 9c97cecab0d49e40460d9b5230ab4bf036f59491
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e652049b2018e3a2e32d71c74cf7d359e07e7618
-Message-Id: <159846685526.8056.7551024561913275412.pr-tracker-bot@kernel.org>
-Date:   Wed, 26 Aug 2020 18:34:15 +0000
-To:     "Michael S. Tsirkin" <mst@redhat.com>
+X-PR-Merge-Commit-Id: 27563ab6ef75abc64b7da2c7a321b7edd89dfcf7
+Message-Id: <159846685683.8056.6162061380278635629.pr-tracker-bot@kernel.org>
+Date:   Wed, 26 Aug 2020 18:34:16 +0000
+To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        elic@nvidia.com, jasowang@redhat.com, lingshan.zhu@intel.com,
-        maxime.coquelin@redhat.com, mst@redhat.com,
-        natechancellor@gmail.com, rdunlap@infradead.org,
-        sgarzare@redhat.com
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 26 Aug 2020 09:27:31 -0400:
+The pull request you sent on Wed, 26 Aug 2020 15:42:11 +0200:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git tags/char-misc-5.9-rc3
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e652049b2018e3a2e32d71c74cf7d359e07e7618
+https://git.kernel.org/torvalds/c/27563ab6ef75abc64b7da2c7a321b7edd89dfcf7
 
 Thank you!
 
