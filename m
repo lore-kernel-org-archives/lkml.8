@@ -2,146 +2,162 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C698C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44155C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDE222078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14F122078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:47:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="vY2tmCmo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5lUnHIQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgHZOp5 (ORCPT
+        id S1726845AbgHZOrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:45:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32858 "EHLO
+        Wed, 26 Aug 2020 10:47:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726854AbgHZOp4 (ORCPT
+        with ESMTP id S1726700AbgHZOrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:45:56 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FBCC061756
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:45:56 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id u1so1978777edi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:45:56 -0700 (PDT)
+        Wed, 26 Aug 2020 10:47:43 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1822EC061574;
+        Wed, 26 Aug 2020 07:47:43 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id y65so1560114qtd.2;
+        Wed, 26 Aug 2020 07:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B3VGI4ZO4Lizn7CsokRl50LFyMV/C/p/NGzm7IxRmNw=;
-        b=vY2tmCmo4W0jtZqs5TvQwnmYEnIQJzhLDUBY7CYym88eFsRdpJ4ZxJrn7MvyB+MFio
-         bcxEvPMJy9wnjmR2lby9fDmqvN9fg3QVolvVd3QBvsX0462o88VSpraYnhKztalmhGd2
-         Euybs+3DAaFUIuwJWRy3ToEqMxmBdJEa96Q2r7KTvb1z5/lfff1Puuerrb05ezIkrRTk
-         E+twZsFag+XZzywBLPDuOLAzwZ5m9DSERvBFMzEr1Fo8FEjx7IePtPDKT6K/vxMpCEQB
-         KqFF0L3zjlU+ho8M6oi1XdKm5YzeqHgXo3TyWNQJRh/GRIf9XqI/LLA4xIABFjBsHYms
-         bzZg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Xc2Hb9o/7Ud3w/FXjCQl5Yr4FI/SfE6ovQyC4Jq0IVE=;
+        b=M5lUnHIQ/AgrRdVc1DXk/Fxye2VdpNklMkr+fsPbADxxVl54//+QmKmArjsaO7IrB/
+         HMGrDSSGc3BvHkRXktG1Ojo+AYwqkIMoI2SoPtLx2GuCT0KV5pnsWA4Doe8Ibic6xb4q
+         x117qeHQsGHMqLOT8uyto49hfN9quRZPOq1E9rJe7rRCsfou8pctxrXL7Ma6kOk5hjJS
+         nF3Dcp2bEbWmv141bj1O7K2HghTbqAgauFbctEBVpRr6JhRD/g69T9/0kSQp5ipIW+Z9
+         JICDu0HU859q7Kk7zNEt2bTTPdC9r7qsgfqIf7XWCsv+FEwHqhDb2tpOl14nEiviuAWF
+         O0KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B3VGI4ZO4Lizn7CsokRl50LFyMV/C/p/NGzm7IxRmNw=;
-        b=og8966k6tf8X9pLbSltPspDA8UUWBPYl2RjefnX5E8oLuyHKZEJ6jLoe2LUStlvlkC
-         lzFSajt0+TxdceGxtEZPF9EgiJz3VQXMVBIlPmKGcfigGB0TnTUmQgCtEfdFXwqcSy2s
-         ZtxBlxkP/ga0LSEoN3PyoQWFp81dkOmrBSNOGGD72khhPKRqFABPPKf34sDf9ge/U340
-         SR+NDksF8qvZvUWDh8GK1b6k57/bcd45juX24aY/PRkoIYZmHSAlg7plM82ib5JjFmuX
-         9GR452VJCoGX/PIOL2HqkJqE660OTGZqkBRn1Apo2vhxYw1Trx1I0Lj/ULZzDnWYOniN
-         6KSg==
-X-Gm-Message-State: AOAM533gqqONOVtkyXNQaicIqqA9oS70Zv3Edzh3xLlyGMUoU9sPktsz
-        E98/QGm+YrYZ54MdwT2KyE511joVBf3qkocEe4Vv
-X-Google-Smtp-Source: ABdhPJz7Lmrx2VSlzkwy+2+vA0HLtnclpWweWaL589faXH/mQoRuZjSVZToxRxXNSNqrVFhEzngnyK3dFQc5fOxqniU=
-X-Received: by 2002:aa7:db10:: with SMTP id t16mr14707237eds.196.1598453154646;
- Wed, 26 Aug 2020 07:45:54 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Xc2Hb9o/7Ud3w/FXjCQl5Yr4FI/SfE6ovQyC4Jq0IVE=;
+        b=WpP1eTDtDxRLGq0fVT9F3V7GuPOhYDCrtOGVuCAmEzp3KyFn0j8/noevovUlxUV9Fb
+         HUWj12kRZmo6TDeWCYt2iLtd4VxVQ4omM9ZMsU0aikXZSPb6Ctic/sFhjoNbhzuQgU/B
+         C3bJENqrHF2t49MkpD6TaapTpko/CgEzAfLu9+tHDoB3T4fFFl8KbeG9j6D9q7FHW6w+
+         WUB0hIjyiztI3CEpZy/fPLAZZTpe6KQKsxkxgHQzBqs3oWLT2nlp46TrDCto5laW67b8
+         TfQJUHmfjO6vRZ2fjpM4UCsZTDBlVwlAqlo+peH5uglmKEpAAfS48FHrXUvCtdi/H8LZ
+         4pNQ==
+X-Gm-Message-State: AOAM5336kPPlHdI0Fi6wkqys3V2/kh/DsMLYZdOUyJll7nphSDzQlNNW
+        PRWSpJOps83LU8tVPIm4RTPCh0zALTyspA==
+X-Google-Smtp-Source: ABdhPJyT5a9WePwjGlwmbnuS5NX7RQ8zzM7hSEpnNk6/4mOkh8NTEaP5HnVV5RKaGcDjhOpsyAO3ag==
+X-Received: by 2002:ac8:4f4b:: with SMTP id i11mr13930514qtw.379.1598453262096;
+        Wed, 26 Aug 2020 07:47:42 -0700 (PDT)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id o187sm1807312qkf.14.2020.08.26.07.47.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2020 07:47:41 -0700 (PDT)
+Subject: Re: (EXT) Re: [PATCH] of: skip disabled CPU nodes
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200826120254.8902-1-matthias.schiffer@ew.tq-group.com>
+ <4dd06b79-1402-d7cf-9676-1f9a9526da12@gmail.com>
+ <9eb72c6561333661599411e49072928385629999.camel@ew.tq-group.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <ac64852a-7f2a-6005-f914-268670cd4f95@gmail.com>
+Date:   Wed, 26 Aug 2020 09:47:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
- <20200824132252.31261-1-peter.enderborg@sony.com> <20200824132252.31261-2-peter.enderborg@sony.com>
- <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com> <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com>
-In-Reply-To: <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 26 Aug 2020 10:45:43 -0400
-Message-ID: <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] selinux: Add denied trace with permssion filter
-To:     peter enderborg <peter.enderborg@sony.com>
-Cc:     linux-kernel@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9eb72c6561333661599411e49072928385629999.camel@ew.tq-group.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 10:34 AM peter enderborg
-<peter.enderborg@sony.com> wrote:
-> On 8/26/20 3:42 PM, Paul Moore wrote:
-> > On Mon, Aug 24, 2020 at 9:23 AM Peter Enderborg
-> > <peter.enderborg@sony.com> wrote:
-> >> This adds tracing of all denies. They are grouped with trace_seq for
-> >> each audit.
-> >>
-> >> A filter can be inserted with a write to it's filter section.
-> >>
-> >> echo "permission==\"entrypoint\"" > events/avc/selinux_denied/filter
-> >>
-> >> A output will be like:
-> >>           runcon-1046  [002] .N..   156.351738: selinux_denied:
-> >>           trace_seq=2 result=-13
-> >>           scontext=system_u:system_r:cupsd_t:s0-s0:c0.
-> >>           c1023 tcontext=system_u:object_r:bin_t:s0
-> >>           tclass=file permission=entrypoint
-> >>
-> >> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
-> >> ---
-> >>  include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++++++
-> >>  security/selinux/avc.c     | 27 +++++++++++++++++++++++++--
-> >>  2 files changed, 62 insertions(+), 2 deletions(-)
-> > My most significant comment is that I don't think we want, or need,
-> > two trace points in the avc_audit_post_callback() function.  Yes, I
-> > understand they are triggered slightly differently, but from my
-> > perspective there isn't enough difference between the two tracepoints
-> > to warrant including both.  However, while the tracepoints may be
->
-> We tried that but that was problematic too.
+Hi Rob,
 
-My apologies if I was on that thread, but can you remind me why it was
-a problem?  Why can't we use a single tracepoint to capture the AVC
-information?
+On 2020-08-26 08:54, Matthias Schiffer wrote:
+> On Wed, 2020-08-26 at 08:01 -0500, Frank Rowand wrote:
+>> On 2020-08-26 07:02, Matthias Schiffer wrote:
+>>> Allow disabling CPU nodes using status = "disabled".
+>>>
+>>> This allows a bootloader to change the number of available CPUs
+>>> (for
+>>> example when a common DTS is used for SoC variants with different
+>>> numbers
+>>> of cores) without deleting the nodes altogether (which may require
+>>> additional fixups where the CPU nodes are referenced, e.g. a
+>>> cooling
+>>> map).
+>>>
+>>> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
+>>>>
+>>> ---
+>>>  drivers/of/base.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>>> index ea44fea99813..d547e9deced1 100644
+>>> --- a/drivers/of/base.c
+>>> +++ b/drivers/of/base.c
+>>> @@ -796,6 +796,8 @@ struct device_node *of_get_next_cpu_node(struct
+>>> device_node *prev)
+>>>  		of_node_put(node);
+>>>  	}
+>>>  	for (; next; next = next->sibling) {
+>>> +		if (!__of_device_is_available(next))
+>>> +			continue;
+>>>  		if (!(of_node_name_eq(next, "cpu") ||
+>>>  		      __of_node_is_type(next, "cpu")))
+>>>  			continue;
+>>>
+>>
+>> The original implementation of of_get_next_cpu_node() had
+>> that check, but status disabled for cpu nodes has different
+>> semantics than other nodes, and the check broke some systems.
+>> The check was removed by c961cb3be906 "of: Fix cpu node
+>> iterator to not ignore disabled cpu nodes".
+>>
+>> It would be useful to document that difference in the
+>> header comment of of_get_next_cpu_node().
+>>
+>> -Frank
+> 
+> Hmm, I see. This difference in behaviour is quite unfortunate, as I'm
+> currently looking for a way to *really* disable a CPU core.
+> 
+> In arch/arm64/boot/dts/freescale/imx8mn.dtsi (and other variants of the
+> i.MX8M), there are 4 CPU nodes for the full-featured quad-core version.
+> The reduced single- and dual-core versions are currently handled in
+> NXP's U-Boot fork by deleting the additional nodes.
+> 
+> Not doing so causes the kernel to hang for a while when trying to
+> online the non-existent cores during boot (at least in linux-imx 5.4 -
+> I have not checked a more recent mainline kernel yet), but the deletion
+> is non-trivial to do without leaving dangling phandle references.
 
-> Having partly overlapping traces is not unheard off.  Check
-> compaction.c where we have a     trace_mm_compaction_begin
-> and a more detailed trace_mm_compaction_migratepages.
-> (And a  trace_mm_compaction_end)
+Any thoughts on implementing another universal property that means
+something like "the hardware described by this node does not exist
+or is so broken that you better not use it".
 
-It may not be unique to SELinux, but that doesn't mean I like it :)
+Matthias, if Rob thinks that is a good idea, then you should start
+with a new proposal that is also sent to
+devicetree-spec@vger.kernel.org <devicetree-spec@vger.kernel.org>
 
-One of my concerns with adding tracepoints is that the code would get
-littered with tracepoints; I accepted that it the AVC decision
-codepath was an obvious place for one, so we added a tracepoint.
-Having two tracepoints here is getting awfully close to my original
-fears.
+-Frank
 
-> > redundant in my mind, this new event does do the permission lookup in
-> > the kernel so that the contexts/class/permissions are all available as
-> > a string which is a good thing.
-> >
-> > Without going into the details, would the tracing folks be okay with
-> > doing something similar with the existing selinux_audited tracepoint?
-> > It's extra work in the kernel, but since it would only be triggered
-> > when the tracepoint was active it seems bearable to me.
->
-> I think the method for expanding lists is what we tried first on
-> suggestion from Steven Rostedt.  Maybe we can do a trace_event
-> from a TP_prink but that would be recursive.
+> 
+> Kind regards,
+> Matthias
+> 
 
-Wait, why would you be adding a trace event to a trace event, or am I
-misunderstanding you?
-
-All I was talking about was adding the permission resolution code to
-the already existing SELinux AVC tracepoint.
-
--- 
-paul moore
-www.paul-moore.com
