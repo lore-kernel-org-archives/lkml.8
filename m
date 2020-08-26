@@ -2,212 +2,123 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4ADFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C25C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:00:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B17032067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:00:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="G8eQ1w2a"
+	by mail.kernel.org (Postfix) with ESMTP id 0E34220838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598436047;
+	bh=4R1A9/PN9wVaIdSe/0IN1S+Pj6t3/4kfuPgweaMW0sA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=m8/Rp5c1XppxKM/EhjWGV5REbj0fn0Ep++Nnl0YTiXUegKCA7Dc/XT7fLeHvew+89
+	 AeI/rz2ggUgHtZgJvmFcOQWrDPRCuyIOqkn8BBjClekUzMO+qp1UrCoF/ceKUhHMOg
+	 mA8dqKQsSET7sFrWtZglWXSCCva6jhndkt0UEs+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbgHZKAC (ORCPT
+        id S1728474AbgHZKAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:00:02 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:40510 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727956AbgHZKAB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:00:01 -0400
-X-UUID: bb4d4cc237e3404483a1142281530358-20200826
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=BsdewsnKtNxlvHGi6w0j9WZgDXhixi655WU8nAWL4Fo=;
-        b=G8eQ1w2ahXO7oQ2pKSnjULYecvgP29E78DTnRBhCskQKCmjG5+BwKAnfD63BIF6K/KG+hnSXu1PBtQxIrl7XBeX5iq1uSc8liaOzTT2plzCawTAl8O3bQ7maDWrCmbkUYThdz16p/AEJf3HRTsFQ/gbYipQICXOKDDmxGUIOx4Q=;
-X-UUID: bb4d4cc237e3404483a1142281530358-20200826
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <neal.liu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1540181207; Wed, 26 Aug 2020 17:59:54 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 26 Aug 2020 17:59:51 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 26 Aug 2020 17:59:51 +0800
-Message-ID: <1598435993.17926.5.camel@mtkswgap22>
-Subject: Re: [PATCH v6 2/2] soc: mediatek: add mt6779 devapc driver
-From:   Neal Liu <neal.liu@mediatek.com>
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-CC:     Neal Liu <neal.liu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 26 Aug 2020 17:59:53 +0800
-In-Reply-To: <1597731644.12680.2.camel@mtkswgap22>
-References: <1597289564-17030-1-git-send-email-neal.liu@mediatek.com>
-         <1597289564-17030-3-git-send-email-neal.liu@mediatek.com>
-         <CAAOTY_88YSHOvDEHm+rM1=fTv_y25nUh1tuLUH8YSxH5UD1bug@mail.gmail.com>
-         <1597636953.3394.7.camel@mtkswgap22>
-         <CAAOTY__7gmvp+U+xD12KJkxuya=CkD8xV67S3pfC60gyfajQiA@mail.gmail.com>
-         <1597718679.5704.3.camel@mtkswgap22> <1597731644.12680.2.camel@mtkswgap22>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: BCA6C1CD50C12E69013FED584194D07E0B653F42725EAD668244F6F84F3648522000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 26 Aug 2020 06:00:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728086AbgHZKAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:00:45 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0F0D20786;
+        Wed, 26 Aug 2020 10:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598436045;
+        bh=4R1A9/PN9wVaIdSe/0IN1S+Pj6t3/4kfuPgweaMW0sA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=D42ocn71NjTNqMYdwTl34QJmoFLOQjaz+HOhfo1ZizZtNWyG6DHLofD9PJDYGNMPj
+         OZBkYB1UgUbfj3Xcs9jik27c1CObXewe84FfvoG9x1EYE/IOssasEfZvXWCS1CJwyz
+         35FtUfcaYo3aDqLXL7ssRmJCUa4d9fL3k+3VDUbo=
+Date:   Wed, 26 Aug 2020 19:00:41 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function
+ entry is not optimized (trigger by int3 breakpoint)
+Message-Id: <20200826190041.2d0ff0fbe154ba62163b0c00@kernel.org>
+In-Reply-To: <20200826180645.9b609fc05df2a149564df1b8@kernel.org>
+References: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
+        <20200825005426.f592075d13be740cb3c9aa77@kernel.org>
+        <7396e7b2079644a6aafd9670a111232b@trendmicro.com>
+        <20200825151538.f856d701a34f4e0561a64932@kernel.org>
+        <20200825120911.GX1362448@hirez.programming.kicks-ass.net>
+        <d3027772a6834f89a1ddc07c0fefaa0a@trendmicro.com>
+        <20200826172239.ff175be78ee5f3a4380579c3@kernel.org>
+        <20200826180645.9b609fc05df2a149564df1b8@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2h1bi1LdWFuZywNCg0KT24gVHVlLCAyMDIwLTA4LTE4IGF0IDE0OjIwICswODAwLCBOZWFs
-IExpdSB3cm90ZToNCj4gSGkgQ2h1bi1LdWFuZywNCj4gDQo+IE9uIFR1ZSwgMjAyMC0wOC0xOCBh
-dCAxMDo0NCArMDgwMCwgTmVhbCBMaXUgd3JvdGU6DQo+ID4gSGkgQ2h1bi1LdWFuZywNCj4gPiAN
-Cj4gPiBPbiBNb24sIDIwMjAtMDgtMTcgYXQgMjM6MTMgKzA4MDAsIENodW4tS3VhbmcgSHUgd3Jv
-dGU6DQo+ID4gPiBIaSwgTmVhbDoNCj4gPiA+IA0KPiA+ID4gTmVhbCBMaXUgPG5lYWwubGl1QG1l
-ZGlhdGVrLmNvbT4g5pa8IDIwMjDlubQ45pyIMTfml6Ug6YCx5LiAIOS4i+WNiDEyOjAy5a+r6YGT
-77yaDQo+ID4gPiA+DQo+ID4gPiA+IEhpIENodW4tS3VhbmcsDQo+ID4gPiA+DQo+ID4gPiA+IE9u
-IFNhdCwgMjAyMC0wOC0xNSBhdCAxMTowMyArMDgwMCwgQ2h1bi1LdWFuZyBIdSB3cm90ZToNCj4g
-PiA+ID4gPiBIaSwgTmVhbDoNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IE5lYWwgTGl1IDxuZWFsLmxp
-dUBtZWRpYXRlay5jb20+IOaWvCAyMDIw5bm0OOaciDEz5pelIOmAseWbmyDkuIrljYgxMTozM+Wv
-q+mBk++8mg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IE1lZGlhVGVrIGJ1cyBmYWJyaWMgcHJv
-dmlkZXMgVHJ1c3Rab25lIHNlY3VyaXR5IHN1cHBvcnQgYW5kIGRhdGENCj4gPiA+ID4gPiA+IHBy
-b3RlY3Rpb24gdG8gcHJldmVudCBzbGF2ZXMgZnJvbSBiZWluZyBhY2Nlc3NlZCBieSB1bmV4cGVj
-dGVkDQo+ID4gPiA+ID4gPiBtYXN0ZXJzLg0KPiA+ID4gPiA+ID4gVGhlIHNlY3VyaXR5IHZpb2xh
-dGlvbiBpcyBsb2dnZWQgYW5kIHNlbnQgdG8gdGhlIHByb2Nlc3NvciBmb3INCj4gPiA+ID4gPiA+
-IGZ1cnRoZXIgYW5hbHlzaXMgb3IgY291bnRlcm1lYXN1cmVzLg0KPiA+ID4gPiA+ID4NCj4gPiA+
-ID4gPiA+IEFueSBvY2N1cnJlbmNlIG9mIHNlY3VyaXR5IHZpb2xhdGlvbiB3b3VsZCByYWlzZSBh
-biBpbnRlcnJ1cHQsIGFuZA0KPiA+ID4gPiA+ID4gaXQgd2lsbCBiZSBoYW5kbGVkIGJ5IG10ay1k
-ZXZhcGMgZHJpdmVyLiBUaGUgdmlvbGF0aW9uDQo+ID4gPiA+ID4gPiBpbmZvcm1hdGlvbiBpcyBw
-cmludGVkIGluIG9yZGVyIHRvIGZpbmQgdGhlIG11cmRlcmVyLg0KPiA+ID4gPiA+ID4NCj4gPiA+
-ID4gPiA+IFNpZ25lZC1vZmYtYnk6IE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+DQo+
-ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFtzbmlwXQ0KPiA+ID4gPiA+DQo+
-ID4gPiA+ID4gPiArLyoNCj4gPiA+ID4gPiA+ICsgKiBkZXZhcGNfdmlvbGF0aW9uX2lycSAtIHRo
-ZSBkZXZhcGMgSW50ZXJydXB0IFNlcnZpY2UgUm91dGluZSAoSVNSKSB3aWxsIGR1bXANCj4gPiA+
-ID4gPiA+ICsgKiAgICAgICAgICAgICAgICAgICAgICAgIHZpb2xhdGlvbiBpbmZvcm1hdGlvbiBp
-bmNsdWRpbmcgd2hpY2ggbWFzdGVyIHZpb2xhdGVzDQo+ID4gPiA+ID4gPiArICogICAgICAgICAg
-ICAgICAgICAgICAgICBhY2Nlc3Mgc2xhdmUuDQo+ID4gPiA+ID4gPiArICovDQo+ID4gPiA+ID4g
-PiArc3RhdGljIGlycXJldHVybl90IGRldmFwY192aW9sYXRpb25faXJxKGludCBpcnFfbnVtYmVy
-LA0KPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0
-cnVjdCBtdGtfZGV2YXBjX2NvbnRleHQgKmN0eCkNCj4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4g
-PiArICAgICAgIC8qDQo+ID4gPiA+ID4gPiArICAgICAgICAqIE1hc2sgc2xhdmUncyBpcnEgYmVm
-b3JlIGNsZWFyaW5nIHZpbyBzdGF0dXMuDQo+ID4gPiA+ID4gPiArICAgICAgICAqIE11c3QgZG8g
-aXQgdG8gYXZvaWQgbmVzdGVkIGludGVycnVwdCBhbmQgcHJldmVudA0KPiA+ID4gPiA+ID4gKyAg
-ICAgICAgKiB1bmV4cGVjdGVkIGJlaGF2aW9yLg0KPiA+ID4gPiA+ID4gKyAgICAgICAgKi8NCj4g
-PiA+ID4gPiA+ICsgICAgICAgbWFza19tb2R1bGVfaXJxKGN0eCwgdHJ1ZSk7DQo+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiBJIHN0aWxsIGRvbid0IHVuZGVyc3RhbmQgd2h5IG5lc3RlZCBpbnRlcnJ1cHQg
-aGFwcGVuLiBJZiB0d28gQ1BVDQo+ID4gPiA+ID4gcHJvY2VzcyBkaWZmZXJlbnQgZGV2YXBjIGlu
-dGVycnVwdCBhdCB0aGUgc2FtZSB0aW1lLCBtYXNrIGludGVycnVwdA0KPiA+ID4gPiA+IGNvdWxk
-IG5vdCBwcmV2ZW50IHRoZXNlIHR3byBDUFUgdG8gc3luYyB2aW8gZGJnIGF0IHRoZSBzYW1lIHRp
-bWUuIEFzIEkNCj4gPiA+ID4gPiBrbm93LCBpbiBBUk0gQ1BVLCBvbmx5IENQVTAgcHJvY2VzcyBp
-cnEgaGFuZGxlciwgYW5kIGFsbCBkZXZhcGMNCj4gPiA+ID4gPiBpbnRlcnJ1cHQgaGFzIHRoZSBz
-YW1lIHByaW9yaXR5LCBzbyB3aHkgbmVzdGVkIGludGVycnVwdCBoYXBwZW4/IENvdWxkDQo+ID4g
-PiA+ID4geW91IGV4cGxhaW4gbW9yZSBkZXRhaWwgYWJvdXQgaG93IG5lc3RlZCBpbnRlcnJ1cHQg
-aGFwcGVuPw0KPiA+ID4gPg0KPiA+ID4gPiBJZiB0aGVyZSBpcyBhbm90aGVyIHZpb2xhdGlvbiBo
-YXBwZW5lZCBiZWZvcmUgcHJldmlvdXMgdmlvbGF0aW9uIGlzDQo+ID4gPiA+IGZ1bGx5IGhhbmRs
-ZWQsIG5lc3RlZCBpbnRlcnJ1cHQgd291bGQgaGFwcGVuLg0KPiA+ID4gPg0KPiA+ID4gPiBMZXQn
-cyBtZSB0YWtlIGFuIGV4YW1wbGU6DQo+ID4gPiA+IHZpbyBBIGhhcHBlbg0KPiA+ID4gPiBlbnRl
-ciBBIElTUg0KPiA+ID4gPiAuLi4gICAgICAgICAgICAgdmlvIEIgaGFwcGVuDQo+ID4gPiA+IGZp
-bmlzaCBBIElTUiAgICBlbnRlciBCIElTUg0KPiA+ID4gPiAgICAgICAgICAgICAgICAgLi4uDQo+
-ID4gPiA+ICAgICAgICAgICAgICAgICBmaW5pc2ggQiBJU1INCj4gPiA+ID4NCj4gPiA+ID4gV2Ug
-bWFzayBhbGwgbW9kdWxlJ3MgaXJxIHRvIGF2b2lkIG5lc3RlZCBpbnRlcnJ1cHQuDQo+ID4gPiAN
-Cj4gPiA+IFRoaXMgaXMgbm90ICduZXN0ZWQnIGludGVycnVwdC4gQWZ0ZXIgQSBJU1IgaXMgZmlu
-aXNoZWQsIEIgSVNSIGhhcHBlbi4NCj4gPiA+IFNvIEEgSVNSIGFuZCBCIElTUiBhcmUgY29uc2Vj
-dXRpdmUgaW50ZXJydXB0LCBub3QgbmVzdGVkIGludGVycnVwdC4NCj4gPiA+IFRvIGNvbXBhcmUg
-bWFzayBpcnEgYW5kIG5vIG1hc2sgaXJxLCBMZXQncyBjb25zaWRlciB0aGlzIHNpdHVhdGlvbjoN
-Cj4gPiA+IA0KPiA+ID4gMS4gMTAwMCBjb25zZWN1dGl2ZSB2aW9sYXRpb24gaGFwcGVuLCB0aGUg
-dGltZSBwZXJpb2QgYmV0d2VlbiB0d28NCj4gPiA+IHZpb2xhdGlvbiBpcyAwLjAxIG1zLCBzbyB0
-aGUgdG90YWwgdGltZSBpcyAxMG1zLiAoSW4gMTBtcywgMTAwMA0KPiA+ID4gdmlvbGF0aW9uIGhh
-cHBlbikNCj4gPiA+IDIuIE9uZSBJU1IgaGFuZGxlIHRpbWUgaXMgMSBtcywgc28gaW4gb25lIElT
-UiBoYW5kbGVyLCAxMDAgdmlvbGF0aW9uIGhhcHBlbi4NCj4gPiA+IA0KPiA+ID4gRm9yIG1hc2sg
-aXJxIHNvbHV0aW9uLCAxMCBJU1IgaGFuZGxlciBpcyB0cmlnZ2VyLiBGb3Igbm8gbWFzayBpcnEN
-Cj4gPiA+IHNvbHV0aW9uLCAxMSBJU1IgaGFuZGxlciBpcyB0cmlnZ2VyLg0KPiA+ID4gSSB0aGlu
-ayB0aGVzZSB0d28gc29sdXRpb24gaGF2ZSBzaW1pbGFyIHJlc3VsdCwgYW5kIG5vIG1hc2sgaXJx
-DQo+ID4gPiBzb2x1dGlvbiBwcmludCBtb3JlIGluZm9ybWF0aW9uIChJZiB0aGVzZSAxMDAwIHZp
-b2xhdGlvbiBpcyB0cmlnZ2VyIGJ5DQo+ID4gPiAyMCBkaWZmZXJlbnQgZHJpdmVyLCBubyBtYXNr
-IHNvbHV0aW9uIG1heSBzaG93IG9uZSBtb3JlIGRyaXZlciB0aGFuDQo+ID4gPiBtYXNrIHNvbHV0
-aW9uKQ0KPiA+ID4gU28gSSB0aGluayBpdCdzIG5vdCBuZWNlc3NhcnkgdG8gbWFzayBpcnEgaW4g
-aXJxIGhhbmRsZXIuDQo+ID4gPiANCj4gPiANCj4gPiBObywgbXkgZXhhbXBsZSBpcyBCIElTUiBp
-cyBlbnRlcmVkIGJlZm9yZSBBIElTUiBmaW5pc2hlZC4NCj4gPiBXaHkgdGhpcyBpcyBub3QgbmVz
-dGVkPw0KPiA+IHZpbyBBIGhhcHBlbg0KPiA+IGVudGVyIEEgSVNSDQo+ID4gLi4uICAgICAgICAg
-ICAgIHZpbyBCIGhhcHBlbg0KPiA+IC4uLgkJZW50ZXIgQiBJU1INCj4gPiBmaW5pc2ggQSBJU1IN
-Cj4gPiAgICAgICAgICAgICAgICAgLi4uDQo+ID4gCQkuLi4NCj4gPiAgICAgICAgICAgICAgICAg
-ZmluaXNoIEIgSVNSDQo+ID4gDQo+IA0KPiBJIGhhdmUgc29tZSBtaXN1bmRlcnN0YW5kaW5nIGFi
-b3V0IGhvdyBBUk0gQ1BVICYgR0lDIHdvcmtzLiBJJ2xsIGNvbmZpcm0NCj4gaXQgYW5kIGdldCBi
-YWNrIHRvIHlvdS4gUGxlYXNlIGlnbm9yZSBwcmV2aW91cyBtYWlsIHRocmVhZC4NCj4gVGhhbmtz
-ICENCg0KWWVzLCB5b3UgYXJlIHJpZ2h0LiBUaGVyZSBpcyBvbmx5IDEgQ1BVIChDUFUwKSB3aWxs
-IHByb2Nlc3MgaXJxIGhhbmRsZXINCmluIEFSTSBDUFUuIE5lc3RlZCBpbnRlcnJ1cHQgd2lsbCBu
-ZXZlciBoYXBwZW4uDQpUaGUgcmVhc29uIHdoeSBJIGhhdmUgbWlzdW5kZXJzdGFuZGluZyBpcyB0
-aGF0IE1lZGlhdGVrIGhhcyBzb21lDQpjdXN0b21pemF0aW9uIGFib3V0IGlycSBoYW5kbGluZyBm
-b3IgQVJNIENQVXMuIEJ1dCBpdCB3b3VsZCBub3QgYXBwbGllZA0KaW4gdXBzdHJlYW0ga2VybmVs
-Lg0KDQpMZXQgcmVtb3ZlIG1hc2svdW5tYXNrIG1vZHVsZSBpcnEgZHVyaW5nIElTUi4gVGhlIGRp
-ZmYgd291bGQgYmU6DQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstZGV2
-YXBjLmMNCmIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWRldmFwYy5jDQppbmRleCA1MTg5YjNm
-NGQ2M2YuLjBiYTYxZDc0MmUwZSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc29jL21lZGlhdGVrL210
-ay1kZXZhcGMuYw0KKysrIGIvZHJpdmVycy9zb2MvbWVkaWF0ZWsvbXRrLWRldmFwYy5jDQpAQCAt
-MTgzLDI0ICsxODMsMTAgQEAgc3RhdGljIHZvaWQgZGV2YXBjX2V4dHJhY3RfdmlvX2RiZyhzdHJ1
-Y3QNCm10a19kZXZhcGNfY29udGV4dCAqY3R4KQ0KIHN0YXRpYyBpcnFyZXR1cm5fdCBkZXZhcGNf
-dmlvbGF0aW9uX2lycShpbnQgaXJxX251bWJlciwNCiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBzdHJ1Y3QgbXRrX2RldmFwY19jb250ZXh0ICpjdHgpDQogew0KLSAgICAg
-ICAvKg0KLSAgICAgICAgKiBNYXNrIHNsYXZlJ3MgaXJxIGJlZm9yZSBjbGVhcmluZyB2aW8gc3Rh
-dHVzLg0KLSAgICAgICAgKiBNdXN0IGRvIGl0IHRvIGF2b2lkIG5lc3RlZCBpbnRlcnJ1cHQgYW5k
-IHByZXZlbnQNCi0gICAgICAgICogdW5leHBlY3RlZCBiZWhhdmlvci4NCi0gICAgICAgICovDQot
-ICAgICAgIG1hc2tfbW9kdWxlX2lycShjdHgsIHRydWUpOw0KLQ0KICAgICAgICB3aGlsZSAoZGV2
-YXBjX3N5bmNfdmlvX2RiZyhjdHgpKQ0KICAgICAgICAgICAgICAgIGRldmFwY19leHRyYWN0X3Zp
-b19kYmcoY3R4KTsNCg0KLSAgICAgICAvKg0KLSAgICAgICAgKiBFbnN1cmUgdGhhdCB2aW9sYXRp
-b24gaW5mbyBhcmUgd3JpdHRlbg0KLSAgICAgICAgKiBiZWZvcmUgZnVydGhlciBvcGVyYXRpb25z
-DQotICAgICAgICAqLw0KLSAgICAgICBzbXBfbWIoKTsNCi0NCiAgICAgICAgY2xlYXJfdmlvX3N0
-YXR1cyhjdHgpOw0KLSAgICAgICBtYXNrX21vZHVsZV9pcnEoY3R4LCBmYWxzZSk7DQoNCiAgICAg
-ICAgcmV0dXJuIElSUV9IQU5ETEVEOw0KIH0NCg0KSXMgdGhhdCBva2F5IGZvciB5b3U/DQpUaGFu
-a3MgIQ0KDQo+IA0KPiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4g
-PiArICAgICAgIHdoaWxlIChkZXZhcGNfc3luY192aW9fZGJnKGN0eCkpDQo+ID4gPiA+ID4gPiAr
-ICAgICAgICAgICAgICAgZGV2YXBjX2V4dHJhY3RfdmlvX2RiZyhjdHgpOw0KPiA+ID4gPiA+ID4g
-Kw0KPiA+ID4gPiA+ID4gKyAgICAgICAvKg0KPiA+ID4gPiA+ID4gKyAgICAgICAgKiBFbnN1cmUg
-dGhhdCB2aW9sYXRpb24gaW5mbyBhcmUgd3JpdHRlbg0KPiA+ID4gPiA+ID4gKyAgICAgICAgKiBi
-ZWZvcmUgZnVydGhlciBvcGVyYXRpb25zDQo+ID4gPiA+ID4gPiArICAgICAgICAqLw0KPiA+ID4g
-PiA+ID4gKyAgICAgICBzbXBfbWIoKTsNCj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICsgICAg
-ICAgY2xlYXJfdmlvX3N0YXR1cyhjdHgpOw0KPiA+ID4gPiA+ID4gKyAgICAgICBtYXNrX21vZHVs
-ZV9pcnEoY3R4LCBmYWxzZSk7DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArICAgICAgIHJl
-dHVybiBJUlFfSEFORExFRDsNCj4gPiA+ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+
-ID4NCj4gPiA+ID4gPiBbc25pcF0NCj4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+
-ID4gK3N0YXRpYyBpbnQgbXRrX2RldmFwY19yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAq
-cGRldikNCj4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gPiArICAgICAgIHN0cnVjdCBtdGtfZGV2
-YXBjX2NvbnRleHQgKmN0eCA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOw0KPiA+ID4gPiA+
-ID4gKw0KPiA+ID4gPiA+ID4gKyAgICAgICBzdG9wX2RldmFwYyhjdHgpOw0KPiA+ID4gPiA+ID4g
-Kw0KPiA+ID4gPiA+ID4gKyAgICAgICBpZiAoY3R4LT5pbmZyYV9jbGspDQo+ID4gPiA+ID4NCj4g
-PiA+ID4gPiBUaGlzIGFsd2F5cyB0cnVlLg0KPiA+ID4gPg0KPiA+ID4gPiBEb2VzIGl0IG1lYW4g
-dGhhdCByZW1vdmUgZnVuY3Rpb24gd291bGQgYmUgY2FsbGVkIG9ubHkgaWYgcHJvYmUgZnVuY3Rp
-b24NCj4gPiA+ID4gaXMgcmV0dXJuZWQgc3VjY2Vzc2Z1bGx5Pw0KPiA+ID4gDQo+ID4gPiBZZXMu
-DQo+ID4gPiANCj4gPiA+ID4gSXMgdGhlcmUgYW55IGNoYW5jZSB0aGlzIGZ1bmN0aW9uIHdvdWxk
-IGJlIGNhbGxlZCBkaXJlY3RseT8NCj4gPiA+IA0KPiA+ID4gTm8uDQo+ID4gPiANCj4gPiA+IFJl
-Z2FyZHMsDQo+ID4gPiBDaHVuLUt1YW5nLg0KPiA+ID4gDQo+ID4gPiA+DQo+ID4gPiA+ID4NCj4g
-PiA+ID4gPiBSZWdhcmRzLA0KPiA+ID4gPiA+IENodW4tS3VhbmcuDQo+ID4gPiA+ID4NCj4gPiA+
-ID4gPiA+ICsgICAgICAgICAgICAgICBjbGtfZGlzYWJsZV91bnByZXBhcmUoY3R4LT5pbmZyYV9j
-bGspOw0KPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gKyAgICAgICByZXR1cm4gMDsNCj4gPiA+
-ID4gPiA+ICt9DQo+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiArc3RhdGljIHN0cnVjdCBwbGF0
-Zm9ybV9kcml2ZXIgbXRrX2RldmFwY19kcml2ZXIgPSB7DQo+ID4gPiA+ID4gPiArICAgICAgIC5w
-cm9iZSA9IG10a19kZXZhcGNfcHJvYmUsDQo+ID4gPiA+ID4gPiArICAgICAgIC5yZW1vdmUgPSBt
-dGtfZGV2YXBjX3JlbW92ZSwNCj4gPiA+ID4gPiA+ICsgICAgICAgLmRyaXZlciA9IHsNCj4gPiA+
-ID4gPiA+ICsgICAgICAgICAgICAgICAubmFtZSA9IEtCVUlMRF9NT0ROQU1FLA0KPiA+ID4gPiA+
-ID4gKyAgICAgICAgICAgICAgIC5vZl9tYXRjaF90YWJsZSA9IG10a19kZXZhcGNfZHRfbWF0Y2gs
-DQo+ID4gPiA+ID4gPiArICAgICAgIH0sDQo+ID4gPiA+ID4gPiArfTsNCj4gPiA+ID4gPiA+ICsN
-Cj4gPiA+ID4gPiA+ICttb2R1bGVfcGxhdGZvcm1fZHJpdmVyKG10a19kZXZhcGNfZHJpdmVyKTsN
-Cj4gPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIk1lZGlhdGVr
-IERldmljZSBBUEMgRHJpdmVyIik7DQo+ID4gPiA+ID4gPiArTU9EVUxFX0FVVEhPUigiTmVhbCBM
-aXUgPG5lYWwubGl1QG1lZGlhdGVrLmNvbT4iKTsNCj4gPiA+ID4gPiA+ICtNT0RVTEVfTElDRU5T
-RSgiR1BMIik7DQo+ID4gPiA+ID4gPiAtLQ0KPiA+ID4gPiA+ID4gMS43LjkuNQ0KPiA+ID4gPiA+
-ID4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCj4gPiA+
-ID4gPiA+IExpbnV4LW1lZGlhdGVrIG1haWxpbmcgbGlzdA0KPiA+ID4gPiA+ID4gTGludXgtbWVk
-aWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiA+ID4gPiA+ID4gaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tZWRpYXRlaw0KPiA+ID4gPg0KPiA+IA0K
-PiA+IA0KPiANCj4gDQoNCg==
+On Wed, 26 Aug 2020 18:06:45 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
+> On Wed, 26 Aug 2020 17:22:39 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > On Wed, 26 Aug 2020 07:07:09 +0000
+> > "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com> wrote:
+> > 
+> > > 
+> > > > -----Original Message-----
+> > > > From: peterz@infradead.org <peterz@infradead.org>
+> > > > Sent: Tuesday, August 25, 2020 8:09 PM
+> > > > To: Masami Hiramatsu <mhiramat@kernel.org>
+> > > > Cc: Eddy Wu (RD-TW) <Eddy_Wu@trendmicro.com>; linux-kernel@vger.kernel.org; x86@kernel.org; David S. Miller
+> > > > <davem@davemloft.net>
+> > > > Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function entry is not optimized (trigger by int3 breakpoint)
+> > > >
+> > > > Surely we can do a lockless list for this. We have llist_add() and
+> > > > llist_del_first() to make a lockless LIFO/stack.
+> > > >
+> > > 
+> > > llist operations require atomic cmpxchg, for some arch doesn't have CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG, in_nmi() check might still needed.
+> > > (HAVE_KRETPROBES && !CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG): arc, arm, csky, mips
+> > 
+> > Good catch. In those cases, we can add in_nmi() check at arch dependent code.
+> 
+> Oops, in_nmi() check is needed in pre_kretprobe_handler() which has no
+> arch dependent code. Hmm, so we still need an weak function to check it...
+
+Oops, again. Sorry I found a big misunderstand. I found the in_nmi() check is
+completely unnecessary with Jiri's commit 9b38cc704e84 ("kretprobe: Prevent 
+triggering kretprobe from within kprobe_flush_task").
+
+This commit introduced the kprobe_busy_begin/end() to the kretproeb trampoline
+handler, which set a dummy kprobe to the per-cpu current kprobe pointer.
+This current-kprobe is checked at the kprobe pre handler to prevent kprobes
+(including kretprobe) recursion.
+
+This means, if an NMI interrupts a kretprobe operation (both pre-handler and
+trampoline-handler) and it hits the same kretprobe, this nested kretprobe
+handlers never be called, because there is a current kprobe is already set.
+Thus, we are totally safe from double-lock issue in the kretprobe handlers.
+
+So we can just remove the in_nmi() check from pre_kretprobe_handler() if
+we introduced a generic trampoline handler, since kprobe_busy_begin/end()
+must called from the trampoline handlers. Currently it is used on x86 only.
+
+Of course, this doesn't solve the llist_del_first() contention in the
+pre_kretprobe_handler(). So anyway we need a lock for per-probe llist
+(if I understand llist.h comment correctly.)
+
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
