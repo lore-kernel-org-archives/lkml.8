@@ -2,185 +2,127 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86E9E20897
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3F720897
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="deJ2I6kg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PBwJBdkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgHZJiO (ORCPT
+        id S1728644AbgHZJi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:38:14 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:20125 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728292AbgHZJer (ORCPT
+        Wed, 26 Aug 2020 05:38:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728328AbgHZJer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Aug 2020 05:34:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598434472;
-        s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=yBt+2etaBY9zgYdXE/iL82GyuWazNPY8Ty2z45dc9Fs=;
-        b=deJ2I6kgPVKJpRe618C4ByI1ZN6r0M+aHEnB1/bL421s84REdHHGWXgNlujL0Qf/7Y
-        yf9uv1c0/ncrqoEBzvPfau6FPsN5IkiVkYkcDXnOfDZy4lm3Hkisxtp4A/zVilJ61ojU
-        WWaaydq7SHCKmmpOHiLHIQPZ7HwmidWvTpKETwWzlfyx4KhQifd+m9YNykJW89x66IOH
-        ZEHCHvWLf3W0P8aF6etjAQEPdSjILgm5zy9PDh/4PtIhvCbSnzkBLQRlUfaQ+qDUbHpO
-        UenfjMmqXj/FInx+8jp1vJZZiuh5FV7BcsJO9yB5qmvrR/lh+yrQ309lco6OP+r1RJFE
-        mZww==
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXS7IYBkLahKxB4W6NYn8D"
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id g0b6c1w7Q9YUkzf
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Wed, 26 Aug 2020 11:34:30 +0200 (CEST)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Niklas Cassel <nks@flawful.org>,
-        Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH v2] opp: Power on (virtual) power domains managed by the OPP core
-Date:   Wed, 26 Aug 2020 11:33:28 +0200
-Message-Id: <20200826093328.88268-1-stephan@gerhold.net>
-X-Mailer: git-send-email 2.28.0
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB5CC061786
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:23 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id t14so1076077wmi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qElmRnHsar7tn4JV1a4MOU4ECliWfWuqmHMN13MnixU=;
+        b=PBwJBdkQlk8+/glvNbz0NN9mU9pLT9iRphNJRoCwUkB7TBfg41MLFYDe9JWU4G4eSz
+         iCZgPMD8KHcs2xTrORTWg9H0xYW4xLdiY/VdZDgZ58k8y9+IngWN8V66vafUV9a4j8mv
+         ZMgrcGPYBYdj3/3d1SQ7JqQCHwSZE6fkwTf4ry/wbHo3DGWpzQWmmveF9yLR8HIBxX6E
+         4txc7BApPS000GyfapvamEZqKo9PpsZ7m1dTFY4Uj144iF4cUUa3nKtjQH39JzVPDoIQ
+         XuwF7EN1CCGOSGA3e6rv9sCVtYV0zOw0RAbFRfsqExehODp8gWDYcuaCSbbz5U1NRWV+
+         aX5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qElmRnHsar7tn4JV1a4MOU4ECliWfWuqmHMN13MnixU=;
+        b=PpZdntD6o+aFEh+VykPbeTINDGUnWL9lX4UTZHMfdnQtiLsy/cafrIE3kfMVg6fPKD
+         Z0wJPm3fVby42fZDSCCu9p8JG1293PDNpxyTDA1WAdMNBJZjOP1UoABXnw1hMI+lbN6/
+         qdkxl143nyJuqQn2QQpQSSvH8CAAAR3rQChRNH8Hx91Dgl4t3KibLSWay/xJcZUilMiq
+         pKC9sO62wdcif0VKf7z7JoI4kqElhAmDLjoBSfUF2VHjpJkzlRn7CAB9VShf0fxYSozG
+         RAx/qBFalk6YP3hFboxJM/pbY2qIJzpw/ifKOcH9h9EerizyEHhAnmaVzY0J8HfYgtyj
+         dPUA==
+X-Gm-Message-State: AOAM530080PtjDXlfQA0oOVfBx+P1F4Wfoq0m35mY2Wt4N91D08brrQD
+        mVS0P3z8b0hunxVsl/211zz4Kw==
+X-Google-Smtp-Source: ABdhPJx3h8A3mjpNHgeZ/6rKPE6GI6Xtear6POyYyOrLQKipA1gOfGiBA+GtMpx2b9EQwV0Whzi1Mg==
+X-Received: by 2002:a1c:96c5:: with SMTP id y188mr6392874wmd.72.1598434462418;
+        Wed, 26 Aug 2020 02:34:22 -0700 (PDT)
+Received: from dell.default ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 02:34:21 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 14/30] wireless: ath: ath6kl: wmi: Remove unused variable 'rate'
+Date:   Wed, 26 Aug 2020 10:33:45 +0100
+Message-Id: <20200826093401.1458456-15-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200826093401.1458456-1-lee.jones@linaro.org>
+References: <20200826093401.1458456-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dev_pm_opp_attach_genpd() allows attaching an arbitrary number of
-power domains to an OPP table. In that case, the genpd core will
-create a virtual device for each of the power domains.
+Fixes the following W=1 kernel build warning(s):
 
-At the moment, the OPP core only calls
-dev_pm_genpd_set_performance_state() on these virtual devices.
-It does not attempt to power on the power domains. Therefore
-the required power domain might never get turned on.
+ drivers/net/wireless/ath/ath6kl/wmi.c: In function ‘ath6kl_wmi_bitrate_reply_rx’:
+ drivers/net/wireless/ath/ath6kl/wmi.c:1204:6: warning: variable ‘rate’ set but not used [-Wunused-but-set-variable]
 
-So far, dev_pm_opp_attach_genpd() is only used in qcom-cpufreq-nvmem.c
-to attach the CPR power domain to the CPU OPP table. The CPR driver
-does not check if it was actually powered on so this did not cause
-any problems. However, other drivers (e.g. rpmpd) might ignore the
-performance state until the power domain is actually powered on.
-
-Since these virtual devices are managed exclusively by the OPP core,
-I would say that it should also be responsible to ensure they are
-enabled.
-
-This commit implements this similar to the non-virtual power domains;
-we create device links for each of attached power domains so that they
-are turned on whenever the consumer device is active.
-
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
-Related discussion: https://lore.kernel.org/linux-arm-msm/20200426123140.GA190483@gerhold.net/
+ drivers/net/wireless/ath/ath6kl/wmi.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-v1: https://lore.kernel.org/linux-pm/20200730080146.25185-4-stephan@gerhold.net/
-Changes in v2:
-  - Use device links instead of enabling the power domains in
-    dev_pm_opp_set_rate()
----
- drivers/opp/core.c | 34 +++++++++++++++++++++++++++++++++-
- drivers/opp/opp.h  |  1 +
- 2 files changed, 34 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 8b3c3986f589..7e53a7b94c59 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -17,6 +17,7 @@
- #include <linux/device.h>
- #include <linux/export.h>
- #include <linux/pm_domain.h>
-+#include <linux/pm_runtime.h>
- #include <linux/regulator/consumer.h>
- 
- #include "opp.h"
-@@ -1964,10 +1965,13 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
- 		if (!opp_table->genpd_virt_devs[index])
- 			continue;
- 
-+		if (opp_table->genpd_virt_links && opp_table->genpd_virt_links[index])
-+			device_link_del(opp_table->genpd_virt_links[index]);
- 		dev_pm_domain_detach(opp_table->genpd_virt_devs[index], false);
- 		opp_table->genpd_virt_devs[index] = NULL;
- 	}
- 
-+	kfree(opp_table->genpd_virt_links);
- 	kfree(opp_table->genpd_virt_devs);
- 	opp_table->genpd_virt_devs = NULL;
- }
-@@ -1999,8 +2003,10 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
+index 6885d2ded53a8..a4339cca661f0 100644
+--- a/drivers/net/wireless/ath/ath6kl/wmi.c
++++ b/drivers/net/wireless/ath/ath6kl/wmi.c
+@@ -1201,8 +1201,7 @@ static int ath6kl_wmi_pstream_timeout_event_rx(struct wmi *wmi, u8 *datap,
+ static int ath6kl_wmi_bitrate_reply_rx(struct wmi *wmi, u8 *datap, int len)
  {
- 	struct opp_table *opp_table;
- 	struct device *virt_dev;
--	int index = 0, ret = -EINVAL;
-+	struct device_link *dev_link;
-+	int index = 0, ret = -EINVAL, num_devs;
- 	const char **name = names;
-+	u32 flags;
+ 	struct wmi_bit_rate_reply *reply;
+-	s32 rate;
+-	u32 sgi, index;
++	u32 index;
  
- 	opp_table = dev_pm_opp_get_opp_table(dev);
- 	if (IS_ERR(opp_table))
-@@ -2049,6 +2055,32 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
- 		name++;
+ 	if (len < sizeof(struct wmi_bit_rate_reply))
+ 		return -EINVAL;
+@@ -1211,15 +1210,10 @@ static int ath6kl_wmi_bitrate_reply_rx(struct wmi *wmi, u8 *datap, int len)
+ 
+ 	ath6kl_dbg(ATH6KL_DBG_WMI, "rateindex %d\n", reply->rate_index);
+ 
+-	if (reply->rate_index == (s8) RATE_AUTO) {
+-		rate = RATE_AUTO;
+-	} else {
++	if (reply->rate_index != (s8) RATE_AUTO) {
+ 		index = reply->rate_index & 0x7f;
+ 		if (WARN_ON_ONCE(index > (RATE_MCS_7_40 + 1)))
+ 			return -EINVAL;
+-
+-		sgi = (reply->rate_index & 0x80) ? 1 : 0;
+-		rate = wmi_rate_tbl[index][sgi];
  	}
  
-+	/* Create device links to enable the power domains when necessary */
-+	opp_table->genpd_virt_links = kcalloc(opp_table->required_opp_count,
-+					      sizeof(*opp_table->genpd_virt_links),
-+					      GFP_KERNEL);
-+	if (!opp_table->genpd_virt_links)
-+		goto err;
-+
-+	/* Turn on power domain initially if consumer is active */
-+	pm_runtime_get_noresume(dev);
-+	flags = DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS;
-+	if (pm_runtime_active(dev))
-+		flags |= DL_FLAG_RPM_ACTIVE;
-+
-+	num_devs = index;
-+	for (index = 0; index < num_devs; index++) {
-+		dev_link = device_link_add(dev, opp_table->genpd_virt_devs[index],
-+					   flags);
-+		if (!dev_link) {
-+			dev_err(dev, "Failed to create device link\n");
-+			pm_runtime_put(dev);
-+			goto err;
-+		}
-+		opp_table->genpd_virt_links[index] = dev_link;
-+	}
-+	pm_runtime_put(dev);
-+
- 	if (virt_devs)
- 		*virt_devs = opp_table->genpd_virt_devs;
- 	mutex_unlock(&opp_table->genpd_virt_dev_lock);
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index 78e876ec803e..be5526cdbdba 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -186,6 +186,7 @@ struct opp_table {
- 
- 	struct mutex genpd_virt_dev_lock;
- 	struct device **genpd_virt_devs;
-+	struct device_link **genpd_virt_links;
- 	struct opp_table **required_opp_tables;
- 	unsigned int required_opp_count;
- 
+ 	ath6kl_wakeup_event(wmi->parent_dev);
 -- 
-2.28.0
+2.25.1
 
