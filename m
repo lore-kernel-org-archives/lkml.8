@@ -2,106 +2,84 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE1BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3759C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA46C2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:42:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598456567;
-	bh=RHa9zBLgw9IpfI7JnYGtkrslv1jtDxLIc9cYeU/LmxM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cAYYikLZjNlFJEitRw+yvwj5wwD08Ra9jt2kUZ9Qk2CzdeFA/D6kCl9ahocBn69S9
-	 GbXwBuSWCCAt1M8oa6oQUfitxwpJsVSMf7uRcgBhEdGBxidkeGJu4R/sGPhc48EgDA
-	 rRuRWR/eT0jTUd5qhisIob/3PPhfRrWJxOioKwec=
+	by mail.kernel.org (Postfix) with ESMTP id BB6582078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgHZPmo (ORCPT
+        id S1727968AbgHZPon (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:42:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727106AbgHZPmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:42:39 -0400
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A308214F1;
-        Wed, 26 Aug 2020 15:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598456559;
-        bh=RHa9zBLgw9IpfI7JnYGtkrslv1jtDxLIc9cYeU/LmxM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zTPtES8x2UWsCaI6kOj9nlniMNWuIzrJD1UT96WMiFp6xVX6hAhsHYjM5ndQD83N+
-         G8Duj3cj5wgQSHoHBb7it+ZNAr319loUQIumqckWjoZAmXispngrIm866+JJelvobX
-         MxmXWZZ3J1yE53x3t73Qs3oyiOEXPGQD3Ct1xkG0=
-Received: by mail-oi1-f180.google.com with SMTP id z22so1908871oid.1;
-        Wed, 26 Aug 2020 08:42:39 -0700 (PDT)
-X-Gm-Message-State: AOAM532hGxfVXbOznas8h8okLE3EW0yIjpgqp+mVAROOHf/CkFHGf+mi
-        zaNgk+wfQ2QK3BOk/CMHPEhWR/7DasRSxq6iaVo=
-X-Google-Smtp-Source: ABdhPJzAvAC3orjViJOSzoyVcXXcCbOYl8M/eBC8YnZBbaXn68xbTd4Ss7RJC5vq85k/RVC1Tc8NT8NeKeBh2EKIkwo=
-X-Received: by 2002:aca:d8c5:: with SMTP id p188mr3975859oig.47.1598456558363;
- Wed, 26 Aug 2020 08:42:38 -0700 (PDT)
+        Wed, 26 Aug 2020 11:44:43 -0400
+Received: from smtprelay0028.hostedemail.com ([216.40.44.28]:36062 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726739AbgHZPog (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 11:44:36 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 57C931DF9;
+        Wed, 26 Aug 2020 15:44:33 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: knot54_5a184f527065
+X-Filterd-Recvd-Size: 2176
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 26 Aug 2020 15:44:32 +0000 (UTC)
+Message-ID: <9635eaa4ccc1141fb0dd8c3687f46da7149206ad.camel@perches.com>
+Subject: Re: [PATCH v1] driver core: Annotate dev_err_probe() with
+ __must_check
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Date:   Wed, 26 Aug 2020 08:44:30 -0700
+In-Reply-To: <20200826104459.81979-1-andriy.shevchenko@linux.intel.com>
+References: <20200826104459.81979-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-References: <20200826055150.2753.90553@ml01.vlan13.01.org> <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
- <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
- <20200826114952.GA2375@gondor.apana.org.au> <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
- <20200826120832.GA2996@gondor.apana.org.au> <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
- <20200826130010.GA3232@gondor.apana.org.au> <c27e5303-48d9-04a4-4e73-cfea5470f357@gmail.com>
- <20200826141907.GA5111@gondor.apana.org.au> <4bb6d926-a249-8183-b3d9-05b8e1b7808a@gmail.com>
-In-Reply-To: <4bb6d926-a249-8183-b3d9-05b8e1b7808a@gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 26 Aug 2020 17:42:27 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXEn507bEt+eT6q7MpCwNH=oAZsTkFRz0t=kPEV0QxFsOQ@mail.gmail.com>
-Message-ID: <CAMj1kXEn507bEt+eT6q7MpCwNH=oAZsTkFRz0t=kPEV0QxFsOQ@mail.gmail.com>
-Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
-To:     Denis Kenzior <denkenz@gmail.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Andrew Zaborowski <andrew.zaborowski@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Caleb Jorden <caljorden@hotmail.com>,
-        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 at 17:33, Denis Kenzior <denkenz@gmail.com> wrote:
->
-> Hi Herbert,
->
-> On 8/26/20 9:19 AM, Herbert Xu wrote:
-> > On Wed, Aug 26, 2020 at 08:57:17AM -0500, Denis Kenzior wrote:
-> >>
-> >> I'm just waking up now, so I might seem dense, but for my education, can you
-> >> tell me why we need to set MSG_MORE when we issue just a single sendmsg
-> >> followed immediately by recv/recvmsg? ell/iwd operates on small buffers, so
-> >> we don't really feed the kernel data in multiple send operations.  You can
-> >> see this in the ell git tree link referenced in Andrew's reply.
-> >
-> > You obviously don't need MSG_MORE if you're doing a single sendmsg.
-> >
-> > The problematic code is in l_cipher_set_iv.  It does a sendmsg(2)
-> > that expects to be followed by more sendmsg(2) calls before a
-> > recvmsg(2).  That's the one that needs a MSG_MORE.
-> >
->
-> Gotcha.  I fixed the set_iv part now in ell:
-> https://git.kernel.org/pub/scm/libs/ell/ell.git/commit/?id=87c76bbc85fe286925cbdb53d733fc9f9fd2ed12
->
+On Wed, 2020-08-26 at 13:44 +0300, Andy Shevchenko wrote:
+> We have got already new users of this API which interpret it differently
+> and miss the opportunity to optimize their code.
+> 
+> In order to avoid similar cases in the future, annotate dev_err_probe()
+> with __must_check.
+> 
+> Fixes: a787e5400a1c ("driver core: add device probe log helper")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/device.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index ca18da4768e3..f9d2e5703bbf 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -978,7 +978,7 @@ void device_links_supplier_sync_state_pause(void);
+>  void device_links_supplier_sync_state_resume(void);
+>  
+>  extern __printf(3, 4)
+> -int dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
+> +int __must_check dev_err_probe(const struct device *dev, int err, const char *fmt, ...);
 
-Interestingly, that change alone (without the kernel side fix that
-Herbert just provided) is not sufficient to make the self tests work
-again.
+Generally, the __must_check should go before the return type
+and the extern isn't necessary and is also generally not used
+in device.h, so I'd prefer:
 
-I still get a failure in aes_siv_encrypt(), which does not occur with
-the kernel side fix applied.
+__printf(3, 4)
+__must_check int dev_err_probe(...);
+
+
