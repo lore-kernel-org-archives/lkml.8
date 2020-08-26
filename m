@@ -2,214 +2,122 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EAFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AC7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9745221E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0637F2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgHZIxm (ORCPT
+        id S1727792AbgHZIyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 04:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgHZIxg (ORCPT
+        Wed, 26 Aug 2020 04:54:22 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:42504 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgHZIyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 04:53:36 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F76C061574
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 01:53:35 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 8E90B295FFF
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>
-Cc:     narmstrong@baylibre.com, matthias.bgg@gmail.com,
-        drinkcat@chromium.org, hsinyi@chromium.org, a.hajda@samsung.com,
-        boris.brezillon@collabora.com, laurent.pinchart@ideasonboard.com,
-        sam@ravnborg.org, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [RESEND PATCH v2 2/2] drm/mediatek: mtk_dpi: Convert to bridge driver
-Date:   Wed, 26 Aug 2020 10:53:17 +0200
-Message-Id: <20200826085317.681385-3-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200826085317.681385-1-enric.balletbo@collabora.com>
-References: <20200826085317.681385-1-enric.balletbo@collabora.com>
+        Wed, 26 Aug 2020 04:54:17 -0400
+Received: by mail-il1-f200.google.com with SMTP id z1so1043399ilz.9
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 01:54:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=KWA98gUVVPLAB5mEnwjYg2XuRfaodeLtZ5bQKkNE1+8=;
+        b=Rll3/Ej+1BasFeSEAhGquljB+Zm++8BvsNXxTqT/75yJIlXIDgVUYBUikgMgPCoI9t
+         st9r2onVi9uiDSb1GPd4EaR0Szvo6zR5L34/d1UbSiiyUFfcrP192Vo26WsqM9/fUEaW
+         051J8UoPLBpdi63NT11Hu2jXv0XalEnna+1t6cCy7zL6JDW2j1iRNoRu/WdB0oQ3sB4J
+         +auBGwB9XJYrxB8wJNQiVf2xQ9MjPCPPogKO8rd5W5eiHxrky+Ga8iGS64AbQxtBIB8E
+         98eFuo1wpR4WMhVd7WzTuhoPbQw9omxZVeTMxoPB1YYJBacsLZmHJ/m7dUeNIiwiFHHy
+         xJHQ==
+X-Gm-Message-State: AOAM531un6iEomPw3630x7kEXommXk69O5jVg3lr46dC+Kwi7mJcSGT/
+        aJiq4p+r92kLNZzTUoyXdx864u+PwjCBerp4DneurMXDSwJx
+X-Google-Smtp-Source: ABdhPJwojF1/sq+xfygWWoJd7PvjM53WyuPf8Nd+Tw6jH4PzPCaeufjMYI+Yv+PKmImWIEaesLI5rp/287INPrLafU2b3mDtP40z
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:3ea:: with SMTP id s10mr4453619jaq.2.1598432056177;
+ Wed, 26 Aug 2020 01:54:16 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 01:54:16 -0700
+In-Reply-To: <001a1143e62eb6a9510565640e76@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e7fab005adc3f636@google.com>
+Subject: Re: WARNING: ODEBUG bug in __do_softirq
+From:   syzbot <syzbot+51c9bdfa559769d2f897@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, anna.schumaker@netapp.com,
+        bfields@fieldses.org, bp@alien8.de, davem@davemloft.net,
+        douly.fnst@cn.fujitsu.com, hpa@zytor.com, jlayton@kernel.org,
+        konrad.wilk@oracle.com, len.brown@intel.com,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        mingo@kernel.org, mingo@redhat.com, netdev@vger.kernel.org,
+        paulmck@kernel.org, peterz@infradead.org, puwen@hygon.cn,
+        rafael.j.wysocki@intel.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, trond.myklebust@hammerspace.com,
+        trond.myklebust@primarydata.com, vbabka@suse.cz, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert mtk_dpi to a bridge driver with built-in encoder support for
-compatibility with existing component drivers.
+syzbot has found a reproducer for the following issue on:
 
-Reviewed-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
+HEAD commit:    3a00d3df Add linux-next specific files for 20200825
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=15080fa9900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9ef0a5f95935d447
+dashboard link: https://syzkaller.appspot.com/bug?extid=51c9bdfa559769d2f897
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17927a2e900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132b8ede900000
 
-Changes in v2:
-- Maintain error message when attach to bridge fails. (Boris)
+The issue was bisected to:
 
- drivers/gpu/drm/mediatek/mtk_dpi.c | 71 ++++++++++++++++++------------
- 1 file changed, 42 insertions(+), 29 deletions(-)
+commit 5b317cbf2bcb85a1e96ce87717cb991ecab1dd4d
+Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Date:   Fri Feb 22 09:17:11 2019 +0000
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
-index f7372dbdac0e..589ef33a1780 100644
---- a/drivers/gpu/drm/mediatek/mtk_dpi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
-@@ -64,6 +64,7 @@ enum mtk_dpi_out_color_format {
- struct mtk_dpi {
- 	struct mtk_ddp_comp ddp_comp;
- 	struct drm_encoder encoder;
-+	struct drm_bridge bridge;
- 	struct drm_bridge *next_bridge;
- 	void __iomem *regs;
- 	struct device *dev;
-@@ -83,9 +84,9 @@ struct mtk_dpi {
- 	int refcount;
- };
- 
--static inline struct mtk_dpi *mtk_dpi_from_encoder(struct drm_encoder *e)
-+static inline struct mtk_dpi *bridge_to_dpi(struct drm_bridge *b)
- {
--	return container_of(e, struct mtk_dpi, encoder);
-+	return container_of(b, struct mtk_dpi, bridge);
- }
- 
- enum mtk_dpi_polarity {
-@@ -521,50 +522,53 @@ static int mtk_dpi_set_display_mode(struct mtk_dpi *dpi,
- 	return 0;
- }
- 
--static bool mtk_dpi_encoder_mode_fixup(struct drm_encoder *encoder,
--				       const struct drm_display_mode *mode,
--				       struct drm_display_mode *adjusted_mode)
-+static void mtk_dpi_encoder_destroy(struct drm_encoder *encoder)
- {
--	return true;
-+	drm_encoder_cleanup(encoder);
- }
- 
--static void mtk_dpi_encoder_mode_set(struct drm_encoder *encoder,
--				     struct drm_display_mode *mode,
--				     struct drm_display_mode *adjusted_mode)
-+static const struct drm_encoder_funcs mtk_dpi_encoder_funcs = {
-+	.destroy = mtk_dpi_encoder_destroy,
-+};
-+
-+static int mtk_dpi_bridge_attach(struct drm_bridge *bridge,
-+				 enum drm_bridge_attach_flags flags)
- {
--	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
-+	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
-+
-+	return drm_bridge_attach(bridge->encoder, dpi->next_bridge,
-+				 &dpi->bridge, flags);
-+}
-+
-+static void mtk_dpi_bridge_mode_set(struct drm_bridge *bridge,
-+				const struct drm_display_mode *mode,
-+				const struct drm_display_mode *adjusted_mode)
-+{
-+	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
- 
- 	drm_mode_copy(&dpi->mode, adjusted_mode);
- }
- 
--static void mtk_dpi_encoder_disable(struct drm_encoder *encoder)
-+static void mtk_dpi_bridge_disable(struct drm_bridge *bridge)
- {
--	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
-+	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
- 
- 	mtk_dpi_power_off(dpi);
- }
- 
--static void mtk_dpi_encoder_enable(struct drm_encoder *encoder)
-+static void mtk_dpi_bridge_enable(struct drm_bridge *bridge)
- {
--	struct mtk_dpi *dpi = mtk_dpi_from_encoder(encoder);
-+	struct mtk_dpi *dpi = bridge_to_dpi(bridge);
- 
- 	mtk_dpi_power_on(dpi);
- 	mtk_dpi_set_display_mode(dpi, &dpi->mode);
- }
- 
--static int mtk_dpi_atomic_check(struct drm_encoder *encoder,
--				struct drm_crtc_state *crtc_state,
--				struct drm_connector_state *conn_state)
--{
--	return 0;
--}
--
--static const struct drm_encoder_helper_funcs mtk_dpi_encoder_helper_funcs = {
--	.mode_fixup = mtk_dpi_encoder_mode_fixup,
--	.mode_set = mtk_dpi_encoder_mode_set,
--	.disable = mtk_dpi_encoder_disable,
--	.enable = mtk_dpi_encoder_enable,
--	.atomic_check = mtk_dpi_atomic_check,
-+static const struct drm_bridge_funcs mtk_dpi_bridge_funcs = {
-+	.attach = mtk_dpi_bridge_attach,
-+	.mode_set = mtk_dpi_bridge_mode_set,
-+	.disable = mtk_dpi_bridge_disable,
-+	.enable = mtk_dpi_bridge_enable,
- };
- 
- static void mtk_dpi_start(struct mtk_ddp_comp *comp)
-@@ -605,12 +609,11 @@ static int mtk_dpi_bind(struct device *dev, struct device *master, void *data)
- 		dev_err(dev, "Failed to initialize decoder: %d\n", ret);
- 		goto err_unregister;
- 	}
--	drm_encoder_helper_add(&dpi->encoder, &mtk_dpi_encoder_helper_funcs);
- 
- 	/* Currently DPI0 is fixed to be driven by OVL1 */
- 	dpi->encoder.possible_crtcs = BIT(1);
- 
--	ret = drm_bridge_attach(&dpi->encoder, dpi->next_bridge, NULL, 0);
-+	ret = drm_bridge_attach(&dpi->encoder, &dpi->bridge, NULL, 0);
- 	if (ret) {
- 		dev_err(dev, "Failed to attach bridge: %d\n", ret);
- 		goto err_cleanup;
-@@ -791,8 +794,15 @@ static int mtk_dpi_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, dpi);
- 
-+	dpi->bridge.funcs = &mtk_dpi_bridge_funcs;
-+	dpi->bridge.of_node = dev->of_node;
-+	dpi->bridge.type = DRM_MODE_CONNECTOR_DPI;
-+
-+	drm_bridge_add(&dpi->bridge);
-+
- 	ret = component_add(dev, &mtk_dpi_component_ops);
- 	if (ret) {
-+		drm_bridge_remove(&dpi->bridge);
- 		dev_err(dev, "Failed to add component: %d\n", ret);
- 		return ret;
- 	}
-@@ -802,7 +812,10 @@ static int mtk_dpi_probe(struct platform_device *pdev)
- 
- static int mtk_dpi_remove(struct platform_device *pdev)
- {
-+	struct mtk_dpi *dpi = platform_get_drvdata(pdev);
-+
- 	component_del(&pdev->dev, &mtk_dpi_component_ops);
-+	drm_bridge_remove(&dpi->bridge);
- 
- 	return 0;
- }
--- 
-2.28.0
+    Merge branch 'pm-cpufreq-fixes'
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=171ead5d200000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=149ead5d200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=109ead5d200000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+51c9bdfa559769d2f897@syzkaller.appspotmail.com
+Fixes: 5b317cbf2bcb ("Merge branch 'pm-cpufreq-fixes'")
+
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object type: work_struct hint: afs_manage_cell+0x0/0x11c0 fs/afs/cell.c:498
+WARNING: CPU: 1 PID: 16 at lib/debugobjects.c:485 debug_print_object+0x160/0x250 lib/debugobjects.c:485
+Modules linked in:
+CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.9.0-rc2-next-20200825-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:485
+Code: dd 60 56 94 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48 8b 14 dd 60 56 94 88 48 c7 c7 c0 4b 94 88 e8 eb bd a4 fd <0f> 0b 83 05 13 50 1b 07 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+RSP: 0018:ffffc90000d7fbf8 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+RDX: ffff8880a9686440 RSI: ffffffff815da937 RDI: fffff520001aff71
+RBP: 0000000000000001 R08: 0000000000000001 R09: ffff8880ae720f8b
+R10: 0000000000000000 R11: 203a47554245444f R12: ffffffff89ba35e0
+R13: ffffffff814b6290 R14: dead000000000100 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9120aabe78 CR3: 0000000088b2e000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
+ debug_check_no_obj_freed+0x301/0x41c lib/debugobjects.c:998
+ kfree+0xf0/0x2c0 mm/slab.c:3755
+ rcu_do_batch kernel/rcu/tree.c:2474 [inline]
+ rcu_core+0x61e/0x1220 kernel/rcu/tree.c:2709
+ __do_softirq+0x2de/0xa24 kernel/softirq.c:298
+ run_ksoftirqd kernel/softirq.c:652 [inline]
+ run_ksoftirqd+0x89/0x100 kernel/softirq.c:644
+ smpboot_thread_fn+0x655/0x9e0 kernel/smpboot.c:165
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
 
