@@ -2,139 +2,84 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF72C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDEE62078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:52:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598460778;
-	bh=BomWlpD0mGAvpFUVz/brmOr64Y92gFzTpqDzQk4KDxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zSUaNURLGC3DOQKaewKGFQesJLDVaTDUGrcuXm/dU+12R/EoMdk1ZtYA0VEnqC9pO
-	 AwTr+wEMUDkv2sjJ0GIU+nP49OpJG2Ut9hWgCxcd/obEfCY9OJ6D8N7kN2CAglg2wJ
-	 NTAtlG0jaKUwFIJBNddjmzBTibpjxAhGWSIBJqqw=
+	by mail.kernel.org (Postfix) with ESMTP id 6B03A2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:53:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgHZQw4 (ORCPT
+        id S1728048AbgHZQxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:52:56 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:45048 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgHZQww (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:52:52 -0400
-Received: by mail-ej1-f66.google.com with SMTP id bo3so3788527ejb.11;
-        Wed, 26 Aug 2020 09:52:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f3SjKHg0rc/Hi94wKGeK4sTEIeweZxxU2pp3miD2U7w=;
-        b=fw7+bH7AiRhwXjq5tfTImHCJPfa+iMv2NbgB0cFIh1y8lFXKapBDUFm5fXQNsJGlJj
-         5DXxGyaezcySLqGq8GHC8LJLLaqbE6C/aeCXfXka5mYXJ1QGn2VRKPuSZdUj3M6SXRF6
-         W1TBlka4AXnyAX74NdyrDDdgZuUn6hNrwO8xfKNBQEhdqvE7QTXDqJdocBsW3hPmVP6b
-         MMGEE2p2VxiAO7kgtGOBwCSl9ZzTN0vlra+xY/dxBjwtyISYXgUiAovTDrORcrHDU/GV
-         6mR3S+5Ct4w7Fx4tcjt4QXFl6jh1bwj4u6fpwmViuqJTfhxzez6jd2bULogNxJC316Qj
-         PkTA==
-X-Gm-Message-State: AOAM531Kyf8RS73pCksdr2lqiLQ2R+Ek5GFFOh/rK7OAph9jtFsHtOK2
-        2efYRXJnX9pIy1U7qUE9Lqk=
-X-Google-Smtp-Source: ABdhPJx8z7paHiBU5Vqit+UaxQDuL7FcpAQaf80dIweI/Cw+HnrnkKZ/d1NlwB9sHxh0qTew9unJQQ==
-X-Received: by 2002:a17:906:b09a:: with SMTP id x26mr2766990ejy.162.1598460769603;
-        Wed, 26 Aug 2020 09:52:49 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id d2sm2656101ejm.19.2020.08.26.09.52.48
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Aug 2020 09:52:49 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 18:52:46 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com
-Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
- Driver
-Message-ID: <20200826165246.GA29212@kozik-lap>
-References: <20200825184413.GA2693@kozik-lap>
- <CGME20200826145929eucas1p1367c260edb8fa003869de1da527039c0@eucas1p1.samsung.com>
- <dleftja6yhv4g2.fsf%l.stelmach@samsung.com>
- <20200826164533.GC31748@kozik-lap>
+        Wed, 26 Aug 2020 12:53:08 -0400
+Received: from mga01.intel.com ([192.55.52.88]:8075 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbgHZQw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:52:58 -0400
+IronPort-SDR: kukMBqYf7ya60bqwi5Z8Q61ahgOHiI53jnyEKXD/DhVOoJNixLt5jRfusB1HrPzAoEJjYZBbPp
+ fhE/5ocEZ6Mw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="174383946"
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="174383946"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:52:57 -0700
+IronPort-SDR: Npc9IP5GJnDHn3tW7dPtZlA7CcT6572KfKtlCH/xLBwxlDLiErCqnJYoij4YqNtKHAawJOKpk+
+ ueTtmAjdNZ+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
+   d="scan'208";a="299538165"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 26 Aug 2020 09:52:55 -0700
+Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.186])
+        by linux.intel.com (Postfix) with ESMTP id AC9E25805ED;
+        Wed, 26 Aug 2020 09:52:53 -0700 (PDT)
+Message-ID: <39d26cecd7e911c6527e05fbe5049b13a5d53788.camel@gmail.com>
+Subject: Re: [PATCH] intel_idle: Add ICL support
+From:   Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Guilhem Lettron <guilhem@barpilot.io>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 26 Aug 2020 19:52:52 +0300
+In-Reply-To: <CAJZ5v0gPY+7YBeWwszoNBwsbKLFOEeuLaekdX62_gvbHXB8xoA@mail.gmail.com>
+References: <20200826120421.44356-1-guilhem@barpilot.io>
+         <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
+         <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
+         <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
+         <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
+         <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
+         <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
+         <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
+         <CAJZ5v0j4FXH26rZCjM9Csd56skPVbRpM7iFcKYAFMmLFX54+bg@mail.gmail.com>
+         <e9e6823d63fe2b9938e43a14c136b89aec0c503b.camel@gmail.com>
+         <CAJZ5v0gPY+7YBeWwszoNBwsbKLFOEeuLaekdX62_gvbHXB8xoA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200826164533.GC31748@kozik-lap>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 06:45:33PM +0200, Krzysztof Kozlowski wrote:
-> On Wed, Aug 26, 2020 at 04:59:09PM +0200, Lukasz Stelmach wrote:
- > >> +#include <linux/of.h>
-> > >> +#endif
-> > >> +#include <linux/crc32.h>
-> > >> +#include <linux/etherdevice.h>
-> > >> +#include <linux/ethtool.h>
-> > >> +#include <linux/gpio/consumer.h>
-> > >> +#include <linux/init.h>
-> > >> +#include <linux/io.h>
-> > >> +#include <linux/kmod.h>
-> > >> +#include <linux/mii.h>
-> > >> +#include <linux/module.h>
-> > >> +#include <linux/netdevice.h>
-> > >> +#include <linux/platform_device.h>
-> > >> +#include <linux/sched.h>
-> > >> +#include <linux/spi/spi.h>
-> > >> +#include <linux/timer.h>
-> > >> +#include <linux/uaccess.h>
-> > >> +#include <linux/usb.h>
-> > >> +#include <linux/version.h>
-> > >> +#include <linux/workqueue.h>
-> > >
-> > > All of these should be removed except the headers used directly in this
-> > > header.
-> > >
-> > 
-> > This is "private" header file included in all ax88796c_*.c files and
-> > these are headers required in them. It seems more conveninet to have
-> > them all listed in one place. What is the reason to do otherwise?
+On Wed, 2020-08-26 at 18:43 +0200, Rafael J. Wysocki wrote:
+> > I am curious, somehow that patch makes a difference.
 > 
-> Because:
-> 1. The header is included in other files (more than one) so each other
-> compilation unit will include all these headers, while not all of them
-> need. This has a performance penalty during preprocessing.
-> 
-> 2. You will loose the track which headers are needed, which are not. We
-> tend to keep it local, which means each compilation unit includes stuff
-> it needs. This helps removing obsolete includes later.
-> 
-> 3. Otherwise you could make one header, including all headers of Linux,
-> and then include this one header in each of C files. One to rule them
-> all.
+> It does make a difference, because it makes the processor spend more
+> time in PC2.  Which very well may be because the processor cannot
+> enter deeper C-states.
 
-... and I got one more:
-
-4. Drivers sometimes get reused, extended or they parts got reused. If
-a header includes more stuff, it simply will pollute all other units
-trying to reuse it... making the re-usage difficult. This is less likely
-reason, I mean, quite imaginary for this particular driver.
-
-I don't expect pieces of this driver to be reused... but who knows. Many
-times in the past in the kernel there was a huge work rewriting headers
-in many files, because something was including something else and we
-wanted to decouple these things.  Therefore following the pattern -
-include stuff you explicitly use - helps in every case.
-
-Best regards,
-Krzysztof
+OK, you are right, we do not indeed have PC10 in both cases. The file
+was wrapped and I unwrapped it incorrectly. So indeed this is the real
+problem to solve, and the patch does not solve it.
 
