@@ -2,391 +2,102 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FE9EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D37992078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:48:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="c/3m8GvN"
+	by mail.kernel.org (Postfix) with ESMTP id B52602078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598467737;
+	bh=XBr/fnbwBz/TLqTnqck7d9QMDktEe+KFnwu1ysa+BqY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=eOfW1wlLiSUOMDZpeyCRSvArySMjeBZzf6OR/HNa35bQ+435DlUyb0/VhrU+tNf+7
+	 Izm86CeImSiVS+sqwL5CzJiMHdv63KgV9BlEHy746xWjPrtjVXMUk+bSj3yvhiKEAg
+	 8PliYjoNz4dixnbftC+GPCOUYvqM+IWOHa0sVgis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgHZSsG (ORCPT
+        id S1727786AbgHZSs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:48:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42924 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgHZSr5 (ORCPT
+        Wed, 26 Aug 2020 14:48:56 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41348 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgHZSsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:47:57 -0400
-Received: from mail-qv1-xf49.google.com (mail-qv1-xf49.google.com [IPv6:2607:f8b0:4864:20::f49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4B6C061574
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 11:47:57 -0700 (PDT)
-Received: by mail-qv1-xf49.google.com with SMTP id q12so2304562qvm.19
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 11:47:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=et/UFlijeTnkcTF5HsUJkethOI/YyNciPaOhWERts3k=;
-        b=c/3m8GvNCUP/NPFQiNTK9C6A+fZB1R/RUbOwFtDEpBCAXgM1Nnm53YxCZcAAIaorLJ
-         7oezuM2Vdiw1SMFeZakK2fK5ShOaBsbRqVrx1ClfaU/HEtm/Ptb10WYcpiuQWaRuFXwS
-         HYGy57l0gxUsSEPSZtMvaJIl695iLd7hURdlSy5Nb6sMt4em4Y+xwsclK/ErZAI3CEmG
-         0ixei4DFoNlDlcoJpB+TaazPHM7+Ptri2S78GF5xaQ2Q8HX0mnsyGUmgQ1tG+Bz7nL/i
-         GfdAJiuzZeL02e+D2zXNZ/7XhIR7IfD4lRKWRanJxiBqE6as2ru8r940ADV/qx29ncgS
-         uJAg==
+        Wed, 26 Aug 2020 14:48:55 -0400
+Received: by mail-io1-f66.google.com with SMTP id m23so3206956iol.8;
+        Wed, 26 Aug 2020 11:48:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=et/UFlijeTnkcTF5HsUJkethOI/YyNciPaOhWERts3k=;
-        b=AG9naWvkRvrn7ZU3kTDofEVNjWrYFII6+xopI/nxgUaqYtoSZPrFNn2/xXLsH1svQ3
-         RO6YPNvaL9zBUYhlNOLOk4vWwTVme+46zFDwkDDrw+tU7oYyc3QKZ3Yk+Jl+XMHCCUOa
-         NkwoJOJhq1zESmZ0blWK6NF1W3MfnWscopQGpHHpGVTz2e4kUxrbxJDyQymipJ0DpndD
-         inrlMpLWpIFk4hd90Ka+7YBITcM5dme39w3ve/YNLatZ1vp43oEUz5P96Eg0/ZuhTLC8
-         0VXXyRO/gL2k+uEBN0cKSzN0uLPSQZjRgIT7J9YgmYV9lEuer/F1OaDXIeJMvTe7cgVy
-         rz1w==
-X-Gm-Message-State: AOAM531FgLfxFJduBbpQOAaqnfu0JW78pr5YVXEbPHRdbKrUFlQSQi6w
-        fYYPlzfGRpJhz3FC+1HEfNWL9qhl
-X-Google-Smtp-Source: ABdhPJwGcGI3kbcWhgvCAy+sL7bKQspD2Litbb5iyKG1svIUsTRKR7wtCeuVPcYSXuIKE3P53O5uQdeB
-X-Received: from posk.svl.corp.google.com ([2620:15c:2cd:202:7220:84ff:fe09:7598])
- (user=posk job=sendgmr) by 2002:a0c:f849:: with SMTP id g9mr15498952qvo.80.1598467676794;
- Wed, 26 Aug 2020 11:47:56 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 11:47:50 -0700
-In-Reply-To: <20200826184750.3671821-1-posk@google.com>
-Message-Id: <20200826184750.3671821-2-posk@google.com>
-Mime-Version: 1.0
-References: <20200826184750.3671821-1-posk@google.com>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH 2/2 v4] rseq/selftests: test MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
-From:   Peter Oskolkov <posk@google.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Paul Turner <pjt@google.com>,
-        Chris Kennelly <ckennelly@google.com>,
-        Peter Oskolkov <posk@posk.io>, Peter Oskolkov <posk@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ANVjB6Oqn2d1pZe/e10TGufV/gtKnuBQp7HE23A4Kz8=;
+        b=bM1ZVTcBDrTz63l+K6iKE6OY/K74r2k0IaL1R2KYui41fjk+OJFyB7ubeG7zBi0yzQ
+         uYJEu8lJIEFyyfqp8OP7WiiLRICdjALUAZfjYGjyNTN51xwz7Y7GlWcH65rmRx9fYQMF
+         VFhv/PuKNC3u95t0gJ6jTSHEMmrLBcqYzpW5odEAHZnulD1RYH4E6YHBg1bL6Mf/OimT
+         oIMT7C6RYo9TRd25AH6DQJ3O0ks6nCHbgmu4qlK1cKuUXhnsnjJvTkKooI1dBp50ytW9
+         cCLwpUrYFqbWIf//mXlt6UHunqCsNQ8EwL4IEI0aPoLg2v/EGJBjpf01zOedmrCipS18
+         K7vQ==
+X-Gm-Message-State: AOAM533jp0ix5O9KxfL7qGU0vxMIhfWcSM0lRmjtKYPpH0oMtAN/O2Wj
+        4zRNoIo4Ze7Yvt34nJxT+gGcIuykuVVC
+X-Google-Smtp-Source: ABdhPJxCGQDbXnwHYxRdKiwLONGRlHhRoTm815Iaj2AA0tWZ3EoOypxgdG+IXPtFbxHb2B2WuP+pTw==
+X-Received: by 2002:a05:6602:280f:: with SMTP id d15mr5477882ioe.200.1598467734302;
+        Wed, 26 Aug 2020 11:48:54 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.249])
+        by smtp.googlemail.com with ESMTPSA id c2sm1609226iow.6.2020.08.26.11.48.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 11:48:53 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH 1/3] dt-bindings: sound: Remove unused 'linux,hdmi-audio'
+Date:   Wed, 26 Aug 2020 12:48:49 -0600
+Message-Id: <20200826184851.3431531-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on Google-internal RSEQ work done by
-Paul Turner and Andrew Hunter.
+The binding was added in 2013 and has had no driver since 2015.
 
-This patch adds a selftest for MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ.
-The test quite often fails without the previous patch in this patchset,
-but consistently passes with it.
-
-v3: added rseq_offset_deref_addv() to x86_64 to make the test
-    more explicit; on other architectures I kept using existing
-    rseq_cmpeqv_cmpeqv_storev() as I have no easy way to test
-    there.  Added a comment explaining why the test works this way.
-v4: skipped the test if rseq_offset_deref_addv() is not present
-    (that is, on all architectures other than x86_64).
-
-Signed-off-by: Peter Oskolkov <posk@google.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../selftests/rseq/basic_percpu_ops_test.c    | 187 ++++++++++++++++++
- tools/testing/selftests/rseq/rseq-x86.h       |  57 ++++++
- 2 files changed, 244 insertions(+)
+ Documentation/devicetree/bindings/sound/hdmi.txt | 16 ----------------
+ 1 file changed, 16 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/hdmi.txt
 
-diff --git a/tools/testing/selftests/rseq/basic_percpu_ops_test.c b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-index eb3f6db36d36..e6e10ba4b9ed 100644
---- a/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-+++ b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-@@ -3,16 +3,24 @@
- #include <assert.h>
- #include <pthread.h>
- #include <sched.h>
-+#include <stdatomic.h>
- #include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <stddef.h>
-+#include <syscall.h>
-+#include <unistd.h>
- 
- #include "rseq.h"
- 
- #define ARRAY_SIZE(arr)	(sizeof(arr) / sizeof((arr)[0]))
- 
-+/* The local <linux/membarrier.h> may not contain the commands below. */
-+#define MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ	(1<<7)
-+#define MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ	(1<<8)
-+#define MEMBARRIER_CMD_FLAG_CPU		(1<<0)
-+
- struct percpu_lock_entry {
- 	intptr_t v;
- } __attribute__((aligned(128)));
-@@ -289,6 +297,183 @@ void test_percpu_list(void)
- 	assert(sum == expected_sum);
- }
- 
-+struct test_membarrier_thread_args {
-+	int stop;
-+	intptr_t percpu_list_ptr;
-+};
-+
-+/* Worker threads modify data in their "active" percpu lists. */
-+void *test_membarrier_worker_thread(void *arg)
-+{
-+	struct test_membarrier_thread_args *args =
-+		(struct test_membarrier_thread_args *)arg;
-+	const int iters = 10 * 1000 * 1000;
-+	int i;
-+
-+	if (rseq_register_current_thread()) {
-+		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+
-+	/* Wait for initialization. */
-+	while (!atomic_load(&args->percpu_list_ptr)) {}
-+
-+	for (i = 0; i < iters; ++i) {
-+		int ret;
-+
-+		do {
-+			int cpu = rseq_cpu_start();
-+
-+			ret = rseq_offset_deref_addv(&args->percpu_list_ptr,
-+							128 * cpu, 1, cpu);
-+		} while (rseq_unlikely(ret));
-+	}
-+
-+	if (rseq_unregister_current_thread()) {
-+		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+	return NULL;
-+}
-+
-+void test_membarrier_init_percpu_list(struct percpu_list *list)
-+{
-+	int i;
-+
-+	memset(list, 0, sizeof(*list));
-+	for (i = 0; i < CPU_SETSIZE; i++) {
-+		struct percpu_list_node *node;
-+
-+		node = malloc(sizeof(*node));
-+		assert(node);
-+		node->data = 0;
-+		node->next = NULL;
-+		list->c[i].head = node;
-+	}
-+}
-+
-+void test_membarrier_free_percpu_list(struct percpu_list *list)
-+{
-+	int i;
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		free(list->c[i].head);
-+}
-+
-+static int sys_membarrier(int cmd, int flags, int cpu_id)
-+{
-+	return syscall(__NR_membarrier, cmd, flags, cpu_id);
-+}
-+
-+/*
-+ * The manager thread swaps per-cpu lists that worker threads see,
-+ * and validates that there are no unexpected modifications.
-+ */
-+void *test_membarrier_manager_thread(void *arg)
-+{
-+	struct test_membarrier_thread_args *args =
-+		(struct test_membarrier_thread_args *)arg;
-+	struct percpu_list list_a, list_b;
-+	intptr_t expect_a = 0, expect_b = 0;
-+	int cpu_a = 0, cpu_b = 0;
-+
-+	if (rseq_register_current_thread()) {
-+		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+
-+	/* Init lists. */
-+	test_membarrier_init_percpu_list(&list_a);
-+	test_membarrier_init_percpu_list(&list_b);
-+
-+	atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
-+
-+	while (!atomic_load(&args->stop)) {
-+		/* list_a is "active". */
-+		cpu_a = rand() % CPU_SETSIZE;
-+		/*
-+		 * As list_b is "inactive", we should never see changes
-+		 * to list_b.
-+		 */
-+		if (expect_b != atomic_load(&list_b.c[cpu_b].head->data)) {
-+			fprintf(stderr, "Membarrier test failed\n");
-+			abort();
-+		}
-+
-+		/* Make list_b "active". */
-+		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_b);
-+		sys_membarrier(MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ,
-+			       MEMBARRIER_CMD_FLAG_CPU, cpu_a);
-+		/*
-+		 * Cpu A should now only modify list_b, so we values
-+		 * in list_a should be stable.
-+		 */
-+		expect_a = atomic_load(&list_a.c[cpu_a].head->data);
-+
-+		cpu_b = rand() % CPU_SETSIZE;
-+		/*
-+		 * As list_a is "inactive", we should never see changes
-+		 * to list_a.
-+		 */
-+		if (expect_a != atomic_load(&list_a.c[cpu_a].head->data)) {
-+			fprintf(stderr, "Membarrier test failed\n");
-+			abort();
-+		}
-+
-+		/* Make list_a "active". */
-+		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
-+		sys_membarrier(MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ,
-+			       MEMBARRIER_CMD_FLAG_CPU, cpu_b);
-+		/* Remember a value from list_b. */
-+		expect_b = atomic_load(&list_b.c[cpu_b].head->data);
-+	}
-+
-+	test_membarrier_free_percpu_list(&list_a);
-+	test_membarrier_free_percpu_list(&list_b);
-+
-+	if (rseq_unregister_current_thread()) {
-+		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+	return NULL;
-+}
-+
-+/* Test MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU membarrier command. */
-+void test_membarrier(void)
-+{
-+#ifndef RSEQ_ARCH_HAS_OFFSET_DEREF_ADDV
-+	fprintf(stderr, "rseq_offset_deref_addv is not implemented on this architecture. "
-+			"Skipping membarrier test.\n");
-+	return;
-+#else
-+	struct test_membarrier_thread_args thread_args;
-+	pthread_t worker_threads[CPU_SETSIZE];
-+	pthread_t manager_thread;
-+	int i;
-+
-+	sys_membarrier(MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ, 0, 0);
-+
-+	thread_args.stop = 0;
-+	thread_args.percpu_list_ptr = 0;
-+	pthread_create(&manager_thread, NULL,
-+		       test_membarrier_manager_thread, &thread_args);
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		pthread_create(&worker_threads[i], NULL,
-+		       test_membarrier_worker_thread, &thread_args);
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		pthread_join(worker_threads[i], NULL);
-+
-+	atomic_store(&thread_args.stop, 1);
-+	pthread_join(manager_thread, NULL);
-+#endif
-+}
-+
- int main(int argc, char **argv)
- {
- 	if (rseq_register_current_thread()) {
-@@ -300,6 +485,8 @@ int main(int argc, char **argv)
- 	test_percpu_spinlock();
- 	printf("percpu_list\n");
- 	test_percpu_list();
-+	printf("membarrier\n");
-+	test_membarrier();
- 	if (rseq_unregister_current_thread()) {
- 		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
- 			errno, strerror(errno));
-diff --git a/tools/testing/selftests/rseq/rseq-x86.h b/tools/testing/selftests/rseq/rseq-x86.h
-index b2da6004fe30..640411518e46 100644
---- a/tools/testing/selftests/rseq/rseq-x86.h
-+++ b/tools/testing/selftests/rseq/rseq-x86.h
-@@ -279,6 +279,63 @@ int rseq_addv(intptr_t *v, intptr_t count, int cpu)
- #endif
- }
- 
-+#define RSEQ_ARCH_HAS_OFFSET_DEREF_ADDV
-+
-+/*
-+ *   pval = *(ptr+off)
-+ *  *pval += inc;
-+ */
-+static inline __attribute__((always_inline))
-+int rseq_offset_deref_addv(intptr_t *ptr, off_t off, intptr_t inc, int cpu)
-+{
-+	RSEQ_INJECT_C(9)
-+
-+	__asm__ __volatile__ goto (
-+		RSEQ_ASM_DEFINE_TABLE(3, 1f, 2f, 4f) /* start, commit, abort */
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error1])
-+#endif
-+		/* Start rseq by storing table entry pointer into rseq_cs. */
-+		RSEQ_ASM_STORE_RSEQ_CS(1, 3b, RSEQ_CS_OFFSET(%[rseq_abi]))
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, RSEQ_CPU_ID_OFFSET(%[rseq_abi]), 4f)
-+		RSEQ_INJECT_ASM(3)
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, RSEQ_CPU_ID_OFFSET(%[rseq_abi]), %l[error1])
-+#endif
-+		/* get p+v */
-+		"movq %[ptr], %%rbx\n\t"
-+		"addq %[off], %%rbx\n\t"
-+		/* get pv */
-+		"movq (%%rbx), %%rcx\n\t"
-+		/* *pv += inc */
-+		"addq %[inc], (%%rcx)\n\t"
-+		"2:\n\t"
-+		RSEQ_INJECT_ASM(4)
-+		RSEQ_ASM_DEFINE_ABORT(4, "", abort)
-+		: /* gcc asm goto does not allow outputs */
-+		: [cpu_id]		"r" (cpu),
-+		  [rseq_abi]		"r" (&__rseq_abi),
-+		  /* final store input */
-+		  [ptr]			"m" (*ptr),
-+		  [off]			"er" (off),
-+		  [inc]			"er" (inc)
-+		: "memory", "cc", "rax", "rbx", "rcx"
-+		  RSEQ_INJECT_CLOBBER
-+		: abort
-+#ifdef RSEQ_COMPARE_TWICE
-+		  , error1
-+#endif
-+	);
-+	return 0;
-+abort:
-+	RSEQ_INJECT_FAILED
-+	return -1;
-+#ifdef RSEQ_COMPARE_TWICE
-+error1:
-+	rseq_bug("cpu_id comparison failed");
-+#endif
-+}
-+
- static inline __attribute__((always_inline))
- int rseq_cmpeqv_trystorev_storev(intptr_t *v, intptr_t expect,
- 				 intptr_t *v2, intptr_t newv2,
+diff --git a/Documentation/devicetree/bindings/sound/hdmi.txt b/Documentation/devicetree/bindings/sound/hdmi.txt
+deleted file mode 100644
+index 56407c30e954..000000000000
+--- a/Documentation/devicetree/bindings/sound/hdmi.txt
++++ /dev/null
+@@ -1,16 +0,0 @@
+-Device-Tree bindings for dummy HDMI codec
+-
+-Required properties:
+-	- compatible: should be "linux,hdmi-audio".
+-
+-CODEC output pins:
+-  * TX
+-
+-CODEC input pins:
+-  * RX
+-
+-Example node:
+-
+-	hdmi_audio: hdmi_audio@0 {
+-		compatible = "linux,hdmi-audio";
+-	};
 -- 
-2.28.0.297.g1956fa8f8d-goog
+2.25.1
 
