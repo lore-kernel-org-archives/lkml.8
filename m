@@ -2,55 +2,85 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5290FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7478920737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FBD620737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:56:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRtgxN04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgHZCxu (ORCPT
+        id S1726759AbgHZC41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 22:53:50 -0400
-Received: from mga05.intel.com ([192.55.52.43]:43725 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726793AbgHZCxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 22:53:49 -0400
-IronPort-SDR: ZWSpoXqefCkNCqaIOIFdmIgf8mF4XCYiKcr8i1yAYe9p6+C4j3++73BLdy0i56Vy6t/XOhaBWk
- jW+v9cJxL1NA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="241042622"
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="241042622"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 19:53:42 -0700
-IronPort-SDR: 3jHNgUz/QtngVIFtUyejaI2JwGGqvmSLiE81xtG4juH9HB0EVbULMEy6+CoSS5E4jNaKDAK7uJ
- CBcTpkXNiFOg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="323019916"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga004.fm.intel.com with ESMTP; 25 Aug 2020 19:53:39 -0700
-Cc:     baolu.lu@linux.intel.com, CobeChen-oc@zhaoxin.com,
-        RaymondPang-oc@zhaoxin.com
-Subject: Re: [PATCH] iommu/vt-d:Add support for detecting ACPI device in RMRR
-To:     FelixCuioc <FelixCui-oc@zhaoxin.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        David Woodhouse <dwmw2@infradead.org>
-References: <20200818024441.2317-1-FelixCui-oc@zhaoxin.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <1d0d696a-8459-24f9-355d-63dc114dc008@linux.intel.com>
-Date:   Wed, 26 Aug 2020 10:48:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 25 Aug 2020 22:56:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36196 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgHZC40 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 22:56:26 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B76FC061574;
+        Tue, 25 Aug 2020 19:56:26 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id n3so442356pjq.1;
+        Tue, 25 Aug 2020 19:56:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hbFEodepPvZbmGlOCAW6pdL+PginykbrTuYJhMivWLU=;
+        b=JRtgxN04gxU/IDzMXlbNw78semo21YBgHHcNoAJbnR8jpjdjspaNQ1Mftdhsz9QGPH
+         jlSF1BkqJEhpSeIj0gismWgIY1pyC4ypjxqBmwTFct/ARCWxtawBzaXiXjMWGSDKTESn
+         cm/hayB1tXowLPiC1gKmKFBJo1YOJLlnQMyLKmDHMvdV38Y1F7qfmQZiHFtCDkMfWA/R
+         LBMwbalKomRo2k8WmJ5V4tFsIATzLx4qh+LxdhaPLM2eZYGDJa08RG134oy7zYAjtzSA
+         obq5uhESHqOOIEF8Ddyg4Muc+sOAgPW4LQRgDEQ2LcsBc7ZOV4v74iwJi2DAzWCofocD
+         PR1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hbFEodepPvZbmGlOCAW6pdL+PginykbrTuYJhMivWLU=;
+        b=Lh4ZMXM8cam+6GBjh/MGfbavfA+0pGzDIDmHVgkkL2FYWSygtvl4mbgsDoKZkXzq35
+         RpknLIzgFOtIURHUMbuTJ5NoZebIhGXmYv+7ImkCIZop1VBzbhRIXusWtfxTiN01plUu
+         EizJsjDUKHA02WKth19MbuE8PRDOxDPOOGD6g6+5FsV62oi24OrlEkvLyh8yHAEusp/C
+         bMlPUK2M1dp++YF2/shRJPYTf/OG74hhtEd7Y2NCCVbeMd6fMWoc9WhR7CUBB065qpTN
+         gnoF16L8ITsu79yfrqKPEscG40RVh2U8f3yfYDj7jL70YJ7Vq9Hnx02Yht3RLIFlnpuX
+         mVKA==
+X-Gm-Message-State: AOAM530UX62vJ2YUqdIdft9peeQVeL3bjMldj7LaI2ocOBXT5x+v2pmX
+        BnghHGrDosMlx4VTqAJNV5VmKFDXGKE=
+X-Google-Smtp-Source: ABdhPJxZm0kD5dvuB19oPRwFNo47AjWTDEpT6SxPsjOG3h5zKWKc4algdeVl7DB4SDtIoJIXo3fWyA==
+X-Received: by 2002:a17:90a:19c8:: with SMTP id 8mr3746355pjj.152.1598410585817;
+        Tue, 25 Aug 2020 19:56:25 -0700 (PDT)
+Received: from [192.168.1.200] (FL1-111-169-205-196.hyg.mesh.ad.jp. [111.169.205.196])
+        by smtp.gmail.com with ESMTPSA id fz19sm397834pjb.40.2020.08.25.19.56.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 19:56:25 -0700 (PDT)
+Subject: Re: [PATCH v3] exfat: integrates dir-entry getting and validation
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
+        mori.takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        'Sungjong Seo' <sj1557.seo@samsung.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20200806010250epcas1p482847d6d906fbf0ccd618c7d1cacd12e@epcas1p4.samsung.com>
+ <20200806010229.24690-1-kohada.t2@gmail.com>
+ <003c01d66edc$edbb1690$c93143b0$@samsung.com>
+ <ca3b2b52-1abc-939c-aa11-8c7d12e4eb2e@gmail.com>
+ <000001d67787$d3abcbb0$7b036310$@samsung.com>
+ <fdaff3a3-99ba-8b9e-bdaf-9bcf9d7208e0@gmail.com>
+ <000101d67b44$ac458c80$04d0a580$@samsung.com>
+From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
+Message-ID: <d1df9cca-3020-9e1e-0f3d-9db6752a22b6@gmail.com>
+Date:   Wed, 26 Aug 2020 11:56:22 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200818024441.2317-1-FelixCui-oc@zhaoxin.com>
+In-Reply-To: <000101d67b44$ac458c80$04d0a580$@samsung.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -59,232 +89,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Felix,
+On 2020/08/26 10:03, Namjae Jeon wrote:
+>> Second: Range validation and type validation should not be separated.
+>> When I started making this patch, I intended to add only range validation.
+>> However, after the caller gets the ep, the type validation follows.
+>> Get ep, null check of ep (= range verification), type verification is a series of procedures.
+>> There would be no reason to keep them independent anymore.
+>> Range and type validation is enforced when the caller uses ep.
+> You can add a validate flags as argument of exfat_get_dentry_set(), e.g. none, basic and strict.
+> none : only range validation.
+> basic : range + type validation.
+> strict : range + type + checksum and name length, etc.
 
-On 8/18/20 10:44 AM, FelixCuioc wrote:
-> Some ACPI devices need to issue dma requests to access
-> the reserved memory area.BIOS uses the device scope type
-> ACPI_NAMESPACE_DEVICE in RMRR to report these ACPI devices.
-> This patch add support for detecting ACPI devices in RMRR.
-> 
+Currently, various types of verification will not be needed.
+Let's add it when we need it.
+>   
+>>> -	/* validiate cached dentries */
+>>> -	for (i = 1; i < num_entries; i++) {
+>>> -		ep = exfat_get_dentry_cached(es, i);
+>>> -		if (!exfat_validate_entry(exfat_get_entry_type(ep), &mode))
+>>> +	ep = exfat_get_dentry_cached(es, ENTRY_STREAM);
+>>> +	if (!ep || ep->type != EXFAT_STREAM)
+>>> +		goto free_es;
+>>> +	es->de[ENTRY_STREAM] = ep;
+>>
+>> The value contained in stream-ext dir-entry should not be used before validating the EntrySet checksum.
+>> So I would insert EntrySet checksum validation here.
+>> In that case, the checksum verification loop would be followed by the TYPE_NAME verification loop, can
+>> you acceptable?
+> Yes. That would be great.
 
-If you are willing to submit a new version of this series, can you
-please add the version tag (commit title) and a change log (under the
-tear line)?
+OK.
+I'll add TYPE_NAME verification after checksum verification, in next patch.
+However, I think it is enough to validate TYPE_NAME when extracting name.
+Could you please tell me why you think you need TYPE_NAME validation here?
 
-Best regards,
-baolu
 
-> Signed-off-by: FelixCuioc <FelixCui-oc@zhaoxin.com>
-> ---
->   drivers/iommu/intel/dmar.c  | 74 ++++++++++++++++++++-----------------
->   drivers/iommu/intel/iommu.c | 22 ++++++++++-
->   include/linux/dmar.h        | 12 +++++-
->   3 files changed, 72 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-> index 93e6345f3414..024ca38dba12 100644
-> --- a/drivers/iommu/intel/dmar.c
-> +++ b/drivers/iommu/intel/dmar.c
-> @@ -215,7 +215,7 @@ static bool dmar_match_pci_path(struct dmar_pci_notify_info *info, int bus,
->   }
->   
->   /* Return: > 0 if match found, 0 if no match found, < 0 if error happens */
-> -int dmar_insert_dev_scope(struct dmar_pci_notify_info *info,
-> +int dmar_pci_insert_dev_scope(struct dmar_pci_notify_info *info,
->   			  void *start, void*end, u16 segment,
->   			  struct dmar_dev_scope *devices,
->   			  int devices_cnt)
-> @@ -304,7 +304,7 @@ static int dmar_pci_bus_add_dev(struct dmar_pci_notify_info *info)
->   
->   		drhd = container_of(dmaru->hdr,
->   				    struct acpi_dmar_hardware_unit, header);
-> -		ret = dmar_insert_dev_scope(info, (void *)(drhd + 1),
-> +		ret = dmar_pci_insert_dev_scope(info, (void *)(drhd + 1),
->   				((void *)drhd) + drhd->header.length,
->   				dmaru->segment,
->   				dmaru->devices, dmaru->devices_cnt);
-> @@ -696,48 +696,56 @@ dmar_find_matched_drhd_unit(struct pci_dev *dev)
->   
->   	return dmaru;
->   }
-> -
-> -static void __init dmar_acpi_insert_dev_scope(u8 device_number,
-> -					      struct acpi_device *adev)
-> +int dmar_acpi_insert_dev_scope(u8 device_number,
-> +				struct acpi_device *adev,
-> +				void *start, void *end,
-> +				struct dmar_dev_scope *devices,
-> +				int devices_cnt)
->   {
-> -	struct dmar_drhd_unit *dmaru;
-> -	struct acpi_dmar_hardware_unit *drhd;
->   	struct acpi_dmar_device_scope *scope;
->   	struct device *tmp;
->   	int i;
->   	struct acpi_dmar_pci_path *path;
->   
-> +	for (; start < end; start += scope->length) {
-> +		scope = start;
-> +		if (scope->entry_type != ACPI_DMAR_SCOPE_TYPE_NAMESPACE)
-> +			continue;
-> +		if (scope->enumeration_id != device_number)
-> +			continue;
-> +		path = (void *)(scope + 1);
-> +		for_each_dev_scope(devices, devices_cnt, i, tmp)
-> +			if (tmp == NULL) {
-> +				devices[i].bus = scope->bus;
-> +				devices[i].devfn = PCI_DEVFN(path->device, path->function);
-> +				rcu_assign_pointer(devices[i].dev,
-> +						   get_device(&adev->dev));
-> +				return 1;
-> +			}
-> +		WARN_ON(i >= devices_cnt);
-> +	}
-> +	return 0;
-> +}
-> +static int dmar_acpi_bus_add_dev(u8 device_number, struct acpi_device *adev)
-> +{
-> +	struct dmar_drhd_unit *dmaru;
-> +	struct acpi_dmar_hardware_unit *drhd;
-> +	int ret = 0;
-> +
->   	for_each_drhd_unit(dmaru) {
->   		drhd = container_of(dmaru->hdr,
->   				    struct acpi_dmar_hardware_unit,
->   				    header);
-> +		ret = dmar_acpi_insert_dev_scope(device_number, adev, (void *)(drhd+1),
-> +						((void *)drhd)+drhd->header.length,
-> +						dmaru->devices, dmaru->devices_cnt);
-> +		if (ret)
-> +			break;
-> +	}
-> +	ret = dmar_rmrr_add_acpi_dev(device_number, adev);
->   
-> -		for (scope = (void *)(drhd + 1);
-> -		     (unsigned long)scope < ((unsigned long)drhd) + drhd->header.length;
-> -		     scope = ((void *)scope) + scope->length) {
-> -			if (scope->entry_type != ACPI_DMAR_SCOPE_TYPE_NAMESPACE)
-> -				continue;
-> -			if (scope->enumeration_id != device_number)
-> -				continue;
-> +	return ret;
->   
-> -			path = (void *)(scope + 1);
-> -			pr_info("ACPI device \"%s\" under DMAR at %llx as %02x:%02x.%d\n",
-> -				dev_name(&adev->dev), dmaru->reg_base_addr,
-> -				scope->bus, path->device, path->function);
-> -			for_each_dev_scope(dmaru->devices, dmaru->devices_cnt, i, tmp)
-> -				if (tmp == NULL) {
-> -					dmaru->devices[i].bus = scope->bus;
-> -					dmaru->devices[i].devfn = PCI_DEVFN(path->device,
-> -									    path->function);
-> -					rcu_assign_pointer(dmaru->devices[i].dev,
-> -							   get_device(&adev->dev));
-> -					return;
-> -				}
-> -			BUG_ON(i >= dmaru->devices_cnt);
-> -		}
-> -	}
-> -	pr_warn("No IOMMU scope found for ANDD enumeration ID %d (%s)\n",
-> -		device_number, dev_name(&adev->dev));
->   }
->   
->   static int __init dmar_acpi_dev_scope_init(void)
-> @@ -766,7 +774,7 @@ static int __init dmar_acpi_dev_scope_init(void)
->   				       andd->device_name);
->   				continue;
->   			}
-> -			dmar_acpi_insert_dev_scope(andd->device_number, adev);
-> +			dmar_acpi_bus_add_dev(andd->device_number, adev);
->   		}
->   	}
->   	return 0;
-> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
-> index ca557d351518..f774ef63d473 100644
-> --- a/drivers/iommu/intel/iommu.c
-> +++ b/drivers/iommu/intel/iommu.c
-> @@ -4507,6 +4507,24 @@ int dmar_find_matched_atsr_unit(struct pci_dev *dev)
->   
->   	return ret;
->   }
-> +int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev)
-> +{
-> +	int ret;
-> +	struct dmar_rmrr_unit *rmrru;
-> +	struct acpi_dmar_reserved_memory *rmrr;
-> +
-> +	list_for_each_entry(rmrru, &dmar_rmrr_units, list) {
-> +		rmrr = container_of(rmrru->hdr,
-> +				struct acpi_dmar_reserved_memory,
-> +				header);
-> +		ret = dmar_acpi_insert_dev_scope(device_number, adev, (void *)(rmrr + 1),
-> +						((void *)rmrr) + rmrr->header.length,
-> +						rmrru->devices, rmrru->devices_cnt);
-> +		if (ret)
-> +			break;
-> +	}
-> +	return 0;
-> +}
->   
->   int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
->   {
-> @@ -4523,7 +4541,7 @@ int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
->   		rmrr = container_of(rmrru->hdr,
->   				    struct acpi_dmar_reserved_memory, header);
->   		if (info->event == BUS_NOTIFY_ADD_DEVICE) {
-> -			ret = dmar_insert_dev_scope(info, (void *)(rmrr + 1),
-> +			ret = dmar_pci_insert_dev_scope(info, (void *)(rmrr + 1),
->   				((void *)rmrr) + rmrr->header.length,
->   				rmrr->segment, rmrru->devices,
->   				rmrru->devices_cnt);
-> @@ -4541,7 +4559,7 @@ int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
->   
->   		atsr = container_of(atsru->hdr, struct acpi_dmar_atsr, header);
->   		if (info->event == BUS_NOTIFY_ADD_DEVICE) {
-> -			ret = dmar_insert_dev_scope(info, (void *)(atsr + 1),
-> +			ret = dmar_pci_insert_dev_scope(info, (void *)(atsr + 1),
->   					(void *)atsr + atsr->header.length,
->   					atsr->segment, atsru->devices,
->   					atsru->devices_cnt);
-> diff --git a/include/linux/dmar.h b/include/linux/dmar.h
-> index 65565820328a..881ac61a4336 100644
-> --- a/include/linux/dmar.h
-> +++ b/include/linux/dmar.h
-> @@ -113,10 +113,14 @@ extern int dmar_parse_dev_scope(void *start, void *end, int *cnt,
->   				struct dmar_dev_scope **devices, u16 segment);
->   extern void *dmar_alloc_dev_scope(void *start, void *end, int *cnt);
->   extern void dmar_free_dev_scope(struct dmar_dev_scope **devices, int *cnt);
-> -extern int dmar_insert_dev_scope(struct dmar_pci_notify_info *info,
-> +extern int dmar_pci_insert_dev_scope(struct dmar_pci_notify_info *info,
->   				 void *start, void*end, u16 segment,
->   				 struct dmar_dev_scope *devices,
->   				 int devices_cnt);
-> +extern int dmar_acpi_insert_dev_scope(u8 device_number,
-> +				struct acpi_device *adev, void *start, void *end,
-> +				struct dmar_dev_scope *devices, int devices_cnt);
-> +
->   extern int dmar_remove_dev_scope(struct dmar_pci_notify_info *info,
->   				 u16 segment, struct dmar_dev_scope *devices,
->   				 int count);
-> @@ -140,6 +144,7 @@ extern int dmar_parse_one_atsr(struct acpi_dmar_header *header, void *arg);
->   extern int dmar_check_one_atsr(struct acpi_dmar_header *hdr, void *arg);
->   extern int dmar_release_one_atsr(struct acpi_dmar_header *hdr, void *arg);
->   extern int dmar_iommu_hotplug(struct dmar_drhd_unit *dmaru, bool insert);
-> +extern int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev);
->   extern int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info);
->   #else /* !CONFIG_INTEL_IOMMU: */
->   static inline int intel_iommu_init(void) { return -ENODEV; }
-> @@ -150,6 +155,11 @@ static inline void intel_iommu_shutdown(void) { }
->   #define	dmar_check_one_atsr		dmar_res_noop
->   #define	dmar_release_one_atsr		dmar_res_noop
->   
-> +static inline int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev)
-> +{
-> +	return 0;
-> +}
-> +
->   static inline int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
->   {
->   	return 0;
+BR
+---
+Tetsuhiro Kohada <kohada.t2@gmail.com>
 > 
