@@ -2,181 +2,175 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF71FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252EFC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 838E620825
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598420990;
-	bh=6sp8rWsIjWmvlvwsP+g2dW9kA81u8URuS8FMA6HUJcM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=JDhIlt9BZ7EqY8i2/ACF7vRGDnoAZj9eIIpIsPCFjN4wYCW6vPku91fTZeJzjhdch
-	 AR48wNNkZ0UtmAwcm1eks6IyAjkFTOPVqJR2hBJPRbqAZip5p/iqwv30ZaVhNN8tEI
-	 TGAM+OrG0n5XD8tqXW9ZqZ09aRP3gkm3mIQ6lkzg=
+	by mail.kernel.org (Postfix) with ESMTP id 0A047206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:53:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726152AbgHZFtr (ORCPT
+        id S1726125AbgHZFx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 01:49:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbgHZFtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 01:49:46 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35CCB206FA;
-        Wed, 26 Aug 2020 05:49:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598420985;
-        bh=6sp8rWsIjWmvlvwsP+g2dW9kA81u8URuS8FMA6HUJcM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RF5WxgrnA0zdjScUJzHn7bW5LeKMj+cT1EYujpp7dpDaHSzU7YsZoqM/WvEVjMgnI
-         0vzf0mkPBqSfoAshkiKMiq2XfBL0/oly7p+4g+aK+Q70YaRDHrdvS/Y0KzviUknfdF
-         FsOvokvwiYYX8k8/yKvenW/W7PeNN5bBoYFN+buY=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kAoJa-001PPP-HC; Wed, 26 Aug 2020 07:49:42 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Maital Hahn <maitalm@ti.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Raz Bouganim <r-bouganim@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Fuqian Huang <huangfq.daxian@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Revert "wlcore: Adding suppoprt for IGTK key in wlcore driver"
-Date:   Wed, 26 Aug 2020 07:49:34 +0200
-Message-Id: <f0a2cb7ea606f1a284d4c23cbf983da2954ce9b6.1598420968.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 26 Aug 2020 01:53:56 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:34979 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725928AbgHZFxz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 01:53:55 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01353;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0U6tzIW8_1598421228;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6tzIW8_1598421228)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 26 Aug 2020 13:53:49 +0800
+Subject: Re: [PATCH v18 25/32] mm/mlock: remove lru_lock on
+ TestClearPageMlocked in munlock_vma_page
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, willy@infradead.org,
+        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        shakeelb@google.com, iamjoonsoo.kim@lge.com,
+        richard.weiyang@gmail.com, kirill@shutemov.name,
+        alexander.duyck@gmail.com, rong.a.chen@intel.com, mhocko@suse.com,
+        vdavydov.dev@gmail.com, shy828301@gmail.com
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1598273705-69124-26-git-send-email-alex.shi@linux.alibaba.com>
+Message-ID: <b184e732-35b9-e6bb-e665-e7bea51b9a42@linux.alibaba.com>
+Date:   Wed, 26 Aug 2020 13:52:18 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1598273705-69124-26-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch causes a regression betwen Kernel 5.7 and 5.8 at wlcore:
-with it applied, WiFi stops working, and the Kernel starts printing
-this message every second:
+LKP reported a preemptiable issue on this patch. update and refresh
+the commit log.
 
-   wlcore: PHY firmware version: Rev 8.2.0.0.242
-   wlcore: firmware booted (Rev 8.9.0.0.79)
-   wlcore: ERROR command execute failure 14
-   ------------[ cut here ]------------
-   WARNING: CPU: 0 PID: 133 at drivers/net/wireless/ti/wlcore/main.c:795 wl12xx_queue_recovery_work.part.0+0x6c/0x74 [wlcore]
-   Modules linked in: wl18xx wlcore mac80211 libarc4 cfg80211 rfkill snd_soc_hdmi_codec crct10dif_ce wlcore_sdio adv7511 cec kirin9xx_drm(C) kirin9xx_dw_drm_dsi(C) drm_kms_helper drm ip_tables x_tables ipv6 nf_defrag_ipv6
-   CPU: 0 PID: 133 Comm: kworker/0:1 Tainted: G        WC        5.8.0+ #186
-   Hardware name: HiKey970 (DT)
-   Workqueue: events_freezable ieee80211_restart_work [mac80211]
-   pstate: 60000005 (nZCv daif -PAN -UAO BTYPE=--)
-   pc : wl12xx_queue_recovery_work.part.0+0x6c/0x74 [wlcore]
-   lr : wl12xx_queue_recovery_work+0x24/0x30 [wlcore]
-   sp : ffff8000126c3a60
-   x29: ffff8000126c3a60 x28: 00000000000025de
-   x27: 0000000000000010 x26: 0000000000000005
-   x25: ffff0001a5d49e80 x24: ffff8000092cf580
-   x23: ffff0001b7c12623 x22: ffff0001b6fcf2e8
-   x21: ffff0001b7e46200 x20: 00000000fffffffb
-   x19: ffff0001a78e6400 x18: 0000000000000030
-   x17: 0000000000000001 x16: 0000000000000001
-   x15: ffff0001b7e46670 x14: ffffffffffffffff
-   x13: ffff8000926c37d7 x12: ffff8000126c37e0
-   x11: ffff800011e01000 x10: ffff8000120526d0
-   x9 : 0000000000000000 x8 : 3431206572756c69
-   x7 : 6166206574756365 x6 : 0000000000000c2c
-   x5 : 0000000000000000 x4 : ffff0001bf1361e8
-   x3 : ffff0001bf1790b0 x2 : 0000000000000000
-   x1 : ffff0001a5d49e80 x0 : 0000000000000001
-   Call trace:
-    wl12xx_queue_recovery_work.part.0+0x6c/0x74 [wlcore]
-    wl12xx_queue_recovery_work+0x24/0x30 [wlcore]
-    wl1271_cmd_set_sta_key+0x258/0x25c [wlcore]
-    wl1271_set_key+0x7c/0x2dc [wlcore]
-    wlcore_set_key+0xe4/0x360 [wlcore]
-    wl18xx_set_key+0x48/0x1d0 [wl18xx]
-    wlcore_op_set_key+0xa4/0x180 [wlcore]
-    ieee80211_key_enable_hw_accel+0xb0/0x2d0 [mac80211]
-    ieee80211_reenable_keys+0x70/0x110 [mac80211]
-    ieee80211_reconfig+0xa00/0xca0 [mac80211]
-    ieee80211_restart_work+0xc4/0xfc [mac80211]
-    process_one_work+0x1cc/0x350
-    worker_thread+0x13c/0x470
-    kthread+0x154/0x160
-    ret_from_fork+0x10/0x30
-   ---[ end trace b1f722abf9af5919 ]---
-   wlcore: WARNING could not set keys
-   wlcore: ERROR Could not add or replace key
-   wlan0: failed to set key (4, ff:ff:ff:ff:ff:ff) to hardware (-5)
-   wlcore: Hardware recovery in progress. FW ver: Rev 8.9.0.0.79
-   wlcore: pc: 0x0, hint_sts: 0x00000040 count: 39
-   wlcore: down
-   wlcore: down
-   ieee80211 phy0: Hardware restart was requested
-   mmc_host mmc0: Bus speed (slot 0) = 400000Hz (slot req 400000Hz, actual 400000HZ div = 0)
-   mmc_host mmc0: Bus speed (slot 0) = 25000000Hz (slot req 25000000Hz, actual 25000000HZ div = 0)
-   wlcore: PHY firmware version: Rev 8.2.0.0.242
-   wlcore: firmware booted (Rev 8.9.0.0.79)
-   wlcore: ERROR command execute failure 14
-   ------------[ cut here ]------------
+From f18e8c87a045bbb8040006b6816ded1f55fa6f9c Mon Sep 17 00:00:00 2001
+From: Alex Shi <alex.shi@linux.alibaba.com>
+Date: Sat, 25 Jul 2020 22:31:03 +0800
+Subject: [PATCH] mm/mlock: remove lru_lock on TestClearPageMlocked in
+ munlock_vma_page
 
-Tested on Hikey 970.
+In the func munlock_vma_page, comments mentained lru_lock needed for
+serialization with split_huge_pages. But the page must be PageLocked
+as well as pages in split_huge_page series funcs. Thus the PageLocked
+is enough to serialize both funcs.
 
-This reverts commit 2b7aadd3b9e17e8b81eeb8d9cc46756ae4658265.
+So we could relief the TestClearPageMlocked/hpage_nr_pages which are not
+necessary under lru lock.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+As to another munlock func __munlock_pagevec, which no PageLocked
+protection and should remain lru protecting.
+
+LKP found a preempt issue on __mod_zone_page_state which need change
+to mod_zone_page_state. Thanks!
+
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/wireless/ti/wlcore/cmd.h  | 1 -
- drivers/net/wireless/ti/wlcore/main.c | 4 ----
- 2 files changed, 5 deletions(-)
+ mm/mlock.c | 43 ++++++++++++++++---------------------------
+ 1 file changed, 16 insertions(+), 27 deletions(-)
 
-diff --git a/drivers/net/wireless/ti/wlcore/cmd.h b/drivers/net/wireless/ti/wlcore/cmd.h
-index 9acd8a41ea61..f2609d5b6bf7 100644
---- a/drivers/net/wireless/ti/wlcore/cmd.h
-+++ b/drivers/net/wireless/ti/wlcore/cmd.h
-@@ -458,7 +458,6 @@ enum wl1271_cmd_key_type {
- 	KEY_TKIP = 2,
- 	KEY_AES  = 3,
- 	KEY_GEM  = 4,
--	KEY_IGTK  = 5,
- };
+diff --git a/mm/mlock.c b/mm/mlock.c
+index 0448409184e3..cd88b93b0f0d 100644
+--- a/mm/mlock.c
++++ b/mm/mlock.c
+@@ -69,9 +69,9 @@ void clear_page_mlock(struct page *page)
+ 	 *
+ 	 * See __pagevec_lru_add_fn for more explanation.
+ 	 */
+-	if (!isolate_lru_page(page)) {
++	if (!isolate_lru_page(page))
+ 		putback_lru_page(page);
+-	} else {
++	else {
+ 		/*
+ 		 * We lost the race. the page already moved to evictable list.
+ 		 */
+@@ -178,7 +178,6 @@ static void __munlock_isolation_failed(struct page *page)
+ unsigned int munlock_vma_page(struct page *page)
+ {
+ 	int nr_pages;
+-	struct lruvec *lruvec;
  
- struct wl1271_cmd_set_keys {
-diff --git a/drivers/net/wireless/ti/wlcore/main.c b/drivers/net/wireless/ti/wlcore/main.c
-index de6c8a7589ca..ef169de99224 100644
---- a/drivers/net/wireless/ti/wlcore/main.c
-+++ b/drivers/net/wireless/ti/wlcore/main.c
-@@ -3550,9 +3550,6 @@ int wlcore_set_key(struct wl1271 *wl, enum set_key_cmd cmd,
- 	case WL1271_CIPHER_SUITE_GEM:
- 		key_type = KEY_GEM;
- 		break;
--	case WLAN_CIPHER_SUITE_AES_CMAC:
--		key_type = KEY_IGTK;
--		break;
- 	default:
- 		wl1271_error("Unknown key algo 0x%x", key_conf->cipher);
+ 	/* For try_to_munlock() and to serialize with page migration */
+ 	BUG_ON(!PageLocked(page));
+@@ -186,37 +185,22 @@ unsigned int munlock_vma_page(struct page *page)
+ 	VM_BUG_ON_PAGE(PageTail(page), page);
  
-@@ -6222,7 +6219,6 @@ static int wl1271_init_ieee80211(struct wl1271 *wl)
- 		WLAN_CIPHER_SUITE_TKIP,
- 		WLAN_CIPHER_SUITE_CCMP,
- 		WL1271_CIPHER_SUITE_GEM,
--		WLAN_CIPHER_SUITE_AES_CMAC,
- 	};
+ 	/*
+-	 * Serialize split tail pages in __split_huge_page_tail() which
+-	 * might otherwise copy PageMlocked to part of the tail pages before
+-	 * we clear it in the head page. It also stabilizes thp_nr_pages().
+-	 * TestClearPageLRU can't be used here to block page isolation, since
+-	 * out of lock clear_page_mlock may interfer PageLRU/PageMlocked
+-	 * sequence, same as __pagevec_lru_add_fn, and lead the page place to
+-	 * wrong lru list here. So relay on PageLocked to stop lruvec change
+-	 * in mem_cgroup_move_account().
++	 * Serialize split tail pages in __split_huge_page_tail() by
++	 * lock_page(); Do TestClearPageMlocked/PageLRU sequence like
++	 * clear_page_mlock().
+ 	 */
+-	lruvec = lock_page_lruvec_irq(page);
+-
+-	if (!TestClearPageMlocked(page)) {
++	if (!TestClearPageMlocked(page))
+ 		/* Potentially, PTE-mapped THP: do not skip the rest PTEs */
+-		nr_pages = 1;
+-		goto unlock_out;
+-	}
++		return 0;
  
- 	/* The tx descriptor buffer */
+ 	nr_pages = thp_nr_pages(page);
+-	__mod_zone_page_state(page_zone(page), NR_MLOCK, -nr_pages);
++	mod_zone_page_state(page_zone(page), NR_MLOCK, -nr_pages);
+ 
+-	if (__munlock_isolate_lru_page(page, lruvec, true)) {
+-		unlock_page_lruvec_irq(lruvec);
++	if (!isolate_lru_page(page))
+ 		__munlock_isolated_page(page);
+-		goto out;
+-	}
+-	__munlock_isolation_failed(page);
+-
+-unlock_out:
+-	unlock_page_lruvec_irq(lruvec);
++	else
++		__munlock_isolation_failed(page);
+ 
+-out:
+ 	return nr_pages - 1;
+ }
+ 
+@@ -305,6 +289,11 @@ static void __munlock_pagevec(struct pagevec *pvec, struct zone *zone)
+ 
+ 		/* block memcg change in mem_cgroup_move_account */
+ 		lock_page_memcg(page);
++		/*
++		 * Serialize split tail pages in __split_huge_page_tail() which
++		 * might otherwise copy PageMlocked to part of the tail pages
++		 * before we clear it in the head page.
++		 */
+ 		lruvec = relock_page_lruvec_irq(page, lruvec);
+ 		if (TestClearPageMlocked(page)) {
+ 			/*
 -- 
-2.26.2
+2.17.1
 
