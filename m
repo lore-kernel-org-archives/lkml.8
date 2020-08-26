@@ -2,146 +2,158 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1614C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3CFE21741
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB2C2224D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:28:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vZ0MQN94";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jkPC6xof"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgHZO1h (ORCPT
+        id S1726854AbgHZO2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:27:37 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:43829 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727949AbgHZO1V (ORCPT
+        Wed, 26 Aug 2020 10:28:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59268 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgHZO16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:27:21 -0400
-Received: by mail-io1-f70.google.com with SMTP id f19so1347373iol.10
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:27:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=IxBmqmDRoHLcoHKmS6D2wqcsc8+BWb34PU7TknvN7DE=;
-        b=Z+Bkgb4BWCyWSYOLancvcE+e17I7kw+jndeEXaN5NrJVGbMr39KpE/4r2Yq8ckWfJt
-         c6JcTZnM+8aDEF+GshnxGdrn0ijZDO/x+d3dHbHzGdYpthlNwmfUuCt3SB+dXZjVl6iJ
-         IUdEKU/HG/2tKfBJ1qaX5BwwINAkYj19BAXhwDVlagtsX/djclbLRMtoobNiL6MUb6gf
-         FTd3wsDSSh/6wd5PFkl7r/J4EVukXhALMs/hmmbtHnPnNPq/rc1fKdNQttkH8TZZ/Iu6
-         Hl8Yian0Bo5FS/quNiTZEFtD1e3FmOxsM7lmXE2c+z5j7oWJRxFIsfGt1hNCcD/T3CJq
-         5lpg==
-X-Gm-Message-State: AOAM530CIhvFd+4ZyD8wfMXa8Ti8jsHmwSjygYv8Mjw6rnDvnKdudrxX
-        cvXBn0Ee4Vze1KfWkFB6qo8iq14d6fja18eQDz1CiRBM4bGz
-X-Google-Smtp-Source: ABdhPJzB2ln6gc3GUNhZHjsCa5AWe4c4CAaM1SmcAstLpYCF2NjbAAyvvlMwBZ3CloNI7vb/3uZW3VNzgRvMrYzJW6mAZBt/55ZE
+        Wed, 26 Aug 2020 10:27:58 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598452074;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yLI1JliWBimG+ivF3z1VwX50dlgm/KDIAccbPnUPwJQ=;
+        b=vZ0MQN940VxAwJgiVL2fdMU4aOCDK0uKAR4ZMl+9P6Z0aFtKL2WYTOlvB7xg/AcGx54knW
+        DCypEonnJIWdlmkSc/Upao1amR5z/yCXLBIV9o8pt2NpbY5iu4v2qXkSZeIpxomOvoR5UJ
+        uH5SxaU31UHt+7Ejm27bDJ3zDdQ404IEcyysrsIbpfLIV7wb0fqfy969+LupFf8nSMmV1U
+        r8SBVxsgG5Ss5TQWEdRhAHzKyw0CL71P0IxXJWkThpU7WOWzJaOF/Yf2r38ZTkAE8CnPQZ
+        s4n0xwsEag78WIHr3rWDNxJFiMFK8krl85qGhK+USJ+TC3auLk+vvu4d1nYmAw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598452074;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yLI1JliWBimG+ivF3z1VwX50dlgm/KDIAccbPnUPwJQ=;
+        b=jkPC6xofKbboBQ68bXnjzKaQ0LzRqWIsS332zGOxhvCZcTte8FT5JrpCObaEYbOPtY3c61
+        DM0S4JkSJMaxUYDg==
+To:     Alexander Graf <graf@amazon.com>, X86 ML <x86@kernel.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
+        Avi Kivity <avi@scylladb.com>,
+        "Herrenschmidt\, Benjamin" <benh@amazon.com>, robketr@amazon.de,
+        amos@scylladb.com, Brian Gerst <brgerst@gmail.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] x86/irq: Preserve vector in orig_ax for APIC code
+In-Reply-To: <20200826115357.3049-1-graf@amazon.com>
+References: <20200826115357.3049-1-graf@amazon.com>
+Date:   Wed, 26 Aug 2020 16:27:54 +0200
+Message-ID: <87k0xlv5w5.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-Received: by 2002:a02:cbb5:: with SMTP id v21mr10945733jap.88.1598452040273;
- Wed, 26 Aug 2020 07:27:20 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 07:27:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000d12fd05adc89e64@google.com>
-Subject: WARNING: refcount bug in qdisc_put (2)
-From:   syzbot <syzbot+b33c1cb0a30ebdc8a5f9@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jhs@mojatatu.com, jiri@resnulli.us,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, petrm@mellanox.com,
-        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Aug 26 2020 at 13:53, Alexander Graf wrote:
+> Commit 633260fa143 ("x86/irq: Convey vector as argument and not in ptregs")
+> changed the handover logic of the vector identifier from ~vector in orig_ax
+> to purely register based. Unfortunately, this field has another consumer
+> in the APIC code which the commit did not touch. The net result was that
+> IRQ balancing did not work and instead resulted in interrupt storms, slowing
+> down the system.
 
-syzbot found the following issue on:
+The net result is an observationof the symptom but that does not explain
+what the underlying technical issue is.
 
-HEAD commit:    6a9dc5fd lib: Revert use of fallthrough pseudo-keyword in ..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15ee850e900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
-dashboard link: https://syzkaller.appspot.com/bug?extid=b33c1cb0a30ebdc8a5f9
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15e2a461900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=176e7296900000
+> This patch restores the original semantics that orig_ax contains the vector.
+> When we receive an interrupt now, the actual vector number stays stored in
+> the orig_ax field which then gets consumed by the APIC code.
+>
+> To ensure that nobody else trips over this in the future, the patch also adds
+> comments at strategic places to warn anyone who would refactor the code that
+> there is another consumer of the field.
+>
+> With this patch in place, IRQ balancing works as expected and performance
+> levels are restored to previous levels.
 
-The issue was bisected to:
+There's a lot of 'This patch and we' in that changelog. Care to grep
+for 'This patch' in Documentation/process/ ?
 
-commit aee9caa03fc3c8b02f8f31824354d85f30e562e0
-Author: Petr Machata <petrm@mellanox.com>
-Date:   Fri Jun 26 22:45:28 2020 +0000
+> diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+> index df8c017..22e829c 100644
+> --- a/arch/x86/entry/entry_32.S
+> +++ b/arch/x86/entry/entry_32.S
+> @@ -727,7 +727,7 @@ SYM_CODE_START_LOCAL(asm_\cfunc)
+>  	ENCODE_FRAME_POINTER
+>  	movl	%esp, %eax
+>  	movl	PT_ORIG_EAX(%esp), %edx		/* get the vector from stack */
+> -	movl	$-1, PT_ORIG_EAX(%esp)		/* no syscall to restart */
+> +	/* keep vector on stack for APIC's irq_complete_move() */
 
-    net: sched: sch_red: Add qevents "early_drop" and "mark"
+Yes that's fixing your observed wreckage, but it introduces a worse one.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1453782e900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1653782e900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1253782e900000
+user space
+  -> interrupt
+       push vector into orig_ax (values are in the ranges of 0-127 and -128 - 255
+                                 except for the system vectors which do
+                                 not go through this code)
+      handle()
+      ...
+      exit_to_user_mode_loop()
+         arch_do_signal()
+            /* Did we come from a system call? */
+	    if (syscall_get_nr(current, regs) >= 0) {
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b33c1cb0a30ebdc8a5f9@syzkaller.appspotmail.com
-Fixes: aee9caa03fc3 ("net: sched: sch_red: Add qevents "early_drop" and "mark"")
+               ---> BOOM for any vector 0-127 because syscall_get_nr()
+                         resolves to regs->orig_ax
 
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 0 PID: 6850 at lib/refcount.c:28 refcount_warn_saturate+0x1d1/0x1e0 lib/refcount.c:28
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 6850 Comm: syz-executor115 Not tainted 5.9.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x4a kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:refcount_warn_saturate+0x1d1/0x1e0 lib/refcount.c:28
-Code: e9 db fe ff ff 48 89 df e8 dc ee 18 fe e9 8a fe ff ff e8 e2 d5 d8 fd 48 c7 c7 00 db 93 88 c6 05 da e4 11 07 01 e8 d1 e6 a9 fd <0f> 0b e9 af fe ff ff 0f 1f 84 00 00 00 00 00 41 56 41 55 41 54 55
-RSP: 0018:ffffc90001fe74a0 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: ffff8880946b4180 RSI: ffffffff815dafc7 RDI: fffff520003fce86
-RBP: 0000000000000003 R08: 0000000000000001 R09: ffff8880ae6318e7
-R10: 0000000000000000 R11: 0000000035383654 R12: ffff8880a0b75864
-R13: 00000000ffffffea R14: ffff88809dc40000 R15: ffff88809fa52024
- refcount_sub_and_test include/linux/refcount.h:274 [inline]
- refcount_dec_and_test include/linux/refcount.h:294 [inline]
- qdisc_put+0xbe/0xe0 net/sched/sch_generic.c:984
- qdisc_create+0xcd9/0x12e0 net/sched/sch_api.c:1295
- tc_modify_qdisc+0x4c8/0x1990 net/sched/sch_api.c:1662
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5563
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2470
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:671
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2353
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2407
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2440
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4404a9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fff85fa9228 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004404a9
-RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000004
-RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
-R10: 00000000004002c8 R11: 0000000000000246 R12: 0000000000401cb0
-R13: 0000000000401d40 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Going to be fun to debug.
 
+The below nasty hack cures it, but I hate it with a passion. I'll look
+deeper for a sane variant.
 
+Thanks,
+
+        tglx
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--- a/arch/x86/kernel/irq.c
++++ b/arch/x86/kernel/irq.c
+@@ -246,7 +246,9 @@ DEFINE_IDTENTRY_IRQ(common_interrupt)
+ 
+ 	desc = __this_cpu_read(vector_irq[vector]);
+ 	if (likely(!IS_ERR_OR_NULL(desc))) {
++		regs->orig_ax = (unsigned long)vector;
+ 		handle_irq(desc, regs);
++		regs->orig_ax = -1;
+ 	} else {
+ 		ack_APIC_irq();
