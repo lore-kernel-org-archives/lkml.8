@@ -2,87 +2,61 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D6EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF40C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 317672075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:26:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cDsq/X5V"
+	by mail.kernel.org (Postfix) with ESMTP id 7B06C2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgHZP0j (ORCPT
+        id S1727895AbgHZP31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:26:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39348 "EHLO
+        Wed, 26 Aug 2020 11:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgHZP0g (ORCPT
+        with ESMTP id S1727008AbgHZP30 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:26:36 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9493CC061574;
-        Wed, 26 Aug 2020 08:26:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+kbSD2yR9v2pWhwpsyiZqxkY0BVg0p/LK9dRxQLDYOQ=; b=cDsq/X5VEuKMenCLWm0q6T9jFP
-        +BRjLwIXzwkTQriFPNTFD+XHjLROecLv6xlo2AVtE7RWIVb2VE6ZkUeVjQFEd6zQ0L6lltp/diJFI
-        JK9K1IesrNG+lmPgJ8muvGVY8OsfoVAEcDc+BOfNagSbl+R8y9FtRKqeg4lKS21IUN6xLZ5QpeK+I
-        cDXcvwgXjEq8PFwUBRJk5iZLmvobXSE62wlTXCunUYbd5mXv3DGAWZURMJlmDqTEdlYbJFSoxSwaR
-        qeSLkbYm9Ux/t8vAAJzoKeecBSAKQG6D+tusUuxDWthKo9W9jA/jMelcb2tf1E6Ka/YmWdVrB+9W7
-        ENW1KRRA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAxJY-0004Pl-Tp; Wed, 26 Aug 2020 15:26:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 26 Aug 2020 11:29:26 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65154C061574;
+        Wed, 26 Aug 2020 08:29:26 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8D7D9303A02;
-        Wed, 26 Aug 2020 17:26:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4B1FC2BFF50C3; Wed, 26 Aug 2020 17:26:12 +0200 (CEST)
-Date:   Wed, 26 Aug 2020 17:26:12 +0200
-From:   peterz@infradead.org
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, "David S . Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: Re: [RFC PATCH 03/14] arm: kprobes: Use generic kretprobe trampoline
- handler
-Message-ID: <20200826152612.GX2674@hirez.programming.kicks-ass.net>
-References: <159844957216.510284.17683703701627367133.stgit@devnote2>
- <159844960343.510284.15315372011917043979.stgit@devnote2>
- <20200826140852.GG1362448@hirez.programming.kicks-ass.net>
- <20200826141025.GU35926@hirez.programming.kicks-ass.net>
- <20200827000405.60aa815dbb6f1417dc9da867@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827000405.60aa815dbb6f1417dc9da867@kernel.org>
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 18072135985CB;
+        Wed, 26 Aug 2020 08:12:39 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 08:28:57 -0700 (PDT)
+Message-Id: <20200826.082857.584544823490249841.davem@davemloft.net>
+To:     aranea@aixah.de
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] veth: Initialize dev->perm_addr
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200826152000.ckxrcfyetdvuvqum@vega>
+References: <20200824143828.5964-1-aranea@aixah.de>
+        <20200824.102545.1450838041398463071.davem@davemloft.net>
+        <20200826152000.ckxrcfyetdvuvqum@vega>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 26 Aug 2020 08:12:39 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 12:04:05AM +0900, Masami Hiramatsu wrote:
+From: Mira Ressel <aranea@aixah.de>
+Date: Wed, 26 Aug 2020 15:20:00 +0000
 
-> > Argh, I replied to the wrong variant, I mean the one that uses
-> > kernel_stack_pointer(regs).
-> 
-> Would you mean using kernel_stack_pointer() for the frame_pointer?
-> Some arch will be OK, but others can not get the framepointer by that.
-> (that is because the stack layout is different on the function prologue
-> and returned address, e.g. x86...)
+> I'm setting the peer->perm_addr, which would otherwise be zero, to its
+> dev_addr, which has been either generated randomly by the kernel or
+> provided by userland in a netlink attribute.
 
-Yeah, I noticed :/
-
-I was hoping to avoid some further duplication, but they're all sublty
-different.
+Which by definition makes it not necessarily a "permanent address" and
+therefore is subject to being different across boots, which is exactly
+what you don't want to happen for automatic address generation.
