@@ -2,225 +2,174 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 200E9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6339FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F05B3207F7
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598415394;
-	bh=9mwZBrs2Apei4nVXemBIp81fg2KqLJnfuW4TFPpznb0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=d8vOCkClxAJKl3ZPzkMw0RekOtCvLi2BnQiYrk/+t9n+nehM51hRETzNOSGHAd5eV
-	 /fwEdGYWEQJuQs00ld4jli6gGdcjnTwbaSoe8hgMV1hSlBX8Fkv/ag9cr5qR/tg+QT
-	 TZ+O/9OUp9lH1uwdNKdtWDB9S7a2o593/4jrYahU=
+	by mail.kernel.org (Postfix) with ESMTP id 362BE20707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:19:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ph/ow5Wb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726190AbgHZEQc (ORCPT
+        id S1726039AbgHZETS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 00:16:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725294AbgHZEQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 00:16:32 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48B9920707;
-        Wed, 26 Aug 2020 04:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598415391;
-        bh=9mwZBrs2Apei4nVXemBIp81fg2KqLJnfuW4TFPpznb0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CYIOC1oKVD8HwmrvQzY8jzONbJZQ/nz7DmztHCjJyBfo8PNv4YyBcSBTBTZ956P7I
-         fgm4gH8D6QvQyUSRJw/A+dMQoJ966IeMM7B1xpnKwnsPlhgnpXFaTQF/f/tfEQZujb
-         w8kKjDUpMgg5uUEjq5DatJM4UNgDjSWadiHB3l6Y=
-Date:   Wed, 26 Aug 2020 06:16:26 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Josh Cartwright <joshc@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: convert spmi.txt to spmi.yaml
-Message-ID: <20200826061150.3eb96ab3@coco.lan>
-In-Reply-To: <20200819230812.GB2090217@bogus>
-References: <94b055687143c9593cd4311f8bcda99a743a619f.1597850327.git.mchehab+huawei@kernel.org>
-        <20200819230812.GB2090217@bogus>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 26 Aug 2020 00:19:18 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:30916 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbgHZETO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 00:19:14 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200826041911epoutp015215fe033bde395e3a568531065b1eb6~utnm2iauG1547915479epoutp01m
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:19:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200826041911epoutp015215fe033bde395e3a568531065b1eb6~utnm2iauG1547915479epoutp01m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598415551;
+        bh=vJGhhWEMdU4RI4OZUZrLMlmVOp+37EnHBm+2cAvft5A=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=ph/ow5Wb6ctfebKa9bR+c09dMz9TtuYryQxorG2i2pQNaegLp0iek93i2v+d9lMAq
+         FcA2kzcV1OZ0razWq5DTKtwRCwrm8I/Dw/RqbnEpgGULEuo7cTBDsdTNTuPJTMoLkO
+         q/hDvylasipMBqHVlWVllI/fA7SUBdhUvgjgpGGI=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200826041911epcas1p19f1533c00e4fc98d69003ca85944f373~utnmSIz332055620556epcas1p1p;
+        Wed, 26 Aug 2020 04:19:11 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.159]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4Bbt0Y5g3pzMqYks; Wed, 26 Aug
+        2020 04:19:09 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        34.68.28578.DB2E54F5; Wed, 26 Aug 2020 13:19:09 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200826041909epcas1p108db024e965f292c5b479a341bdd76b5~utnkjO58I2055620556epcas1p1l;
+        Wed, 26 Aug 2020 04:19:09 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200826041909epsmtrp1204bee6a4dd0f9a97184e4fc19b014df~utnkimfOJ1440014400epsmtrp1O;
+        Wed, 26 Aug 2020 04:19:09 +0000 (GMT)
+X-AuditID: b6c32a39-8dfff70000006fa2-91-5f45e2bd5169
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        7E.A1.08303.DB2E54F5; Wed, 26 Aug 2020 13:19:09 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200826041908epsmtip2130885c172cdc3cfaf55c12035ad47be~utnkYYDEN2804828048epsmtip2G;
+        Wed, 26 Aug 2020 04:19:08 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <d1df9cca-3020-9e1e-0f3d-9db6752a22b6@gmail.com>
+Subject: RE: [PATCH v3] exfat: integrates dir-entry getting and validation
+Date:   Wed, 26 Aug 2020 13:19:09 +0900
+Message-ID: <002e01d67b60$0b7d82a0$227887e0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQH6G9isXEQ9sMxkt33jRW4ItYjr3QIF0gSvAfjtwRwBp6Lp0QLf0PstAjwGXzkCQUE62QDGw52qqJQvqBA=
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmvu7eR67xBqdPaFv8mHubxeLNyaks
+        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYrHl3xFWB3aPL3OOs3u0Tf7H7tF8bCWbx85Zd9k9+ras
+        YvT4vEkugC0qxyYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DX
+        LTMH6BYlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToGhQYFecWJucWleul5yfq6V
+        oYGBkSlQZUJOxsWtvxgLLvBXvLyxirWB8RBPFyMnh4SAicS1dxvYQGwhgR2MEqeuAsW5gOxP
+        jBIr1y1ghnA+M0osfrKSBabj4fQmdojELkaJN7fOsUA4LxklDnfMYQKpYhPQlfj3Zz/YXBEB
+        PYmTJ6+zgRQxCzQySSw/8QVoLgcHp4CtxIQOCxBTWMBLYl6vFEg5i4CqRP/ZQ6wgNq+ApcTF
+        5mfsELagxMmZT8COYBaQl9j+dg4zxEEKEj+fLmOFWJUkcbtlIjNEjYjE7M42sA8kBBZySGye
+        2cMI0eAicXXfDVYIW1ji1fEt7BC2lMTL/jZ2kHskBKolPu6Hmt/BKPHiuy2EbSxxc/0GVpAS
+        ZgFNifW79CHCihI7f89lhFjLJ/Huaw8rxBReiY42IYgSVYm+S4eZIGxpia72D+wTGJVmIXls
+        FpLHZiF5YBbCsgWMLKsYxVILinPTU4sNC0yRo3oTIziValnuYJz+9oPeIUYmDsZDjBIczEoi
+        vIIXneOFeFMSK6tSi/Lji0pzUosPMZoCg3ois5Rocj4wmeeVxBuaGhkbG1uYmJmbmRorifM+
+        vKUQLySQnliSmp2aWpBaBNPHxMEp1cCkrMFz3++pbdoSvvwJNwKTbqatevEkPXvqlBmuzFeO
+        p3959HxWzbPMLcHlvVtObjx/pdkw317d2Wc586EdPpy6JRUfmconxET/+zhviryO0s5ZoufE
+        lv/t+Xaia0FFq8XDyMhdm0vZ2ZZOY0kXamacHjPNe+d3x87ZXXtjW05XdM5xnfizIbV0hrtu
+        6e2a5WcmZGbHbEjw4j4m+8h8vumF0sqVJ4TinzWdKQ5yXrGap+v/a4Wy9M1r2SYwi5ReX8N/
+        ZZbQxnSeDfsaP+i7++gstN59ebOoXN3vxdsVXk5knlb3ovLxcvulx5oTvq0Tn3p2dQk7z23t
+        mHCBK9r2q00OTFv087XLCi7fa+9l9034q8RSnJFoqMVcVJwIABqdCskuBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42LZdlhJXnfvI9d4g0VzWS1+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
+        MXp83iQXwBbFZZOSmpNZllqkb5fAlXFx6y/Gggv8FS9vrGJtYDzE08XIySEhYCLxcHoTexcj
+        F4eQwA5Gia6dvUwQCWmJYyfOMHcxcgDZwhKHDxeDhIUEnjNKNPQ5gdhsAroS//7sZwOxRQT0
+        JE6evM4GModZoJlJ4tuzJcwQQ5czS/xbe4UVZBCngK3EhA4LEFNYwEtiXq8USC+LgKpE/9lD
+        rCA2r4ClxMXmZ+wQtqDEyZlPWEBsZgFtiac3n0LZ8hLb385hhjhTQeLn02WsEDckSdxumcgM
+        USMiMbuzjXkCo/AsJKNmIRk1C8moWUhaFjCyrGKUTC0ozk3PLTYsMMpLLdcrTswtLs1L10vO
+        z93ECI4qLa0djHtWfdA7xMjEwXiIUYKDWUmEV/Cic7wQb0piZVVqUX58UWlOavEhRmkOFiVx
+        3q+zFsYJCaQnlqRmp6YWpBbBZJk4OKUamNxU5UqVPwse3SrdVBHFkZ/DeUl5zvYv2XV1XX9q
+        S1gYQ8KXKVy5cSb2OFtTkQN77VyBF4VeoUFOz3YdfTol6Zh79K4JcbPaVu3+WN9/fauQqvC1
+        6QfFBMvvFF7TqNftjeq6pRah5j9dsHdPncAdjiRWiTz+3yeM59wMnsu18UDnoxlR5pqpFjIZ
+        twwXncyIWdNf9PWdmffGuWFH3JXv2k0pnDa182g0f6TRQvfuo0s3X1sy/yJXzbkvxbMqu1re
+        +k27PD+Hd79B2cpJuZNCYxoVSu++0T5hsMFYJy1vpp5p7zyO4DWNFl1f0x257H+YRwsopawJ
+        aqvq+VmyJiKmPtb2fJpEnkT78gqp0rNKLMUZiYZazEXFiQCAkxC0GQMAAA==
+X-CMS-MailID: 20200826041909epcas1p108db024e965f292c5b479a341bdd76b5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200806010250epcas1p482847d6d906fbf0ccd618c7d1cacd12e
+References: <CGME20200806010250epcas1p482847d6d906fbf0ccd618c7d1cacd12e@epcas1p4.samsung.com>
+        <20200806010229.24690-1-kohada.t2@gmail.com>
+        <003c01d66edc$edbb1690$c93143b0$@samsung.com>
+        <ca3b2b52-1abc-939c-aa11-8c7d12e4eb2e@gmail.com>
+        <000001d67787$d3abcbb0$7b036310$@samsung.com>
+        <fdaff3a3-99ba-8b9e-bdaf-9bcf9d7208e0@gmail.com>
+        <000101d67b44$ac458c80$04d0a580$@samsung.com>
+        <d1df9cca-3020-9e1e-0f3d-9db6752a22b6@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 19 Aug 2020 17:08:12 -0600
-Rob Herring <robh@kernel.org> escreveu:
-
-> Need to also define 'reg' constraints as defined by the bus:
+> On 2020/08/26 10:03, Namjae Jeon wrote:
+> >> Second: Range validation and type validation should not be separated.
+> >> When I started making this patch, I intended to add only range validation.
+> >> However, after the caller gets the ep, the type validation follows.
+> >> Get ep, null check of ep (= range verification), type verification is a series of procedures.
+> >> There would be no reason to keep them independent anymore.
+> >> Range and type validation is enforced when the caller uses ep.
+> > You can add a validate flags as argument of exfat_get_dentry_set(), e.g. none, basic and strict.
+> > none : only range validation.
+> > basic : range + type validation.
+> > strict : range + type + checksum and name length, etc.
 > 
-> properties:
->   reg:
->     minItems: 1
->     maxItems: 2  #??? Not sure about this. Is it 1 SPMI_USID and 1 \
-> SPMI_GSID entry at most?
-
-
-Each child have just one user ID (SPMI_USID). The group ID (SPMI_GSID) is an 
-optional feature. From what I know, only one group ID is allowed at most.
-So, maxItems: 2 makes sense.
-
-
->     items:
->       items:
->         - minimum: 0
->           maximum: 0xf
->         - enum: [ 0, 1 ]
-
-If I use both maxItems:2 and the above, the example produces the following
-error:
-
-	/devel/v4l/temp/Documentation/devicetree/bindings/spmi/spmi.example.dt.yaml: spmi@0: child@7:reg: Additional items are not allowed ([3, 1] was unexpected)
-
-(full DT file enclosed)
-
-This seems to be some bug at the parsing logic, which seems to be refusing
-to accept both "items" and "maxItems".
-
--
-
-That's said, looking at the code[1], only SPMI_USID is currently supported:
-
-		err = of_property_read_u32_array(node, "reg", reg, 2);
-		if (err) {
-			dev_err(&ctrl->dev,
-				"node %pOF err (%d) does not have 'reg' property\n",
-				node, err);
-			continue;
-		}
-
-		if (reg[1] != SPMI_USID) {
-			dev_err(&ctrl->dev,
-				"node %pOF contains unsupported 'reg' entry\n",
-				node);
-			continue;
-		}
-
-		if (reg[0] >= SPMI_MAX_SLAVE_ID) {
-			dev_err(&ctrl->dev, "invalid usid on node %pOF\n", node);
-			continue;
-		}
-
-So, for now, using SPMI_GSID will fail.
-
-[1] drivers/spmi/spmi.c
-
-So, I'm inclined to define reg property as:
-
-    properties:
-      reg:
-        minItems: 1
-        maxItems: 2
-        items:
-          - minimum: 0
-            maximum: 0xf
-          - enum: [ 0 ]
-            description: |
-              0 means user ID address. 1 is reserved for group ID address.
-
-And drop the group ID from the example. I'll send such version as a
-second version of this patch.
-
-Thanks,
-Mauro
-
-
-# SPDX-License-Identifier: GPL-2.0
-%YAML 1.2
----
-$id: http://devicetree.org/schemas/spmi/spmi.yaml#
-$schema: http://devicetree.org/meta-schemas/core.yaml#
-
-title: System Power Management Interface (SPMI) Controller
-
-maintainers:
-  - Josh Cartwright <joshc@codeaurora.org>
-
-description: |
-  The System Power Management (SPMI) controller is a 2-wire bus defined
-  by the MIPI Alliance for power management control to be used on SoC designs.
-
-  SPMI controllers are modelled in device tree using a generic set of
-  bindings defined here, plus any bus controller specific properties, if
-  needed.
-
-  Each SPMI controller has zero or more child nodes (up to 16 ones), each
-  one representing an unique slave at the bus.
-
-properties:
-  $nodename:
-    pattern: "spmi@.*"
-
-  reg:
-    maxItems: 1
-
-  "#address-cells":
-    const: 2
-
-  "#size-cells":
-    const: 0
-
-patternProperties:
-  ".*@([0-9]|1[0-5])$":
-    description: up to 16 child PMIC nodes
-    type: object
-
-    properties:
-      reg:
-        minItems: 1
-        maxItems: 2
-        items:
-          - minimum: 0
-            maximum: 0xf
-          - enum: [ 0, 1 ]
-
-    required:
-      - reg
-
-required:
-  - reg
-
-examples:
-  - |
-    #include <dt-bindings/spmi/spmi.h>
-
-    spmi@0 {
-      reg = <0 0>;
-
-      #address-cells = <2>;
-      #size-cells = <0>;
-
-      child@0 {
-        reg = <0 SPMI_USID>;
-      };
-
-      child@7 {
-        reg = <7 SPMI_USID>,
-              <3 SPMI_GSID>;
-      };
-    };
-
-
-
+> Currently, various types of verification will not be needed.
+> Let's add it when we need it.
+> >
+> >>> -	/* validiate cached dentries */
+> >>> -	for (i = 1; i < num_entries; i++) {
+> >>> -		ep = exfat_get_dentry_cached(es, i);
+> >>> -		if (!exfat_validate_entry(exfat_get_entry_type(ep), &mode))
+> >>> +	ep = exfat_get_dentry_cached(es, ENTRY_STREAM);
+> >>> +	if (!ep || ep->type != EXFAT_STREAM)
+> >>> +		goto free_es;
+> >>> +	es->de[ENTRY_STREAM] = ep;
+> >>
+> >> The value contained in stream-ext dir-entry should not be used before validating the EntrySet
+> checksum.
+> >> So I would insert EntrySet checksum validation here.
+> >> In that case, the checksum verification loop would be followed by the
+> >> TYPE_NAME verification loop, can you acceptable?
+> > Yes. That would be great.
+> 
+> OK.
+> I'll add TYPE_NAME verification after checksum verification, in next patch.
+> However, I think it is enough to validate TYPE_NAME when extracting name.
+> Could you please tell me why you think you need TYPE_NAME validation here?
+I've told you on previous mail. This function should return validated dentry set after checking
+file->stream->name in sequence.
+> 
+> 
+> BR
+> ---
+> Tetsuhiro Kohada <kohada.t2@gmail.com>
+> >
 
