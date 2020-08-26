@@ -2,140 +2,112 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B11BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0295BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA81207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:57:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T5C+bXP9"
+	by mail.kernel.org (Postfix) with ESMTP id C93D0207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:58:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598471928;
+	bh=mfVGJtsfCiK5g6CUnH92HrgINWp/ONFtW7ep/jchN8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jxnLA36EzLmJYL1Gdweb3EI05O8VVsNeqtXdzQEIkY4FmMLnT8J1JwUTUd2NyPzaq
+	 raAtrezlObrzNKJjxDAr+2YZD2JxSn6DIAG3Ak0DTBTtf1z8I/aeg66j8NkHEXTxAP
+	 pKUdijS3uy+6MhWlk52cSrzqWU7ssdB/P0oSxO0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHZT5x (ORCPT
+        id S1727112AbgHZT6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:57:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23760 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727050AbgHZT5t (ORCPT
+        Wed, 26 Aug 2020 15:58:47 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:35138 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726845AbgHZT6m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:57:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598471868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DXuqJrwfbCwnI98H5NI02hcjDkuIvuf4O5Gqzi6vDmc=;
-        b=T5C+bXP9yTkp0VGZqwi6N7EooR2fkreYYa71jlYsWaKfXbCfRJIa28++RVi5+W2xINswhc
-        /do7x372nJKTa4LKK51bgnfo3dVzCl6rT11hJlR/gFrhG9tfvAztPksAlrVUxYFo0HuXkO
-        1u1U9kMOovWBI49AEZSvAWB+XnYuaCY=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-550-a4V4BgvVPmew4ejly-wZVg-1; Wed, 26 Aug 2020 15:57:46 -0400
-X-MC-Unique: a4V4BgvVPmew4ejly-wZVg-1
-Received: by mail-ed1-f70.google.com with SMTP id c3so1087075edm.7
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:57:45 -0700 (PDT)
+        Wed, 26 Aug 2020 15:58:42 -0400
+Received: by mail-ej1-f68.google.com with SMTP id a26so4574013ejc.2;
+        Wed, 26 Aug 2020 12:58:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DXuqJrwfbCwnI98H5NI02hcjDkuIvuf4O5Gqzi6vDmc=;
-        b=r20ROUM7hE/+Uftp9soK9SHH0IPQNOTAU7mrwHMYrZzmyXgPSiFGjv51rLGGguzBBx
-         YeBvySt6y620KEV1qViMRL0XJkndlwRB6svHDRUp4JREDnkQp0NfRYoMIWRiDdukxQVZ
-         8AHS8zDApt4c3fdfp8dwNLAbExKwv2eFHHBjN/e/aXTyvBeUG0sELrXAqBtAJqhUVf/W
-         V53YkgvmDdYadBPZ0O+1rrslOsuW3sgwMw3K8FMgOqAPU5BYarJPjPOaVQHf6yLwry/p
-         x8+SG0UjFZR6XSNbLmasuS2/iz1Rb1TVReSdXNNHAuWys0q/twaiFXB70nzOwPTFlmTf
-         4ykg==
-X-Gm-Message-State: AOAM5334gU4x+3y/Kqnfxf0mPSd0Fd+3E2kn3wOHk4mQCbEwZQVgUd8d
-        08QnaxzKjf6a08zLlHcPAdma0hrgFG/G0+3Ju0ObEgGfivvXE5vnO57j5iNIkc8sDCPTVwksFaU
-        vmAl75/ZGTy8E5Py5bW6RfGA6
-X-Received: by 2002:a17:906:c146:: with SMTP id dp6mr14384794ejc.38.1598471864818;
-        Wed, 26 Aug 2020 12:57:44 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJymm84HHrEaEJR60+VZu48mdqNVVXAmjgsvlGr83z6u0tjMLua+wnc0FDeay9ZxJELtATkZ8g==
-X-Received: by 2002:a17:906:c146:: with SMTP id dp6mr14384775ejc.38.1598471864635;
-        Wed, 26 Aug 2020 12:57:44 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
-        by smtp.gmail.com with ESMTPSA id qk7sm3204480ejb.17.2020.08.26.12.57.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Aug 2020 12:57:43 -0700 (PDT)
-Subject: Re: [PATCH 01/24] Input: bcm-keypad - Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FZCtI/sENbrZHnL80khwCXX1Nrs/RKTExkULdecFZeQ=;
+        b=kWie/lbXdQRSFf4wtF4EtaM+sRfV++b+7IAOutHBdhLZDtsYhpjiNdoQ/27rm7F/wY
+         LFZwHD1DIvEkNFMtbBULPDeCTJKEaibPuLw6okS5oUtwP8f/UEEpvBYw6eNrpK4cCmXV
+         JDIwCSpPexYoH6oUQBWiVpr3dv+GlQuYYtHDZYWuTDffIahEZp+LM75JdYjc3UDb4LpJ
+         5T4lNQDDZl98NGOoQO0nb7DkXrFDMC1tXMJDLQnzH1t0jY372jKeeMS+e5zpMqNoGUXp
+         lewmmaxGEy0e4QUn0x3sgnQLfuQ0K0ng74PLj5mIz3G495jlkebFzPIid+dtA0+UnxU9
+         6/uw==
+X-Gm-Message-State: AOAM532tzWztA2GYakzPCl4OacVh2QX5Jc/ip42nkxEGOqiHs9zL9JtC
+        s9CkHPBli4WR1erazM8NixE=
+X-Google-Smtp-Source: ABdhPJwnXz/m9TCB6MQbPoDK31UoxUxZDLxLD/wiYix/QXCerD0snZBOuMIT1kfbdRyCJr493L4kIA==
+X-Received: by 2002:a17:906:5914:: with SMTP id h20mr13321639ejq.346.1598471920276;
+        Wed, 26 Aug 2020 12:58:40 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id v4sm3116939eje.39.2020.08.26.12.58.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Aug 2020 12:58:39 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 21:58:37 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bastien Nocera <hadess@hadess.net>,
         Sangwon Jee <jeesw@melfas.com>,
         Eugen Hristev <eugen.hristev@microchip.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
+        linux-input <linux-input@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH 02/24] Input: gpio_keys - Simplify with dev_err_probe()
+Message-ID: <20200826195837.GA29590@kozik-lap>
 References: <20200826181706.11098-1-krzk@kernel.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <858aaca7-5648-83a0-6cb4-213c62fee4a6@redhat.com>
-Date:   Wed, 26 Aug 2020 21:57:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ <20200826181706.11098-2-krzk@kernel.org>
+ <20200826191334.GX1891694@smile.fi.intel.com>
+ <20200826192256.GA14739@kozik-lap>
+ <CAHp75VcrUKN5S1HUdfzijx8xNEaA75jRAV893Khzm83i47cqgA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcrUKN5S1HUdfzijx8xNEaA75jRAV893Khzm83i47cqgA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-As someone who has added the if (error != -EPROBE_DEFER) dev_err()
-pattern in way too many places myself, I'm quite happy to see this
-new (I presume?) helper and this nice cleanup series.
-
-The entire series looks good to me, and you can add my:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-To the entire series.
-
-Regards,
-
-Hans
-
-
-
-On 8/26/20 8:16 PM, Krzysztof Kozlowski wrote:
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and also it prints the error value.
+On Wed, Aug 26, 2020 at 10:39:12PM +0300, Andy Shevchenko wrote:
+> On Wed, Aug 26, 2020 at 10:23 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > On Wed, Aug 26, 2020 at 10:13:34PM +0300, Andy Shevchenko wrote:
+> > > On Wed, Aug 26, 2020 at 08:16:44PM +0200, Krzysztof Kozlowski wrote:
+> > > > Common pattern of handling deferred probe can be simplified with
+> > > > dev_err_probe().  Less code and also it prints the error value.
+> > >
+> > > > --- a/drivers/input/keyboard/gpio_keys.c
+> > > > +++ b/drivers/input/keyboard/gpio_keys.c
+> > > > @@ -505,10 +505,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+> > > >                              */
+> > > >                             bdata->gpiod = NULL;
+> > >
+> > > gpiod_get_optional()?
+> > > Do not see much context though (but please double check your series for these
+> > > kind of things).
+> >
+> > It would fit except it is devm_fwnode_gpiod_get() which does not have
+> > optional yet.
+> >
+> > I can add it although the scope of the patch grows from simple
+> > defer-path-simplification.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->   drivers/input/keyboard/bcm-keypad.c | 8 +++-----
->   1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/bcm-keypad.c b/drivers/input/keyboard/bcm-keypad.c
-> index 2b771c3a5578..1bf71e7c9e0d 100644
-> --- a/drivers/input/keyboard/bcm-keypad.c
-> +++ b/drivers/input/keyboard/bcm-keypad.c
-> @@ -379,11 +379,9 @@ static int bcm_kp_probe(struct platform_device *pdev)
->   	kp->clk = devm_clk_get(&pdev->dev, "peri_clk");
->   	if (IS_ERR(kp->clk)) {
->   		error = PTR_ERR(kp->clk);
-> -		if (error != -ENOENT) {
-> -			if (error != -EPROBE_DEFER)
-> -				dev_err(&pdev->dev, "Failed to get clock\n");
-> -			return error;
-> -		}
-> +		if (error != -ENOENT)
-> +			return dev_err_probe(&pdev->dev, error, "Failed to get clock\n");
-> +
->   		dev_dbg(&pdev->dev,
->   			"No clock specified. Assuming it's enabled\n");
->   		kp->clk = NULL;
-> 
+> No need. My comment only about existing API per individual cases. SO,
+> here it's fine then.
+
+I checked the others and I didn't see such pattern anymore.
+
+Best regards,
+Krzysztof
 
