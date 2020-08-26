@@ -2,98 +2,72 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3ECC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C883FC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A952620786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:00:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598443254;
-	bh=WdolUUSPQwrh8Aj5TJ8h5qeAtgIkR7u9c5nE+npwIIY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t55ojAO5j7WmSbWcOA3lK5IuN3YzC1TrXiLOzlphL2Jsp0AEHT9i5Nx89QVEYrkxU
-	 2fUswE+U3PoY6J6jLzjxuNeukpu/JZzqnQDP7gesHnxA8XA+QImf1FAr3rdcCgQlne
-	 M7HKYMrIzBkPLnKgr1plGa12DidhaTgyo992pBRs=
+	by mail.kernel.org (Postfix) with ESMTP id A4E2120786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgHZMAv (ORCPT
+        id S1729421AbgHZMBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 26 Aug 2020 08:01:49 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:46512 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729303AbgHZMAv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Aug 2020 08:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729363AbgHZMAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:00:10 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D386C2080C;
-        Wed, 26 Aug 2020 12:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598443205;
-        bh=WdolUUSPQwrh8Aj5TJ8h5qeAtgIkR7u9c5nE+npwIIY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Qw1Rt0YmTj69jFWJ0biR73mZ980JOtuuj9zihJsBsJRTiPMfezuNNb2FQXeRTDFnN
-         Dtb+xQ58UwcBov1EjWGpb4pfi3b90IRJ/qZq9Vk40+Ql6T9JI0EV56LZxxaAbVKwjG
-         0fC9YtlfKviSR4UCsBKcf2OXdYrufDZ809xWnue0=
-Received: by mail-ot1-f47.google.com with SMTP id i11so1255096otr.5;
-        Wed, 26 Aug 2020 05:00:04 -0700 (PDT)
-X-Gm-Message-State: AOAM531pxbnjxCDwMUPdm0fG6xKBsR0eMACV62U8KTGZ1Nu+WQwltFlL
-        /vxFK/esfvY7MfqTO5iuErrfPIG9/K+axZH0eGA=
-X-Google-Smtp-Source: ABdhPJyRHJMIRG+/FJI73y2W6ECDWrCfnnurge8nTGaW0Q7CAiSYqL3nLbuQh1xgC0wevH+7nsqEBia2B/6cXtCsGvo=
-X-Received: by 2002:a9d:5189:: with SMTP id y9mr4290025otg.77.1598443204195;
- Wed, 26 Aug 2020 05:00:04 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U6vmsbS_1598443247;
+Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U6vmsbS_1598443247)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 26 Aug 2020 20:00:47 +0800
+Reply-To: xlpang@linux.alibaba.com
+Subject: Re: [PATCH] mm: memcg: Fix memcg reclaim soft lockup
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <1598426822-93737-1-git-send-email-xlpang@linux.alibaba.com>
+ <20200826081102.GM22869@dhcp22.suse.cz>
+ <99efed0e-050a-e313-46ab-8fe6228839d5@linux.alibaba.com>
+ <20200826110015.GO22869@dhcp22.suse.cz>
+From:   xunlei <xlpang@linux.alibaba.com>
+Message-ID: <f0122b2d-4740-2caf-3c4f-009a513426e3@linux.alibaba.com>
+Date:   Wed, 26 Aug 2020 20:00:47 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200826055150.2753.90553@ml01.vlan13.01.org> <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
- <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com> <20200826114952.GA2375@gondor.apana.org.au>
-In-Reply-To: <20200826114952.GA2375@gondor.apana.org.au>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 26 Aug 2020 13:59:53 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
-Message-ID: <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
-Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Caleb Jorden <caljorden@hotmail.com>,
-        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200826110015.GO22869@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 at 13:50, Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> On Wed, Aug 26, 2020 at 12:40:14PM +0200, Ard Biesheuvel wrote:
-> >
-> > It would be helpful if someone could explain for the non-mac80211
-> > enlightened readers how iwd's EAP-PEAPv0 + MSCHAPv2 support relies on
-> > the algif_aead socket interface, and which AEAD algorithms it uses. I
-> > assume this is part of libell?
->
-> I see the problem.  libell/ell/checksum.c doesn't clear the MSG_MORE
-> flag before doing the recv(2).
->
+On 2020/8/26 下午7:00, Michal Hocko wrote:
+> On Wed 26-08-20 18:41:18, xunlei wrote:
+>> On 2020/8/26 下午4:11, Michal Hocko wrote:
+>>> On Wed 26-08-20 15:27:02, Xunlei Pang wrote:
+>>>> We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
+>>>> the target memcg doesn't have any reclaimable memory.
+>>>
+>>> Do you have any scenario when this happens or is this some sort of a
+>>> test case?
+>>
+>> It can happen on tiny guest scenarios.
+> 
+> OK, you made me more curious. If this is a tiny guest and this is a hard
+> limit reclaim path then we should trigger an oom killer which should
+> kill the offender and that in turn bail out from the try_charge lopp
+> (see should_force_charge). So how come this repeats enough in your setup
+> that it causes soft lockups?
+> 
 
-But that code uses a hash not an aead, afaict.
-
-> I was hoping nobody out there was doing this but obviously I've
-> been proven wrong.
->
-> So what I'm going to do is to specifically allow this case of
-> a string of sendmsg(2)'s with MSG_MORE folloed by a recvmsg(2)
-> in the same thread.  I'll add a WARN_ON_ONCE so user-space can
-> eventually be fixed.
->
-> Cheers,
-> --
-> Email: Herbert Xu <herbert@gondor.apana.org.au>
-> Home Page: http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+should_force_charge() is false, the current trapped in endless loop is
+not the oom victim.
