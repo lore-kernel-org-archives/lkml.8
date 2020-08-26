@@ -2,102 +2,94 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D4DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A25312078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598469784;
-	bh=6LMIGauMiBRJMcOpdECzUGyEQkUdA1nW6+6wgr8LkCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iwiUxW48WbhKKE9jmI2RYDZL7ZDCVvIdE9Dn45pJvh2tzepFp1SBs/fOluTJf111Q
-	 KdCmSIp0r7Otx0lde43G9NjS/18/WK9ARiKVQHwC8VpvThLeMrcAHdd+9QA4axZxkU
-	 7eiteYmR7PewzzrUtMJ0iM9ULDYAFaV2XvRoTVAQ=
+	by mail.kernel.org (Postfix) with ESMTP id EC56D207DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:26:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="FaUxUnjK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbgHZTXD (ORCPT
+        id S1726948AbgHZT0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:23:03 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45975 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbgHZTXC (ORCPT
+        Wed, 26 Aug 2020 15:26:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726794AbgHZT0n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:23:02 -0400
-Received: by mail-ed1-f67.google.com with SMTP id i17so1228367edx.12;
-        Wed, 26 Aug 2020 12:23:00 -0700 (PDT)
+        Wed, 26 Aug 2020 15:26:43 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4813C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:26:41 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id si26so4415039ejb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:26:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TYKPTufiMBAMoTNCgDN7PLKKjOS7TYvnr9DjmBNmXfM=;
+        b=FaUxUnjKb0N9Xw2K3ckURq7XBP2BC7VSd74QmXqnGlHpmfsTcG0/cbq0wjQ72NwmtM
+         /XRHgHj1rfJMGI+1Wj3VNHM4uo0IrKuS9FTep4/wvrAttKznUFlA2UZIfJWJPZoJ06Ei
+         s2yVxWhOI+28JDFT+R83RAGBwXVvIqe78CshI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YoSbFEE6WxawXijyPOSjl6BnMKpo5u+32xWA9EukxUc=;
-        b=eDkd129y5p8wfoSExAwj4DezugO6ajkHBYeJA8JjXkf9Pk3or28D89ZBRliielkvlZ
-         o/EoAtOjrSt5MuX+1XoXw8OmzZu8cdnDvKiWAQykLceLtAxZ6h0TDTZLyM2BAKvYBQ/O
-         WbdrK/m1aAV8LvbBY4s1N+Bwv1J9C2VUDOr9/VKSUb2we+4DwpeGc3WA9shf7to0IqPX
-         NvwAZ01udl/4qtNou0KMP1y3WXgrTzHKp6PjgEsRePFrt6Cusr+J421Jcew4iM9pzgg9
-         raiCOF07Yvi+NMyBtibhff66N26Z1JdmRSOeBqHIjhp1vdH0Lzmc2X1YCioLtNCoc7Tu
-         714w==
-X-Gm-Message-State: AOAM533ZfAezDHFmI1WtZJFqawzTS3zCbCbAYCldT3HixtT9TeBdQ5zj
-        zHeNfehOgxMtO0sB/cRpewA=
-X-Google-Smtp-Source: ABdhPJx8/pzC23/MfkOErm5NZndYQOVvm0SrUDOipckwuovfnOyFr2pW/5b6DcISQkKxPM6zKPgt0g==
-X-Received: by 2002:a05:6402:1591:: with SMTP id c17mr16230169edv.111.1598469780133;
-        Wed, 26 Aug 2020 12:23:00 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id b9sm940428edw.93.2020.08.26.12.22.58
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 26 Aug 2020 12:22:59 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 21:22:56 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Sangwon Jee <jeesw@melfas.com>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 02/24] Input: gpio_keys - Simplify with dev_err_probe()
-Message-ID: <20200826192256.GA14739@kozik-lap>
-References: <20200826181706.11098-1-krzk@kernel.org>
- <20200826181706.11098-2-krzk@kernel.org>
- <20200826191334.GX1891694@smile.fi.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TYKPTufiMBAMoTNCgDN7PLKKjOS7TYvnr9DjmBNmXfM=;
+        b=b+KsuaEHcx/TNyQHcmDk+m3jMvZlenWkvafqJmYRADLluqze0J5A+HXuoxjTSX4O+d
+         S0LK/PzcqVvyK0CgGdw9ngzClIIad+WqO7YuQO0arNsj9hLqgrJJr0rIeczzFMlembgl
+         DFvjwGc4UdIlqW8CIeUKUYZxuVPb9QB0swoKL+numLFE7oqkVCo9xSR5+z/rf4PjbBr4
+         NmhsRZZCi0IeKtCiuWodVoPrtQS5y7U4tzsCdMz3kN4kd2u7Tfr9IpNjpLf3WA402P/U
+         Aet/IxRjJ+qgJDKU92Y3ukDQTIsrrSF24pzrIQDmY0M8Ws11QVs8RGwv+jXubePYEBew
+         KKiA==
+X-Gm-Message-State: AOAM530bGjAoWHPnGjfDXiYxCYCE4KEMW71uAZg0GMFDFUYP5y+u1USp
+        TttO9MlCaOZGzHD5Tie0FymdJFOJ/I898kmxlkHuNQ==
+X-Google-Smtp-Source: ABdhPJySXvtS1wt72dlTMaNXkc4ygI3g/9G+dTkz6T/HxF6o7ikX7c/MufNQgXY1U/W7PJiGBF7gwXubMG5akFPdVoI=
+X-Received: by 2002:a17:906:b2d7:: with SMTP id cf23mr17037501ejb.113.1598470000611;
+ Wed, 26 Aug 2020 12:26:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200826191334.GX1891694@smile.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200819221956.845195-1-vgoyal@redhat.com> <20200819221956.845195-12-vgoyal@redhat.com>
+ <CAJfpegsgHE0MkZLFgE4yrZXO5ThDxCj85-PjizrXPRC2CceT1g@mail.gmail.com>
+ <20200826155142.GA1043442@redhat.com> <20200826173408.GA11480@stefanha-x1.localdomain>
+ <20200826191711.GF3932@work-vm>
+In-Reply-To: <20200826191711.GF3932@work-vm>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 26 Aug 2020 21:26:29 +0200
+Message-ID: <CAJfpegvqZUXsvbWg8K-xosNR+RVwRm2KH+S9mKs6n6Sv65s+Qg@mail.gmail.com>
+Subject: Re: [PATCH v3 11/18] fuse: implement FUSE_INIT map_alignment field
+To:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        virtio-fs-list <virtio-fs@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 10:13:34PM +0300, Andy Shevchenko wrote:
-> On Wed, Aug 26, 2020 at 08:16:44PM +0200, Krzysztof Kozlowski wrote:
-> > Common pattern of handling deferred probe can be simplified with
-> > dev_err_probe().  Less code and also it prints the error value.
-> 
-> > --- a/drivers/input/keyboard/gpio_keys.c
-> > +++ b/drivers/input/keyboard/gpio_keys.c
-> > @@ -505,10 +505,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
-> >  				 */
-> >  				bdata->gpiod = NULL;
-> 
-> gpiod_get_optional()?
-> Do not see much context though (but please double check your series for these
-> kind of things).
+On Wed, Aug 26, 2020 at 9:17 PM Dr. David Alan Gilbert
+<dgilbert@redhat.com> wrote:
 
-It would fit except it is devm_fwnode_gpiod_get() which does not have
-optional yet.
+> Agreed, because there's not much that the server can do about it if the
+> client would like a smaller granularity - the servers granularity might
+> be dictated by it's mmap/pagesize/filesystem.  If the client wants a
+> larger granularity that's it's choice when it sends the setupmapping
+> calls.
 
-I can add it although the scope of the patch grows from simple
-defer-path-simplification.
+What bothers me is that the server now comes with the built in 2MiB
+granularity (obviously much larger than actually needed).
 
-Thanks for the feedback.
+What if at some point we'd want to reduce that somewhat in the client?
+  Yeah, we can't.   Maybe this is not a kernel problem after all, the
+proper thing would be to fix the server to actually send something
+meaningful.
 
-Best regards,
-Krzysztof
+Thanks,
+Miklos
