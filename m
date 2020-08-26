@@ -2,190 +2,107 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1156FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E79C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:21:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D61F320737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:20:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pvKvB1AM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oWrjSaUu"
+	by mail.kernel.org (Postfix) with ESMTP id 681A7207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598476893;
+	bh=wP47mPmI4+nLi8j+Dv3UaXk1NT7veGFnDPlvz/jc1qg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=slVGWvrzL2HxQRU+KLG7B+koMBhMddU1MFsxz6L6xNjWfzxfrDskaUDTiveMSTTPo
+	 TnuIltFAUc7VX+nxWLIwnC/gDKzkvg7j2kacppKhRTHEbFMj2j0UkSzZT9zfmgEX9h
+	 XZoKPdAmB2Y+yUdIVVd9dWQ1WzoEPKSLQZRqXSFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgHZVUD (ORCPT
+        id S1726940AbgHZVVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:20:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33596 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgHZVUA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:20:00 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598476797;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WYZnB7uf4zw+g6DBBef5reqPEj8a0j4M5RX3zdOOKzc=;
-        b=pvKvB1AMMg61vF3fuuFlE/MjubeGYv3ru+dZbTvHajwgBVYvAEQefT04IBXFOezkguPQmN
-        /CZWOdtXKlQmE8ObjUoPwGvTbYZfMrTtdvjVYhynH8BTWRfQ0kCVBtP+xO5yNuaFZlTyoB
-        YfFVLUqTCqkdxpR7lkPmYqNGoB43zk5UlwhM33f8pFT3UDs0fKUTc+N48y18DXhTyrikLB
-        Cn4e2VBH7/Fb0KqpKDKd2gzoGZZSVES7hQWMowj45Xk7MA5bYvJBJMqC5hQufiBX92bva3
-        oTxipIX/Q7LReXbW3YfAemOe94IuUH+vGtqhQh0JAvhW7MdTZUObynzmLOAwFA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598476797;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WYZnB7uf4zw+g6DBBef5reqPEj8a0j4M5RX3zdOOKzc=;
-        b=oWrjSaUuvxZFWVKpzIddniXB4pV/MwolflT+zDiuc64L+U6Z6uqVmYilcDAgH4c1Moq+9p
-        bsm+zr1NkfquxRCw==
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 04/46] genirq/chip: Use the first chip in irq_chip_compose_msi_msg()
-In-Reply-To: <87a6yh2nln.wl-maz@kernel.org>
-References: <20200826111628.794979401@linutronix.de> <20200826112331.047917603@linutronix.de> <87a6yh2nln.wl-maz@kernel.org>
-Date:   Wed, 26 Aug 2020 23:19:56 +0200
-Message-ID: <87o8mxt88z.fsf@nanos.tec.linutronix.de>
+        Wed, 26 Aug 2020 17:21:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726753AbgHZVVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:21:31 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D67F920737;
+        Wed, 26 Aug 2020 21:21:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598476890;
+        bh=wP47mPmI4+nLi8j+Dv3UaXk1NT7veGFnDPlvz/jc1qg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=G5eB9+PtcxVan0hnnfXfHh8RnNffxhAqEgx5H++6bGZERQb7dX7JLPTGYxjLaw7Hn
+         4Zlfp8cwdQtXKO7bkPsQY0/TgTCb6o97bi1g7HljqojOzdtmXKaYRLaUNGP78ALYzh
+         clon7yQgREIVP44CoRYTmYS8Qj+TiNfWv8BhPoXk=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id AF6FA35226D9; Wed, 26 Aug 2020 14:21:30 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 14:21:30 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] kcsan: Use tracing-safe version of prandom
+Message-ID: <20200826212130.GU2855@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200821123126.3121494-1-elver@google.com>
+ <CANpmjNMLL+Xqg0MQrtBMxLunUGXVP-mAXKqRH5s0xNSfAUhrzg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNMLL+Xqg0MQrtBMxLunUGXVP-mAXKqRH5s0xNSfAUhrzg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26 2020 at 20:50, Marc Zyngier wrote:
-> On Wed, 26 Aug 2020 12:16:32 +0100,
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> ---
->> V2: New patch. Note, that this might break other stuff which relies on the
->>     current behaviour, but the hierarchy composition of DT based chips is
->>     really hard to follow.
->
-> Grepping around, I don't think there is any occurrence of two irqchips
-> providing irq_compose_msi() that can share a hierarchy on any real
-> system, so we should be fine. Famous last words.
+On Wed, Aug 26, 2020 at 02:17:57PM +0200, Marco Elver wrote:
+> On Fri, 21 Aug 2020 at 14:31, Marco Elver <elver@google.com> wrote:
+> > In the core runtime, we must minimize any calls to external library
+> > functions to avoid any kind of recursion. This can happen even though
+> > instrumentation is disabled for called functions, but tracing is
+> > enabled.
+> >
+> > Most recently, prandom_u32() added a tracepoint, which can cause
+> > problems for KCSAN even if the rcuidle variant is used. For example:
+> >         kcsan -> prandom_u32() -> trace_prandom_u32_rcuidle ->
+> >         srcu_read_lock_notrace -> __srcu_read_lock -> kcsan ...
+> >
+> > While we could disable KCSAN in kcsan_setup_watchpoint(), this does not
+> > solve other unexpected behaviour we may get due recursing into functions
+> > that may not be tolerant to such recursion:
+> >         __srcu_read_lock -> kcsan -> ... -> __srcu_read_lock
+> >
+> > Therefore, switch to using prandom_u32_state(), which is uninstrumented,
+> > and does not have a tracepoint.
+> >
+> > Link: https://lkml.kernel.org/r/20200821063043.1949509-1-elver@google.com
+> > Link: https://lkml.kernel.org/r/20200820172046.GA177701@elver.google.com
+> > Signed-off-by: Marco Elver <elver@google.com>
+> > ---
+> > Applies to latest -rcu/dev only.
+> >
+> > Let's wait a bit to see what happens with
+> >   https://lkml.kernel.org/r/20200821063043.1949509-1-elver@google.com,
+> > just in case there's a better solution that might make this patch redundant.
+> 
+> Paul, feel free to pick this up.
+> 
+> I wanted to wait until after plumbers to see what happens, but maybe
+> it's better to give the heads-up now, so this is in time for the next
+> pull-request. It seems that prandom_u32() will keep its tracepoint,
+> which means we definitely need this to make KCSAN compatible with
+> tracing again.
 
-Knocking on wood :)
+Queued and pushed, thank you!
 
->>  #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
->> -	for (; data; data = data->parent_data)
->> -#endif
->> -		if (data->chip && data->chip->irq_compose_msi_msg)
->> +	for (; data; data = data->parent_data) {
->> +		if (data->chip && data->chip->irq_compose_msi_msg) {
->>  			pos = data;
->> +			break;
->> +		}
->> +	}
->> +#else
->> +	if (data->chip && data->chip->irq_compose_msi_msg)
->> +		pos = data;
->> +#endif
->>  	if (!pos)
->>  		return -ENOSYS;
->
-> Is it just me, or is this last change more complex than it ought to
-> be?
-
-Kinda.
-
-> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-> index 857f5f4c8098..25e18b73699c 100644
-> --- a/kernel/irq/chip.c
-> +++ b/kernel/irq/chip.c
-> @@ -1544,7 +1544,7 @@ int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
->  	struct irq_data *pos = NULL;
->  
->  #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
-> -	for (; data; data = data->parent_data)
-> +	for (; data && !pos; data = data->parent_data)
->  #endif
->  		if (data->chip && data->chip->irq_compose_msi_msg)
->  			pos = data;
->
-> Though the for loop in a #ifdef in admittedly an acquired taste...
-
-Checking !pos is simpler obviously. That doesn't make me hate the loop
-in the #ifdef less. :)
-
-What about the below?
-
-Thanks,
-
-        tglx
----
---- a/kernel/irq/internals.h
-+++ b/kernel/irq/internals.h
-@@ -473,6 +473,15 @@ static inline void irq_domain_deactivate
- }
- #endif
- 
-+static inline struct irq_data *irqd_get_parent_data(struct irq_data *irqd)
-+{
-+#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
-+	return irqd->parent_data;
-+#else
-+	return NULL;
-+#endif
-+}
-+
- #ifdef CONFIG_GENERIC_IRQ_DEBUGFS
- #include <linux/debugfs.h>
- 
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -1541,18 +1541,17 @@ EXPORT_SYMBOL_GPL(irq_chip_release_resou
-  */
- int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- {
--	struct irq_data *pos = NULL;
-+	struct irq_data *pos;
- 
--#ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
--	for (; data; data = data->parent_data)
--#endif
-+	for (pos = NULL; !pos && data; data = irqd_get_parent_data(data)) {
- 		if (data->chip && data->chip->irq_compose_msi_msg)
- 			pos = data;
-+	}
-+
- 	if (!pos)
- 		return -ENOSYS;
- 
- 	pos->chip->irq_compose_msi_msg(pos, msg);
--
- 	return 0;
- }
- 
+							Thanx, Paul
