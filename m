@@ -2,148 +2,105 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD43CC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E36DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8812F20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:53:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC29207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:56:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="NPqPR2pG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Urv33F11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgHZWxN (ORCPT
+        id S1726873AbgHZW4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 18:53:13 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:64642 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726071AbgHZWxN (ORCPT
+        Wed, 26 Aug 2020 18:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgHZW4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 18:53:13 -0400
+        Wed, 26 Aug 2020 18:56:41 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F379C061574;
+        Wed, 26 Aug 2020 15:56:40 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id f26so4229242ljc.8;
+        Wed, 26 Aug 2020 15:56:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598482393; x=1630018393;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=5X9AA/AAIgwS2L9XWuah67/BdYE6MvWoAueH3IVXuUs=;
-  b=NPqPR2pGQQh4Kfsn5bl8rajEvSgkGKT5EjGqd7TeqgrpWt/FglMEX3VM
-   3YLo6loqnZIA2MG/n0eXT12qxIJNAkoaFkkuSX15J6xkOh//0T83v9IOP
-   v/k51UMU02ejPUZKVtUdwfVTVAzd8d2Nm5BRyLHcppaLY0ak+zHmL3Y8q
-   o=;
-X-IronPort-AV: E=Sophos;i="5.76,357,1592870400"; 
-   d="scan'208";a="71215827"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 26 Aug 2020 22:53:08 +0000
-Received: from EX13MTAUWC002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-38ae4ad2.us-east-1.amazon.com (Postfix) with ESMTPS id 32841A21A7;
-        Wed, 26 Aug 2020 22:52:58 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 26 Aug 2020 22:52:58 +0000
-Received: from vpn-10-85-95-61.fra53.corp.amazon.com (10.43.162.73) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Wed, 26 Aug 2020 22:52:50 +0000
-Subject: Re: x86/irq: Unbreak interrupt affinity setting
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        'X86 ML' <x86@kernel.org>
-CC:     'Andy Lutomirski' <luto@kernel.org>,
-        'LKML' <linux-kernel@vger.kernel.org>,
-        'Andrew Cooper' <andrew.cooper3@citrix.com>,
-        "'Paul E. McKenney'" <paulmck@kernel.org>,
-        'Alexandre Chartre' <alexandre.chartre@oracle.com>,
-        'Frederic Weisbecker' <frederic@kernel.org>,
-        'Paolo Bonzini' <pbonzini@redhat.com>,
-        'Sean Christopherson' <sean.j.christopherson@intel.com>,
-        'Masami Hiramatsu' <mhiramat@kernel.org>,
-        'Petr Mladek' <pmladek@suse.com>,
-        'Steven Rostedt' <rostedt@goodmis.org>,
-        'Joel Fernandes' <joel@joelfernandes.org>,
-        'Boris Ostrovsky' <boris.ostrovsky@oracle.com>,
-        'Juergen Gross' <jgross@suse.com>,
-        "'Mathieu Desnoyers'" <mathieu.desnoyers@efficios.com>,
-        'Josh Poimboeuf' <jpoimboe@redhat.com>,
-        'Will Deacon' <will@kernel.org>,
-        'Tom Lendacky' <thomas.lendacky@amd.com>,
-        'Wei Liu' <wei.liu@kernel.org>,
-        'Michael Kelley' <mikelley@microsoft.com>,
-        'Jason Chen CJ' <jason.cj.chen@intel.com>,
-        "'Zhao Yakui'" <yakui.zhao@intel.com>,
-        "'Peter Zijlstra (Intel)'" <peterz@infradead.org>,
-        'Avi Kivity' <avi@scylladb.com>,
-        "'Herrenschmidt, Benjamin'" <benh@amazon.com>,
-        "'robketr@amazon.de'" <robketr@amazon.de>,
-        "'amos@scylladb.com'" <amos@scylladb.com>,
-        'Brian Gerst' <brgerst@gmail.com>,
-        "'stable@vger.kernel.org'" <stable@vger.kernel.org>,
-        'Alex bykov' <alex.bykov@scylladb.com>
-References: <20200826115357.3049-1-graf@amazon.com>
- <87k0xlv5w5.fsf@nanos.tec.linutronix.de>
- <fd87a87d-7d8a-9959-6c81-f49003a43c21@amazon.com>
- <87blixuuny.fsf@nanos.tec.linutronix.de>
- <873649utm4.fsf@nanos.tec.linutronix.de>
- <87wo1ltaxz.fsf@nanos.tec.linutronix.de>
- <db3e28b59d404f55aff83120c077d6f6@AcuMS.aculab.com>
- <42ae8716e425495c964ae7372bd7ff52@AcuMS.aculab.com>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <014fd671-73c1-97f3-cc92-73c2cf9576af@amazon.com>
-Date:   Thu, 27 Aug 2020 00:52:48 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:78.0)
- Gecko/20100101 Thunderbird/78.1.1
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gyu34eqNIzm7NHyu71tvXj/6BZWs11p7Z/KgaEDFzxg=;
+        b=Urv33F113PADAG1mDhqUyy9F+l6t3eEJtPXqPEm14U5YrOtRAYae7t970B1UxB1QW1
+         ksll53n4tloVnrddAxvshwMERcm0WF8fCA9qb3g2ux1TD3yppKPm/Ek6ziaNAXfTZWX0
+         eq/Z5kawDvjjHztTAGrOX8S6XL2eUwWXrZBUNn1ruAq2QlVDfHwikjUUPGdj8LVHRMeA
+         z5rc4Nx9s/IAw2TzvGgSQ5EQH4TW5+ZzN9NHMsPvdJyq227W7JhMSBR/jp8trbhVenC9
+         oasbftIhwQ2izMAC8r/56u6e9A36c9ASJ2NjCYNrFhvmYz3etttr2P2HF6qrQVLNV4qK
+         IEyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Gyu34eqNIzm7NHyu71tvXj/6BZWs11p7Z/KgaEDFzxg=;
+        b=oahTtYgKBzJVBMDn0s6Tz5qlkg+17IrpC7Gd7gPjllDfHm7WxxLih0G2KyJ7Kx3BED
+         g4Yo5trSqY1VTICZeG9AooN9QnSN2B3kqBa8pqnIFbyuT5ArgsAtOQiyAjbSE2dZspmr
+         Xl/CIUzeybR0ZfFoVVYry6e6M/Cl/kzZley6ZaAMC0rYVLs+nVow9sJ5nLrFkx9te+2u
+         RxzNoSG7bedAuf4BkdLvrdueoVeAKF56OsAcwlUv+ORyVmrC9MhZDxelMNX6lReUpE/G
+         FrtiLguH8lDjXP5T4fs0g/tsvVraEmU1pytvyL/lpCmpv4AmQ4bqa+zdteJCA36ObVpz
+         U1uQ==
+X-Gm-Message-State: AOAM530OzW5tuDcM5DSh/j/rT7Qj4n3amD/LY1F+qGAEY6StLEJ3jwBR
+        Twr8XU09a9VzGEtjnnYmUjA=
+X-Google-Smtp-Source: ABdhPJy5R3OaYZkfrzmMwNaDf/6vVUJyPNM2j0O2fvAcTtmpOckD7xr1Mna4zW+WtossdAx+ebNCpA==
+X-Received: by 2002:a05:651c:155:: with SMTP id c21mr8770175ljd.453.1598482598696;
+        Wed, 26 Aug 2020 15:56:38 -0700 (PDT)
+Received: from localhost.localdomain (h-82-196-111-59.NA.cust.bahnhof.se. [82.196.111.59])
+        by smtp.gmail.com with ESMTPSA id u28sm49075ljd.39.2020.08.26.15.56.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 15:56:37 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Kalle Valo <kvalo@codeaurora.org>, ath11k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: [PATCH net-next 0/6] drivers/net: constify static ops-variables
+Date:   Thu, 27 Aug 2020 00:56:02 +0200
+Message-Id: <20200826225608.90299-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <42ae8716e425495c964ae7372bd7ff52@AcuMS.aculab.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.73]
-X-ClientProxiedBy: EX13D16UWC004.ant.amazon.com (10.43.162.72) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAyNi4wOC4yMCAyMzo0NywgRGF2aWQgTGFpZ2h0IHdyb3RlOgo+IAo+IEZyb206IERhdmlk
-IExhaWdodAo+PiBTZW50OiAyNiBBdWd1c3QgMjAyMCAyMjozNwo+Pgo+PiBGcm9tOiBUaG9tYXMg
-R2xlaXhuZXIKPj4+IFNlbnQ6IDI2IEF1Z3VzdCAyMDIwIDIxOjIyCj4+IC4uLgo+Pj4gTW92aW5n
-IGludGVycnVwdHMgb24geDg2IGhhcHBlbnMgaW4gc2V2ZXJhbCBzdGVwcy4gQSBuZXcgdmVjdG9y
-IG9uIGEKPj4+IGRpZmZlcmVudCBDUFUgaXMgYWxsb2NhdGVkIGFuZCB0aGUgcmVsZXZhbnQgaW50
-ZXJydXB0IHNvdXJjZSBpcwo+Pj4gcmVwcm9ncmFtbWVkIHRvIHRoYXQuIEJ1dCB0aGF0J3MgcmFj
-eSBhbmQgdGhlcmUgbWlnaHQgYmUgYW4gaW50ZXJydXB0Cj4+PiBhbHJlYWR5IGluIGZsaWdodCB0
-byB0aGUgb2xkIHZlY3Rvci4gU28gdGhlIG9sZCB2ZWN0b3IgaXMgcHJlc2VydmVkIHVudGlsCj4+
-PiB0aGUgZmlyc3QgaW50ZXJydXB0IGFycml2ZXMgb24gdGhlIG5ldyB2ZWN0b3IgYW5kIHRoZSBu
-ZXcgdGFyZ2V0IENQVS4gT25jZQo+Pj4gdGhhdCBoYXBwZW5zIHRoZSBvbGQgdmVjdG9yIGlzIGNs
-ZWFuZWQgdXAsIGJ1dCB0aGlzIGNsZWFudXAgc3RpbGwgZGVwZW5kcwo+Pj4gb24gdGhlIHZlY3Rv
-ciBudW1iZXIgYmVpbmcgc3RvcmVkIGluIHB0X3JlZ3M6Om9yaWdfYXgsIHdoaWNoIGlzIG5vdyAt
-MS4KPj4KPj4gSSBzdXNwZWN0IHRoYXQgaXQgaXMgbXVjaCBtb3JlICdyYWN5JyB0aGFuIHRoYXQg
-Zm9yIFBDSS1YIGludGVycnVwdHMuCj4+IE9uIHRoZSBoYXJkd2FyZSBzaWRlIHRoZXJlIGlzIGFu
-IGludGVycnVwdCBkaXNhYmxlIGJpdCwgYW5kIGFkZHJlc3MKPj4gYW5kIGEgdmFsdWUuCj4+IFRv
-IHJhaXNlIGFuIGludGVycnVwdCB0aGUgaGFyZHdhcmUgbXVzdCB3cml0ZSB0aGUgdmFsdWUgdG8g
-dGhlIGFkZHJlc3MuCj4+Cj4+IElmIHRoZSBjcHUgbmVlZHMgdG8gbW92ZSBhbiBpbnRlcnJ1cHQg
-Ym90aCB0aGUgYWRkcmVzcyBhbmQgdmFsdWUKPj4gbmVlZCBjaGFuZ2luZywgYnV0IHRoZSBjcHUg
-d29udCB3cml0ZSB0aGUgYWRkcmVzcyBhbmQgdmFsdWUgdXNpbmcKPj4gdGhlIHNhbWUgVExQLCBz
-byB0aGUgaGFyZHdhcmUgY291bGQgcG90ZW50aWFsbHkgd3JpdGUgYSB2YWx1ZSB0bwo+PiB0aGUg
-d3JvbmcgYWRkcmVzcy4KPj4gV29yc2UgdGhhbiB0aGF0LCB0aGUgaGFyZHdhcmUgY291bGQgZWFz
-aWx5IG9ubHkgbG9vayBhdCB0aGUgYWRkcmVzcwo+PiBhbmQgdmFsdWUgaW4gdGhlIGNsb2NrcyBh
-ZnRlciBjaGVja2luZyB0aGUgaW50ZXJydXB0IGlzIGVuYWJsZWQuCj4+IFNvIG1hc2tpbmcgdGhl
-IGludGVycnVwdCBpbW1lZGlhdGVseSBwcmlvciB0byBjaGFuZ2luZyB0aGUgdmVjdG9yCj4+IGlu
-Zm8gbWF5IG5vdCBiZSBlbm91Z2guCj4+Cj4+IEl0IGlzIGxpa2VseSB0aGF0IGEgcmVhZC1iYWNr
-IG9mIHRoZSBtYXNrIGJlZm9yZSB1cGRhdGluZyB0aGUgdmVjdG9yCj4+IGlzIGVub3VnaC4KPiAK
-PiBCdXQgbm90IGVub3VnaCB0byBhc3N1bWUgeW91IHdvbid0IHJlY2VpdmUgYW4gaW50ZXJydXB0
-IGFmdGVyIHJlYWRpbmcKPiBiYWNrIHRoYXQgaW50ZXJydXB0cyBhcmUgbWFza2VkLgo+IAo+IChJ
-J3ZlIGltcGxlbWVudGVkIHRoZSBoYXJkd2FyZSBzaWRlIGZvciBhbiBmcGdhIC4uLikKCkRvIHdl
-IGFjdHVhbGx5IGNhcmUgaW4gdGhpcyBjb250ZXh0PyBBbGwgd2Ugd2FudCB0byBrbm93IGhlcmUg
-aXMgd2hldGhlciAKYSBkZXZpY2UgKG9yIGlycWNoaXAgaW4gYmV0d2VlbikgaGFzIGFjdHVhbGx5
-IG5vdGljZWQgdGhhdCBpdCBzaG91bGQgCnBvc3QgdG8gYSBuZXcgdmVjdG9yLiBJZiB3ZSBnZXQg
-aW50ZXJydXB0cyBvbiByYW5kb20gb3RoZXIgdmVjdG9ycyBpbiAKYmV0d2VlbiwgdGhleSB3b3Vs
-ZCBzaW1wbHkgc2hvdyB1cCBhcyBzcHVyaW91cywgbm8/CgpTbyBJIGRvbid0IHF1aXRlIHNlZSB3
-aGVyZSB0aGlzIHBhdGNoIG1ha2VzIHRoZSBzaXR1YXRpb24gYW55IHdvcnNlIHRoYW4gCmJlZm9y
-ZS4KCgpBbGV4CgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVz
-ZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hs
-YWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdldHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0
-ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpTaXR6OiBCZXJsaW4KVXN0LUlEOiBERSAyODkgMjM3
-IDg3OQoKCg==
+This series constifies a number of static ops variables, to allow the
+compiler to put them in read-only memory. Compile-tested only.
+
+Rikard Falkeborn (6):
+  net: ethernet: qualcomm: constify qca_serdev_ops
+  net: ethernet: ravb: constify bb_ops
+  net: renesas: sh_eth: constify bb_ops
+  net: phy: at803x: constify static regulator_ops
+  net: phy: mscc: macsec: constify vsc8584_macsec_ops
+  net: ath11k: constify ath11k_thermal_ops
+
+ drivers/net/ethernet/qualcomm/qca_uart.c  | 2 +-
+ drivers/net/ethernet/renesas/ravb_main.c  | 2 +-
+ drivers/net/ethernet/renesas/sh_eth.c     | 2 +-
+ drivers/net/phy/at803x.c                  | 4 ++--
+ drivers/net/phy/mscc/mscc_macsec.c        | 2 +-
+ drivers/net/wireless/ath/ath11k/thermal.c | 2 +-
+ 6 files changed, 7 insertions(+), 7 deletions(-)
+
+-- 
+2.28.0
 
