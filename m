@@ -2,174 +2,280 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6339FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E15C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 362BE20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53436207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:29:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ph/ow5Wb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="ZfeljoJg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbgHZETS (ORCPT
+        id S1726128AbgHZE3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 00:19:18 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:30916 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgHZETO (ORCPT
+        Wed, 26 Aug 2020 00:29:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725267AbgHZE3P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 00:19:14 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200826041911epoutp015215fe033bde395e3a568531065b1eb6~utnm2iauG1547915479epoutp01m
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:19:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200826041911epoutp015215fe033bde395e3a568531065b1eb6~utnm2iauG1547915479epoutp01m
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598415551;
-        bh=vJGhhWEMdU4RI4OZUZrLMlmVOp+37EnHBm+2cAvft5A=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=ph/ow5Wb6ctfebKa9bR+c09dMz9TtuYryQxorG2i2pQNaegLp0iek93i2v+d9lMAq
-         FcA2kzcV1OZ0razWq5DTKtwRCwrm8I/Dw/RqbnEpgGULEuo7cTBDsdTNTuPJTMoLkO
-         q/hDvylasipMBqHVlWVllI/fA7SUBdhUvgjgpGGI=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200826041911epcas1p19f1533c00e4fc98d69003ca85944f373~utnmSIz332055620556epcas1p1p;
-        Wed, 26 Aug 2020 04:19:11 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.159]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4Bbt0Y5g3pzMqYks; Wed, 26 Aug
-        2020 04:19:09 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        34.68.28578.DB2E54F5; Wed, 26 Aug 2020 13:19:09 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200826041909epcas1p108db024e965f292c5b479a341bdd76b5~utnkjO58I2055620556epcas1p1l;
-        Wed, 26 Aug 2020 04:19:09 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200826041909epsmtrp1204bee6a4dd0f9a97184e4fc19b014df~utnkimfOJ1440014400epsmtrp1O;
-        Wed, 26 Aug 2020 04:19:09 +0000 (GMT)
-X-AuditID: b6c32a39-8dfff70000006fa2-91-5f45e2bd5169
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7E.A1.08303.DB2E54F5; Wed, 26 Aug 2020 13:19:09 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200826041908epsmtip2130885c172cdc3cfaf55c12035ad47be~utnkYYDEN2804828048epsmtip2G;
-        Wed, 26 Aug 2020 04:19:08 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
-Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
-        <mori.takahiro@ab.mitsubishielectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <d1df9cca-3020-9e1e-0f3d-9db6752a22b6@gmail.com>
-Subject: RE: [PATCH v3] exfat: integrates dir-entry getting and validation
-Date:   Wed, 26 Aug 2020 13:19:09 +0900
-Message-ID: <002e01d67b60$0b7d82a0$227887e0$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQH6G9isXEQ9sMxkt33jRW4ItYjr3QIF0gSvAfjtwRwBp6Lp0QLf0PstAjwGXzkCQUE62QDGw52qqJQvqBA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNJsWRmVeSWpSXmKPExsWy7bCmvu7eR67xBqdPaFv8mHubxeLNyaks
-        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYrHl3xFWB3aPL3OOs3u0Tf7H7tF8bCWbx85Zd9k9+ras
-        YvT4vEkugC0qxyYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DX
-        LTMH6BYlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToGhQYFecWJucWleul5yfq6V
-        oYGBkSlQZUJOxsWtvxgLLvBXvLyxirWB8RBPFyMnh4SAicS1dxvYQGwhgR2MEqeuAsW5gOxP
-        jBIr1y1ghnA+M0osfrKSBabj4fQmdojELkaJN7fOsUA4LxklDnfMYQKpYhPQlfj3Zz/YXBEB
-        PYmTJ6+zgRQxCzQySSw/8QVoLgcHp4CtxIQOCxBTWMBLYl6vFEg5i4CqRP/ZQ6wgNq+ApcTF
-        5mfsELagxMmZT8COYBaQl9j+dg4zxEEKEj+fLmOFWJUkcbtlIjNEjYjE7M42sA8kBBZySGye
-        2cMI0eAicXXfDVYIW1ji1fEt7BC2lMTL/jZ2kHskBKolPu6Hmt/BKPHiuy2EbSxxc/0GVpAS
-        ZgFNifW79CHCihI7f89lhFjLJ/Huaw8rxBReiY42IYgSVYm+S4eZIGxpia72D+wTGJVmIXls
-        FpLHZiF5YBbCsgWMLKsYxVILinPTU4sNC0yRo3oTIziValnuYJz+9oPeIUYmDsZDjBIczEoi
-        vIIXneOFeFMSK6tSi/Lji0pzUosPMZoCg3ois5Rocj4wmeeVxBuaGhkbG1uYmJmbmRorifM+
-        vKUQLySQnliSmp2aWpBaBNPHxMEp1cCkrMFz3++pbdoSvvwJNwKTbqatevEkPXvqlBmuzFeO
-        p3959HxWzbPMLcHlvVtObjx/pdkw317d2Wc586EdPpy6JRUfmconxET/+zhviryO0s5ZoufE
-        lv/t+Xaia0FFq8XDyMhdm0vZ2ZZOY0kXamacHjPNe+d3x87ZXXtjW05XdM5xnfizIbV0hrtu
-        6e2a5WcmZGbHbEjw4j4m+8h8vumF0sqVJ4TinzWdKQ5yXrGap+v/a4Wy9M1r2SYwi5ReX8N/
-        ZZbQxnSeDfsaP+i7++gstN59ebOoXN3vxdsVXk5knlb3ovLxcvulx5oTvq0Tn3p2dQk7z23t
-        mHCBK9r2q00OTFv087XLCi7fa+9l9034q8RSnJFoqMVcVJwIABqdCskuBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42LZdlhJXnfvI9d4g0VzWS1+zL3NYvHm5FQW
-        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
-        MXp83iQXwBbFZZOSmpNZllqkb5fAlXFx6y/Gggv8FS9vrGJtYDzE08XIySEhYCLxcHoTexcj
-        F4eQwA5Gia6dvUwQCWmJYyfOMHcxcgDZwhKHDxeDhIUEnjNKNPQ5gdhsAroS//7sZwOxRQT0
-        JE6evM4GModZoJlJ4tuzJcwQQ5czS/xbe4UVZBCngK3EhA4LEFNYwEtiXq8USC+LgKpE/9lD
-        rCA2r4ClxMXmZ+wQtqDEyZlPWEBsZgFtiac3n0LZ8hLb385hhjhTQeLn02WsEDckSdxumcgM
-        USMiMbuzjXkCo/AsJKNmIRk1C8moWUhaFjCyrGKUTC0ozk3PLTYsMMpLLdcrTswtLs1L10vO
-        z93ECI4qLa0djHtWfdA7xMjEwXiIUYKDWUmEV/Cic7wQb0piZVVqUX58UWlOavEhRmkOFiVx
-        3q+zFsYJCaQnlqRmp6YWpBbBZJk4OKUamNxU5UqVPwse3SrdVBHFkZ/DeUl5zvYv2XV1XX9q
-        S1gYQ8KXKVy5cSb2OFtTkQN77VyBF4VeoUFOz3YdfTol6Zh79K4JcbPaVu3+WN9/fauQqvC1
-        6QfFBMvvFF7TqNftjeq6pRah5j9dsHdPncAdjiRWiTz+3yeM59wMnsu18UDnoxlR5pqpFjIZ
-        twwXncyIWdNf9PWdmffGuWFH3JXv2k0pnDa182g0f6TRQvfuo0s3X1sy/yJXzbkvxbMqu1re
-        +k27PD+Hd79B2cpJuZNCYxoVSu++0T5hsMFYJy1vpp5p7zyO4DWNFl1f0x257H+YRwsopawJ
-        aqvq+VmyJiKmPtb2fJpEnkT78gqp0rNKLMUZiYZazEXFiQCAkxC0GQMAAA==
-X-CMS-MailID: 20200826041909epcas1p108db024e965f292c5b479a341bdd76b5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200806010250epcas1p482847d6d906fbf0ccd618c7d1cacd12e
-References: <CGME20200806010250epcas1p482847d6d906fbf0ccd618c7d1cacd12e@epcas1p4.samsung.com>
-        <20200806010229.24690-1-kohada.t2@gmail.com>
-        <003c01d66edc$edbb1690$c93143b0$@samsung.com>
-        <ca3b2b52-1abc-939c-aa11-8c7d12e4eb2e@gmail.com>
-        <000001d67787$d3abcbb0$7b036310$@samsung.com>
-        <fdaff3a3-99ba-8b9e-bdaf-9bcf9d7208e0@gmail.com>
-        <000101d67b44$ac458c80$04d0a580$@samsung.com>
-        <d1df9cca-3020-9e1e-0f3d-9db6752a22b6@gmail.com>
+        Wed, 26 Aug 2020 00:29:15 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4921C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 21:29:15 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id c67so572826qkd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 21:29:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=e2sthLChL56CJC3JcU1bN90aRQyj9LySBce8eSFPDRQ=;
+        b=ZfeljoJgdAap9byIHIint/gzU7sEuB5x4h9+SYb3crYeFbbA1NFL/brKFik8vIK3a3
+         yD1QdgacNapvaxAScMoJnauD+D9rPVRgDB8vm6DloZuXRnOffHJggPmxqGj0QlLuuJLs
+         LwHFOv/WTd6z9j4jsx46jrKTCMA7PlUfws5gD+LIdbThT3IkYwXoh0Ml6ivqPRbkwOEf
+         pCOWWiZHc0LI+mzaJaiuSTKFnSiw8JuAigKuIjY0c2Ja3l5QW1R516rYft1866NqLkJI
+         OJjehycNrf9BnYd7JQwjpraqZmlorSd0KgdXDCeBvYk7bDA6Y7FhQvnC6+XbTTNWRryL
+         QaDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=e2sthLChL56CJC3JcU1bN90aRQyj9LySBce8eSFPDRQ=;
+        b=OH2LQWn30eonzLdTpVSUY8YBGYMCUXiMgNp5Jud7ku9NhiOw/cHoKQi8fqp1uXCIBG
+         R5COfP76Dlfa0H66RDrBWYE/bU7IV+p8niXLf0i+3aHM2v6+1WEXc9BHpSUKKWV7zM6T
+         ejLYHi5yLHy8pC4MlYY+JJprVeKMirgTXwshvmQCMElPi+AHmGSpqq3wiz/MHQD1rKy3
+         9PIUqjvO3+iVMEBf6/iLI6kBjEPt4GUhMZbBysdZ203PIGEJ3vdpJiYdjiqNB0ldV6nJ
+         ePj8/m5Vjl1Az/rIGjcEA1Z6hvivqIqa3ZzYieC1ORjHpz+eqSlteEziEDG8iZqcxLUS
+         Is9A==
+X-Gm-Message-State: AOAM531xTms53VHMyEdQInDHtBFOiF7zZsNdCjoCu9o3POFzubhTUyeG
+        QUc7aubR7P3kY6pZmOJ/lGzm1L8/pPaJ
+X-Google-Smtp-Source: ABdhPJwhtThJ2l1VTxtlAD92hKu424560dbu+JG7twten6GlJpZWpVn3f4xWeSGiL+y3Vsq6zjYGqtDK6S0t
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2cd:2:f693:9fff:fef4:4583])
+ (user=irogers job=sendgmr) by 2002:a0c:f849:: with SMTP id
+ g9mr12698699qvo.80.1598416154530; Tue, 25 Aug 2020 21:29:14 -0700 (PDT)
+Date:   Tue, 25 Aug 2020 21:29:09 -0700
+Message-Id: <20200826042910.1902374-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH 1/2] perf expr: Force encapsulation on expr_id_data
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 2020/08/26 10:03, Namjae Jeon wrote:
-> >> Second: Range validation and type validation should not be separated.
-> >> When I started making this patch, I intended to add only range validation.
-> >> However, after the caller gets the ep, the type validation follows.
-> >> Get ep, null check of ep (= range verification), type verification is a series of procedures.
-> >> There would be no reason to keep them independent anymore.
-> >> Range and type validation is enforced when the caller uses ep.
-> > You can add a validate flags as argument of exfat_get_dentry_set(), e.g. none, basic and strict.
-> > none : only range validation.
-> > basic : range + type validation.
-> > strict : range + type + checksum and name length, etc.
-> 
-> Currently, various types of verification will not be needed.
-> Let's add it when we need it.
-> >
-> >>> -	/* validiate cached dentries */
-> >>> -	for (i = 1; i < num_entries; i++) {
-> >>> -		ep = exfat_get_dentry_cached(es, i);
-> >>> -		if (!exfat_validate_entry(exfat_get_entry_type(ep), &mode))
-> >>> +	ep = exfat_get_dentry_cached(es, ENTRY_STREAM);
-> >>> +	if (!ep || ep->type != EXFAT_STREAM)
-> >>> +		goto free_es;
-> >>> +	es->de[ENTRY_STREAM] = ep;
-> >>
-> >> The value contained in stream-ext dir-entry should not be used before validating the EntrySet
-> checksum.
-> >> So I would insert EntrySet checksum validation here.
-> >> In that case, the checksum verification loop would be followed by the
-> >> TYPE_NAME verification loop, can you acceptable?
-> > Yes. That would be great.
-> 
-> OK.
-> I'll add TYPE_NAME verification after checksum verification, in next patch.
-> However, I think it is enough to validate TYPE_NAME when extracting name.
-> Could you please tell me why you think you need TYPE_NAME validation here?
-I've told you on previous mail. This function should return validated dentry set after checking
-file->stream->name in sequence.
-> 
-> 
-> BR
-> ---
-> Tetsuhiro Kohada <kohada.t2@gmail.com>
-> >
+This patch resolves some undefined behavior where variables in
+expr_id_data were accessed (for debugging) without being defined. To
+better enforce the tagged union behavior, the struct is moved into
+expr.c and accessors provided. Tag values (kinds) are explicitly
+identified.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/expr.c        | 64 ++++++++++++++++++++++++++++++-----
+ tools/perf/util/expr.h        | 17 +++-------
+ tools/perf/util/expr.y        |  2 +-
+ tools/perf/util/metricgroup.c |  4 +--
+ 4 files changed, 62 insertions(+), 25 deletions(-)
+
+diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+index 53482ef53c41..1ca0992db86b 100644
+--- a/tools/perf/util/expr.c
++++ b/tools/perf/util/expr.c
+@@ -17,6 +17,25 @@
+ extern int expr_debug;
+ #endif
+ 
++struct expr_id_data {
++	union {
++		double val;
++		struct {
++			double val;
++			const char *metric_name;
++			const char *metric_expr;
++		} ref;
++		struct expr_id	*parent;
++	};
++
++	enum {
++		EXPR_ID_DATA__VALUE,
++		EXPR_ID_DATA__REF,
++		EXPR_ID_DATA__REF_VALUE,
++		EXPR_ID_DATA__PARENT,
++	} kind;
++};
++
+ static size_t key_hash(const void *key, void *ctx __maybe_unused)
+ {
+ 	const char *str = (const char *)key;
+@@ -48,6 +67,7 @@ int expr__add_id(struct expr_parse_ctx *ctx, const char *id)
+ 		return -ENOMEM;
+ 
+ 	data_ptr->parent = ctx->parent;
++	data_ptr->kind = EXPR_ID_DATA__PARENT;
+ 
+ 	ret = hashmap__set(&ctx->ids, id, data_ptr,
+ 			   (const void **)&old_key, (void **)&old_data);
+@@ -69,7 +89,7 @@ int expr__add_id_val(struct expr_parse_ctx *ctx, const char *id, double val)
+ 	if (!data_ptr)
+ 		return -ENOMEM;
+ 	data_ptr->val = val;
+-	data_ptr->is_ref = false;
++	data_ptr->kind = EXPR_ID_DATA__VALUE;
+ 
+ 	ret = hashmap__set(&ctx->ids, id, data_ptr,
+ 			   (const void **)&old_key, (void **)&old_data);
+@@ -114,8 +134,7 @@ int expr__add_ref(struct expr_parse_ctx *ctx, struct metric_ref *ref)
+ 	 */
+ 	data_ptr->ref.metric_name = ref->metric_name;
+ 	data_ptr->ref.metric_expr = ref->metric_expr;
+-	data_ptr->ref.counted = false;
+-	data_ptr->is_ref = true;
++	data_ptr->kind = EXPR_ID_DATA__REF;
+ 
+ 	ret = hashmap__set(&ctx->ids, name, data_ptr,
+ 			   (const void **)&old_key, (void **)&old_data);
+@@ -148,17 +167,30 @@ int expr__resolve_id(struct expr_parse_ctx *ctx, const char *id,
+ 
+ 	data = *datap;
+ 
+-	pr_debug2("lookup: is_ref %d, counted %d, val %f: %s\n",
+-		  data->is_ref, data->ref.counted, data->val, id);
+-
+-	if (data->is_ref && !data->ref.counted) {
+-		data->ref.counted = true;
++	switch (data->kind) {
++	case EXPR_ID_DATA__VALUE:
++		pr_debug2("lookup(%s): val %f\n", id, data->val);
++		break;
++	case EXPR_ID_DATA__PARENT:
++		pr_debug2("lookup(%s): parent %s\n", id, data->parent->id);
++		break;
++	case EXPR_ID_DATA__REF:
++		pr_debug2("lookup(%s): ref metric name %s\n", id,
++			data->ref.metric_name);
+ 		pr_debug("processing metric: %s ENTRY\n", id);
+-		if (expr__parse(&data->val, ctx, data->ref.metric_expr, 1)) {
++		data->kind = EXPR_ID_DATA__REF_VALUE;
++		if (expr__parse(&data->ref.val, ctx, data->ref.metric_expr, 1)) {
+ 			pr_debug("%s failed to count\n", id);
+ 			return -1;
+ 		}
+ 		pr_debug("processing metric: %s EXIT: %f\n", id, data->val);
++		break;
++	case EXPR_ID_DATA__REF_VALUE:
++		pr_debug2("lookup(%s): ref val %f metric name %s\n", id,
++			data->ref.val, data->ref.metric_name);
++		break;
++	default:
++		assert(0);  /* Unreachable. */
+ 	}
+ 
+ 	return 0;
+@@ -241,3 +273,17 @@ int expr__find_other(const char *expr, const char *one,
+ 
+ 	return ret;
+ }
++
++double expr_id_data__value(const struct expr_id_data *data)
++{
++	if (data->kind == EXPR_ID_DATA__VALUE)
++		return data->val;
++	assert(data->kind == EXPR_ID_DATA__REF_VALUE);
++	return data->ref.val;
++}
++
++struct expr_id *expr_id_data__parent(struct expr_id_data *data)
++{
++	assert(data->kind == EXPR_ID_DATA__PARENT);
++	return data->parent;
++}
+diff --git a/tools/perf/util/expr.h b/tools/perf/util/expr.h
+index fc2b5e824a66..dcf8d19b83c8 100644
+--- a/tools/perf/util/expr.h
++++ b/tools/perf/util/expr.h
+@@ -23,19 +23,7 @@ struct expr_parse_ctx {
+ 	struct expr_id	*parent;
+ };
+ 
+-struct expr_id_data {
+-	union {
+-		double val;
+-		struct {
+-			const char *metric_name;
+-			const char *metric_expr;
+-			bool counted;
+-		} ref;
+-		struct expr_id	*parent;
+-	};
+-
+-	bool is_ref;
+-};
++struct expr_id_data;
+ 
+ struct expr_scanner_ctx {
+ 	int start_token;
+@@ -57,4 +45,7 @@ int expr__parse(double *final_val, struct expr_parse_ctx *ctx,
+ int expr__find_other(const char *expr, const char *one,
+ 		struct expr_parse_ctx *ids, int runtime);
+ 
++double expr_id_data__value(const struct expr_id_data *data);
++struct expr_id *expr_id_data__parent(struct expr_id_data *data);
++
+ #endif
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index d34b370391c6..b2ada8f8309a 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -93,7 +93,7 @@ expr:	  NUMBER
+ 						YYABORT;
+ 					}
+ 
+-					$$ = data->val;
++					$$ = expr_id_data__value(data);
+ 					free($1);
+ 				}
+ 	| expr '|' expr		{ $$ = (long)$1 | (long)$3; }
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 8831b964288f..339bfb19a10b 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -786,7 +786,7 @@ static int recursion_check(struct metric *m, const char *id, struct expr_id **pa
+ 	if (ret)
+ 		return ret;
+ 
+-	p = data->parent;
++	p = expr_id_data__parent(data);
+ 
+ 	while (p->parent) {
+ 		if (!strcmp(p->id, id)) {
+@@ -807,7 +807,7 @@ static int recursion_check(struct metric *m, const char *id, struct expr_id **pa
+ 	}
+ 
+ 	p->id     = strdup(id);
+-	p->parent = data->parent;
++	p->parent = expr_id_data__parent(data);
+ 	*parent   = p;
+ 
+ 	return p->id ? 0 : -ENOMEM;
+-- 
+2.28.0.297.g1956fa8f8d-goog
 
