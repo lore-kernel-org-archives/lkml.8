@@ -2,222 +2,128 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F4DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 37F6C2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3224120B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:51:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ttr3PaIs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbgHZMvi (ORCPT
+        id S1730036AbgHZMvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:51:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43236 "EHLO
+        Wed, 26 Aug 2020 08:51:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729473AbgHZMva (ORCPT
+        with ESMTP id S1730018AbgHZMvi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:51:30 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD3AC061756
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 05:51:29 -0700 (PDT)
-Received: from ramsan ([84.195.186.194])
-        by baptiste.telenet-ops.be with bizsmtp
-        id LCrR2300G4C55Sk01CrRDP; Wed, 26 Aug 2020 14:51:25 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1kAuth-00082b-IT; Wed, 26 Aug 2020 14:51:25 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1kAuth-0006Dc-Fu; Wed, 26 Aug 2020 14:51:25 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     linux-m68k@lists.linux-m68k.org
-Cc:     linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] m68k: amiga: Clean up Amiga hardware configuration
-Date:   Wed, 26 Aug 2020 14:51:24 +0200
-Message-Id: <20200826125124.23863-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 26 Aug 2020 08:51:38 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F1CC061574;
+        Wed, 26 Aug 2020 05:51:38 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id x6so408663ooe.8;
+        Wed, 26 Aug 2020 05:51:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=diZBGnPjcaRpzNNj2xUjW6fq8RTGqEBgIiCRFd1AUvI=;
+        b=ttr3PaIsjT/RjpWXQtLVmsui9TXBbtizCopYLMyvJTdW7EZMRA2PpoSrAsjerIXr/z
+         YaNlHvT8BWC263/aLRGBR3zCvP7tqHR8H97Y3oe6Ofc5jEF9EkcrrjTm0hu4W2xqYrqT
+         eYCCCdlkwUXwMGp1Qj/k13eA4A7+ac7kZ0kEmM+fydpqWPkoPivDeaT0U3yKTPjnwo2a
+         qAkJVV+/5B86W4OCfcC6zQshjourutOlO/Xo9/WX0AYAZvFHz5k4TXJu0ZRUEHJNGtG3
+         UiOEOgk9gXrki77lUns3qG5O8lvJmRPVuZILLFGmiNWwJIz4qyGQRjFthGhdezTsis5G
+         4fHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=diZBGnPjcaRpzNNj2xUjW6fq8RTGqEBgIiCRFd1AUvI=;
+        b=XX6ux3HJ/oGWCB1YbhHzayR8J1VMZa8IvXS4kLDo7E0siLRjM1SJjISjiJGxvGEPTe
+         BeHjamuKpl3VekqrQlSZuiDyjjR2biF4giuNx5CnEQ2u5oYLbkOehZUqCLH9qRjPdy+f
+         YoaUs5VjzaGdYYfZALx/Q9S5tgKK7DAnNKeZam9OX7ENhRgNk5T7TXvxQTE202L+k5HT
+         WXGQlqWWw5GtKsfRQyg/ozv52YbJbvvXFFITsktyK0ne9T4kZ9tm1cOphUaR4qnWI9vy
+         L60gHKiKLF5zCxgDU2/BX5XpSs5pSoJuoBjBxTnxYmYaZlRywIfFZ1GSlU6bq5Duzck8
+         c0ew==
+X-Gm-Message-State: AOAM530gN747LKJevhr0DCZ38pApMlixXWoe5loAny7ptS3YUT44OsFG
+        abjQCCqm1Rbl0N8CpwnsswHBs5U1iykmOl8L19zfEV6E
+X-Google-Smtp-Source: ABdhPJzmjHEiAqqyB6P0v1hZaqEVA0oSJ76tcW7W9vc9a0ZBpSV8NZ1U0o+lj1suA/o+LdgT1knTCjGmuXzY0Q80Igc=
+X-Received: by 2002:a4a:b80b:: with SMTP id g11mr10543780oop.13.1598446297471;
+ Wed, 26 Aug 2020 05:51:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200822010018.19453-1-nramas@linux.microsoft.com>
+ <CAEjxPJ5Kok-TBfS=XQ+NUC5tuaZRkyLBOawG4UDky51_bsMnGw@mail.gmail.com>
+ <418618c4-a0c6-6b28-6718-2726a29b83c5@linux.microsoft.com>
+ <CAEjxPJ6-8WnZRJnADsn=RVakzJiESjEjK-f8nSkscpT7dnricQ@mail.gmail.com>
+ <CAFqZXNvVQ5U6Ea3gT32Z0hfWbu7GPR-mTF2z6-JZZJT57Heuuw@mail.gmail.com>
+ <f041e8ee-3955-9551-b72d-d4d7fa6e636d@linux.microsoft.com>
+ <CAHC9VhQP7_rV+Oi6weLjVhrx2d8iu9UJ8zeE=ZcqnBMqngrJ4Q@mail.gmail.com> <07854807-c495-b7e5-fc44-26d78ff14f1b@linux.microsoft.com>
+In-Reply-To: <07854807-c495-b7e5-fc44-26d78ff14f1b@linux.microsoft.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Wed, 26 Aug 2020 08:51:26 -0400
+Message-ID: <CAEjxPJ4TkEEKG+pXwUjyysov1s1mFk4jbGGVyC7ghmpfd3TJ4w@mail.gmail.com>
+Subject: Re: [PATCH] SELinux: Measure state and hash of policy using IMA
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>,
+        tusharsu@linux.microsoft.com, Sasha Levin <sashal@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the generic Amiga hardware configuration section out of the
-switch statement, which allows to replace all ugly jumps by break
-statements.
+On Tue, Aug 25, 2020 at 4:49 PM Lakshmi Ramasubramanian
+<nramas@linux.microsoft.com> wrote:
+>
+> On 8/24/20 3:18 PM, Paul Moore wrote:
+>
+> Hi Paul,
+>
+> >>>>> Is Ondrej's re-try approach I need to use to workaround policy reload issue?
+> >>>>
+> >>>> No, I think perhaps we should move the mutex to selinux_state instead
+> >>>> of selinux_fs_info.  selinux_fs_info has a pointer to selinux_state so
+> >>>> it can then use it indirectly.  Note that your patches are going to
+> >>>> conflict with other ongoing work in the selinux next branch that is
+> >>>> refactoring policy load and converting the policy rwlock to RCU.
+> >>>
+> >>> Yeah, and I'm experimenting with a patch on top of Stephen's RCU work
+> >>> that would allow you to do this in a straightforward way without even
+> >>> messing with the fsi->mutex. My patch may or may not be eventually
+> >>> committed, but either way I'd recommend holding off on this for a
+> >>> while until the dust settles around the RCU conversion.
+> >>
+> >> I can make the SELinux\IMA changes in "selinux next branch" taking
+> >> dependencies on Stephen's patches + relevant IMA patches.
+> >
+> > I know it can be frustrating to hear what I'm about to say, but the
+> > best option is probably just to wait a little to let things settle in
+> > the SELinux -next branch.  There is a lot of stuff going on right now
+> > with patches flooding in (at least "flooding" from a SELinux kernel
+> > development perspective) and we/I've haven't gotten through all of
+> > them yet.
+> >
+>
+> Could you please let me know when the current set of changes in SELinux
+> next branch would be completed and be ready to take new changes?
+>
+> I mean, roughly - would it be a month from now or you expect that to
+> take longer?
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- arch/m68k/amiga/config.c | 118 +++++++++++++++++++--------------------
- 1 file changed, 58 insertions(+), 60 deletions(-)
-
-diff --git a/arch/m68k/amiga/config.c b/arch/m68k/amiga/config.c
-index 9c1afa143d05962b..bee9f240f35deef5 100644
---- a/arch/m68k/amiga/config.c
-+++ b/arch/m68k/amiga/config.c
-@@ -214,7 +214,7 @@ static void __init amiga_identify(void)
- 
- 	switch (amiga_model) {
- 	case AMI_UNKNOWN:
--		goto Generic;
-+		break;
- 
- 	case AMI_600:
- 	case AMI_1200:
-@@ -227,7 +227,7 @@ static void __init amiga_identify(void)
- 	case AMI_2000:
- 	case AMI_2500:
- 		AMIGAHW_SET(A2000_CLK);	/* Is this correct for all models? */
--		goto Generic;
-+		break;
- 
- 	case AMI_3000:
- 	case AMI_3000T:
-@@ -238,7 +238,7 @@ static void __init amiga_identify(void)
- 		AMIGAHW_SET(A3000_SCSI);
- 		AMIGAHW_SET(A3000_CLK);
- 		AMIGAHW_SET(ZORRO3);
--		goto Generic;
-+		break;
- 
- 	case AMI_4000T:
- 		AMIGAHW_SET(A4000_SCSI);
-@@ -247,68 +247,12 @@ static void __init amiga_identify(void)
- 		AMIGAHW_SET(A4000_IDE);
- 		AMIGAHW_SET(A3000_CLK);
- 		AMIGAHW_SET(ZORRO3);
--		goto Generic;
-+		break;
- 
- 	case AMI_CDTV:
- 	case AMI_CD32:
- 		AMIGAHW_SET(CD_ROM);
- 		AMIGAHW_SET(A2000_CLK);             /* Is this correct? */
--		goto Generic;
--
--	Generic:
--		AMIGAHW_SET(AMI_VIDEO);
--		AMIGAHW_SET(AMI_BLITTER);
--		AMIGAHW_SET(AMI_AUDIO);
--		AMIGAHW_SET(AMI_FLOPPY);
--		AMIGAHW_SET(AMI_KEYBOARD);
--		AMIGAHW_SET(AMI_MOUSE);
--		AMIGAHW_SET(AMI_SERIAL);
--		AMIGAHW_SET(AMI_PARALLEL);
--		AMIGAHW_SET(CHIP_RAM);
--		AMIGAHW_SET(PAULA);
--
--		switch (amiga_chipset) {
--		case CS_OCS:
--		case CS_ECS:
--		case CS_AGA:
--			switch (amiga_custom.deniseid & 0xf) {
--			case 0x0c:
--				AMIGAHW_SET(DENISE_HR);
--				break;
--			case 0x08:
--				AMIGAHW_SET(LISA);
--				break;
--			default:
--				AMIGAHW_SET(DENISE);
--				break;
--			}
--			break;
--		}
--		switch ((amiga_custom.vposr>>8) & 0x7f) {
--		case 0x00:
--			AMIGAHW_SET(AGNUS_PAL);
--			break;
--		case 0x10:
--			AMIGAHW_SET(AGNUS_NTSC);
--			break;
--		case 0x20:
--		case 0x21:
--			AMIGAHW_SET(AGNUS_HR_PAL);
--			break;
--		case 0x30:
--		case 0x31:
--			AMIGAHW_SET(AGNUS_HR_NTSC);
--			break;
--		case 0x22:
--		case 0x23:
--			AMIGAHW_SET(ALICE_PAL);
--			break;
--		case 0x32:
--		case 0x33:
--			AMIGAHW_SET(ALICE_NTSC);
--			break;
--		}
--		AMIGAHW_SET(ZORRO);
- 		break;
- 
- 	case AMI_DRACO:
-@@ -318,6 +262,60 @@ static void __init amiga_identify(void)
- 		panic("Unknown Amiga Model");
- 	}
- 
-+	AMIGAHW_SET(AMI_VIDEO);
-+	AMIGAHW_SET(AMI_BLITTER);
-+	AMIGAHW_SET(AMI_AUDIO);
-+	AMIGAHW_SET(AMI_FLOPPY);
-+	AMIGAHW_SET(AMI_KEYBOARD);
-+	AMIGAHW_SET(AMI_MOUSE);
-+	AMIGAHW_SET(AMI_SERIAL);
-+	AMIGAHW_SET(AMI_PARALLEL);
-+	AMIGAHW_SET(CHIP_RAM);
-+	AMIGAHW_SET(PAULA);
-+
-+	switch (amiga_chipset) {
-+	case CS_OCS:
-+	case CS_ECS:
-+	case CS_AGA:
-+		switch (amiga_custom.deniseid & 0xf) {
-+		case 0x0c:
-+			AMIGAHW_SET(DENISE_HR);
-+			break;
-+		case 0x08:
-+			AMIGAHW_SET(LISA);
-+			break;
-+		default:
-+			AMIGAHW_SET(DENISE);
-+			break;
-+		}
-+		break;
-+	}
-+	switch ((amiga_custom.vposr>>8) & 0x7f) {
-+	case 0x00:
-+		AMIGAHW_SET(AGNUS_PAL);
-+		break;
-+	case 0x10:
-+		AMIGAHW_SET(AGNUS_NTSC);
-+		break;
-+	case 0x20:
-+	case 0x21:
-+		AMIGAHW_SET(AGNUS_HR_PAL);
-+		break;
-+	case 0x30:
-+	case 0x31:
-+		AMIGAHW_SET(AGNUS_HR_NTSC);
-+		break;
-+	case 0x22:
-+	case 0x23:
-+		AMIGAHW_SET(ALICE_PAL);
-+		break;
-+	case 0x32:
-+	case 0x33:
-+		AMIGAHW_SET(ALICE_NTSC);
-+		break;
-+	}
-+	AMIGAHW_SET(ZORRO);
-+
- #define AMIGAHW_ANNOUNCE(name, str)		\
- 	if (AMIGAHW_PRESENT(name))		\
- 		pr_cont(str)
--- 
-2.17.1
-
+I can't speak for Paul but I would expect it to be sooner rather than
+later. Ondrej has some follow ups on top of my policy rcu conversion
+but then it should be good to go.
