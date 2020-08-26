@@ -2,88 +2,123 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BE0C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1343C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25EE22078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B61D62078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:41:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ncib95Z0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TECBFGlJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgHZUif (ORCPT
+        id S1726904AbgHZUlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:38:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60088 "EHLO
+        Wed, 26 Aug 2020 16:41:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgHZUie (ORCPT
+        with ESMTP id S1726739AbgHZUlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:38:34 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC18AC061574
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:38:33 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id n128so2746272oif.0
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:38:33 -0700 (PDT)
+        Wed, 26 Aug 2020 16:41:15 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A0D1C061574;
+        Wed, 26 Aug 2020 13:41:14 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id oz20so4706461ejb.5;
+        Wed, 26 Aug 2020 13:41:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6RDmTeskOQgqjH7Bwa9ilUHRa8YVRzYGClEJYJQLJEs=;
-        b=Ncib95Z0vslOOUIyFxuviDs0j+tBfe5FDoorlEI4kUHJBZv+l7A+C1TbJPzR25/WjW
-         AVFG/Ml7nQJFKgucAJce4V7Yd/QfZZI3tKY9DdcDLrvUQxBHXTAExIg5vRU36ClMmfQv
-         UiDSu5XzVvJFOjf4XmcYqS5uf185wpBop6AjhfzUtSl7XKHDK8/f+OlFhtik6whAojDK
-         3xYlxMTP/2aMJ05MjhL8C5iU4SfPsbZGZ5aRnNwnNLsRxD81hi+tFe7vjbpbEKJ6bPrs
-         Y1UCLVyOj6NK9naOKWU+opF0FdOBrQSlQ8rG2jJEqn945yuYMOw6ZANhCMGmHAQbMCMD
-         GsTA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OEHNQBqIQ3j/x1FwJ86oOM9T7cjlrKj+42ssBtV3FXk=;
+        b=TECBFGlJdGKHvGXEafJ76TE80s9bCzMPLCkkaVJSbAgl7oEv0TMR3/KYBsV3U3gOGD
+         pvOmYSJ0UqLVpejELnLu2igAhl/2HA8QhEcykNDUGysro/vEJKREraYNvMFdpndC28kT
+         h8CH2i1zkiNPVTOQuMIG/HsA2M9FwCp1I9TQh+JwKCMsWOYhvP+uW1y+qP5WogxAqLN8
+         nuijRkpK3TuUsaat5uu1xRkI1cDeBRy1FWoO5SnZ/XCCHVRq+ETvYKrKjruOtt45j8u5
+         svUlHP+lUUywlvNkuJ3NuYZ6zbmdL6Ov4s7L00SsmdcLYi5Jmg8Ei2HkJ7DZ6x3V74WP
+         d+SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6RDmTeskOQgqjH7Bwa9ilUHRa8YVRzYGClEJYJQLJEs=;
-        b=JRdtqZgSPu+Pyotl3V92nusj4sSfOqAzY04vXP+rC1cTqpqNdDJGueCU3WVW8lS0fM
-         flW2opDBZ5tPdh5Ex3TtJ7gX4Lzv/cPpAwekYcTDyizmgG1sEc+JF2rXQ5PNFkOLno+9
-         4vya93P1NDdC5hV0QAUmRV0XGDPkUURDVHGPFxeRuIKfaxsa4jb0txoi8XDl6AfL37ff
-         gcz24fmTGDXDhzaKC0HFbhC8kAu6ahP0E6NvRA080PiacK2SQ6Ocq+X87lVGddaRMlex
-         RgnnCQzswJovCy1MyCezC4YK/kRgA5AIKxdMwKlynZZzOCABfrV5/ZveAY6/j6o+PIDQ
-         LddA==
-X-Gm-Message-State: AOAM531uN5UEC2AmuF3RCoa1pvqYnUsS0fDNm2CG8oJBh/5afSPX6R5F
-        F6vQdi6ne4zArR7cU5wCvRrqiCW9s6eUhrCYeTrQ+Q==
-X-Google-Smtp-Source: ABdhPJy6hwY95r78yIoeS5ram8XOf7QjXY5PDWluJU3+L70Px0lQMsNtKZKlaCwQW/hQeMV41R65lk9NEeH70RX44Vc=
-X-Received: by 2002:a54:4795:: with SMTP id o21mr5056157oic.13.1598474312866;
- Wed, 26 Aug 2020 13:38:32 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OEHNQBqIQ3j/x1FwJ86oOM9T7cjlrKj+42ssBtV3FXk=;
+        b=W0kzmGqEj597i8+kkTq/vAbkRsNhz0AOl/onrVOIxpq5ESRaUUOIZJHh5RF/PWVc96
+         dcKM6oYgZ0Hdy6H9LMnMw5epcFav7cByyylmQDHG+eArne9VH3W90uXG1ahgkkERRBKM
+         EXnx8QAzSqd3601tqGcSWq6HFPIA2tBibLPdQ5oDL2KqjDWhCYJ7g7gEP9RK7l46VMaB
+         RtKCCFT8XSsZdBXEtAiffTdQTabgEeViTb6A9eQY6XwevsFhFHZixxI0dgDrP21ky9MF
+         Wv5ErlIQD7vv9vAdfkX3POyjlZrgYu0NOdKloVtVgVGUaxD41pCbN1Z8ARRx3u5UmgzP
+         YA9A==
+X-Gm-Message-State: AOAM531ljccmBvxiqiOEaBhh3CSQPsBMiBbRATdtudJAE7C2zinyrJGV
+        1HLYar0d6KsHiA+VIhAhGes=
+X-Google-Smtp-Source: ABdhPJwVs4itkESl3B1zyf1XkhvgvyM/LNEElsRIkgnj7DVCwoKKFLi2GJKpDYbDIkYW0ozyirqNBA==
+X-Received: by 2002:a17:906:4f11:: with SMTP id t17mr14820025eju.371.1598474471373;
+        Wed, 26 Aug 2020 13:41:11 -0700 (PDT)
+Received: from skbuf ([86.126.22.216])
+        by smtp.gmail.com with ESMTPSA id i25sm2860688edt.1.2020.08.26.13.41.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 13:41:10 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 23:41:08 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        tanveer <tanveer.alam@puresoftware.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
+Message-ID: <20200826204108.reuy7ieqabutwuwo@skbuf>
+References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
+ <20200822183342.6sdhp6yq6i7yvdia@skbuf>
+ <CAHp75VeNXy1jWNWMuZc0bfXruKc3=0H4ezwpE8jbj6GLYk5QBA@mail.gmail.com>
 MIME-Version: 1.0
-References: <159846887637.18873.14677728679411578606.stgit@bmoger-ubuntu> <159846923918.18873.8521340533771523718.stgit@bmoger-ubuntu>
-In-Reply-To: <159846923918.18873.8521340533771523718.stgit@bmoger-ubuntu>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Wed, 26 Aug 2020 13:38:21 -0700
-Message-ID: <CALMp9eSM6joAKAHPeJWZB8srCxJPJyTxgpwjAzpJuCLm0LmvyA@mail.gmail.com>
-Subject: Re: [PATCH v5 02/12] KVM: SVM: Change intercept_cr to generic intercepts
-To:     Babu Moger <babu.moger@amd.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        kvm list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeNXy1jWNWMuZc0bfXruKc3=0H4ezwpE8jbj6GLYk5QBA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:14 PM Babu Moger <babu.moger@amd.com> wrote:
+On Wed, Aug 26, 2020 at 10:34:04PM +0300, Andy Shevchenko wrote:
+> On Sat, Aug 22, 2020 at 9:37 PM Vladimir Oltean <olteanv@gmail.com> wrote:
+> > On Fri, Aug 21, 2020 at 06:40:29PM +0530, kuldip dwivedi wrote:
 >
-> Change intercept_cr to generic intercepts in vmcb_control_area.
-> Use the new vmcb_set_intercept, vmcb_clr_intercept and vmcb_is_intercept
-> where applicable.
+> > Just noticed this now.
+> > So for device tree, spi-fsl-dspi supports the following compatibles:
+> >
+> > fsl,vf610-dspi
+> > fsl,ls1021a-v1.0-dspi
+> > fsl,ls1012a-dspi
+> > fsl,ls1028a-dspi
+> > fsl,ls1043a-dspi
+> > fsl,ls1046a-dspi
+> > fsl,ls2080a-dspi
+> > fsl,ls2085a-dspi
+> > fsl,lx2160a-dspi
+> >
+> > Depending on the compatible string, the driver knows whether to use DMA
+> > or XSPI mode, and what the FIFO size is.
+> >
+> > Now, of course not all of the above SoCs are going to support ACPI, but
+> > it is reasonable to expect that more than one will. And in that case,
+> > the driver should still be able to know on what SoC it's running,
+> > because for example LS1043A doesn't support DMA, and LS2085A doesn't
+> > support XSPI.
+> >
+> > How is this dealt with in ACPI?
 >
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+> Theoretically you may declare your HID in the same / similar way as
+> PRP0001 and use same compatible strings and all other DT properties
+> (when they make sense and not duplicate ACPI functionality).
+> But better if ACPI people can tell you (I Cc'ed Rafael and ACPI
+> mailing list) if it is gonna work.
+>
+
+Something doesn't look right about PRP0001, what's the catch?
