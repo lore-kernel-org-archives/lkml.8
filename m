@@ -2,356 +2,280 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24028C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE673C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8B48207DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A5F20866
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:07:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kRAEaOLR"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fK29koJY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgHZIDl (ORCPT
+        id S1726767AbgHZIHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 04:03:41 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:41314 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726241AbgHZIDl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 04:03:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598429019; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=hleoJnRPFgTh4Q3Z/gEZpKKg+hswZ9iuwWfl1+U3mJY=;
- b=kRAEaOLR26A7hseGScayCJ9MSwzaq54iFd/aFIlPRmke7LTtMPLDK7LnZYxRoe2GiuWzj91C
- agTic9l5bNM0rIxyWQ00D5H169oyGj7+gO+eY3nJ75zkNYVTx7wH5P+U81RJGorgt1sngHBz
- QrgmX3xlY+CrL7XBOKzTL+v2UyI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f46174f6fc2098fa7ccac14 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 08:03:27
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 73A3AC43395; Wed, 26 Aug 2020 08:03:26 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9896FC433CA;
-        Wed, 26 Aug 2020 08:03:24 +0000 (UTC)
+        Wed, 26 Aug 2020 04:07:11 -0400
+Received: from mail-eopbgr60053.outbound.protection.outlook.com ([40.107.6.53]:50680
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726016AbgHZIHJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 04:07:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Cp288TEXc8uI4FPmOpnu5+s/S3wmNoqLq2hVtRG43MXAhUOWjbE9IuO2rb2y3CWpgIJZhQaV/aOqWbsiEixFnm1MGjegC1oGodsXHD2OKPeQHSKvYGwvusllrjFtwKBpUR6hEQKDFkTFQ4EMKf13GY4v6wYu7mHf4osAmBmOxzSngQrVzE0GWHf4N/q+K8T5OigZeNEW2KKxCX+x2NSeSpbwKPKieD0fRszp3YLezOO4zv/si5K0dLxiYs153cwNNVfTncTvC/2lr2aHvz8udsmFdx+s56oEUn6pHaT8gRhUxD9/fo+A86WVgduFS4iGehsHxprh8qeKdp32ZHJz1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FeM3G0EiIJ6zIF1CYSgtq/xbuiMr2qFGAB/RJWtrHEE=;
+ b=NBvz7ezCWhwKzte/yZpkOa3j1nTevoCj+seNhVxNIFIB9wlnxNr5+lTc8ilBpAL6l6aFbNews+y3ksUXRKSuhCAIuoR6vmznjtVKVzoWsNWasBBL16iEPTTfpvsJsbSWrLkIfDY2HnPRVFaVTjy8Mc6QOdTv5NisrSCqodfFx2W7jbAhAXybjNzirga4EjSIbZoKvhWj9pQeZ+YFf4LlpTGnsszzYT1+LNp7zdGXCIDVt1UUReOK8OscMYVo7XxEpuLhJtLZ/MlWKqyamTGDzsgUTuZZ2uuZ2+26Rv8vODuc+NF8vfCWzAy7yIHx2MUnlo+rgaPcYnci/IxaJ1GhDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FeM3G0EiIJ6zIF1CYSgtq/xbuiMr2qFGAB/RJWtrHEE=;
+ b=fK29koJYzOspeHsjca+jtOzMueg21jkhM05+RA07u3NKKweD4pJSWLSqFzRCt+C2kXc2zybV/+0zgumb/A/OOg+D0017+7+3aoEU0gkV/q0TsZyVUg/0PXk1i9wOXZS3GRwr5wNdT49fV6se9wnRz1wq6TXfjyzhuRl55WZLbhQ=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
+ by AM6PR04MB4165.eurprd04.prod.outlook.com (2603:10a6:209:44::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Wed, 26 Aug
+ 2020 08:07:05 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1023:be8d:40c:efe1]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1023:be8d:40c:efe1%3]) with mapi id 15.20.3305.032; Wed, 26 Aug 2020
+ 08:07:05 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Pawel Laszczak <pawell@cadence.com>
+CC:     Roger Quadros <rogerq@ti.com>,
+        "balbi@kernel.org" <balbi@kernel.org>,
+        Rahul Kumar <kurahul@cadence.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH 3/3] usb: cdns3: Enable workaround for USB2.0 PHY Rx
+ compliance test PHY lockup
+Thread-Topic: [PATCH 3/3] usb: cdns3: Enable workaround for USB2.0 PHY Rx
+ compliance test PHY lockup
+Thread-Index: AQHWete/XCUsbMkzVE2tONyDrFDh16lJudEAgAAMW4CAADVhAIAACEuAgAACF/A=
+Date:   Wed, 26 Aug 2020 08:07:05 +0000
+Message-ID: <AM7PR04MB71576DF6C03387C7628DBE3A8B540@AM7PR04MB7157.eurprd04.prod.outlook.com>
+References: <20200825120059.12436-1-rogerq@ti.com>
+ <20200825120059.12436-4-rogerq@ti.com> <20200826031948.GA7646@b29397-desktop>
+ <DM6PR07MB5529A43AFDEB25993595DB59DD540@DM6PR07MB5529.namprd07.prod.outlook.com>
+ <20200826071504.GA19661@b29397-desktop>
+ <DM6PR07MB5529EB2FB7E3380321191B44DD540@DM6PR07MB5529.namprd07.prod.outlook.com>
+In-Reply-To: <DM6PR07MB5529EB2FB7E3380321191B44DD540@DM6PR07MB5529.namprd07.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: cadence.com; dkim=none (message not signed)
+ header.d=none;cadence.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [92.121.64.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0b7cced1-ae9c-4ed3-326f-08d84997057d
+x-ms-traffictypediagnostic: AM6PR04MB4165:
+x-microsoft-antispam-prvs: <AM6PR04MB416555E2C5918BB0FF85AE3E8B540@AM6PR04MB4165.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: krSucRgCZriyhsq79De9QsT3j5yhwsG70ivuJdjwXdw1i+VKJF2ErzZvTiFTHNtpSS+LEHSbMdykqpLYuGHy55tq6qePExTud7WYPgB74tBGiuTVqPKcqdkzwBSUJ5xm8AjPTgm60/jSJ5H/qsdSxOV5TbmtZJxwkRuZt2tYKnEWnmu0lbQWQ1PAZEtSYK2pz0MnOgTGErElHsmHl0RgGSUQsflL4TZKolWZl95V3tgMVSIH8dhoxnbRKbcFGF5jlqgaHAuBbUqXtczjrPHQK/qPDU+ekNoLaqczP8u7TFkQ3GzjXnhlRhQ533FJ1QfmuN9VQ0UsWmVdxSV61ToICQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(39860400002)(396003)(136003)(346002)(376002)(66946007)(64756008)(66446008)(26005)(186003)(478600001)(2906002)(7696005)(8936002)(6506007)(54906003)(66556008)(4326008)(71200400001)(44832011)(86362001)(76116006)(66476007)(5660300002)(6916009)(316002)(9686003)(8676002)(33656002)(55016002)(83380400001)(52536014)(7416002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: nXiZPYSfxVYLWzKe2HA2hU40FB53ssuFTkus3mAehZUmesbP9NGhI9/dXOR3MhDp5qE0rqO8vSfnb8/LYKntx4nxV5XjOXLo3Qi3YeMJA6WqXJdUIZ5tm1KUE8drp70yMRE8NiyM2IYsQO3yubdeEHlzRYRmTVxoGlR3HI68SpjQkH15Oc9FhiJNrJeN8fa+rEkdprTJTD0k5id0dkTtTfSHObiOUg7ET7LwH9rpm42ufqIrS17rSIluBLU5IOzq3biJ75svu9dS+m71+HLv+uY9PxkG9tclb4XdTg72EOK41DQrUzrkPIKwqXjIKgt/WRfnPMn7SUYBHeoEt4yEEZuIS9NIdRn2fGCwXob7tKglsO/KHWbuNomDtCPFCKARgQOu0T2SzkIPkJfH/kfy4dmLOVhpBRrcChojAgb4m+3nXdv+ezgmNuclPHEu85MTDQ6nnAFzoSq1dvtuQF8U4f8dpnqDsuk8gJElEU74f5YkmDVQVeVTgl4ZLIxNkFo1u74YUgzdm1ZzcoViyaBjyU9VLK4hsIopmP9cRwiQlnIQf8bmZZhocUJ7Go1TV43ehEckJCSgM0RlhJK47qknRohR/65Dwv1ASwfWKrZNvt/KX8dFcLfJoDT0vtjugbfHcduTF5hXzS6Arrxr72BATA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Aug 2020 13:33:24 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH] iommu: Add support to filter non-strict/lazy mode based
- on device names
-In-Reply-To: <CAD=FV=X=3Jae7_gXN_05EsmZjrM1bN=TMZ0qoGKz=UaNrthzAg@mail.gmail.com>
-References: <20200825154249.20011-1-saiprakash.ranjan@codeaurora.org>
- <CAD=FV=XK3Xa3rRWvuSA_jA+5_1XYBmHEX2B2XSb8h3oOe1PHLw@mail.gmail.com>
- <3df7edd53ebca00be288e69b92b8d4b9@codeaurora.org>
- <CAD=FV=X=3Jae7_gXN_05EsmZjrM1bN=TMZ0qoGKz=UaNrthzAg@mail.gmail.com>
-Message-ID: <4224f8580d19e9a7eae80299fa2ffa37@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b7cced1-ae9c-4ed3-326f-08d84997057d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Aug 2020 08:07:05.3039
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VgV00DxCcWX4AzkNSsxRuLFy/hXSg3lc7XcrGfYOOZDF/uagoITAcAv1N5kGLbSo9xxMkCt+mNDiRRC3rDs77A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+=20
+>=20
+>=20
+> >
+> >On 20-08-26 04:04:01, Pawel Laszczak wrote:
+> >> >On 20-08-25 15:00:59, Roger Quadros wrote:
+> >> >> From: Pawel Laszczak <pawell@cadence.com>
+> >> >>
+> >> >> USB2.0 PHY hangs in Rx Compliance test when the incoming packet
+> >> >> amplitude is varied below and above the Squelch Level of Receiver
+> >> >> during the active packet multiple times.
+> >> >>
+> >> >> Version 1 of the controller allows PHY to be reset when RX fail
+> >> >> condition is detected to work around the above issue. This feature
+> >> >> is disabled by default and needs to be enabled using a bit from
+> >> >> the newly added PHYRST_CFG register. This patch enables the workaro=
+und.
+> >> >>
+> >> >> As there is no way to distinguish between the controller version
+> >> >> before the device controller is started we need to rely on a DT
+> >> >> property to decide when to apply the workaround.
+> >> >
+> >> >Pawel, it could know the controller version at cdns3_gadget_start,
+> >> >but the controller starts when it tries to bind gadget driver, at
+> >> >that time, it has already known the controller version.
+> >> >
+> >> >For me, the device controller starts is using USB_CONF.DEVEN (Device
+> >> >Enable) through usb_gadget_connect, I am not sure if it is the same
+> >> >with yours.
+> >> >
+> >>
+> >> Yes in device mode driver knows controller version but this
+> >> workaround Must be enabled also in host mode. In host mode the
+> >> controller doesn't have access to device registers. The controller
+> >> version is placed in device register.
+> >>
+> >
+> >You may suggest your design team adding CHIP_VER register at global
+> >register region, it will easy the software engineer life.
+> >
+> >From what I read, this register is only enabling USB2 PHY reset
+> >software control, it needs for all chips with rev 0x0002450D, and the
+> >place you current change is only for 0x0002450D, right?
+>=20
+> Even I could say that this workaround should be enabled only for Specific=
+ USB2
+> PHY  (only 0x0002450D)
+>=20
+> This bit should not have any impact for Cadence PHY but it can has Impact=
+ for third
+> party PHYs.
+>=20
 
-On 2020-08-26 03:45, Doug Anderson wrote:
-> Hi,
-> 
-> On Tue, Aug 25, 2020 at 12:01 PM Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> 
->> Hi,
->> 
->> On 2020-08-25 21:40, Doug Anderson wrote:
->> > Hi,
->> >
->> > On Tue, Aug 25, 2020 at 8:43 AM Sai Prakash Ranjan
->> > <saiprakash.ranjan@codeaurora.org> wrote:
->> >>
->> >> Currently the non-strict or lazy mode of TLB invalidation can only be
->> >> set
->> >> for all or no domains. This works well for development platforms where
->> >> setting to non-strict/lazy mode is fine for performance reasons but on
->> >> production devices, we need a more fine grained control to allow only
->> >> certain peripherals to support this mode where we can be sure that it
->> >> is
->> >> safe. So add support to filter non-strict/lazy mode based on the
->> >> device
->> >> names that are passed via cmdline parameter "iommu.nonstrict_device".
->> >>
->> >> Example:
->> >> iommu.nonstrict_device="7c4000.sdhci,a600000.dwc3,6048000.etr"
-> 
-> Just curious: are device names like this really guaranteed to be
-> stable across versions?
-> 
+So, it is related to specific PHY, but enable this specific PHY reset bit i=
+s at controller region, why don't
+put this enable bit at PHY region?
 
-Good question, AFAIK the device names are based on the DT node address 
-and
-the node name, for ex:  etr@6048000 and device name - "6048000.etr", now 
-I
-believe these are pretty stable for a particular SoC or board since 
-there
-is no reason to change the device node name or the address unless 
-something
-has gone terribly wrong. I don't know about ACPI systems, but however 
-they
-are described can be specified in this command line parameter. This is 
-an
-advantage over the DT property where ACPI systems get left out unless 
-someone
-goes and adds the same/similar property over there.
+So, you use controller's device property to know this specific PHY, can con=
+troller know this specific
+PHY dynamically?
 
-> 
->> > I have an inherent dislike of jamming things like this onto the
->> > command line.  IMHO the command line is the last resort for specifying
->> > configuration and generally should be limited to some specialized
->> > debug options and cases where the person running the kernel needs to
->> > override a config that was set by the person (or company) compiling
->> > the kernel.  Specifically, having a long/unwieldy command line makes
->> > it harder to use for the case when an end user actually wants to use
->> > it to override something.  It's also just another place to look for
->> > config.
->> >
->> 
->> Good thing about command line parameters are that they are optional,
->> they do
->> not specify any default behaviour (I mean they are not mandatory to be
->> set
->> for the system to be functional), so I would like to view it as an
->> optional
->> config. And this command line parameter (nonstrict_device) is strictly
->> optional
->> with default being strict already set in the driver.
->> 
->> They can be passed from the bootloader via chosen node for DT 
->> platforms
->> or choose
->> a new *bootconfig* as a way to pass the cmdline but finally it does 
->> boil
->> down to
->> just another config.
-> 
-> Never looked at bootconfig.  Unfortunately it seems to require
-> initramfs so that pretty much means it's out for my usage.  :(
-> 
+Peter
 
-Yes that won't fit everywhere.
-
-> 
->> I agree with general boolean or single value command line parameters
->> being just
->> more messy which could just be Kconfigs instead but for multiple value
->> parameters
->> like these do not fit in Kconfig.
->> 
->> As you might already know, command line also gives an advantage to the
->> end user
->> to configure system without building kernel, for this specific command
->> line its
->> very useful because the performance bump is quite noticeable when the
->> iommu.strict
->> is off. Now for end user who would not be interested in building 
->> entire
->> kernel(majority)
->> and just cares about good speeds or throughput can find this very
->> beneficial.
->> I am not talking about one specific OS usecase here but more in 
->> general
->> term.
->> 
->> > The other problem is that this doesn't necessarily scale very well.
->> > While it works OK for embedded cases it doesn't work terribly well for
->> > distributions.  I know that in an out-of-band thread you indicated
->> > that it doesn't break anything that's not already broken (AKA this
->> > doesn't fix the distro case but it doesn't make it worse), it would be
->> > better to come up with a more universal solution.
->> >
->> 
->> Is the universal solution here referring to fix all the command line
->> parameters
->> in the kernel or this specific command line? Are we going to remove 
->> any
->> more
->> addition to the cmdline ;)
-> 
-> There are very few cases where a kernel command line parameter is the
-> only way to configure something.  Most of the time it's just there to
-> override a config.  I wouldn't suggest removing those.  I just don't
-> want a kernel command line parameter to be the primary way to enable
-> something.
-> 
-
-Agreed that command line parameters are not supposed to be some primary
-way of setting things but an optional way to override settings, in this
-case to override the strict mode already set by the driver. Then we can
-probably agree that this command line is just an optional way provided
-to the end user for his convenience? We would still need to find a 
-primary
-way to set this non-strict mode in drivers via DT passing the 
-information
-or some other way.
-
-> 
->> So possible other solution is the *bootconfig* which is again just
->> another place
->> to look for a config. So thing is that this universal solution would
->> result in
->> just more new fancy ways of passing configs or adding such configs to
->> the drivers
->> or subsystems in kernel which is pretty much similar to implementing
->> policy in
->> kernel which I think is frowned upon and mentioned in the other 
->> thread.
->> 
->> > Ideally it feels like we should figure out how to tag devices in a
->> > generic manner automatically (hardcode at the driver or in the device
->> > tree).  I think the out-of-band discussions talked about "external
->> > facing" and the like.  We could also, perhaps, tag devices that have
->> > "binary blob" firmware if we wanted.  Then we'd have a policy (set by
->> > Kconfig, perhaps overridable via commandline) that indicated the
->> > strictness level for the various classes of devices.  So policy would
->> > be decided by KConfig and/or command line.
->> >
->> 
->> How is tagging in driver or device tree better than the simple command
->> line
->> approach to pass the same list of devices which otherwise you would
->> hardcode
->> in the corresponding drivers and device tree all over the kernel other
->> than
->> the scalability part for command line? IMHO it is too much churn.
-> 
-> It's better because it doesn't require keeping track and updating
-> these per-board (or per machine) arguments for each and every
-> board/machine you maintain.
-
-If you choose to pass the information via DT which seems like the most 
-ideal
-way, then you would still have to update them per-board for every board 
-you
-maintain which is the same thing.
-
-If, for instance, we start out by
-> allowing HW video decoder to use non-strict.  So:
-> 
-> On one board, we add in "aa00000.video-codec" to the command line.
-> On some other board, maybe we add in "1d00000.video-codec" to the 
-> command line.
-> On some other board, maybe we add in "90400000.video-codec" to the 
-> command line.
-> 
-> Now we realize that there's some problem and we have to remove it, so
-> we need to go through and remove this from our command line
-> everywhere.  Worse is that we have to proactively notice it and remove
-> it.
-> 
-
-Same as above where we need to modify DT to mark certain devices as 
-strict
-in case something goes wrong.
-
-> Instead, let's imagine that we set a policy at a bit of a higher
-> level.  Different ideas:
-> 
-> a) We could have a CONFIG_ option for the video codec that's something
-> like "CONFIG_VIDEOCODEC_DEFAULT_NONSTRICT".  If this was set then if
-> there is no "iommu.strict" command line argument then this device
-> would be mapped as non-strict.  If "iommu.strict=0" or
-> "iommu.strict=1" is on the command line then it would override all of
-> these defaults.  Probably the existence (or maybe the default value)
-> of this CONFIG option implies that there are no known/expected
-> exploits related to it.
-> 
-
-Hmm, so then we'd have tens of Kconfigs for each device being non strict
-by default?  Then I guess we'd need a menuconfig for this and where 
-should
-this go into, IOMMU layer or under respective drivers? Let's say we do 
-this,
-but how would the IOMMU know about such classes of devices, the only way 
-I
-can think of is adding such a field in "struct device" which can be 
-tried
-but may not be well received.
-
-Also default should be strict in my opinion as it is today similar to 
-bypassing
-SMMU and then non strict option to override it.
-
-> b) We could find some way to tag the video codec and then set
-> non-strictness on certain classes of devices, then we could have a
-> policy to disable strictness on certain classes of devices.
-> 
-
-If tagging is based on the DT property then we have ACPI to think about 
-and it
-poses the same problems which you listed for command line parameter 
-where you
-would have to go and update all the DT entries.
-
-> The nice thing about the above is that you could imagine someone
-> pushing a change to the stable trees that would fix everyone affected.
-> Nobody would need to go around and adjust command line options, they'd
-> just get the newest stable and it could cause devices to move into
-> strict mode if there was a known exploit.  I suppose with your
-> proposal stable trees could have a "blacklist" where the commandline
-> is ignored for exploited devices, but that seems ugly.
-> 
-
-Yes this is true but then we can keep this cmdline parameter as only 
-optional
-and find a different way to enforce the non-strict mode setting.
-
-> 
->> Device tree could be used but then we have a problem with it being for
->> only
->> describing hardware and it doesn't work for ACPI based systems.
->> 
->> Command line approach works for all systems (both DT and ACPI) without
->> having
->> to add too much churn to drivers. Lastly, I think we can have both
->> options, it
->> doesn't hurt to add command line parameter since it is optional.
-> 
-> I'm not opposed to something existing that lets you override this on
-> the command line, but I'm just not a fan of it being the primary way.
-> 
-
-Agreed, so we can treat non-strict command line parameter as just 
-optional
-and we find a different way to set this mode in drivers via whatever 
-method
-everyone finds suitable.
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+> Pawel
+>=20
+> >
+> >Peter
+> >
+> >> Pawel
+> >>
+> >> >Peter
+> >> >
+> >> >
+> >> >>
+> >> >> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> >> >> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> >> >> ---
+> >> >>  drivers/usb/cdns3/core.c |  2 ++
+> >> >>  drivers/usb/cdns3/core.h |  1 +
+> >> >>  drivers/usb/cdns3/drd.c  | 12 ++++++++++++
+> >> >> drivers/usb/cdns3/drd.h  |  5 ++++-
+> >> >>  4 files changed, 19 insertions(+), 1 deletion(-)
+> >> >>
+> >> >> diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
+> >> >> index 5c1586ec7824..34b36487682b 100644
+> >> >> --- a/drivers/usb/cdns3/core.c
+> >> >> +++ b/drivers/usb/cdns3/core.c
+> >> >> @@ -443,6 +443,8 @@ static int cdns3_probe(struct platform_device *=
+pdev)
+> >> >>  		return -ENXIO;
+> >> >>  	}
+> >> >>
+> >> >> +	cdns->phyrst_a_enable =3D device_property_read_bool(dev,
+> >> >> +"cdns,phyrst-a-enable");
+> >> >> +
+> >> >>  	cdns->otg_res =3D *res;
+> >> >>
+> >> >>  	mutex_init(&cdns->mutex);
+> >> >> diff --git a/drivers/usb/cdns3/core.h b/drivers/usb/cdns3/core.h
+> >> >> index 1ad1f1fe61e9..24cf0f1b5726 100644
+> >> >> --- a/drivers/usb/cdns3/core.h
+> >> >> +++ b/drivers/usb/cdns3/core.h
+> >> >> @@ -76,6 +76,7 @@ struct cdns3 {
+> >> >>  #define CDNS3_CONTROLLER_V0	0
+> >> >>  #define CDNS3_CONTROLLER_V1	1
+> >> >>  	u32				version;
+> >> >> +	bool				phyrst_a_enable;
+> >> >>
+> >> >>  	int				otg_irq;
+> >> >>  	int				dev_irq;
+> >> >> diff --git a/drivers/usb/cdns3/drd.c b/drivers/usb/cdns3/drd.c
+> >> >> index 6234bcd6158a..b74803e9703d 100644
+> >> >> --- a/drivers/usb/cdns3/drd.c
+> >> >> +++ b/drivers/usb/cdns3/drd.c
+> >> >> @@ -42,6 +42,18 @@ int cdns3_set_mode(struct cdns3 *cdns, enum
+> usb_dr_mode mode)
+> >> >>  			reg =3D readl(&cdns->otg_v1_regs->override);
+> >> >>  			reg |=3D OVERRIDE_IDPULLUP;
+> >> >>  			writel(reg, &cdns->otg_v1_regs->override);
+> >> >> +
+> >> >> +			/*
+> >> >> +			 * Enable work around feature built into the
+> >> >> +			 * controller to address issue with RX Sensitivity
+> >> >> +			 * est (EL_17) for USB2 PHY. The issue only occures
+> >> >> +			 * for 0x0002450D controller version.
+> >> >> +			 */
+> >> >> +			if (cdns->phyrst_a_enable) {
+> >> >> +				reg =3D readl(&cdns->otg_v1_regs->phyrst_cfg);
+> >> >> +				reg |=3D PHYRST_CFG_PHYRST_A_ENABLE;
+> >> >> +				writel(reg, &cdns->otg_v1_regs->phyrst_cfg);
+> >> >> +			}
+> >> >>  		} else {
+> >> >>  			reg =3D readl(&cdns->otg_v0_regs->ctrl1);
+> >> >>  			reg |=3D OVERRIDE_IDPULLUP_V0;
+> >> >> diff --git a/drivers/usb/cdns3/drd.h b/drivers/usb/cdns3/drd.h
+> >> >> index 7e7cf7fa2dd3..f1ccae285a16 100644
+> >> >> --- a/drivers/usb/cdns3/drd.h
+> >> >> +++ b/drivers/usb/cdns3/drd.h
+> >> >> @@ -31,7 +31,7 @@ struct cdns3_otg_regs {
+> >> >>  	__le32 simulate;
+> >> >>  	__le32 override;
+> >> >>  	__le32 susp_ctrl;
+> >> >> -	__le32 reserved4;
+> >> >> +	__le32 phyrst_cfg;
+> >> >>  	__le32 anasts;
+> >> >>  	__le32 adp_ramp_time;
+> >> >>  	__le32 ctrl1;
+> >> >> @@ -153,6 +153,9 @@ struct cdns3_otg_common_regs {
+> >> >>  /* Only for CDNS3_CONTROLLER_V0 version */
+> >> >>  #define OVERRIDE_IDPULLUP_V0		BIT(24)
+> >> >>
+> >> >> +/* PHYRST_CFG - bitmasks */
+> >> >> +#define PHYRST_CFG_PHYRST_A_ENABLE     BIT(0)
+> >> >> +
+> >> >>  #define CDNS3_ID_PERIPHERAL		1
+> >> >>  #define CDNS3_ID_HOST			0
+> >> >>
+> >> >> --
+> >> >> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> >> >> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> >> >>
+> >> >
+> >> >--
+> >> >
+> >> >Thanks,
+> >> >Peter Chen
+> >
+> >--
+> >
+> >Thanks,
+> >Peter Chen
