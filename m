@@ -2,105 +2,128 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB22C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B602080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EDD0208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgHZOke (ORCPT
+        id S1726784AbgHZOmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:40:34 -0400
-Received: from mga11.intel.com ([192.55.52.93]:3727 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbgHZOkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:40:25 -0400
-IronPort-SDR: RfPfYohHD/s0/CXUENx3YY6C9Wt28AebuilvA8xR42ZRqxFtDoi23FoYBzhSxqFepRsgg2/rP9
- HukA5ooFl3hg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153869877"
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="153869877"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 07:40:24 -0700
-IronPort-SDR: KHxkWteeU8emhyHgGfiOwbt/dsY21nC8/UY5bgPeCNc+exWvdcy9vNMmiijVfwhXIoSVnfVsLW
- iZeVF4gNESwA==
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="299494879"
-Received: from gillelas-mobl1.amr.corp.intel.com (HELO [10.255.231.51]) ([10.255.231.51])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 07:40:23 -0700
-Subject: Re: [PATCH 09/11] soundwire: intel: add dynamic debug trace for
- clock-stop invalid configs
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, sanyog.r.kale@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-References: <20200818024120.20721-1-yung-chuan.liao@linux.intel.com>
- <20200818024120.20721-10-yung-chuan.liao@linux.intel.com>
- <20200826094817.GC2639@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <21038e8d-dbd9-76c7-c758-9933fb45024a@linux.intel.com>
-Date:   Wed, 26 Aug 2020 09:38:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 26 Aug 2020 10:42:07 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43844 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726241AbgHZOmE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:42:04 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 8345E2994D6
+Received: by jupiter.universe (Postfix, from userid 1000)
+        id 57832480113; Wed, 26 Aug 2020 16:42:00 +0200 (CEST)
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCHv1 2/2] power: supply: smb347-charger: Use generic property framework
+Date:   Wed, 26 Aug 2020 16:41:59 +0200
+Message-Id: <20200826144159.353837-3-sebastian.reichel@collabora.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200826144159.353837-1-sebastian.reichel@collabora.com>
+References: <20200826144159.353837-1-sebastian.reichel@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20200826094817.GC2639@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Simplify the driver and remove the DT specific code by
+using the generic device property framework.
 
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+ drivers/power/supply/smb347-charger.c | 40 +++++++++++++--------------
+ 1 file changed, 19 insertions(+), 21 deletions(-)
 
-On 8/26/20 4:48 AM, Vinod Koul wrote:
-> On 18-08-20, 10:41, Bard Liao wrote:
->> From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->>
->> Detect cases where the clock is assumed to be stopped but the IP is
->> not in the relevant state, and add a dynamic debug trace.
-> 
-> you meant a debug print..and it looks like error print below (also in title).
+diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply/smb347-charger.c
+index b182727dfc90..d3bf35ed12ce 100644
+--- a/drivers/power/supply/smb347-charger.c
++++ b/drivers/power/supply/smb347-charger.c
+@@ -17,6 +17,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/i2c.h>
+ #include <linux/power_supply.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
+ 
+ #include <dt-bindings/power/summit,smb347-charger.h>
+@@ -1176,7 +1177,7 @@ static bool smb347_readable_reg(struct device *dev, unsigned int reg)
+ 
+ static void smb347_dt_parse_dev_info(struct smb347_charger *smb)
+ {
+-	struct device_node *np = smb->dev->of_node;
++	struct device *dev = smb->dev;
+ 
+ 	smb->soft_temp_limit_compensation =
+ 					SMB3XX_SOFT_TEMP_COMPENSATE_DEFAULT;
+@@ -1190,32 +1191,29 @@ static void smb347_dt_parse_dev_info(struct smb347_charger *smb)
+ 	smb->hard_hot_temp_limit  = SMB3XX_TEMP_USE_DEFAULT;
+ 
+ 	/* Charging constraints */
+-	of_property_read_u32(np, "summit,fast-voltage-threshold-microvolt",
+-			     &smb->pre_to_fast_voltage);
+-	of_property_read_u32(np, "summit,mains-current-limit-microamp",
+-			     &smb->mains_current_limit);
+-	of_property_read_u32(np, "summit,usb-current-limit-microamp",
+-			     &smb->usb_hc_current_limit);
++	device_property_read_u32(dev, "summit,fast-voltage-threshold-microvolt",
++				 &smb->pre_to_fast_voltage);
++	device_property_read_u32(dev, "summit,mains-current-limit-microamp",
++				 &smb->mains_current_limit);
++	device_property_read_u32(dev, "summit,usb-current-limit-microamp",
++				 &smb->usb_hc_current_limit);
+ 
+ 	/* For thermometer monitoring */
+-	of_property_read_u32(np, "summit,chip-temperature-threshold-celsius",
+-			     &smb->chip_temp_threshold);
+-	of_property_read_u32(np, "summit,soft-compensation-method",
+-			     &smb->soft_temp_limit_compensation);
+-	of_property_read_u32(np, "summit,charge-current-compensation-microamp",
+-			     &smb->charge_current_compensation);
++	device_property_read_u32(dev, "summit,chip-temperature-threshold-celsius",
++				 &smb->chip_temp_threshold);
++	device_property_read_u32(dev, "summit,soft-compensation-method",
++				 &smb->soft_temp_limit_compensation);
++	device_property_read_u32(dev, "summit,charge-current-compensation-microamp",
++				 &smb->charge_current_compensation);
+ 
+ 	/* Supported charging mode */
+-	smb->use_mains =
+-		of_property_read_bool(np, "summit,enable-mains-charging");
+-	smb->use_usb =
+-		of_property_read_bool(np, "summit,enable-usb-charging");
+-	smb->use_usb_otg =
+-		of_property_read_bool(np, "summit,enable-otg-charging");
++	smb->use_mains = device_property_read_bool(dev, "summit,enable-mains-charging");
++	smb->use_usb = device_property_read_bool(dev, "summit,enable-usb-charging");
++	smb->use_usb_otg = device_property_read_bool(dev, "summit,enable-otg-charging");
+ 
+ 	/* Select charging control */
+-	of_property_read_u32(np, "summit,enable-charge-control",
+-			     &smb->enable_control);
++	device_property_read_u32(dev, "summit,enable-charge-control",
++				 &smb->enable_control);
+ }
+ 
+ static int smb347_get_battery_info(struct smb347_charger *smb)
+-- 
+2.28.0
 
-I don't understand the comment. Is the 'trace' confusing and are you 
-asking to e.g. change the commit message to 'add dynamic debug log'?
-
-> 
->>
->> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
->> ---
->>   drivers/soundwire/intel.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
->> index 7c63581270fd..b82d02af3c4f 100644
->> --- a/drivers/soundwire/intel.c
->> +++ b/drivers/soundwire/intel.c
->> @@ -1964,6 +1964,11 @@ static int intel_resume_runtime(struct device *dev)
->>   			}
->>   		}
->>   	} else if (!clock_stop_quirks) {
->> +
->> +		clock_stop0 = sdw_cdns_is_clock_stop(&sdw->cdns);
->> +		if (!clock_stop0)
->> +			dev_err(dev, "%s invalid configuration, clock was not stopped", __func__);
->> +
->>   		ret = intel_init(sdw);
->>   		if (ret) {
->>   			dev_err(dev, "%s failed: %d", __func__, ret);
->> -- 
->> 2.17.1
-> 
