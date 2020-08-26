@@ -2,106 +2,143 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E5CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F18B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD2402078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E442078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728000AbgHZPG7 (ORCPT
+        id S1727822AbgHZPHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:06:59 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:22694 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726947AbgHZPG4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:06:56 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-261-ph5PWed-PFGPcuia_f9y9w-1; Wed, 26 Aug 2020 16:06:52 +0100
-X-MC-Unique: ph5PWed-PFGPcuia_f9y9w-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 26 Aug 2020 16:06:51 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 26 Aug 2020 16:06:51 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Lukasz Stelmach' <l.stelmach@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "b.zolnierkie@samsung.com" <b.zolnierkie@samsung.com>
-Subject: RE: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
- Driver
-Thread-Topic: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
- Driver
-Thread-Index: AQHWe7mj43dSzPFWakSayEhKlD9dNqlKfEsw
-Date:   Wed, 26 Aug 2020 15:06:51 +0000
-Message-ID: <1efebb42c30a4c40bf91649d83d60e1c@AcuMS.aculab.com>
-References: <20200825184413.GA2693@kozik-lap>
-        <CGME20200826145929eucas1p1367c260edb8fa003869de1da527039c0@eucas1p1.samsung.com>
- <dleftja6yhv4g2.fsf%l.stelmach@samsung.com>
-In-Reply-To: <dleftja6yhv4g2.fsf%l.stelmach@samsung.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 26 Aug 2020 11:07:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45834 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726873AbgHZPH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 11:07:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 4F4F5ACAF;
+        Wed, 26 Aug 2020 15:07:59 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 17:07:27 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/7][next] printk: ringbuffer: add
+ finalization/extension support
+Message-ID: <20200826150726.GA4928@alley>
+References: <20200824103538.31446-1-john.ogness@linutronix.de>
+ <20200824103538.31446-6-john.ogness@linutronix.de>
+ <87lfi1ls2g.fsf@jogness.linutronix.de>
+ <20200826100113.GA8849@jagdpanzerIV.localdomain>
+ <87eentlh19.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87eentlh19.fsf@jogness.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTHVrYXN6IFN0ZWxtYWNoDQo+IFNlbnQ6IDI2IEF1Z3VzdCAyMDIwIDE1OjU5DQo+IA0K
-PiBJdCB3YXMgPDIwMjAtMDgtMjUgd3RvIDIwOjQ0Piwgd2hlbiBLcnp5c3p0b2YgS296bG93c2tp
-IHdyb3RlOg0KPiA+IE9uIFR1ZSwgQXVnIDI1LCAyMDIwIGF0IDA3OjAzOjA5UE0gKzAyMDAsIMWB
-dWthc3ogU3RlbG1hY2ggd3JvdGU6DQo+ID4+IEFTSVggQVg4ODc5NlsxXSBpcyBhIHZlcnNhdGls
-ZSBldGhlcm5ldCBhZGFwdGVyIGNoaXAsIHRoYXQgY2FuIGJlDQo+ID4+IGNvbm5lY3RlZCB0byBh
-IENQVSB3aXRoIGEgOC8xNi1iaXQgYnVzIG9yIHdpdGggYW4gU1BJLiBUaGlzIGRyaXZlcg0KPiA+
-PiBzdXBwb3J0cyBTUEkgY29ubmVjdGlvbi4NCi4uLg0KPiA+PiArKysgYi9kcml2ZXJzL25ldC9l
-dGhlcm5ldC9hc2l4L0tjb25maWcNCj4gPj4gQEAgLTAsMCArMSwyMCBAQA0KPiA+PiArIw0KPiA+
-PiArIyBBc2l4IG5ldHdvcmsgZGV2aWNlIGNvbmZpZ3VyYXRpb24NCj4gPj4gKyMNCj4gPj4gKw0K
-PiA+PiArY29uZmlnIE5FVF9WRU5ET1JfQVNJWA0KPiA+PiArCWJvb2wgIkFzaXggZGV2aWNlcyIN
-Cj4gPj4gKwlkZXBlbmRzIG9uIFNQSQ0KPiA+PiArCWhlbHANCj4gPj4gKwkgIElmIHlvdSBoYXZl
-IGEgbmV0d29yayAoRXRoZXJuZXQpIGludGVyZmFjZSBiYXNlZCBvbiBhIGNoaXAgZnJvbSBBU0lY
-LCBzYXkgWQ0KPiA+DQo+ID4gTG9va3MgbGlrZSB0b28gbG9uZywgZGlkIGl0IHBhc3MgY2hlY2tw
-YXRjaD8NCj4gDQo+IFllcz8gTGV0IG1lIHRyeSBhZ2Fpbi4gWWVzLCB0aGlzIG9uZSBwYXNzZWQs
-IGJ1dCBJIG1pc3NlZCBhIGZldyBvdGhlcg0KPiBwcm9ibGVtcy4gVGhhbmsgeW91Lg0KPiANCj4g
-Pj4gKw0KPiA+PiAraWYgTkVUX1ZFTkRPUl9BU0lYDQo+ID4+ICsNCj4gPj4gK2NvbmZpZyBTUElf
-QVg4ODc5NkMNCj4gPj4gKwl0cmlzdGF0ZSAiQXNpeCBBWDg4Nzk2Qy1TUEkgc3VwcG9ydCINCj4g
-Pj4gKwlkZXBlbmRzIG9uIFNQSQ0KPiA+PiArCWRlcGVuZHMgb24gR1BJT0xJQg0KPiA+PiArCWhl
-bHANCj4gPj4gKwkgIFNheSBZIGhlcmUgaWYgeW91IGludGVuZCB0byBhdHRhY2ggYSBBc2l4IEFY
-ODg3OTZDIGFzIFNQSSBtb2RlDQo+ID4+ICsNCj4gPj4gK2VuZGlmICMgTkVUX1ZFTkRPUl9BU0lY
-DQoNClRoZXJlIGFyZSBwbGVudHkgb2Ygb3RoZXIgZXRoZXJuZXQgZGV2aWNlcyBtYWRlIGJ5IEFT
-SVggKGVnIFVTQiBvbmVzKQ0KdGhhdCBoYXZlIG5vdGhpbmcgYXQgYWxsIHRvIGRvIHdpdGggdGhp
-cyBkcml2ZXIuDQpTbyB0aG9zZSBxdWVzdGlvbnMgYXJlIHRvbyBicm9hZC4NCg0KVGhlIGZpcnN0
-IG9uZSBzaG91bGQgcHJvYmFibGUgYmUgZm9yIEFTSVggU1BJIG5ldHdvcmsgZGV2aWNlcy4NCg0K
-KEkgY2FuJ3QgaW1hZ2luZSBTUEkgYmVpbmcgZmFzdCBlbm91Z2ggdG8gYmUgdXNlZnVsIGZvciBl
-dGhlcm5ldC4uLikNCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwg
-QnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVn
-aXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+On Wed 2020-08-26 14:43:22, John Ogness wrote:
+> On 2020-08-26, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
+> >>> @@ -1157,6 +1431,14 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+> >>>  		goto fail;
+> >>>  	}
+> >>>  
+> >>> +	/*
+> >>> +	 * New data is about to be reserved. Once that happens, previous
+> >>> +	 * descriptors are no longer able to be extended. Finalize the
+> >>> +	 * previous descriptor now so that it can be made available to
+> >>> +	 * readers (when committed).
+> >>> +	 */
+> >>> +	desc_finalize(desc_ring, DESC_ID(id - 1));
+> >>> +
+> >>>  	d = to_desc(desc_ring, id);
+> >>>  
+> >>>  	/*
+> >> 
+> >> Apparently this is not enough to guarantee that past descriptors are
+> >> finalized. I am able to reproduce a scenario where the finalization
+> >> of a certain descriptor never happens. That leaves the descriptor
+> >> permanently in the reserved queried state, which prevents any new
+> >> records from being created. I am investigating.
+> >
+> > Good to know. I also run into problems:
+> > - broken dmesg (and broken journalctl -f /dev/kmsg poll) and broken
+> >   syslog read
+> >
+> > $ strace dmesg
+> >
+> > ...
+> > openat(AT_FDCWD, "/dev/kmsg", O_RDONLY|O_NONBLOCK) = 3
+> > lseek(3, 0, SEEK_DATA)                  = 0
+> > read(3, 0x55dda8c240a8, 8191)           = -1 EAGAIN (Resource temporarily unavailable)
+> > close(3)                                = 0
+> > syslog(10 /* SYSLOG_ACTION_SIZE_BUFFER */) = 524288
+> > mmap(NULL, 528384, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f43ea847000
+> > syslog(3 /* SYSLOG_ACTION_READ_ALL */, "", 524296) = 0
+> 
+> Yes, this a consequence of the problem. The tail is in the reserved
+> queried state, so readers will not advance beyond it.
+> 
+> This series makes a very naive assumption that the previous descriptor
+> is either in the reserved or committed queried states. The fact is, it
+> can be in any of the 4 queried states. Adding support for finalization
+> of all the states then gets quite complex, since any state transition
+> (cmpxchg) may have to deal with an unexpected FINAL flag.
+>
+> The ringbuffer was designed so that descriptors are completely
+> self-contained. So adding logic where an action on one descriptor should
+> affect another descriptor is far more complex than I initially expected.
+> 
+> Keep in mind the finalization concept satisfies 3 things:
+> 
+> - denote if a record can be extended (i.e. transition back to reserved)
+> - denote if a reader may read the record
+> - denote if a writer may recycle a record
+>
+> I have not yet given up on the idea of finalization (particularly
+> because it allows mainline LOG_CONT behavior to be preserved locklessy),
 
+In each case, we need to finalize the descriptor also in prb_commit()
+when the descriptor is not longer the last reserved one.
+
+It has to be done in two steps to avoid race:
+
+prb_commit()
+
+   + set PRB_COMMIT_MASK
+   + check if it is still the last descriptor in the array
+   + set PRB_FINAL_MASK when it is not the last descriptor
+
+It should work because prb_reserve() finalizes the previous
+descriptor after the new one is reserved. As a result:
+
+   + prb_reserve() should either see PRB_COMMIT_MASK in the previous
+     descriptor and be able to finalize it.
+
+   + or prb_commit() will see that the head moved and it is not
+     longer the last reserved one.
+
+I keep my fingers crossed.
+
+Best Regards,
+Petr
+
+PS: I am still in the middle of review. And I had a feeling that
+this situatuation was not handled.
