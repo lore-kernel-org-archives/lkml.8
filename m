@@ -2,122 +2,240 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AC7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BC6C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0637F2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D055B2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:54:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VgzHV/iN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgHZIyW (ORCPT
+        id S1727883AbgHZIy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 04:54:22 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:42504 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726817AbgHZIyR (ORCPT
+        Wed, 26 Aug 2020 04:54:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727869AbgHZIy4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 04:54:17 -0400
-Received: by mail-il1-f200.google.com with SMTP id z1so1043399ilz.9
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 01:54:16 -0700 (PDT)
+        Wed, 26 Aug 2020 04:54:56 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC98C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 01:54:56 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id 10so579288plg.8
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 01:54:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qadicGXgYcKSNNg1g3go9gjZkk5hffA2czmSYcbwqeQ=;
+        b=VgzHV/iNY+RV3kQGcpWagm0E5cDIzUJBfRj8kWs+4M3XFc2gek9bNT+b4PXw+/b4ob
+         bOI9+m63UM96I12pdmdG6t4os3qcXBLBnZd5Bazs2C2Oz6z1JRKv65geOMJxWCy4DZXR
+         v9vdoApNkhj3Dy1LT3yHgDW/CAErOzLnt8VkY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=KWA98gUVVPLAB5mEnwjYg2XuRfaodeLtZ5bQKkNE1+8=;
-        b=Rll3/Ej+1BasFeSEAhGquljB+Zm++8BvsNXxTqT/75yJIlXIDgVUYBUikgMgPCoI9t
-         st9r2onVi9uiDSb1GPd4EaR0Szvo6zR5L34/d1UbSiiyUFfcrP192Vo26WsqM9/fUEaW
-         051J8UoPLBpdi63NT11Hu2jXv0XalEnna+1t6cCy7zL6JDW2j1iRNoRu/WdB0oQ3sB4J
-         +auBGwB9XJYrxB8wJNQiVf2xQ9MjPCPPogKO8rd5W5eiHxrky+Ga8iGS64AbQxtBIB8E
-         98eFuo1wpR4WMhVd7WzTuhoPbQw9omxZVeTMxoPB1YYJBacsLZmHJ/m7dUeNIiwiFHHy
-         xJHQ==
-X-Gm-Message-State: AOAM531un6iEomPw3630x7kEXommXk69O5jVg3lr46dC+Kwi7mJcSGT/
-        aJiq4p+r92kLNZzTUoyXdx864u+PwjCBerp4DneurMXDSwJx
-X-Google-Smtp-Source: ABdhPJwojF1/sq+xfygWWoJd7PvjM53WyuPf8Nd+Tw6jH4PzPCaeufjMYI+Yv+PKmImWIEaesLI5rp/287INPrLafU2b3mDtP40z
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qadicGXgYcKSNNg1g3go9gjZkk5hffA2czmSYcbwqeQ=;
+        b=QuoQPgepU4z0fyMTm7dpFJCOmp1f2ZEO5S3CM7BJQfwbRdOfgrA0vqTOk0Lzb+UKXp
+         10tmvXGdXIZJrxDM9gM3mIBKvjhvx5Y2zheXJBuPgK8ki5VyyrfwWhOD9bJSLYf0FrW/
+         /IyHAAxB/jreEne/QU32MjNdCzE6R5hgvqop0OqmhNE24vgrv5SuGCmEwVDzWtlHh/tB
+         baMXgwbUsLyUs/SYZvl+Eb26R8xxN2y60MqtLRlUhJkLPCaI0Z5AOlw/nT8NHMuo5FmY
+         rBULIj6UNTWT9d48rK/SehnbKRu5frkNV+zn+JlwmcwJdwp6yu64HKYpt5W9qBYUYVul
+         IrbA==
+X-Gm-Message-State: AOAM530yixTxWAuDW1fByOG55zfb0PXn0u3Bj5hdcU4ParlfWkJxbnP+
+        j9BHE2Uqz6c692oH4BRjKnXCsQ==
+X-Google-Smtp-Source: ABdhPJzWRfgimLFOdQX8RCV3Sw17ksdclDCbGcimvVj7p/+/yoe05SEkkQ42vUBTyKihWIgxgA7eoQ==
+X-Received: by 2002:a17:90a:8a97:: with SMTP id x23mr5154324pjn.195.1598432095759;
+        Wed, 26 Aug 2020 01:54:55 -0700 (PDT)
+Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:f693:9fff:fef4:a8fc])
+        by smtp.gmail.com with ESMTPSA id v91sm1702990pjv.12.2020.08.26.01.54.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 01:54:54 -0700 (PDT)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Bayi Cheng <bayi.cheng@mediatek.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH v2] dt-bindings: spi: Convert spi-mtk-nor to json-schema
+Date:   Wed, 26 Aug 2020 16:54:50 +0800
+Message-Id: <20200826085450.508556-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+In-Reply-To: <20200820052827.2642164-1-ikjn@chromium.org>
+References: <20200820052827.2642164-1-ikjn@chromium.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:3ea:: with SMTP id s10mr4453619jaq.2.1598432056177;
- Wed, 26 Aug 2020 01:54:16 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 01:54:16 -0700
-In-Reply-To: <001a1143e62eb6a9510565640e76@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e7fab005adc3f636@google.com>
-Subject: Re: WARNING: ODEBUG bug in __do_softirq
-From:   syzbot <syzbot+51c9bdfa559769d2f897@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, anna.schumaker@netapp.com,
-        bfields@fieldses.org, bp@alien8.de, davem@davemloft.net,
-        douly.fnst@cn.fujitsu.com, hpa@zytor.com, jlayton@kernel.org,
-        konrad.wilk@oracle.com, len.brown@intel.com,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        mingo@kernel.org, mingo@redhat.com, netdev@vger.kernel.org,
-        paulmck@kernel.org, peterz@infradead.org, puwen@hygon.cn,
-        rafael.j.wysocki@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, trond.myklebust@hammerspace.com,
-        trond.myklebust@primarydata.com, vbabka@suse.cz, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+Convert Mediatek ARM SOC's serial NOR flash controller binding
+to json-schema format.
 
-HEAD commit:    3a00d3df Add linux-next specific files for 20200825
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=15080fa9900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9ef0a5f95935d447
-dashboard link: https://syzkaller.appspot.com/bug?extid=51c9bdfa559769d2f897
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17927a2e900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132b8ede900000
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+---
+v2: remove unnecessary quotes, set interrupts as required,
+    add unevaluatedProperties:false
+---
+ .../bindings/spi/mediatek,spi-mtk-nor.yaml    | 85 +++++++++++++++++++
+ .../devicetree/bindings/spi/spi-mtk-nor.txt   | 47 ----------
+ 2 files changed, 85 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
 
-The issue was bisected to:
-
-commit 5b317cbf2bcb85a1e96ce87717cb991ecab1dd4d
-Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Date:   Fri Feb 22 09:17:11 2019 +0000
-
-    Merge branch 'pm-cpufreq-fixes'
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=171ead5d200000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=149ead5d200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=109ead5d200000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+51c9bdfa559769d2f897@syzkaller.appspotmail.com
-Fixes: 5b317cbf2bcb ("Merge branch 'pm-cpufreq-fixes'")
-
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: work_struct hint: afs_manage_cell+0x0/0x11c0 fs/afs/cell.c:498
-WARNING: CPU: 1 PID: 16 at lib/debugobjects.c:485 debug_print_object+0x160/0x250 lib/debugobjects.c:485
-Modules linked in:
-CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.9.0-rc2-next-20200825-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:485
-Code: dd 60 56 94 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48 8b 14 dd 60 56 94 88 48 c7 c7 c0 4b 94 88 e8 eb bd a4 fd <0f> 0b 83 05 13 50 1b 07 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
-RSP: 0018:ffffc90000d7fbf8 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: ffff8880a9686440 RSI: ffffffff815da937 RDI: fffff520001aff71
-RBP: 0000000000000001 R08: 0000000000000001 R09: ffff8880ae720f8b
-R10: 0000000000000000 R11: 203a47554245444f R12: ffffffff89ba35e0
-R13: ffffffff814b6290 R14: dead000000000100 R15: dffffc0000000000
-FS:  0000000000000000(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f9120aabe78 CR3: 0000000088b2e000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
- debug_check_no_obj_freed+0x301/0x41c lib/debugobjects.c:998
- kfree+0xf0/0x2c0 mm/slab.c:3755
- rcu_do_batch kernel/rcu/tree.c:2474 [inline]
- rcu_core+0x61e/0x1220 kernel/rcu/tree.c:2709
- __do_softirq+0x2de/0xa24 kernel/softirq.c:298
- run_ksoftirqd kernel/softirq.c:652 [inline]
- run_ksoftirqd+0x89/0x100 kernel/softirq.c:644
- smpboot_thread_fn+0x655/0x9e0 kernel/smpboot.c:165
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+diff --git a/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
+new file mode 100644
+index 000000000000..42c9205ac991
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
+@@ -0,0 +1,85 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/mediatek,spi-mtk-nor.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Serial NOR flash controller for MediaTek ARM SoCs
++
++maintainers:
++  - Bayi Cheng <bayi.cheng@mediatek.com>
++  - Chuanhong Guo <gch981213@gmail.com>
++
++description: |
++  This spi controller support single, dual, or quad mode transfer for
++  SPI NOR flash. There should be only one spi slave device following
++  generic spi bindings. It's not recommended to use this controller
++  for devices other than SPI NOR flash due to limited transfer
++  capability of this controller.
++
++allOf:
++  - $ref: /spi/spi-controller.yaml#
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - mediatek,mt2701-nor
++              - mediatek,mt2712-nor
++              - mediatek,mt7622-nor
++              - mediatek,mt7623-nor
++              - mediatek,mt7629-nor
++          - enum:
++              - mediatek,mt8173-nor
++      - items:
++          - const: mediatek,mt8173-nor
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: clock used for spi bus
++      - description: clock used for controller
++
++  clock-names:
++    items:
++      - const: spi
++      - const: sf
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/mt8173-clk.h>
++
++    soc {
++      #address-cells = <2>;
++      #size-cells = <2>;
++
++      nor_flash: spi@1100d000 {
++        compatible = "mediatek,mt8173-nor";
++        reg = <0 0x1100d000 0 0xe0>;
++        interrupts = <&spi_flash_irq>;
++        clocks = <&pericfg CLK_PERI_SPI>, <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
++        clock-names = "spi", "sf";
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        flash@0 {
++          compatible = "jedec,spi-nor";
++          reg = <0>;
++        };
++      };
++    };
++
+diff --git a/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt b/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
+deleted file mode 100644
+index 984ae7fd4f94..000000000000
+--- a/Documentation/devicetree/bindings/spi/spi-mtk-nor.txt
++++ /dev/null
+@@ -1,47 +0,0 @@
+-* Serial NOR flash controller for MediaTek ARM SoCs
+-
+-Required properties:
+-- compatible: 	  For mt8173, compatible should be "mediatek,mt8173-nor",
+-		  and it's the fallback compatible for other Soc.
+-		  For every other SoC, should contain both the SoC-specific compatible
+-		  string and "mediatek,mt8173-nor".
+-		  The possible values are:
+-		  "mediatek,mt2701-nor", "mediatek,mt8173-nor"
+-		  "mediatek,mt2712-nor", "mediatek,mt8173-nor"
+-		  "mediatek,mt7622-nor", "mediatek,mt8173-nor"
+-		  "mediatek,mt7623-nor", "mediatek,mt8173-nor"
+-		  "mediatek,mt7629-nor", "mediatek,mt8173-nor"
+-		  "mediatek,mt8173-nor"
+-- reg: 		  physical base address and length of the controller's register
+-- interrupts:	  Interrupt number used by the controller.
+-- clocks: 	  the phandle of the clocks needed by the nor controller
+-- clock-names: 	  the names of the clocks
+-		  the clocks should be named "spi" and "sf". "spi" is used for spi bus,
+-		  and "sf" is used for controller, these are the clocks witch
+-		  hardware needs to enabling nor flash and nor flash controller.
+-		  See Documentation/devicetree/bindings/clock/clock-bindings.txt for details.
+-- #address-cells: should be <1>
+-- #size-cells:	  should be <0>
+-
+-There should be only one spi slave device following generic spi bindings.
+-It's not recommended to use this controller for devices other than SPI NOR
+-flash due to limited transfer capability of this controller.
+-
+-Example:
+-
+-nor_flash: spi@1100d000 {
+-	compatible = "mediatek,mt8173-nor";
+-	reg = <0 0x1100d000 0 0xe0>;
+-	interrupts = <&spi_flash_irq>;
+-	clocks = <&pericfg CLK_PERI_SPI>,
+-		 <&topckgen CLK_TOP_SPINFI_IFR_SEL>;
+-	clock-names = "spi", "sf";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+-	flash@0 {
+-		compatible = "jedec,spi-nor";
+-		reg = <0>;
+-	};
+-};
+-
+-- 
+2.28.0.297.g1956fa8f8d-goog
 
