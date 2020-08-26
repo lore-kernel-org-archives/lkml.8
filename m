@@ -2,129 +2,209 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:10:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FCAEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C16B4206EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:10:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2uYkVQM"
+	by mail.kernel.org (Postfix) with ESMTP id 5175E20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgHZKKJ (ORCPT
+        id S1728236AbgHZKNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgHZKJj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:09:39 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C21C061756;
-        Wed, 26 Aug 2020 03:09:38 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 67so781371pgd.12;
-        Wed, 26 Aug 2020 03:09:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iHEsWvvTMNlzi3UKismS4T0pMykRpFFyVU3jPbBAjYs=;
-        b=Q2uYkVQMXrVq3/6USoa/qReMoQU+pWI851jFMp3PhxTMaOZ/AbqKYQ154SAvyxNg9/
-         XggvOhhBsKFYX7+x8LORzg9JERAd4sWgR6SG+5FaVHBbey5H26EtxCWWVZtSCPj0Y7fw
-         Y+V5nl8lSbaC1L3YrC3pSHuyRUxbUqiydOaNUjLpKscWVyuqTpnm0jbO08o4adCrIc8G
-         VWp7iHLmMnNjGf4dfY0IgzvfnnhK4UUk/YAvQ48KlIMbLzdWtR1HpmQC/Cz/fgYnk+sZ
-         7mF/Vl3ebd1n0hPRapw8eBhlFglWhc9E9jOHiJe5qFOTEvE3WPKPDWu5RNKsCNHNI4PQ
-         9QBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iHEsWvvTMNlzi3UKismS4T0pMykRpFFyVU3jPbBAjYs=;
-        b=s+ZoLm6kjSbkx+tVh81VKmsN+jOgy452nev5ryBI9FbnAdO6UBBMwU5hvhT3SDTzK7
-         TSQbV6a+MqY07vX0+qKAoUQX9nfWhJCbLaYnsJSa3Irt6aIl8ndI35fyVo2xwRFO13Of
-         y9IktMGfsH3O0gnnE7j4Xziezxktm0yOvrJPAXCC5ygcFmmcpFF0B5VpUbAoR4YQHJ7f
-         sqMAgra306ACTLv5u8xipHzM6pSKZgPPJTD5T/v9h4YZbNzbq+RV41u30k5Ccbp6WORZ
-         zXSRoJZjNmP4rqBoKHFIuZO4Gj9hbIOwLI7Fz9zwSvW3MWFqQwNO0Z39blUBEDDSzIaU
-         ucJw==
-X-Gm-Message-State: AOAM533ZFBVdKEW8wOvjSvJuuOUBrUi8bpqMYarJqdOCNrRkcM6HqKSi
-        0sANWoGjryXQX7OqZtBAENU=
-X-Google-Smtp-Source: ABdhPJxY4Ti6Jljfc0G99zFAUhrGJKBo7hdD07Nhq8XuH3Qh0im2jFzwYu+D7Ot8nE6GiTWt4XUm7A==
-X-Received: by 2002:aa7:96cf:: with SMTP id h15mr11590240pfq.294.1598436578235;
-        Wed, 26 Aug 2020 03:09:38 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id u16sm2325227pfn.134.2020.08.26.03.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 03:09:37 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 19:09:35 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: consider devices with of_match_table during i2c
- device probing
-Message-ID: <20200826100935.GB8849@jagdpanzerIV.localdomain>
-References: <20200826042938.3259-1-sergey.senozhatsky@gmail.com>
- <20200826050851.GA1081@ninjato>
- <20200826052544.GA500@jagdpanzerIV.localdomain>
- <20200826095356.GG1891694@smile.fi.intel.com>
+        Wed, 26 Aug 2020 06:13:12 -0400
+Received: from david.siemens.de ([192.35.17.14]:57695 "EHLO david.siemens.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728015AbgHZKNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:13:11 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id 07QACq9T029900
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Aug 2020 12:12:52 +0200
+Received: from [167.87.242.222] ([167.87.242.222])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 07QACn7n030731;
+        Wed, 26 Aug 2020 12:12:50 +0200
+Subject: Re: [RESEND PATCH v3 5/8] mtd: spi-nor: cadence-quadspi: Handle probe
+ deferral while requesting DMA channel
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Jin, Le (RC-CN DF FA R&D)" <le.jin@siemens.com>
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Ramuthevar Vadivel Murugan 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, simon.k.r.goldschmidt@gmail.com,
+        dinguyen@kernel.org, marex@denx.de
+References: <20200601070444.16923-1-vigneshr@ti.com>
+ <20200601070444.16923-6-vigneshr@ti.com>
+ <6c8d9bff-3a67-0e6c-d4d1-36b7ed5007b9@web.de>
+ <8cebd31a-2366-4584-b1d1-faa30c18ed6a@ti.com>
+ <dbba9f0c-4621-2d58-8fb8-4cbe788558f9@siemens.com>
+ <eff1b49e-e392-8887-b3a0-3caedc5b81cc@siemens.com>
+Message-ID: <8995f5c5-bd6a-c0e5-1e4f-1744aedd2bcd@siemens.com>
+Date:   Wed, 26 Aug 2020 12:12:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826095356.GG1891694@smile.fi.intel.com>
+In-Reply-To: <eff1b49e-e392-8887-b3a0-3caedc5b81cc@siemens.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/08/26 12:53), Andy Shevchenko wrote:
-> On Wed, Aug 26, 2020 at 02:25:44PM +0900, Sergey Senozhatsky wrote:
-> > On (20/08/26 07:08), Wolfram Sang wrote:
-> > > On Wed, Aug 26, 2020 at 01:29:37PM +0900, Sergey Senozhatsky wrote:
-[..]
-
-> > > > i2c_of_match_device() depends on CONFIG_OF and, thus, is always false.
-> > > > i2c_acpi_match_device() does ACPI match only, no of_comtatible() matching
-> > > > takes place, even though the device provides .of_match_table and ACPI,
-> > > > technically, is capable of matching such device. The result is -ENODEV.
-> > > > Probing will succeed, however, if we'd use .of_match_table aware ACPI
-> > > > matching.
+On 24.08.20 19:20, Jan Kiszka wrote:
+> On 24.08.20 14:49, Jan Kiszka wrote:
+>> On 24.08.20 13:45, Vignesh Raghavendra wrote:
+>>>
+>>>
+>>> On 8/22/20 11:35 PM, Jan Kiszka wrote:
+>>>> On 01.06.20 09:04, Vignesh Raghavendra wrote:
+>>>>> dma_request_chan_by_mask() can throw EPROBE_DEFER if DMA provider
+>>>>> is not yet probed. Currently driver just falls back to using PIO mode
+>>>>> (which is less efficient) in this case. Instead return probe deferral
+>>>>> error as is so that driver will be re probed once DMA provider is
+>>>>> available.
+>>>>>
+>>>>> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+>>>>> Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+>>>>> ---
+>>> [...]
+>>>>>
+>>>>>  static const struct spi_nor_controller_ops cqspi_controller_ops = {
+>>>>> @@ -1269,8 +1274,11 @@ static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
+>>>>>  			dev_dbg(nor->dev, "using direct mode for %s\n",
+>>>>>  				mtd->name);
+>>>>>
+>>>>> -			if (!cqspi->rx_chan)
+>>>>> -				cqspi_request_mmap_dma(cqspi);
+>>>>> +			if (!cqspi->rx_chan) {
+>>>>> +				ret = cqspi_request_mmap_dma(cqspi);
+>>>>> +				if (ret == -EPROBE_DEFER)
+>>>>> +					goto err;
+>>>>> +			}
+>>>>>  		}
+>>>>>  	}
+>>>>>
+>>>>>
+>>>>
+>>>> This seem to break reading the SPI flash on our IOT2050 [1] (didn't test
+>>>> the eval board yet).
+>>>>
+>>>> Without that commit, read happens via PIO, and that works. With the
+>>>> commit, the pattern
+>>>>
+>>>> with open("out.bin", "wb") as out:
+>>>>     pos = 0
+>>>>     while pos < 2:
+>>>>         with open("/dev/mtd0", "rb") as mtd:
+>>>>            mtd.seek(pos * 0x10000)
+>>>>            out.write(mtd.read(0x10000))
+>>>>         pos += 1
+>>>>
+>>>> gives the wrong result for the second block while
+>>>
+>>> Interesting... Could you please explain wrong result? Is the data move
+>>> around or completely garbage?
+>>
+>> It looks like some stripes contain data from other parts of the flash or
+>> kernel RAM. It's not just garbage, there are readable strings included.
+>>
+>>>
+>>> Does this fail even on AM654 EVM? Could you share full script for me to
+>>> test locally?
+>>
+>> The scripts are complete (python). Just binary-diff the outputs.
+>>
+>> I'll try on the EVM later.
 > 
-> Looks like you read same StackOverflow question :-)
+> Done so now, could reproduce.
 
-Nope :) Ran into actual media/i2c driver probing issue several days ago
+..."could *not* reproduce" there. Sorry if that caused confusion.
 
-[..]
-> >         if (!driver->id_table &&
-> > -           !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
-> > -           !i2c_of_match_device(dev->driver->of_match_table, client)) {
-> > +           !(client && i2c_device_match(&client->dev, dev->driver))) {
 > 
-> You probably meant simply:
+> But the OSPIs are definitely different. EVM reports
 > 
-> 	if (!i2c_device_match(dev, dev->driver)) {
+> spi-nor spi0.0: mt35xu512aba (65536 Kbytes)
 > 
-> >                 status = -ENODEV;
-> >                 goto put_sync_adapter;
-> >         }
+> with 4K erase size. Our our board, we have
+> 
+> spi-nor spi7.0: w25q128 (16384 Kbytes)
+> 
+> with 64K erase size.
+> 
+> Here is some extract of the hex-diffs between out.bin and out2.bin (the 
+> latter being the good one):
+> 
+> --- /dev/fd/63  2020-08-24 17:16:58.776409282 +0000
+> +++ /dev/fd/62  2020-08-24 17:16:58.776409282 +0000
+> @@ -6,18 +6,18 @@
+>  00000050  0f 30 0d 06 03 55 04 07  0c 06 44 61 6c 6c 61 73  |.0...U....Dallas|
+>  00000060  31 27 30 25 06 03 55 04  0a 0c 1e 54 65 78 61 73  |1'0%..U....Texas|
+>  00000070  20 49 6e 73 74 72 75 6d  65 6e 74 73 20 49 6e 63  | Instruments Inc|
+> -00000080  84 8b 96 2c 0c 12 18 03  01 05 05 04 01 02 00 00  |...,............|
+> -00000090  07 06 44 45 20 01 0d 14  2a 01 00 32 05 24 30 48  |..DE ...*..2.$0H|
+> -000000a0  60 6c 30 14 01 00 00 0f  ac 04 01 00 00 0f ac 04  |`l0.............|
+> -000000b0  01 00 00 0f ac 02 0c 00  2d 1a 6f 18 17 ff ff ff  |........-.o.....|
+> +00000080  6f 72 70 6f 72 61 74 65  64 31 13 30 11 06 03 55  |orporated1.0...U|
+> +00000090  04 0b 0c 0a 50 72 6f 63  65 73 73 6f 72 73 31 13  |....Processors1.|
+> +000000a0  30 11 06 03 55 04 03 0c  0a 54 49 20 73 75 70 70  |0...U....TI supp|
+> +000000b0  6f 72 74 31 1d 30 1b 06  09 2a 86 48 86 f7 0d 01  |ort1.0...*.H....|
+>  000000c0  09 01 16 0e 73 75 70 70  6f 72 74 40 74 69 2e 63  |....support@ti.c|
+>  000000d0  6f 6d 30 1e 17 0d 32 30  30 37 32 32 31 31 30 30  |om0...2007221100|
+>  000000e0  30 30 5a 17 0d 32 30 30  38 32 31 31 31 30 30 30  |00Z..20082111000|
+>  000000f0  30 5a 30 81 9d 31 0b 30  09 06 03 55 04 06 13 02  |0Z0..1.0...U....|
+> -00000100  00 00 27 a4 00 00 42 43  5e 00 62 32 2f 00 b4 96  |..'...BC^.b2/...|
+> -00000110  24 44 0c 00 c6 00 43 0a  00 00 0b f0 43 a5 2a 01  |$D....C.....C.*.|
+> -00000120  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+> -*
+> +00000100  55 53 31 0b 30 09 06 03  55 04 08 0c 02 54 58 31  |US1.0...U....TX1|
+> +00000110  0f 30 0d 06 03 55 04 07  0c 06 44 61 6c 6c 61 73  |.0...U....Dallas|
+> +00000120  31 27 30 25 06 03 55 04  0a 0c 1e 54 65 78 61 73  |1'0%..U....Texas|
+> +00000130  20 49 6e 73 74 72 75 6d  65 6e 74 73 20 49 6e 63  | Instruments Inc|
+>  00000140  6f 72 70 6f 72 61 74 65  64 31 13 30 11 06 03 55  |orporated1.0...U|
+>  00000150  04 0b 0c 0a 50 72 6f 63  65 73 73 6f 72 73 31 13  |....Processors1.|
+>  00000160  30 11 06 03 55 04 03 0c  0a 54 49 20 73 75 70 70  |0...U....TI supp|
+> 
+> [...]
+> 
+>  000017a0  02 8a e5 06 c8 8c e2 14  c2 8a e5 7c 01 00 ea ed  |...........|....|
+>  000017b0  1f 8f e2 66 02 00 ea 5b  45 72 72 6f 72 5d 20 52  |...f...[Error] R|
+> -000017c0  69 64 20 55 54 43 20 49  44 21 21 21 0a 00 00 5b  |id UTC ID!!!...[|
+> -000017d0  45 72 72 6f 72 5d 20 49  6e 76 61 6c 69 64 20 50  |Error] Invalid P|
+> -000017e0  65 65 72 20 43 68 61 6e  6e 65 6c 20 4e 75 6d 62  |eer Channel Numb|
+> -000017f0  65 72 21 21 21 0a 00 41  73 73 65 72 74 69 6f 6e  |er!!!..Assertion|
+> +000017c0  4d 20 41 6c 6c 6f 63 20  54 58 20 43 68 20 66 61  |M Alloc TX Ch fa|
+> +000017d0  69 6c 65 64 21 21 21 0a  00 00 00 73 72 63 2f 75  |iled!!!....src/u|
+> +000017e0  64 6d 61 5f 63 68 2e 63  00 00 00 75 74 63 49 6e  |dma_ch.c...utcIn|
+> +000017f0  66 6f 20 21 3d 20 4e 55  4c 4c 5f 50 54 52 00 75  |fo != NULL_PTR.u|
+>  00001800  74 63 49 64 20 3c 3d 20  55 44 4d 41 5f 4e 55 4d  |tcId <= UDMA_NUM|
+>  00001810  5f 55 54 43 5f 49 4e 53  54 41 4e 43 45 00 00 72  |_UTC_INSTANCE..r|
+> 
 
-That's shorter, yes. I wanted to keep the existing "workaround" in order
-to avoid extra id_table matching. Because it probably will take place
-earlier somewhere in
+I've done [1] for now in order to make the OSPI usable again here. It
+looks like reading an mtd device in one chunk (single read syscall) is
+fine, ie. "dd if=/dev/mtd3 of=content2 bs=<sizeof-mtd3>", while reading
+it in multiple chunks is problematic, e.g. "dd if=/dev/mtd3 of=content2
+bs=4096". Interestingly, the deviation is already on the first block,
+which may speak against a setup issue for a second transfer.
 
-	bus_for_each_dev()
-	 __driver_attach()
-	  i2c_device_match()  // OF ACPI id_table match
+The content I've seen in the corrupted output may come from other parts
+of the memory. I've found my WIFI SSID there, which is definitely not
+part of our OSPI image.
 
-> On the first glance it will work the same way but slightly longer in case of ID
-> table matching.
+Jan
 
-Right.
+[1]
+https://github.com/siemens/linux/commit/0abc3696f89f3a89214e483f7216b54e1b2196cd
 
-	-ss
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
