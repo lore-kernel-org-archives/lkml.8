@@ -2,229 +2,382 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8489C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1617FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 806D92075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3102075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ro0RoIoF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Ui1jvtAN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbgHZQFU (ORCPT
+        id S1726802AbgHZQGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:05:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45132 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgHZQEF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:04:05 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E380AC061574;
-        Wed, 26 Aug 2020 09:04:03 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id mt12so1091990pjb.4;
-        Wed, 26 Aug 2020 09:04:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZYnA2SCibgRU/WISqM1t5OcPtNJ/1IEgy+sMsxjqVJc=;
-        b=Ro0RoIoFpw5yQk7ZvooJCT1WTUGt+wJ5SOxQ4f0Hz3xvWR0RlQ1z7jyCWeP7xkl/Ic
-         q00Wx1MNqZP9XDzgLXaU+axSjPQtLSrVzHcgfK1VnVirdcVsMEjOagJAVtBG6I4+YaG7
-         RuYWM/PGaRhBScXWkMIh7T9Uj4r49q+wyBx9JFJ7AYSSkjk7dIihmLN2A/6+uBobGbN0
-         Gfqvc30Zxf6OwyzpId329jBAUbvOSZMMVOmCwRMvxpcC4UvrqI0TyEHwHY8f4Z7zU2Vq
-         2qOWkwHkPhHZcsbJQREZFRFiQWCKOa/tFQP6T3XLIo0j1AHS0vRNEYMcz0lRvqZ7TbWy
-         9HXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZYnA2SCibgRU/WISqM1t5OcPtNJ/1IEgy+sMsxjqVJc=;
-        b=bPpQ4zCR65ItC0VnoRpLkwt6+bkPXs3nwfD2XC1DMsGPOo6KtniUKaLExheqaLQtvt
-         Y2KLIwOSwmICh8ImyiCrWHL3SJsGqxfdJYTqP0wsYz1PmGC3fh7hhvdQBN2Ve9cJOHrb
-         KLmsFDcq/xWNWcAJdVY1s211qp6Qbt1dowfFIRvZyINQGv5lM0Sm4mkVyxH8pVZItjKH
-         jbfOnDtqze4b7JGIMlsdUNAx3iFrThbsPcO74gdTW0fwBK2dcmy2yi2vKKd1zzxIeonx
-         WCHfqmVcaulPRmmZ0lF+g2vX1tP35Mdmat37J4NUfrJ9wlet0XFAUgUMNGmJFv2RwnB6
-         AzMw==
-X-Gm-Message-State: AOAM532R34fDcXSNnKU3OsYVX06ZfB75sT9MZ1pdJvYZ87AZltWBxbmw
-        R57RbIDJzVeZvmZfdbvC+dy+D9kPUat1PhY0Q5k=
-X-Google-Smtp-Source: ABdhPJwddMhqWnxN6SgtsR1zQqgZSBxBX3NV/CXneRN/Ee/tMrxaF7NKqcX5ii/Sj9Izi1h8FF/iOg5M8g1U2crrIBE=
-X-Received: by 2002:a17:90b:509:: with SMTP id r9mr6883860pjz.228.1598457843192;
- Wed, 26 Aug 2020 09:04:03 -0700 (PDT)
+        Wed, 26 Aug 2020 12:06:06 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:17739 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726690AbgHZQFm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:05:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598457940; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=/v0VS/QvaL5WQOPkn0McnlmQIMtm3aSvwgdoze6Cqx8=;
+ b=Ui1jvtANdCvYd9Fdd4wgs/1XquGKxn//OxTRay0+gzPD2S0N5kFGUvrFlOoxY9nu3LDZ+bEb
+ F+mAWkAxVSE09LqejtEutkA9dzNx2LSc4wQSzMvpJY0BE8IonGWafwY5WIBo0X2baqMIxooW
+ 2c1qBH0s8Eyc3/OEEQJEPvn+ZW0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 5f46883ef4c0f8ce20792a72 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 16:05:18
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 524AAC433C6; Wed, 26 Aug 2020 16:05:17 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: skakit)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BF514C433CA;
+        Wed, 26 Aug 2020 16:05:15 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200825101614.2462-1-william.sung@advantech.com.tw>
-In-Reply-To: <20200825101614.2462-1-william.sung@advantech.com.tw>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 26 Aug 2020 19:03:46 +0300
-Message-ID: <CAHp75VceTBHJ1p3amCQ0PpDSEP8L5+Tf-Qro69+G1WZBrt2oDw@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: dac: ad5593r: Dynamically set AD5593R channel modes
-To:     William Sung <william.sung@advantech.com.tw>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        Campion Kang <Campion.Kang@advantech.com.tw>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 26 Aug 2020 21:35:15 +0530
+From:   skakit@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
+Subject: Re: [PATCH V3 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
+ BT uart
+In-Reply-To: <20200825163820.GD486007@google.com>
+References: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
+ <1597931467-24268-3-git-send-email-skakit@codeaurora.org>
+ <20200821172215.GB486007@google.com>
+ <e1738473c26de45b5c9c7c4d5963f32c@codeaurora.org>
+ <20200825163820.GD486007@google.com>
+Message-ID: <10485f6a111c578f2e15dbcc0ceec66d@codeaurora.org>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 1:19 PM William Sung
-<william.sung@advantech.com.tw> wrote:
->
-> To use ad5593r more flexibly, we use the module parameter to setting the
-> channel modes dynamically whenever the module probe up. Users can pass
-> the channel modes to the module parameter for allocating the
-> functionality of channels as desired.
->
-> For example:
-> * Use in the kernel command line:
-> Users can add the module parameter in the kernel command line such as
->
->     "ad5593r.ch_mode=88001122"
->
-> "88001122" means the channel mode setting for each channel. The most
-> left side indicates the mode of channel 7, and the most right side
-> indicates the mode of channel 0.
->
-> * Use when manually probe the module:
-> Similar to the kernel command line usage, users can enter
->
->     "modprobe ad5593r ch_mode=88001122"
->
-> to start the ad5593r module with the desired channel mode setting.
+Hi Matthias,
 
-> v2: Fix the patch description and remove redundant for loop
+On 2020-08-25 22:08, Matthias Kaehlcke wrote:
+> On Tue, Aug 25, 2020 at 06:42:28PM +0530, skakit@codeaurora.org wrote:
+>> On 2020-08-21 22:52, Matthias Kaehlcke wrote:
+>> > On Thu, Aug 20, 2020 at 07:21:06PM +0530, satya priya wrote:
+>> > > Add sleep pin ctrl for BT uart, and also change the bias
+>> > > configuration to match Bluetooth module.
+>> > >
+>> > > Signed-off-by: satya priya <skakit@codeaurora.org>
+>> > > Reviewed-by: Akash Asthana <akashast@codeaurora.org>
+>> > > ---
+>> > > Changes in V2:
+>> > >  - This patch adds sleep state for BT UART. Newly added in V2.
+>> > >
+>> > > Changes in V3:
+>> > >  - Remove "output-high" for TX from both sleep and default states
+>> > >    as it is not required. Configure pull-up for TX in sleep state.
+>> > >
+>> > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 54
+>> > > +++++++++++++++++++++++++++------
+>> > >  1 file changed, 45 insertions(+), 9 deletions(-)
+>> > >
+>> > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> > > index d8b5507..806f626 100644
+>> > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> > > @@ -473,20 +473,20 @@
+>> > >
+>> > >  &qup_uart3_default {
+>> > >  	pinconf-cts {
+>> > > -		/*
+>> > > -		 * Configure a pull-down on 38 (CTS) to match the pull of
+>> > > -		 * the Bluetooth module.
+>> > > -		 */
+>> > > +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
+>> > >  		pins = "gpio38";
+>> > > -		bias-pull-down;
+>> > > -		output-high;
+>> > > +		bias-disable;
+>> >
+>> > I think it should be ok in functional terms, but I don't like the
+>> > rationale
+>> > and also doubt the change is really needed.
+>> >
+>> > If the pull is removed to match the Bluetooth module, then that sounds
+>> > as
+>> > if the signal was floating on the the BT side, which I think is not the
+>> > case.
+>> > Yes, according to the datasheet there is no pull when the BT controller
+>> > is
+>> > active, but then it drives the signal actively to either high or low.
+>> > There
+>> > seems to be no merit in 'matching' the Bluetooth side in this case, if
+>> > the
+>> > signal was really floating on the BT side we would definitely not want
+>> > this.
+>> >
+>> > In a reply to v2 you said:
+>> >
+>> > > Recently on cherokee we worked with BT team and came to an agreement
+>> > > to
+>> > > keep no-pull from our side in order to not conflict with their pull in
+>> > > any state.
+>> >
+>> > What are these conflicting pull states?
+>> >
+>> > The WCN3998 datasheet has a pull-down on RTS (WCN3998 side) in reset and
+>> > boot mode, and no pull in active mode. In reset and boot mode the host
+>> > config with a pull down would match, and no pull in active mode doesn't
+>> > conflict with the pull-down on the host UART. My understanding is that
+>> > the pinconf pulls are weak pulls, so as soon as the BT chip drives its
+>> > RTS the pull on the host side shouldn't matter.
+>> >
+>> 
+>> yes, I agree with you, the pinconf pulls are weak. As this is driven 
+>> by BT
+>> SoC (pull on HOST side shouldn't matter), we are not mentioning any 
+>> bias
+>> configuration from our side and simply putting it as no-pull, just to 
+>> not
+>> conflict in any case. It seems that the rationale mentioned is a bit
+>> confusing i will change it to clearly specify why we are configuring
+>> no-pull.
+>> 
+>> > Is this change actually related with wakeup support? I have the
+>> > impression
+>> > that multiple things are conflated in this patch. If some of the changes
+>> > are just fixing/improving other things they should be in a separate
+>> > patch,
+>> > which could be part of this series, otherwise it's really hard to
+>> > distinguish between the pieces that are actually relevant for wakeup and
+>> > the rest.
+>> >
+>> > Independently of whether the changes are done in a single or multiple
+>> > patches, the commit log should include details on why the changes are
+>> > necessary, especially when there are not explantatory comments in the
+>> > DT/code itself (e.g. the removal of 'output-high', which seems correct
+>> > to me, but no reason is given why it is done).
+>> >
+>> 
+>> This change is not related to wakeup support, I will make it a 
+>> separate
+>> patch, will also mention the details in commit text.
+>> 
+>> > >  	};
+>> > >
+>> > >  	pinconf-rts {
+>> > > -		/* We'll drive 39 (RTS), so no pull */
+>> > > +		/*
+>> > > +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
+>> > > +		 * floating pin which could mislead Bluetooth controller
+>> > > +		 * with UART RFR state (READY/NOT_READY).
+>> > > +		 */
+>> > >  		pins = "gpio39";
+>> > >  		drive-strength = <2>;
+>> > > -		bias-disable;
+>> > > +		bias-pull-down;
+>> > >  	};
+>> >
+>> > [copy of my comment on v2]
+>> >
+>> > I'm a bit at a loss here, about two things:
+>> >
+>> > RTS is an output pin controlled by the UART. IIUC if the UART port is
+>> > active
+>> > and hardware flow control is enabled the RTS signal is either driven to
+>> > high
+>> > or low, but not floating.
+>> 
+>> Yes, RTS is either driven high or low. HW flow control is always 
+>> enabled and
+>> only turned off when RX FIFO is full. Whereas SW flow control is 
+>> controlled
+>> by upper layers(serial core), also it can be enabled/disabled from 
+>> host by
+>> calling set_mctrl.
+> 
+> As far as I understand the above isn't entirely correct. HW flow 
+> control is not
+> disabled when the RX FIFO is full, rather as part of HW flow control 
+> the
+> hardware deasserts RTS when the FIFO is full. Software flow control 
+> isn't really
+> relevant here, since it doesn't use RTS/CTS but uses transmission of 
+> special
+> codes (XON/XOFF) over TX/RX.
 
-This should go after the cutter '---' line below.
+Here by Software flow control i meant, we can control the flow from 
+SW(explained below).
 
-> Signed-off-by: William Sung <william.sung@advantech.com.tw>
-> ---
+> 
+>> > Now lets assume I'm wrong with the above and RTS can be floating. We
+>> > only want
+>> > the BT SoC to send data when the host UART is ready to receive them,
+>> > right?
+>> > RTS is an active low signal, hence by configuring it as a pull-down the
+>> > BT
+>> > SoC can send data regardless of whether the host UART actually asserts
+>> > RTS,
+>> > so the host UART may not be ready to receive it. I would argue that if
+>> > there
+>> > is really such a thing as a floating RTS signal then it should have a
+>> > pull-up,
+>> > to prevent the BT SoC from sending data at any time.
+>> >
+>> > I'm not an expert in UART communication and pinconf, so it could be that
+>> > I
+>> > got something wrong, but as of now it seems to me that no pull is the
+>> > correct
+>> > config for RTS.
+>> >
+>> > >
+>> > >  	pinconf-tx {
+>> > > @@ -494,7 +494,43 @@
+>> > >  		pins = "gpio40";
+>> > >  		drive-strength = <2>;
+>> > >  		bias-disable;
+>> > > -		output-high;
+>> > > +	};
+>> > > +
+>> > > +	pinconf-rx {
+>> > > +		/*
+>> > > +		 * Configure a pull-up on 41 (RX). This is needed to avoid
+>> > > +		 * garbage data when the TX pin of the Bluetooth module is
+>> > > +		 * in tri-state (module powered off or not driving the
+>> > > +		 * signal yet).
+>> > > +		 */
+>> > > +		pins = "gpio41";
+>> > > +		bias-pull-up;
+>> > > +	};
+>> > > +};
+>> > > +
+>> > > +&qup_uart3_sleep {
+>> > > +	pinconf-cts {
+>> > > +		/* Configure no-pull on 38 (CTS) to match Bluetooth module */
+>> > > +		pins = "gpio38";
+>> > > +		bias-disable;
+>> > > +	};
+>> > > +
+>> > > +	pinconf-rts {
+>> > > +		/*
+>> > > +		 * Configure pull-down on 39 (RTS). This is needed to avoid a
+>> > > +		 * floating pin which could mislead Bluetooth controller
+>> > > +		 * with UART RFR state (READY/NOT_READY).
+>> > > +		 */
+>> > > +		pins = "gpio39";
+>> > > +		drive-strength = <2>;
+> 
+> just noticed this: in the sleep config all pins are in GPIO config (see
+> "arm64: dts: sc7180: Add wakeup support over UART RX" from this series)
+> and by default they are inputs, hence the drive-strength here is 
+> pointless
+> IIUC.
+> 
 
-...
+CTS and RX are inputs to the HOST whereas RTS and TX are outputs. We 
+have added drive-strength for output pins only as they are driven by 
+UART(please correct me if wrong).
 
-> +/* Parameters for dynamic channel mode setting */
-> +static u8 update_channel_mode;
-> +static u8 new_channel_modes[AD559XR_CHANNEL_NR];
+>> > > +		bias-pull-down;
+>> > > +	};
+>> >
+>> > I don't know all the details, but I have the impression that this is the
+>> > relevant pull change for wakeup. From the title of the series I derive
+>> > that the UART RX pin is used for signalling wakeup. A pull-down on RTS
+>> > indicates the BT controller that it can always send data to wake up the
+>> > host.
+>> >
+>> > I think RTS in default mode should remain with no-pull (the UART is
+>> > driving
+>> > the signal), and then change it to pull-down in sleep mode.
+>> >
+>> >
+>> 
+>> As I understand from your previous comment, pinconf pulls are weak and
+>> cannot override the pull of controller.
+> 
+> I'm not sure this is an absolute truth. I think there may be cases 
+> where
+> the driver has to increase its drive strength..
+> 
+>> Although pull down is configured,
+>> data will be received only if host controller is ready to accept it. 
+>> So, we
+>> want to put RTS in pull-down state(known state) instead of leaving it 
+>> in
+>> ambiguous state i.e, no-pull(high/low).
+> 
+> I disgress. I'm pretty sure that you want RTS to be low to make sure 
+> that
+> the BT SoC can wake up the system by sending whatever data it has to 
+> send.
+> It won't do that if RTS is high (e.g. because that's its floating state
+> at that time). I just tried configuring a pull-up (also a known
+> non-ambiguous state), and Bluetooth wakeup doesn't work with that,
+> supposedly because the BT SoC/UART will wait for its CTS signal to be 
+> low.
+> 
 
-Huh?! Global variables?!
+yes, you are right, we are keeping RTS low to make sure that BT SoC can 
+wakeup the system by sending bytes.
+My intention here was to explain below case from your comment:
 
-...
+>> > RTS is an active low signal, hence by configuring it as a pull-down the
+>> > BT
+>> > SoC can send data regardless of whether the host UART actually asserts
+>> > RTS,
+>> > so the host UART may not be ready to receive it.
 
-> +static void ad5592r_set_def_channel_modes(struct ad5592r_state *st)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(st->channel_modes); i++)
-> +               st->channel_modes[i] = new_channel_modes[i];
-> +}
+1. By default our HW flow is enabled(since we are configuring pull-down 
+on RTS),and BT SoC can send data anytime.
+2. But there is a SW mechanism where we can control the flow from 
+software. In that case what ever is configured to UART_MANUAL_RFR(READY 
+or NOT_READY) will override the dtsi pinconf pull and the RTS/RFR line 
+is pulled high when HOST is not ready(while debugging the wake up issue 
+we came across this).
 
-NIH of memcpy() ?
+So, as far as i understand, even if pull-down is configured on RTS, BT 
+SoC can send data only when HOST is ready.
+Can you please let me know which case you mean here, when you say "by 
+configuring it as a pull-down the BT SoC can send data regardless of 
+whether the host UART actually asserts RTS". Is there any case which we 
+are missing here?
 
-...
+>> > > +
+>> > > +	pinconf-tx {
+>> > > +		/* Configure pull-up on 40 (TX) when it isn't actively driven */
+>> >
+>> > nit: just say '... on TX ...', the GPIO number isn't really interesting
+>> > and can
+>> > easily be determined by looking at 'pins' if needed . Applicable to all
+>> > comments
+>> > involving pins.
+>> >
+>> 
+>> Okay.
+>> 
+>> > > +		pins = "gpio40";
+>> > > +		drive-strength = <2>;
+> 
+> also not needed, see above
 
-> +void ad5592r_update_default_channel_modes(u8 *new_modes)
-> +{
-> +       int idx = 0;
-> +
-> +       update_channel_mode = 1;
-> +       for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++)
-> +               new_channel_modes[idx] = new_modes[idx];
 
-> +
-
-Redundant blank line.
-
-> +}
-
-Ditto (see memcpy() above).
-
-> +EXPORT_SYMBOL_GPL(ad5592r_update_default_channel_modes);
-
-What?!
-
-...
-
-> +/* Parameters for dynamic channel mode setting */
-> +static char *ch_mode = "";
-> +module_param(ch_mode, charp, 0400);
-
-We have sysfs ABI, what's wrong with it?
-
-...
-
-> +static void ad5593r_check_new_channel_mode(void)
-> +{
-> +       char *new_mode = NULL, tmp[2];
-> +       u8 new_ch_modes[AD559XR_CHANNEL_NR];
-
-> +       int idx = 0;
-
-Redundant assignment.
-Also for new_mode.
-
-> +
-
-> +       if (strlen(ch_mode) != AD559XR_CHANNEL_NR)
-
-This is interesting...
-
-> +               return;
-> +
-> +       new_mode = ch_mode;
-> +
-> +       /* Check if all channel modes are valid */
-> +       for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++) {
-> +               switch (new_mode[idx]) {
-> +               case '0':
-> +               case '1':
-> +               case '2':
-> +               case '3':
-> +               case '8':
-> +                       continue;
-> +               default:
-> +                       /* There is invalid mode exist, ignore the settings */
-
-> +                       pr_err("%s: invalid(%c) in index(%d)\n",
-> +                               __func__, new_mode[idx], idx);
-
-Oh...
-
-> +                       return;
-> +               }
-> +       }
-> +
-> +       /* Set the new modes to ad5592r-base driver to setup the new channel modes */
-> +       memset(tmp, 0, 2);
-> +       for (idx = 0; idx < AD559XR_CHANNEL_NR; idx++) {
-> +               tmp[0] = new_mode[idx];
-
-> +               if (kstrtou8(tmp, 10, &new_ch_modes[AD559XR_CHANNEL_NR - idx - 1])) {
-
-Shadowing errors?
-
-> +                       /* Something error when converting the string to integer */
-> +                       /* Ignore this settings */
-
-Wrong style of comment.
-
-> +                       pr_err("%s: kstr error idx(%d)\n", __func__, idx);
-> +                       return;
-> +               }
-> +       }
-> +
-> +       ad5592r_update_default_channel_modes(new_ch_modes);
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Satya Priya
