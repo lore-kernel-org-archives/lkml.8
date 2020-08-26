@@ -2,129 +2,374 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 462ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABB52087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E98E2087D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:07:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cjwglaMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgHZV74 (ORCPT
+        id S1726834AbgHZWHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:59:56 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47262 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgHZV7z (ORCPT
+        Wed, 26 Aug 2020 18:07:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49943 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726836AbgHZWHw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:59:55 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 42A8329946E
-Received: by earth.universe (Postfix, from userid 1000)
-        id E7C103C0C82; Wed, 26 Aug 2020 23:59:50 +0200 (CEST)
-Date:   Wed, 26 Aug 2020 23:59:50 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH 1/2] power: supply: Add support for RN5T618/RC5T619
- charger and fuel gauge
-Message-ID: <20200826215950.bkzk76lwax7l6arz@earth.universe>
-References: <20200815165610.10647-1-andreas@kemnade.info>
- <20200815165610.10647-2-andreas@kemnade.info>
- <20200826174817.vhus3j4i4t7u7jc4@earth.universe>
- <20200826202834.42b1673f@aktux>
+        Wed, 26 Aug 2020 18:07:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598479670;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nii5V4XiY+KmfMDOCUYJbycvEUwVkBpmclFbFkaDfxI=;
+        b=cjwglaMyDYMxtliJ1ZLkWF7aYuY6Xk9oXi8Fxzc16sSO00sd5PzP0FvDjZ6z/qLNiMcoFU
+        +Li+VAJM+OO1RIh5oFJrOv86/tAsazagkzLl8IMp3JhSiEKdDSG+cjr6IBq7NrCuU//U7V
+        Y0GQfFt9ktTiRAeV3hwTedpD8RAPRMA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-77-xG5ECe31MpaDOSrugm-E8Q-1; Wed, 26 Aug 2020 18:07:45 -0400
+X-MC-Unique: xG5ECe31MpaDOSrugm-E8Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E71F1005504;
+        Wed, 26 Aug 2020 22:07:43 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C1995C1C4;
+        Wed, 26 Aug 2020 22:07:38 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 18:07:38 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-raid@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        Song Liu <song@kernel.org>, dm-devel@redhat.com,
+        linux-mtd@lists.infradead.org, cgroups@vger.kernel.org,
+        drbd-dev@tron.linbit.com, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, martin.petersen@oracle.com
+Subject: Re: [PATCH 06/14] block: lift setting the readahead size into the
+ block layer
+Message-ID: <20200826220737.GA25613@redhat.com>
+References: <20200726150333.305527-1-hch@lst.de>
+ <20200726150333.305527-7-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pa4o3hd67cmcjsut"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200826202834.42b1673f@aktux>
+In-Reply-To: <20200726150333.305527-7-hch@lst.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jul 26 2020 at 11:03am -0400,
+Christoph Hellwig <hch@lst.de> wrote:
 
---pa4o3hd67cmcjsut
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Drivers shouldn't really mess with the readahead size, as that is a VM
+> concept.  Instead set it based on the optimal I/O size by lifting the
+> algorithm from the md driver when registering the disk.  Also set
+> bdi->io_pages there as well by applying the same scheme based on
+> max_sectors.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  block/blk-settings.c         |  5 ++---
+>  block/blk-sysfs.c            |  1 -
+>  block/genhd.c                | 13 +++++++++++--
+>  drivers/block/aoe/aoeblk.c   |  2 --
+>  drivers/block/drbd/drbd_nl.c | 12 +-----------
+>  drivers/md/bcache/super.c    |  4 ----
+>  drivers/md/dm-table.c        |  3 ---
+>  drivers/md/raid0.c           | 16 ----------------
+>  drivers/md/raid10.c          | 24 +-----------------------
+>  drivers/md/raid5.c           | 13 +------------
+>  10 files changed, 16 insertions(+), 77 deletions(-)
 
-Hi,
 
-On Wed, Aug 26, 2020 at 08:28:34PM +0200, Andreas Kemnade wrote:
-> On Wed, 26 Aug 2020 19:48:17 +0200
-> Sebastian Reichel <sebastian.reichel@collabora.com> wrote:
-> > On Sat, Aug 15, 2020 at 06:56:09PM +0200, Andreas Kemnade wrote:
-> > > [...]
-> > > +static int rn5t618_battery_current_now(struct rn5t618_power_info *in=
-fo,
-> > > +				       union power_supply_propval *val)
-> > > +{
-> > > +	u16 res;
-> > > +	int ret;
-> > > +
-> > > +	ret =3D rn5t618_battery_read_doublereg(info, RN5T618_CC_AVEREG1, &r=
-es);
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	val->intval =3D res;
-> > > +	/* 2's complement */
-> > > +	if (val->intval & (1 << 13))
-> > > +		val->intval =3D val->intval - (1 << 14);
+In general these changes need a solid audit relative to stacking
+drivers.  That is, the limits stacking methods (blk_stack_limits)
+vs lower level allocation methods (__device_add_disk).
 
-Btw. I think sign_extend32() can be used here?
+You optimized for lowlevel __device_add_disk establishing the bdi's
+ra_pages and io_pages.  That is at the beginning of disk allocation,
+well before any build up of stacking driver's queue_io_opt() -- which
+was previously done in disk_stack_limits or driver specific methods
+(e.g. dm_table_set_restrictions) that are called _after_ all the limits
+stacking occurs.
 
-> > > +	/* negate current to be positive when discharging */
-> > > +	val->intval *=3D -1000; =20
-> >=20
-> > mh, the sign is not documented (which should be fixed). At least
-> > sbs-battery does it the other way around (negative current when
-> > discharging, positive otherwise). Some drivers do not support
-> > signed current and always report positive values (e.g. ACPI driver).
-> >=20
-> > What did you use as reference for swapping the sign?
-> >=20
-> Well, I have searched for documentation, found nothing and used the
-> bq27xxx driver as reference  which I am used to from the GTA04/GTA02,
-> so things behave equal. That are the devices where a was most
-> intensively looking at those values.
-> I thought that there would be some unwritten rule about that.
+By inverting the setting of the bdi's ra_pages and io_pages to be done
+so early in __device_add_disk it'll break properly setting these values
+for at least DM afaict.
 
-The mess is mostly due to lacking reviewing from my side
-(and possibly my predecessors). I just went through a dozen of
-drivers and it looks like most either do not support signed current
-(and use negative values as error code :() or use negative current
-for discharge. I could not find any other driver using negative
-numbers for charging. I think it's best to negative =3D discharge as
-official correct value and will send an update patch for the
-documentation later.
+Mike
 
--- Sebastian
 
---pa4o3hd67cmcjsut
-Content-Type: application/pgp-signature; name="signature.asc"
+> diff --git a/block/blk-settings.c b/block/blk-settings.c
+> index 76a7e03bcd6cac..01049e9b998f1d 100644
+> --- a/block/blk-settings.c
+> +++ b/block/blk-settings.c
+> @@ -452,6 +452,8 @@ EXPORT_SYMBOL(blk_limits_io_opt);
+>  void blk_queue_io_opt(struct request_queue *q, unsigned int opt)
+>  {
+>  	blk_limits_io_opt(&q->limits, opt);
+> +	q->backing_dev_info->ra_pages =
+> +		max(queue_io_opt(q) * 2 / PAGE_SIZE, VM_READAHEAD_PAGES);
+>  }
+>  EXPORT_SYMBOL(blk_queue_io_opt);
+>  
+> @@ -628,9 +630,6 @@ void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
+>  		printk(KERN_NOTICE "%s: Warning: Device %s is misaligned\n",
+>  		       top, bottom);
+>  	}
+> -
+> -	t->backing_dev_info->io_pages =
+> -		t->limits.max_sectors >> (PAGE_SHIFT - 9);
+>  }
+>  EXPORT_SYMBOL(disk_stack_limits);
+>  
+> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+> index 7dda709f3ccb6f..ce418d9128a0b2 100644
+> --- a/block/blk-sysfs.c
+> +++ b/block/blk-sysfs.c
+> @@ -245,7 +245,6 @@ queue_max_sectors_store(struct request_queue *q, const char *page, size_t count)
+>  
+>  	spin_lock_irq(&q->queue_lock);
+>  	q->limits.max_sectors = max_sectors_kb << 1;
+> -	q->backing_dev_info->io_pages = max_sectors_kb >> (PAGE_SHIFT - 10);
+>  	spin_unlock_irq(&q->queue_lock);
+>  
+>  	return ret;
+> diff --git a/block/genhd.c b/block/genhd.c
+> index 8b1e9f48957cb5..097d4e4bc0b8a2 100644
+> --- a/block/genhd.c
+> +++ b/block/genhd.c
+> @@ -775,6 +775,7 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
+>  			      const struct attribute_group **groups,
+>  			      bool register_queue)
+>  {
+> +	struct request_queue *q = disk->queue;
+>  	dev_t devt;
+>  	int retval;
+>  
+> @@ -785,7 +786,7 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
+>  	 * registration.
+>  	 */
+>  	if (register_queue)
+> -		elevator_init_mq(disk->queue);
+> +		elevator_init_mq(q);
+>  
+>  	/* minors == 0 indicates to use ext devt from part0 and should
+>  	 * be accompanied with EXT_DEVT flag.  Make sure all
+> @@ -815,10 +816,18 @@ static void __device_add_disk(struct device *parent, struct gendisk *disk,
+>  		disk->flags |= GENHD_FL_SUPPRESS_PARTITION_INFO;
+>  		disk->flags |= GENHD_FL_NO_PART_SCAN;
+>  	} else {
+> -		struct backing_dev_info *bdi = disk->queue->backing_dev_info;
+> +		struct backing_dev_info *bdi = q->backing_dev_info;
+>  		struct device *dev = disk_to_dev(disk);
+>  		int ret;
+>  
+> +		/*
+> +		 * For read-ahead of large files to be effective, we need to
+> +		 * readahead at least twice the optimal I/O size.
+> +		 */
+> +		bdi->ra_pages = max(queue_io_opt(q) * 2 / PAGE_SIZE,
+> +				    VM_READAHEAD_PAGES);
+> +		bdi->io_pages = queue_max_sectors(q) >> (PAGE_SHIFT - 9);
+> +
+>  		/* Register BDI before referencing it from bdev */
+>  		dev->devt = devt;
+>  		ret = bdi_register(bdi, "%u:%u", MAJOR(devt), MINOR(devt));
+> diff --git a/drivers/block/aoe/aoeblk.c b/drivers/block/aoe/aoeblk.c
+> index 5ca7216e9e01f3..89b33b402b4e52 100644
+> --- a/drivers/block/aoe/aoeblk.c
+> +++ b/drivers/block/aoe/aoeblk.c
+> @@ -347,7 +347,6 @@ aoeblk_gdalloc(void *vp)
+>  	mempool_t *mp;
+>  	struct request_queue *q;
+>  	struct blk_mq_tag_set *set;
+> -	enum { KB = 1024, MB = KB * KB, READ_AHEAD = 2 * MB, };
+>  	ulong flags;
+>  	int late = 0;
+>  	int err;
+> @@ -407,7 +406,6 @@ aoeblk_gdalloc(void *vp)
+>  	WARN_ON(d->gd);
+>  	WARN_ON(d->flags & DEVFL_UP);
+>  	blk_queue_max_hw_sectors(q, BLK_DEF_MAX_SECTORS);
+> -	q->backing_dev_info->ra_pages = READ_AHEAD / PAGE_SIZE;
+>  	d->bufpool = mp;
+>  	d->blkq = gd->queue = q;
+>  	q->queuedata = d;
+> diff --git a/drivers/block/drbd/drbd_nl.c b/drivers/block/drbd/drbd_nl.c
+> index 650372ee2c7822..212bf711fb6b41 100644
+> --- a/drivers/block/drbd/drbd_nl.c
+> +++ b/drivers/block/drbd/drbd_nl.c
+> @@ -1360,18 +1360,8 @@ static void drbd_setup_queue_param(struct drbd_device *device, struct drbd_backi
+>  	decide_on_discard_support(device, q, b, discard_zeroes_if_aligned);
+>  	decide_on_write_same_support(device, q, b, o, disable_write_same);
+>  
+> -	if (b) {
+> +	if (b)
+>  		blk_stack_limits(&q->limits, &b->limits, 0);
+> -
+> -		if (q->backing_dev_info->ra_pages !=
+> -		    b->backing_dev_info->ra_pages) {
+> -			drbd_info(device, "Adjusting my ra_pages to backing device's (%lu -> %lu)\n",
+> -				 q->backing_dev_info->ra_pages,
+> -				 b->backing_dev_info->ra_pages);
+> -			q->backing_dev_info->ra_pages =
+> -						b->backing_dev_info->ra_pages;
+> -		}
+> -	}
+>  	fixup_discard_if_not_supported(q);
+>  	fixup_write_zeroes(device, q);
+>  }
+> diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+> index 9e45faa054b6f4..9d3f0711be030f 100644
+> --- a/drivers/md/bcache/super.c
+> +++ b/drivers/md/bcache/super.c
+> @@ -1367,10 +1367,6 @@ static int cached_dev_init(struct cached_dev *dc, unsigned int block_size)
+>  	if (ret)
+>  		return ret;
+>  
+> -	dc->disk.disk->queue->backing_dev_info->ra_pages =
+> -		max(dc->disk.disk->queue->backing_dev_info->ra_pages,
+> -		    q->backing_dev_info->ra_pages);
+> -
+>  	atomic_set(&dc->io_errors, 0);
+>  	dc->io_disable = false;
+>  	dc->error_limit = DEFAULT_CACHED_DEV_ERROR_LIMIT;
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index aac4c31cfc8498..324a42ed2f8894 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
+> @@ -1924,9 +1924,6 @@ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+>  		q->nr_zones = blkdev_nr_zones(t->md->disk);
+>  	}
+>  #endif
+> -
+> -	/* Allow reads to exceed readahead limits */
+> -	q->backing_dev_info->io_pages = limits->max_sectors >> (PAGE_SHIFT - 9);
+>  }
+>  
+>  unsigned int dm_table_get_num_targets(struct dm_table *t)
+> diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+> index f54a449f97aa79..aa2d7279176880 100644
+> --- a/drivers/md/raid0.c
+> +++ b/drivers/md/raid0.c
+> @@ -410,22 +410,6 @@ static int raid0_run(struct mddev *mddev)
+>  		 mdname(mddev),
+>  		 (unsigned long long)mddev->array_sectors);
+>  
+> -	if (mddev->queue) {
+> -		/* calculate the max read-ahead size.
+> -		 * For read-ahead of large files to be effective, we need to
+> -		 * readahead at least twice a whole stripe. i.e. number of devices
+> -		 * multiplied by chunk size times 2.
+> -		 * If an individual device has an ra_pages greater than the
+> -		 * chunk size, then we will not drive that device as hard as it
+> -		 * wants.  We consider this a configuration error: a larger
+> -		 * chunksize should be used in that case.
+> -		 */
+> -		int stripe = mddev->raid_disks *
+> -			(mddev->chunk_sectors << 9) / PAGE_SIZE;
+> -		if (mddev->queue->backing_dev_info->ra_pages < 2* stripe)
+> -			mddev->queue->backing_dev_info->ra_pages = 2* stripe;
+> -	}
+> -
+>  	dump_zones(mddev);
+>  
+>  	ret = md_integrity_register(mddev);
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index 9f88ff9bdee437..23d15acbf457d4 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -3865,19 +3865,6 @@ static int raid10_run(struct mddev *mddev)
+>  	mddev->resync_max_sectors = size;
+>  	set_bit(MD_FAILFAST_SUPPORTED, &mddev->flags);
+>  
+> -	if (mddev->queue) {
+> -		int stripe = conf->geo.raid_disks *
+> -			((mddev->chunk_sectors << 9) / PAGE_SIZE);
+> -
+> -		/* Calculate max read-ahead size.
+> -		 * We need to readahead at least twice a whole stripe....
+> -		 * maybe...
+> -		 */
+> -		stripe /= conf->geo.near_copies;
+> -		if (mddev->queue->backing_dev_info->ra_pages < 2 * stripe)
+> -			mddev->queue->backing_dev_info->ra_pages = 2 * stripe;
+> -	}
+> -
+>  	if (md_integrity_register(mddev))
+>  		goto out_free_conf;
+>  
+> @@ -4715,17 +4702,8 @@ static void end_reshape(struct r10conf *conf)
+>  	conf->reshape_safe = MaxSector;
+>  	spin_unlock_irq(&conf->device_lock);
+>  
+> -	/* read-ahead size must cover two whole stripes, which is
+> -	 * 2 * (datadisks) * chunksize where 'n' is the number of raid devices
+> -	 */
+> -	if (conf->mddev->queue) {
+> -		int stripe = conf->geo.raid_disks *
+> -			((conf->mddev->chunk_sectors << 9) / PAGE_SIZE);
+> -		stripe /= conf->geo.near_copies;
+> -		if (conf->mddev->queue->backing_dev_info->ra_pages < 2 * stripe)
+> -			conf->mddev->queue->backing_dev_info->ra_pages = 2 * stripe;
+> +	if (conf->mddev->queue)
+>  		raid10_set_io_opt(conf);
+> -	}
+>  	conf->fullsync = 0;
+>  }
+>  
+> diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
+> index 68e41ce3ca75cc..415ce3cc155698 100644
+> --- a/drivers/md/raid5.c
+> +++ b/drivers/md/raid5.c
+> @@ -7413,8 +7413,6 @@ static int raid5_run(struct mddev *mddev)
+>  		int data_disks = conf->previous_raid_disks - conf->max_degraded;
+>  		int stripe = data_disks *
+>  			((mddev->chunk_sectors << 9) / PAGE_SIZE);
+> -		if (mddev->queue->backing_dev_info->ra_pages < 2 * stripe)
+> -			mddev->queue->backing_dev_info->ra_pages = 2 * stripe;
+>  
+>  		chunk_size = mddev->chunk_sectors << 9;
+>  		blk_queue_io_min(mddev->queue, chunk_size);
+> @@ -8002,17 +8000,8 @@ static void end_reshape(struct r5conf *conf)
+>  		spin_unlock_irq(&conf->device_lock);
+>  		wake_up(&conf->wait_for_overlap);
+>  
+> -		/* read-ahead size must cover two whole stripes, which is
+> -		 * 2 * (datadisks) * chunksize where 'n' is the number of raid devices
+> -		 */
+> -		if (conf->mddev->queue) {
+> -			int data_disks = conf->raid_disks - conf->max_degraded;
+> -			int stripe = data_disks * ((conf->chunk_sectors << 9)
+> -						   / PAGE_SIZE);
+> -			if (conf->mddev->queue->backing_dev_info->ra_pages < 2 * stripe)
+> -				conf->mddev->queue->backing_dev_info->ra_pages = 2 * stripe;
+> +		if (conf->mddev->queue)
+>  			raid5_set_io_opt(conf);
+> -		}
+>  	}
+>  }
+>  
+> -- 
+> 2.27.0
+> 
+> --
+> dm-devel mailing list
+> dm-devel@redhat.com
+> https://www.redhat.com/mailman/listinfo/dm-devel
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9G204ACgkQ2O7X88g7
-+poT0hAAo9qt3MJtmVC4Jo5cRFg8HtHcMV/QonFv94AU1H1EF/yXqztd2Q2GpQJo
-Q91b0E0d6fBYsVhofss7D2Oq2dqEeSQlAUs1UohcXQlySBfsIPI4UYm+hxdkVegA
-9Qaj5q6oFEZrHvN0O4hq86iH4dtelG0SgYbxWwpfnaehk+uTHdazVzwoBACw9q+s
-j+5HRlqs0aelpVP2y8Sab0XQQHlt14Fl6r17vxuIxM4p0K7ks1+yElJtx1fyNrjO
-Pvx72OyR40mEfGtMJErLpHEWDNAY7MZYUbb1VwWQ3uYOtmvI3RNcnP2ffXMR6j0t
-J14Ll3Aui93Ka9GvM+hDivWw4/pehfDrajMs4xlpu2mtAwFmvZpUtxhGB5pRd54Q
-MO2oaOaOmrWS5Klrpw57PN5PMHdODglZL8URpPD7x4bznVbEge9ekB6UowrJIsyp
-7DQsb2VlVYkHGt3pY17XW0h80Lbc/IYLUlUgnkmrxBHkbI8vGWwJKsCT0Kx82ZwL
-m+0NWKdVVfb/sQGTeWS4kAh82y4/llJlmZx4/QzzM57EKk0V4ZuUHNBAA+f8QgU1
-0/S6jmXiv9/uU6aTqQXLHKDX3dInXMZS289aibvWYQAFcXeDF95qHDhbQoIzGWUk
-WANu3gcDoWSzW2pdGlKtWjKvQtbGeyY4crVsIzomPQfqVe+tZng=
-=ozPK
------END PGP SIGNATURE-----
-
---pa4o3hd67cmcjsut--
