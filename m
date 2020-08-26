@@ -2,93 +2,99 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7345FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:09:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA53CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3192087D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:09:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C551920825
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgHZIJn (ORCPT
+        id S1726817AbgHZILE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 04:09:43 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:58198 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbgHZIJi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 04:09:38 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 31BD91C0BBC; Wed, 26 Aug 2020 10:09:35 +0200 (CEST)
-Date:   Wed, 26 Aug 2020 10:09:34 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.4 00/33] 4.4.234-rc1 review
-Message-ID: <20200826080934.GB9637@amd>
-References: <20200824082346.498653578@linuxfoundation.org>
+        Wed, 26 Aug 2020 04:11:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51488 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726016AbgHZILE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 04:11:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 795CDAD36;
+        Wed, 26 Aug 2020 08:11:34 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 10:11:02 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Xunlei Pang <xlpang@linux.alibaba.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm: memcg: Fix memcg reclaim soft lockup
+Message-ID: <20200826081102.GM22869@dhcp22.suse.cz>
+References: <1598426822-93737-1-git-send-email-xlpang@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="nVMJ2NtxeReIH9PS"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824082346.498653578@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1598426822-93737-1-git-send-email-xlpang@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed 26-08-20 15:27:02, Xunlei Pang wrote:
+> We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
+> the target memcg doesn't have any reclaimable memory.
 
---nVMJ2NtxeReIH9PS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Do you have any scenario when this happens or is this some sort of a
+test case?
 
-Hi!
+> It can be easily reproduced as below:
+>  watchdog: BUG: soft lockup - CPU#0 stuck for 111s![memcg_test:2204]
+>  CPU: 0 PID: 2204 Comm: memcg_test Not tainted 5.9.0-rc2+ #12
+>  Call Trace:
+>   shrink_lruvec+0x49f/0x640
+>   shrink_node+0x2a6/0x6f0
+>   do_try_to_free_pages+0xe9/0x3e0
+>   try_to_free_mem_cgroup_pages+0xef/0x1f0
+>   try_charge+0x2c1/0x750
+>   mem_cgroup_charge+0xd7/0x240
+>   __add_to_page_cache_locked+0x2fd/0x370
+>   add_to_page_cache_lru+0x4a/0xc0
+>   pagecache_get_page+0x10b/0x2f0
+>   filemap_fault+0x661/0xad0
+>   ext4_filemap_fault+0x2c/0x40
+>   __do_fault+0x4d/0xf9
+>   handle_mm_fault+0x1080/0x1790
+> 
+> It only happens on our 1-vcpu instances, because there's no chance
+> for oom reaper to run to reclaim the to-be-killed process.
+> 
+> Add cond_resched() in such cases at the beginning of shrink_lruvec()
+> to give up the cpu to others.
 
-> Responses should be made by Wed, 26 Aug 2020 08:23:34 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.234=
--rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
- linux-4.4.y
-> and the diffstat can be found below.
->
+I do agree that we need a cond_resched but I cannot say I would like
+this patch. The primary reason is that it doesn't catch all cases when
+the memcg is not reclaimable. For example it wouldn't reschedule if the
+memcg is protected by low/min. What do you think about this instead?
 
-I believe this was tested successfully with CIP project:
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 99e1796eb833..bbdc38b58cc5 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2617,6 +2617,8 @@ static void shrink_node_memcgs(pg_data_t *pgdat, struct scan_control *sc)
+ 
+ 		mem_cgroup_calculate_protection(target_memcg, memcg);
+ 
++		cond_resched();
++
+ 		if (mem_cgroup_below_min(memcg)) {
+ 			/*
+ 			 * Hard protection.
 
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/pipelines/1=
-81017460
-
-Yes, they are failures, but they are DNS resolution problems during
-testing.
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---nVMJ2NtxeReIH9PS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl9GGL4ACgkQMOfwapXb+vJX5ACgw4URW8tZBmqKaRedeAiHuKVJ
-xpYAnRH3sxonRWLmp+awdULetN7awy1/
-=GvYG
------END PGP SIGNATURE-----
-
---nVMJ2NtxeReIH9PS--
+This should catch both cases. I even have a vague recollection that
+somebody has proposed something in that direction but I cannot remember
+what has happened with that patch.
+-- 
+Michal Hocko
+SUSE Labs
