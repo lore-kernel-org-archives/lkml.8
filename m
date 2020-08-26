@@ -2,130 +2,182 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5290FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A814CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FBD620737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81E0020707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 03:02:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRtgxN04"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pIfhHm84"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgHZC41 (ORCPT
+        id S1726716AbgHZDCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 22:56:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36196 "EHLO
+        Tue, 25 Aug 2020 23:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbgHZC40 (ORCPT
+        with ESMTP id S1726672AbgHZDCm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 22:56:26 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B76FC061574;
-        Tue, 25 Aug 2020 19:56:26 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id n3so442356pjq.1;
-        Tue, 25 Aug 2020 19:56:26 -0700 (PDT)
+        Tue, 25 Aug 2020 23:02:42 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B832C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 20:02:42 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id k18so413742qtm.10
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 20:02:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hbFEodepPvZbmGlOCAW6pdL+PginykbrTuYJhMivWLU=;
-        b=JRtgxN04gxU/IDzMXlbNw78semo21YBgHHcNoAJbnR8jpjdjspaNQ1Mftdhsz9QGPH
-         jlSF1BkqJEhpSeIj0gismWgIY1pyC4ypjxqBmwTFct/ARCWxtawBzaXiXjMWGSDKTESn
-         cm/hayB1tXowLPiC1gKmKFBJo1YOJLlnQMyLKmDHMvdV38Y1F7qfmQZiHFtCDkMfWA/R
-         LBMwbalKomRo2k8WmJ5V4tFsIATzLx4qh+LxdhaPLM2eZYGDJa08RG134oy7zYAjtzSA
-         obq5uhESHqOOIEF8Ddyg4Muc+sOAgPW4LQRgDEQ2LcsBc7ZOV4v74iwJi2DAzWCofocD
-         PR1A==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=bBtj8BOGuVCwuCUtU9BujnP6yeM9XARBTfZAPqcfaW4=;
+        b=pIfhHm8495RUt1xSexojlv3iX2KraJIkmsMf5578fv+zsRywnca7yc946YLee8L7or
+         2h1j04Rl0tevAn5UxT4wOcAfQ8do59RMoxzvML9VRQp1TLXJUr7AIXFgEF2nbuxa8Pwb
+         ZaTEOU0wIbXC8aUtOLZpc76WrXl9JjQrDqr8hLYlbKupeadbFm+WQ39vrRpp5MLpq0PK
+         n7isUhYH0xxDX9QHbFUBVQvz5j0bSHklekuqAsyh1pViM1AHfOjzQG3Ws3iqHB6CbOfG
+         LRvCBwujv1WuJzBkGq4jT1ZkfWjt3DuvKnWBRmfOuJjhA3UoMXM8edtmzMLscbh8Tcvs
+         QUEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hbFEodepPvZbmGlOCAW6pdL+PginykbrTuYJhMivWLU=;
-        b=Lh4ZMXM8cam+6GBjh/MGfbavfA+0pGzDIDmHVgkkL2FYWSygtvl4mbgsDoKZkXzq35
-         RpknLIzgFOtIURHUMbuTJ5NoZebIhGXmYv+7ImkCIZop1VBzbhRIXusWtfxTiN01plUu
-         EizJsjDUKHA02WKth19MbuE8PRDOxDPOOGD6g6+5FsV62oi24OrlEkvLyh8yHAEusp/C
-         bMlPUK2M1dp++YF2/shRJPYTf/OG74hhtEd7Y2NCCVbeMd6fMWoc9WhR7CUBB065qpTN
-         gnoF16L8ITsu79yfrqKPEscG40RVh2U8f3yfYDj7jL70YJ7Vq9Hnx02Yht3RLIFlnpuX
-         mVKA==
-X-Gm-Message-State: AOAM530UX62vJ2YUqdIdft9peeQVeL3bjMldj7LaI2ocOBXT5x+v2pmX
-        BnghHGrDosMlx4VTqAJNV5VmKFDXGKE=
-X-Google-Smtp-Source: ABdhPJxZm0kD5dvuB19oPRwFNo47AjWTDEpT6SxPsjOG3h5zKWKc4algdeVl7DB4SDtIoJIXo3fWyA==
-X-Received: by 2002:a17:90a:19c8:: with SMTP id 8mr3746355pjj.152.1598410585817;
-        Tue, 25 Aug 2020 19:56:25 -0700 (PDT)
-Received: from [192.168.1.200] (FL1-111-169-205-196.hyg.mesh.ad.jp. [111.169.205.196])
-        by smtp.gmail.com with ESMTPSA id fz19sm397834pjb.40.2020.08.25.19.56.23
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=bBtj8BOGuVCwuCUtU9BujnP6yeM9XARBTfZAPqcfaW4=;
+        b=SkIzALWEOq5ILSLjXzMQjQYEc2vhbdRHfT6RzIhBltoB9tdyIKzDC0Qv+FKDGEaCo2
+         5NfVjSdk82ulPNKgQtiUL710oouVeAS8Dgxmys5UuLrGdHmKChLlkiznQWMgD5Uf5S8N
+         dU06cRbTpL0TjeJUqnAxA6bOhMfRnjQbDBZWbZEG5QxPWkSLaawRYGA0rcPLaBxH25/p
+         h4oWWJ2M3WqMz79lwPLJ80xjxmlkAVOqnvEoIoXR2+PGGO0wvv/GgZErR/9WUjIFW7Kq
+         inOptWeSJmcXES4v6b7mw1fbXikW5Q3bcnGzwGI3gv+lZJykUDovvOErym4CQb40EfBK
+         mPEw==
+X-Gm-Message-State: AOAM532ngcfDWDa65l345USSYgFPB7NdcakElWajUeQqbL3V5KFq+LHS
+        U7D2ZCHcixbhKUjeuRHtvCZsQg==
+X-Google-Smtp-Source: ABdhPJx7JoPpIaawjxbK+f0V6njk9pwHSJWwMY62T2TGV/lhrkViqACrPsTG/SY0ZC7iophAo67SGA==
+X-Received: by 2002:ac8:32dd:: with SMTP id a29mr12205419qtb.191.1598410961598;
+        Tue, 25 Aug 2020 20:02:41 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 19sm652994qkj.123.2020.08.25.20.02.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 19:56:25 -0700 (PDT)
-Subject: Re: [PATCH v3] exfat: integrates dir-entry getting and validation
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     kohada.tetsuhiro@dc.mitsubishielectric.co.jp,
-        mori.takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp,
-        'Sungjong Seo' <sj1557.seo@samsung.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200806010250epcas1p482847d6d906fbf0ccd618c7d1cacd12e@epcas1p4.samsung.com>
- <20200806010229.24690-1-kohada.t2@gmail.com>
- <003c01d66edc$edbb1690$c93143b0$@samsung.com>
- <ca3b2b52-1abc-939c-aa11-8c7d12e4eb2e@gmail.com>
- <000001d67787$d3abcbb0$7b036310$@samsung.com>
- <fdaff3a3-99ba-8b9e-bdaf-9bcf9d7208e0@gmail.com>
- <000101d67b44$ac458c80$04d0a580$@samsung.com>
-From:   Tetsuhiro Kohada <kohada.t2@gmail.com>
-Message-ID: <d1df9cca-3020-9e1e-0f3d-9db6752a22b6@gmail.com>
-Date:   Wed, 26 Aug 2020 11:56:22 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <000101d67b44$ac458c80$04d0a580$@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 25 Aug 2020 20:02:41 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [mm] c566586818: BUG:kernel_hang_in_early-boot_stage,last_printk:Probing_EDD(edd=off_to_disable)...ok
+Date:   Tue, 25 Aug 2020 23:02:40 -0400
+Message-Id: <9D9FBD8D-DF19-4DA9-B0B1-260BA72D3712@lca.pw>
+References: <34a960a0-ec0b-3c26-ec73-e415a8197757@intel.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+In-Reply-To: <34a960a0-ec0b-3c26-ec73-e415a8197757@intel.com>
+To:     Rong Chen <rong.a.chen@intel.com>
+X-Mailer: iPhone Mail (17G80)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/08/26 10:03, Namjae Jeon wrote:
->> Second: Range validation and type validation should not be separated.
->> When I started making this patch, I intended to add only range validation.
->> However, after the caller gets the ep, the type validation follows.
->> Get ep, null check of ep (= range verification), type verification is a series of procedures.
->> There would be no reason to keep them independent anymore.
->> Range and type validation is enforced when the caller uses ep.
-> You can add a validate flags as argument of exfat_get_dentry_set(), e.g. none, basic and strict.
-> none : only range validation.
-> basic : range + type validation.
-> strict : range + type + checksum and name length, etc.
-
-Currently, various types of verification will not be needed.
-Let's add it when we need it.
->   
->>> -	/* validiate cached dentries */
->>> -	for (i = 1; i < num_entries; i++) {
->>> -		ep = exfat_get_dentry_cached(es, i);
->>> -		if (!exfat_validate_entry(exfat_get_entry_type(ep), &mode))
->>> +	ep = exfat_get_dentry_cached(es, ENTRY_STREAM);
->>> +	if (!ep || ep->type != EXFAT_STREAM)
->>> +		goto free_es;
->>> +	es->de[ENTRY_STREAM] = ep;
->>
->> The value contained in stream-ext dir-entry should not be used before validating the EntrySet checksum.
->> So I would insert EntrySet checksum validation here.
->> In that case, the checksum verification loop would be followed by the TYPE_NAME verification loop, can
->> you acceptable?
-> Yes. That would be great.
-
-OK.
-I'll add TYPE_NAME verification after checksum verification, in next patch.
-However, I think it is enough to validate TYPE_NAME when extracting name.
-Could you please tell me why you think you need TYPE_NAME validation here?
 
 
-BR
----
-Tetsuhiro Kohada <kohada.t2@gmail.com>
-> 
+> On Aug 25, 2020, at 8:44 PM, Rong Chen <rong.a.chen@intel.com> wrote:
+>=20
+> I rebuilt the kernel on commit c566586818 but the error changed to "RIP: 0=
+010:clear_page_orig+0x12/0x40",
+> and the error can be reproduced on parent commit:
+
+Catalin, any thought? Sounds like those early kmemleak allocations cause som=
+e sort of memory corruption?
+
+>=20
+> [    0.539811] Memory: 12325340K/12680692K available (10243K kernel code, 2=
+414K rwdata, 8188K rodata, 856K init, 14628K bss, 355352K reserved, 0K cma-r=
+eserved)
+> [    4.133400] BUG: unable to handle page fault for address: ffff88833653e=
+000
+> [    4.134130] #PF: supervisor write access in kernel mode
+> [    4.134694] #PF: error_code(0x0002) - not-present page
+> [    4.135177] PGD 3800067 P4D 3800067 PUD f000e6f2f000d445 PMD 0
+> [    4.135730] Thread overran stack, or stack corrupted
+> [    4.136192] Oops: 0002 [#1] DEBUG_PAGEALLOC PTI
+> [    4.136609] CPU: 0 PID: 0 Comm: swapper Not tainted 5.3.0-11792-gc56658=
+68183fe #1
+> [    4.137300] RIP: 0010:clear_page_orig+0x12/0x40
+> [    4.137732] Code: 03 00 00 00 b0 01 5b c3 b9 00 02 00 00 31 c0 f3 48 ab=
+ c3 0f 1f 44 00 00 31 c0 b9 40 00 00 00 66 0f 1f 84 00 00 00 00 00 ff c9 <48=
+> 89 07 48 89 47 08 48 89 47 10 48 89 47 18 48 89 47 20 48 89 47
+> [    4.139453] RSP: 0000:ffffffff8239d8e8 EFLAGS: 00010016
+> [    4.139939] RAX: 0000000000000000 RBX: 0000000000000101 RCX: 0000000000=
+00003f
+> [    4.140602] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff888336=
+53e000
+> [    4.141261] RBP: ffffea000cd94f80 R08: ffffffff82427800 R09: ffffea000c=
+d94f80
+> [    4.141956] R10: 0000160000000000 R11: ffff888000000000 R12: 0000000000=
+000000
+> [    4.142642] R13: 0000000000000001 R14: 0000000000092000 R15: 0000000000=
+000046
+> [    4.143298] FS:  0000000000000000(0000) GS:ffffffff8243d000(0000) knlGS=
+:0000000000000000
+> [    4.144076] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    4.144661] CR2: ffff88833653e000 CR3: 0000000002420000 CR4: 0000000000=
+0006b0
+> [    4.145382] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000=
+000000
+> [    4.146121] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000=
+000400
+> [    4.146829] Call Trace:
+> [    4.147066] Modules linked in:
+> [    4.147359] CR2: ffff88833653e000
+> [    4.147757] random: get_random_bytes called from init_oops_id+0x1d/0x2c=
+ with crng_init=3D0
+>=20
+> $ ./scripts/faddr2line vmlinux clear_page_orig+0x12/0x40
+> clear_page_orig+0x12/0x40:
+> clear_page_orig at arch/x86/lib/clear_page_64.S:31
+>=20
+>=20
+> but I also can reproduced the lookup_address_in_pgd error in v5.9-rc2 with=
+ attached config file:
+>=20
+> [    0.382789] Memory: 12313044K/12680692K available (10242K kernel code, 2=
+658K rwdata, 8916K rodata, 800K init, 24540K bss, 367392K reserved, 0K cma-r=
+eserved)
+> [    4.027977] general protection fault, probably for non-canonical addres=
+s 0xf0006f7280000d98: 0000 [#1] DEBUG_PAGEALLOC PTI
+> [    4.029094] CPU: 0 PID: 0 Comm: swapper Not tainted 5.9.0-rc2 #1
+> [    4.029741] RIP: 0010:lookup_address_in_pgd+0x7c/0xcc
+> [    4.030341] Code: 00 00 48 3d 81 00 00 00 74 6c 4c 89 df e8 9d f2 ff ff=
+ 48 f7 d0 4c 21 d8 a8 01 74 5a 4c 89 d6 4c 89 df e8 fd f5 ff ff 49 89 c0 <48=
+> f7 00 9f ff ff ff 74 93 41 c7 01 02 00 00 00 48 8b 08 48 89 cf
+> [    4.032205] RSP: 0000:ffffffff82453a08 EFLAGS: 00010082
+> [    4.032716] RAX: f0006f7280000d98 RBX: 0000000000000001 RCX: f000e6f280=
+000000
+> [    4.033569] RDX: ffff888000000000 RSI: ffff888000000d98 RDI: f000e6f2f0=
+00d400
+> [    4.034474] RBP: ffffffff82453b28 R08: f0006f7280000d98 R09: ffffffff82=
+453a48
+> [    4.035125] R10: ffff88833664c000 R11: f000e6f2f000d445 R12: ffff888336=
+64c000
+> [    4.035836] R13: 0000000000000001 R14: ffff888000000000 R15: ffffffff82=
+7806b8
+> [    4.036575] FS:  0000000000000000(0000) GS:ffffffff82641000(0000) knlGS=
+:0000000000000000
+> [    4.037389] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    4.037961] CR2: ffff8883447ff000 CR3: 0000000002622000 CR4: 0000000000=
+0006b0
+> [    4.038677] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000=
+000000
+> [    4.039388] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000=
+000400
+> [    4.040243] Call Trace:
+> [    4.040552] Modules linked in:
+> [    4.041033] random: get_random_bytes called from init_oops_id+0x1d/0x2c=
+ with crng_init=3D0
+>=20
+> $ ./scripts/faddr2line vmlinux lookup_address_in_pgd+0x7c/0xcc
+> lookup_address_in_pgd+0x7c/0xcc:
+> lookup_address_in_pgd at arch/x86/mm/pat/set_memory.c:604
+> (inlined by) lookup_address_in_pgd at arch/x86/mm/pat/set_memory.c:575
