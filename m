@@ -2,106 +2,148 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FB9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD47C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:41:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B04B2068E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF9B2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:41:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f2B57zh/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729059AbgHZLkB (ORCPT
+        id S1729017AbgHZLkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:40:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:44570 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729034AbgHZLed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:34:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8205A1FB;
-        Wed, 26 Aug 2020 04:24:48 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 678023F71F;
-        Wed, 26 Aug 2020 04:24:46 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 12:24:35 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Al Grant <al.grant@foss.arm.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, acme@redhat.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH] perf: correct SNOOPX field offset
-Message-ID: <20200826112435.GA43491@C02TD0UTHF1T.local>
-References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+        Wed, 26 Aug 2020 07:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729018AbgHZLh5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 07:37:57 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F91C0613ED;
+        Wed, 26 Aug 2020 04:37:35 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id v16so758328plo.1;
+        Wed, 26 Aug 2020 04:37:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Vt41UNzwhd7H8iOJWWQaJ2po5o89qJA4//y1ixZpDJA=;
+        b=f2B57zh/EGUaA7PQLarcSXY8LmHSM4t/5IYJRkigwlX2JbvU4mCjJbK99OdAz5Fx9I
+         xjmHmh9I8H1AHvVdd2PwLXb0gFNV/mooRXS2OwqCi5+sGqi39TovZMUZfMDS286/VsS/
+         xMJzF+yEA+5BhFqoAotNw/qi5ik02UPO+cDWl6MH0W9R0uiTGXjliFJEZbh91OL0MA4k
+         kWvRguE7ObqrX2wgJUeHpv0AKoGz+KLfMXfSCDMOjfUCVsmql4n3K7H7olz/rVwk1Hzi
+         ZmAeKUuIDxvF7WPhTifjjM4xGxN5zt8G9UJZVmK6p65sCH7wHudUKFXNZ8yM/VUC28qN
+         ewgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Vt41UNzwhd7H8iOJWWQaJ2po5o89qJA4//y1ixZpDJA=;
+        b=STciMdolYsDbj5UxKTYrb3KEILfAsQvaWioFYnyPVW9IXo6waLKL+Jry8RtQniJfr9
+         tDr+N9TABaWGC0ywahSeTELhpG1XuQHCYn9dTNPAxVhUwW8rDwQVtRjvgpZy/cssz1K4
+         1vPsPB1cNyMYKxhrKxKlgXVlAkowKmOvkpW77aXJNJSGv1/CLoBOk0uMO/9CxaNOqJh7
+         rx983QArY6YSYwz2Yky07QO1vZwIyEZAG1FOA9+TbveYezvjZstHSWmdivMcX6vVL6vs
+         wFSajKUom0mfZvagZPmSstgYZ89gPLrxyr4wy3z6Jpi+wai1txkNoeGmMOetTAj1bZxc
+         0ffA==
+X-Gm-Message-State: AOAM531Qfll3PYHZwBj/s8L06OR+nrkLPOMcM7gHpyc7kQq+n/tY+agd
+        ViKEtld11htoOS7ZtSw5CPD+c59MI0I=
+X-Google-Smtp-Source: ABdhPJzBGZnfnxqRta01CVr9x9ijWsljVtnE050DIPGOxgcWkmTkxadvUO5k7vIIYadCfhHoJ3ZuRg==
+X-Received: by 2002:a17:90a:9483:: with SMTP id s3mr5694994pjo.98.1598441854639;
+        Wed, 26 Aug 2020 04:37:34 -0700 (PDT)
+Received: from localhost.localdomain ([2402:7500:56a:2197:d2eb:7e49:dfa1:a882])
+        by smtp.gmail.com with ESMTPSA id x5sm2591047pfj.1.2020.08.26.04.37.31
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 26 Aug 2020 04:37:34 -0700 (PDT)
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+To:     jacek.anaszewski@gmail.com, pavel@ucw.cz, matthias.bgg@gmail.com
+Cc:     dmurphy@ti.com, linux-leds@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com,
+        benjamin.chao@mediatek.com
+Subject: [PATCH 2/2] dt-bindings: leds: Add bindings for MT6360 LED
+Date:   Wed, 26 Aug 2020 19:37:20 +0800
+Message-Id: <1598441840-15226-3-git-send-email-gene.chen.richtek@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1598441840-15226-1-git-send-email-gene.chen.richtek@gmail.com>
+References: <1598441840-15226-1-git-send-email-gene.chen.richtek@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Gene Chen <gene_chen@richtek.com>
 
-[ adding the kernel-side perf maintainers ]
+Add bindings document for LED support on MT6360 PMIC
 
-Please note that scripts/get_maintainer.pl can help to find relevant
-maintainers.
+Signed-off-by: Gene Chen <gene_chen@richtek.com>
+---
+ .../devicetree/bindings/leds/leds-mt6360.yaml      | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-mt6360.yaml
 
-On Mon, Aug 24, 2020 at 10:28:34AM +0100, Al Grant wrote:
-> perf_event.h has macros that define the field offsets in the
-> data_src bitmask in perf records. The SNOOPX and REMOTE offsets
-> were both 37. These are distinct fields, and the bitfield layout
-> in perf_mem_data_src confirms that SNOOPX should be at offset 38.
->
-> From: Al Grant <al.grant@arm.com>
+diff --git a/Documentation/devicetree/bindings/leds/leds-mt6360.yaml b/Documentation/devicetree/bindings/leds/leds-mt6360.yaml
+new file mode 100644
+index 0000000..4598be5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-mt6360.yaml
+@@ -0,0 +1,50 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/leds-mt6360.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: LED driver for MT6360 PMIC from MediaTek Integrated.
++
++maintainers:
++  - Gene Chen <gene_chen@richtek.com>
++
++description: |
++  This module is part of the MT6360 MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/mt6360.yaml.
++
++  The LED controller is represented as a sub-node of the PMIC node on
++  the device tree.
++
++  This device has six current sinks.
++
++properties:
++  compatible:
++    const: mediatek,mt6360-led
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  "^led@[0-5]$":
++    type: object
++    description: |
++      Properties for a single LED.
++
++    properties:
++      reg:
++        description:
++          Index of the LED.
++        minimum: 0
++        maximum: 5
++
++required:
++  - compatible
++  - "#address-cells"
++  - "#size-cells"
++additionalProperties: false
++
++...
+-- 
+2.7.4
 
-This needs a Signed-off-by line from you. See:
-
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#sign-your-work-the-developer-s-certificate-of-origin
-
-The patch itself looks right to me, so provided you add an S-o-B line:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark
-
-> 
->  include/uapi/linux/perf_event.h       | 2 +-
->  tools/include/uapi/linux/perf_event.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/uapi/linux/perf_event.h
-> b/include/uapi/linux/perf_event.h
-> index 077e7ee69e3d..3e5dcdd48a49 100644
-> --- a/include/uapi/linux/perf_event.h
-> +++ b/include/uapi/linux/perf_event.h
-> @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
-> 
->  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
->  /* 1 free */
-> -#define PERF_MEM_SNOOPX_SHIFT  37
-> +#define PERF_MEM_SNOOPX_SHIFT  38
-> 
->  /* locked instruction */
->  #define PERF_MEM_LOCK_NA       0x01 /* not available */
-> diff --git a/tools/include/uapi/linux/perf_event.h
-> b/tools/include/uapi/linux/perf_event.h
-> index 077e7ee69e3d..3e5dcdd48a49 100644
-> --- a/tools/include/uapi/linux/perf_event.h
-> +++ b/tools/include/uapi/linux/perf_event.h
-> @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
-> 
->  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
->  /* 1 free */
-> -#define PERF_MEM_SNOOPX_SHIFT  37
-> +#define PERF_MEM_SNOOPX_SHIFT  38
-> 
->  /* locked instruction */
->  #define PERF_MEM_LOCK_NA       0x01 /* not available */
