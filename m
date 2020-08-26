@@ -2,89 +2,170 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B93CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023C4C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 900292078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC2A2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:58:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XV3htLBO"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ANtUBcFP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgHZP63 (ORCPT
+        id S1726967AbgHZP6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:58:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46396 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726967AbgHZP5o (ORCPT
+        Wed, 26 Aug 2020 11:58:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13026 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727882AbgHZP54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:57:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598457463;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ybwY4Uq7LlkHfwrDNDqmZvQFiTLb0VQK1kS+vs9BLdU=;
-        b=XV3htLBOoGoQf8ooCgsUXsDVfmSE7rzgYyQk1Orwytic4MTTsNZ/V2vyOog7I1RcNEc4UX
-        KhjkBZHmaVoa9gbuTKp9ySgWiLuaAumkVyJWG7DsdhmXgkyrVrvbR9Pzf9lEnPI63Iyx1t
-        TMRd15gMKPFByBa31NWfolkPObKrpas=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-157-gojH5KqRMA2eZlQl697v6w-1; Wed, 26 Aug 2020 11:57:39 -0400
-X-MC-Unique: gojH5KqRMA2eZlQl697v6w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6D6AD1DE15;
-        Wed, 26 Aug 2020 15:57:37 +0000 (UTC)
-Received: from krava (unknown [10.40.192.33])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 479B219C58;
-        Wed, 26 Aug 2020 15:57:34 +0000 (UTC)
-Date:   Wed, 26 Aug 2020 17:57:33 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] perf expr: Force encapsulation on expr_id_data
-Message-ID: <20200826155733.GB783610@krava>
-References: <20200826153055.2067780-1-irogers@google.com>
+        Wed, 26 Aug 2020 11:57:56 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QFW2UE189368;
+        Wed, 26 Aug 2020 11:57:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=HccGIv1kXZpAh+2ptA3ZwBl+YCt3qQZHYAt/DHYIo6A=;
+ b=ANtUBcFPSlnyCBhe5XzhRefOY2CgJjUqIOmxh1eIBlq0ufnA9irIv25sJwTzxLxVs4p6
+ C0HUMNg7YT8OzXYjH5hIeUu/5kiVVPv4P3U3s9g1YYkVPhkLsbGnmhKXeNamTTYZ3+yy
+ I3kaShD2c3D67HVwlSDeTlPyRNX+noqw9Zc9kqrsvjOPRppGshX74HTFT5RTBSwnkTYy
+ dZFQIrHOO/Kl3gRRd+uW946QfWb9U3SjWwc91o7JuimsHddlbM5xvNygwBK+sX8GIRNy
+ Kcl+Eo386LY5WQvXv/iU2gA/3W0PWt6RNsjdyQhFNLpBjsmaWT0SCZelxQwa5dpgsULv qA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 335t9v8x77-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 11:57:49 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07QFW54D189756;
+        Wed, 26 Aug 2020 11:57:48 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 335t9v8x5r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 11:57:48 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07QFVqnL020411;
+        Wed, 26 Aug 2020 15:57:46 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02dal.us.ibm.com with ESMTP id 335kvcbp2q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 15:57:46 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07QFvjWl56099296
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Aug 2020 15:57:45 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E942124055;
+        Wed, 26 Aug 2020 15:57:45 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AB9CD124052;
+        Wed, 26 Aug 2020 15:57:44 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.160.97.86])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 26 Aug 2020 15:57:44 +0000 (GMT)
+Subject: Re: [PATCH v2 0/2] ima: Fix keyrings race condition and other key
+ related bugs
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+References: <20200811192621.281675-1-tyhicks@linux.microsoft.com>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Message-ID: <48c98a62-01f0-825b-7648-7d8fa9f13b40@linux.vnet.ibm.com>
+Date:   Wed, 26 Aug 2020 11:57:44 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826153055.2067780-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200811192621.281675-1-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-26_09:2020-08-26,2020-08-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 phishscore=0
+ mlxscore=0 clxscore=1015 bulkscore=0 impostorscore=0 suspectscore=0
+ adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008260114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 08:30:55AM -0700, Ian Rogers wrote:
-> This patch resolves some undefined behavior where variables in
-> expr_id_data were accessed (for debugging) without being defined. To
-> better enforce the tagged union behavior, the struct is moved into
-> expr.c and accessors provided. Tag values (kinds) are explicitly
-> identified.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
 
-great, thanks for doing this
+On 8/11/20 3:26 PM, Tyler Hicks wrote:
+> v2:
+>   - Always return an ERR_PTR from ima_alloc_rule_opt_list() (Nayna)
+>   - Add Lakshmi's Reviewed-by to both patches
+>   - Rebased on commit 3db0d0c276a7 ("integrity: remove redundant
+>     initialization of variable ret") of next-integrity
+> v1: https://lore.kernel.org/lkml/20200727140831.64251-1-tyhicks@linux.microsoft.com/
+>
+> Nayna pointed out that the "keyrings=" option in an IMA policy rule
+> should only be accepted when CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS is
+> enabled:
+>
+>   https://lore.kernel.org/linux-integrity/336cc947-1f70-0286-6506-6df3d1d23a1d@linux.vnet.ibm.com/
+>
+> While fixing this, the compiler warned me about the potential for the
+> ima_keyrings pointer to be NULL despite it being used, without a check
+> for NULL, as the destination address for the strcpy() in
+> ima_match_keyring().
+>
+> It also became apparent that there was not adequate locking around the
+> use of the pre-allocated buffer that ima_keyrings points to. The kernel
+> keyring has a lock (.sem member of struct key) that ensures only one key
+> can be added to a given keyring at a time but there's no protection
+> against adding multiple keys to different keyrings at the same time.
+>
+> The first patch in this series fixes both ima_keyrings related issues by
+> parsing the list of keyrings in a KEY_CHECK rule at policy load time
+> rather than deferring the parsing to policy check time. Once that fix is
+> in place, the second patch can enforce that
+> CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS must be enabled in order to use
+> "func=KEY_CHECK" or "keyrings=" options in IMA policy.
+>
+> The new "keyrings=" value handling is done in a generic manner that can
+> be reused by other options in the future. This seems to make sense as
+> "appraise_type=" has similar style (though it doesn't need to be fully
+> parsed at this time) and using "|" as an alternation delimiter is
+> becoming the norm in IMA policy.
+>
+> This series is based on commit 311aa6aafea4 ("ima: move
+> APPRAISE_BOOTPARAM dependency on ARCH_POLICY to runtime") in
+> next-integrity.
+>
+> Tyler
+>
+> Tyler Hicks (2):
+>    ima: Pre-parse the list of keyrings in a KEY_CHECK rule
+>    ima: Fail rule parsing when asymmetric key measurement isn't
+>      supportable
+>
+>   security/integrity/ima/ima_policy.c | 142 +++++++++++++++++++---------
+>   1 file changed, 96 insertions(+), 46 deletions(-)
+>
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Sorry for delay in responding.
 
-jirka
+The patches look good. Feel free to add my tag
+
+Reviewed-by: Nayna Jain <nayna@linux.ibm.com>
+
+Thanks & Regards,
+
+     - Nayna
+
+
+
 
