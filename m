@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197B8C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76391C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFBBE20897
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 483212087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598443600;
-	bh=XFf6WD/mS3WUjtPuRD+AuZx4AOOaYLXdV+Z07SqZ1wE=;
+	s=default; t=1598443607;
+	bh=O8ZwRVfglmC1HCV5rl0wMfnoGxS661gLxObTPdOyfoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=en7rg+joDjsxfLp5UbDrxid0xm1roeSbCvvxsIaD+EeYeg8jtp6Y8FWxssmSmHQZh
-	 WUX5wbV5vpKfIWavSbjoxqpwWq+sNzkClympOAvGMQ2U+QONG2rmWxxaybQ0/lJoJf
-	 LJGY83PUOU4GaF1LlmcDHRJchiicx01oybX9V9iw=
+	b=l4cjnaJHGDGk/Q4IpvWttJHz3NPK9GjQ0iwyFeqOUk7p+34WwOB6BPT6VA1xMiza5
+	 mbDX0F4a3q98Uph8AeJyTWCu4GQL6zDTAoAMcVcDwfTfS7ugOliWjw4s5IKj4D+ChP
+	 39Nw4Fn3fZtZWeK0rODmFsgqq7fI+GOwYGGGzHaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729737AbgHZMGj (ORCPT
+        id S1729744AbgHZMGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:06:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38612 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 08:06:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729521AbgHZMDb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:03:31 -0400
+        id S1729526AbgHZMD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:03:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F6AC20B1F;
-        Wed, 26 Aug 2020 12:03:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3D12208A9;
+        Wed, 26 Aug 2020 12:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598443411;
-        bh=XFf6WD/mS3WUjtPuRD+AuZx4AOOaYLXdV+Z07SqZ1wE=;
+        s=default; t=1598443408;
+        bh=O8ZwRVfglmC1HCV5rl0wMfnoGxS661gLxObTPdOyfoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HHqn7Zn2QIXZyPsX+BSLQ77zSPv+GExF4MMu/XxlI792/R+GkQeJShNKmDde0WxBw
-         f16OSMqaubwkAvJhJBP+aCErUYRQkLulFoYpln02F8qAESBdIE/+YYfTtGITNvi+9a
-         HClJmmkIeuEhK8t3t7vS27Cv/vKlIN6xzTmnDxhY=
+        b=DqRxhpi7bploDaVXtx1h/mslopTS/QLDu8swSr5aYZgPhMKlFaJLBRDA/GE+uccEy
+         PXCZ5QsdkmL/EYFOy/etybHV1lPUNkPEPPqp1ECSBXf8EqvNm68I7794ehEiCZQROB
+         8/UWLexQjLwc8OlVjpZkamRK6HZCFx7PE3WPXXYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.8 14/16] netlink: fix state reallocation in policy export
-Date:   Wed, 26 Aug 2020 14:02:51 +0200
-Message-Id: <20200826114911.918676140@linuxfoundation.org>
+Subject: [PATCH 5.8 13/16] ethtool: Dont omit the netlink reply if no features were changed
+Date:   Wed, 26 Aug 2020 14:02:50 +0200
+Message-Id: <20200826114911.869913007@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200826114911.216745274@linuxfoundation.org>
 References: <20200826114911.216745274@linuxfoundation.org>
@@ -59,33 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit d1fb55592909ea249af70170c7a52e637009564d ]
+[ Upstream commit f01204ec8be7ea5e8f0230a7d4200e338d563bde ]
 
-Evidently, when I did this previously, we didn't have more than
-10 policies and didn't run into the reallocation path, because
-it's missing a memset() for the unused policies. Fix that.
+The legacy ethtool userspace tool shows an error when no features could
+be changed. It's useful to have a netlink reply to be able to show this
+error when __netdev_update_features wasn't called, for example:
 
-Fixes: d07dcf9aadd6 ("netlink: add infrastructure to expose policies to userspace")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+1. ethtool -k eth0
+   large-receive-offload: off
+2. ethtool -K eth0 rx-fcs on
+3. ethtool -K eth0 lro on
+   Could not change any device features
+   rx-lro: off [requested on]
+4. ethtool -K eth0 lro on
+   # The output should be the same, but without this patch the kernel
+   # doesn't send the reply, and ethtool is unable to detect the error.
+
+This commit makes ethtool-netlink always return a reply when requested,
+and it still avoids unnecessary calls to __netdev_update_features if the
+wanted features haven't changed.
+
+Fixes: 0980bfcd6954 ("ethtool: set netdev features with FEATURES_SET request")
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netlink/policy.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/ethtool/features.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
---- a/net/netlink/policy.c
-+++ b/net/netlink/policy.c
-@@ -51,6 +51,9 @@ static int add_policy(struct nl_policy_d
- 	if (!state)
- 		return -ENOMEM;
+--- a/net/ethtool/features.c
++++ b/net/ethtool/features.c
+@@ -268,14 +268,11 @@ int ethnl_set_features(struct sk_buff *s
+ 	bitmap_and(req_wanted, req_wanted, req_mask, NETDEV_FEATURE_COUNT);
+ 	bitmap_andnot(new_wanted, old_wanted, req_mask, NETDEV_FEATURE_COUNT);
+ 	bitmap_or(req_wanted, new_wanted, req_wanted, NETDEV_FEATURE_COUNT);
+-	if (bitmap_equal(req_wanted, old_wanted, NETDEV_FEATURE_COUNT)) {
+-		ret = 0;
+-		goto out_rtnl;
++	if (!bitmap_equal(req_wanted, old_wanted, NETDEV_FEATURE_COUNT)) {
++		dev->wanted_features &= ~dev->hw_features;
++		dev->wanted_features |= ethnl_bitmap_to_features(req_wanted) & dev->hw_features;
++		__netdev_update_features(dev);
+ 	}
+-
+-	dev->wanted_features &= ~dev->hw_features;
+-	dev->wanted_features |= ethnl_bitmap_to_features(req_wanted) & dev->hw_features;
+-	__netdev_update_features(dev);
+ 	ethnl_features_to_bitmap(new_active, dev->features);
+ 	mod = !bitmap_equal(old_active, new_active, NETDEV_FEATURE_COUNT);
  
-+	memset(&state->policies[state->n_alloc], 0,
-+	       flex_array_size(state, policies, n_alloc - state->n_alloc));
-+
- 	state->policies[state->n_alloc].policy = policy;
- 	state->policies[state->n_alloc].maxtype = maxtype;
- 	state->n_alloc = n_alloc;
 
 
