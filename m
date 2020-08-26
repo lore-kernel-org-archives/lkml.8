@@ -2,109 +2,124 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 301C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D2AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0661820767
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598426911;
-	bh=cBZ3Gb+SQy3R6NrwPSw69ZFfRmSEAixJtgbTl9nTZa4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jlwBkqQCAfZyQQgxapeZz3SfoIL05AQil5yJ7IwWKl2cmJrZuAo7U45yvJ5J2BaaR
-	 N7hxHADajby3qYoQlLbyuqjHSCn5ThrYeba6HETNcowBbh9MXBDQHySV2S1CXTmJK6
-	 qgW+hxVIivZG7VWA9MHrswHfiCy+g/7NV6GLkUb8=
+	by mail.kernel.org (Postfix) with ESMTP id 336FE20767
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:31:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z2eetczZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgHZH23 (ORCPT
+        id S1726750AbgHZHba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:28:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42680 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726700AbgHZH22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:28:28 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E534B2071E;
-        Wed, 26 Aug 2020 07:28:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598426908;
-        bh=cBZ3Gb+SQy3R6NrwPSw69ZFfRmSEAixJtgbTl9nTZa4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=E7sWpsx9KISTMma4faGLO3PWiUxhHzKmDcjQwtIr+2b0Ulb67RkdGd4JwiWeFnGq2
-         5qzRgaIfjIucMnUe056rwt0xBAUyLqf8w0I/3R6XZXh04d++STsH4W6vJ+HPKEW4XO
-         OdhllpIrmDqJwnyxCl23/ZN5JbHGWDIpffQBF7Pk=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kApr7-001RrA-SP; Wed, 26 Aug 2020 09:28:25 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH] docs: trace: ring-buffer-design.rst: use the new SPDX tag
-Date:   Wed, 26 Aug 2020 09:28:24 +0200
-Message-Id: <290d101bee434e54acec13778c67c77802fbc953.1598426895.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Wed, 26 Aug 2020 03:31:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbgHZHb3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 03:31:29 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0AFC061574;
+        Wed, 26 Aug 2020 00:31:29 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id k20so714472wmi.5;
+        Wed, 26 Aug 2020 00:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iugUDxAIQnsl/7ZTyF/vSE3EIH4/fyRR8BQQUZWp5EQ=;
+        b=Z2eetczZorq1PwBzNArWIukQAkQr+paPOisqwgvveDDD3GU3KOHoDs/79J2caxqSz1
+         iO1GLncjUMrj7RwcK1kbLNigUHVYYnWwVF39f+w41H2Gr86d6pu0j4f4j5sVlJwkXlq6
+         SwaV6AE3U4Nn31pMY3y96WnIM7ZXc+amAEGdWaIlzIAQDTfd6Hd29krGLP1RJoNaunW5
+         qD7saoAmwowVM9j+mV3naqQYj5d8wTTLpBtAMevaOQ6ggdOzMLCdUkmU3BGAbZzuuAX7
+         Bcj451PyKs6PK7CZlx+woOjvfOIWkTNTQUo8zrHw9cqGCnYtD3b+XGwsAMc/hDMC+3xH
+         DLBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iugUDxAIQnsl/7ZTyF/vSE3EIH4/fyRR8BQQUZWp5EQ=;
+        b=UH4TroUE770PKmbH68Ob3UExd6LU3WTsKiZFnWl++wwj9dXX3LkrTe42V1Dg996+3T
+         nMxZXH3nVPCTHVw9xCMhOO1xEh8CZ+0BrD03CINHwEt7BCXGW9+9A7GQz+rtWwZmsv3w
+         2BeKXLmCp4TwOv1mvpXXmikej3mJR+gdrXfywvxNK7YU3/G5L6CpL4mmwHeu8e7lcjTm
+         VOugwbEarfrHnwuOOG4GhEQgsAIBGuFi1JrE2KQDq4rtpW72TUIQhPguFEhD/Q8QY4Cw
+         EyImptqkwnpPZIJzTF68pOFZZi6zvLSeLw9gDYd/ZqwL+/P0sBvmBWj79XqUPZxbXdCJ
+         58bw==
+X-Gm-Message-State: AOAM5325U9xD55NoSTSEjqq9SZxY/2LG+V+dlGJVccAEQEusLhRnSYuu
+        5aTWXx3C7Id3Pj8vVP1gZ38=
+X-Google-Smtp-Source: ABdhPJy68Qvq8AcZg5rqsHqIO4qYh0hH2z1tsgQ09aHUGpv1lVQhmf9NzotCzkFjNfZwGbmAnPUEAA==
+X-Received: by 2002:a1c:de55:: with SMTP id v82mr5057597wmg.181.1598427087731;
+        Wed, 26 Aug 2020 00:31:27 -0700 (PDT)
+Received: from ?IPv6:2001:a61:253c:4c01:2cf1:7133:9da2:66a9? ([2001:a61:253c:4c01:2cf1:7133:9da2:66a9])
+        by smtp.gmail.com with ESMTPSA id f6sm4390016wme.32.2020.08.26.00.31.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2020 00:31:26 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com, Alexander Viro <viro@zeniv.linux.org.uk>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, Karel Zak <kzak@redhat.com>
+Subject: Re: [PATCH 2/5] Add manpages for move_mount(2) and open_tree(2)
+To:     David Howells <dhowells@redhat.com>
+References: <CAKgNAkjHcxYpzVohhJnxcHXO4s-4Ti_pNsmTZrD-CMu-EUCOoA@mail.gmail.com>
+ <159680892602.29015.6551860260436544999.stgit@warthog.procyon.org.uk>
+ <159680894741.29015.5588747939240667925.stgit@warthog.procyon.org.uk>
+ <287644.1598263702@warthog.procyon.org.uk>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <91c4ada9-5b5d-e93e-0bf6-b0a36b240880@gmail.com>
+Date:   Wed, 26 Aug 2020 09:31:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <287644.1598263702@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SPDX v3.10 gained support for GFDL-1.2 with no invariant sections:
+On 8/24/20 12:08 PM, David Howells wrote:
+> Michael Kerrisk (man-pages) <mtk.manpages@gmail.com> wrote:
+> 
+>>> +To access the source mount object or the destination mountpoint, no
+>>> +permissions are required on the object itself, but if either pathname is
+>>> +supplied, execute (search) permission is required on all of the directories
+>>> +specified in
+>>> +.IR from_pathname " or " to_pathname .
+>>> +.PP
+>>> +The caller does, however, require the appropriate capabilities or permission
+>>> +to effect a mount.
+>>
+>> Maybe better: s/effect/create/
+> 
+> The mount has already been created.  We're moving/attaching it.  
 
-	https://spdx.org/licenses/GFDL-1.2-invariants-only.html
+Ahh -- then the verb was wrong.
 
-Let's use it, instead of keeping a license text for this file.
+to effect == to cause, bring about
+to affect == to change, have an impact on
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/trace/ring-buffer-design.rst | 26 +---------------------
- 1 file changed, 1 insertion(+), 25 deletions(-)
+> Maybe:
+> 
+> 	The caller does, however, require the appropriate privilege (Linux:
+> 	the CAP_SYS_ADMIN capability) to move or attach mounts.
 
-diff --git a/Documentation/trace/ring-buffer-design.rst b/Documentation/trace/ring-buffer-design.rst
-index 9c8d22a53d6c..a76435610b58 100644
---- a/Documentation/trace/ring-buffer-design.rst
-+++ b/Documentation/trace/ring-buffer-design.rst
-@@ -1,28 +1,4 @@
--.. This file is dual-licensed: you can use it either under the terms
--.. of the GPL 2.0 or the GFDL 1.2 license, at your option. Note that this
--.. dual licensing only applies to this file, and not this project as a
--.. whole.
--..
--.. a) This file is free software; you can redistribute it and/or
--..    modify it under the terms of the GNU General Public License as
--..    published by the Free Software Foundation version 2 of
--..    the License.
--..
--..    This file is distributed in the hope that it will be useful,
--..    but WITHOUT ANY WARRANTY; without even the implied warranty of
--..    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--..    GNU General Public License for more details.
--..
--.. Or, alternatively,
--..
--.. b) Permission is granted to copy, distribute and/or modify this
--..    document under the terms of the GNU Free Documentation License,
--..    Version 1.2 version published by the Free Software
--..    Foundation, with no Invariant Sections, no Front-Cover Texts
--..    and no Back-Cover Texts. A copy of the license is included at
--..    Documentation/userspace-api/media/fdl-appendix.rst.
--..
--.. TODO: replace it to GPL-2.0 OR GFDL-1.2 WITH no-invariant-sections
-+.. SPDX-License-Identifier: GPL-2.0 OR GFDL-1.2-invariants-only
- 
- ===========================
- Lockless Ring Buffer Design
+Yes, better.
+
+Thanks,
+
+Michael
+
 -- 
-2.26.2
-
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
