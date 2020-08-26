@@ -2,108 +2,83 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F441C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B11EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0979F2074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AF6B2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgHZQZV (ORCPT
+        id S1727863AbgHZQ0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:25:21 -0400
-Received: from mga12.intel.com ([192.55.52.136]:63758 "EHLO mga12.intel.com"
+        Wed, 26 Aug 2020 12:26:05 -0400
+Received: from mga18.intel.com ([134.134.136.126]:21701 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727817AbgHZQZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:25:19 -0400
-IronPort-SDR: wYltJ6V+nAlxPHbY8ejAj7pP085E7QAv6hBVcvtLgK9kKbuJQrEfn/IoquZLpW6GVCqLmyby0I
- jntnbw7SmVFQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="135876678"
+        id S1727107AbgHZQ0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:26:01 -0400
+IronPort-SDR: HVyb42HM/w1r6PPf5FjMxL+bq8NkEMID4RltH6oPvh6nnfwd21KIYsGfTI6H5A5cw0yMwJNyXH
+ I/v73WWWkjTw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="143996600"
 X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="135876678"
+   d="scan'208";a="143996600"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:25:04 -0700
-IronPort-SDR: 6lt9+j4eGT0v5tDACuVd3B8bxb9Q1oeuYvvvqx15jOzrfAwovc5udQTe/+x3iWHyqTR74WnxUj
- xV5hGEGnYrBA==
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:26:00 -0700
+IronPort-SDR: SzGVEoo0yBQ9+G/otfIWxh49XHzowrTI9qRPFfpArRSmyrg9MovtC0ktnV4krye94kexzglYxD
+ hiYfhk9gjUrw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="336877690"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by FMSMGA003.fm.intel.com with SMTP; 26 Aug 2020 09:24:59 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 26 Aug 2020 19:24:58 +0300
-Date:   Wed, 26 Aug 2020 19:24:58 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     jani.nikula@linux.intel.com,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/i915/lspcon: Limits to 8 bpc for RGB/YCbCr444
-Message-ID: <20200826162458.GP6112@intel.com>
-References: <20200826052143.17607-1-kai.heng.feng@canonical.com>
+   d="scan'208";a="499786658"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Aug 2020 09:25:59 -0700
+Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.186])
+        by linux.intel.com (Postfix) with ESMTP id 128AB5806C4;
+        Wed, 26 Aug 2020 09:25:57 -0700 (PDT)
+Message-ID: <c17c75993ebb5512e5a869fbe5b13f5c49685041.camel@gmail.com>
+Subject: Re: [PATCH] intel_idle: Add ICL support
+From:   Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To:     Guilhem Lettron <guilhem@barpilot.io>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 26 Aug 2020 19:25:56 +0300
+In-Reply-To: <72fab2376722c6169549669016933217d3da34a0.camel@gmail.com>
+References: <20200826120421.44356-1-guilhem@barpilot.io>
+         <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
+         <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
+         <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
+         <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
+         <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
+         <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
+         <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
+         <72fab2376722c6169549669016933217d3da34a0.camel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200826052143.17607-1-kai.heng.feng@canonical.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 01:21:15PM +0800, Kai-Heng Feng wrote:
-> LSPCON only supports 8 bpc for RGB/YCbCr444.
-> 
-> Set the correct bpp otherwise it renders blank screen.
+On Wed, 2020-08-26 at 19:19 +0300, Artem Bityutskiy wrote:
+> May be there is a BIOS update that fixes this problem? May be Windows
+> user get it quickly because stuff like this is often well-integrated in
+> Windows? Would you please check if there is newer BIOS?
 
-Hmm. Does 
-git://github.com/vsyrjala/linux.git dp_downstream_ports_5
-work?
+Oh, wait a second. So ACPI_C3 is C6, the deepest C-state one can
+request. Sorry, I missed this first. Scratch my questions about Windows
+and newer BIOS.
 
-Actually better make that dp_downstream_ports_5^^^^^^^^^^^ aka.
-54d846ce62a2 ("drm/i915: Do YCbCr 444->420 conversion via DP protocol
-converters") to avoid the experiments and hacks I have sitting on top.
+So ACPI does expose the deepest C-state, but something prevents your
+system from going into PC10.
 
-> 
-> Closes: https://gitlab.freedesktop.org/drm/intel/-/issues/2195
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/gpu/drm/i915/display/intel_lspcon.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/display/intel_lspcon.c b/drivers/gpu/drm/i915/display/intel_lspcon.c
-> index b781bf469644..c7a44fcaade8 100644
-> --- a/drivers/gpu/drm/i915/display/intel_lspcon.c
-> +++ b/drivers/gpu/drm/i915/display/intel_lspcon.c
-> @@ -196,7 +196,8 @@ void lspcon_ycbcr420_config(struct drm_connector *connector,
->  		crtc_state->port_clock /= 2;
->  		crtc_state->output_format = INTEL_OUTPUT_FORMAT_YCBCR444;
->  		crtc_state->lspcon_downsampling = true;
-> -	}
-> +	} else
-> +		crtc_state->pipe_bpp = 24;
->  }
->  
->  static bool lspcon_probe(struct intel_lspcon *lspcon)
-> -- 
-> 2.17.1
-
--- 
-Ville Syrjälä
-Intel
