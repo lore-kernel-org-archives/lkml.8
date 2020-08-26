@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 629ADC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E9BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E15320737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 179FC20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598461277;
-	bh=xWAdoVZA2pXnZlSGTDF0cdD/4tTL0G8PPVUPrv8x9Jc=;
+	s=default; t=1598461295;
+	bh=cTd2VJ/kFLsBgXZtZiYIMwczja87CvcwlW7JDSKrnF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N+YzWptLk6rUtTlpti44c7I9WTd8Trc8Dt+aS5pC9Ek9h7aUf1JswFbEIKjtlc50C
-	 qn18EYKfcwIoa+TM5fY8kfS56bsrXnE916+GTPODL1rxQRbbZKkPymt6ExyGsu4wv8
-	 vgz/PREM2uucnOzZhHEKwK2g1QX5uhhnri9srQRM=
+	b=xBwNlW5d8nVNsFnLaUgQqe6opma76JY6SZ4R0TJ0XLdx6ubj8tB5R+sqDKTHgZwov
+	 vN3c/Rqo9TWA4hlZPYsb+fam/zIKn+UjBMoDXJK1RtsPxaNBMGOKo9up5wIFT6uALR
+	 J3ciMv14qDF2FDtrj+f7/oLQ8MKmzw7oklHs0E0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgHZRBB (ORCPT
+        id S1726767AbgHZRB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56482 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 13:01:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727042AbgHZRAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:00:49 -0400
+        id S1727069AbgHZRAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 13:00:51 -0400
 Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 519A6206F0;
-        Wed, 26 Aug 2020 17:00:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AE5D20738;
+        Wed, 26 Aug 2020 17:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598461249;
-        bh=xWAdoVZA2pXnZlSGTDF0cdD/4tTL0G8PPVUPrv8x9Jc=;
+        s=default; t=1598461250;
+        bh=cTd2VJ/kFLsBgXZtZiYIMwczja87CvcwlW7JDSKrnF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y66M8Wm67IaMyPg6zykhHu9kr2Evld0jibbvnzoGkGZxlgEXbv5llvaLLtI8uBKfz
-         CVM7oLI7Iitu3ASgr7BK/aijEjf0GCF+635e2qT42qxRiShOrfiooPscJhfpIDIa4g
-         Io+nWN1J2OqpscOAdOp2j9uxBOApJVxyujwjJONM=
+        b=gIfG9SVjhQP3e+XQz8dfWZzXytfK3V7vuiduCBWaSSE+iNK8vlTleppuRlnSCSiJ8
+         +1qFvNvoTgH3Mf4yxPbpsWc2H/JBJZWOpL1/3hbgdhfbdd4v5TFjv0DLs9PXDaZrV1
+         axD5eL/z7VwSxFbvzhCfo+PVe9gDHBgBh2Dz+3bg=
 From:   Andy Lutomirski <luto@kernel.org>
 To:     x86@kernel.org
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH 1/2] selftests/x86/fsgsbase: Reap a forgotten child
-Date:   Wed, 26 Aug 2020 10:00:45 -0700
-Message-Id: <e7700a503f30e79ab35a63103938a19893dbeff2.1598461151.git.luto@kernel.org>
+        Andy Lutomirski <luto@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH 2/2] selftests/x86/fsgsbase: Test PTRACE_PEEKUSER for GSBASE with invalid LDT GS
+Date:   Wed, 26 Aug 2020 10:00:46 -0700
+Message-Id: <c618ae86d1f757e01b1a8e79869f553cb88acf9a.1598461151.git.luto@kernel.org>
 X-Mailer: git-send-email 2.25.4
 In-Reply-To: <cover.1598461151.git.luto@kernel.org>
 References: <cover.1598461151.git.luto@kernel.org>
@@ -56,27 +56,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ptrace() test forgot to reap its child.  Reap it.
+This tesst commit 8ab49526b53d ("x86/fsgsbase/64: Fix NULL deref in
+86_fsgsbase_read_task").  Unpatched kernels will OOPS.
 
+Cc: stable@vger.kernel.org
 Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- tools/testing/selftests/x86/fsgsbase.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/testing/selftests/x86/fsgsbase.c | 65 ++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
 diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
-index 998319553523..0056e2597f53 100644
+index 0056e2597f53..7161cfc2e60b 100644
 --- a/tools/testing/selftests/x86/fsgsbase.c
 +++ b/tools/testing/selftests/x86/fsgsbase.c
-@@ -517,6 +517,9 @@ static void test_ptrace_write_gsbase(void)
+@@ -443,6 +443,68 @@ static void test_unexpected_base(void)
  
- END:
- 	ptrace(PTRACE_CONT, child, NULL, NULL);
+ #define USER_REGS_OFFSET(r) offsetof(struct user_regs_struct, r)
+ 
++static void test_ptrace_write_gs_read_base(void)
++{
++	int status;
++	pid_t child = fork();
++
++	if (child < 0)
++		err(1, "fork");
++
++	if (child == 0) {
++		printf("[RUN]\tPTRACE_POKE GS, read GSBASE back\n");
++
++		printf("[RUN]\tARCH_SET_GS to 1\n");
++		if (syscall(SYS_arch_prctl, ARCH_SET_GS, 1) != 0)
++			err(1, "ARCH_SET_GS");
++
++		if (ptrace(PTRACE_TRACEME, 0, NULL, NULL) != 0)
++			err(1, "PTRACE_TRACEME");
++
++		raise(SIGTRAP);
++		_exit(0);
++	}
++
++	wait(&status);
++
++	if (WSTOPSIG(status) == SIGTRAP) {
++		unsigned long base;
++		unsigned long gs_offset = USER_REGS_OFFSET(gs);
++		unsigned long base_offset = USER_REGS_OFFSET(gs_base);
++
++		/* Read the initial base.  It should be 1. */
++		base = ptrace(PTRACE_PEEKUSER, child, base_offset, NULL);
++		if (base == 1) {
++			printf("[OK]\tGSBASE started at 1\n");
++		} else {
++			nerrs++;
++			printf("[FAIL]\tGSBASE started at 0x%lx\n", base);
++		}
++
++		printf("[RUN]\tSet GS = 0x7, read GSBASE\n");
++
++		/* Poke an LDT selector into GS. */
++		if (ptrace(PTRACE_POKEUSER, child, gs_offset, 0x7) != 0)
++			err(1, "PTRACE_POKEUSER");
++
++		/* And read the base. */
++		base = ptrace(PTRACE_PEEKUSER, child, base_offset, NULL);
++
++		if (base == 0 || base == 1) {
++			printf("[OK]\tGSBASE reads as 0x%lx with invalid GS\n", base);
++		} else {
++			nerrs++;
++			printf("[FAIL]\tGSBASE=0x%lx (should be 0 or 1)\n", base);
++		}
++	}
++
++	ptrace(PTRACE_CONT, child, NULL, NULL);
++
 +	wait(&status);
 +	if (!WIFEXITED(status))
 +		printf("[WARN]\tChild didn't exit cleanly.\n");
- }
++}
++
+ static void test_ptrace_write_gsbase(void)
+ {
+ 	int status;
+@@ -529,6 +591,9 @@ int main()
+ 	shared_scratch = mmap(NULL, 4096, PROT_READ | PROT_WRITE,
+ 			      MAP_ANONYMOUS | MAP_SHARED, -1, 0);
  
- int main()
++	/* Do these tests before we have an LDT. */
++	test_ptrace_write_gs_read_base();
++
+ 	/* Probe FSGSBASE */
+ 	sethandler(SIGILL, sigill, 0);
+ 	if (sigsetjmp(jmpbuf, 1) == 0) {
 -- 
 2.25.4
 
