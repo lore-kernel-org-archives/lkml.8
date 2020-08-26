@@ -4,82 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B055C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5257DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04688206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1714A206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598459433;
-	bh=hRr/a/YAnLdURZWW/rmGtbraj2KU8FLUxIgB33GwWXQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=fxT1Wq6+YxmTU24REGIZGNux9MD7Vohe6rqT62E8bjUArgUTIMZXlMi8q4GM5hZU2
-	 KzrSJlgiyJcG111HVo65RoC0ol2ncgG7fWqGOvN95ukkhUGZj2itU6bI6+/RKWV9ZC
-	 BaP5fkvDrunIuha86gYetmhMiLU2GTmJ45+rirZ8=
+	s=default; t=1598459454;
+	bh=dDEoV+9r/Llmk77Z0OE2S9FotxUgZu9Y4tOYpgAYbG4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YMoO8HNTjnEyRPcSoE584XqGX/l7tEehIP50QwKNY3qD0gw/u5I7Do1N51mGPAYJp
+	 HGUw6Ham9TO3Xc1QxzXUbLaJ/iD1rj+dhV1yYWnv4pEO69FG2BKAMnxEKZYiVf7gEt
+	 IR4dSD6GPOom7pckeyujV9YWhkobX6l2pG715EVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbgHZQaZ (ORCPT
+        id S1728077AbgHZQak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:30:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54358 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 12:30:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgHZQaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:30:01 -0400
+        id S1727878AbgHZQaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:30:04 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E6AF2074A;
-        Wed, 26 Aug 2020 16:29:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE96D20825;
+        Wed, 26 Aug 2020 16:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598459401;
-        bh=hRr/a/YAnLdURZWW/rmGtbraj2KU8FLUxIgB33GwWXQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ugkcwvyy2eF4kcFRRMkgRJ1yQXheRkwuhRoP0kXW++xMfPQHBqdS4QxeP9ZlTQONT
-         x2lAaQnOSBlzovndPDpdNWf8pmgDu0qQL8oR6ik/g/LjJAu7UBfJos+yhWxS6yB7MU
-         fRi9Soxj1q72tXU7iYl9ouFkd5hOJMJhil8YU++M=
+        s=default; t=1598459403;
+        bh=dDEoV+9r/Llmk77Z0OE2S9FotxUgZu9Y4tOYpgAYbG4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nIYgQARZVzbxjgaQuNE+3CwamharL89IZNlCpKsFbIcvS4K5RaqpIsW2v7qqfROfU
+         8QAjDNlGCx3kdcuY86EMjMq/iWSRus1UWo7Z5G2rTGdaAtJjDwyHn/N1afmmuhT5AK
+         +pogMuiZ9A8HSaI1syxSeCqg2xMzj7xd3HaZB/vc=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>,
         linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/3] crypto: sa2ul - Hide pointer and fix -Wpointer-to-int-cast in dev_dbg()
-Date:   Wed, 26 Aug 2020 18:29:52 +0200
-Message-Id: <20200826162954.28636-1-krzk@kernel.org>
+Subject: [PATCH 2/3] crypto: sa2ul - Simplify with dev_err_probe()
+Date:   Wed, 26 Aug 2020 18:29:53 +0200
+Message-Id: <20200826162954.28636-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200826162954.28636-1-krzk@kernel.org>
+References: <20200826162954.28636-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pointers should not be printed because they might leak important
-information about address space layout.  Use %p to hash the value.  This
-also fixes compilation warnings on 32-bit architecture:
-
-    drivers/crypto/sa2ul.c:1486:33: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/crypto/sa2ul.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/sa2ul.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/crypto/sa2ul.c b/drivers/crypto/sa2ul.c
-index 5bc099052bd2..4a950437bf44 100644
+index 4a950437bf44..5a11c2fb7a3a 100644
 --- a/drivers/crypto/sa2ul.c
 +++ b/drivers/crypto/sa2ul.c
-@@ -1482,8 +1482,8 @@ static int sa_sha_init(struct ahash_request *req)
- 	struct sa_sha_req_ctx *rctx = ahash_request_ctx(req);
- 	struct sa_tfm_ctx *ctx = crypto_ahash_ctx(tfm);
+@@ -2243,25 +2243,21 @@ static int sa_dma_init(struct sa_crypto_data *dd)
+ 		return ret;
  
--	dev_dbg(sa_k3_dev, "init: digest size: %d, rctx=%llx\n",
--		crypto_ahash_digestsize(tfm), (u64)rctx);
-+	dev_dbg(sa_k3_dev, "init: digest size: %d, rctx=%p\n",
-+		crypto_ahash_digestsize(tfm), rctx);
+ 	dd->dma_rx1 = dma_request_chan(dd->dev, "rx1");
+-	if (IS_ERR(dd->dma_rx1)) {
+-		if (PTR_ERR(dd->dma_rx1) != -EPROBE_DEFER)
+-			dev_err(dd->dev, "Unable to request rx1 DMA channel\n");
+-		return PTR_ERR(dd->dma_rx1);
+-	}
++	if (IS_ERR(dd->dma_rx1))
++		return dev_err_probe(dd->dev, PTR_ERR(dd->dma_rx1),
++				     "Unable to request rx1 DMA channel\n");
  
- 	ahash_request_set_tfm(&rctx->fallback_req, ctx->fallback.ahash);
- 	rctx->fallback_req.base.flags =
+ 	dd->dma_rx2 = dma_request_chan(dd->dev, "rx2");
+ 	if (IS_ERR(dd->dma_rx2)) {
+ 		dma_release_channel(dd->dma_rx1);
+-		if (PTR_ERR(dd->dma_rx2) != -EPROBE_DEFER)
+-			dev_err(dd->dev, "Unable to request rx2 DMA channel\n");
+-		return PTR_ERR(dd->dma_rx2);
++		return dev_err_probe(dd->dev, PTR_ERR(dd->dma_rx2),
++				     "Unable to request rx2 DMA channel\n");
+ 	}
+ 
+ 	dd->dma_tx = dma_request_chan(dd->dev, "tx");
+ 	if (IS_ERR(dd->dma_tx)) {
+-		if (PTR_ERR(dd->dma_tx) != -EPROBE_DEFER)
+-			dev_err(dd->dev, "Unable to request tx DMA channel\n");
+-		ret = PTR_ERR(dd->dma_tx);
++		ret = dev_err_probe(dd->dev, PTR_ERR(dd->dma_tx),
++				    "Unable to request tx DMA channel\n");
+ 		goto err_dma_tx;
+ 	}
+ 
 -- 
 2.17.1
 
