@@ -2,128 +2,85 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAB1C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1881DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 738F92076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D864F2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:22:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="EMLRIUB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbgHZGSY (ORCPT
+        id S1726074AbgHZGWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:18:24 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:44431 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725786AbgHZGSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:18:21 -0400
-Received: from [192.168.0.2] (ip5f5af678.dynamic.kabel-deutschland.de [95.90.246.120])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id C3F7320225BDA;
-        Wed, 26 Aug 2020 08:18:17 +0200 (CEST)
-Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
-To:     Caleb Jorden <caljorden@hotmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-References: <20200826055150.2753.90553@ml01.vlan13.01.org>
-Cc:     iwd@lists.01.org, stable@vger.kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
-Date:   Wed, 26 Aug 2020 08:18:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 26 Aug 2020 02:22:50 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:33843 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725786AbgHZGWu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 02:22:50 -0400
+X-UUID: 3d906c26148845369c5ba3fc48e774f0-20200826
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=GIkhKgz7Elf9zu2USBbkj5bdyXwJ9NQ0IBkBTXI6x1k=;
+        b=EMLRIUB3+W2rhkoNq652bxCof4cmA8Zfh9NWX9dM15wlJ9aKZJvGegwwY7tIP5deJLja9DF2clyEI4pl2jmtoC2sXBSMEDeyTrErRSR04a19v2h192nW6ce3+oqGVjiqnC52P3wALOoAhBBV7JUJcjTn5gHyvnGaciju+G8ZSXo=;
+X-UUID: 3d906c26148845369c5ba3fc48e774f0-20200826
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <chih-en.hsu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2022027483; Wed, 26 Aug 2020 14:22:47 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 26 Aug 2020 14:22:45 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 26 Aug 2020 14:22:45 +0800
+From:   Chih-En Hsu <chih-en.hsu@mediatek.com>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <srv_heupstream@mediatek.com>,
+        <Andrew-CT.Chen@mediatek.com>, <Michael.Mei@mediatek.com>,
+        Chih-En Hsu <chih-en.hsu@mediatek.com>
+Subject: [PATCH v2] nvmem: mtk-efuse: Remove EFUSE register write support
+Date:   Wed, 26 Aug 2020 14:21:50 +0800
+Message-ID: <20200826062148.27293-1-chih-en.hsu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-In-Reply-To: <20200826055150.2753.90553@ml01.vlan13.01.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+VGhpcyBwYXRjaCBpcyB0byByZW1vdmUgZnVuY3Rpb24gIm10a19yZWdfd3JpdGUiIHNpbmNlDQpN
+ZWRpYXRlayBFRlVTRSBoYXJkd2FyZSBvbmx5IHN1cHBvcnRzIHJlYWQgZnVuY3Rpb25hbGl0eQ0K
+Zm9yIE5WTUVNIGNvbnN1bWVycy4NCg0KRml4ZXM6IDRjN2U0ZmUzNzc2NiAoIm52bWVtOiBtZWRp
+YXRlazogQWRkIE1lZGlhdGVrIEVGVVNFIGRyaXZlciIpDQpTaWduZWQtb2ZmLWJ5OiBDaGloLUVu
+IEhzdSA8Y2hpaC1lbi5oc3VAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9udm1lbS9tdGst
+ZWZ1c2UuYyB8IDE0IC0tLS0tLS0tLS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDE0IGRlbGV0aW9u
+cygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9udm1lbS9tdGstZWZ1c2UuYyBiL2RyaXZlcnMv
+bnZtZW0vbXRrLWVmdXNlLmMNCmluZGV4IDg1NmQ5YzNmYzM4ZS4uNmE1MzdkOTU5ZjE0IDEwMDY0
+NA0KLS0tIGEvZHJpdmVycy9udm1lbS9tdGstZWZ1c2UuYw0KKysrIGIvZHJpdmVycy9udm1lbS9t
+dGstZWZ1c2UuYw0KQEAgLTI4LDE5ICsyOCw2IEBAIHN0YXRpYyBpbnQgbXRrX3JlZ19yZWFkKHZv
+aWQgKmNvbnRleHQsDQogCXJldHVybiAwOw0KIH0NCiANCi1zdGF0aWMgaW50IG10a19yZWdfd3Jp
+dGUodm9pZCAqY29udGV4dCwNCi0JCQkgdW5zaWduZWQgaW50IHJlZywgdm9pZCAqX3ZhbCwgc2l6
+ZV90IGJ5dGVzKQ0KLXsNCi0Jc3RydWN0IG10a19lZnVzZV9wcml2ICpwcml2ID0gY29udGV4dDsN
+Ci0JdTMyICp2YWwgPSBfdmFsOw0KLQlpbnQgaSA9IDAsIHdvcmRzID0gYnl0ZXMgLyA0Ow0KLQ0K
+LQl3aGlsZSAod29yZHMtLSkNCi0JCXdyaXRlbCgqdmFsKyssIHByaXYtPmJhc2UgKyByZWcgKyAo
+aSsrICogNCkpOw0KLQ0KLQlyZXR1cm4gMDsNCi19DQotDQogc3RhdGljIGludCBtdGtfZWZ1c2Vf
+cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiB7DQogCXN0cnVjdCBkZXZpY2Ug
+KmRldiA9ICZwZGV2LT5kZXY7DQpAQCAtNjEsNyArNDgsNiBAQCBzdGF0aWMgaW50IG10a19lZnVz
+ZV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KIAllY29uZmlnLnN0cmlkZSA9
+IDQ7DQogCWVjb25maWcud29yZF9zaXplID0gNDsNCiAJZWNvbmZpZy5yZWdfcmVhZCA9IG10a19y
+ZWdfcmVhZDsNCi0JZWNvbmZpZy5yZWdfd3JpdGUgPSBtdGtfcmVnX3dyaXRlOw0KIAllY29uZmln
+LnNpemUgPSByZXNvdXJjZV9zaXplKHJlcyk7DQogCWVjb25maWcucHJpdiA9IHByaXY7DQogCWVj
+b25maWcuZGV2ID0gZGV2Ow0KLS0gDQoyLjE4LjANCg==
 
-Dear Caleb,
-
-
-Thank you for the report. Linux has a no regression policy, so the 
-correct forum to report this to is the Linux kernel folks. I am adding 
-the crypto and stable folks to the receiver list.
-
-Am 26.08.20 um 07:51 schrieb caljorden@hotmail.com:
-
-> I wanted to note an issue that I have hit with iwd when I upgraded to
-> the Linux 5.8.3 stable kernel.  My office network uses WPA Enterprise
-> with EAP-PEAPv0 + MSCHAPv2.  When using this office network,
-> upgrading to Linux 5.8.3 caused my system to refuse to associate
-> successfully to the network.  I get the following in my dmesg logs:
-> 
-> [   40.846535] wlan0: authenticate with <redacted>:60
-> [   40.850570] wlan0: send auth to <redacted>:60 (try 1/3)
-> [   40.854627] wlan0: authenticated
-> [   40.855992] wlan0: associate with <redacted>:60 (try 1/3)
-> [   40.860450] wlan0: RX AssocResp from <redacted>:60 (capab=0x411 status=0 aid=11)
-> [   40.861620] wlan0: associated
-> [   41.886503] wlan0: deauthenticating from <redacted>:60 by local choice (Reason: 23=IEEE8021X_FAILED)
-> [   42.360127] wlan0: authenticate with <redacted>:22
-> [   42.364584] wlan0: send auth to <redacted>:22 (try 1/3)
-> [   42.370821] wlan0: authenticated
-> [   42.372658] wlan0: associate with <redacted>:22 (try 1/3)
-> [   42.377426] wlan0: RX AssocResp from <redacted>:22 (capab=0x411 status=0 aid=15)
-> [   42.378607] wlan0: associated
-> [   43.402009] wlan0: deauthenticating from <redacted>:22 by local choice (Reason: 23=IEEE8021X_FAILED)
-> [   43.875921] wlan0: authenticate with <redacted>:60
-> [   43.879988] wlan0: send auth to <redacted>:60 (try 1/3)
-> [   43.886244] wlan0: authenticated
-> [   43.889273] wlan0: associate with <redacted>:60 (try 1/3)
-> [   43.894586] wlan0: RX AssocResp from <redacted>:60 (capab=0x411 status=0 aid=11)
-> [   43.896077] wlan0: associated
-> [   44.918504] wlan0: deauthenticating from <redacted>:60 by local choice (Reason: 23=IEEE8021X_FAILED)
-> 
-> This continues as long as I let iwd run.
-> 
-> I downgraded back to Linux 5.8.2, and verified that everything works
-> as expected.  I also tried using Linux 5.8.3 on a different system at
-> my home, which uses WPA2-PSK.  It worked fine (though it uses an
-> Atheros wireless card instead of an Intel card - but I assume that is
-> irrelevant).
-> 
-> I decided to try to figure out what caused the issue in the changes
-> for Linux 5.8.3.  I assumed that it was something that changed in the
-> crypto interface, which limited my bisection to a very few commits.
-> Sure enough, I found that if I revert commit
-> e91d82703ad0bc68942a7d91c1c3d993e3ad87f0 (crypto: algif_aead - Only
-> wake up when ctx->more is zero), the problem goes away and I am able
-> to associate to my WPA Enterprise network successfully, and use it.
-> I found that in order to revert this commit, I also first had to
-> revert 465c03e999102bddac9b1e132266c232c5456440 (crypto: af_alg - Fix
-> regression on empty requests), because the two commits have coupled
-> changes.
-> 
-> I normally would have assumed that this should be sent to the kernel
-> list, but I thought I would first mention it here because of what I
-> found in some email threads on the Linux-Crypto list about the crypto
-> interfaces to the kernel being sub-optimal and needing to be fixed.
-> The changes in these commits look like they are just trying to fix
-> what could be broken interfaces, so I thought that it would make
-> sense to see what the iwd team thinks about the situation first.
-> 
-> The wireless card I was using during this testing is an Intel
-> Wireless 3165 (rev 81).  If there is any additional information I
-> could help provide, please let me know.
-
-It’d be great, if you verified, if the problem occurs with Linus’ master 
-branch too.
-
-
-Kind regards,
-
-Paul
