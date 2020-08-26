@@ -2,122 +2,192 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C715AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B59C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A47CA20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC302080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598464386;
+	bh=Zd24Yb4vjHVqZMcBZUg6fD4NfTY3pGvnVh3ocrW4duI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ij+LcGaRR+pMOP8vC2k4+m+Im1TgYxfFDdlqiTUnpX9kvZKaQ4P5BkANWqmLkSlOB
+	 /WTMxLdtp81VNLGAvjUG/y7FrLPl09PGclEqCOq6/qCUGAynU+maXDSwK4vk2hmgL4
+	 1Gn1k/Xne2CHLc75Opqt5MVCkJDmiFBnkOlIzRVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgHZRsa (ORCPT
+        id S1726783AbgHZRw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:48:30 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45500 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgHZRs0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:48:26 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 8944F294D9C
-Received: by earth.universe (Postfix, from userid 1000)
-        id 54F1E3C0C82; Wed, 26 Aug 2020 19:48:17 +0200 (CEST)
-Date:   Wed, 26 Aug 2020 19:48:17 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, b.galvani@gmail.com, phh@phh.me,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH 1/2] power: supply: Add support for RN5T618/RC5T619
- charger and fuel gauge
-Message-ID: <20200826174817.vhus3j4i4t7u7jc4@earth.universe>
-References: <20200815165610.10647-1-andreas@kemnade.info>
- <20200815165610.10647-2-andreas@kemnade.info>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="y3moyevmvc7nmaqp"
-Content-Disposition: inline
-In-Reply-To: <20200815165610.10647-2-andreas@kemnade.info>
+        Wed, 26 Aug 2020 13:52:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54778 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726187AbgHZRw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 13:52:56 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72EF020737;
+        Wed, 26 Aug 2020 17:52:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598464375;
+        bh=Zd24Yb4vjHVqZMcBZUg6fD4NfTY3pGvnVh3ocrW4duI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oGt4PCbs/J/rOYxOmxVGNKn7rv/v0UjhddU8AUqIHs964IXq8BnhDLiJ8XBgsLFx1
+         fDs78zRjxBJ5BWor2KAViU/xDWDheyIrw+P6gipyU7fSHwO4aM88Xcdj50rMQZX/ZH
+         UqTBYKrd/AAdlTV6iOrNrXmua3DyfNFcLED9v+Q0=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kAzbR-006vbP-Jg; Wed, 26 Aug 2020 18:52:53 +0100
+Date:   Wed, 26 Aug 2020 18:52:46 +0100
+Message-ID: <87lfi170r5.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 5/9] fsl-msi: Provide default retrigger callback
+In-Reply-To: <70107b944534c6a0eeff83e43b05865e@kernel.org>
+References: <20200824102317.1038259-1-maz@kernel.org>
+        <20200824102317.1038259-6-maz@kernel.org>
+        <jhj7dtlejxc.mognet@arm.com>
+        <70107b944534c6a0eeff83e43b05865e@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, gregory.clement@bootlin.com, jason@lakedaemon.net, laurentiu.tudor@nxp.com, tglx@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 26 Aug 2020 17:37:30 +0100,
+Marc Zyngier <maz@kernel.org> wrote:
+> 
+> Hi Valentin,
+> 
+> On 2020-08-26 12:16, Valentin Schneider wrote:
+> > Hi Marc,
+> > 
+> > Many thanks for picking this up!
+> > Below's the only comment I have, the rest LGTM.
+> > 
+> > On 24/08/20 11:23, Marc Zyngier wrote:
+> >> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> >> ---
+> >>  drivers/bus/fsl-mc/fsl-mc-msi.c | 2 ++
+> >>  1 file changed, 2 insertions(+)
+> >> 
+> >> diff --git a/drivers/bus/fsl-mc/fsl-mc-msi.c
+> >> b/drivers/bus/fsl-mc/fsl-mc-msi.c
+> >> index 8edadf05cbb7..5306ba7dea3e 100644
+> >> --- a/drivers/bus/fsl-mc/fsl-mc-msi.c
+> >> +++ b/drivers/bus/fsl-mc/fsl-mc-msi.c
+> >> @@ -144,6 +144,8 @@ static void fsl_mc_msi_update_chip_ops(struct
+> >> msi_domain_info *info)
+> >>        */
+> >>       if (!chip->irq_write_msi_msg)
+> >>               chip->irq_write_msi_msg = fsl_mc_msi_write_msg;
+> >> +	if (!chip->irq_retrigger)
+> >> +		chip->irq_retrigger = irq_chip_retrigger_hierarchy;
+> > 
+> > AFAICT the closest generic hook we could use here is
+> > 
+> >   msi_create_irq_domain() -> msi_domain_update_chip_ops()
+> > 
+> > which happens just below the fsl-specific ops update.
+> > 
+> > 
+> > However, placing a default .irq_retrigger callback in there would
+> > affect any
+> > and all MSI domain. IOW that would cover PCI and platform MSIs
+> > (covered by
+> > separate patches in this series), but also some x86 ("dmar" &
+> > "hpet") and
+> > TI thingies.
+> > 
+> > I can't tell right now how bad of an idea it is, but I figured I'd
+> > throw
+> > this out there.
+> 
+> The problem with this approach is that it requires the resend path to be
+> cooperative and actually check for more than the top-level irq_data.
+> Otherwise you'd never actually trigger the HW resend if it is below
+> the top level.
+> 
+> But I like the idea though. Something like this should do the trick, and
+> is admittedly a bug fix:
 
---y3moyevmvc7nmaqp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Well, not quite.
 
-Hi,
-
-Driver looks mostly good.
-
-On Sat, Aug 15, 2020 at 06:56:09PM +0200, Andreas Kemnade wrote:
-> [...]
-> +static int rn5t618_battery_current_now(struct rn5t618_power_info *info,
-> +				       union power_supply_propval *val)
+> 
+> diff --git a/kernel/irq/resend.c b/kernel/irq/resend.c
+> index c48ce19a257f..d11c729f9679 100644
+> --- a/kernel/irq/resend.c
+> +++ b/kernel/irq/resend.c
+> @@ -86,6 +86,18 @@ static int irq_sw_resend(struct irq_desc *desc)
+>  }
+>  #endif
+> 
+> +static int try_retrigger(struct irq_desc *desc)
 > +{
-> +	u16 res;
-> +	int ret;
-> +
-> +	ret = rn5t618_battery_read_doublereg(info, RN5T618_CC_AVEREG1, &res);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val->intval = res;
-> +	/* 2's complement */
-> +	if (val->intval & (1 << 13))
-> +		val->intval = val->intval - (1 << 14);
-> +
-> +	/* negate current to be positive when discharging */
-> +	val->intval *= -1000;
+> +#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+> +	return irq_chip_retrigger_hierarchy(&desc->irq_data);
 
-mh, the sign is not documented (which should be fixed). At least
-sbs-battery does it the other way around (negative current when
-discharging, positive otherwise). Some drivers do not support
-signed current and always report positive values (e.g. ACPI driver).
+This only checks the parent, so we still need to evaluate the
+top-level. Something like this:
 
-What did you use as reference for swapping the sign?
+diff --git a/kernel/irq/resend.c b/kernel/irq/resend.c
+index c48ce19a257f..8ccd32a0cc80 100644
+--- a/kernel/irq/resend.c
++++ b/kernel/irq/resend.c
+@@ -86,6 +86,18 @@ static int irq_sw_resend(struct irq_desc *desc)
+ }
+ #endif
+ 
++static int try_retrigger(struct irq_desc *desc)
++{
++	if (desc->irq_data.chip->irq_retrigger)
++		return desc->irq_data.chip->irq_retrigger(&desc->irq_data);
++
++#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
++	return irq_chip_retrigger_hierarchy(&desc->irq_data);
++#else
++	return 0;
++#endif
++}
++
+ /*
+  * IRQ resend
+  *
+@@ -113,8 +125,7 @@ int check_irq_resend(struct irq_desc *desc, bool inject)
+ 
+ 	desc->istate &= ~IRQS_PENDING;
+ 
+-	if (!desc->irq_data.chip->irq_retrigger ||
+-	    !desc->irq_data.chip->irq_retrigger(&desc->irq_data))
++	if (!try_retrigger(desc))
+ 		err = irq_sw_resend(desc);
+ 
+ 	/* If the retrigger was successfull, mark it with the REPLAY bit */
 
-> +	return 0;
-> +}
-> [...]
-> +static const struct power_supply_desc rn5t618_adp_desc = {
-> +	.name                   = "rn5t618-adp",
-> +	.type                   = POWER_SUPPLY_TYPE_MAINS,
-> +	.properties             = rn5t618_usb_props,
+With that, I believe we can drop most of the patches in this series
+and only keep the GIC ones.
 
-wrong property array, works by accident since usb and adp property
-lists are the same.
+	M.
 
-> +	.num_properties         = ARRAY_SIZE(rn5t618_adp_props),
-> +	.get_property           = rn5t618_adp_get_property,
-> +};
-> [...]
-
--- Sebastian
-
---y3moyevmvc7nmaqp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9GoFsACgkQ2O7X88g7
-+prupQ/+PUw6LW965p9e0EajZ5HB7SF2KwRWx6T+uXRreV8R2dMAS1s8K1gJplca
-0/U5ZqMf3BjI5lP9m4h7/ccgUNEp/Iuk6tl143dCHutV+33SzTMgsucZVkuB+C7l
-te75mJdDcxlf54+A2YBTLJkWoeFuznG9Cnecz0+KYJVpFia5Y6IJDQhmuAkW1UQ/
-iSe8LnvAIZH+HQ9dyU0/wTSYhlidecfybKJL2i4o9Rv0l0jp4eKYnb/vhFQ7tW/u
-4IXtEuc+CPSMy4wWC0gFMx2fo7EMBVmMLgxKOw3p5E3+26yG0tMoR/q8Pp4paIqk
-CC/YZolAbU0nPWm71gCbisiZc3V/FE10SA6v65mFU/PyDIdCFHxmpWYb3A+LaOim
-Z/HAcKzJj3mtmTDBu/O7sezuIgULfx2Zb3lAZ2HtuqWKJ/KYaZ0Z10TXtiBNGm14
-3jWp2hEBVHsktNNVf4kjTQwENGwMaI85Kjsx9e2YNXJoESpyJh32M3HMKiBpDUKh
-v/Qkb2Y5SSlgMb0E+StPIbRpVQ46vZpV2Ys04X5dfOp81UoG7NhvSECI5fOLRpo7
-Kpa2/mrPMhe1gha/LEk2OItqXAZF8P95PL1obXVXWyV39vYm/v5oUd51wnOdnlu1
-oyc2RLOgLW0Ae3KZsywx7ZgqD9XhhM076V0NaSMfSd5AAMQt0vI=
-=TU9+
------END PGP SIGNATURE-----
-
---y3moyevmvc7nmaqp--
+-- 
+Without deviation from the norm, progress is not possible.
