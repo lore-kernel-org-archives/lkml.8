@@ -2,204 +2,207 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C19FC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B21C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF9E2076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598418540;
-	bh=ZewbGokjIPwrPd22kZW4jiPlCDpkUT+w7kxtaumNiMU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FKQbRO/+5G6uJKNGBe/jaJY25pOt+WZywJJcCV2ziYV2qiRPj6JPko6o2yHfS45e+
-	 e4RY0DyQjnNCXg3Xt3RxJ70HKVJk55pp3H2HG0F5acyFP1pj+iLTQ3XzV8rjcVXJyo
-	 O1Qvik0ik4pBxcIrdmlrZDQBrc3UiqFDx2X1uVm8=
+	by mail.kernel.org (Postfix) with ESMTP id B9844206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 05:11:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LQj7nEji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbgHZFI6 (ORCPT
+        id S1726700AbgHZFLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 01:08:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725764AbgHZFI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 01:08:58 -0400
-Received: from localhost (p54b33436.dip0.t-ipconnect.de [84.179.52.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC4612076C;
-        Wed, 26 Aug 2020 05:08:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598418537;
-        bh=ZewbGokjIPwrPd22kZW4jiPlCDpkUT+w7kxtaumNiMU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H2uH7yf1LheFk6bGN6GL9bSSi7e3eEL4c+KMicA2Mm9Qr5iKjHsEvxIZr7Ezy+4Wx
-         p5dcMRVPjha2uU8CuKWucEJuNuGIbu7shW6IBM3DcmKvyOdvjzJ4kpkpMLPejY7ChI
-         UuWf6VNEgnGpxC8L/2Y80FI+Y55juQ3wXE1XgkEA=
-Date:   Wed, 26 Aug 2020 07:08:51 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: consider devices with of_match_table during i2c
- device probing
-Message-ID: <20200826050851.GA1081@ninjato>
-References: <20200826042938.3259-1-sergey.senozhatsky@gmail.com>
+        Wed, 26 Aug 2020 01:11:40 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47509 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbgHZFLi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 01:11:38 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200826051135euoutp02e5d551df7b2b5d99978f8dd4ab4f2aac~uuVXLc0l72850028500euoutp02L;
+        Wed, 26 Aug 2020 05:11:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200826051135euoutp02e5d551df7b2b5d99978f8dd4ab4f2aac~uuVXLc0l72850028500euoutp02L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598418695;
+        bh=UoWZxsq2ehgW6OJCcDlHRW36cf3DBAGPj6G6QPuhOk4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LQj7nEji6ZHBRvG8OclXTVyjMFZD6W6NYuQ+HDNHW8GbULvR3lgq9bL46Hz6+9pdC
+         rjiuAMKGgPvryc2dRdzCXSOcAaPwniLnH7ijo6P+OxB3rfyhntALLGj1ieadr7Fr53
+         4UKfOJUur5HLD/zQJR8dqjn2qp0ke5Q6VakWpH8o=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200826051134eucas1p2e7e95ebb5be135386f7e12e5fd00a133~uuVWRFIe-0099700997eucas1p27;
+        Wed, 26 Aug 2020 05:11:34 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 7E.36.05997.60FE54F5; Wed, 26
+        Aug 2020 06:11:34 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9~uuVVoxr7O2361423614eucas1p2M;
+        Wed, 26 Aug 2020 05:11:34 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200826051134eusmtrp16606dc6df146f0b38b332affe9d28037~uuVVoC1Bn2068720687eusmtrp1v;
+        Wed, 26 Aug 2020 05:11:34 +0000 (GMT)
+X-AuditID: cbfec7f4-65dff7000000176d-0d-5f45ef06ddf3
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 40.7A.06314.60FE54F5; Wed, 26
+        Aug 2020 06:11:34 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200826051134eusmtip2c4cbe24fe8f6a11cc1119606acfc10e1~uuVVapPyv0656206562eusmtip2a;
+        Wed, 26 Aug 2020 05:11:33 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com
+Subject: Re: [PATCH 3/3] ARM: defconfig: Enable ax88796c driver
+Date:   Wed, 26 Aug 2020 07:11:18 +0200
+In-Reply-To: <20200825185152.GC2693@kozik-lap> (Krzysztof Kozlowski's
+        message of "Tue, 25 Aug 2020 20:51:52 +0200")
+Message-ID: <dleftjk0xmuh3d.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
-Content-Disposition: inline
-In-Reply-To: <20200826042938.3259-1-sergey.senozhatsky@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCKsWRmVeSWpSXmKPExsWy7djP87ps713jDZ68NLTYOGM9q8Wc8y0s
+        FvOPnGO16H/8mtni/PkN7BYXtvWxWmx6fI3V4vKuOWwWM87vY7I4NHUvo8XaI3fZLY4tELNo
+        3XuE3YHX4/K1i8weW1beZPLYtKqTzWPzknqPvi2rGD0+b5ILYIvisklJzcksSy3St0vgyji4
+        7TVbwQTxinUzepkaGJtEuhg5OSQETCT2Pmpi72Lk4hASWMEocWn5BUYI5wujxJ9pL9ggnM+M
+        Eif/TWeDaZl84DITRGI5o8SH08ugnOeMEq/PHGXpYuTgYBPQk1i7NgKkQURAU+L63++sIDXM
+        ArOYJS5u+c4CkhAWsJc4urqHEcRmEVCV+HPyFtgGToFSiXcntjKD2LwC5hLTnk1mArFFBSwl
+        try4zw4RF5Q4OfMJ2BxmgVyJmeffgN0tIfCXXaLr7AlmiFNdJG6f3s8CYQtLvDq+hR3ClpE4
+        PbkH7FAJgXqJyZPMIHp7GCW2zfkBVW8tcefcL6iXHSVaDq5nhqjnk7jxVhBiL5/EpG3TocK8
+        Eh1tQhDVKhLr+vdATZGS6H21ghHC9pBY/BfCFhJoZJT49UZuAqPCLCTfzELyzSygqczAoFu/
+        Sx8irC2xbOFrZgjbVmLduvcsCxhZVzGKp5YW56anFhvlpZbrFSfmFpfmpesl5+duYgSmt9P/
+        jn/ZwbjrT9IhRgEORiUe3gVsrvFCrIllxZW5hxhVgCY92rD6AqMUS15+XqqSCK/T2dNxQrwp
+        iZVVqUX58UWlOanFhxilOViUxHmNF72MFRJITyxJzU5NLUgtgskycXBKNTAuPyOzxdmK/3KA
+        2yWVJY0atuWyUcknbZbtOyby807ky8+b7BsuMEvpZIcsK5xzabuS0LHQG8JypxjFH/DPN3YJ
+        /fOxtULta69BdSv7rAU/L9jJPbQorv1TX99n4ub5nqFLMcr+V//DndPi5aM7vjUaP631rS95
+        O5mpZvlmZQMD8zmGNY+DK5VYijMSDbWYi4oTAQTkyOB3AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrNIsWRmVeSWpSXmKPExsVy+t/xe7ps713jDbZc5bDYOGM9q8Wc8y0s
+        FvOPnGO16H/8mtni/PkN7BYXtvWxWmx6fI3V4vKuOWwWM87vY7I4NHUvo8XaI3fZLY4tELNo
+        3XuE3YHX4/K1i8weW1beZPLYtKqTzWPzknqPvi2rGD0+b5ILYIvSsynKLy1JVcjILy6xVYo2
+        tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQyzi47TVbwQTxinUzepkaGJtEuhg5
+        OSQETCQmH7jM1MXIxSEksJRR4uiOD0AOB1BCSmLl3HSIGmGJP9e62CBqnjJKPHreDVbDJqAn
+        sXZtBEiNiICmxPW/31lBapgF+pgl7i78yQiSEBawlzi6ugfMFhLQlbi3eh8riM0ioCrx5+Qt
+        NpA5nAKlEtO32oCEeQXMJaY9m8wEYosKWEpseXGfHSIuKHFy5hMWEJtZIFvi6+rnzBMYBWYh
+        Sc1CkpoFNJUZ6KT1u/QhwtoSyxa+ZoawbSXWrXvPsoCRdRWjSGppcW56brGhXnFibnFpXrpe
+        cn7uJkZgZG479nPzDsZLG4MPMQpwMCrx8C5gc40XYk0sK67MPcSoAjTm0YbVFxilWPLy81KV
+        RHidzp6OE+JNSaysSi3Kjy8qzUktPsRoCvTmRGYp0eR8YDLJK4k3NDU0t7A0NDc2NzazUBLn
+        7RA4GCMkkJ5YkpqdmlqQWgTTx8TBKdXAWHHFi2XGperEM8snrIh3qy/Wm2O0++S3BKvPU0oe
+        i586cz9inlW/d3yz65XGjl/a7l8CL21gdgxOkNKy+Ln88N8j7H8kzLd/X3iPv2XfSrfvfscq
+        Lnv47ePPnde10lKCq/TmoZ2hvOLaJ6vKol6u4Hmk/Xx7df6s6acad1f2p6R9eH5yxsxCLyWW
+        4oxEQy3mouJEAP4Td0XuAgAA
+X-CMS-MailID: 20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9
+X-Msg-Generator: CA
+X-RootMTR: 20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9
+References: <20200825185152.GC2693@kozik-lap>
+        <CGME20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---3MwIy2ne0vdjdPXF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 26, 2020 at 01:29:37PM +0900, Sergey Senozhatsky wrote:
-> Unlike acpi_match_device(), acpi_driver_match_device() does
-> consider devices that provide of_match_table and performs
-> of_compatible() matching for such devices. The key point here is
-> that ACPI of_compatible() matching - acpi_of_match_device() - is
-> part of ACPI and does not depend on CONFIG_OF.
->=20
-> Consider the following case:
-> o !CONFIG_OF system
-> o probing of i2c device that provides .of_match_table, but no .id_table
->=20
->  i2c_device_probe()
->  ...
->    if (!driver->id_table &&
->        !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
->        !i2c_of_match_device(dev->driver->of_match_table, client)) {
->        status =3D -ENODEV;
->        goto put_sync_adapter;
->    }
->=20
-> i2c_of_match_device() depends on CONFIG_OF and, thus, is always false.
-> i2c_acpi_match_device() does ACPI match only, no of_comtatible() matching
-> takes place, even though the device provides .of_match_table and ACPI,
-> technically, is capable of matching such device. The result is -ENODEV.
-> Probing will succeed, however, if we'd use .of_match_table aware ACPI
-> matching.
->=20
-> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+It was <2020-08-25 wto 20:51>, when Krzysztof Kozlowski wrote:
+> On Tue, Aug 25, 2020 at 07:03:11PM +0200, =C5=81ukasz Stelmach wrote:
+>> Enable ax88796c driver for the ethernet chip on Exynos3250-based
+>> ARTIK5 boards.
+>>=20
+>> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach@samsung.com>
+>> ---
+>>  arch/arm/configs/exynos_defconfig   | 2 ++
+>>  arch/arm/configs/multi_v7_defconfig | 2 ++
+>>  2 files changed, 4 insertions(+)
+>>=20
+>> Please DO NOT merge before these two
+>
+> Sure, it can wait but shouldn't actually DT wait? It's only defconfig so
+> it does not change anything except automated systems booting these
+> defconfigs... The boards might be broken by DT.
 
-We have currently this in for-current which is even removing
-i2c_acpi_match_device():
+I was told, to ask for deferred merge of defconfig and it makes sense to
+me. DT won't break anything if the driver isn't compiled. However, I can
+see that you have a word you may decide about DT too. My point is to
+wait until spi-s3c64xx patches are merged and not to break ARTIK5
+boards.
 
-http://patchwork.ozlabs.org/project/linux-i2c/list/?series=3D196990&state=
-=3D*
+>>=20
+>>   https://lore.kernel.org/lkml/20200821161401.11307-2-l.stelmach@samsung=
+.com/
+>>   https://lore.kernel.org/lkml/20200821161401.11307-3-l.stelmach@samsung=
+.com/
+>>=20
+>> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos=
+_defconfig
+>> index 6e8b5ff0859c..82480b2bf545 100644
+>> --- a/arch/arm/configs/exynos_defconfig
+>> +++ b/arch/arm/configs/exynos_defconfig
+>> @@ -107,6 +107,8 @@ CONFIG_MD=3Dy
+>>  CONFIG_BLK_DEV_DM=3Dy
+>>  CONFIG_DM_CRYPT=3Dm
+>>  CONFIG_NETDEVICES=3Dy
+>> +CONFIG_NET_VENDOR_ASIX=3Dy
+>> +CONFIG_SPI_AX88796C=3Dy
+>>  CONFIG_SMSC911X=3Dy
+>>  CONFIG_USB_RTL8150=3Dm
+>>  CONFIG_USB_RTL8152=3Dy
+>> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/mult=
+i_v7_defconfig
+>> index e9e76e32f10f..a8b4e95d4148 100644
+>> --- a/arch/arm/configs/multi_v7_defconfig
+>> +++ b/arch/arm/configs/multi_v7_defconfig
+>> @@ -241,6 +241,8 @@ CONFIG_SATA_HIGHBANK=3Dy
+>>  CONFIG_SATA_MV=3Dy
+>>  CONFIG_SATA_RCAR=3Dy
+>>  CONFIG_NETDEVICES=3Dy
+>> +CONFIG_NET_VENDOR_ASIX=3Dy
+>> +CONFIG_SPI_AX88796C=3Dm
+>>  CONFIG_VIRTIO_NET=3Dy
+>>  CONFIG_B53_SPI_DRIVER=3Dm
+>>  CONFIG_B53_MDIO_DRIVER=3Dm
+>> --=20
+>> 2.26.2
+>>=20
+>
+>
 
-=46rom a glimpse, this is basically equal but CCing Andy for the details.
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
 
-> ---
->  drivers/i2c/i2c-core-acpi.c | 10 ++++------
->  drivers/i2c/i2c-core-base.c |  2 +-
->  drivers/i2c/i2c-core.h      | 10 +++-------
->  3 files changed, 8 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-> index 2ade99b105b9..1dd152ae75e5 100644
-> --- a/drivers/i2c/i2c-core-acpi.c
-> +++ b/drivers/i2c/i2c-core-acpi.c
-> @@ -276,14 +276,12 @@ void i2c_acpi_register_devices(struct i2c_adapter *=
-adap)
->  		dev_warn(&adap->dev, "failed to enumerate I2C slaves\n");
->  }
-> =20
-> -const struct acpi_device_id *
-> -i2c_acpi_match_device(const struct acpi_device_id *matches,
-> -		      struct i2c_client *client)
-> +bool i2c_acpi_match_device(struct device *dev, struct i2c_client *client)
->  {
-> -	if (!(client && matches))
-> -		return NULL;
-> +	if (!client)
-> +		return false;
-> =20
-> -	return acpi_match_device(matches, &client->dev);
-> +	return acpi_driver_match_device(&client->dev, dev->driver);
->  }
-> =20
->  static const struct acpi_device_id i2c_acpi_force_400khz_device_ids[] =
-=3D {
-> diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-> index 34a9609f256d..35ec6335852b 100644
-> --- a/drivers/i2c/i2c-core-base.c
-> +++ b/drivers/i2c/i2c-core-base.c
-> @@ -480,7 +480,7 @@ static int i2c_device_probe(struct device *dev)
->  	 * or ACPI ID table is supplied for the probing device.
->  	 */
->  	if (!driver->id_table &&
-> -	    !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
-> +	    !i2c_acpi_match_device(dev, client) &&
->  	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
->  		status =3D -ENODEV;
->  		goto put_sync_adapter;
-> diff --git a/drivers/i2c/i2c-core.h b/drivers/i2c/i2c-core.h
-> index 94ff1693b391..7ee6a6e3fb8d 100644
-> --- a/drivers/i2c/i2c-core.h
-> +++ b/drivers/i2c/i2c-core.h
-> @@ -59,19 +59,15 @@ static inline int __i2c_check_suspended(struct i2c_ad=
-apter *adap)
->  }
-> =20
->  #ifdef CONFIG_ACPI
-> -const struct acpi_device_id *
-> -i2c_acpi_match_device(const struct acpi_device_id *matches,
-> -		      struct i2c_client *client);
-> +bool i2c_acpi_match_device(struct device *dev, struct i2c_client *client=
-);
->  void i2c_acpi_register_devices(struct i2c_adapter *adap);
-> =20
->  int i2c_acpi_get_irq(struct i2c_client *client);
->  #else /* CONFIG_ACPI */
->  static inline void i2c_acpi_register_devices(struct i2c_adapter *adap) {=
- }
-> -static inline const struct acpi_device_id *
-> -i2c_acpi_match_device(const struct acpi_device_id *matches,
-> -		      struct i2c_client *client)
-> +bool i2c_acpi_match_device(struct device *dev, struct i2c_client *client)
->  {
-> -	return NULL;
-> +	return false;
->  }
-> =20
->  static inline int i2c_acpi_get_irq(struct i2c_client *client)
-> --=20
-> 2.28.0
->=20
-
---3MwIy2ne0vdjdPXF
+--=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9F7l8ACgkQFA3kzBSg
-KbZjQxAAonAEmZmWBFz4kktZ2UBEn1LY/lVRzWpLpCPjSEc1jxRMlubYlOdFV/u+
-XB6kJGIgjlVGSemIB0gCyBVp/cKGKdTUhgQYMbuq3XymGmsn7My6prIyJQxFd1E6
-6gxysDzz9EezB4KF4KY68b8faxdtUGo6KW0j4VK8gzPvjwxsdghbRfOLXMJexAHQ
-lfIGXES983r/u4I2XkZbO0KvCrb5e5XgoPXKKP7uAFYLixs81nWVeJlWxPEQVA1a
-bXmqZIbZ03+J6ckpLWzOd6NsGroezEtnNkZoBL0hc05CV9s5Z9E/31Amzqg+D82S
-7QX00/1cpCrddLaE475rUdx74Ykd0JAdS0igjuHNX52VubdvrJmQKktbTp6wlZ8F
-yyIwT/cEKuR4aWcl5/ootySBo3W03DLAOaFxFLFk+RYiNPBtid4mPBiAWLxK4GEf
-Zmtjg2qwBrEAoUbzNKhLPx5GZt8fg/6Whrl0EyMJMOvKOFB22XEyESHlttms2gzO
-o32VR7o13plAfSRsWVi3ROHujXDUYbhIf14hMAhmL6zB2Jnnw5y4dVeVZwe4/aOD
-OPZnhaP0D79+0PIFU4UwdYrzGEas8hJiEHseoq+Y1NW5cRFvmIYGjE82d3G4jswv
-AkgZKBmL3Q15Wn6xUC9hzIrkufxHDMPUEkN0ICoG1uMyBx3I3xA=
-=OB9K
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl9F7vYACgkQsK4enJil
+gBAFHQgAmtB7lnKmjz1HmpsDGOZW6GL7+dy6DzX/WdcZYKl/BqPGkdJdS3mmZ2vL
+ReeRKBNGMi1tF5ke//+PK2ymKNUlM+oNogikadhqey9bPRNNehuAHT5A3iL+KulJ
+ynt0tiCPR1+1Map3UNgiMzAhcLmLZnJ+CIDeTq8z+USD7noFT05O3G4rNGnh5wMc
+iIyx3zVUCCVVoqEE1HlulzOgXc1p1E9ZnoH331iBVEr3aTUDoLvSoymMRx6eA2zA
+ggmUcoaFC5qjBza+qipukpqir4OZ40lisI3pgD8YPtJlJkZz4B7JitjcIb5s/7hT
+8h5mI4Wf/w2tA+GWcoYAnMfKZR+O2Q==
+=cYnG
 -----END PGP SIGNATURE-----
-
---3MwIy2ne0vdjdPXF--
+--=-=-=--
