@@ -2,187 +2,228 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C15C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0141C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:54:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B62B620707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 945E122B3F
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:54:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j2/+JFzv"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VMH+xXtq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbgHZLyi (ORCPT
+        id S1729270AbgHZLyv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:54:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729154AbgHZLuq (ORCPT
+        Wed, 26 Aug 2020 07:54:51 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:14884 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729257AbgHZLyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:50:46 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D58C5C061796
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:50:43 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id m8so855109pfh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:50:43 -0700 (PDT)
+        Wed, 26 Aug 2020 07:54:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qBfSxqGewdmgqv+MqirStMARwcP9jOnx8CudDAuj8N4=;
-        b=j2/+JFzvW/o4MtYwgPJgGB1/hmO3WTaD7uyivV4STDRbE42T5q8F2+3AG7rYqbHT9F
-         2Y+tksDrhYQlmhLtQeI7i2RYvhqyRkIYftTEyAeGjMtUszGvxvWoIyTDr5wZ6R1aCViA
-         eAn4cmOYkSC8phQ36CSGhyXaw0/jTGzroxer8E2Ll1T+5hd3HGwTpESFosrS7WywfsLa
-         +wCpXdszE3bKqU5WDO4DAyizF0XO9NLE5l/xcySKN8rPceXSCcfbp060BXJwRPPgIwht
-         lw7C+a8b4AvrR1h8jLBKhC38gdM4fi2WTw/tLfgX4YKp50xtH9HB09VDl17iII9RDPhZ
-         I2gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qBfSxqGewdmgqv+MqirStMARwcP9jOnx8CudDAuj8N4=;
-        b=NpTR5kiMs9kwSgRmWmarCDqGJmJKWGxd1j9LxOqLhIWxXwdAioaz6KCiaSGQ+mxKlj
-         /X6YY8emh5MPIzHhIToNrWSLx5eMXmKC2y8gARf5+4YWY6LDpPPaUx+jMx/JrEK/3Ldh
-         PHCmGhKB3f88zomzi39AENX3aIaj+Ffx/DpFHL0qJ1JTJZ/wXycHsQbFjdzqanfqfS7T
-         BwNTnQLSPRqHS66tR4zjmqiJv0l2y+xjOKHR1fab3yufVtqBedPoH/EuxevAw3bBNNpy
-         RnUuyd19YC8YIPSFQqKhcl7eWmjd7gua1htv2sRWkFAOx/ODPsvrSab93aF/cIJs18gU
-         cmXg==
-X-Gm-Message-State: AOAM530kZKGm8UyGsVP/RSIozXeC9dfXCbTeYE89oic0POmbX+Wznxfk
-        nLvU2Q6izxR/Wbm+JD3frJ+vQw==
-X-Google-Smtp-Source: ABdhPJwvl+y6ZWGao7YMxGBN1XA7sn0sxPJqCHEifmy40XejHezA8W66zOzhmYS0St1ioo8tqsrhvA==
-X-Received: by 2002:a63:354:: with SMTP id 81mr3180046pgd.216.1598442643293;
-        Wed, 26 Aug 2020 04:50:43 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id j1sm3083230pfg.6.2020.08.26.04.50.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 04:50:42 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] dt-bindings: opp: Allow opp-supported-hw to contain multiple versions
-Date:   Wed, 26 Aug 2020 17:20:28 +0530
-Message-Id: <552554ad2e77cc7fe2098d9f2807d0ec8c0de23a.1598442485.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
-In-Reply-To: <cover.1598442485.git.viresh.kumar@linaro.org>
-References: <cover.1598442485.git.viresh.kumar@linaro.org>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1598442859; x=1629978859;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=pKEDmrAi0WeO5TQzAX1yLEmkHIToya6bTxO+48zPR1E=;
+  b=VMH+xXtqI0CZEHZjoGD4ARMTq9dISHTNqjEUZg4tYv/wGA3Nv3H2FFA9
+   PAP/T0Gbu/yH9V0exXfKq08nqC2iv15DNJ4cinn9tTMe/cCV29N/yv1I6
+   O4j1aT+nRFPB2THduWVmQBrgFJS2p1MEXHI1E0GtbWiuTLCXfsaJ824Dw
+   s=;
+X-IronPort-AV: E=Sophos;i="5.76,355,1592870400"; 
+   d="scan'208";a="50004992"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 26 Aug 2020 11:54:14 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 0CF4D1A0453;
+        Wed, 26 Aug 2020 11:54:12 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 26 Aug 2020 11:54:11 +0000
+Received: from u79c5a0a55de558.ant.amazon.com (10.43.160.6) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 26 Aug 2020 11:54:04 +0000
+From:   Alexander Graf <graf@amazon.com>
+To:     X86 ML <x86@kernel.org>
+CC:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Avi Kivity" <avi@scylladb.com>,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>, <robketr@amazon.de>,
+        <amos@scylladb.com>, Brian Gerst <brgerst@gmail.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH] x86/irq: Preserve vector in orig_ax for APIC code
+Date:   Wed, 26 Aug 2020 13:53:57 +0200
+Message-ID: <20200826115357.3049-1-graf@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.6]
+X-ClientProxiedBy: EX13D25UWB001.ant.amazon.com (10.43.161.245) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A single list of versions for a hierarchy of hardware levels is not
-sufficient in some cases. For example, if the hardware version has two
-levels, i.e. X.Y and we want an OPP to support only version 2.1 and 1.2,
-we will set the property as:
+Commit 633260fa143 ("x86/irq: Convey vector as argument and not in ptregs")
+changed the handover logic of the vector identifier from ~vector in orig_ax
+to purely register based. Unfortunately, this field has another consumer
+in the APIC code which the commit did not touch. The net result was that
+IRQ balancing did not work and instead resulted in interrupt storms, slowing
+down the system.
 
-	opp-supported-hw = <0x00000003 0x00000003>;
+This patch restores the original semantics that orig_ax contains the vector.
+When we receive an interrupt now, the actual vector number stays stored in
+the orig_ax field which then gets consumed by the APIC code.
 
-What this also does is enable hardware versions 2.2 and 1.1, which we
-don't want.
+To ensure that nobody else trips over this in the future, the patch also adds
+comments at strategic places to warn anyone who would refactor the code that
+there is another consumer of the field.
 
-Extend the property to accept multiple versions, so we can define the
-property as:
+With this patch in place, IRQ balancing works as expected and performance
+levels are restored to previous levels.
 
-	opp-supported-hw = <0x00000002 0x00000001>, <0x00000001 0x00000002>;
-
-While at it, also reword the property description.
-
-Reported-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reported-by: Alex bykov <alex.bykov@scylladb.com>
+Reported-by: Avi Kivity <avi@scylladb.com>
+Fixes: 633260fa143 ("x86/irq: Convey vector as argument and not in ptregs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Alexander Graf <graf@amazon.com>
 ---
- Documentation/devicetree/bindings/opp/opp.txt | 53 +++++++++++--------
- 1 file changed, 32 insertions(+), 21 deletions(-)
+ arch/x86/entry/entry_32.S     |  2 +-
+ arch/x86/entry/entry_64.S     | 17 +++++++++++------
+ arch/x86/kernel/apic/vector.c |  2 +-
+ 3 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 9d16d417e9be..9847dfeeffcb 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -154,25 +154,27 @@ properties.
- - opp-suspend: Marks the OPP to be used during device suspend. If multiple OPPs
-   in the table have this, the OPP with highest opp-hz will be used.
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index df8c017..22e829c 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -727,7 +727,7 @@ SYM_CODE_START_LOCAL(asm_\cfunc)
+ 	ENCODE_FRAME_POINTER
+ 	movl	%esp, %eax
+ 	movl	PT_ORIG_EAX(%esp), %edx		/* get the vector from stack */
+-	movl	$-1, PT_ORIG_EAX(%esp)		/* no syscall to restart */
++	/* keep vector on stack for APIC's irq_complete_move() */
+ 	call	\cfunc
+ 	jmp	handle_exception_return
+ SYM_CODE_END(asm_\cfunc)
+diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+index 70dea93..d78fb1c 100644
+--- a/arch/x86/entry/entry_64.S
++++ b/arch/x86/entry/entry_64.S
+@@ -319,7 +319,7 @@ SYM_CODE_END(ret_from_fork)
+  * @cfunc:		C function to be called
+  * @has_error_code:	Hardware pushed error code on stack
+  */
+-.macro idtentry_body cfunc has_error_code:req
++.macro idtentry_body cfunc has_error_code:req preserve_error_code:req
  
--- opp-supported-hw: This enables us to select only a subset of OPPs from the
--  larger OPP table, based on what version of the hardware we are running on. We
--  still can't have multiple nodes with the same opp-hz value in OPP table.
--
--  It's a user defined array containing a hierarchy of hardware version numbers,
--  supported by the OPP. For example: a platform with hierarchy of three levels
--  of versions (A, B and C), this field should be like <X Y Z>, where X
--  corresponds to Version hierarchy A, Y corresponds to version hierarchy B and Z
--  corresponds to version hierarchy C.
--
--  Each level of hierarchy is represented by a 32 bit value, and so there can be
--  only 32 different supported version per hierarchy. i.e. 1 bit per version. A
--  value of 0xFFFFFFFF will enable the OPP for all versions for that hierarchy
--  level. And a value of 0x00000000 will disable the OPP completely, and so we
--  never want that to happen.
--
--  If 32 values aren't sufficient for a version hierarchy, than that version
--  hierarchy can be contained in multiple 32 bit values. i.e. <X Y Z1 Z2> in the
--  above example, Z1 & Z2 refer to the version hierarchy Z.
-+- opp-supported-hw: This property allows a platform to enable only a subset of
-+  the OPPs from the larger set present in the OPP table, based on the current
-+  version of the hardware (already known to the operating system).
-+
-+  Each block present in the array of blocks in this property, represents a
-+  sub-group of hardware versions supported by the OPP. i.e. <sub-group A>,
-+  <sub-group B>, etc. The OPP will be enabled if _any_ of these sub-groups match
-+  the hardware's version.
-+
-+  Each sub-group is a platform defined array representing the hierarchy of
-+  hardware versions supported by the platform. For a platform with three
-+  hierarchical levels of version (X.Y.Z), this field shall look like
-+
-+  opp-supported-hw = <X1 Y1 Z1>, <X2 Y2 Z2>, <X3 Y3 Z3>.
-+
-+  Each level (eg. X1) in version hierarchy is represented by a 32 bit value, one
-+  bit per version and so there can be maximum 32 versions per level. Logical AND
-+  (&) operation is performed for each level with the hardware's level version
-+  and a non-zero output for _all_ the levels in a sub-group means the OPP is
-+  supported by hardware. A value of 0xFFFFFFFF for each level in the sub-group
-+  will enable the OPP for all versions for the hardware.
+ 	call	error_entry
+ 	UNWIND_HINT_REGS
+@@ -328,7 +328,9 @@ SYM_CODE_END(ret_from_fork)
  
- - status: Marks the node enabled/disabled.
+ 	.if \has_error_code == 1
+ 		movq	ORIG_RAX(%rsp), %rsi	/* get error code into 2nd argument*/
+-		movq	$-1, ORIG_RAX(%rsp)	/* no syscall to restart */
++		.if \preserve_error_code == 0
++			movq	$-1, ORIG_RAX(%rsp)	/* no syscall to restart */
++		.endif
+ 	.endif
  
-@@ -503,7 +505,6 @@ Example 5: opp-supported-hw
- 			 */
- 			opp-supported-hw = <0xF 0xFFFFFFFF 0xFFFFFFFF>
- 			opp-hz = /bits/ 64 <600000000>;
--			opp-microvolt = <915000 900000 925000>;
- 			...
- 		};
+ 	call	\cfunc
+@@ -346,7 +348,7 @@ SYM_CODE_END(ret_from_fork)
+  * The macro emits code to set up the kernel context for straight forward
+  * and simple IDT entries. No IST stack, no paranoid entry checks.
+  */
+-.macro idtentry vector asmsym cfunc has_error_code:req
++.macro idtentry vector asmsym cfunc has_error_code:req preserve_error_code=0
+ SYM_CODE_START(\asmsym)
+ 	UNWIND_HINT_IRET_REGS offset=\has_error_code*8
+ 	ASM_CLAC
+@@ -369,7 +371,7 @@ SYM_CODE_START(\asmsym)
+ .Lfrom_usermode_no_gap_\@:
+ 	.endif
  
-@@ -516,7 +517,17 @@ Example 5: opp-supported-hw
- 			 */
- 			opp-supported-hw = <0x20 0xff0000ff 0x0000f4f0>
- 			opp-hz = /bits/ 64 <800000000>;
--			opp-microvolt = <915000 900000 925000>;
-+			...
-+		};
-+
-+		opp-900000000 {
-+			/*
-+			 * Supports:
-+			 * - All cuts and substrate where process version is 0x2.
-+			 * - All cuts and process where substrate version is 0x2.
-+			 */
-+			opp-supported-hw = <0xFFFFFFFF 0xFFFFFFFF 0x02>, <0xFFFFFFFF 0x01 0xFFFFFFFF>
-+			opp-hz = /bits/ 64 <900000000>;
- 			...
- 		};
- 	};
+-	idtentry_body \cfunc \has_error_code
++	idtentry_body \cfunc \has_error_code \preserve_error_code
+ 
+ _ASM_NOKPROBE(\asmsym)
+ SYM_CODE_END(\asmsym)
+@@ -382,11 +384,14 @@ SYM_CODE_END(\asmsym)
+  * position of idtentry exceptions, and jump to one of the two idtentry points
+  * (common/spurious).
+  *
++ * The original vector number on the stack has to stay untouched, so that the
++ * APIC irq_complete_move() code can access it later on IRQ ack.
++ *
+  * common_interrupt is a hotpath, align it to a cache line
+  */
+ .macro idtentry_irq vector cfunc
+ 	.p2align CONFIG_X86_L1_CACHE_SHIFT
+-	idtentry \vector asm_\cfunc \cfunc has_error_code=1
++	idtentry \vector asm_\cfunc \cfunc has_error_code=1 preserve_error_code=1
+ .endm
+ 
+ /*
+@@ -440,7 +445,7 @@ SYM_CODE_START(\asmsym)
+ 
+ 	/* Switch to the regular task stack and use the noist entry point */
+ .Lfrom_usermode_switch_stack_\@:
+-	idtentry_body noist_\cfunc, has_error_code=0
++	idtentry_body noist_\cfunc, has_error_code=0, preserve_error_code=0
+ 
+ _ASM_NOKPROBE(\asmsym)
+ SYM_CODE_END(\asmsym)
+diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+index dae32d9..e81b835 100644
+--- a/arch/x86/kernel/apic/vector.c
++++ b/arch/x86/kernel/apic/vector.c
+@@ -924,7 +924,7 @@ static void __irq_complete_move(struct irq_cfg *cfg, unsigned vector)
+ 
+ void irq_complete_move(struct irq_cfg *cfg)
+ {
+-	__irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
++	__irq_complete_move(cfg, (u8)get_irq_regs()->orig_ax);
+ }
+ 
+ /*
 -- 
-2.25.0.rc1.19.g042ed3e048af
+1.8.3.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
 
