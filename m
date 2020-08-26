@@ -2,211 +2,96 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19040C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9813BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB0B6206EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnrqKy6k"
+	by mail.kernel.org (Postfix) with ESMTP id 7458E2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbgHZKug (ORCPT
+        id S1728735AbgHZKul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:50:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728572AbgHZKtn (ORCPT
+        Wed, 26 Aug 2020 06:50:41 -0400
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:32193 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728647AbgHZKug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:49:43 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420E3C061757;
-        Wed, 26 Aug 2020 03:49:43 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id h2so706976plr.0;
-        Wed, 26 Aug 2020 03:49:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fNxSfFiY1tuDXOCkxl1KwXHZGTRpS8Bl3VyT4+22yAo=;
-        b=LnrqKy6kUV8a9EKcK25PoRKI9k6qjlOBP+xLiHlzbrZettbU0f4DgQtgLdNC70ibBC
-         lK/Ehv7u5BEtVEnpEdZF6c+jdXIq2UTFBgNmFEFhR2dKt5ec+qQty6/Dmj0gkThl8LTh
-         /XVDkNNHvdJhaRRzHFx3w45IZP6adC8/MPVU66BJ8ZdCGpvIBBdpzs3TX3f0vDkuCRSX
-         +BymyRY9VnnzxBQqnNpejZJhjsVSu9bvBq9+GMcZ2UtRlVSvmRTdTIfm2Db+dAZyktGX
-         JQXQRNrIACVJV61C9+SiGGI/N7xv/5h8MVQBneqoHKWQVJnpu2IsAjW7X5rZ2oOUZ/4m
-         GTGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=fNxSfFiY1tuDXOCkxl1KwXHZGTRpS8Bl3VyT4+22yAo=;
-        b=CyWMzrMRgjHMqWp//p+g+V2mUa48DlBc054M6xDN218LN6FwC1crJG37EKaetiMfU+
-         wi4E1dIf3rBRVFIto7rgWsG4Q8bo6uWk+2H3tQOS22zkrVWTb0lJb7d8fkxwy78DCpKV
-         tXZ3TmV9YGqR8bW20oUET6oWxIVbbEWxId4Pu59VGCRwCBoQCR6yscIEJUZQwkCatIYf
-         IlmDimh4SMWnfC+NR78veSGwnGlJfAbDO6QaXFwqdl1ml+xmIU+a0RaHfCi8R8XoAywG
-         lmdt6oFzs1tH2JP/gduCVvUhtKiCW0Ubc5jcserpLSKQM3QenHezdcSkHkBouvWDcWsK
-         sm4g==
-X-Gm-Message-State: AOAM530srJ8GKapvrErirSr1wc1ssToY6dXaa9tKBPT+nen6bAUAmZEZ
-        HHasHLpi6IT+y4DU7PQg0rc=
-X-Google-Smtp-Source: ABdhPJwtA/oSnHx0Arv0mc9TbHEnQGYbVoG5raqyiIQx3CBTlOSm4BqHHLhZxJ02XDVfMRSXGVAX6Q==
-X-Received: by 2002:a17:90b:410d:: with SMTP id io13mr5052761pjb.63.1598438982873;
-        Wed, 26 Aug 2020 03:49:42 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:56a:2197:d2eb:7e49:dfa1:a882])
-        by smtp.gmail.com with ESMTPSA id d127sm2540349pfc.175.2020.08.26.03.49.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 03:49:42 -0700 (PDT)
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-To:     matthias.bgg@gmail.com, robh+dt@kernel.org
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, gene_chen@richtek.com,
-        Wilma.Wu@mediatek.com, shufan_lee@richtek.com,
-        cy_huang@richtek.com, benjamin.chao@mediatek.com
-Subject: [PATCH v4 2/2] dt-bindings: regulator: mt6360: Add DT binding documentation
-Date:   Wed, 26 Aug 2020 18:49:18 +0800
-Message-Id: <1598438958-26802-3-git-send-email-gene.chen.richtek@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598438958-26802-1-git-send-email-gene.chen.richtek@gmail.com>
-References: <1598438958-26802-1-git-send-email-gene.chen.richtek@gmail.com>
+        Wed, 26 Aug 2020 06:50:36 -0400
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 26 Aug
+ 2020 18:50:33 +0800
+Received: from localhost.localdomain (61.148.243.98) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 26 Aug
+ 2020 18:50:32 +0800
+From:   FelixCuioc <FelixCui-oc@zhaoxin.com>
+To:     Joerg Roedel <joro@8bytes.org>, <iommu@lists.linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>, <kbuild@lists.01.org>
+CC:     <kbuild-all@lists.01.org>, <CobeChen-oc@zhaoxin.com>,
+        <RaymondPang-oc@zhaoxin.com>, <TonyWWang-oc@zhaoxin.com>
+Subject: [PATCH v2 0/3] Add support for ACPI device in RMRR to access reserved memory
+Date:   Wed, 26 Aug 2020 06:50:22 -0400
+Message-ID: <20200826105025.3912-1-FelixCui-oc@zhaoxin.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [61.148.243.98]
+X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
+ zxbjmbx1.zhaoxin.com (10.29.252.163)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gene Chen <gene_chen@richtek.com>
+BIOS allocate reserved memory ranges that may be DMA targets.
+BIOS may report each such reserved memory region through the
+RMRR structures,along with the devices that requires access to
+the specified reserved memory region.
 
-Add a devicetree binding documentation for the mt6360 regulator driver.
+The purpose of this series is to achieve ACPI device in RMRR
+access reserved memory.Therefore,it is necessary to increase
+the analysis of acpi device in RMRR and establish a mapping
+for this device.
 
-Signed-off-by: Gene Chen <gene_chen@richtek.com>
----
- .../bindings/regulator/mt6360-regulator.yaml       | 113 +++++++++++++++++++++
- 1 file changed, 113 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mt6360-regulator.yaml
+The first patch adds interfaces for detecting ACPI device in RMRR
+and in order to distinguish it from pci device,some interface
+functions are modified.
 
-diff --git a/Documentation/devicetree/bindings/regulator/mt6360-regulator.yaml b/Documentation/devicetree/bindings/regulator/mt6360-regulator.yaml
-new file mode 100644
-index 0000000..a462d99
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mt6360-regulator.yaml
-@@ -0,0 +1,113 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/regulator/mt6360-regulator.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: MT6360 Regulator from MediaTek Integrated
-+
-+maintainers:
-+  - Gene Chen <gene_chen@richtek.com>
-+
-+description: |
-+  list of regulators provided by this controller, must be named
-+  after their hardware counterparts buck1/2 or ldo1/2/3/5/6/7
-+
-+properties:
-+  compatible:
-+    const: mediatek,mt6360-regulator
-+
-+  LDO_VIN1-supply:
-+    description: Input supply phandle(s) for LDO1/2/3
-+  LDO_VIN2-supply:
-+    description: Input supply phandle(s) for LDO5
-+  LDO_VIN3-supply:
-+    description: Input supply phandle(s) for LDO6/7
-+
-+patternProperties:
-+  "^buck[12]$":
-+    $ref: "regulator.yaml#"
-+
-+  "^ldo[123567]$":
-+    $ref: "regulator.yaml#"
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/regulator/mediatek,mt6360-regulator.h>
-+    regulator {
-+      compatible = "mediatek,mt6360-regulator";
-+      LDO_VIN3-supply = <&BUCK2>;
-+      buck1 {
-+        regulator-compatible = "BUCK1";
-+        regulator-name = "mt6360,buck1";
-+        regulator-min-microvolt = <300000>;
-+        regulator-max-microvolt = <1300000>;
-+        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+             MT6360_OPMODE_LP
-+             MT6360_OPMODE_ULP>;
-+      };
-+      BUCK2: buck2 {
-+        regulator-compatible = "BUCK2";
-+        regulator-name = "mt6360,buck2";
-+        regulator-min-microvolt = <300000>;
-+        regulator-max-microvolt = <1300000>;
-+        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+             MT6360_OPMODE_LP
-+             MT6360_OPMODE_ULP>;
-+      };
-+      ldo6 {
-+        regulator-compatible = "LDO6";
-+        regulator-name = "mt6360,ldo6";
-+        regulator-min-microvolt = <500000>;
-+        regulator-max-microvolt = <2100000>;
-+        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+             MT6360_OPMODE_LP>;
-+      };
-+      ldo7 {
-+        regulator-compatible = "LDO7";
-+        regulator-name = "mt6360,ldo7";
-+        regulator-min-microvolt = <500000>;
-+        regulator-max-microvolt = <2100000>;
-+        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+             MT6360_OPMODE_LP>;
-+      };
-+      ldo1 {
-+        regulator-compatible = "LDO1";
-+        regulator-name = "mt6360,ldo1";
-+        regulator-min-microvolt = <1200000>;
-+        regulator-max-microvolt = <3600000>;
-+        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+             MT6360_OPMODE_LP>;
-+      };
-+        ldo2 {
-+        regulator-compatible = "LDO2";
-+        regulator-name = "mt6360,ldo2";
-+        regulator-min-microvolt = <1200000>;
-+        regulator-max-microvolt = <3600000>;
-+        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+             MT6360_OPMODE_LP>;
-+      };
-+      ldo3 {
-+        regulator-compatible = "LDO3";
-+        regulator-name = "mt6360,ldo3";
-+        regulator-min-microvolt = <1200000>;
-+        regulator-max-microvolt = <3600000>;
-+        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+             MT6360_OPMODE_LP>;
-+      };
-+      ldo5 {
-+        regulator-compatible = "LDO5";
-+        regulator-name = "mt6360,ldo5";
-+        regulator-min-microvolt = <2700000>;
-+        regulator-max-microvolt = <3600000>;
-+        regulator-allowed-modes = <MT6360_OPMODE_NORMAL
-+             MT6360_OPMODE_LP>;
-+      };
-+    };
-+...
+The second patch adds support for probing ACPI device in RMRR.
+In probe_acpi_namespace_devices(),add support for direct mapping
+of ACPI device and add support for physical node of acpi device
+to be NULL.
+
+The last patch adds mutex_unlock(&adev->physical_node_lock)
+before returning in probe_acpi_namespace_devices().
+
+v1->v2:
+   - Split the patch set to small series of patches
+   - Move the processing of physical node of acpi device for NULL
+     to probe_acpi_namespace_devices().
+   - Add mutex_unlock(&adev->physical_node_lock) before returning
+     in probe_acpi_namespace_devices().
+
+
+FelixCuioc (3):
+  iommu/vt-d:Add support for detecting ACPI device in RMRR
+  iommu/vt-d:Add support for probing ACPI device in RMRR
+  iommu/vt-d:Add mutex_unlock() before returning
+
+ drivers/iommu/intel/dmar.c  | 74 ++++++++++++++++++++-----------------
+ drivers/iommu/intel/iommu.c | 50 ++++++++++++++++++++++++-
+ drivers/iommu/iommu.c       |  6 +++
+ include/linux/dmar.h        | 12 +++++-
+ include/linux/iommu.h       |  3 ++
+ 5 files changed, 109 insertions(+), 36 deletions(-)
+
 -- 
-2.7.4
+2.17.1
 
