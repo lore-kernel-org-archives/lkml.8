@@ -2,132 +2,289 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DACAC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFE7206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62D7920707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:11:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jQNvNVHY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lHrcSwx6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgHZBLe (ORCPT
+        id S1726766AbgHZBLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 21:11:34 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:48068 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbgHZBL2 (ORCPT
+        Tue, 25 Aug 2020 21:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48326 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726633AbgHZBL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 25 Aug 2020 21:11:28 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07Q1A691044031;
-        Wed, 26 Aug 2020 01:10:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2020-01-29;
- bh=VWKaRWmTmrlTrbnIky0PuQ3aZ0bL/HrXLsBsMQQqZo4=;
- b=jQNvNVHYVl0Oq89XEgsmuaLNiJpGZJT9brk12EKPFxStCdsik5I4IBEl6Bg/H3NtYf2Z
- cmzX1sVKVAwMR/9dtkl5+JbbWT934jfcpvNxDywlgqCg51YQs0e0n9qAHlHsLQ5ihWaP
- jfDlzlh4U6ZT4v89eaYGfzPPP/w9t5HO2yAgiNyJ1PgteJXcHlLGZW6e7NrjGNIVpSeB
- lU7mwgsqKocBkjf4K5fjzhl9uxqclIjlOPIoYhiqdyWwa04NYvZW7c+F0nPNNYYZ4/rV
- FMmXYE4rJEyLxS6Vur9iT/YFuDO8s0NbT0Q+rWL/Ni1XlHheonNF35vprX/YllYb3zk6 rA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 333w6tv73f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 01:10:55 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07Q1AC7X034251;
-        Wed, 26 Aug 2020 01:10:54 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 333ru8x57n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 01:10:54 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07Q1AnBB002426;
-        Wed, 26 Aug 2020 01:10:49 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 25 Aug 2020 18:10:48 -0700
-Date:   Tue, 25 Aug 2020 21:19:46 -0400
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        mgorman@techsingularity.net, tj@kernel.org,
-        khlebnikov@yandex-team.ru, willy@infradead.org, hannes@cmpxchg.org,
-        lkp@intel.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        cgroups@vger.kernel.org, shakeelb@google.com,
-        iamjoonsoo.kim@lge.com, richard.weiyang@gmail.com,
-        kirill@shutemov.name, alexander.duyck@gmail.com,
-        rong.a.chen@intel.com, mhocko@suse.com, vdavydov.dev@gmail.com,
-        shy828301@gmail.com
-Subject: Re: [PATCH v18 00/32] per memcg lru_lock
-Message-ID: <20200826011946.spknwjt44d2szrdo@ca-dmjordan1.us.oracle.com>
-References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
- <20200824114204.cc796ca182db95809dd70a47@linux-foundation.org>
- <alpine.LSU.2.11.2008241231460.1065@eggly.anvils>
- <20200825015627.3c3pnwauqznnp3gc@ca-dmjordan1.us.oracle.com>
- <ec62a835-f79d-2b8c-99c7-120834703b42@linux.alibaba.com>
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E05C061757
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 18:03:17 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id m23so437802iol.8
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 18:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=95iD9grKs874OZRXLaKmh7iAntQIC8bb1aAQXOrsWwE=;
+        b=lHrcSwx6f+2je3HDnro8+xvQr/Rb/uzaQBMsDxmMIjnAskry1/9NbsY8sqELCe7BXk
+         d0UUA8UTs2blL34Iykm+nzrbCaLn9n7iX1zb/E+Uy7vBiJnnYAEQEq+uo6/C7kzv3LUv
+         ywLStIBD7hnJvAZiHvDaNPOIeJm8c2w3fOd+s6n5jO78HzwQAsivDKegiHNXV2qK8iIP
+         L4Lt+PDM9f1zl+uw0bO10QGvhwuwsDESBbrNqNu4USKl+/eW8PmVoLwYcHeLdh0PdaEv
+         ReZC7rvTY9hs0q9qEqTLIiyJVEAeg7OwfZiarndpdCdn51/Ewy9a5+59W49WOlKpdD20
+         tUfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=95iD9grKs874OZRXLaKmh7iAntQIC8bb1aAQXOrsWwE=;
+        b=UzQ7uFFaJrGnk//B/n49i64XEvEkDuPj6Rlo6WoXbtQjzsHdL4yZgDkGeZDvcs5RVI
+         RXvZOu9HziBy1vSOJwwoYnUaxNv0trTOjsE2srIxGlExzpww0KYIkR4bcSlU0agtmB7X
+         oqqB25n3TOD0FHX+6fvql4586aaUZKSWrrrZcnwiRjVQOlpXPqZ5V6XDimVOxcC5Qyht
+         401AnR1w6NTZAH/6TEKA+SnaW4kTJFsj5wXtQJLZ2H/wnHcUVOAoE/Z0VCfexgbTiDdD
+         pJyxPEoL2e4XxaqzD1mHYHQdGTVty8nB5jTAN7HMeKZsB227dYKfdtD2GrOWyXFxR7Ba
+         jNlw==
+X-Gm-Message-State: AOAM531sI5hJXZ6SnQ6rOrM+h9D0CWh+nQVx0VLxy4gwmAkyprwF9JHG
+        3xInXur4CH5TjBBJVyoNbr6NmcAeMcitkW+6dA==
+X-Google-Smtp-Source: ABdhPJx0STFJXc8n9KRdJxmsoPCIo2ciwcv0Edi29efO7FnJqTlfX7dDYa0Uq9vyNgtqfl6BF4RtXHgi+n0ot/eygxc=
+X-Received: by 2002:a02:730b:: with SMTP id y11mr13196057jab.126.1598403796593;
+ Tue, 25 Aug 2020 18:03:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ec62a835-f79d-2b8c-99c7-120834703b42@linux.alibaba.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
- bulkscore=0 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008260007
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 impostorscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 malwarescore=0 spamscore=0
- priorityscore=1501 clxscore=1015 mlxscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008260006
+References: <20200521200513.656533920@linutronix.de> <20200521202118.796915981@linutronix.de>
+ <f0079706-4cb3-b3e3-9a5e-97aaba0aa0eb@amazon.com> <87a6yj58af.fsf@nanos.tec.linutronix.de>
+ <051182cc-6c90-e48b-d191-8ca004385261@amazon.com> <CALCETrXutDjE5Z6WR+47MJvp3xt4n=EGiF_oEYm88vGvCqUgHA@mail.gmail.com>
+ <b1fdf037-9c11-9f47-f285-e9a0843d648a@amazon.com>
+In-Reply-To: <b1fdf037-9c11-9f47-f285-e9a0843d648a@amazon.com>
+From:   Brian Gerst <brgerst@gmail.com>
+Date:   Tue, 25 Aug 2020 21:03:05 -0400
+Message-ID: <CAMzpN2i3AL3cED-XAo-YmaAD5PhjxfwPs9e0JPPNZOkOpu=9HQ@mail.gmail.com>
+Subject: Re: [patch V9 21/39] x86/irq: Convey vector as argument and not in ptregs
+To:     Alexander Graf <graf@amazon.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        X86 ML <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Jason Chen CJ <jason.cj.chen@intel.com>,
+        Zhao Yakui <yakui.zhao@intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Avi Kivity <avi@scylladb.com>,
+        "Herrenschmidt, Benjamin" <benh@amazon.com>, robketr@amazon.de,
+        amos@scylladb.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 11:26:58AM +0800, Alex Shi wrote:
-> 在 2020/8/25 上午9:56, Daniel Jordan 写道:
-> > Alex, do you have a pointer to the modified readtwice case?
-> 
-> Sorry, no. my developer machine crashed, so I lost case my container and modified
-> case. I am struggling to get my container back from a account problematic repository. 
-> 
-> But some testing scripts is here, generally, the original readtwice case will
-> run each of threads on each of cpus. The new case will run one container on each cpus,
-> and just run one readtwice thead in each of containers.
+On Tue, Aug 25, 2020 at 8:04 PM Alexander Graf <graf@amazon.com> wrote:
+>
+> Hi Andy,
+>
+> On 26.08.20 01:41, Andy Lutomirski wrote:
+> >
+> > On Tue, Aug 25, 2020 at 4:18 PM Alexander Graf <graf@amazon.com> wrote:
+> >>
+> >> Hi Thomas,
+> >>
+> >> On 25.08.20 12:28, Thomas Gleixner wrote:
+> >>> void irq_complete_move(struct irq_cfg *cfg)
+> > {
+> >          __irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
+> > }
+> >
+> >>> Alex,
+> >>>
+> >>> On Mon, Aug 24 2020 at 19:29, Alexander Graf wrote:
+> >>>> I'm currently trying to understand a performance regression with
+> >>>> ScyllaDB on i3en.3xlarge (KVM based VM on Skylake) which we reliably
+> >>>> bisected down to this commit:
+> >>>>
+> >>>>      https://github.com/scylladb/scylla/issues/7036
+> >>>>
+> >>>> What we're seeing is that syscalls such as membarrier() take forever
+> >>>> (0-10 =C2=B5s would be normal):
+> >>> ...
+> >>>> That again seems to stem from a vastly slowed down
+> >>>> smp_call_function_many_cond():
+> >>>>
+> >>>> Samples: 218K of event 'cpu-clock', 4000 Hz
+> >>>> Overhead  Shared Object        Symbol
+> >>>>      94.51%  [kernel]             [k] smp_call_function_many_cond
+> >>>>       0.76%  [kernel]             [k] __do_softirq
+> >>>>       0.32%  [kernel]             [k] native_queued_spin_lock_slowpa=
+th
+> >>>> [...]
+> >>>>
+> >>>> which is stuck in
+> >>>>
+> >>>>           =E2=94=82     csd_lock_wait():
+> >>>>           =E2=94=82             smp_cond_load_acquire(&csd->flags, !=
+(VAL &
+> >>>>      0.00 =E2=94=82       mov    0x8(%rcx),%edx
+> >>>>      0.00 =E2=94=82       and    $0x1,%edx
+> >>>>           =E2=94=82     =E2=86=93 je     2b9
+> >>>>           =E2=94=82     rep_nop():
+> >>>>      0.70 =E2=94=822af:   pause
+> >>>>           =E2=94=82     csd_lock_wait():
+> >>>>     92.82 =E2=94=82       mov    0x8(%rcx),%edx
+> >>>>      6.48 =E2=94=82       and    $0x1,%edx
+> >>>>      0.00 =E2=94=82     =E2=86=91 jne    2af
+> >>>>      0.00 =E2=94=822b9: =E2=86=91 jmp    282
+> >>>>
+> >>>>
+> >>>> Given the patch at hand I was expecting lost IPIs, but I can't quite=
+ see
+> >>>> anything getting lost.
+> >>>
+> >>> I have no idea how that patch should be related to IPI and smp functi=
+on
+> >>> calls. It's changing the way how regular device interrupts and their
+> >>> spurious counterpart are handled and not the way how IPIs are
+> >>> handled. They are handled by direct vectors and do not go through
+> >>> do_IRQ() at all.
+> >>>
+> >>> Aside of that the commit just changes the way how the interrupt vecto=
+r
+> >>> of a regular device interrupt is stored and conveyed. The extra read =
+and
+> >>> write on the cache hot stack is hardly related to anything IPI.
+> >>
+> >> I am as puzzled as you are, but the bisect is very clear: 79b9c183021e
+> >> works fast and 633260fa1 (as well as mainline) shows the weird behavio=
+r
+> >> above.
+> >>
+> >> It gets even better. This small (demonstrative only, mangled) patch on
+> >> top of 633260fa1 also resolves the performance issue:
+> >>
+> >> diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+> >> index c766936..7e91e9a 100644
+> >> --- a/arch/x86/kernel/irq.c
+> >> +++ b/arch/x86/kernel/irq.c
+> >> @@ -239,6 +239,7 @@ __visible void __irq_entry do_IRQ(struct pt_regs
+> >> *regs, unsigned long vector)
+> >>           * lower 8 bits.
+> >>           */
+> >>          vector &=3D 0xFF;
+> >> +       regs->orig_ax =3D ~vector;
+> >>
+> >>          /* entering_irq() tells RCU that we're not quiescent.  Check =
+it. */
+> >>          RCU_LOCKDEP_WARN(!rcu_is_watching(), "IRQ failed to wake up R=
+CU");
+> >>
+> >>
+> >> To me that sounds like some irq exit code somewhere must still be
+> >> looking at orig_ax to decide on something - and that something is wron=
+g
+> >> now that we removed the negation of the vector. It also seems to have =
+an
+> >> impact on remote function calls.
+> >>
+> >> I'll have a deeper look tomorrow again if I can find any such place, b=
+ut
+> >> I wouldn't mind if anyone could point me into the right direction
+> >> earlier :).
+> >
+> > How about this:
+> >
+> > void irq_complete_move(struct irq_cfg *cfg)
+> > {
+> >          __irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
+> > }
+> >
+> > in arch/x86/kernel/apic/vector.c.
+> >
+>
+> Thanks a lot, I stumbled over the same thing just after I sent the email
+> as well and had been trying to see if I can quickly patch it up before I
+> fall asleep :).
+>
+> The code path above is used by the APIC vector move (irqbalance) logic,
+> which explains why not everyone was seeing issues.
+>
+> So with 633260fa1 applied, we never get out of moving state for our IRQ
+> because orig_ax is always -1. That means we send an IPI to the cleanup
+> vector on every single device interrupt, completely occupying the poor
+> CPU that we moved the IRQ from.
+>
+> I've confirmed that the patch below fixes the issue and will send a
+> proper, more complete patch on top of mainline with fancy description
+> and stable tag tomorrow.
+>
+>
+> Alex
+>
+>
+>
+> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
+> index e7434cd..a474e6e 100644
+> --- a/arch/x86/entry/entry_64.S
+> +++ b/arch/x86/entry/entry_64.S
+> @@ -734,7 +734,6 @@ SYM_CODE_START_LOCAL(common_spurious)
+>         call    interrupt_entry
+>         UNWIND_HINT_REGS indirect=3D1
+>         movq    ORIG_RAX(%rdi), %rsi            /* get vector from stack =
+*/
+> -       movq    $-1, ORIG_RAX(%rdi)             /* no syscall to restart =
+*/
+>         call    smp_spurious_interrupt          /* rdi points to pt_regs =
+*/
+>         jmp     ret_from_intr
+>   SYM_CODE_END(common_spurious)
+> @@ -746,7 +745,6 @@ SYM_CODE_START_LOCAL(common_interrupt)
+>         call    interrupt_entry
+>         UNWIND_HINT_REGS indirect=3D1
+>         movq    ORIG_RAX(%rdi), %rsi            /* get vector from stack =
+*/
+> -       movq    $-1, ORIG_RAX(%rdi)             /* no syscall to restart =
+*/
+>         call    do_IRQ                          /* rdi points to pt_regs =
+*/
+>         /* 0(%rsp): old RSP */
+>   ret_from_intr:
+> diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.=
+c
+> index 67768e5443..5b6f74e 100644
+> --- a/arch/x86/kernel/apic/vector.c
+> +++ b/arch/x86/kernel/apic/vector.c
+> @@ -934,7 +934,7 @@ static void __irq_complete_move(struct irq_cfg *cfg,
+> unsigned vector)
+>
+>   void irq_complete_move(struct irq_cfg *cfg)
+>   {
+> -       __irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
+> +       __irq_complete_move(cfg, get_irq_regs()->orig_ax);
+>   }
 
-Ok, what you've sent so far gives me an idea of what you did.  My readtwice
-changes were similar, except I used the cgroup interface directly instead of
-docker and shared a filesystem between all the cgroups whereas it looks like
-you had one per memcg.  30 second runs on 5.9-rc2 and v18 gave 11% more data
-read with v18.  This was using 16 cgroups (32 dd tasks) on a 40 CPU, 2 socket
-machine.
+I think you need to also truncate the vector to 8-bits, since it now
+gets sign-extended when pushed into the orig_ax slot.
 
-> > Even better would be a description of the problem you're having in production
-> > with lru_lock.  We might be able to create at least a simulation of it to show
-> > what the expected improvement of your real workload is.
-> 
-> we are using thousands memcgs in a machine, but as a simulation, I guess above case
-> could be helpful to show the problem.
-
-Using thousands of memcgs to do what?  Any particulars about the type of
-workload?  Surely it's more complicated than page cache reads :)
-
-> > I ran a few benchmarks on v17 last week (sysbench oltp readonly, kerndevel from
-> > mmtests, a memcg-ized version of the readtwice case I cooked up) and then today
-> > discovered there's a chance I wasn't running the right kernels, so I'm redoing
-> > them on v18.
-
-Neither kernel compile nor git checkout in the root cgroup changed much, just
-0.31% slower on elapsed time for the compile, so no significant regressions
-there.  Now for sysbench again.
+--
+Brian Gerst
