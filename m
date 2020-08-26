@@ -2,327 +2,111 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A26ED2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D8072075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SWKOaQWC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xwyGpJ9S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVgL1WzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgHZQIn (ORCPT
+        id S1726858AbgHZQKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45814 "EHLO
+        Wed, 26 Aug 2020 12:10:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726745AbgHZQIa (ORCPT
+        with ESMTP id S1726718AbgHZQJz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:08:30 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 847D9C061574;
-        Wed, 26 Aug 2020 09:08:29 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 16:08:25 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598458106;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7ebq8NKBRgy1Hm9IvsN+cdbSEyXakYm/n0Q5fCvenHE=;
-        b=SWKOaQWCkXiIUwqo+1obVgXwNJ+47v90FpC037JLuL8FQh1lzp9PSJea/bu0cVocDUe/Y3
-        E4MBnd8yrHYTLWszb6jYnBlC1Agay9oW8zXzVzcMD/k7YApYlm9d41X5GkYkFsRGgRRu/A
-        3ryTRyJzefyM9Qbo6bNJAkSlxlyxKXLZwmTrPcvd0+fDIIlDma4m1Al8NTaZneW0mTzqFj
-        H+CL5+0iihaz6by+2FcNxEr0draQ9Tw1yGdjXuTW/hrOX81kJLn7aoBXMdOm0kUIYoSpsa
-        d0w3zlsIK/NQ4EmG0fTd7EfUQ6q9+UijuBDJDN9MJwuoS97FvMpkbsP+Vf3w6g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598458106;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7ebq8NKBRgy1Hm9IvsN+cdbSEyXakYm/n0Q5fCvenHE=;
-        b=xwyGpJ9SBCEPnXDqCqYt9asiUvEKjReK6bTs0ojmksQrY1k3Qdwoj5S+WbeL61oDXG2FxN
-        yoPAjzASMkWynrCA==
-From:   "tip-bot2 for Fenghua Yu" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cache] x86/resctrl: Enable user to view thread or core
- throttling mode
-Cc:     Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <1598296281-127595-3-git-send-email-fenghua.yu@intel.com>
-References: <1598296281-127595-3-git-send-email-fenghua.yu@intel.com>
+        Wed, 26 Aug 2020 12:09:55 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17F4C061574;
+        Wed, 26 Aug 2020 09:09:54 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id l23so2204614edv.11;
+        Wed, 26 Aug 2020 09:09:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=M2MxZIUXPUpmUf6QxK3hAeLX83FtG2l1uckG74gDySM=;
+        b=LVgL1WzYWIpvD7I2Liu6jZDHK9m8clGdyi/splNF9igVB7uUtJEJBZ15e5GRgDMtOE
+         6Th8gEWPmn5l2m4S0n6t0rrMUCY6Q8gwUBg63Ph2YY+QRif9WKC+cQUMdh/vIBSEydHQ
+         zIdX575OJZSeUjw6M9E7H+d2IjSGnpDqgFjPcdrOfG85QRK9a+PrvuEyjIuUwPfqQMSG
+         UnC9orzRbyMDpa0zbHFH4nvwRbhylY9p+X3aVqAHguWIexwBSeQQUrcqYYzw5g4ElSda
+         aVjf78FGAMVwLNKxarR9AbkcnkZ8vF4JLNOOUWK2kjhryzLMz8ptGttY9sY/k545V1Yu
+         7jPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=M2MxZIUXPUpmUf6QxK3hAeLX83FtG2l1uckG74gDySM=;
+        b=WocmhEeAn3HodgNQSOLIlFGHgjOXah4qt1snSFWuihKLMp4B9uEHRVUwrTKPHqJOHc
+         mxOUdNQJKcI/FiLA+mU0ZFrvGGrBYx5qz/5A+may+9Y05nn+egORG7j3CRnX5U4febEY
+         khwBK64YT5t5N2z45k62Ff5DSGZVq6dcZBlK3VuoZrn1PLn+P9MV8R3tTexNVAEITd7z
+         KhJmgoQ0Y2rWPXsx8+khCFB+dM1lvb9stK6tvbL2Kd9B3cJ6Pc2G8uPGFsqDUNfxylTB
+         eCOeB4Ub8iLppJd3Vo4ghDXfrIwvqKT6zYDbzDd2fiqaYr9IeOuFM6ZhS0+N6WTqLcTn
+         3rDA==
+X-Gm-Message-State: AOAM530eZw7uxCz5oEVii0E5H/z4PGp3T1vzkkYSpTxNNKV3gTxPEgOc
+        1Akp0YiJpwzLaB53VkP+vvA=
+X-Google-Smtp-Source: ABdhPJyr2pY6Ky2yatr/El2379cMj7jCE2Z19cx/t1xeCXQHBPZnYJa/14OQIxUzJt7h5dn1UWDaFQ==
+X-Received: by 2002:a50:f403:: with SMTP id r3mr14483693edm.260.1598458193415;
+        Wed, 26 Aug 2020 09:09:53 -0700 (PDT)
+Received: from skbuf ([86.126.22.216])
+        by smtp.gmail.com with ESMTPSA id v5sm2429132ede.13.2020.08.26.09.09.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 09:09:52 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 19:09:50 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Kuldip Dwivedi <kuldip.dwivedi@puresoftware.com>
+Cc:     Mark Brown <broonie@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        Tanveer Alam <tanveer.alam@puresoftware.com>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
+Message-ID: <20200826160950.i3k2oy6w2dlvmj34@skbuf>
+References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
+ <20200821140718.GH4870@sirena.org.uk>
+ <c810740d75f64e308fd362e6c6a5f437@mail.gmail.com>
+ <20200822152118.rlwbcgfk4abjldtg@skbuf>
+ <VE1PR04MB6768699B6D7A507A5BF82F9191540@VE1PR04MB6768.eurprd04.prod.outlook.com>
+ <20200826114758.4agph53ag2fin6um@skbuf>
+ <20200826142312.GH4965@sirena.org.uk>
+ <20200826144744.c4yzgoovk6f4t3id@skbuf>
+ <2e19f8979be4f962045a1597bdbe7886@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <159845810528.389.15030205688555561094.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2e19f8979be4f962045a1597bdbe7886@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cache branch of tip:
+On Wed, Aug 26, 2020 at 08:43:20PM +0530, Kuldip Dwivedi wrote:
+> Just a query, Can't we use meaningful HID for different SoC just like
+> compatible strings in DT ?
+> In this way Silicon parameters can also be added in
+> fsl_dspi_devtype_data structure , which is already exist in driver
 
-Commit-ID:     29b6bd41ee24f69a85666b9f68d500b382d408fd
-Gitweb:        https://git.kernel.org/tip/29b6bd41ee24f69a85666b9f68d500b382d408fd
-Author:        Fenghua Yu <fenghua.yu@intel.com>
-AuthorDate:    Mon, 24 Aug 2020 12:11:21 -07:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Wed, 26 Aug 2020 17:53:22 +02:00
+I don't know, is that the preferred way?
+I don't even know if NXP0005 is made up or if it's written down
+somewhere in the PNP ID registry. NXP0006 seems to be assigned to the
+MDIO controller already, so the list of _HID values for the DSPI
+controller would be discontiguous at best, as well as ever-growing.
+Again, I'm just raising the concern, if somebody comes in and declares
+that as "not a problem", then ok.
+In the ACPI spec there's also a _HRV (Hardware Revision) object, which
+comes as a simple DWORD. We could use acpi_evaluate_integer() to read
+that, and use it as index into the array of fsl_dspi_devtype_data, if
+we declare that as ABI within the driver (and new SoCs would be added
+only at the end of the enum). Then we could use the NXP0005 _HID for
+everything DSPI.
+Again, maybe somebody could chime in and guide us on what's preferable.
 
-x86/resctrl: Enable user to view thread or core throttling mode
-
-Early Intel hardware implementations of Memory Bandwidth Allocation (MBA)
-could only control bandwidth at the processor core level. This meant that
-when two processes with different bandwidth allocations ran simultaneously
-on the same core the hardware had to resolve this difference. It did so by
-applying the higher throttling value (lower bandwidth) to both processes.
-
-Newer implementations can apply different throttling values to each
-thread on a core.
-
-Introduce a new resctrl file, "thread_throttle_mode", on Intel systems
-that shows to the user how throttling values are allocated, per-core or
-per-thread.
-
-On systems that support per-core throttling, the file will display "max".
-On newer systems that support per-thread throttling, the file will display
-"per-thread".
-
-AMD confirmed in [1] that AMD bandwidth allocation is already at thread
-level but that the AMD implementation does not use a memory delay
-throttle mode. So to avoid confusion the thread throttling mode would be
-UNDEFINED on AMD systems and the "thread_throttle_mode" file will not be
-visible.
-
-Originally-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Link: https://lkml.kernel.org/r/1598296281-127595-3-git-send-email-fenghua.yu@intel.com
-Link: [1] https://lore.kernel.org/lkml/18d277fd-6523-319c-d560-66b63ff606b8@amd.com
----
- Documentation/x86/resctrl_ui.rst       | 18 +++++++-
- arch/x86/kernel/cpu/resctrl/core.c     | 11 +++++-
- arch/x86/kernel/cpu/resctrl/internal.h | 30 +++++++++++---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 53 ++++++++++++++++++++++++-
- 4 files changed, 103 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/x86/resctrl_ui.rst b/Documentation/x86/resctrl_ui.rst
-index 5368ced..e59b7b9 100644
---- a/Documentation/x86/resctrl_ui.rst
-+++ b/Documentation/x86/resctrl_ui.rst
-@@ -138,6 +138,18 @@ with respect to allocation:
- 		non-linear. This field is purely informational
- 		only.
- 
-+"thread_throttle_mode":
-+		Indicator on Intel systems of how tasks running on threads
-+		of a physical core are throttled in cases where they
-+		request different memory bandwidth percentages:
-+
-+		"max":
-+			the smallest percentage is applied
-+			to all threads
-+		"per-thread":
-+			bandwidth percentages are directly applied to
-+			the threads running on the core
-+
- If RDT monitoring is available there will be an "L3_MON" directory
- with the following files:
- 
-@@ -364,8 +376,10 @@ to the next control step available on the hardware.
- 
- The bandwidth throttling is a core specific mechanism on some of Intel
- SKUs. Using a high bandwidth and a low bandwidth setting on two threads
--sharing a core will result in both threads being throttled to use the
--low bandwidth. The fact that Memory bandwidth allocation(MBA) is a core
-+sharing a core may result in both threads being throttled to use the
-+low bandwidth (see "thread_throttle_mode").
-+
-+The fact that Memory bandwidth allocation(MBA) may be a core
- specific mechanism where as memory bandwidth monitoring(MBM) is done at
- the package level may lead to confusion when users try to apply control
- via the MBA and then monitor the bandwidth to see if the controls are
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 1c00f2f..9e1712e 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -273,6 +273,12 @@ static bool __get_mem_config_intel(struct rdt_resource *r)
- 	}
- 	r->data_width = 3;
- 
-+	if (boot_cpu_has(X86_FEATURE_PER_THREAD_MBA))
-+		r->membw.throttle_mode = THREAD_THROTTLE_PER_THREAD;
-+	else
-+		r->membw.throttle_mode = THREAD_THROTTLE_MAX;
-+	thread_throttle_mode_init();
-+
- 	r->alloc_capable = true;
- 	r->alloc_enabled = true;
- 
-@@ -293,6 +299,11 @@ static bool __rdt_get_mem_config_amd(struct rdt_resource *r)
- 	r->membw.delay_linear = false;
- 	r->membw.arch_needs_linear = false;
- 
-+	/*
-+	 * AMD does not use memory delay throttle model to control
-+	 * the allocation like Intel does.
-+	 */
-+	r->membw.throttle_mode = THREAD_THROTTLE_UNDEFINED;
- 	r->membw.min_bw = 0;
- 	r->membw.bw_gran = 1;
- 	/* Max value is 2048, Data width should be 4 in decimal */
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index 0b48294..80fa997 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -372,21 +372,38 @@ struct rdt_cache {
- };
- 
- /**
-+ * enum membw_throttle_mode - System's memory bandwidth throttling mode
-+ * @THREAD_THROTTLE_UNDEFINED:	Not relevant to the system
-+ * @THREAD_THROTTLE_MAX:	Memory bandwidth is throttled at the core
-+ *				always using smallest bandwidth percentage
-+ *				assigned to threads, aka "max throttling"
-+ * @THREAD_THROTTLE_PER_THREAD:	Memory bandwidth is throttled at the thread
-+ */
-+enum membw_throttle_mode {
-+	THREAD_THROTTLE_UNDEFINED = 0,
-+	THREAD_THROTTLE_MAX,
-+	THREAD_THROTTLE_PER_THREAD,
-+};
-+
-+/**
-  * struct rdt_membw - Memory bandwidth allocation related data
-  * @min_bw:		Minimum memory bandwidth percentage user can request
-  * @bw_gran:		Granularity at which the memory bandwidth is allocated
-  * @delay_linear:	True if memory B/W delay is in linear scale
-  * @arch_needs_linear:	True if we can't configure non-linear resources
-+ * @throttle_mode:	Bandwidth throttling mode when threads request
-+ *			different memory bandwidths
-  * @mba_sc:		True if MBA software controller(mba_sc) is enabled
-  * @mb_map:		Mapping of memory B/W percentage to memory B/W delay
-  */
- struct rdt_membw {
--	u32		min_bw;
--	u32		bw_gran;
--	u32		delay_linear;
--	bool		arch_needs_linear;
--	bool		mba_sc;
--	u32		*mb_map;
-+	u32				min_bw;
-+	u32				bw_gran;
-+	u32				delay_linear;
-+	bool				arch_needs_linear;
-+	enum membw_throttle_mode	throttle_mode;
-+	bool				mba_sc;
-+	u32				*mb_map;
- };
- 
- static inline bool is_llc_occupancy_enabled(void)
-@@ -607,5 +624,6 @@ void cqm_handle_limbo(struct work_struct *work);
- bool has_busy_rmid(struct rdt_resource *r, struct rdt_domain *d);
- void __check_limbo(struct rdt_domain *d, bool force_free);
- void rdt_domain_reconfigure_cdp(struct rdt_resource *r);
-+void __init thread_throttle_mode_init(void);
- 
- #endif /* _ASM_X86_RESCTRL_INTERNAL_H */
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 78f3be1..b494187 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1027,6 +1027,19 @@ static int max_threshold_occ_show(struct kernfs_open_file *of,
- 	return 0;
- }
- 
-+static int rdt_thread_throttle_mode_show(struct kernfs_open_file *of,
-+					 struct seq_file *seq, void *v)
-+{
-+	struct rdt_resource *r = of->kn->parent->priv;
-+
-+	if (r->membw.throttle_mode == THREAD_THROTTLE_PER_THREAD)
-+		seq_puts(seq, "per-thread\n");
-+	else
-+		seq_puts(seq, "max\n");
-+
-+	return 0;
-+}
-+
- static ssize_t max_threshold_occ_write(struct kernfs_open_file *of,
- 				       char *buf, size_t nbytes, loff_t off)
- {
-@@ -1523,6 +1536,17 @@ static struct rftype res_common_files[] = {
- 		.seq_show	= rdt_delay_linear_show,
- 		.fflags		= RF_CTRL_INFO | RFTYPE_RES_MB,
- 	},
-+	/*
-+	 * Platform specific which (if any) capabilities are provided by
-+	 * thread_throttle_mode. Defer "fflags" initialization to platform
-+	 * discovery.
-+	 */
-+	{
-+		.name		= "thread_throttle_mode",
-+		.mode		= 0444,
-+		.kf_ops		= &rdtgroup_kf_single_ops,
-+		.seq_show	= rdt_thread_throttle_mode_show,
-+	},
- 	{
- 		.name		= "max_threshold_occupancy",
- 		.mode		= 0644,
-@@ -1593,7 +1617,7 @@ static int rdtgroup_add_files(struct kernfs_node *kn, unsigned long fflags)
- 	lockdep_assert_held(&rdtgroup_mutex);
- 
- 	for (rft = rfts; rft < rfts + len; rft++) {
--		if ((fflags & rft->fflags) == rft->fflags) {
-+		if (rft->fflags && ((fflags & rft->fflags) == rft->fflags)) {
- 			ret = rdtgroup_add_file(kn, rft);
- 			if (ret)
- 				goto error;
-@@ -1610,6 +1634,33 @@ error:
- 	return ret;
- }
- 
-+static struct rftype *rdtgroup_get_rftype_by_name(const char *name)
-+{
-+	struct rftype *rfts, *rft;
-+	int len;
-+
-+	rfts = res_common_files;
-+	len = ARRAY_SIZE(res_common_files);
-+
-+	for (rft = rfts; rft < rfts + len; rft++) {
-+		if (!strcmp(rft->name, name))
-+			return rft;
-+	}
-+
-+	return NULL;
-+}
-+
-+void __init thread_throttle_mode_init(void)
-+{
-+	struct rftype *rft;
-+
-+	rft = rdtgroup_get_rftype_by_name("thread_throttle_mode");
-+	if (!rft)
-+		return;
-+
-+	rft->fflags = RF_CTRL_INFO | RFTYPE_RES_MB;
-+}
-+
- /**
-  * rdtgroup_kn_mode_restrict - Restrict user access to named resctrl file
-  * @r: The resource group with which the file is associated.
+Thanks,
+-Vladimir
