@@ -2,169 +2,86 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4BDC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332FDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 079CD2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:53:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skogtun.org header.i=@skogtun.org header.b="ljVfY4RE"
+	by mail.kernel.org (Postfix) with ESMTP id 0E5212078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726856AbgHZUxd (ORCPT
+        id S1726887AbgHZUyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:53:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgHZUxc (ORCPT
+        Wed, 26 Aug 2020 16:54:09 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:22582 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726739AbgHZUyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:53:32 -0400
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26CB2C061574
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:53:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=skogtun.org
-        ; s=ds201912; h=Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:
-        References:Cc:To:Subject:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-        :List-Post:List-Owner:List-Archive;
-        bh=JICICfSzhFTN9gnTi1KJ0e+tPTQlVk7Qx43lqZ7fPPY=; b=ljVfY4REyCnSUkas2cf0fF/1l1
-        fYVsX7HEKI4U6cx1WnLnb9b5NiXJB4Dvcn/lZnoaesZWM6FrIb2KU/cQIWe7cWIHeRoIu0AdH7w+w
-        xIQGrL838UWXYl9cJ26/vy5lYzRxZWJBTOII+29W3Le1joTjVBsieEUTyYpHtdwpEn1FeDpORIxG5
-        L/W7T9kDfh1zWp0E2oP7TxiHXUWFiXNeb7/C1Iw2WtSwTNsieN+g4Zmy9X1Jm/6bENTm2tSoiD8I8
-        G/uI5vDcc7krxYJ2naSBbfFHriQmg0vb25fHeaEINh6z2yfbPkuCekJK7PJPNPAHor9emtPPh2MAL
-        xbnqK6Dw==;
-Received: from [2a01:79c:cebf:7fb0:de97:df61:fecc:46bb] (port=56316)
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <harald@skogtun.org>)
-        id 1kB2QE-0001MU-AL; Wed, 26 Aug 2020 22:53:30 +0200
-Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to
- mainline
-To:     Dave Airlie <airlied@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-References: <20200817161132.GA4711@amd>
- <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
- <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com>
- <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com>
- <20200820092349.GA3792@amd>
- <CAHk-=wjX=ck_u8uvp=PjGCQ3M9igE-yqyRPsJ54th1gQWpwMnA@mail.gmail.com>
- <20200821091900.hzbivycs5ky5d3iw@duo.ucw.cz> <87tuwr59te.fsf@intel.com>
- <7efa547d-b7a4-b873-f1aa-4f19eb849fa3@skogtun.org>
- <CAHk-=wj3WskPCtHncCWLdaP6xVecLp8bDBTT57vyiU-0=Ld6QQ@mail.gmail.com>
- <d4db4a52-3001-cb02-4888-a9dfd55cdd7c@skogtun.org>
- <656b8f9f-d696-c75d-aef6-2b8b5170f2f6@skogtun.org>
- <CAHk-=wiAK=AiqTD47o-BFFZciQXpEC0SiiDnXLWJUcQtCo-Pig@mail.gmail.com>
- <101bff45-0ebd-8fb6-7c99-963aa4fcc588@skogtun.org>
- <CAPM=9twLvHu_XLJ89GVXpNo=PHPZLJuRpHggkfzvvuVf+xrwoA@mail.gmail.com>
-From:   Harald Arnesen <harald@skogtun.org>
-Message-ID: <0f06d704-c14e-0d86-c8bb-8c7b3a34758a@skogtun.org>
-Date:   Wed, 26 Aug 2020 22:53:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 26 Aug 2020 16:54:07 -0400
+X-IronPort-AV: E=Sophos;i="5.76,357,1592863200"; 
+   d="scan'208";a="464849659"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 22:54:06 +0200
+Date:   Wed, 26 Aug 2020 22:54:05 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Denis Efremov <efremov@linux.com>,
+        Bernie Thompson <bernie@plugable.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, kbuild-all@lists.01.org
+Subject: [PATCH] coccinelle: api: fix kobj_to_dev.cocci warnings
+Message-ID: <alpine.DEB.2.22.394.2008262252270.2522@hadrien>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-In-Reply-To: <CAPM=9twLvHu_XLJ89GVXpNo=PHPZLJuRpHggkfzvvuVf+xrwoA@mail.gmail.com>
-Content-Type: multipart/mixed;
- boundary="------------7C9CE45B82D9C27910FABF78"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------7C9CE45B82D9C27910FABF78
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: kernel test robot <lkp@intel.com>
 
-Dave Airlie [26.08.2020 22:47]:
+ Use kobj_to_dev() instead of container_of()
 
-> On Thu, 27 Aug 2020 at 06:44, Harald Arnesen <harald@skogtun.org> wrote:
->>
->> Linus Torvalds [26.08.2020 20:04]:
->>
->> > On Wed, Aug 26, 2020 at 2:30 AM Harald Arnesen <harald@skogtun.org> wrote:
->> >> Somehow related to lightdm or xfce4? However, it is a regression, since
->> >> kernel 5.8 works.
->> > Yeah, apparently there's something else wrong with the relocation changes too.
->> >
->> > That said, does that patch at
->> >
->> >   https://lore.kernel.org/intel-gfx/20200821123746.16904-1-joro@8bytes.org/
->> >
->> > change things at all? If there are two independent bugs, maybe
->> > applying that patch might at least give you an oops that gets saved in
->> > the logs?
->> >
->> > (it might be worth waiting a bit after the machine locks up in case
->> > the machine is alive enough so sync logs after a bit.. If ssh works,
->> > that's obviously better yet)
->>
->> No, doesn't help. And I was wrong, ssh does not work at all when the
->> display locks up.
-> 
-> Did you say what hw you had? is it the same hw as Pavel or different?
-> 
-> Dave.
-> 
+Generated by: scripts/coccinelle/api/kobj_to_dev.cocci
 
-It's a Thinkpad T520.
-Output from 'lspci' attached.
+Fixes: a2fc3718bc22 ("coccinelle: api: add kobj_to_dev.cocci script")
+CC: Denis Efremov <efremov@linux.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
 
--- 
-Hilsen Harald
+---
 
---------------7C9CE45B82D9C27910FABF78
-Content-Type: text/plain; charset=UTF-8;
- name="hw.txt"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="hw.txt"
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/jlawall/linux.git for-5.10
+head:   a2fc3718bc22e85378085568ecc5765fb28cabce
+commit: a2fc3718bc22e85378085568ecc5765fb28cabce [3/3] coccinelle: api: add kobj_to_dev.cocci script
+:::::: branch date: 5 days ago
+:::::: commit date: 5 days ago
 
-MDA6MDAuMCBIb3N0IGJyaWRnZTogSW50ZWwgQ29ycG9yYXRpb24gMm5kIEdlbmVyYXRpb24g
-Q29yZSBQcm9jZXNzb3IgRmFtaWx5IERSQU0gQ29udHJvbGxlciAocmV2IDA5KQowMDowMi4w
-IFZHQSBjb21wYXRpYmxlIGNvbnRyb2xsZXI6IEludGVsIENvcnBvcmF0aW9uIDJuZCBHZW5l
-cmF0aW9uIENvcmUgUHJvY2Vzc29yIEZhbWlseSBJbnRlZ3JhdGVkIEdyYXBoaWNzIENvbnRy
-b2xsZXIgKHJldiAwOSkKMDA6MTYuMCBDb21tdW5pY2F0aW9uIGNvbnRyb2xsZXI6IEludGVs
-IENvcnBvcmF0aW9uIDYgU2VyaWVzL0MyMDAgU2VyaWVzIENoaXBzZXQgRmFtaWx5IE1FSSBD
-b250cm9sbGVyICMxIChyZXYgMDQpCjAwOjE5LjAgRXRoZXJuZXQgY29udHJvbGxlcjogSW50
-ZWwgQ29ycG9yYXRpb24gODI1NzlMTSBHaWdhYml0IE5ldHdvcmsgQ29ubmVjdGlvbiAoTGV3
-aXN2aWxsZSkgKHJldiAwNCkKMDA6MWEuMCBVU0IgY29udHJvbGxlcjogSW50ZWwgQ29ycG9y
-YXRpb24gNiBTZXJpZXMvQzIwMCBTZXJpZXMgQ2hpcHNldCBGYW1pbHkgVVNCIEVuaGFuY2Vk
-IEhvc3QgQ29udHJvbGxlciAjMiAocmV2IDA0KQowMDoxYi4wIEF1ZGlvIGRldmljZTogSW50
-ZWwgQ29ycG9yYXRpb24gNiBTZXJpZXMvQzIwMCBTZXJpZXMgQ2hpcHNldCBGYW1pbHkgSGln
-aCBEZWZpbml0aW9uIEF1ZGlvIENvbnRyb2xsZXIgKHJldiAwNCkKMDA6MWMuMCBQQ0kgYnJp
-ZGdlOiBJbnRlbCBDb3Jwb3JhdGlvbiA2IFNlcmllcy9DMjAwIFNlcmllcyBDaGlwc2V0IEZh
-bWlseSBQQ0kgRXhwcmVzcyBSb290IFBvcnQgMSAocmV2IGI0KQowMDoxYy4xIFBDSSBicmlk
-Z2U6IEludGVsIENvcnBvcmF0aW9uIDYgU2VyaWVzL0MyMDAgU2VyaWVzIENoaXBzZXQgRmFt
-aWx5IFBDSSBFeHByZXNzIFJvb3QgUG9ydCAyIChyZXYgYjQpCjAwOjFjLjMgUENJIGJyaWRn
-ZTogSW50ZWwgQ29ycG9yYXRpb24gNiBTZXJpZXMvQzIwMCBTZXJpZXMgQ2hpcHNldCBGYW1p
-bHkgUENJIEV4cHJlc3MgUm9vdCBQb3J0IDQgKHJldiBiNCkKMDA6MWMuNCBQQ0kgYnJpZGdl
-OiBJbnRlbCBDb3Jwb3JhdGlvbiA2IFNlcmllcy9DMjAwIFNlcmllcyBDaGlwc2V0IEZhbWls
-eSBQQ0kgRXhwcmVzcyBSb290IFBvcnQgNSAocmV2IGI0KQowMDoxZC4wIFVTQiBjb250cm9s
-bGVyOiBJbnRlbCBDb3Jwb3JhdGlvbiA2IFNlcmllcy9DMjAwIFNlcmllcyBDaGlwc2V0IEZh
-bWlseSBVU0IgRW5oYW5jZWQgSG9zdCBDb250cm9sbGVyICMxIChyZXYgMDQpCjAwOjFmLjAg
-SVNBIGJyaWRnZTogSW50ZWwgQ29ycG9yYXRpb24gUU02NyBFeHByZXNzIENoaXBzZXQgTFBD
-IENvbnRyb2xsZXIgKHJldiAwNCkKMDA6MWYuMiBTQVRBIGNvbnRyb2xsZXI6IEludGVsIENv
-cnBvcmF0aW9uIDYgU2VyaWVzL0MyMDAgU2VyaWVzIENoaXBzZXQgRmFtaWx5IDYgcG9ydCBN
-b2JpbGUgU0FUQSBBSENJIENvbnRyb2xsZXIgKHJldiAwNCkKMDA6MWYuMyBTTUJ1czogSW50
-ZWwgQ29ycG9yYXRpb24gNiBTZXJpZXMvQzIwMCBTZXJpZXMgQ2hpcHNldCBGYW1pbHkgU01C
-dXMgQ29udHJvbGxlciAocmV2IDA0KQowMzowMC4wIE5ldHdvcmsgY29udHJvbGxlcjogSW50
-ZWwgQ29ycG9yYXRpb24gQ2VudHJpbm8gVWx0aW1hdGUtTiA2MzAwIChyZXYgMzUpCjBkOjAw
-LjAgU3lzdGVtIHBlcmlwaGVyYWw6IFJpY29oIENvIEx0ZCBQQ0llIFNEWEMvTU1DIEhvc3Qg
-Q29udHJvbGxlciAocmV2IDA4KQowZDowMC4zIEZpcmVXaXJlIChJRUVFIDEzOTQpOiBSaWNv
-aCBDbyBMdGQgUjVDODMyIFBDSWUgSUVFRSAxMzk0IENvbnRyb2xsZXIgKHJldiAwNCkK
---------------7C9CE45B82D9C27910FABF78--
+ udlfb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/video/fbdev/udlfb.c
++++ b/drivers/video/fbdev/udlfb.c
+@@ -1457,7 +1457,7 @@ static ssize_t edid_show(
+ 			struct file *filp,
+ 			struct kobject *kobj, struct bin_attribute *a,
+ 			 char *buf, loff_t off, size_t count) {
+-	struct device *fbdev = container_of(kobj, struct device, kobj);
++	struct device *fbdev = kobj_to_dev(kobj);
+ 	struct fb_info *fb_info = dev_get_drvdata(fbdev);
+ 	struct dlfb_data *dlfb = fb_info->par;
+
+@@ -1479,7 +1479,7 @@ static ssize_t edid_store(
+ 			struct file *filp,
+ 			struct kobject *kobj, struct bin_attribute *a,
+ 			char *src, loff_t src_off, size_t src_size) {
+-	struct device *fbdev = container_of(kobj, struct device, kobj);
++	struct device *fbdev = kobj_to_dev(kobj);
+ 	struct fb_info *fb_info = dev_get_drvdata(fbdev);
+ 	struct dlfb_data *dlfb = fb_info->par;
+ 	int ret;
