@@ -2,123 +2,253 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E23C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:37:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6CAB208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F2A5208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:37:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="kqBVNg1d"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="A37eH+VG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbgHZShn (ORCPT
+        id S1727034AbgHZSh4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:37:43 -0400
-Received: from mail-dm6nam08on2056.outbound.protection.outlook.com ([40.107.102.56]:55777
-        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726767AbgHZShl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:37:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lfLnDEmpdk8reotpQh2cXFAtCRoJo7dOhpbRr4c7XfCZ/INlfrEem2ppaG5Mmdi9LISy3zLQ1Gn1bhboIHKV89/ONpjXQuo3geq1dLd5IciV1tgPxQ6u3QRQgWcIZ5uye+ATMC3n3fPHON80u+SFWjDaJWAbKqw9jCtJuEXCUTxLIH757tHcY8elM/4ysPPeruPzmsoxJBPgE5H696Lwd+CTATVDE17zdGnlUPlPDHSfHVzSU26KDdrz54DVBnUwwbFffRh/+E9Utn9XlJvZjbqslFrK2dXW9IHMtyGxh+OuG9w7AFKIMOQzmCNd9dplYZeOdcTvw3CywSmlsq/jIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dz0P6Mgxt8rW/nrkZWafZcXA50hiUGZxp7RfRfk9+hg=;
- b=Ia/w7xMd/GpXSRrl+JdY0O6SbvbTwyA5aUEThv1afj5sgCjk0UDvK+BQCQl/m6L+naMB0NA5vv8mn6Hyp4wXN6a4SYt4qv7RyE5ZZ1fwe/r6vXdR/9Bjjyeekcm17VpOCtleKz0JfdawahzDYhX17DJDOnRdbYZgY0X+fWGojUQWbyqxXyYqk8JNJVT5QF4DlaeluQBVd3YtDreqiL6d0mcDR+JUwrRRnnR2MQqNB16O+V99JqQ2eHED4ISgmwuCIR/U+kZg/xe4kCahozeXgyQOGeM+O8umiGDFqmstCZap4vQT5Vu4N4YO0W8pWBXIUAT1SUPjwZe02BgO0Juxiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 26 Aug 2020 14:37:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbgHZShy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:37:54 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CAEDC061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 11:37:53 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id m8so1445932pfh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 11:37:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dz0P6Mgxt8rW/nrkZWafZcXA50hiUGZxp7RfRfk9+hg=;
- b=kqBVNg1dGN2INNR3FQNNIFXQ1lyZyqkRduwI2R1zNs5KeVCChMOEYzKDJcRsB6y4RTjD/53Mk1u/76b763iRAdJ30MqMt9wxg9IEGZoYT5jbH5diNDMGZaHKmRrMDqpbcRl567U111zGTWbIxmbQY9bN3fecndj+zbO/RUf+3bA=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR1201MB0188.namprd12.prod.outlook.com (2603:10b6:4:56::12)
- by DM5PR12MB1321.namprd12.prod.outlook.com (2603:10b6:3:78::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Wed, 26 Aug
- 2020 18:37:39 +0000
-Received: from DM5PR1201MB0188.namprd12.prod.outlook.com
- ([fe80::4df1:4ad8:38cd:128c]) by DM5PR1201MB0188.namprd12.prod.outlook.com
- ([fe80::4df1:4ad8:38cd:128c%7]) with mapi id 15.20.3305.026; Wed, 26 Aug 2020
- 18:37:38 +0000
-Subject: Re: [PATCH] ASoC: AMD: Clean kernel log from deferred probe error
- messages
-To:     Mark Brown <broonie@kernel.org>,
-        Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200826111826.3168-1-akshu.agrawal@amd.com>
- <20200826112450.GF4965@sirena.org.uk>
-From:   "Agrawal, Akshu" <aagrawal2@amd.com>
-Message-ID: <09daf99a-de96-f4a3-78fc-62e5871f5cf8@amd.com>
-Date:   Thu, 27 Aug 2020 00:07:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-In-Reply-To: <20200826112450.GF4965@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: BMXPR01CA0065.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:2c::29) To DM5PR1201MB0188.namprd12.prod.outlook.com
- (2603:10b6:4:56::12)
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=HWwMg7wLtO/jS4ZCdT6Z4Slvmcz2bXgfE9LdWuY0+xU=;
+        b=A37eH+VGhA1dwlcHdL7E5ccfC4Ea2FVTSpfG5rZ4zBFEsUJw9bjwDuQpv0SgP/yA9+
+         U/pDImEb/eMS4xmhFGDNMWx3YJM/5lpBoxwZ6JACf8su0Sh3UsF31mjJPPFcE6v+yKK4
+         h35Py9Nt3xAUqspVXJfe+zI4vq211obP43Wzl/A8Rizv4R8UuX1LgU3NogD6r89B4Kwv
+         hX3OxMrAQAQpB0DkbaMtwcHndkL3WVH8rtgv3LTTGxvNas11HtHV8NlJgjTN3+LU2anq
+         4DnE5/3WtHYM97IDxXpR/nYhQHyvBBqmdgN0dpX/REXM7Cnstey9EiPiFKx0jIHpRRU6
+         s7Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=HWwMg7wLtO/jS4ZCdT6Z4Slvmcz2bXgfE9LdWuY0+xU=;
+        b=c7hnPcGlXYRHWIfilZ7uxtIS21sFPszxx2Ktz94omblC/kasJLQSgXQvsdGmuuu41W
+         NcPGpaCLy8zDa7875VIfZLS3xwv3b7sY3Wsh5m5+EXjGqfqdRRsfs46goL46cJ8TJqld
+         xqa8q7LJ+olb5F3/kVyizWCRqQD9MS1Aq+ImxElJAGNpgnBFDJUZLA+oNDm8/mr8HCjD
+         JQCqZbYvn4kyC998Y3SSo2AO6s5AC90qAOkErTaXvAp9MnUKJpo1adhlijgLxRweC7Nq
+         /w6oDQL4+f4+YB97WEeuXYXgm28UgV1XHVj1xYnEaV2BAJ3jjRLpmS/P1PGXxxbkrmQE
+         p3sA==
+X-Gm-Message-State: AOAM5335P5H+bPKLU/IXN42r1qzzu2mMuUMsrEP/6yyAjUX94kSI0BN4
+        3WsKPVU1KMl6mnfK/+2jpxn1SdmQSBhx5g==
+X-Google-Smtp-Source: ABdhPJxcC6THxYL340bBZSG7Z18W6j4yItjG6tdud12IdJv2cFHQ01K/9K0SMbtPyjYHZjMtMNw3BA==
+X-Received: by 2002:a63:342:: with SMTP id 63mr11984354pgd.134.1598467072940;
+        Wed, 26 Aug 2020 11:37:52 -0700 (PDT)
+Received: from arch-ashland-svkelley ([2601:1c0:6a00:1804:88d3:6720:250a:6d10])
+        by smtp.gmail.com with ESMTPSA id j14sm3033847pgj.3.2020.08.26.11.37.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 11:37:52 -0700 (PDT)
+Message-ID: <faa5535d194d0238217aaed118d1db40e841ee3a.camel@intel.com>
+Subject: Re: [PATCH V2 3/9] PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs
+ associated with RCEC
+From:   sean.v.kelley@intel.com
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>, bhelgaas@google.com,
+        Jonathan.Cameron@huawei.com, rjw@rjwysocki.net,
+        ashok.raj@intel.com, tony.luck@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Date:   Wed, 26 Aug 2020 11:37:27 -0700
+In-Reply-To: <139d4c34-7e5e-8867-a016-4a5bc737b804@linux.intel.com>
+References: <20200804194052.193272-1-sean.v.kelley@intel.com>
+         <20200804194052.193272-4-sean.v.kelley@intel.com>
+         <139d4c34-7e5e-8867-a016-4a5bc737b804@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4 
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BMXPR01CA0065.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:2c::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 18:37:34 +0000
-X-Originating-IP: [165.204.159.242]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7c4be7be-0346-4ec5-ee86-08d849ef1bd4
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1321:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB132130DE05B9311B7351B792F8540@DM5PR12MB1321.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HTi0DhX0EGxc3EKL/gbBursMmglNDYl0i46OGW4tWv1HblYTkjywjTUkREjfFRbeok9XLJhgg1Eta7hsuxpB3GKjCSr/qqrpWkgHRWIhSF0m+YowD0qelzid3TANmJl+J/lWsJ91pM7A7V2EqCBh1twSP0Kj2jLbs+kxxeDUBuxAQkGYZb0Z0VewRFIAk6jZ6rayPczMtBteSuatKYJXEP1cFdolK4z4MjUM4/fRiySProg+dvJPyhW8cEom51HXAqBAyT5WVQjHJTUNStAjqYgwfFo5E7tEOzMLPuhH7+3C0rLhMnBbPZTWl0mcn4O/J9JRS5AL5SqonZzk/39F2eRGtTufKP36PwKrvQ9c5BFrL69WY9takaH8N6J3nbrk
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(376002)(366004)(396003)(346002)(52116002)(2616005)(186003)(316002)(8676002)(956004)(16576012)(8936002)(66946007)(66476007)(83380400001)(110136005)(66556008)(4326008)(36756003)(15650500001)(6636002)(478600001)(53546011)(4744005)(5660300002)(6666004)(31696002)(26005)(2906002)(31686004)(54906003)(6486002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: MDR6/CFklsjxTL5bYV00to/31yIrH0FgY1Tj3YkLGDgSQSuXks8im835VgS+fYnezWYpiF2gk//6be/2m2HgtYfoYm2naOB9gH+PoHegpCvXEj9NuyhrdgdSTovaVosadgAe2G4+VtFTCoF3OkbBTmYNmkyWIPNRAgIox+6SLIdISoW46qHTpm4Plg60n2ruWaHT26uiVgfZWPtsY0Je84a6hEET/WKYp6CEKQvkcGmjjUhKnCu0NH/+zDYGFhrCS+ensG582ludK3pYVGT1qj1wmFYemogUGfRljE51rpW1N3w1n+08gl/RPuPfsdH3AQziFdLOCqJhWTg5qgbieHfXUrAI3QjRH8tS2Hb+1qgGQyRl1LPbSW+Lloq9ZHAuYRbomc9j8BDZTxoyO8d5nSvdmdAh2ioOP+GKgbNK0KvOiP5jcCQAHt/kQtWK+ANyhdyKkVN/GEk83hnkoM5nZFZINNieYZWGYILmdWCz4zc5js7SZegqw2m+DTggox2oeEBNn1A8cB8O5qItoKLo69zFGn92V4qJJDdCnmj2ilk9yeVnEHjtDBx86W3XAM44+Z7Rb+GgxIa4V7ocsC37eDTgUxEptD2ivLWceOXIRnCAoMLQw9lmZTf/24oEIs6SdM/Mgmf3t/DvjzjFXbNR/g==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c4be7be-0346-4ec5-ee86-08d849ef1bd4
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR1201MB0188.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 18:37:38.8964
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xNmJj/+R/VNzyUdqfc4fYPu/t3m6ftPiuBeJA3VtQyaTncWWSiSjuCybxbByE4vRrIRnd/gpYXvfFcio/LiAow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1321
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sathya,
 
-On 8/26/2020 4:54 PM, Mark Brown wrote:
-> On Wed, Aug 26, 2020 at 04:48:05PM +0530, Akshu Agrawal wrote:
->> While the driver waits for DAIs to be probed and retries probing,
->> avoid printing error messages.
-> This means that if there is a problem with deferred probe no diagnostics
-> will be available, there should be something at least at debug level.
 
-Sure will add a message at debug level for deferred probe.
+On Wed, 2020-08-26 at 09:20 -0700, Kuppuswamy, Sathyanarayanan wrote:
+> 
+> On 8/4/20 12:40 PM, Sean V Kelley wrote:
+> > From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> > 
+> > When an RCEC device signals error(s) to a CPU core, the CPU core
+> > needs to walk all the RCiEPs associated with that RCEC to check
+> > errors. So add the function pcie_walk_rcec() to walk all RCiEPs
+> > associated with the RCEC device.
+> I think its better if you merge the usage patch and API
+> (pcie_walk_rcec) patch together.
 
-Thanks,
-Akshu
+Good suggestion, I'll have a look to see if that works well merged.
+
+> 
+> Did you not get unused function warning with this patch?
+
+The latest patches are below (v3) and they were built on top of
+pci/master (prior to the release of 5.9.0-rc1 btw).  I did not get a
+warning with that but will double check...
+
+https://lore.kernel.org/linux-pci/20200812164659.1118946-1-sean.v.kelley@intel.com/
+
+Thanks!
+
+Sean
+
+Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+> > Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> > Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >   drivers/pci/pcie/portdrv.h      |  2 +
+> >   drivers/pci/pcie/portdrv_core.c | 82
+> > +++++++++++++++++++++++++++++++++
+> >   2 files changed, 84 insertions(+)
+> > 
+> > diff --git a/drivers/pci/pcie/portdrv.h
+> > b/drivers/pci/pcie/portdrv.h
+> > index af7cf237432a..c11d5ecbad76 100644
+> > --- a/drivers/pci/pcie/portdrv.h
+> > +++ b/drivers/pci/pcie/portdrv.h
+> > @@ -116,6 +116,8 @@ void pcie_port_service_unregister(struct
+> > pcie_port_service_driver *new);
+> >   
+> >   extern struct bus_type pcie_port_bus_type;
+> >   int pcie_port_device_register(struct pci_dev *dev);
+> > +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev
+> > *, void *),
+> > +		    void *userdata);
+> >   #ifdef CONFIG_PM
+> >   int pcie_port_device_suspend(struct device *dev);
+> >   int pcie_port_device_resume_noirq(struct device *dev);
+> > diff --git a/drivers/pci/pcie/portdrv_core.c
+> > b/drivers/pci/pcie/portdrv_core.c
+> > index 5d4a400094fc..daa2dfa83a0b 100644
+> > --- a/drivers/pci/pcie/portdrv_core.c
+> > +++ b/drivers/pci/pcie/portdrv_core.c
+> > @@ -14,6 +14,7 @@
+> >   #include <linux/pm_runtime.h>
+> >   #include <linux/string.h>
+> >   #include <linux/slab.h>
+> > +#include <linux/bitops.h>
+> >   #include <linux/aer.h>
+> >   
+> >   #include "../pci.h"
+> > @@ -365,6 +366,87 @@ int pcie_port_device_register(struct pci_dev
+> > *dev)
+> >   	return status;
+> >   }
+> >   
+> > +static int pcie_walk_rciep_devfn(struct pci_bus *pbus, int
+> > (*cb)(struct pci_dev *, void *),
+> > +				 void *userdata, unsigned long bitmap)
+> > +{
+> > +	unsigned int dev, fn;
+> > +	struct pci_dev *pdev;
+> > +	int retval;
+> > +
+> > +	for_each_set_bit(dev, &bitmap, 32) {
+> > +		for (fn = 0; fn < 8; fn++) {
+> > +			pdev = pci_get_slot(pbus, PCI_DEVFN(dev, fn));
+> > +
+> > +			if (!pdev || pci_pcie_type(pdev) !=
+> > PCI_EXP_TYPE_RC_END)
+> > +				continue;
+> > +
+> > +			retval = cb(pdev, userdata);
+> > +			if (retval)
+> > +				return retval;
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/**
+> > + * pcie_walk_rcec - Walk RCiEP devices associating with RCEC and
+> > call callback.
+> > + * @rcec     RCEC whose RCiEP devices should be walked.
+> > + * @cb       Callback to be called for each RCiEP device found.
+> > + * @userdata Arbitrary pointer to be passed to callback.
+> > + *
+> > + * Walk the given RCEC. Call the provided callback on each RCiEP
+> > device found.
+> > + *
+> > + * We check the return of @cb each time. If it returns anything
+> > + * other than 0, we break out.
+> > + */
+> > +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev
+> > *, void *),
+> > +		    void *userdata)
+> > +{
+> > +	u32 pos, bitmap, hdr, busn;
+> > +	u8 ver, nextbusn, lastbusn;
+> > +	struct pci_bus *pbus;
+> > +	unsigned int bnr;
+> > +
+> > +	pos = pci_find_ext_capability(rcec, PCI_EXT_CAP_ID_RCEC);
+> > +	if (!pos)
+> > +		return;
+> > +
+> > +	pbus = pci_find_bus(pci_domain_nr(rcec->bus), rcec->bus-
+> > >number);
+> > +	if (!pbus)
+> > +		return;
+> > +
+> > +	pci_read_config_dword(rcec, pos + PCI_RCEC_RCIEP_BITMAP,
+> > &bitmap);
+> > +
+> > +	/* Find RCiEP devices on the same bus as the RCEC */
+> > +	if (pcie_walk_rciep_devfn(pbus, cb, userdata, (unsigned
+> > long)bitmap))
+> > +		return;
+> > +
+> > +	/* Check whether RCEC BUSN register is present */
+> > +	pci_read_config_dword(rcec, pos, &hdr);
+> > +	ver = PCI_EXT_CAP_VER(hdr);
+> > +	if (ver < PCI_RCEC_BUSN_REG_VER)
+> > +		return;
+> > +
+> > +	pci_read_config_dword(rcec, pos + PCI_RCEC_BUSN, &busn);
+> > +	nextbusn = PCI_RCEC_BUSN_NEXT(busn);
+> > +	lastbusn = PCI_RCEC_BUSN_LAST(busn);
+> > +
+> > +	/* All RCiEP devices are on the same bus as the RCEC */
+> > +	if (nextbusn == 0xff && lastbusn == 0x00)
+> > +		return;
+> > +
+> > +	for (bnr = nextbusn; bnr <= lastbusn; bnr++) {
+> > +		pbus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
+> > +		if (!pbus)
+> > +			continue;
+> > +
+> > +		/* Find RCiEP devices on the given bus */
+> > +		if (pcie_walk_rciep_devfn(pbus, cb, userdata,
+> > 0xffffffff))
+> > +			return;
+> > +	}
+> > +}
+> > +
+> >   #ifdef CONFIG_PM
+> >   typedef int (*pcie_pm_callback_t)(struct pcie_device *);
+> >   
+> > 
 
