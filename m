@@ -2,86 +2,84 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE2CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3594AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A51F82080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121172080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730150AbgHZNPb (ORCPT
+        id S1730174AbgHZNQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:15:31 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44303 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729177AbgHZNP2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:15:28 -0400
-Received: by mail-lj1-f194.google.com with SMTP id g6so2278339ljn.11;
-        Wed, 26 Aug 2020 06:15:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=f/nPRgHC0iGFykXQ1veAuL/EAakIUq9/Zg/UORe3DVo=;
-        b=ZfgII+nubV6VFC5S9VlSTQf0+5gEAae6S0Kq3K8S67Fa5yzY8IwcMpbvex/dVNqhyx
-         EKwrEPL6EI30MZZRfQ2844SAZ2xNFU9eL1WP80sOEBZTrDXdrOZHj3IJP6m/7+uu/t3+
-         MlJqAf2yoh26MTg25Szc5EPvNAxhxqTLyTC3fRqghyDQr7BjT/vOQzLUnBimfXfwAnd1
-         xCXQ2whsdVCI9XTwWtwJbdO6f21Ja2Hv3HhUFohXcyKObXn+SjdljIhfGN5wsPZJkMLW
-         Lj1ZXZJPgf3lMSZkKly1wIAFboYUzeaHn5v7uURyZ5nsO4tthzjhwCJjjHbsXJMyyqon
-         a9WQ==
-X-Gm-Message-State: AOAM532YSg6DRtW70bxkccC1vb0SAyk/ERqpVGdwu+LBjJv4jatkdad5
-        2mp1isPuR094lzE3Cbo+SUvGSr7tUJA=
-X-Google-Smtp-Source: ABdhPJz7jT67Fc/sgQR58BoX7ag/DyxVE8rLkkDR/Zi2YcfjbLUVL6Yj5ZMEtRBXxf5+swH7Q6cR0w==
-X-Received: by 2002:a2e:85a:: with SMTP id g26mr7096722ljd.60.1598447726234;
-        Wed, 26 Aug 2020 06:15:26 -0700 (PDT)
-Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
-        by smtp.googlemail.com with ESMTPSA id r11sm503320ljk.46.2020.08.26.06.15.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 06:15:25 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: inside-secure - use kfree_sensitive()
-Date:   Wed, 26 Aug 2020 16:15:14 +0300
-Message-Id: <20200826131515.397667-1-efremov@linux.com>
-X-Mailer: git-send-email 2.26.2
+        Wed, 26 Aug 2020 09:16:24 -0400
+Received: from mga18.intel.com ([134.134.136.126]:7576 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729177AbgHZNQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:16:23 -0400
+IronPort-SDR: XX3+JDuVw15eJTYxVi53cVFFpjhoZ+bzppdrwhD/wx4xZHBL9WHVw005OesBM9pIEA3WZFwyjo
+ TRdqNpzhGHBQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="143949317"
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="143949317"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 06:16:22 -0700
+IronPort-SDR: NWV84qiBbzuGF6u+v34yNbY3wZEIE7Blm4wTVprLCU/eHyE7uHEVhGWI5MfL1TLAgkvLGnUV5/
+ KLQkSKGbq0Pg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="499719031"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Aug 2020 06:16:22 -0700
+Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.186])
+        by linux.intel.com (Postfix) with ESMTP id 4FAC05806C4;
+        Wed, 26 Aug 2020 06:16:20 -0700 (PDT)
+Message-ID: <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
+Subject: Re: [PATCH] intel_idle: Add ICL support
+From:   Artem Bityutskiy <dedekind1@gmail.com>
+Reply-To: dedekind1@gmail.com
+To:     Guilhem Lettron <guilhem@barpilot.io>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Wed, 26 Aug 2020 16:16:19 +0300
+In-Reply-To: <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
+References: <20200826120421.44356-1-guilhem@barpilot.io>
+         <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
+         <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kfree_sensitive() instead of open-coding it.
+On Wed, 2020-08-26 at 15:03 +0200, Guilhem Lettron wrote:
+> On Wed, 26 Aug 2020 at 14:43, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > On Wed, Aug 26, 2020 at 2:05 PM Guilhem Lettron <guilhem@barpilot.io> wrote:
+> > > Use the same C-states as SKL
+> > 
+> > Why is this change needed?
+> 
+> On my laptop, a Dell XPS 13 7390 2-in-1 with i7-1065G7, ACPI only
+> report "C1_ACPI", "C2_ACPI" and "C3_ACPI".
 
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- drivers/crypto/inside-secure/safexcel_hash.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Also, if you could runt turbostat - we could see which _actual_ HW C-
+states are used on your system, which Package C-states are reached.
 
-diff --git a/drivers/crypto/inside-secure/safexcel_hash.c b/drivers/crypto/inside-secure/safexcel_hash.c
-index 16a467969d8e..5ffdc1cd5847 100644
---- a/drivers/crypto/inside-secure/safexcel_hash.c
-+++ b/drivers/crypto/inside-secure/safexcel_hash.c
-@@ -1082,8 +1082,7 @@ static int safexcel_hmac_init_pad(struct ahash_request *areq,
- 		}
- 
- 		/* Avoid leaking */
--		memzero_explicit(keydup, keylen);
--		kfree(keydup);
-+		kfree_sensitive(keydup);
- 
- 		if (ret)
- 			return ret;
--- 
-2.26.2
+Just get a reasonably new turbostat (it is part of the kernel tree, you
+can compile it yourself) and run it for few seconds (like 'turbostat
+sleep 10'), get the output (will be a lot of it), and we can check what
+is actually going on with regards to C-states.
+
+Artem.
 
