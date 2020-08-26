@@ -2,191 +2,189 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E356C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42EAC20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 353C62075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="R+7brwVT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mppDhYaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgHZCrt (ORCPT
+        id S1726923AbgHZCry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 22:47:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34834 "EHLO
+        Tue, 25 Aug 2020 22:47:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbgHZCrp (ORCPT
+        with ESMTP id S1726793AbgHZCrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 22:47:45 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F766C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 19:47:45 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l191so310188pgd.5
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 19:47:45 -0700 (PDT)
+        Tue, 25 Aug 2020 22:47:22 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C074C061756
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 19:47:22 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id i13so202140pjv.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 19:47:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZaSYpexlLvPxI84HazJndvbg5he7BW+IBJD7sKq5YvY=;
-        b=R+7brwVTpmWlsuyGRZDJ/+/lbCauCWfnMnCJ9PH2BLBG9wwLqhHe9bnQaykWJBdJwT
-         n+Mq/8UHBgyOZGF5ALc2qyohMfy4V6lbqDSCGVkpVRlMYSoVltdLbvXpCz1kCJ8rTytM
-         KIQhrZ4/Kgsy6a9a5/adTTZRoEmK74MeyMwnZsZsX3RqufYk4bv5vmkTJEypJTua//fh
-         NukZgNfJ8lkprjRC1OIA4RSnBnrTyMGyZcWdtHlfpCgSCZ+p/97Tv2mL3MPDk/70bITQ
-         uM9YKxlu3h+x+MghVoLUSptRaosHVQbAXAvHYyIVVNBw6rzUpNfn9IvZTzWUI5+WS3WH
-         5P8g==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=+81M+5ubnzDMjyN4QTZe5AhV0wGuqG7N73aNQeiHN8w=;
+        b=mppDhYaFVslwHAJAJY+tTvBBwNvzNUiAGJZD6EiLHU+gCuKJM5v+KjBS92ThxJewEt
+         6sKu5+sjvq8jkbJdwU+C2Z6agR4g0V8FbX46O6K9khgrpTAuOriLghWyuF2jZyKbJRvH
+         5dDNPP59EcQRedRF0x6PSPiijV4nRT3As0wrc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZaSYpexlLvPxI84HazJndvbg5he7BW+IBJD7sKq5YvY=;
-        b=jFgGhqeGJcm6698/3c76ZaBqraXv0vqCJvWOUVctaHA3wm7aMmISui+iT0D3Uq1VDM
-         /svsVmHreHzsmm5uMsKrMk3TlXRQV3DB44x9OiyCwXWZoNC3XjQEmO7z83Sf2nkR/Kzz
-         o3pFOgQDGFRbwu7z28QCBaqC2bNPrYyCD6CSpFwhuEMafCGZuIlmFzVaSOg4kYNO7PQz
-         f2Ypuk6uqaGOp4R4NhJHhpZ8ao7fVzyJPVyoChWAMX/HtuyGQdTW3QfkPg1fGJroLOUq
-         HrxteIGIS5rqQyb7xmGktjrTo4kKjK7I6rAU6hcL+uENgojhjhelef6cCZLWr05brKJQ
-         vwGw==
-X-Gm-Message-State: AOAM531rRgiVCJl5U8TuYg9t3hRjRPSYNSBw2AWPNtU4wsdb0h6vfU4o
-        08b3qsuW3kJsjPI4HeUboZwlN3fHvBUD2n78xJgznw==
-X-Google-Smtp-Source: ABdhPJyYvSOaJYXBWmv4cag3NWnxpTjnIegW2oU0cKZ/3pkPBFG99egp09QHEhqO35GsF5jmAY9I39VgYEZurzmSgJE=
-X-Received: by 2002:a63:5515:: with SMTP id j21mr8597942pgb.31.1598410064864;
- Tue, 25 Aug 2020 19:47:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=+81M+5ubnzDMjyN4QTZe5AhV0wGuqG7N73aNQeiHN8w=;
+        b=jVy3OxrbdyN3e4Dikk0w76vWTmxg967+P1h/kqVk2xUXvucVGZ+q8y//v0pejuLpmt
+         9UZaDP4PtAv3eMqishP/c1A0ZJwADsvnTKY8PcrQi2XCaoz31jXe2e1LdMWp9jgWjGNp
+         WfGkIp1l71mnhAkEiuf6z78HkeoiTd3wVFGUDbJniRaexPk8XRhaXsNsjsTfyOxTuFsk
+         Z3odrRzeODxgA5sDXb5RIwswxaQgMrELBqK+QDry4yQehrtxeO3EpvQdIFBW8Al+LgCc
+         VYHJ83hczgMwzmG/Q6ZmdO31O+MDLCy3f0ZHeWo3KABIGISuHG/gMFt2vZDshuSAvffL
+         GpXw==
+X-Gm-Message-State: AOAM5317rYZ1EXH43Cdn4p7f9tzYIEHRChAEDUSRX6eTcrR2mINvf7nK
+        5ec6fU6KuwL5Jxdndt+ZMwdW6w==
+X-Google-Smtp-Source: ABdhPJz2mRi6tx1V7iq+gfvGCmNNBSCRFRY84hNrOFUOXkLT7+lijx0gQXO6sIK/CntAnN+K2Hx37w==
+X-Received: by 2002:a17:90a:d904:: with SMTP id c4mr3932494pjv.145.1598410041609;
+        Tue, 25 Aug 2020 19:47:21 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id u65sm684381pfb.102.2020.08.25.19.47.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Aug 2020 19:47:21 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@chromium.org>
+Subject: [PATCH v1 7/9] phy: qcom-qmp: Add support for sc7180 DP phy
+Date:   Tue, 25 Aug 2020 19:47:09 -0700
+Message-Id: <20200826024711.220080-8-swboyd@chromium.org>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+In-Reply-To: <20200826024711.220080-1-swboyd@chromium.org>
+References: <20200826024711.220080-1-swboyd@chromium.org>
 MIME-Version: 1.0
-References: <20200822095328.61306-1-songmuchun@bytedance.com>
- <20200824135924.b485e000d358cee817c4f05c@linux-foundation.org>
- <79800508-54c9-4cda-02de-29b1a6912e75@oracle.com> <CAMZfGtXh+FP0O92ccj532Y=K4m2S==eSK8LjYEM+p6cttV0p8Q@mail.gmail.com>
- <231ec1f1-fe7a-c48a-2427-1311360d4b9b@oracle.com>
-In-Reply-To: <231ec1f1-fe7a-c48a-2427-1311360d4b9b@oracle.com>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Wed, 26 Aug 2020 10:47:08 +0800
-Message-ID: <CAMZfGtWj5_Uh2KFAy4DGc0vzrNm4+Nge7rOBDAFQhh2aN7wOqA@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] mm/hugetlb: Fix a race between hugetlb
- sysctl handlers
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, ak@linux.intel.com,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 8:03 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->
-> On 8/24/20 8:01 PM, Muchun Song wrote:
-> > On Tue, Aug 25, 2020 at 5:21 AM Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> >>
-> >> I too am looking at this now and do not completely understand the race.
-> >> It could be that:
-> >>
-> >> hugetlb_sysctl_handler_common
-> >> ...
-> >>         table->data = &tmp;
-> >>
-> >> and, do_proc_doulongvec_minmax()
-> >> ...
-> >>         return __do_proc_doulongvec_minmax(table->data, table, write, ...
-> >> with __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, ...
-> >> ...
-> >>         i = (unsigned long *) data;
-> >>         ...
-> >>                 *i = val;
-> >>
-> >> So, __do_proc_doulongvec_minmax can be dereferencing and writing to the pointer
-> >> in one thread when hugetlb_sysctl_handler_common is setting it in another?
-> >
-> > Yes, you are right.
-> >
-> >>
-> >> Another confusing part of the message is the stack trace which includes
-> >> ...
-> >>      ? set_max_huge_pages+0x3da/0x4f0
-> >>      ? alloc_pool_huge_page+0x150/0x150
-> >>
-> >> which are 'downstream' from these routines.  I don't understand why these
-> >> are in the trace.
-> >
-> > I am also confused. But this issue can be reproduced easily by letting more
-> > than one thread write to `/proc/sys/vm/nr_hugepages`. With this patch applied,
-> > the issue can not be reproduced and disappears.
->
-> There certainly is an issue here as one thread can modify data in another.
-> However, I am having a hard time seeing what causes the 'kernel NULL pointer
-> dereference'.
+Add the necessary compatible strings and phy data for the sc7180 USB3+DP
+combo phy.
 
-If you write 0 to '/proc/sys/vm/nr_hugepages', you will get the
-    kernel NULL pointer dereference, address: 0000000000000000
+Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
+Cc: Chandan Uddaraju <chandanu@codeaurora.org>
+Cc: Vara Reddy <varar@codeaurora.org>
+Cc: Tanmay Shah <tanmay@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Manu Gautam <mgautam@codeaurora.org>
+Cc: Sandeep Maheswaram <sanm@codeaurora.org>
+Cc: Douglas Anderson <dianders@chromium.org>
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Jonathan Marek <jonathan@marek.ca>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@chromium.org>
+Link: https://lore.kernel.org/r/20200609034623.10844-1-tanmay@codeaurora.org
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 47 +++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-If you write 1024 to '/proc/sys/vm/nr_hugepages', you will get the
-    kernel NULL pointer dereference, address: 0000000000000400
-
-The address of dereference is the value which you write to the
-'/proc/sys/vm/nr_hugepages'.
-
->
-> I tried to reproduce the issue myself but was unsuccessful.  I have 16 threads
-> writing to /proc/sys/vm/nr_hugepages in an infinite loop.  After several hours
-> running, I did not hit the issue.  Just curious, what architecture is the
-> system?  any special config or compiler options?
->
-> If you can easily reproduce, can you post the detailed oops message?
->
-> The 'NULL pointer' seems strange because after the first assignment to
-> table->data the value should never be NULL.  Certainly it can be modified
-> by another thread, but I can not see how it can be NULL.  At the beginning
-> of __do_proc_doulongvec_minmax, there is a check for NULL pointer with:
-
-CPU0:                                     CPU1:
-                                          proc_sys_write
-hugetlb_sysctl_handler                      proc_sys_call_handler
-hugetlb_sysctl_handler_common                 hugetlb_sysctl_handler
-  table->data = &tmp;                           hugetlb_sysctl_handler_common
-                                                  table->data = &tmp;
-    proc_doulongvec_minmax
-      do_proc_doulongvec_minmax             sysctl_head_finish
-        __do_proc_doulongvec_minmax
-          i = table->data;
-          *i = val;     // corrupt CPU1 stack
-
-If the val is 0, you will see the NULL.
-
->
->         if (!data || !table->maxlen || !*lenp || (*ppos && !write)) {
->                 *lenp = 0;
->                 return 0;
->         }
->
-> I looked at the code my compiler produced for __do_proc_doulongvec_minmax.
-> It appears to use the same value/register for the pointer throughout the
-> routine.  IOW, I do not see how the pointer can be NULL for the assignment
-> when the routine does:
->
->                         *i = val;
->
-> Again, your analysis/patch points out a real issue.  I just want to get
-> a better understanding to make sure there is not another issue causing
-> the NULL pointer dereference.
-
-Below is my test script. There are 8 threads to execute the following script.
-In my qemu, it is easy to panic. Thanks.
-
-#!/bin/sh
-
-while :
-do
-        echo 128 > /proc/sys/vm/nr_hugepages
-        echo 0 > /proc/sys/vm/nr_hugepages
-done
-
-> --
-> Mike Kravetz
-
-
-
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index dd77c7dfa310..84fba3437a20 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -1071,6 +1071,24 @@ static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl_hbr3[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE0, 0x06),
+ };
+ 
++static const struct qmp_phy_init_tbl qmp_v3_dp_tx_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TRANSCEIVER_BIAS_EN, 0x1a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_VMODE_CTRL1, 0x40),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_PRE_STALL_LDO_BOOST_EN, 0x30),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_INTERFACE_SELECT, 0x3d),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_CLKBUF_ENABLE, 0x0f),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RESET_TSYNC_EN, 0x03),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TRAN_DRVR_EMP_EN, 0x03),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_PARRATE_REC_DETECT_IDLE_EN, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_INTERFACE_MODE, 0x00),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_BAND, 0x4),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_POL_INV, 0x0a),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_DRV_LVL, 0x38),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_TX_EMP_POST1_LVL, 0x20),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_TX, 0x06),
++	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_RX, 0x07),
++};
++
+ static const struct qmp_phy_init_tbl qmp_v3_usb3_rx_tbl[] = {
+ 	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_FASTLOCK_FO_GAIN, 0x0b),
+ 	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL2, 0x0f),
+@@ -2337,6 +2355,28 @@ static const struct qmp_phy_cfg sc7180_usb3phy_cfg = {
+ 	.is_dual_lane_phy	= true,
+ };
+ 
++static const struct qmp_phy_cfg sc7180_dpphy_cfg = {
++	.type			= PHY_TYPE_DP,
++	.nlanes			= 1,
++
++	.tx_tbl			= qmp_v3_dp_tx_tbl,
++	.tx_tbl_num		= ARRAY_SIZE(qmp_v3_dp_tx_tbl),
++	.clk_list		= qmp_v3_phy_clk_l,
++	.num_clks		= ARRAY_SIZE(qmp_v3_phy_clk_l),
++	.reset_list		= sc7180_usb3phy_reset_l,
++	.num_resets		= ARRAY_SIZE(sc7180_usb3phy_reset_l),
++	.vreg_list		= qmp_phy_vreg_l,
++	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
++
++	.has_phy_dp_com_ctrl	= true,
++	.is_dual_lane_phy	= true,
++};
++
++static const struct qmp_phy_combo_cfg sc7180_usb3dpphy_cfg = {
++	.usb_cfg		= &sc7180_usb3phy_cfg,
++	.dp_cfg			= &sc7180_dpphy_cfg,
++};
++
+ static const struct qmp_phy_cfg qmp_v3_usb3_uniphy_cfg = {
+ 	.type			= PHY_TYPE_USB3,
+ 	.nlanes			= 1,
+@@ -3891,6 +3931,9 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+ 	}, {
+ 		.compatible = "qcom,sc7180-qmp-usb3-phy",
+ 		.data = &sc7180_usb3phy_cfg,
++	}, {
++		.compatible = "qcom,sc7180-qmp-usb3-dp-phy",
++		/* It's a combo phy */
+ 	}, {
+ 		.compatible = "qcom,sdm845-qhp-pcie-phy",
+ 		.data = &sdm845_qhp_pciephy_cfg,
+@@ -3933,6 +3976,10 @@ static const struct of_device_id qcom_qmp_phy_of_match_table[] = {
+ MODULE_DEVICE_TABLE(of, qcom_qmp_phy_of_match_table);
+ 
+ static const struct of_device_id qcom_qmp_combo_phy_of_match_table[] = {
++	{
++		.compatible = "qcom,sc7180-qmp-usb3-dp-phy",
++		.data = &sc7180_usb3dpphy_cfg,
++	},
+ 	{ }
+ };
+ 
 -- 
-Yours,
-Muchun
+Sent by a computer, using git, on the internet
+
