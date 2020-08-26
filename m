@@ -2,107 +2,95 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E79C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA12C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 681A7207BC
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:21:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598476893;
-	bh=wP47mPmI4+nLi8j+Dv3UaXk1NT7veGFnDPlvz/jc1qg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=slVGWvrzL2HxQRU+KLG7B+koMBhMddU1MFsxz6L6xNjWfzxfrDskaUDTiveMSTTPo
-	 TnuIltFAUc7VX+nxWLIwnC/gDKzkvg7j2kacppKhRTHEbFMj2j0UkSzZT9zfmgEX9h
-	 XZoKPdAmB2Y+yUdIVVd9dWQ1WzoEPKSLQZRqXSFE=
+	by mail.kernel.org (Postfix) with ESMTP id C8BBD207BC
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:21:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JcmJGGf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgHZVVb (ORCPT
+        id S1726972AbgHZVVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:21:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbgHZVVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:21:31 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D67F920737;
-        Wed, 26 Aug 2020 21:21:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598476890;
-        bh=wP47mPmI4+nLi8j+Dv3UaXk1NT7veGFnDPlvz/jc1qg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=G5eB9+PtcxVan0hnnfXfHh8RnNffxhAqEgx5H++6bGZERQb7dX7JLPTGYxjLaw7Hn
-         4Zlfp8cwdQtXKO7bkPsQY0/TgTCb6o97bi1g7HljqojOzdtmXKaYRLaUNGP78ALYzh
-         clon7yQgREIVP44CoRYTmYS8Qj+TiNfWv8BhPoXk=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id AF6FA35226D9; Wed, 26 Aug 2020 14:21:30 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 14:21:30 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kcsan: Use tracing-safe version of prandom
-Message-ID: <20200826212130.GU2855@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200821123126.3121494-1-elver@google.com>
- <CANpmjNMLL+Xqg0MQrtBMxLunUGXVP-mAXKqRH5s0xNSfAUhrzg@mail.gmail.com>
+        Wed, 26 Aug 2020 17:21:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgHZVVw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:21:52 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB8C3C061574;
+        Wed, 26 Aug 2020 14:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=Xsfx+KabYUh+DH5+P2LawgczRML7gRo0hmmmop5VVHQ=; b=JcmJGGf2yA5/kdHpckUJrt/PTG
+        1AeBqLH5ZuPIzzV1aSlS+fpiw8WWJwvaOthEnyoxDSElm7nPQwKTnSmk+guFm+BdgXHG2jmgM3evD
+        Dju/YtKirQ0VMCl8l35SNVWt/7qtd34/1EGYbh7eit5LmnRIUEqYXm1UraOVYVuWGn0tsnCsLkXAn
+        ZXneyhuQvgKZrwETjYgKiuDzI37JZuAWjiL3MwlK0loltDVfDKbYbgxX0ZldCW7euUHWETtKmBbG1
+        MTJNw+2Y29RMafHfIbtLtK36zkJK5euVtlgt9Vo/8IeNl4qxx1mcdwdxJU4Fw/jdZIGHCUFRgU3CI
+        Dxq70WLA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kB2rb-00013Y-4X; Wed, 26 Aug 2020 21:21:47 +0000
+To:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Changbin Du <changbin.du@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] kconfig: streamline_config.pl: check defined(ENV variable)
+ before using it
+Message-ID: <be80ceda-596b-03aa-394f-166cc6388aa0@infradead.org>
+Date:   Wed, 26 Aug 2020 14:21:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNMLL+Xqg0MQrtBMxLunUGXVP-mAXKqRH5s0xNSfAUhrzg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 02:17:57PM +0200, Marco Elver wrote:
-> On Fri, 21 Aug 2020 at 14:31, Marco Elver <elver@google.com> wrote:
-> > In the core runtime, we must minimize any calls to external library
-> > functions to avoid any kind of recursion. This can happen even though
-> > instrumentation is disabled for called functions, but tracing is
-> > enabled.
-> >
-> > Most recently, prandom_u32() added a tracepoint, which can cause
-> > problems for KCSAN even if the rcuidle variant is used. For example:
-> >         kcsan -> prandom_u32() -> trace_prandom_u32_rcuidle ->
-> >         srcu_read_lock_notrace -> __srcu_read_lock -> kcsan ...
-> >
-> > While we could disable KCSAN in kcsan_setup_watchpoint(), this does not
-> > solve other unexpected behaviour we may get due recursing into functions
-> > that may not be tolerant to such recursion:
-> >         __srcu_read_lock -> kcsan -> ... -> __srcu_read_lock
-> >
-> > Therefore, switch to using prandom_u32_state(), which is uninstrumented,
-> > and does not have a tracepoint.
-> >
-> > Link: https://lkml.kernel.org/r/20200821063043.1949509-1-elver@google.com
-> > Link: https://lkml.kernel.org/r/20200820172046.GA177701@elver.google.com
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> > Applies to latest -rcu/dev only.
-> >
-> > Let's wait a bit to see what happens with
-> >   https://lkml.kernel.org/r/20200821063043.1949509-1-elver@google.com,
-> > just in case there's a better solution that might make this patch redundant.
-> 
-> Paul, feel free to pick this up.
-> 
-> I wanted to wait until after plumbers to see what happens, but maybe
-> it's better to give the heads-up now, so this is in time for the next
-> pull-request. It seems that prandom_u32() will keep its tracepoint,
-> which means we definitely need this to make KCSAN compatible with
-> tracing again.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Queued and pushed, thank you!
+A user reported:
+'Use of uninitialized value $ENV{"LMC_KEEP"} in split at
+ ./scripts/kconfig/streamline_config.pl line 596.'
 
-							Thanx, Paul
+so first check that $ENV{LMC_KEEP} is defined before trying
+to use it.
+
+Fixes: c027b02d89fd ("streamline_config.pl: add LMC_KEEP to preserve some kconfigs")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Changbin Du <changbin.du@gmail.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ scripts/kconfig/streamline_config.pl |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+--- linux-next-20200825.orig/scripts/kconfig/streamline_config.pl
++++ linux-next-20200825/scripts/kconfig/streamline_config.pl
+@@ -593,7 +593,10 @@ while ($repeat) {
+ }
+ 
+ my %setconfigs;
+-my @preserved_kconfigs = split(/:/,$ENV{LMC_KEEP});
++my @preserved_kconfigs;
++if (defined($ENV{'LMC_KEEP'})) {
++	@preserved_kconfigs = split(/:/,$ENV{LMC_KEEP});
++}
+ 
+ sub in_preserved_kconfigs {
+     my $kconfig = $config2kfile{$_[0]};
+
