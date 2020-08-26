@@ -2,193 +2,145 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C30C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4817C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E3362224D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598451645;
-	bh=U1WyvVQpTJcvW/3SSoIx+r4B+XBN/pfqdpgz99RoBzM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=MyO5fGed9YlHvejOY+imLvpGQj/7RwT3mk26Xfe2cW5UJuq/+rNonxBkVYDNaUWSc
-	 GPxo0PGcS7sFt08hFIzi/0Yb2t3tel6Ah3tx9/RODDTehrfa3rZuF1wVBnWKS/tPz8
-	 lcKxsaMwPNABd/jUPG1AFDVvJmMSzWFbOum+VHbg=
+	by mail.kernel.org (Postfix) with ESMTP id A9AE6221E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:21:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="r/aSAxJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728113AbgHZOUj (ORCPT
+        id S1728191AbgHZOVY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:20:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53408 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728008AbgHZOUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:20:30 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33E28208E4;
-        Wed, 26 Aug 2020 14:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598451629;
-        bh=U1WyvVQpTJcvW/3SSoIx+r4B+XBN/pfqdpgz99RoBzM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=WcAJP06vBqbso9IrCOqXaB+y/KsHF+wkLVozIWv/Pk8JONWFIgrQc/hG7L+HdvP3T
-         +t9EkCSqPUeKIzvxJIjvLBB36nlFIRYvywmAKgCLH+1wbOhLENZNhuIp58eeaXfMo3
-         8RIDS5Vt0wjJQ0qHR/irSgzocG4w7hX7e31Uxz4Y=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id ED9DC3522612; Wed, 26 Aug 2020 07:20:28 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 07:20:28 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
-        dave@stgolabs.net, Ingo Molnar <mingo@redhat.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        neeraj.iitr10@gmail.com, rcu@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Uladzislau Rezki (Sony)" <urezki@gmail.com>, vineethrp@gmail.com
-Subject: Re: [PATCH v4 -rcu 1/4] rcu/segcblist: Do not depend on rcl->len to
- store the segcb len during merge
-Message-ID: <20200826142028.GN2855@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200825024842.3408659-1-joel@joelfernandes.org>
- <20200825024842.3408659-2-joel@joelfernandes.org>
- <20200825200809.GW2855@paulmck-ThinkPad-P72>
- <20200825224723.GB579506@google.com>
+        Wed, 26 Aug 2020 10:21:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57232 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbgHZOVU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:21:20 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DF08C061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:21:20 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id b3so299030qtg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:21:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9cipQfYQtv7cAiG+G38dpVGRbXrdKVedcuYm2vqWBLE=;
+        b=r/aSAxJIwBhxZNYLfslR2WgJGk8qwXY7iEQclmhmk8/Z831e3QGoww9xiThSt0fEU1
+         3PCNg6JDfrF1/obSDOg5HsFvZFIVHfQRu1wEC8OOFd01VUmXaBhZfoP40svMW802E1Tf
+         3JM0RIrOw2BqmfIUSfn+mz+17yNzZAIeFBAzVEuU92gtGA0FhaBtdyMpFRnKxer1CMCB
+         uRQRHSXbROCHtEjVH2hlrpYARZm43Cce7Ri3XnIpVGznmEarT4V3wLqHduh1Bx6VHn2P
+         SpXJ+RpUhQnm0DVrncjQNiJ0vYYkEqEu1U1x+3Xu36kJKVEtOiBRhvf0vTaw+hdySoFf
+         ns/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9cipQfYQtv7cAiG+G38dpVGRbXrdKVedcuYm2vqWBLE=;
+        b=rI6TzP8m0XoHlpZHtnRCX/NimRUElJrvBC02zm5SHTAESjNT/lHu0AkKNtndxpSW1t
+         9qaMaP0jRUPVeDMdpRqH2PZ6qSQqdDZofYa0yShlYj5IVF0+vAWgtt6TN9VW35PiNclG
+         bYORG4GHSduBZPEZbqSIwrnQJitNA9KHQdnm+5QmSqNguxHj2/fPRlotXKvPaG4ojvfD
+         BXR1JiWSGft3tCQdiI4ewzyEYiOaPzt1OX8ueSoOX4ViFvaLUH4IV7LTx/qCmPDDxXSc
+         RYFkVhLHU98whDLxCXJJaCwryf67pBdWmr57xji0K9ZVLcjrmwClGm4qJEa2TB8zOuAL
+         Ll1Q==
+X-Gm-Message-State: AOAM530x6e+Bf8n7fXG4z+Sk0uvQs7xvrIhj68MwVAeaQx3HANUJuHDw
+        05y+ggu2f9vozJaUwsfktftaLA==
+X-Google-Smtp-Source: ABdhPJzkL+VbMNqXk0VI6usc3IzWafauyYNT0NkD01Zs9u4SVmyMN6cWX67eat1DeaEj/WIGp5aZEg==
+X-Received: by 2002:ac8:7156:: with SMTP id h22mr14460468qtp.36.1598451678946;
+        Wed, 26 Aug 2020 07:21:18 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:4a00])
+        by smtp.gmail.com with ESMTPSA id x29sm1976087qtv.80.2020.08.26.07.21.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:21:17 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 10:20:02 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Matthew Auld <matthew.auld@intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] mm: Use find_get_swap_page in memcontrol
+Message-ID: <20200826142002.GA988805@cmpxchg.org>
+References: <20200819184850.24779-1-willy@infradead.org>
+ <20200819184850.24779-3-willy@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825224723.GB579506@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200819184850.24779-3-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 06:47:23PM -0400, Joel Fernandes wrote:
-> Hi Paul,
+On Wed, Aug 19, 2020 at 07:48:44PM +0100, Matthew Wilcox (Oracle) wrote:
+> The current code does not protect against swapoff of the underlying
+> swap device, so this is a bug fix as well as a worthwhile reduction in
+> code complexity.
 > 
-> On Tue, Aug 25, 2020 at 01:08:09PM -0700, Paul E. McKenney wrote:
-> > On Mon, Aug 24, 2020 at 10:48:39PM -0400, Joel Fernandes (Google) wrote:
-> > > The donecbs's ->len field is used to store the total count of the segmented
-> > > callback list's length. This ->len field is then added to the destination segcb
-> > > list.
-> > > 
-> > > However, this presents a problem for per-segment length counting which is added
-> > > in a future patch. This future patch sets the rcl->len field as we move
-> > > segments of callbacks between source and destination lists, thus becoming
-> > > incompatible with the donecb's ->len field.
-> > 
-> > OK, I will bite.  What is "rcl"?  A placeholder for donecbs and pendcbs?
-> > If so, please just name them both.  If not, please explain.
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  mm/memcontrol.c | 25 ++-----------------------
+>  1 file changed, 2 insertions(+), 23 deletions(-)
 > 
-> Ok will fix.
-> 
-> > > This commit therefore avoids depending on the ->len field in this way. IMHO,
-> > > this is also less error-prone and is more accurate - the donecb's ->len field
-> > > should be the length of the done segment and not just used as a temporarily
-> > > variable.
-> > 
-> > Please also mention why ->len is handled specially at all, namely
-> > interactions between rcu_barrier() and callback invocation.  This is
-> > the answer to "why not just make all this work like normal lists?"
-> > This might go well in the first paragraph.
-> 
-> Are you referring to the cblist structures ->len?  I know the segcblist's
-> ->len field is what rcu_barrier() samples but I am not changing that behavior
-> at all in this patch. This patch is only about the donecb's len (which is a
-> cblist structure on the stack).
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index b807952b4d43..4075f214a841 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -5539,35 +5539,14 @@ static struct page *mc_handle_swap_pte(struct vm_area_struct *vma,
+>  static struct page *mc_handle_file_pte(struct vm_area_struct *vma,
+>  			unsigned long addr, pte_t ptent, swp_entry_t *entry)
+>  {
+> -	struct page *page = NULL;
+> -	struct address_space *mapping;
+> -	pgoff_t pgoff;
+> -
+>  	if (!vma->vm_file) /* anonymous vma */
+>  		return NULL;
+>  	if (!(mc.flags & MOVE_FILE))
+>  		return NULL;
+>  
+> -	mapping = vma->vm_file->f_mapping;
+> -	pgoff = linear_page_index(vma, addr);
+> -
+>  	/* page is moved even if it's not RSS of this task(page-faulted). */
+> -#ifdef CONFIG_SWAP
+> -	/* shmem/tmpfs may report page out on swap: account for that too. */
+> -	if (shmem_mapping(mapping)) {
+> -		page = find_get_entry(mapping, pgoff);
+> -		if (xa_is_value(page)) {
+> -			swp_entry_t swp = radix_to_swp_entry(page);
+> -			*entry = swp;
+> -			page = find_get_page(swap_address_space(swp),
+> -					     swp_offset(swp));
+> -		}
+> -	} else
+> -		page = find_get_page(mapping, pgoff);
+> -#else
+> -	page = find_get_page(mapping, pgoff);
+> -#endif
+> -	return page;
+> +	return find_get_swap_page(vma->vm_file->f_mapping,
+> +			linear_page_index(vma, addr));
 
-Yes, we agree.  I am just suggesting that you call this out in the
-commit log.  It is probably not obvious to those who have not been
-through the code yet.  ;-)
+The refactor makes sense to me, but the name is confusing. We're not
+looking for a swap page, we're primarily looking for a file page in
+the page cache mapping that's handed in. Only in the special case
+where it's a shmem mapping and there is a swap entry do we consult the
+auxiliary swap cache.
 
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > > ---
-> > >  kernel/rcu/rcu_segcblist.c | 8 ++++++--
-> > >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-> > > index 2d2a6b6b9dfb..b70d4154433c 100644
-> > > --- a/kernel/rcu/rcu_segcblist.c
-> > > +++ b/kernel/rcu/rcu_segcblist.c
-> > > @@ -513,14 +513,18 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
-> > >  {
-> > >  	struct rcu_cblist donecbs;
-> > >  	struct rcu_cblist pendcbs;
-> > > +	long src_len;
-> > >  
-> > >  	rcu_cblist_init(&donecbs);
-> > >  	rcu_cblist_init(&pendcbs);
-> > > -	rcu_segcblist_extract_count(src_rsclp, &donecbs);
-> > > +
-> > > +	src_len = rcu_segcblist_xchg_len(src_rsclp, 0);
-> > 
-> > Given that both rcu_segcblist_xchg_len() and rcu_segcblist_extract_count()
-> > have only one callsite each, why not get rid of one of them?
-> 
-> Good point, I will do that.
-> 
-> > Or better yet, please see below, which should allow getting rid of both
-> > of them.
-> > 
-> > >  	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
-> > >  	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
-> > > -	rcu_segcblist_insert_count(dst_rsclp, &donecbs);
-> > > +
-> > > +	rcu_segcblist_add_len(dst_rsclp, src_len);
-> > >  	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
-> > >  	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
-> > 
-> > Rather than adding the blank lines, why not have the rcu_cblist structures
-> > carry the lengths?  You are already adjusting one of the two call sites
-> > that care (rcu_do_batch()), and the other is srcu_invoke_callbacks().
-> > That should shorten this function a bit more.  And make callback handling
-> > much more approachable, I suspect.
-> 
-> Sorry, I did not understand. The rcu_cblist structure already has a length
-> field. I do modify rcu_segcblist_extract_done_cbs() and
-> rcu_segcblist_extract_pend_cbs() to carry the length already, in a later
-> patch.
-> 
-> Just to emphasize, this patch is just a small refactor to avoid an issue in
-> later patches. It aims to keep current functionality unchanged.
-
-True enough.  I am just suggesting that an equally small refactor in
-a slightly different direction should get to a better place.  The key
-point enabling this slightly different direction is that this code is
-an exception to the "preserve ->cblist.len" rule because it is invoked
-only from the CPU hotplug code.
-
-So you could use the rcu_cblist .len field to update the ->cblist.len
-field, thus combining the _cbs and _count updates.  One thing that helps
-is that setting th e rcu_cblist .len field doesn't hurt the other use
-cases that require careful handling of ->cblist.len.
-
-							Thanx, Paul
-
-> thanks,
-> 
->  - Joel
-> 
-> > 
-> > There would still be the callback-invocation need to be careful with
-> > ->cblist.len due to rcu_barrier() and srcu_barrier().  But both of
-> > those should be excluded by this code.  (But don't take my word for it,
-> > ask KCSAN.)
-> > 
-> > 							Thanx, Paul
-> > 
-> > > +
-> > >  	rcu_segcblist_init(src_rsclp);
-> > >  }
-> > > -- 
-> > > 2.28.0.297.g1956fa8f8d-goog
-> > > 
+How about find_get_page_or_swapcache()? find_get_page_shmemswap()?
+Maybe you have a better idea. It's a fairly specialized operation that
+isn't widely used, so a longer name isn't a bad thing IMO.
