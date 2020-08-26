@@ -2,110 +2,95 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C9BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88931C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:40:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 767D82076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 504E92076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:40:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CCtjUjay"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VWhtWvqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbgHZTkb (ORCPT
+        id S1727769AbgHZTkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:40:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51172 "EHLO
+        Wed, 26 Aug 2020 15:40:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgHZTk2 (ORCPT
+        with ESMTP id S1727050AbgHZTkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:40:28 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA5E0C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:40:27 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 67so1598407pgd.12
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:40:27 -0700 (PDT)
+        Wed, 26 Aug 2020 15:40:51 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26AE4C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:40:51 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l191so1614551pgd.5
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:40:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=OG8uhnCA9kG3csdFryFQgnoVrLmqM/Aisjk2iXjlTO4=;
-        b=CCtjUjayr/qntPIykQMCTBeZZeCK50TmOXnltMMVDBp3CR9A65E334WHfJcIaB+qj5
-         lM0Ab5TQ23N8QqsdlltlQODO+OGXq6MmQcJBd+tA7A5w2hgKBd/HXsYX/JCZnPLsvU76
-         Fc4t/yR7DlFMji9jHEtdubrTqLh5q1Ob78A9U=
+        bh=dSakW77xCiSA5fE92SUgWSBVc4QxiTq31NeLlsC4iFg=;
+        b=VWhtWvqrmDlLgP5IoVdxqiPa54SABR3BHMz8veK4DE7RS5r9FdBeTxrta0h0MeqBNj
+         MtlYu0R3sWrjlNeBq2vpa4ed25Es3FS2palRH/FeV8ZVJ7p0W3xyPaDQTfr24TqanHmn
+         LFLB1QRKPHSwsqeXR/wncpgGF5/+A4Dm3qZ7A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=OG8uhnCA9kG3csdFryFQgnoVrLmqM/Aisjk2iXjlTO4=;
-        b=q4vLw1SeFFhPfD0MiGtLswPMuwi7+G2vHQZWbMlPvPxBEeNkD6Sg8Uzrn/G8vKfadL
-         jTr9qHmnIV3ogcQmo/GJt1oi5RYXlKG4u4+cGe1a2kQ0x+Hh2yEe2z2AW4Lc0WsVQOB8
-         xh+GJYeJnk2vpayfFEyKfo9122S3n5AuZ7m/tAcwK76xIKNU6sVB8HxMQbWtnR8a84cC
-         USHSSmeRnAR8LjtflT2L98szY8Hj6sTOC2JcjQD/5y7NAelgisB6AZF0L/MpBpYEHleg
-         CNtZ1mO5mvhLdUcPcu3FfgibyGuUyVtkumi1U+ejyQ53uUE/samD3KpkmTKmkhrjiTRw
-         DB+w==
-X-Gm-Message-State: AOAM5309SUEuN/+i5WCzuDgtf4nGTC8ZX6hFLQZIXa49XuC8OrbG5nim
-        Bz9iO1uDxs68XRQc+s6mxlBUuQ==
-X-Google-Smtp-Source: ABdhPJwoFPtYUC9LMuzuxI/JkcSQzWHlHT55l/323/HECz8Y1hZ6XBGrFMmE05TvFRpD7eDwLUE2Aw==
-X-Received: by 2002:a63:516:: with SMTP id 22mr12143709pgf.316.1598470827209;
-        Wed, 26 Aug 2020 12:40:27 -0700 (PDT)
+        bh=dSakW77xCiSA5fE92SUgWSBVc4QxiTq31NeLlsC4iFg=;
+        b=JMYtQEHfG0N2ybqpD+zHwrqPeKfyCP8ZH149nkchhLFEqrOHkS7psLfHQzf5FEwRT/
+         nQnP2Ytjn6sqhwyfGaYRFgiHankdCv7icRkOpxkfX10mjcPDfy15pfMNNSi1dMmg2UQm
+         cH/yARUtFAKU4BU+oD7GFXLjUNsJ1s55etuNJ6FpsxCKjOhWBhfFjHR8U33WwWIzjwhj
+         /k43AKcG5lWVON7yVvsd9+I/l5QqspCJPduleOT9yBzLCNAa1laQOTBjCeTE7+d6dFJC
+         3Xv7GgyGCkLPgOYWW60Gt74IQkW3qDocwGk1kHa30akd+UllbiFEVcLtlv9SF4/kvI+H
+         9pbA==
+X-Gm-Message-State: AOAM533ssyLR9DF5Ey4EQx9eBGOM3w2dwekR4D3TPD9rufS9n0VUjo/k
+        jIJT/2/82hENLpTmSrxmdpWHpA==
+X-Google-Smtp-Source: ABdhPJyXEKxXHXf5cRg3/3OzMrYtkIyhnNNSdxI6Puywl/QUiLpeWpXICM+kla3UsLYeJUISDEHNYg==
+X-Received: by 2002:a63:cd56:: with SMTP id a22mr11535786pgj.259.1598470850778;
+        Wed, 26 Aug 2020 12:40:50 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e16sm3774598pfd.17.2020.08.26.12.40.26
+        by smtp.gmail.com with ESMTPSA id a13sm3048078pgn.17.2020.08.26.12.40.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 12:40:26 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 12:40:24 -0700
+        Wed, 26 Aug 2020 12:40:49 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 12:40:48 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Stefano Garzarella <sgarzare@redhat.com>,
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
         Christian Brauner <christian.brauner@ubuntu.com>,
         Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Sargun Dhillon <sargun@sargun.me>,
+        linux-fsdevel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Kernel Hardening <kernel-hardening@lists.openwall.com>,
         Stefan Hajnoczi <stefanha@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        io-uring <io-uring@vger.kernel.org>
-Subject: Re: [PATCH v4 0/3] io_uring: add restrictions to support untrusted
- applications and guests
-Message-ID: <202008261237.904C1E6@keescook>
+        linux-kernel@vger.kernel.org, Aleksa Sarai <asarai@suse.de>,
+        io-uring@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] io_uring: use an enumeration for
+ io_uring_register(2) opcodes
+Message-ID: <202008261240.CC4BAB0CBD@keescook>
 References: <20200813153254.93731-1-sgarzare@redhat.com>
- <CAGxU2F55zzMzc043P88TWJNr2poUTVwrRmu86qyh0uM-8gimng@mail.gmail.com>
- <82061082-42c8-1e1c-1f36-6f42e7dd10cb@kernel.dk>
+ <20200813153254.93731-2-sgarzare@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <82061082-42c8-1e1c-1f36-6f42e7dd10cb@kernel.dk>
+In-Reply-To: <20200813153254.93731-2-sgarzare@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 10:47:36AM -0600, Jens Axboe wrote:
-> On 8/25/20 9:20 AM, Stefano Garzarella wrote:
-> > Hi Jens,
-> > this is a gentle ping.
-> > 
-> > I'll respin, using memdup_user() for restriction registration.
-> > I'd like to get some feedback to see if I should change anything else.
-> > 
-> > Do you think it's in good shape?
+On Thu, Aug 13, 2020 at 05:32:52PM +0200, Stefano Garzarella wrote:
+> The enumeration allows us to keep track of the last
+> io_uring_register(2) opcode available.
 > 
-> As far as I'm concerned, this is fine. But I want to make sure that Kees
-> is happy with it, as he's the one that's been making noise on this front.
+> Behaviour and opcodes names don't change.
+> 
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Oop! Sorry, I didn't realize this was blocked on me. Once I saw how
-orthogonal io_uring was to "regular" process trees, I figured this
-series didn't need seccomp input. (I mean, I am still concerned about
-attack surface reduction, but that seems like a hard problem given
-io_uring's design -- it is, however, totally covered by the LSMs, so I'm
-satisfied from that perspective.)
-
-I'll go review... thanks for the poke. :)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
