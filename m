@@ -2,153 +2,106 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E84CC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD60BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40FF521741
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:57:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lg8/ha00"
+	by mail.kernel.org (Postfix) with ESMTP id 9167321741
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598453882;
+	bh=EO6+OrtQUwKwY8gZU4JakHT0nILSB70xFqDRJMkESZY=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=X5Akjqx6skqxCFQdtM+zZB0YvnMEbPpe6F7X1rqBSGEzhdwx83mZRgkGBUSAYrmWZ
+	 Vk6STrcR7yHXXi69iEYoZXF8s+zq6W0MCdvCyE/8miOH/vohNMNFaY15hgUhScMZhU
+	 Un26XXWDQpfeq0G4mv/BNn2A0JE9P6eF9ILmv/A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgHZO5p (ORCPT
+        id S1728174AbgHZO6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:57:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728172AbgHZOw7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:52:59 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D0FDC061574;
-        Wed, 26 Aug 2020 07:52:59 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x143so1113594pfc.4;
-        Wed, 26 Aug 2020 07:52:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tNfoBs9TBB9YEBE9tGDOyEBHmB4zC7u2zOrj/FbPgx8=;
-        b=Lg8/ha00Khu4EnC51k8zmKvtgAPlEmqiajWsZOLjETHGx23tEzbGXekHrgWjO+Vq1I
-         2fXkg0Q35UcFc74e/G1qntsuqPWKwE5jUgK3SJ1m6u4QZ98nVq8tNnk++aXMnvMZ/Yu6
-         dyiJu8oryT8NpYJlAP+N5xCrKCIJF03RO+hzw5D4+W2YAsmnTFfACWHYWzwXSbKwaW/n
-         ARq6VLEOHctnhON5rjgmWsghY6gAlHvcJJn4/dIjfsKmk7RWjjdFRiGYefpX7Cno30GO
-         g2vYdSxNqnsBsuv1nCqvXii58LJ997cl1b8HtYgdLHsnRSGifRinKvewZA0Z/ANz+VZH
-         bYaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=tNfoBs9TBB9YEBE9tGDOyEBHmB4zC7u2zOrj/FbPgx8=;
-        b=uKKwwsBTdFo8qj0hZPTr/vkNZnoaAtPdIo3Y50CwSeDWSrGuyp9PZtpb89LvWOMCdZ
-         0P5zRwh3tKnZOSz2/oV04aFNaWTCsaXQeFmP9LWSEoZwj8G4+Q7moaaH1orawa8LQk03
-         PfgGswJUpA0rCTb0pKHHvi/ZZ6BDyv9xXCfxFB4bvI/8rsP4avEiB3ZxOSPsFmxEuxOl
-         CFeTQca8kbgku355fwf1isrSYTvL+ow5svXRLHjFEEN1Yk+czSzesCkGbI9UYowBQdKC
-         I0xEtk5n5CfA67LWDj7Yhj2oXlqOn/BgPK52VqFaFqcuHwi9VHtUK24xEc81tPEIR2eU
-         sYsA==
-X-Gm-Message-State: AOAM530m868zPj/bo7lsY6Zwy3jlZDDie3BDctrw0rvSDNkUWuacorHf
-        1WrTseQcyUWHuKOvcsQQcnUL7hTAFEM=
-X-Google-Smtp-Source: ABdhPJxLIeqRIUyEsfqFb7nJ7wULo7zOJ9c+t995J9bGMLz8hG1B5sC3G6S9f61NKHKNNvKKa0BQkQ==
-X-Received: by 2002:a62:2903:: with SMTP id p3mr5843369pfp.83.1598453578576;
-        Wed, 26 Aug 2020 07:52:58 -0700 (PDT)
-Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
-        by smtp.gmail.com with ESMTPSA id r7sm3327140pfl.186.2020.08.26.07.52.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 07:52:58 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linux-arch@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 00/23] Use asm-generic for mmu_context no-op functions
-Date:   Thu, 27 Aug 2020 00:52:26 +1000
-Message-Id: <20200826145249.745432-1-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 26 Aug 2020 10:58:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728169AbgHZOw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:52:58 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9E0F21741;
+        Wed, 26 Aug 2020 14:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598453578;
+        bh=EO6+OrtQUwKwY8gZU4JakHT0nILSB70xFqDRJMkESZY=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=lp7M6zPOo/NbXV/KmnrIZP2j/7osA6KnrnBkn7shBUFVg2hnnQTzWduD5TiLx0Ht8
+         fq7PppS6Qip528k2PlASRjtE6lMvHH0fsQdhFZGue0pxH7GKSotNtOcdL8qHiWjMfG
+         CeSJAVZKWw9V3sMB8ZmCdfUUIu/6WJ+KVF8kZqgg=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH 10/16] iio: amplifiers: hmc425a: Simplify with dev_err_probe()
+Date:   Wed, 26 Aug 2020 16:51:47 +0200
+Message-Id: <20200826145153.10444-10-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200826145153.10444-1-krzk@kernel.org>
+References: <20200826145153.10444-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It would be nice to be able to modify mmu_context functions or add a
-hook without updating all architectures, many of which will be no-ops.
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and also it prints the error value.
 
-The motivation for this series is a change to lazy mmu handling, but
-this series stands on its own as a good cleanup whether or not we end
-up making that change.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/iio/amplifiers/hmc425a.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Arnd, is this something you could take through your asm-generic tree?
-(assuming arch maintainers are okay with it)
-
-Thanks,
-Nick
-
-Since v1:
-- Added acks and feedback from various people.
-- Fixed a nommu build error caught by ktp.
-- Dropped unicore32.
-
-Nicholas Piggin (23):
-  asm-generic: add generic MMU versions of mmu context functions
-  alpha: use asm-generic/mmu_context.h for no-op implementations
-  arc: use asm-generic/mmu_context.h for no-op implementations
-  arm: use asm-generic/mmu_context.h for no-op implementations
-  arm64: use asm-generic/mmu_context.h for no-op implementations
-  csky: use asm-generic/mmu_context.h for no-op implementations
-  hexagon: use asm-generic/mmu_context.h for no-op implementations
-  ia64: use asm-generic/mmu_context.h for no-op implementations
-  m68k: use asm-generic/mmu_context.h for no-op implementations
-  microblaze: use asm-generic/mmu_context.h for no-op implementations
-  mips: use asm-generic/mmu_context.h for no-op implementations
-  nds32: use asm-generic/mmu_context.h for no-op implementations
-  nios2: use asm-generic/mmu_context.h for no-op implementations
-  openrisc: use asm-generic/mmu_context.h for no-op implementations
-  parisc: use asm-generic/mmu_context.h for no-op implementations
-  powerpc: use asm-generic/mmu_context.h for no-op implementations
-  riscv: use asm-generic/mmu_context.h for no-op implementations
-  s390: use asm-generic/mmu_context.h for no-op implementations
-  sh: use asm-generic/mmu_context.h for no-op implementations
-  sparc: use asm-generic/mmu_context.h for no-op implementations
-  um: use asm-generic/mmu_context.h for no-op implementations
-  x86: use asm-generic/mmu_context.h for no-op implementations
-  xtensa: use asm-generic/mmu_context.h for no-op implementations
-
- arch/alpha/include/asm/mmu_context.h         | 12 ++---
- arch/arc/include/asm/mmu_context.h           | 17 +++---
- arch/arm/include/asm/mmu_context.h           | 26 ++-------
- arch/arm64/include/asm/mmu_context.h         |  9 ++--
- arch/csky/include/asm/mmu_context.h          |  8 ++-
- arch/hexagon/include/asm/mmu_context.h       | 33 ++----------
- arch/ia64/include/asm/mmu_context.h          | 17 ++----
- arch/m68k/include/asm/mmu_context.h          | 47 +++-------------
- arch/microblaze/include/asm/mmu_context.h    |  2 +-
- arch/microblaze/include/asm/mmu_context_mm.h |  8 +--
- arch/microblaze/include/asm/processor.h      |  3 --
- arch/mips/include/asm/mmu_context.h          | 11 ++--
- arch/nds32/include/asm/mmu_context.h         | 10 +---
- arch/nios2/include/asm/mmu_context.h         | 21 ++------
- arch/openrisc/include/asm/mmu_context.h      |  8 ++-
- arch/parisc/include/asm/mmu_context.h        | 12 ++---
- arch/powerpc/include/asm/mmu_context.h       | 22 +++-----
- arch/riscv/include/asm/mmu_context.h         | 22 +-------
- arch/s390/include/asm/mmu_context.h          |  9 ++--
- arch/sh/include/asm/mmu_context.h            |  7 ++-
- arch/sh/include/asm/mmu_context_32.h         |  9 ----
- arch/sparc/include/asm/mmu_context_32.h      | 10 ++--
- arch/sparc/include/asm/mmu_context_64.h      | 10 ++--
- arch/um/include/asm/mmu_context.h            | 12 ++---
- arch/x86/include/asm/mmu_context.h           |  6 +++
- arch/xtensa/include/asm/mmu_context.h        | 11 ++--
- arch/xtensa/include/asm/nommu_context.h      | 26 +--------
- include/asm-generic/mmu_context.h            | 57 +++++++++++++++-----
- include/asm-generic/nommu_context.h          | 19 +++++++
- 29 files changed, 166 insertions(+), 298 deletions(-)
- create mode 100644 include/asm-generic/nommu_context.h
-
+diff --git a/drivers/iio/amplifiers/hmc425a.c b/drivers/iio/amplifiers/hmc425a.c
+index 582708924e4f..9efa692151f0 100644
+--- a/drivers/iio/amplifiers/hmc425a.c
++++ b/drivers/iio/amplifiers/hmc425a.c
+@@ -201,12 +201,9 @@ static int hmc425a_probe(struct platform_device *pdev)
+ 	st->gain = st->chip_info->default_gain;
+ 
+ 	st->gpios = devm_gpiod_get_array(&pdev->dev, "ctrl", GPIOD_OUT_LOW);
+-	if (IS_ERR(st->gpios)) {
+-		ret = PTR_ERR(st->gpios);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "failed to get gpios\n");
+-		return ret;
+-	}
++	if (IS_ERR(st->gpios))
++		return dev_err_probe(&pdev->dev, PTR_ERR(st->gpios),
++				     "failed to get gpios\n");
+ 
+ 	if (st->gpios->ndescs != st->chip_info->num_gpios) {
+ 		dev_err(&pdev->dev, "%d GPIOs needed to operate\n",
 -- 
-2.23.0
+2.17.1
 
