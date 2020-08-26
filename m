@@ -2,71 +2,122 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C98C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 186D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8DF620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3F0E20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 22:26:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Z8h3jmnp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbgHZWTj (ORCPT
+        id S1726887AbgHZW0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 18:19:39 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:33496 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbgHZWTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 18:19:39 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kB3lB-0006pS-LL; Thu, 27 Aug 2020 08:19:14 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 27 Aug 2020 08:19:13 +1000
-Date:   Thu, 27 Aug 2020 08:19:13 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Denis Kenzior <denkenz@gmail.com>,
-        Andrew Zaborowski <andrew.zaborowski@intel.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Caleb Jorden <caljorden@hotmail.com>,
-        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Wed, 26 Aug 2020 18:26:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbgHZW0q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 18:26:46 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68859C061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 15:26:46 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ls14so1554525pjb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 15:26:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PkRfetQcp2SyPXpao4+ZMmtYtLe8fTRZhlCz7rJNi6U=;
+        b=Z8h3jmnpWF7n+FdysrKDsbSu7wBGc3eoFbM9dho9msL4PB9dDMXlpeV0H31eSQU1b5
+         r3Aa61QUvEgghcmBcRl7X0J61lByqkSl+w6XEBC6D9t5MhDazODWG9IPN4xaXe/bqFz8
+         qBNNeC18oZI1SgMDRENNkDP44pLgtiWwwXtr4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PkRfetQcp2SyPXpao4+ZMmtYtLe8fTRZhlCz7rJNi6U=;
+        b=GAdDVDIzD4IlhftvQWLqngVPvp0huu5iUS9RHuR3OXB8NSHzRc+LVG9KqBe/dZ7lFB
+         +EDUHfSS/pJpVbXwPnGbpqPUQgbo5enEjlu53cytJCHw+FejBQm2DUvL2sSN4a5Qvxsd
+         kLh9PMLURUVeW6f5oGZjpfkT5sutHfuK7OKy9iAJJrpAMEsUp0tCmUPNQNST3HJzmGu1
+         AzpT4mXVRRSgPejX/BvqUaXeKy6l/p5wATh7h4r5WotpEvikoNctm1oz4nosVpT/Jgch
+         bxY/3L2lpot3qbF2WHQZXtmfUvLxNkf2TVo7gxegGp48H5FIMW7ruueNxVgLgLNFQ60S
+         lMYQ==
+X-Gm-Message-State: AOAM530vy8Fmg1dLcCYumU/iO+f6r+GsOGNn7tfiPWEWaI3M22gRPQqv
+        yyBOeu//yvPvvowG7MtSN29YuA==
+X-Google-Smtp-Source: ABdhPJwtq/aSnkaRCd+AVsIZIusn3TQlRtKEGYCH0S1le5PKTs+SyjZKUXXLlrqQjBHKw/Nd6anXZg==
+X-Received: by 2002:a17:90b:3ce:: with SMTP id go14mr2017340pjb.162.1598480805822;
+        Wed, 26 Aug 2020 15:26:45 -0700 (PDT)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:7220:84ff:fe09:2b94])
+        by smtp.gmail.com with ESMTPSA id x19sm204076pfq.43.2020.08.26.15.26.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 15:26:45 -0700 (PDT)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org, linux-bluetooth@vger.kernel.org
+Cc:     chromeos-bluetooth-upstreaming@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
-Message-ID: <20200826221913.GA16175@gondor.apana.org.au>
-References: <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
- <20200826114952.GA2375@gondor.apana.org.au>
- <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
- <20200826120832.GA2996@gondor.apana.org.au>
- <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
- <20200826130010.GA3232@gondor.apana.org.au>
- <c27e5303-48d9-04a4-4e73-cfea5470f357@gmail.com>
- <20200826141907.GA5111@gondor.apana.org.au>
- <4bb6d926-a249-8183-b3d9-05b8e1b7808a@gmail.com>
- <CAMj1kXEn507bEt+eT6q7MpCwNH=oAZsTkFRz0t=kPEV0QxFsOQ@mail.gmail.com>
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH] Bluetooth: Clear suspend tasks on unregister
+Date:   Wed, 26 Aug 2020 15:26:39 -0700
+Message-Id: <20200826152623.1.I24fb6cc377d03d64d74f83cec748afd12ee33e37@changeid>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXEn507bEt+eT6q7MpCwNH=oAZsTkFRz0t=kPEV0QxFsOQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 05:42:27PM +0200, Ard Biesheuvel wrote:
->
-> I still get a failure in aes_siv_encrypt(), which does not occur with
-> the kernel side fix applied.
+While unregistering, make sure to clear the suspend tasks before
+cancelling the work. If the unregister is called during resume from
+suspend, this will unnecessarily add 2s to the resume time otherwise.
 
-Where is this test from? I can't find it in the ell git tree.
+Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+---
+This was discovered with RT8822CE using the btusb driver. This chipset
+will reset on resume during system suspend and was unnecessarily adding
+2s to every resume. Since we're unregistering anyway, there's no harm in
+just clearing the pending events.
 
-Thanks,
+ net/bluetooth/hci_core.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 68bfe57b66250f..ed4cb3479433c0 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -3442,6 +3442,16 @@ void hci_copy_identity_address(struct hci_dev *hdev, bdaddr_t *bdaddr,
+ 	}
+ }
+ 
++static void hci_suspend_clear_tasks(struct hci_dev *hdev)
++{
++	int i;
++
++	for (i = 0; i < __SUSPEND_NUM_TASKS; ++i)
++		clear_bit(i, hdev->suspend_tasks);
++
++	wake_up(&hdev->suspend_wait_q);
++}
++
+ static int hci_suspend_wait_event(struct hci_dev *hdev)
+ {
+ #define WAKE_COND                                                              \
+@@ -3785,6 +3795,7 @@ void hci_unregister_dev(struct hci_dev *hdev)
+ 	cancel_work_sync(&hdev->power_on);
+ 
+ 	unregister_pm_notifier(&hdev->suspend_notifier);
++	hci_suspend_clear_tasks(hdev);
+ 	cancel_work_sync(&hdev->suspend_prepare);
+ 
+ 	hci_dev_do_close(hdev);
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.28.0.297.g1956fa8f8d-goog
+
