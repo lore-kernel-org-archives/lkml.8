@@ -2,104 +2,123 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16B2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C495C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85078221E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:24:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598451877;
-	bh=A8bT4gpJk+PvJm80XkjyjxOjjrEqUwRY+LaS3YZKKto=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xo2Ogg9k3PuaZJevEi60Sk1O6tvkRzXYS/WelKbozm9jlleMkC5xBGac2J4fpBx2G
-	 iY3TTIXCCoVKK2UwL+ZY9taWAJQHHrBoDbjruJyA4PhUznfEEXo9bFtohaqnTjt74E
-	 NHSAMvnutZxcAhOWfJ2e85CAwIMC5nk/xIY3SjFU=
+	by mail.kernel.org (Postfix) with ESMTP id EB5E22224D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgHZOY2 (ORCPT
+        id S1728400AbgHZOYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:24:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57654 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 10:24:36 -0400
+Received: from mga06.intel.com ([134.134.136.31]:29572 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728202AbgHZOXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:23:50 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2ECB221E2;
-        Wed, 26 Aug 2020 14:23:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598451829;
-        bh=A8bT4gpJk+PvJm80XkjyjxOjjrEqUwRY+LaS3YZKKto=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cpGZhQOGxjeYLKpWhS/cSaND/Zxo/Y4JV7DyqpYiQS+CQUgIokFuJR0X6IW9ebNef
-         jvwWLwrxfcfutVgmJ4TLnHWyfEovinhD0nVQ1fm/s+b8eVnGF7SFgN6fZM3T/MIjDs
-         78NbKiVfVl3Yo7k4FR8GRGUerM63SADzP4OMGIWM=
-Date:   Wed, 26 Aug 2020 15:23:12 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Qiang Zhao <qiang.zhao@nxp.com>,
-        kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        Tanveer Alam <tanveer.alam@puresoftware.com>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
-Message-ID: <20200826142312.GH4965@sirena.org.uk>
-References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
- <20200821140718.GH4870@sirena.org.uk>
- <c810740d75f64e308fd362e6c6a5f437@mail.gmail.com>
- <20200822152118.rlwbcgfk4abjldtg@skbuf>
- <VE1PR04MB6768699B6D7A507A5BF82F9191540@VE1PR04MB6768.eurprd04.prod.outlook.com>
- <20200826114758.4agph53ag2fin6um@skbuf>
+        id S1726707AbgHZOYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:24:13 -0400
+IronPort-SDR: IuTm3YLT79DNJDRri+THGfYZpgse6I+8SJ22p+3hnN798BZPJ6qMrwBPXyjoBlr7ynjbsmR6kW
+ MOw8T03+CNNg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="217843100"
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="217843100"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 07:24:12 -0700
+IronPort-SDR: wKoZm4fHQkjC8bBISivoH8C49NqFFN6MaKVHRHTwKBO7+8aA+6DPyJhX8nv/ItyI1iYryFhG+f
+ XGsyr7y6uqZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="329242274"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 26 Aug 2020 07:24:10 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kAwLQ-00BaL8-PZ; Wed, 26 Aug 2020 17:24:08 +0300
+Date:   Wed, 26 Aug 2020 17:24:08 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com
+Subject: Re: [PATCH 2/2] sched/topology: Move SD_DEGENERATE_GROUPS_MASK out
+ of linux/sched/topology.h
+Message-ID: <20200826142408.GO1891694@smile.fi.intel.com>
+References: <20200825133216.9163-1-valentin.schneider@arm.com>
+ <20200825133216.9163-2-valentin.schneider@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="RwGu8mu1E+uYXPWP"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200826114758.4agph53ag2fin6um@skbuf>
-X-Cookie: Should I do my BOBBIE VINTON medley?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200825133216.9163-2-valentin.schneider@arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 25, 2020 at 02:32:16PM +0100, Valentin Schneider wrote:
+> SD_DEGENERATE_GROUPS_MASK is only useful for sched/topology.c, but still
+> gets defined for anyone who imports topology.h, leading to a flurry of
+> unused variable warnings.
+> 
+> Move it out of the header and place it next to the SD degeneration
+> functions in sched/topology.c.
 
---RwGu8mu1E+uYXPWP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On Wed, Aug 26, 2020 at 02:47:58PM +0300, Vladimir Oltean wrote:
+> Fixes: 4ee4ea443a5d ("sched/topology: Introduce SD metaflag for flags needing > 1 groups")
+> Reported-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> ---
+>  include/linux/sched/topology.h | 7 -------
+>  kernel/sched/topology.c        | 7 +++++++
+>  2 files changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
+> index b9b0dab4d067..9ef7bf686a9f 100644
+> --- a/include/linux/sched/topology.h
+> +++ b/include/linux/sched/topology.h
+> @@ -25,13 +25,6 @@ enum {
+>  };
+>  #undef SD_FLAG
+>  
+> -/* Generate a mask of SD flags with the SDF_NEEDS_GROUPS metaflag */
+> -#define SD_FLAG(name, mflags) (name * !!((mflags) & SDF_NEEDS_GROUPS)) |
+> -static const unsigned int SD_DEGENERATE_GROUPS_MASK =
+> -#include <linux/sched/sd_flags.h>
+> -0;
+> -#undef SD_FLAG
+> -
+>  #ifdef CONFIG_SCHED_DEBUG
+>  
+>  struct sd_flag_debug {
+> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+> index 4e1260cb4b44..da3cd60e4b78 100644
+> --- a/kernel/sched/topology.c
+> +++ b/kernel/sched/topology.c
+> @@ -154,6 +154,13 @@ static inline bool sched_debug(void)
+>  }
+>  #endif /* CONFIG_SCHED_DEBUG */
+>  
+> +/* Generate a mask of SD flags with the SDF_NEEDS_GROUPS metaflag */
+> +#define SD_FLAG(name, mflags) (name * !!((mflags) & SDF_NEEDS_GROUPS)) |
+> +static const unsigned int SD_DEGENERATE_GROUPS_MASK =
+> +#include <linux/sched/sd_flags.h>
+> +0;
+> +#undef SD_FLAG
+> +
+>  static int sd_degenerate(struct sched_domain *sd)
+>  {
+>  	if (cpumask_weight(sched_domain_span(sd)) == 1)
+> -- 
+> 2.27.0
+> 
 
-> - The compatible string plays an integral part in the functionality of
->   the spi-fsl-dspi driver. I want to see a solution for ACPI where the
->   driver knows on which SoC it's running on. Otherwise it doesn't know
->   what are the silicon parameters of the DSPI module (XSPI present or
->   not, DMA present or not, FIFO depth). I don't see that now. I just see
->   something hardcoded for:
->   { "NXP0005", .driver_data = (kernel_ulong_t)&devtype_data[LS2085A], }
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Based on some other stuff I've seen with ACPI on NXP stuff it looks like
-they're following the same scheme but only caring about that one SoC for
-the time being.
 
---RwGu8mu1E+uYXPWP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9GcFAACgkQJNaLcl1U
-h9DWBwf/RbhMMV43CmV4B9YAHIO3SYiuzAS57g1dZwgEy/b+D0qN7NofL/c/M61q
-ehswXZ8kG1o4U3U7Kveb+CPOVLNDL0JGlf7RT7oX2027ER32kBqC6LbqhXm/blGA
-4xOws3MJmy9fZHyPTMqGJPHjVyJFE0HU6yy3PjOuHDMP/+AvJs7/ZQed0DXUYULF
-qPPFeN/O2uhl/4ODq/CpyyNjqIXnZzF7AGGd8vqLX5FP6FJH2CM8F2hoOu/SKKCy
-HsQcxOG2yp3XmjxlloubFteSpuMOQ3XVP1H+xG1HvgXt8iqWQvlb767LBqK8qOBv
-duwtA0RdsVc7n504Un0QlpgQz/f3eg==
-=AqXf
------END PGP SIGNATURE-----
-
---RwGu8mu1E+uYXPWP--
