@@ -2,169 +2,96 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F845C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89371C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA1E2177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555D42177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598449614;
-	bh=OnbaeTODuZTMNRlSHoyCbThTdhp2gl9zdOoHBVBt/cg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mUAMGTo63WB0jIRCpNJ6a021KolmzC1pdpr4IvwhiZONYi9bSx6/hoq1myV6nL/S4
-	 h07L8logYwHfWjnk2oDAnHrSKnFb3TD7eaDZO2eRvung/GTECfvdGlyVpl1fuUMCsT
-	 1HCGlWPxCjAgbzn0TrbZhqQLrvVA1aAvbQZPlSYg=
+	s=default; t=1598449627;
+	bh=lxOWZe0NvRj5PWjS+O4R6iWxBEI7vplpD8lEw3DXrYY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yPGBt2wV/Z9NOOyXruS+x2R1aUu7x6MhHwuHWvktYvtruGgRoF4Jf7ngQ6mIq93qX
+	 iL5AQtjdueQFp8QUJMXny20WjmOrCXua1JvzSqJ6VVM2JXo5J0yerdSChNSpyVLoFa
+	 cZ2s9e0SQrbKzAld3bChE2MPC4a2H/TWdJjiUx0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730405AbgHZNqw (ORCPT
+        id S1730422AbgHZNrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:46:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56378 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 09:47:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730306AbgHZNqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:46:48 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730407AbgHZNq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:46:56 -0400
+Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B384620707;
-        Wed, 26 Aug 2020 13:46:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73B7822B40;
+        Wed, 26 Aug 2020 13:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598449607;
-        bh=OnbaeTODuZTMNRlSHoyCbThTdhp2gl9zdOoHBVBt/cg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dSGcKzeV2DJHrocsZwfvp5scgSjghpMulltzzv0PWgfuncKHexnqs7/AhQ3maQtjv
-         kuRLyaxSA/NJ43H3gHGHP7EQOp+55rCMI933iEIsDRu+SkLma+T5A3W+/E1bLjmIzo
-         +APCk5vP1miREaduYYfY3QI9m4TerDetvDFr7bG8=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, "David S . Miller" <davem@davemloft.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        linux-arch@vger.kernel.org
-Subject: [RFC PATCH 03/14] arm: kprobes: Use generic kretprobe trampoline handler
-Date:   Wed, 26 Aug 2020 22:46:43 +0900
-Message-Id: <159844960343.510284.15315372011917043979.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159844957216.510284.17683703701627367133.stgit@devnote2>
-References: <159844957216.510284.17683703701627367133.stgit@devnote2>
-User-Agent: StGit/0.19
+        s=default; t=1598449615;
+        bh=lxOWZe0NvRj5PWjS+O4R6iWxBEI7vplpD8lEw3DXrYY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=yi5Zsbf4PbgL1PyjG9QhxZNEjqPAItOrubBqyZf2sduxy0HZsH8wsgBhUsYCW5Enu
+         uLumJCakR0YQmjbcgx3lpH11DasIRhHMC1p3c2/orhbBGZGzRWc9Css6yO/E22e+BT
+         cQHJrjdB1tfHJsT63KHv2c+tHQqOWwPLtiroU85M=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kAvlN-002L50-FY; Wed, 26 Aug 2020 15:46:53 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Frank A. Cancio Bello" <frank@generalsoftwareinc.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-spdx@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2 0/2] use SPDX also for GFDL documents
+Date:   Wed, 26 Aug 2020 15:46:50 +0200
+Message-Id: <cover.1598449136.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the generic kretprobe trampoline handler. Use regs->ARM_fp
-for framepointer verification.
+There are 438 document files that were licensed under the
+free versions of GNU Free Document License.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- arch/arm/probes/kprobes/core.c |   79 ++--------------------------------------
- 1 file changed, 4 insertions(+), 75 deletions(-)
+The free versions are the one that doesn't contain invariant
+parts.
 
-diff --git a/arch/arm/probes/kprobes/core.c b/arch/arm/probes/kprobes/core.c
-index 90b5bc723c83..d523baf10cea 100644
---- a/arch/arm/probes/kprobes/core.c
-+++ b/arch/arm/probes/kprobes/core.c
-@@ -413,87 +413,16 @@ void __naked __kprobes kretprobe_trampoline(void)
- /* Called from kretprobe_trampoline */
- static __used __kprobes void *trampoline_handler(struct pt_regs *regs)
- {
--	struct kretprobe_instance *ri = NULL;
--	struct hlist_head *head, empty_rp;
--	struct hlist_node *tmp;
--	unsigned long flags, orig_ret_address = 0;
--	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
--	kprobe_opcode_t *correct_ret_addr = NULL;
--
--	INIT_HLIST_HEAD(&empty_rp);
--	kretprobe_hash_lock(current, &head, &flags);
--
--	/*
--	 * It is possible to have multiple instances associated with a given
--	 * task either because multiple functions in the call path have
--	 * a return probe installed on them, and/or more than one return
--	 * probe was registered for a target function.
--	 *
--	 * We can handle this because:
--	 *     - instances are always inserted at the head of the list
--	 *     - when multiple return probes are registered for the same
--	 *       function, the first instance's ret_addr will point to the
--	 *       real return address, and all the rest will point to
--	 *       kretprobe_trampoline
--	 */
--	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
--		if (ri->task != current)
--			/* another task is sharing our hash bucket */
--			continue;
--
--		orig_ret_address = (unsigned long)ri->ret_addr;
--
--		if (orig_ret_address != trampoline_address)
--			/*
--			 * This is the real return address. Any other
--			 * instances associated with this task are for
--			 * other calls deeper on the call stack
--			 */
--			break;
--	}
--
--	kretprobe_assert(ri, orig_ret_address, trampoline_address);
--
--	correct_ret_addr = ri->ret_addr;
--	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
--		if (ri->task != current)
--			/* another task is sharing our hash bucket */
--			continue;
--
--		orig_ret_address = (unsigned long)ri->ret_addr;
--		if (ri->rp && ri->rp->handler) {
--			__this_cpu_write(current_kprobe, &ri->rp->kp);
--			get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
--			ri->ret_addr = correct_ret_addr;
--			ri->rp->handler(ri, regs);
--			__this_cpu_write(current_kprobe, NULL);
--		}
--
--		recycle_rp_inst(ri, &empty_rp);
--
--		if (orig_ret_address != trampoline_address)
--			/*
--			 * This is the real return address. Any other
--			 * instances associated with this task are for
--			 * other calls deeper on the call stack
--			 */
--			break;
--	}
--
--	kretprobe_hash_unlock(current, &flags);
--
--	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
--		hlist_del(&ri->hlist);
--		kfree(ri);
--	}
--
--	return (void *)orig_ret_address;
-+	return (void *)kretprobe_trampoline_handler(regs,
-+				(unsigned long)&kretprobe_trampoline,
-+				regs->ARM_fp);
- }
- 
- void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
- 				      struct pt_regs *regs)
- {
- 	ri->ret_addr = (kprobe_opcode_t *)regs->ARM_lr;
-+	ri->fp = regs->ARM_fp;
- 
- 	/* Replace the return addr with trampoline addr. */
- 	regs->ARM_lr = (unsigned long)&kretprobe_trampoline;
+The first patch adds the license files.  As newer documents
+aren't supposed to use them without being dual-licensed
+with GPLv2, add them under LICENSE/deprecated.
+
+The second patch replaces a boilerplate text from 
+ring-buffer-design.rst by the corresponding SPDX header.
+
+The other documents are all under Documentation/uapi/media.
+
+A separate patchset, to be merged via the linux-media tree
+will cover those.
+
+Mauro Carvalho Chehab (2):
+  LICENSE: add GFDL deprecated licenses
+  docs: trace:: use the new SPDX tag
+
+ Documentation/trace/ring-buffer-design.rst |  26 +-
+ LICENSES/deprecated/GFDL-1.1               | 355 ++++++++++++++++++
+ LICENSES/deprecated/GFDL-1.2               | 397 +++++++++++++++++++++
+ 3 files changed, 753 insertions(+), 25 deletions(-)
+ create mode 100644 LICENSES/deprecated/GFDL-1.1
+ create mode 100644 LICENSES/deprecated/GFDL-1.2
+
+-- 
+2.26.2
+
 
