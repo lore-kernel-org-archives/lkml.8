@@ -2,99 +2,109 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 148DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE76B2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:26:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lCGvvJtx"
+	by mail.kernel.org (Postfix) with ESMTP id AD603207DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:26:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHZH0p (ORCPT
+        id S1726858AbgHZH0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:26:45 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46282 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbgHZH0o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 03:26:52 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57756 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726723AbgHZH0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Aug 2020 03:26:44 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07Q7QQAw044714;
-        Wed, 26 Aug 2020 02:26:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598426786;
-        bh=5vsDR7X3Aq0aAuUV19I1BIwRlagOD/K58mwMuCDkt0E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lCGvvJtxFVazQGWve4gNBURcEZ5nWoiF6ggO3eDngkMnX1hUBgxMjNb5gWj41zWKE
-         pL2EdCy1IgBudhs3JeKeSV/y5W/GUZRt1DpAlGDBuJPo+9faRrD6JbUHtI5wVToSOS
-         9P1K6J3J3if+bYFYtPjDdlv7CFcguw1s0B4/UPKE=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07Q7QQGK022517
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 02:26:26 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
- Aug 2020 02:26:26 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 26 Aug 2020 02:26:26 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07Q7QMK8115741;
-        Wed, 26 Aug 2020 02:26:23 -0500
-Subject: Re: [PATCH v8 2/3] drm: bridge: Add support for Cadence MHDP DPI/DP
- bridge
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Swapnil Jakhade <sjakhade@cadence.com>
-CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
-        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
-        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
-        <yamonkar@cadence.com>, <jsarha@ti.com>, <nsekhar@ti.com>,
-        <praneeth@ti.com>
-References: <1596713672-8146-1-git-send-email-sjakhade@cadence.com>
- <1596713672-8146-3-git-send-email-sjakhade@cadence.com>
- <20200811023622.GC13513@pendragon.ideasonboard.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <0a6e7550-67ca-c72f-7c3a-1ed4586381a7@ti.com>
-Date:   Wed, 26 Aug 2020 10:26:22 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EC334B2CAEDE9C0B3083;
+        Wed, 26 Aug 2020 15:26:41 +0800 (CST)
+Received: from huawei.com (10.69.192.56) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Wed, 26 Aug 2020
+ 15:26:35 +0800
+From:   Luo Jiaxing <luojiaxing@huawei.com>
+To:     <martin.petersen@oracle.com>, <jejb@linux.ibm.com>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <john.garry@huawei.com>, <yanaijie@huawei.com>,
+        <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>,
+        <linuxarm@huawei.com>
+Subject: [PATCH v1] scsi: libsas: set data_dir as DMA_NONE if libata mark qc as NODATA
+Date:   Wed, 26 Aug 2020 15:24:26 +0800
+Message-ID: <1598426666-54544-1-git-send-email-luojiaxing@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20200811023622.GC13513@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+We found that it will fail every time when set feature to SATA disk by
+"sdparm -s WCE=0 /dev/sde".
 
-On 11/08/2020 05:36, Laurent Pinchart wrote:
->> +{
->> +	u32 max_bw, req_bw, bpp;
->> +
->> +	bpp = cdns_mhdp_get_bpp(&mhdp->display_fmt);
->> +	req_bw = mode->clock * bpp / 8;
->> +	max_bw = lanes * rate;
-> mode->clock is in kHz, while rate is expressed in 10kHz unit if I'm not
-> mistaken.
+After checking protocol, we know that MODE SELECT is the SCSI command for
+setting WCE, and it do not exist in the SATA protocol. Therefore, this
+commands are encapsulated in the SET FEATURE command in SATA protocol.
+The difference is that the MODE SELECT command sent to SAS disk contains
+data and is sent through the DMA. But when send to SATA disk through
+SET FEATURE command, it does not contain data.
 
-Rate is in 10 kbps units. And 10 bits in DP gives you one byte (8b/10b encoding). So max_bw is in
-kBps, the same as req_bw.
+I think libsas was not thorough enough in dealing with the situation, at
+sas_ata_qc_issue(), task->dma_dir is inherited from qc->dma_dir(qc->dma_dir
+is also inherited from SCSI). However, in ATA driver, if qc->tf.protocol is
+set to ATA_PROT_NODATA, ata_sg_setup() will not invoked by ata_qc_issue().
+It mean that ATA didn't use dma_dir and it's not reliable. So, if libsas
+still inherits from qc->dma_dir when there is no data need to be send. As a
+result, task with no data are mistakenly considered as carrying data and it
+will make LLDD report an error on IO completion.
 
- Tomi
+So, When ATA driver mark tf->protocol as NODATA, dma_dir should be set as
+DMA_NONE. And we can see WCE is successfully disable for SATA disk then.
 
+Euler:~ # sdparm -s WCE=0 /dev/sde
+     /dev/sde: ATA       ST4000NM0035-1V4  TN03
+Euler:~ # sdparm /dev/sde
+     /dev/sde: ATA       ST4000NM0035-1V4  TN03
+Read write error recovery mode page:
+   AWRE        1  [cha: n, def:  1]
+   ARRE        0  [cha: n, def:  0]
+   PER         0  [cha: n, def:  0]
+Caching (SBC) mode page:
+   WCE         0  [cha: y, def:  0]
+   RCD         0  [cha: n, def:  0]
+Control mode page:
+   SWP         0  [cha: n, def:  0]
+
+Fixes: fa1c1e8f1ece ("[SCSI] Add SATA support to libsas")
+
+Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
+Reviewed-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/libsas/sas_ata.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/libsas/sas_ata.c b/drivers/scsi/libsas/sas_ata.c
+index 6a521ba..a488798 100644
+--- a/drivers/scsi/libsas/sas_ata.c
++++ b/drivers/scsi/libsas/sas_ata.c
+@@ -209,7 +209,10 @@ static unsigned int sas_ata_qc_issue(struct ata_queued_cmd *qc)
+ 		task->num_scatter = si;
+ 	}
+ 
+-	task->data_dir = qc->dma_dir;
++	if (qc->tf.protocol == ATA_PROT_NODATA)
++		task->data_dir = DMA_NONE;
++	else
++		task->data_dir = qc->dma_dir;
+ 	task->scatter = qc->sg;
+ 	task->ata_task.retry_count = 1;
+ 	task->task_state_flags = SAS_TASK_STATE_PENDING;
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.7.4
+
