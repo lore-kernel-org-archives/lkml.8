@@ -2,193 +2,83 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A2FFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B811AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA75820838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:05:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEM9ob7l"
+	by mail.kernel.org (Postfix) with ESMTP id 9FB7F20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbgHZMFj (ORCPT
+        id S1729709AbgHZMFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:05:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35988 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729639AbgHZMEf (ORCPT
+        Wed, 26 Aug 2020 08:05:46 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42821 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729677AbgHZMFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:04:35 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A55FC061574;
-        Wed, 26 Aug 2020 05:04:35 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id k2so1269333ots.4;
-        Wed, 26 Aug 2020 05:04:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to;
-        bh=H42To0Ot/qKyLOPGuE85SNu+0SkA0I/INYqpJsqvgsc=;
-        b=KEM9ob7lUvneiK7C8F85XB+lZbIJwGILMyE3JLGHxlx1sCAJa6oAIGuo97jGgYrMpu
-         uOz7VZ9lWJHk0WmusJF/jyOgZfwLebK4Dn/7KI/bfngOnt5+1vVvH86P6YxBI/wf/pEq
-         RaTmElS8ZR8fq0NLAlG+7t9mTb+iEDuueyKU/EMJzs6gM2aUUHEuzWT+XjVq4RsRHZd8
-         6mGwpJjBayNOQXmIJOGKIFTpgNzXyJn931wgpF8ihHS8xoScRUoZKeF1+CVOqqY3qZKB
-         04YcZxto9VVki3wl79SnCLEBF2TV77DJX5Fidk160S5S+cwAw5DMgq9lWSPnF6nLtiY9
-         NLXA==
+        Wed, 26 Aug 2020 08:05:01 -0400
+Received: by mail-wr1-f67.google.com with SMTP id q14so1528555wrn.9;
+        Wed, 26 Aug 2020 05:05:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to;
-        bh=H42To0Ot/qKyLOPGuE85SNu+0SkA0I/INYqpJsqvgsc=;
-        b=oyas1xK7zPiFYaHqkN6xJu9x5ryFeEXBb4+ZMWOVUNhPW8be/BxDnoPmPQnCSSAnpR
-         EnqJZmCEplJj1EUmp7bJTHPkg2sGzFbup3k3zSLZhSGaX7egG7jfNhwMaxsN45/9e1OG
-         I+2k3e48JywJGMh+WbIXEIiuRdlOw6wXWskqd/54HMxgCdVXvSK+S+OcTMkl0COoC7Bw
-         49rL0q7hPuPMMk0lp7kZUSsrO/a4eNqlQmfx0K14Q/DlmRwx1/gMbxh4F5Jnx0WwAbi9
-         QL0vhIJaIyXY0CzO6jGG9qCFzB1/2pus7+C8OCslD5jxAiV1mzDPaDDhIRNhRHskwKmP
-         BBeQ==
-X-Gm-Message-State: AOAM533otXD8Vu+IfspZ7ZknWVy9qkq0Ey+aBKqygRZwQsJjSCay6lXT
-        NiHq3hP284rXR8EZhvvUYb2DQRytJBVoiu8uKVY=
-X-Google-Smtp-Source: ABdhPJzCuDvkPvtoeoC1Hv8vDbP0LNmo0Whoc6GAv6tXuG9z1c2BfKjQ1r7gofSPeldiPXEx9jfMo1Swv5mhZJioDzM=
-X-Received: by 2002:a9d:7656:: with SMTP id o22mr9125655otl.109.1598443474719;
- Wed, 26 Aug 2020 05:04:34 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yeR3qMxY8QK4/wvsoj5cuxH3mWn/t2ot23DexX4h7MA=;
+        b=IxdmjIAk61phj86Vx2aVeUtyV1ZPH6KSc6YbsU2upSKiejQ2+9+5qYpeJ0vwQ1Ft4K
+         yBA/x5JdIzT2RFVMchiz886iNCuDWnEyLHUHakwU3eL9BNqVIQGscVT6s/uhE7zHPeyZ
+         1Peh8dJwsx6AgyoXqQkD6BVloLi9NBXaLjv0z9xgAKm9EF+d62CaFjPNm7ifPMrfgxzF
+         Lt3RKsbOBJNyf9ZFCrLIRKpfeshH0BFblASsrNDaY5gKMIkxRGKi8GyDlLW/VtlG3S9A
+         sQl674qG4AUx1TxijPipxKuofwQyhfGH1BofPnrl+xkzqvyWbYaxo5smqopN51ieUnWm
+         E0oA==
+X-Gm-Message-State: AOAM532RTMuiB3z/59l1yZhmZQCDDr5vZLxbi5MTtxhb0hWRedR50Qi8
+        5RWPrFjQLB55qJTyzQgffj6b+4oQm6983A==
+X-Google-Smtp-Source: ABdhPJzsVm84CbbIOidcz8nD79LPK/Ny1lXC+ZG5qTLEMI14VHYwfiCaAadaxv6yHSvDMychEJr93w==
+X-Received: by 2002:adf:e452:: with SMTP id t18mr14333704wrm.109.1598443498258;
+        Wed, 26 Aug 2020 05:04:58 -0700 (PDT)
+Received: from localhost.localdomain (static-176-175-69-188.ftth.abo.bbox.fr. [176.175.69.188])
+        by smtp.googlemail.com with ESMTPSA id k24sm4728420wmj.19.2020.08.26.05.04.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 05:04:57 -0700 (PDT)
+From:   Guilhem Lettron <guilhem@barpilot.io>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guilhem Lettron <guilhem@barpilot.io>
+Subject: [PATCH] intel_idle: Add ICL support
+Date:   Wed, 26 Aug 2020 14:04:21 +0200
+Message-Id: <20200826120421.44356-1-guilhem@barpilot.io>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200816123248.97770-1-sedat.dilek@gmail.com>
-In-Reply-To: <20200816123248.97770-1-sedat.dilek@gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Wed, 26 Aug 2020 14:04:22 +0200
-Message-ID: <CA+icZUUnP5JQCzMG=pMQFwqQBHy78au6E0eJCod0YOARbHoLrw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Simplify DEBUG_INFO Kconfig handling
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just a friendly ping.
+Use the same C-states as SKL
 
-- Sedat -
+Signed-off-by: Guilhem Lettron <guilhem@barpilot.io>
+---
+ drivers/idle/intel_idle.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On Sun, Aug 16, 2020 at 2:32 PM Sedat Dilek <sedat.dilek@gmail.com> wrote:
->
-> While playing with [1] I saw that the handling
-> of CONFIG_DEBUG_INFO can be simplified.
->
-> [1] https://patchwork.kernel.org/patch/11716107/
->
-> Signed-off-by: Sedat Dilek <sedat.dilek@gmail.com>
-> ---
->  Makefile          |  6 +++++-
->  lib/Kconfig.debug | 10 ++++------
->  2 files changed, 9 insertions(+), 7 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 24a4c1b97bb0..f7af83393a49 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -810,13 +810,15 @@ endif
->  DEBUG_CFLAGS   := $(call cc-option, -fno-var-tracking-assignments)
->
->  ifdef CONFIG_DEBUG_INFO
-> +
->  ifdef CONFIG_DEBUG_INFO_SPLIT
->  DEBUG_CFLAGS   += -gsplit-dwarf
->  else
->  DEBUG_CFLAGS   += -g
->  endif
-> +
->  KBUILD_AFLAGS  += -Wa,-gdwarf-2
-> -endif
-> +
->  ifdef CONFIG_DEBUG_INFO_DWARF4
->  DEBUG_CFLAGS   += -gdwarf-4
->  endif
-> @@ -832,6 +834,8 @@ KBUILD_AFLAGS       += -gz=zlib
->  KBUILD_LDFLAGS += --compress-debug-sections=zlib
->  endif
->
-> +endif # CONFIG_DEBUG_INFO
-> +
->  KBUILD_CFLAGS += $(DEBUG_CFLAGS)
->  export DEBUG_CFLAGS
->
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 9ad9210d70a1..19930c412b93 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -212,9 +212,10 @@ config DEBUG_INFO
->
->           If unsure, say N.
->
-> +if DEBUG_INFO
-> +
->  config DEBUG_INFO_REDUCED
->         bool "Reduce debugging information"
-> -       depends on DEBUG_INFO
->         help
->           If you say Y here gcc is instructed to generate less debugging
->           information for structure types. This means that tools that
-> @@ -227,7 +228,6 @@ config DEBUG_INFO_REDUCED
->
->  config DEBUG_INFO_COMPRESSED
->         bool "Compressed debugging information"
-> -       depends on DEBUG_INFO
->         depends on $(cc-option,-gz=zlib)
->         depends on $(ld-option,--compress-debug-sections=zlib)
->         help
-> @@ -243,7 +243,6 @@ config DEBUG_INFO_COMPRESSED
->
->  config DEBUG_INFO_SPLIT
->         bool "Produce split debuginfo in .dwo files"
-> -       depends on DEBUG_INFO
->         depends on $(cc-option,-gsplit-dwarf)
->         help
->           Generate debug info into separate .dwo files. This significantly
-> @@ -259,7 +258,6 @@ config DEBUG_INFO_SPLIT
->
->  config DEBUG_INFO_DWARF4
->         bool "Generate dwarf4 debuginfo"
-> -       depends on DEBUG_INFO
->         depends on $(cc-option,-gdwarf-4)
->         help
->           Generate dwarf4 debug info. This requires recent versions
-> @@ -269,7 +267,6 @@ config DEBUG_INFO_DWARF4
->
->  config DEBUG_INFO_BTF
->         bool "Generate BTF typeinfo"
-> -       depends on DEBUG_INFO
->         depends on !DEBUG_INFO_SPLIT && !DEBUG_INFO_REDUCED
->         depends on !GCC_PLUGIN_RANDSTRUCT || COMPILE_TEST
->         help
-> @@ -279,7 +276,6 @@ config DEBUG_INFO_BTF
->
->  config GDB_SCRIPTS
->         bool "Provide GDB scripts for kernel debugging"
-> -       depends on DEBUG_INFO
->         help
->           This creates the required links to GDB helper scripts in the
->           build directory. If you load vmlinux into gdb, the helper
-> @@ -288,6 +284,8 @@ config GDB_SCRIPTS
->           instance. See Documentation/dev-tools/gdb-kernel-debugging.rst
->           for further details.
->
-> +endif # DEBUG_INFO
-> +
->  config ENABLE_MUST_CHECK
->         bool "Enable __must_check logic"
->         default y
-> --
-> 2.28.0
->
+diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+index 8e0fb1a5bdbd..1bb539f09a4f 100644
+--- a/drivers/idle/intel_idle.c
++++ b/drivers/idle/intel_idle.c
+@@ -1145,6 +1145,8 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
+ 	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&idle_cpu_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&idle_cpu_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,		&idle_cpu_skx),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&idle_cpu_skl),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&idle_cpu_skl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&idle_cpu_icx),
+ 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&idle_cpu_knl),
+ 	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&idle_cpu_knl),
+-- 
+2.27.0
+
