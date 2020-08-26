@@ -7,106 +7,264 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FE3C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8072075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90342075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LVgL1WzY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUM4b+AK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgHZQKH (ORCPT
+        id S1727783AbgHZQKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:10:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46034 "EHLO
+        Wed, 26 Aug 2020 12:10:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgHZQJz (ORCPT
+        with ESMTP id S1726718AbgHZQKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:09:55 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17F4C061574;
-        Wed, 26 Aug 2020 09:09:54 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id l23so2204614edv.11;
-        Wed, 26 Aug 2020 09:09:54 -0700 (PDT)
+        Wed, 26 Aug 2020 12:10:21 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669C5C061574;
+        Wed, 26 Aug 2020 09:10:20 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mt12so1099750pjb.4;
+        Wed, 26 Aug 2020 09:10:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=M2MxZIUXPUpmUf6QxK3hAeLX83FtG2l1uckG74gDySM=;
-        b=LVgL1WzYWIpvD7I2Liu6jZDHK9m8clGdyi/splNF9igVB7uUtJEJBZ15e5GRgDMtOE
-         6Th8gEWPmn5l2m4S0n6t0rrMUCY6Q8gwUBg63Ph2YY+QRif9WKC+cQUMdh/vIBSEydHQ
-         zIdX575OJZSeUjw6M9E7H+d2IjSGnpDqgFjPcdrOfG85QRK9a+PrvuEyjIuUwPfqQMSG
-         UnC9orzRbyMDpa0zbHFH4nvwRbhylY9p+X3aVqAHguWIexwBSeQQUrcqYYzw5g4ElSda
-         aVjf78FGAMVwLNKxarR9AbkcnkZ8vF4JLNOOUWK2kjhryzLMz8ptGttY9sY/k545V1Yu
-         7jPQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dzkKMaEYRSqK3qJ/7RKMF0nr0rmaw4l1yJHr2LcyJrQ=;
+        b=GUM4b+AKt4DXs9Czm1/g7FEUizlZoYNy2a13HKf6jY4MB/UtxnZis4YdlNbgnv0gng
+         VLgyepIPIP+r3HqOxtcXfRJOT8V7yK3/geJJFC4lH9ZkeKrvKSRo5tgNGS1jFwqbuW4w
+         mIYO6h8SNnsvEq+7tnBZVzNICRpRqO4mKjRfclvaEicY3IT/MBm3Z25ahf5To6Qy9Dmj
+         ZXGlgdmZQb9uwS8VglWPRo+Do6XZl7+U0fqkBKz93N3/oH+S5dRF8ZiefspOZswDrGuS
+         Mc0OEGPL7xKO0zfmXYaD3yZoZ6uzDWFsuFt4Wq1bCmA6r0pmVK6yEsL7oNTZ5wWtIr+R
+         NFqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=M2MxZIUXPUpmUf6QxK3hAeLX83FtG2l1uckG74gDySM=;
-        b=WocmhEeAn3HodgNQSOLIlFGHgjOXah4qt1snSFWuihKLMp4B9uEHRVUwrTKPHqJOHc
-         mxOUdNQJKcI/FiLA+mU0ZFrvGGrBYx5qz/5A+may+9Y05nn+egORG7j3CRnX5U4febEY
-         khwBK64YT5t5N2z45k62Ff5DSGZVq6dcZBlK3VuoZrn1PLn+P9MV8R3tTexNVAEITd7z
-         KhJmgoQ0Y2rWPXsx8+khCFB+dM1lvb9stK6tvbL2Kd9B3cJ6Pc2G8uPGFsqDUNfxylTB
-         eCOeB4Ub8iLppJd3Vo4ghDXfrIwvqKT6zYDbzDd2fiqaYr9IeOuFM6ZhS0+N6WTqLcTn
-         3rDA==
-X-Gm-Message-State: AOAM530eZw7uxCz5oEVii0E5H/z4PGp3T1vzkkYSpTxNNKV3gTxPEgOc
-        1Akp0YiJpwzLaB53VkP+vvA=
-X-Google-Smtp-Source: ABdhPJyr2pY6Ky2yatr/El2379cMj7jCE2Z19cx/t1xeCXQHBPZnYJa/14OQIxUzJt7h5dn1UWDaFQ==
-X-Received: by 2002:a50:f403:: with SMTP id r3mr14483693edm.260.1598458193415;
-        Wed, 26 Aug 2020 09:09:53 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id v5sm2429132ede.13.2020.08.26.09.09.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 09:09:52 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 19:09:50 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Kuldip Dwivedi <kuldip.dwivedi@puresoftware.com>
-Cc:     Mark Brown <broonie@kernel.org>, Qiang Zhao <qiang.zhao@nxp.com>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        Tanveer Alam <tanveer.alam@puresoftware.com>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
-Message-ID: <20200826160950.i3k2oy6w2dlvmj34@skbuf>
-References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
- <20200821140718.GH4870@sirena.org.uk>
- <c810740d75f64e308fd362e6c6a5f437@mail.gmail.com>
- <20200822152118.rlwbcgfk4abjldtg@skbuf>
- <VE1PR04MB6768699B6D7A507A5BF82F9191540@VE1PR04MB6768.eurprd04.prod.outlook.com>
- <20200826114758.4agph53ag2fin6um@skbuf>
- <20200826142312.GH4965@sirena.org.uk>
- <20200826144744.c4yzgoovk6f4t3id@skbuf>
- <2e19f8979be4f962045a1597bdbe7886@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dzkKMaEYRSqK3qJ/7RKMF0nr0rmaw4l1yJHr2LcyJrQ=;
+        b=VnYecQZjoyBVoCq5b3vJP0ay4g+m/hMjpLpZgnyJDGc0GVI6vfglsIUIKibhjBVPm+
+         HiOxAsM9k7DA699NNnOEGyMo5wsRt8/9wJvHztIsVbHDARhl+d9ENaI5TEsn66xjrohl
+         R7ATO2rHPoxgDmRGhfc78GKRihIbqsINY6yYLJw+OdtxdK/0sMnXC8AZK2ZL3T7TADKw
+         SayIMgUZS28o9tuB+IOb1c1H1Xpu+IgcYxvRta77l6Q7Qj4XVjngHbzrT2FG4wIZ/JwI
+         uG2atwhEQG1F+0XbyFcrakHUd4rbPLYOou+8lxdpNUrNcpCtEgoftRYBArF+4GogjG9Q
+         VIkQ==
+X-Gm-Message-State: AOAM532S9DQOmPWmlewJTC2Ye/JS/LpbxmXURcuJJbySLHRIri72jaUD
+        NUYsUjM/0Gh+2JcuO97eKbAdh8BBAHV0bl+SuhA=
+X-Google-Smtp-Source: ABdhPJxjUO7auQGz1uE0L/pbKqExRjpwrx9ZKnA6VZu1uXt4iuNvtzNdZeMz+Ss+KiwIbV4Sfv0XzdnBKKO4+yfbwcQ=
+X-Received: by 2002:a17:902:407:: with SMTP id 7mr12502214ple.167.1598458219927;
+ Wed, 26 Aug 2020 09:10:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e19f8979be4f962045a1597bdbe7886@mail.gmail.com>
+References: <20200825124711.11455-1-nish.malpani25@gmail.com> <20200825124711.11455-2-nish.malpani25@gmail.com>
+In-Reply-To: <20200825124711.11455-2-nish.malpani25@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 26 Aug 2020 19:10:03 +0300
+Message-ID: <CAHp75VfHFo41S=Bhs2MB6Te6VAn+yCteys6XcYgciNZu9VppJg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] iio: gyro: adxrs290: Add triggered buffer support
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
+        darius.berghe@analog.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 08:43:20PM +0530, Kuldip Dwivedi wrote:
-> Just a query, Can't we use meaningful HID for different SoC just like
-> compatible strings in DT ?
-> In this way Silicon parameters can also be added in
-> fsl_dspi_devtype_data structure , which is already exist in driver
+On Tue, Aug 25, 2020 at 4:11 PM Nishant Malpani
+<nish.malpani25@gmail.com> wrote:
+>
+> Provide a way for continuous data capture by setting up buffer support. The
+> data ready signal exposed at the SYNC pin of the ADXRS290 is exploited as
+> a hardware interrupt which triggers to fill the buffer.
+>
+> Triggered buffer setup was tested with both hardware trigger (DATA_RDY) and
+> software triggers (sysfs-trig & hrtimer).
 
-I don't know, is that the preferred way?
-I don't even know if NXP0005 is made up or if it's written down
-somewhere in the PNP ID registry. NXP0006 seems to be assigned to the
-MDIO controller already, so the list of _HID values for the DSPI
-controller would be discontiguous at best, as well as ever-growing.
-Again, I'm just raising the concern, if somebody comes in and declares
-that as "not a problem", then ok.
-In the ACPI spec there's also a _HRV (Hardware Revision) object, which
-comes as a simple DWORD. We could use acpi_evaluate_integer() to read
-that, and use it as index into the array of fsl_dspi_devtype_data, if
-we declare that as ABI within the driver (and new SoCs would be added
-only at the end of the enum). Then we could use the NXP0005 _HID for
-everything DSPI.
-Again, maybe somebody could chime in and guide us on what's preferable.
+...
 
-Thanks,
--Vladimir
+> +static int adxrs290_set_mode(struct iio_dev *indio_dev, enum adxrs290_mode mode)
+> +{
+> +       struct adxrs290_state *st = iio_priv(indio_dev);
+> +       int val, ret;
+> +
+> +       mutex_lock(&st->lock);
+> +
+> +       if (st->mode == mode) {
+
+> +               ret = 0;
+
+Can be done outside of mutex.
+
+> +               goto done;
+> +       }
+> +
+
+> +       val = spi_w8r8(st->spi, ADXRS290_READ_REG(ADXRS290_REG_POWER_CTL));
+> +       if (val < 0) {
+> +               ret = val;
+> +               goto done;
+> +       }
+
+Consider other way around
+ ret = ...
+ ...
+ val = ret;
+
+> +       switch (mode) {
+> +       case ADXRS290_MODE_STANDBY:
+> +               val &= ~ADXRS290_MEASUREMENT;
+> +               break;
+> +       case ADXRS290_MODE_MEASUREMENT:
+> +               val |= ADXRS290_MEASUREMENT;
+> +               break;
+> +       default:
+> +               ret = -EINVAL;
+> +               goto done;
+> +       }
+> +
+> +       ret = adxrs290_spi_write_reg(st->spi,
+> +                                    ADXRS290_REG_POWER_CTL,
+> +                                    val);
+> +       if (ret < 0) {
+> +               dev_err(&st->spi->dev, "unable to set mode: %d\n", ret);
+> +               goto done;
+> +       }
+> +
+> +       /* update cached mode */
+> +       st->mode = mode;
+> +
+> +done:
+> +       mutex_unlock(&st->lock);
+> +       return ret;
+> +}
+
+...
+
+> +                               goto err_release;
+>
+> -                       return IIO_VAL_INT;
+> +                       ret = IIO_VAL_INT;
+> +                       break;
+>                 default:
+> -                       return -EINVAL;
+> +                       ret = -EINVAL;
+> +                       break;
+>                 }
+
+> +err_release:
+
+I didn't get the purpose of this. Wasn't the break statement enough?
+
+> +               iio_device_release_direct_mode(indio_dev);
+> +               return ret;
+>         case IIO_CHAN_INFO_SCALE:
+>                 switch (chan->type) {
+>                 case IIO_ANGL_VEL:
+
+...
+
+> +                       goto err_release;
+
+Ditto.
+
+> +               }
+> +
+>                 /* caching the updated state of the high-pass filter */
+>                 st->hpf_3db_freq_idx = hpf_idx;
+>                 /* retrieving the current state of the low-pass filter */
+>                 lpf_idx = st->lpf_3db_freq_idx;
+> -               return adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
+> +               ret = adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
+> +               break;
+> +
+> +       default:
+> +               ret = -EINVAL;
+> +               break;
+>         }
+>
+> -       return -EINVAL;
+> +err_release:
+> +       iio_device_release_direct_mode(indio_dev);
+> +       return ret;
+>  }
+
+...
+
+> +       val = (state ? ADXRS290_SYNC(ADXRS290_DATA_RDY_OUT) : 0);
+
+Purpose of outer parentheses?
+
+...
+
+> +static int adxrs290_probe_trigger(struct iio_dev *indio_dev)
+> +{
+> +       struct adxrs290_state *st = iio_priv(indio_dev);
+> +       int ret;
+> +
+> +       if (!st->spi->irq) {
+> +               dev_info(&st->spi->dev, "no irq, using polling\n");
+> +               return 0;
+> +       }
+> +
+> +       st->dready_trig = devm_iio_trigger_alloc(&st->spi->dev,
+> +                                                "%s-dev%d",
+> +                                                indio_dev->name,
+> +                                                indio_dev->id);
+> +       if (!st->dready_trig)
+> +               return -ENOMEM;
+> +
+> +       st->dready_trig->dev.parent = &st->spi->dev;
+> +       st->dready_trig->ops = &adxrs290_trigger_ops;
+> +       iio_trigger_set_drvdata(st->dready_trig, indio_dev);
+> +
+> +       ret = devm_request_irq(&st->spi->dev, st->spi->irq,
+> +                              &iio_trigger_generic_data_rdy_poll,
+> +                              IRQF_ONESHOT,
+> +                              "adxrs290_irq", st->dready_trig);
+> +       if (ret < 0) {
+
+> +               dev_err(&st->spi->dev, "request irq %d failed\n", st->spi->irq);
+> +               return ret;
+
+return dev_err_probe(...);
+
+> +       }
+> +
+> +       ret = devm_iio_trigger_register(&st->spi->dev, st->dready_trig);
+> +       if (ret) {
+
+> +               dev_err(&st->spi->dev, "iio trigger register failed\n");
+> +               return ret;
+
+return dev_err_probe(...);
+
+> +       }
+> +
+> +       indio_dev->trig = iio_trigger_get(st->dready_trig);
+> +
+> +       return 0;
+> +}
+
+...
+
+> +       ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
+> +                                             &iio_pollfunc_store_time,
+> +                                             &adxrs290_trigger_handler, NULL);
+> +       if (ret < 0) {
+
+> +               dev_err(&spi->dev, "iio triggered buffer setup failed\n");
+> +               return ret;
+
+return dev_err_probe(...);
+
+> +       }
+
+-- 
+With Best Regards,
+Andy Shevchenko
