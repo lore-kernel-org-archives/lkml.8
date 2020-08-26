@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169A8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83739C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3C3920737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E72120737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:20:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598466003;
-	bh=/MVD81Dk9a9N8i8v4eBsnioXxC7T8r+SLsxSVtXZhEA=;
+	s=default; t=1598466008;
+	bh=MhmkwJ2yyDo7W16oC/eUQhQtQQPiKt2NFHFuo0anrwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bLXtC1kc4w9DiNf7UiXRn/rAQ3Lh/8kXmAsoblEWpN3k9CtnolY6t/bSmduVqC/gQ
-	 2w+mcqyN8ViJZX6AdfxU0KCDAHDwBJ6bVQFuVmuC41lR9dqCqRjnHrS+PK5TJL35Fk
-	 Eiih7x+GKNWQU3IyscX2yDtxPh2PQbcZikpHf6PA=
+	b=qRihsJPjoqcKShOP4ZsJJqxNJBzbE5jUoVZ67uqxR/RtpkppG3FGdksmUbXEdCvpG
+	 9+fiCJeQlHGG/ckcc3OXPSrRBLt0XKXE29V0ZFunqxuk7iQCV4Wv3CcOw37Zv4xrZ3
+	 RYgE6J7uT4WIKaoNkIWkZhKlgTUd3JBc59gyAkew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgHZSUB (ORCPT
+        id S1726946AbgHZSUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:20:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41926 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 14:20:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727794AbgHZSSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:18:21 -0400
+        id S1727047AbgHZSRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:17:53 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE49C2083B;
-        Wed, 26 Aug 2020 18:18:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D8A320786;
+        Wed, 26 Aug 2020 18:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598465901;
-        bh=/MVD81Dk9a9N8i8v4eBsnioXxC7T8r+SLsxSVtXZhEA=;
+        s=default; t=1598465872;
+        bh=MhmkwJ2yyDo7W16oC/eUQhQtQQPiKt2NFHFuo0anrwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a5whlNufmpP7lRPlL+rG4uzwsAtu9iYP3on3k/DYmbaOa9YW3+AFwZq7f+T/8luiA
-         hHsJ1uIQ81vCNO8Q/rgvmt5cf3vY13wrCqoUPOrcYhWsrOKNqIBcZgYw57qoubbZcU
-         BreZZCgcxExZXnCjzjBGvs/iP4Rf9JAqMHaUDO8w=
+        b=fBU6CEuAA0amVc+6o5CPkB5Rh3XmQO1TEJXL+cFkD0c5P+wobSWcKG4cGtSSrqiZj
+         68w16vrtYopb/o6hDHNTwOaolZi3w6lxHP1apv/XOs1PYC+eh5xT5eejdertKgYtQt
+         PD6sAFEl2vaV85bkDGWgwMlt7HPTV36kavA/5rgc=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Hans de Goede <hdegoede@redhat.com>,
@@ -51,9 +51,9 @@ To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
         platform-driver-x86@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 13/24] Input: edf-ft5x06 - Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 20:16:55 +0200
-Message-Id: <20200826181706.11098-13-krzk@kernel.org>
+Subject: [PATCH 07/24] Input: rotary_encoder - Simplify with dev_err_probe()
+Date:   Wed, 26 Aug 2020 20:16:49 +0200
+Message-Id: <20200826181706.11098-7-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200826181706.11098-1-krzk@kernel.org>
 References: <20200826181706.11098-1-krzk@kernel.org>
@@ -67,30 +67,28 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/input/touchscreen/edt-ft5x06.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/input/misc/rotary_encoder.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index 6ff81d48da86..d4827ac963b0 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -1098,13 +1098,9 @@ static int edt_ft5x06_ts_probe(struct i2c_client *client,
- 	tsdata->max_support_points = chip_data->max_support_points;
+diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/rotary_encoder.c
+index 6d613f2a017c..ea56c9f4975a 100644
+--- a/drivers/input/misc/rotary_encoder.c
++++ b/drivers/input/misc/rotary_encoder.c
+@@ -236,12 +236,8 @@ static int rotary_encoder_probe(struct platform_device *pdev)
+ 		device_property_read_bool(dev, "rotary-encoder,relative-axis");
  
- 	tsdata->vcc = devm_regulator_get(&client->dev, "vcc");
--	if (IS_ERR(tsdata->vcc)) {
--		error = PTR_ERR(tsdata->vcc);
--		if (error != -EPROBE_DEFER)
--			dev_err(&client->dev,
--				"failed to request regulator: %d\n", error);
--		return error;
+ 	encoder->gpios = devm_gpiod_get_array(dev, NULL, GPIOD_IN);
+-	if (IS_ERR(encoder->gpios)) {
+-		err = PTR_ERR(encoder->gpios);
+-		if (err != -EPROBE_DEFER)
+-			dev_err(dev, "unable to get gpios: %d\n", err);
+-		return err;
 -	}
-+	if (IS_ERR(tsdata->vcc))
-+		return dev_err_probe(&client->dev, PTR_ERR(tsdata->vcc),
-+				     "failed to request regulator\n");
- 
- 	error = regulator_enable(tsdata->vcc);
- 	if (error < 0) {
++	if (IS_ERR(encoder->gpios))
++		return dev_err_probe(dev, PTR_ERR(encoder->gpios), "unable to get gpios\n");
+ 	if (encoder->gpios->ndescs < 2) {
+ 		dev_err(dev, "not enough gpios found\n");
+ 		return -EINVAL;
 -- 
 2.17.1
 
