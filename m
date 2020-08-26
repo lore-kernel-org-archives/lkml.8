@@ -2,118 +2,108 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43158C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE97C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:11:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 207C02080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B4902080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:11:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nnIuJBO3"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHrFHnGJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbgHZLLC (ORCPT
+        id S1728659AbgHZLLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:11:02 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:11648 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728586AbgHZLKv (ORCPT
+        Wed, 26 Aug 2020 07:11:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55862 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728721AbgHZLLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:10:51 -0400
-X-UUID: e55c0edbb05643daa301872f462d6ff4-20200826
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=pnlfpEAFsOOmXFIeR1iCQGXMDaBl8g+2wdRlohePfrs=;
-        b=nnIuJBO324rDoCeil/c+H+QsWE21nPnyLgP/NhW7P0T5/pvghlHa5DT5QuKGOC2MH9WGQFQtbkI5pYzM5OiYEsn+pJsu/6s+rt2covtMNHXZihotQIaUsCCfwVAtSZWCCH4cFkJJxzd/CoVffeksJL1xkWkXtMJhpV9olDwwFDA=;
-X-UUID: e55c0edbb05643daa301872f462d6ff4-20200826
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <crystal.guo@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1114327454; Wed, 26 Aug 2020 19:10:43 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 26 Aug
- 2020 19:10:42 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 26 Aug 2020 19:10:41 +0800
-Message-ID: <1598440159.30048.13.camel@mhfsdcap03>
-Subject: Re: [v4,1/4] dt-binding: reset-controller: ti: add
- reset-duration-us property
-From:   Crystal Guo <crystal.guo@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "s-anna@ti.com" <s-anna@ti.com>, "afd@ti.com" <afd@ti.com>,
-        Seiya Wang =?UTF-8?Q?=28=E7=8E=8B=E8=BF=BA=E5=90=9B=29?= 
-        <seiya.wang@mediatek.com>,
-        Stanley Chu =?UTF-8?Q?=28=E6=9C=B1=E5=8E=9F=E9=99=9E=29?= 
-        <stanley.chu@mediatek.com>,
-        Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= 
-        <Yingjoe.Chen@mediatek.com>,
-        Fan Chen =?UTF-8?Q?=28=E9=99=B3=E5=87=A1=29?= 
-        <fan.chen@mediatek.com>,
-        Yong Liang =?UTF-8?Q?=28=E6=A2=81=E5=8B=87=29?= 
-        <Yong.Liang@mediatek.com>
-Date:   Wed, 26 Aug 2020 19:09:19 +0800
-In-Reply-To: <20200825174215.GA999117@bogus>
-References: <20200817030324.5690-1-crystal.guo@mediatek.com>
-         <20200817030324.5690-2-crystal.guo@mediatek.com>
-         <20200825174215.GA999117@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 26 Aug 2020 07:11:01 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B26C061574;
+        Wed, 26 Aug 2020 04:11:00 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id i10so881692pgk.1;
+        Wed, 26 Aug 2020 04:11:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OYwGuEb91/Fq7kHgAcheZzGBW4eXw4/zcLyHp4V/iG0=;
+        b=kHrFHnGJJqHIOGuHlNt47+PIV7xjyxVsQGCXDBKvWlCVnlDrIzQm6EMJ2ilqj4vxtR
+         Ea5p9UqDeeEy8aUGQmy7Jg2iXrzk3+f7GARCG/yd94rppYK1u0lp3FDcF1INMV7dBzZu
+         88Sx8IdxaethQB6tSl/yYI2xja24LrVc04r10ejLRKRrdS8mKCWTZPyTmaw3HrNQHi6L
+         /9L2n9XdDytKjSYeVNeUJSPwJHMkrwKqnUmP8LFzlh2gerEGyU19Z15fqwcs8wbTOAvQ
+         mkSg6jHwv/x12y61M23ocu1o6DnSUIhByZVC5fAASWXHamKddzyqNC+GJmw55ugorjCO
+         PYPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OYwGuEb91/Fq7kHgAcheZzGBW4eXw4/zcLyHp4V/iG0=;
+        b=VbwE8EtmMSO6AeNQgcM80oHbYAJcAYp7gv/cUsSjUz1a/FKltMAIRLMliQzAyt6HqE
+         Pi2QRzU3wuG7WaKw88DkcVK8Yp8giko4LlYND04pf+JoAj6khJOq2D+Am2aJ1bhPO4Sp
+         5RSElsYh6R+/SYRLNO3izmmKJEAkCLwBBnzkF9nDaKw69eO/tw2kuJNm0ZI8xxeOEHAZ
+         eWtcDhN01iHvBf6+aj9xDGwwJtOi3UvGgzzKHUfu23XjpIHnMlAMC01c8wITAAokyt6N
+         3/ozOi9Lk7dKEZFnyfxCkGooXh8Lq7eL/84fYBxNXAPFqbKaS82h0xod6pnrzCWTQH81
+         bkWQ==
+X-Gm-Message-State: AOAM531k1G77ZGjIEnJ3X+C9ZXdNjMa5KBE9ztzlQ5NEWAzfHPXOipXK
+        nodYoPIx5EzM+WmWkOapUdc=
+X-Google-Smtp-Source: ABdhPJwLxmpEUrt0bg/EsSlOKtqGn2tKaPB89b7YhYCQnhKwKyVGv7GIbk3RsGJH1mgpotz1PR/t8A==
+X-Received: by 2002:a63:df01:: with SMTP id u1mr9354157pgg.401.1598440259924;
+        Wed, 26 Aug 2020 04:10:59 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.215.131])
+        by smtp.gmail.com with ESMTPSA id e62sm2793172pfh.144.2020.08.26.04.10.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 04:10:59 -0700 (PDT)
+From:   Anant Thazhemadam <anant.thazhemadam@gmail.com>
+Cc:     anant.thazhemadam@gmail.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] staging: media/atomisp : fix "dubious: !x | !y" sparse warning
+Date:   Wed, 26 Aug 2020 16:39:15 +0530
+Message-Id: <20200826110919.9523-1-anant.thazhemadam@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200826095000.GW1793@kadam>
+References: <20200826095000.GW1793@kadam>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: CD4A58937EB8860E7A6649B1B9819A2D1F0714F405492412FB5A47804F237A782000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA4LTI2IGF0IDAxOjQyICswODAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gTW9uLCBBdWcgMTcsIDIwMjAgYXQgMTE6MDM6MjFBTSArMDgwMCwgQ3J5c3RhbCBHdW8gd3Jv
-dGU6DQo+ID4gaW50cm9kdWNlICdyZXNldCcgbWV0aG9kIHRvIGFsbG93IGRldmljZSBkbyBzZXJp
-YWxpemVkIGFzc2VydCBhbmQNCj4gPiBkZWFzc2VydCBvcGVyYXRpb25zIGluIGEgc2luZ2xlIHN0
-ZXAsIHdoaWNoIG5lZWRzIGEgbWluaW11bSBkZWxheQ0KPiA+IHRvIGJlIHdhaXRlZCBiZXR3ZWVu
-IGFzc2VydCBhbmQgZGVhc3NlcnQuDQo+IA0KPiBXaHkgaXMgTWVkaWF0ZWsgYWRkaW5nIHRvIGEg
-VEkgYmluZGluZz8NCg0KVEkgcmVzZXQtY29udHJvbGxlciBwcm92aWRlcyBhIGNvbW1vbiByZXNl
-dCBtYW5hZ2VtZW50LA0KYW5kIGlzIHN1aXRhYmxlIGZvciBNZWRpYXRlayBTb0NzLCB0aHVzIE1l
-ZGlhdGVrIHdhbnRzIHRvIHJldXNlIHRoaXMNCmRyaXZlciBmb3IgcmVzZXQuDQoNCj4gDQo+ID4g
-DQo+ID4gU2lnbmVkLW9mZi1ieTogQ3J5c3RhbCBHdW8gPGNyeXN0YWwuZ3VvQG1lZGlhdGVrLmNv
-bT4NCj4gPiAtLS0NCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0
-L3RpLXN5c2Nvbi1yZXNldC50eHQgfCA1ICsrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA1IGlu
-c2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL3Jlc2V0L3RpLXN5c2Nvbi1yZXNldC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcmVzZXQvdGktc3lzY29uLXJlc2V0LnR4dA0KPiA+IGluZGV4IDg2
-OTQ1NTAyY2NiNS4uYWIwNDEwMzIzMzliIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9yZXNldC90aS1zeXNjb24tcmVzZXQudHh0DQo+ID4gKysrIGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0L3RpLXN5c2Nvbi1yZXNldC50
-eHQNCj4gPiBAQCAtNTksNiArNTksMTEgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgUGxl
-YXNlIGFsc28gcmVmZXIgdG8gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0
-L3Jlc2V0LnR4dCBmb3INCj4gPiAgY29tbW9uIHJlc2V0IGNvbnRyb2xsZXIgdXNhZ2UgYnkgY29u
-c3VtZXJzLg0KPiA+ICANCj4gPiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiArLSByZXNldC1k
-dXJhdGlvbi11czogV2hlbiBkbyBzZXJpYWxpemVkIGFzc2VydCBhbmQgZGVhc3NlcnQgb3BlcmF0
-aW9ucywgbWluaW11bSBkZWxheSBpbiBtaWNyb3NlY29uZHMNCj4gPiAraXMgbmVlZGVkIHRvIGJl
-IHdhaXRlZCBiZXR3ZWVuIGFuIGFzc2VydCBhbmQgYSBkZWFzc2VydCB0byByZXNldCB0aGUgZGV2
-aWNlLiBUaGlzIHZhbHVlIGNhbiBiZSAwLCAwIG1lYW5zDQo+ID4gK3RoYXQgc3VjaCBhIGRlbGF5
-IGlzIG5vdCBuZWVkZWQuDQo+IA0KPiBUaGlzIGdvZXMgaW4gdGhlIHJlc2V0IGNvbnRyb2xsZXIg
-bm9kZSBvciBlYWNoIGNvbnN1bWVyPyBGb3IgdGhlIGxhdHRlciwgDQo+IGl0IHNob3VsZCBiZSBh
-IGNlbGwgaW4gJ3Jlc2V0cycgaWYgeW91IG5lZWQgdGhpcy4gQnV0IHJlYWxseSwgSSB0aGluayAN
-Cj4gdGhlIHJlc2V0IGNvbnRyb2xsZXIgc2hvdWxkIGVuZm9yY2Ugc29tZSBtaW5pbXVtIHRpbWUg
-dGhhdCB3b3JrcyBmb3IgYWxsIA0KPiBjb25zdW1lcnMuIFN1cmVseSBoYXZpbmcgYSBtaW5pbXVt
-IHRpbWUgcGVyIHJlc2V0IGlzbid0IHJlYWxseSBuZWVkZWQuDQo+IA0KPiBSb2INCg0KJ3Jlc2V0
-LWR1cmF0aW9uLXVzJyB3aWxsIGJlIGluIHRoZSByZXNldCBjb250cm9sbGVyIG5vZGUsIGFuZCBp
-dCdzDQpvcHRpb25hbC4gSWYgbWluaW11bSBkZWxheSBpcyBuZWVkZWQgdG8gYmUgd2FpdGVkIGJl
-dHdlZW4gYW4gYXNzZXJ0IGFuZA0KYSBkZWFzc2VydCB0byByZXNldCB0aGUgZGV2aWNlLCB0aGlz
-IHByb3BlcnR5IHdpbGwgYmUgc2V0Lk90aGVyd2lzZSBubw0KbmVlZCB0byBzZXQgdGhpcyBwcm9w
-ZXJ0eS4NCg0KQmVzdCBSZWdhcmRzDQpDcnlzdGFsDQoNCg==
+Upon running Sparse, "warning: dubious: !x | !y" is brought to notice
+for this file.  Logical and bitwise OR are basically the same in this
+context, so it doesn't cause a runtime bug.  But let's change it to
+logical OR to make it a little bit cleaner and silence the Sparse
+warning.
 
+Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
+---
+ .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+index 358cb7d2cd4c..3b850bb2d39d 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+@@ -58,7 +58,7 @@ sh_css_vf_downscale_log2(
+ 	unsigned int ds_log2 = 0;
+ 	unsigned int out_width;
+ 
+-	if ((!out_info) | (!vf_info))
++	if ((!out_info) || (!vf_info))
+ 		return -EINVAL;
+ 
+ 	out_width = out_info->res.width;
+-- 
+2.25.1
