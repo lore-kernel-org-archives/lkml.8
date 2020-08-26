@@ -2,306 +2,123 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D62C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15513C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 941852071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598426339;
-	bh=FMzXVMoId/Kvxlbl2TmaHLiw3F9awa6K+3ThnX269Yk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SXaY7BW9G641crSWV011MUFuDjHvrrVryQczqwogjVLI41gCVS/+t0MCa/rPjYfXP
-	 AFZKhZMEquyYDAL3XvKDY95tb3UHE4s9r+fUR1NaWho5NdSS1HBvBKrX4hojKV5bF2
-	 vECYZ593FUiLbWqTxcvPicjEKGrDZKUdbqogS3vM=
+	by mail.kernel.org (Postfix) with ESMTP id D944B2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgHZHS6 (ORCPT
+        id S1726934AbgHZHTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:18:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726700AbgHZHSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:18:50 -0400
-Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDE4D20825;
-        Wed, 26 Aug 2020 07:18:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598426328;
-        bh=FMzXVMoId/Kvxlbl2TmaHLiw3F9awa6K+3ThnX269Yk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xjO6fiqXSHAwZ8vrgT94VPaJJRzxmZOHMBARKfl503qKVbfR4zufLyvWbsyPmlZx+
-         FEn7Rug9hkzfQGHfiLEbSbBd4h4TayJ28oPXjk8I0XKhUs2TLbt8q15QENaY3pjVOK
-         B32YagfdHA8Zl3tPqXOcMWnH8p+y/rVUk5R9j19g=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kAphm-001Raj-19; Wed, 26 Aug 2020 09:18:46 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     linux-media@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 4/4] media: docs: use SPDX GPL-2.0 OR GFDL-1.1 instead of text on *.svg files
-Date:   Wed, 26 Aug 2020 09:18:39 +0200
-Message-Id: <8785b1e6721bd54ce85837bf2e3d9787cd8e9796.1598426302.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <929df929283e38b388f601c2ba521257e38cc566.1598426302.git.mchehab+huawei@kernel.org>
-References: <929df929283e38b388f601c2ba521257e38cc566.1598426302.git.mchehab+huawei@kernel.org>
+        Wed, 26 Aug 2020 03:19:19 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:53245 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgHZHTM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 03:19:12 -0400
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N8XLj-1kgAEZ2Vxx-014RA6; Wed, 26 Aug 2020 09:19:10 +0200
+Received: by mail-qt1-f178.google.com with SMTP id p36so696958qtd.12;
+        Wed, 26 Aug 2020 00:19:10 -0700 (PDT)
+X-Gm-Message-State: AOAM533otbBT+1FDrSRwvz7Y7vZ+GY6/CGfE/HFvIQKMGPGWfVft24t1
+        MZ2DCoTJw3PV7r9j+G2Y3zqdW6Ihui9/7puns/4=
+X-Google-Smtp-Source: ABdhPJy5+Pw3cdGpC8Q6lMpkiPFPkzeHlCi3MRPq3Igp7X2iV4AcClzQkt1xJ/kMgSeokHBcS7+FuRVgiX+xM5QVGLc=
+X-Received: by 2002:ac8:4652:: with SMTP id f18mr12561128qto.142.1598426349178;
+ Wed, 26 Aug 2020 00:19:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
+ <1598287583-71762-8-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a1NXVJON+apBZeVDdx_bqQmenab8srqJDWS_VFVpAncRA@mail.gmail.com> <MW2PR2101MB1052AD42CC4F9A71F87EFE95D7570@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB1052AD42CC4F9A71F87EFE95D7570@MW2PR2101MB1052.namprd21.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 26 Aug 2020 09:18:53 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3fzXuyamf=sokW59=Ln-ULBBGaSHxKwUeqxT_4sNrQqw@mail.gmail.com>
+Message-ID: <CAK8P3a3fzXuyamf=sokW59=Ln-ULBBGaSHxKwUeqxT_4sNrQqw@mail.gmail.com>
+Subject: Re: [PATCH v7 07/10] arm64: hyperv: Initialize hypervisor on boot
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Mark.Rutland@arm.com" <Mark.Rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:65Evus5OXX7pf1ZayKDZMzlfDj3azEij/JtxW0/w1BmxCL0q69d
+ 4icpFl1nuXRnjYL2OTsXz7uzqY44dVPZtI5sQUJYc9k5ValxBbw7nxts19K1sokrbaOC02K
+ VpISE+98YncBQbbWjaBD5yuK9d2cp6RIybUFfOSV3Hi82GqZe7okaBmzqRcqA6wT8UXGA1j
+ fPC8GwM37cYCBIzxQGxzQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nWKx0foQu/g=:cRHTW84q8SmQR80a+VBtT/
+ 2z0b38SfKjlkje1F/JUIwBZOtPEshpQnl+cs4zTJiXhgYz+kQoYI5cxgMsRGygMePld7UO40y
+ VeqZdcmYXrVOXaYtfWci1ZKfxEY0nzmdmHbWGmqF0CfwX/P7j3dg+F27V9yQDJaQu8GlH0Fui
+ 63PO9vGwn6HSoOYi653wfrTSjqqLmEOKmW731q2GQndpvaJ2LL/RobVxuZrma8MQuGsCaITJp
+ nz8sRFrnqGC/JyMNRTohpNmJrIDfG4qiJujya09GceRE4KuT5+wWiwDpOcR7LqePzYfzUhsvW
+ Lu02GwBy9sdoDbIYZ1yXnxJMBXMS7vIjs9LB9erL1c+U7cPrvT2cr8KmQ6t8abEmCWQlzP7Os
+ qOjUMTL8hLugDbFhvoJz+ismAnpUcfXonLucJ3ybJyb4/un6dUdktjQMfI7xy7d5joHrHZ3O4
+ /Fe9t84vCp1cL/YrNsqcCtKnx/MfwATqdtjZyONnqan4IvnsDecuKlhNKC082ROFCKlomiGq3
+ jodwVY6ZtFIHfA53gPCK0EjsgAWMtNAjusiJTMn0NW3nilZ4bE+OTbLcOfo6UUpKsvuMUCeLv
+ NX6F4V8awdH4qFS55Odp+Awzm3gP2VcnK5FjiarPPlTYUxhj+prxOiZ2k/rygUV3GgRq7wKHL
+ QwVmj6b+YXrVL9M7r2NVOc+KPzkQLy0ZobZJFWHf4MNtRUpzZMJ8f0mrm1cR+N6lxV6VHvKAQ
+ 0ychjMRfxN3lxiCx4DOgKhTD6mn4t4B/aX9nm95wNOLPndI5UYKDxjI1itAmY9oNp2gQMysk4
+ 1+XA0qKvLGE7EJCIEZ1fTBbWb44Ai1p5YUWQplN4/w+t3pjXa2whWPKWXic0dUbWdluUCwzH5
+ w3DEk2VoBUwDWyNu1BYSRQxLTNiZnECn0L0JnzSwXtKIUVy56jKq4lJEf8bHByyLCnSrOTNyP
+ AWTjXO2aCPXmaJ6Y2Fsdx9ohQyyK2mP32wUHqdY16TtG4vAoYyLcC
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some files that are dual licensed GPL and GFDL.
+On Tue, Aug 25, 2020 at 11:20 PM Michael Kelley <mikelley@microsoft.com> wrote:
+> From: Arnd Bergmann <arnd@arndb.de> Sent: Monday, August 24, 2020 11:34 AM
+> > On Mon, Aug 24, 2020 at 6:48 PM Michael Kelley <mikelley@microsoft.com> wrote:
+> >
+> > I think this has come up before, and I still don't consider it an acceptable
+> > hack to hook platform initialization code into the timer code.
+> >
+> > Please split out the timer into a standalone driver in drivers/clocksource
+> > that can get reviewed by the clocksource maintainers.
+>
+> I see two related topics here.
 
-As SPDX v3.10 gained support for GFDL-1.1 with no invariant sections:
+Agreed
 
-	https://spdx.org/licenses/GFDL-1.1-no-invariants-or-later.html
+>  First, the Hyper-V clocksource driver is
+> drivers/clocksource/hyperv_timer.c.  The code is architecture independent
+> and is used today on the x86 side and for ARM64 in this patch series.  A few
+> architecture specific calls are satisfied by code under arch/x86, and in this
+> patch series, under arch/arm64.  Is there some aspect of this driver that
+> needs reconsideration?  I just want to make sure to understand what you
+> are getting at.
 
-Let's remove the dual license text, replacing them by:
+For the clocksource driver, I would like to see the arm64 specific bits
+(the code you add in arch/arm64 that are only relevant to this driver)
+moved out of arch/arm64 and into drivers/clocksource, in whatever
+form the clocksource maintainers prefer. I would suggest having a
+separate file that can get linked along with the architecture-independent
+part of that driver.
 
-	SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later
+> Second is the question of where/how to do Hyper-V specific initialization.
+> I agree that hanging it off the timer initialization isn't a great approach.
+> Should I add a Hyper-V specific initialization call at the appropriate point
+> in the ARM64 init sequence?  The x86 side has some structure for handling
+> multiple hypervisors, and the Hyper-V initialization code naturally plugs into
+> that structure.  I'm certainly open to suggestions on the best way to handle
+> it for ARM64.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../userspace-api/media/dvb/dvbstb.svg        | 28 +------------------
- .../userspace-api/media/v4l/bayer.svg         | 28 +------------------
- .../userspace-api/media/v4l/constraints.svg   | 28 +------------------
- .../userspace-api/media/v4l/nv12mt.svg        | 28 +------------------
- .../media/v4l/nv12mt_example.svg              | 28 +------------------
- .../userspace-api/media/v4l/selection.svg     | 28 +------------------
- 6 files changed, 6 insertions(+), 162 deletions(-)
+Yes, that is where I was getting at. Maybe the x86 abstraction for handling
+multiple hypervisors can be lifted out of arch/x86/ into common code?
 
-diff --git a/Documentation/userspace-api/media/dvb/dvbstb.svg b/Documentation/userspace-api/media/dvb/dvbstb.svg
-index b333d0ff944f..87e68baa056b 100644
---- a/Documentation/userspace-api/media/dvb/dvbstb.svg
-+++ b/Documentation/userspace-api/media/dvb/dvbstb.svg
-@@ -1,31 +1,5 @@
- <?xml version="1.0" encoding="UTF-8"?>
--<!--
--    This file is dual-licensed: you can use it either under the terms
--    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
--    dual licensing only applies to this file, and not this project as a
--    whole.
--
--    a) This file is free software; you can redistribute it and/or
--       modify it under the terms of the GNU General Public License as
--       published by the Free Software Foundation version 2 of
--       the License.
--
--       This file is distributed in the hope that it will be useful,
--       but WITHOUT ANY WARRANTY; without even the implied warranty of
--       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--       GNU General Public License for more details.
--
--    Or, alternatively,
--
--    b) Permission is granted to copy, distribute and/or modify this
--       document under the terms of the GNU Free Documentation License,
--       Version 1.1 or any later version published by the Free Software
--       Foundation, with no Invariant Sections, no Front-Cover Texts
--       and no Back-Cover Texts. A copy of the license is included at
--       Documentation/userspace-api/media/fdl-appendix.rst.
--
--    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
- <svg id="svg2" width="15.847cm" height="8.4187cm" fill-rule="evenodd" stroke-linejoin="round" stroke-width="28.222" preserveAspectRatio="xMidYMid" version="1.2" viewBox="0 0 23770.123 12628.122" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><defs id="defs142"><marker id="Arrow1Lend" overflow="visible" orient="auto"><path id="path954" transform="matrix(-.8 0 0 -.8 -10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/></marker><marker id="marker1243" overflow="visible" orient="auto"><path id="path1241" transform="matrix(-.8 0 0 -.8 -10 0)" d="m0 0 5-5-17.5 5 17.5 5z" fill-rule="evenodd" stroke="#000" stroke-width="1pt"/></marker></defs><metadata id="metadata519"><rdf:RDF><cc:Work
- rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title/></cc:Work></rdf:RDF></metadata><rect id="rect197" class="BoundingBox" x="5355.1" y="13.122" width="18403" height="9603" fill="none"/><path id="path199" d="m14556 9614.1h-9200v-9600h18400v9600z" fill="#fff"/><path id="path201" d="m14556 9614.1h-9200v-9600h18400v9600z" fill="none" stroke="#000"/><rect id="rect206" class="BoundingBox" x="13.122" y="4013.1" width="4544" height="2403" fill="none"/><path id="path208" d="m2285.1 6414.1h-2271v-2400h4541v2400z" fill="#fff"/><path id="path210" d="m2285.1 6414.1h-2271v-2400h4541v2400z" fill="none" stroke="#000"/><text id="text212" class="TextShape" x="-2443.8779" y="-4585.8779"><tspan id="tspan214" class="TextParagraph" font-family="sans-serif" font-size="635px" font-weight="400"><tspan id="tspan216" class="TextPosition"
- x="1281.1219" y="5435.1221"><tspan id="tspan218" fill="#000000">Antena</tspan></tspan></tspan></text>
-diff --git a/Documentation/userspace-api/media/v4l/bayer.svg b/Documentation/userspace-api/media/v4l/bayer.svg
-index 82e805c68c1f..c500a28f0817 100644
---- a/Documentation/userspace-api/media/v4l/bayer.svg
-+++ b/Documentation/userspace-api/media/v4l/bayer.svg
-@@ -1,31 +1,5 @@
- <?xml version="1.0" encoding="UTF-8"?>
--<!--
--    This file is dual-licensed: you can use it either under the terms
--    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
--    dual licensing only applies to this file, and not this project as a
--    whole.
--
--    a) This file is free software; you can redistribute it and/or
--       modify it under the terms of the GNU General Public License as
--       published by the Free Software Foundation version 2 of
--       the License.
--
--       This file is distributed in the hope that it will be useful,
--       but WITHOUT ANY WARRANTY; without even the implied warranty of
--       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--       GNU General Public License for more details.
--
--    Or, alternatively,
--
--    b) Permission is granted to copy, distribute and/or modify this
--       document under the terms of the GNU Free Documentation License,
--       Version 1.1 or any later version published by the Free Software
--       Foundation, with no Invariant Sections, no Front-Cover Texts
--       and no Back-Cover Texts. A copy of the license is included at
--       Documentation/userspace-api/media/fdl-appendix.rst.
--
--    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
- <svg id="svg2" width="164.15mm" height="46.771mm" fill-rule="evenodd" stroke-linejoin="round" stroke-width="28.222" preserveAspectRatio="xMidYMid" version="1.2" viewBox="0 0 16415.333 4677.1107" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><metadata id="metadata652"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title/></cc:Work></rdf:RDF></metadata><g id="g186" class="com.sun.star.drawing.CustomShape" transform="translate(-3285.9 -3185.9)"><g id="id6"><rect id="rect189" class="BoundingBox" x="3299" y="3199" width="1303" height="1203" fill="none"/><path id="path191" d="m3950 4400h-650v-1200h1300v1200h-650z" fill="#00f"/><path id="path193" d="m3950
- 4400h-650v-1200h1300v1200h-650z" fill="none" stroke="#3465a4"/><text id="text195" class="TextShape"><tspan id="tspan197" class="TextParagraph" font-family="sans-serif" font-size="635px" font-weight="400"><tspan id="tspan199" class="TextPosition" x="3739" y="4021"><tspan id="tspan201" fill="#ffffff">B</tspan></tspan></tspan></text>
- </g></g><g id="g203" class="com.sun.star.drawing.CustomShape" transform="translate(-3285.9 -3185.9)"><g id="id7"><rect id="rect206" class="BoundingBox" x="4599" y="3199" width="1303" height="1203" fill="none"/><path id="path208" d="m5250 4400h-650v-1200h1300v1200h-650z" fill="#0c0"/><path id="path210" d="m5250 4400h-650v-1200h1300v1200h-650z" fill="none" stroke="#3465a4"/><text id="text212" class="TextShape"><tspan id="tspan214" class="TextParagraph" font-family="sans-serif" font-size="635px" font-weight="400"><tspan id="tspan216" class="TextPosition" x="5003" y="4021"><tspan id="tspan218" fill="#ffffff">G</tspan></tspan></tspan></text>
-diff --git a/Documentation/userspace-api/media/v4l/constraints.svg b/Documentation/userspace-api/media/v4l/constraints.svg
-index 1dfe51a9839d..ac5f82bc6d1a 100644
---- a/Documentation/userspace-api/media/v4l/constraints.svg
-+++ b/Documentation/userspace-api/media/v4l/constraints.svg
-@@ -1,31 +1,5 @@
- <?xml version="1.0" encoding="UTF-8"?>
--<!--
--    This file is dual-licensed: you can use it either under the terms
--    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
--    dual licensing only applies to this file, and not this project as a
--    whole.
--
--    a) This file is free software; you can redistribute it and/or
--       modify it under the terms of the GNU General Public License as
--       published by the Free Software Foundation version 2 of
--       the License.
--
--       This file is distributed in the hope that it will be useful,
--       but WITHOUT ANY WARRANTY; without even the implied warranty of
--       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--       GNU General Public License for more details.
--
--    Or, alternatively,
--
--    b) Permission is granted to copy, distribute and/or modify this
--       document under the terms of the GNU Free Documentation License,
--       Version 1.1 or any later version published by the Free Software
--       Foundation, with no Invariant Sections, no Front-Cover Texts
--       and no Back-Cover Texts. A copy of the license is included at
--       Documentation/userspace-api/media/fdl-appendix.rst.
--
--    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
- <svg id="svg2" width="249.01mm" height="143.01mm" fill-rule="evenodd" stroke-linejoin="round" stroke-width="28.222" preserveAspectRatio="xMidYMid" version="1.2" viewBox="0 0 24900.998 14300.999" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><metadata id="metadata325"><rdf:RDF><cc:Work rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/><dc:title/></cc:Work></rdf:RDF></metadata><defs id="defs4" class="ClipPathGroup"><marker id="marker6261" overflow="visible" orient="auto"><path id="path6263" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#f00" fill-rule="evenodd" stroke="#f00" stroke-width="1pt"/></marker><marker id="marker6125" overflow="visible"
- orient="auto"><path id="path6127" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#f00" fill-rule="evenodd" stroke="#f00" stroke-width="1pt"/></marker><marker id="marker6001" overflow="visible" orient="auto"><path id="path6003" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#f00" fill-rule="evenodd" stroke="#f00" stroke-width="1pt"/></marker><marker id="marker5693" overflow="visible" orient="auto"><path id="path5695" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#f00" fill-rule="evenodd" stroke="#f00" stroke-width="1pt"/></marker><marker id="marker5575" overflow="visible" orient="auto"><path id="path5577" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#000080" fill-rule="evenodd" stroke="#000080" stroke-width="1pt"/></marker><marker id="marker5469" overflow="visible"
- orient="auto"><path id="path5471" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#000080" fill-rule="evenodd" stroke="#000080" stroke-width="1pt"/></marker><marker id="marker5259" overflow="visible" orient="auto"><path id="path5261" transform="matrix(-.4 0 0 -.4 -4 0)" d="m0 0 5-5-17.5 5 17.5 5-5-5z" fill="#000080" fill-rule="evenodd" stroke="#000080" stroke-width="1pt"/></marker><marker id="Arrow2Mend" overflow="visible" orient="auto"><path id="path4241" transform="scale(-.6)" d="m8.7186 4.0337-10.926-4.0177 10.926-4.0177c-1.7455 2.3721-1.7354 5.6175-6e-7 8.0354z" fill="#000080" fill-rule="evenodd" stroke="#000080" stroke-linejoin="round" stroke-width=".625"/></marker></defs><g id="g204" class="com.sun.star.drawing.CustomShape" transform="translate(-1350,-3250)"><g id="id6"><rect id="rect207" class="BoundingBox" x="1350" y="3250" width="24901" height="14301"
-diff --git a/Documentation/userspace-api/media/v4l/nv12mt.svg b/Documentation/userspace-api/media/v4l/nv12mt.svg
-index d4bb4eb83f6a..30a15b5470be 100644
---- a/Documentation/userspace-api/media/v4l/nv12mt.svg
-+++ b/Documentation/userspace-api/media/v4l/nv12mt.svg
-@@ -1,31 +1,5 @@
- <?xml version="1.0" encoding="UTF-8" standalone="no"?>
--<!--
--    This file is dual-licensed: you can use it either under the terms
--    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
--    dual licensing only applies to this file, and not this project as a
--    whole.
--
--    a) This file is free software; you can redistribute it and/or
--       modify it under the terms of the GNU General Public License as
--       published by the Free Software Foundation version 2 of
--       the License.
--
--       This file is distributed in the hope that it will be useful,
--       but WITHOUT ANY WARRANTY; without even the implied warranty of
--       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--       GNU General Public License for more details.
--
--    Or, alternatively,
--
--    b) Permission is granted to copy, distribute and/or modify this
--       document under the terms of the GNU Free Documentation License,
--       Version 1.1 or any later version published by the Free Software
--       Foundation, with no Invariant Sections, no Front-Cover Texts
--       and no Back-Cover Texts. A copy of the license is included at
--       Documentation/userspace-api/media/fdl-appendix.rst.
--
--    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
- <svg
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cc="http://creativecommons.org/ns#"
-diff --git a/Documentation/userspace-api/media/v4l/nv12mt_example.svg b/Documentation/userspace-api/media/v4l/nv12mt_example.svg
-index e5075af9f45a..d1e2023f4973 100644
---- a/Documentation/userspace-api/media/v4l/nv12mt_example.svg
-+++ b/Documentation/userspace-api/media/v4l/nv12mt_example.svg
-@@ -1,31 +1,5 @@
- <?xml version="1.0" encoding="UTF-8" standalone="no"?>
--<!--
--    This file is dual-licensed: you can use it either under the terms
--    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
--    dual licensing only applies to this file, and not this project as a
--    whole.
--
--    a) This file is free software; you can redistribute it and/or
--       modify it under the terms of the GNU General Public License as
--       published by the Free Software Foundation version 2 of
--       the License.
--
--       This file is distributed in the hope that it will be useful,
--       but WITHOUT ANY WARRANTY; without even the implied warranty of
--       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--       GNU General Public License for more details.
--
--    Or, alternatively,
--
--    b) Permission is granted to copy, distribute and/or modify this
--       document under the terms of the GNU Free Documentation License,
--       Version 1.1 or any later version published by the Free Software
--       Foundation, with no Invariant Sections, no Front-Cover Texts
--       and no Back-Cover Texts. A copy of the license is included at
--       Documentation/userspace-api/media/fdl-appendix.rst.
--
--    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
- <svg
-    xmlns:dc="http://purl.org/dc/elements/1.1/"
-    xmlns:cc="http://creativecommons.org/ns#"
-diff --git a/Documentation/userspace-api/media/v4l/selection.svg b/Documentation/userspace-api/media/v4l/selection.svg
-index c0e00ab2ae6b..6305b53b8e54 100644
---- a/Documentation/userspace-api/media/v4l/selection.svg
-+++ b/Documentation/userspace-api/media/v4l/selection.svg
-@@ -1,31 +1,5 @@
- <?xml version="1.0" encoding="UTF-8"?>
--<!--
--    This file is dual-licensed: you can use it either under the terms
--    of the GPL 2.0 or the GFDL 1.1+ license, at your option. Note that this
--    dual licensing only applies to this file, and not this project as a
--    whole.
--
--    a) This file is free software; you can redistribute it and/or
--       modify it under the terms of the GNU General Public License as
--       published by the Free Software Foundation version 2 of
--       the License.
--
--       This file is distributed in the hope that it will be useful,
--       but WITHOUT ANY WARRANTY; without even the implied warranty of
--       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
--       GNU General Public License for more details.
--
--    Or, alternatively,
--
--    b) Permission is granted to copy, distribute and/or modify this
--       document under the terms of the GNU Free Documentation License,
--       Version 1.1 or any later version published by the Free Software
--       Foundation, with no Invariant Sections, no Front-Cover Texts
--       and no Back-Cover Texts. A copy of the license is included at
--       Documentation/userspace-api/media/fdl-appendix.rst.
--
--    TODO: replace it to GPL-2.0 OR GFDL-1.1-or-later WITH no-invariant-sections
---->
-+<!-- SPDX-License-Identifier: GPL-2.0 OR GFDL-1.1-no-invariants-or-later -->
- <svg enable-background="new" version="1" viewBox="0 0 4226.3 1686.8" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-   <pattern id="ig" xlink:href="#ka" patternTransform="matrix(5.4432 0 0 10.1 1722.4 161.06)"/>
--- 
-2.26.2
-
+       Arnd
