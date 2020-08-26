@@ -2,82 +2,229 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268C6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA0AC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E07432074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:18:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598401082;
-	bh=xXaAEJ0AEr+5jikBS0er1PNhtLBu2gg0MrzTQd1zC6U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=tUKeFA4M6h6zgdXiuM+J6gZnGXITbuGxqt3eQ/q+Fv7toseA35xLtbfcrNxrbBAjk
-	 dBIYh4rqfMR/vnDelqSEf03RY3iC4dREKgg4yC0ccE7sPk8sSn/+KyfsEaEVvA280M
-	 vdCrQLL6Gy6/+612elxjZWzZaUsDbofzTN6RZFrA=
+	by mail.kernel.org (Postfix) with ESMTP id 3410420738
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="NS2gmW2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbgHZASA (ORCPT
+        id S1726698AbgHZATA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 20:18:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37960 "EHLO mail.kernel.org"
+        Tue, 25 Aug 2020 20:19:00 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45271 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726570AbgHZAR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 20:17:58 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726570AbgHZAS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 20:18:59 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3283920738;
-        Wed, 26 Aug 2020 00:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598401077;
-        bh=xXaAEJ0AEr+5jikBS0er1PNhtLBu2gg0MrzTQd1zC6U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GziKgOjQuNTLiyQzSE8/pAtRGOGqyQr6ck2qKh0HhXFhtXBYiRHAXd/C/O1AcGrlv
-         Yok3Cajmqe878dcLJAkRzbvcd5F0Orqy0K0cO7c7kSRL8utpGhM2Im4QDCwrO2N9SO
-         NCqN28JRSjdqUDGa5u5y54AS+w2grsvS59zcpE2A=
-Date:   Tue, 25 Aug 2020 17:17:56 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Kieran Bingham <kbingham@kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2][next] update gdb scripts for lockless printk
- ringbuffer
-Message-Id: <20200825171756.830d5895eb40d2dded2803ae@linux-foundation.org>
-In-Reply-To: <20200825123542.GU4353@alley>
-References: <20200814212525.6118-1-john.ogness@linutronix.de>
-        <20200821080813.GM4353@alley>
-        <d81e8b0d-fa7f-1da1-671f-0541b94ad349@siemens.com>
-        <a5f4c178-9b3c-6ccd-9ea1-24d8fdc13273@kernel.org>
-        <20200825123542.GU4353@alley>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BbmgM1tBkz9sTS;
+        Wed, 26 Aug 2020 10:18:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1598401136;
+        bh=tJVsIHj3u8pdSw38FTMaRa/EF/oKBc71jDbiOCWeoJk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=NS2gmW2BL/p44MaUi2rdYGMc8fdMUvSP99HWSejz+Ckq2/c0d1Jbmwbm1y4BNV/ST
+         sYOBsvro7GFWS/rXeuoXWx5WBq3abQg6XouW3vJfypa9FnJumV5ViDxdAMrGMnUo0A
+         s8C4PGrBuJz/hxAWz4qgZsK/HjKbW8yO9ac6+MyInlwNRvfntr0536Gclb/v5CLlc9
+         wrlfKEwfgmpb+wZFoyRVL7mi4oJMdSvNfmcNwnMwVELfXZIYIkojp8l06Z63P93UkY
+         sYD44wt7Vx5Xnv4hzitv4OodYH2gV78X0geltDzAx/+nbf9KA5syQPDcazpbfwYo7h
+         fvgXKCkSuw4zw==
+Date:   Wed, 26 Aug 2020 10:18:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luben Tuikov <luben.tuikov@amd.com>,
+        Dave Airlie <airlied@redhat.com>
+Subject: linux-next: manual merge of the drm-misc tree with the amdgpu tree
+Message-ID: <20200826101853.59136e16@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/UgIurNh8g2YWcQcqwF_dMY+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 14:35:42 +0200 Petr Mladek <pmladek@suse.com> wrote:
+--Sig_/UgIurNh8g2YWcQcqwF_dMY+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Andrew, would you mind when I take the three gdb/lockless-printk
-> related changes via printk tree to avoid synchronization problems?
+Hi all,
 
-No probs.  If such patches turn up in linux-next I just drop my copy.
-After checking that the patches fully match...
+Today's linux-next merge of the drm-misc tree got conflicts in:
 
+  drivers/gpu/drm/amd/amdgpu/amdgpu_gtt_mgr.c
+  drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+  drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.h
+  drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+
+between commits:
+
+  cacbbe7c0065 ("drm/amdgpu: move stolen memory from gmc to mman")
+  72de33f8f7ba ("drm/amdgpu: move IP discovery data to mman")
+  87ded5caeec3 ("drm/amdgpu: move vram usage by vbios to mman (v2)")
+  1348969ab68c ("drm/amdgpu: drm_device to amdgpu_device by inline-f (v2)")
+
+from the amdgpu tree and commits:
+
+  6c28aed6e5b7 ("drm/amdgfx/ttm: use wrapper to get ttm memory managers")
+  9de59bc20149 ("drm/ttm: rename ttm_mem_type_manager -> ttm_resource_manag=
+er.")
+  4f297b9c82e1 ("drm/amdgpu/ttm: move vram/gtt mgr allocations to mman.")
+
+from the drm-misc tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/amd/amdgpu/amdgpu_gtt_mgr.c
+index e1b66898cb76,697bc2c6fdb2..000000000000
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gtt_mgr.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gtt_mgr.c
+@@@ -47,10 -46,10 +46,10 @@@ static ssize_t amdgpu_mem_info_gtt_tota
+  		struct device_attribute *attr, char *buf)
+  {
+  	struct drm_device *ddev =3D dev_get_drvdata(dev);
+ -	struct amdgpu_device *adev =3D ddev->dev_private;
+ +	struct amdgpu_device *adev =3D drm_to_adev(ddev);
+-=20
++ 	struct ttm_resource_manager *man =3D ttm_manager_type(&adev->mman.bdev, =
+TTM_PL_TT);
+  	return snprintf(buf, PAGE_SIZE, "%llu\n",
+- 			(adev->mman.bdev.man[TTM_PL_TT].size) * PAGE_SIZE);
++ 			man->size * PAGE_SIZE);
+  }
+ =20
+  /**
+@@@ -65,10 -64,10 +64,10 @@@ static ssize_t amdgpu_mem_info_gtt_used
+  		struct device_attribute *attr, char *buf)
+  {
+  	struct drm_device *ddev =3D dev_get_drvdata(dev);
+ -	struct amdgpu_device *adev =3D ddev->dev_private;
+ +	struct amdgpu_device *adev =3D drm_to_adev(ddev);
+-=20
++ 	struct ttm_resource_manager *man =3D ttm_manager_type(&adev->mman.bdev, =
+TTM_PL_TT);
+  	return snprintf(buf, PAGE_SIZE, "%llu\n",
+- 			amdgpu_gtt_mgr_usage(&adev->mman.bdev.man[TTM_PL_TT]));
++ 			amdgpu_gtt_mgr_usage(man));
+  }
+ =20
+  static DEVICE_ATTR(mem_info_gtt_total, S_IRUGO,
+diff --cc drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+index 63e541409549,fc5f7ac53d0a..000000000000
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+@@@ -2316,8 -2251,8 +2261,8 @@@ static int amdgpu_mm_dump_table(struct=20
+  	struct drm_info_node *node =3D (struct drm_info_node *)m->private;
+  	unsigned ttm_pl =3D (uintptr_t)node->info_ent->data;
+  	struct drm_device *dev =3D node->minor->dev;
+ -	struct amdgpu_device *adev =3D dev->dev_private;
+ +	struct amdgpu_device *adev =3D drm_to_adev(dev);
+- 	struct ttm_mem_type_manager *man =3D &adev->mman.bdev.man[ttm_pl];
++ 	struct ttm_resource_manager *man =3D ttm_manager_type(&adev->mman.bdev, =
+ttm_pl);
+  	struct drm_printer p =3D drm_seq_file_printer(m);
+ =20
+  	man->func->debug(man, &p);
+diff --cc drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.h
+index de37ceff0e56,7ba2be37e6ba..000000000000
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.h
+@@@ -60,22 -75,8 +75,24 @@@ struct amdgpu_mman=20
+  	/* Scheduler entity for buffer moves */
+  	struct drm_sched_entity			entity;
+ =20
+ +	uint64_t		stolen_vga_size;
+ +	struct amdgpu_bo	*stolen_vga_memory;
+ +	uint64_t		stolen_extended_size;
+ +	struct amdgpu_bo	*stolen_extended_memory;
+ +	bool			keep_stolen_vga_memory;
+ +
+ +	/* discovery */
+ +	uint8_t				*discovery_bin;
+ +	uint32_t			discovery_tmr_size;
+ +	struct amdgpu_bo		*discovery_memory;
+ +
+ +	/* firmware VRAM reservation */
+ +	u64		fw_vram_usage_start_offset;
+ +	u64		fw_vram_usage_size;
+ +	struct amdgpu_bo	*fw_vram_usage_reserved_bo;
+ +	void		*fw_vram_usage_va;
++ 	struct amdgpu_vram_mgr vram_mgr;
++ 	struct amdgpu_gtt_mgr gtt_mgr;
+  };
+ =20
+  struct amdgpu_copy_mem {
+diff --cc drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+index 91098a385ed6,7574be6cd7a0..000000000000
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vram_mgr.c
+@@@ -81,10 -84,10 +84,10 @@@ static ssize_t amdgpu_mem_info_vram_use
+  		struct device_attribute *attr, char *buf)
+  {
+  	struct drm_device *ddev =3D dev_get_drvdata(dev);
+ -	struct amdgpu_device *adev =3D ddev->dev_private;
+ +	struct amdgpu_device *adev =3D drm_to_adev(ddev);
+-=20
++ 	struct ttm_resource_manager *man =3D ttm_manager_type(&adev->mman.bdev, =
+TTM_PL_VRAM);
+  	return snprintf(buf, PAGE_SIZE, "%llu\n",
+- 		amdgpu_vram_mgr_usage(&adev->mman.bdev.man[TTM_PL_VRAM]));
++ 			amdgpu_vram_mgr_usage(man));
+  }
+ =20
+  /**
+@@@ -99,10 -102,10 +102,10 @@@ static ssize_t amdgpu_mem_info_vis_vram
+  		struct device_attribute *attr, char *buf)
+  {
+  	struct drm_device *ddev =3D dev_get_drvdata(dev);
+ -	struct amdgpu_device *adev =3D ddev->dev_private;
+ +	struct amdgpu_device *adev =3D drm_to_adev(ddev);
+-=20
++ 	struct ttm_resource_manager *man =3D ttm_manager_type(&adev->mman.bdev, =
+TTM_PL_VRAM);
+  	return snprintf(buf, PAGE_SIZE, "%llu\n",
+- 		amdgpu_vram_mgr_vis_usage(&adev->mman.bdev.man[TTM_PL_VRAM]));
++ 			amdgpu_vram_mgr_vis_usage(man));
+  }
+ =20
+  static ssize_t amdgpu_mem_info_vram_vendor(struct device *dev,
+
+--Sig_/UgIurNh8g2YWcQcqwF_dMY+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9Fqm0ACgkQAVBC80lX
+0GzUQwf/Ryy6DRYQzcDaTBzLLF2sfGXEGGWy7NrSMCHOVy0MbA32RtAfrcwzy7Zb
+gWpgLIAg/UJrARMkHTMvoIhqGMlIshXDoLttkkQzshNqm7AcsC0VoFRk2dc7HYc8
+16kmqge/+aspqdW3y9zPkkCk2LxsUYEm2o2X8ro208Dv/B7hGD5OAqb9Z5ZSSw8n
+bKiJRO/Rq5RdwhwEqO4gxpAJSSBRL+SaV4ACFkcPz8lm43mbTrSfWVWplXV4NPG1
+/r65ejUJpl2Xy2NL+eyPD106zXZT7dFZ1B+M9xljWP9eJfW72J5tIJDMtzv9BsVd
+FV1SkntXeZfaTlD2S9eVTE8PIaPwtw==
+=RcOa
+-----END PGP SIGNATURE-----
+
+--Sig_/UgIurNh8g2YWcQcqwF_dMY+--
