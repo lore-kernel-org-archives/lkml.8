@@ -2,134 +2,79 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B44BCC433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97CD52071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D08F2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:16:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="eUJFmJDS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbgHZHPA (ORCPT
+        id S1726765AbgHZHQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:15:00 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:37389 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726698AbgHZHO7 (ORCPT
+        Wed, 26 Aug 2020 03:16:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgHZHQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:14:59 -0400
-Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mk0a0-1kvBwf1TTs-00kRea; Wed, 26 Aug 2020 09:14:57 +0200
-Received: by mail-qt1-f179.google.com with SMTP id 92so718948qtb.6;
-        Wed, 26 Aug 2020 00:14:56 -0700 (PDT)
-X-Gm-Message-State: AOAM532NZ91CydDDFgF41edtRYot+cE0wnTAgd3Y3/XaQn75w/CnIHtT
-        twhhN+OsckwUc6veJjV+2eqjMFd0Yt9uKLRZqQ8=
-X-Google-Smtp-Source: ABdhPJwLuGjkmlnft754xbUklzGWtHhgTglHwx7onxQfpdw4FEOyMnyaABTTrq89Agj1YnTZDmfbHPSjkpJNT1I0q7s=
-X-Received: by 2002:ac8:688e:: with SMTP id m14mr12988809qtq.7.1598426095918;
- Wed, 26 Aug 2020 00:14:55 -0700 (PDT)
+        Wed, 26 Aug 2020 03:16:15 -0400
+X-Greylist: delayed 744 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 26 Aug 2020 00:16:15 PDT
+Received: from canardo.mork.no (canardo.mork.no [IPv6:2001:4641::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B269C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 00:16:14 -0700 (PDT)
+Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id 07Q73N8G024392
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 26 Aug 2020 09:03:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1598425404; bh=JSuM4dKUM2nfywxTFJ0hWSXUwcdiL5ludU2CopjahqY=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=eUJFmJDSPFK1jgdbN2iYYyLcENd+E373WgO9hlVhHhEsORapOdeEamKR3VaMY2siS
+         HyLzxCYK53OT5U+fMuRBBrChG8rEwz+Q5s3cOPgkW+esFa+ViA5bHdbZnULxuXh4aa
+         hivXqjsBwKJXqBHICDBq6Bsbwk5mtmXarUugplrM=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.94)
+        (envelope-from <bjorn@mork.no>)
+        id 1kApSt-0001tZ-4K; Wed, 26 Aug 2020 09:03:23 +0200
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <davem@davemloft.net>, <kuba@kernel.org>, <masahiroy@kernel.org>,
+        <miguel@det.uvigo.gal>, <linux-usb@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: cdc_ncm: Fix build error
+Organization: m
+References: <20200826065231.14344-1-yuehaibing@huawei.com>
+Date:   Wed, 26 Aug 2020 09:03:23 +0200
+In-Reply-To: <20200826065231.14344-1-yuehaibing@huawei.com>
+        (yuehaibing@huawei.com's message of "Wed, 26 Aug 2020 14:52:31 +0800")
+Message-ID: <87k0xl7utg.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
- <1598287583-71762-6-git-send-email-mikelley@microsoft.com>
- <CAK8P3a1hDBVembCd+6=ENUWYFz=72JBTFMrKYZ2aFd+_Q04F+g@mail.gmail.com> <MW2PR2101MB105201EF9EB186AA9BF31A74D7570@MW2PR2101MB1052.namprd21.prod.outlook.com>
-In-Reply-To: <MW2PR2101MB105201EF9EB186AA9BF31A74D7570@MW2PR2101MB1052.namprd21.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 26 Aug 2020 09:14:39 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a0bCf7Fe5Ex=AHUM49UuvNk0KEpXJ3jgWmULa2eDOWBKA@mail.gmail.com>
-Message-ID: <CAK8P3a0bCf7Fe5Ex=AHUM49UuvNk0KEpXJ3jgWmULa2eDOWBKA@mail.gmail.com>
-Subject: Re: [PATCH v7 05/10] arm64: hyperv: Add interrupt handlers for VMbus
- and stimer
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Mark.Rutland@arm.com" <Mark.Rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        vkuznets <vkuznets@redhat.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:CfQNSp9K2Sdd2RppPCh70mApHLnySRUQtQTPs+NNnr5FwrxVCng
- AGs3F+IWIItB3FT7rCqPXYb5XyGGoFDhSK+bnnEr60dbVKDCRHARjKlBpi9MGbX9vXdpJbU
- azeTOu7yxAaAs+27q0YE9uN75kTAtAWNeCuEW0hI9gtCn99zyIo1UbdlbrW44jnbuGDBVXK
- MznMJZzDDYN2Qs5DfuJng==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xO0XMxW3dlA=:vjc8OvsMhX2drfQa3Dri8w
- oq47fIAjowurvD4ZZkt++2rnBezU79/Rzrl2CPXjVZ3RvhKchD4luPVKF0RsuCsaVJ6LQva0q
- FMy/z3NyQyst0i9tHN/MfHjMpU9mf1VBQTa7RmkhfUXTQpMuo1uP7j7itn3rCJE7ixmqjoSBy
- SNAGr8zxtJBQoorgvrwsjYaX0FVytV6ZQBlETXDbi3+qvQKDg+gYXlulRd9niBZ+pn5rlRgG0
- wLjz8LpwEjE1UqKkJX8X9sVaHsSURyNOe78N+KO7fwZjTY/o9UJSzHMZlYovb/eNEBE5LveLp
- +/n+C8IrI4FUR9Da86VkJSRKqTXynBnI1Rd6nLJ6Y6iJjbSFL3FssDtesh8y3osxThKWsiESz
- O5NpdHIhQx8YrMovHWylmbB/Iizpaj51h+RTcmYFNFcO4dwZ97+oRTTAKx80+kTPqMtueaqqa
- a4joAYmuzbQ9/0ZTfbEHecvdeXYS0Qs7k/ejk9em39qknATRFaEK4wfFvRoHUYVEpHby/p/Eq
- zNnYZ7z1KGc2Ti9bJCG6UFLhwQa0VvtYi4A/1qkwDECB3MjvpGKjmSwSbHztJVYnIk9sNQxXm
- Kzw5m5i40W0U8wwsHJUm3a1Q20GNdof1knYfMX77zXRJ4GMtaC2dUSnhaEFej7+YLdOrsEDK0
- +AbCRXHPoN/phSj6191B5V+/jUIxsXPmeD5SyMl4/l17XfjJYWw9KGZglpFmqTdf6JsDD4v1x
- YF9JL2OX7YX0nrJCDXmpF7mJVdihvVHe6fVmAFhTAJCbAO/ew/KCOtQ8Rh1vF5vmTzrxNfOyR
- 5OIftf6uZV5xVzlzAgOG5KJ5w8zn9McySso6Gi1tWQSTXJyaykpM+Gie0fGL2fKLPQ1HlJC
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.102.4 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:04 AM Michael Kelley <mikelley@microsoft.com> wrote:
-> From: Arnd Bergmann <arnd@arndb.de> Sent: Monday, August 24, 2020 11:54 AM
+YueHaibing <yuehaibing@huawei.com> writes:
 
-> >
-> > I'm not sure what the correct solution should be, but what I'd try to
-> > do here is to move every function that just considers the platform
-> > rather than the architecture somewhere into drivers/hv where it
-> > can be linked into the same modules as the existing files when
-> > building for arm64, while trying to keep architecture specific code
-> > in the header file where it can be included from those modules.
+> If USB_NET_CDC_NCM is y and USB_NET_CDCETHER is m, build fails:
 >
-> OK.  The concept of separating platform from architecture makes
-> sense to me.  The original separation of the Hyper-V code into
-> architecture independent portions and x86-specific portions could
-> use some tweaking now that we're dealing with n=2 architectures.  With
-> that tweaking, I can reduce the amount of Hyper-V code under arch/x86
-> and under arch/arm64.
+> drivers/net/usb/cdc_ncm.o:(.rodata+0x1d8): undefined reference to `usbnet=
+_cdc_update_filter'
 >
-> On the flip side, the Hyper-V implementation on x86 and ARM64 has
-> differences that are semi-related to the architecture.  For example, on
-> x86 Hyper-V uses synthetic MSRs for a lot of guest-hypervisor setup, while
-> hypercalls are required on ARM64.  So I'm assuming those differences
-> will end up in code under arch/x86 and arch/arm64.
+> Select USB_NET_CDCETHER for USB_NET_CDC_NCM to fix this.
 
-Yes, that absolutely makes sense.
+Ouch.  For some reason I assumed that was always selected with usbnet.
+Thanks for fixing.
 
-> Arguably, I could introduce a level of indirection (such as
-> CONFIG_HYPERV_USE_MSRS vs.
-> CONFIG_HYPERV_USE_HYPERCALLS) to distinguish the two behaviors.
-> The selection would be tied to the architecture, and then code in
-> drivers/hv can #ifdef the two cases.  But I wonder if getting code out of
-> arch/x86 and arch/arm64 is worth that additional messiness.
 
-No, I think that would take it a little too far, and conflicts with the
-generic rule that code under drivers/* should be written to be portable
-even if can only run on a particular target platform.
 
-> Looking at the Xen code in drivers/xen, it looks like a lot of the Xen functionality
-> is implemented in hypercalls that can be consistent across architectures,
-> though I was a bit surprised to see a dozen or so instances of #ifdef CONFIG_X86.
-> Xen also #ifdefs on PV vs. PVHVM, which may handle some architecture
-> differences implicitly.  But I'm assuming that doing #ifdef <architecture>
-> in the Hyper-V code in order to reduce code under arch/x86 or arch/arm64
-> is not the right way to go.
-
-In general that is true, adding a lot of #ifdefs makes code less readable and
-harder to test. OTOH there are cases where a single #ifdef can be useful when
-it avoids adding a larger amount of complexity elsewhere. Many subsystems
-try to restrict the #ifdef checks to header files while keeping the
-drivers/* code
-free of them.
-
-       Arnd
+Bj=C3=B8rn
