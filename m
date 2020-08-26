@@ -2,118 +2,280 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2040AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 898BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA5092080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:38:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q4iia6oA"
+	by mail.kernel.org (Postfix) with ESMTP id 64C1E20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:38:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbgHZKiQ (ORCPT
+        id S1728582AbgHZKil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728363AbgHZKiL (ORCPT
+        Wed, 26 Aug 2020 06:38:41 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:35189 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728570AbgHZKiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:38:11 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 042CAC061574;
-        Wed, 26 Aug 2020 03:38:11 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id v16so695127plo.1;
-        Wed, 26 Aug 2020 03:38:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=0Y6Q0TCirrZ7EH7PZeLiKVtJktRjRtt1OK24qTlq+Tg=;
-        b=q4iia6oAcCDyfqStFnxBNCBzGRak3z0/HjQpNbWUTi75n+svBiFnAk5Pd//YjhWoAg
-         eK0lM69r9MpxcZuQRBrwtmPAnx4O8xY42SOMJBjpoDDwD+hX1jtc9S9uB5Dxgxc/9dM+
-         5wU8+P64Q709QhQdlsRDorJ9ru6fUKcYdmYvh8Bh6ytuf1/Gs7B3QDF8iovxd/OL7qU8
-         r92ZpuTQZWxcf68lewVbhDH0BqCOcgGBlgagxgzd+rneZuFB2r7VlBEj1p9I8PmL8mj5
-         7oG7H5Lk5V+kG+1Ei8HdQrjFxs5yZuEDc42/yX96McVHc5M/sNsEhwwNewwVrX99/fhy
-         OAkw==
+        Wed, 26 Aug 2020 06:38:17 -0400
+Received: by mail-io1-f71.google.com with SMTP id k20so908085iog.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 03:38:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0Y6Q0TCirrZ7EH7PZeLiKVtJktRjRtt1OK24qTlq+Tg=;
-        b=ZKmXO5lMAvv+ssfAmqOtXGNW7G/4uh/LLa5ypLqNEw524EdhhiNtHRvB3DtpxuD2UE
-         lEhWxBxLgdgBOcNcTSPYH/c7JUcyMF0ytOuLzzk4frbknQk4FcXu0PbWeO5L3+IXlX53
-         cZLS63ff7UIro/V+WIgGkUFkjIYtzTyuXyhumhVxGbHnP87OEWDIsq5IZVBcRWJQ9fCT
-         ECEko6+f0MG+aCGYA/Q5zRTIaLtpAcXFawjNe/RWDPcJQYmJAIo6YMQonfTLHNzv7LgF
-         nyM6xEmE9aOjCvoYVYjW/qfrlEsSPBUAkT3oaWQk7NJDK1cCRuotghGeAXAqQINrRFFR
-         5bRA==
-X-Gm-Message-State: AOAM531/SJgWD8lxlAy9JBNbTz+zO8Dwc26mIVaDF098FufkR691Y7RR
-        ixxOozYzIFH9wpHVfVLDn3k=
-X-Google-Smtp-Source: ABdhPJzrzFNcD02aszag+XQSJiPTd/D4SiK/bs8h9jBRb5o0aQ7ahzpSU2+Pd+s1VDWjbqrMNAi2UA==
-X-Received: by 2002:a17:90b:4a46:: with SMTP id lb6mr5590574pjb.107.1598438290449;
-        Wed, 26 Aug 2020 03:38:10 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id p20sm1752956pjz.49.2020.08.26.03.38.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 03:38:09 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 19:38:07 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH 1/2] i2c: consider devices with of_match_table during i2c
- device probing
-Message-ID: <20200826103807.GD8849@jagdpanzerIV.localdomain>
-References: <20200826042938.3259-1-sergey.senozhatsky@gmail.com>
- <20200826050851.GA1081@ninjato>
- <20200826052544.GA500@jagdpanzerIV.localdomain>
- <20200826095356.GG1891694@smile.fi.intel.com>
- <20200826095617.GH1891694@smile.fi.intel.com>
- <20200826102411.GC8849@jagdpanzerIV.localdomain>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=zygVL94X6Q9/gOxylja2ASyPRPX3GqyZ0wHqqF523eI=;
+        b=jgDmxJLFYUYMCSDn3C8hJi5TyLWknix4VODl7Ygy4ktdfX5noVXHgi0DuKSDkyb/x9
+         LloH2hQiUJ059dyZnZ4F1rNF6IqPH0C95hQ1OJN88D9oBioI125gxGbXs2TxgS+yxQhH
+         so6WIP7DcIzEUYKfQUMsz1a4QHelDCZ02bQZ9Z3q6nTuRbqbiCHpeD1L0kHsF60uFMcu
+         HoKVc1tD2pYh92mrQamg2vOrb41akIsMNrwZJaK51QEDZN2whpKa2CCYlXPjtKqhlCFe
+         BRFAK4oUXDtgagHRixYnxRzsJGigpgnZ39KZS08fnfUuyrEYn+hYCENBzbBOY32U7GjP
+         rlyA==
+X-Gm-Message-State: AOAM5333YpBQoyxcKJK8E9RTMgd4T1gET5P3KI/i4efzWWQxiW0JJ+Da
+        K26INV70mhzBIXjjRvqfNOGNQwIAaGkly9vzSHoszDA93ynB
+X-Google-Smtp-Source: ABdhPJw08lyBJzdODV2Nkxfhuk4RHh+Cw2MEsa6J9AamNBzV1YHNImbwq9QQ84qsc0HcufY/KZOLJ+Gx1fTymR3g1Kve5aQLypQ6
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826102411.GC8849@jagdpanzerIV.localdomain>
+X-Received: by 2002:a02:6d0e:: with SMTP id m14mr14520416jac.23.1598438295340;
+ Wed, 26 Aug 2020 03:38:15 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 03:38:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ca0c6805adc56a38@google.com>
+Subject: INFO: task can't die in p9_fd_close
+From:   syzbot <syzbot+fbe34b643e462f65e542@syzkaller.appspotmail.com>
+To:     alsa-devel@alsa-project.org, asmadeus@codewreck.org,
+        broonie@kernel.org, daniel.baluta@nxp.com, davem@davemloft.net,
+        ericvh@gmail.com, kuba@kernel.org, lgirdwood@gmail.com,
+        linux-kernel@vger.kernel.org, lucho@ionkov.net,
+        netdev@vger.kernel.org, perex@perex.cz, rminnich@sandia.gov,
+        syzkaller-bugs@googlegroups.com, tiwai@suse.com,
+        v9fs-developer@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/08/26 19:24), Sergey Senozhatsky wrote:
-> > But then the question is why we have this code in the ->probe() at all?
-> > ->match() is run before probe by bus core, no?
-> 
-> That's a good question.
+Hello,
 
-Everything seem to be working OK on my test board with this patch:
+syzbot found the following issue on:
+
+HEAD commit:    494d311a Add linux-next specific files for 20200821
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10615b36900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=a61d44f28687f508
+dashboard link: https://syzkaller.appspot.com/bug?extid=fbe34b643e462f65e542
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15920a05900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a78539900000
+
+The issue was bisected to:
+
+commit af3acca3e35c01920fe476f730dca7345d0a48df
+Author: Daniel Baluta <daniel.baluta@nxp.com>
+Date:   Tue Feb 20 12:53:10 2018 +0000
+
+    ASoC: ak5558: Fix style for SPDX identifier
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12ea5d39900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=11ea5d39900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16ea5d39900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+fbe34b643e462f65e542@syzkaller.appspotmail.com
+Fixes: af3acca3e35c ("ASoC: ak5558: Fix style for SPDX identifier")
+
+INFO: task syz-executor475:7005 can't die for more than 143 seconds.
+task:syz-executor475 state:D stack:27208 pid: 7005 ppid:  6875 flags:0x00004004
+Call Trace:
+ context_switch kernel/sched/core.c:3778 [inline]
+ __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4602
+ schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
+ do_wait_for_common kernel/sched/completion.c:85 [inline]
+ __wait_for_common kernel/sched/completion.c:106 [inline]
+ wait_for_common kernel/sched/completion.c:117 [inline]
+ wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
+ __flush_work+0x51f/0xab0 kernel/workqueue.c:3046
+ __cancel_work_timer+0x5de/0x700 kernel/workqueue.c:3133
+ p9_conn_destroy net/9p/trans_fd.c:889 [inline]
+ p9_fd_close+0x305/0x520 net/9p/trans_fd.c:919
+ p9_client_destroy+0xbe/0x360 net/9p/client.c:1086
+ v9fs_session_close+0x45/0x2c0 fs/9p/v9fs.c:498
+ v9fs_kill_super+0x49/0x90 fs/9p/vfs_super.c:222
+ deactivate_locked_super+0x94/0x160 fs/super.c:335
+ v9fs_mount+0x77c/0x970 fs/9p/vfs_super.c:203
+ legacy_get_tree+0x105/0x220 fs/fs_context.c:592
+ vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+ do_new_mount fs/namespace.c:2896 [inline]
+ path_mount+0x1287/0x1e20 fs/namespace.c:3214
+ do_mount fs/namespace.c:3227 [inline]
+ __do_sys_mount fs/namespace.c:3435 [inline]
+ __se_sys_mount fs/namespace.c:3412 [inline]
+ __x64_sys_mount+0x27f/0x300 fs/namespace.c:3412
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x446eb9
+Code: Bad RIP value.
+RSP: 002b:00007f6a133add98 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00000000006dcc48 RCX: 0000000000446eb9
+RDX: 0000000020000200 RSI: 0000000020000000 RDI: 0000000000000000
+RBP: 00000000006dcc40 R08: 00000000200028c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dcc4c
+R13: 00000000200003c0 R14: 00000000004af538 R15: 0000000000000000
+INFO: task syz-executor475:7005 blocked for more than 143 seconds.
+      Not tainted 5.9.0-rc1-next-20200821-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor475 state:D stack:27208 pid: 7005 ppid:  6875 flags:0x00004004
+Call Trace:
+ context_switch kernel/sched/core.c:3778 [inline]
+ __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4602
+ schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
+ do_wait_for_common kernel/sched/completion.c:85 [inline]
+ __wait_for_common kernel/sched/completion.c:106 [inline]
+ wait_for_common kernel/sched/completion.c:117 [inline]
+ wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
+ __flush_work+0x51f/0xab0 kernel/workqueue.c:3046
+ __cancel_work_timer+0x5de/0x700 kernel/workqueue.c:3133
+ p9_conn_destroy net/9p/trans_fd.c:889 [inline]
+ p9_fd_close+0x305/0x520 net/9p/trans_fd.c:919
+ p9_client_destroy+0xbe/0x360 net/9p/client.c:1086
+ v9fs_session_close+0x45/0x2c0 fs/9p/v9fs.c:498
+ v9fs_kill_super+0x49/0x90 fs/9p/vfs_super.c:222
+ deactivate_locked_super+0x94/0x160 fs/super.c:335
+ v9fs_mount+0x77c/0x970 fs/9p/vfs_super.c:203
+ legacy_get_tree+0x105/0x220 fs/fs_context.c:592
+ vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+ do_new_mount fs/namespace.c:2896 [inline]
+ path_mount+0x1287/0x1e20 fs/namespace.c:3214
+ do_mount fs/namespace.c:3227 [inline]
+ __do_sys_mount fs/namespace.c:3435 [inline]
+ __se_sys_mount fs/namespace.c:3412 [inline]
+ __x64_sys_mount+0x27f/0x300 fs/namespace.c:3412
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x446eb9
+Code: Bad RIP value.
+RSP: 002b:00007f6a133add98 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00000000006dcc48 RCX: 0000000000446eb9
+RDX: 0000000020000200 RSI: 0000000020000000 RDI: 0000000000000000
+RBP: 00000000006dcc40 R08: 00000000200028c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dcc4c
+R13: 00000000200003c0 R14: 00000000004af538 R15: 0000000000000000
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1173:
+ #0: ffffffff89c675c0 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5825
+1 lock held by in:imklog/6540:
+2 locks held by kworker/0:1/6858:
+ #0: ffff8880ae635dd8 (&rq->lock){-.-.}-{2:2}, at: rq_lock kernel/sched/sched.h:1292 [inline]
+ #0: ffff8880ae635dd8 (&rq->lock){-.-.}-{2:2}, at: __schedule+0x232/0x21e0 kernel/sched/core.c:4445
+ #1: ffff8880ae620ec8 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x2fb/0x400 kernel/sched/psi.c:833
+2 locks held by kworker/0:2/6898:
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
+ #1: ffffc90005577da8 ((work_completion)(&m->wq)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
+1 lock held by syz-executor475/6960:
+ #0: ffff8880a7c7a0e0 (&type->s_umount_key#45/1){+.+.}-{3:3}, at: alloc_super+0x201/0xa90 fs/super.c:229
+1 lock held by syz-executor475/7064:
+ #0: ffff8880a6c9c0e0 (&type->s_umount_key#45/1){+.+.}-{3:3}, at: alloc_super+0x201/0xa90 fs/super.c:229
+2 locks held by kworker/0:3/7070:
+ #0: ffff8880aa073538 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: ffff8880aa073538 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
+ #0: ffff8880aa073538 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
+ #0: ffff8880aa073538 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
+ #0: ffff8880aa073538 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
+ #0: ffff8880aa073538 ((wq_completion)rcu_gp){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
+ #1: ffffc90006157da8 ((work_completion)(&rew.rew_work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
+1 lock held by syz-executor475/7279:
+ #0: ffff88809476e0e0 (&type->s_umount_key#45/1){+.+.}-{3:3}, at: alloc_super+0x201/0xa90 fs/super.c:229
+1 lock held by syz-executor475/32328:
+ #0: ffffffff89c6bc28 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:322 [inline]
+ #0: ffffffff89c6bc28 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x274/0x5f0 kernel/rcu/tree_exp.h:836
+1 lock held by syz-executor475/32335:
+ #0: ffffffff89c6bc28 (rcu_state.exp_mutex){+.+.}-{3:3}, at: exp_funnel_lock kernel/rcu/tree_exp.h:322 [inline]
+ #0: ffffffff89c6bc28 (rcu_state.exp_mutex){+.+.}-{3:3}, at: synchronize_rcu_expedited+0x274/0x5f0 kernel/rcu/tree_exp.h:836
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 1173 Comm: khungtaskd Not tainted 5.9.0-rc1-next-20200821-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ nmi_cpu_backtrace.cold+0x44/0xd7 lib/nmi_backtrace.c:105
+ nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:147 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:253 [inline]
+ watchdog+0xd89/0xf30 kernel/hung_task.c:339
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 32335 Comm: syz-executor475 Not tainted 5.9.0-rc1-next-20200821-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:write_comp_data+0x0/0x80 kernel/kcov.c:212
+Code: e8 ff ff cc cc cc cc cc cc cc 65 48 8b 04 25 c0 fe 01 00 48 8b 80 20 14 00 00 c3 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 <49> 89 f2 65 8b 05 76 90 8d 7e 65 48 8b 34 25 c0 fe 01 00 a9 00 01
+RSP: 0018:ffffc90009c47ab8 EFLAGS: 00000086
+RAX: 0000000000000000 RBX: ffff888096e0e000 RCX: ffffffff8134b5d6
+RDX: ffff888116e0e000 RSI: ffff888096e0e000 RDI: 0000000000000006
+RBP: ffff888116e0e000 R08: 0000000000000001 R09: ffff8880ae736dc7
+R10: 0000000000000000 R11: 0000000000000001 R12: 0000000000000000
+R13: ffff888096e0e000 R14: ffff8880ae632c80 R15: ffff8880a43f9f00
+FS:  00007f6a133ae700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f19a2450710 CR3: 0000000097214000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __phys_addr+0x26/0x110 arch/x86/mm/physaddr.c:20
+ virt_to_head_page include/linux/mm.h:846 [inline]
+ qlink_to_cache mm/kasan/quarantine.c:128 [inline]
+ qlist_move_cache+0x72/0xd0 mm/kasan/quarantine.c:278
+ per_cpu_remove_cache+0x47/0x60 mm/kasan/quarantine.c:296
+ on_each_cpu+0xf0/0x240 kernel/smp.c:834
+ quarantine_remove_cache+0x40/0xd0 mm/kasan/quarantine.c:313
+ shutdown_cache mm/slab_common.c:449 [inline]
+ kmem_cache_destroy+0x50/0x120 mm/slab_common.c:497
+ p9_client_destroy+0x24b/0x360 net/9p/client.c:1097
+ v9fs_session_close+0x45/0x2c0 fs/9p/v9fs.c:498
+ v9fs_kill_super+0x49/0x90 fs/9p/vfs_super.c:222
+ deactivate_locked_super+0x94/0x160 fs/super.c:335
+ v9fs_mount+0x77c/0x970 fs/9p/vfs_super.c:203
+ legacy_get_tree+0x105/0x220 fs/fs_context.c:592
+ vfs_get_tree+0x89/0x2f0 fs/super.c:1547
+ do_new_mount fs/namespace.c:2896 [inline]
+ path_mount+0x1287/0x1e20 fs/namespace.c:3214
+ do_mount fs/namespace.c:3227 [inline]
+ __do_sys_mount fs/namespace.c:3435 [inline]
+ __se_sys_mount fs/namespace.c:3412 [inline]
+ __x64_sys_mount+0x27f/0x300 fs/namespace.c:3412
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x446eb9
+Code: e8 dc e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 ab 05 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f6a133add98 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00000000006dcc48 RCX: 0000000000446eb9
+RDX: 0000000020000200 RSI: 0000000020000000 RDI: 0000000000000000
+RBP: 00000000006dcc40 R08: 00000000200028c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dcc4c
+R13: 00000000200003c0 R14: 00000000004af538 R15: 0000000000000000
+
 
 ---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 5ec082e2039d..77eea5c0bc71 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -475,17 +475,6 @@ static int i2c_device_probe(struct device *dev)
- 
- 	driver = to_i2c_driver(dev->driver);
- 
--	/*
--	 * An I2C ID table is not mandatory, if and only if, a suitable OF
--	 * or ACPI ID table is supplied for the probing device.
--	 */
--	if (!driver->id_table &&
--	    !acpi_driver_match_device(dev, dev->driver) &&
--	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
--		status = -ENODEV;
--		goto put_sync_adapter;
--	}
--
- 	if (client->flags & I2C_CLIENT_WAKE) {
- 		int wakeirq;
- 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
