@@ -2,169 +2,177 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1386C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB31EC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D994206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98577206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:12:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="ktiAugnt";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Wwu1HF0z"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nA68HLMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgHZBLn (ORCPT
+        id S1726825AbgHZBMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 21:11:43 -0400
-Received: from relay5.mymailcheap.com ([159.100.241.64]:45215 "EHLO
-        relay5.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726610AbgHZBLi (ORCPT
+        Tue, 25 Aug 2020 21:12:13 -0400
+Received: from mailout4.samsung.com ([203.254.224.34]:44106 "EHLO
+        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbgHZBMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 21:11:38 -0400
-Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [149.56.97.132])
-        by relay5.mymailcheap.com (Postfix) with ESMTPS id 97EA72008F;
-        Wed, 26 Aug 2020 01:11:35 +0000 (UTC)
-Received: from filter2.mymailcheap.com (filter2.mymailcheap.com [91.134.140.82])
-        by relay1.mymailcheap.com (Postfix) with ESMTPS id 2F4A83F1C5;
-        Tue, 25 Aug 2020 21:11:33 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by filter2.mymailcheap.com (Postfix) with ESMTP id 763672A90E;
-        Wed, 26 Aug 2020 03:11:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
-        s=default; t=1598404292;
-        bh=bKNHV8QveD/p5NgbIWUCPUPbPjKF59Td/+XweN6nEtk=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=ktiAugnt5+bUlvMFeqm799jWWiPODSEPfThdMh9MKifksyA+hUCJFSxhxVJui6gpR
-         6PEIGzpgLb0bYfbB18fE7V6KLjuhdGEiOnQkx7tIIewb4QPR9CEqUZnpeshhFyKIk9
-         s9cyys3VGjyGr9ZyBvp9cQsOEyy8X1+4FzIXWxYY=
-X-Virus-Scanned: Debian amavisd-new at filter2.mymailcheap.com
-Received: from filter2.mymailcheap.com ([127.0.0.1])
-        by localhost (filter2.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id AUIIMSPDVqYs; Wed, 26 Aug 2020 03:11:31 +0200 (CEST)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by filter2.mymailcheap.com (Postfix) with ESMTPS;
-        Wed, 26 Aug 2020 03:11:31 +0200 (CEST)
-Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id 242BF41194;
-        Wed, 26 Aug 2020 01:11:28 +0000 (UTC)
-Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="Wwu1HF0z";
-        dkim-atps=neutral
-AI-Spam-Status: Not processed
-Received: from [0.0.0.0] (unknown [203.86.239.39])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 1CCD540859;
-        Wed, 26 Aug 2020 01:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1598404065;
-        bh=bKNHV8QveD/p5NgbIWUCPUPbPjKF59Td/+XweN6nEtk=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=Wwu1HF0zSQEc1/U07xbHxfliYEV4M0fkdnj+6PFgk9lz/Ta+2VYABQncdZTsEmwop
-         ICxvlZRlm1wHXsro8MM7JYAA+hWQQwfJLC1xefYAmzS0vt6VqdrIsCOOpE5JrlODDv
-         Iv19Lty2UJikD5mZn8DzWisHv6BtoIcpPkrKgqMI=
-Subject: Re: [PATCH 2/4] MIPS: Loongson2ef: Remove specific mc146818rtc.h
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200825090907.66681-1-tsbogend@alpha.franken.de>
- <20200825090907.66681-2-tsbogend@alpha.franken.de>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <42468082-3ae4-7655-b19a-2a952d888612@flygoat.com>
-Date:   Wed, 26 Aug 2020 09:07:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 25 Aug 2020 21:12:12 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200826010315epoutp04954924f07519d055d947c079eb53bc6e~uq8ifZNy81579315793epoutp04I
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 01:03:15 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200826010315epoutp04954924f07519d055d947c079eb53bc6e~uq8ifZNy81579315793epoutp04I
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598403795;
+        bh=GArVnUQlfGs75UJ6SGWrUgWlyvN3uE4bsrDRJWD991Q=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=nA68HLMrNwUT90gpV/gL4cK1YOyqISHeFVr4Uh7VIuNTmC0GtrekNUrWokazh8z+m
+         5thI7llF4dMwSr9kOkgWAi/CNqdYm3Q/q5OdesF9GAcPCkVZeEhZ4E0dADc0OU2efK
+         M3cTHlUKml2ZFZ372li7cJADwNxm89OQ8Kk8A908=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200826010315epcas1p1f23fe85bb12878fcb63d995541324379~uq8iClkD42321123211epcas1p1p;
+        Wed, 26 Aug 2020 01:03:15 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.164]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4BbnfV3GGszMqYkZ; Wed, 26 Aug
+        2020 01:03:14 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D7.69.18978.1D4B54F5; Wed, 26 Aug 2020 10:03:13 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200826010313epcas1p1e1df3c0235f84b2dbc1bd6eaa770ca88~uq8f7yREE2321123211epcas1p1m;
+        Wed, 26 Aug 2020 01:03:13 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200826010313epsmtrp1652abb59429cc427b0ee9e93510a7e86~uq8f7H3kP0915909159epsmtrp1V;
+        Wed, 26 Aug 2020 01:03:13 +0000 (GMT)
+X-AuditID: b6c32a35-b8298a8000004a22-75-5f45b4d1c9cf
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A5.CB.08382.0D4B54F5; Wed, 26 Aug 2020 10:03:13 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200826010312epsmtip177affdc1e9bc98b957a90900e74f4edd~uq8fuQZVM0946209462epsmtip1a;
+        Wed, 26 Aug 2020 01:03:12 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
+Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
+        <mori.takahiro@ab.mitsubishielectric.co.jp>,
+        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
+        "'Sungjong Seo'" <sj1557.seo@samsung.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+In-Reply-To: <fdaff3a3-99ba-8b9e-bdaf-9bcf9d7208e0@gmail.com>
+Subject: RE: [PATCH v3] exfat: integrates dir-entry getting and validation
+Date:   Wed, 26 Aug 2020 10:03:13 +0900
+Message-ID: <000101d67b44$ac458c80$04d0a580$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20200825090907.66681-2-tsbogend@alpha.franken.de>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Rspamd-Queue-Id: 242BF41194
-X-Spamd-Result: default: False [-0.10 / 10.00];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         ARC_NA(0.00)[];
-         R_DKIM_ALLOW(0.00)[flygoat.com:s=default];
-         FROM_HAS_DN(0.00)[];
-         RCPT_COUNT_THREE(0.00)[3];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         R_SPF_SOFTFAIL(0.00)[~all];
-         ML_SERVERS(-3.10)[148.251.23.173];
-         DKIM_TRACE(0.00)[flygoat.com:+];
-         DMARC_POLICY_ALLOW(0.00)[flygoat.com,none];
-         DMARC_POLICY_ALLOW_WITH_FAILURES(0.00)[];
-         RCVD_NO_TLS_LAST(0.10)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:24940, ipnet:148.251.0.0/16, country:DE];
-         RCVD_COUNT_TWO(0.00)[2];
-         MID_RHS_MATCH_FROM(0.00)[];
-         HFILTER_HELO_BAREIP(3.00)[148.251.23.173,1]
-X-Rspamd-Server: mail20.mymailcheap.com
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQH6G9isXEQ9sMxkt33jRW4ItYjr3QIF0gSvAfjtwRwBp6Lp0QLf0PstAjwGXzmorDU8MA==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLJsWRmVeSWpSXmKPExsWy7bCmge7FLa7xBm+65S1+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
+        MXp83iQXwBaVY5ORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6Dr
+        lpkDdIuSQlliTilQKCCxuFhJ386mKL+0JFUhI7+4xFYptSAlp8DQoECvODG3uDQvXS85P9fK
+        0MDAyBSoMiEn482jDywFF/grJs58zNjAuJWni5GTQ0LAROL/tYnsXYxcHEICOxgl5l6YyArh
+        fGKUaLt5jwnC+cYoseHcNmaYlidtE1kgEnsZJVbsW8II4bxklLhzZRM7SBWbgK7Evz/72UBs
+        EQE9iZMnr7OBFDELNDJJLD/xBWwUp4CtxMt5U4BsDg5hAS+Jeb1SIGEWAVWJhxv2gZXwClhK
+        rL1zmAXCFpQ4OfMJmM0sIC+x/e0cqIsUJH4+XcYKsStMom9pBztEjYjE7M42ZpC9EgILOSRW
+        7/jNBtHgItFxpJcFwhaWeHV8CzuELSXxsr+NHeQeCYFqiY/7oeZ3MEq8+G4LYRtL3Fy/gRWk
+        hFlAU2L9Ln2IsKLEzt9zGSHW8km8+9rDCjGFV6KjTQiiRFWi79JhJghbWqKr/QP7BEalWUge
+        m4XksVlIHpiFsGwBI8sqRrHUguLc9NRiwwJD5MjexAhOp1qmOxgnvv2gd4iRiYPxEKMEB7OS
+        CK/gRed4Id6UxMqq1KL8+KLSnNTiQ4ymwKCeyCwlmpwPTOh5JfGGpkbGxsYWJmbmZqbGSuK8
+        D28pxAsJpCeWpGanphakFsH0MXFwSjUw5ffFHyxkdI567Hskvdf3R3PDDS25hUfZE2dttwxJ
+        vb7Q37Ow++T+ukau5dxa83x/nd4snFX1Vlpr5Wabxry3ixceq5Dz7NI+MMl5t9M8jVop7Vub
+        fr7r2T9N+KHtWZ5qW77oj/fmrmbhn1Am35KY9j4s4HSw9sTeim9xCUc/L/v6rWKFyc+M/49V
+        fIJf3lhVVLGtj4P98a+0aXu3G4g+rDkmVHPwRNPzQ9M7HD3muc+fayhsNN+yO6H39xVpeU71
+        o/nvj73n3XzoguvpjK3BexrTf1pGbv7YdnCqvEfniRNstivWtc1WUFrFuG1d9yOeaUvana99
+        ehZU1KlldPxA2d7Nj5PL7dX1W37P3N1crMRSnJFoqMVcVJwIADjAygQwBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LZdlhJTvfiFtd4g29TmC1+zL3NYvHm5FQW
+        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
+        MXp83iQXwBbFZZOSmpNZllqkb5fAlfHm0QeWggv8FRNnPmZsYNzK08XIySEhYCLxpG0iSxcj
+        F4eQwG5Gia3725kgEtISx06cYe5i5ACyhSUOHy6GqHnOKLG78wFYDZuArsS/P/vZQGwRAT2J
+        kyevs4EUMQs0M0l8e7aEGaLjBJPE14WdrCBVnAK2Ei/nTQGbKizgJTGvVwokzCKgKvFwwz5m
+        EJtXwFJi7Z3DLBC2oMTJmU/AbGYBbYmnN59C2fIS29/OYYY4VEHi59NlrBBHhEn0Le1gh6gR
+        kZjd2cY8gVF4FpJRs5CMmoVk1CwkLQsYWVYxSqYWFOem5xYbFhjmpZbrFSfmFpfmpesl5+du
+        YgRHlpbmDsbtqz7oHWJk4mA8xCjBwawkwit40TleiDclsbIqtSg/vqg0J7X4EKM0B4uSOO+N
+        woVxQgLpiSWp2ampBalFMFkmDk6pBqaOFV0mf/Z53Qg7W3mqWnrqzveRO2boxh58YRmrNevO
+        sWZW5gm2O9Uc7vZGfVDW+P1ulYbkfNaEx5wVglvnPjzR9mOWgsfroj6336unqsQUzz7xxcVf
+        L3xv/wWxuZ4PG1Q+RM6W33bth8T1xQ1KYs8yNFQYDO5K7SutVzJnusTk986M9WUJz4+eB7M+
+        FP6Zk7F3Q8LfOUIm6WVSrZYpVyTCmp77XbdoNeBwORJ5uX7tVGZ2jv0sn5xyN8rN2bvvDBNX
+        KG/j+8185ok2qleXPs/XSs1cFiUtc4H7us4HTg8W3+bny+2ja9LXX+l4zcq6hvtO4IcKB5Gz
+        1z5Hnwtl+2W3OLLG9fzsuXEibG/rliqxFGckGmoxFxUnAgDH553jGwMAAA==
+X-CMS-MailID: 20200826010313epcas1p1e1df3c0235f84b2dbc1bd6eaa770ca88
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200806010250epcas1p482847d6d906fbf0ccd618c7d1cacd12e
+References: <CGME20200806010250epcas1p482847d6d906fbf0ccd618c7d1cacd12e@epcas1p4.samsung.com>
+        <20200806010229.24690-1-kohada.t2@gmail.com>
+        <003c01d66edc$edbb1690$c93143b0$@samsung.com>
+        <ca3b2b52-1abc-939c-aa11-8c7d12e4eb2e@gmail.com>
+        <000001d67787$d3abcbb0$7b036310$@samsung.com>
+        <fdaff3a3-99ba-8b9e-bdaf-9bcf9d7208e0@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Second: Range validation and type validation should not be separated.
+> When I started making this patch, I intended to add only range validation.
+> However, after the caller gets the ep, the type validation follows.
+> Get ep, null check of ep (= range verification), type verification is a series of procedures.
+> There would be no reason to keep them independent anymore.
+> Range and type validation is enforced when the caller uses ep.
+You can add a validate flags as argument of exfat_get_dentry_set(), e.g. none, basic and strict.
+none : only range validation.
+basic : range + type validation.
+strict : range + type + checksum and name length, etc.
+ 
+> > -	/* validiate cached dentries */
+> > -	for (i = 1; i < num_entries; i++) {
+> > -		ep = exfat_get_dentry_cached(es, i);
+> > -		if (!exfat_validate_entry(exfat_get_entry_type(ep), &mode))
+> > +	ep = exfat_get_dentry_cached(es, ENTRY_STREAM);
+> > +	if (!ep || ep->type != EXFAT_STREAM)
+> > +		goto free_es;
+> > +	es->de[ENTRY_STREAM] = ep;
+> 
+> The value contained in stream-ext dir-entry should not be used before validating the EntrySet checksum.
+> So I would insert EntrySet checksum validation here.
+> In that case, the checksum verification loop would be followed by the TYPE_NAME verification loop, can
+> you acceptable?
+Yes. That would be great.
 
+Thanks!
+> 
+> 
+> > diff --git a/fs/exfat/exfat_fs.h b/fs/exfat/exfat_fs.h index
+> > 44dc04520175..0e4cc8ba2f8e 100644
+> > --- a/fs/exfat/exfat_fs.h
+> > +++ b/fs/exfat/exfat_fs.h
+> > @@ -33,6 +33,12 @@ enum {
+> >   	NLS_NAME_OVERLEN,	/* the length is over than its limit */
+> >   };
+> >
+> > +enum {
+> > +	ENTRY_FILE,
+> > +	ENTRY_STREAM,
+> > +	ENTRY_NAME,
+> > +};
+> 
+> This is necessary!
+> With this, some magic numbers will be gone.
+> But, I think it's better to use a name that can be recognized as an offset/index in the EntrySet.
+> And, I think it's better to define this in "exfat_raw.h"
+Okay, You can rename it and move it to there.
 
-ÔÚ 2020/8/25 ÏÂÎç5:09, Thomas Bogendoerfer Ð´µÀ:
-> Loonson2ef's mc146818rtc.h is the same as the generic one -> remove it.
->
-> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-
-Acked-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-
-> ---
->   .../include/asm/mach-loongson2ef/mc146818rtc.h     | 36 ----------------------
->   1 file changed, 36 deletions(-)
->   delete mode 100644 arch/mips/include/asm/mach-loongson2ef/mc146818rtc.h
->
-> diff --git a/arch/mips/include/asm/mach-loongson2ef/mc146818rtc.h b/arch/mips/include/asm/mach-loongson2ef/mc146818rtc.h
-> deleted file mode 100644
-> index 00d602629a55..000000000000
-> --- a/arch/mips/include/asm/mach-loongson2ef/mc146818rtc.h
-> +++ /dev/null
-> @@ -1,36 +0,0 @@
-> -/*
-> - * This file is subject to the terms and conditions of the GNU General Public
-> - * License.  See the file "COPYING" in the main directory of this archive
-> - * for more details.
-> - *
-> - * Copyright (C) 1998, 2001, 03, 07 by Ralf Baechle (ralf@linux-mips.org)
-> - *
-> - * RTC routines for PC style attached Dallas chip.
-> - */
-> -#ifndef __ASM_MACH_LOONGSON2EF_MC146818RTC_H
-> -#define __ASM_MACH_LOONGSON2EF_MC146818RTC_H
-> -
-> -#include <linux/io.h>
-> -
-> -#define RTC_PORT(x)	(0x70 + (x))
-> -#define RTC_IRQ		8
-> -
-> -static inline unsigned char CMOS_READ(unsigned long addr)
-> -{
-> -	outb_p(addr, RTC_PORT(0));
-> -	return inb_p(RTC_PORT(1));
-> -}
-> -
-> -static inline void CMOS_WRITE(unsigned char data, unsigned long addr)
-> -{
-> -	outb_p(addr, RTC_PORT(0));
-> -	outb_p(data, RTC_PORT(1));
-> -}
-> -
-> -#define RTC_ALWAYS_BCD	0
-> -
-> -#ifndef mc146818_decode_year
-> -#define mc146818_decode_year(year) ((year) < 70 ? (year) + 2000 : (year) + 1970)
-> -#endif
-> -
-> -#endif /* __ASM_MACH_LOONGSON2EF_MC146818RTC_H */
