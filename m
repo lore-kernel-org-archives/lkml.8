@@ -2,109 +2,133 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2475C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C73C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0D0120707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:19:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD5A206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:19:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K+PUZGRM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728013AbgHZJTC convert rfc822-to-8bit (ORCPT
+        id S1728025AbgHZJTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:19:02 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:44529 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727793AbgHZJS6 (ORCPT
+        Wed, 26 Aug 2020 05:19:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38588 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727996AbgHZJS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Aug 2020 05:18:58 -0400
-X-Originating-IP: 90.89.180.255
-Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
-        (Authenticated sender: kevin.lhopital@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 02DA62001E;
-        Wed, 26 Aug 2020 09:18:50 +0000 (UTC)
-Date:   Wed, 26 Aug 2020 11:18:50 +0200
-From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Yong Deng <yong.deng@magewell.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 1/7] media: sun6i-csi: Fix the bpp for 10-bit bayer
- formats
-Message-ID: <20200826111850.06cbe400@lhopital-XPS-13-9360>
-In-Reply-To: <CAGb2v65enzLHdK09-8Nm7=YU9-bRP=0Q+BXjXah6MZR2-y=zrA@mail.gmail.com>
-References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
-        <20200821145935.20346-2-kevin.lhopital@bootlin.com>
-        <CAGb2v65enzLHdK09-8Nm7=YU9-bRP=0Q+BXjXah6MZR2-y=zrA@mail.gmail.com>
-Organization: bootlin
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54396C061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:18:58 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y6so607740plt.3
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:18:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3zVbq7zEl/VylsOkImAEnSsEooCYxqv16B/0RWDkhJE=;
+        b=K+PUZGRMtL+WeKb15tJBnfkVOHrBfTwHgTsG6Vhq5aOYQ9VzlMP8bC3D4H9s9Vmnwr
+         T9UbSHeZLvi2f0631yma1BoIk5JYO0ZMUMnnNgxwstvJPuxz6OXM3Zei5mB9fjd+8QXu
+         tOQbQiebKGt/CBAaRYhsoaC02PXAPOJ+6bDTE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3zVbq7zEl/VylsOkImAEnSsEooCYxqv16B/0RWDkhJE=;
+        b=VznhJ42ymTJMIDDvx6vWrhsyF4ubhmTChUU5f0yEn0gubvhS5iwjYHc1ijF8bAuPmo
+         RD6dAZqhx3zD3EkQUEbmQSSG87ntSmPzOoXF1fa9IAvX7W4pPWTieXjIBXCP6ZzeInIl
+         NloyzVqJm6uYsaYS35EuIjoKYy8kiKq3ag9yasExVRtUPdjUewIDWwDoUnk050MANlbw
+         AMUVBJHzYBuEGp8bfOFoIvoXUacYiGJE4dyPuaZhrLDQeigXfVSt/Rfic/eS3UW5m1C2
+         MU97g90qRBoOHo7mkFGESRluWOH60Ajk3QVlhTHeamPZ5d6/iucRzyKbgPUR0Og5n53F
+         vjyg==
+X-Gm-Message-State: AOAM533YaahNwLJDs3MRbRkDYyZ/+K3S6m5iuL6UroxEcc4ha8TFA6f6
+        KrG99a/7/Ptm5ShLS4HWdsjETg==
+X-Google-Smtp-Source: ABdhPJwmlAUvfRKgb9uu3liuf+trZDCW7x2GR14ieJBTwinOvb3MMKRDTkVHVMx+HWNAbWEyyr44TA==
+X-Received: by 2002:a17:902:bb89:: with SMTP id m9mr7541350pls.108.1598433537693;
+        Wed, 26 Aug 2020 02:18:57 -0700 (PDT)
+Received: from ikjn-p920.tpe.corp.google.com ([2401:fa00:1:10:f693:9fff:fef4:a8fc])
+        by smtp.gmail.com with ESMTPSA id t20sm1922270pgj.27.2020.08.26.02.18.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 02:18:57 -0700 (PDT)
+From:   Ikjoon Jang <ikjn@chromium.org>
+To:     Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Bayi Cheng <bayi.cheng@mediatek.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Ikjoon Jang <ikjn@chromium.org>
+Subject: [PATCH] spi: spi-mtk-nor: support standard spi properties
+Date:   Wed, 26 Aug 2020 17:18:52 +0800
+Message-Id: <20200826091852.519138-1-ikjn@chromium.org>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Use default supports_op() to support spi-[rt]x-bus-width properties.
+And check dummy op's byte length instead of its bus width for output.
 
-Le Tue, 25 Aug 2020 23:50:30 +0800,
-Chen-Yu Tsai <wens@csie.org> a écrit :
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+---
+ drivers/spi/spi-mtk-nor.c | 29 ++++++++++++++++-------------
+ 1 file changed, 16 insertions(+), 13 deletions(-)
 
-> On Fri, Aug 21, 2020 at 11:00 PM Kévin L'hôpital
-> <kevin.lhopital@bootlin.com> wrote:
-> >
-> > 10-bit bayer formats are aligned to 16 bits in memory, so this is
-> > what needs to be used as bpp for calculating the size of the
-> > buffers to allocate.
-> >
-> > Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>  
-> 
-> Please add:
-> 
-> Fixes: 5cc7522d8965 ("media: sun6i: Add support for Allwinner CSI
-> V3s")
-> 
-> 
-I will add this, thank you very much for the review.
-Kévin
-> 
-> > ---
-> >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
-> > b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h index
-> > c626821aaedb..8b83d15de0d0 100644 ---
-> > a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h +++
-> > b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h @@ -100,7
-> > +100,7 @@ static inline int sun6i_csi_get_bpp(unsigned int
-> > pixformat) case V4L2_PIX_FMT_SGBRG10: case V4L2_PIX_FMT_SGRBG10:
-> >         case V4L2_PIX_FMT_SRGGB10:
-> > -               return 10;
-> > +               return 16;
-> >         case V4L2_PIX_FMT_SBGGR12:
-> >         case V4L2_PIX_FMT_SGBRG12:
-> >         case V4L2_PIX_FMT_SGRBG12:
-> > --
-> > 2.17.1
-> >  
-
-
-
+diff --git a/drivers/spi/spi-mtk-nor.c b/drivers/spi/spi-mtk-nor.c
+index b08d8e9a8ee9..6e6ca2b8e6c8 100644
+--- a/drivers/spi/spi-mtk-nor.c
++++ b/drivers/spi/spi-mtk-nor.c
+@@ -211,25 +211,28 @@ static bool mtk_nor_supports_op(struct spi_mem *mem,
+ 	if (op->cmd.buswidth != 1)
+ 		return false;
+ 
+-	/* DTR ops not supported. */
+-	if (op->cmd.dtr || op->addr.dtr || op->dummy.dtr || op->data.dtr)
+-		return false;
+-	if (op->cmd.nbytes != 1)
+-		return false;
+-
+ 	if ((op->addr.nbytes == 3) || (op->addr.nbytes == 4)) {
+-		if ((op->data.dir == SPI_MEM_DATA_IN) && mtk_nor_match_read(op))
+-			return true;
+-		else if (op->data.dir == SPI_MEM_DATA_OUT)
+-			return (op->addr.buswidth == 1) &&
+-			       (op->dummy.buswidth == 0) &&
+-			       (op->data.buswidth == 1);
++		switch(op->data.dir) {
++		case SPI_MEM_DATA_IN:
++			if (!mtk_nor_match_read(op))
++				return false;
++			break;
++		case SPI_MEM_DATA_OUT:
++			if ((op->addr.buswidth != 1) ||
++			    (op->dummy.nbytes != 0) ||
++			    (op->data.buswidth != 1))
++				return false;
++			break;
++		default:
++			break;
++		}
+ 	}
+ 	len = op->cmd.nbytes + op->addr.nbytes + op->dummy.nbytes;
+ 	if ((len > MTK_NOR_PRG_MAX_SIZE) ||
+ 	    ((op->data.nbytes) && (len == MTK_NOR_PRG_MAX_SIZE)))
+ 		return false;
+-	return true;
++
++	return spi_mem_default_supports_op(mem, op);
+ }
+ 
+ static void mtk_nor_setup_bus(struct mtk_nor *sp, const struct spi_mem_op *op)
 -- 
-Kevin L'Hopital, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+2.28.0.297.g1956fa8f8d-goog
+
