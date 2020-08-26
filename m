@@ -2,143 +2,109 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B60AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C256C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 000CD208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:54:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="CN37Jl22"
+	by mail.kernel.org (Postfix) with ESMTP id 621F4208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598450109;
+	bh=K5QLd/X1fnK2BhaLCj1T0f0LtdugxVd+h+B5AjNrEw4=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:
+	 Cc:Cc:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WZ0CT8wXUqA24bV1k0BeyeWbDIa3s8GPEVz8eqsN1dlJR6frIlIuFD+1W/kcPiN+4
+	 sknPADXV5SvhvbAUCZsWeUXCIEGgMLradbPcv9TELhqqkV8zKN4boZ6J0uI41Vzbgd
+	 i00NhS1WCQagY1NY+HhrVcpqCA8vPEIc2CqxY+JQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730545AbgHZNyx (ORCPT
+        id S1730585AbgHZNzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:54:53 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:18337 "EHLO mx1.tq-group.com"
+        Wed, 26 Aug 2020 09:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730575AbgHZNyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:54:46 -0400
-IronPort-SDR: 4qZEJQfbxShC9ygBEgk8Bq0woVrWk10KVvg60Pk6LDwUzH88EDTbmntil5v6zOkSa0vdLEo3Wv
- oMMTG0Je0e+Lfy8DEtQ+he48QvbIt60OrqHuVwJPjsMswWzBskxYWUEnacYGbkqGy8b47bOtDR
- BPO6OOI9xGEcx+4B4G4Tp3NLmSeKZGirGv71UshA/6bFXQQFRjCM9PaYpRo4O8FaxHeCwqwC4B
- 6fLrtIueUdyr48buvs0fsGiu5QRR9uLcSKUxjPCS+HMXB25cnmtCQTlcBnUmYQDJEDRXHqc1cQ
- 9XU=
-X-IronPort-AV: E=Sophos;i="5.76,355,1592863200"; 
-   d="scan'208";a="13610172"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 26 Aug 2020 15:54:44 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 26 Aug 2020 15:54:44 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 26 Aug 2020 15:54:44 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1598450084; x=1629986084;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=oyBCdI37qgrjRW4ghqxsqRMW6f2Kj9dxEiEcFm2sbnA=;
-  b=CN37Jl22/apgtqmLB84TILsD4PXVk9tulsTP69yGaKuAB3gWKo0vDP1m
-   fLuNLcNd7keJBu0/jdTUILSZnxarNLOklw7AvbpCVNAaSAnsoCB3gW49i
-   clmoaUCH/OGp1x6FV3UE5hoGeThyuAf5hoFApigKkA1iLqPuj1ObRiuJZ
-   hyHZPZKkEdaA1eV+7ftFH11xlhwPll8xwofnQs7WjYViCNzD8rcDf62sv
-   a59tWmJY+UdO+/MvxaW92vNedDZ1dFe8NqBUA2G8Ps2Bi0fuCoYGuaX4T
-   p/DoRrZSpR56y247TeaMjkSAUAA4e4CxOK5jOufFCSv9LZeN32JjpqTmw
-   g==;
-IronPort-SDR: fQCFrSQyelniZqboToTRYXgqlViufbT06V39C9FC1eWA3/HJ3YSpykrd7ggg4fxhTZh54mvkvO
- f3RI+rODB/e0R9GxJmUK+RWrvrt7GyfVibTkuDE6eGSiXreBJ4LXDWTot8fKaAL99l2uQk8zJB
- EGGHWYKd9EdDymqI59FszoD2emXI/P47GlqMkAfmvbL8rJGYEICkP2wp0/RLZqfG+99MFTx4Wd
- qTUkozq4EdeoUCx5ko6M3pRrqNC+50ipRyrFqbk1DXzRjkr6tOIH11vjHRPbplBjxJYdS5XnQw
- /3w=
-X-IronPort-AV: E=Sophos;i="5.76,355,1592863200"; 
-   d="scan'208";a="13610171"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 26 Aug 2020 15:54:44 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 71109280065;
-        Wed, 26 Aug 2020 15:54:44 +0200 (CEST)
-Message-ID: <9eb72c6561333661599411e49072928385629999.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: [PATCH] of: skip disabled CPU nodes
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 26 Aug 2020 15:54:42 +0200
-In-Reply-To: <4dd06b79-1402-d7cf-9676-1f9a9526da12@gmail.com>
-References: <20200826120254.8902-1-matthias.schiffer@ew.tq-group.com>
-         <4dd06b79-1402-d7cf-9676-1f9a9526da12@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1730453AbgHZNx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:53:59 -0400
+Received: from localhost (unknown [70.37.104.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4D4C22B4B;
+        Wed, 26 Aug 2020 13:53:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598450039;
+        bh=K5QLd/X1fnK2BhaLCj1T0f0LtdugxVd+h+B5AjNrEw4=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:Cc:
+         Cc:Cc:Cc:Subject:In-Reply-To:References:From;
+        b=d9t+9O/5L1pVr1cn+LCeNjQnxckoIX4KWNn9hhvwRA9015CapL+hwvn8aRci0zkC7
+         9eRPuvnVVzxHNSdsjyrcW0BFEOemmwwv99edARWoGrSC4cIH7Z3eZ+nNIqiKAK4KbV
+         3lAt67YzGUbOvaFIcGgkbj5NwbXMV4oSg/XtdACs=
+Date:   Wed, 26 Aug 2020 13:53:58 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Kim Phillips <kim.phillips@amd.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Stephane Eranian <eranian@google.com>
+Cc:     Stephane Eranian <eranian@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Borislav Petkov <bp@alien8.de>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Michael Petlan <mpetlan@redhat.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86 <x86@kernel.org>
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH 1/7 RESEND] perf/amd/uncore: Set all slices and threads to restore perf stat -a behaviour
+In-Reply-To: <20200817220628.7604-1-kim.phillips@amd.com>
+References: <20200817220628.7604-1-kim.phillips@amd.com>
+Message-Id: <20200826135358.C4D4C22B4B@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-26 at 08:01 -0500, Frank Rowand wrote:
-> On 2020-08-26 07:02, Matthias Schiffer wrote:
-> > Allow disabling CPU nodes using status = "disabled".
-> > 
-> > This allows a bootloader to change the number of available CPUs
-> > (for
-> > example when a common DTS is used for SoC variants with different
-> > numbers
-> > of cores) without deleting the nodes altogether (which may require
-> > additional fixups where the CPU nodes are referenced, e.g. a
-> > cooling
-> > map).
-> > 
-> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
-> > >
-> > ---
-> >  drivers/of/base.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index ea44fea99813..d547e9deced1 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -796,6 +796,8 @@ struct device_node *of_get_next_cpu_node(struct
-> > device_node *prev)
-> >  		of_node_put(node);
-> >  	}
-> >  	for (; next; next = next->sibling) {
-> > +		if (!__of_device_is_available(next))
-> > +			continue;
-> >  		if (!(of_node_name_eq(next, "cpu") ||
-> >  		      __of_node_is_type(next, "cpu")))
-> >  			continue;
-> > 
-> 
-> The original implementation of of_get_next_cpu_node() had
-> that check, but status disabled for cpu nodes has different
-> semantics than other nodes, and the check broke some systems.
-> The check was removed by c961cb3be906 "of: Fix cpu node
-> iterator to not ignore disabled cpu nodes".
-> 
-> It would be useful to document that difference in the
-> header comment of of_get_next_cpu_node().
-> 
-> -Frank
+Hi
 
-Hmm, I see. This difference in behaviour is quite unfortunate, as I'm
-currently looking for a way to *really* disable a CPU core.
+[This is an automated email]
 
-In arch/arm64/boot/dts/freescale/imx8mn.dtsi (and other variants of the
-i.MX8M), there are 4 CPU nodes for the full-featured quad-core version.
-The reduced single- and dual-core versions are currently handled in
-NXP's U-Boot fork by deleting the additional nodes.
+This commit has been processed because it contains a "Fixes:" tag
+fixing commit: 2f217d58a8a0 ("perf/x86/amd/uncore: Set the thread mask for F17h L3 PMCs").
 
-Not doing so causes the kernel to hang for a while when trying to
-online the non-existent cores during boot (at least in linux-imx 5.4 -
-I have not checked a more recent mainline kernel yet), but the deletion
-is non-trivial to do without leaving dangling phandle references.
+The bot has tested the following trees: v5.8.2, v5.7.16, v5.4.59, v4.19.140, v4.14.193.
 
-Kind regards,
-Matthias
+v5.8.2: Build OK!
+v5.7.16: Build OK!
+v5.4.59: Failed to apply! Possible dependencies:
+    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
+    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
+    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
 
+v4.19.140: Failed to apply! Possible dependencies:
+    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
+    6d0ef316b9f8 ("x86/events: Add Hygon Dhyana support to PMU infrastructure")
+    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
+    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
+
+v4.14.193: Failed to apply! Possible dependencies:
+    4dcc3df82573 ("perf/amd/uncore: Prepare L3 thread mask code for Family 19h")
+    6d0ef316b9f8 ("x86/events: Add Hygon Dhyana support to PMU infrastructure")
+    9689dbbeaea8 ("perf/amd/uncore: Make L3 thread mask code more readable")
+    e48667b86548 ("perf/amd/uncore: Add support for Family 19h L3 PMU")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
