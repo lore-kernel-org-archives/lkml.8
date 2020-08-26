@@ -2,113 +2,91 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E68C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4161E206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:01:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YQ0m9+zZ"
+	by mail.kernel.org (Postfix) with ESMTP id 2E7912076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598400169;
+	bh=aBI3dtda/CdYpEmdbdOJXEkCTP84gg1IL93fqoIOK6U=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=2UvgKVK25DYNixyZ31ku14yeGb68y2kX0jYKHl6+7ksPlVUkkMb2rS4oNXSgo0x2Y
+	 C8ZVTz3uvVWyYeploQp44Z/pBinqQnhMZKcPOxcO+gJaDguqrt+19eM59YiOTPon1b
+	 hcYGiFo39Y/51qOWFPnQZ7DA8w2dTHBJ6rWleXQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgHZABY (ORCPT
+        id S1726706AbgHZACs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 20:01:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbgHZABU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 20:01:20 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B91DC061574;
-        Tue, 25 Aug 2020 17:01:19 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 25 Aug 2020 20:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726483AbgHZACq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 20:02:46 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BbmGz0SKWz9sPB;
-        Wed, 26 Aug 2020 10:01:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598400076;
-        bh=TwFxGEb4cUq9387ARgHf6vpuujgya5+1GaLjkV+Xl7I=;
+        by mail.kernel.org (Postfix) with ESMTPSA id C475F206EB;
+        Wed, 26 Aug 2020 00:02:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598400166;
+        bh=aBI3dtda/CdYpEmdbdOJXEkCTP84gg1IL93fqoIOK6U=;
         h=Date:From:To:Cc:Subject:From;
-        b=YQ0m9+zZT4sdW0hbJ8zCKXqxtgYeUBUEq2OXge6GMFdlZw+58ghsY3f+GdH5xu3nY
-         QBG3pKrwr7Cgeh3sFrU4BbZOwHaO7LHk+C81Qbaj0NkhBQ4/HZeA2ih/xORqyB/yqB
-         oed0Hkc/o06ooYldpIqkz7fXWMQc7m0g9PMjJeqcnm4jhNLnYAo8nMrIaP1aK6Kr9l
-         D++fgJRsUTopUaP/HtaWpIp/VUQkPDPkLWDd+BSc48HTeXF6FGUBlziB/kR8Q7JknL
-         nXHvTVUgrPzQl0n9HBFN2uE1pMgakUf/x4tMTJTVPcZKQIFvrqv/zbeOCq15O3Etac
-         TpNuKChpsb0zw==
-Date:   Wed, 26 Aug 2020 10:01:13 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: linux-next: manual merge of the drm-misc tree with Linus' tree
-Message-ID: <20200826100113.6126afad@canb.auug.org.au>
+        b=D684WVqr2ndz7+Sjj5fwEDzm23k5ELhVAmaV8q49/bbroAZCVDvQWiYxLVfgKDIzm
+         RP/IXHfd+nL2QKUJdt5BIM3di9KiEvbDqVo3uZ7VMV2ANGD0P03b7FdSyVpGViVnY9
+         +WzxySHOy6qYI7fBdDP2j44mxv6Cre6QDTe2eZPs=
+Date:   Tue, 25 Aug 2020 19:08:44 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH] iio: dpot-dac: fix code comment in dpot_dac_read_raw()
+Message-ID: <20200826000844.GA16807@embeddedor>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3ptXOJpu8Wggpt40t=+s=uM";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/3ptXOJpu8Wggpt40t=+s=uM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+After the replacement of the /* fall through */ comment with the
+fallthrough pseudo-keyword macro, the natural reading of a code
+comment was broken.
 
-Hi all,
+Fix the natural reading of such a comment and make it intelligible.
 
-Today's linux-next merge of the drm-misc tree got conflicts in:
+Reported-by: Peter Rosin <peda@axentia.se>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/iio/dac/dpot-dac.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-  drivers/video/fbdev/arcfb.c
-  drivers/video/fbdev/atmel_lcdfb.c
-  drivers/video/fbdev/savage/savagefb_driver.c
+diff --git a/drivers/iio/dac/dpot-dac.c b/drivers/iio/dac/dpot-dac.c
+index be61c3b01e8b..1a9609eda5c5 100644
+--- a/drivers/iio/dac/dpot-dac.c
++++ b/drivers/iio/dac/dpot-dac.c
+@@ -74,10 +74,11 @@ static int dpot_dac_read_raw(struct iio_dev *indio_dev,
+ 		case IIO_VAL_INT:
+ 			/*
+ 			 * Convert integer scale to fractional scale by
+-			 * setting the denominator (val2) to one, and...
++			 * setting the denominator (val2) to one...
+ 			 */
+ 			*val2 = 1;
+ 			ret = IIO_VAL_FRACTIONAL;
++			/* ...and fall through. Say it again for GCC. */
+ 			fallthrough;
+ 		case IIO_VAL_FRACTIONAL:
+ 			*val *= regulator_get_voltage(dac->vref) / 1000;
+-- 
+2.27.0
 
-between commit:
-
-  df561f6688fe ("treewide: Use fallthrough pseudo-keyword")
-
-from Linus' tree and commit:
-
-  ad04fae0de07 ("fbdev: Use fallthrough pseudo-keyword")
-
-from the drm-misc tree.
-
-I fixed it up (they are much the same, I just used the version from Linus'
-tree) and can carry the fix as necessary. This is now fixed as far as
-linux-next is concerned, but any non trivial conflicts should be mentioned
-to your upstream maintainer when your tree is submitted for merging.
-You may also want to consider cooperating with the maintainer of the
-conflicting tree to minimise any particularly complex conflicts.
-
-
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/3ptXOJpu8Wggpt40t=+s=uM
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9FpkkACgkQAVBC80lX
-0Gw9bgf/aNCbX377c4IdSb1IJKi9m2loeOLAZ6oUTJII1MBCyizcDavmyZb6vLW9
-ODBXdC8+1FMrHcLElvvgMpCTqTwfjgCHW+2cJc7kRVoCSyfwMoF6noWgof7ATDHa
-H+zhNvsb1kLuR3LGCkARBhaHjyyWbgAunSTWtCbBRL6jE2JGqsP1SFVMZq/YBmRT
-RzlNiad8d8bTR57MngIn4PNtwv9ZRPDeNTR5Dv1+QDxYHVWSjbzElnZwyvkVwxvY
-daAzpHLtQobic5OppUm1aaG6rUtuk7lawrnBOWTP8Adac/cpiaqqSw3leLQhWPnt
-Nz+0y+3MLOq/qm/Pu6K/cqydjBBEfA==
-=nvdp
------END PGP SIGNATURE-----
-
---Sig_/3ptXOJpu8Wggpt40t=+s=uM--
