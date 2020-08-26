@@ -2,72 +2,111 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C883FC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCC8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4E2120786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424EB2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:02:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ba+ApzA3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JYpSEt6S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbgHZMBt (ORCPT
+        id S1729433AbgHZMCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:01:49 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:46512 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729303AbgHZMAv (ORCPT
+        Wed, 26 Aug 2020 08:02:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57020 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729371AbgHZMBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:00:51 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01419;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U6vmsbS_1598443247;
-Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U6vmsbS_1598443247)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 26 Aug 2020 20:00:47 +0800
-Reply-To: xlpang@linux.alibaba.com
-Subject: Re: [PATCH] mm: memcg: Fix memcg reclaim soft lockup
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <1598426822-93737-1-git-send-email-xlpang@linux.alibaba.com>
- <20200826081102.GM22869@dhcp22.suse.cz>
- <99efed0e-050a-e313-46ab-8fe6228839d5@linux.alibaba.com>
- <20200826110015.GO22869@dhcp22.suse.cz>
-From:   xunlei <xlpang@linux.alibaba.com>
-Message-ID: <f0122b2d-4740-2caf-3c4f-009a513426e3@linux.alibaba.com>
-Date:   Wed, 26 Aug 2020 20:00:47 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Wed, 26 Aug 2020 08:01:01 -0400
+Message-Id: <20200826112330.683298931@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598443256;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=Oz0/1gWRPSvvsPJtwAVY3cS6pNjuxGdtqsobcr4ZCvs=;
+        b=Ba+ApzA3lxf0wI52RxaFIrxrYAUyBUQG1gGFQztF1br0kk0U6AoE5wqCgnixhkjrgzOMo6
+        rT2ZvDyvuHISEifoHKZcKVSGoRPA4BuCErcMtK3FQsusSIwD5cxoIwTKUluv4ET8zep/wX
+        rIHR72+BqmwB1T2FYELwwtUSa5KalCb4GGFT5jGxBlx+9x72db//rw0t1XujWqIY8Vjs+P
+        FVWGmQd/RE/PAIEnL0RNQjFWLeWLoGfwUlzXfBeO7dzRVssgTu8kngEQeo/lNittJ7g2V5
+        NVXx9eYNRt9ZrPbdlXzYbDphBoMnpc/BMMJMcyjRQDnN40c6/GFaU/Q5glpFAg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598443256;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:  references:references;
+        bh=Oz0/1gWRPSvvsPJtwAVY3cS6pNjuxGdtqsobcr4ZCvs=;
+        b=JYpSEt6S0O9MIXMNQT5EttPLTAVkYzwAAPVY2vxQEslrb722eNdO+r4OYiSe56zO/bTHh/
+        UR0TOrKuXedUnoCQ==
+Date:   Wed, 26 Aug 2020 13:16:29 +0200
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [patch V2 01/46] iommu/amd: Prevent NULL pointer dereference
+References: <20200826111628.794979401@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200826110015.GO22869@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-transfer-encoding: 8-bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/26 下午7:00, Michal Hocko wrote:
-> On Wed 26-08-20 18:41:18, xunlei wrote:
->> On 2020/8/26 下午4:11, Michal Hocko wrote:
->>> On Wed 26-08-20 15:27:02, Xunlei Pang wrote:
->>>> We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
->>>> the target memcg doesn't have any reclaimable memory.
->>>
->>> Do you have any scenario when this happens or is this some sort of a
->>> test case?
->>
->> It can happen on tiny guest scenarios.
-> 
-> OK, you made me more curious. If this is a tiny guest and this is a hard
-> limit reclaim path then we should trigger an oom killer which should
-> kill the offender and that in turn bail out from the try_charge lopp
-> (see should_force_charge). So how come this repeats enough in your setup
-> that it causes soft lockups?
-> 
+From: Thomas Gleixner <tglx@linutronix.de>
 
-should_force_charge() is false, the current trapped in endless loop is
-not the oom victim.
+Dereferencing irq_data before checking it for NULL is suboptimal.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+
+---
+ drivers/iommu/amd/iommu.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -3717,8 +3717,8 @@ static int irq_remapping_alloc(struct ir
+ 
+ 	for (i = 0; i < nr_irqs; i++) {
+ 		irq_data = irq_domain_get_irq_data(domain, virq + i);
+-		cfg = irqd_cfg(irq_data);
+-		if (!irq_data || !cfg) {
++		cfg = irq_data ? irqd_cfg(irq_data) : NULL;
++		if (!cfg) {
+ 			ret = -EINVAL;
+ 			goto out_free_data;
+ 		}
+
+
