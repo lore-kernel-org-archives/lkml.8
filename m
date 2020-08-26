@@ -2,117 +2,313 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F45C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD4920767
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:24:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14822075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:24:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rGbJ2Yi3"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f20JUufv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbgHZAYg (ORCPT
+        id S1726736AbgHZAYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 20:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41132 "EHLO
+        Tue, 25 Aug 2020 20:24:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbgHZAYf (ORCPT
+        with ESMTP id S1726551AbgHZAYj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 20:24:35 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D5A8C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 17:24:34 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id e11so306054ils.10
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 17:24:34 -0700 (PDT)
+        Tue, 25 Aug 2020 20:24:39 -0400
+Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E146C061574
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 17:24:38 -0700 (PDT)
+Received: by mail-ua1-x942.google.com with SMTP id y2so36103uaq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 17:24:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6PhaVc46fB3y3C+IQtYQZZ5zU6t7TWG1wQZ/Bjf9fao=;
-        b=rGbJ2Yi3tEgAgxB4tjVSu9oxzSlEA/v8vXQjwgRt0dmviuoTszefr/h4MVmsMdHcIP
-         O/5zMbkShEMy61fbnpMD6bsp/L1BJE/HIl3ajGibH9pGHPJf1nfgAQ4eNBB0+szyYhYr
-         ryXLeNC+Q9B56lJTTe5lGxuEhHm1xjmzI/ZI2XBG2it/vZ7Y5jD56J+dufKiDqLJHnrZ
-         NP0+7wKSYfyNi1MFHF8L6smcFp5df/grB0wJuOr3pjFDYX8j2bgHPhCj5Ohv5bLGPpIG
-         AfU7A4BHTWfRftS5XbnVU7NYJsdPe+BMazyvfSxrDahCA4Zay7kv3INPh0NdjZf0sEBY
-         8nUQ==
+        bh=LKNYZxdd9GnzF09d9hnsszm0hfjYWuDgd4/PlOEGld8=;
+        b=f20JUufvss7xZL/HrjKmsqIQ5mWiEbA4xg5ZmZzrqMVH5q/i+AUHRaJOwlrs3zIU71
+         zulan3xrqqX8mQS8GSGYsutdfDf1SRCSRvmcfE+20/9POjON2tF2SG9k0QZ+ponsIO25
+         o1PHju9rH05o/4XewhDwdlfjBvY5fZC6yoroI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6PhaVc46fB3y3C+IQtYQZZ5zU6t7TWG1wQZ/Bjf9fao=;
-        b=JCTLSV6WfcTSN6CmplU5XzgPB3FNTaj4Mcx8AY5uGbfenJYosOdRAa6Hq0RzyiI7Wx
-         twi1vApOmewvEWVZHF0P39Quig1SrujtSFVAZofDRc2Zp/9sJ4TsSe7gGZw/7g5y8cxk
-         ZBa41d5i6I1Uxjzi5H161a3zT3qbV3PpYpupwmeFLJJfBdbI6tT9lJKqnzrNdATf1acF
-         2VxCjdMGCkRPnF3KFJgR1qcsE7PEki3MzS6H51y7p5ZwuQppjrpkKOF7kvizLbjNZI90
-         mOkx7X+HdYbSO0iy2MLe6+TvSywR7vDY28dbbnHR7VF8g0P4sC0CwFmZsfE20Xxt1upx
-         Pm+g==
-X-Gm-Message-State: AOAM532qRu6O/FKOE/nJioirUNWUIjDtj7XQ+UyPxjl4u7ofPvD1EUL3
-        JQcWo/G9bThkefxh5dG7m2ADNwgxlgqFCyI1VBf32A==
-X-Google-Smtp-Source: ABdhPJzdIClyagWUDzamz8fAV/d2I4gI7NVREIzSGQv3DSbz0qFNSFZoQmgbvGFPGEeCYhE+Mm6VlCgbpqGu28sMmLw=
-X-Received: by 2002:a92:d688:: with SMTP id p8mr11697017iln.82.1598401473429;
- Tue, 25 Aug 2020 17:24:33 -0700 (PDT)
+        bh=LKNYZxdd9GnzF09d9hnsszm0hfjYWuDgd4/PlOEGld8=;
+        b=SaWAQgjl3KiBYL/RCAJWZqB1Ioaf8hQAUKjgOq0a1hmFhrpBg+5qcKcfO23/LwAIrm
+         +QyDUKSFTbXeGKAGyxRZAKP6FM+SsBwWUxsDi5/e2zx/HTfAK4l+8LfxAxPzFLp2uozw
+         iMxOv5+z+JHMMygvcp9xxVXGih1jWnI/HAI8Lm04p/a+402ZBz+MjG8e1SsrpO2iqFUw
+         i55zzTUUhNxp3YjkqdYlyDELIeh7Gz0qtZWbT8iGCS5zDmD5q0eCgabflesFzzLY+tDN
+         r/yqrP7qLCxx6Zt9mlJGIwK/+qyWgKy0wK5VpAvp2r08ajXDpWlfOWNrmh5w2084oDg0
+         RUtw==
+X-Gm-Message-State: AOAM5330EtXf8oyTPZUA4ge4zRgASt9cfqb/AALbqvSejbDp5utoaV5s
+        3FQJxxEmV+v7L4Ay4r8nC+3whsV+z1ihEg==
+X-Google-Smtp-Source: ABdhPJxFtL9jhdkR/D5OaknLSMy+MuTvaF/SGbwcccuQ2GrNbHhzIScdcMOyh0m32jPMglAeMWBrNg==
+X-Received: by 2002:ab0:74ca:: with SMTP id f10mr7313330uaq.24.1598401477405;
+        Tue, 25 Aug 2020 17:24:37 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id 81sm121440vky.52.2020.08.25.17.24.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Aug 2020 17:24:36 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id u131so44833vsu.11
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 17:24:36 -0700 (PDT)
+X-Received: by 2002:a67:bc08:: with SMTP id t8mr8111843vsn.44.1598401476047;
+ Tue, 25 Aug 2020 17:24:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200822014018.913868-1-lokeshgidra@google.com>
- <20200822014018.913868-2-lokeshgidra@google.com> <20200824123247.finquufqpr6i7umb@linutronix.de>
-In-Reply-To: <20200824123247.finquufqpr6i7umb@linutronix.de>
-From:   Lokesh Gidra <lokeshgidra@google.com>
-Date:   Tue, 25 Aug 2020 17:24:22 -0700
-Message-ID: <CA+EESO5E5Kg1YaCP5FpPx4Qtnmf3H506f9ZA26=vugLDk=GkDg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] Add UFFD_USER_MODE_ONLY
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, Peter Xu <peterx@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Biggers <ebiggers@kernel.com>,
-        Daniel Colascione <dancol@dancol.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org, Kalesh Singh <kaleshsingh@google.com>,
-        Calin Juravle <calin@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Jeffrey Vander Stoep <jeffv@google.com>,
-        kernel-team@android.com, Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Shaohua Li <shli@fb.com>, Jerome Glisse <jglisse@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Nitin Gupta <nigupta@nvidia.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Daniel Colascione <dancol@google.com>
+References: <20200825154249.20011-1-saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=XK3Xa3rRWvuSA_jA+5_1XYBmHEX2B2XSb8h3oOe1PHLw@mail.gmail.com>
+ <3df7edd53ebca00be288e69b92b8d4b9@codeaurora.org> <CAD=FV=X=3Jae7_gXN_05EsmZjrM1bN=TMZ0qoGKz=UaNrthzAg@mail.gmail.com>
+ <CAF6AEGsuusnGaN-H9geFa+jwX_hkvMHGZCWvwk5-MDGQ7cBsbQ@mail.gmail.com>
+In-Reply-To: <CAF6AEGsuusnGaN-H9geFa+jwX_hkvMHGZCWvwk5-MDGQ7cBsbQ@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 25 Aug 2020 17:24:23 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WyL3ttE_F3YJJxOWAJANeNueqH0gO3phu8q5F4NP809g@mail.gmail.com>
+Message-ID: <CAD=FV=WyL3ttE_F3YJJxOWAJANeNueqH0gO3phu8q5F4NP809g@mail.gmail.com>
+Subject: Re: [PATCH] iommu: Add support to filter non-strict/lazy mode based
+ on device names
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 5:32 AM Sebastian Andrzej Siewior
-<bigeasy@linutronix.de> wrote:
+Hi,
+
+On Tue, Aug 25, 2020 at 3:54 PM Rob Clark <robdclark@gmail.com> wrote:
 >
-> On 2020-08-21 18:40:17 [-0700], Lokesh Gidra wrote:
-> > --- a/fs/userfaultfd.c
-> > +++ b/fs/userfaultfd.c
-> > @@ -1966,6 +1969,7 @@ static void init_once_userfaultfd_ctx(void *mem)
+> On Tue, Aug 25, 2020 at 3:23 PM Doug Anderson <dianders@chromium.org> wrote:
 > >
-> >  SYSCALL_DEFINE1(userfaultfd, int, flags)
-> >  {
-> > +     static const int uffd_flags = UFFD_USER_MODE_ONLY;
-> >       struct userfaultfd_ctx *ctx;
-> >       int fd;
-> Why?
-
-Not sure! I guess Daniel didn't want to repeat the long flag name twice.
-
-Thanks for catching that. I'll send another version fixing this.
+> > Hi,
+> >
+> > On Tue, Aug 25, 2020 at 12:01 PM Sai Prakash Ranjan
+> > <saiprakash.ranjan@codeaurora.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On 2020-08-25 21:40, Doug Anderson wrote:
+> > > > Hi,
+> > > >
+> > > > On Tue, Aug 25, 2020 at 8:43 AM Sai Prakash Ranjan
+> > > > <saiprakash.ranjan@codeaurora.org> wrote:
+> > > >>
+> > > >> Currently the non-strict or lazy mode of TLB invalidation can only be
+> > > >> set
+> > > >> for all or no domains. This works well for development platforms where
+> > > >> setting to non-strict/lazy mode is fine for performance reasons but on
+> > > >> production devices, we need a more fine grained control to allow only
+> > > >> certain peripherals to support this mode where we can be sure that it
+> > > >> is
+> > > >> safe. So add support to filter non-strict/lazy mode based on the
+> > > >> device
+> > > >> names that are passed via cmdline parameter "iommu.nonstrict_device".
+> > > >>
+> > > >> Example:
+> > > >> iommu.nonstrict_device="7c4000.sdhci,a600000.dwc3,6048000.etr"
+> >
+> > Just curious: are device names like this really guaranteed to be
+> > stable across versions?
+> >
+> >
+> > > > I have an inherent dislike of jamming things like this onto the
+> > > > command line.  IMHO the command line is the last resort for specifying
+> > > > configuration and generally should be limited to some specialized
+> > > > debug options and cases where the person running the kernel needs to
+> > > > override a config that was set by the person (or company) compiling
+> > > > the kernel.  Specifically, having a long/unwieldy command line makes
+> > > > it harder to use for the case when an end user actually wants to use
+> > > > it to override something.  It's also just another place to look for
+> > > > config.
+> > > >
+> > >
+> > > Good thing about command line parameters are that they are optional,
+> > > they do
+> > > not specify any default behaviour (I mean they are not mandatory to be
+> > > set
+> > > for the system to be functional), so I would like to view it as an
+> > > optional
+> > > config. And this command line parameter (nonstrict_device) is strictly
+> > > optional
+> > > with default being strict already set in the driver.
+> > >
+> > > They can be passed from the bootloader via chosen node for DT platforms
+> > > or choose
+> > > a new *bootconfig* as a way to pass the cmdline but finally it does boil
+> > > down to
+> > > just another config.
+> >
+> > Never looked at bootconfig.  Unfortunately it seems to require
+> > initramfs so that pretty much means it's out for my usage.  :(
+> >
+> >
+> > > I agree with general boolean or single value command line parameters
+> > > being just
+> > > more messy which could just be Kconfigs instead but for multiple value
+> > > parameters
+> > > like these do not fit in Kconfig.
+> > >
+> > > As you might already know, command line also gives an advantage to the
+> > > end user
+> > > to configure system without building kernel, for this specific command
+> > > line its
+> > > very useful because the performance bump is quite noticeable when the
+> > > iommu.strict
+> > > is off. Now for end user who would not be interested in building entire
+> > > kernel(majority)
+> > > and just cares about good speeds or throughput can find this very
+> > > beneficial.
+> > > I am not talking about one specific OS usecase here but more in general
+> > > term.
+> > >
+> > > > The other problem is that this doesn't necessarily scale very well.
+> > > > While it works OK for embedded cases it doesn't work terribly well for
+> > > > distributions.  I know that in an out-of-band thread you indicated
+> > > > that it doesn't break anything that's not already broken (AKA this
+> > > > doesn't fix the distro case but it doesn't make it worse), it would be
+> > > > better to come up with a more universal solution.
+> > > >
+> > >
+> > > Is the universal solution here referring to fix all the command line
+> > > parameters
+> > > in the kernel or this specific command line? Are we going to remove any
+> > > more
+> > > addition to the cmdline ;)
+> >
+> > There are very few cases where a kernel command line parameter is the
+> > only way to configure something.  Most of the time it's just there to
+> > override a config.  I wouldn't suggest removing those.  I just don't
+> > want a kernel command line parameter to be the primary way to enable
+> > something.
+> >
+> >
+> > > So possible other solution is the *bootconfig* which is again just
+> > > another place
+> > > to look for a config. So thing is that this universal solution would
+> > > result in
+> > > just more new fancy ways of passing configs or adding such configs to
+> > > the drivers
+> > > or subsystems in kernel which is pretty much similar to implementing
+> > > policy in
+> > > kernel which I think is frowned upon and mentioned in the other thread.
+> > >
+> > > > Ideally it feels like we should figure out how to tag devices in a
+> > > > generic manner automatically (hardcode at the driver or in the device
+> > > > tree).  I think the out-of-band discussions talked about "external
+> > > > facing" and the like.  We could also, perhaps, tag devices that have
+> > > > "binary blob" firmware if we wanted.  Then we'd have a policy (set by
+> > > > Kconfig, perhaps overridable via commandline) that indicated the
+> > > > strictness level for the various classes of devices.  So policy would
+> > > > be decided by KConfig and/or command line.
+> > > >
+> > >
+> > > How is tagging in driver or device tree better than the simple command
+> > > line
+> > > approach to pass the same list of devices which otherwise you would
+> > > hardcode
+> > > in the corresponding drivers and device tree all over the kernel other
+> > > than
+> > > the scalability part for command line? IMHO it is too much churn.
+> >
+> > It's better because it doesn't require keeping track and updating
+> > these per-board (or per machine) arguments for each and every
+> > board/machine you maintain.  If, for instance, we start out by
+> > allowing HW video decoder to use non-strict.  So:
+> >
+> > On one board, we add in "aa00000.video-codec" to the command line.
+> > On some other board, maybe we add in "1d00000.video-codec" to the command line.
+> > On some other board, maybe we add in "90400000.video-codec" to the command line.
+> >
+> > Now we realize that there's some problem and we have to remove it, so
+> > we need to go through and remove this from our command line
+> > everywhere.  Worse is that we have to proactively notice it and remove
+> > it.
+> >
+> > Instead, let's imagine that we set a policy at a bit of a higher
+> > level.  Different ideas:
+> >
+> > a) We could have a CONFIG_ option for the video codec that's something
+> > like "CONFIG_VIDEOCODEC_DEFAULT_NONSTRICT".  If this was set then if
+> > there is no "iommu.strict" command line argument then this device
+> > would be mapped as non-strict.  If "iommu.strict=0" or
+> > "iommu.strict=1" is on the command line then it would override all of
+> > these defaults.  Probably the existence (or maybe the default value)
+> > of this CONFIG option implies that there are no known/expected
+> > exploits related to it.
 >
-> Sebastian
+> jumping in a bit late so might have missed some of the background, but
+> shouldn't the driver decide strict vs non-strict?  It should be the
+> one that knows if non-strict is safe or not?
+
+Part of the problem is that we need some way for the driver to know if
+the connected device is external or not.  A soldered-down storage
+device connected via an internal PCIe bus is probably OK to use w/
+non-strict.  An exposed PCIe port that anyone could plug anything into
+is probably not OK to use with non-strict.  Right now the kernel
+doesn't have this info.
+
+Part of the problem is also trying to describe the risk level that
+you're OK with and/or which risks you're willing to take and which
+ones you're not willing to take.  Right now there's a binary: "accept
+all the risk so I can get the best performance" and "accept none of
+the risk".  ...but what if you want to accept some risks and not
+others?  Maybe you're compiling the firmware for the video decoder
+yourself and you're very convinced that it really sanitizes all input
+and can't be compromised (or, if it is, you can quickly patch the
+compromise).  You might be willing to run this video codec in "non
+strict mode".  ...but if you give the video decoder firmware to
+someone else as a binary blob they might not be willing to trust you
+and might want to run the same firmware as "non-strict".
+
+
+
+> BR,
+> -R
+>
+> >
+> > b) We could find some way to tag the video codec and then set
+> > non-strictness on certain classes of devices, then we could have a
+> > policy to disable strictness on certain classes of devices.
+> >
+> > The nice thing about the above is that you could imagine someone
+> > pushing a change to the stable trees that would fix everyone affected.
+> > Nobody would need to go around and adjust command line options, they'd
+> > just get the newest stable and it could cause devices to move into
+> > strict mode if there was a known exploit.  I suppose with your
+> > proposal stable trees could have a "blacklist" where the commandline
+> > is ignored for exploited devices, but that seems ugly.
+> >
+> >
+> > > Device tree could be used but then we have a problem with it being for
+> > > only
+> > > describing hardware and it doesn't work for ACPI based systems.
+> > >
+> > > Command line approach works for all systems (both DT and ACPI) without
+> > > having
+> > > to add too much churn to drivers. Lastly, I think we can have both
+> > > options, it
+> > > doesn't hurt to add command line parameter since it is optional.
+> >
+> > I'm not opposed to something existing that lets you override this on
+> > the command line, but I'm just not a fan of it being the primary way.
+> >
+> > -Doug
+> > _______________________________________________
+> > iommu mailing list
+> > iommu@lists.linux-foundation.org
+> > https://lists.linuxfoundation.org/mailman/listinfo/iommu
