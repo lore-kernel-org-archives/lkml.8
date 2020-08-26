@@ -2,110 +2,160 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0759520737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:07:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtFcrHvI"
+	by mail.kernel.org (Postfix) with ESMTP id 11A08207DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgHZVHD (ORCPT
+        id S1726929AbgHZVKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:07:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgHZVHC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:07:02 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C7AC061574;
-        Wed, 26 Aug 2020 14:07:02 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id q21so1804777edv.1;
-        Wed, 26 Aug 2020 14:07:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3Os1LN7Ue+Ms9CVeN7ASmdmMTYx1HCqAOOT3/+0mXhg=;
-        b=PtFcrHvI6+V4VyHgf02ZQVEQf/Nbjj3TPaB0qAz/abmIAwiZ2ezYJ5lgCSAGzQUAox
-         O8FEw5ZWgrVK5GXdTTtXj2jzNV5BchVbIsaDfmpuGAXeErGEb1LbI+7rhESOvCCAuEc4
-         UlOfXYO/G+Cj3Y6P2OXhC+N96u3CiacF7omuraKWHo7NH4ZTIeHReQJsArfygjJnYj4b
-         eM3Sj2pXvju6R/vwgxDsBFjRecPy+8nZ/ijvXkExngPCLaTGkNY09jN5olxpvRjOg5vB
-         XOwDSOaqwDjuGV2T1m/bb4NKsFkEv0ADJBl6py9SjSuNvcLB2/Xj74EBekm7RYo0Z2yr
-         ITEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3Os1LN7Ue+Ms9CVeN7ASmdmMTYx1HCqAOOT3/+0mXhg=;
-        b=EMG0BwzChp+zJ5fX55pvxCOLMyPpNSYUJ2LvwHaKcEI21rkRov0pBe2iBzChnFLFTm
-         v9fwNCD0rEgRJXnaNtekWLqvQQRehh6mjXXOIO1wT3tbFbfIo/4t7LZr4dOEDZY1qqL/
-         w8WV7xaRPy+xM3JTmeWpBWQ3gjXu1zJoe1FTFjQKzmHCyZjl8aISvJdsmb+5HoIltS5L
-         dSQRoxIaVRaE8d3LERNzypdJJl1DfeNoGvYwUk5r4kpvm+S3XoA3SkSDoa3N+QZiFMcw
-         Ad6XrClb5ff/Z1mF2K6fdMdF+XSK6gLe7xEhsQMybXlW3nHDe3Vo0A05HUesrWOU4zn5
-         9spw==
-X-Gm-Message-State: AOAM532l3MZt0TRucqovk4HKkQC/2LyA+g5koK1x8/0jZCC2dC3zq2hu
-        K8B1rFHxWK5mwm4P9xVyat2+fmdGvV4=
-X-Google-Smtp-Source: ABdhPJxiegS9IXlSGKx/12qlpIj+mvTmflGrxgGgaRzu0Q6o1wRNRQgOGRIVgaLIUSuqoAihTbBPJw==
-X-Received: by 2002:aa7:da02:: with SMTP id r2mr4198492eds.231.1598476019749;
-        Wed, 26 Aug 2020 14:06:59 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id o7sm2882960edq.53.2020.08.26.14.06.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 14:06:59 -0700 (PDT)
-Date:   Thu, 27 Aug 2020 00:06:57 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        tanveer <tanveer.alam@puresoftware.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
-Message-ID: <20200826210657.z526xjhhkq6vkxgr@skbuf>
-References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
- <20200822183342.6sdhp6yq6i7yvdia@skbuf>
- <CAHp75VeNXy1jWNWMuZc0bfXruKc3=0H4ezwpE8jbj6GLYk5QBA@mail.gmail.com>
- <20200826204108.reuy7ieqabutwuwo@skbuf>
- <20200826204547.GU4965@sirena.org.uk>
+        Wed, 26 Aug 2020 17:10:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36308 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726740AbgHZVKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:10:09 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FCAE20737;
+        Wed, 26 Aug 2020 21:10:07 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 17:10:05 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Nathan Royce <nroycea+kernel@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Changbin Du <changbin.du@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: Re: localmodconfig - "intel_rapl_perf config not found!!"
+Message-ID: <20200826171005.2027e9fa@oasis.local.home>
+In-Reply-To: <663f60dc-6e91-128b-67e7-ccf2ced32ef1@infradead.org>
+References: <CALaQ_hqgnPGx2A8XxE+CHxYqGK1z4_hfzo-g-HHbVpLGeOAZ4w@mail.gmail.com>
+        <9ec12e0d-9d07-8c1b-6efc-c3e8cfae409c@infradead.org>
+        <CALaQ_hr-xuLJ3ZYHuvCaY7jLm7od1bgGQvgT0c6N16xTtdAD0g@mail.gmail.com>
+        <55b09be8-5bb2-60e3-8386-05bc9f6fd854@infradead.org>
+        <663f60dc-6e91-128b-67e7-ccf2ced32ef1@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826204547.GU4965@sirena.org.uk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 09:45:47PM +0100, Mark Brown wrote:
-> On Wed, Aug 26, 2020 at 11:41:08PM +0300, Vladimir Oltean wrote:
-> > On Wed, Aug 26, 2020 at 10:34:04PM +0300, Andy Shevchenko wrote:
->
-> > > Theoretically you may declare your HID in the same / similar way as
-> > > PRP0001 and use same compatible strings and all other DT properties
-> > > (when they make sense and not duplicate ACPI functionality).
-> > > But better if ACPI people can tell you (I Cc'ed Rafael and ACPI
-> > > mailing list) if it is gonna work.
->
-> > Something doesn't look right about PRP0001, what's the catch?
->
-> Microsoft decided not to implement support for it in Windows, it's
-> essentially there for embedded style x86 platforms running Linux so they
-> don't need to reimplement so many wheels and can just reuse existing DT
-> bindings but it causes problems if you want to run Windows (and possibly
-> some of the enterprise Linux distros, I can't remember if any of them
-> had concerns about it) on the platform.
+On Tue, 25 Aug 2020 14:34:34 -0700
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-So if a silicon vendor doesn't care about Windows, what incentive does
-it have to even register an official ACPI/PNP ID for its devices?
+> On 8/25/20 2:12 PM, Randy Dunlap wrote:
+> >> On Tue, Aug 25, 2020 at 2:13 PM Randy Dunlap <rdunlap@infradead.org> wrote:  
+> >>>
+> >>> so intel_rapl_perf is listed in your lsmod.cfg file:
+> >>> intel_rapl_perf        16384  2
+> >>>
+> >>> You say Linux 5.8.3.  I'm guessing that your "make localmodconfig" tree
+> >>> is Linux 5.8.3 (?).  What kernel version are you running?
+> >>> I think that it's older, and some file/module names have changed since then.  
+> > 
+> > On 8/25/20 1:34 PM, Nathan Royce wrote:  
+> >> Correct. I'm building for 5.8.3 and I'm currently on 5.7.4 (1 month
+> >> doesn't seem particularly old).  
+> > 
+> > Yes, things can change quickly.
+
+Yes and as Randy said, there's no way to easily fix that.
+
+> > 
+> > 
+> > I don't see any support in streamline_config.pl for Kconfig symbols
+> > and/or modules whose names have changed.  Trying to do something
+> > like that would be a never-ending job (a la job security).
+> > 
+> > At least it gave you a warning that it couldn't find a Kconfig symbol
+> > for that module.
+
+Correct, this is exactly why I have it warn. Because this happens all
+the time. In most cases, I simply ignore the warning ;-)
+
+
+> > 
+> > 
+> > From your original email:
+> > | I'm going to assume it has something to do with the naming and it's
+> > | supposed to be associated with "Intel/AMD rapl performance events
+> > | (CONFIG_PERF_EVENTS_INTEL_RAPL)" which I already have set to 'Y'.
+> > 
+> > Yes, commit fd3ae1e1587d64ef8cc8e361903d33625458073e changed the module name
+> > since it now supports both Intel and AMD.
+> > 
+> > 
+> > | Right below that, I also get 'Use of uninitialized value
+> > | $ENV{"LMC_KEEP"} in split at ./scripts/kconfig/streamline_config.pl
+> > | line 596.', but again that is the sort of thing that may warrant a new
+> > | email specific to localmodconfig author(s). But again maybe not
+> > | because I take it more as a warning given I don't make use of
+> > | LMC_KEEP.
+> > 
+> > 
+> > @Changbin: can you fix this little bug in streamline_config.pl, please? ^^^^^  
+> 
+> Changing email address for Changbin.
+> Plus I made the quick patch for streamline_config.pl (below)
+> although I haven't tested it.
+> 
+> ---
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> A user reported:
+> 'Use of uninitialized value $ENV{"LMC_KEEP"} in split at
+>  ./scripts/kconfig/streamline_config.pl line 596.'
+> 
+> so first check that $ENV{LMC_KEEP} is defined before trying
+> to use it.
+
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+
+Randy, please send this as a stand alone patch to the KBUILD
+maintainers.
+
+-- Steve
+
+
+> 
+> Fixes: c027b02d89fd ("streamline_config.pl: add LMC_KEEP to preserve some kconfigs")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Changbin Du <changbin.du@gmail.com>
+> Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>  scripts/kconfig/streamline_config.pl |    5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> --- linux-next-20200825.orig/scripts/kconfig/streamline_config.pl
+> +++ linux-next-20200825/scripts/kconfig/streamline_config.pl
+> @@ -593,7 +593,10 @@ while ($repeat) {
+>  }
+>  
+>  my %setconfigs;
+> -my @preserved_kconfigs = split(/:/,$ENV{LMC_KEEP});
+> +my @preserved_kconfigs;
+> +if (defined($ENV{'LMC_KEEP'})) {
+> +	@preserved_kconfigs = split(/:/,$ENV{LMC_KEEP});
+> +}
+>  
+>  sub in_preserved_kconfigs {
+>      my $kconfig = $config2kfile{$_[0]};
+
