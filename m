@@ -2,67 +2,55 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E61C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C717B20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7478920737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbgHZCvp (ORCPT
+        id S1726779AbgHZCxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 22:51:45 -0400
-Received: from mga03.intel.com ([134.134.136.65]:18781 "EHLO mga03.intel.com"
+        Tue, 25 Aug 2020 22:53:50 -0400
+Received: from mga05.intel.com ([192.55.52.43]:43725 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726664AbgHZCvp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 22:51:45 -0400
-IronPort-SDR: AasJpHHOBEj02sbPg1uL/0mUmcNsO43ZsnORI6uwn/7wd2qkGlJ4K1rc0xTov9VOg1rhsTDLRN
- N7mvtO2p1OUg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="156217402"
+        id S1726793AbgHZCxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 22:53:49 -0400
+IronPort-SDR: ZWSpoXqefCkNCqaIOIFdmIgf8mF4XCYiKcr8i1yAYe9p6+C4j3++73BLdy0i56Vy6t/XOhaBWk
+ jW+v9cJxL1NA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="241042622"
 X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="156217402"
+   d="scan'208";a="241042622"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 19:51:44 -0700
-IronPort-SDR: JFM28Ox3Mhd7iGJnJpLzR7hZPTe21FVLR3OZHs8OeVrNdX4IhPyCNvv2M7LU8nSGTsUhaVccqm
- zMTC6AkuFo/g==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 19:53:42 -0700
+IronPort-SDR: 3jHNgUz/QtngVIFtUyejaI2JwGGqvmSLiE81xtG4juH9HB0EVbULMEy6+CoSS5E4jNaKDAK7uJ
+ CBcTpkXNiFOg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="336704207"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 25 Aug 2020 19:51:43 -0700
-Received: from [10.215.173.55] (vramuthx-MOBL1.gar.corp.intel.com [10.215.173.55])
-        by linux.intel.com (Postfix) with ESMTP id DF3BD5806F0;
-        Tue, 25 Aug 2020 19:51:39 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v1 0/9] extcon: extcon-ptn5150: Add the USB external
- connector support
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>, thomas.langer@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com,
-        krzk@kernel.org
-References: <20200818065727.50520-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200818084044.GD1891694@smile.fi.intel.com>
- <69e13a74-8b8d-cbc0-915d-ce289e7d4a70@linux.intel.com>
- <CAHp75VfwBnDgR6WR_On1nh+dX4meWrX1Q-CiUKqkV39=o2m5Hg@mail.gmail.com>
- <b9187c39-8d94-6b41-9e1c-b95161b17c1c@linux.intel.com>
- <20200825081935.GE189773@kuha.fi.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <bc66fcec-fa52-71a3-57d1-514a4d716605@linux.intel.com>
-Date:   Wed, 26 Aug 2020 10:51:37 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+   d="scan'208";a="323019916"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Aug 2020 19:53:39 -0700
+Cc:     baolu.lu@linux.intel.com, CobeChen-oc@zhaoxin.com,
+        RaymondPang-oc@zhaoxin.com
+Subject: Re: [PATCH] iommu/vt-d:Add support for detecting ACPI device in RMRR
+To:     FelixCuioc <FelixCui-oc@zhaoxin.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        David Woodhouse <dwmw2@infradead.org>
+References: <20200818024441.2317-1-FelixCui-oc@zhaoxin.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <1d0d696a-8459-24f9-355d-63dc114dc008@linux.intel.com>
+Date:   Wed, 26 Aug 2020 10:48:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200825081935.GE189773@kuha.fi.intel.com>
+In-Reply-To: <20200818024441.2317-1-FelixCui-oc@zhaoxin.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -71,40 +59,232 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Heikki,
+Hi Felix,
 
-  Thank you very much for the review comment...
-
-On 25/8/2020 4:19 pm, Heikki Krogerus wrote:
-> On Wed, Aug 19, 2020 at 04:45:38PM +0800, Ramuthevar, Vadivel MuruganX wrote:
->> Hi Andy,
->>
->> On 19/8/2020 3:55 pm, Andy Shevchenko wrote:
->>> On Wed, Aug 19, 2020 at 8:38 AM Ramuthevar, Vadivel MuruganX
->>> <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
->>>> On 18/8/2020 4:40 pm, Andy Shevchenko wrote:
->>>>> On Tue, Aug 18, 2020 at 02:57:18PM +0800, Ramuthevar,Vadivel MuruganX wrote:
->>>>>> USB external connector chip PTN5150 used on the Intel LGM SoC
->>>>>> boards to detect the USB type and connection.
->>>>> Internally I meant you can send cleanups, but couple of patches here are the
->>>>> features and were still under discussion... But here we are.
->>>>
->>>> you mean asking us to implement the Heikki suggested as below..
->>>>
->>>> Heikki Krogerus: register the port and the partner attached to it with
->>>> the USB Type-C connector class in the driver. Is my understaanding
->>>> right? if not, please explain it. Thanks!
->>>
->>> When you mention somebody, don't forget to Cc them (now done by me).
->> Sure, Thank you
+On 8/18/20 10:44 AM, FelixCuioc wrote:
+> Some ACPI devices need to issue dma requests to access
+> the reserved memory area.BIOS uses the device scope type
+> ACPI_NAMESPACE_DEVICE in RMRR to report these ACPI devices.
+> This patch add support for detecting ACPI devices in RMRR.
 > 
-> So the patches 1-5 are fine. The rest needs to be rewritten.
-Already Krzysztof submitted all the patches and got approved, so we 
-started sending only one patch which support to Intel LGM SoC based 
-boards, Thanks!
 
-Regards
-Vadivel
+If you are willing to submit a new version of this series, can you
+please add the version tag (commit title) and a change log (under the
+tear line)?
+
+Best regards,
+baolu
+
+> Signed-off-by: FelixCuioc <FelixCui-oc@zhaoxin.com>
+> ---
+>   drivers/iommu/intel/dmar.c  | 74 ++++++++++++++++++++-----------------
+>   drivers/iommu/intel/iommu.c | 22 ++++++++++-
+>   include/linux/dmar.h        | 12 +++++-
+>   3 files changed, 72 insertions(+), 36 deletions(-)
 > 
-> thanks,
+> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+> index 93e6345f3414..024ca38dba12 100644
+> --- a/drivers/iommu/intel/dmar.c
+> +++ b/drivers/iommu/intel/dmar.c
+> @@ -215,7 +215,7 @@ static bool dmar_match_pci_path(struct dmar_pci_notify_info *info, int bus,
+>   }
+>   
+>   /* Return: > 0 if match found, 0 if no match found, < 0 if error happens */
+> -int dmar_insert_dev_scope(struct dmar_pci_notify_info *info,
+> +int dmar_pci_insert_dev_scope(struct dmar_pci_notify_info *info,
+>   			  void *start, void*end, u16 segment,
+>   			  struct dmar_dev_scope *devices,
+>   			  int devices_cnt)
+> @@ -304,7 +304,7 @@ static int dmar_pci_bus_add_dev(struct dmar_pci_notify_info *info)
+>   
+>   		drhd = container_of(dmaru->hdr,
+>   				    struct acpi_dmar_hardware_unit, header);
+> -		ret = dmar_insert_dev_scope(info, (void *)(drhd + 1),
+> +		ret = dmar_pci_insert_dev_scope(info, (void *)(drhd + 1),
+>   				((void *)drhd) + drhd->header.length,
+>   				dmaru->segment,
+>   				dmaru->devices, dmaru->devices_cnt);
+> @@ -696,48 +696,56 @@ dmar_find_matched_drhd_unit(struct pci_dev *dev)
+>   
+>   	return dmaru;
+>   }
+> -
+> -static void __init dmar_acpi_insert_dev_scope(u8 device_number,
+> -					      struct acpi_device *adev)
+> +int dmar_acpi_insert_dev_scope(u8 device_number,
+> +				struct acpi_device *adev,
+> +				void *start, void *end,
+> +				struct dmar_dev_scope *devices,
+> +				int devices_cnt)
+>   {
+> -	struct dmar_drhd_unit *dmaru;
+> -	struct acpi_dmar_hardware_unit *drhd;
+>   	struct acpi_dmar_device_scope *scope;
+>   	struct device *tmp;
+>   	int i;
+>   	struct acpi_dmar_pci_path *path;
+>   
+> +	for (; start < end; start += scope->length) {
+> +		scope = start;
+> +		if (scope->entry_type != ACPI_DMAR_SCOPE_TYPE_NAMESPACE)
+> +			continue;
+> +		if (scope->enumeration_id != device_number)
+> +			continue;
+> +		path = (void *)(scope + 1);
+> +		for_each_dev_scope(devices, devices_cnt, i, tmp)
+> +			if (tmp == NULL) {
+> +				devices[i].bus = scope->bus;
+> +				devices[i].devfn = PCI_DEVFN(path->device, path->function);
+> +				rcu_assign_pointer(devices[i].dev,
+> +						   get_device(&adev->dev));
+> +				return 1;
+> +			}
+> +		WARN_ON(i >= devices_cnt);
+> +	}
+> +	return 0;
+> +}
+> +static int dmar_acpi_bus_add_dev(u8 device_number, struct acpi_device *adev)
+> +{
+> +	struct dmar_drhd_unit *dmaru;
+> +	struct acpi_dmar_hardware_unit *drhd;
+> +	int ret = 0;
+> +
+>   	for_each_drhd_unit(dmaru) {
+>   		drhd = container_of(dmaru->hdr,
+>   				    struct acpi_dmar_hardware_unit,
+>   				    header);
+> +		ret = dmar_acpi_insert_dev_scope(device_number, adev, (void *)(drhd+1),
+> +						((void *)drhd)+drhd->header.length,
+> +						dmaru->devices, dmaru->devices_cnt);
+> +		if (ret)
+> +			break;
+> +	}
+> +	ret = dmar_rmrr_add_acpi_dev(device_number, adev);
+>   
+> -		for (scope = (void *)(drhd + 1);
+> -		     (unsigned long)scope < ((unsigned long)drhd) + drhd->header.length;
+> -		     scope = ((void *)scope) + scope->length) {
+> -			if (scope->entry_type != ACPI_DMAR_SCOPE_TYPE_NAMESPACE)
+> -				continue;
+> -			if (scope->enumeration_id != device_number)
+> -				continue;
+> +	return ret;
+>   
+> -			path = (void *)(scope + 1);
+> -			pr_info("ACPI device \"%s\" under DMAR at %llx as %02x:%02x.%d\n",
+> -				dev_name(&adev->dev), dmaru->reg_base_addr,
+> -				scope->bus, path->device, path->function);
+> -			for_each_dev_scope(dmaru->devices, dmaru->devices_cnt, i, tmp)
+> -				if (tmp == NULL) {
+> -					dmaru->devices[i].bus = scope->bus;
+> -					dmaru->devices[i].devfn = PCI_DEVFN(path->device,
+> -									    path->function);
+> -					rcu_assign_pointer(dmaru->devices[i].dev,
+> -							   get_device(&adev->dev));
+> -					return;
+> -				}
+> -			BUG_ON(i >= dmaru->devices_cnt);
+> -		}
+> -	}
+> -	pr_warn("No IOMMU scope found for ANDD enumeration ID %d (%s)\n",
+> -		device_number, dev_name(&adev->dev));
+>   }
+>   
+>   static int __init dmar_acpi_dev_scope_init(void)
+> @@ -766,7 +774,7 @@ static int __init dmar_acpi_dev_scope_init(void)
+>   				       andd->device_name);
+>   				continue;
+>   			}
+> -			dmar_acpi_insert_dev_scope(andd->device_number, adev);
+> +			dmar_acpi_bus_add_dev(andd->device_number, adev);
+>   		}
+>   	}
+>   	return 0;
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index ca557d351518..f774ef63d473 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -4507,6 +4507,24 @@ int dmar_find_matched_atsr_unit(struct pci_dev *dev)
+>   
+>   	return ret;
+>   }
+> +int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev)
+> +{
+> +	int ret;
+> +	struct dmar_rmrr_unit *rmrru;
+> +	struct acpi_dmar_reserved_memory *rmrr;
+> +
+> +	list_for_each_entry(rmrru, &dmar_rmrr_units, list) {
+> +		rmrr = container_of(rmrru->hdr,
+> +				struct acpi_dmar_reserved_memory,
+> +				header);
+> +		ret = dmar_acpi_insert_dev_scope(device_number, adev, (void *)(rmrr + 1),
+> +						((void *)rmrr) + rmrr->header.length,
+> +						rmrru->devices, rmrru->devices_cnt);
+> +		if (ret)
+> +			break;
+> +	}
+> +	return 0;
+> +}
+>   
+>   int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+>   {
+> @@ -4523,7 +4541,7 @@ int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+>   		rmrr = container_of(rmrru->hdr,
+>   				    struct acpi_dmar_reserved_memory, header);
+>   		if (info->event == BUS_NOTIFY_ADD_DEVICE) {
+> -			ret = dmar_insert_dev_scope(info, (void *)(rmrr + 1),
+> +			ret = dmar_pci_insert_dev_scope(info, (void *)(rmrr + 1),
+>   				((void *)rmrr) + rmrr->header.length,
+>   				rmrr->segment, rmrru->devices,
+>   				rmrru->devices_cnt);
+> @@ -4541,7 +4559,7 @@ int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+>   
+>   		atsr = container_of(atsru->hdr, struct acpi_dmar_atsr, header);
+>   		if (info->event == BUS_NOTIFY_ADD_DEVICE) {
+> -			ret = dmar_insert_dev_scope(info, (void *)(atsr + 1),
+> +			ret = dmar_pci_insert_dev_scope(info, (void *)(atsr + 1),
+>   					(void *)atsr + atsr->header.length,
+>   					atsr->segment, atsru->devices,
+>   					atsru->devices_cnt);
+> diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+> index 65565820328a..881ac61a4336 100644
+> --- a/include/linux/dmar.h
+> +++ b/include/linux/dmar.h
+> @@ -113,10 +113,14 @@ extern int dmar_parse_dev_scope(void *start, void *end, int *cnt,
+>   				struct dmar_dev_scope **devices, u16 segment);
+>   extern void *dmar_alloc_dev_scope(void *start, void *end, int *cnt);
+>   extern void dmar_free_dev_scope(struct dmar_dev_scope **devices, int *cnt);
+> -extern int dmar_insert_dev_scope(struct dmar_pci_notify_info *info,
+> +extern int dmar_pci_insert_dev_scope(struct dmar_pci_notify_info *info,
+>   				 void *start, void*end, u16 segment,
+>   				 struct dmar_dev_scope *devices,
+>   				 int devices_cnt);
+> +extern int dmar_acpi_insert_dev_scope(u8 device_number,
+> +				struct acpi_device *adev, void *start, void *end,
+> +				struct dmar_dev_scope *devices, int devices_cnt);
+> +
+>   extern int dmar_remove_dev_scope(struct dmar_pci_notify_info *info,
+>   				 u16 segment, struct dmar_dev_scope *devices,
+>   				 int count);
+> @@ -140,6 +144,7 @@ extern int dmar_parse_one_atsr(struct acpi_dmar_header *header, void *arg);
+>   extern int dmar_check_one_atsr(struct acpi_dmar_header *hdr, void *arg);
+>   extern int dmar_release_one_atsr(struct acpi_dmar_header *hdr, void *arg);
+>   extern int dmar_iommu_hotplug(struct dmar_drhd_unit *dmaru, bool insert);
+> +extern int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev);
+>   extern int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info);
+>   #else /* !CONFIG_INTEL_IOMMU: */
+>   static inline int intel_iommu_init(void) { return -ENODEV; }
+> @@ -150,6 +155,11 @@ static inline void intel_iommu_shutdown(void) { }
+>   #define	dmar_check_one_atsr		dmar_res_noop
+>   #define	dmar_release_one_atsr		dmar_res_noop
+>   
+> +static inline int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev)
+> +{
+> +	return 0;
+> +}
+> +
+>   static inline int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+>   {
+>   	return 0;
 > 
