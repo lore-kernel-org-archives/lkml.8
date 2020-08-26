@@ -2,123 +2,131 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C25C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8637AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:01:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E34220838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:00:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598436047;
-	bh=4R1A9/PN9wVaIdSe/0IN1S+Pj6t3/4kfuPgweaMW0sA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=m8/Rp5c1XppxKM/EhjWGV5REbj0fn0Ep++Nnl0YTiXUegKCA7Dc/XT7fLeHvew+89
-	 AeI/rz2ggUgHtZgJvmFcOQWrDPRCuyIOqkn8BBjClekUzMO+qp1UrCoF/ceKUhHMOg
-	 mA8dqKQsSET7sFrWtZglWXSCCva6jhndkt0UEs+A=
+	by mail.kernel.org (Postfix) with ESMTP id 616E120786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:01:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rZYrbaDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgHZKAp (ORCPT
+        id S1728487AbgHZKBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:00:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728086AbgHZKAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:00:45 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0F0D20786;
-        Wed, 26 Aug 2020 10:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598436045;
-        bh=4R1A9/PN9wVaIdSe/0IN1S+Pj6t3/4kfuPgweaMW0sA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=D42ocn71NjTNqMYdwTl34QJmoFLOQjaz+HOhfo1ZizZtNWyG6DHLofD9PJDYGNMPj
-         OZBkYB1UgUbfj3Xcs9jik27c1CObXewe84FfvoG9x1EYE/IOssasEfZvXWCS1CJwyz
-         35FtUfcaYo3aDqLXL7ssRmJCUa4d9fL3k+3VDUbo=
-Date:   Wed, 26 Aug 2020 19:00:41 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function
- entry is not optimized (trigger by int3 breakpoint)
-Message-Id: <20200826190041.2d0ff0fbe154ba62163b0c00@kernel.org>
-In-Reply-To: <20200826180645.9b609fc05df2a149564df1b8@kernel.org>
-References: <8816bdbbc55c4d2397e0b02aad2825d3@trendmicro.com>
-        <20200825005426.f592075d13be740cb3c9aa77@kernel.org>
-        <7396e7b2079644a6aafd9670a111232b@trendmicro.com>
-        <20200825151538.f856d701a34f4e0561a64932@kernel.org>
-        <20200825120911.GX1362448@hirez.programming.kicks-ass.net>
-        <d3027772a6834f89a1ddc07c0fefaa0a@trendmicro.com>
-        <20200826172239.ff175be78ee5f3a4380579c3@kernel.org>
-        <20200826180645.9b609fc05df2a149564df1b8@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 26 Aug 2020 06:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45140 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728041AbgHZKBS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:01:18 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB50EC061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 03:01:17 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id m71so724151pfd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 03:01:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lN7CDYsBp+g8H+Q27SUJ+E2mec/tKF8dfPsVSHDg050=;
+        b=rZYrbaDKZEGSb9NrM2Wt0vKPzu5pSLr7Z4soaF4BK4oG6IipXyLFdENSTzR4AXtYBp
+         L9wZEWqNiqlq+e1Ehqss9bk8toyUAh/MRXvdjVU41UmfjkIgOL/Nl5nYwY56g+5OtCXD
+         1VduYt2QKNS+wORnDVcOEmFtpCMlsdM5TU7WADFxW/w0ZxNJLSgJgd1vtaN5ziSTYERh
+         qrh2gko/0nAWQ1FnuPVeqNhihUO4Vi7+glLJ6C3Pp9lQ8K1jlDB8aW7JSpDS2FgDeOOF
+         9oamUieaJr3PetzWIJeYJCYnvbEM1IMuunwNh9GXFGkXDPE04lA225VhJBGuHhoI1z6V
+         cqAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lN7CDYsBp+g8H+Q27SUJ+E2mec/tKF8dfPsVSHDg050=;
+        b=kdEJjiH70OKAq+g+jErybiHRBolGRRYkSEXlDktSrImVL+xXq3fjcBSB68FqZHnuF2
+         C4IngypyKdn2LEn0OBepUHQSpcAbOabQNlhu4nBbu6OQ/SDBGffQIqR7cZGYHFjWqBxc
+         VnVP9kiUL8yy9d0sWRuvNxhUhGZkY8zwI4qg1kA2DpO7AZ7GoObfzZ1O7t7bHsC4a8xI
+         5NYMzkdZRL2o5SysBrQe/A3a+HtHPdM0tFyGptaZAsSu6DA8tAKLfwY/OO9WqsmU93So
+         Wsz9x5c5RjsrUh8gmLMRWeOFXyKR8j7KZPcsytLTFrNWLMhBhVsrfG4+2qXleBJ9/MVd
+         3Dcg==
+X-Gm-Message-State: AOAM5310GcDK96awuLxXuIi5DdWBaBgMInMhmc0mL8bXx4LOn5OwdA2v
+        99G0/4V2lSXvphP8KB2iDqY=
+X-Google-Smtp-Source: ABdhPJxYhjBzb/1wST94Ldy6U50tkVIofIqQYck5r6/B+ywfwdF7ykYwG15AippqtuGIGa8U2xmnKg==
+X-Received: by 2002:aa7:8490:: with SMTP id u16mr5709733pfn.258.1598436077192;
+        Wed, 26 Aug 2020 03:01:17 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id o2sm1762049pjh.4.2020.08.26.03.01.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 03:01:16 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 19:01:13 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/7][next] printk: ringbuffer: add
+ finalization/extension support
+Message-ID: <20200826100113.GA8849@jagdpanzerIV.localdomain>
+References: <20200824103538.31446-1-john.ogness@linutronix.de>
+ <20200824103538.31446-6-john.ogness@linutronix.de>
+ <87lfi1ls2g.fsf@jogness.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lfi1ls2g.fsf@jogness.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 18:06:45 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> On Wed, 26 Aug 2020 17:22:39 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+On (20/08/26 10:45), John Ogness wrote:
+> On 2020-08-24, John Ogness <john.ogness@linutronix.de> wrote:
+> > @@ -1157,6 +1431,14 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+> >  		goto fail;
+> >  	}
+> >  
+> > +	/*
+> > +	 * New data is about to be reserved. Once that happens, previous
+> > +	 * descriptors are no longer able to be extended. Finalize the
+> > +	 * previous descriptor now so that it can be made available to
+> > +	 * readers (when committed).
+> > +	 */
+> > +	desc_finalize(desc_ring, DESC_ID(id - 1));
+> > +
+> >  	d = to_desc(desc_ring, id);
+> >  
+> >  	/*
 > 
-> > On Wed, 26 Aug 2020 07:07:09 +0000
-> > "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com> wrote:
-> > 
-> > > 
-> > > > -----Original Message-----
-> > > > From: peterz@infradead.org <peterz@infradead.org>
-> > > > Sent: Tuesday, August 25, 2020 8:09 PM
-> > > > To: Masami Hiramatsu <mhiramat@kernel.org>
-> > > > Cc: Eddy Wu (RD-TW) <Eddy_Wu@trendmicro.com>; linux-kernel@vger.kernel.org; x86@kernel.org; David S. Miller
-> > > > <davem@davemloft.net>
-> > > > Subject: Re: x86/kprobes: kretprobe fails to triggered if kprobe at function entry is not optimized (trigger by int3 breakpoint)
-> > > >
-> > > > Surely we can do a lockless list for this. We have llist_add() and
-> > > > llist_del_first() to make a lockless LIFO/stack.
-> > > >
-> > > 
-> > > llist operations require atomic cmpxchg, for some arch doesn't have CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG, in_nmi() check might still needed.
-> > > (HAVE_KRETPROBES && !CONFIG_ARCH_HAVE_NMI_SAFE_CMPXCHG): arc, arm, csky, mips
-> > 
-> > Good catch. In those cases, we can add in_nmi() check at arch dependent code.
-> 
-> Oops, in_nmi() check is needed in pre_kretprobe_handler() which has no
-> arch dependent code. Hmm, so we still need an weak function to check it...
+> Apparently this is not enough to guarantee that past descriptors are
+> finalized. I am able to reproduce a scenario where the finalization of a
+> certain descriptor never happens. That leaves the descriptor permanently
+> in the reserved queried state, which prevents any new records from being
+> created. I am investigating.
 
-Oops, again. Sorry I found a big misunderstand. I found the in_nmi() check is
-completely unnecessary with Jiri's commit 9b38cc704e84 ("kretprobe: Prevent 
-triggering kretprobe from within kprobe_flush_task").
+Good to know. I also run into problems:
+- broken dmesg (and broken journalctl -f /dev/kmsg poll) and broken
+  syslog read
 
-This commit introduced the kprobe_busy_begin/end() to the kretproeb trampoline
-handler, which set a dummy kprobe to the per-cpu current kprobe pointer.
-This current-kprobe is checked at the kprobe pre handler to prevent kprobes
-(including kretprobe) recursion.
+$ strace dmesg
 
-This means, if an NMI interrupts a kretprobe operation (both pre-handler and
-trampoline-handler) and it hits the same kretprobe, this nested kretprobe
-handlers never be called, because there is a current kprobe is already set.
-Thus, we are totally safe from double-lock issue in the kretprobe handlers.
+...
+openat(AT_FDCWD, "/dev/kmsg", O_RDONLY|O_NONBLOCK) = 3
+lseek(3, 0, SEEK_DATA)                  = 0
+read(3, 0x55dda8c240a8, 8191)           = -1 EAGAIN (Resource temporarily unavailable)
+close(3)                                = 0
+syslog(10 /* SYSLOG_ACTION_SIZE_BUFFER */) = 524288
+mmap(NULL, 528384, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f43ea847000
+syslog(3 /* SYSLOG_ACTION_READ_ALL */, "", 524296) = 0
+munmap(0x7f43ea847000, 528384)          = 0
+...
 
-So we can just remove the in_nmi() check from pre_kretprobe_handler() if
-we introduced a generic trampoline handler, since kprobe_busy_begin/end()
-must called from the trampoline handlers. Currently it is used on x86 only.
-
-Of course, this doesn't solve the llist_del_first() contention in the
-pre_kretprobe_handler(). So anyway we need a lock for per-probe llist
-(if I understand llist.h comment correctly.)
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+	-ss
