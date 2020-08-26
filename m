@@ -2,89 +2,120 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EF6C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48012C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 755FC2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A955208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598448034;
-	bh=PWAM+fSMgJoSOIShD1u7yfMXsrJhEvdfCxjPmQvzz1A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jgkYuh5wY9DWLLj2SOZwFaRVbVtdSD4/nc+r+iQVu29guP+Y9La05XR/gDpfG0D57
-	 SUFDBFiV9aawYuQONvmLtlgWds1UTOy3kEv4BFV/G96hr2eyjXGG8KQK/Hsl9BGJMp
-	 MTZbI2lgTdsvuOFVdEidfhynaLhEmxBV+NNO2w7A=
+	s=default; t=1598448079;
+	bh=s0l3MRlai5y9sJL8ojERRg++aQ7zKvgtUOFyEiGCDjE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gvlEL+cX/ZrwHZx6F7+gsUKtUeXmtBf9lnxbQj2BQgewwvy6/CThOxb5gVhiazcxm
+	 wJxXSwUXOEqshyBgn8tsLpRabaK3wEiXwv4/Tyw5R6MB27iz37SwN5tJFi1r+OC7Yl
+	 elUcL+3I99Lxal5UPomWcS04cfeP4hJejMoiONjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbgHZNUb (ORCPT
+        id S1730268AbgHZNVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:20:31 -0400
-Received: from mail-oo1-f65.google.com ([209.85.161.65]:38303 "EHLO
-        mail-oo1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730227AbgHZNUZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:20:25 -0400
-Received: by mail-oo1-f65.google.com with SMTP id z11so432336oon.5;
-        Wed, 26 Aug 2020 06:20:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PWAM+fSMgJoSOIShD1u7yfMXsrJhEvdfCxjPmQvzz1A=;
-        b=fc4Inb13Wth035FjdizJpRz9UYhvQ7ZNvjLUUiwmNKznOcrYJeeobLDEqaTbXlu8fW
-         1CYk4y4t1gG+dRmrdx25yy66Zj7Gn7hRDCJnUPoVsgigI7I8bSIUZtk1bvLH2gLjwwTb
-         wOssj+kNKpAq8zZ4BDjpf0weCESwscHnKwoDcwYPXPWHkuvb3zUu4vBtwVzyK63gBNf+
-         AVyQ0JV5iFHaH+d/t/gsAH3zEt3K3EmwrSVDcW6T5SjLZKH6hBbCIv1vsGhi8QYyEn3n
-         gUTerWcJcOwsIwXVZRyhPq7pTAQ1P4jIauEemboO03zJoDJ4E8UDa2EOKw8eunErTIKE
-         UMXQ==
-X-Gm-Message-State: AOAM530nm2RnDEKdVMjWmzPWqVo4+BaPu1PvPO5kkgbucYgw23aJDUY/
-        75aFBlQq3PJfCPuA2c18ZRic1m+Vj+F9q85et6g=
-X-Google-Smtp-Source: ABdhPJyYYmr8DMHJ7k2ZgyqVB9v2GAJt6G0w+tTYb2PRyQqL6H9WNqhVZH4qzKdXt4Tll8WOsUMEjHzxpQ+U0Vs4SRU=
-X-Received: by 2002:a4a:d62c:: with SMTP id n12mr10597744oon.38.1598448023959;
- Wed, 26 Aug 2020 06:20:23 -0700 (PDT)
+        Wed, 26 Aug 2020 09:21:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39118 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728276AbgHZNVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:21:10 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA3412080C;
+        Wed, 26 Aug 2020 13:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598448070;
+        bh=s0l3MRlai5y9sJL8ojERRg++aQ7zKvgtUOFyEiGCDjE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dBmDlq7C52cAgdico/iqHb4N3ZZwmfrDiaZyeiD0cnZiDAGfaf32maM6ddwis58Db
+         QOtPIXBA6WIBeuKS+ETcBnDZxsoL60dXdJLEc0JeuuD36PnpOn1D2kQQGz+KOVdIj8
+         Abssa8DxULUajRDLTBuqsBZn4DK9iy+EEOzrbPTE=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0118840D3D; Wed, 26 Aug 2020 10:21:07 -0300 (-03)
+Date:   Wed, 26 Aug 2020 10:21:07 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Kajol Jain <kjain@linux.ibm.com>
+Cc:     jolsa@redhat.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        daniel@iogearbox.net, brho@google.com, srikar@linux.vnet.ibm.com
+Subject: Re: [RFC] perf/core: Fixes hung issue on perf stat command during
+ cpu hotplug
+Message-ID: <20200826132107.GH1059382@kernel.org>
+References: <20200826093236.446024-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200826120421.44356-1-guilhem@barpilot.io> <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
- <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com> <a7c8ee4b54b5f205548c055b7b8d599c1bd7ddeb.camel@gmail.com>
-In-Reply-To: <a7c8ee4b54b5f205548c055b7b8d599c1bd7ddeb.camel@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 26 Aug 2020 15:20:12 +0200
-Message-ID: <CAJZ5v0iBn8M062CpMfv8sJ9tavMjrfrDtN6aTFq7DGV60X5iLQ@mail.gmail.com>
-Subject: Re: [PATCH] intel_idle: Add ICL support
-To:     Artem Bityutskiy <dedekind1@gmail.com>
-Cc:     Guilhem Lettron <guilhem@barpilot.io>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826093236.446024-1-kjain@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 3:09 PM Artem Bityutskiy <dedekind1@gmail.com> wrote:
->
-> On Wed, 2020-08-26 at 15:03 +0200, Guilhem Lettron wrote:
-> > On Wed, 26 Aug 2020 at 14:43, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > On Wed, Aug 26, 2020 at 2:05 PM Guilhem Lettron <guilhem@barpilot.io> wrote:
-> > > > Use the same C-states as SKL
-> > >
-> > > Why is this change needed?
-> >
-> > On my laptop, a Dell XPS 13 7390 2-in-1 with i7-1065G7, ACPI only
-> > report "C1_ACPI", "C2_ACPI" and "C3_ACPI".
->
-> Did you try to dig into the BIOS menus and check if you can enable
-> more/deeper C-states?
+Em Wed, Aug 26, 2020 at 03:02:36PM +0530, Kajol Jain escreveu:
+> Commit 2ed6edd33a21 ("perf: Add cond_resched() to task_function_call()")
+> added assignment of ret value as -EAGAIN in case function
+> call to 'smp_call_function_single' fails.
+> For non-zero ret value, it did 
+> 'ret = !ret ? data.ret : -EAGAIN;', which always
+> assign -EAGAIN to ret and make second if condition useless.
+> 
+> In scenarios like when executing a perf stat with --per-thread option, and 
+> if any of the monitoring cpu goes offline, the 'smp_call_function_single'
+> function could return -ENXIO, and with the above check,
+> task_function_call hung and increases CPU
+> usage (because of repeated 'smp_call_function_single()')
+> 
+> Recration scenario:
+> 	# perf stat -a --per-thread && (offline a CPU )
 
-I would be surprised if there were settings for that in the BIOS, as
-Windows only expects #1, C2 and C3 AFAICS.
+Peter, this is kernel stuff, can you take a look?
 
-It might be possible to disable C1E autopromotion, but that option is
-not likely to be available on a laptop.
+- Arnaldo
+ 
+> Patch here removes the tertiary condition added as part of that 
+> commit and added a check for NULL and -EAGAIN.
+> 
+> Fixes: 2ed6edd33a21("perf: Add cond_resched() to task_function_call()")
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> Reported-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> ---
+>  kernel/events/core.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 5bfe8e3c6e44..330c53f7df9c 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -115,9 +115,9 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
+>  	for (;;) {
+>  		ret = smp_call_function_single(task_cpu(p), remote_function,
+>  					       &data, 1);
+> -		ret = !ret ? data.ret : -EAGAIN;
+> -
+> -		if (ret != -EAGAIN)
+> +		if (!ret)
+> +			ret = data.ret;
+> +		else if (ret != -EAGAIN)
+>  			break;
+>  
+>  		cond_resched();
+> -- 
+> 2.26.2
+> 
 
-Cheers!
+-- 
+
+- Arnaldo
