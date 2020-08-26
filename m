@@ -2,135 +2,123 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E41C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB3792083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B072083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:39:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XJESFxd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbgHZLjY (ORCPT
+        id S1729049AbgHZLjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:39:24 -0400
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:55723 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729026AbgHZLed (ORCPT
+        Wed, 26 Aug 2020 07:39:33 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34552 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729027AbgHZLed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Aug 2020 07:34:33 -0400
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1kAtgn-002WZ3-Li; Wed, 26 Aug 2020 13:34:01 +0200
-Received: from suse-laptop.physik.fu-berlin.de ([160.45.32.140])
-          by inpost2.zedat.fu-berlin.de (Exim 4.93)
-          with esmtpsa (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1kAtgn-002L6k-Eh; Wed, 26 Aug 2020 13:34:01 +0200
-Subject: Re: [PATCH] zorro: Fix address space collision message with RAM
- expansion boards
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stefan Reinauer <stefan.k.reinauer@gmail.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200713072429.6182-1-geert@linux-m68k.org>
- <CAMuHMdXWfLa8dCZPF6jSQYuowGBR4dJnS1hx_rN1kDpPFZnVGg@mail.gmail.com>
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Autocrypt: addr=glaubitz@physik.fu-berlin.de; keydata=
- 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
- scOkTAZQGVpD/8AaLH4v1w==
-Message-ID: <8a94e52c-4b29-5013-3ea4-af4223abda46@physik.fu-berlin.de>
-Date:   Wed, 26 Aug 2020 13:34:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598441644;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8w9qvTgsSj+61KuULjmZxV/U5oE0aAJ8Za6AVF1mAmg=;
+        b=XJESFxd5c2yO8R4VUTVWPX6GwuuWgAqzt5LthPGdOLCVlLxIsg/AQm1Ry+VCV7AJlDLJP5
+        8accPBGG4gNDWJKJxQzfErt3JmOLZ3sBw7QjV/HsuL9rfYI0MF7BKVZZI70VVCDLNJwi5/
+        3MkKxZ50jwcMz5gKtQS1LcA6TwjDIiU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-185-SqgwGgjuNICBN0BCeauBWg-1; Wed, 26 Aug 2020 07:34:02 -0400
+X-MC-Unique: SqgwGgjuNICBN0BCeauBWg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94691801AFC;
+        Wed, 26 Aug 2020 11:33:59 +0000 (UTC)
+Received: from krava (unknown [10.40.194.188])
+        by smtp.corp.redhat.com (Postfix) with SMTP id E6B627D4E7;
+        Wed, 26 Aug 2020 11:33:55 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 13:33:54 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-kernel@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH 1/2] perf expr: Force encapsulation on expr_id_data
+Message-ID: <20200826113354.GB753783@krava>
+References: <20200826042910.1902374-1-irogers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdXWfLa8dCZPF6jSQYuowGBR4dJnS1hx_rN1kDpPFZnVGg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 160.45.32.140
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826042910.1902374-1-irogers@google.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/20 1:28 PM, Geert Uytterhoeven wrote:
-> On Mon, Jul 13, 2020 at 9:24 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> When booting Linux on an Amiga with BigRAMPlus Zorro expansion board:
->>
->>     zorro: Address space collision on device Zorro device 12128600 (Individual Computers) [??? 0x50000000-]
->>
->> This happens because the address space occupied by the BigRAMPlus Zorro
->> device is already in use, as it is part of system RAM.  Hence the
->> message is harmless.
->>
->> Zorro memory expansion boards have the ERTF_MEMLIST flag set, which
->> tells AmigaOS to link the board's RAM into the free memory list.  While
->> we could skip registering the board resource if this flag is set, that
->> may cause issues with Zorro II RAM excluded in a memfile.
->>
->> Hence fix the issue by just ignoring the error if ERTF_MEMLIST is set.
->>
->> Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
->> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+On Tue, Aug 25, 2020 at 09:29:09PM -0700, Ian Rogers wrote:
+> This patch resolves some undefined behavior where variables in
+> expr_id_data were accessed (for debugging) without being defined. To
+> better enforce the tagged union behavior, the struct is moved into
+> expr.c and accessors provided. Tag values (kinds) are explicitly
+> identified.
 > 
-> Applied, and queued in the m68k for-v5.10 branch.
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/expr.c        | 64 ++++++++++++++++++++++++++++++-----
+>  tools/perf/util/expr.h        | 17 +++-------
+>  tools/perf/util/expr.y        |  2 +-
+>  tools/perf/util/metricgroup.c |  4 +--
+>  4 files changed, 62 insertions(+), 25 deletions(-)
+> 
+> diff --git a/tools/perf/util/expr.c b/tools/perf/util/expr.c
+> index 53482ef53c41..1ca0992db86b 100644
+> --- a/tools/perf/util/expr.c
+> +++ b/tools/perf/util/expr.c
+> @@ -17,6 +17,25 @@
+>  extern int expr_debug;
+>  #endif
+>  
+> +struct expr_id_data {
+> +	union {
+> +		double val;
+> +		struct {
+> +			double val;
+> +			const char *metric_name;
+> +			const char *metric_expr;
+> +		} ref;
+> +		struct expr_id	*parent;
+> +	};
+> +
+> +	enum {
+> +		EXPR_ID_DATA__VALUE,
+> +		EXPR_ID_DATA__REF,
+> +		EXPR_ID_DATA__REF_VALUE,
+> +		EXPR_ID_DATA__PARENT,
+> +	} kind;
 
-Oh, that reminds me. I should dig out the Big-RAM-Plus again. I still haven't
-found it after my last move but I know where to find it (hopefully ;-)).
+I like that, it's more clear than current state ;-)
 
-Adrian
+could you still put a small comment for each enum above,
+as a hint what it's used for?
 
--- 
- .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer - glaubitz@debian.org
-`. `'   Freie Universitaet Berlin - glaubitz@physik.fu-berlin.de
-  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+thanks,
+jirka
+
