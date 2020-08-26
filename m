@@ -2,92 +2,154 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D7CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAD3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA9EB2078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36CAD2078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:48:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jbc2/quw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pPrMAdUd";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4ugEezBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgHZQr7 (ORCPT
+        id S1728259AbgHZQs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:47:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728239AbgHZQrx (ORCPT
+        Wed, 26 Aug 2020 12:48:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:60130 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728053AbgHZQpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:47:53 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31DDC061574;
-        Wed, 26 Aug 2020 09:47:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=b4MA5TpSwk2Pnubg8wuSz4Ft23kjXnr6s/x3xGVfM+o=; b=Jbc2/quwfgWiTnjRfTG/KEzz2Y
-        J4zprwW81y8Q/7NQYGOfaeyzmBlRKJT08kxTZUwZ8rYxi981RqXykckkHuGQ1rIp1KYT4oeF/vImS
-        +swAZiv3EdCES26pTEVVU9p1lkH2twWmLxU7mMYN88lFVrfFscuqKtSiCtg2rQ6Fg4IDq0IXZeR0e
-        rDpr37I2BFCjdBwO2FCyHScxkqH+h+crnu4zeNsVOh5M9PqEVBDoWRlYa2/oTyOtbFIWGgaEogDlI
-        XmUOv3KKEnbBm8C09HuBKDWP3OByNTJLHezjX3SsfH+r2OgSyMxZ7vHII5PHtoKwqKslTjP3RRudS
-        0/UAW5BQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAyaR-0008Au-ME; Wed, 26 Aug 2020 16:47:47 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Gerd Hoffmann <kraxel@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] drm: virtio: fix kconfig dependency warning
-Message-ID: <d3643dcf-87f4-ff45-fb90-9945458438f9@infradead.org>
-Date:   Wed, 26 Aug 2020 09:47:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 26 Aug 2020 12:45:45 -0400
+Date:   Wed, 26 Aug 2020 16:45:40 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598460341;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BGR++If+ribQsSohR3lDNpsMbmtIOW7a12l0f+wL3x8=;
+        b=pPrMAdUd1HWhSg20H3ldNLIZTsOpMGT2bMfphmdZWq1VrN+LXngA2iSxQyJqg3oLZqQ1iP
+        RSvg00C2v1hKYEsG2ABt2m1ysHfQLGC66ogk8cmyKgQyb7NjRiiLGCXTdBVHax7FpQe6uL
+        g04BJpSI39IFG0nsQWmSq+NP3V6futr8MkHcS5I59xGX+WOD//GYX/0/fGbPKNR4NdR+FO
+        34xWe2cuKBtW0gfvPG2Oa3wRSSvZxURVTSgOq1dURrGqE77BadFkqkVuRfGrueZ9y/o7Wl
+        i1/kMJeWmxOgZniQzw3W4HMrb2f7HTodeBTaFQmNwPo4vwwFJtiS0dRH3GyBrA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598460341;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BGR++If+ribQsSohR3lDNpsMbmtIOW7a12l0f+wL3x8=;
+        b=4ugEezBHGk5JKZoQWuLSWbPftXQWcYTN3bDcuXHuzpSPxsHjLYbcpo47lSSSiegnYw5KFr
+        /XXvBrEL27xhaJCw==
+From:   "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: ras/core] x86/mce: Delay clearing IA32_MCG_STATUS to the end of
+ do_machine_check()
+Cc:     Gabriele Paoloni <gabriele.paoloni@intel.com>,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200824221237.5397-1-tony.luck@intel.com>
+References: <20200824221237.5397-1-tony.luck@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Message-ID: <159846034062.389.5520610330060261726.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+The following commit has been merged into the ras/core branch of tip:
 
-Fix kconfig dependency warning by using a different Kconfig symbol.
+Commit-ID:     1e36d9c6886849c6f3d3c836370563e6bc1a6ddd
+Gitweb:        https://git.kernel.org/tip/1e36d9c6886849c6f3d3c836370563e6bc1a6ddd
+Author:        Tony Luck <tony.luck@intel.com>
+AuthorDate:    Mon, 24 Aug 2020 15:12:37 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 26 Aug 2020 18:40:18 +02:00
 
-WARNING: unmet direct dependencies detected for VIRTIO_DMA_SHARED_BUFFER
-  Depends on [n]: VIRTIO_MENU [=n] && DMA_SHARED_BUFFER [=y]
-  Selected by [y]:
-  - DRM_VIRTIO_GPU [=y] && HAS_IOMEM [=y] && DRM [=y] && VIRTIO [=y] && MMU [=y]
+x86/mce: Delay clearing IA32_MCG_STATUS to the end of do_machine_check()
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: virtualization@lists.linux-foundation.org
+A long time ago, Linux cleared IA32_MCG_STATUS at the very end of machine
+check processing.
+
+Then, some fancy recovery and IST manipulation was added in:
+
+  d4812e169de4 ("x86, mce: Get rid of TIF_MCE_NOTIFY and associated mce tricks")
+
+and clearing IA32_MCG_STATUS was pulled earlier in the function.
+
+Next change moved the actual recovery out of do_machine_check() and
+just used task_work_add() to schedule it later (before returning to the
+user):
+
+  5567d11c21a1 ("x86/mce: Send #MC singal from task work")
+
+Most recently the fancy IST footwork was removed as no longer needed:
+
+  b052df3da821 ("x86/entry: Get rid of ist_begin/end_non_atomic()")
+
+At this point there is no reason remaining to clear IA32_MCG_STATUS early.
+It can move back to the very end of the function.
+
+Also move sync_core(). The comments for this function say that it should
+only be called when instructions have been changed/re-mapped. Recovery
+for an instruction fetch may change the physical address. But that
+doesn't happen until the scheduled work runs (which could be on another
+CPU).
+
+ [ bp: Massage commit message. ]
+
+Reported-by: Gabriele Paoloni <gabriele.paoloni@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200824221237.5397-1-tony.luck@intel.com
 ---
-Found in linux-next but applies to mainline.
+ arch/x86/kernel/cpu/mce/core.c |  9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
- drivers/gpu/drm/virtio/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- linux-next-20200826.orig/drivers/gpu/drm/virtio/Kconfig
-+++ linux-next-20200826/drivers/gpu/drm/virtio/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config DRM_VIRTIO_GPU
- 	tristate "Virtio GPU driver"
--	depends on DRM && VIRTIO && MMU
-+	depends on DRM && VIRTIO_MENU && MMU
- 	select DRM_KMS_HELPER
- 	select DRM_GEM_SHMEM_HELPER
- 	select VIRTIO_DMA_SHARED_BUFFER
-
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index f43a78b..0ba24df 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1190,6 +1190,7 @@ static void kill_me_maybe(struct callback_head *cb)
+ 
+ 	if (!memory_failure(p->mce_addr >> PAGE_SHIFT, flags)) {
+ 		set_mce_nospec(p->mce_addr >> PAGE_SHIFT, p->mce_whole_page);
++		sync_core();
+ 		return;
+ 	}
+ 
+@@ -1330,12 +1331,8 @@ noinstr void do_machine_check(struct pt_regs *regs)
+ 	if (worst > 0)
+ 		irq_work_queue(&mce_irq_work);
+ 
+-	mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
+-
+-	sync_core();
+-
+ 	if (worst != MCE_AR_SEVERITY && !kill_it)
+-		return;
++		goto out;
+ 
+ 	/* Fault was in user mode and we need to take some action */
+ 	if ((m.cs & 3) == 3) {
+@@ -1364,6 +1361,8 @@ noinstr void do_machine_check(struct pt_regs *regs)
+ 				mce_panic("Failed kernel mode recovery", &m, msg);
+ 		}
+ 	}
++out:
++	mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
+ }
+ EXPORT_SYMBOL_GPL(do_machine_check);
+ 
