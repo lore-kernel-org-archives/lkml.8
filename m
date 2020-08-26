@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C14C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FAAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:03:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1FEA20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06D842087D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:03:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598443402;
-	bh=y37TjwnN3ZVstO0ILROloWPnz1AJ4Je3xR4/WMvMAvU=;
+	s=default; t=1598443417;
+	bh=nHZ1XCR0ar56nN1+7P20uXLCe6Zcn+8Xf7Xo61kQ/uI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bZ7SCA5rPxPcgAdE18Umy2V2ORf5Gpii10cyg80w4DJTMi+T0zi6OLabUkVUoKqYq
-	 bEytDy6Peh7PifWx9mhlm73Fy0OCkd8cyCllbO+AmVbDrdV3f01JuaNAsqRuT1BM0g
-	 iNCE3b6JCvmpbD8xXcNhdwvLhiwluNNei/6sT0KQ=
+	b=dyW3VYQyIVCBsPb7MaNeTLhZqaoipxDkIPBvaf4la7p+Rp3ge9LrmnzS70L3uMm71
+	 l9lM3mWEVazvfM71FSTqThj4fMlpowop5ckatS0g5W7J0jUmHqKBp2C673D2qWeLO7
+	 Q6z4lOq1IiisLkcKQYWoEJWt1L1Nj9mBpS772FvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbgHZMDT (ORCPT
+        id S1729532AbgHZMDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:03:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36406 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 08:03:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729445AbgHZMCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:02:30 -0400
+        id S1729465AbgHZMCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:02:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20B4720786;
-        Wed, 26 Aug 2020 12:02:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A784120838;
+        Wed, 26 Aug 2020 12:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598443349;
-        bh=y37TjwnN3ZVstO0ILROloWPnz1AJ4Je3xR4/WMvMAvU=;
+        s=default; t=1598443365;
+        bh=nHZ1XCR0ar56nN1+7P20uXLCe6Zcn+8Xf7Xo61kQ/uI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C7UJd0wTgivjveibVHseFAjcXGiwHa4u5y1aicrR7NrQVGIL/ihZT/X9nQkX9iGJM
-         2206faJN7LWlVxhQnlEt//s94De1w6z+BnuhvNQ+3ZlraiewAX+mjxhE5bvtNoxbj6
-         43lqLpKXl+M+PplExX3bwknCtFYGXaHbY6Z1smE8=
+        b=IKGiqpe1R9EViSbwMaGi82BUpfVRWaOUgCNpX8D5NtAj8QYHOXTfnOiHNWfKAcI5N
+         mZtQpId/xSA3kcgjvDUFSgnyBFc7DSufOcnGLl8RMIeCGFNO7dWKbCCg896JakR1I0
+         dWjzDTi5mVHubE6teD1CuPvE++IFxrseie8h7JHE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com,
+        Necip Fazil Yildiran <necip@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 01/15] gre6: Fix reception with IP6_TNL_F_RCV_DSCP_COPY
-Date:   Wed, 26 Aug 2020 14:02:29 +0200
-Message-Id: <20200826114849.371310385@linuxfoundation.org>
+Subject: [PATCH 5.7 04/15] net: qrtr: fix usage of idr in port assignment to socket
+Date:   Wed, 26 Aug 2020 14:02:32 +0200
+Message-Id: <20200826114849.508923384@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200826114849.295321031@linuxfoundation.org>
 References: <20200826114849.295321031@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,42 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+From: Necip Fazil Yildiran <necip@google.com>
 
-[ Upstream commit 272502fcb7cda01ab07fc2fcff82d1d2f73d43cc ]
+[ Upstream commit 8dfddfb79653df7c38a9c8c4c034f242a36acee9 ]
 
-When receiving an IPv4 packet inside an IPv6 GRE packet, and the
-IP6_TNL_F_RCV_DSCP_COPY flag is set on the tunnel, the IPv4 header would
-get corrupted. This is due to the common ip6_tnl_rcv() function assuming
-that the inner header is always IPv6. This patch checks the tunnel
-protocol for IPv4 inner packets, but still defaults to IPv6.
+Passing large uint32 sockaddr_qrtr.port numbers for port allocation
+triggers a warning within idr_alloc() since the port number is cast
+to int, and thus interpreted as a negative number. This leads to
+the rejection of such valid port numbers in qrtr_port_assign() as
+idr_alloc() fails.
 
-Fixes: 308edfdf1563 ("gre6: Cleanup GREv6 receive path, call common GRE functions")
-Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+To avoid the problem, switch to idr_alloc_u32() instead.
+
+Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
+Reported-by: syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com
+Signed-off-by: Necip Fazil Yildiran <necip@google.com>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/ip6_tunnel.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ net/qrtr/qrtr.c |   20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
---- a/net/ipv6/ip6_tunnel.c
-+++ b/net/ipv6/ip6_tunnel.c
-@@ -886,7 +886,15 @@ int ip6_tnl_rcv(struct ip6_tnl *t, struc
- 		struct metadata_dst *tun_dst,
- 		bool log_ecn_err)
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -692,23 +692,25 @@ static void qrtr_port_remove(struct qrtr
+  */
+ static int qrtr_port_assign(struct qrtr_sock *ipc, int *port)
  {
--	return __ip6_tnl_rcv(t, skb, tpi, tun_dst, ip6ip6_dscp_ecn_decapsulate,
-+	int (*dscp_ecn_decapsulate)(const struct ip6_tnl *t,
-+				    const struct ipv6hdr *ipv6h,
-+				    struct sk_buff *skb);
-+
-+	dscp_ecn_decapsulate = ip6ip6_dscp_ecn_decapsulate;
-+	if (tpi->proto == htons(ETH_P_IP))
-+		dscp_ecn_decapsulate = ip4ip6_dscp_ecn_decapsulate;
-+
-+	return __ip6_tnl_rcv(t, skb, tpi, tun_dst, dscp_ecn_decapsulate,
- 			     log_ecn_err);
- }
- EXPORT_SYMBOL(ip6_tnl_rcv);
++	u32 min_port;
+ 	int rc;
+ 
+ 	mutex_lock(&qrtr_port_lock);
+ 	if (!*port) {
+-		rc = idr_alloc(&qrtr_ports, ipc,
+-			       QRTR_MIN_EPH_SOCKET, QRTR_MAX_EPH_SOCKET + 1,
+-			       GFP_ATOMIC);
+-		if (rc >= 0)
+-			*port = rc;
++		min_port = QRTR_MIN_EPH_SOCKET;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, QRTR_MAX_EPH_SOCKET, GFP_ATOMIC);
++		if (!rc)
++			*port = min_port;
+ 	} else if (*port < QRTR_MIN_EPH_SOCKET && !capable(CAP_NET_ADMIN)) {
+ 		rc = -EACCES;
+ 	} else if (*port == QRTR_PORT_CTRL) {
+-		rc = idr_alloc(&qrtr_ports, ipc, 0, 1, GFP_ATOMIC);
++		min_port = 0;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, 0, GFP_ATOMIC);
+ 	} else {
+-		rc = idr_alloc(&qrtr_ports, ipc, *port, *port + 1, GFP_ATOMIC);
+-		if (rc >= 0)
+-			*port = rc;
++		min_port = *port;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, *port, GFP_ATOMIC);
++		if (!rc)
++			*port = min_port;
+ 	}
+ 	mutex_unlock(&qrtr_port_lock);
+ 
 
 
