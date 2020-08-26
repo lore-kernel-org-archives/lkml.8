@@ -2,112 +2,148 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED60AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE8852067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBC7F2067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:52:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dUYqtN2S"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wz3K0+h+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgHZJvx (ORCPT
+        id S1728274AbgHZJwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728055AbgHZJvw (ORCPT
+        Wed, 26 Aug 2020 05:52:16 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:37998 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbgHZJwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:51:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C67BC061574
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:51:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=VEw0fSExpNbRt5vwrktYz/cnO18y6hD3RYPNSwCk5go=; b=dUYqtN2SHDmWh1OIFlhhSLRHI9
-        NCN4t7qkFgMkv/L9dwV+EsRdlXRkHTf7RId7iYueSJrYCLXCewQPvoChzk4352DcthUd2+63dM/rj
-        wuqMc0vXfQl89wn0u9yVcTBVIE3NCphfVRr8GCQhN+waIe7A14QnhowcljmA9hCNxDeWEPH11NXWV
-        a3LNhXVsGgMZrbUuylg0NVqAohOL/f6WQjQAJsB/D9smOQe8LebiL7bquTv0tcBb0boOuW7Hymf/8
-        tHr/uePsi8AIuTRxWUrGYjWYPNsR+CUVoxjW8+MESH0WsneF26bwlFa17MyHbQwgp1kpgQsPEnGW9
-        a4vIlihg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kAs5p-00071s-OH; Wed, 26 Aug 2020 09:51:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 17FEC301A66;
-        Wed, 26 Aug 2020 11:51:45 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F09FF2BF6E0F8; Wed, 26 Aug 2020 11:51:44 +0200 (CEST)
-Date:   Wed, 26 Aug 2020 11:51:44 +0200
-From:   peterz@infradead.org
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     syzbot <syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com>,
-        fweisbec@gmail.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
-Subject: Re: INFO: rcu detected stall in smp_call_function
-Message-ID: <20200826095144.GD1362448@hirez.programming.kicks-ass.net>
-References: <000000000000903d5805ab908fc4@google.com>
- <20200729125811.GA70158@hirez.programming.kicks-ass.net>
- <20200825132411.GR35926@hirez.programming.kicks-ass.net>
- <20200825154841.GQ2855@paulmck-ThinkPad-P72>
+        Wed, 26 Aug 2020 05:52:15 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07Q9malW168699;
+        Wed, 26 Aug 2020 09:52:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=puG6dn/0ZJ/S9eYVShDLSjSPKteNXnTDwq9+go1akjA=;
+ b=wz3K0+h++jsK1mSFm80F42A8wKBHb/1KQIqOGgwGSfnKYECH26biQ3pFDGAS55vS4Xf3
+ RM7QuvSza1jG41Z7CMlMx8ULnxzPOaZeSQIEjZFdiwvPhf0oSD63jesA2Ponpu5y4NXO
+ tFR4CMbj++gRzz8ZhugnxdLtVU+ym/1LJcUXsWRzE0RxF6m1CFIUpRnJlk7e/0Xno4n9
+ Nu/2Vt35D+QE4YxjTzlQV+xqTHeq/EE3a5+FzjiX/3IXF5JfODJU2RTuBijkXi4z/NR+
+ W4wYdgqXNx9sEERAVC9PBQtrjSAvR/mAxZffqeLel7F7nIEwI+9am4zdeXET1YdQ9x1D Qg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 335gw819ft-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 09:52:10 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07Q9ko6O101234;
+        Wed, 26 Aug 2020 09:50:09 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 333r9kxw1r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Aug 2020 09:50:09 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07Q9o7ql023582;
+        Wed, 26 Aug 2020 09:50:08 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 26 Aug 2020 02:50:07 -0700
+Date:   Wed, 26 Aug 2020 12:50:00 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Anant Thazhemadam <anant.thazhemadam@gmail.com>
+Cc:     devel@driverdev.osuosl.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] staging: media-atomisp : fix "dubious: !x | !y" sparse
+ warning
+Message-ID: <20200826095000.GW1793@kadam>
+References: <20200825220437.11214-1-anant.thazhemadam@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825154841.GQ2855@paulmck-ThinkPad-P72>
+In-Reply-To: <20200825220437.11214-1-anant.thazhemadam@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
+ adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008260077
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9724 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 lowpriorityscore=0
+ mlxscore=0 phishscore=0 bulkscore=0 impostorscore=0 adultscore=0
+ malwarescore=0 clxscore=1011 spamscore=0 mlxlogscore=999
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008260078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 08:48:41AM -0700, Paul E. McKenney wrote:
+On Wed, Aug 26, 2020 at 03:34:26AM +0530, Anant Thazhemadam wrote:
+> Upon running sparse, "warning: dubious: !x | !y" is brought to notice
+> for this file. This patch fixes that warning.
+> 
+> If there's a specific reason that this change is considered undesirable, 
+> please do let me know why.
+> Thanks.
 
-> > Paul, I wanted to use this function, but found it has very weird
-> > semantics.
-> > 
-> > Why do you need it to (remotely) call @func when p is current? The user
-> > in rcu_print_task_stall() explicitly bails in this case, and the other
-> > in rcu_wait_for_one_reader() will attempt an IPI.
-> 
-> Good question.  Let me look at the invocations:
-> 
-> o	trc_wait_for_one_reader() bails on current before
-> 	invoking try_invoke_on_locked_down_task():
-> 
-> 	if (t == current) {
-> 		t->trc_reader_checked = true;
-> 		trc_del_holdout(t);
-> 		WARN_ON_ONCE(t->trc_reader_nesting);
-> 		return;
-> 	}
-> 
-> o	rcu_print_task_stall() might well invoke on the current task,
-> 	low though the probability of this happening might be.	(The task
-> 	has to be preempted within an RCU read-side critical section
-> 	and resume in time for the scheduling-clock irq that will report
-> 	the RCU CPU stall to interrupt it.)
-> 
-> 	And you are right, no point in an IPI in this case.
-> 
-> > Would it be possible to change this function to:
-> > 
-> >  - blocked task: call @func with p->pi_lock held
-> >  - queued, !running task: call @func with rq->lock held
-> >  - running task: fail.
-> > 
-> > ?
-> 
-> Why not a direct call in the current-task case, perhaps as follows,
-> including your change above?  This would allow the RCU CPU stall
-> case to work naturally and without the IPI.
-> 
-> Would that work for your use case?
+Please don't put this sort of comments in the commit message.  You can
+put it under the --- cut off
 
-It would in fact, but at this point I'd almost be inclined to stick the
-IPI in as well. But small steps I suppose. So yes.
+> 
+> Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
+> ---
+  ^^^
+here.  Then it will be removed instead of going into the permanent git
+log.
+
+Please always say int the commit message how the patch will affect the
+runtime behavior of the kernel.  In this case it will not affect it at
+all.  It's just a clean up.  Her is my proposed commit message if you
+want:
+
+Subject: [PATCH] staging: media-atomisp : silence "dubious: !x | !y" warning
+
+Upon running sparse, "warning: dubious: !x | !y" is brought to notice
+for this file.  Logical and bitwise OR are basically the same in this
+context so it doesn't cause a runtime bug.  But let's change it to
+logical OR to make it cleaner and silence the Sparse warning.
+
+regards,
+dan carpenter
+
+
+
+
+
+>  .../media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c    | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+> index 358cb7d2cd4c..3b850bb2d39d 100644
+> --- a/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+> +++ b/drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c
+> @@ -58,7 +58,7 @@ sh_css_vf_downscale_log2(
+>  	unsigned int ds_log2 = 0;
+>  	unsigned int out_width;
+>  
+> -	if ((!out_info) | (!vf_info))
+> +	if ((!out_info) || (!vf_info))
+>  		return -EINVAL;
+>  
+>  	out_width = out_info->res.width;
+> -- 
+> 2.25.1
+> 
+> _______________________________________________
+> devel mailing list
+> devel@linuxdriverproject.org
+> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
