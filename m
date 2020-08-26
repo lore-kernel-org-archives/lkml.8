@@ -2,112 +2,96 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C29C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB53C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15EAB2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB712080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbgHZNQc (ORCPT
+        id S1730198AbgHZNRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:16:32 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:59488 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729177AbgHZNQc (ORCPT
+        Wed, 26 Aug 2020 09:17:07 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37783 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729177AbgHZNRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:16:32 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U6w.nFU_1598447788;
-Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U6w.nFU_1598447788)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 26 Aug 2020 21:16:28 +0800
-Reply-To: xlpang@linux.alibaba.com
-Subject: Re: [PATCH] mm: memcg: Fix memcg reclaim soft lockup
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <1598426822-93737-1-git-send-email-xlpang@linux.alibaba.com>
- <20200826081102.GM22869@dhcp22.suse.cz>
- <99efed0e-050a-e313-46ab-8fe6228839d5@linux.alibaba.com>
- <20200826110015.GO22869@dhcp22.suse.cz>
- <f0122b2d-4740-2caf-3c4f-009a513426e3@linux.alibaba.com>
- <20200826120740.GP22869@dhcp22.suse.cz>
- <19eb48db-7d5e-0f55-5dfc-6a71274fd896@linux.alibaba.com>
- <20200826124810.GQ22869@dhcp22.suse.cz>
-From:   xunlei <xlpang@linux.alibaba.com>
-Message-ID: <061e8600-e162-6ac9-2f4f-bf161435a5b2@linux.alibaba.com>
-Date:   Wed, 26 Aug 2020 21:16:28 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Wed, 26 Aug 2020 09:17:04 -0400
+Received: by mail-lj1-f193.google.com with SMTP id w14so2317761ljj.4;
+        Wed, 26 Aug 2020 06:17:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vU/nQo+UBNG9xvKd9GuEpi2FmWTAJodJN80NdTSBLAk=;
+        b=RcwuyWIef/Gt4ktGODHegTfBG33CSLzdiIcLnJOlH7LU/w6HDbC8xNHQ/RFczUqRhT
+         6MqKlpU7s97d7AiekXg23QuheGTPO3QXKK/AQrFtX1ajv74ovFprZF/B9JOuIa9bc+h8
+         ZLE2bqw2Re1SjHE8/YAkcTqXALSBvwQi4fWHkN2jdpSfAympAohm4/4KS5y2EIFmVUrq
+         DtVnETyAxU3crAwQjgvji2xkdLVoZl/N+54Z7v4hmBspKjCteNGzqVjs9p4/aQN0UwLm
+         AfV/qfnqqR9GvRY4/aq2Vp+EXt3l6HDNBoySrvEBzxr/cTj4v/7yLTRvUeglB+n6+Cex
+         +vcg==
+X-Gm-Message-State: AOAM530dtR87XfEYg8GYfRqAg75Cmw7LU/2sp/PJpSyBkLddjAFsQgKC
+        IeojRspkEHMXFuNrbtlAKFHV+aFWurI=
+X-Google-Smtp-Source: ABdhPJz7tHUoM8nJr9czWl1gcdQGwvnPgBvglHx5FCWqpeWj9hP2LVpyXxO/BRHRRUxT/7MnePBLcQ==
+X-Received: by 2002:a05:651c:152:: with SMTP id c18mr6508091ljd.15.1598447821446;
+        Wed, 26 Aug 2020 06:17:01 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id u19sm496556ljj.128.2020.08.26.06.17.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 06:17:00 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     Denis Efremov <efremov@linux.com>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: amlogic - use kfree_sensitive()
+Date:   Wed, 26 Aug 2020 16:16:57 +0300
+Message-Id: <20200826131657.398090-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200826124810.GQ22869@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/26 下午8:48, Michal Hocko wrote:
-> On Wed 26-08-20 20:21:39, xunlei wrote:
->> On 2020/8/26 下午8:07, Michal Hocko wrote:
->>> On Wed 26-08-20 20:00:47, xunlei wrote:
->>>> On 2020/8/26 下午7:00, Michal Hocko wrote:
->>>>> On Wed 26-08-20 18:41:18, xunlei wrote:
->>>>>> On 2020/8/26 下午4:11, Michal Hocko wrote:
->>>>>>> On Wed 26-08-20 15:27:02, Xunlei Pang wrote:
->>>>>>>> We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
->>>>>>>> the target memcg doesn't have any reclaimable memory.
->>>>>>>
->>>>>>> Do you have any scenario when this happens or is this some sort of a
->>>>>>> test case?
->>>>>>
->>>>>> It can happen on tiny guest scenarios.
->>>>>
->>>>> OK, you made me more curious. If this is a tiny guest and this is a hard
->>>>> limit reclaim path then we should trigger an oom killer which should
->>>>> kill the offender and that in turn bail out from the try_charge lopp
->>>>> (see should_force_charge). So how come this repeats enough in your setup
->>>>> that it causes soft lockups?
->>>>>
->>>>
->>>> should_force_charge() is false, the current trapped in endless loop is
->>>> not the oom victim.
->>>
->>> How is that possible? If the oom killer kills a task and that doesn't
->>> resolve the oom situation then it would go after another one until all
->>> tasks are killed. Or is your task living outside of the memcg it tries
->>> to charge?
->>>
->>
->> All tasks are in memcgs. Looks like the first oom victim is not finished
->> (unable to schedule), later mem_cgroup_oom()->...->oom_evaluate_task()
->> will set oc->chosen to -1 and abort.
-> 
-> This shouldn't be possible for too long because oom_reaper would
-> make it invisible to the oom killer so it should proceed. Also
-> mem_cgroup_out_of_memory takes a mutex and that is an implicit
-> scheduling point already.
-> 
-> Which kernel version is this?
-> 
+Use kfree_sensitive() instead of open-coding it.
 
-I reproduced it on "5.9.0-rc2".
+Signed-off-by: Denis Efremov <efremov@linux.com>
+---
+ drivers/crypto/amlogic/amlogic-gxl-cipher.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-oom_reaper also can't get scheduled because of 1-cpu, and the mutex
-uses might_sleep() which is noop in case of "CONFIG_PREEMPT_VOLUNTARY is
-not set" I mentioned in the commit log.
+diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+index d93210726697..f3dca456d9f8 100644
+--- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
+@@ -341,8 +341,7 @@ void meson_cipher_exit(struct crypto_tfm *tfm)
+ 	struct meson_cipher_tfm_ctx *op = crypto_tfm_ctx(tfm);
+ 
+ 	if (op->key) {
+-		memzero_explicit(op->key, op->keylen);
+-		kfree(op->key);
++		kfree_sensitive(op->key);
+ 	}
+ 	crypto_free_skcipher(op->fallback_tfm);
+ }
+@@ -368,8 +367,7 @@ int meson_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 		return -EINVAL;
+ 	}
+ 	if (op->key) {
+-		memzero_explicit(op->key, op->keylen);
+-		kfree(op->key);
++		kfree_sensitive(op->key);
+ 	}
+ 	op->keylen = keylen;
+ 	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
+-- 
+2.26.2
 
-> And just for the clarification. I am not against the additional
-> cond_resched. That sounds like a good thing in general because we do
-> want to have a predictable scheduling during reclaim which is
-> independent on reclaimability as much as possible. But I would like to
-> drill down to why you are seeing the lockup because those shouldn't
-> really happen.
-> 
