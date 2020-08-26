@@ -2,111 +2,144 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCC8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E47C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 424EB2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:02:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ba+ApzA3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JYpSEt6S"
+	by mail.kernel.org (Postfix) with ESMTP id 41AE620838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729433AbgHZMCC (ORCPT
+        id S1729444AbgHZMCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:02:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57020 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729371AbgHZMBB (ORCPT
+        Wed, 26 Aug 2020 08:02:13 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:60394 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729375AbgHZMBH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:01:01 -0400
-Message-Id: <20200826112330.683298931@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598443256;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=Oz0/1gWRPSvvsPJtwAVY3cS6pNjuxGdtqsobcr4ZCvs=;
-        b=Ba+ApzA3lxf0wI52RxaFIrxrYAUyBUQG1gGFQztF1br0kk0U6AoE5wqCgnixhkjrgzOMo6
-        rT2ZvDyvuHISEifoHKZcKVSGoRPA4BuCErcMtK3FQsusSIwD5cxoIwTKUluv4ET8zep/wX
-        rIHR72+BqmwB1T2FYELwwtUSa5KalCb4GGFT5jGxBlx+9x72db//rw0t1XujWqIY8Vjs+P
-        FVWGmQd/RE/PAIEnL0RNQjFWLeWLoGfwUlzXfBeO7dzRVssgTu8kngEQeo/lNittJ7g2V5
-        NVXx9eYNRt9ZrPbdlXzYbDphBoMnpc/BMMJMcyjRQDnN40c6/GFaU/Q5glpFAg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598443256;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=Oz0/1gWRPSvvsPJtwAVY3cS6pNjuxGdtqsobcr4ZCvs=;
-        b=JYpSEt6S0O9MIXMNQT5EttPLTAVkYzwAAPVY2vxQEslrb722eNdO+r4OYiSe56zO/bTHh/
-        UR0TOrKuXedUnoCQ==
-Date:   Wed, 26 Aug 2020 13:16:29 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [patch V2 01/46] iommu/amd: Prevent NULL pointer dereference
-References: <20200826111628.794979401@linutronix.de>
+        Wed, 26 Aug 2020 08:01:07 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QBqkD7004452;
+        Wed, 26 Aug 2020 08:00:51 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 3330955b3k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 08:00:51 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 07QC0o59065465
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 26 Aug 2020 08:00:50 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 26 Aug
+ 2020 08:00:49 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 26 Aug 2020 08:00:49 -0400
+Received: from saturn.ad.analog.com ([10.48.65.100])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 07QC0hNZ024342;
+        Wed, 26 Aug 2020 08:00:44 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <jic23@kernel.org>, <alexandre.torgue@st.com>,
+        <fabrice.gasnier@st.com>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2] iio: stm32-dac: Replace indio_dev->mlock with own device lock
+Date:   Wed, 26 Aug 2020 15:00:42 +0300
+Message-ID: <20200826120042.200364-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200826063850.47625-1-alexandru.ardelean@analog.com>
+References: <20200826063850.47625-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-26_08:2020-08-26,2020-08-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ phishscore=0 mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxlogscore=582 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008260096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
 
-Dereferencing irq_data before checking it for NULL is suboptimal.
+As part of the general cleanup of indio_dev->mlock, this change replaces
+it with a local lock. The lock protects against potential races when
+reading the CR reg and then updating, so that the state of pm_runtime
+is consistent between the two operations.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/iommu/amd/iommu.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/dac/stm32-dac.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -3717,8 +3717,8 @@ static int irq_remapping_alloc(struct ir
+diff --git a/drivers/iio/dac/stm32-dac.c b/drivers/iio/dac/stm32-dac.c
+index 092c796fa3d9..7a8aed476850 100644
+--- a/drivers/iio/dac/stm32-dac.c
++++ b/drivers/iio/dac/stm32-dac.c
+@@ -26,9 +26,11 @@
+ /**
+  * struct stm32_dac - private data of DAC driver
+  * @common:		reference to DAC common data
++ * @lock:		lock to protect the data buffer during regmap ops
+  */
+ struct stm32_dac {
+ 	struct stm32_dac_common *common;
++	struct mutex		lock;
+ };
  
- 	for (i = 0; i < nr_irqs; i++) {
- 		irq_data = irq_domain_get_irq_data(domain, virq + i);
--		cfg = irqd_cfg(irq_data);
--		if (!irq_data || !cfg) {
-+		cfg = irq_data ? irqd_cfg(irq_data) : NULL;
-+		if (!cfg) {
- 			ret = -EINVAL;
- 			goto out_free_data;
+ static int stm32_dac_is_enabled(struct iio_dev *indio_dev, int channel)
+@@ -58,10 +60,10 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
+ 	int ret;
+ 
+ 	/* already enabled / disabled ? */
+-	mutex_lock(&indio_dev->mlock);
++	mutex_lock(&dac->lock);
+ 	ret = stm32_dac_is_enabled(indio_dev, ch);
+ 	if (ret < 0 || enable == !!ret) {
+-		mutex_unlock(&indio_dev->mlock);
++		mutex_unlock(&dac->lock);
+ 		return ret < 0 ? ret : 0;
+ 	}
+ 
+@@ -69,13 +71,13 @@ static int stm32_dac_set_enable_state(struct iio_dev *indio_dev, int ch,
+ 		ret = pm_runtime_get_sync(dev);
+ 		if (ret < 0) {
+ 			pm_runtime_put_noidle(dev);
+-			mutex_unlock(&indio_dev->mlock);
++			mutex_unlock(&dac->lock);
+ 			return ret;
  		}
-
+ 	}
+ 
+ 	ret = regmap_update_bits(dac->common->regmap, STM32_DAC_CR, msk, en);
+-	mutex_unlock(&indio_dev->mlock);
++	mutex_unlock(&dac->lock);
+ 	if (ret < 0) {
+ 		dev_err(&indio_dev->dev, "%s failed\n", en ?
+ 			"Enable" : "Disable");
+@@ -327,6 +329,8 @@ static int stm32_dac_probe(struct platform_device *pdev)
+ 	indio_dev->info = &stm32_dac_iio_info;
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 
++	mutex_init(&dac->lock);
++
+ 	ret = stm32_dac_chan_of_init(indio_dev);
+ 	if (ret < 0)
+ 		return ret;
+-- 
+2.25.1
 
