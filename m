@@ -6,107 +6,122 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916C2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D4BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E458206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:40:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9189B206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598460032;
-	bh=Nhxs6GLEXkmk91ceSYxBRjhcy81ZD8QVkvWailiH5V8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lm7Q84hxYvyTc5wzetfaHIFczwayHrffaMhwUOMDoHzcxfko8cGTIsY6C9+rSJFF9
-	 Y0vs9IfbHfvFGMWjbHRPjWGkI5siSNAlOGaPSty8n7Q4DcrzzZkTH1aODNrCcCGMqN
-	 Mi6EGAzziDFtBlnOFFWr3Igyn/t/RNk1eRdZSQIc=
+	s=default; t=1598460127;
+	bh=K0KRjosCNihhIUjy2CzAbSeunhdWGQrDEtxgSqHeoew=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NaERnEFO6bGudC+mdeQPWn66aCPmfgGNPsTBoh8MOVR1DYsFd8HAwJUZi7W/dxVj6
+	 Wlsct1/pjKbPmrJPgqhI7/ymbxewbPgZyPA1lhLSIe3bGm2kcj6/Gf5KST0Kb08O+6
+	 dXU5MLJ+41XXgh1aocvDErkLiCAgNh5iEks/2ZKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgHZQka (ORCPT
+        id S1727973AbgHZQmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:40:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38306 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgHZQkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:40:22 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F5322071E;
-        Wed, 26 Aug 2020 16:40:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598460022;
-        bh=Nhxs6GLEXkmk91ceSYxBRjhcy81ZD8QVkvWailiH5V8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0/CE7/9xoULdHqEYGdYFuGogIbhVNQgRoRg1NbIRk3g1xglWTV8iEm8f0Y0khaTKo
-         qoKGl301FSUks2EGYBJmhla9zwh0FLvlOECCAo+KTbjAqUcOk0udgLToVHois88arU
-         mK3AbOh4P7yZmzG+RHaQw1vbQjHqPCqSbL4ud3Es=
-Date:   Wed, 26 Aug 2020 22:10:18 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        alsa-devel@alsa-project.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Hui Wang <hui.wang@canonical.com>, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-Subject: Re: [PATCH 3/4] soundwire: SDCA: add helper macro to access controls
-Message-ID: <20200826164018.GF2639@vkoul-mobl>
-References: <20200825171656.75836-1-pierre-louis.bossart@linux.intel.com>
- <20200825171656.75836-4-pierre-louis.bossart@linux.intel.com>
- <20200826085540.GY2639@vkoul-mobl>
- <9c078341-7e90-a4e8-da30-19e9720d93e4@linux.intel.com>
+        Wed, 26 Aug 2020 12:42:05 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43431 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgHZQl4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:41:56 -0400
+Received: by mail-oi1-f195.google.com with SMTP id j21so2056131oii.10;
+        Wed, 26 Aug 2020 09:41:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wsy5zXuBQviVStdVeCGrMTAX227JSl/kynJ+bRrUqhw=;
+        b=uL0EDsf6hJ5sYmTPNDda8Fn3aZoHQUNP/ul1Zg2uDqq8fYYbtzvot0ih3lIrn/Y9pB
+         g82NPkvOgM3zldlh9M67dEQi3MaMJjxny7+jZYgmcuZmtPOwzoKqFdmbyiZoSkTBRdgJ
+         ykan7vd4zD6+4pUMcAad6pefnvPiPMVNMChZC0WFZoPLukictI+qb8OIVNDQiNN7zc3K
+         3JHxX2lW86AO8oXWpdVvsF4iGom1xgGZ1l4XedbGEQbfw7GFLnzkYuF6yjyZ5KWyMTO0
+         lzB04jzWn0AcdB2+iixkegKEBzH/fysOj+H3WFszyvWxpthM+9wEz0gETrlZ5+5EBWpL
+         gs3w==
+X-Gm-Message-State: AOAM531YtMLODrgjU0sIfxFAWcXIwqop//BQHCZd16o1H1k/82iDZqH8
+        JYjcsPTY3dhjMAn2R/vAUE6We+cGhbOSWinDqw8=
+X-Google-Smtp-Source: ABdhPJy2nXYl0RJfHQH7KCX/v6XWxgIJw5+i8hypA0vKnYTy4GFLpfksuMvG0V355VFbpomGojLtzxqFcnWQisTKKjo=
+X-Received: by 2002:aca:3e8b:: with SMTP id l133mr1553553oia.110.1598460115467;
+ Wed, 26 Aug 2020 09:41:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9c078341-7e90-a4e8-da30-19e9720d93e4@linux.intel.com>
+References: <20200826120421.44356-1-guilhem@barpilot.io> <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
+ <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
+ <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
+ <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
+ <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
+ <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
+ <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com> <72fab2376722c6169549669016933217d3da34a0.camel@gmail.com>
+In-Reply-To: <72fab2376722c6169549669016933217d3da34a0.camel@gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 26 Aug 2020 18:41:44 +0200
+Message-ID: <CAJZ5v0jDY62HYWF-QKE8kH4kFx9Ympjwk1Dbhdm_VCFaP28RZg@mail.gmail.com>
+Subject: Re: [PATCH] intel_idle: Add ICL support
+To:     Artem Bityutskiy <dedekind1@gmail.com>
+Cc:     Guilhem Lettron <guilhem@barpilot.io>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-08-20, 10:00, Pierre-Louis Bossart wrote:
-> 
-> 
-> > > +/* v1.2 device - SDCA address mapping */
-> > 
-> > Can you please add description of bits used by each field here,
-> > something like we have done for DevId
-> 
-> were you referring to something like this?
-> 
->  * Spec definition
->  *   Register		Bit	Contents
->  *   DevId_0 [7:4]	47:44	sdw_version
->  *   DevId_0 [3:0]	43:40	unique_id
->  *   DevId_1		39:32	mfg_id [15:8]
->  *   DevId_2		31:24	mfg_id [7:0]
->  *   DevId_3		23:16	part_id [15:8]
->  *   DevId_4		15:08	part_id [7:0]
->  *   DevId_5		07:00	class_id
+On Wed, Aug 26, 2020 at 6:19 PM Artem Bityutskiy <dedekind1@gmail.com> wrote:
+>
+> Indeed, when I compare them:
+>
+> acpi_idle (without the patch):
 
-Correct
+Does this come from the Guilhem's data?  It's intel_idle in both
+cases, but in the "without the patch" case it uses ACPI.
 
-> > 
-> > > +#define SDW_SDCA_CTL(fun, ent, ctl, ch)		(BIT(30) |			\
-> > > +						 (((fun) & 0x7) << 22) |	\
-> > > +						 (((ent) & 0x40) << 15) |	\
-> > > +						 (((ent) & 0x3f) << 7) |	\
-> > > +						 (((ctl) & 0x30) << 15) |	\
-> > > +						 (((ctl) & 0x0f) << 3) |	\
-> > > +						 (((ch) & 0x38) << 12) |	\
-> > > +						 ((ch) & 0x07))
-> > 
-> > GENMASK() for the bitmaps here please. Also it would look very neat by
-> > using FIELD_PREP() here, you can skip the bit shifts and they would be
-> > done by FIELD_PREP() for you.
-> 
-> ok.
+> CPU%c1  CPU%c6  CPU%c7  CoreTmp PkgTmp  GFX%rc6 Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10 PkgWatt
+> 29.48   0.00    60.71   58      58      97.96   16.96   0.00    0.00    0.00    0.00    0.00    0.00    6.08
 
-FWIW I am testing changes to do the conversion for subsystem to use nice
-stuff in bitfield.h
+and I get the same data here, but
 
+> intel_idle (with the patch):
+>
+> CPU%c1  CPU%c6  CPU%c7  CoreTmp PkgTmp  GFX%rc6 Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10 PkgWatt
+> 56      56      96.64   300     68.29   48.58   0.00    0.00    0.00    0.00    0.00    0.00    7.38    0.00
 
--- 
-~Vinod
+you seem to have columns wrong here.
+
+I get something like this
+
+CPU%c1     CPU%c6     CPU%c7     CoreTmp PkgTmp     GFX%rc6 GFXMHz
+Totl%C0 Any%C0     GFX%C0     CPUGFX% Pkg%pc2    Pkg%pc3 Pkg%pc6
+Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+16.07     26.24     49.10     56     56     96.64     300     68.29
+ 48.58     3.08     2.10     30.36     0.04     0.00     0.00     0.00
+    0.00     0.00
+
+so still no PC10 residency (and it would be rather strange to get PC10
+residency without any PC6 or higher residency).  The 7.38 is the
+PkgWatt number AFAICS.
+
+> With intel_idle we reach PC10, without it we only go as deep as PC2 - huge difference.
+
+Not really.  We don't get any PC10 residency in both cases.
+
+> I really wonder why the BIOS does not expose deeper C-states...
+
+It does expose C10.
+
+> And if it does not, is this for a reason? And how windows works then?
+
+It can only expose 3 C-states and it chose to expose C1, C7s and C10.
+
+> May be there is a BIOS update that fixes this problem? May be Windows
+> user get it quickly because stuff like this is often well-integrated in
+> Windows? Would you please check if there is newer BIOS?
+
+I doubt it.
+
+Cheers!
