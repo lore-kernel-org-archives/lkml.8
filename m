@@ -2,97 +2,68 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35555C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6771C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04D27206F0
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B73206F0
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:00:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598461247;
-	bh=PK2AREGsgo2BJQkLoTxbptoSZnFMwBXWBdBmpLjVG8I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZfT2B2o7MvRrdhONvwWqgg0P98Rw6Slu8U0NWIi2KtWgeRJRK2Ajb4/3VWghigdq2
-	 6ICNIhEHXdZC/fzNnCO4e1tMiuKZmQFpGtZAy+u6nTjJdjqqB4y2tFJvEE4MWaO5QU
-	 nsKegGNmBoncSnsENEvl0uu5Kb6s4WhxMmVCi4pM=
+	s=default; t=1598461256;
+	bh=RnU9Q4Xdz50gqo0uAJq7I+ukQjkaoJk+xgR9olQlcJA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=mygXB6zXcTskpdlhJisEILsIcE8gaJcDQ8l/Rre3kWMWB8xjNePYrkIAD7e5ruNly
+	 o38Gd6dNbyVgRupEv7NHwu+Y880tSwMw4lgs0yKRIv/6Euqi+5Qr97nUlnpOWxqsVm
+	 Rirz0pm9R75GxS/LtkOSuzr6+ZCkbPxLd0bwT9jQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgHZRAo (ORCPT
+        id S1727104AbgHZRAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:00:44 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41933 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbgHZRAk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:00:40 -0400
-Received: by mail-ot1-f67.google.com with SMTP id a65so2070528otc.8;
-        Wed, 26 Aug 2020 10:00:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PK2AREGsgo2BJQkLoTxbptoSZnFMwBXWBdBmpLjVG8I=;
-        b=nwlyG10eRuy3mSZoU5VhwnbQG1JvPDN82fzO4Y4zZR2hQ+AStUCG+S4y6ExJbMBut/
-         40qg+4XTqqd4ofPf2AMzdiOaBhHO5rkcd/AyCW/2NndGdW2JPS27Hta0vKe6k0mrtw//
-         fkV1fWVtjr5ywj5ROm2ACH1zK328tyzl+hzAQgJRIIXRX8NNOdftJS0P9TqippCTEtGb
-         k7ZzRQ/xc6FMpyrOwlbMiP9cvDQv5C/YkqQ7CojIM9joGwErw8TcUbJHb14HoMJsw4HI
-         VcpX9CIHMlfP4NtOQ7oL6USYs34E1vTtkXPiOwoN+2JN8voNRfWjHnigwTSUvl2DG+b3
-         Dcqg==
-X-Gm-Message-State: AOAM533zTReSVj6ZKKtmgAhtqeKzhJ55ntUiOKEkRLPkVDXDVzLfsYfN
-        qrritDieDxDA58FnYawXO1wRrgxVw80JJ9k9h9k=
-X-Google-Smtp-Source: ABdhPJzmuAPF17O9pdrF64IuZb2lUyWVFmVfah1qh0Pr2tFPah79a2+KuSIS9LNFrK10E4CYrQcBaK4YUihkpasyw0g=
-X-Received: by 2002:a9d:5c06:: with SMTP id o6mr10580527otk.262.1598461239813;
- Wed, 26 Aug 2020 10:00:39 -0700 (PDT)
+        Wed, 26 Aug 2020 13:00:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726690AbgHZRAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 13:00:49 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A974206F0;
+        Wed, 26 Aug 2020 17:00:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598461248;
+        bh=RnU9Q4Xdz50gqo0uAJq7I+ukQjkaoJk+xgR9olQlcJA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mZvfBceBaSCEYkYoJDFbtl85vsrqwMgaWcB9R68IGJPppz9ULwB/faWycTcNNEupC
+         +BHAm6D5rRLAJOwbVsINhHWj9QhLcOqxd0uk+7I0oRZZnw+UM6ZNX5OwpqfSaiMgD4
+         JjH74naDARNp0cHiZLdBej/h0OzPN+bgPcB080TI=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     x86@kernel.org
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: [PATCH 0/2] selftests/x86: fsgsbase test updates
+Date:   Wed, 26 Aug 2020 10:00:44 -0700
+Message-Id: <cover.1598461151.git.luto@kernel.org>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-References: <20200826120421.44356-1-guilhem@barpilot.io> <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
- <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
- <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
- <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
- <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
- <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
- <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
- <CAJZ5v0j4FXH26rZCjM9Csd56skPVbRpM7iFcKYAFMmLFX54+bg@mail.gmail.com>
- <e9e6823d63fe2b9938e43a14c136b89aec0c503b.camel@gmail.com>
- <CAJZ5v0gPY+7YBeWwszoNBwsbKLFOEeuLaekdX62_gvbHXB8xoA@mail.gmail.com> <CAGX5Wg3bVpgaFXHb1=4ikGk0P+4=XRqROBU4pqw1mpsY06dbHQ@mail.gmail.com>
-In-Reply-To: <CAGX5Wg3bVpgaFXHb1=4ikGk0P+4=XRqROBU4pqw1mpsY06dbHQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 26 Aug 2020 19:00:28 +0200
-Message-ID: <CAJZ5v0gJscMWLsjCm_L6jCDdZ2hdRB2mPtUBSgd1va7Xm7GyVA@mail.gmail.com>
-Subject: Re: [PATCH] intel_idle: Add ICL support
-To:     Guilhem Lettron <guilhem@barpilot.io>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 6:46 PM Guilhem Lettron <guilhem@barpilot.io> wrote:
->
-> I've done more tests, maybe it can give you more hints.
-> I don't see that much differences between both (with and without
-> patches) in this cases.
+This fixes a minor bug and adds a test for the recent NULL pointer
+dereference.
 
-OK, thanks!
+Andy Lutomirski (2):
+  selftests/x86/fsgsbase: Reap a forgotten child
+  selftests/x86/fsgsbase: Test PTRACE_PEEKUSER for GSBASE with invalid
+    LDT GS
 
-I'm assuming that the topmost two sets of data are for the "without
-the patch" case whereas the other three correspond to the "with the
-patch" case.
+ tools/testing/selftests/x86/fsgsbase.c | 68 ++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
-If so, the processor clearly enters PC10 in both cases and the
-residency percentages are similar.
+-- 
+2.25.4
 
-The numbers of times the POLL state was selected in the first test
-look kind of unusual (relatively very large), but other than this the
-patch doesn't seem to make much of a difference, so I'm not going to
-apply it.
-
-Thanks!
