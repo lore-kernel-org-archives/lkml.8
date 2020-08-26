@@ -2,151 +2,98 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DCEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA3ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B69B20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:00:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="V70btNfX"
+	by mail.kernel.org (Postfix) with ESMTP id A952620786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:00:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598443254;
+	bh=WdolUUSPQwrh8Aj5TJ8h5qeAtgIkR7u9c5nE+npwIIY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=t55ojAO5j7WmSbWcOA3lK5IuN3YzC1TrXiLOzlphL2Jsp0AEHT9i5Nx89QVEYrkxU
+	 2fUswE+U3PoY6J6jLzjxuNeukpu/JZzqnQDP7gesHnxA8XA+QImf1FAr3rdcCgQlne
+	 M7HKYMrIzBkPLnKgr1plGa12DidhaTgyo992pBRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbgHZL7z (ORCPT
+        id S1729368AbgHZMAv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:59:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729171AbgHZL7x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:59:53 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3AC4C061574;
-        Wed, 26 Aug 2020 04:59:52 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Wed, 26 Aug 2020 08:00:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729363AbgHZMAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:00:10 -0400
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bc4D61TSvz9sPB;
-        Wed, 26 Aug 2020 21:59:50 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1598443190;
-        bh=GOzj1DPicMFxSUlas1Q1vx8Ws0Up4IWmSCJigxWCf3c=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=V70btNfX/PLjOnzqQvGO3b4JBQQrVQ+MYJhODoTs3ta63dpYfxgkjnEdefQDD9gKk
-         XlRlc5uqLNiplsIQuUTrp0oGH4oIWJNP9GVUJQPoT4FU5Q5a+O7aC9o98aVRCDwk0A
-         ODcN9kfK4IQHIeiyOdC0fDr1rCL0GJhchyRW7v77qgZvxXx+41peQWogcU11DF+5vn
-         XlnUoGwLtvdnpo014boZOVav604iYLNp0ZEYApFGfH3vXOhe44m+s8UBlKyGvwsK/2
-         EvwCBsggA12u7rX2osXIO5K7z6RTSUGtSqY3Lhvgfxd/QMaW+wIFPUC6W4Tf+LKzNm
-         w1ahRc3PBceew==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nicholas Piggin <npiggin@gmail.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Zefan Li <lizefan@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH v7 06/12] powerpc: inline huge vmap supported functions
-In-Reply-To: <20200825145753.529284-7-npiggin@gmail.com>
-References: <20200825145753.529284-1-npiggin@gmail.com> <20200825145753.529284-7-npiggin@gmail.com>
-Date:   Wed, 26 Aug 2020 21:59:49 +1000
-Message-ID: <87lfi1hb2i.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id D386C2080C;
+        Wed, 26 Aug 2020 12:00:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598443205;
+        bh=WdolUUSPQwrh8Aj5TJ8h5qeAtgIkR7u9c5nE+npwIIY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Qw1Rt0YmTj69jFWJ0biR73mZ980JOtuuj9zihJsBsJRTiPMfezuNNb2FQXeRTDFnN
+         Dtb+xQ58UwcBov1EjWGpb4pfi3b90IRJ/qZq9Vk40+Ql6T9JI0EV56LZxxaAbVKwjG
+         0fC9YtlfKviSR4UCsBKcf2OXdYrufDZ809xWnue0=
+Received: by mail-ot1-f47.google.com with SMTP id i11so1255096otr.5;
+        Wed, 26 Aug 2020 05:00:04 -0700 (PDT)
+X-Gm-Message-State: AOAM531pxbnjxCDwMUPdm0fG6xKBsR0eMACV62U8KTGZ1Nu+WQwltFlL
+        /vxFK/esfvY7MfqTO5iuErrfPIG9/K+axZH0eGA=
+X-Google-Smtp-Source: ABdhPJyRHJMIRG+/FJI73y2W6ECDWrCfnnurge8nTGaW0Q7CAiSYqL3nLbuQh1xgC0wevH+7nsqEBia2B/6cXtCsGvo=
+X-Received: by 2002:a9d:5189:: with SMTP id y9mr4290025otg.77.1598443204195;
+ Wed, 26 Aug 2020 05:00:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200826055150.2753.90553@ml01.vlan13.01.org> <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
+ <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com> <20200826114952.GA2375@gondor.apana.org.au>
+In-Reply-To: <20200826114952.GA2375@gondor.apana.org.au>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 26 Aug 2020 13:59:53 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
+Message-ID: <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
+Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Caleb Jorden <caljorden@hotmail.com>,
+        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicholas Piggin <npiggin@gmail.com> writes:
-> This allows unsupported levels to be constant folded away, and so
-> p4d_free_pud_page can be removed because it's no longer linked to.
+On Wed, 26 Aug 2020 at 13:50, Herbert Xu <herbert@gondor.apana.org.au> wrote:
 >
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> ---
+> On Wed, Aug 26, 2020 at 12:40:14PM +0200, Ard Biesheuvel wrote:
+> >
+> > It would be helpful if someone could explain for the non-mac80211
+> > enlightened readers how iwd's EAP-PEAPv0 + MSCHAPv2 support relies on
+> > the algif_aead socket interface, and which AEAD algorithms it uses. I
+> > assume this is part of libell?
 >
-> Ack or objection if this goes via the -mm tree? 
+> I see the problem.  libell/ell/checksum.c doesn't clear the MSG_MORE
+> flag before doing the recv(2).
+>
 
-Fine by me if it builds.
+But that code uses a hash not an aead, afaict.
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-
-cheers
-
-> diff --git a/arch/powerpc/include/asm/vmalloc.h b/arch/powerpc/include/asm/vmalloc.h
-> index 105abb73f075..3f0c153befb0 100644
-> --- a/arch/powerpc/include/asm/vmalloc.h
-> +++ b/arch/powerpc/include/asm/vmalloc.h
-> @@ -1,12 +1,25 @@
->  #ifndef _ASM_POWERPC_VMALLOC_H
->  #define _ASM_POWERPC_VMALLOC_H
->  
-> +#include <asm/mmu.h>
->  #include <asm/page.h>
->  
->  #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
-> -bool arch_vmap_p4d_supported(pgprot_t prot);
-> -bool arch_vmap_pud_supported(pgprot_t prot);
-> -bool arch_vmap_pmd_supported(pgprot_t prot);
-> +static inline bool arch_vmap_p4d_supported(pgprot_t prot)
-> +{
-> +	return false;
-> +}
-> +
-> +static inline bool arch_vmap_pud_supported(pgprot_t prot)
-> +{
-> +	/* HPT does not cope with large pages in the vmalloc area */
-> +	return radix_enabled();
-> +}
-> +
-> +static inline bool arch_vmap_pmd_supported(pgprot_t prot)
-> +{
-> +	return radix_enabled();
-> +}
->  #endif
->  
->  #endif /* _ASM_POWERPC_VMALLOC_H */
-> diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-> index eca83a50bf2e..27f5837cf145 100644
-> --- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-> +++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-> @@ -1134,22 +1134,6 @@ void radix__ptep_modify_prot_commit(struct vm_area_struct *vma,
->  	set_pte_at(mm, addr, ptep, pte);
->  }
->  
-> -bool arch_vmap_pud_supported(pgprot_t prot)
-> -{
-> -	/* HPT does not cope with large pages in the vmalloc area */
-> -	return radix_enabled();
-> -}
-> -
-> -bool arch_vmap_pmd_supported(pgprot_t prot)
-> -{
-> -	return radix_enabled();
-> -}
-> -
-> -int p4d_free_pud_page(p4d_t *p4d, unsigned long addr)
-> -{
-> -	return 0;
-> -}
-> -
->  int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
->  {
->  	pte_t *ptep = (pte_t *)pud;
-> @@ -1233,8 +1217,3 @@ int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
->  
->  	return 1;
->  }
-> -
-> -bool arch_vmap_p4d_supported(pgprot_t prot)
-> -{
-> -	return false;
-> -}
-> -- 
-> 2.23.0
+> I was hoping nobody out there was doing this but obviously I've
+> been proven wrong.
+>
+> So what I'm going to do is to specifically allow this case of
+> a string of sendmsg(2)'s with MSG_MORE folloed by a recvmsg(2)
+> in the same thread.  I'll add a WARN_ON_ONCE so user-space can
+> eventually be fixed.
+>
+> Cheers,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
