@@ -2,186 +2,99 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FA6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7179BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2272224D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2DA2224D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598451899;
+	bh=y/o8xTsCxJXwdFLg7PPBp4sPe/or6bDLtEoBE6yq7jM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=x8ujIUk+JctYlJOCT/d67T4/et8fR7n4qVftUsQHANtpP+nCmIGykScnzunVtQV7Q
+	 lPMvHUmDo89sMm8LWLVAYaYWXMcLCVre4qRq1k7gqIW3h9Bfpfejvz1pBy5jUJPwuC
+	 PaQhuy2k511lY4cs2JG7E4+jOA3bhT664Wj3kL0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgHZOYn (ORCPT
+        id S1728418AbgHZOY4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:24:43 -0400
-Received: from lucky1.263xmail.com ([211.157.147.135]:58546 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728381AbgHZOYd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:24:33 -0400
-Received: from localhost (unknown [192.168.167.69])
-        by lucky1.263xmail.com (Postfix) with ESMTP id C5F30A22F5;
-        Wed, 26 Aug 2020 22:24:22 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED: 0
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [103.29.142.67])
-        by smtp.263.net (postfix) whith ESMTP id P32155T139859905738496S1598451859689366_;
-        Wed, 26 Aug 2020 22:24:22 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <f83766c1e70417d8c8c857082aeefd14>
-X-RL-SENDER: algea.cao@rock-chips.com
-X-SENDER: algea.cao@rock-chips.com
-X-LOGIN-NAME: algea.cao@rock-chips.com
-X-FST-TO: mripard@kernel.org
-X-SENDER-IP: 103.29.142.67
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Algea Cao <algea.cao@rock-chips.com>
-To:     mripard@kernel.org, tzimmermann@suse.de,
-        linux-kernel@vger.kernel.org, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, maarten.lankhorst@linux.intel.com,
-        daniel@ffwll.ch, linux-rockchip@lists.infradead.org
-Cc:     Algea Cao <algea.cao@rock-chips.com>
-Subject: [PATCH] drm: Parse Colorimetry data block from EDID
-Date:   Wed, 26 Aug 2020 22:23:28 +0800
-Message-Id: <20200826142328.131144-1-algea.cao@rock-chips.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 26 Aug 2020 10:24:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728403AbgHZOYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:24:39 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31480221E2;
+        Wed, 26 Aug 2020 14:24:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598451879;
+        bh=y/o8xTsCxJXwdFLg7PPBp4sPe/or6bDLtEoBE6yq7jM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=wNnNhrT/OAhZMK+ndEUA3Enxu1eITO8pawK+T2TlZVYk6cwdyRiplvYNc5QGHE4q8
+         BN8ZQlG13QzHwdyf5CHAFT9hL1nliH5paahVUeBZPwsA22LidzEjZGqVxTxaNO5P4/
+         MaVHbLMf9NRjdGNkQd8tEtA6KsOWdUTNlP6tKaWI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0782A3522612; Wed, 26 Aug 2020 07:24:39 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 07:24:39 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
+        dave@stgolabs.net, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neeraj.iitr10@gmail.com, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>, vineethrp@gmail.com
+Subject: Re: [PATCH v4 -rcu 3/4] rcu/segcblist: Add counters to segcblist
+ datastructure
+Message-ID: <20200826142438.GO2855@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200825024842.3408659-1-joel@joelfernandes.org>
+ <20200825024842.3408659-4-joel@joelfernandes.org>
+ <20200825215338.GA16846@paulmck-ThinkPad-P72>
+ <20200825225103.GC579506@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825225103.GC579506@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CEA 861.3 spec adds colorimetry data block for HDMI.
-Parsing the block to get the colorimetry data from
-panel.
+On Tue, Aug 25, 2020 at 06:51:03PM -0400, Joel Fernandes wrote:
+> On Tue, Aug 25, 2020 at 02:53:38PM -0700, Paul E. McKenney wrote:
+> > On Mon, Aug 24, 2020 at 10:48:41PM -0400, Joel Fernandes (Google) wrote:
+> > > Add counting of segment lengths of segmented callback list.
+> > > 
+> > > This will be useful for a number of things such as knowing how big the
+> > > ready-to-execute segment have gotten. The immediate benefit is ability
+> > > to trace how the callbacks in the segmented callback list change.
+> > > 
+> > > Tested by profusely reading traces when segcblist counts updated.
+> > 
+> > Might I recommend a more repeatable and sustainable test methodology?
+> > (Sorry, couldn't resist, given that you left yourself wide open for
+> > that one...)
+> 
+> Ah, this message was from an older series :-(. I did test it with rcutorture
+> for many hours. But I forgot to update this commit message. :-(
 
-Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
----
+That is better.  Let me see if I can find a more targeted test from the
+old days...
 
- drivers/gpu/drm/drm_edid.c  | 45 +++++++++++++++++++++++++++++++++++++
- include/drm/drm_connector.h |  3 +++
- include/drm/drm_edid.h      | 14 ++++++++++++
- 3 files changed, 62 insertions(+)
+> I will respond to other comments soon, I am still stuck on the comment about
+> rcl.len and rcu_barrier interaction that you brought up in 1/4 and 2/4.
 
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 31496b6cfc56..67e607c04492 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -3223,6 +3223,7 @@ add_detailed_modes(struct drm_connector *connector, struct edid *edid,
- #define VIDEO_BLOCK     0x02
- #define VENDOR_BLOCK    0x03
- #define SPEAKER_BLOCK	0x04
-+#define COLORIMETRY_DATA_BLOCK		0x5
- #define HDR_STATIC_METADATA_BLOCK	0x6
- #define USE_EXTENDED_TAG 0x07
- #define EXT_VIDEO_CAPABILITY_BLOCK 0x00
-@@ -4309,6 +4310,48 @@ static void fixup_detailed_cea_mode_clock(struct drm_display_mode *mode)
- 	mode->clock = clock;
- }
- 
-+static bool cea_db_is_hdmi_colorimetry_data_block(const u8 *db)
-+{
-+	if (cea_db_tag(db) != USE_EXTENDED_TAG)
-+		return false;
-+
-+	if (db[1] != COLORIMETRY_DATA_BLOCK)
-+		return false;
-+
-+	if (cea_db_payload_len(db) < 2)
-+		return false;
-+
-+	return true;
-+}
-+
-+static void
-+drm_parse_colorimetry_data_block(struct drm_connector *connector, const u8 *db)
-+{
-+	struct drm_hdmi_info *info = &connector->display_info.hdmi;
-+
-+	if (db[2] & DRM_EDID_CLRMETRY_xvYCC_601)
-+		info->colorimetry |= DRM_EDID_CLRMETRY_xvYCC_601;
-+	if (db[2] & DRM_EDID_CLRMETRY_xvYCC_709)
-+		info->colorimetry |= DRM_EDID_CLRMETRY_xvYCC_709;
-+	if (db[2] & DRM_EDID_CLRMETRY_sYCC_601)
-+		info->colorimetry |= DRM_EDID_CLRMETRY_sYCC_601;
-+	if (db[2] & DRM_EDID_CLRMETRY_ADBYCC_601)
-+		info->colorimetry |= DRM_EDID_CLRMETRY_ADBYCC_601;
-+	if (db[2] & DRM_EDID_CLRMETRY_ADB_RGB)
-+		info->colorimetry |= DRM_EDID_CLRMETRY_ADB_RGB;
-+	if (db[2] & DRM_EDID_CLRMETRY_BT2020_CYCC)
-+		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_CYCC;
-+	if (db[2] & DRM_EDID_CLRMETRY_BT2020_YCC)
-+		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_YCC;
-+	if (db[2] & DRM_EDID_CLRMETRY_BT2020_RGB)
-+		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_RGB;
-+	/* Byte 4 Bit 7: DCI-P3 */
-+	if (db[3] & BIT(7))
-+		info->colorimetry |= DRM_EDID_CLRMETRY_DCI_P3;
-+
-+	DRM_DEBUG_KMS("Supported Colorimetry 0x%x\n", info->colorimetry);
-+}
-+
- static bool cea_db_is_hdmi_hdr_metadata_block(const u8 *db)
- {
- 	if (cea_db_tag(db) != USE_EXTENDED_TAG)
-@@ -4994,6 +5037,8 @@ static void drm_parse_cea_ext(struct drm_connector *connector,
- 			drm_parse_vcdb(connector, db);
- 		if (cea_db_is_hdmi_hdr_metadata_block(db))
- 			drm_parse_hdr_metadata_block(connector, db);
-+		if (cea_db_is_hdmi_colorimetry_data_block(db))
-+			drm_parse_colorimetry_data_block(connector, db);
- 	}
- }
- 
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index af145608b5ed..d599c3b9e881 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -207,6 +207,9 @@ struct drm_hdmi_info {
- 
- 	/** @y420_dc_modes: bitmap of deep color support index */
- 	u8 y420_dc_modes;
-+
-+	/* @colorimetry: bitmap of supported colorimetry modes */
-+	u16 colorimetry;
- };
- 
- /**
-diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
-index cfa4f5af49af..98fa78c2f82d 100644
---- a/include/drm/drm_edid.h
-+++ b/include/drm/drm_edid.h
-@@ -229,6 +229,20 @@ struct detailed_timing {
- 				    DRM_EDID_YCBCR420_DC_36 | \
- 				    DRM_EDID_YCBCR420_DC_30)
- 
-+/*
-+ * Supported Colorimetry from colorimetry data block
-+ * as per CEA 861-G spec
-+ */
-+#define DRM_EDID_CLRMETRY_xvYCC_601   (1 << 0)
-+#define DRM_EDID_CLRMETRY_xvYCC_709   (1 << 1)
-+#define DRM_EDID_CLRMETRY_sYCC_601    (1 << 2)
-+#define DRM_EDID_CLRMETRY_ADBYCC_601  (1 << 3)
-+#define DRM_EDID_CLRMETRY_ADB_RGB     (1 << 4)
-+#define DRM_EDID_CLRMETRY_BT2020_CYCC (1 << 5)
-+#define DRM_EDID_CLRMETRY_BT2020_YCC  (1 << 6)
-+#define DRM_EDID_CLRMETRY_BT2020_RGB  (1 << 7)
-+#define DRM_EDID_CLRMETRY_DCI_P3      (1 << 15)
-+
- /* ELD Header Block */
- #define DRM_ELD_HEADER_BLOCK_SIZE	4
- 
--- 
-2.25.1
+Hoping my more recent replies help.  If not, you know where to find me.
 
-
-
+							Thanx, Paul
