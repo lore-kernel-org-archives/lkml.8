@@ -2,136 +2,74 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7166EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C14DC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8C5206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:53:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="URLT5+Gr"
+	by mail.kernel.org (Postfix) with ESMTP id 47C42206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbgHZGxZ (ORCPT
+        id S1726894AbgHZGyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44398 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726777AbgHZGxR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:53:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8830C061574;
-        Tue, 25 Aug 2020 23:53:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=SGTWnq2AQ38kIvWB9VYuxXbeJQGBBC+aSlZ9ZuRIk/o=; b=URLT5+GrMtH6TU2ggQIB9e3cS1
-        NReyEbguY4kT689u1FD6QTnTjjHtB3ICFWoXEGYD1P9Al01FBX3cHl2LzBPjJb3a4HrR5IXUNQTWL
-        N/TF5wdk4b4ChbWXZzp92xHKW5A7btN5q2tDpbyfWzsga6/DVXyHZ2+pwYJCXzvtlY1kOZ++cB57N
-        PilGLY0N++OTu0+mZOpIfUVeMIwqiyPI6H0E8R2kW6yWAFpe+1QcLyf7qixn6KtWXlfLVPwYlW3Tu
-        hHyIC6EAKtOANuhPWu4pLgO7qpdsnjvnFOsaAv30IirDcv1d4PT8kNX7W+/y89qe0KuRVYwItRTT1
-        kD/KsRhg==;
-Received: from 213-225-6-196.nat.highway.a1.net ([213.225.6.196] helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kApJ2-0003Lc-Dy; Wed, 26 Aug 2020 06:53:12 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
-Subject: [PATCH 12/19] md: use __register_blkdev to allocate devices on demand
-Date:   Wed, 26 Aug 2020 08:24:39 +0200
-Message-Id: <20200826062446.31860-13-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200826062446.31860-1-hch@lst.de>
-References: <20200826062446.31860-1-hch@lst.de>
+        Wed, 26 Aug 2020 02:54:07 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56972 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726214AbgHZGyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 02:54:04 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6A604E763DA31AF03A3C;
+        Wed, 26 Aug 2020 14:54:02 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Wed, 26 Aug 2020
+ 14:53:51 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <masahiroy@kernel.org>,
+        <bjorn@mork.no>, <miguel@det.uvigo.gal>
+CC:     <linux-usb@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] net: cdc_ncm: Fix build error
+Date:   Wed, 26 Aug 2020 14:52:31 +0800
+Message-ID: <20200826065231.14344-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the simpler mechanism attached to major_name to allocate a brd device
-when a currently unregistered minor is accessed.
+If USB_NET_CDC_NCM is y and USB_NET_CDCETHER is m, build fails:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+drivers/net/usb/cdc_ncm.o:(.rodata+0x1d8): undefined reference to `usbnet_cdc_update_filter'
+
+Select USB_NET_CDCETHER for USB_NET_CDC_NCM to fix this.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e10dcb1b6ba7 ("net: cdc_ncm: hook into set_rx_mode to admit multicast traffic")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/md/md.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ drivers/net/usb/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 60727820702300..3c4ef862ac5fb0 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -5766,11 +5766,12 @@ static int md_alloc(dev_t dev, char *name)
- 	return error;
- }
- 
--static struct kobject *md_probe(dev_t dev, int *part, void *data)
-+static void md_probe(dev_t dev)
- {
-+	if (MAJOR(dev) == MD_MAJOR && MINOR(dev) >= 512)
-+		return;
- 	if (create_on_open)
- 		md_alloc(dev, NULL);
--	return NULL;
- }
- 
- static int add_named_array(const char *val, const struct kernel_param *kp)
-@@ -6536,7 +6537,7 @@ static void autorun_devices(int part)
- 			break;
- 		}
- 
--		md_probe(dev, NULL, NULL);
-+		md_probe(dev);
- 		mddev = mddev_find(dev);
- 		if (!mddev || !mddev->gendisk) {
- 			if (mddev)
-@@ -9548,18 +9549,15 @@ static int __init md_init(void)
- 	if (!md_misc_wq)
- 		goto err_rdev_misc_wq;
- 
--	if ((ret = register_blkdev(MD_MAJOR, "md")) < 0)
-+	ret = __register_blkdev(MD_MAJOR, "md", md_probe);
-+	if (ret < 0)
- 		goto err_md;
- 
--	if ((ret = register_blkdev(0, "mdp")) < 0)
-+	ret = __register_blkdev(0, "mdp", md_probe);
-+	if (ret < 0)
- 		goto err_mdp;
- 	mdp_major = ret;
- 
--	blk_register_region(MKDEV(MD_MAJOR, 0), 512, THIS_MODULE,
--			    md_probe, NULL, NULL);
--	blk_register_region(MKDEV(mdp_major, 0), 1UL<<MINORBITS, THIS_MODULE,
--			    md_probe, NULL, NULL);
--
- 	register_reboot_notifier(&md_notifier);
- 	raid_table_header = register_sysctl_table(raid_root_table);
- 
-@@ -9826,9 +9824,6 @@ static __exit void md_exit(void)
- 	struct list_head *tmp;
- 	int delay = 1;
- 
--	blk_unregister_region(MKDEV(MD_MAJOR,0), 512);
--	blk_unregister_region(MKDEV(mdp_major,0), 1U << MINORBITS);
--
- 	unregister_blkdev(MD_MAJOR,"md");
- 	unregister_blkdev(mdp_major, "mdp");
- 	unregister_reboot_notifier(&md_notifier);
+diff --git a/drivers/net/usb/Kconfig b/drivers/net/usb/Kconfig
+index a7fbc3ccd29e..c7bcfca7d70b 100644
+--- a/drivers/net/usb/Kconfig
++++ b/drivers/net/usb/Kconfig
+@@ -252,6 +252,7 @@ config USB_NET_CDC_EEM
+ config USB_NET_CDC_NCM
+ 	tristate "CDC NCM support"
+ 	depends on USB_USBNET
++	select USB_NET_CDCETHER
+ 	default y
+ 	help
+ 	  This driver provides support for CDC NCM (Network Control Model
 -- 
-2.28.0
+2.17.1
+
 
