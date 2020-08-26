@@ -2,173 +2,159 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD6562075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:22:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1002075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:22:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="VFFFdjmD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GIGN8wX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgHZPWK (ORCPT
+        id S1727902AbgHZPW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:22:10 -0400
-Received: from mail-bn8nam12on2042.outbound.protection.outlook.com ([40.107.237.42]:59873
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726999AbgHZPWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:22:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nsTxwI8hYSMntIpmjHCqrFl1RIKSqLy5VMJ80oSdqZTAww+km+AGimMmXzcIOqVzkTLNRBdwDXoEe2dsBcBkzNHOY5QeSafkL3CSW9/hcju38ZOrZQKLFgHBexjmepEqvO0+y2wJwsIJJmEi8v7Yz2hoQKJQjf8G+xAtY20m4fXdvwvXdqzC4UlMBH4cPmwa6yqt6gz/ABoXdz8JYgFI5s292plQbx+FIod/UMbYRcyxAw7T9UY4K7xmU5WhHxE1LHSzniPgOHACxrKFUMvzq37ERPCcC0y5bDl+hVaGuo267tghLmLkyRZ/CjEpO+3fg8edxqGIs3cgUbSLxqAwGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6tQHKdGudG23SIJjjBh+uLES2iq+PgXhlz8izbCKPf4=;
- b=asgjNwkTkwLvNbBdnk6AT+pjCUU4L3fLHAleNTg3fQQoCR0m3xurEBCm2DJcXcQnVfBpJsdQmdLTNpc6JYSNCPzqAWvR+jRgk6G0R5omWiz8XyN9zIk9tCDW6A1wieHHd73iojhp0KZ1f+MUcfYOnMSJtabEEt+Ub99X/OVoQnG+IwqYVu8Q9RK1180DldaEHAYBymITp4dBX7mS4LocCb8ql7pO9UYEQf6eRwZtXKPe4o6qhqTG/kfkGukLvdGjUaU2EuW9/BSghu9QYI++ZLYXyTSpiyFYr/P0ve3PICVwFw1zOOdh4iAcCnbBc9CufJU3QmStfkFyueSAs06YCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Wed, 26 Aug 2020 11:22:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726999AbgHZPWM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 11:22:12 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2B2C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 08:22:11 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id k1so1160594pfu.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 08:22:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6tQHKdGudG23SIJjjBh+uLES2iq+PgXhlz8izbCKPf4=;
- b=VFFFdjmD97NI6MdVA2evm4NW6wc9wn/aDKgclXUEL3wbCfcbQUYW8KNqo7BtDwehTntTYqwoP4NoMoD46NOOMG6fs/78dQboBYctQWmGwfdtxk+cODbRBYpbp4lNf5VcdYLh4idJsIO+MWBWUligQRto6yczjRQU40kfacCTDE4=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com (2603:10b6:802:2e::31)
- by SA0PR12MB4574.namprd12.prod.outlook.com (2603:10b6:806:94::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Wed, 26 Aug
- 2020 15:22:03 +0000
-Received: from SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::d548:1236:cb4f:1be9]) by SN1PR12MB2414.namprd12.prod.outlook.com
- ([fe80::d548:1236:cb4f:1be9%7]) with mapi id 15.20.3305.032; Wed, 26 Aug 2020
- 15:22:03 +0000
-Subject: Re: [PATCH 0/2] iommu/amd: Fix IOMMUv2 devices when SME is active
-To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "Huang, Ray" <ray.huang@amd.com>
-Cc:     "jroedel@suse.de" <jroedel@suse.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200824105415.21000-1-joro@8bytes.org>
- <MN2PR12MB4488D6B7BBF98845DF796E0BF7540@MN2PR12MB4488.namprd12.prod.outlook.com>
-From:   Felix Kuehling <felix.kuehling@amd.com>
-Message-ID: <34db343f-cd23-09af-3bc5-29b9d385f85d@amd.com>
-Date:   Wed, 26 Aug 2020 11:22:01 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <MN2PR12MB4488D6B7BBF98845DF796E0BF7540@MN2PR12MB4488.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: YT1PR01CA0042.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2e::11) To SN1PR12MB2414.namprd12.prod.outlook.com
- (2603:10b6:802:2e::31)
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vtJDwZCH/3FF1e3t+ULJa3AUehUyh5L1H4fEzIfmn4o=;
+        b=GIGN8wX3pyjKhCF0wAkRfMN1el9RjJWFj8wzMB0EPBzLhBY51FePhM2oaxSjBktdec
+         RDZDUzX5TFXl/ymZSVgMFbtiqSqjXdFJv0OmSwVPBuLjXNQaSaxW/gsV3N3KUXtHSpXZ
+         MIPBqbugEmDk8K+4S4vugfFpV7QHbzMIaOO1g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vtJDwZCH/3FF1e3t+ULJa3AUehUyh5L1H4fEzIfmn4o=;
+        b=cKieQzVOoq7CyYxLViGyvbn5qoVCpfB74SYGgv6DbUTdt7FHkDf8aBYkEexHnF60lp
+         TMlZDltFDg+MYRsEulvvflgjX+T8ciLeCah7oJbUAU1CTWFGhxBWtjKF7dht/YNLNlVT
+         EzdU76XraQDIDUJIUQpooIc7dc8ZxmS2o/XOjPTV1C6OZ/VbRpR6AvtKIBRwpAfgFs50
+         mpyfWP0Rp4JwbuVJma8L/Nsa4hjOZopJAGEWvZZtfAGOjZH5D87ngr/tb/+X0kh0qetJ
+         7OBgUcKl0VGeyTjWhyFjOupp+6Rp0RNG4ImShwxvoT1BrSoO6v81N3V35BO7zxLKKKAH
+         LX4g==
+X-Gm-Message-State: AOAM530zLRLkZWhsA59kGFLA6JFL9ce3ZNBMS1Tf0gm3rNXSic6X6aQM
+        Y4RlIhAYO3cwhzlyZpn4z1whuPu7VrEWBw==
+X-Google-Smtp-Source: ABdhPJzLyHWcSj7Vm+MuzdkYBxrO9j5DgXJEwOBbTsbHaZtpPhDC5bH383FmCZxfzvk8bd4r7nwv+A==
+X-Received: by 2002:a63:330c:: with SMTP id z12mr11048145pgz.46.1598455331205;
+        Wed, 26 Aug 2020 08:22:11 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id ck3sm2319962pjb.20.2020.08.26.08.22.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 08:22:10 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 08:22:09 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        clang-built-linux@googlegroups.com, stable@vger.kernel.org,
+        Andy Lavr <andy.lavr@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Joe Perches <joe@perches.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
+Message-ID: <202008260821.CF6D817B36@keescook>
+References: <20200825140001.2941001-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by YT1PR01CA0042.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2e::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 15:22:02 +0000
-X-Originating-IP: [142.116.113.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 37f73252-70fe-4f43-b178-08d849d3c900
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4574:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SA0PR12MB4574569FD87929C1ED26302C92540@SA0PR12MB4574.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RdU+IID6MzxhezuvM/Nt8Tldf5B6Ks979awK+dfVt1N7SaDciHkp9cmfT9u6RqOgVTAXGxPSon0jat0kkjVrjEi1MvPwPiCJwOdoIqX18NHSm9tQO0dtamLFBnODh+DwdLASsJZx7yBV6arXoSaGLn6ZxZoFino5I8t4Jh0jj6mfcSTTos0Ovldzko5lw+/GwGSF1QpDZkjX4pYD0i2EwG3BYCNtc2Hab+tApsuvR2PQ+xESLC9k/+FvFHf1tLMSaYcxXtIQo9WQ4ggMPaK/PrATMWpwrbZlXrEBP550b4CVEPnJ2V+ksMA/DRadtW9YUZLmJdZRog/rV9c7kgH200uRt7o7mvaVtyNXRevqBSxHkC1Odb2y4qOELpt+1nth
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2414.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(376002)(366004)(136003)(346002)(396003)(6636002)(110136005)(2906002)(8676002)(86362001)(4326008)(31696002)(478600001)(316002)(6486002)(16576012)(8936002)(2616005)(36756003)(186003)(83380400001)(66476007)(31686004)(66946007)(52116002)(54906003)(5660300002)(26005)(66556008)(44832011)(956004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: l9sh78XTEvu4Gyy7ZjsQxcoXQ297MchS0ffLybLKoxiN4R3+0KFwnC6t2PvS5/3+5xKCqrbZV4b73dDjGe7Khdc8KK1HA1AVavChiMaSLLhgjJjBkzRMZvqU14bDGOfdM8uofcI1xtz1/3ICNPxaP/3Zv58HRvi3+vynF7uWu9vb2qFJ3PYbpj4+qVAPmGt2vwN1qrxMTk/79HFWikzPvLKBDDY5jzO2v4/I8ucSTsjPX7lro2SBG8+YkICcCqU1J3/PJ4oajHAhaGS3mI/iyGpL72z9mVQylv9d/5mDYqPsHF1NhGDyVrL3vUjwqra0dqI5SNQaA2FBnh82rAyShE9DIgCEY4FsjN3ibOJCROxRgrz4jnnUEWjM85tIajxg0JApFk2DOIAF8JpJ7pI/Or58mgtziktRXsY4WTyAU5QdR5KTWHmWPWnJtgmBD6rdmy2ZYnp8NC8Dprdf0ITk82kcu2lzAPfa9J8XcfU7/OJNKBBF0KuPmSNXf47GfRRx4F28EV3UpjXohw8KVxeuoV+BZPYS6G+nkseEeyguJ4hA6AWYc6WPdCDoxJ/j47EHFMcLY7kpkcNdeLzhmYXGbXm/CMbB05A3lXQK4/vCvdpNO1+plzU87npTUEEWfpmA/JLRUuqmAJquevXth4GjwQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37f73252-70fe-4f43-b178-08d849d3c900
-X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2414.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 15:22:03.4286
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uBj+JI6DJknJRqEHHVFJxhsJZiwZn3aLTflZMEjKK4qYC5HEs+4I+ed6z73NKhqLg7Znt2JvCfWGpv0SxtF5SA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4574
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825140001.2941001-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+Ray]
+On Tue, Aug 25, 2020 at 07:00:00AM -0700, Nick Desaulniers wrote:
+> LLVM implemented a recent "libcall optimization" that lowers calls to
+> `sprintf(dest, "%s", str)` where the return value is used to
+> `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+> in parsing format strings.  `stpcpy` is just like `strcpy` except it
+> returns the pointer to the new tail of `dest`.  This optimization was
+> introduced into clang-12.
+> 
+> Implement this so that we don't observe linkage failures due to missing
+> symbol definitions for `stpcpy`.
+> 
+> Similar to last year's fire drill with:
+> commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
+> 
+> The kernel is somewhere between a "freestanding" environment (no full libc)
+> and "hosted" environment (many symbols from libc exist with the same
+> type, function signature, and semantics).
+> 
+> As H. Peter Anvin notes, there's not really a great way to inform the
+> compiler that you're targeting a freestanding environment but would like
+> to opt-in to some libcall optimizations (see pr/47280 below), rather than
+> opt-out.
+> 
+> Arvind notes, -fno-builtin-* behaves slightly differently between GCC
+> and Clang, and Clang is missing many __builtin_* definitions, which I
+> consider a bug in Clang and am working on fixing.
+> 
+> Masahiro summarizes the subtle distinction between compilers justly:
+>   To prevent transformation from foo() into bar(), there are two ways in
+>   Clang to do that; -fno-builtin-foo, and -fno-builtin-bar.  There is
+>   only one in GCC; -fno-buitin-foo.
+> 
+> (Any difference in that behavior in Clang is likely a bug from a missing
+> __builtin_* definition.)
+> 
+> Masahiro also notes:
+>   We want to disable optimization from foo() to bar(),
+>   but we may still benefit from the optimization from
+>   foo() into something else. If GCC implements the same transform, we
+>   would run into a problem because it is not -fno-builtin-bar, but
+>   -fno-builtin-foo that disables that optimization.
+> 
+>   In this regard, -fno-builtin-foo would be more future-proof than
+>   -fno-built-bar, but -fno-builtin-foo is still potentially overkill. We
+>   may want to prevent calls from foo() being optimized into calls to
+>   bar(), but we still may want other optimization on calls to foo().
+> 
+> It seems that compilers today don't quite provide the fine grain control
+> over which libcall optimizations pseudo-freestanding environments would
+> prefer.
+> 
+> Finally, Kees notes that this interface is unsafe, so we should not
+> encourage its use.  As such, I've removed the declaration from any
+> header, but it still needs to be exported to avoid linkage errors in
+> modules.
+> 
+> Cc: stable@vger.kernel.org
+> Link: https://bugs.llvm.org/show_bug.cgi?id=47162
+> Link: https://bugs.llvm.org/show_bug.cgi?id=47280
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1126
+> Link: https://man7.org/linux/man-pages/man3/stpcpy.3.html
+> Link: https://pubs.opengroup.org/onlinepubs/9699919799/functions/stpcpy.html
+> Link: https://reviews.llvm.org/D85963
+> Suggested-by: Andy Lavr <andy.lavr@gmail.com>
+> Suggested-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Suggested-by: Joe Perches <joe@perches.com>
+> Suggested-by: Masahiro Yamada <masahiroy@kernel.org>
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Reported-by: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 
+Acked-by: Kees Cook <keescook@chromium.org>
 
-Thanks for the heads up. Currently KFD won't work on APUs when IOMMUv2
-is disabled. But Ray is working on fallbacks that will allow KFD to work
-on APUs even without IOMMUv2, similar to our dGPUs. Along with changes
-in ROCm user mode, those fallbacks are necessary for making ROCm on APUs
-generally useful.
-
-
-How common is SME on typical PCs or laptops that would use AMD APUs?
-
-
-Alex, do you know if anyone has tested amdgpu on an APU with SME
-enabled? Is this considered something we support?
-
-
-Thanks,
-  Felix
-
-
-Am 2020-08-26 um 10:14 a.m. schrieb Deucher, Alexander:
->
-> [AMD Official Use Only - Internal Distribution Only]
->
->
-> + Felix
-> ------------------------------------------------------------------------
-> *From:* Joerg Roedel <joro@8bytes.org>
-> *Sent:* Monday, August 24, 2020 6:54 AM
-> *To:* iommu@lists.linux-foundation.org <iommu@lists.linux-foundation.org>
-> *Cc:* Joerg Roedel <joro@8bytes.org>; jroedel@suse.de
-> <jroedel@suse.de>; Lendacky, Thomas <Thomas.Lendacky@amd.com>;
-> Suthikulpanit, Suravee <Suravee.Suthikulpanit@amd.com>; Deucher,
-> Alexander <Alexander.Deucher@amd.com>; linux-kernel@vger.kernel.org
-> <linux-kernel@vger.kernel.org>
-> *Subject:* [PATCH 0/2] iommu/amd: Fix IOMMUv2 devices when SME is active
->  
-> From: Joerg Roedel <jroedel@suse.de>
->
-> Hi,
->
-> Some IOMMUv2 capable devices do not work correctly when SME is
-> active, because their DMA mask does not include the encryption bit, so
-> that they can not DMA to encrypted memory directly.
->
-> The IOMMU can jump in here, but the AMD IOMMU driver puts IOMMUv2
-> capable devices into an identity mapped domain. Fix that by not
-> forcing an identity mapped domain on devices when SME is active and
-> forbid using their IOMMUv2 functionality.
->
-> Please review.
->
-> Thanks,
->
->         Joerg
->
-> Joerg Roedel (2):
->   iommu/amd: Do not force direct mapping when SME is active
->   iommu/amd: Do not use IOMMUv2 functionality when SME is active
->
->  drivers/iommu/amd/iommu.c    | 7 ++++++-
->  drivers/iommu/amd/iommu_v2.c | 7 +++++++
->  2 files changed, 13 insertions(+), 1 deletion(-)
->
-> -- 
-> 2.28.0
->
+-- 
+Kees Cook
