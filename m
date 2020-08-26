@@ -2,123 +2,112 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 377E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAA3221741
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598435451;
-	bh=flqfdinl/qRnKOjzS9tis3TK7zjuqgYHmK53RRzGca8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PnWcJ1SYaoHKev7uyWWAHQmgm9kkZNJ0E4fHK3uQnpiJWVdKntXzRvXgDMmCyX5CT
-	 iDfR7C9o7rpWIM8qi+HtBsQx2DQeHfiMcvEmnrCNlTJOiAciTtyKa3NOtC5nY1eAjg
-	 S8nAhSgv7g1c8a5H8yFyGYvxyx+L1lyCh9IT8xXg=
+	by mail.kernel.org (Postfix) with ESMTP id EE8852067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:51:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dUYqtN2S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbgHZJuu (ORCPT
+        id S1728115AbgHZJvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:50:50 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41949 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727997AbgHZJut (ORCPT
+        Wed, 26 Aug 2020 05:51:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728055AbgHZJvw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:50:49 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p17so1142520wrj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:50:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=XYRj2v7R5LZk+33zWoDyl+Re6PBI0A19OrU7pGYabjI=;
-        b=Q61lvIPv+Mb13FBVAyoqdqcW50jZS+XekIhpOtWxvGxXv9P5ELYR+dK8xhyoC2Qmup
-         WQdnFRqcjQhcYsugmT6shCxPkqt6OJ4YpVDJBZipHvNlVRRtLhAFEoCi9EkDTfYsUmyW
-         Nv/dTx6RQ+LIv5nYFH3waVIZgIBKpIOTjvD26kqznCXWpGeXnPiXwnWwN4Y/rL4C18AM
-         kwWID0AFwNsfCbuZuZv2naGbq1ijMd6pSUUc6/SzNVR7EsXOgpOjOKgGq9q958tJCiuO
-         bpMNTGpTlDAzEbgFjb1NoEZ9e8zub4Mg61TY0OUn6hKqin9F7UhBUXVs0ly0IH0mPZDX
-         pwyw==
-X-Gm-Message-State: AOAM531sn86tNFIXiYLQOF6hjHKCrVA/YidKNzrJCBani/tL44yPyy70
-        If8QdP9XAX1OJ3OSJbjlSlg=
-X-Google-Smtp-Source: ABdhPJyWu0V1esE6oDyreBUd1DUUpYrwKeqiun61wKB0Gr2F9LIQxVUafOqdYLIn2weWfK2GyZJQPA==
-X-Received: by 2002:adf:a106:: with SMTP id o6mr14689307wro.1.1598435447191;
-        Wed, 26 Aug 2020 02:50:47 -0700 (PDT)
-Received: from pi3 ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id k24sm3964995wmj.19.2020.08.26.02.50.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 02:50:46 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 11:50:44 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>, thomas.langer@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
-Subject: Re: [PATCH v1 0/9] extcon: extcon-ptn5150: Add the USB external
- connector support
-Message-ID: <20200826095044.GA12835@pi3>
-References: <20200818065727.50520-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20200818084044.GD1891694@smile.fi.intel.com>
- <69e13a74-8b8d-cbc0-915d-ce289e7d4a70@linux.intel.com>
- <CAHp75VfwBnDgR6WR_On1nh+dX4meWrX1Q-CiUKqkV39=o2m5Hg@mail.gmail.com>
- <b9187c39-8d94-6b41-9e1c-b95161b17c1c@linux.intel.com>
- <20200825081935.GE189773@kuha.fi.intel.com>
- <bc66fcec-fa52-71a3-57d1-514a4d716605@linux.intel.com>
- <20200826091804.GF1891694@smile.fi.intel.com>
+        Wed, 26 Aug 2020 05:51:52 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C67BC061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=VEw0fSExpNbRt5vwrktYz/cnO18y6hD3RYPNSwCk5go=; b=dUYqtN2SHDmWh1OIFlhhSLRHI9
+        NCN4t7qkFgMkv/L9dwV+EsRdlXRkHTf7RId7iYueSJrYCLXCewQPvoChzk4352DcthUd2+63dM/rj
+        wuqMc0vXfQl89wn0u9yVcTBVIE3NCphfVRr8GCQhN+waIe7A14QnhowcljmA9hCNxDeWEPH11NXWV
+        a3LNhXVsGgMZrbUuylg0NVqAohOL/f6WQjQAJsB/D9smOQe8LebiL7bquTv0tcBb0boOuW7Hymf/8
+        tHr/uePsi8AIuTRxWUrGYjWYPNsR+CUVoxjW8+MESH0WsneF26bwlFa17MyHbQwgp1kpgQsPEnGW9
+        a4vIlihg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAs5p-00071s-OH; Wed, 26 Aug 2020 09:51:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 17FEC301A66;
+        Wed, 26 Aug 2020 11:51:45 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F09FF2BF6E0F8; Wed, 26 Aug 2020 11:51:44 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 11:51:44 +0200
+From:   peterz@infradead.org
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     syzbot <syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com>,
+        fweisbec@gmail.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Subject: Re: INFO: rcu detected stall in smp_call_function
+Message-ID: <20200826095144.GD1362448@hirez.programming.kicks-ass.net>
+References: <000000000000903d5805ab908fc4@google.com>
+ <20200729125811.GA70158@hirez.programming.kicks-ass.net>
+ <20200825132411.GR35926@hirez.programming.kicks-ass.net>
+ <20200825154841.GQ2855@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200826091804.GF1891694@smile.fi.intel.com>
+In-Reply-To: <20200825154841.GQ2855@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:18:04PM +0300, Andy Shevchenko wrote:
-> On Wed, Aug 26, 2020 at 10:51:37AM +0800, Ramuthevar, Vadivel MuruganX wrote:
-> > On 25/8/2020 4:19 pm, Heikki Krogerus wrote:
-> > > On Wed, Aug 19, 2020 at 04:45:38PM +0800, Ramuthevar, Vadivel MuruganX wrote:
-> > > > On 19/8/2020 3:55 pm, Andy Shevchenko wrote:
-> > > > > On Wed, Aug 19, 2020 at 8:38 AM Ramuthevar, Vadivel MuruganX
-> > > > > <vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
-> > > > > > On 18/8/2020 4:40 pm, Andy Shevchenko wrote:
-> > > > > > > On Tue, Aug 18, 2020 at 02:57:18PM +0800, Ramuthevar,Vadivel MuruganX wrote:
-> > > > > > > > USB external connector chip PTN5150 used on the Intel LGM SoC
-> > > > > > > > boards to detect the USB type and connection.
-> > > > > > > Internally I meant you can send cleanups, but couple of patches here are the
-> > > > > > > features and were still under discussion... But here we are.
-> > > > > > 
-> > > > > > you mean asking us to implement the Heikki suggested as below..
-> > > > > > 
-> > > > > > Heikki Krogerus: register the port and the partner attached to it with
-> > > > > > the USB Type-C connector class in the driver. Is my understaanding
-> > > > > > right? if not, please explain it. Thanks!
-> > > > > 
-> > > > > When you mention somebody, don't forget to Cc them (now done by me).
-> > > > Sure, Thank you
-> > > 
-> > > So the patches 1-5 are fine. The rest needs to be rewritten.
-> > Already Krzysztof submitted all the patches and got approved, so we started
-> > sending only one patch which support to Intel LGM SoC based boards, Thanks!
+On Tue, Aug 25, 2020 at 08:48:41AM -0700, Paul E. McKenney wrote:
+
+> > Paul, I wanted to use this function, but found it has very weird
+> > semantics.
+> > 
+> > Why do you need it to (remotely) call @func when p is current? The user
+> > in rcu_print_task_stall() explicitly bails in this case, and the other
+> > in rcu_wait_for_one_reader() will attempt an IPI.
 > 
-> I'm not sure what you meant by above.
+> Good question.  Let me look at the invocations:
 > 
-> Krzysztof suggested you to squash all first patches into 1 (or two) and he
-> approves it. What you have to do is follow his advise and send v2 where it will
-> be one (or two) patch with his tag attached.
+> o	trc_wait_for_one_reader() bails on current before
+> 	invoking try_invoke_on_locked_down_task():
 > 
-> Krzysztof, is it correct what I'm saying?
+> 	if (t == current) {
+> 		t->trc_reader_checked = true;
+> 		trc_del_holdout(t);
+> 		WARN_ON_ONCE(t->trc_reader_nesting);
+> 		return;
+> 	}
+> 
+> o	rcu_print_task_stall() might well invoke on the current task,
+> 	low though the probability of this happening might be.	(The task
+> 	has to be preempted within an RCU read-side critical section
+> 	and resume in time for the scheduling-clock irq that will report
+> 	the RCU CPU stall to interrupt it.)
+> 
+> 	And you are right, no point in an IPI in this case.
+> 
+> > Would it be possible to change this function to:
+> > 
+> >  - blocked task: call @func with p->pi_lock held
+> >  - queued, !running task: call @func with rq->lock held
+> >  - running task: fail.
+> > 
+> > ?
+> 
+> Why not a direct call in the current-task case, perhaps as follows,
+> including your change above?  This would allow the RCU CPU stall
+> case to work naturally and without the IPI.
+> 
+> Would that work for your use case?
 
-Yes, correct. I guess Vadivel mentioned my patchset which was sent some
-days before and recently got applied into extcon tree.
-
-I think there is no misunderstanding here.
-
-Best regards,
-Krzysztof
-
+It would in fact, but at this point I'd almost be inclined to stick the
+IPI in as well. But small steps I suppose. So yes.
