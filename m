@@ -2,33 +2,34 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADEFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F09BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA8E2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B0542078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:45:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Em1a3mFm"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="A9MOVtUX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbgHZSog (ORCPT
+        id S1727784AbgHZSpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:44:36 -0400
-Received: from mail-bn8nam11on2042.outbound.protection.outlook.com ([40.107.236.42]:13729
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        Wed, 26 Aug 2020 14:45:00 -0400
+Received: from mail-mw2nam10on2061.outbound.protection.outlook.com ([40.107.94.61]:1856
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726786AbgHZSof (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:44:35 -0400
+        id S1726786AbgHZSo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:44:56 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=klGyn4ySlw25xjvjWxzYcgAv132Z9CKzslmv3qs0YG4NPJDnACAiaINxtXTj1Grnldex+fJ+HXlMbB4AfJUFwCt3DPMoXqkk6Zl54cknR2hei3FGD+AKQ6s8Q/mTBuB1Z7bHZG1QCXBFhqgGAlvmxXalZuCIGO3vH7gP3WGIcLB/CsJCdmcE6+GbinYp+d51xnf8zxldzOsUP9HLNkdkz+DtsYk31VcDkYGnfaY3jk5lkeHSof06vDxzymtpaWGbgHWFieSSLQG+i9a83JZ1l2/wN52N/zOSyhOapHUnRGq46oqDHfPmBTmmeY7SBSE1CKpwUWdT10HZEk9csxTkmw==
+ b=VEvVhLYL9kJpfffw8kJ5G45zxEkvTuehdl7oeaQxFAaEQ98NwT4dIQwSrhcobqmofYnySWdSOocwSViJnBebQKIt3Qi7KPd4e3vYdCKIq1C5FliSTTyLhpAnkEdDpAHZ5XWwdzkBGCke9PRuK+ks2X11jesNd0z0vB3HUhXK7NygxrwboRgmZmDkw81OFn5ymzVkc9578n2pXlj9gRfw5OfB+ySSf9gG0cZN5sLA1bR7/zD54w2LBifUe4qs7XkqerndKvZezru0VjTkc6N99Gp8Si+BiSvav8Aoq3Qdj14UEK9F2/hkXwu8QCnz5hrlSZaNgiCB389NO7CwgA3moA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sr7Rxu5N1hxyLakYX1rDtpttNRcvr3x3UdqNgtwlHUQ=;
- b=bUeBuOEHeGTMjPHAForfmK15fxtd0jigRVEWBpdl8TdHdHmFWhTIPVXMFscc/TyW0wOZxoNRxGwJCXqt+jZXSSLcMJOB1gzACqXM/G/GoxFpYUnoj1k4wwBmnkj1RaDLO7qEzT6HpuSUwlvxTbSHq9z41moYC56DY0+h/aVleR4cmq8GfLYpoGcQ9dYiPWKVkceJLlY2F9kbyzn2H7RicQ4h+4iglZfyQTRml8Z/EYPHz6IVXcrDSqRpE4KL7p6tAcFxDYPXCLjwxnkWAm4TlNRMlUDo+ez7csdAlAVyJBMgLk6jA6Dh4doIKJlgrlZWyDXoDy7WbCusbdYNsHGcWQ==
+ bh=MpHGlYodSNLJW9Wkf6iuj1QvEy5dG85QvCKTkIywIg0=;
+ b=MYTcAmb15yO6sG9uxGiUtPzscI/ZY1Fp75GyM9NEe9Lk6bIzj0naOI8QaS1opo4ke9+rwZJSBSX9j0KtsKSbe9a+p9ipDYLtrTH2/q1tn5JBO5eKWWVIAwH2Zmh2AUrkuHdqLAYpxFlyS5GHjWc34TUWqI/perrIPOF3jp62lAY7aG59Xr9FXIz3vFdWZd2VoIEvSrkX7iIP7iahBqxw8e5VsGpb0Ja5opB1Dph5GUm8ZLW1a6WvNngJZhQx32b9IkudPNC+/NBKqskK6fa5V87FW1EC58lFphqkYl1sG/BeRfcZpk7ns3EfrODyVDExlQF8Canp1c8MQI6yB9i9Iw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
  dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
@@ -36,18 +37,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Sr7Rxu5N1hxyLakYX1rDtpttNRcvr3x3UdqNgtwlHUQ=;
- b=Em1a3mFmC4lDcZeDBWMfxdoJsBm5EUd1+gsDO+LfChgoOrywOHzB8AD7DG0lrW310+Ey8hQrhK/bU81bADC6IKTZdGGv7WBXELaB2zoSTv+kdPlGXwHBo99fSkqgSBRe/6kTDPpWhHII4bCQEEmgK47qChpDYCHQ/RzxVtvMMiY=
-Received: from MN2PR22CA0016.namprd22.prod.outlook.com (2603:10b6:208:238::21)
- by BY5PR02MB6771.namprd02.prod.outlook.com (2603:10b6:a03:200::10) with
+ bh=MpHGlYodSNLJW9Wkf6iuj1QvEy5dG85QvCKTkIywIg0=;
+ b=A9MOVtUX+S+LsvM9RKjgg2k0ycA4cAS7IDGcTzfGLA33NEBaXXcfhhneYU13UhSf4Zv7Vqma3ot30Nphc1UGaKJYQMePmCg345VNhAQrlhYeh5aEEola9gkS1+bho6o+AqC0pr8WkoWtpqvwMRcAmSQnTbU5nqiFC4hlA9+XhjE=
+Received: from BL0PR03CA0006.namprd03.prod.outlook.com (2603:10b6:208:2d::19)
+ by BY5PR02MB6290.namprd02.prod.outlook.com (2603:10b6:a03:1b1::27) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Wed, 26 Aug
- 2020 18:44:32 +0000
-Received: from BL2NAM02FT024.eop-nam02.prod.protection.outlook.com
- (2603:10b6:208:238:cafe::b1) by MN2PR22CA0016.outlook.office365.com
- (2603:10b6:208:238::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Wed, 26 Aug
+ 2020 18:44:53 +0000
+Received: from BL2NAM02FT047.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:208:2d:cafe::e) by BL0PR03CA0006.outlook.office365.com
+ (2603:10b6:208:2d::19) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
- Transport; Wed, 26 Aug 2020 18:44:32 +0000
+ Transport; Wed, 26 Aug 2020 18:44:53 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
  smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
@@ -56,36 +57,38 @@ Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
  149.199.60.83 as permitted sender) receiver=protection.outlook.com;
  client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
 Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- BL2NAM02FT024.mail.protection.outlook.com (10.152.77.62) with Microsoft SMTP
- Server id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 18:44:32
+ BL2NAM02FT047.mail.protection.outlook.com (10.152.77.9) with Microsoft SMTP
+ Server id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 18:44:52
  +0000
-Received: from [149.199.38.66] (port=58166 helo=smtp.xilinx.com)
+Received: from [149.199.38.66] (port=58352 helo=smtp.xilinx.com)
         by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
         (envelope-from <manish.narani@xilinx.com>)
-        id 1kB0Ou-0000lZ-No; Wed, 26 Aug 2020 11:44:00 -0700
+        id 1kB0PE-0000lw-Sa; Wed, 26 Aug 2020 11:44:20 -0700
 Received: from [127.0.0.1] (helo=localhost)
         by smtp.xilinx.com with smtp (Exim 4.63)
         (envelope-from <manish.narani@xilinx.com>)
-        id 1kB0PP-0008Om-S0; Wed, 26 Aug 2020 11:44:31 -0700
-Received: from xsj-pvapsmtp01 (xsj-mail.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07QIiSlL008569;
-        Wed, 26 Aug 2020 11:44:28 -0700
+        id 1kB0Pj-0008RA-W7; Wed, 26 Aug 2020 11:44:52 -0700
+Received: from xsj-pvapsmtp01 (smtp2.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07QIifbe011691;
+        Wed, 26 Aug 2020 11:44:41 -0700
 Received: from [172.23.64.106] (helo=xhdvnc125.xilinx.com)
         by xsj-pvapsmtp01 with esmtp (Exim 4.63)
         (envelope-from <mnarani@xilinx.com>)
-        id 1kB0PL-0008Oc-Ul; Wed, 26 Aug 2020 11:44:28 -0700
+        id 1kB0PZ-0008Pe-Bs; Wed, 26 Aug 2020 11:44:41 -0700
 Received: by xhdvnc125.xilinx.com (Postfix, from userid 16987)
-        id 2550A12116C; Thu, 27 Aug 2020 00:14:27 +0530 (IST)
+        id 6BF5F12116C; Thu, 27 Aug 2020 00:14:29 +0530 (IST)
 From:   Manish Narani <manish.narani@xilinx.com>
 To:     gregkh@linuxfoundation.org, robh+dt@kernel.org,
         michal.simek@xilinx.com, balbi@kernel.org, p.zabel@pengutronix.de
 Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         git@xilinx.com, Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH 0/2] Add a separate DWC3 OF driver for Xilinx platforms
-Date:   Thu, 27 Aug 2020 00:13:59 +0530
-Message-Id: <1598467441-124203-1-git-send-email-manish.narani@xilinx.com>
+Subject: [PATCH 1/2] dt-bindings: usb: dwc3-xilinx: Add documentation for Versal DWC3 Controller
+Date:   Thu, 27 Aug 2020 00:14:00 +0530
+Message-Id: <1598467441-124203-2-git-send-email-manish.narani@xilinx.com>
 X-Mailer: git-send-email 2.1.1
+In-Reply-To: <1598467441-124203-1-git-send-email-manish.narani@xilinx.com>
+References: <1598467441-124203-1-git-send-email-manish.narani@xilinx.com>
 X-RCIS-Action: ALLOW
 X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
 X-TM-AS-User-Approved-Sender: Yes;Yes
@@ -94,46 +97,82 @@ X-MS-Office365-Filtering-HT: Tenant
 X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
 Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: c2c9d48a-6a22-42fe-f44d-08d849f01260
-X-MS-TrafficTypeDiagnostic: BY5PR02MB6771:
-X-Microsoft-Antispam-PRVS: <BY5PR02MB6771A98F1E196857257FF546C1540@BY5PR02MB6771.namprd02.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: e53ee87e-adb1-4db6-eb4a-08d849f01e6a
+X-MS-TrafficTypeDiagnostic: BY5PR02MB6290:
+X-Microsoft-Antispam-PRVS: <BY5PR02MB6290A93EF74737237B6A1600C1540@BY5PR02MB6290.namprd02.prod.outlook.com>
 X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +VIPWT2b0qSRSlnyLtcozQF1fGFGdGKBGRkfHBN7lH9JWLvu3hXB4h89rU0XfOX77asV2VcCVohrDc1CPQdS8/0sjcBa2b9UvuEdv6I24r5hlOyEauHAWoOK6Cys2StD+CO3nZ/evPHi0gVu3cUBZg2EEiinxuKTSG+e5iXHpMmXO/8W+PUSxnWHLPoLfBmzaqLe9rh0kjIdvEmZUKEEc5IU39S67jTiUtMfYEb/jr7OyTCLlm0XCX8GouJ/Ps0rV8GWJIxKSbRyfrJHQOrhlvFviHWvb9qYm/ACV8tdgSnBgVrU1iHLDfeyQ8sTNoRINB6fRmqC8nmaemxd1pW19fh4CMMXY0wzvUDBtMRUwtI/6N5PNOOzP4BHnhWdi98dikiUljRUHotmzvrlB78/YA==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(136003)(396003)(346002)(376002)(39860400002)(46966005)(70206006)(186003)(70586007)(26005)(42186006)(316002)(8676002)(6266002)(5660300002)(356005)(336012)(83380400001)(107886003)(8936002)(36756003)(478600001)(2906002)(4744005)(4326008)(81166007)(44832011)(47076004)(6666004)(82740400003)(82310400002)(2616005)(426003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 8YZpm+LEhj9hEIy1meyLfAmw8GCjZmi7DbqFY9e6eHjoaDdOMUIdR+y8IMhY5/ZonFQdfPfw7u2+hFvz6RQbcVTxT6Lm1s/HC+OVPapBYBOVlOcowbPL3s784DzEuWgo9FBOO79SejvtTH3Rgap+bjSTPXRexad9cbNMSHNKCgXjCAsPN0XGJgzp+y8o9N6nPHEAR08bPwsn7t6gHjvFNkLkFTOkDTPGuc1Gtt9SkPDwefEYrdMPykBXY3ohA6bqnv5+wLzU9LotDnKB2nf6vmT1avvEOaPIoi6lleHzQsfERfWMmfPoI/ld5UsfX5s8GTRtVVH1HpemnBvC16cqsnAYUnuFULO4+PuBsZPulxpltkBvYJScNP6YngKsAxPHbM8SW8m2lBQjvNFTizmCmQ==
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:ErrorRetry;CAT:NONE;SFS:(346002)(396003)(136003)(39860400002)(376002)(46966005)(186003)(8676002)(42186006)(6666004)(316002)(26005)(336012)(36756003)(47076004)(82740400003)(82310400002)(107886003)(356005)(70586007)(83380400001)(426003)(8936002)(81166007)(70206006)(2616005)(4326008)(6266002)(5660300002)(44832011)(2906002)(478600001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 18:44:32.2147
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 18:44:52.3927
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c2c9d48a-6a22-42fe-f44d-08d849f01260
+X-MS-Exchange-CrossTenant-Network-Message-Id: e53ee87e-adb1-4db6-eb4a-08d849f01e6a
 X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT024.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BL2NAM02FT047.eop-nam02.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6771
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB6290
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series documents the Xilinx Versal DWC3 controller. This also
-adds a new Xilinx specific driver for adding new features in the future.
+Add documentation for Versal DWC3 controller. Add required property
+'reg' for the same. Also add optional properties for snps,dwc3.
 
-Manish Narani (2):
-  dt-bindings: usb: dwc3-xilinx: Add documentation for Versal DWC3
-    Controller
-  usb: dwc3: Add driver for Xilinx platforms
+Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+---
+ .../devicetree/bindings/usb/dwc3-xilinx.txt          | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/usb/dwc3-xilinx.txt   |  12 +-
- drivers/usb/dwc3/Kconfig                      |   8 +
- drivers/usb/dwc3/Makefile                     |   1 +
- drivers/usb/dwc3/dwc3-of-simple.c             |   1 -
- drivers/usb/dwc3/dwc3-xilinx.c                | 416 ++++++++++++++++++
- 5 files changed, 436 insertions(+), 2 deletions(-)
- create mode 100644 drivers/usb/dwc3/dwc3-xilinx.c
-
+diff --git a/Documentation/devicetree/bindings/usb/dwc3-xilinx.txt b/Documentation/devicetree/bindings/usb/dwc3-xilinx.txt
+index 4aae5b2cef56..dd41ed831411 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3-xilinx.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3-xilinx.txt
+@@ -1,7 +1,8 @@
+ Xilinx SuperSpeed DWC3 USB SoC controller
+ 
+ Required properties:
+-- compatible:	Should contain "xlnx,zynqmp-dwc3"
++- compatible:	May contain "xlnx,zynqmp-dwc3" or "xlnx,versal-dwc3"
++- reg:		Base address and length of the register control block
+ - clocks:	A list of phandles for the clocks listed in clock-names
+ - clock-names:	Should contain the following:
+   "bus_clk"	 Master/Core clock, have to be >= 125 MHz for SS
+@@ -13,12 +14,19 @@ Required child node:
+ A child node must exist to represent the core DWC3 IP block. The name of
+ the node is not important. The content of the node is defined in dwc3.txt.
+ 
++Optional properties for snps,dwc3:
++- dma-coherent:	Enable this flag if CCI is enabled in design. Adding this
++		flag configures Global SoC bus Configuration Register and
++		Xilinx USB 3.0 IP - USB coherency register to enable CCI.
++- interrupt-names: This property provides the names of the interrupt ids used
++
+ Example device node:
+ 
+ 		usb@0 {
+ 			#address-cells = <0x2>;
+ 			#size-cells = <0x1>;
+ 			compatible = "xlnx,zynqmp-dwc3";
++			reg = <0x0 0xff9d0000 0x0 0x100>;
+ 			clock-names = "bus_clk" "ref_clk";
+ 			clocks = <&clk125>, <&clk125>;
+ 			ranges;
+@@ -26,7 +34,9 @@ Example device node:
+ 			dwc3@fe200000 {
+ 				compatible = "snps,dwc3";
+ 				reg = <0x0 0xfe200000 0x40000>;
++				interrupt-name = "dwc_usb3";
+ 				interrupts = <0x0 0x41 0x4>;
+ 				dr_mode = "host";
++				dma-coherent;
+ 			};
+ 		};
 -- 
 2.17.1
 
