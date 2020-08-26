@@ -2,105 +2,149 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042BBC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AA0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB47E2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598453805;
-	bh=kkISLubLn02Pqd4uTanIQMpVWj7X3BN+1/yofvSuWc8=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LSkbIpyQa5ls9Hm3kTpq0CmP2EbtvC5u4Nu1havMtjW/uAO/Z/1CiDFBBDd97x0L2
-	 i4HC3l3GpV1Q36nvxBTCUuRUKAn5qx1Xjn+8ohL5kftO5DUxdO1ZQ5Fx0iB9RZ5+RB
-	 KrO0t+buhxBegFJKCoQu3m0rMvc3j4KS2cX21gwQ=
+	by mail.kernel.org (Postfix) with ESMTP id 35842214F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:56:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tsB9NPIE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgHZOx1 (ORCPT
+        id S1728254AbgHZO4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:53:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726870AbgHZOwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:52:53 -0400
-Received: from localhost.localdomain (unknown [194.230.155.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FABE2177B;
-        Wed, 26 Aug 2020 14:52:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453572;
-        bh=kkISLubLn02Pqd4uTanIQMpVWj7X3BN+1/yofvSuWc8=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=H83nW6V5S3urOUpULphtz3zccovbw9g0fFCefrjuYoLXand4Ge+9p3+Qyf/Srtffc
-         YmReJ+BHI1bG1UUo4u3E1DyrY/ZG2fhUgi/JEZbJBWLnHhmG2Rw6sbUKkSHiVsfKm3
-         XeueJ6nAcItK/oN4JmekPru4Me0xq7pfmGDQHOR8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH 09/16] iio: afe: iio-rescale: Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 16:51:46 +0200
-Message-Id: <20200826145153.10444-9-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826145153.10444-1-krzk@kernel.org>
-References: <20200826145153.10444-1-krzk@kernel.org>
+        Wed, 26 Aug 2020 10:56:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728251AbgHZOx3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:53:29 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14285C061574;
+        Wed, 26 Aug 2020 07:53:29 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id i13so1006369pjv.0;
+        Wed, 26 Aug 2020 07:53:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Qg+y9mENI5s/3Hp67w0VaPORZ5hguo4wpnU/9+nxop0=;
+        b=tsB9NPIEI2EV4l5chpZ1VShXia7MBk6qDAmAUpkG9ydb8tuPVcG7JMZoeW+T3Dm2iS
+         e40Z2DodY0kzrfIXcRQurr+mSfPL1M/qXx7wA4be0OVqeI3IQaidHUMGOwP10prR0EPY
+         qoFo6VNRBvU7kRfqumOH9/pppYWEM9JTk+Ll0/MwYzIZHhzT9FhJSBa/tCKl0ZA4Robn
+         BgZQ9bVnjbQVXNaQMmO2ezalhPNHWabMU0XVtcgr+WD4L48+QRPBjc5TlsNohUZd/9nd
+         BfpNS60rOmiEIrOzyFvqQaD6ph5N6Zptier4k2fdQwL2IxdVsSaIKQiLZw9tz4lOnRxj
+         Nd3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Qg+y9mENI5s/3Hp67w0VaPORZ5hguo4wpnU/9+nxop0=;
+        b=Xd+uMf+HUnu7pXTwnN0JBStoXyvfN3+wjM7c4m1O2qpieP0YcK55FmZrwFUmO1Nhml
+         R6ZGfkUxXjcT9QPX0GH9Ddk/ZgOzaDtgG1gM5kK1mUNmPRDDkyw+Xb+G2MxM/70At/St
+         UQ0sMFzve8j9VK2KpLLtzg3ukVFZ8y68ri9yEypMfrimvv5EfrKYz8L9tJssk2AWZ6Du
+         1AtWTLzdEIheZi83tLJJPjQBO3VSGIXOKiXvE3bSosA/N1B5uOxNhDc2Se1MBamjMhxc
+         06OgydwUC8JRhRfqv77JVbX4Nq0ygqVogs6WfXzW/KDUWBg8Ws6ZD8Ok/ir6/qftfS4x
+         ClNg==
+X-Gm-Message-State: AOAM533Y/pyLjlwnhdmFPYxytPTREL+jDSPJCt7krqEWiQQ7G7G8Y24Z
+        D18XJWzWliQFTkUAyKz9mVsxVcCbwdA=
+X-Google-Smtp-Source: ABdhPJzXkvb6xSDZr6SiieiLkOWMoxXqqyGTyYFG5Tva+Dhu45xbd/y2npDHNcyNJHrmj3G3xfZp9Q==
+X-Received: by 2002:a17:902:7b82:: with SMTP id w2mr12355577pll.258.1598453608407;
+        Wed, 26 Aug 2020 07:53:28 -0700 (PDT)
+Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id r7sm3327140pfl.186.2020.08.26.07.53.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 07:53:27 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org
+Subject: [PATCH v2 08/23] ia64: use asm-generic/mmu_context.h for no-op implementations
+Date:   Thu, 27 Aug 2020 00:52:34 +1000
+Message-Id: <20200826145249.745432-9-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
+References: <20200826145249.745432-1-npiggin@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and also it prints the error value.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: linux-ia64@vger.kernel.org
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- drivers/iio/afe/iio-rescale.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/ia64/include/asm/mmu_context.h | 17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/iio/afe/iio-rescale.c b/drivers/iio/afe/iio-rescale.c
-index 69c0f277ada0..e42ea2b1707d 100644
---- a/drivers/iio/afe/iio-rescale.c
-+++ b/drivers/iio/afe/iio-rescale.c
-@@ -276,11 +276,9 @@ static int rescale_probe(struct platform_device *pdev)
- 	int ret;
+diff --git a/arch/ia64/include/asm/mmu_context.h b/arch/ia64/include/asm/mmu_context.h
+index 2da0e2eb036b..87a0d5bc11ef 100644
+--- a/arch/ia64/include/asm/mmu_context.h
++++ b/arch/ia64/include/asm/mmu_context.h
+@@ -49,11 +49,6 @@ DECLARE_PER_CPU(u8, ia64_need_tlb_flush);
+ extern void mmu_context_init (void);
+ extern void wrap_mmu_context (struct mm_struct *mm);
  
- 	source = devm_iio_channel_get(dev, NULL);
--	if (IS_ERR(source)) {
--		if (PTR_ERR(source) != -EPROBE_DEFER)
--			dev_err(dev, "failed to get source channel\n");
--		return PTR_ERR(source);
--	}
-+	if (IS_ERR(source))
-+		return dev_err_probe(dev, PTR_ERR(source),
-+				     "failed to get source channel\n");
+-static inline void
+-enter_lazy_tlb (struct mm_struct *mm, struct task_struct *tsk)
+-{
+-}
+-
+ /*
+  * When the context counter wraps around all TLBs need to be flushed because
+  * an old context number might have been reused. This is signalled by the
+@@ -116,6 +111,7 @@ get_mmu_context (struct mm_struct *mm)
+  * Initialize context number to some sane value.  MM is guaranteed to be a
+  * brand-new address-space, so no TLB flushing is needed, ever.
+  */
++#define init_new_context init_new_context
+ static inline int
+ init_new_context (struct task_struct *p, struct mm_struct *mm)
+ {
+@@ -123,12 +119,6 @@ init_new_context (struct task_struct *p, struct mm_struct *mm)
+ 	return 0;
+ }
  
- 	sizeof_ext_info = iio_get_channel_ext_info_count(source);
- 	if (sizeof_ext_info) {
+-static inline void
+-destroy_context (struct mm_struct *mm)
+-{
+-	/* Nothing to do.  */
+-}
+-
+ static inline void
+ reload_context (nv_mm_context_t context)
+ {
+@@ -178,11 +168,10 @@ activate_context (struct mm_struct *mm)
+ 	} while (unlikely(context != mm->context));
+ }
+ 
+-#define deactivate_mm(tsk,mm)	do { } while (0)
+-
+ /*
+  * Switch from address space PREV to address space NEXT.
+  */
++#define activate_mm activate_mm
+ static inline void
+ activate_mm (struct mm_struct *prev, struct mm_struct *next)
+ {
+@@ -196,5 +185,7 @@ activate_mm (struct mm_struct *prev, struct mm_struct *next)
+ 
+ #define switch_mm(prev_mm,next_mm,next_task)	activate_mm(prev_mm, next_mm)
+ 
++#include <asm-generic/mmu_context.h>
++
+ # endif /* ! __ASSEMBLY__ */
+ #endif /* _ASM_IA64_MMU_CONTEXT_H */
 -- 
-2.17.1
+2.23.0
 
