@@ -2,183 +2,167 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EC8C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E455BC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAF5F221E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:37:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aVQlORT0"
+	by mail.kernel.org (Postfix) with ESMTP id BF4DE214F1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgHZOhu (ORCPT
+        id S1727040AbgHZOil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:37:50 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46704 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726690AbgHZOhq (ORCPT
+        Wed, 26 Aug 2020 10:38:41 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:39261 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726912AbgHZOiY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:37:46 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QEYtOg142777;
-        Wed, 26 Aug 2020 10:37:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=Z558S2nodXLm4F/1ZPPki9oJvRdlnNOJaMdxJSjvL/g=;
- b=aVQlORT09BYK3fDkFGQefoV5xK4mz0LJfg9CSLhbdRX1GoPDxxVaG13f9xTOIyQEQlLg
- JpC3jEXRQOv2e8VsRwtFS/rjbsJ+A5xnvvT3vjTPfww4I5PCsIFdUD5Rcy42Ork3Sdvl
- QPVBc0i3J9k7XJOI9utc+eEeQ951tTRXbW7Dbq3LdNeNASShBpqHSIvAW6zDqfv7VVod
- zjdW9rwzmT5NptpCPzoITftnjjKzMhKDlhXrlb6rHmXqf3iotRaKf37EMy6BGasmmetq
- tcPhuGVVXxq3TQOx92IBzzxao/yMQzUm/1Ua4XgtNgtYaPR2n8vuicMZWoWHvLbs8E39 Ng== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335sccrjxn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 10:37:28 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07QEZ6Fm143953;
-        Wed, 26 Aug 2020 10:37:28 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335sccrjwe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 10:37:28 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07QELqgK024981;
-        Wed, 26 Aug 2020 14:37:27 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma02dal.us.ibm.com with ESMTP id 335kvcb299-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 14:37:27 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07QEbQ3749021196
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 14:37:26 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9DC3AB206A;
-        Wed, 26 Aug 2020 14:37:26 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88462B2064;
-        Wed, 26 Aug 2020 14:37:22 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.63.208])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Aug 2020 14:37:22 +0000 (GMT)
-Subject: Re: [RFC] perf/core: Fixes hung issue on perf stat command during cpu
- hotplug
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     jolsa@redhat.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        daniel@iogearbox.net, brho@google.com, srikar@linux.vnet.ibm.com
-References: <20200826093236.446024-1-kjain@linux.ibm.com>
- <20200826132107.GH1059382@kernel.org>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <135a1238-9a43-8335-e8a6-961678e95f65@linux.ibm.com>
-Date:   Wed, 26 Aug 2020 20:07:20 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 26 Aug 2020 10:38:24 -0400
+Received: by mail-io1-f71.google.com with SMTP id v10so1376481iot.6
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 07:38:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Xxqad3xL8qqUrM4EVjmvmkbniZ+gtAPelAMhad+ABBc=;
+        b=Mb5rIYVYxsV0SXTs+n+gSH6fFmVLytnHyu8l2hjEWD1oTgB2iig1CDbMqZ5Ukrxpbf
+         OZQzVs73jRJIHTH/Qprfgdjjxc3+ZHpmXF2DRfSUlhKBwtv6pxkGtMT1caIA3H89OHoN
+         oUic16oexCZF0oMM32PYcN9CddOb/3gRc0QroudydLnLScHnXFtVS0pYfBqa1E8RqF5h
+         Mq2BvPwYndH8dlBA58C0FBzaSVQqeeOswCEPwBChM3b+W7SFIy8wIpbsG//AdNYU4l9j
+         CrmrZ2HumrsZOvbzg572/6d626mcOPUJqxI1r7dcP9199V/LvMi4AxL6Qy7t871z4igT
+         V4uQ==
+X-Gm-Message-State: AOAM533xhw6OoiLb8uWvvQk4eguTZZ+4Y94n4R+rzaeCf3K3JfyVe1XI
+        NmORlhcI5SEAVnJh44VvNMHemxqrSlnAvEvDrLD7gM24YKqu
+X-Google-Smtp-Source: ABdhPJx/wE3q6toYtnfpdXKUpmAL2eZoCUl21CrqenWwy9a2FBEuv8fnXX8NeASztT0UzeKqqCLDzTQYVEgaZz53g+szfsyEfCYQ
 MIME-Version: 1.0
-In-Reply-To: <20200826132107.GH1059382@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-26_09:2020-08-26,2020-08-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0 impostorscore=0
- phishscore=0 malwarescore=0 mlxscore=0 clxscore=1015 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008260108
+X-Received: by 2002:a05:6602:2b08:: with SMTP id p8mr8153004iov.180.1598452703156;
+ Wed, 26 Aug 2020 07:38:23 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 07:38:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000008fddd805adc8c56f@google.com>
+Subject: general protection fault in rt6_fill_node
+From:   syzbot <syzbot+81af6e9b3c4b8bc874f8@syzkaller.appspotmail.com>
+To:     John.Linn@xilinx.com, a@unstable.cc, andriin@fb.com,
+        anirudh@xilinx.com, ast@kernel.org,
+        b.a.t.m.a.n@lists.open-mesh.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hancock@sedsystems.ca,
+        john.fastabend@gmail.com, kafai@fb.com, kpsingh@chromium.org,
+        kuba@kernel.org, kuznet@ms2.inr.ac.ru,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mareklindner@neomailbox.ch, michal.simek@xilinx.com,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        sw@simonwunderlich.de, syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    d7223aa5 Merge branch 'l2tp-replace-custom-logging-code-wi..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1399802e900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3d400a47d1416652
+dashboard link: https://syzkaller.appspot.com/bug?extid=81af6e9b3c4b8bc874f8
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12949b5a900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17b60e46900000
+
+The issue was bisected to:
+
+commit 867d03bc238f62fcd28f287b9da8af5e483baeab
+Author: Robert Hancock <hancock@sedsystems.ca>
+Date:   Thu Jun 6 22:28:14 2019 +0000
+
+    net: axienet: Add DMA registers to ethtool register dump
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1523f266900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1723f266900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1323f266900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+81af6e9b3c4b8bc874f8@syzkaller.appspotmail.com
+Fixes: 867d03bc238f ("net: axienet: Add DMA registers to ethtool register dump")
+
+IPv6: RTM_NEWROUTE with no NLM_F_CREATE or NLM_F_REPLACE
+IPv6: NLM_F_CREATE should be set when creating new route
+IPv6: NLM_F_CREATE should be set when creating new route
+general protection fault, probably for non-canonical address 0xdffffc0000000010: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000080-0x0000000000000087]
+CPU: 1 PID: 7050 Comm: syz-executor648 Not tainted 5.9.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:nexthop_is_blackhole include/net/nexthop.h:240 [inline]
+RIP: 0010:rt6_fill_node+0x1396/0x2940 net/ipv6/route.c:5584
+Code: 3c 02 00 0f 85 ef 14 00 00 4d 8b 6d 10 e8 f2 1c 87 fa 49 8d bd 80 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 10 15 00 00 4d 8b ad 80 00 00 00 e8 34 4b 06 01
+RSP: 0018:ffffc900063672b0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8880a88bd800 RCX: ffffffff86ed2456
+RDX: 0000000000000010 RSI: ffffffff86ed248e RDI: 0000000000000080
+RBP: ffffc900063673e8 R08: 0000000000000001 R09: ffff8880a88bd847
+R10: 0000000000000001 R11: 0000000000000000 R12: ffff8880a8ded940
+R13: 0000000000000000 R14: ffff8880a899ea00 R15: 0000000000000000
+FS:  00000000010e3880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000300 CR3: 00000000a8efa000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ inet6_rt_notify+0x14c/0x2b0 net/ipv6/route.c:6017
+ fib6_add_rt2node net/ipv6/ip6_fib.c:1246 [inline]
+ fib6_add+0x2840/0x3ed0 net/ipv6/ip6_fib.c:1473
+ __ip6_ins_rt net/ipv6/route.c:1317 [inline]
+ ip6_route_add+0x8b/0x150 net/ipv6/route.c:3744
+ inet6_rtm_newroute+0x152/0x160 net/ipv6/route.c:5360
+ rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5563
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2470
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:671
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2353
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2407
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2440
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x443ef9
+Code: e8 8c 07 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 bb 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fff25138308 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000443ef9
+RDX: 0000000000000000 RSI: 0000000020000300 RDI: 0000000000000003
+RBP: 00007fff25138310 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000e25f
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 46e9e8854602a8a3 ]---
+RIP: 0010:nexthop_is_blackhole include/net/nexthop.h:240 [inline]
+RIP: 0010:rt6_fill_node+0x1396/0x2940 net/ipv6/route.c:5584
+Code: 3c 02 00 0f 85 ef 14 00 00 4d 8b 6d 10 e8 f2 1c 87 fa 49 8d bd 80 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 10 15 00 00 4d 8b ad 80 00 00 00 e8 34 4b 06 01
+RSP: 0018:ffffc900063672b0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffff8880a88bd800 RCX: ffffffff86ed2456
+RDX: 0000000000000010 RSI: ffffffff86ed248e RDI: 0000000000000080
+RBP: ffffc900063673e8 R08: 0000000000000001 R09: ffff8880a88bd847
+R10: 0000000000000001 R11: 0000000000000000 R12: ffff8880a8ded940
+R13: 0000000000000000 R14: ffff8880a899ea00 R15: 0000000000000000
+FS:  00000000010e3880(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000300 CR3: 00000000a8efa000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-On 8/26/20 6:51 PM, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Aug 26, 2020 at 03:02:36PM +0530, Kajol Jain escreveu:
->> Commit 2ed6edd33a21 ("perf: Add cond_resched() to task_function_call()")
->> added assignment of ret value as -EAGAIN in case function
->> call to 'smp_call_function_single' fails.
->> For non-zero ret value, it did 
->> 'ret = !ret ? data.ret : -EAGAIN;', which always
->> assign -EAGAIN to ret and make second if condition useless.
->>
->> In scenarios like when executing a perf stat with --per-thread option, and 
->> if any of the monitoring cpu goes offline, the 'smp_call_function_single'
->> function could return -ENXIO, and with the above check,
->> task_function_call hung and increases CPU
->> usage (because of repeated 'smp_call_function_single()')
->>
->> Recration scenario:
->> 	# perf stat -a --per-thread && (offline a CPU )
-> 
-> Peter, this is kernel stuff, can you take a look?
-> 
-> - Arnaldo
->  
->> Patch here removes the tertiary condition added as part of that 
->> commit and added a check for NULL and -EAGAIN.
->>
->> Fixes: 2ed6edd33a21("perf: Add cond_resched() to task_function_call()")
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> Reported-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
->> ---
->>  kernel/events/core.c | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 5bfe8e3c6e44..330c53f7df9c 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -115,9 +115,9 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
->>  	for (;;) {
->>  		ret = smp_call_function_single(task_cpu(p), remote_function,
->>  					       &data, 1);
->> -		ret = !ret ? data.ret : -EAGAIN;
->> -
->> -		if (ret != -EAGAIN)
->> +		if (!ret)
->> +			ret = data.ret;
->> +		else if (ret != -EAGAIN)
->>  			break;
->>  
->>  		cond_resched();
->> -- 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Hi,
-  Sorry for the confusion, I send wrong version of the patch. We don't have else in second
-condition.
-
-The right patch changes are:
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5bfe8e3c6e44..53d960394af9 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -115,8 +115,8 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
-        for (;;) {
-                ret = smp_call_function_single(task_cpu(p), remote_function,
-                                               &data, 1);
--               ret = !ret ? data.ret : -EAGAIN;
--
-+               if (!ret)
-+                       ret = data.ret;
-                if (ret != -EAGAIN)
-                        break;
-
-I will again send the patch, please ignore this one.
-
-Thanks,
-Kajol Jain
- 
->> 2.26.2
->>
-> 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
