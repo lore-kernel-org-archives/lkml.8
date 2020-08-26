@@ -7,96 +7,131 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933DDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7166EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:53:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB15206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8C5206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:53:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="soGar4Ol"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="URLT5+Gr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbgHZGwt (ORCPT
+        id S1726885AbgHZGxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:52:49 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:60140 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbgHZGws (ORCPT
+        Wed, 26 Aug 2020 02:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44398 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbgHZGxR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:52:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1598424769; x=1629960769;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HBnyjxMa7uVI/eu1uBnT609d4ARMKM0v5wDO/MK1iLM=;
-  b=soGar4OlokHCTsFtuzDD9ymzl3TCl3YFC3N0NjiLqjrq0SHuCmbi8H+K
-   SfeuJbnr0FLaRMlMwMBkQmOen2QtAzEDOQ6U8Tg7rxNSc8QRIGcZdbC28
-   WP5wul4yFFDrsja7hj32sUl0PLlZl0Sawkkl/c9dcvqdGCHNTeducBP7w
-   0ML5FcWdfMBlygNVFuZU0YtkDAYrgD92epV+EPKufwRPLNT+WSu+6hPdN
-   nr6ipUSJnJ8QwFTV/9sXRcu0CUJVPThkm73QvY05to8rMMAHhH81XHIka
-   GxaoH0cz60qPcIHuamC00qSs1NqxyJkkjnGKzR51YyaDU82EvnQULDK9c
-   Q==;
-IronPort-SDR: ltFITmBxW421ggd23VoOb62FaLmXM2x8/RabVddrGsBdJh32y4SXsDc6IRb4cr0kGI0NwMplHy
- ChKs4JpINBDKcbMhvoPvKke9MLA9Vn3PgpW+5rx/4pb2kzfvFGPFLto2ROgM53E9vZZpanToXi
- TycWEhxxvFDpozssBO00NTWNxlaJGWrWVyWycj3jDgIyYDk1eMO8DLtzKTJ3bsYiCAAIMYhmel
- 2y/v9ENHW+gxKlRMm/Mc63xMZJk2mCYjen/yY5EEJQhuulotq6ThHl6PsPHo9iJS4sFgb5m12D
- BkU=
-X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="88565264"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Aug 2020 23:52:46 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 25 Aug 2020 23:51:56 -0700
-Received: from ROB-ULT-M18282.microchip.com (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1979.3 via Frontend Transport; Tue, 25 Aug 2020 23:52:28 -0700
-From:   Eugen Hristev <eugen.hristev@microchip.com>
-To:     <robh+dt@kernel.org>, <sakari.ailus@iki.fi>,
-        <linux-media@vger.kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH v3 3/3] MAINTAINERS: add microchip csi2dc
-Date:   Wed, 26 Aug 2020 09:51:42 +0300
-Message-ID: <20200826065142.205000-3-eugen.hristev@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200826065142.205000-1-eugen.hristev@microchip.com>
-References: <20200826065142.205000-1-eugen.hristev@microchip.com>
+        Wed, 26 Aug 2020 02:53:17 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8830C061574;
+        Tue, 25 Aug 2020 23:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=SGTWnq2AQ38kIvWB9VYuxXbeJQGBBC+aSlZ9ZuRIk/o=; b=URLT5+GrMtH6TU2ggQIB9e3cS1
+        NReyEbguY4kT689u1FD6QTnTjjHtB3ICFWoXEGYD1P9Al01FBX3cHl2LzBPjJb3a4HrR5IXUNQTWL
+        N/TF5wdk4b4ChbWXZzp92xHKW5A7btN5q2tDpbyfWzsga6/DVXyHZ2+pwYJCXzvtlY1kOZ++cB57N
+        PilGLY0N++OTu0+mZOpIfUVeMIwqiyPI6H0E8R2kW6yWAFpe+1QcLyf7qixn6KtWXlfLVPwYlW3Tu
+        hHyIC6EAKtOANuhPWu4pLgO7qpdsnjvnFOsaAv30IirDcv1d4PT8kNX7W+/y89qe0KuRVYwItRTT1
+        kD/KsRhg==;
+Received: from 213-225-6-196.nat.highway.a1.net ([213.225.6.196] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kApJ2-0003Lc-Dy; Wed, 26 Aug 2020 06:53:12 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: [PATCH 12/19] md: use __register_blkdev to allocate devices on demand
+Date:   Wed, 26 Aug 2020 08:24:39 +0200
+Message-Id: <20200826062446.31860-13-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200826062446.31860-1-hch@lst.de>
+References: <20200826062446.31860-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Microchip CSI2DC driver in the list.
+Use the simpler mechanism attached to major_name to allocate a brd device
+when a currently unregistered minor is accessed.
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/md/md.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index deaafb617361..a07d3f5597a6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11375,6 +11375,13 @@ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
- S:	Supported
- F:	sound/soc/atmel
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 60727820702300..3c4ef862ac5fb0 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -5766,11 +5766,12 @@ static int md_alloc(dev_t dev, char *name)
+ 	return error;
+ }
  
-+MICROCHIP CSI2DC DRIVER
-+M:	Eugen Hristev <eugen.hristev@microchip.com>
-+L:	linux-media@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/media/microchip,csi2dc.yaml
-+F:	drivers/media/platform/atmel/microchip-csi2dc.c
-+
- MICROCHIP ECC DRIVER
- M:	Tudor Ambarus <tudor.ambarus@microchip.com>
- L:	linux-crypto@vger.kernel.org
+-static struct kobject *md_probe(dev_t dev, int *part, void *data)
++static void md_probe(dev_t dev)
+ {
++	if (MAJOR(dev) == MD_MAJOR && MINOR(dev) >= 512)
++		return;
+ 	if (create_on_open)
+ 		md_alloc(dev, NULL);
+-	return NULL;
+ }
+ 
+ static int add_named_array(const char *val, const struct kernel_param *kp)
+@@ -6536,7 +6537,7 @@ static void autorun_devices(int part)
+ 			break;
+ 		}
+ 
+-		md_probe(dev, NULL, NULL);
++		md_probe(dev);
+ 		mddev = mddev_find(dev);
+ 		if (!mddev || !mddev->gendisk) {
+ 			if (mddev)
+@@ -9548,18 +9549,15 @@ static int __init md_init(void)
+ 	if (!md_misc_wq)
+ 		goto err_rdev_misc_wq;
+ 
+-	if ((ret = register_blkdev(MD_MAJOR, "md")) < 0)
++	ret = __register_blkdev(MD_MAJOR, "md", md_probe);
++	if (ret < 0)
+ 		goto err_md;
+ 
+-	if ((ret = register_blkdev(0, "mdp")) < 0)
++	ret = __register_blkdev(0, "mdp", md_probe);
++	if (ret < 0)
+ 		goto err_mdp;
+ 	mdp_major = ret;
+ 
+-	blk_register_region(MKDEV(MD_MAJOR, 0), 512, THIS_MODULE,
+-			    md_probe, NULL, NULL);
+-	blk_register_region(MKDEV(mdp_major, 0), 1UL<<MINORBITS, THIS_MODULE,
+-			    md_probe, NULL, NULL);
+-
+ 	register_reboot_notifier(&md_notifier);
+ 	raid_table_header = register_sysctl_table(raid_root_table);
+ 
+@@ -9826,9 +9824,6 @@ static __exit void md_exit(void)
+ 	struct list_head *tmp;
+ 	int delay = 1;
+ 
+-	blk_unregister_region(MKDEV(MD_MAJOR,0), 512);
+-	blk_unregister_region(MKDEV(mdp_major,0), 1U << MINORBITS);
+-
+ 	unregister_blkdev(MD_MAJOR,"md");
+ 	unregister_blkdev(mdp_major, "mdp");
+ 	unregister_reboot_notifier(&md_notifier);
 -- 
-2.25.1
+2.28.0
 
