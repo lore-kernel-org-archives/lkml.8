@@ -2,313 +2,349 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F45C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785AFC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:25:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F14822075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453212075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 00:25:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f20JUufv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ib56OhRs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgHZAYl (ORCPT
+        id S1726750AbgHZAZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 20:24:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41146 "EHLO
+        Tue, 25 Aug 2020 20:25:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbgHZAYj (ORCPT
+        with ESMTP id S1726570AbgHZAZr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 20:24:39 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E146C061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 17:24:38 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id y2so36103uaq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 17:24:38 -0700 (PDT)
+        Tue, 25 Aug 2020 20:25:47 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64780C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 17:25:47 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id p18so317081ilm.7
+        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 17:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LKNYZxdd9GnzF09d9hnsszm0hfjYWuDgd4/PlOEGld8=;
-        b=f20JUufvss7xZL/HrjKmsqIQ5mWiEbA4xg5ZmZzrqMVH5q/i+AUHRaJOwlrs3zIU71
-         zulan3xrqqX8mQS8GSGYsutdfDf1SRCSRvmcfE+20/9POjON2tF2SG9k0QZ+ponsIO25
-         o1PHju9rH05o/4XewhDwdlfjBvY5fZC6yoroI=
+        bh=K/dyzKl2KNDp/r+WfnPynkuztX4WyPxO01OxIzOPsJ4=;
+        b=ib56OhRsrZHqLngBOX7WcYBi5OVWlsUTXEhNLYmH95tp2zLJU9SZi0F14WkOZEjSdB
+         YL2vv1mZMvs631kK8DIkddhpnGpvHWXwJk0/SBy3PK4mFkBHOvSblRdP3JfRalaXmeEA
+         4jLU442pDRP82Tk0CxZaZ1vz3Dtyngw09LHmYEsteHyGGxdUgG81gN1fRytCwmXFqjDQ
+         YBb0+wUGqKkZJxxuVGUtFC1UQBso067BO/zLJGx/f9XL3tCZGgrDP0e0H+8rzrdaz1SQ
+         2q/TdyDbZAOh/ErdLcMitEGi8Y74Qwl1jaWKm/GtYZ7PZj4Q5K+kqqUQdIESC6PttW5e
+         YoAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LKNYZxdd9GnzF09d9hnsszm0hfjYWuDgd4/PlOEGld8=;
-        b=SaWAQgjl3KiBYL/RCAJWZqB1Ioaf8hQAUKjgOq0a1hmFhrpBg+5qcKcfO23/LwAIrm
-         +QyDUKSFTbXeGKAGyxRZAKP6FM+SsBwWUxsDi5/e2zx/HTfAK4l+8LfxAxPzFLp2uozw
-         iMxOv5+z+JHMMygvcp9xxVXGih1jWnI/HAI8Lm04p/a+402ZBz+MjG8e1SsrpO2iqFUw
-         i55zzTUUhNxp3YjkqdYlyDELIeh7Gz0qtZWbT8iGCS5zDmD5q0eCgabflesFzzLY+tDN
-         r/yqrP7qLCxx6Zt9mlJGIwK/+qyWgKy0wK5VpAvp2r08ajXDpWlfOWNrmh5w2084oDg0
-         RUtw==
-X-Gm-Message-State: AOAM5330EtXf8oyTPZUA4ge4zRgASt9cfqb/AALbqvSejbDp5utoaV5s
-        3FQJxxEmV+v7L4Ay4r8nC+3whsV+z1ihEg==
-X-Google-Smtp-Source: ABdhPJxFtL9jhdkR/D5OaknLSMy+MuTvaF/SGbwcccuQ2GrNbHhzIScdcMOyh0m32jPMglAeMWBrNg==
-X-Received: by 2002:ab0:74ca:: with SMTP id f10mr7313330uaq.24.1598401477405;
-        Tue, 25 Aug 2020 17:24:37 -0700 (PDT)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id 81sm121440vky.52.2020.08.25.17.24.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Aug 2020 17:24:36 -0700 (PDT)
-Received: by mail-vs1-f53.google.com with SMTP id u131so44833vsu.11
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 17:24:36 -0700 (PDT)
-X-Received: by 2002:a67:bc08:: with SMTP id t8mr8111843vsn.44.1598401476047;
- Tue, 25 Aug 2020 17:24:36 -0700 (PDT)
+        bh=K/dyzKl2KNDp/r+WfnPynkuztX4WyPxO01OxIzOPsJ4=;
+        b=GR+Ewx6YI4jvUNeHfs3t1/ueviwkBTnFaA38z8a4uMJFQOlQjwCIdqWJxauehHyx9Z
+         hPk+ES64SCg5VU9Hi3ztmX70HWY8pBtbHzCnu5RdDeIlYFRgDFUPSovKpbivuRwfc95i
+         EkKqn1MYoBAlO7Ar98+hgk5hh7senuX//a9x7PUj+hfvZPPdb/VVc6VR7AH1V3retQb6
+         Cys+SnhdkGUmaHKcpeZrg/RNJ3mUjsQAv4TN5hYVCeT83zuiOGMPxy5xFNcE0gqNU9pt
+         j5bNb0r9rSDXcWb6wrmzIrYeu7MtvE6A1PVGDL0ta4jUIzGsdzrBDFlvceGRrEK7CEdh
+         vaIg==
+X-Gm-Message-State: AOAM531Mo4tzG+Ojek5O42v1VAnMBi6nCOgq913TZSRZAYIaC3NaNUzu
+        RqHQieiwuekRFxQTgzigu0mZ8K9e8K4msJUYSpGLYg==
+X-Google-Smtp-Source: ABdhPJyu1EJ1dRN4fAV7VA7O9vNx4XEDXtN9oKEprWXupCUNBnM8L5AfVi9mlfJPiFSlKmachtOfFp6J9htuuDjldAw=
+X-Received: by 2002:a92:dc90:: with SMTP id c16mr11226649iln.202.1598401546414;
+ Tue, 25 Aug 2020 17:25:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200825154249.20011-1-saiprakash.ranjan@codeaurora.org>
- <CAD=FV=XK3Xa3rRWvuSA_jA+5_1XYBmHEX2B2XSb8h3oOe1PHLw@mail.gmail.com>
- <3df7edd53ebca00be288e69b92b8d4b9@codeaurora.org> <CAD=FV=X=3Jae7_gXN_05EsmZjrM1bN=TMZ0qoGKz=UaNrthzAg@mail.gmail.com>
- <CAF6AEGsuusnGaN-H9geFa+jwX_hkvMHGZCWvwk5-MDGQ7cBsbQ@mail.gmail.com>
-In-Reply-To: <CAF6AEGsuusnGaN-H9geFa+jwX_hkvMHGZCWvwk5-MDGQ7cBsbQ@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 25 Aug 2020 17:24:23 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WyL3ttE_F3YJJxOWAJANeNueqH0gO3phu8q5F4NP809g@mail.gmail.com>
-Message-ID: <CAD=FV=WyL3ttE_F3YJJxOWAJANeNueqH0gO3phu8q5F4NP809g@mail.gmail.com>
-Subject: Re: [PATCH] iommu: Add support to filter non-strict/lazy mode based
- on device names
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20200821185645.801971-1-lokeshgidra@google.com>
+ <20200821185645.801971-2-lokeshgidra@google.com> <20200825035036.GC810@sol.localdomain>
+In-Reply-To: <20200825035036.GC810@sol.localdomain>
+From:   Lokesh Gidra <lokeshgidra@google.com>
+Date:   Tue, 25 Aug 2020 17:25:35 -0700
+Message-ID: <CA+EESO7YG=9K7o=rjRm++n7HWPhhP1W8Xo7CF_4_pGBheExmqA@mail.gmail.com>
+Subject: Re: [PATCH v7 1/3] Add a new LSM-supporting anonymous inode interface
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        James Morris <jmorris@namei.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Daniel Colascione <dancol@dancol.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        KP Singh <kpsingh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Thomas Cedeno <thomascedeno@google.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Aaron Goidel <acgoide@tycho.nsa.gov>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Adrian Reber <areber@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Calin Juravle <calin@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        kernel-team@android.com, Daniel Colascione <dancol@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Aug 25, 2020 at 3:54 PM Rob Clark <robdclark@gmail.com> wrote:
+On Mon, Aug 24, 2020 at 8:50 PM Eric Biggers <ebiggers@kernel.org> wrote:
 >
-> On Tue, Aug 25, 2020 at 3:23 PM Doug Anderson <dianders@chromium.org> wrote:
+> On Fri, Aug 21, 2020 at 11:56:43AM -0700, Lokesh Gidra wrote:
+> > From: Daniel Colascione <dancol@google.com>
 > >
-> > Hi,
+> > This change adds a new function, anon_inode_getfd_secure, that creates
+> > anonymous-node file with individual non-S_PRIVATE inode to which security
+> > modules can apply policy. Existing callers continue using the original
+> > singleton-inode kind of anonymous-inode file. We can transition anonymous
+> > inode users to the new kind of anonymous inode in individual patches for
+> > the sake of bisection and review.
 > >
-> > On Tue, Aug 25, 2020 at 12:01 PM Sai Prakash Ranjan
-> > <saiprakash.ranjan@codeaurora.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On 2020-08-25 21:40, Doug Anderson wrote:
-> > > > Hi,
-> > > >
-> > > > On Tue, Aug 25, 2020 at 8:43 AM Sai Prakash Ranjan
-> > > > <saiprakash.ranjan@codeaurora.org> wrote:
-> > > >>
-> > > >> Currently the non-strict or lazy mode of TLB invalidation can only be
-> > > >> set
-> > > >> for all or no domains. This works well for development platforms where
-> > > >> setting to non-strict/lazy mode is fine for performance reasons but on
-> > > >> production devices, we need a more fine grained control to allow only
-> > > >> certain peripherals to support this mode where we can be sure that it
-> > > >> is
-> > > >> safe. So add support to filter non-strict/lazy mode based on the
-> > > >> device
-> > > >> names that are passed via cmdline parameter "iommu.nonstrict_device".
-> > > >>
-> > > >> Example:
-> > > >> iommu.nonstrict_device="7c4000.sdhci,a600000.dwc3,6048000.etr"
+> > The new function accepts an optional context_inode parameter that
+> > callers can use to provide additional contextual information to
+> > security modules for granting/denying permission to create an anon inode
+> > of the same type.
 > >
-> > Just curious: are device names like this really guaranteed to be
-> > stable across versions?
+> > For example, in case of userfaultfd, the created inode is a
+> > 'logical child' of the context_inode (userfaultfd inode of the
+> > parent process) in the sense that it provides the security context
+> > required during creation of the child process' userfaultfd inode.
 > >
+> > Signed-off-by: Daniel Colascione <dancol@google.com>
 > >
-> > > > I have an inherent dislike of jamming things like this onto the
-> > > > command line.  IMHO the command line is the last resort for specifying
-> > > > configuration and generally should be limited to some specialized
-> > > > debug options and cases where the person running the kernel needs to
-> > > > override a config that was set by the person (or company) compiling
-> > > > the kernel.  Specifically, having a long/unwieldy command line makes
-> > > > it harder to use for the case when an end user actually wants to use
-> > > > it to override something.  It's also just another place to look for
-> > > > config.
-> > > >
-> > >
-> > > Good thing about command line parameters are that they are optional,
-> > > they do
-> > > not specify any default behaviour (I mean they are not mandatory to be
-> > > set
-> > > for the system to be functional), so I would like to view it as an
-> > > optional
-> > > config. And this command line parameter (nonstrict_device) is strictly
-> > > optional
-> > > with default being strict already set in the driver.
-> > >
-> > > They can be passed from the bootloader via chosen node for DT platforms
-> > > or choose
-> > > a new *bootconfig* as a way to pass the cmdline but finally it does boil
-> > > down to
-> > > just another config.
+> > [Fix comment documenting return values of inode_init_security_anon()]
+> > [Add context_inode description in comments to anon_inode_getfd_secure()]
+> > [Remove definition of anon_inode_getfile_secure() as there are no callers]
+> > [Make _anon_inode_getfile() static]
+> > [Use correct error cast in _anon_inode_getfile()]
 > >
-> > Never looked at bootconfig.  Unfortunately it seems to require
-> > initramfs so that pretty much means it's out for my usage.  :(
+> > Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
+> > ---
+> >  fs/anon_inodes.c              | 148 ++++++++++++++++++++++++----------
+> >  include/linux/anon_inodes.h   |  13 +++
+> >  include/linux/lsm_hook_defs.h |   2 +
+> >  include/linux/lsm_hooks.h     |   7 ++
+> >  include/linux/security.h      |   3 +
+> >  security/security.c           |   9 +++
+> >  6 files changed, 141 insertions(+), 41 deletions(-)
 > >
+> > diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
+> > index 89714308c25b..2aa8b57be895 100644
+> > --- a/fs/anon_inodes.c
+> > +++ b/fs/anon_inodes.c
+> > @@ -55,61 +55,78 @@ static struct file_system_type anon_inode_fs_type = {
+> >       .kill_sb        = kill_anon_super,
+> >  };
 > >
-> > > I agree with general boolean or single value command line parameters
-> > > being just
-> > > more messy which could just be Kconfigs instead but for multiple value
-> > > parameters
-> > > like these do not fit in Kconfig.
-> > >
-> > > As you might already know, command line also gives an advantage to the
-> > > end user
-> > > to configure system without building kernel, for this specific command
-> > > line its
-> > > very useful because the performance bump is quite noticeable when the
-> > > iommu.strict
-> > > is off. Now for end user who would not be interested in building entire
-> > > kernel(majority)
-> > > and just cares about good speeds or throughput can find this very
-> > > beneficial.
-> > > I am not talking about one specific OS usecase here but more in general
-> > > term.
-> > >
-> > > > The other problem is that this doesn't necessarily scale very well.
-> > > > While it works OK for embedded cases it doesn't work terribly well for
-> > > > distributions.  I know that in an out-of-band thread you indicated
-> > > > that it doesn't break anything that's not already broken (AKA this
-> > > > doesn't fix the distro case but it doesn't make it worse), it would be
-> > > > better to come up with a more universal solution.
-> > > >
-> > >
-> > > Is the universal solution here referring to fix all the command line
-> > > parameters
-> > > in the kernel or this specific command line? Are we going to remove any
-> > > more
-> > > addition to the cmdline ;)
-> >
-> > There are very few cases where a kernel command line parameter is the
-> > only way to configure something.  Most of the time it's just there to
-> > override a config.  I wouldn't suggest removing those.  I just don't
-> > want a kernel command line parameter to be the primary way to enable
-> > something.
-> >
-> >
-> > > So possible other solution is the *bootconfig* which is again just
-> > > another place
-> > > to look for a config. So thing is that this universal solution would
-> > > result in
-> > > just more new fancy ways of passing configs or adding such configs to
-> > > the drivers
-> > > or subsystems in kernel which is pretty much similar to implementing
-> > > policy in
-> > > kernel which I think is frowned upon and mentioned in the other thread.
-> > >
-> > > > Ideally it feels like we should figure out how to tag devices in a
-> > > > generic manner automatically (hardcode at the driver or in the device
-> > > > tree).  I think the out-of-band discussions talked about "external
-> > > > facing" and the like.  We could also, perhaps, tag devices that have
-> > > > "binary blob" firmware if we wanted.  Then we'd have a policy (set by
-> > > > Kconfig, perhaps overridable via commandline) that indicated the
-> > > > strictness level for the various classes of devices.  So policy would
-> > > > be decided by KConfig and/or command line.
-> > > >
-> > >
-> > > How is tagging in driver or device tree better than the simple command
-> > > line
-> > > approach to pass the same list of devices which otherwise you would
-> > > hardcode
-> > > in the corresponding drivers and device tree all over the kernel other
-> > > than
-> > > the scalability part for command line? IMHO it is too much churn.
-> >
-> > It's better because it doesn't require keeping track and updating
-> > these per-board (or per machine) arguments for each and every
-> > board/machine you maintain.  If, for instance, we start out by
-> > allowing HW video decoder to use non-strict.  So:
-> >
-> > On one board, we add in "aa00000.video-codec" to the command line.
-> > On some other board, maybe we add in "1d00000.video-codec" to the command line.
-> > On some other board, maybe we add in "90400000.video-codec" to the command line.
-> >
-> > Now we realize that there's some problem and we have to remove it, so
-> > we need to go through and remove this from our command line
-> > everywhere.  Worse is that we have to proactively notice it and remove
-> > it.
-> >
-> > Instead, let's imagine that we set a policy at a bit of a higher
-> > level.  Different ideas:
-> >
-> > a) We could have a CONFIG_ option for the video codec that's something
-> > like "CONFIG_VIDEOCODEC_DEFAULT_NONSTRICT".  If this was set then if
-> > there is no "iommu.strict" command line argument then this device
-> > would be mapped as non-strict.  If "iommu.strict=0" or
-> > "iommu.strict=1" is on the command line then it would override all of
-> > these defaults.  Probably the existence (or maybe the default value)
-> > of this CONFIG option implies that there are no known/expected
-> > exploits related to it.
+> > -/**
+> > - * anon_inode_getfile - creates a new file instance by hooking it up to an
+> > - *                      anonymous inode, and a dentry that describe the "class"
+> > - *                      of the file
+> > - *
+> > - * @name:    [in]    name of the "class" of the new file
+> > - * @fops:    [in]    file operations for the new file
+> > - * @priv:    [in]    private data for the new file (will be file's private_data)
+> > - * @flags:   [in]    flags
+> > - *
+> > - * Creates a new file by hooking it on a single inode. This is useful for files
+> > - * that do not need to have a full-fledged inode in order to operate correctly.
+> > - * All the files created with anon_inode_getfile() will share a single inode,
+> > - * hence saving memory and avoiding code duplication for the file/inode/dentry
+> > - * setup.  Returns the newly created file* or an error pointer.
+> > - */
+> > -struct file *anon_inode_getfile(const char *name,
+> > -                             const struct file_operations *fops,
+> > -                             void *priv, int flags)
+> > +static struct inode *anon_inode_make_secure_inode(
+> > +     const char *name,
+> > +     const struct inode *context_inode)
+> > +{
+> > +     struct inode *inode;
+> > +     const struct qstr qname = QSTR_INIT(name, strlen(name));
+> > +     int error;
+> > +
+> > +     inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
+> > +     if (IS_ERR(inode))
+> > +             return inode;
+> > +     inode->i_flags &= ~S_PRIVATE;
+> > +     error = security_inode_init_security_anon(
+> > +             inode, &qname, context_inode);
 >
-> jumping in a bit late so might have missed some of the background, but
-> shouldn't the driver decide strict vs non-strict?  It should be the
-> one that knows if non-strict is safe or not?
-
-Part of the problem is that we need some way for the driver to know if
-the connected device is external or not.  A soldered-down storage
-device connected via an internal PCIe bus is probably OK to use w/
-non-strict.  An exposed PCIe port that anyone could plug anything into
-is probably not OK to use with non-strict.  Right now the kernel
-doesn't have this info.
-
-Part of the problem is also trying to describe the risk level that
-you're OK with and/or which risks you're willing to take and which
-ones you're not willing to take.  Right now there's a binary: "accept
-all the risk so I can get the best performance" and "accept none of
-the risk".  ...but what if you want to accept some risks and not
-others?  Maybe you're compiling the firmware for the video decoder
-yourself and you're very convinced that it really sanitizes all input
-and can't be compromised (or, if it is, you can quickly patch the
-compromise).  You might be willing to run this video codec in "non
-strict mode".  ...but if you give the video decoder firmware to
-someone else as a binary blob they might not be willing to trust you
-and might want to run the same firmware as "non-strict".
-
-
-
-> BR,
-> -R
+> Weird indentation here.  The call to security_inode_init_security_anon() fits on
+> one line.
 >
+> > +     if (error) {
+> > +             iput(inode);
+> > +             return ERR_PTR(error);
+> > +     }
+> > +     return inode;
+> > +}
+> > +
+> > +static struct file *_anon_inode_getfile(const char *name,
+> > +                                     const struct file_operations *fops,
+> > +                                     void *priv, int flags,
+> > +                                     const struct inode *context_inode,
+> > +                                     bool secure)
+> >  {
+> > +     struct inode *inode;
+> >       struct file *file;
 > >
-> > b) We could find some way to tag the video codec and then set
-> > non-strictness on certain classes of devices, then we could have a
-> > policy to disable strictness on certain classes of devices.
+> > -     if (IS_ERR(anon_inode_inode))
+> > -             return ERR_PTR(-ENODEV);
+> > +     if (secure) {
+> > +             inode = anon_inode_make_secure_inode(
+> > +                     name, context_inode);
+>
+> Likewise here.  The call to anon_inode_make_secure_inode() fits on one line.
+>
+> > +             if (IS_ERR(inode))
+> > +                     return ERR_CAST(inode);
+> > +     } else {
+> > +             inode = anon_inode_inode;
+> > +             if (IS_ERR(inode))
+> > +                     return ERR_PTR(-ENODEV);
+> > +             /*
+> > +              * We know the anon_inode inode count is always
+> > +              * greater than zero, so ihold() is safe.
+> > +              */
+> > +             ihold(inode);
+> > +     }
 > >
-> > The nice thing about the above is that you could imagine someone
-> > pushing a change to the stable trees that would fix everyone affected.
-> > Nobody would need to go around and adjust command line options, they'd
-> > just get the newest stable and it could cause devices to move into
-> > strict mode if there was a known exploit.  I suppose with your
-> > proposal stable trees could have a "blacklist" where the commandline
-> > is ignored for exploited devices, but that seems ugly.
+> > -     if (fops->owner && !try_module_get(fops->owner))
+> > -             return ERR_PTR(-ENOENT);
+> > +     if (fops->owner && !try_module_get(fops->owner)) {
+> > +             file = ERR_PTR(-ENOENT);
+> > +             goto err;
+> > +     }
+>
+> The error path here does module_put(fops->owner), even though a reference wasn't
+> acquired.
+>
+> > +
+> > +/**
+> > + * anon_inode_getfd - creates a new file instance by hooking it up to
+> > + *                    an anonymous inode and a dentry that describe
+> > + *                    the "class" of the file
+> > + *
+> > + * @name:    [in]    name of the "class" of the new file
+> > + * @fops:    [in]    file operations for the new file
+> > + * @priv:    [in]    private data for the new file (will be file's private_data)
+> > + * @flags:   [in]    flags
+> > + *
+> > + * Creates a new file by hooking it on a single inode. This is
+> > + * useful for files that do not need to have a full-fledged inode in
+> > + * order to operate correctly.  All the files created with
+> > + * anon_inode_getfile() will use the same singleton inode, reducing
+>
+> This should say anon_inode_getfd(), not anon_inode_getfile().
+>
+> > +/**
+> > + * Like anon_inode_getfd(), but adds the @context_inode argument to
+> > + * allow security modules to control creation of the new file. Once the
+> > + * security module makes the decision, this inode is no longer needed
+> > + * and hence reference to it is not held.
+> > + */
+> > +int anon_inode_getfd_secure(const char *name, const struct file_operations *fops,
+> > +                         void *priv, int flags,
+> > +                         const struct inode *context_inode)
+> > +{
+> > +     return _anon_inode_getfd(name, fops, priv, flags,
+> > +                              context_inode, true);
+> > +}
+>
+> Weird indentation here again.  The call to _anon_inode_getfd() fits on one line.
+>
+> > @@ -162,4 +229,3 @@ static int __init anon_inode_init(void)
+> >  }
 > >
+> >  fs_initcall(anon_inode_init);
+> > -
+>
+> Unnecessary whitespace change.
+>
+> > diff --git a/include/linux/anon_inodes.h b/include/linux/anon_inodes.h
+> > index d0d7d96261ad..67bd85d92dca 100644
+> > --- a/include/linux/anon_inodes.h
+> > +++ b/include/linux/anon_inodes.h
+> > @@ -10,12 +10,25 @@
+> >  #define _LINUX_ANON_INODES_H
 > >
-> > > Device tree could be used but then we have a problem with it being for
-> > > only
-> > > describing hardware and it doesn't work for ACPI based systems.
-> > >
-> > > Command line approach works for all systems (both DT and ACPI) without
-> > > having
-> > > to add too much churn to drivers. Lastly, I think we can have both
-> > > options, it
-> > > doesn't hurt to add command line parameter since it is optional.
+> >  struct file_operations;
+> > +struct inode;
+> > +
+> > +struct file *anon_inode_getfile_secure(const char *name,
+> > +                                    const struct file_operations *fops,
+> > +                                    void *priv, int flags,
+> > +                                    const struct inode *context_inode);
+>
+> This function isn't defined anywhere.
+>
+> > + * @inode_init_security_anon:
+> > + *      Set up a secure anonymous inode.
+> > + *      @inode contains the inode structure
+> > + *      @name name of the anonymous inode class
+> > + *      @context_inode optional related inode
+> > + *   Returns 0 on success, -EACCESS if the security module denies the
+> > + *   creation of this inode, or another -errno upon other errors.
+>
+> Is there a better name for this than "secure anonymous inode"?
+> (What is meant by "secure"?)
+>
+> > diff --git a/include/linux/security.h b/include/linux/security.h
+> > index 0a0a03b36a3b..95c133a8f8bb 100644
+> > --- a/include/linux/security.h
+> > +++ b/include/linux/security.h
+> > @@ -322,6 +322,9 @@ void security_inode_free(struct inode *inode);
+> >  int security_inode_init_security(struct inode *inode, struct inode *dir,
+> >                                const struct qstr *qstr,
+> >                                initxattrs initxattrs, void *fs_data);
+> > +int security_inode_init_security_anon(struct inode *inode,
+> > +                                   const struct qstr *name,
+> > +                                   const struct inode *context_inode);
+> >  int security_old_inode_init_security(struct inode *inode, struct inode *dir,
+> >                                    const struct qstr *qstr, const char **name,
+> >                                    void **value, size_t *len);
+>
+> This patch doesn't compile when !CONFIG_SECURITY because this file is missing a
+> !CONFIG_SECURITY stub for security_inode_init_security_anon().
+>
+> > diff --git a/security/security.c b/security/security.c
+> > index 70a7ad357bc6..149b3f024e2d 100644
+> > --- a/security/security.c
+> > +++ b/security/security.c
+> > @@ -1057,6 +1057,15 @@ int security_inode_init_security(struct inode *inode, struct inode *dir,
+> >  }
+> >  EXPORT_SYMBOL(security_inode_init_security);
 > >
-> > I'm not opposed to something existing that lets you override this on
-> > the command line, but I'm just not a fan of it being the primary way.
-> >
-> > -Doug
-> > _______________________________________________
-> > iommu mailing list
-> > iommu@lists.linux-foundation.org
-> > https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> > +int
+> > +security_inode_init_security_anon(struct inode *inode,
+> > +                               const struct qstr *name,
+> > +                               const struct inode *context_inode)
+> > +{
+> > +     return call_int_hook(inode_init_security_anon, 0, inode, name,
+> > +                          context_inode);
+> > +}
+>
+> Nit: everything else in this file has 'int' on the same line as the function
+> name.
+>
+Thanks a lot for reviewing. I'll send another version with all these fixed.
+
+> - Eric
