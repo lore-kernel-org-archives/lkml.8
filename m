@@ -2,60 +2,60 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3861FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF312087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052452087D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UeOWj1bL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SODSLjCJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgHZLFJ (ORCPT
+        id S1728904AbgHZLFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:05:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54912 "EHLO
+        Wed, 26 Aug 2020 07:05:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728679AbgHZLFD (ORCPT
+        with ESMTP id S1728723AbgHZLFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:05:03 -0400
+        Wed, 26 Aug 2020 07:05:11 -0400
 Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA97EC0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:05:02 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id v16so724055plo.1
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:05:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9751DC061756
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:05:10 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id b11so723386pld.7
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:05:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mqlq1PfT56HOoFMV6L94hJv96dlmh01C5Xs6bahtBkI=;
-        b=UeOWj1bLiRwpjx0xxo7VgpqGSSWO0JgJ1jDlPJnXdrM6c/bGEfxHVRjO52822EdGos
-         hMjeRcRFC8MnALlN0EL5KFiJ7OeDjlvlw/2zKk58tdxtxb/emtza+ibHAB+OxblK09Lb
-         CEPrqLjTKx3bpE5zD7EXrW2cyycWVsGx+84oc=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=57ATY6rlaZ9eWDcltcMWl9pjLEa9gziieo3Id6n6Wg8=;
+        b=SODSLjCJPxJuz8GNvtiwPEG9mbBU6waV9kB51eDienSbClMJV7QUxvAjRWVOjIjT1x
+         gG2LhvG30xscwrLxUrCcfJVFDeKX5Epw91nWxx3ikTQLnnzCPF6o3sFfrgwsBGnZ6jm6
+         g/puoak4Ejacz/UATbtTw739rS7Jl33YuIdsI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mqlq1PfT56HOoFMV6L94hJv96dlmh01C5Xs6bahtBkI=;
-        b=fUBbJG4V/UgGKLnEoBAG7ovzwg0gDbfkZj6IS+Yl6+bpg+iwVOzHLyWCX9xYt+8ImJ
-         Tb4hqX+KDeZGVmYci7N0Z4/aB0oHoGjWsEt/M5jF7t5RL3WbU39cFnuQD1V/Vf6lOi9v
-         OzeaOpYCi3HFfzqgupp8ku2hM8GIRkuIVkMdg/2nwonMx/t6RYv5uGxNtqHTkEp5d5lZ
-         kb8LmzKsI8dAQSwJZ75pXa0dmXs2AT8cKmy0RH1oM9rouelP7nwwwwK/Ig0vcwpRoAYD
-         3iitOJ4Ao1/WBW/UEti87ajhbBA9SS73TMySCL+sUx3vQuPRAkmmpWB4iZaE6FPMnoun
-         K2cg==
-X-Gm-Message-State: AOAM531hY5BbctjGZFgAxD1TMtsjqqGyRm9c1C8Y+dxhkbmCvX5YrxnD
-        UWPNryDTtd0TCjl7ukIwbDrZiSlI78Oby61b
-X-Google-Smtp-Source: ABdhPJzkWckbe2f7/EY4eUKIYZ4JNt+7W4ArRJA9yhosyjN47O+337w2fSQAeHRBzXhqgEJos8I9Lw==
-X-Received: by 2002:a17:902:9309:: with SMTP id bc9mr11228131plb.51.1598439901835;
-        Wed, 26 Aug 2020 04:05:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=57ATY6rlaZ9eWDcltcMWl9pjLEa9gziieo3Id6n6Wg8=;
+        b=TJ7JedWQ3EWkAv4VIkTl63ImI69NQEPqN97S2tQvc0YwP3BlzuVWxRAZc7U33fCzYU
+         7+foUeNDw29bksrXyA//k3/WEj2Xh8VyCWCqdl8NT05SICPvZltF1reqgywX/6Rjdi79
+         TNi8p3RveQgM/jrX4gWNl8GkghsaESyaFKc2n4DddvUNTq/2u8uh/UXsxondub7quhFV
+         of6lmIp5R1xghs2Qo7EKKNHmhXvEAeS166fmt0IPxXtn36rHscG7IjcPt8tiFN99v+jT
+         ePjS7vp3SC+qywLshruLL+CLWvnUzbnijaW5q4PjcTZpI2HqTm+QWFAtyCCr4r7rBgoF
+         7Yow==
+X-Gm-Message-State: AOAM532LLeglnIcsrtSH4yXC1DCTg7K71kD9XhdJ76rtcGLL9ojwj+Ij
+        yQWkkYwqbScG07ztrQIyfYYRbObGZyTByqGg
+X-Google-Smtp-Source: ABdhPJzYRhsn/wYXuVMOpPBm4M674M05q8cS5wEqqc7VfH+Jxwmu3FKrFuPJeVxUpfirXrS2ykg3rQ==
+X-Received: by 2002:a17:902:bb87:: with SMTP id m7mr11409065pls.61.1598439909717;
+        Wed, 26 Aug 2020 04:05:09 -0700 (PDT)
 Received: from localhost ([2401:fa00:1:10:de4a:3eff:fe7d:d39c])
-        by smtp.gmail.com with ESMTPSA id x5sm1888539pgf.65.2020.08.26.04.04.57
+        by smtp.gmail.com with ESMTPSA id o65sm2578660pfg.105.2020.08.26.04.05.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Aug 2020 04:05:00 -0700 (PDT)
+        Wed, 26 Aug 2020 04:05:09 -0700 (PDT)
 From:   Cheng-Yi Chiang <cychiang@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Mark Brown <broonie@kernel.org>, Taniya Das <tdas@codeaurora.org>,
@@ -75,10 +75,12 @@ Cc:     Mark Brown <broonie@kernel.org>, Taniya Das <tdas@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         alsa-devel@alsa-project.org,
         Cheng-Yi Chiang <cychiang@chromium.org>
-Subject: [PATCH v6 0/2] Add documentation and machine driver for SC7180 sound card
-Date:   Wed, 26 Aug 2020 19:04:52 +0800
-Message-Id: <20200826110454.1811352-1-cychiang@chromium.org>
+Subject: [PATCH v6 1/2] ASoC: qcom: dt-bindings: Add sc7180 machine bindings
+Date:   Wed, 26 Aug 2020 19:04:53 +0800
+Message-Id: <20200826110454.1811352-2-cychiang@chromium.org>
 X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+In-Reply-To: <20200826110454.1811352-1-cychiang@chromium.org>
+References: <20200826110454.1811352-1-cychiang@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -86,67 +88,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Note:
-- The machine driver patch is made by the collaboration of
-  Cheng-Yi Chiang <cychiang@chromium.org>
-  Rohit kumar <rohitkr@codeaurora.org>
-  Ajit Pandey <ajitp@codeaurora.org>
-  But Ajit has left codeaurora.
+Add devicetree bindings documentation file for sc7180 sound card.
 
-Changes from v1 to v2:
-- Ducumentation: Addressed all suggestions from Doug.
-- Machine driver:
-  - Fix comment style for license.
-  - Sort includes.
-  - Remove sc7180_snd_hw_params.
-  - Remove sc7180_dai_init and use aux device instead for headset jack registration.
-  - Statically define format for Primary MI2S.
-  - Atomic is not a concern because there is mutex in card to make sure
-    startup and shutdown happen sequentially.
-  - Fix missing return -EINVAL in startup.
-  - Use static sound card.
-  - Use devm_kzalloc to avoid kfree.
-
-Changes from v2 to v3:
-- Ducumentation: Addressed suggestions from Srini.
-- Machine driver:
-  - Reuse qcom_snd_parse_of to parse properties.
-  - Remove playback-only and capture-only.
-  - Misc fixes to address comments.
-
-Changes from v3 to v4:
-- Ducumentation: Addressed suggestions from Rob.
- - Remove definition of dai.
- - Use 'sound-dai: true' for sound-dai schema.
- - Add reg property to pass 'make dt_binding_check' check although reg is not used in the driver.
-- Machine driver:
- - Add Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
-
-Changes from v4 to v5:
-- Documentation: Addressed suggestions from Rob.
- - Add definition for "#address-cells" and "#size-cells".
- - Add additionalProperties: false
- - Add required properties.
-
-Changes from v5 to v6:
-- Documentation: Addressed suggestions from Rob.
- - Drop contains in compatible strings.
- - Only allow dai-link@[0-9]
- - Remove reg ref since it has a type definition already.
-Ajit Pandey (1):
-  ASoC: qcom: sc7180: Add machine driver for sound card registration
-
-Cheng-Yi Chiang (1):
-  ASoC: qcom: dt-bindings: Add sc7180 machine bindings
-
- .../bindings/sound/qcom,sc7180.yaml           | 124 +++++++++
- sound/soc/qcom/Kconfig                        |  12 +
- sound/soc/qcom/Makefile                       |   2 +
- sound/soc/qcom/sc7180.c                       | 244 ++++++++++++++++++
- 4 files changed, 382 insertions(+)
+Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
+---
+ .../bindings/sound/qcom,sc7180.yaml           | 124 ++++++++++++++++++
+ 1 file changed, 124 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
- create mode 100644 sound/soc/qcom/sc7180.c
 
+diff --git a/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+new file mode 100644
+index 000000000000..a85375974a4c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/qcom,sc7180.yaml
+@@ -0,0 +1,124 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/qcom,sc7180.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies Inc. SC7180 ASoC sound card driver
++
++maintainers:
++  - Rohit kumar <rohitkr@codeaurora.org>
++  - Cheng-Yi Chiang <cychiang@chromium.org>
++
++description:
++  This binding describes the SC7180 sound card which uses LPASS for audio.
++
++properties:
++  compatible:
++    const: qcom,sc7180-sndcard
++
++  audio-routing:
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    description:
++      A list of the connections between audio components. Each entry is a
++      pair of strings, the first being the connection's sink, the second
++      being the connection's source.
++
++  model:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: User specified audio sound card name
++
++  aux-dev:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle of the codec for headset detection
++
++  "#address-cells":
++    const: 1
++
++  "#size-cells":
++    const: 0
++
++patternProperties:
++  "^dai-link(@[0-9])?$":
++    description:
++      Each subnode represents a dai link. Subnodes of each dai links would be
++      cpu/codec dais.
++
++    type: object
++
++    properties:
++      link-name:
++        description: Indicates dai-link name and PCM stream name.
++        $ref: /schemas/types.yaml#/definitions/string
++        maxItems: 1
++
++      reg:
++        description: dai link address.
++
++      cpu:
++        description: Holds subnode which indicates cpu dai.
++        type: object
++        properties:
++          sound-dai: true
++
++      codec:
++        description: Holds subnode which indicates codec dai.
++        type: object
++        properties:
++          sound-dai: true
++
++    required:
++      - link-name
++      - cpu
++      - codec
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - model
++  - "#address-cells"
++  - "#size-cells"
++
++additionalProperties: false
++
++examples:
++
++  - |
++    sound {
++        compatible = "qcom,sc7180-sndcard";
++        model = "sc7180-snd-card";
++
++        audio-routing =
++                    "Headphone Jack", "HPOL",
++                    "Headphone Jack", "HPOR";
++
++        aux-dev = <&alc5682>;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        dai-link@0 {
++            link-name = "MultiMedia0";
++            reg = <0>;
++            cpu {
++                sound-dai = <&lpass_cpu 0>;
++            };
++
++            codec {
++                sound-dai = <&alc5682 0>;
++            };
++        };
++
++        dai-link@1 {
++            link-name = "MultiMedia1";
++            reg = <1>;
++            cpu {
++                sound-dai = <&lpass_cpu 1>;
++            };
++
++            codec {
++                sound-dai = <&max98357a>;
++            };
++        };
++    };
 -- 
 2.28.0.297.g1956fa8f8d-goog
 
