@@ -2,171 +2,216 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDEBC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A650BC433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05FF12071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9AA207DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MDWa/v2U"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vdQOiVSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727064AbgHZGgj (ORCPT
+        id S1727077AbgHZGgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:36:39 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:39452 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726886AbgHZGfu (ORCPT
+        Wed, 26 Aug 2020 02:36:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbgHZGfs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:35:50 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200826063546euoutp02dcb3f8dad44cee87fa00d3238aaf474e~uve3Mi5cX1512715127euoutp02o
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:35:46 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200826063546euoutp02dcb3f8dad44cee87fa00d3238aaf474e~uve3Mi5cX1512715127euoutp02o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598423746;
-        bh=i9tfBl9XK1ZIcmVNmOj760Z4Av4MmZkmEeWSykU107Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MDWa/v2UN64kd/Pdh2+Eqeqoqxov2kLfJNAWiAuYfPUDZdGsjK6rzp0jDh/Ieviln
-         FTtvqfiaz8SXSMsHICUOsl47/oAzIj4oVOeTnycj3hrxaX9nk4J4vuowAU11CNovOv
-         MRLIevFWqldfH/vPZ87AN+jaPiLfdmm0deNKsdu8=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200826063546eucas1p248e3327a2574966e6260f8ea4243a18c~uve27uU5X0403504035eucas1p2_;
-        Wed, 26 Aug 2020 06:35:46 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 59.BD.05997.2C2064F5; Wed, 26
-        Aug 2020 07:35:46 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200826063546eucas1p268558dcd08ac9b43843f9f5e23da227d~uve2fzbFv0398703987eucas1p2r;
-        Wed, 26 Aug 2020 06:35:46 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200826063546eusmtrp1324e39600c0b1709cb7b91c674f0a758~uve2fFvRB1167511675eusmtrp1M;
-        Wed, 26 Aug 2020 06:35:46 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-ed-5f4602c23e0d
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B0.E0.06314.1C2064F5; Wed, 26
-        Aug 2020 07:35:45 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200826063545eusmtip2148831d8e511c634dd22bec68983ea60~uve14XvZb0092300923eusmtip2U;
-        Wed, 26 Aug 2020 06:35:45 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kirti Wankhede <kwankhede@nvidia.com>, kvm@vger.kernel.org
-Subject: [PATCH v9 30/32] samples: vfio-mdev/mbochs: fix common struct
- sg_table related issues
-Date:   Wed, 26 Aug 2020 08:33:14 +0200
-Message-Id: <20200826063316.23486-31-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826063316.23486-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrMKsWRmVeSWpSXmKPExsWy7djP87qHmNziDT68kLXoPXeSyWLjjPWs
-        Fv+3TWS2uPL1PZvFytVHmSwW7Le2mDO10GLL6bmMFl+uPGSy2PT4GqvF5V1z2CzWHrnLbnHw
-        wxNWB16PNfPWMHrs/baAxWP7twesHve7jzN5bF5S73H732Nmj8k3ljN67L7ZwObR2/yOzaNv
-        yypGj8+b5AK4o7hsUlJzMstSi/TtErgyfm/bxF6wRLDi1o78BsaNfF2MnBwSAiYSbe2XGbsY
-        uTiEBFYwSnx/tZYFwvnCKHHnxE4WkCohgc+MEp++x8N0rO9bDdWxnFGid9d0JriOM1fmMoNU
-        sQkYSnS97WIDsUUEWhklTvTygBQxC1xjknj79x1rFyMHh7BAgsSnV6kgNSwCqhLPph8C6+UV
-        sJOY1/qIDWKbvMTqDQfA4pxA8ePd/VDxfewSO4/EQNguEnfetjFC2MISr45vYYewZSROT+4B
-        e0dCoJlR4uG5tewQTg+jxOWmGVAd1hJ3zv1iAzmIWUBTYv0ufYiwo0T3uknMIGEJAT6JG28F
-        QcLMQOakbdOhwrwSHW1CENVqErOOr4Nbe/DCJWYI20Oie+N5Nkj4TGSUeDP9IfMERvlZCMsW
-        MDKuYhRPLS3OTU8tNspLLdcrTswtLs1L10vOz93ECExKp/8d/7KDcdefpEOMAhyMSjy8C9hc
-        44VYE8uKK3MPMUpwMCuJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iFGag0VJnNd40ctYIYH0xJLU
-        7NTUgtQimCwTB6dUA+OU74IBMS0vucr3ZHVH7+uVTr/jXntVNFgm02oxx793fImpnqG6U+9d
-        nXLmWK0Cd1/XLLNPN7RVfHZLvj188cKthwerP+04vObfls4Xz0yyUwraz23gsP6T2K9V7Vjt
-        vNJp3+8+s5yO9+F+rHIymgFcyzy1tIv/Fb07a1S6v2N+wExW7m2BHEosxRmJhlrMRcWJAKtM
-        O5tGAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprGIsWRmVeSWpSXmKPExsVy+t/xe7oHmdziDb6vtbToPXeSyWLjjPWs
-        Fv+3TWS2uPL1PZvFytVHmSwW7Le2mDO10GLL6bmMFl+uPGSy2PT4GqvF5V1z2CzWHrnLbnHw
-        wxNWB16PNfPWMHrs/baAxWP7twesHve7jzN5bF5S73H732Nmj8k3ljN67L7ZwObR2/yOzaNv
-        yypGj8+b5AK4o/RsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstS
-        i/TtEvQyfm/bxF6wRLDi1o78BsaNfF2MnBwSAiYS6/tWM3YxcnEICSxllPj5aSIrREJG4uS0
-        BihbWOLPtS42iKJPjBKHf19jB0mwCRhKdL2FSIgIdDJKTOv+CJZgFrjHJLF3nR+ILSwQJ/Gi
-        /ysbiM0ioCrxbPohZhCbV8BOYl7rIzaIDfISqzccAItzAsWPd/eDxYUEbCVOr53BPIGRbwEj
-        wypGkdTS4tz03GJDveLE3OLSvHS95PzcTYzAONl27OfmHYyXNgYfYhTgYFTi4V3A5hovxJpY
-        VlyZe4hRgoNZSYTX6ezpOCHelMTKqtSi/Pii0pzU4kOMpkBHTWSWEk3OB8ZwXkm8oamhuYWl
-        obmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGRsu2U4X6kaYfvvde3DRTdfW1pKJj
-        l2V3bww7cEX3+YmKl0rMtrNUezkDopax21noP7DjmaHGtro+5aG64EVHpZfTQtITnsZH2mzy
-        DCqQmsTD6HZt0cTgpAtaNzdGlxSt3+reNuf2Y8MfLVczbF8tnp4c8cMk0EhskYlH7ZJPbQdC
-        XHfadyrdVWIpzkg01GIuKk4EAOSPyuupAgAA
-X-CMS-MailID: 20200826063546eucas1p268558dcd08ac9b43843f9f5e23da227d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200826063546eucas1p268558dcd08ac9b43843f9f5e23da227d
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200826063546eucas1p268558dcd08ac9b43843f9f5e23da227d
-References: <20200826063316.23486-1-m.szyprowski@samsung.com>
-        <CGME20200826063546eucas1p268558dcd08ac9b43843f9f5e23da227d@eucas1p2.samsung.com>
+        Wed, 26 Aug 2020 02:35:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27F56C061574;
+        Tue, 25 Aug 2020 23:35:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=+cMW5JtsVeNS2FjWWdcDP87J0ElpYqiX0+V9AmGsl5g=; b=vdQOiVSF6fBxenY6vigpPDDsWy
+        LAzWjpyJ7o18k22xyQbjOpHTJyPJKLXoVeaa04ofyq6Z3VaTrUPwWJWMnKJPSYMKjUp7k/OPQ/xgz
+        EcSojjFOvAu3EU8v3YnCxPkEqa9JaBNOWNs3cgRmGwXIIaoBM3lNgEnKi7HERU+C7bybJl53Z7kSM
+        ELarZ2DolwN5nr4Gk1JZ3lOujCRX15fsGCop2mJ8/MbvWoatnsQWOZLHwWAKwKJauKmHBhZ/jtLMZ
+        4L7Qa37j+tybKLQU/LrLDM1/f4zYDYgxg5mF5VImsBfThswFUUAIef3p5ARCVVEu+lZyyumP9yXHx
+        lnBE7AnA==;
+Received: from 213-225-6-196.nat.highway.a1.net ([213.225.6.196] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAp25-0001NT-RV; Wed, 26 Aug 2020 06:35:42 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Subject: [PATCH 04/19] block: split block_class_lock
+Date:   Wed, 26 Aug 2020 08:24:31 +0200
+Message-Id: <20200826062446.31860-5-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200826062446.31860-1-hch@lst.de>
+References: <20200826062446.31860-1-hch@lst.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-returns the number of the created entries in the DMA address space.
-However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-dma_unmap_sg must be called with the original number of the entries
-passed to the dma_map_sg().
+Split the block_class_lock mutex into one each to protect bdev_map
+and major_names.
 
-struct sg_table is a common structure used for describing a non-contiguous
-memory buffer, used commonly in the DRM and graphics subsystems. It
-consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-and DMA mapped pages (nents entry).
-
-It turned out that it was a common mistake to misuse nents and orig_nents
-entries, calling DMA-mapping functions with a wrong number of entries or
-ignoring the number of mapped entries returned by the dma_map_sg()
-function.
-
-To avoid such issues, lets use a common dma-mapping wrappers operating
-directly on the struct sg_table objects and use scatterlist page
-iterators where possible. This, almost always, hides references to the
-nents and orig_nents entries, making the code robust, easier to follow
-and copy/paste safe.
-
-While touching this code, also add missing call to dma_unmap_sgtable.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- samples/vfio-mdev/mbochs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ block/genhd.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
-index 3cc5e5921682..e03068917273 100644
---- a/samples/vfio-mdev/mbochs.c
-+++ b/samples/vfio-mdev/mbochs.c
-@@ -846,7 +846,7 @@ static struct sg_table *mbochs_map_dmabuf(struct dma_buf_attachment *at,
- 	if (sg_alloc_table_from_pages(sg, dmabuf->pages, dmabuf->pagecount,
- 				      0, dmabuf->mode.size, GFP_KERNEL) < 0)
- 		goto err2;
--	if (!dma_map_sg(at->dev, sg->sgl, sg->nents, direction))
-+	if (dma_map_sgtable(at->dev, sg, direction, 0))
- 		goto err3;
+diff --git a/block/genhd.c b/block/genhd.c
+index df6485223a2c3d..0ae6210e141ee5 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -25,7 +25,6 @@
  
- 	return sg;
-@@ -868,6 +868,7 @@ static void mbochs_unmap_dmabuf(struct dma_buf_attachment *at,
+ #include "blk.h"
  
- 	dev_dbg(dev, "%s: %d\n", __func__, dmabuf->id);
+-static DEFINE_MUTEX(block_class_lock);
+ static struct kobject *block_depr;
  
-+	dma_unmap_sgtable(at->dev, sg, direction, 0);
- 	sg_free_table(sg);
- 	kfree(sg);
+ struct bdev_map {
+@@ -37,6 +36,7 @@ struct bdev_map {
+ 	int (*lock)(dev_t, void *);
+ 	void *data;
+ } *bdev_map[255];
++static DEFINE_MUTEX(bdev_map_lock);
+ 
+ /* for extended dynamic devt allocation, currently only one major is used */
+ #define NR_EXT_DEVT		(1 << MINORBITS)
+@@ -403,6 +403,7 @@ static struct blk_major_name {
+ 	int major;
+ 	char name[16];
+ } *major_names[BLKDEV_MAJOR_HASH_SIZE];
++static DEFINE_MUTEX(major_names_lock);
+ 
+ /* index in the above - for now: assume no multimajor ranges */
+ static inline int major_to_index(unsigned major)
+@@ -415,11 +416,11 @@ void blkdev_show(struct seq_file *seqf, off_t offset)
+ {
+ 	struct blk_major_name *dp;
+ 
+-	mutex_lock(&block_class_lock);
++	mutex_lock(&major_names_lock);
+ 	for (dp = major_names[major_to_index(offset)]; dp; dp = dp->next)
+ 		if (dp->major == offset)
+ 			seq_printf(seqf, "%3d %s\n", dp->major, dp->name);
+-	mutex_unlock(&block_class_lock);
++	mutex_unlock(&major_names_lock);
  }
+ #endif /* CONFIG_PROC_FS */
+ 
+@@ -448,7 +449,7 @@ int register_blkdev(unsigned int major, const char *name)
+ 	struct blk_major_name **n, *p;
+ 	int index, ret = 0;
+ 
+-	mutex_lock(&block_class_lock);
++	mutex_lock(&major_names_lock);
+ 
+ 	/* temporary */
+ 	if (major == 0) {
+@@ -501,7 +502,7 @@ int register_blkdev(unsigned int major, const char *name)
+ 		kfree(p);
+ 	}
+ out:
+-	mutex_unlock(&block_class_lock);
++	mutex_unlock(&major_names_lock);
+ 	return ret;
+ }
+ 
+@@ -513,7 +514,7 @@ void unregister_blkdev(unsigned int major, const char *name)
+ 	struct blk_major_name *p = NULL;
+ 	int index = major_to_index(major);
+ 
+-	mutex_lock(&block_class_lock);
++	mutex_lock(&major_names_lock);
+ 	for (n = &major_names[index]; *n; n = &(*n)->next)
+ 		if ((*n)->major == major)
+ 			break;
+@@ -523,7 +524,7 @@ void unregister_blkdev(unsigned int major, const char *name)
+ 		p = *n;
+ 		*n = p->next;
+ 	}
+-	mutex_unlock(&block_class_lock);
++	mutex_unlock(&major_names_lock);
+ 	kfree(p);
+ }
+ 
+@@ -674,7 +675,7 @@ void blk_register_region(dev_t devt, unsigned long range, struct module *module,
+ 		p->data = data;
+ 	}
+ 
+-	mutex_lock(&block_class_lock);
++	mutex_lock(&bdev_map_lock);
+ 	for (i = 0, p -= n; i < n; i++, p++, index++) {
+ 		struct bdev_map **s = &bdev_map[index % 255];
+ 		while (*s && (*s)->range < range)
+@@ -682,7 +683,7 @@ void blk_register_region(dev_t devt, unsigned long range, struct module *module,
+ 		p->next = *s;
+ 		*s = p;
+ 	}
+-	mutex_unlock(&block_class_lock);
++	mutex_unlock(&bdev_map_lock);
+ }
+ EXPORT_SYMBOL(blk_register_region);
+ 
+@@ -693,7 +694,7 @@ void blk_unregister_region(dev_t devt, unsigned long range)
+ 	unsigned i;
+ 	struct bdev_map *found = NULL;
+ 
+-	mutex_lock(&block_class_lock);
++	mutex_lock(&bdev_map_lock);
+ 	for (i = 0; i < min(n, 255u); i++, index++) {
+ 		struct bdev_map **s;
+ 		for (s = &bdev_map[index % 255]; *s; s = &(*s)->next) {
+@@ -706,7 +707,7 @@ void blk_unregister_region(dev_t devt, unsigned long range)
+ 			}
+ 		}
+ 	}
+-	mutex_unlock(&block_class_lock);
++	mutex_unlock(&bdev_map_lock);
+ 	kfree(found);
+ }
+ EXPORT_SYMBOL(blk_unregister_region);
+@@ -1041,7 +1042,7 @@ static struct gendisk *lookup_gendisk(dev_t dev, int *partno)
+ 	unsigned long best = ~0UL;
+ 
+ retry:
+-	mutex_lock(&block_class_lock);
++	mutex_lock(&bdev_map_lock);
+ 	for (p = bdev_map[MAJOR(dev) % 255]; p; p = p->next) {
+ 		struct kobject *(*probe)(dev_t, int *, void *);
+ 		struct module *owner;
+@@ -1062,7 +1063,7 @@ static struct gendisk *lookup_gendisk(dev_t dev, int *partno)
+ 			module_put(owner);
+ 			continue;
+ 		}
+-		mutex_unlock(&block_class_lock);
++		mutex_unlock(&bdev_map_lock);
+ 		kobj = probe(dev, partno, data);
+ 		/* Currently ->owner protects _only_ ->probe() itself. */
+ 		module_put(owner);
+@@ -1070,7 +1071,7 @@ static struct gendisk *lookup_gendisk(dev_t dev, int *partno)
+ 			return dev_to_disk(kobj_to_dev(kobj));
+ 		goto retry;
+ 	}
+-	mutex_unlock(&block_class_lock);
++	mutex_unlock(&bdev_map_lock);
+ 	return NULL;
+ }
+ 
 -- 
-2.17.1
+2.28.0
 
