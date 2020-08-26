@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C96C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 168F720838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BF720838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598443667;
-	bh=RhiLupqRQVXojRdaOn/M2DAmZX/fy/Bizh/vLiZGe4U=;
+	s=default; t=1598443676;
+	bh=CWyMEWvEF4mgTZYLBmO4vAIk8fL1sXzxh/kZHfgo1s0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rXYICmAJK1q8xIT7Cd+y6+IfXZhjrJPKl1Lp/C281DJRqWhYI4egfMXn/gfWjcXgu
-	 TgP7PHgbs1s2anujJxMw/KZ9xxSn/RkTOa3LHu9vfZQkYcxMvMpFXkjrZWnvvLEt0F
-	 aaCDtDDRuAUmGpfLyD0U+qOMoLQX2aQMVwkw/DEw=
+	b=a9TQNI6MIVI3+LRaoMIPnWZlAe/b8Z3L9xr+obEBZTtvewRdnNAYJEkfVSEjYahZT
+	 +3GVpzr7qcFEJw6WfGEQYV6djWBmkDF+f1YmjZdADLo22dMnrxRNG6iuqZy6wsHkZy
+	 MxXbUEeb8M3pquyH6Cw9cqth+AM7wylkYg2ROENY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbgHZMHo (ORCPT
+        id S1729559AbgHZMHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:07:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36684 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 08:07:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729455AbgHZMCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:02:38 -0400
+        id S1729457AbgHZMCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:02:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBF682087C;
-        Wed, 26 Aug 2020 12:02:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9959120786;
+        Wed, 26 Aug 2020 12:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598443357;
-        bh=RhiLupqRQVXojRdaOn/M2DAmZX/fy/Bizh/vLiZGe4U=;
+        s=default; t=1598443360;
+        bh=CWyMEWvEF4mgTZYLBmO4vAIk8fL1sXzxh/kZHfgo1s0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Dzcq7B6WabdzpAOqsUcs6YA5jVEy+50jE1gZ77AdTdxIW84SRkb5szrXV86V/wLLI
-         ghwsreY+mh6xwr1CGdx9Cij4ZpFuGpqYtNmDQTXiEuhG/nl3f4HA0H+wWixKSnAG+Q
-         NOxZG0f9y/UTuZ88M1oedS394wQYccz9X0iJFlzA=
+        b=qmcUQCB5imzfV6A6e5Fo26qhzmHNEXiVaBi2t4QlXay9//zTsevCIpRnqs3khtThn
+         YyxK1O8Ta8mlFUUnBdwQ/ZjclobTGMZBGK4EhGc5axsUb9vNyWmIGfhkV2SegtPq0l
+         mcZwqUh3b5tr+z4vzPKcwxksfgSpMKT8XW0V0THY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shay Agroskin <shayagr@amazon.com>,
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.7 10/15] net: ena: Make missed_tx stat incremental
-Date:   Wed, 26 Aug 2020 14:02:38 +0200
-Message-Id: <20200826114849.800823726@linuxfoundation.org>
+Subject: [PATCH 5.7 02/15] net: Fix potential wrong skb->protocol in skb_vlan_untag()
+Date:   Wed, 26 Aug 2020 14:02:30 +0200
+Message-Id: <20200826114849.419802836@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200826114849.295321031@linuxfoundation.org>
 References: <20200826114849.295321031@linuxfoundation.org>
@@ -59,47 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shay Agroskin <shayagr@amazon.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-[ Upstream commit ccd143e5150f24b9ba15145c7221b61dd9e41021 ]
+[ Upstream commit 55eff0eb7460c3d50716ed9eccf22257b046ca92 ]
 
-Most statistics in ena driver are incremented, meaning that a stat's
-value is a sum of all increases done to it since driver/queue
-initialization.
+We may access the two bytes after vlan_hdr in vlan_set_encap_proto(). So
+we should pull VLAN_HLEN + sizeof(unsigned short) in skb_vlan_untag() or
+we may access the wrong data.
 
-This patch makes all statistics this way, effectively making missed_tx
-statistic incremental.
-Also added a comment regarding rx_drops and tx_drops to make it
-clearer how these counters are calculated.
-
-Fixes: 11095fdb712b ("net: ena: add statistics for missed tx packets")
-Signed-off-by: Shay Agroskin <shayagr@amazon.com>
+Fixes: 0d5501c1c828 ("net: Always untag vlan-tagged traffic on input.")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_netdev.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/core/skbuff.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
-@@ -3594,7 +3594,7 @@ static int check_missing_comp_in_tx_queu
- 	}
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -5421,8 +5421,8 @@ struct sk_buff *skb_vlan_untag(struct sk
+ 	skb = skb_share_check(skb, GFP_ATOMIC);
+ 	if (unlikely(!skb))
+ 		goto err_free;
+-
+-	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN)))
++	/* We may access the two bytes after vlan_hdr in vlan_set_encap_proto(). */
++	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN + sizeof(unsigned short))))
+ 		goto err_free;
  
- 	u64_stats_update_begin(&tx_ring->syncp);
--	tx_ring->tx_stats.missed_tx = missed_tx;
-+	tx_ring->tx_stats.missed_tx += missed_tx;
- 	u64_stats_update_end(&tx_ring->syncp);
- 
- 	return rc;
-@@ -4519,6 +4519,9 @@ static void ena_keep_alive_wd(void *adap
- 	rx_drops = ((u64)desc->rx_drops_high << 32) | desc->rx_drops_low;
- 
- 	u64_stats_update_begin(&adapter->syncp);
-+	/* These stats are accumulated by the device, so the counters indicate
-+	 * all drops since last reset.
-+	 */
- 	adapter->dev_stats.rx_drops = rx_drops;
- 	u64_stats_update_end(&adapter->syncp);
- }
+ 	vhdr = (struct vlan_hdr *)skb->data;
 
 
