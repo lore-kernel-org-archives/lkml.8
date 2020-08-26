@@ -2,203 +2,95 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E21FC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB0E1206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:20:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460392074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:20:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyXYghMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgHZQUW (ORCPT
+        id S1727814AbgHZQUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:20:22 -0400
-Received: from mga14.intel.com ([192.55.52.115]:48253 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727814AbgHZQUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:20:18 -0400
-IronPort-SDR: Ta5RCl9xbAAOgSPEeLmoGrwSNHmT2sxo6DHxSKQaWJ1TcANn0oJJ5BHdU8Pc39HaPUvi872vZ9
- ZnKOBaDg2uMw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="155586468"
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="155586468"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:20:16 -0700
-IronPort-SDR: ljGBez0CmtQf6FL04AiuuPiruyngdoTWumwzs1YukECTXeJI+df3vtw01T9fzH/Co9fd1Ehj6B
- D6RKzfvy4Nng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="444104375"
-Received: from yliang6-mobl1.ccr.corp.intel.com (HELO [10.254.84.68]) ([10.254.84.68])
-  by orsmga004.jf.intel.com with ESMTP; 26 Aug 2020 09:20:09 -0700
-Subject: Re: [PATCH V2 3/9] PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs
- associated with RCEC
-To:     Sean V Kelley <sean.v.kelley@intel.com>, bhelgaas@google.com,
-        Jonathan.Cameron@huawei.com, rjw@rjwysocki.net,
-        ashok.raj@intel.com, tony.luck@intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-References: <20200804194052.193272-1-sean.v.kelley@intel.com>
- <20200804194052.193272-4-sean.v.kelley@intel.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <139d4c34-7e5e-8867-a016-4a5bc737b804@linux.intel.com>
-Date:   Wed, 26 Aug 2020 09:20:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 26 Aug 2020 12:20:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbgHZQUq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:20:46 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15D48C061574;
+        Wed, 26 Aug 2020 09:20:46 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y6so1123226plk.10;
+        Wed, 26 Aug 2020 09:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=+gFxa6mV/dX1dFCBtC2xOtSeE1QQdKAWrajpPbfycck=;
+        b=lyXYghMrnRsy3FpCr4AoQmKaZJOTWa0XdSKtjtXFSo7t5sdVS6sNr77I+PEJ4Pa6qV
+         17ADvEsT5pTzYjNFWe/3G6MjBv53R8PPjmH4NERp+ePjdPORiMZbrfBBf4nWwLsi5VfU
+         qyPUMgn4gBD/EylLGvUscir654O7fAKUkB8+j9eAPnyAaa1mW4ERgUdIawCuy2vACsyl
+         xWFhU4cMmlM2AwuDpn471FIeZxCisuZM5za5fJVL9Bg9IO8BbN5qdK2x9PalDbwvg84i
+         PEUmxcYoWG0RGC86JMwTMdQAD85Q6+KwtCDL+h3Yc+2jgrW+ZksycWAahqMIX6tuBbtD
+         2gwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=+gFxa6mV/dX1dFCBtC2xOtSeE1QQdKAWrajpPbfycck=;
+        b=Bgg5uuuyAY9wqCN7qzcc+2WSHTTF4351FvZodFNSf1nEpVuQ+EsIvsUkmKU7K9eOAP
+         BSOEZf+4XiW1ITy7D26sFa2uXUAG4azzN+UuN3p/GpPI1feF+kIaZxa5Wxm43Yy0AnXa
+         UMSgcYBZHAzpITtaoFga4OY+lYX3kiMQbaOKjtQVsK9A+n3TaqjpaLvDAqh9Rf9ol32V
+         w59KNW6Nvpu2cHXcyvRAc+24xuFJ0PDGmMQ5HKDrzN0tS2W8hqHUT2V2wVRLYnT5CHJ0
+         Bd3WhGGnaZqXi7dlQbMRohDJtstgVw4MVEZn1y8KS65PEE78VWhlUx/MNhRCtoM+CCD/
+         kPWw==
+X-Gm-Message-State: AOAM532c+RcKY5d/kQbh5p+SZiQ5SSo1jKb0XGQILakHE4RQWShpKWvg
+        M4ATU6wxAde9ytI549O9GCg=
+X-Google-Smtp-Source: ABdhPJxduybij+lj3whYtH300CUDZDncU2wg5pWzfaYs4zZ6iQOFKaGFzZiG9cdh/d4Xs3xWY4c/Jw==
+X-Received: by 2002:a17:90a:f310:: with SMTP id ca16mr6782701pjb.120.1598458845724;
+        Wed, 26 Aug 2020 09:20:45 -0700 (PDT)
+Received: from localhost (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id c143sm3674575pfb.84.2020.08.26.09.20.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 09:20:44 -0700 (PDT)
+Date:   Thu, 27 Aug 2020 02:20:39 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v2 05/23] arm64: use asm-generic/mmu_context.h for no-op
+ implementations
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Will Deacon <will@kernel.org>
+References: <20200826145249.745432-1-npiggin@gmail.com>
+        <20200826145249.745432-6-npiggin@gmail.com> <20200826152510.GB24545@gaia>
+In-Reply-To: <20200826152510.GB24545@gaia>
 MIME-Version: 1.0
-In-Reply-To: <20200804194052.193272-4-sean.v.kelley@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Message-Id: <1598458759.6wa1mql9py.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Excerpts from Catalin Marinas's message of August 27, 2020 1:25 am:
+> On Thu, Aug 27, 2020 at 12:52:31AM +1000, Nicholas Piggin wrote:
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+>=20
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+>=20
 
+Thank you, I see I stupidly mis-rebased this patch too :( Sorry
+I'll fix that.
 
-On 8/4/20 12:40 PM, Sean V Kelley wrote:
-> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> 
-> When an RCEC device signals error(s) to a CPU core, the CPU core
-> needs to walk all the RCiEPs associated with that RCEC to check
-> errors. So add the function pcie_walk_rcec() to walk all RCiEPs
-> associated with the RCEC device.
-I think its better if you merge the usage patch and API
-(pcie_walk_rcec) patch together.
-
-Did you not get unused function warning with this patch?
-> 
-> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
->   drivers/pci/pcie/portdrv.h      |  2 +
->   drivers/pci/pcie/portdrv_core.c | 82 +++++++++++++++++++++++++++++++++
->   2 files changed, 84 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-> index af7cf237432a..c11d5ecbad76 100644
-> --- a/drivers/pci/pcie/portdrv.h
-> +++ b/drivers/pci/pcie/portdrv.h
-> @@ -116,6 +116,8 @@ void pcie_port_service_unregister(struct pcie_port_service_driver *new);
->   
->   extern struct bus_type pcie_port_bus_type;
->   int pcie_port_device_register(struct pci_dev *dev);
-> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
-> +		    void *userdata);
->   #ifdef CONFIG_PM
->   int pcie_port_device_suspend(struct device *dev);
->   int pcie_port_device_resume_noirq(struct device *dev);
-> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-> index 5d4a400094fc..daa2dfa83a0b 100644
-> --- a/drivers/pci/pcie/portdrv_core.c
-> +++ b/drivers/pci/pcie/portdrv_core.c
-> @@ -14,6 +14,7 @@
->   #include <linux/pm_runtime.h>
->   #include <linux/string.h>
->   #include <linux/slab.h>
-> +#include <linux/bitops.h>
->   #include <linux/aer.h>
->   
->   #include "../pci.h"
-> @@ -365,6 +366,87 @@ int pcie_port_device_register(struct pci_dev *dev)
->   	return status;
->   }
->   
-> +static int pcie_walk_rciep_devfn(struct pci_bus *pbus, int (*cb)(struct pci_dev *, void *),
-> +				 void *userdata, unsigned long bitmap)
-> +{
-> +	unsigned int dev, fn;
-> +	struct pci_dev *pdev;
-> +	int retval;
-> +
-> +	for_each_set_bit(dev, &bitmap, 32) {
-> +		for (fn = 0; fn < 8; fn++) {
-> +			pdev = pci_get_slot(pbus, PCI_DEVFN(dev, fn));
-> +
-> +			if (!pdev || pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)
-> +				continue;
-> +
-> +			retval = cb(pdev, userdata);
-> +			if (retval)
-> +				return retval;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * pcie_walk_rcec - Walk RCiEP devices associating with RCEC and call callback.
-> + * @rcec     RCEC whose RCiEP devices should be walked.
-> + * @cb       Callback to be called for each RCiEP device found.
-> + * @userdata Arbitrary pointer to be passed to callback.
-> + *
-> + * Walk the given RCEC. Call the provided callback on each RCiEP device found.
-> + *
-> + * We check the return of @cb each time. If it returns anything
-> + * other than 0, we break out.
-> + */
-> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
-> +		    void *userdata)
-> +{
-> +	u32 pos, bitmap, hdr, busn;
-> +	u8 ver, nextbusn, lastbusn;
-> +	struct pci_bus *pbus;
-> +	unsigned int bnr;
-> +
-> +	pos = pci_find_ext_capability(rcec, PCI_EXT_CAP_ID_RCEC);
-> +	if (!pos)
-> +		return;
-> +
-> +	pbus = pci_find_bus(pci_domain_nr(rcec->bus), rcec->bus->number);
-> +	if (!pbus)
-> +		return;
-> +
-> +	pci_read_config_dword(rcec, pos + PCI_RCEC_RCIEP_BITMAP, &bitmap);
-> +
-> +	/* Find RCiEP devices on the same bus as the RCEC */
-> +	if (pcie_walk_rciep_devfn(pbus, cb, userdata, (unsigned long)bitmap))
-> +		return;
-> +
-> +	/* Check whether RCEC BUSN register is present */
-> +	pci_read_config_dword(rcec, pos, &hdr);
-> +	ver = PCI_EXT_CAP_VER(hdr);
-> +	if (ver < PCI_RCEC_BUSN_REG_VER)
-> +		return;
-> +
-> +	pci_read_config_dword(rcec, pos + PCI_RCEC_BUSN, &busn);
-> +	nextbusn = PCI_RCEC_BUSN_NEXT(busn);
-> +	lastbusn = PCI_RCEC_BUSN_LAST(busn);
-> +
-> +	/* All RCiEP devices are on the same bus as the RCEC */
-> +	if (nextbusn == 0xff && lastbusn == 0x00)
-> +		return;
-> +
-> +	for (bnr = nextbusn; bnr <= lastbusn; bnr++) {
-> +		pbus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
-> +		if (!pbus)
-> +			continue;
-> +
-> +		/* Find RCiEP devices on the given bus */
-> +		if (pcie_walk_rciep_devfn(pbus, cb, userdata, 0xffffffff))
-> +			return;
-> +	}
-> +}
-> +
->   #ifdef CONFIG_PM
->   typedef int (*pcie_pm_callback_t)(struct pcie_device *);
->   
-> 
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Thanks,
+Nick
