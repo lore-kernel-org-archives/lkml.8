@@ -7,82 +7,90 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 424F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC668C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18BB22087D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C203E2087D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:38:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JuY0r5yX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LwLU6UgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgHZJiE (ORCPT
+        id S1728638AbgHZJiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40930 "EHLO
+        Wed, 26 Aug 2020 05:38:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728364AbgHZJe6 (ORCPT
+        with ESMTP id S1728338AbgHZJer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:34:58 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B5A5C061345
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:28 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id b79so483275wmb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:28 -0700 (PDT)
+        Wed, 26 Aug 2020 05:34:47 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A1EC061797
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:26 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id s13so1077575wmh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 02:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WVfVHRbfLs77xvEowdNmRYJl1Eqf3t8uGBw9b5yOc7s=;
-        b=JuY0r5yXntpWWzZXsdA88BXsBYv590V4Ep8F6jfWf6kGIWp1JSFtrAQadAVxFywmbN
-         RtkCN5MVz8Kb5gEYOUJAvT5dlvGbvkWMLI/pGdjCNsDAXh6K9kvNfg/crGE7jeGkn9uH
-         YqfwFTj4gh/eR0PkX25QY/QvgCmNAqJjUMxUmUuBD7hHDWFW5mfuZcIj04QlMlM6jNji
-         KT1WWvFzTJ9kZXWxDpKk0Alp8YvzaEa1JeM4SwjWhQGblNi93mk/Xr4Q4s2zw+WJB36o
-         Knnsb802yKk5B/vVGx1+qzXlMyRLPWnxnY32BR97sUmGXn7J8XMufW1T5tzJAEiN7aV0
-         BN0w==
+        bh=gXj0QTNi35Mkf/0PfjV36Op7KYk+Sf8/3WVle5YvISs=;
+        b=LwLU6UgNWRhkAICyUcI0WTYo9m6TXWqPAHELcWqUYunSe14/NoTP2Wi3SxwnjRCPYp
+         P8ToArmn9LBzbGkBXZ5NsJr3JcJPxfj4PgpcLvujetjrJ+klZkFbwpqK7c0ENSxr3mNx
+         TZxfs6nglopjKXRQRLOaqoCUM9q4GccbGnin36RbIYanIqRUXWquVts5sYLDdBZYOzzb
+         vAyKkiZ+aFleQE2DfWIpFhUJ+MAVRqtkvonJgyFAONhAPazcEjwPOHxWz+EVcNksSV7I
+         vfNUXi6Qw+KqfZKelE0ChGdvsvJPlz3owrqDYGcVtd3723oXffVMm074IevYrbmxxaLj
+         Gs8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WVfVHRbfLs77xvEowdNmRYJl1Eqf3t8uGBw9b5yOc7s=;
-        b=APPGflrCV9Jy55MYsObs+DEwHBECWX3fQ/JdRwcBUl5XnEDeDbAvmNnATHQOeh7DUk
-         qZYJGY9AnstSr/xO9gzoirDuIyAjcL25n5OxJ333HmP9ICaTBc2MZ2YRGiTujqlL/HLH
-         O0x2WtmO+LN43o/wJiLZy/z/EiK4qVAGpCYJCfqZembZ5U6+4mTz4gsR5PVc2RrXF/Dq
-         y6UXRGbZDXaQPjvOVRm2maB2h/6WlHBSAEXYkqYNqWYdDbYpeql4fWbFdrQ/9JpC44PD
-         GC1qRmT5g31BfrgncJ/drkiJTKwWbWlpqbt0GpehCikHtnmNBQpaGSX/wAgTfZP+ds9f
-         bfRQ==
-X-Gm-Message-State: AOAM5309Fd5uTy6SueCvZJpytIU5c7U+URPruCGfLhRwqeHIpvIEP/kU
-        DP+EfpJ6UrutZVVLkKYOkbZHFQ==
-X-Google-Smtp-Source: ABdhPJyU2nSGobc0dtKGFmaO2f5zOBwubTya6uY4DUiS+jy3Wni+yfPQlhnFiLfmGxtP5tH2dPQoLg==
-X-Received: by 2002:a1c:7c11:: with SMTP id x17mr4307425wmc.122.1598434467042;
-        Wed, 26 Aug 2020 02:34:27 -0700 (PDT)
+        bh=gXj0QTNi35Mkf/0PfjV36Op7KYk+Sf8/3WVle5YvISs=;
+        b=irfajyaE3NzR4+627dyFCuiJJTJW+X0bwBCUFtZIKXsxBa+9FYgEKMM/iXrGCHRtem
+         /vudEYlfdpeY06WhsD5amG/LtADlzexhin3eTiJlfBQP9XIN0vz0l7pAbLvsoUMy0W9g
+         AnnI1FlRa4ozB1BB/EG8qLJkKVr4tIF+JyZtE4DEEUnr5ot/IWKvlNkGqQPHW278/uCS
+         3ZsrkNURZdgpc188KRbV0lV40EtTSDHD5BLfXmniAgBKcFE+57O9SJqrv0x9vuXUukii
+         vWdm39pnQHoMuFCPstlo5iD8obvit6SRqyxm+azU8nIxDEQOaYLwyvzHaZg3OH9IwS3m
+         ga6Q==
+X-Gm-Message-State: AOAM533jvLHZsg4Wq7IeqfqmfKE/MedYNifLZhX63JOAkvqgLxa1034o
+        S14CDHlR56w6FxuaUnpHDmDGmA==
+X-Google-Smtp-Source: ABdhPJzhoiIojiVg/XClYdahPZ4ZyRm0woGPRNGbBc3tfiZLNL944VFpp2XhnfvuIRtgcAevDM0t/Q==
+X-Received: by 2002:a1c:c913:: with SMTP id f19mr5945307wmb.173.1598434464899;
+        Wed, 26 Aug 2020 02:34:24 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.26
+        by smtp.gmail.com with ESMTPSA id u3sm3978759wml.44.2020.08.26.02.34.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 02:34:26 -0700 (PDT)
+        Wed, 26 Aug 2020 02:34:24 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
-Subject: [PATCH 18/30] wireless: ath: ath9k: ar9001_initvals: Remove unused array 'ar5416Bank6_9100'
-Date:   Wed, 26 Aug 2020 10:33:49 +0100
-Message-Id: <20200826093401.1458456-19-lee.jones@linaro.org>
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>
+Subject: [PATCH 16/30] wireless: rsi: rsi_91x_sdio: Fix a few kernel-doc related issues
+Date:   Wed, 26 Aug 2020 10:33:47 +0100
+Message-Id: <20200826093401.1458456-17-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200826093401.1458456-1-lee.jones@linaro.org>
 References: <20200826093401.1458456-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+ - File headers do not make for good kernel-doc candidates
+ - Kernel-doc header lines should start with " *"
+ - Fix doc-rot issue
+
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/ath/ath9k/ar9001_initvals.h:462:18: warning: ‘ar5416Bank6_9100’ defined but not used [-Wunused-const-variable=]
+ drivers/net/wireless/rsi/rsi_91x_sdio.c:25: warning: cannot understand function prototype: 'u16 dev_oper_mode = DEV_OPMODE_STA_BT_DUAL; '
+ drivers/net/wireless/rsi/rsi_91x_sdio.c:802: warning: bad line:                                    from the device.
+ drivers/net/wireless/rsi/rsi_91x_sdio.c:842: warning: Function parameter or member 'pfunction' not described in 'rsi_init_sdio_interface'
+ drivers/net/wireless/rsi/rsi_91x_sdio.c:842: warning: Excess function parameter 'pkt' description in 'rsi_init_sdio_interface'
 
-Cc: QCA ath9k Development <ath9k-devel@qca.qualcomm.com>
+Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+Cc: Siva Rebbagondla <siva8118@gmail.com>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
@@ -90,57 +98,41 @@ Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../net/wireless/ath/ath9k/ar9001_initvals.h  | 37 -------------------
- 1 file changed, 37 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_sdio.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/ar9001_initvals.h b/drivers/net/wireless/ath/ath9k/ar9001_initvals.h
-index 59524e1d4678c..aa5f086fa3b0b 100644
---- a/drivers/net/wireless/ath/ath9k/ar9001_initvals.h
-+++ b/drivers/net/wireless/ath/ath9k/ar9001_initvals.h
-@@ -459,43 +459,6 @@ static const u32 ar5416Common_9100[][2] = {
- 	{0x0000a3e0, 0x000001ce},
- };
+diff --git a/drivers/net/wireless/rsi/rsi_91x_sdio.c b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+index a04ff75c409f4..a7b8684143f46 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_sdio.c
++++ b/drivers/net/wireless/rsi/rsi_91x_sdio.c
+@@ -1,4 +1,4 @@
+-/**
++/*
+  * Copyright (c) 2014 Redpine Signals Inc.
+  *
+  * Permission to use, copy, modify, and/or distribute this software for any
+@@ -799,7 +799,7 @@ static int rsi_sdio_host_intf_write_pkt(struct rsi_hw *adapter,
  
--static const u32 ar5416Bank6_9100[][3] = {
--	/* Addr      5G          2G        */
--	{0x0000989c, 0x00000000, 0x00000000},
--	{0x0000989c, 0x00000000, 0x00000000},
--	{0x0000989c, 0x00000000, 0x00000000},
--	{0x0000989c, 0x00e00000, 0x00e00000},
--	{0x0000989c, 0x005e0000, 0x005e0000},
--	{0x0000989c, 0x00120000, 0x00120000},
--	{0x0000989c, 0x00620000, 0x00620000},
--	{0x0000989c, 0x00020000, 0x00020000},
--	{0x0000989c, 0x00ff0000, 0x00ff0000},
--	{0x0000989c, 0x00ff0000, 0x00ff0000},
--	{0x0000989c, 0x00ff0000, 0x00ff0000},
--	{0x0000989c, 0x00ff0000, 0x00ff0000},
--	{0x0000989c, 0x005f0000, 0x005f0000},
--	{0x0000989c, 0x00870000, 0x00870000},
--	{0x0000989c, 0x00f90000, 0x00f90000},
--	{0x0000989c, 0x007b0000, 0x007b0000},
--	{0x0000989c, 0x00ff0000, 0x00ff0000},
--	{0x0000989c, 0x00f50000, 0x00f50000},
--	{0x0000989c, 0x00dc0000, 0x00dc0000},
--	{0x0000989c, 0x00110000, 0x00110000},
--	{0x0000989c, 0x006100a8, 0x006100a8},
--	{0x0000989c, 0x004210a2, 0x004210a2},
--	{0x0000989c, 0x0014000f, 0x0014000f},
--	{0x0000989c, 0x00c40002, 0x00c40002},
--	{0x0000989c, 0x003000f2, 0x003000f2},
--	{0x0000989c, 0x00440016, 0x00440016},
--	{0x0000989c, 0x00410040, 0x00410040},
--	{0x0000989c, 0x000180d6, 0x000180d6},
--	{0x0000989c, 0x0000c0aa, 0x0000c0aa},
--	{0x0000989c, 0x000000b1, 0x000000b1},
--	{0x0000989c, 0x00002000, 0x00002000},
--	{0x0000989c, 0x000000d4, 0x000000d4},
--	{0x000098d0, 0x0000000f, 0x0010000f},
--};
+ /**
+  * rsi_sdio_host_intf_read_pkt() - This function reads the packet
+-				   from the device.
++ *				   from the device.
+  * @adapter: Pointer to the adapter data structure.
+  * @pkt: Pointer to the packet data to be read from the the device.
+  * @length: Length of the data to be read from the device.
+@@ -832,11 +832,10 @@ int rsi_sdio_host_intf_read_pkt(struct rsi_hw *adapter,
+  * rsi_init_sdio_interface() - This function does init specific to SDIO.
+  *
+  * @adapter: Pointer to the adapter data structure.
+- * @pkt: Pointer to the packet data to be read from the the device.
++ * @pfunction: Pointer to the sdio_func structure.
+  *
+  * Return: 0 on success, -1 on failure.
+  */
 -
- static const u32 ar5416Bank6TPC_9100[][3] = {
- 	/* Addr      5G          2G        */
- 	{0x0000989c, 0x00000000, 0x00000000},
+ static int rsi_init_sdio_interface(struct rsi_hw *adapter,
+ 				   struct sdio_func *pfunction)
+ {
 -- 
 2.25.1
 
