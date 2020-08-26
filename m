@@ -2,127 +2,109 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41124C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01DF5C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 198C822BF3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:47:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k+qNTns/"
+	by mail.kernel.org (Postfix) with ESMTP id D5DDC2074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgHZQrK (ORCPT
+        id S1727991AbgHZQrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:47:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728116AbgHZQps (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:45:48 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FCFEC061786
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:45:44 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 2so1139524pjx.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 09:45:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=oxBIu0NnSAiLhfjGgDwxzLw/4/EIRT2u79pWVsdwMLg=;
-        b=k+qNTns/opkjJEZ2Dfhp3nSo+/gW/l2mqzUB7ZbUnn1SNzUJkPTwH85YhOHspy5Vzm
-         8C9wf8/Fd1RmmE1VOJ6mzWgbzVHJJxiF/O6nCczbJWfkB8iAkjc0ABmO2n4fWC38V+3s
-         BzxF3qvJtruDwI6eBJMgLFBei+5H23OQsItgXm5BhM/wP5PU0e13zhErdowD2rtvN01U
-         YwtSnXT8idDk1mrJl/WS+YHu/eq/oYezZMR5Tr8PCDtJTA0j5Mh/rG5Cr9FSUtztzxyj
-         yZRvbD2PyEjw7yGVLtIh4QWTABpdtvrsR7SWP2Xl3oJZbgV+uWPqgTS+BUXIz8hrN2S+
-         imdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oxBIu0NnSAiLhfjGgDwxzLw/4/EIRT2u79pWVsdwMLg=;
-        b=N7O9AThc9R+f/aBbiuA0wgNDoi3JQ6MWWV9ESRygtUYjXileA4j0yCwPfrhRBAsCyy
-         NPxD2gRTC/c3U4Pm7o4e21cRZjjA9FH5Tc0mHTD8OoNabt31M9xPg1ziBPVCZPgtZNcx
-         WzY+iMACCTyTN9p0rRrzr/NV2hcKeoXeeagRi7Es6bAstF3ohMVHzhzp7wdgm5tuoAdG
-         MwHVreeQkHgrUiTp7IJOUbsGVFMpXUSnxeaNG+n6eltoP28sD866RdeSQBvELS4ie7rx
-         gkRTeHClc/LBFUqTQI9Cth0NSROCMCqir3Q3qttrzfL+qJvLUm5p30PxAQdmh+tmg0uH
-         U3yg==
-X-Gm-Message-State: AOAM530jLqeDzLGEYheO8PJii2LOK6REidIJIyHOzFDKCB2KpbJ31Sv5
-        cJ/tqujNQeCS5oN/HsPPcQTplg==
-X-Google-Smtp-Source: ABdhPJw1FGuVfhmWkCr4RLXbFoDk8hnd4hktva/TxRidLNKsDXaL4s5yS4kF0snQuBUj1uaNtUJeMA==
-X-Received: by 2002:a17:902:7603:: with SMTP id k3mr12394135pll.113.1598460343792;
-        Wed, 26 Aug 2020 09:45:43 -0700 (PDT)
-Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id u3sm2548878pjn.29.2020.08.26.09.45.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 09:45:43 -0700 (PDT)
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     bjorn.andersson@linaro.org, ohad@wizery.com
-Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/13] remoteproc: Refactor rproc delete and cdev release path
-Date:   Wed, 26 Aug 2020 10:45:28 -0600
-Message-Id: <20200826164529.224476-13-mathieu.poirier@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200826164529.224476-1-mathieu.poirier@linaro.org>
-References: <20200826164529.224476-1-mathieu.poirier@linaro.org>
+        Wed, 26 Aug 2020 12:47:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:48952 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727013AbgHZQqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:46:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F0B84101E;
+        Wed, 26 Aug 2020 09:46:10 -0700 (PDT)
+Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E7093F68F;
+        Wed, 26 Aug 2020 09:46:07 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 17:46:05 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+Message-ID: <20200826164604.GW6642@arm.com>
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+ <20200825002540.3351-26-yu-cheng.yu@intel.com>
+ <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
+ <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
+ <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+ <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+ <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refactor function rproc_del() and rproc_cdev_release() to take
-into account scenarios where the remote processor has been
-attached to.  If the remote processor has been started by the
-remoteproc core then switch it off, and if it was attached to
-detach from it. This heuristic is simple and can be enhanced
-easily if there is a need to.
+On Tue, Aug 25, 2020 at 04:34:27PM -0700, Yu, Yu-cheng wrote:
+> On 8/25/2020 4:20 PM, Dave Hansen wrote:
+> >On 8/25/20 2:04 PM, Yu, Yu-cheng wrote:
+> >>>>I think this is more arch-specific.  Even if it becomes a new syscall,
+> >>>>we still need to pass the same parameters.
+> >>>
+> >>>Right, but without the copying in and out of memory.
+> >>>
+> >>Linux-api is already on the Cc list.  Do we need to add more people to
+> >>get some agreements for the syscall?
+> >What kind of agreement are you looking for?  I'd suggest just coding it
+> >up and posting the patches.  Adding syscalls really is really pretty
+> >straightforward and isn't much code at all.
+> >
+> 
+> Sure, I will do that.
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- drivers/remoteproc/remoteproc_cdev.c | 7 ++++++-
- drivers/remoteproc/remoteproc_core.c | 5 ++++-
- 2 files changed, 10 insertions(+), 2 deletions(-)
+Alternatively, would a regular prctl() work here?
 
-diff --git a/drivers/remoteproc/remoteproc_cdev.c b/drivers/remoteproc/remoteproc_cdev.c
-index 3a3830e27050..18cffbe588c1 100644
---- a/drivers/remoteproc/remoteproc_cdev.c
-+++ b/drivers/remoteproc/remoteproc_cdev.c
-@@ -87,8 +87,13 @@ static int rproc_cdev_release(struct inode *inode, struct file *filp)
- {
- 	struct rproc *rproc = container_of(inode->i_cdev, struct rproc, cdev);
- 
--	if (rproc->cdev_put_on_release && rproc->state == RPROC_RUNNING)
-+	if (!rproc->cdev_put_on_release)
-+		return 0;
-+
-+	if (rproc->state == RPROC_RUNNING)
- 		rproc_shutdown(rproc);
-+	else if (rproc->state == RPROC_ATTACHED)
-+		rproc_detach(rproc);
- 
- 	return 0;
- }
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 95bb40b4ebb3..5586582f54c5 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -2346,7 +2346,10 @@ int rproc_del(struct rproc *rproc)
- 		return -EINVAL;
- 
- 	/* TODO: make sure this works with rproc->power > 1 */
--	rproc_shutdown(rproc);
-+	if (rproc->state == RPROC_RUNNING)
-+		rproc_shutdown(rproc);
-+	else if (rproc->state == RPROC_ATTACHED)
-+		rproc_detach(rproc);
- 
- 	mutex_lock(&rproc->lock);
- 	rproc->state = RPROC_DELETED;
--- 
-2.25.1
+arch_prctl() feels like a historical weirdness for x86 -- other arches
+all seem to be using regular prctl(), which allows for 4 args.  I don't
+know the history behind the difference here.
 
+(Since prctl() and arch_prctl() use non-clashing command numbers, I had
+wondered whether it would be worth just merging the x86 calls in with
+the rest and making the two calls aliases.  That's one for later,
+though...)
+
+Cheers
+---Dave
