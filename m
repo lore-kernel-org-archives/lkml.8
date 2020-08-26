@@ -2,399 +2,106 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D52C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA21B208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AE62080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:56:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598446566;
+	bh=Qohh7KnymuEQHzs/9CF3j1KPAQ9eiI6pLEUhx2D4F8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w4gFFb+PrDGZicJL+EuA7J3bLe7qJa/fgJ7MBgMoaPdAXImEQYk8vTR7C/FHKV9qn
+	 vm8/WeDKmeAQ63eNIdQcqJk8wZE3JaeFi4EKdR3ye1c+W+aTaO4qItmQZYnwbuVWgQ
+	 oIpncQyo/0JLCWb+eJgrlSE4KtluYK+5ygA7UDb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730048AbgHZMxx (ORCPT
+        id S1730032AbgHZM4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:53:53 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:33724 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729999AbgHZMxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:53:48 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx+MVIW0ZfSj4OAA--.1019S2;
-        Wed, 26 Aug 2020 20:53:28 +0800 (CST)
-From:   Jinyang He <hejinyang@loongson.cn>
-To:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [PATCH] MIPS: Loongson: Fix complie errors without CONFIG_SMP
-Date:   Wed, 26 Aug 2020 20:53:27 +0800
-Message-Id: <1598446407-8845-1-git-send-email-hejinyang@loongson.cn>
-X-Mailer: git-send-email 2.1.0
+        Wed, 26 Aug 2020 08:56:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53588 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728960AbgHZM4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:56:01 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 941732080C;
+        Wed, 26 Aug 2020 12:56:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598446560;
+        bh=Qohh7KnymuEQHzs/9CF3j1KPAQ9eiI6pLEUhx2D4F8I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jXPjdni7ZqKiERVzh859zCQgN69UbqLuw2vWbSSI/tpgU00/e86IxJ57n0NUhgttt
+         thKMQC2fgCX05QUVPSXKT9MUHBLFKgKOQF2rtBcaKaHqbzXkf+GTES6L+veErpJnlH
+         g8udzzQYcYV1UMfDwpVhGwqXymX9zZaW7ipaaSrQ=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 5104040D3D; Wed, 26 Aug 2020 09:55:57 -0300 (-03)
+Date:   Wed, 26 Aug 2020 09:55:57 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com, Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH] perf test: Perf test 67 dumps core on s390
+Message-ID: <20200826125557.GD1059382@kernel.org>
+References: <20200825071211.16959-1-tmricht@linux.ibm.com>
+ <CAP-5=fUkOyVUgagpkh6zgbjA1Dd0oP_WmP4HVA8f6J3WifwM9w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dx+MVIW0ZfSj4OAA--.1019S2
-X-Coremail-Antispam: 1UD129KBjvJXoWfGryUKw15ZryDAry5JF17GFg_yoWkZw4rpF
-        srAr1kGF48WryUArZ5A39Y9ry3Xwn5GrW2y3yj9ry3u3ZIq3WUJrs3Kr1avr18JF4vk3Wx
-        WFZxWr1fWr12yw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Xr1l
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-        42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JU6wZcUUUUU=
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fUkOyVUgagpkh6zgbjA1Dd0oP_WmP4HVA8f6J3WifwM9w@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Machine as follows,
-[    0.000000] MIPS: machine is loongson,loongson64c-4core-ls7a
+Em Tue, Aug 25, 2020 at 02:04:30PM -0700, Ian Rogers escreveu:
+> On Tue, Aug 25, 2020 at 12:12 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+> > Linux 5.9 introduced perf test case "Parse and process metrics" and
+> > on s390 this test case always dumps core:
 
-If SMP if off, error as follows:
+<SNIP>
 
-0x0:
-In file included from ./include/linux/gfp.h:9:0,
-                 from ./include/linux/xarray.h:14,
-                 from ./include/linux/radix-tree.h:18,
-                 from ./include/linux/fs.h:15,
-                 from ./include/linux/compat.h:17,
-                 from arch/mips/kernel/asm-offsets.c:12:
-./include/linux/topology.h: In function ‘numa_node_id’:
-./include/linux/topology.h:119:2: error: implicit declaration of function ‘cpu_logical_map’ [-Werror=implicit-function-declaration]
-  return cpu_to_node(raw_smp_processor_id());
-  ^
-In uniprocessor machines cpu_to_node(cpu) values 0.
+> Acked-by: Ian Rogers <irogers@google.com>
+> 
+> This also shows up with address sanitizer on all architectures
+> (perhaps change the patch title) and perhaps add a "Fixes: <commit>"
+> tag.
 
-arch/mips/include/asm/mach-loongson64/topology.h -> 0x0
+$ git tag --contains 0a507af9c681ac2adedc5fe1b2d534e27be85446
+perf-tools-2020-08-10
+perf-tools-2020-08-14
+perf-tools-tests-2020-07-02
+perf-tools-tests-2020-07-17
+perf-tools-tests-2020-08-05
+perf-tools-tests-2020-08-06
+v5.9-rc1
+v5.9-rc2
+$
 
-And then errors follows,
 
-0x1:
-In file included from ./arch/mips/include/asm/mach-loongson64/topology.h:5:0,
-                 from ./arch/mips/include/asm/topology.h:11,
-                 from ./include/linux/topology.h:36,
-                 from ./include/linux/gfp.h:9,
-                 from ./include/linux/xarray.h:14,
-                 from ./include/linux/radix-tree.h:18,
-                 from ./include/linux/fs.h:15,
-                 from ./include/linux/compat.h:17,
-                 from arch/mips/kernel/asm-offsets.c:12:
-./arch/mips/include/asm/smp.h:28:44: error: macro "raw_smp_processor_id" passed 1 arguments, but takes just 0
- static inline int raw_smp_processor_id(void)
-                                            ^
-./arch/mips/include/asm/smp.h:29:1: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘{’ token
- {
- ^
-./arch/mips/include/asm/smp.h:38:0: warning: "raw_smp_processor_id" redefined
- #define raw_smp_processor_id raw_smp_processor_id
- ^
-In file included from ./arch/mips/include/asm/cpu-type.h:12:0,
-                 from ./arch/mips/include/asm/timex.h:19,
-                 from ./include/linux/timex.h:65,
-                 from ./include/linux/time32.h:13,
-                 from ./include/linux/time.h:73,
-                 from ./include/linux/compat.h:10,
-                 from arch/mips/kernel/asm-offsets.c:12:
-./include/linux/smp.h:160:0: note: this is the location of the previous definition
- #define raw_smp_processor_id()   0
- ^
+I added this:
 
-0x2:
-In file included from ./arch/mips/include/asm/mach-loongson64/topology.h:5:0,
-                 from ./arch/mips/include/asm/topology.h:11,
-                 from ./include/linux/topology.h:36,
-                 from ./include/linux/gfp.h:9,
-                 from ./include/linux/xarray.h:14,
-                 from ./include/linux/radix-tree.h:18,
-                 from ./include/linux/fs.h:15,
-                 from ./include/linux/compat.h:17,
-                 from arch/mips/kernel/asm-offsets.c:12:
-./arch/mips/include/asm/smp.h:42:29: error: ‘CONFIG_MIPS_NR_CPU_NR_MAP’ undeclared here (not in a function)
- extern int __cpu_number_map[CONFIG_MIPS_NR_CPU_NR_MAP];
-                             ^
+Fixes: 0a507af9c681ac2a ("perf tests: Add parse metric test for ipc metric")
 
-0x3:
-./arch/mips/include/asm/smp.h:69:20: error: redefinition of ‘smp_send_reschedule’
- static inline void smp_send_reschedule(int cpu)
-                    ^
-In file included from ./arch/mips/include/asm/cpu-type.h:12:0,
-                 from ./arch/mips/include/asm/timex.h:19,
-                 from ./include/linux/timex.h:65,
-                 from ./include/linux/time32.h:13,
-                 from ./include/linux/time.h:73,
-                 from ./include/linux/compat.h:10,
-                 from arch/mips/kernel/asm-offsets.c:12:
-./include/linux/smp.h:167:20: note: previous definition of ‘smp_send_reschedule’ was here
- static inline void smp_send_reschedule(int cpu) { }
-                    ^
-In file included from ./arch/mips/include/asm/mach-loongson64/topology.h:5:0,
-                 from ./arch/mips/include/asm/topology.h:11,
-                 from ./include/linux/topology.h:36,
-                 from ./include/linux/gfp.h:9,
-                 from ./include/linux/xarray.h:14,
-                 from ./include/linux/radix-tree.h:18,
-                 from ./include/linux/fs.h:15,
-                 from ./include/linux/compat.h:17,
-                 from arch/mips/kernel/asm-offsets.c:12:
-./arch/mips/include/asm/smp.h: In function ‘smp_send_reschedule’:
+As Jiri forgot to add that sentinel when he first introduced this
+pmu_event table, iterators depend on the .name to be NULL to stop.
 
-0x4:
-./arch/mips/include/asm/smp.h:73:8: error: dereferencing pointer to incomplete type
-  mp_ops->send_ipi_single(cpu, SMP_RESCHEDULE_YOURSELF);
-        ^
-./arch/mips/include/asm/smp.h: In function ‘kexec_nonboot_cpu’:
-./arch/mips/include/asm/smp.h:99:15: error: dereferencing pointer to incomplete type
-  return mp_ops->kexec_nonboot_cpu();
-               ^
-./arch/mips/include/asm/smp.h:99:2: warning: ‘return’ with a value, in function returning void
-  return mp_ops->kexec_nonboot_cpu();
-  ^
-./arch/mips/include/asm/smp.h: In function ‘kexec_nonboot_cpu_func’:
-./arch/mips/include/asm/smp.h:106:15: error: dereferencing pointer to incomplete type
-  return mp_ops->kexec_nonboot_cpu;
-               ^
-./arch/mips/include/asm/smp.h: In function ‘arch_send_call_function_single_ipi’:
-./arch/mips/include/asm/smp.h:128:8: error: dereferencing pointer to incomplete type
-  mp_ops->send_ipi_single(cpu, SMP_CALL_FUNCTION);
-        ^
-./arch/mips/include/asm/smp.h: In function ‘arch_send_call_function_ipi_mask’:
-./arch/mips/include/asm/smp.h:135:8: error: dereferencing pointer to incomplete type
-  mp_ops->send_ipi_mask(mask, SMP_CALL_FUNCTION);
-        ^
+And added Jiri to the CC, as well as Namhyung Kim, as they are listed in
+MAINTAINERS as reviewers for perf:
 
-For 0x2, CONFIG_MIPS_NR_CPU_NR_MAP can't depend on SMP,
-otherwise its ranges not include 1.
+PERFORMANCE EVENTS SUBSYSTEM
+R:      Jiri Olsa <jolsa@redhat.com>
+R:      Namhyung Kim <namhyung@kernel.org>
 
-arch/mips/Kconfig -> 0x2
+And help me with reviewing all this, thanks,
 
-For 0x1, 0x3, 0x4 can be fixed by checking CONFIG_SMP,
-arch/mips/include/asm/smp.h -> 0x1, 0x3, 0x4
-
-After fix them, errors as follows,
-
-0x5:
-mm/percpu.o: In function `setup_per_cpu_areas':
-(.init.text+0xa00): multiple definition of `setup_per_cpu_areas'
-arch/mips/mm/init.o:(.init.text+0xa8): first defined here
-
-Normally, setup_per_cpu_areas is defined at arch/mips/mm/init.c
-with CONFIG_HAVE_SETUP_PER_CPU_AREA. mm/percpu.c defines it with
-CONFIG_SMP && !CONFIG_HAVE_SETUP_PER_CPU_AREA || !CONFIG_SMP.
-Obviously, !CONFIG_SMP causes the multiple definition.
-
-arch/mips/mm/init.c -> 0x5
-
-New errors as follows,
-
-0x6:
-mm/page_alloc.o: In function `get_page_from_freelist':
-page_alloc.c:(.text+0x4734): undefined reference to `node_reclaim_distance'
-page_alloc.c:(.text+0x473c): undefined reference to `node_reclaim_distance'
-
-mm/page_alloc.c -> 0x6
-
-Now, it can complie right and loongson3-llsc-check returns success.
-And it can start success.
-
-Origin(use SMP): $ lscpu
-Architecture:          mips64
-Byte Order:            Little Endian
-CPU(s):                4
-On-line CPU(s) list:   0-3
-Thread(s) per core:    1
-Core(s) per socket:    4
-Socket(s):             1
-NUMA node(s):          1
-Model name:            Loongson-3A R3 (Loongson-3A3000) @ 1450MHz
-CPU max MHz:           1450.0000
-CPU min MHz:           725.0000
-L1d cache:             64K
-L1i cache:             64K
-L2 cache:              256K
-L3 cache:              2048K
-NUMA node0 CPU(s):     0-3
-
-Now(not use SMP): $ lscpu
-Architecture:          mips64
-Byte Order:            Little Endian
-CPU(s):                1
-On-line CPU(s) list:   0
-Thread(s) per core:    1
-Core(s) per socket:    1
-Socket(s):             1
-NUMA node(s):          1
-L1d cache:             64K
-L1i cache:             64K
-L2 cache:              2048K
-NUMA node0 CPU(s):     0
-
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
----
- arch/mips/Kconfig                                |  2 +-
- arch/mips/include/asm/mach-loongson64/topology.h |  4 ++++
- arch/mips/include/asm/smp.h                      | 20 ++++++++++++++++++++
- arch/mips/mm/init.c                              |  2 +-
- mm/page_alloc.c                                  |  6 +++---
- 5 files changed, 29 insertions(+), 5 deletions(-)
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index c95fa3a..c3b2864 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2876,7 +2876,7 @@ config MIPS_NR_CPU_NR_MAP_1024
- 
- config MIPS_NR_CPU_NR_MAP
- 	int
--	depends on SMP
-+	default 1 if !SMP
- 	default 1024 if MIPS_NR_CPU_NR_MAP_1024
- 	default NR_CPUS if !MIPS_NR_CPU_NR_MAP_1024
- 
-diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
-index 3414a1f..2157fe1 100644
---- a/arch/mips/include/asm/mach-loongson64/topology.h
-+++ b/arch/mips/include/asm/mach-loongson64/topology.h
-@@ -4,7 +4,11 @@
- 
- #ifdef CONFIG_NUMA
- 
-+#ifdef CONFIG_SMP
- #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
-+#else
-+#define cpu_to_node(cpu)	0
-+#endif
- 
- extern cpumask_t __node_cpumask[];
- #define cpumask_of_node(node)	(&__node_cpumask[node])
-diff --git a/arch/mips/include/asm/smp.h b/arch/mips/include/asm/smp.h
-index 5d9ff61..8ea3733 100644
---- a/arch/mips/include/asm/smp.h
-+++ b/arch/mips/include/asm/smp.h
-@@ -25,6 +25,7 @@ extern cpumask_t cpu_sibling_map[];
- extern cpumask_t cpu_core_map[];
- extern cpumask_t cpu_foreign_map[];
- 
-+#ifdef CONFIG_SMP
- static inline int raw_smp_processor_id(void)
- {
- #if defined(__VDSO__)
-@@ -36,6 +37,7 @@ static inline int raw_smp_processor_id(void)
- #endif
- }
- #define raw_smp_processor_id raw_smp_processor_id
-+#endif
- 
- /* Map from cpu id to sequential logical cpu number.  This will only
-    not be idempotent when cpus failed to come on-line.	*/
-@@ -66,12 +68,14 @@ extern void calculate_cpu_foreign_map(void);
-  * it goes straight through and wastes no time serializing
-  * anything. Worst case is that we lose a reschedule ...
-  */
-+#ifdef CONFIG_SMP
- static inline void smp_send_reschedule(int cpu)
- {
- 	extern const struct plat_smp_ops *mp_ops;	/* private */
- 
- 	mp_ops->send_ipi_single(cpu, SMP_RESCHEDULE_YOURSELF);
- }
-+#endif
- 
- #ifdef CONFIG_HOTPLUG_CPU
- static inline int __cpu_disable(void)
-@@ -92,6 +96,8 @@ extern void play_dead(void);
- #endif
- 
- #ifdef CONFIG_KEXEC
-+
-+#ifdef CONFIG_SMP
- static inline void kexec_nonboot_cpu(void)
- {
- 	extern const struct plat_smp_ops *mp_ops;	/* private */
-@@ -105,6 +111,15 @@ static inline void *kexec_nonboot_cpu_func(void)
- 
- 	return mp_ops->kexec_nonboot_cpu;
- }
-+#else /* CONFIG_SMP */
-+static inline void kexec_nonboot_cpu(void) { }
-+
-+static inline void *kexec_nonboot_cpu_func(void)
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_SMP */
-+
- #endif
- 
- /*
-@@ -121,6 +136,7 @@ int mips_smp_ipi_allocate(const struct cpumask *mask);
-  */
- int mips_smp_ipi_free(const struct cpumask *mask);
- 
-+#ifdef CONFIG_SMP
- static inline void arch_send_call_function_single_ipi(int cpu)
- {
- 	extern const struct plat_smp_ops *mp_ops;	/* private */
-@@ -134,5 +150,9 @@ static inline void arch_send_call_function_ipi_mask(const struct cpumask *mask)
- 
- 	mp_ops->send_ipi_mask(mask, SMP_CALL_FUNCTION);
- }
-+#else /* CONFIG_SMP */
-+static inline void arch_send_call_function_single_ipi(int cpu) { }
-+static inline void arch_send_call_function_ipi_mask(const struct cpumask *mask) { }
-+#endif /* CONFIG_SMP */
- 
- #endif /* __ASM_SMP_H */
-diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
-index 6c7bbfe..867bff2 100644
---- a/arch/mips/mm/init.c
-+++ b/arch/mips/mm/init.c
-@@ -513,7 +513,7 @@ void __ref free_initmem(void)
- 		free_initmem_default(POISON_FREE_INITMEM);
- }
- 
--#ifdef CONFIG_HAVE_SETUP_PER_CPU_AREA
-+#if defined(CONFIG_HAVE_SETUP_PER_CPU_AREA) && defined(CONFIG_SMP)
- unsigned long __per_cpu_offset[NR_CPUS] __read_mostly;
- EXPORT_SYMBOL(__per_cpu_offset);
- 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 0e2bab4..45a891c 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3635,18 +3635,18 @@ bool zone_watermark_ok_safe(struct zone *z, unsigned int order,
- 								free_pages);
- }
- 
--#ifdef CONFIG_NUMA
-+#if defined(CONFIG_NUMA) && defined(CONFIG_SMP)
- static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
- {
- 	return node_distance(zone_to_nid(local_zone), zone_to_nid(zone)) <=
- 				node_reclaim_distance;
- }
--#else	/* CONFIG_NUMA */
-+#else	/* CONFIG_NUMA && CONFIG_SMP */
- static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
- {
- 	return true;
- }
--#endif	/* CONFIG_NUMA */
-+#endif	/* CONFIG_NUMA && CONFIG_SMP */
- 
- /*
-  * The restriction on ZONE_DMA32 as being a suitable zone to use to avoid
--- 
-2.1.0
-
+- Arnaldo
