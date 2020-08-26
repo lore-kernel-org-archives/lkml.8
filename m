@@ -2,101 +2,133 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D86C433E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D813FC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72C0D20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1E3207CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:28:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ppbpj32C";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g64NV1HP"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="caRsXu9q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgHZV1s (ORCPT
+        id S1726952AbgHZV25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:27:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33692 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbgHZV1o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:27:44 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598477262;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AP/JLSo39vhE0wtYqmiGvGnDrGFkgwOpCQr0bMHNNIo=;
-        b=Ppbpj32Cn5vd1ION8eS5aNl/fj1QjIs+RkAaM6B9/j2KvPN1mwxngYrYRgiWuDvZz7tk4s
-        6s3VU0oxNXckuhydtQw2GgWp9Lfh6ODP0+s0hFgvzGCyaE7b+A+lIZaUi6gcZA/8lo5a4X
-        Euy7gPuCc91BHe8pXICVD2nCrFV9IERKZf+HfP/+i3Fiyte9xzGw/xupM0BY5OEQNdUEQg
-        FSOqYrYHEp/isAlEeyp0rD5/Tbv3MnOJpEwiIrn+8eh5SdC6QWIfsV4iOmiZxyT6TlWac6
-        8D2S8zdYEOpLjpGvQn5ZbyugrRJHkxqLX+ncTO+VdcNoBYHDOsGnw6OdV/ra8A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598477262;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AP/JLSo39vhE0wtYqmiGvGnDrGFkgwOpCQr0bMHNNIo=;
-        b=g64NV1HP6nZPTwYFAmNkOJaevjoEaWBisT8u9MwS+B3AK95KBK4cxQI4t2bfE2amJBs0p0
-        WvmjR7PZtJ//chDw==
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 34/46] PCI/MSI: Make arch_.*_msi_irq[s] fallbacks selectable
-In-Reply-To: <8736492jot.wl-maz@kernel.org>
-References: <20200826111628.794979401@linutronix.de> <20200826112333.992429909@linutronix.de> <8736492jot.wl-maz@kernel.org>
-Date:   Wed, 26 Aug 2020 23:27:41 +0200
-Message-ID: <87lfi1t7w2.fsf@nanos.tec.linutronix.de>
+        Wed, 26 Aug 2020 17:28:57 -0400
+Received: from mail-mw2nam10on2073.outbound.protection.outlook.com ([40.107.94.73]:12128
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726753AbgHZV2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:28:52 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FDFp8UKYWIhbFgr1s6qZWfaFfpVFV5uZ+s94rIyQJvHOHdcx1El0MZqU4nlt9yY4I4iZLAIeXzAIev6ByCYgQC+qQ2RCmYzN7TnqX9d0oxC3WoQLSyAnQWs4fPfnaoWaEs5W+eiXNS2hoYPVmMv5l2imonIJPLIGnjGuEC56ZIfFVOMQ4sC8LH4tTvsfL/Nxrbr39D0CC5tXPGcZ0YEZv2XQidAldM1AIMTvTYyOg0bknSzRbtiC9FINWliqMvbu+TstseYSNyRNfVWsDJy+8P11xHAxDt3OCCMA70MotTkXZhf85TpTWEF+LOGALPP7Ywt+yH993uAm3ievMrA63A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DRyCNOMO5xHMNKfrmHEw80y023nX5DL2JTW4T8i3S+0=;
+ b=ASsO05+DI1bmKhIMZKdY7TmeUEcgU+AcplVD09IU1YulOJLaHF91bmzKYVba3GmsRJ+8eXNm3j74UpevAf47oJLO49w4Nmtv49os81z0hxbTVRWe2boapiLaTqHK4ukem6kjkV0gTZEplnfIvhc5G1TPwmo4UZQU23XbkR+o2RqtloKZEr8tP3wNBJC2G+DGWf2KARbnTVQDC2mlfEvzup2wJtA3RvqhI/92yI8mWpNCWhzB6hAR8kG+UNP3Yo5D8YTnsHPEZ8eXXoCbkWeutnByEMr1ktmqvJ+ZPahNuIkUc+PX1nSbiGW7Ow63dEYkAE3CWa7HYVjgYhSLR9o9sQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DRyCNOMO5xHMNKfrmHEw80y023nX5DL2JTW4T8i3S+0=;
+ b=caRsXu9qPUdXXo682/Kwbok1ihRExHJyin/wDfgLe2A4zyr5Uvtop/hSdE+9RpX57I6aezQrVPHaBhBnl8DGnlMizFEuA22XdXGJKNy63rsiVByGUzP8IXUSgBs7FjcC/YX1kk5zytJFzDTeGkw++Cxq3rvd2mmrqIWBxe8memU=
+Authentication-Results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none header.from=amd.com;
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
+ by SN1PR12MB2461.namprd12.prod.outlook.com (2603:10b6:802:27::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Wed, 26 Aug
+ 2020 21:28:49 +0000
+Received: from SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::ccd9:728:9577:200d]) by SN1PR12MB2560.namprd12.prod.outlook.com
+ ([fe80::ccd9:728:9577:200d%4]) with mapi id 15.20.3305.026; Wed, 26 Aug 2020
+ 21:28:49 +0000
+Subject: Re: [PATCH v5 04/12] KVM: SVM: Modify intercept_exceptions to generic
+ intercepts
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        kvm list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <159846887637.18873.14677728679411578606.stgit@bmoger-ubuntu>
+ <159846925426.18873.12673817778834207178.stgit@bmoger-ubuntu>
+ <CALMp9eSHVS+HmbYUMdRgt9gPQaWUGBHt_owDenPOz4+KiDti5Q@mail.gmail.com>
+From:   Babu Moger <babu.moger@amd.com>
+Message-ID: <f7916109-6590-756b-dafc-7976e42fc44d@amd.com>
+Date:   Wed, 26 Aug 2020 16:28:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <CALMp9eSHVS+HmbYUMdRgt9gPQaWUGBHt_owDenPOz4+KiDti5Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0801CA0013.namprd08.prod.outlook.com
+ (2603:10b6:803:29::23) To SN1PR12MB2560.namprd12.prod.outlook.com
+ (2603:10b6:802:26::19)
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by SN4PR0801CA0013.namprd08.prod.outlook.com (2603:10b6:803:29::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 21:28:49 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e6a96a01-aee3-432c-0dc8-08d84a0705eb
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2461:
+X-Microsoft-Antispam-PRVS: <SN1PR12MB24619A0B736622F941905DC495540@SN1PR12MB2461.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: SNXEfrQF5sMTITSNCUbNODRxtq+OdSbDOLVjDQ/Khwf89XiyGX6TFAvTaBBV4R1w0zcs3ec+M1PClVQhAB3K03Yebzp14Cc8LVcRuJLF10bu7HwI7DiWyYZh3TC8ttHrTPKx6yJEAgIHmTmNrtL55oMP0jF14j5R1ehaw5FnUs1yneh/bAjzNZpcW9MmHsIU7zmOvuXMFPPnLxeCz7sq7y3ZWaodXKl3JqfsSgcT/Kk+ay4gX3QhzW7ytyCEa3sVUzPKRNwLx25BvzrhHV4KlsvMUa0L0OhujMlVymb0vgitb3IP5n7QPvyatBuqjcK/FtYmmFRS6ZHQD+GQ/fuGim5gkn0eDH8H45IwG+ctyR5NVrvbP2o8Sa/ZbVwj7/r75MFXGIxsVvUbWNXlbRUVwQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(6916009)(2906002)(8676002)(316002)(4326008)(5660300002)(4744005)(31686004)(53546011)(66476007)(8936002)(2616005)(956004)(44832011)(31696002)(66556008)(66946007)(36756003)(6486002)(26005)(478600001)(7416002)(52116002)(186003)(54906003)(16576012)(86362001)(41533002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: P/B2MPWXWEonu1bzmN4Gw9aCJqypvRun0sMTDPbD9W1uV6+yzpca+m6oa+iANCMaUSQQCHY1izQIuxv/XzCKprVfMnds3zkHPSnxj627R4mOofd+n8WdGoeG7SQb8XBajMLswx9ZexlrNI9PB5+APMpnbgGtMch4I4HYsNXJyq6pcKIT60xe28bGcC0MeU6o3bh8nlOc8eWC16SehgNYqHf2UgshX9FIp4ks1ztMdB4K9lvWU5zNrpfF5erDZNe3u4LChdaovmHuabfgbKqYu2wPkpIVk7D8/8Gr+sWb97u3DuTvF2s5p70mlav597fAxnHox5RlhagbmYtUQtvWE2fRdBfh1Udkz0dqhOx03xniRR62+HxLlyYI3rr4QGDTcGLVCeJvfDUSZVYBF9u2hR+CK/4QVMnSEYmgti54QuCFfofT6VyCQ8scXQVoSYVu/CjCGxpBsGSkYwjF1p9nhQUADjX4hQQFBfcF/PpwSxNX87ENGTVvLGmL/9gHNqynJU8C/pziVaADAT3nfc7XFbiz7xKERUjT1aIyWQ9tMtDmalzv11E/XfXW++1YyRcGHzaB0tvZMEON42ByW9r6rhkEJaAPMpSMIhzYiRNfkHEJ0f72btG/RO7I5G4qdJMJ7//3h1whcTC0LEKzkth9qQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6a96a01-aee3-432c-0dc8-08d84a0705eb
+X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2560.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 21:28:49.8581
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ImzICXi6bqTmrZjFoSn46MLToMsyv+E1q1a8UcC+Z2BEj3CWTc5QI2w0qeP7iYhY
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2461
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26 2020 at 22:14, Marc Zyngier wrote:
-> On Wed, 26 Aug 2020 12:17:02 +0100,
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> @@ -103,6 +105,7 @@ config PCIE_XILINX_CPM
->>  	bool "Xilinx Versal CPM host bridge support"
->>  	depends on ARCH_ZYNQMP || COMPILE_TEST
->>  	select PCI_HOST_COMMON
->> +	select PCI_MSI_ARCH_FALLBACKS
->
-> This guy actually doesn't implement MSIs at all (it seems to delegate
-> them to an ITS present in the system, if I read the DT binding
-> correctly). However its older brother from the same silicon dealer
-> seems to need it. The patchlet below should fix it.
 
-Gah, at some point my eyes went squared and I lost track..
+
+On 8/26/20 3:55 PM, Jim Mattson wrote:
+> On Wed, Aug 26, 2020 at 12:14 PM Babu Moger <babu.moger@amd.com> wrote:
+>>
+>> Modify intercept_exceptions to generic intercepts in vmcb_control_area. Use
+>> the generic vmcb_set_intercept, vmcb_clr_intercept and vmcb_is_intercept to
+>> set/clear/test the intercept_exceptions bits.
+>>
+>> Signed-off-by: Babu Moger <babu.moger@amd.com>
+>> Reviewed-by: Jim Mattson <jmattson@google.com>
+>> ---
+> 
+>> @@ -835,7 +832,7 @@ static bool nested_exit_on_exception(struct vcpu_svm *svm)
+>>  {
+>>         unsigned int nr = svm->vcpu.arch.exception.nr;
+>>
+>> -       return (svm->nested.ctl.intercept_exceptions & (1 << nr));
+>> +       return (svm->nested.ctl.intercepts[EXCEPTION_VECTOR] & (1 << nr));
+> Nit: BIT(nr) rather than (1 << nr).
+
+Sure. will change it. thanks
 
