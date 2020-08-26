@@ -2,269 +2,126 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19FE3C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4698DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E90342075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:10:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUM4b+AK"
+	by mail.kernel.org (Postfix) with ESMTP id 24A332075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:11:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgHZQKa (ORCPT
+        id S1727075AbgHZQLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:10:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbgHZQKV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:10:21 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 669C5C061574;
-        Wed, 26 Aug 2020 09:10:20 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id mt12so1099750pjb.4;
-        Wed, 26 Aug 2020 09:10:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dzkKMaEYRSqK3qJ/7RKMF0nr0rmaw4l1yJHr2LcyJrQ=;
-        b=GUM4b+AKt4DXs9Czm1/g7FEUizlZoYNy2a13HKf6jY4MB/UtxnZis4YdlNbgnv0gng
-         VLgyepIPIP+r3HqOxtcXfRJOT8V7yK3/geJJFC4lH9ZkeKrvKSRo5tgNGS1jFwqbuW4w
-         mIYO6h8SNnsvEq+7tnBZVzNICRpRqO4mKjRfclvaEicY3IT/MBm3Z25ahf5To6Qy9Dmj
-         ZXGlgdmZQb9uwS8VglWPRo+Do6XZl7+U0fqkBKz93N3/oH+S5dRF8ZiefspOZswDrGuS
-         Mc0OEGPL7xKO0zfmXYaD3yZoZ6uzDWFsuFt4Wq1bCmA6r0pmVK6yEsL7oNTZ5wWtIr+R
-         NFqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dzkKMaEYRSqK3qJ/7RKMF0nr0rmaw4l1yJHr2LcyJrQ=;
-        b=VnYecQZjoyBVoCq5b3vJP0ay4g+m/hMjpLpZgnyJDGc0GVI6vfglsIUIKibhjBVPm+
-         HiOxAsM9k7DA699NNnOEGyMo5wsRt8/9wJvHztIsVbHDARhl+d9ENaI5TEsn66xjrohl
-         R7ATO2rHPoxgDmRGhfc78GKRihIbqsINY6yYLJw+OdtxdK/0sMnXC8AZK2ZL3T7TADKw
-         SayIMgUZS28o9tuB+IOb1c1H1Xpu+IgcYxvRta77l6Q7Qj4XVjngHbzrT2FG4wIZ/JwI
-         uG2atwhEQG1F+0XbyFcrakHUd4rbPLYOou+8lxdpNUrNcpCtEgoftRYBArF+4GogjG9Q
-         VIkQ==
-X-Gm-Message-State: AOAM532S9DQOmPWmlewJTC2Ye/JS/LpbxmXURcuJJbySLHRIri72jaUD
-        NUYsUjM/0Gh+2JcuO97eKbAdh8BBAHV0bl+SuhA=
-X-Google-Smtp-Source: ABdhPJxjUO7auQGz1uE0L/pbKqExRjpwrx9ZKnA6VZu1uXt4iuNvtzNdZeMz+Ss+KiwIbV4Sfv0XzdnBKKO4+yfbwcQ=
-X-Received: by 2002:a17:902:407:: with SMTP id 7mr12502214ple.167.1598458219927;
- Wed, 26 Aug 2020 09:10:19 -0700 (PDT)
+        Wed, 26 Aug 2020 12:11:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49730 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726718AbgHZQL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:11:29 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id AE037B6FA;
+        Wed, 26 Aug 2020 16:11:58 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id D5BB01E12AF; Wed, 26 Aug 2020 18:11:26 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 18:11:26 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     trix@redhat.com
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH] writeback: clear auto_free in initializaiton
+Message-ID: <20200826161126.GB8760@quack2.suse.cz>
+References: <20200818141330.29134-1-trix@redhat.com>
 MIME-Version: 1.0
-References: <20200825124711.11455-1-nish.malpani25@gmail.com> <20200825124711.11455-2-nish.malpani25@gmail.com>
-In-Reply-To: <20200825124711.11455-2-nish.malpani25@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 26 Aug 2020 19:10:03 +0300
-Message-ID: <CAHp75VfHFo41S=Bhs2MB6Te6VAn+yCteys6XcYgciNZu9VppJg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] iio: gyro: adxrs290: Add triggered buffer support
-To:     Nishant Malpani <nish.malpani25@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
-        darius.berghe@analog.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818141330.29134-1-trix@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 4:11 PM Nishant Malpani
-<nish.malpani25@gmail.com> wrote:
->
-> Provide a way for continuous data capture by setting up buffer support. The
-> data ready signal exposed at the SYNC pin of the ADXRS290 is exploited as
-> a hardware interrupt which triggers to fill the buffer.
->
-> Triggered buffer setup was tested with both hardware trigger (DATA_RDY) and
-> software triggers (sysfs-trig & hrtimer).
+On Tue 18-08-20 07:13:30, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+> 
+> Review fs/fs-writeback.c bdi_split_work_to_wbs
+> The CONFIG_CGROUP_WRITEBACK version contains this line
+> 	base_work->auto_free = 0;
 
-...
+It is actually the !CONFIG_CGROUP_WRITEBACK version...
 
-> +static int adxrs290_set_mode(struct iio_dev *indio_dev, enum adxrs290_mode mode)
-> +{
-> +       struct adxrs290_state *st = iio_priv(indio_dev);
-> +       int val, ret;
-> +
-> +       mutex_lock(&st->lock);
-> +
-> +       if (st->mode == mode) {
+> Which seems like a strange place to set auto_free as
+> it is not where the rest of base_work is initialized.
 
-> +               ret = 0;
+Otherwise I agree it's a strange place. I've added Tejun to CC just in case
+he remembers why he's added that.
 
-Can be done outside of mutex.
+> In the default version of bdi_split_work_to_wbs, if a
+> successful malloc happens, base_work is copied and
+> auto_free is set to 1, else the base_work is
+> copied to another local valarible and its auto_free
+> is set to 0.
+> 
+> So move the clearing of auto_free to the
+> initialization of the local base_work structures.
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
-> +               goto done;
-> +       }
-> +
+Some more comments below.
 
-> +       val = spi_w8r8(st->spi, ADXRS290_READ_REG(ADXRS290_REG_POWER_CTL));
-> +       if (val < 0) {
-> +               ret = val;
-> +               goto done;
-> +       }
+> ---
+>  fs/fs-writeback.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+> index a605c3dddabc..fa1106de2ab0 100644
+> --- a/fs/fs-writeback.c
+> +++ b/fs/fs-writeback.c
+> @@ -881,7 +881,6 @@ static void bdi_split_work_to_wbs(struct backing_dev_info *bdi,
+>  		work = &fallback_work;
+>  		*work = *base_work;
+>  		work->nr_pages = nr_pages;
+> -		work->auto_free = 0;
+>  		work->done = &fallback_work_done;
 
-Consider other way around
- ret = ...
- ...
- val = ret;
+Honestly, I'd leave this alone. Although base_work should have auto_free ==
+0, this assignment IMO helps readability.
 
-> +       switch (mode) {
-> +       case ADXRS290_MODE_STANDBY:
-> +               val &= ~ADXRS290_MEASUREMENT;
-> +               break;
-> +       case ADXRS290_MODE_MEASUREMENT:
-> +               val |= ADXRS290_MEASUREMENT;
-> +               break;
-> +       default:
-> +               ret = -EINVAL;
-> +               goto done;
-> +       }
-> +
-> +       ret = adxrs290_spi_write_reg(st->spi,
-> +                                    ADXRS290_REG_POWER_CTL,
-> +                                    val);
-> +       if (ret < 0) {
-> +               dev_err(&st->spi->dev, "unable to set mode: %d\n", ret);
-> +               goto done;
-> +       }
-> +
-> +       /* update cached mode */
-> +       st->mode = mode;
-> +
-> +done:
-> +       mutex_unlock(&st->lock);
-> +       return ret;
-> +}
+> @@ -1055,10 +1054,8 @@ static void bdi_split_work_to_wbs(struct backing_dev_info *bdi,
+>  {
+>  	might_sleep();
+>  
+> -	if (!skip_if_busy || !writeback_in_progress(&bdi->wb)) {
+> -		base_work->auto_free = 0;
+> +	if (!skip_if_busy || !writeback_in_progress(&bdi->wb))
+>  		wb_queue_work(&bdi->wb, base_work);
+> -	}
 
-...
+Agreed with this.
 
-> +                               goto err_release;
->
-> -                       return IIO_VAL_INT;
-> +                       ret = IIO_VAL_INT;
-> +                       break;
->                 default:
-> -                       return -EINVAL;
-> +                       ret = -EINVAL;
-> +                       break;
->                 }
 
-> +err_release:
+> @@ -2459,6 +2456,7 @@ static void __writeback_inodes_sb_nr(struct super_block *sb, unsigned long nr,
+>  		.done			= &done,
+>  		.nr_pages		= nr,
+>  		.reason			= reason,
+> +		.auto_free		= 0,
+>  	};
+>  
+>  	if (!bdi_has_dirty_io(bdi) || bdi == &noop_backing_dev_info)
+> @@ -2538,6 +2536,7 @@ void sync_inodes_sb(struct super_block *sb)
+>  		.done		= &done,
+>  		.reason		= WB_REASON_SYNC,
+>  		.for_sync	= 1,
+> +		.auto_free	= 0,
+>  	};
 
-I didn't get the purpose of this. Wasn't the break statement enough?
+No need for explicit initialization to 0 - that is implicit with the
+initializers.
 
-> +               iio_device_release_direct_mode(indio_dev);
-> +               return ret;
->         case IIO_CHAN_INFO_SCALE:
->                 switch (chan->type) {
->                 case IIO_ANGL_VEL:
-
-...
-
-> +                       goto err_release;
-
-Ditto.
-
-> +               }
-> +
->                 /* caching the updated state of the high-pass filter */
->                 st->hpf_3db_freq_idx = hpf_idx;
->                 /* retrieving the current state of the low-pass filter */
->                 lpf_idx = st->lpf_3db_freq_idx;
-> -               return adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-> +               ret = adxrs290_set_filter_freq(indio_dev, lpf_idx, hpf_idx);
-> +               break;
-> +
-> +       default:
-> +               ret = -EINVAL;
-> +               break;
->         }
->
-> -       return -EINVAL;
-> +err_release:
-> +       iio_device_release_direct_mode(indio_dev);
-> +       return ret;
->  }
-
-...
-
-> +       val = (state ? ADXRS290_SYNC(ADXRS290_DATA_RDY_OUT) : 0);
-
-Purpose of outer parentheses?
-
-...
-
-> +static int adxrs290_probe_trigger(struct iio_dev *indio_dev)
-> +{
-> +       struct adxrs290_state *st = iio_priv(indio_dev);
-> +       int ret;
-> +
-> +       if (!st->spi->irq) {
-> +               dev_info(&st->spi->dev, "no irq, using polling\n");
-> +               return 0;
-> +       }
-> +
-> +       st->dready_trig = devm_iio_trigger_alloc(&st->spi->dev,
-> +                                                "%s-dev%d",
-> +                                                indio_dev->name,
-> +                                                indio_dev->id);
-> +       if (!st->dready_trig)
-> +               return -ENOMEM;
-> +
-> +       st->dready_trig->dev.parent = &st->spi->dev;
-> +       st->dready_trig->ops = &adxrs290_trigger_ops;
-> +       iio_trigger_set_drvdata(st->dready_trig, indio_dev);
-> +
-> +       ret = devm_request_irq(&st->spi->dev, st->spi->irq,
-> +                              &iio_trigger_generic_data_rdy_poll,
-> +                              IRQF_ONESHOT,
-> +                              "adxrs290_irq", st->dready_trig);
-> +       if (ret < 0) {
-
-> +               dev_err(&st->spi->dev, "request irq %d failed\n", st->spi->irq);
-> +               return ret;
-
-return dev_err_probe(...);
-
-> +       }
-> +
-> +       ret = devm_iio_trigger_register(&st->spi->dev, st->dready_trig);
-> +       if (ret) {
-
-> +               dev_err(&st->spi->dev, "iio trigger register failed\n");
-> +               return ret;
-
-return dev_err_probe(...);
-
-> +       }
-> +
-> +       indio_dev->trig = iio_trigger_get(st->dready_trig);
-> +
-> +       return 0;
-> +}
-
-...
-
-> +       ret = devm_iio_triggered_buffer_setup(&spi->dev, indio_dev,
-> +                                             &iio_pollfunc_store_time,
-> +                                             &adxrs290_trigger_handler, NULL);
-> +       if (ret < 0) {
-
-> +               dev_err(&spi->dev, "iio triggered buffer setup failed\n");
-> +               return ret;
-
-return dev_err_probe(...);
-
-> +       }
-
+								Honza
 -- 
-With Best Regards,
-Andy Shevchenko
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
