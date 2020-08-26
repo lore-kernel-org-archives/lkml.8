@@ -2,108 +2,111 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C67C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEE8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55255207DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 425BA207DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:53:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B9oo0fYO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fd75T1FC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHZTwz (ORCPT
+        id S1727099AbgHZTxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:52:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53104 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbgHZTwy (ORCPT
+        Wed, 26 Aug 2020 15:53:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47439 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726794AbgHZTxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:52:54 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0A3C061574;
-        Wed, 26 Aug 2020 12:52:54 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id 67so1619774pgd.12;
-        Wed, 26 Aug 2020 12:52:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=94/SNbSIYD+Xo9JGqNVO2RH4yAJNdDu/Srjv1flV1xU=;
-        b=B9oo0fYO83YraeDiISzi9wTvMOYANVtCssR31gsYfbP26/yLDn62YivLWh28/HRLuW
-         5E3flOJzN9eMe0WK11fWSUldNF/kjJWzEexyBSQpp1894bKqzkJJskj14VIxYVK9qXL9
-         P6730iOT4DKPNAbcDlNxN9BWambABkuUnFs/8Sf+v60d6o2+G5/yFZvd/tvE4Ui+r3Wb
-         XnYazDzrSHPsbHTIgiFfAofWF0M/qqH1eHN6ZfMhl1JD1NacfmnQNrYyP5LatergKUnF
-         /PFzdw3koueaaOVUGFClaZrew8vDS3NBRo5OhH1q8zxDtPm5n/Zlp5xkeI7cAskhQ6Wk
-         gTfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=94/SNbSIYD+Xo9JGqNVO2RH4yAJNdDu/Srjv1flV1xU=;
-        b=d/t53aXHiH54vIMCYmG0ZeNyuPHsBYGsFVr8yNEN4YmXtZZ2fvEqcNjum3xnWIEzP8
-         MILzApx5QBxzDPhns8CzeJyrAlLiieX1gSbJaVmReyrenm1Qw1bGxy7tvSXZrSfAhMB9
-         EBPUODg61CpbzVRatQylopD1ZQq0iAvP/1INgQi8ADarsLqA8TjmFksZLW508ElwlRtk
-         SmR8qWdMZK7tuJ5TwaVZO8VHyjgvcU/8dJ9zTv7PeMPgKLHR3MC3Kwsuel28QksJLGlP
-         eyTGgaSJGQMxyKifkHnhb0Oeo8bg5ksxHoYiUhgpFwkQIhjyVH2GzduWD6HHkMopwgxy
-         BSvQ==
-X-Gm-Message-State: AOAM532jFjz62QUuBVdhbykj953jFSGu+jQLJPt5HFQFjSa8V2w5qQzw
-        3VjRVUOyQyWtpZBa8fLr3KQ=
-X-Google-Smtp-Source: ABdhPJzSnqwgeAkAqN2xJDE0qEBkdhNetW25TS9HYgmaf31pTd7MgP/c7bHA7cLtQF0Bg3Ng4vnQqw==
-X-Received: by 2002:a65:670d:: with SMTP id u13mr11775755pgf.280.1598471573542;
-        Wed, 26 Aug 2020 12:52:53 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:8e18])
-        by smtp.gmail.com with ESMTPSA id x12sm3738117pff.48.2020.08.26.12.52.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 12:52:52 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 12:52:50 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Udip Pant <udippant@fb.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v3 0/4] bpf: verifier: use target program's type
- for access verifications
-Message-ID: <20200826195250.jnbl3oca5lqrdgbs@ast-mbp.dhcp.thefacebook.com>
-References: <20200825232003.2877030-1-udippant@fb.com>
+        Wed, 26 Aug 2020 15:53:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598471601;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GTZBfQJrZmGoOihET1Kwf2wGDuCL4pavAJzlhd2obj8=;
+        b=Fd75T1FCRJYv7NasWwkOFUNhoXBot2Vfy0viot5CJZQbfLNWpiC17ydU1DtoMvjL8EWUZV
+        1IVtyCLCk0Glzj9Qur3bz4DFeA8sYz7TfCgm87kcOtDAAjfmBmX8chpHNvdy07vjFz1pwC
+        bD6i2IblAx3oPE2vWE0Lqwgrj/VUiQM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-577-F0p-GF9QNC20GO3wYDSSDA-1; Wed, 26 Aug 2020 15:53:19 -0400
+X-MC-Unique: F0p-GF9QNC20GO3wYDSSDA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2139E1074646;
+        Wed, 26 Aug 2020 19:53:18 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-115-36.rdu2.redhat.com [10.10.115.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 53B8719C58;
+        Wed, 26 Aug 2020 19:53:12 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id A14A6223C69; Wed, 26 Aug 2020 15:53:11 -0400 (EDT)
+Date:   Wed, 26 Aug 2020 15:53:11 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        virtio-fs-list <virtio-fs@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v3 11/18] fuse: implement FUSE_INIT map_alignment field
+Message-ID: <20200826195311.GB1043442@redhat.com>
+References: <20200819221956.845195-1-vgoyal@redhat.com>
+ <20200819221956.845195-12-vgoyal@redhat.com>
+ <CAJfpegsgHE0MkZLFgE4yrZXO5ThDxCj85-PjizrXPRC2CceT1g@mail.gmail.com>
+ <20200826155142.GA1043442@redhat.com>
+ <20200826173408.GA11480@stefanha-x1.localdomain>
+ <20200826191711.GF3932@work-vm>
+ <CAJfpegvqZUXsvbWg8K-xosNR+RVwRm2KH+S9mKs6n6Sv65s+Qg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825232003.2877030-1-udippant@fb.com>
+In-Reply-To: <CAJfpegvqZUXsvbWg8K-xosNR+RVwRm2KH+S9mKs6n6Sv65s+Qg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 04:19:59PM -0700, Udip Pant wrote:
-> This patch series adds changes in verifier to make decisions such as granting
-> of read / write access or enforcement of return code status based on
-> the program type of the target program while using dynamic program
-> extension (of type BPF_PROG_TYPE_EXT).
+On Wed, Aug 26, 2020 at 09:26:29PM +0200, Miklos Szeredi wrote:
+> On Wed, Aug 26, 2020 at 9:17 PM Dr. David Alan Gilbert
+> <dgilbert@redhat.com> wrote:
 > 
-> The BPF_PROG_TYPE_EXT type can be used to extend types such as XDP, SKB
-> and others. Since the BPF_PROG_TYPE_EXT program type on itself is just a
-> placeholder for those, we need this extended check for those extended
-> programs to actually work with proper access, while using this option.
+> > Agreed, because there's not much that the server can do about it if the
+> > client would like a smaller granularity - the servers granularity might
+> > be dictated by it's mmap/pagesize/filesystem.  If the client wants a
+> > larger granularity that's it's choice when it sends the setupmapping
+> > calls.
 > 
-> Patch #1 includes changes in the verifier.
-> Patch #2 adds selftests to verify write access on a packet for a valid 
-> extension program type
-> Patch #3 adds selftests to verify proper check for the return code
-> Patch #4 adds selftests to ensure access permissions and restrictions 
-> for some map types such sockmap.
+> What bothers me is that the server now comes with the built in 2MiB
+> granularity (obviously much larger than actually needed).
 > 
-> Changelogs:
->   v2 -> v3:
->     * more comprehensive resolution of the program type in the verifier
->       based on the target program (and not just for the packet access)
->     * selftests for checking return code and map access
->     * Also moved this patch to 'bpf-next' from 'bpf' tree
+> What if at some point we'd want to reduce that somewhat in the client?
+>   Yeah, we can't.   Maybe this is not a kernel problem after all, the
+> proper thing would be to fix the server to actually send something
+> meaningful.
 
-Applied. Thanks
+Hi Miklos,
+
+Current implementation of virtiofsd reports this map alignment as
+PAGE_SIZE.
+
+        /* This constraint comes from mmap(2) and munmap(2) */
+        outarg.map_alignment = ffsl(sysconf(_SC_PAGE_SIZE)) - 1;
+
+Which should be 4K on x86. 
+
+And that means if client wants it can drop to dax mapping size as
+small as 4K and still meeting alignment constratints. Just that by
+default we have chosen 2MB as of now fearing there might be too
+many small mmap() calls on host and we will hit various limits.
+
+Thanks
+Vivek
+
