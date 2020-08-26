@@ -2,85 +2,116 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAB6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95F772078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B96C82076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:34:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLSOwOQw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgHZTcG (ORCPT
+        id S1726910AbgHZTeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:32:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726790AbgHZTcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:32:06 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6CB92076C;
-        Wed, 26 Aug 2020 19:32:04 +0000 (UTC)
-Date:   Wed, 26 Aug 2020 15:32:03 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        jbaron@akamai.com, mingo@redhat.com,
-        Nicolas Boichat <drinkcat@chromium.org>, kernel@axis.com,
-        corbet@lwn.net, pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        john.ogness@linutronix.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] dynamic debug: allow printing to trace event
-Message-ID: <20200826153203.1a65c35d@oasis.local.home>
-In-Reply-To: <651f7ec449dfb28006bbc0b018d4f6e506bcda80.camel@perches.com>
-References: <20200825153338.17061-1-vincent.whitchurch@axis.com>
-        <20200825153338.17061-3-vincent.whitchurch@axis.com>
-        <651f7ec449dfb28006bbc0b018d4f6e506bcda80.camel@perches.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 26 Aug 2020 15:34:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50202 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbgHZTeW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:34:22 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 102CCC061574;
+        Wed, 26 Aug 2020 12:34:22 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id m34so1585666pgl.11;
+        Wed, 26 Aug 2020 12:34:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TldKm6UYrDqQCB8UevAGIccUxXWB4Kosvte/jze7YQU=;
+        b=kLSOwOQwTvHZVDY6z2gnIIs2Mx5UlcXYJW4rd0W/h7CldAnnQJoRXjdI6g8EnhgTUT
+         7HpokCM1WdWTAX85W7tWBJoV8b3JY4wki1YZmYNbzGTtnPK/kL2dSP6xwx0PuxA/5Tpd
+         4SNVnsJLHX+2BvIgdcFQIaTsJvPRVAmLtFUeNIwYjmkpVIFxfBq6SiOnepU0/WwwfWJH
+         T5tiFVj6TFI9Ev8QH/YQFLy7QFHwslP1kZVGXG82aYinvEfHXZyCgv0gEtrtfpU4c3eG
+         6svBClrltN/JIU/duo2wJDcr8rVA4xx/mChjloBBvzLAEi0txKut8BmOydqUoNVQk0Ke
+         HfGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TldKm6UYrDqQCB8UevAGIccUxXWB4Kosvte/jze7YQU=;
+        b=B6XqqgWedtd2jaywKJlW6FwXvWBEDJm1B8umBVpDvPMXrjwt2ygSustXenCzBjlVfW
+         zg5aleGz+Oo2HmJYmhFg62S5SnOpS3wYu1B91zNBcuXHwww+d+O884k/zD6gqkaiAQFU
+         BioXLkV0dE327zZDaNv2XEE1eHgbbE5LToh8NvYg5w4xk5NBwvheRl3iiBisia2Lns1v
+         EHCNBtOLsIDyoH6LnmbnYXnhf9Xi3kXDcVnnkQlcx7ZzNdoqMf7pQKDOC4j9g6llSRYF
+         IfW0klk6Y8P7FEOr+tGoGxuqjmElZQIxDZtcicZzgeCxbldCKtIFBZ2M/S1rZtEQGMjc
+         /jkg==
+X-Gm-Message-State: AOAM5317lKF4TTEXXWWAUoMitKhts48oN+zNyEbxL6pDbdMim6011o28
+        yW1OJKV4EGPLE+FqXo5JQC121Sh4gEym8Uy8T4Q=
+X-Google-Smtp-Source: ABdhPJxU5LveNLI3N+AP3CiHJqnh/ejkN1V0tbzNHVbFjNlLP1SQr1TkF1bumcE9knyZOIH371onyWTP682ulHVzwUQ=
+X-Received: by 2002:a17:902:8208:: with SMTP id x8mr1690183pln.65.1598470461445;
+ Wed, 26 Aug 2020 12:34:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com> <20200822183342.6sdhp6yq6i7yvdia@skbuf>
+In-Reply-To: <20200822183342.6sdhp6yq6i7yvdia@skbuf>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 26 Aug 2020 22:34:04 +0300
+Message-ID: <CAHp75VeNXy1jWNWMuZc0bfXruKc3=0H4ezwpE8jbj6GLYk5QBA@mail.gmail.com>
+Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qiang Zhao <qiang.zhao@nxp.com>,
+        Pankaj Bansal <pankaj.bansal@nxp.com>,
+        Varun Sethi <V.Sethi@nxp.com>,
+        tanveer <tanveer.alam@puresoftware.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 08:53:25 -0700
-Joe Perches <joe@perches.com> wrote:
+On Sat, Aug 22, 2020 at 9:37 PM Vladimir Oltean <olteanv@gmail.com> wrote:
+> On Fri, Aug 21, 2020 at 06:40:29PM +0530, kuldip dwivedi wrote:
 
-> > The print buffer is statically allocated and managed using code borrowed
-> > from __ftrace_trace_stack() and is limited to 256 bytes (four of these
-> > are allocated per CPU to handle the various contexts); anything larger
-> > will be truncated.  
-> 
-> There is an effort to avoid using trace_printk and the like
-> so perhaps this feature should have the same compile time
-> guard.
+> Just noticed this now.
+> So for device tree, spi-fsl-dspi supports the following compatibles:
+>
+> fsl,vf610-dspi
+> fsl,ls1021a-v1.0-dspi
+> fsl,ls1012a-dspi
+> fsl,ls1028a-dspi
+> fsl,ls1043a-dspi
+> fsl,ls1046a-dspi
+> fsl,ls2080a-dspi
+> fsl,ls2085a-dspi
+> fsl,lx2160a-dspi
+>
+> Depending on the compatible string, the driver knows whether to use DMA
+> or XSPI mode, and what the FIFO size is.
+>
+> Now, of course not all of the above SoCs are going to support ACPI, but
+> it is reasonable to expect that more than one will. And in that case,
+> the driver should still be able to know on what SoC it's running,
+> because for example LS1043A doesn't support DMA, and LS2085A doesn't
+> support XSPI.
+>
+> How is this dealt with in ACPI?
 
-No, this is fine for being in a production kernel. Basically, these are
-simply debug printk()s that can also be put into the trace buffer. The
-key difference to trace_printk() is that they are an event that needs
-to be enabled to write into the buffer.
+Theoretically you may declare your HID in the same / similar way as
+PRP0001 and use same compatible strings and all other DT properties
+(when they make sense and not duplicate ACPI functionality).
+But better if ACPI people can tell you (I Cc'ed Rafael and ACPI
+mailing list) if it is gonna work.
 
-The problem I'm avoiding with not letting people add trace_printk() is
-that trace_printk() should be used when a developer is trying to debug
-some code. The *only* trace_printk()s should be the ones that developer
-adds (because it only shows what they want to find).
-
-trace_printk()s are enabled by default, and they have a special
-switch to disable. But it is an all or nothing switch. They either
-enable all of them, or disable all of them. No in between.
-
-Now if we allow trace_printk()s to be scattered through the kernel,
-when someone wants to use trace_printk() for their own debugging, and
-it is turned on, now the trace buffer is filled with a bunch of "noise"
-from all these other trace_printk()s that are scattered around, and the
-trace_printk()s that the poor developer added are lost among the sea of
-other trace_printk()s, making their trace_printk()s useless.
-
-That is the reason I try hard not letting trace_printk() enter into the
-kernel.
-
--- Steve
+-- 
+With Best Regards,
+Andy Shevchenko
