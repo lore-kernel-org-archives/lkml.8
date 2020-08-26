@@ -2,121 +2,74 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FDEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34017C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC1FD2071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:52:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="prQUtVvw"
+	by mail.kernel.org (Postfix) with ESMTP id 1037D20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 08:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgHZIwg (ORCPT
+        id S1727817AbgHZIxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 04:52:36 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:40568 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbgHZIwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 04:52:35 -0400
-Received: from zn.tnic (p200300ec2f0cee0024a26a8aa2aa63ac.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:ee00:24a2:6a8a:a2aa:63ac])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DCAAB1EC0301;
-        Wed, 26 Aug 2020 10:52:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1598431954;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=wrbb6+uQ8UOIr4v7FRvD1AMqEEw17QltJm0TB+jqX3o=;
-        b=prQUtVvw0Qq/tyLheD2DsFqO43OeUlh1FWI3rxVJYaAbDeDvR8PdsrHjAGUio5RQAN5a8y
-        SCLPdc+f9Uvp0ZaDRpRhKQ/QggwTagr7noZMK12Rfbik2J7S5JdFI6HMMxeILFJskXeavk
-        D6JlkeEDtevC+evuE42all/VxRMwrxw=
-Date:   Wed, 26 Aug 2020 10:52:29 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mchehab@kernel.org, tony.luck@intel.com, james.morse@arm.com,
-        rrichter@marvell.com, linuxarm@huawei.com
-Subject: Re: [PATCH 1/1] EDAC/ghes: Fix for NULL pointer dereference in
- ghes_edac_register()
-Message-ID: <20200826085229.GB22390@zn.tnic>
-References: <20200825130108.2132-1-shiju.jose@huawei.com>
+        Wed, 26 Aug 2020 04:53:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbgHZIxe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 04:53:34 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248BDC061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 01:53:34 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 49EB129435B
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>
+Cc:     narmstrong@baylibre.com, matthias.bgg@gmail.com,
+        drinkcat@chromium.org, hsinyi@chromium.org, a.hajda@samsung.com,
+        boris.brezillon@collabora.com, laurent.pinchart@ideasonboard.com,
+        sam@ravnborg.org, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [RESEND PATCH v2 0/2] Convert mtk-dpi to drm_bridge API
+Date:   Wed, 26 Aug 2020 10:53:15 +0200
+Message-Id: <20200826085317.681385-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200825130108.2132-1-shiju.jose@huawei.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 02:01:08PM +0100, Shiju Jose wrote:
-> After the 'commit b9cae27728d1 ("EDAC/ghes: Scan the system once on driver init")'
-> applied, following error has occurred in ghes_edac_register() when
-> CONFIG_DEBUG_TEST_DRIVER_REMOVE is enabled. The null ghes_hw.dimms pointer
-> in the mci_for_each_dimm() of ghes_edac_register() caused the error.
-> 
-> The error occurs when all the previously initialized ghes instances are
-> removed and then probe a new ghes instance. In this case, the ghes_refcount
-> would be 0, ghes_hw.dimms and mci already freed. The ghes_hw.dimms would
-> be null because ghes_scan_system() would not call enumerate_dimms() again.
 
-Try the below instead and see if it fixes the issue for you too.
+The mtk-dpi driver still uses the drm_encoder API which is now somewhat
+deprecated. We started to move all the Mediatek drivers to the drm_bridge API,
+like we did for the mtk-dsi driver [1], this is another small step to be able to
+fully convert the DRM Mediatek drivers to the drm_bridge API. A dummy
+drm_encoder is maintained in the mtk-dpi driver but the end goal is move all the
+dummy drm_encoder (mtk-dsi, mtk-dpi, etc) to the main mtk_drm_drv driver.
 
-If it does, pls send it as v2 but do not add the splat to the commit
-message - that's a lot of noise for something which is clear why it
-happens and you explain it properly in text anyway.
+[1] https://lore.kernel.org/patchwork/project/lkml/list/?series=441559
 
-Thx.
+Changes in v2:
+- Maintain error message when attach to bridge fails. (Boris)
 
----
-diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
-index da60c29468a7..54ebc8afc6b1 100644
---- a/drivers/edac/ghes_edac.c
-+++ b/drivers/edac/ghes_edac.c
-@@ -55,6 +55,8 @@ static DEFINE_SPINLOCK(ghes_lock);
- static bool __read_mostly force_load;
- module_param(force_load, bool, 0);
- 
-+static bool system_scanned;
-+
- /* Memory Device - Type 17 of SMBIOS spec */
- struct memdev_dmi_entry {
- 	u8 type;
-@@ -225,14 +227,12 @@ static void enumerate_dimms(const struct dmi_header *dh, void *arg)
- 
- static void ghes_scan_system(void)
- {
--	static bool scanned;
--
--	if (scanned)
-+	if (system_scanned)
- 		return;
- 
- 	dmi_walk(enumerate_dimms, &ghes_hw);
- 
--	scanned = true;
-+	system_scanned = true;
- }
- 
- void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
-@@ -631,6 +631,8 @@ void ghes_edac_unregister(struct ghes *ghes)
- 
- 	mutex_lock(&ghes_reg_mutex);
- 
-+	system_scanned = false;
-+
- 	if (!refcount_dec_and_test(&ghes_refcount))
- 		goto unlock;
- 
+Enric Balletbo i Serra (2):
+  drm/mediatek: mtk_dpi: Rename bridge to next_bridge
+  drm/mediatek: mtk_dpi: Convert to bridge driver
+
+ drivers/gpu/drm/mediatek/mtk_dpi.c | 77 +++++++++++++++++-------------
+ 1 file changed, 45 insertions(+), 32 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.28.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
