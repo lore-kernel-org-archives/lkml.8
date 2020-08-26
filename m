@@ -2,93 +2,203 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3DFC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DE0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C87782078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB0E1206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgHZQTm (ORCPT
+        id S1727944AbgHZQUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:19:42 -0400
-Received: from mga04.intel.com ([192.55.52.120]:16687 "EHLO mga04.intel.com"
+        Wed, 26 Aug 2020 12:20:22 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48253 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgHZQTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:19:40 -0400
-IronPort-SDR: 3ih83erqta+LZ6aiy7Wg7VRaOE+VURhP0QP5m/hWXLqdIGtwhrHDYnkTyzrrNNmqZijoANHbV5
- 2N8A5+nOiN0A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="153748697"
+        id S1727814AbgHZQUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:20:18 -0400
+IronPort-SDR: Ta5RCl9xbAAOgSPEeLmoGrwSNHmT2sxo6DHxSKQaWJ1TcANn0oJJ5BHdU8Pc39HaPUvi872vZ9
+ ZnKOBaDg2uMw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="155586468"
 X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="153748697"
+   d="scan'208";a="155586468"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:19:38 -0700
-IronPort-SDR: GHtPkWF/dFgeM56edoykkNBMUlh1+IRjy3B5ToTjEq80wBupCLYE0qwEIUBGicPxkJ4NZTcHbs
- lIWrq8cjhYoA==
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 09:20:16 -0700
+IronPort-SDR: ljGBez0CmtQf6FL04AiuuPiruyngdoTWumwzs1YukECTXeJI+df3vtw01T9fzH/Co9fd1Ehj6B
+ D6RKzfvy4Nng==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="336876099"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 26 Aug 2020 09:19:38 -0700
-Received: from abityuts-desk1.fi.intel.com (abityuts-desk1.fi.intel.com [10.237.72.186])
-        by linux.intel.com (Postfix) with ESMTP id AB2025805ED;
-        Wed, 26 Aug 2020 09:19:36 -0700 (PDT)
-Message-ID: <72fab2376722c6169549669016933217d3da34a0.camel@gmail.com>
-Subject: Re: [PATCH] intel_idle: Add ICL support
-From:   Artem Bityutskiy <dedekind1@gmail.com>
-Reply-To: dedekind1@gmail.com
-To:     Guilhem Lettron <guilhem@barpilot.io>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Wed, 26 Aug 2020 19:19:35 +0300
-In-Reply-To: <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
-References: <20200826120421.44356-1-guilhem@barpilot.io>
-         <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
-         <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
-         <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
-         <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
-         <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
-         <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
-         <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+   d="scan'208";a="444104375"
+Received: from yliang6-mobl1.ccr.corp.intel.com (HELO [10.254.84.68]) ([10.254.84.68])
+  by orsmga004.jf.intel.com with ESMTP; 26 Aug 2020 09:20:09 -0700
+Subject: Re: [PATCH V2 3/9] PCI/portdrv: Add pcie_walk_rcec() to walk RCiEPs
+ associated with RCEC
+To:     Sean V Kelley <sean.v.kelley@intel.com>, bhelgaas@google.com,
+        Jonathan.Cameron@huawei.com, rjw@rjwysocki.net,
+        ashok.raj@intel.com, tony.luck@intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+References: <20200804194052.193272-1-sean.v.kelley@intel.com>
+ <20200804194052.193272-4-sean.v.kelley@intel.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <139d4c34-7e5e-8867-a016-4a5bc737b804@linux.intel.com>
+Date:   Wed, 26 Aug 2020 09:20:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200804194052.193272-4-sean.v.kelley@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Indeed, when I compare them:
 
-acpi_idle (without the patch):
 
-CPU%c1  CPU%c6  CPU%c7  CoreTmp PkgTmp  GFX%rc6 Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10 PkgWatt
-29.48   0.00    60.71   58      58      97.96   16.96   0.00    0.00    0.00    0.00    0.00    0.00    6.08
+On 8/4/20 12:40 PM, Sean V Kelley wrote:
+> From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> 
+> When an RCEC device signals error(s) to a CPU core, the CPU core
+> needs to walk all the RCiEPs associated with that RCEC to check
+> errors. So add the function pcie_walk_rcec() to walk all RCiEPs
+> associated with the RCEC device.
+I think its better if you merge the usage patch and API
+(pcie_walk_rcec) patch together.
 
-intel_idle (with the patch):
+Did you not get unused function warning with this patch?
+> 
+> Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+>   drivers/pci/pcie/portdrv.h      |  2 +
+>   drivers/pci/pcie/portdrv_core.c | 82 +++++++++++++++++++++++++++++++++
+>   2 files changed, 84 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+> index af7cf237432a..c11d5ecbad76 100644
+> --- a/drivers/pci/pcie/portdrv.h
+> +++ b/drivers/pci/pcie/portdrv.h
+> @@ -116,6 +116,8 @@ void pcie_port_service_unregister(struct pcie_port_service_driver *new);
+>   
+>   extern struct bus_type pcie_port_bus_type;
+>   int pcie_port_device_register(struct pci_dev *dev);
+> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
+> +		    void *userdata);
+>   #ifdef CONFIG_PM
+>   int pcie_port_device_suspend(struct device *dev);
+>   int pcie_port_device_resume_noirq(struct device *dev);
+> diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
+> index 5d4a400094fc..daa2dfa83a0b 100644
+> --- a/drivers/pci/pcie/portdrv_core.c
+> +++ b/drivers/pci/pcie/portdrv_core.c
+> @@ -14,6 +14,7 @@
+>   #include <linux/pm_runtime.h>
+>   #include <linux/string.h>
+>   #include <linux/slab.h>
+> +#include <linux/bitops.h>
+>   #include <linux/aer.h>
+>   
+>   #include "../pci.h"
+> @@ -365,6 +366,87 @@ int pcie_port_device_register(struct pci_dev *dev)
+>   	return status;
+>   }
+>   
+> +static int pcie_walk_rciep_devfn(struct pci_bus *pbus, int (*cb)(struct pci_dev *, void *),
+> +				 void *userdata, unsigned long bitmap)
+> +{
+> +	unsigned int dev, fn;
+> +	struct pci_dev *pdev;
+> +	int retval;
+> +
+> +	for_each_set_bit(dev, &bitmap, 32) {
+> +		for (fn = 0; fn < 8; fn++) {
+> +			pdev = pci_get_slot(pbus, PCI_DEVFN(dev, fn));
+> +
+> +			if (!pdev || pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)
+> +				continue;
+> +
+> +			retval = cb(pdev, userdata);
+> +			if (retval)
+> +				return retval;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * pcie_walk_rcec - Walk RCiEP devices associating with RCEC and call callback.
+> + * @rcec     RCEC whose RCiEP devices should be walked.
+> + * @cb       Callback to be called for each RCiEP device found.
+> + * @userdata Arbitrary pointer to be passed to callback.
+> + *
+> + * Walk the given RCEC. Call the provided callback on each RCiEP device found.
+> + *
+> + * We check the return of @cb each time. If it returns anything
+> + * other than 0, we break out.
+> + */
+> +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct pci_dev *, void *),
+> +		    void *userdata)
+> +{
+> +	u32 pos, bitmap, hdr, busn;
+> +	u8 ver, nextbusn, lastbusn;
+> +	struct pci_bus *pbus;
+> +	unsigned int bnr;
+> +
+> +	pos = pci_find_ext_capability(rcec, PCI_EXT_CAP_ID_RCEC);
+> +	if (!pos)
+> +		return;
+> +
+> +	pbus = pci_find_bus(pci_domain_nr(rcec->bus), rcec->bus->number);
+> +	if (!pbus)
+> +		return;
+> +
+> +	pci_read_config_dword(rcec, pos + PCI_RCEC_RCIEP_BITMAP, &bitmap);
+> +
+> +	/* Find RCiEP devices on the same bus as the RCEC */
+> +	if (pcie_walk_rciep_devfn(pbus, cb, userdata, (unsigned long)bitmap))
+> +		return;
+> +
+> +	/* Check whether RCEC BUSN register is present */
+> +	pci_read_config_dword(rcec, pos, &hdr);
+> +	ver = PCI_EXT_CAP_VER(hdr);
+> +	if (ver < PCI_RCEC_BUSN_REG_VER)
+> +		return;
+> +
+> +	pci_read_config_dword(rcec, pos + PCI_RCEC_BUSN, &busn);
+> +	nextbusn = PCI_RCEC_BUSN_NEXT(busn);
+> +	lastbusn = PCI_RCEC_BUSN_LAST(busn);
+> +
+> +	/* All RCiEP devices are on the same bus as the RCEC */
+> +	if (nextbusn == 0xff && lastbusn == 0x00)
+> +		return;
+> +
+> +	for (bnr = nextbusn; bnr <= lastbusn; bnr++) {
+> +		pbus = pci_find_bus(pci_domain_nr(rcec->bus), bnr);
+> +		if (!pbus)
+> +			continue;
+> +
+> +		/* Find RCiEP devices on the given bus */
+> +		if (pcie_walk_rciep_devfn(pbus, cb, userdata, 0xffffffff))
+> +			return;
+> +	}
+> +}
+> +
+>   #ifdef CONFIG_PM
+>   typedef int (*pcie_pm_callback_t)(struct pcie_device *);
+>   
+> 
 
-CPU%c1  CPU%c6  CPU%c7  CoreTmp PkgTmp  GFX%rc6 Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10 PkgWatt
-56      56      96.64   300     68.29   48.58   0.00    0.00    0.00    0.00    0.00    0.00    7.38    0.00
-
-With intel_idle we reach PC10, without it we only go as deep as PC2 - huge difference.
-
-I really wonder why the BIOS does not expose deeper C-states... And if
-it does not, is this for a reason? And how windows works then?
-
-May be there is a BIOS update that fixes this problem? May be Windows
-user get it quickly because stuff like this is often well-integrated in
-Windows? Would you please check if there is newer BIOS?
-
-Artem.
-
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
