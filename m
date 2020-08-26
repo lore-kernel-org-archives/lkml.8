@@ -7,36 +7,36 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2E5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 812D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 220B322B49
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CC920786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728179AbgHZJ1N (ORCPT
+        id S1728152AbgHZJ1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:27:13 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:43532 "EHLO inva021.nxp.com"
+        Wed, 26 Aug 2020 05:27:04 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:56600 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728020AbgHZJ0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728025AbgHZJ0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 26 Aug 2020 05:26:10 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 23F8A2007A9;
-        Wed, 26 Aug 2020 11:26:05 +0200 (CEST)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AC9511A08FF;
+        Wed, 26 Aug 2020 11:26:07 +0200 (CEST)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 17A092005B7;
-        Wed, 26 Aug 2020 11:26:05 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 95B201A08B7;
+        Wed, 26 Aug 2020 11:26:07 +0200 (CEST)
 Received: from fsr-ub1864-111.ea.freescale.net (fsr-ub1864-111.ea.freescale.net [10.171.82.141])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B731A202CA;
-        Wed, 26 Aug 2020 11:26:04 +0200 (CEST)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 41B0C202CA;
+        Wed, 26 Aug 2020 11:26:07 +0200 (CEST)
 From:   Diana Craciun <diana.craciun@oss.nxp.com>
 To:     linux-kernel@vger.kernel.org, laurentiu.tudor@nxp.com
 Cc:     stuyoder@gmail.com, leoyang.li@nxp.com, gregkh@linuxfoundation.org,
         linux-arm-kernel@lists.infradead.org, bharatb.linux@gmail.com,
         Diana Craciun <diana.craciun@oss.nxp.com>
-Subject: [PATCH v4 07/13] bus/fsl-mc: Export dprc_scan/dprc_remove functions to be used by multiple entities
-Date:   Wed, 26 Aug 2020 12:25:21 +0300
-Message-Id: <20200826092527.4992-8-diana.craciun@oss.nxp.com>
+Subject: [PATCH v4 13/13] bus/fsl-mc: Add a new version for dprc_get_obj_region command
+Date:   Wed, 26 Aug 2020 12:25:27 +0300
+Message-Id: <20200826092527.4992-14-diana.craciun@oss.nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200826092527.4992-1-diana.craciun@oss.nxp.com>
 References: <20200826092527.4992-1-diana.craciun@oss.nxp.com>
@@ -46,123 +46,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the DPRC scan function is used only by the bus driver.
-But the same functionality will be needed by the VFIO driver.
-To support this, the dprc scan function was exported and a little
-bit adjusted to fit both scenarios. Also the scan mutex initialization
-is done when the bus object is created, not in dprc_probe in order
-to be used by both VFIO and bus driver.
-Similarily dprc_remove_devices is exported to be used by VFIO.
+The region size reported by the firmware for mc and software
+portals was less than allocated by the hardware. This may be
+problematic when mmapping the region in user space because the
+region size is less than page size. However the size as reserved
+by the hardware is 64K.
 
 Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
 ---
- drivers/bus/fsl-mc/dprc-driver.c | 26 +++++++++++---------------
- drivers/bus/fsl-mc/fsl-mc-bus.c  |  1 +
- include/linux/fsl/mc.h           |  7 +++++++
- 3 files changed, 19 insertions(+), 15 deletions(-)
+ drivers/bus/fsl-mc/dprc.c           | 38 ++++++++++++++++++-----------
+ drivers/bus/fsl-mc/fsl-mc-private.h |  3 +++
+ 2 files changed, 27 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/bus/fsl-mc/dprc-driver.c b/drivers/bus/fsl-mc/dprc-driver.c
-index 3d850515e3e5..dde8fe965e30 100644
---- a/drivers/bus/fsl-mc/dprc-driver.c
-+++ b/drivers/bus/fsl-mc/dprc-driver.c
-@@ -81,9 +81,9 @@ static int __fsl_mc_device_remove(struct device *dev, void *data)
-  * the MC by removing devices that represent MC objects that have
-  * been dynamically removed in the physical DPRC.
-  */
--static void dprc_remove_devices(struct fsl_mc_device *mc_bus_dev,
--				struct fsl_mc_obj_desc *obj_desc_array,
--				int num_child_objects_in_mc)
-+void dprc_remove_devices(struct fsl_mc_device *mc_bus_dev,
-+			 struct fsl_mc_obj_desc *obj_desc_array,
-+			 int num_child_objects_in_mc)
- {
- 	if (num_child_objects_in_mc != 0) {
- 		/*
-@@ -105,6 +105,7 @@ static void dprc_remove_devices(struct fsl_mc_device *mc_bus_dev,
- 				      __fsl_mc_device_remove);
- 	}
- }
-+EXPORT_SYMBOL_GPL(dprc_remove_devices);
- 
- static int __fsl_mc_device_match(struct device *dev, void *data)
- {
-@@ -354,9 +355,10 @@ static int dprc_scan_objects(struct fsl_mc_device *mc_bus_dev,
-  * bus driver with the actual state of the MC by adding and removing
-  * devices as appropriate.
-  */
--static int dprc_scan_container(struct fsl_mc_device *mc_bus_dev)
-+int dprc_scan_container(struct fsl_mc_device *mc_bus_dev,
-+			bool alloc_interrupts)
- {
--	int error;
-+	int error = 0;
- 	struct fsl_mc_bus *mc_bus = to_fsl_mc_bus(mc_bus_dev);
- 
- 	fsl_mc_init_all_resource_pools(mc_bus_dev);
-@@ -365,16 +367,12 @@ static int dprc_scan_container(struct fsl_mc_device *mc_bus_dev)
- 	 * Discover objects in the DPRC:
- 	 */
- 	mutex_lock(&mc_bus->scan_mutex);
--	error = dprc_scan_objects(mc_bus_dev, true);
-+	error = dprc_scan_objects(mc_bus_dev, alloc_interrupts);
- 	mutex_unlock(&mc_bus->scan_mutex);
--	if (error < 0) {
--		fsl_mc_cleanup_all_resource_pools(mc_bus_dev);
--		return error;
--	}
- 
--	return 0;
-+	return error;
- }
--
-+EXPORT_SYMBOL_GPL(dprc_scan_container);
- /**
-  * dprc_irq0_handler - Regular ISR for DPRC interrupt 0
-  *
-@@ -683,12 +681,10 @@ static int dprc_probe(struct fsl_mc_device *mc_dev)
- 		goto error_cleanup_open;
+diff --git a/drivers/bus/fsl-mc/dprc.c b/drivers/bus/fsl-mc/dprc.c
+index 650808799a29..57b097caf255 100644
+--- a/drivers/bus/fsl-mc/dprc.c
++++ b/drivers/bus/fsl-mc/dprc.c
+@@ -536,20 +536,30 @@ int dprc_get_obj_region(struct fsl_mc_io *mc_io,
+ 			return err;
  	}
  
--	mutex_init(&mc_bus->scan_mutex);
--
- 	/*
- 	 * Discover MC objects in DPRC object:
- 	 */
--	error = dprc_scan_container(mc_dev);
-+	error = dprc_scan_container(mc_dev, true);
- 	if (error < 0)
- 		goto error_cleanup_open;
- 
-diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-index 1bb70a92167e..32f194814b08 100644
---- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-+++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-@@ -678,6 +678,7 @@ int fsl_mc_device_add(struct fsl_mc_obj_desc *obj_desc,
- 		if (!mc_bus)
- 			return -ENOMEM;
- 
-+		mutex_init(&mc_bus->scan_mutex);
- 		mc_dev = &mc_bus->mc_dev;
- 	} else {
- 		/*
-diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
-index 1d8800acf21f..da11171bc38f 100644
---- a/include/linux/fsl/mc.h
-+++ b/include/linux/fsl/mc.h
-@@ -531,6 +531,13 @@ int dprc_reset_container(struct fsl_mc_io *mc_io,
- 			 int child_container_id,
- 			 u32 options);
- 
-+int dprc_scan_container(struct fsl_mc_device *mc_bus_dev,
-+			bool alloc_interrupts);
+-	/**
+-	 * MC API version 6.3 introduced a new field to the region
+-	 * descriptor: base_address. If the older API is in use then the base
+-	 * address is set to zero to indicate it needs to be obtained elsewhere
+-	 * (typically the device tree).
+-	 */
+-	if (dprc_major_ver > 6 || (dprc_major_ver == 6 && dprc_minor_ver >= 3))
+-		cmd.header =
+-			mc_encode_cmd_header(DPRC_CMDID_GET_OBJ_REG_V2,
+-					     cmd_flags, token);
+-	else
+-		cmd.header =
+-			mc_encode_cmd_header(DPRC_CMDID_GET_OBJ_REG,
+-					     cmd_flags, token);
++	if (dprc_major_ver > 6 || (dprc_major_ver == 6 && dprc_minor_ver >= 6)) {
++		/*
++		 * MC API version 6.6 changed the size of the MC portals and software
++		 * portals to 64K (as implemented by hardware). If older API is in use the
++		 * size reported is less (64 bytes for mc portals and 4K for software
++		 * portals).
++		 */
 +
-+void dprc_remove_devices(struct fsl_mc_device *mc_bus_dev,
-+			 struct fsl_mc_obj_desc *obj_desc_array,
-+			 int num_child_objects_in_mc);
++		cmd.header = mc_encode_cmd_header(DPRC_CMDID_GET_OBJ_REG_V3,
++						  cmd_flags, token);
 +
- /*
-  * Data Path Buffer Pool (DPBP) API
-  * Contains initialization APIs and runtime control APIs for DPBP
++	} else if (dprc_major_ver == 6 && dprc_minor_ver >= 3) {
++		/*
++		 * MC API version 6.3 introduced a new field to the region
++		 * descriptor: base_address. If the older API is in use then the base
++		 * address is set to zero to indicate it needs to be obtained elsewhere
++		 * (typically the device tree).
++		 */
++		cmd.header = mc_encode_cmd_header(DPRC_CMDID_GET_OBJ_REG_V2,
++						  cmd_flags, token);
++	} else {
++		cmd.header = mc_encode_cmd_header(DPRC_CMDID_GET_OBJ_REG,
++						  cmd_flags, token);
++	}
+ 
+ 	cmd_params = (struct dprc_cmd_get_obj_region *)cmd.params;
+ 	cmd_params->obj_id = cpu_to_le32(obj_id);
+diff --git a/drivers/bus/fsl-mc/fsl-mc-private.h b/drivers/bus/fsl-mc/fsl-mc-private.h
+index 3e9f9c778631..85ca5fdee581 100644
+--- a/drivers/bus/fsl-mc/fsl-mc-private.h
++++ b/drivers/bus/fsl-mc/fsl-mc-private.h
+@@ -80,10 +80,12 @@ int dpmcp_reset(struct fsl_mc_io *mc_io,
+ /* DPRC command versioning */
+ #define DPRC_CMD_BASE_VERSION			1
+ #define DPRC_CMD_2ND_VERSION			2
++#define DPRC_CMD_3RD_VERSION			3
+ #define DPRC_CMD_ID_OFFSET			4
+ 
+ #define DPRC_CMD(id)	(((id) << DPRC_CMD_ID_OFFSET) | DPRC_CMD_BASE_VERSION)
+ #define DPRC_CMD_V2(id)	(((id) << DPRC_CMD_ID_OFFSET) | DPRC_CMD_2ND_VERSION)
++#define DPRC_CMD_V3(id)	(((id) << DPRC_CMD_ID_OFFSET) | DPRC_CMD_3RD_VERSION)
+ 
+ /* DPRC command IDs */
+ #define DPRC_CMDID_CLOSE                        DPRC_CMD(0x800)
+@@ -105,6 +107,7 @@ int dpmcp_reset(struct fsl_mc_io *mc_io,
+ #define DPRC_CMDID_GET_OBJ                      DPRC_CMD(0x15A)
+ #define DPRC_CMDID_GET_OBJ_REG                  DPRC_CMD(0x15E)
+ #define DPRC_CMDID_GET_OBJ_REG_V2               DPRC_CMD_V2(0x15E)
++#define DPRC_CMDID_GET_OBJ_REG_V3               DPRC_CMD_V3(0x15E)
+ #define DPRC_CMDID_SET_OBJ_IRQ                  DPRC_CMD(0x15F)
+ 
+ #define DPRC_CMDID_GET_CONNECTION               DPRC_CMD(0x16C)
 -- 
 2.17.1
 
