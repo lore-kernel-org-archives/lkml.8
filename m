@@ -2,109 +2,82 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B274C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA22C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA28E20707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:00:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598446828;
-	bh=IWtrVErsNt6biC0nU1M0P0Qygjeyy2+q3KfSsdSxkWs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ROAmbvj1joRPLV7K75l0HVLumMpkHOnX1KisHyOVu+EFE9Otg+iCgjQQXRL/f1ihS
-	 y5J0a8GuQ8KLGc4CYFuADUFMKRubbq/+SCexvdlJmzPD424cKhUtuzyyYzGKntwB/g
-	 c6+AjDz2Rgw/R0e91mFHzdPe+Wd+idSfOSh55BFQ=
+	by mail.kernel.org (Postfix) with ESMTP id E5DCC2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgHZNAU (ORCPT
+        id S1730054AbgHZNAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:00:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55324 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 09:00:40 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:33116 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbgHZNAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:00:05 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B7992080C;
-        Wed, 26 Aug 2020 13:00:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598446805;
-        bh=IWtrVErsNt6biC0nU1M0P0Qygjeyy2+q3KfSsdSxkWs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wQEodM1+P3RE3vRwZe7NXLBYax59zSpUQettpNZkIZoxD716uYg5Y5dr9ygkgcHjM
-         LWkQwKSuXf8I3r9R3XC4g3l++FvC9PSokP/AXKlm9mD65LGE8kl1GXp0xBjoONt9Zg
-         7c1c2LddBk9KWYIuXi54lB7MgG0vUI3uuo0OOsxU=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 46B4040D3D; Wed, 26 Aug 2020 10:00:03 -0300 (-03)
-Date:   Wed, 26 Aug 2020 10:00:03 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH] perf stat: Fix s390x compile error on F32
- utils/stat-display.c
-Message-ID: <20200826130003.GE1059382@kernel.org>
-References: <20200825063304.77733-1-tmricht@linux.ibm.com>
- <20200825071442.GB631468@krava>
+        id S1728977AbgHZNAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:00:36 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1kAv2A-0004QZ-Po; Wed, 26 Aug 2020 23:00:11 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 26 Aug 2020 23:00:10 +1000
+Date:   Wed, 26 Aug 2020 23:00:10 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Andrew Zaborowski <andrew.zaborowski@intel.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Caleb Jorden <caljorden@hotmail.com>,
+        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
+Message-ID: <20200826130010.GA3232@gondor.apana.org.au>
+References: <20200826055150.2753.90553@ml01.vlan13.01.org>
+ <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
+ <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
+ <20200826114952.GA2375@gondor.apana.org.au>
+ <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
+ <20200826120832.GA2996@gondor.apana.org.au>
+ <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825071442.GB631468@krava>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Aug 25, 2020 at 09:14:42AM +0200, Jiri Olsa escreveu:
-> On Tue, Aug 25, 2020 at 08:33:04AM +0200, Thomas Richter wrote:
+On Wed, Aug 26, 2020 at 02:58:02PM +0200, Andrew Zaborowski wrote:
+>
+> Running iwd's and ell's unit tests I can see that at least the
+> following algorithms give EINVAL errors:
+> ecb(aes)
+> cbc(aes)
+> ctr(aes)
 > 
-> SNIP
+> The first one fails in recv() and only for some input lengths.  The
+> latter two fail in send().  The relevant ell code starts at
+> https://git.kernel.org/pub/scm/libs/ell/ell.git/tree/ell/cipher.c#n271
 > 
-> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> > index 57d0706e1330..cbe836649f84 100644
-> > --- a/tools/perf/util/stat-display.c
-> > +++ b/tools/perf/util/stat-display.c
-> > @@ -117,12 +117,11 @@ static void aggr_printout(struct perf_stat_config *config,
-> >  				cpu_map__id_to_die(id),
-> >  				config->csv_output ? 0 : -3,
-> >  				cpu_map__id_to_cpu(id), config->csv_sep);
-> > -		} else {
-> > +		} else if (id > -1)
-> >  			fprintf(config->output, "CPU%*d%s",
-> >  				config->csv_output ? 0 : -7,
-> >  				evsel__cpus(evsel)->map[id],
-> >  				config->csv_sep);
-> > -		}
- 
-> I think we want multiple if lines within  { } but
-> scripts/checkpatch.pl does not scream about this, so leaving this to
-> Arnaldo ;-)
+> The tests didn't get to the point where aead is used.
 
-Yeah, I removed the removal of the {} for a multiline else block, added
-your Acked-by, thanks,
+Yes ell needs to set MSG_MORE after sending the control message.
+Any sendmsg(2) without a MSG_MORE will be interpreted as the end
+of a request.
 
-- Analdo
- 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
-> 
-> thanks,
-> jirka
-> 
-> >  		break;
-> >  	case AGGR_THREAD:
-> >  		fprintf(config->output, "%*s-%*d%s",
-> > -- 
-> > 2.26.2
-> > 
-> 
+I'll work around this in the kernel though for the case where there
+is no actual data, with a WARN_ON_ONCE.
 
+Thanks,
 -- 
-
-- Arnaldo
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
