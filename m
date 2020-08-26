@@ -2,186 +2,122 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4223AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE19C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1803C20825
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598456019;
-	bh=2F0FlTbURVaj1x4DrL2qLIeLQqGNDXWILGGXNk69h3A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E/4rbdRHl++oya++EaFvaPS4+/sbQa+irEr93nqs2ZYdN/KvW/pWTGz8SgUU2vKWI
-	 fZFNLytb0b8QaSQBcUB3VjhMk/R4yWFdn2x0anTCKDDcMNEz1RutOglmhaamsU4hw3
-	 ssNRu5vlq6Hy/xbeuQvV/emIq9EfgHG3626dSkJc=
+	by mail.kernel.org (Postfix) with ESMTP id 469582078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:34:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s5L2Zx9P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgHZPdh (ORCPT
+        id S1728084AbgHZPeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:33:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbgHZPdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:33:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51C9A2078D;
-        Wed, 26 Aug 2020 15:33:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598456012;
-        bh=2F0FlTbURVaj1x4DrL2qLIeLQqGNDXWILGGXNk69h3A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u28JoRRlaRp+ORrBZWuATbk3bssAY0RNJauoz7e/jSYK2dBkHdSvS+JdK8LU0d2mW
-         O7JBScg+sp00QIkzgjNQesrxpVcVB0vuedg7WD/aqEBKIm8113RJ7j4MXrD44kWtcS
-         5jQCokq4yLUpjNL7xnC06THocySmnhcycqOavoBw=
-Date:   Wed, 26 Aug 2020 17:33:47 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Brooke Basile <brookebasile@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        Ilja Van Sprundel <ivansprundel@ioactive.com>,
-        Kees Cook <keescook@chromium.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [GIT PULL] USB fixes for 5.9-rc3
-Message-ID: <20200826153347.GB4187816@kroah.com>
-References: <20200826134315.GA3882506@kroah.com>
- <CGME20200826150239eucas1p24c59716cc31edfeb2eece84d97936b93@eucas1p2.samsung.com>
- <1425ab4f-ef7e-97d9-238f-0328ab51eb35@samsung.com>
+        Wed, 26 Aug 2020 11:34:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbgHZPd7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 11:33:59 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0178AC061574;
+        Wed, 26 Aug 2020 08:33:59 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id e6so1870050oii.4;
+        Wed, 26 Aug 2020 08:33:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=nIL1/58suiuSHSwi2XfS45sO4Fd/mY/wkCGtXqq6Pl4=;
+        b=s5L2Zx9P87gJCXiucHFa/GiwtzJYSjqf3aDzUrPtJOcN8Ptp5MHx1ZAtMJBzvuE+OE
+         yKqRdZcNkQolvee9Fgze4jKXT8dm5xQ2vgoKFWoCKPlgMXMwmyJ7Iqcys14drKvzS8ib
+         V3LYOUO2xU65CAOAFikF1LTlBSdF51pg9PJ+loFhZJq4fbFFXn1EFRR6Ezs3lKzk2Fw4
+         M/Il9t99nRHHAJKAkiPaQ4cj9UZJJsawgrF+d/n1HWbqMJ7/7cR19l0nyXoK/CTHZtCQ
+         qH4vEjZt0vcq+erdKBdHWlZ7vjsMclnkB6UcTfT5ojSotFzatGIlvWflrofZvFDNzi1y
+         MHqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nIL1/58suiuSHSwi2XfS45sO4Fd/mY/wkCGtXqq6Pl4=;
+        b=NXtxKZ8jG9+uslqLxSVh6z2M+HLqY3nNStVNi+JqqC9F9IX01g1yPYlnhWIB3m7wpX
+         OxVDBoY1ynsom21QUdHuHppVn4m0yIQ7jmLX849AzsHsTqHZbs7K2B69To64Fl5FZeYI
+         P7TJYLXqRBNTbAPKM6Llxlb1ZD/H36OxxQw69qvDKAy3UQTguxQfblZGgOekESh4DJNY
+         NkY5/XS967QMx+HRb/890rbnDlUCNddxArtJb9Mcn63T7nzJG7AgIrwmfATT1MUpZpFF
+         VxSh4+lXtJzNuekuVRALUmT7DBNMDuCjnXrMRuXvNR779Tcu3BoceLmSTMbJnkvKOLkq
+         OExw==
+X-Gm-Message-State: AOAM532DzO0fsskDasrXPdj1dcJoXbMr6HG0Mnhd3XJkKSGDQtsVzAn4
+        jx4E5YJYk0rSymEEkrLBb+v06LK5s3M=
+X-Google-Smtp-Source: ABdhPJx+Zs4+M30zN3vBrvnozXtA5K17axzNFbYGYJDZuqcfUcobinJEWKy/RF7ptW7Q6Gvjam2hdg==
+X-Received: by 2002:a54:4196:: with SMTP id 22mr4353036oiy.23.1598456037379;
+        Wed, 26 Aug 2020 08:33:57 -0700 (PDT)
+Received: from ?IPv6:2605:6000:1025:4ecf::1e3f? ([2605:6000:1025:4ecf::1e3f])
+        by smtp.googlemail.com with ESMTPSA id 59sm562990otr.61.2020.08.26.08.33.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2020 08:33:56 -0700 (PDT)
+Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Andrew Zaborowski <andrew.zaborowski@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Caleb Jorden <caljorden@hotmail.com>,
+        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+References: <20200826055150.2753.90553@ml01.vlan13.01.org>
+ <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
+ <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
+ <20200826114952.GA2375@gondor.apana.org.au>
+ <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
+ <20200826120832.GA2996@gondor.apana.org.au>
+ <CAOq732JaP=4X9Yh_KjER5_ctQWoauxzXTZqyFP9KsLSxvVH8=w@mail.gmail.com>
+ <20200826130010.GA3232@gondor.apana.org.au>
+ <c27e5303-48d9-04a4-4e73-cfea5470f357@gmail.com>
+ <20200826141907.GA5111@gondor.apana.org.au>
+From:   Denis Kenzior <denkenz@gmail.com>
+Message-ID: <4bb6d926-a249-8183-b3d9-05b8e1b7808a@gmail.com>
+Date:   Wed, 26 Aug 2020 10:25:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1425ab4f-ef7e-97d9-238f-0328ab51eb35@samsung.com>
+In-Reply-To: <20200826141907.GA5111@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 05:02:38PM +0200, Marek Szyprowski wrote:
-> Hi Greg,
+Hi Herbert,
+
+On 8/26/20 9:19 AM, Herbert Xu wrote:
+> On Wed, Aug 26, 2020 at 08:57:17AM -0500, Denis Kenzior wrote:
+>>
+>> I'm just waking up now, so I might seem dense, but for my education, can you
+>> tell me why we need to set MSG_MORE when we issue just a single sendmsg
+>> followed immediately by recv/recvmsg? ell/iwd operates on small buffers, so
+>> we don't really feed the kernel data in multiple send operations.  You can
+>> see this in the ell git tree link referenced in Andrew's reply.
 > 
-> On 26.08.2020 15:43, Greg KH wrote:
-> > The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
-> >
-> >    Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
-> >
-> > are available in the Git repository at:
-> >
-> >    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.9-rc3
-> >
-> > for you to fetch changes up to 23e26d0577535f5ffe4ff8ed6d06e009553c0bca:
-> >
-> >    usb: typec: tcpm: Fix Fix source hard reset response for TDA 2.3.1.1 and TDA 2.3.1.2 failures (2020-08-25 16:02:35 +0200)
-> >
-> > ----------------------------------------------------------------
-> > USB fixes for 5.9-rc3
-> >
-> > Here are a small set of USB fixes for 5.9-rc3.
-> >
-> > Like most set of USB bugfixes, they include the usual:
-> > 	- usb gadget driver fixes
-> > 	- xhci driver fixes
-> > 	- typec fixes
-> > 	- new qurks and ids
-> > 	- fixes for USB patches merged in 5.9-rc1
-> >
-> > Nothing huge, all of these have been in linux-next with no reported
-> > issues:
-> >
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > ----------------------------------------------------------------
-> > Alan Stern (1):
-> >        USB: yurex: Fix bad gfp argument
-> >
-> > Andy Shevchenko (1):
-> >        usb: hcd: Fix use after free in usb_hcd_pci_remove()
-> >
-> > Badhri Jagan Sridharan (1):
-> >        usb: typec: tcpm: Fix Fix source hard reset response for TDA 2.3.1.1 and TDA 2.3.1.2 failures
-> >
-> > Bastien Nocera (2):
-> >        USB: Also match device drivers using the ->match vfunc
-> >        USB: Fix device driver race
-> >
-> > Brooke Basile (2):
-> >        USB: gadget: u_f: add overflow checks to VLA macros
+> You obviously don't need MSG_MORE if you're doing a single sendmsg.
 > 
-> Sorry, but the above patch breaks USB Ethernet Gadget operation. It also 
-> didn't get the proper testing in linux-next (next-20200826 is the first 
-> one with this patch).
+> The problematic code is in l_cipher_set_iv.  It does a sendmsg(2)
+> that expects to be followed by more sendmsg(2) calls before a
+> recvmsg(2).  That's the one that needs a MSG_MORE.
 > 
-> This is how it explodes on Samsung Exynos (ARM 32bit) based board with 
-> g_ether module loaded:
-> 
-> ------------[ cut here ]------------
-> kernel BUG at mm/slub.c:4116!
 
-Why is slub.c erroring?  How is this related to freeing memory?
+Gotcha.  I fixed the set_iv part now in ell:
+https://git.kernel.org/pub/scm/libs/ell/ell.git/commit/?id=87c76bbc85fe286925cbdb53d733fc9f9fd2ed12
 
-> Internal error: Oops - BUG: 0 [#1] SMP ARM
-> Modules linked in: usb_f_ecm g_ether(+) usb_f_rndis u_ether libcomposite 
-> panel_samsung_s6e8aa0 s5p_csis s5p_fimc exynos4_is_common v4l2_fwnode 
-> max8997_regulator rtc_max8997 leds_max8997 max8
-> emless mms114 governor_simpleondemand s5p_mfc lima gpu_sched s5p_jpeg 
-> v4l2_mem2mem videobuf2_dma_contig videobuf2_memops videobuf2_v4l2 
-> videobuf2_common phy_exynos_usb2 exynosdrm analogix_dp
->   s3c2410_wdt
-> CPU: 0 PID: 616 Comm: modprobe Not tainted 5.9.0-rc1-00026-gb1cd1b65afba 
-> #9023
-> Hardware name: Samsung Exynos (Flattened Device Tree)
-> PC is at kfree+0x234/0x268
-> LR is at config_item_set_name+0x60/0xb0
-> ...
-> Process modprobe (pid: 616, stack limit = 0x(ptrval))
-> ...
-> [<c0494248>] (kfree) from [<c05347a0>] (config_item_set_name+0x60/0xb0)
-> [<c05347a0>] (config_item_set_name) from [<c0534844>] 
-> (config_group_init_type_name+0x1c/0x50)
-
-Odd, for a "normal" descriptor, the logic should have remained the same
-as without this patch.
-
-What does the descriptor definition of your device look like that it
-triggers this traceback?
-
-> [<c0534844>] (config_group_init_type_name) from [<bf14bc18>] 
-> (usb_os_desc_prepare_interf_dir+0x54/0x124 [libcomposite])
-> [<bf14bc18>] (usb_os_desc_prepare_interf_dir [libcomposite]) from 
-> [<bf15af9c>] (rndis_alloc_inst+0x100/0x150 [usb_f_rndis])
-> [<bf15af9c>] (rndis_alloc_inst [usb_f_rndis]) from [<bf1499dc>] 
-> (try_get_usb_function_instance+0x88/0xa4 [libcomposite])
-> [<bf1499dc>] (try_get_usb_function_instance [libcomposite]) from 
-> [<bf149ad8>] (usb_get_function_instance+0xc/0x44 [libcomposite])
-> [<bf149ad8>] (usb_get_function_instance [libcomposite]) from 
-> [<bf114164>] (eth_bind+0xdc/0x34c [g_ether])
-> [<bf114164>] (eth_bind [g_ether]) from [<bf1497cc>] 
-> (composite_bind+0x78/0x1a8 [libcomposite])
-> [<bf1497cc>] (composite_bind [libcomposite]) from [<c0c62a0c>] 
-> (udc_bind_to_driver+0x60/0x108)
-> [<c0c62a0c>] (udc_bind_to_driver) from [<c0c62ed8>] 
-> (usb_gadget_probe_driver+0x100/0x158)
-> [<c0c62ed8>] (usb_gadget_probe_driver) from [<c0301fd0>] 
-> (do_one_initcall+0x54/0x220)
-> [<c0301fd0>] (do_one_initcall) from [<c03de390>] (do_init_module+0x60/0x210)
-> [<c03de390>] (do_init_module) from [<c03dd0d4>] (load_module+0x2078/0x24c0)
-> [<c03dd0d4>] (load_module) from [<c03dd758>] (sys_finit_module+0xc8/0xd8)
-> [<c03dd758>] (sys_finit_module) from [<c03000c0>] 
-> (ret_fast_syscall+0x0/0x54)
-> Exception stack(0xedd1dfa8 to 0xedd1dff0)
-> ...
-> ---[ end trace 0dc21d79c1880545 ]---
-
-Brooke, any ideas?
-
-thanks,
-
-greg k-h
+Regards,
+-Denis
