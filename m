@@ -2,101 +2,139 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F70C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0E8C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E472078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:52:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UEnbnMrP"
+	by mail.kernel.org (Postfix) with ESMTP id DDEE62078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:52:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598460778;
+	bh=BomWlpD0mGAvpFUVz/brmOr64Y92gFzTpqDzQk4KDxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zSUaNURLGC3DOQKaewKGFQesJLDVaTDUGrcuXm/dU+12R/EoMdk1ZtYA0VEnqC9pO
+	 AwTr+wEMUDkv2sjJ0GIU+nP49OpJG2Ut9hWgCxcd/obEfCY9OJ6D8N7kN2CAglg2wJ
+	 NTAtlG0jaKUwFIJBNddjmzBTibpjxAhGWSIBJqqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbgHZQwq (ORCPT
+        id S1727993AbgHZQw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:52:46 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:48860 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbgHZQwm (ORCPT
+        Wed, 26 Aug 2020 12:52:56 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:45048 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgHZQww (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:52:42 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07QGnqlQ064879;
-        Wed, 26 Aug 2020 16:52:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=CrsB4hOh/IOUnBY1dl7dcxJi5+3Jl0r1xaa80gDONMo=;
- b=UEnbnMrP8mqj5BsJHIGuOjnCvJvNvGoC+ag0xw9anfWjXhUaUECQhQF2OLCc2JG7Qheg
- HkhT8TLGzCc2QclrFIuCnlauQiMFVJLqb1Dq5Ofy14Wfx8ptWG5GWT238ek+YIUin/pm
- QY1MUFSQRXhO0N8dj3LJkDfLydyYZCk4wJNoEmg1RisTI1AlIHDPMQUbFBjRgYBYYNBl
- 9SyOkSxuTxXUzZKsI0n7pISnAIRnI3RNi0syAGRuTruKvGqfiWVGZXuGeHexGBsL7anW
- agzrUuJFnpeVfCXi0SV/8yzGqo17fiiagCDUqsv5iyWk9+uZq4Xs7692FiCT4I3M6N+p mw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 333dbs1n5q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 16:52:39 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07QGoqCN123571;
-        Wed, 26 Aug 2020 16:52:39 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 333r9mcwt6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 16:52:39 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07QGqcr4031493;
-        Wed, 26 Aug 2020 16:52:39 GMT
-Received: from [10.74.108.37] (/10.74.108.37)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 26 Aug 2020 09:52:38 -0700
-Subject: Re: [PATCH] memory: emif: Remove bogus debugfs error handling
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200826113759.GF393664@mwanda>
-From:   santosh.shilimkar@oracle.com
-Organization: Oracle Corporation
-Message-ID: <10387fe0-579a-de71-44ad-ac585ff604d6@oracle.com>
-Date:   Wed, 26 Aug 2020 09:52:37 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Wed, 26 Aug 2020 12:52:52 -0400
+Received: by mail-ej1-f66.google.com with SMTP id bo3so3788527ejb.11;
+        Wed, 26 Aug 2020 09:52:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f3SjKHg0rc/Hi94wKGeK4sTEIeweZxxU2pp3miD2U7w=;
+        b=fw7+bH7AiRhwXjq5tfTImHCJPfa+iMv2NbgB0cFIh1y8lFXKapBDUFm5fXQNsJGlJj
+         5DXxGyaezcySLqGq8GHC8LJLLaqbE6C/aeCXfXka5mYXJ1QGn2VRKPuSZdUj3M6SXRF6
+         W1TBlka4AXnyAX74NdyrDDdgZuUn6hNrwO8xfKNBQEhdqvE7QTXDqJdocBsW3hPmVP6b
+         MMGEE2p2VxiAO7kgtGOBwCSl9ZzTN0vlra+xY/dxBjwtyISYXgUiAovTDrORcrHDU/GV
+         6mR3S+5Ct4w7Fx4tcjt4QXFl6jh1bwj4u6fpwmViuqJTfhxzez6jd2bULogNxJC316Qj
+         PkTA==
+X-Gm-Message-State: AOAM531Kyf8RS73pCksdr2lqiLQ2R+Ek5GFFOh/rK7OAph9jtFsHtOK2
+        2efYRXJnX9pIy1U7qUE9Lqk=
+X-Google-Smtp-Source: ABdhPJx8z7paHiBU5Vqit+UaxQDuL7FcpAQaf80dIweI/Cw+HnrnkKZ/d1NlwB9sHxh0qTew9unJQQ==
+X-Received: by 2002:a17:906:b09a:: with SMTP id x26mr2766990ejy.162.1598460769603;
+        Wed, 26 Aug 2020 09:52:49 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id d2sm2656101ejm.19.2020.08.26.09.52.48
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Aug 2020 09:52:49 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 18:52:46 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Lukasz Stelmach <l.stelmach@samsung.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
+        b.zolnierkie@samsung.com
+Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
+ Driver
+Message-ID: <20200826165246.GA29212@kozik-lap>
+References: <20200825184413.GA2693@kozik-lap>
+ <CGME20200826145929eucas1p1367c260edb8fa003869de1da527039c0@eucas1p1.samsung.com>
+ <dleftja6yhv4g2.fsf%l.stelmach@samsung.com>
+ <20200826164533.GC31748@kozik-lap>
 MIME-Version: 1.0
-In-Reply-To: <20200826113759.GF393664@mwanda>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008260125
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9725 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
- priorityscore=1501 impostorscore=0 phishscore=0 malwarescore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008260125
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200826164533.GC31748@kozik-lap>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/20 4:37 AM, Dan Carpenter wrote:
-> Callers are generally not supposed to check the return values from
-> debugfs functions.  Debugfs functions never return NULL so this error
-> handling will never trigger.  (Historically debugfs functions used to
-> return a mix of NULL and error pointers but it was eventually deemed too
-> complicated for something which wasn't intended to be used in normal
-> situations).
+On Wed, Aug 26, 2020 at 06:45:33PM +0200, Krzysztof Kozlowski wrote:
+> On Wed, Aug 26, 2020 at 04:59:09PM +0200, Lukasz Stelmach wrote:
+ > >> +#include <linux/of.h>
+> > >> +#endif
+> > >> +#include <linux/crc32.h>
+> > >> +#include <linux/etherdevice.h>
+> > >> +#include <linux/ethtool.h>
+> > >> +#include <linux/gpio/consumer.h>
+> > >> +#include <linux/init.h>
+> > >> +#include <linux/io.h>
+> > >> +#include <linux/kmod.h>
+> > >> +#include <linux/mii.h>
+> > >> +#include <linux/module.h>
+> > >> +#include <linux/netdevice.h>
+> > >> +#include <linux/platform_device.h>
+> > >> +#include <linux/sched.h>
+> > >> +#include <linux/spi/spi.h>
+> > >> +#include <linux/timer.h>
+> > >> +#include <linux/uaccess.h>
+> > >> +#include <linux/usb.h>
+> > >> +#include <linux/version.h>
+> > >> +#include <linux/workqueue.h>
+> > >
+> > > All of these should be removed except the headers used directly in this
+> > > header.
+> > >
+> > 
+> > This is "private" header file included in all ax88796c_*.c files and
+> > these are headers required in them. It seems more conveninet to have
+> > them all listed in one place. What is the reason to do otherwise?
 > 
-> Delete all the error handling.
+> Because:
+> 1. The header is included in other files (more than one) so each other
+> compilation unit will include all these headers, while not all of them
+> need. This has a performance penalty during preprocessing.
 > 
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
-Looks good to me !!
+> 2. You will loose the track which headers are needed, which are not. We
+> tend to keep it local, which means each compilation unit includes stuff
+> it needs. This helps removing obsolete includes later.
+> 
+> 3. Otherwise you could make one header, including all headers of Linux,
+> and then include this one header in each of C files. One to rule them
+> all.
 
-Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
+... and I got one more:
+
+4. Drivers sometimes get reused, extended or they parts got reused. If
+a header includes more stuff, it simply will pollute all other units
+trying to reuse it... making the re-usage difficult. This is less likely
+reason, I mean, quite imaginary for this particular driver.
+
+I don't expect pieces of this driver to be reused... but who knows. Many
+times in the past in the kernel there was a huge work rewriting headers
+in many files, because something was including something else and we
+wanted to decouple these things.  Therefore following the pattern -
+include stuff you explicitly use - helps in every case.
+
+Best regards,
+Krzysztof
+
