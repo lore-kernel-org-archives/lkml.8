@@ -2,225 +2,107 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F520C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BDAC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D91720786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:50:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598471439;
-	bh=KBI1XSZ0Ad4xgoosNG6cTrKv6S5jK+snnqWS91Va+wE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=C5HsrmyHh6Wi7re87PzGiALn+ZjCgVdCAYvq9qwLocZt65YC+LiA9xBVV/fFy9Z3U
-	 5QzOxlUaaMLmpyXKfjzdLMIrKkLvJlEXVZinp9EPUxBFD+cbIkO5RU7TlrnsfRYccg
-	 xAu1PP2WbZXTP5s8CxCCcmZZaq2w9K+rZabm6ueg=
+	by mail.kernel.org (Postfix) with ESMTP id 6B14820786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:50:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aU8siOpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726998AbgHZTuh (ORCPT
+        id S1727077AbgHZTun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:50:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55042 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbgHZTud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:50:33 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18DCE20737;
-        Wed, 26 Aug 2020 19:50:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598471432;
-        bh=KBI1XSZ0Ad4xgoosNG6cTrKv6S5jK+snnqWS91Va+wE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=wVAlzqBnZxrhwq4g59h1BqgZe4cjmugIYxbR5GIGwfeysAM6eAc4CWYIqW9hF3LAZ
-         sSNgA34LV7NKVzYibSSl1Tj/m+gZW9MyM3uMkINrrmLoqO+RIHYDkNyzJ9NT72H8W3
-         iXfYUmSWAaJOeprSTR4wThp63ynt9XVjYxRatDfE=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kB1RG-006xgP-FJ; Wed, 26 Aug 2020 20:50:30 +0100
-Date:   Wed, 26 Aug 2020 20:50:28 +0100
-Message-ID: <87a6yh2nln.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [patch V2 04/46] genirq/chip: Use the first chip in irq_chip_compose_msi_msg()
-In-Reply-To: <20200826112331.047917603@linutronix.de>
-References: <20200826111628.794979401@linutronix.de>
-        <20200826112331.047917603@linutronix.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Wed, 26 Aug 2020 15:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726854AbgHZTue (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:50:34 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A10CC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:50:33 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id k1so1583401pfu.2
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 12:50:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uxqzqvKmp7TiheniHf4IhKcDFcjxbiVLlnBXpofjwMk=;
+        b=aU8siOppe3gnQyuaHzROkStSBHp1R5OW7cyHZa9Qz7+3P9SoF3bduzgEtFv0LgQ6EB
+         SoPfRvVMaGGz7cgLY3D80QJOfKTkdjKYwQBRF982bGuQfjWlAASB6m3+ZBBr5WHfyh2w
+         9WogV6NaCd7ry+cSTti/fvS9ekjLyQoNnN7HM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=uxqzqvKmp7TiheniHf4IhKcDFcjxbiVLlnBXpofjwMk=;
+        b=E6I+5PvmbMkzVTiY1XWB2RB60yEKw1Mpm3Z0uK6DgAaIPo4psVQMMMxO7L6L/7XsYL
+         0eWcfk7o5X8K5KXHTDigGwidTOxxGjNREJVyXqO4FAe7+0npGushADnTMW7fF2Zw8JHA
+         w68GrwScxu+mRiZCZmGPctmhfRox1zXI08ZNOyhLghhqM30cVUIWAAG0Iq+Qi+cBHyB6
+         uPt9Z+mEp5NLKLD3KiRvw6WhCN/ulINd4hElv1tbcFGxg+6O6ngsqvQC2sX0DiykbVo9
+         Ym2kOtvbfpD7Jbk1sgUUnWy9rGF/5rjraGmcrNv8Mwmvvx3+w73kaiCEN7MQwu5Zi7wc
+         5IOw==
+X-Gm-Message-State: AOAM532GVOJwPHeKplgj/uIwq+wIP5m8Mzasm5v9iqiDejLBpuCzT6LK
+        ch86wAHbCXixuTueYOh06rP1NA==
+X-Google-Smtp-Source: ABdhPJzxqVFKo5Bu6GBfBDh+chu3duJcUOhxiTiRE4q8mDWtHYdG37wKhgbCE4yKAY4sw60hABcZoA==
+X-Received: by 2002:a63:df13:: with SMTP id u19mr11904336pgg.275.1598471433358;
+        Wed, 26 Aug 2020 12:50:33 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a200sm3921461pfd.182.2020.08.26.12.50.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 12:50:32 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 12:50:31 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
+        linux-fsdevel@vger.kernel.org, Sargun Dhillon <sargun@sargun.me>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-kernel@vger.kernel.org, Aleksa Sarai <asarai@suse.de>,
+        io-uring@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] io_uring: allow disabling rings during the
+ creation
+Message-ID: <202008261248.BB37204250@keescook>
+References: <20200813153254.93731-1-sgarzare@redhat.com>
+ <20200813153254.93731-4-sgarzare@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813153254.93731-4-sgarzare@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 12:16:32 +0100,
-Thomas Gleixner <tglx@linutronix.de> wrote:
+On Thu, Aug 13, 2020 at 05:32:54PM +0200, Stefano Garzarella wrote:
+> This patch adds a new IORING_SETUP_R_DISABLED flag to start the
+> rings disabled, allowing the user to register restrictions,
+> buffers, files, before to start processing SQEs.
 > 
-> The documentation of irq_chip_compose_msi_msg() claims that with
-> hierarchical irq domains the first chip in the hierarchy which has an
-> irq_compose_msi_msg() callback is chosen. But the code just keeps
-> iterating after it finds a chip with a compose callback.
+> When IORING_SETUP_R_DISABLED is set, SQE are not processed and
+> SQPOLL kthread is not started.
 > 
-> The x86 HPET MSI implementation relies on that behaviour, but that does not
-> make it more correct.
+> The restrictions registration are allowed only when the rings
+> are disable to prevent concurrency issue while processing SQEs.
 > 
-> The message should always be composed at the domain which manages the
-> underlying resource (e.g. APIC or remap table) because that domain knows
-> about the required layout of the message.
+> The rings can be enabled using IORING_REGISTER_ENABLE_RINGS
+> opcode with io_uring_register(2).
 > 
-> On X86 the following hierarchies exist:
-> 
-> 1)   vector -------- PCI/MSI
-> 2)   vector -- IR -- PCI/MSI
-> 
-> The vector domain has a different message format than the IR (remapping)
-> domain. So obviously the PCI/MSI domain can't compose the message without
-> having knowledge about the parent domain, which is exactly the opposite of
-> what hierarchical domains want to achieve.
-> 
-> X86 actually has two different PCI/MSI chips where #1 has a compose
-> callback and #2 does not. #2 delegates the composition to the remap domain
-> where it belongs, but #1 does it at the PCI/MSI level.
-> 
-> For the upcoming device MSI support it's necessary to change this and just
-> let the first domain which can compose the message take care of it. That
-> way the top level chip does not have to worry about it and the device MSI
-> code does not need special knowledge about topologies. It just sets the
-> compose callback to NULL and lets the hierarchy pick the first chip which
-> has one.
-> 
-> Due to that the attempt to move the compose callback from the direct
-> delivery PCI/MSI domain to the vector domain made the system fail to boot
-> with interrupt remapping enabled because in the remapping case
-> irq_chip_compose_msi_msg() keeps iterating and choses the compose callback
-> of the vector domain which obviously creates the wrong format for the remap
-> table.
-> 
-> Break out of the loop when the first irq chip with a compose callback is
-> found and fixup the HPET code temporarily. That workaround will be removed
-> once the direct delivery compose callback is moved to the place where it
-> belongs in the vector domain.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> V2: New patch. Note, that this might break other stuff which relies on the
->     current behaviour, but the hierarchy composition of DT based chips is
->     really hard to follow.
+> Suggested-by: Jens Axboe <axboe@kernel.dk>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Grepping around, I don't think there is any occurrence of two irqchips
-providing irq_compose_msi() that can share a hierarchy on any real
-system, so we should be fine. Famous last words.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-> ---
->  arch/x86/kernel/apic/msi.c |    7 +++++--
->  kernel/irq/chip.c          |   12 +++++++++---
->  2 files changed, 14 insertions(+), 5 deletions(-)
-> 
-> --- a/arch/x86/kernel/apic/msi.c
-> +++ b/arch/x86/kernel/apic/msi.c
-> @@ -479,10 +479,13 @@ struct irq_domain *hpet_create_irq_domai
->  	info.type = X86_IRQ_ALLOC_TYPE_HPET;
->  	info.hpet_id = hpet_id;
->  	parent = irq_remapping_get_ir_irq_domain(&info);
-> -	if (parent == NULL)
-> +	if (parent == NULL) {
->  		parent = x86_vector_domain;
-> -	else
-> +	} else {
->  		hpet_msi_controller.name = "IR-HPET-MSI";
-> +		/* Temporary fix: Will go away */
-> +		hpet_msi_controller.irq_compose_msi_msg = NULL;
-> +	}
->  
->  	fn = irq_domain_alloc_named_id_fwnode(hpet_msi_controller.name,
->  					      hpet_id);
-> --- a/kernel/irq/chip.c
-> +++ b/kernel/irq/chip.c
-> @@ -1544,10 +1544,16 @@ int irq_chip_compose_msi_msg(struct irq_
->  	struct irq_data *pos = NULL;
->  
->  #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
-> -	for (; data; data = data->parent_data)
-> -#endif
-> -		if (data->chip && data->chip->irq_compose_msi_msg)
-> +	for (; data; data = data->parent_data) {
-> +		if (data->chip && data->chip->irq_compose_msi_msg) {
->  			pos = data;
-> +			break;
-> +		}
-> +	}
-> +#else
-> +	if (data->chip && data->chip->irq_compose_msi_msg)
-> +		pos = data;
-> +#endif
->  	if (!pos)
->  		return -ENOSYS;
->  
-> 
-> 
-
-Is it just me, or is this last change more complex than it ought to be?
-
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 857f5f4c8098..25e18b73699c 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -1544,7 +1544,7 @@ int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 	struct irq_data *pos = NULL;
- 
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
--	for (; data; data = data->parent_data)
-+	for (; data && !pos; data = data->parent_data)
- #endif
- 		if (data->chip && data->chip->irq_compose_msi_msg)
- 			pos = data;
-
-Though the for loop in a #ifdef in admittedly an acquired taste...
-
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-
-	M.
+Where can I find the io_uring selftests? I'd expect an additional set of
+patches to implement the selftests for this new feature.
 
 -- 
-Without deviation from the norm, progress is not possible.
+Kees Cook
