@@ -2,99 +2,108 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D751AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E18C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B49C62080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LllienEV"
+	by mail.kernel.org (Postfix) with ESMTP id E307B2083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598439031;
+	bh=TqPevqx6D2J7PXGgLZWIHZHYHYk8i8daoX9CkV8jVM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oMr+TP+VAWNtfk09Z71PYoBifj8uSrvORJuyPFRYZWJPmTT51Ix8yQCub0dQc7wxb
+	 OFVF9ZWWjKR8ah06tt/GNduAFyByP3tc9h8GifQ88tR62vKYZBNRRDnPomGLwg3Uvr
+	 3e305f9fApIs8sdo8I4kg6Y9EHFZaj3caNwFdSdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgHZKuE (ORCPT
+        id S1728567AbgHZKu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728755AbgHZKtl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:49:41 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7D0C061574;
-        Wed, 26 Aug 2020 03:49:34 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id p11so764132pfn.11;
-        Wed, 26 Aug 2020 03:49:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZdoBCKVRuvYYbqZgZKgMCJZ6Rhom1CCtkDlusoa4B08=;
-        b=LllienEVsS0/YjEfXtvj5rzxdou1vCQqakXHq/OJq1M43/7W6Tuce2RiG3zpoyoenK
-         xvZU1CKhfVuAvYMO1FUfFmxq/9zXDnkRUSsMVUEkO9k57kIvlvQM4a+za/PYjNyyNt84
-         DvS4G2CHiG57/KJqI1BiaW0cUZ/LizVqlduxg8n36+2sxP7B0lN/dhN/RE74bWwscmMx
-         ZyeiqtzgqcuIWazjMhtO3y4fmjHYkdQ+QEipKr/Tx6BFfJswaLNhq8DkEuRooKGcrj0Q
-         5v7Ifi+xwuIIW9thT/QhR8ozQwp8yLuUODd1+Zhf7TLOXwklQD3NnsTEr5+dR3JpX43Z
-         3uDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZdoBCKVRuvYYbqZgZKgMCJZ6Rhom1CCtkDlusoa4B08=;
-        b=ihS2ZqtQ44HYv46GBjmgk5x0kphq63QJiaDFhtOGcXH810ZWHMKGPPfMU7AtvQa54J
-         HK6As9w8dxIxaKq35EKQvN5gMRttTjz3dz+sGCgx66EdnAVyzvn6dgNtcAUd8bCj074o
-         YTpeIOAAPrWsYaXQRWga1UeRLLStN6Dr+IIUd0dlSmDsY54LHoo4A0LIuDHF+bH5UFUG
-         tILahDKrAxtUtbhfRywJOnlC+MsGqWFC4JXGpNot36QdxIeT9oDf9Zki+mfSMoyuN04Z
-         qEYOhBcNQ9Htn9v+KM84cWD2mMfgxEQR93FL9oMskqJTTfyoJH1OZ6VTVOQOLlhwFVqw
-         rj0g==
-X-Gm-Message-State: AOAM531z0h4C9DoSuIt+xBQ+3ij1bFnvyua+XsX/nNIk7tUi600AMQjL
-        CFuEJhrIrojAKtVOcE0/9Is=
-X-Google-Smtp-Source: ABdhPJxwc1Phv6qBxJ2Uh381P86SiHzLD+oSSBz+RODYM2sy8PuJJw64PLZ/dXz5PJcQKd5fcw1f8A==
-X-Received: by 2002:a63:c30e:: with SMTP id c14mr9908486pgd.225.1598438974128;
-        Wed, 26 Aug 2020 03:49:34 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:56a:2197:d2eb:7e49:dfa1:a882])
-        by smtp.gmail.com with ESMTPSA id d127sm2540349pfc.175.2020.08.26.03.49.30
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 03:49:33 -0700 (PDT)
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-To:     matthias.bgg@gmail.com, robh+dt@kernel.org
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, gene_chen@richtek.com,
-        Wilma.Wu@mediatek.com, shufan_lee@richtek.com,
-        cy_huang@richtek.com, benjamin.chao@mediatek.com
-Subject: [PATCH v4 0/2] regulator: mt6360: Add support for MT6360 regulator
-Date:   Wed, 26 Aug 2020 18:49:16 +0800
-Message-Id: <1598438958-26802-1-git-send-email-gene.chen.richtek@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 26 Aug 2020 06:50:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728754AbgHZKt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:49:56 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96C69206EB;
+        Wed, 26 Aug 2020 10:49:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598438996;
+        bh=TqPevqx6D2J7PXGgLZWIHZHYHYk8i8daoX9CkV8jVM0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2sgsrLL8+6Se7RV01jW3bbRE2mvcZfKUPxov22vTodcl7jsNoAEyoN0nVtDuiV9Uy
+         YbCjL5vyGCjtkW9Gxm5wwLDgAmsvpiB284grpS1ZcdGjsR1BQyldPXZ4OTsLiXQNpw
+         4Ie/fRL6Whnaa9pcDNOXdoOByiDooJoftVzQm78I=
+Date:   Wed, 26 Aug 2020 11:49:19 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     syzbot <syzbot+fbe34b643e462f65e542@syzkaller.appspotmail.com>
+Cc:     alsa-devel@alsa-project.org, asmadeus@codewreck.org,
+        daniel.baluta@nxp.com, davem@davemloft.net, ericvh@gmail.com,
+        kuba@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        lucho@ionkov.net, netdev@vger.kernel.org, perex@perex.cz,
+        rminnich@sandia.gov, syzkaller-bugs@googlegroups.com,
+        tiwai@suse.com, v9fs-developer@lists.sourceforge.net
+Subject: Re: INFO: task can't die in p9_fd_close
+Message-ID: <20200826104919.GE4965@sirena.org.uk>
+References: <000000000000ca0c6805adc56a38@google.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ryJZkp9/svQ58syV"
+Content-Disposition: inline
+In-Reply-To: <000000000000ca0c6805adc56a38@google.com>
+X-Cookie: Should I do my BOBBIE VINTON medley?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series add MT6360 regulator support contains driver and binding document
 
-Gene Chen (2)
-  regulator: mt6360: Add support for MT6360 regulator
-  dt-bindings: regulator: mt6360: Add DT binding
+--ryJZkp9/svQ58syV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- Documentation/devicetree/bindings/regulator/mt6360-regulator.yaml |  113 ++
- drivers/regulator/Kconfig                                         |    9 
- drivers/regulator/Makefile                                        |    1 
- drivers/regulator/mt6360-regulator.c                              |  459 ++++++++++
- include/dt-bindings/regulator/mediatek,mt6360-regulator.h         |   16 
- 5 files changed, 598 insertions(+)
+On Wed, Aug 26, 2020 at 03:38:15AM -0700, syzbot wrote:
 
-changelogs between v1 & v2
- - regulator: merge regmap to mfd driver for r/w with crc
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D10615b36900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Da61d44f28687f=
+508
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dfbe34b643e462f6=
+5e542
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D15920a05900=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D13a78539900000
+>=20
+> The issue was bisected to:
+>=20
+> commit af3acca3e35c01920fe476f730dca7345d0a48df
+> Author: Daniel Baluta <daniel.baluta@nxp.com>
+> Date:   Tue Feb 20 12:53:10 2018 +0000
+>=20
+>     ASoC: ak5558: Fix style for SPDX identifier
 
-changelogs between v2 & v3
- - Move regmap define to MFD parent driver
- - Add bindings document
+This bisection is clearly not accurate, I'm guessing the bug is
+intermittent and it was just luck that landed it on this commit.
 
-changelogs between v3 & v4
- - replace of_node binding table by platform_id_table
- - set regulator_desc.regulators_node find dt
+--ryJZkp9/svQ58syV
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9GPi8ACgkQJNaLcl1U
+h9DyfAf8C2paLbOwHHdDVOi687LcmeI2dZuyjT7chCNm5YaFacrU8e5nRF/fnG6y
+G350XTQP7ygvtDz3oeIoEzMn8bJa7Xzeo03wiNm2JrUiMFRT6/S77JOk5g1d75xv
+tVwBelb7UdHY869OzQLeLc7exArpn9SsuSpRXkwqrY3EO4Ki/ZwwQPgOPrtYNdLM
+x1gX63pYxXoLCaHV3QHnselGfBIcz551NPsJJFowk4+ztuCDvaCp1pCYQpfaA+mS
+RU3Ttf+3q8xnCtvFF/Fz8deIGx9sXK9SMlc/uLC9GwhuP57oJ3G3O+JKLiaD9ONf
+rdK9/4syv9inh3Wwk3n22yqnKN96hw==
+=g5nP
+-----END PGP SIGNATURE-----
+
+--ryJZkp9/svQ58syV--
