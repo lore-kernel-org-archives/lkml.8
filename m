@@ -2,139 +2,122 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2822FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C715AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F245B207DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="HEdiitSK"
+	by mail.kernel.org (Postfix) with ESMTP id A47CA20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 17:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbgHZRsG (ORCPT
+        id S1727034AbgHZRsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 13:48:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33572 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgHZRrt (ORCPT
+        Wed, 26 Aug 2020 13:48:30 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:45500 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgHZRs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 13:47:49 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E89C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:47:48 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id oz20so4063089ejb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 10:47:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DZhvz/VcmtyOV5FpCQGhe3jSJp/wS6UPaYcPASL+W/w=;
-        b=HEdiitSKEBxMSHU8oTLa3sOT98ZqvBgSHQoEa8wKCD7Bep9IfA3SmowbtjCNMgkw9i
-         jku1yi1AxvYbxckP53qA3tB5mi0Xeepx/+gdavzei1K18KH4XJJ7ql/2GL6DWC7FoP0J
-         DFVlciGxbX1urrNma8ZDr07/YRWt/Uy8XWkxyo6yHLhilLIZNM9TZ2slZHDFGktyk3/Q
-         9E9A0VZvOP44jHPNyTpdKN92CKWEsGHxifxkxymJ/Nlu23ojN81Emuo0TqlFKCCQ0/bZ
-         QVpX4GgvoQA463xPcCxrkOn6bIi3vIyOL5CtkIXlfdLEfYTsyzwlhbzOju+HDjTrlITC
-         zxLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DZhvz/VcmtyOV5FpCQGhe3jSJp/wS6UPaYcPASL+W/w=;
-        b=faxF9RSDNNTi1EpUG/f4dPskO7jlwBpnye8SnChynkfz8nCyuY3W/UI+bDZ/W7v85Q
-         9OyBJX1WclbMJKEJYoOBxVawgt2uj8PE9Ezy+vo61DrQQgVpCPXMiji8cLhFTeThvooJ
-         43Q0RBeB3nT/benR7zuOkdLRWnoML26K7ZqJWwwcmNBTsfwvRiIMdccP+sGjPbc/5ZNm
-         WftRypG/4Bqa1ynmXP/unUmsfUVORkBtDLAC0nbjNQqHMSKnpX4YFvjY6s8LUZ0dUyIY
-         Enpx4FZVBDRjC4AyF4rwiSkaM+ZtbJ4iyYW0WW67r6hWcZCHk/gj5FC7XB2Rt7B12vxh
-         78Rw==
-X-Gm-Message-State: AOAM53136UeP/mharPOMZnq1yG1uOytXRSZE2INWN0OdqKtXHauV6q2r
-        pklZHzXFKMg4XUyPFO1Tc1DMfdU0EAWeUYOqbNGmfg==
-X-Google-Smtp-Source: ABdhPJzus1ddDpcAB3sDL3goLET4zr36SFUC2Lm7kSX43cr3KBZpmMROLLbNpz+1kIMWiaUywpNuyma7UHpBq/QSea8=
-X-Received: by 2002:a17:906:c10c:: with SMTP id do12mr13194774ejc.92.1598464066662;
- Wed, 26 Aug 2020 10:47:46 -0700 (PDT)
+        Wed, 26 Aug 2020 13:48:26 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: sre)
+        with ESMTPSA id 8944F294D9C
+Received: by earth.universe (Postfix, from userid 1000)
+        id 54F1E3C0C82; Wed, 26 Aug 2020 19:48:17 +0200 (CEST)
+Date:   Wed, 26 Aug 2020 19:48:17 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH 1/2] power: supply: Add support for RN5T618/RC5T619
+ charger and fuel gauge
+Message-ID: <20200826174817.vhus3j4i4t7u7jc4@earth.universe>
+References: <20200815165610.10647-1-andreas@kemnade.info>
+ <20200815165610.10647-2-andreas@kemnade.info>
 MIME-Version: 1.0
-References: <1583589765-19344-1-git-send-email-hexiaolong2008@gmail.com>
-In-Reply-To: <1583589765-19344-1-git-send-email-hexiaolong2008@gmail.com>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Wed, 26 Aug 2020 14:47:35 -0300
-Message-ID: <CAAEAJfA0w+xs95vnOiFnnMPpzh-0qJDey95bXdbv27O98cpWHA@mail.gmail.com>
-Subject: Re: [v2] dma-buf: heaps: bugfix for selftest failure
-To:     Leon He <hexiaolong2008@gmail.com>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-kselftest@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linaro-mm-sig@lists.linaro.org, Leon He <leon.he@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y3moyevmvc7nmaqp"
+Content-Disposition: inline
+In-Reply-To: <20200815165610.10647-2-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leon, Shuah,
 
-Thanks for the fix. I had this issue pending to fix,
-but have been lazy about it, I appreciate you are taking care of it!
+--y3moyevmvc7nmaqp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Sat, 7 Mar 2020 at 11:03, Leon He <hexiaolong2008@gmail.com> wrote:
->
-> From: Leon He <leon.he@unisoc.com>
->
-> There are two errors in the dmabuf-heap selftest:
-> 1. The 'char name[5]' was not initialized to zero, which will cause
->    strcmp(name, "vgem") failed in check_vgem().
-> 2. The return value of test_alloc_errors() should be reversed, other-
->    wise the while loop in main() will be broken.
->
-> Signed-off-by: Leon He <leon.he@unisoc.com>
-> ---
->  tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> index cd5e1f6..836b185 100644
-> --- a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> @@ -22,7 +22,7 @@
->  static int check_vgem(int fd)
->  {
->         drm_version_t version = { 0 };
-> -       char name[5];
-> +       char name[5] = { 0 };
->         int ret;
->
+Hi,
 
-As Shuah already mentioned, I think we want to use strncmp
-to be on the safe side.
+Driver looks mostly good.
 
->         version.name_len = 4;
-> @@ -357,7 +357,7 @@ static int test_alloc_errors(char *heap_name)
->         if (heap_fd >= 0)
->                 close(heap_fd);
->
-> -       return ret;
-> +       return !ret;
+On Sat, Aug 15, 2020 at 06:56:09PM +0200, Andreas Kemnade wrote:
+> [...]
+> +static int rn5t618_battery_current_now(struct rn5t618_power_info *info,
+> +				       union power_supply_propval *val)
+> +{
+> +	u16 res;
+> +	int ret;
+> +
+> +	ret = rn5t618_battery_read_doublereg(info, RN5T618_CC_AVEREG1, &res);
+> +	if (ret)
+> +		return ret;
+> +
+> +	val->intval = res;
+> +	/* 2's complement */
+> +	if (val->intval & (1 << 13))
+> +		val->intval = val->intval - (1 << 14);
+> +
+> +	/* negate current to be positive when discharging */
+> +	val->intval *= -1000;
 
-I agree with Shuah, this change makes no sense, just drop it.
+mh, the sign is not documented (which should be fixed). At least
+sbs-battery does it the other way around (negative current when
+discharging, positive otherwise). Some drivers do not support
+signed current and always report positive values (e.g. ACPI driver).
 
-I think the fact this test was broken and nobody noticed
-uncovers the fact that the test isn't being run.
+What did you use as reference for swapping the sign?
 
-Any reason why this test isn't a regular TARGET?
-Or any idea how we can make sure this is run by CIs
-and any other testing system?
+> +	return 0;
+> +}
+> [...]
+> +static const struct power_supply_desc rn5t618_adp_desc = {
+> +	.name                   = "rn5t618-adp",
+> +	.type                   = POWER_SUPPLY_TYPE_MAINS,
+> +	.properties             = rn5t618_usb_props,
 
-Thanks!
-Ezequiel
+wrong property array, works by accident since usb and adp property
+lists are the same.
 
->  }
->
->  int main(void)
-> --
-> 2.7.4
->
+> +	.num_properties         = ARRAY_SIZE(rn5t618_adp_props),
+> +	.get_property           = rn5t618_adp_get_property,
+> +};
+> [...]
+
+-- Sebastian
+
+--y3moyevmvc7nmaqp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl9GoFsACgkQ2O7X88g7
++prupQ/+PUw6LW965p9e0EajZ5HB7SF2KwRWx6T+uXRreV8R2dMAS1s8K1gJplca
+0/U5ZqMf3BjI5lP9m4h7/ccgUNEp/Iuk6tl143dCHutV+33SzTMgsucZVkuB+C7l
+te75mJdDcxlf54+A2YBTLJkWoeFuznG9Cnecz0+KYJVpFia5Y6IJDQhmuAkW1UQ/
+iSe8LnvAIZH+HQ9dyU0/wTSYhlidecfybKJL2i4o9Rv0l0jp4eKYnb/vhFQ7tW/u
+4IXtEuc+CPSMy4wWC0gFMx2fo7EMBVmMLgxKOw3p5E3+26yG0tMoR/q8Pp4paIqk
+CC/YZolAbU0nPWm71gCbisiZc3V/FE10SA6v65mFU/PyDIdCFHxmpWYb3A+LaOim
+Z/HAcKzJj3mtmTDBu/O7sezuIgULfx2Zb3lAZ2HtuqWKJ/KYaZ0Z10TXtiBNGm14
+3jWp2hEBVHsktNNVf4kjTQwENGwMaI85Kjsx9e2YNXJoESpyJh32M3HMKiBpDUKh
+v/Qkb2Y5SSlgMb0E+StPIbRpVQ46vZpV2Ys04X5dfOp81UoG7NhvSECI5fOLRpo7
+Kpa2/mrPMhe1gha/LEk2OItqXAZF8P95PL1obXVXWyV39vYm/v5oUd51wnOdnlu1
+oyc2RLOgLW0Ae3KZsywx7ZgqD9XhhM076V0NaSMfSd5AAMQt0vI=
+=TU9+
+-----END PGP SIGNATURE-----
+
+--y3moyevmvc7nmaqp--
