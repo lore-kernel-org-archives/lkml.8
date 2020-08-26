@@ -2,96 +2,131 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09762C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4325BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3E3220707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B3162080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="E/wM8YPI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lLgG5Zuk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="aHOapJ/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728486AbgHZKb1 (ORCPT
+        id S1728494AbgHZKcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:31:27 -0400
-Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:42583 "EHLO
-        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728132AbgHZKbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:31:25 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.west.internal (Postfix) with ESMTP id 7E1F613CD;
-        Wed, 26 Aug 2020 06:31:23 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Wed, 26 Aug 2020 06:31:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=fzXSyiJ0yKCBJMfU7qZRijHqxRF
-        7SJCllidhSQjnX5g=; b=E/wM8YPIqDoyZ08hyoegYIw3IUZ0c6QqL4Sl9Xi2wlz
-        N27VHRU4fhgB9zOi3Hn1L8LqlZEYCs87t5+z2UO+oQp0LJOJ5q78PkR0tdXFy8Ps
-        TavZK6NFaXD45tQFyx/3NVYhbprrxvENGDv1Attna2ErKpdeh4EVvSVGNMpW5C2t
-        s6spSI2cES63rDiJB0PvyTyYI5c1KVJTTAfgV4ZcsvBnBjCYysJVsU5bnk8E5CLw
-        DAugbXE0VcZ8IVra+hhjeXAtIlO310DqlfC47pc8/hf/Ttaedj56QfpAQHLOYQVZ
-        PGtdjhM/TAlFjb7XhrS2gpaH2RZAhq5WHdxpC9s00rw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=fzXSyi
-        J0yKCBJMfU7qZRijHqxRF7SJCllidhSQjnX5g=; b=lLgG5ZukFOcF5MdVRQwiAw
-        M9WcC3EibCmLVWp6OqEu4Lko5c7zO4aw5o3TGGwDC0sHOUkU4jZcNZQnpbau7M5x
-        zrCoZ9MstIvOP6hIcAOLAeegkcQud3L8OM3RoOw3W4YfE8q9vZeQQR7k1fv2CwxL
-        3Lumv3qtW2Zawa4+BZixAzvgWNFfnlaejGaJGProPMCCw71gA1dBrWUWhhs2Mk/y
-        JJR8VfhR8buGK2zt22wgz2OcHHwA546khHtOq/0E+bgLJhLhU1n/uOVhYHw0smEO
-        BogZSxEQDhGjvLAgEO2KSlgvEArc78teARcUaoGjdTqyN+78sEPvUXeeJii+lTXA
-        ==
-X-ME-Sender: <xms:-jlGX3Kw_cCOte_5xtvllTm93NP5vkNRInBmgMrJYqUvpHWoVO4ysw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddvvddgvdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
-    dttddtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
-    necuggftrfgrthhtvghrnhepveeuheejgfffgfeivddukedvkedtleelleeghfeljeeiue
-    eggeevueduudekvdetnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtg
-    homh
-X-ME-Proxy: <xmx:-jlGX7KomOU1GGlI_F32hsge41oVLQju52fSHA1LuLOM7skkQ_JoYw>
-    <xmx:-jlGX_sXCMFmmjF7iupGYo14IRhBt5cGAYjzbM77GSwWagqj5UfGZg>
-    <xmx:-jlGXwYkRYCMZpMmmzXQIlXU-qdT9WNpBA2KhxhR9Rki8UMTOZ0r7g>
-    <xmx:-zlGX-F1nciJtAUSJjD4D7JE3Al6e6ilsgRp0GAbM8SenD9v49lquQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1AF2F30600A9;
-        Wed, 26 Aug 2020 06:31:22 -0400 (EDT)
-Date:   Wed, 26 Aug 2020 12:31:37 +0200
-From:   Greg KH <greg@kroah.com>
-To:     xiangxia.m.yue@gmail.com
-Cc:     sashal@kernel.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        netdev@vger.kernel.org, jknoos@google.com
-Subject: Re: [PATCH net backport 5.6.14-5.8.3 v1] net: openvswitch: introduce
- common code for flushing flows
-Message-ID: <20200826103137.GC3356257@kroah.com>
-References: <20200825052532.15301-1-xiangxia.m.yue@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825052532.15301-1-xiangxia.m.yue@gmail.com>
+        Wed, 26 Aug 2020 06:32:32 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:48669 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728132AbgHZKcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:32:21 -0400
+IronPort-SDR: 9OZKk8jEcvCf/m3dpFJVwSgODe4S/NTgM3/BJZwc+totVibwYjJskgkHIvH1luqMNDHkMlI4mG
+ zgIlbku+Y8eVt0IikwZWK+8XhVAfuuhKfvo6Ykxhyaft6JuOexl8+hqdSIl5NVP1hXwUYj/llX
+ S9Mpzl0lQ8EnZP5QpWa7B2qjdM1zHr9E+qiXNuF//7nrNIEtiTi98bUk0+cgpPYPIbLWHAkd+y
+ Ey93PlVoyr/4vvUSnPoGqUh+eUd1OoVQeFv4fVl+ket3cgLTjv0cxIWJmbgrBGi0KCaLtL26GJ
+ i24=
+X-IronPort-AV: E=Sophos;i="5.76,355,1592863200"; 
+   d="scan'208";a="13605981"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 26 Aug 2020 12:32:19 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 26 Aug 2020 12:32:19 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 26 Aug 2020 12:32:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1598437939; x=1629973939;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=mkEkX1GM1xbLiXkLbImdPglocH+IeXx6MxzXdXmSuoQ=;
+  b=aHOapJ/zO9nEki7v7TnwPsS+h5yF6dMfYpoCz7nMFPhgXVt57jJp3gvm
+   B1IH2vznv7YhNG3U0pd5ex5+BqQd2NkyxNP0CzE+ZS+Hk286HOIjqWRuJ
+   qvlGBrulS8FVddQszJtWFnl7Ois8VRJQek7K7DiKE4GVNEWj7254/fF/m
+   TLwlO5Eij84qVg/stvnBtQOEJQHOlUN4MeaPs4bbmpQy77l2ycOf70PtJ
+   6rltUbvoVBDt+O9In/roV7A143w5TX3x7QDf1njCQxZFLyBKLDuwYS9gi
+   8r/xEWF1YlOZofGI9CRAffjzjsNMukrN55vDoOcHOtlJnywwPWru8hkOM
+   g==;
+IronPort-SDR: YJeyxRPZU91peRDZT+5Vm5Z4NR4Ycx+N+xtKloknBbXfhabJim5XpCZLDn9YzBXcE4nYPq0kKu
+ y0rzgEi0Y0MefjCCBwAjS/YRoF3JNbxoOFeAuEU++hmnORUiwzvBVX1dWNqGDUFw7TjwBVclyb
+ 8F8TaH874gCnt/7gCtT0UTlWf4KmIlz3pQLYsR+kcF1wCVqJOe64CdoYyB71/kJLAzFMirSRCE
+ hz+NXVb+ZIsWJkOPbfYo7W8qH2UqejHbxLKhqnojoD0cK07w2E9bm9/V8PqkTJf7QS//C+PVLB
+ 7kA=
+X-IronPort-AV: E=Sophos;i="5.76,355,1592863200"; 
+   d="scan'208";a="13605980"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 26 Aug 2020 12:32:19 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id B4B6A2800A2;
+        Wed, 26 Aug 2020 12:32:19 +0200 (CEST)
+Message-ID: <53f5f17735fc2f0ca061a321969bbb131e55efff.camel@ew.tq-group.com>
+Subject: Re: (EXT) Re: (EXT) Re: (EXT) Re: [PATCH 2/2] ARM: dts: imx6qdl:
+ tqma6: minor fixes
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Wed, 26 Aug 2020 12:32:17 +0200
+In-Reply-To: <CAOMZO5CP=wtJ5ZScyb0NrRMW0FR0FAGVKRFq9JpFcAoZppn_bA@mail.gmail.com>
+References: <20200824091013.20640-1-matthias.schiffer@ew.tq-group.com>
+         <20200824091013.20640-2-matthias.schiffer@ew.tq-group.com>
+         <CAOMZO5DSX1pf3xxo=CGvgPmHcjMJoWFx74grVJBckSmjtF-RGg@mail.gmail.com>
+         <4b7d57738ce8e2130c4740a0f3f973fbaf60a7cf.camel@ew.tq-group.com>
+         <CAOMZO5DYrkEb_G+EYAGrc+qjSsbjRdeBUU3tJUfkU6tjgNm_7g@mail.gmail.com>
+         <7a59492e46f34d213b83f7182c7db73954c5a9c7.camel@ew.tq-group.com>
+         <CAOMZO5CP=wtJ5ZScyb0NrRMW0FR0FAGVKRFq9JpFcAoZppn_bA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 01:25:32PM +0800, xiangxia.m.yue@gmail.com wrote:
-> From: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+On Tue, 2020-08-25 at 14:16 -0300, Fabio Estevam wrote:
+> On Tue, Aug 25, 2020 at 11:40 AM Matthias Schiffer
+> <matthias.schiffer@ew.tq-group.com> wrote:
 > 
-> [ Upstream commit 77b981c82c1df7c7ad32a046f17f007450b46954 ]
+> > Makes sense. Does the following logic sound correct?
+> > 
+> > - If num-cs is set, use that (and add it to the docs)
+> 
+> I would not add num-cs to the docs. As far as I can see there is no
+> imx dts that uses num-cs currently.
 
-That is not what this commit is :(
+But the previous platform data that was removed in 8cdcd8aeee281 ("spi:
+imx/fsl-lpspi: Convert to GPIO descriptors") set different values for
+different boards. So maybe some DTS should be using num-cs?
 
-Please fix up and resend with the correct commit.
 
-thanks,
+> 
+> > - If num-cs is unset, use the number of cs-gpios
+> > - If num-cs is unset and no cs-gpios are defined, use a driver-
+> > provided
+> > default
+> > 
+> > 
+> > I'm not sure if 3 is a particularly useful default either, but it
+> > seems
+> > it was chosen to accommodate boards that previously set this via
+> > platform data. All SoCs I've checked (i.MX6Q/DL, i.MX6UL, i.MX7)
+> > have 4
+> > internal CS pins per ECSPI instance, so maybe the driver should use
+> > that as its default instead?
+> 
+> I think it is time to get rid of i.MX board files. I will try to work
+> on this when I have a chance.
+> 
+> bout using 4 as default chip select number, please also check some
+> older SoCs like imx25, imx35, imx51, imx53, etc
 
-greg k-h
+Hmm, I just checked i.MX28, and it has only 3 chip selects per
+instance.
+
