@@ -2,114 +2,157 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FC3C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D928520786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED1F20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 10:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598438434;
+	bh=txaSaNPnXRRk4ooQL2bKzX5EI3dP8CHaqLkAxMpUPeI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Udi6AfSYA7IR02pkTFABX7EwWcLbrWz6hGcIxs3u61vIQuJ1U+rw9iV48zx6tbMtU
+	 0I6QHNSF6p4Y7wZ98m/t63RnvbZ8h8xUxQX6Jn6QFVzHT+amGG8uj7udaphxYWJlQB
+	 J+EWWMj7mqhN7QPH1WDkChKHxAgsixEiBMh3OW0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbgHZKjP (ORCPT
+        id S1728596AbgHZKkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 06:39:15 -0400
-Received: from mga03.intel.com ([134.134.136.65]:31782 "EHLO mga03.intel.com"
+        Wed, 26 Aug 2020 06:40:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728386AbgHZKjN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 06:39:13 -0400
-IronPort-SDR: BxAuspFbbuMlxK/2SL1UDQjNlX0FMMaAzungJbSeBEsVIJBMFn95KTKYKA6ctO2aufzFglMWiE
- vuJuDGI5U12Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="156256935"
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="156256935"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 03:39:13 -0700
-IronPort-SDR: ACAIHj2r3pc7To2YpFjLT03tqkADnn9ok+F/dobSkxuRuV8CE9U/LKyAtS2zvYVqTRwxHo+76/
- uGo/YRt9ll+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
-   d="scan'208";a="403025660"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Aug 2020 03:39:11 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 8D249352; Wed, 26 Aug 2020 13:39:10 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>
-Subject: [PATCH v1] extcon: ptn5150: Deduplicate parts of dev_err_probe()
-Date:   Wed, 26 Aug 2020 13:39:10 +0300
-Message-Id: <20200826103910.81413-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
+        id S1728386AbgHZKk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 06:40:26 -0400
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5E832080C;
+        Wed, 26 Aug 2020 10:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598438426;
+        bh=txaSaNPnXRRk4ooQL2bKzX5EI3dP8CHaqLkAxMpUPeI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dC+5Olx5mdQHGtKK62E1yUdRwd3jMfhr/j1edBpYOjvI34xMS9P8Lj3QlOSjDdEh3
+         Ads9nnaw2GUczX6HT23SDi4Ct5cjc4fH9rXJNOupxJpuSIdL6wJDS9jDPhMeVvSwRA
+         6tfZnlV6W3577vNWCGv8pcnmnv7eZfTR/3J9JKa8=
+Received: by mail-oo1-f54.google.com with SMTP id a6so326650oog.9;
+        Wed, 26 Aug 2020 03:40:25 -0700 (PDT)
+X-Gm-Message-State: AOAM533d4fGo58lzwKzoQrRPuWg60UoSKZ8airpEhEDVK1zdMBfBkyeq
+        H+OeiQe8ZO7KPB6qJpTwYI9S7pZuydN4BcqlFhM=
+X-Google-Smtp-Source: ABdhPJwV0tCVOBpDOYwyJ7WqID0zDWxC9DNsplWSfqvJpse4QTRdk5ZeqxB8wzlH4itZZkrEmzS/6TmCYNaNFKuQick=
+X-Received: by 2002:a4a:9211:: with SMTP id f17mr4104637ooh.41.1598438425284;
+ Wed, 26 Aug 2020 03:40:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200826055150.2753.90553@ml01.vlan13.01.org> <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
+In-Reply-To: <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 26 Aug 2020 12:40:14 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
+Message-ID: <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
+Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Caleb Jorden <caljorden@hotmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dev_err_probe() is designed to be used like
+On Wed, 26 Aug 2020 at 08:18, Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+>
+>
+> Dear Caleb,
+>
+>
+> Thank you for the report. Linux has a no regression policy, so the
+> correct forum to report this to is the Linux kernel folks. I am adding
+> the crypto and stable folks to the receiver list.
+>
+> Am 26.08.20 um 07:51 schrieb caljorden@hotmail.com:
+>
+> > I wanted to note an issue that I have hit with iwd when I upgraded to
+> > the Linux 5.8.3 stable kernel.  My office network uses WPA Enterprise
+> > with EAP-PEAPv0 + MSCHAPv2.  When using this office network,
+> > upgrading to Linux 5.8.3 caused my system to refuse to associate
+> > successfully to the network.  I get the following in my dmesg logs:
+> >
+> > [   40.846535] wlan0: authenticate with <redacted>:60
+> > [   40.850570] wlan0: send auth to <redacted>:60 (try 1/3)
+> > [   40.854627] wlan0: authenticated
+> > [   40.855992] wlan0: associate with <redacted>:60 (try 1/3)
+> > [   40.860450] wlan0: RX AssocResp from <redacted>:60 (capab=3D0x411 st=
+atus=3D0 aid=3D11)
+> > [   40.861620] wlan0: associated
+> > [   41.886503] wlan0: deauthenticating from <redacted>:60 by local choi=
+ce (Reason: 23=3DIEEE8021X_FAILED)
+> > [   42.360127] wlan0: authenticate with <redacted>:22
+> > [   42.364584] wlan0: send auth to <redacted>:22 (try 1/3)
+> > [   42.370821] wlan0: authenticated
+> > [   42.372658] wlan0: associate with <redacted>:22 (try 1/3)
+> > [   42.377426] wlan0: RX AssocResp from <redacted>:22 (capab=3D0x411 st=
+atus=3D0 aid=3D15)
+> > [   42.378607] wlan0: associated
+> > [   43.402009] wlan0: deauthenticating from <redacted>:22 by local choi=
+ce (Reason: 23=3DIEEE8021X_FAILED)
+> > [   43.875921] wlan0: authenticate with <redacted>:60
+> > [   43.879988] wlan0: send auth to <redacted>:60 (try 1/3)
+> > [   43.886244] wlan0: authenticated
+> > [   43.889273] wlan0: associate with <redacted>:60 (try 1/3)
+> > [   43.894586] wlan0: RX AssocResp from <redacted>:60 (capab=3D0x411 st=
+atus=3D0 aid=3D11)
+> > [   43.896077] wlan0: associated
+> > [   44.918504] wlan0: deauthenticating from <redacted>:60 by local choi=
+ce (Reason: 23=3DIEEE8021X_FAILED)
+> >
+> > This continues as long as I let iwd run.
+> >
+> > I downgraded back to Linux 5.8.2, and verified that everything works
+> > as expected.  I also tried using Linux 5.8.3 on a different system at
+> > my home, which uses WPA2-PSK.  It worked fine (though it uses an
+> > Atheros wireless card instead of an Intel card - but I assume that is
+> > irrelevant).
+> >
+> > I decided to try to figure out what caused the issue in the changes
+> > for Linux 5.8.3.  I assumed that it was something that changed in the
+> > crypto interface, which limited my bisection to a very few commits.
+> > Sure enough, I found that if I revert commit
+> > e91d82703ad0bc68942a7d91c1c3d993e3ad87f0 (crypto: algif_aead - Only
+> > wake up when ctx->more is zero), the problem goes away and I am able
+> > to associate to my WPA Enterprise network successfully, and use it.
+> > I found that in order to revert this commit, I also first had to
+> > revert 465c03e999102bddac9b1e132266c232c5456440 (crypto: af_alg - Fix
+> > regression on empty requests), because the two commits have coupled
+> > changes.
+> >
+> > I normally would have assumed that this should be sent to the kernel
+> > list, but I thought I would first mention it here because of what I
+> > found in some email threads on the Linux-Crypto list about the crypto
+> > interfaces to the kernel being sub-optimal and needing to be fixed.
+> > The changes in these commits look like they are just trying to fix
+> > what could be broken interfaces, so I thought that it would make
+> > sense to see what the iwd team thinks about the situation first.
+> >
+> > The wireless card I was using during this testing is an Intel
+> > Wireless 3165 (rev 81).  If there is any additional information I
+> > could help provide, please let me know.
+>
+> It=E2=80=99d be great, if you verified, if the problem occurs with Linus=
+=E2=80=99 master
+> branch too.
+>
 
-	return dev_err_probe(dev, ret, "Error message\n");
-
-Hence no need to have a separate return statement. Besides that
-dev_err_probe() prints already returned error code, no need to repeat
-that either.
-
-Fixes: 48cbf8c6653c ("extcon: ptn5150: Reduce the amount of logs on deferred probe")
-Cc: Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/extcon/extcon-ptn5150.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/extcon/extcon-ptn5150.c b/drivers/extcon/extcon-ptn5150.c
-index 8ba706fad887..051bf374b43f 100644
---- a/drivers/extcon/extcon-ptn5150.c
-+++ b/drivers/extcon/extcon-ptn5150.c
-@@ -242,8 +242,7 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
- 			dev_info(dev, "No VBUS GPIO, ignoring VBUS control\n");
- 			info->vbus_gpiod = NULL;
- 		} else {
--			dev_err_probe(dev, ret, "failed to get VBUS GPIO\n");
--			return ret;
-+			return dev_err_probe(dev, ret, "failed to get VBUS GPIO\n");
- 		}
- 	}
- 
-@@ -253,10 +252,8 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
- 
- 	info->regmap = devm_regmap_init_i2c(i2c, &ptn5150_regmap_config);
- 	if (IS_ERR(info->regmap)) {
--		ret = PTR_ERR(info->regmap);
--		dev_err_probe(info->dev, ret, "failed to allocate register map: %d\n",
--			      ret);
--		return ret;
-+		return dev_err_probe(info->dev, PTR_ERR(info->regmap),
-+				     "failed to allocate register map\n");
- 	}
- 
- 	if (i2c->irq > 0) {
-@@ -264,9 +261,8 @@ static int ptn5150_i2c_probe(struct i2c_client *i2c)
- 	} else {
- 		info->int_gpiod = devm_gpiod_get(&i2c->dev, "int", GPIOD_IN);
- 		if (IS_ERR(info->int_gpiod)) {
--			ret = PTR_ERR(info->int_gpiod);
--			dev_err_probe(dev, ret, "failed to get INT GPIO\n");
--			return ret;
-+			return dev_err_probe(dev, PTR_ERR(info->int_gpiod),
-+					     "failed to get INT GPIO\n");
- 		}
- 
- 		info->irq = gpiod_to_irq(info->int_gpiod);
--- 
-2.28.0
-
+It would be helpful if someone could explain for the non-mac80211
+enlightened readers how iwd's EAP-PEAPv0 + MSCHAPv2 support relies on
+the algif_aead socket interface, and which AEAD algorithms it uses. I
+assume this is part of libell?
