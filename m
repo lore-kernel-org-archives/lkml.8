@@ -2,113 +2,78 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B10C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA07A20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:09:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rYeOk83p";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="19p1170o"
+	by mail.kernel.org (Postfix) with ESMTP id 81D3120838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbgHZMJG (ORCPT
+        id S1729816AbgHZMJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:09:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729419AbgHZMBs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:01:48 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90A3C061757;
-        Wed, 26 Aug 2020 05:01:47 -0700 (PDT)
-Message-Id: <20200826112334.698236296@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598443306;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=T7GI6+per3yw7C/RYhxMMvPmri10khmLfeX2/IGCf+c=;
-        b=rYeOk83pkEJnp46ajEK6NUiZaIQWhcYQOD7ARwQ4vU+RFzqloQ63JN2nVYehUzJCZ3LhEM
-        nSvRtOTy2UEio1ys8RRtDU/QayBvKZkSuMuvMgk+a9H5ILcig8cpK/553ZabvDI8df5lKS
-        okR053zhIrINePDGUZi1mOpY/lBtAW5f6ZunqQOcOmm/Sm2oNDC+w9GwUD6L0lAJTkCSNt
-        voLf39dTRK8wXWcqnk8nqZa7+ytxZXByWN4UpDIwm6TP4r34cMxnX/n8ogGmo5ibrOp+nq
-        jMMBNare5DRQuC71qjLfmswliL61Gs8OgznCWDk/2DJZm1QTEOADZCXvc8ODGQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598443306;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=T7GI6+per3yw7C/RYhxMMvPmri10khmLfeX2/IGCf+c=;
-        b=19p1170oqCuoZJTSY37jpDQNACEfJLfBQIGgKA6yb2yN5TF7Hyw1gvihiQWU9wKDv1m7Ky
-        q5LnSO3wTOR3faCA==
-Date:   Wed, 26 Aug 2020 13:17:09 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [patch V2 41/46] platform-msi: Provide default irq_chip:: Ack
-References: <20200826111628.794979401@linutronix.de>
+        Wed, 26 Aug 2020 08:09:09 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:33072 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729538AbgHZMIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:08:51 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1kAuEC-0003TM-Nd; Wed, 26 Aug 2020 22:08:33 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 26 Aug 2020 22:08:32 +1000
+Date:   Wed, 26 Aug 2020 22:08:32 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Paul Menzel <pmenzel@molgen.mpg.de>,
+        Caleb Jorden <caljorden@hotmail.com>,
+        Sasha Levin <sashal@kernel.org>, iwd@lists.01.org,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: Re: Issue with iwd + Linux 5.8.3 + WPA Enterprise
+Message-ID: <20200826120832.GA2996@gondor.apana.org.au>
+References: <20200826055150.2753.90553@ml01.vlan13.01.org>
+ <b34f7644-a495-4845-0a00-0aebf4b9db52@molgen.mpg.de>
+ <CAMj1kXEUQdmQDCDXPBNb3hRrbui=HVyDjCDoiFwDr+mDSjP43A@mail.gmail.com>
+ <20200826114952.GA2375@gondor.apana.org.au>
+ <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGjytfJEbLMbz50it3okQfiLScHB5YK2FMqR5CsmFEBbg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Wed, Aug 26, 2020 at 01:59:53PM +0200, Ard Biesheuvel wrote:
+> On Wed, 26 Aug 2020 at 13:50, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+> >
+> > On Wed, Aug 26, 2020 at 12:40:14PM +0200, Ard Biesheuvel wrote:
+> > >
+> > > It would be helpful if someone could explain for the non-mac80211
+> > > enlightened readers how iwd's EAP-PEAPv0 + MSCHAPv2 support relies on
+> > > the algif_aead socket interface, and which AEAD algorithms it uses. I
+> > > assume this is part of libell?
+> >
+> > I see the problem.  libell/ell/checksum.c doesn't clear the MSG_MORE
+> > flag before doing the recv(2).
+> 
+> But that code uses a hash not an aead, afaict.
 
-For the upcoming device MSI support it's required to have a default
-irq_chip::ack implementation (irq_chip_ack_parent) so the drivers do not
-need to care.
+Good point.  In that case can we please get a strace with a -s
+option that's big enough to capture the crypto data?
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Comparing the working strace and the non-working one should be
+sufficient to identify the problem.
 
----
- drivers/base/platform-msi.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/drivers/base/platform-msi.c
-+++ b/drivers/base/platform-msi.c
-@@ -95,6 +95,8 @@ static void platform_msi_update_chip_ops
- 		chip->irq_mask = irq_chip_mask_parent;
- 	if (!chip->irq_unmask)
- 		chip->irq_unmask = irq_chip_unmask_parent;
-+	if (!chip->irq_ack)
-+		chip->irq_ack = irq_chip_ack_parent;
- 	if (!chip->irq_eoi)
- 		chip->irq_eoi = irq_chip_eoi_parent;
- 	if (!chip->irq_set_affinity)
-
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
