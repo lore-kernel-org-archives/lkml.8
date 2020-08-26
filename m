@@ -7,57 +7,60 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB86C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B52602078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:48:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8112078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598467737;
-	bh=XBr/fnbwBz/TLqTnqck7d9QMDktEe+KFnwu1ysa+BqY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=eOfW1wlLiSUOMDZpeyCRSvArySMjeBZzf6OR/HNa35bQ+435DlUyb0/VhrU+tNf+7
-	 Izm86CeImSiVS+sqwL5CzJiMHdv63KgV9BlEHy746xWjPrtjVXMUk+bSj3yvhiKEAg
-	 8PliYjoNz4dixnbftC+GPCOUYvqM+IWOHa0sVgis=
+	s=default; t=1598467745;
+	bh=lCWk/j9SvqFwahbxMoapvMtMKnFPnY4PtXWqojjq3VU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2AisXSg1gd6ytAzKpgWlaEi7I1isqrKI+nkhTYCxBvfeaS0fBStBsh6wLaDyrz/eo
+	 i8xt+8u65v+T7LE2cjXqmkhY1K0oZaBwFoz0yr3X/ZlVQl/nWmvhhstoEeKEBfyELV
+	 Z0Pb65wLVfTAvJkdwMx4C0cLSmGAN7/+hB7Clg2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgHZSs4 (ORCPT
+        id S1727827AbgHZStD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:48:56 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41348 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726191AbgHZSsz (ORCPT
+        Wed, 26 Aug 2020 14:49:03 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41354 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727790AbgHZSs5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:48:55 -0400
-Received: by mail-io1-f66.google.com with SMTP id m23so3206956iol.8;
-        Wed, 26 Aug 2020 11:48:54 -0700 (PDT)
+        Wed, 26 Aug 2020 14:48:57 -0400
+Received: by mail-io1-f67.google.com with SMTP id m23so3207027iol.8;
+        Wed, 26 Aug 2020 11:48:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ANVjB6Oqn2d1pZe/e10TGufV/gtKnuBQp7HE23A4Kz8=;
-        b=bM1ZVTcBDrTz63l+K6iKE6OY/K74r2k0IaL1R2KYui41fjk+OJFyB7ubeG7zBi0yzQ
-         uYJEu8lJIEFyyfqp8OP7WiiLRICdjALUAZfjYGjyNTN51xwz7Y7GlWcH65rmRx9fYQMF
-         VFhv/PuKNC3u95t0gJ6jTSHEMmrLBcqYzpW5odEAHZnulD1RYH4E6YHBg1bL6Mf/OimT
-         oIMT7C6RYo9TRd25AH6DQJ3O0ks6nCHbgmu4qlK1cKuUXhnsnjJvTkKooI1dBp50ytW9
-         cCLwpUrYFqbWIf//mXlt6UHunqCsNQ8EwL4IEI0aPoLg2v/EGJBjpf01zOedmrCipS18
-         K7vQ==
-X-Gm-Message-State: AOAM533jp0ix5O9KxfL7qGU0vxMIhfWcSM0lRmjtKYPpH0oMtAN/O2Wj
-        4zRNoIo4Ze7Yvt34nJxT+gGcIuykuVVC
-X-Google-Smtp-Source: ABdhPJxCGQDbXnwHYxRdKiwLONGRlHhRoTm815Iaj2AA0tWZ3EoOypxgdG+IXPtFbxHb2B2WuP+pTw==
-X-Received: by 2002:a05:6602:280f:: with SMTP id d15mr5477882ioe.200.1598467734302;
-        Wed, 26 Aug 2020 11:48:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LNZy6DyKFktw1S4IEMG7/aKvHfRAsR8jlYGJnThSK/w=;
+        b=UX5DbWNL5Rt3p2nQWLnaQ2KLHq/EuP7NyrvLTzihq3d/Vfwo6dCPM4rcMFM3kCV4eV
+         Up2BIuzHY4/tS1EoEHjPq1rPNz+Plz9CS8oozZhenqEjACQzD37zU5QgV6IoDBZDsX/T
+         kSrBnVU1rgoy03rkBWqAPmX8Q6m4hHDmbbEtX9fjanIeFKHrLz9FJdA+dkdC9xTVcQuk
+         PjNDg+tXSUhUj0sIv4CxKOu3wFIO2wRNbjT+7VpIeLuZl4XuPCwflfbsSQwzEB4ePgGq
+         5yzGcfsviSdIJSjqXWgUE7zdJ0bjbgZSBCXosVlJrGgpDvs6YL01vxr956ruhItZfCzf
+         dlfQ==
+X-Gm-Message-State: AOAM531PvWBrK954HaGfvtEaYgpv9yM8z+6BJ/hfEm1PQP0KyJNVWyHK
+        AKRFDx49OhcwkxCrMot8cgxutmLOT75S
+X-Google-Smtp-Source: ABdhPJw3rZMqtCEoM6EXfLvn7ToJRVHLjEfMDKOeyf9q8tYTAfxr69JwYoHPnqFHtMqcAqf/pXRbgA==
+X-Received: by 2002:a6b:2c1:: with SMTP id 184mr4171903ioc.137.1598467735776;
+        Wed, 26 Aug 2020 11:48:55 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.249])
-        by smtp.googlemail.com with ESMTPSA id c2sm1609226iow.6.2020.08.26.11.48.52
+        by smtp.googlemail.com with ESMTPSA id c2sm1609226iow.6.2020.08.26.11.48.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 11:48:53 -0700 (PDT)
+        Wed, 26 Aug 2020 11:48:54 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH 1/3] dt-bindings: sound: Remove unused 'linux,hdmi-audio'
-Date:   Wed, 26 Aug 2020 12:48:49 -0600
-Message-Id: <20200826184851.3431531-1-robh@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Griffin <peter.griffin@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 2/3] dt-bindings: phy: Remove phy-stih41x-usb binding
+Date:   Wed, 26 Aug 2020 12:48:50 -0600
+Message-Id: <20200826184851.3431531-2-robh@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200826184851.3431531-1-robh@kernel.org>
+References: <20200826184851.3431531-1-robh@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,39 +68,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The binding was added in 2013 and has had no driver since 2015.
+The driver was removed in 2016 in commit fb954c48aea6 ("phy:
+stih41x-usb: Remove usb phy driver and dt binding  documentation.") and
+somehow the DT binding got dropped despite the subject.
 
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org
+Cc: Peter Griffin <peter.griffin@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/hdmi.txt | 16 ----------------
- 1 file changed, 16 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/hdmi.txt
+ .../bindings/phy/phy-stih41x-usb.txt          | 24 -------------------
+ 1 file changed, 24 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
 
-diff --git a/Documentation/devicetree/bindings/sound/hdmi.txt b/Documentation/devicetree/bindings/sound/hdmi.txt
+diff --git a/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt b/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
 deleted file mode 100644
-index 56407c30e954..000000000000
---- a/Documentation/devicetree/bindings/sound/hdmi.txt
+index 744b4809542e..000000000000
+--- a/Documentation/devicetree/bindings/phy/phy-stih41x-usb.txt
 +++ /dev/null
-@@ -1,16 +0,0 @@
--Device-Tree bindings for dummy HDMI codec
+@@ -1,24 +0,0 @@
+-STMicroelectronics STiH41x USB PHY binding
+-------------------------------------------
+-
+-This file contains documentation for the usb phy found in STiH415/6 SoCs from
+-STMicroelectronics.
 -
 -Required properties:
--	- compatible: should be "linux,hdmi-audio".
+-- compatible	: should be "st,stih416-usb-phy" or "st,stih415-usb-phy"
+-- st,syscfg	: should be a phandle of the syscfg node
+-- clock-names	: must contain "osc_phy"
+-- clocks	: must contain an entry for each name in clock-names.
+-See: Documentation/devicetree/bindings/clock/clock-bindings.txt
+-- #phy-cells	: must be 0 for this phy
+-See: Documentation/devicetree/bindings/phy/phy-bindings.txt
 -
--CODEC output pins:
--  * TX
+-Example:
 -
--CODEC input pins:
--  * RX
--
--Example node:
--
--	hdmi_audio: hdmi_audio@0 {
--		compatible = "linux,hdmi-audio";
--	};
+-usb2_phy: usb2phy@0 {
+-	compatible	= "st,stih416-usb-phy";
+-	#phy-cells	= <0>;
+-	st,syscfg	= <&syscfg_rear>;
+-	clocks		= <&clk_sysin>;
+-	clock-names	= "osc_phy";
+-};
 -- 
 2.25.1
 
