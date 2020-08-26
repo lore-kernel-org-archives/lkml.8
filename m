@@ -2,137 +2,183 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D57C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20E6D2087D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C251207CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:56:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Y1O0o25r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726825AbgHZVra convert rfc822-to-8bit (ORCPT
+        id S1726853AbgHZV4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:47:30 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:27651 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726753AbgHZVr2 (ORCPT
+        Wed, 26 Aug 2020 17:56:16 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:52204 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbgHZV4Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:47:28 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-257-g12td2zPN3C-gOdetsRJcQ-1; Wed, 26 Aug 2020 22:47:25 +0100
-X-MC-Unique: g12td2zPN3C-gOdetsRJcQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 26 Aug 2020 22:47:24 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 26 Aug 2020 22:47:24 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Thomas Gleixner' <tglx@linutronix.de>,
-        'Alexander Graf' <graf@amazon.com>, 'X86 ML' <x86@kernel.org>
-CC:     'Andy Lutomirski' <luto@kernel.org>,
-        'LKML' <linux-kernel@vger.kernel.org>,
-        'Andrew Cooper' <andrew.cooper3@citrix.com>,
-        "'Paul E. McKenney'" <paulmck@kernel.org>,
-        'Alexandre Chartre' <alexandre.chartre@oracle.com>,
-        'Frederic Weisbecker' <frederic@kernel.org>,
-        'Paolo Bonzini' <pbonzini@redhat.com>,
-        'Sean Christopherson' <sean.j.christopherson@intel.com>,
-        'Masami Hiramatsu' <mhiramat@kernel.org>,
-        'Petr Mladek' <pmladek@suse.com>,
-        'Steven Rostedt' <rostedt@goodmis.org>,
-        'Joel Fernandes' <joel@joelfernandes.org>,
-        'Boris Ostrovsky' <boris.ostrovsky@oracle.com>,
-        'Juergen Gross' <jgross@suse.com>,
-        "'Mathieu Desnoyers'" <mathieu.desnoyers@efficios.com>,
-        'Josh Poimboeuf' <jpoimboe@redhat.com>,
-        'Will Deacon' <will@kernel.org>,
-        'Tom Lendacky' <thomas.lendacky@amd.com>,
-        'Wei Liu' <wei.liu@kernel.org>,
-        'Michael Kelley' <mikelley@microsoft.com>,
-        'Jason Chen CJ' <jason.cj.chen@intel.com>,
-        "'Zhao Yakui'" <yakui.zhao@intel.com>,
-        "'Peter Zijlstra (Intel)'" <peterz@infradead.org>,
-        'Avi Kivity' <avi@scylladb.com>,
-        "'Herrenschmidt, Benjamin'" <benh@amazon.com>,
-        "'robketr@amazon.de'" <robketr@amazon.de>,
-        "'amos@scylladb.com'" <amos@scylladb.com>,
-        'Brian Gerst' <brgerst@gmail.com>,
-        "'stable@vger.kernel.org'" <stable@vger.kernel.org>,
-        'Alex bykov' <alex.bykov@scylladb.com>
-Subject: RE: x86/irq: Unbreak interrupt affinity setting
-Thread-Topic: x86/irq: Unbreak interrupt affinity setting
-Thread-Index: AQHWe+aKb+AhwM2rPkq6/MK3Hcp5nKlK5iEAgAAGXqA=
-Date:   Wed, 26 Aug 2020 21:47:23 +0000
-Message-ID: <42ae8716e425495c964ae7372bd7ff52@AcuMS.aculab.com>
-References: <20200826115357.3049-1-graf@amazon.com>
- <87k0xlv5w5.fsf@nanos.tec.linutronix.de>
- <fd87a87d-7d8a-9959-6c81-f49003a43c21@amazon.com>
- <87blixuuny.fsf@nanos.tec.linutronix.de>
- <873649utm4.fsf@nanos.tec.linutronix.de>
- <87wo1ltaxz.fsf@nanos.tec.linutronix.de>
- <db3e28b59d404f55aff83120c077d6f6@AcuMS.aculab.com>
-In-Reply-To: <db3e28b59d404f55aff83120c077d6f6@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 26 Aug 2020 17:56:16 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07QLu8uo042177;
+        Wed, 26 Aug 2020 16:56:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598478968;
+        bh=dQZ0Q9XvUZXYwld+PELH7Qf4PN7CZlITbMVyyKwxzbU=;
+        h=Subject:To:References:CC:From:Date:In-Reply-To;
+        b=Y1O0o25rMSxs3MC9UHRZc6aNRYBYb8johsSyqxN6O5Zej9Ot9XFzSl4W2PKKZeaJB
+         GTRBQofnFFdejVqmQPNSf6bxuKqlCLLzEJnyAnP+OlTSoe3unt/+E+SavkZ4SPUGIX
+         TPpgabyvpxC35ayYehxOKcaZqewv89SjMjVvksbo=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07QLu85b005105
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 26 Aug 2020 16:56:08 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
+ Aug 2020 16:56:08 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 26 Aug 2020 16:56:08 -0500
+Received: from [10.250.32.245] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07QLu7Pj129319;
+        Wed, 26 Aug 2020 16:56:07 -0500
+Subject: Re: [PATCH v2 00/13] extcon: ptn5150: Improvements and fixes
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Vijai Kumar K <vijaikumar.kanagarajan@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200817070009.4631-1-krzk@kernel.org>
+ <CGME20200824103713epcas1p4ae0d5d821fd468163ec5948dd59d0d15@epcas1p4.samsung.com>
+ <2879914d-7ad6-4d98-8b9c-a7646719f766@linux.intel.com>
+ <b6ec12af-5573-ce86-9f6b-16fcbc36b1a3@samsung.com>
+CC:     "Menon, Nishanth" <nm@ti.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <065f3979-f8c3-9233-4411-6f34f605a05a@ti.com>
+Date:   Wed, 26 Aug 2020 16:56:01 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <b6ec12af-5573-ce86-9f6b-16fcbc36b1a3@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Laight
-> Sent: 26 August 2020 22:37
-> 
-> From: Thomas Gleixner
-> > Sent: 26 August 2020 21:22
-> ...
-> > Moving interrupts on x86 happens in several steps. A new vector on a
-> > different CPU is allocated and the relevant interrupt source is
-> > reprogrammed to that. But that's racy and there might be an interrupt
-> > already in flight to the old vector. So the old vector is preserved until
-> > the first interrupt arrives on the new vector and the new target CPU. Once
-> > that happens the old vector is cleaned up, but this cleanup still depends
-> > on the vector number being stored in pt_regs::orig_ax, which is now -1.
-> 
-> I suspect that it is much more 'racy' than that for PCI-X interrupts.
-> On the hardware side there is an interrupt disable bit, and address
-> and a value.
-> To raise an interrupt the hardware must write the value to the address.
-> 
-> If the cpu needs to move an interrupt both the address and value
-> need changing, but the cpu wont write the address and value using
-> the same TLP, so the hardware could potentially write a value to
-> the wrong address.
-> Worse than that, the hardware could easily only look at the address
-> and value in the clocks after checking the interrupt is enabled.
-> So masking the interrupt immediately prior to changing the vector
-> info may not be enough.
-> 
-> It is likely that a read-back of the mask before updating the vector
-> is enough.
+Hi Chanwoo,
 
-But not enough to assume you won't receive an interrupt after reading
-back that interrupts are masked.
+On 8/24/20 6:28 AM, Chanwoo Choi wrote:
+> Hi,
+> 
+> On 8/24/20 7:36 PM, Ramuthevar, Vadivel MuruganX wrote:
+>> Hi,
+>>
+>>  Thank you for the patches and optimized the code as well.
+>>  I have applied your patches and tested, it's working fine
+>>  with few minor changes as per Intel's LGM board.
+> 
+> Thanks for the test.
+> 
+>>
+>>  can I send the patches along with patches or we need to wait until
+>>  your patch get merge?
+>>
+>>  Please suggest to me go further, Thanks!
+> 
+> I applied these patches. You better to send your patches
+> based on extcon-next. Thanks.
 
-(I've implemented the hardware side for an fpga ...)
+I am not sure what happened, but the $id and $schema got morphed in the patch
+on linux-next, 000ce2ad3c96 ("dt-bindings: extcon: ptn5150: Convert binding to
+DT schema"), when compared to Krzysztof's original patch.
 
-	David
+This is causing dtbs_check to fail in general on linux-next,
+  UPD     include/config/kernel.release
+  CHKDT   Documentation/devicetree/bindings/processed-schema-examples.json
+Traceback (most recent call last):
+  File
+"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
+774, in resolve_from_url
+    document = self.store[url]
+  File "/home/suman/.local/lib/python3.6/site-packages/jsonschema/_utils.py",
+line 22, in __getitem__
+    return self.store[self.normalize(uri)]
+KeyError:
+'https://protect2.fireeye.com/url?k=59835ffc-05905d01-59822c67-0cc47a336902-306bd2691e458c36&q=1&u=http%3A%2F%2Fdevicetree.org%2Fmeta-schemas%2Fcore.yaml%23'
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File
+"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
+777, in resolve_from_url
+    document = self.resolve_remote(url)
+  File
+"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
+860, in resolve_remote
+    result = requests.get(uri).json()
+  File "/usr/lib/python3/dist-packages/requests/models.py", line 892, in json
+    return complexjson.loads(self.text, **kwargs)
+  File "/usr/lib/python3/dist-packages/simplejson/__init__.py", line 518, in loads
+    return _default_decoder.decode(s)
+  File "/usr/lib/python3/dist-packages/simplejson/decoder.py", line 370, in decode
+    obj, end = self.raw_decode(s)
+  File "/usr/lib/python3/dist-packages/simplejson/decoder.py", line 400, in
+raw_decode
+    return self.scan_once(s, idx=_w(s, idx).end())
+simplejson.errors.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/suman/.local/bin/dt-doc-validate", line 67, in <module>
+    ret = check_doc(f)
+  File "/home/suman/.local/bin/dt-doc-validate", line 33, in check_doc
+    for error in sorted(dtschema.DTValidator.iter_schema_errors(testtree),
+key=lambda e: e.linecol):
+  File "/home/suman/.local/lib/python3.6/site-packages/dtschema/lib.py", line
+663, in iter_schema_errors
+    meta_schema = cls.resolver.resolve_from_url(schema['$schema'])
+  File
+"/home/suman/.local/lib/python3.6/site-packages/jsonschema/validators.py", line
+779, in resolve_from_url
+    raise exceptions.RefResolutionError(exc)
+jsonschema.exceptions.RefResolutionError: Expecting value: line 1 column 1 (char 0)
+Documentation/devicetree/bindings/Makefile:52: recipe for target
+'Documentation/devicetree/bindings/processed-schema-examples.json' failed
+make[1]: *** [Documentation/devicetree/bindings/processed-schema-examples.json]
+Error 123
+Makefile:1366: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
+
+regards
+Suman
+
+> 
+>>
+>> On 17/8/2020 2:59 pm, Krzysztof Kozlowski wrote:
+>>> Hi,
+>>>
+>>> Changes since v1:
+>>> 1. Mutex unlock fix in patch 8/13.
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+>>
+>>
+> 
+> 
 
