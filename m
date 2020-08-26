@@ -2,40 +2,37 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F6FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAF6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 261ED20838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05EC20838
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:30:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbgHZJaR (ORCPT
+        id S1728034AbgHZJa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:30:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50246 "EHLO mx2.suse.de"
+        Wed, 26 Aug 2020 05:30:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50330 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727854AbgHZJaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:30:17 -0400
+        id S1727854AbgHZJaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 05:30:24 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id EC6AFAD39;
-        Wed, 26 Aug 2020 09:30:46 +0000 (UTC)
-From:   Thomas Renninger <trenn@suse.com>
-To:     Jiri Kosina <trivial@kernel.org>, linux-kernel@vger.kernel.org,
-        Joe Perches <joe@perches.com>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 29/29] tools: Avoid comma separated statements
-Date:   Wed, 26 Aug 2020 11:30:14 +0200
-Message-ID: <6011591.XMClsHuqKX@c100>
-In-Reply-To: <52b68acfeb441b483de188f7e100600291f8c3ec.1598331149.git.joe@perches.com>
-References: <cover.1598331148.git.joe@perches.com> <52b68acfeb441b483de188f7e100600291f8c3ec.1598331149.git.joe@perches.com>
+        by mx2.suse.de (Postfix) with ESMTP id 8DD2BAD39;
+        Wed, 26 Aug 2020 09:30:53 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 11:30:21 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     adrian.hunter@intel.com, peterz@infradead.org, rostedt@goodmis.org
+cc:     linux-kernel@vger.kernel.org
+Subject: Ftrace regression in v5.9-rc1 due to commit fc0ea795f53c ("ftrace:
+ Add symbols for ftrace trampolines")
+Message-ID: <alpine.LSU.2.21.2008261104180.7835@pobox.suse.cz>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -43,63 +40,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-getting rid of lines with multiple instructions, separated by comma is
-certainly a good idea.
-One nit pick, though:
+during v5.9-rc1 testing I ran into an issue (BUG dump at the end of the 
+email). I suspected commit fc0ea795f53c ("ftrace: Add symbols for ftrace 
+trampolines") (which git bisect later confirmed) and a missing call to 
+ftrace_remove_trampoline_from_kallsyms() somewhere. And indeed there is an 
+unhandled place in ftrace_startup(). __register_ftrace_function() creates 
+a trampoline and adds its ops to new ftrace_ops_trampoline_list. If 
+ftrace_hash_ipmodify_enable() fails, the ops is not removed from the list. 
 
-Am Dienstag, 25. August 2020, 06:56:26 CEST schrieb Joe Perches:
-> Use semicolons and braces.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
-> ---
->  tools/lib/subcmd/help.c                    |  10 +-
->  tools/power/cpupower/utils/cpufreq-set.c   |  14 +-
->  tools/testing/selftests/vm/gup_benchmark.c |  18 +-
->  tools/testing/selftests/vm/userfaultfd.c   | 296 +++++++++++++--------
->  4 files changed, 210 insertions(+), 128 deletions(-)
-> 
-> diff --git a/tools/lib/subcmd/help.c b/tools/lib/subcmd/help.c
-> index 2859f107abc8..bf02d62a3b2b 100644
-> --- a/tools/lib/subcmd/help.c
-> +++ b/tools/lib/subcmd/help.c
-> @@ -65,12 +65,14 @@ void exclude_cmds(struct cmdnames *cmds, struct cmdnames
-> *excludes) ci = cj = ei = 0;
->  	while (ci < cmds->cnt && ei < excludes->cnt) {
->  		cmp = strcmp(cmds->names[ci]->name, excludes->names[ei]->name);
-> -		if (cmp < 0)
-> +		if (cmp < 0) {
->  			cmds->names[cj++] = cmds->names[ci++];
-> -		else if (cmp == 0)
-> -			ci++, ei++;
-> -		else if (cmp > 0)
-> +		} else if (cmp == 0) {
-> +			ci++;
->  			ei++;
-> +		} else if (cmp > 0) {
-> +			ei++;
-> +		}
->  	}
+Moreover, the trampoline is not freed anywhere in this case if I am not 
+missing something, which is not a problem of the mentioned patch.
 
-I can remember patches being rejected with one line statements in a condition,
-surounded by braces.
-I just read up Documentation/process/coding-style.rst, to be sure this still is up-to-date.
-It's not a must, but line 180 says:
-"Do not unnecessarily use braces where a single statement will do."
+If that's the case, something like
 
-So if this is about coding style cleanup, IMO you should remove braces from single line
-statements.
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 275441254bb5..656d7cb5a78c 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -2862,6 +2862,8 @@ int ftrace_startup(struct ftrace_ops *ops, int command)
+                __unregister_ftrace_function(ops);
+                ftrace_start_up--;
+                ops->flags &= ~FTRACE_OPS_FL_ENABLED;
++               if (ops->flags & FTRACE_OPS_FL_DYNAMIC)
++                       ftrace_trampoline_free(ops);
+                return ret;
+        }
 
-I haven't reviewed every line, but I expect you only split up comma separated instructions
-into separate lines and added braces?
+could do the trick. At least it fixes the issue for me, but I tend to get 
+lost in ftrace code, so it might not be a good approach generally.
 
-Afaik there isn't a specific tag, but having:
-cleanup only: No functional change
+If no one sees a problem anywhere, I'll prepare a proper patch and will 
+run some more testing.
 
-in the changelog would be nice for people looking for fixes to backport.
+Regards
+Miroslav
 
-
-Otherwise, I think this is a worthful cleanup.
-
-     Thomas
+---
+BUG: unable to handle page fault for address: fffffffffffffff0
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD 2216067 P4D 2216067 PUD 2218067 PMD 0 
+Oops: 0000 [#1] SMP PTI
+CPU: 1 PID: 2430 Comm: cat Tainted: G           O  K   5.9.0-rc2-dirty #44
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-48-gd9c812d-rebuilt.opensuse.org 04/01/2014
+RIP: 0010:ftrace_mod_get_kallsym+0xd4/0x150
+Code: 40 38 39 f8 0f 87 7b ff ff ff eb e1 0f 0b 4c 8b 0d 21 95 0d 01 b8 de ff ff ff 49 81 f9 80 6d 29 82 4d 8d 81 60 fe ff ff 74 2e <49> 8b 80 90 01 00 00 48 85 c0 740
+RSP: 0018:ffffc90000373e00 EFLAGS: 00010203
+RAX: 0000000000000000 RBX: ffff888072952900 RCX: ffff888072952935
+RDX: ffff888072952934 RSI: ffff888072952928 RDI: 0000000000000000
+RBP: ffff8880729529b5 R08: fffffffffffffe60 R09: ffff888037180fc0
+R10: 0000000000000000 R11: 00000000ff6d59b3 R12: ffff8880729529f0
+R13: ffff888072952928 R14: ffff888072952934 R15: ffff8880729529b5
+FS:  00007f543f339500(0000) GS:ffff88807d200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffffffffff0 CR3: 000000007a09e000 CR4: 00000000000006e0
+Call Trace:
+ update_iter+0x189/0x1e0
+ s_next+0x1f/0x30
+ seq_read+0x238/0x420
+ proc_reg_read+0x56/0x70
+ vfs_read+0xb7/0x1c0
+ ksys_read+0xa7/0xe0
+ do_syscall_64+0x33/0x80
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7f543ee621a1
+Code: fe ff ff 48 8d 3d 67 a1 09 00 48 83 ec 08 e8 e6 03 02 00 66 0f 1f 44 00 00 8b 05 0a d2 2c 00 48 63 ff 85 c0 75 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 57 f3 c3 0f9
+RSP: 002b:00007ffd9b8691d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f543ee621a1
+RDX: 0000000000020000 RSI: 00007f543f196000 RDI: 0000000000000003
+RBP: 0000000000020000 R08: ffffffffffffffff R09: 0000000000000000
+R10: 000000000000089f R11: 0000000000000246 R12: 00007f543f196000
+R13: 0000000000000003 R14: 0000000000000fe3 R15: 0000000000020000
+Modules linked in: af_packet iscsi_ibft iscsi_boot_sysfs rfkill ppdev bochs_drm drm_vram_helper drm_ttm_helper ttm drm_kms_helper joydev i2c_piix4 drm pcspkr parport_]
+CR2: fffffffffffffff0
+---[ end trace 2ad43a0bbf68c2e2 ]---
+RIP: 0010:ftrace_mod_get_kallsym+0xd4/0x150
+Code: 40 38 39 f8 0f 87 7b ff ff ff eb e1 0f 0b 4c 8b 0d 21 95 0d 01 b8 de ff ff ff 49 81 f9 80 6d 29 82 4d 8d 81 60 fe ff ff 74 2e <49> 8b 80 90 01 00 00 48 85 c0 740
+RSP: 0018:ffffc90000373e00 EFLAGS: 00010203
+RAX: 0000000000000000 RBX: ffff888072952900 RCX: ffff888072952935
+RDX: ffff888072952934 RSI: ffff888072952928 RDI: 0000000000000000
+RBP: ffff8880729529b5 R08: fffffffffffffe60 R09: ffff888037180fc0
+R10: 0000000000000000 R11: 00000000ff6d59b3 R12: ffff8880729529f0
+R13: ffff888072952928 R14: ffff888072952934 R15: ffff8880729529b5
+FS:  00007f543f339500(0000) GS:ffff88807d200000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffffffffff0 CR3: 000000007a09e000 CR4: 00000000000006e0
+note: cat[2430] exited with preempt_count 1
+BUG: sleeping function called from invalid context at ./include/linux/percpu-rwsem.h:49
+in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 2430, name: cat
+INFO: lockdep is turned off.
+irq event stamp: 530598
+hardirqs last  enabled at (530597): [<ffffffff819c9a10>] syscall_enter_from_user_mode+0x20/0x250
+hardirqs last disabled at (530598): [<ffffffff819c9ebd>] irqentry_enter+0x1d/0x50
+softirqs last  enabled at (522266): [<ffffffff81c00343>] __do_softirq+0x343/0x463
+softirqs last disabled at (522259): [<ffffffff81a010d2>] asm_call_on_stack+0x12/0x20
+CPU: 1 PID: 2430 Comm: cat Tainted: G      D    O  K   5.9.0-rc2-dirty #44
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.13.0-48-gd9c812d-rebuilt.opensuse.org 04/01/2014
+Call Trace:
+ dump_stack+0x96/0xdb
+ ___might_sleep+0x16c/0x260
+ exit_signals+0x30/0x2f0
+ do_exit+0xd4/0xc50
+ ? ksys_read+0xa7/0xe0
+ rewind_stack_do_exit+0x17/0x20
+RIP: 0033:0x7f543ee621a1
+Code: fe ff ff 48 8d 3d 67 a1 09 00 48 83 ec 08 e8 e6 03 02 00 66 0f 1f 44 00 00 8b 05 0a d2 2c 00 48 63 ff 85 c0 75 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 57 f3 c3 0f9
+RSP: 002b:00007ffd9b8691d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007f543ee621a1
+RDX: 0000000000020000 RSI: 00007f543f196000 RDI: 0000000000000003
+RBP: 0000000000020000 R08: ffffffffffffffff R09: 0000000000000000
+R10: 000000000000089f R11: 0000000000000246 R12: 00007f543f196000
+R13: 0000000000000003 R14: 0000000000000fe3 R15: 0000000000020000
 
 
