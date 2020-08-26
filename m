@@ -2,319 +2,128 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68F8C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FDBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E48A20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:08:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y2aaM3VT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IBdG0MXZ"
+	by mail.kernel.org (Postfix) with ESMTP id C074E20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598443720;
+	bh=LtLkAShyIGY4PhKwW6il8v3zv5EU8NYcrikGnC+ntT8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=t0+8GG9ZSoaoLb92NUuxkL7tlpQRHFhiOLmUe2DBUoXN6QioHENAjBH6NDX2xC5gR
+	 YrSO7EBZc8ANETIPaS2JKskUknudcW51MgpklqVE14Np6SIYGesSvCoox3b1IHvTFS
+	 eElDDLw5bZ4kVfkWwzSSmkkGR48Lw9VNNnBczFd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbgHZMI0 (ORCPT
+        id S1729785AbgHZMIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:08:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57868 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729423AbgHZMBx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:01:53 -0400
-Message-Id: <20200826112334.985197056@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598443309;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=BMT6qDj2uBUhNhaXmY2IZfaaybCNXAgFl59YZnlPXcU=;
-        b=y2aaM3VTRpFprInazgsfdsQRk1PfHKEcBEufPY5JCHo6TjB1GrAUgauLTHxn1/0tIDz5pR
-        eR8f7TDSOicZrqu4MAejG2lcgOjnVXjnECCL+ZYRb1FRR6tZLz+otnfi8jTdiWsgPArHGX
-        zyXyHn+KDgPQC5fAwhXvedQ6r3SPMEMBDKykGGhjcVVn4qGlyu5KXtFZDYUrPTO5A/oL6c
-        /6uq8IDJLdA0LntLvunkvoZ0uigb7efs0PL4gQEtfhZDalE9u9hK/gD/vsoWqKTNHBTr/X
-        U9ZHxala/5z4vdwP0/i8KfmT2rVid9ujlG1443MP7tN5TUNuCd1i9Dt5OwbwTQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598443309;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:  references:references;
-        bh=BMT6qDj2uBUhNhaXmY2IZfaaybCNXAgFl59YZnlPXcU=;
-        b=IBdG0MXZRHj29jEIQrBByxhhiaBZGuqn44GRIBBkrL+TghYScK/n1yTADhJ7BzfxO+eqUc
-        VJL3h52GlMGsf8AQ==
-Date:   Wed, 26 Aug 2020 13:17:12 +0200
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jon Derrick <jonathan.derrick@intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dimitri Sivanich <sivanich@hpe.com>,
-        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Megha Dey <megha.dey@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Baolu Lu <baolu.lu@intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [patch V2 44/46] platform-msi: Add device MSI infrastructure
-References: <20200826111628.794979401@linutronix.de>
+        Wed, 26 Aug 2020 08:08:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729789AbgHZMIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:08:30 -0400
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6970E2087D;
+        Wed, 26 Aug 2020 12:08:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598443709;
+        bh=LtLkAShyIGY4PhKwW6il8v3zv5EU8NYcrikGnC+ntT8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EKwiHOBEcwfHi77g0MzNXWtK1Ubhlp/WdnhtS9QSltgfUUVtCqPX+wWO7UTLIcPcF
+         iwrC9pggBzskvCXX0z7cnUC33cQExDdltwfXMKKx+VHp/xP88/JiG+qLhrNinKTR1L
+         0Kev3G/OZaHrJhJALb3DZAPUCuh3SLHyULX+LNNc=
+Received: by mail-oi1-f170.google.com with SMTP id v13so1258592oiv.13;
+        Wed, 26 Aug 2020 05:08:29 -0700 (PDT)
+X-Gm-Message-State: AOAM531ieJPET8RF0oRAA9Wni6w2msMK1zSbsNdVjKqqW1DNW06IqeZe
+        50R0CZux2jBQyuVGj+5oGu1ehGSILgndM28EG3o=
+X-Google-Smtp-Source: ABdhPJzzPq7S2H5rVGigyuue4pj1WV/eBXdUGRHi6dgNXRlZ8nZgWnELoCz7uNsTVW4mTpQmfHxfC71nLK9ZQYuGbc8=
+X-Received: by 2002:aca:d8c5:: with SMTP id p188mr3452457oig.47.1598443708834;
+ Wed, 26 Aug 2020 05:08:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-transfer-encoding: 8-bit
+References: <20200826004607.7483-1-jlee@suse.com>
+In-Reply-To: <20200826004607.7483-1-jlee@suse.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 26 Aug 2020 14:08:18 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHAmUVPs=P5ptb3J95+4epP5fQXkBZ_+vLP8xfxri8VBw@mail.gmail.com>
+Message-ID: <CAMj1kXHAmUVPs=P5ptb3J95+4epP5fQXkBZ_+vLP8xfxri8VBw@mail.gmail.com>
+Subject: Re: [PATCH v2] efi/efivars: Create efivars mount point via efivars abstraction
+To:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Lee, Chun-Yi" <jlee@suse.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Fabian Vogt <fvogt@suse.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On Wed, 26 Aug 2020 at 02:46, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
+>
+> This patch creates efivars mount point when active efivars abstraction
+> be set. It is useful for userland to determine the availability of efivars
+> filesystem.
+>
+> Cc: Matthias Brugger <mbrugger@suse.com>
+> Cc: Fabian Vogt <fvogt@suse.com>
+> Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
 
-Add device specific MSI domain infrastructure for devices which have their
-own resource management and interrupt chip. These devices are not related
-to PCI and contrary to platform MSI they do not share a common resource and
-interrupt chip. They provide their own domain specific resource management
-and interrupt chip.
+Apologies for not bringing this up before: while the patch seems fine,
+I wonder if we really need this if the purpose is to decide whether
+efivars is available or not. We already have the 'efivars' platform
+device for this, and so userland can simply check for the existence of
 
-This utilizes the new alloc/free override in a non evil way which avoids
-having yet another set of specialized alloc/free functions. Just using
-msi_domain_alloc/free_irqs() is sufficient
+/sys/devices/platform/efivars.0
 
-While initially it was suggested and tried to piggyback device MSI on
-platform MSI, the better variant is to reimplement platform MSI on top of
-device MSI.
+and so we don't need to make any changes for this.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
----
- drivers/base/platform-msi.c |  131 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/irqdomain.h   |    1 
- include/linux/msi.h         |   24 ++++++++
- kernel/irq/Kconfig          |    4 +
- 4 files changed, 160 insertions(+)
 
---- a/drivers/base/platform-msi.c
-+++ b/drivers/base/platform-msi.c
-@@ -412,3 +412,134 @@ int platform_msi_domain_alloc(struct irq
- 
- 	return err;
- }
-+
-+#ifdef CONFIG_DEVICE_MSI
-+/*
-+ * Device specific MSI domain infrastructure for devices which have their
-+ * own resource management and interrupt chip. These devices are not
-+ * related to PCI and contrary to platform MSI they do not share a common
-+ * resource and interrupt chip. They provide their own domain specific
-+ * resource management and interrupt chip.
-+ */
-+
-+static void device_msi_free_msi_entries(struct device *dev)
-+{
-+	struct list_head *msi_list = dev_to_msi_list(dev);
-+	struct msi_desc *entry, *tmp;
-+
-+	list_for_each_entry_safe(entry, tmp, msi_list, list) {
-+		list_del(&entry->list);
-+		free_msi_entry(entry);
-+	}
-+}
-+
-+/**
-+ * device_msi_free_irqs - Free MSI interrupts assigned to  a device
-+ * @dev:	Pointer to the device
-+ *
-+ * Frees the interrupt and the MSI descriptors.
-+ */
-+static void device_msi_free_irqs(struct irq_domain *domain, struct device *dev)
-+{
-+	__msi_domain_free_irqs(domain, dev);
-+	device_msi_free_msi_entries(dev);
-+}
-+
-+/**
-+ * device_msi_alloc_irqs - Allocate MSI interrupts for a device
-+ * @dev:	Pointer to the device
-+ * @nvec:	Number of vectors
-+ *
-+ * Allocates the required number of MSI descriptors and the corresponding
-+ * interrupt descriptors.
-+ */
-+static int device_msi_alloc_irqs(struct irq_domain *domain, struct device *dev, int nvec)
-+{
-+	int i, ret = -ENOMEM;
-+
-+	for (i = 0; i < nvec; i++) {
-+		struct msi_desc *entry = alloc_msi_entry(dev, 1, NULL);
-+
-+		if (!entry)
-+			goto fail;
-+		list_add_tail(&entry->list, dev_to_msi_list(dev));
-+	}
-+
-+	ret = __msi_domain_alloc_irqs(domain, dev, nvec);
-+	if (!ret)
-+		return 0;
-+fail:
-+	device_msi_free_msi_entries(dev);
-+	return ret;
-+}
-+
-+static void device_msi_update_dom_ops(struct msi_domain_info *info)
-+{
-+	if (!info->ops->domain_alloc_irqs)
-+		info->ops->domain_alloc_irqs = device_msi_alloc_irqs;
-+	if (!info->ops->domain_free_irqs)
-+		info->ops->domain_free_irqs = device_msi_free_irqs;
-+	if (!info->ops->msi_prepare)
-+		info->ops->msi_prepare = arch_msi_prepare;
-+}
-+
-+/**
-+ * device_msi_create_msi_irq_domain - Create an irq domain for devices
-+ * @fwnode:	Firmware node of the interrupt controller
-+ * @info:	MSI domain info to configure the new domain
-+ * @parent:	Parent domain
-+ */
-+struct irq_domain *device_msi_create_irq_domain(struct fwnode_handle *fn,
-+						struct msi_domain_info *info,
-+						struct irq_domain *parent)
-+{
-+	struct irq_domain *domain;
-+
-+	if (info->flags & MSI_FLAG_USE_DEF_CHIP_OPS)
-+		platform_msi_update_chip_ops(info);
-+
-+	if (info->flags & MSI_FLAG_USE_DEF_DOM_OPS)
-+		device_msi_update_dom_ops(info);
-+
-+	msi_domain_set_default_info_flags(info);
-+
-+	domain = msi_create_irq_domain(fn, info, parent);
-+	if (domain)
-+		irq_domain_update_bus_token(domain, DOMAIN_BUS_DEVICE_MSI);
-+	return domain;
-+}
-+
-+#ifdef CONFIG_PCI
-+#include <linux/pci.h>
-+
-+/**
-+ * pci_subdevice_msi_create_irq_domain - Create an irq domain for subdevices
-+ * @pdev:	Pointer to PCI device for which the subdevice domain is created
-+ * @info:	MSI domain info to configure the new domain
-+ */
-+struct irq_domain *pci_subdevice_msi_create_irq_domain(struct pci_dev *pdev,
-+						       struct msi_domain_info *info)
-+{
-+	struct irq_domain *domain, *pdev_msi;
-+	struct fwnode_handle *fn;
-+
-+	/*
-+	 * Retrieve the MSI domain of the underlying PCI device's MSI
-+	 * domain. The PCI device domain's parent domain is also the parent
-+	 * domain of the new subdevice domain.
-+	 */
-+	pdev_msi = dev_get_msi_domain(&pdev->dev);
-+	if (!pdev_msi)
-+		return NULL;
-+
-+	fn = irq_domain_alloc_named_fwnode(dev_name(&pdev->dev));
-+	if (!fn)
-+		return NULL;
-+	domain = device_msi_create_irq_domain(fn, info, pdev_msi->parent);
-+	if (!domain)
-+		irq_domain_free_fwnode(fn);
-+	return domain;
-+}
-+EXPORT_SYMBOL_GPL(pci_subdevice_msi_create_irq_domain);
-+#endif /* CONFIG_PCI */
-+#endif /* CONFIG_DEVICE_MSI */
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -85,6 +85,7 @@ enum irq_domain_bus_token {
- 	DOMAIN_BUS_TI_SCI_INTA_MSI,
- 	DOMAIN_BUS_WAKEUP,
- 	DOMAIN_BUS_VMD_MSI,
-+	DOMAIN_BUS_DEVICE_MSI,
- };
- 
- /**
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -56,6 +56,18 @@ struct ti_sci_inta_msi_desc {
- };
- 
- /**
-+ * device_msi_desc - Device MSI specific MSI descriptor data
-+ * @priv:		Pointer to device specific private data
-+ * @priv_iomem:		Pointer to device specific private io memory
-+ * @hwirq:		The hardware irq number in the device domain
-+ */
-+struct device_msi_desc {
-+	void		*priv;
-+	void __iomem	*priv_iomem;
-+	u16		hwirq;
-+};
-+
-+/**
-  * struct msi_desc - Descriptor structure for MSI based interrupts
-  * @list:	List head for management
-  * @irq:	The base interrupt number
-@@ -127,6 +139,7 @@ struct msi_desc {
- 		struct platform_msi_desc platform;
- 		struct fsl_mc_msi_desc fsl_mc;
- 		struct ti_sci_inta_msi_desc inta;
-+		struct device_msi_desc device_msi;
- 	};
- };
- 
-@@ -413,6 +426,17 @@ void *platform_msi_get_host_data(struct
- void msi_domain_set_default_info_flags(struct msi_domain_info *info);
- #endif /* CONFIG_GENERIC_MSI_IRQ_DOMAIN */
- 
-+#ifdef CONFIG_DEVICE_MSI
-+struct irq_domain *device_msi_create_irq_domain(struct fwnode_handle *fn,
-+						struct msi_domain_info *info,
-+						struct irq_domain *parent);
-+
-+# ifdef CONFIG_PCI
-+struct irq_domain *pci_subdevice_msi_create_irq_domain(struct pci_dev *pdev,
-+						       struct msi_domain_info *info);
-+# endif
-+#endif /* CONFIG_DEVICE_MSI */
-+
- #ifdef CONFIG_PCI_MSI_IRQ_DOMAIN
- void pci_msi_domain_write_msg(struct irq_data *irq_data, struct msi_msg *msg);
- struct irq_domain *pci_msi_create_irq_domain(struct fwnode_handle *fwnode,
---- a/kernel/irq/Kconfig
-+++ b/kernel/irq/Kconfig
-@@ -93,6 +93,10 @@ config GENERIC_MSI_IRQ_DOMAIN
- 	select IRQ_DOMAIN_HIERARCHY
- 	select GENERIC_MSI_IRQ
- 
-+config DEVICE_MSI
-+	bool
-+	select GENERIC_MSI_IRQ_DOMAIN
-+
- config IRQ_MSI_IOMMU
- 	bool
- 
-
+> ---
+>
+> v2:
+> Using efivars_kobject() helper instead of checking GetVariable or
+> GetNextVariable EFI runtime services. Because the efivarfs code could be
+> instantiated using a different efivars abstraction.
+>
+>  drivers/firmware/efi/efi.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 3aa07c3b5136..db483fc68501 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -405,11 +405,13 @@ static int __init efisubsys_init(void)
+>         if (error)
+>                 goto err_remove_group;
+>
+> -       /* and the standard mountpoint for efivarfs */
+> -       error = sysfs_create_mount_point(efi_kobj, "efivars");
+> -       if (error) {
+> -               pr_err("efivars: Subsystem registration failed.\n");
+> -               goto err_remove_group;
+> +       if (efivars_kobject()) {
+> +               /* and the standard mountpoint for efivarfs */
+> +               error = sysfs_create_mount_point(efi_kobj, "efivars");
+> +               if (error) {
+> +                       pr_err("efivars: Subsystem registration failed.\n");
+> +                       goto err_remove_group;
+> +               }
+>         }
+>
+>         if (efi_enabled(EFI_DBG) && efi_enabled(EFI_PRESERVE_BS_REGIONS))
+> --
+> 2.16.4
+>
