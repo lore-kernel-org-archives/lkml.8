@@ -2,156 +2,58 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41880C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC4EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19B5D206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598424415;
-	bh=hVffajsF2+XdKaXPf34BPboBIlD4e9nfaQNS/KKUDNU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mWdSwZzlFWsSid++OSH2VwrkP5wx99rTOsk5Ps65nhPmEjka8PpB/fKpFEaroWiBE
-	 /EFk+PlTbwCv/QyqdT7h9lbhZ4fprs9V2oPnJZrlN/PFdNsc+mi/K9vSexHpLGz0Jk
-	 tRLtH48XUtcRpJUiLbVnjQUyvKejt1uK+Do4VuBw=
+	by mail.kernel.org (Postfix) with ESMTP id 92458206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHZGqw convert rfc822-to-8bit (ORCPT
+        id S1726790AbgHZGsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:46:52 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37673 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726014AbgHZGqv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:46:51 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x9so618599wmi.2;
-        Tue, 25 Aug 2020 23:46:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=woDwpwEGnSTSc4kljToA4r5StN2rkeplc2dBRDufFZA=;
-        b=axwIzwdJXwjZsXIrMW6pOdz/Fl6s46kYixkoGoQQN/7r9Q/vxadPrX3i+bebYsbCiu
-         F4qZsZvN95U99837oYJKDflwgzafkp8BGFvkifvpW9oEhMLE333cpq/DJ6shNJJfSU5K
-         fnmuUSViSObLp0Ewaib3nIfSmb8PtCnnfdI5BujC6YtDd+HCiTYKVXGRsyhEHO+jm7pY
-         zQmoJVHnBmZRFKyutbDAAbYCLy1mkWk3CT00a6x0Cu1r3oCwcCfSknTc66vPeMBdwA5U
-         nLq76H0aID+17EaVGxsDpqxCaKdydyCQWRbilU7I08vj/SVRvwa1e2WoBzJMws98UpK1
-         2LPQ==
-X-Gm-Message-State: AOAM531ug6AshDEqLNSwI/selChhVUmSRNzRglZTYEfaWpy+w8gqY/Fn
-        x7ybN70ny7ur9SgYvotdq0ZJbNX2crg=
-X-Google-Smtp-Source: ABdhPJwwnq5+FT5AJu3knzHTD/+s17qG77/RpFqNYzEjYg24N/OVflA007W8XbHJWMrOxuCfflZj9Q==
-X-Received: by 2002:a7b:cf13:: with SMTP id l19mr5238783wmg.115.1598424408857;
-        Tue, 25 Aug 2020 23:46:48 -0700 (PDT)
-Received: from pi3 ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id g17sm3402102wrr.28.2020.08.25.23.46.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 23:46:48 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 08:46:45 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Lukasz Stelmach <l.stelmach@samsung.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, m.szyprowski@samsung.com,
-        b.zolnierkie@samsung.com
-Subject: Re: [PATCH 3/3] ARM: defconfig: Enable ax88796c driver
-Message-ID: <20200826064645.GA12103@pi3>
-References: <20200825185152.GC2693@kozik-lap>
- <CGME20200826051134eucas1p23a1c91b2179678eecc5dd5eeb2d0e4c9@eucas1p2.samsung.com>
- <dleftjk0xmuh3d.fsf%l.stelmach@samsung.com>
+        Wed, 26 Aug 2020 02:48:18 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49662 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726152AbgHZGsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 02:48:18 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EED8939BD2D5B9716034;
+        Wed, 26 Aug 2020 14:48:11 +0800 (CST)
+Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 26 Aug
+ 2020 14:48:06 +0800
+Subject: Re: [PATCH v2 5/5] f2fs: support age threshold based garbage
+ collection
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200804131449.50517-1-yuchao0@huawei.com>
+ <20200804131449.50517-6-yuchao0@huawei.com>
+ <20200825193404.GA2614120@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <cfee98ee-382f-7bf2-4a99-d1ac2d6a3b0c@huawei.com>
+Date:   Wed, 26 Aug 2020 14:48:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <dleftjk0xmuh3d.fsf%l.stelmach@samsung.com>
+In-Reply-To: <20200825193404.GA2614120@google.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.136.114.67]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 07:11:18AM +0200, Lukasz Stelmach wrote:
-> It was <2020-08-25 wto 20:51>, when Krzysztof Kozlowski wrote:
-> > On Tue, Aug 25, 2020 at 07:03:11PM +0200, Łukasz Stelmach wrote:
-> >> Enable ax88796c driver for the ethernet chip on Exynos3250-based
-> >> ARTIK5 boards.
-> >> 
-> >> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
-> >> ---
-> >>  arch/arm/configs/exynos_defconfig   | 2 ++
-> >>  arch/arm/configs/multi_v7_defconfig | 2 ++
-> >>  2 files changed, 4 insertions(+)
-> >> 
-> >> Please DO NOT merge before these two
-> >
-> > Sure, it can wait but shouldn't actually DT wait? It's only defconfig so
-> > it does not change anything except automated systems booting these
-> > defconfigs... The boards might be broken by DT.
+Thanks, Jaegeuk, :)
+
+On 2020/8/26 3:34, Jaegeuk Kim wrote:
+> Hi Chao,
 > 
-> I was told, to ask for deferred merge of defconfig and it makes sense to
-> me. DT won't break anything if the driver isn't compiled. However, I can
-> see that you have a word you may decide about DT too. My point is to
-> wait until spi-s3c64xx patches are merged and not to break ARTIK5
-> boards.
-
-The config is chosen and adjusted by each person, during build. Merging
-defconfig does not necessarily affect them. However merging DT affects -
-you cannot disable it without source code modification.
-
-Anyway, no problem for me with waiting with defconfig.
-
-Best regards,
-Krzysztof
-
-
-> 
-> >> 
-> >>   https://lore.kernel.org/lkml/20200821161401.11307-2-l.stelmach@samsung.com/
-> >>   https://lore.kernel.org/lkml/20200821161401.11307-3-l.stelmach@samsung.com/
-> >> 
-> >> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-> >> index 6e8b5ff0859c..82480b2bf545 100644
-> >> --- a/arch/arm/configs/exynos_defconfig
-> >> +++ b/arch/arm/configs/exynos_defconfig
-> >> @@ -107,6 +107,8 @@ CONFIG_MD=y
-> >>  CONFIG_BLK_DEV_DM=y
-> >>  CONFIG_DM_CRYPT=m
-> >>  CONFIG_NETDEVICES=y
-> >> +CONFIG_NET_VENDOR_ASIX=y
-> >> +CONFIG_SPI_AX88796C=y
-> >>  CONFIG_SMSC911X=y
-> >>  CONFIG_USB_RTL8150=m
-> >>  CONFIG_USB_RTL8152=y
-> >> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> >> index e9e76e32f10f..a8b4e95d4148 100644
-> >> --- a/arch/arm/configs/multi_v7_defconfig
-> >> +++ b/arch/arm/configs/multi_v7_defconfig
-> >> @@ -241,6 +241,8 @@ CONFIG_SATA_HIGHBANK=y
-> >>  CONFIG_SATA_MV=y
-> >>  CONFIG_SATA_RCAR=y
-> >>  CONFIG_NETDEVICES=y
-> >> +CONFIG_NET_VENDOR_ASIX=y
-> >> +CONFIG_SPI_AX88796C=m
-> >>  CONFIG_VIRTIO_NET=y
-> >>  CONFIG_B53_SPI_DRIVER=m
-> >>  CONFIG_B53_MDIO_DRIVER=m
-> >> -- 
-> >> 2.26.2
-> >> 
-> >
-> >
-> 
-> -- 
-> Łukasz Stelmach
-> Samsung R&D Institute Poland
-> Samsung Electronics
-
-
+> I modified directly like below which makes fsck complain wrong free segment
+> number.
