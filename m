@@ -2,167 +2,225 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0264C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C63B3206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:15:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=vanguardiasur-com-ar.20150623.gappssmtp.com header.i=@vanguardiasur-com-ar.20150623.gappssmtp.com header.b="ukqxvLek"
+	by mail.kernel.org (Postfix) with ESMTP id F05B3207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 04:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598415394;
+	bh=9mwZBrs2Apei4nVXemBIp81fg2KqLJnfuW4TFPpznb0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=d8vOCkClxAJKl3ZPzkMw0RekOtCvLi2BnQiYrk/+t9n+nehM51hRETzNOSGHAd5eV
+	 /fwEdGYWEQJuQs00ld4jli6gGdcjnTwbaSoe8hgMV1hSlBX8Fkv/ag9cr5qR/tg+QT
+	 TZ+O/9OUp9lH1uwdNKdtWDB9S7a2o593/4jrYahU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725980AbgHZEP2 (ORCPT
+        id S1726190AbgHZEQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 00:15:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbgHZEPZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 00:15:25 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13099C061756
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 21:15:25 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id j25so947134ejk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 21:15:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vanguardiasur-com-ar.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QY6Ljmh2HXSSryC0p9M8nVGRSf9FH/y8FKhduU/dGHc=;
-        b=ukqxvLek6Rh9EePhBgW6aHIfsWaXbpGPJVxjvwjQoc1UpjqQfbRWdjd1Di/NrmBs9V
-         uMMYpdVdmrZnpsAC15Et463umxUcrFLQfwOJYkKs1teWoy3jMgb4WPxOhHY3+Tsx2U7n
-         VAGY5d8iHraduuSrATiE5WN43eDP6GB1aIKH/w+BucM8S4or7eOq9islch5fTcwID0yI
-         /1G/yLDyVue7PGWBzzi5UeWeR6m7L7SqbvERg40QJm01hRvuBHvDdoUtPTeG6enXdcad
-         bLNBFytPl47lj19wukyxMYpcMSCKt1e1X7ZYwraGcNg/FiSFDiA+lrudZdnnVVPwY4ah
-         nV2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QY6Ljmh2HXSSryC0p9M8nVGRSf9FH/y8FKhduU/dGHc=;
-        b=c3+x0J0vSWSVOMCrLH3P8f1IWruG+SHZYrM82W5IVbspfjmB586l7qKS/eEZ7GtIpH
-         uvxYlUyPHoiB7pti7zUaEae/U0O5bHkpipJfdPxEE/5Mxnia6Ly7SdUBFwZJVbd5K1Ow
-         MYnmrRUnvavmHwSWIXoCAsoFjK8r4urQNiDusRbe4qdh2MXGTk89NfjV2OFjAwBS17uV
-         kYXkJhVcSwEX7CPdfLjAKpQCPmT+TXqd6h90NtUNYha9uVh8fvli/QL2yPzfeLIT7k1c
-         ZqJ1m9sdLgq9sFoJgBAniY/85iKflIBRToCbH/iZu/NQ7sDVxEI08pI5Zrmd+w+1Zr54
-         lIKw==
-X-Gm-Message-State: AOAM532kGf/jyuwb7+qZNozTVJ7XzFsMOt0s3VnH5DE9Xn4f+4IyJ1oe
-        vIC/ko43IFAwJr81Kzwz7b4HY84hXK31tyls+UW5Zg==
-X-Google-Smtp-Source: ABdhPJyA8btFePNGsr5nV+ALqcQpJ9fj6erIwGjpRlDloWAH9ll3j6ubw2BSiKuJ9kDS4azvi+6cIg69pIPOmt+RT/k=
-X-Received: by 2002:a17:906:a209:: with SMTP id r9mr14533660ejy.413.1598415323684;
- Tue, 25 Aug 2020 21:15:23 -0700 (PDT)
+        Wed, 26 Aug 2020 00:16:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725294AbgHZEQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 00:16:32 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48B9920707;
+        Wed, 26 Aug 2020 04:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598415391;
+        bh=9mwZBrs2Apei4nVXemBIp81fg2KqLJnfuW4TFPpznb0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CYIOC1oKVD8HwmrvQzY8jzONbJZQ/nz7DmztHCjJyBfo8PNv4YyBcSBTBTZ956P7I
+         fgm4gH8D6QvQyUSRJw/A+dMQoJ966IeMM7B1xpnKwnsPlhgnpXFaTQF/f/tfEQZujb
+         w8kKjDUpMgg5uUEjq5DatJM4UNgDjSWadiHB3l6Y=
+Date:   Wed, 26 Aug 2020 06:16:26 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Josh Cartwright <joshc@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: convert spmi.txt to spmi.yaml
+Message-ID: <20200826061150.3eb96ab3@coco.lan>
+In-Reply-To: <20200819230812.GB2090217@bogus>
+References: <94b055687143c9593cd4311f8bcda99a743a619f.1597850327.git.mchehab+huawei@kernel.org>
+        <20200819230812.GB2090217@bogus>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200825145556.637323-1-gnurou@gmail.com> <20200825145556.637323-3-gnurou@gmail.com>
-In-Reply-To: <20200825145556.637323-3-gnurou@gmail.com>
-From:   Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Date:   Wed, 26 Aug 2020 01:15:12 -0300
-Message-ID: <CAAEAJfD1kUJODa+-STV6Q+=9qWH8v2=KZzAA4ppgfbQxstO+Mg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] media: v4l2-mem2mem: simplify poll logic a bit
-To:     Alexandre Courbot <gnurou@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
+Em Wed, 19 Aug 2020 17:08:12 -0600
+Rob Herring <robh@kernel.org> escreveu:
 
-On Tue, 25 Aug 2020 at 11:56, Alexandre Courbot <gnurou@gmail.com> wrote:
->
-> Factorize redundant checks into a single code block, remove the early
-> return, and declare variables in their innermost block. Hopefully this
-> makes this code a little bit easier to follow.
->
+> Need to also define 'reg' constraints as defined by the bus:
+> 
+> properties:
+>   reg:
+>     minItems: 1
+>     maxItems: 2  #??? Not sure about this. Is it 1 SPMI_USID and 1 \
+> SPMI_GSID entry at most?
 
-This _definitely_ makes the poll handling more readable.
 
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Each child have just one user ID (SPMI_USID). The group ID (SPMI_GSID) is an 
+optional feature. From what I know, only one group ID is allowed at most.
+So, maxItems: 2 makes sense.
 
-See below a nitpick.
 
-> Signed-off-by: Alexandre Courbot <gnurou@gmail.com>
-> ---
->  drivers/media/v4l2-core/v4l2-mem2mem.c | 35 +++++++++++---------------
->  1 file changed, 15 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
-> index 0d0192119af20..aeac9707123d0 100644
-> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-> @@ -841,7 +841,6 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
->                                        struct poll_table_struct *wait)
->  {
->         struct vb2_queue *src_q, *dst_q;
-> -       struct vb2_buffer *src_vb = NULL, *dst_vb = NULL;
->         __poll_t rc = 0;
->         unsigned long flags;
->
-> @@ -863,33 +862,29 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
->                 return EPOLLERR;
->
->         spin_lock_irqsave(&src_q->done_lock, flags);
-> -       if (!list_empty(&src_q->done_list))
-> -               src_vb = list_first_entry(&src_q->done_list, struct vb2_buffer,
-> -                                               done_entry);
-> -       if (src_vb && (src_vb->state == VB2_BUF_STATE_DONE
-> -                       || src_vb->state == VB2_BUF_STATE_ERROR))
-> -               rc |= EPOLLOUT | EPOLLWRNORM;
-> +       if (!list_empty(&src_q->done_list)) {
-> +               struct vb2_buffer *src_vb = list_first_entry(
-> +                       &src_q->done_list, struct vb2_buffer, done_entry);
-> +               if (src_vb->state == VB2_BUF_STATE_DONE ||
-> +                   src_vb->state == VB2_BUF_STATE_ERROR)
-> +                       rc |= EPOLLOUT | EPOLLWRNORM;
-> +       }
->         spin_unlock_irqrestore(&src_q->done_lock, flags);
->
->         spin_lock_irqsave(&dst_q->done_lock, flags);
-> -       if (list_empty(&dst_q->done_list)) {
-> +       if (!list_empty(&dst_q->done_list)) {
-> +               struct vb2_buffer *dst_vb = list_first_entry(
-> +                       &dst_q->done_list, struct vb2_buffer, done_entry);
-> +               if (dst_vb->state == VB2_BUF_STATE_DONE ||
-> +                   dst_vb->state == VB2_BUF_STATE_ERROR)
-> +                       rc |= EPOLLIN | EPOLLRDNORM;
-> +       } else if (dst_q->last_buffer_dequeued) {
->                 /*
->                  * If the last buffer was dequeued from the capture queue,
->                  * return immediately. DQBUF will return -EPIPE.
->                  */
+>     items:
+>       items:
+>         - minimum: 0
+>           maximum: 0xf
+>         - enum: [ 0, 1 ]
 
-The part about "returning immediately" doesn't make
-much sense now. Could we rephrase this, keeping the -EPIPE
-comment?
+If I use both maxItems:2 and the above, the example produces the following
+error:
+
+	/devel/v4l/temp/Documentation/devicetree/bindings/spmi/spmi.example.dt.yaml: spmi@0: child@7:reg: Additional items are not allowed ([3, 1] was unexpected)
+
+(full DT file enclosed)
+
+This seems to be some bug at the parsing logic, which seems to be refusing
+to accept both "items" and "maxItems".
+
+-
+
+That's said, looking at the code[1], only SPMI_USID is currently supported:
+
+		err = of_property_read_u32_array(node, "reg", reg, 2);
+		if (err) {
+			dev_err(&ctrl->dev,
+				"node %pOF err (%d) does not have 'reg' property\n",
+				node, err);
+			continue;
+		}
+
+		if (reg[1] != SPMI_USID) {
+			dev_err(&ctrl->dev,
+				"node %pOF contains unsupported 'reg' entry\n",
+				node);
+			continue;
+		}
+
+		if (reg[0] >= SPMI_MAX_SLAVE_ID) {
+			dev_err(&ctrl->dev, "invalid usid on node %pOF\n", node);
+			continue;
+		}
+
+So, for now, using SPMI_GSID will fail.
+
+[1] drivers/spmi/spmi.c
+
+So, I'm inclined to define reg property as:
+
+    properties:
+      reg:
+        minItems: 1
+        maxItems: 2
+        items:
+          - minimum: 0
+            maximum: 0xf
+          - enum: [ 0 ]
+            description: |
+              0 means user ID address. 1 is reserved for group ID address.
+
+And drop the group ID from the example. I'll send such version as a
+second version of this patch.
 
 Thanks,
-Ezequiel
+Mauro
 
-> -               if (dst_q->last_buffer_dequeued) {
-> -                       spin_unlock_irqrestore(&dst_q->done_lock, flags);
-> -                       rc |= EPOLLIN | EPOLLRDNORM;
-> -                       return rc;
-> -               }
-> -       }
-> -
-> -       if (!list_empty(&dst_q->done_list))
-> -               dst_vb = list_first_entry(&dst_q->done_list, struct vb2_buffer,
-> -                                               done_entry);
-> -       if (dst_vb && (dst_vb->state == VB2_BUF_STATE_DONE
-> -                       || dst_vb->state == VB2_BUF_STATE_ERROR))
->                 rc |= EPOLLIN | EPOLLRDNORM;
-> +       }
->         spin_unlock_irqrestore(&dst_q->done_lock, flags);
->
->         return rc;
-> --
-> 2.28.0
->
+
+# SPDX-License-Identifier: GPL-2.0
+%YAML 1.2
+---
+$id: http://devicetree.org/schemas/spmi/spmi.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
+
+title: System Power Management Interface (SPMI) Controller
+
+maintainers:
+  - Josh Cartwright <joshc@codeaurora.org>
+
+description: |
+  The System Power Management (SPMI) controller is a 2-wire bus defined
+  by the MIPI Alliance for power management control to be used on SoC designs.
+
+  SPMI controllers are modelled in device tree using a generic set of
+  bindings defined here, plus any bus controller specific properties, if
+  needed.
+
+  Each SPMI controller has zero or more child nodes (up to 16 ones), each
+  one representing an unique slave at the bus.
+
+properties:
+  $nodename:
+    pattern: "spmi@.*"
+
+  reg:
+    maxItems: 1
+
+  "#address-cells":
+    const: 2
+
+  "#size-cells":
+    const: 0
+
+patternProperties:
+  ".*@([0-9]|1[0-5])$":
+    description: up to 16 child PMIC nodes
+    type: object
+
+    properties:
+      reg:
+        minItems: 1
+        maxItems: 2
+        items:
+          - minimum: 0
+            maximum: 0xf
+          - enum: [ 0, 1 ]
+
+    required:
+      - reg
+
+required:
+  - reg
+
+examples:
+  - |
+    #include <dt-bindings/spmi/spmi.h>
+
+    spmi@0 {
+      reg = <0 0>;
+
+      #address-cells = <2>;
+      #size-cells = <0>;
+
+      child@0 {
+        reg = <0 SPMI_USID>;
+      };
+
+      child@7 {
+        reg = <7 SPMI_USID>,
+              <3 SPMI_GSID>;
+      };
+    };
+
+
+
+
