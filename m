@@ -2,120 +2,115 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B03C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2667420838
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DE7E2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 12:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GDiKgTSH"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cUFP7Oiw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbgHZMRt (ORCPT
+        id S1729810AbgHZMSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 08:17:49 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55630 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729204AbgHZMRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 08:17:48 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598444267; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=r/4qUAmqAI0V7gRbqKrmT3zgfbrjj739xnjXpNtJKmA=;
- b=GDiKgTSHWLx1s+asZxT8GL9dkYuH39hOzz7wP1w1AYNoAQnZCdZmEPhAWjg+adJZEUvR2A8D
- QqZL+gjPCfFKFfVVfCYrjASBeUlZoun7xGNsKTpLStOR1sC/B//zHhHq87HLmaldDZc8mviT
- 4ofeG/+soviVgA8amqiA0rbAKK4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f4652dcf4c0f8ce20da78b3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 12:17:32
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3762FC433A1; Wed, 26 Aug 2020 12:17:31 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5D919C433CA;
-        Wed, 26 Aug 2020 12:17:30 +0000 (UTC)
+        Wed, 26 Aug 2020 08:18:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38074 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729204AbgHZMSJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 08:18:09 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8144C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 05:18:09 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id n23so1272184otq.11
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 05:18:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7/q8ddA2FVVePJulVHbf1w2DVxs+k2gCtz8r5i1ccF8=;
+        b=cUFP7Oiw1nGQBRVAjjWi4uM5zQAqXphiVe5sfmdel3PFSgL2f5Hc7lgzgDy9fc0qhb
+         lJ9N8s3+lCqQAUn1b11KbLv8tr52O0JlPgWbKJUYy+kD4jIS2eOPAIg7iv70NvPAKyg0
+         mcI8hVIPBXs9+1hQduhVWVBpH/OK85kGGuxqTzhalXNZOh0za+2xYHOugfpQ99+eoejT
+         1NIidxHyeH3222oxS7vlk09XfFxD2yzTzij8oaq7TcAhFB9DpoA7VrvK000co/yi5brk
+         yYMF+R5iVgZaFQAp0n52szNbvg1PVtA3osFR/eQCRnRzLywuSVdy+tiTe0lXQ4H89aJd
+         O79g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7/q8ddA2FVVePJulVHbf1w2DVxs+k2gCtz8r5i1ccF8=;
+        b=fxcajWjC7VaLw7lBZNPxBS3i4Z+bY6r0D+sy55DwjtvHCD8slCmZjkoikotONVFAj6
+         wU5LoDGxa/JVPfdoP/VV/w08IiQsgvrUR8MK05f7YbHjxShrHasltBwM2lvilaJrmTLf
+         2ZtRKAwnwccQA7PGL2ZMphbO3rBzegZpX3RaWRqEegf+fchN3J36fHJzVBc/s84U9lAo
+         D2hzenMANkWFubDLmc152QtBHhJOjwQgT8ASqqiry7Uu680OVsf1t/0GcQdjqsFlfly6
+         t4JSQc9Tz+24j1LyatGjMt7c9HMupnG7Gc8qSab49bEUBuc7aGwJSd0gkl++QbK+Tsiu
+         bmRQ==
+X-Gm-Message-State: AOAM530EoGvbyx5ZgNyN2oC7WA+GXJRidHZl1806dbLSiGWk5f4B6uy6
+        DFo0Fzmbx6m5UopibgUFY3rQTg/z5iBUcmx5IayKoQ==
+X-Google-Smtp-Source: ABdhPJwY8yOqgMAG5GbBC8S7wFO7rp5OTMSq8t+9EXlSRQ4LdqzRa+XFWCAY31bpPC+oZnvjdAVdY6DAc7krgBKagCk=
+X-Received: by 2002:a9d:739a:: with SMTP id j26mr10379141otk.17.1598444288848;
+ Wed, 26 Aug 2020 05:18:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 26 Aug 2020 17:47:30 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Douglas Anderson <dianders@chromium.org>
-Cc:     Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] iommu: Add support to filter non-strict/lazy mode based
- on device names
-In-Reply-To: <e3e4da33-a44f-0a07-9e2e-0f806875ab0b@arm.com>
-References: <20200825154249.20011-1-saiprakash.ranjan@codeaurora.org>
- <e3e4da33-a44f-0a07-9e2e-0f806875ab0b@arm.com>
-Message-ID: <d9b1f1b614057d87279c26e13cbbb1f5@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200821123126.3121494-1-elver@google.com>
+In-Reply-To: <20200821123126.3121494-1-elver@google.com>
+From:   Marco Elver <elver@google.com>
+Date:   Wed, 26 Aug 2020 14:17:57 +0200
+Message-ID: <CANpmjNMLL+Xqg0MQrtBMxLunUGXVP-mAXKqRH5s0xNSfAUhrzg@mail.gmail.com>
+Subject: Re: [PATCH] kcsan: Use tracing-safe version of prandom
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Marco Elver <elver@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-26 17:07, Robin Murphy wrote:
-> On 2020-08-25 16:42, Sai Prakash Ranjan wrote:
->> Currently the non-strict or lazy mode of TLB invalidation can only be 
->> set
->> for all or no domains. This works well for development platforms where
->> setting to non-strict/lazy mode is fine for performance reasons but on
->> production devices, we need a more fine grained control to allow only
->> certain peripherals to support this mode where we can be sure that it 
->> is
->> safe. So add support to filter non-strict/lazy mode based on the 
->> device
->> names that are passed via cmdline parameter "iommu.nonstrict_device".
-> 
-> There seems to be considerable overlap here with both the existing
-> patches for per-device default domain control [1], and the broader
-> ongoing development on how to define, evaluate and handle "trusted"
-> vs. "untrusted" devices (e.g. [2],[3]). I'd rather see work done to
-> make sure those integrate properly together and work well for
-> everyone's purposes, than add more disjoint mechanisms that only
-> address small pieces of the overall issue.
-> 
-> Robin.
-> 
-> [1]
-> https://lore.kernel.org/linux-iommu/20200824051726.7xaJRTTszJuzdFWGJ8YNsshCtfNR0BNeMrlILAyqt_0@z/
-> [2]
-> https://lore.kernel.org/linux-iommu/20200630044943.3425049-1-rajatja@google.com/
-> [3]
-> https://lore.kernel.org/linux-iommu/20200626002710.110200-2-rajatja@google.com/
-> 
+On Fri, 21 Aug 2020 at 14:31, Marco Elver <elver@google.com> wrote:
+> In the core runtime, we must minimize any calls to external library
+> functions to avoid any kind of recursion. This can happen even though
+> instrumentation is disabled for called functions, but tracing is
+> enabled.
+>
+> Most recently, prandom_u32() added a tracepoint, which can cause
+> problems for KCSAN even if the rcuidle variant is used. For example:
+>         kcsan -> prandom_u32() -> trace_prandom_u32_rcuidle ->
+>         srcu_read_lock_notrace -> __srcu_read_lock -> kcsan ...
+>
+> While we could disable KCSAN in kcsan_setup_watchpoint(), this does not
+> solve other unexpected behaviour we may get due recursing into functions
+> that may not be tolerant to such recursion:
+>         __srcu_read_lock -> kcsan -> ... -> __srcu_read_lock
+>
+> Therefore, switch to using prandom_u32_state(), which is uninstrumented,
+> and does not have a tracepoint.
+>
+> Link: https://lkml.kernel.org/r/20200821063043.1949509-1-elver@google.com
+> Link: https://lkml.kernel.org/r/20200820172046.GA177701@elver.google.com
+> Signed-off-by: Marco Elver <elver@google.com>
+> ---
+> Applies to latest -rcu/dev only.
+>
+> Let's wait a bit to see what happens with
+>   https://lkml.kernel.org/r/20200821063043.1949509-1-elver@google.com,
+> just in case there's a better solution that might make this patch redundant.
 
-Thanks for the links, [1] definitely sounds interesting, I was under the 
-impression
-that changing such via sysfs is late, but seems like other Sai has got 
-it working
-for the default domain type. So we can extend that and add a strict 
-attribute as well,
-we should be definitely OK with system booting with default strict mode 
-for all
-peripherals as long as we have an option to change that later, Doug?
+Paul, feel free to pick this up.
+
+I wanted to wait until after plumbers to see what happens, but maybe
+it's better to give the heads-up now, so this is in time for the next
+pull-request. It seems that prandom_u32() will keep its tracepoint,
+which means we definitely need this to make KCSAN compatible with
+tracing again.
 
 Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+-- Marco
