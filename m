@@ -2,80 +2,64 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED67AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4063C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE2FC20897
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:51:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mBiZVZxD"
+	by mail.kernel.org (Postfix) with ESMTP id 80D0020707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:51:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbgHZLvE (ORCPT
+        id S1729214AbgHZLvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:51:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729143AbgHZLul (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:50:41 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1527FC0613ED
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:50:41 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id j11so772437plk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 04:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YamHvfkP8QzJYhuEjb0/KnD0eM3ZI++KpyFGM28MyaU=;
-        b=mBiZVZxDCvUt6hLD48mg3Q12FL0jsNUjeakdVaFYreSg+6zLizvcH7tOYA4wRmTTut
-         wIRIJ8dVERDNCPc+80jOIqaToeBcOSL5ZS7Tpm2PL7/CPYx06WJ+MsEAxd8bvpIq9Z/7
-         MTCNTwed9PIYasztEIAiWwLt68PZEymEWPKIT39Je/TA/Dnsdys/fb6XzLofGnbYc3Kf
-         60p2IGvt1TF5ERJbECNEeCRD1GO27gjcKJXwNgBV6+JsRjVFoa3iQG3gE1Qj0/P4dqgy
-         GfD4vA4g7BHKFEjT23GkDssilnM5F4pYiUVuLOoDfvedhc+7jePoG1R9fxG8HtR8dTex
-         2asQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YamHvfkP8QzJYhuEjb0/KnD0eM3ZI++KpyFGM28MyaU=;
-        b=HHrLnGWAW6lZ8TLPZ/yBk0CXeutKqczfCb9jOlxX2fFcVaUEUW0Wi/JNhcQkMTtFnr
-         ONlslW0hs3E8q3IyIijjKPNz7UKXzCRF7mn5oVsvHCUrsKpQKFKyjtyGq1th+KafiIa2
-         ATASaLgAR/i3pd9YVNDwFjJaxMJlxw5KOyr+3gF1TfaaJ0l5Hr0o5WgNoEP0XTd3eWhE
-         cuf6nV+Mri5D25aI3eSyHWrHeOt+Jn7GO3Edh5VE58RdvH+K3dHImuZLUzR1ZbNJlEtS
-         G2s6bmyw/nm8s5DueBfihUuslF22lRb81KBmo5fDuT/Gqqyuu/i8GNKmwI9+qv6NfJe4
-         9LIA==
-X-Gm-Message-State: AOAM533ohvd6VMH0LdyB9SSB8yA/SaqFMkAl7cL1X7Hrfveo/e5fW42r
-        Cqt7Ih9WdToZjIUSlVtRNqiegQ==
-X-Google-Smtp-Source: ABdhPJw8Oo/HMnBPg30gLaQd8tsLpFWkUn2/9H03cnOA39gJU2XV4GJz2To+Kk1+/bfcON40cB1AdA==
-X-Received: by 2002:a17:90a:550e:: with SMTP id b14mr5698261pji.64.1598442640224;
-        Wed, 26 Aug 2020 04:50:40 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id q2sm2261270pgs.90.2020.08.26.04.50.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Aug 2020 04:50:39 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Jonathan Hunter <jonathanh@nvidia.com>, Nishanth Menon <nm@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Viresh Kumar <vireshk@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH 0/3] opp: Allow opp-supported-hw to contain multiple versions
-Date:   Wed, 26 Aug 2020 17:20:27 +0530
-Message-Id: <cover.1598442485.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
+        Wed, 26 Aug 2020 07:51:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:17928 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729181AbgHZLvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 07:51:05 -0400
+IronPort-SDR: CedqNMWSajI1h6eUL0+jOS2jdozmk69QzHpskD+iRrMudJn1CBKAUtZHO5d4VmCeOE+k5MRk+u
+ ApRHU1N4XohQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="217822885"
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="217822885"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 04:50:58 -0700
+IronPort-SDR: 45btBJ3Fh4xEeSU/JjsxGTjrvYWzd+ac0ValhMUhBCn3aJFlHtVtBZ+gaGx7Je4pMJuR1e+VhX
+ 04DpG52DM7tQ==
+X-IronPort-AV: E=Sophos;i="5.76,355,1592895600"; 
+   d="scan'208";a="331754184"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 04:50:53 -0700
+Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 6B3E9209B8;
+        Wed, 26 Aug 2020 14:50:51 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1kAu0e-0001bP-Q6; Wed, 26 Aug 2020 14:54:32 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
+        linux-media@vger.kernel.org,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
+        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
+Subject: [PATCH v6 3/6] ov5670: Support probe whilst the device is in a low power state
+Date:   Wed, 26 Aug 2020 14:54:29 +0300
+Message-Id: <20200826115432.6103-4-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200826115432.6103-1-sakari.ailus@linux.intel.com>
+References: <20200826115432.6103-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,30 +67,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephan and Dmitry,
+Tell ACPI device PM code that the driver supports the device being in a
+low power state when the driver's probe function is entered.
 
-Here is an attempt to solve the problem you guys faced, I have tested it
-locally and works with my expectations. Please see if they solve your
-problems.
+Also do identification on the first access of the device, whether in probe
+or when starting streaming.
 
-Dmitry: I sent another message for you in patch 3's comments section.
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/i2c/ov5670.c | 76 +++++++++++++++++++++++---------------
+ 1 file changed, 46 insertions(+), 30 deletions(-)
 
---
-viresh
-
-Viresh Kumar (3):
-  dt-bindings: opp: Allow opp-supported-hw to contain multiple versions
-  opp: Allow opp-supported-hw to contain multiple versions
-  ARM: tegra: Pass multiple versions in opp-supported-hw property
-
- Documentation/devicetree/bindings/opp/opp.txt |  53 +-
- .../boot/dts/tegra20-cpu-opp-microvolt.dtsi   |  36 -
- arch/arm/boot/dts/tegra20-cpu-opp.dtsi        |  67 +-
- .../boot/dts/tegra30-cpu-opp-microvolt.dtsi   | 512 ---------
- arch/arm/boot/dts/tegra30-cpu-opp.dtsi        | 986 +++---------------
- drivers/opp/of.c                              |  47 +-
- 6 files changed, 214 insertions(+), 1487 deletions(-)
-
+diff --git a/drivers/media/i2c/ov5670.c b/drivers/media/i2c/ov5670.c
+index f26252e35e08d..74b0325c22565 100644
+--- a/drivers/media/i2c/ov5670.c
++++ b/drivers/media/i2c/ov5670.c
+@@ -1832,6 +1832,8 @@ struct ov5670 {
+ 
+ 	/* Streaming on/off */
+ 	bool streaming;
++	/* True if the device has been identified */
++	bool identified;
+ };
+ 
+ #define to_ov5670(_sd)	container_of(_sd, struct ov5670, sd)
+@@ -2270,6 +2272,32 @@ static int ov5670_get_skip_frames(struct v4l2_subdev *sd, u32 *frames)
+ 	return 0;
+ }
+ 
++/* Verify chip ID */
++static int ov5670_identify_module(struct ov5670 *ov5670)
++{
++	struct i2c_client *client = v4l2_get_subdevdata(&ov5670->sd);
++	int ret;
++	u32 val;
++
++	if (ov5670->identified)
++		return 0;
++
++	ret = ov5670_read_reg(ov5670, OV5670_REG_CHIP_ID,
++			      OV5670_REG_VALUE_24BIT, &val);
++	if (ret)
++		return ret;
++
++	if (val != OV5670_CHIP_ID) {
++		dev_err(&client->dev, "chip id mismatch: %x!=%x\n",
++			OV5670_CHIP_ID, val);
++		return -ENXIO;
++	}
++
++	ov5670->identified = true;
++
++	return 0;
++}
++
+ /* Prepare streaming by writing default values and customized values */
+ static int ov5670_start_streaming(struct ov5670 *ov5670)
+ {
+@@ -2278,6 +2306,10 @@ static int ov5670_start_streaming(struct ov5670 *ov5670)
+ 	int link_freq_index;
+ 	int ret;
+ 
++	ret = ov5670_identify_module(ov5670);
++	if (ret)
++		return ret;
++
+ 	/* Get out of from software reset */
+ 	ret = ov5670_write_reg(ov5670, OV5670_REG_SOFTWARE_RST,
+ 			       OV5670_REG_VALUE_08BIT, OV5670_SOFTWARE_RST);
+@@ -2401,27 +2433,6 @@ static int __maybe_unused ov5670_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-/* Verify chip ID */
+-static int ov5670_identify_module(struct ov5670 *ov5670)
+-{
+-	struct i2c_client *client = v4l2_get_subdevdata(&ov5670->sd);
+-	int ret;
+-	u32 val;
+-
+-	ret = ov5670_read_reg(ov5670, OV5670_REG_CHIP_ID,
+-			      OV5670_REG_VALUE_24BIT, &val);
+-	if (ret)
+-		return ret;
+-
+-	if (val != OV5670_CHIP_ID) {
+-		dev_err(&client->dev, "chip id mismatch: %x!=%x\n",
+-			OV5670_CHIP_ID, val);
+-		return -ENXIO;
+-	}
+-
+-	return 0;
+-}
+-
+ static const struct v4l2_subdev_video_ops ov5670_video_ops = {
+ 	.s_stream = ov5670_set_stream,
+ };
+@@ -2456,6 +2467,7 @@ static int ov5670_probe(struct i2c_client *client)
+ 	struct ov5670 *ov5670;
+ 	const char *err_msg;
+ 	u32 input_clk = 0;
++	bool low_power;
+ 	int ret;
+ 
+ 	device_property_read_u32(&client->dev, "clock-frequency", &input_clk);
+@@ -2472,11 +2484,14 @@ static int ov5670_probe(struct i2c_client *client)
+ 	/* Initialize subdev */
+ 	v4l2_i2c_subdev_init(&ov5670->sd, client, &ov5670_subdev_ops);
+ 
+-	/* Check module identity */
+-	ret = ov5670_identify_module(ov5670);
+-	if (ret) {
+-		err_msg = "ov5670_identify_module() error";
+-		goto error_print;
++	low_power = acpi_dev_state_low_power(&client->dev);
++	if (!low_power) {
++		/* Check module identity */
++		ret = ov5670_identify_module(ov5670);
++		if (ret) {
++			err_msg = "ov5670_identify_module() error";
++			goto error_print;
++		}
+ 	}
+ 
+ 	mutex_init(&ov5670->mutex);
+@@ -2513,10 +2528,10 @@ static int ov5670_probe(struct i2c_client *client)
+ 	ov5670->streaming = false;
+ 
+ 	/*
+-	 * Device is already turned on by i2c-core with ACPI domain PM.
+-	 * Enable runtime PM and turn off the device.
++	 * Don't set the device's state to active if it's in a low power state.
+ 	 */
+-	pm_runtime_set_active(&client->dev);
++	if (!low_power)
++		pm_runtime_set_active(&client->dev);
+ 	pm_runtime_enable(&client->dev);
+ 	pm_runtime_idle(&client->dev);
+ 
+@@ -2558,7 +2573,7 @@ static const struct dev_pm_ops ov5670_pm_ops = {
+ 
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id ov5670_acpi_ids[] = {
+-	{"INT3479"},
++	{ "INT3479" },
+ 	{ /* sentinel */ }
+ };
+ 
+@@ -2573,6 +2588,7 @@ static struct i2c_driver ov5670_i2c_driver = {
+ 	},
+ 	.probe_new = ov5670_probe,
+ 	.remove = ov5670_remove,
++	.flags = I2C_DRV_FL_ALLOW_LOW_POWER_PROBE,
+ };
+ 
+ module_i2c_driver(ov5670_i2c_driver);
 -- 
-2.25.0.rc1.19.g042ed3e048af
+2.20.1
 
