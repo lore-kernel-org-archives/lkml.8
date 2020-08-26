@@ -2,182 +2,143 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD757C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD53CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A438E22B43
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 876D6221E2
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598449662;
-	bh=uzssotztbdeouyU8VYe0e+lj4zz+u493NeAdpN+nBBk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TexEq7qvf0lAhllPb8xdpA1BXh2VbnWoqIZ9H2bdWvUQX6xHPKe5ODhf+mQPxRVhH
-	 TbF8+mtMF566S8P3IPIoNTXtgo8P6WREzjGnfkBunbozWvYo12rEkB/0akG7tq/FYW
-	 T3O+QZfOL01+ibbeEiOLRbWQr6xj+l0quQYfixvg=
+	s=default; t=1598449682;
+	bh=9/ac13JQo1bQIoTAtId4klh0RJxLdy34KcJ9kyGT9W4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qybjiuV3bEJxl3OEitY3R+8tNZebgLJ49lKMNmRpRh+0X4FFl13U46GS7obIhFU7g
+	 vZUSzlt4QMNRw2qCO/+XY8N5a0f1yfJ4t/wAy0UTz8ktFw6TMwiGBmMocT8/9bZ6Di
+	 IxQ3Qupii5Ds92h6m3NvUBQw7c/4+6UpATOJE6iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgHZNrN (ORCPT
+        id S1730453AbgHZNr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:47:13 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:43811 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730400AbgHZNq5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:46:57 -0400
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 07QDkPCh008653;
-        Wed, 26 Aug 2020 22:46:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 07QDkPCh008653
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598449585;
-        bh=o7eCdAdgOheG7FAIfRne3QfZg51jDgTmJuPqiAC/sK8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=21bA7VpEWxm5UeK7oPZWUFdIhQajYdPhqd3SV11eya86xNPqIzTN61Ph8de6zpGEz
-         ErmqVG9CEY1PU4acX9fn1RjP1NiHCEt6A7n+jxuatW35C1Ibmexw2WFRQ5kELQrioY
-         nhyyZIHuk/VR/WdHnlXnht+t+83UBcH62kZpZ//xifmRUuh1tOgl6Vf9FKEswPQI/e
-         1HW+Kh3ukNNsu7d799pH6Lt8J4iufcPAHoPKoIfVMBLRzxgtROhN0b/eC4qbJ/xFXC
-         9uBapHPM+v+BgmVo87jKiZV1cojEK3iS8gv9OsHt49K7yPELvIeywks56mcwBoFz1F
-         NvE1zvPqM2Yqw==
-X-Nifty-SrcIP: [209.85.216.51]
-Received: by mail-pj1-f51.google.com with SMTP id 2so900074pjx.5;
-        Wed, 26 Aug 2020 06:46:25 -0700 (PDT)
-X-Gm-Message-State: AOAM531iH2q2SxVzfu1gBpOSo0Qcp/iYTPkRQNzYTVI8/9B2e6Y42MOn
-        iNhZkfMnMu3mEExeab7sGc0PTQDyh6e3eeyBWKg=
-X-Google-Smtp-Source: ABdhPJxYguAPl7915j/hpYyN6BaOhYmXutUAd9G9j1QCXn8OaMyaNTPAez6SpGyucG7F48mn5JH7tlL0yZwPTX1xjPU=
-X-Received: by 2002:a17:90a:fb53:: with SMTP id iq19mr6288925pjb.153.1598449584709;
- Wed, 26 Aug 2020 06:46:24 -0700 (PDT)
+        Wed, 26 Aug 2020 09:47:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730425AbgHZNrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:47:08 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D5FF20707;
+        Wed, 26 Aug 2020 13:47:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598449627;
+        bh=9/ac13JQo1bQIoTAtId4klh0RJxLdy34KcJ9kyGT9W4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YFH6CDTEgfZViaPLi0v7r/tgXt9XBngQFWrkvOznBb7IuFz5NDPXf0w0brJm9HoMN
+         X2FFf/IEPVk8dk7IC/H/ZQlMPeMduRh1siuJOdiEHbniDz6dsgfxiAgCGKKQUeJpEs
+         q2fLzd8d9l77vAN+s81BDGqENT4IYc7ErPhvxcts=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Eddy Wu <Eddy_Wu@trendmicro.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, "David S . Miller" <davem@davemloft.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        linux-arch@vger.kernel.org
+Subject: [RFC PATCH 05/14] arc: kprobes: Use generic kretprobe trampoline handler
+Date:   Wed, 26 Aug 2020 22:47:03 +0900
+Message-Id: <159844962289.510284.652053935088847481.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159844957216.510284.17683703701627367133.stgit@devnote2>
+References: <159844957216.510284.17683703701627367133.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-References: <20200821024358.616384-1-masahiroy@kernel.org>
-In-Reply-To: <20200821024358.616384-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 26 Aug 2020 22:45:47 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASkc_LVJ1dvzn3aETgKkrkqNt8hOpjBF0Pn2gh40gJYEw@mail.gmail.com>
-Message-ID: <CAK7LNASkc_LVJ1dvzn3aETgKkrkqNt8hOpjBF0Pn2gh40gJYEw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: hide commands to run Kconfig, and show short log
- for syncconfig
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 11:44 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Some targets (localyesconfig, localmodconfig, defconfig) hide the
-> command running, but the others do not.
->
-> Users know which Kconfig flavor they are running, so it is OK to hide
-> the command. Add $(Q) to all commands consistently. If you want to see
-> the full command running, pass V=1 from the command line.
->
-> syncconfig is the exceptional case, which occurs without explicit
-> command invocation by the user. Display the Kbuild-style log for it.
-> The ugly bare log will go away.
->
-> [Before]
->
-> scripts/kconfig/conf  --syncconfig Kconfig
->
-> [After]
->
->   SYNC    include/config/auto.conf
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ arch/arc/kernel/kprobes.c |   55 ++-------------------------------------------
+ 1 file changed, 3 insertions(+), 52 deletions(-)
 
+diff --git a/arch/arc/kernel/kprobes.c b/arch/arc/kernel/kprobes.c
+index 7d3efe83cba7..da615684240b 100644
+--- a/arch/arc/kernel/kprobes.c
++++ b/arch/arc/kernel/kprobes.c
+@@ -388,6 +388,7 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+ {
+ 
+ 	ri->ret_addr = (kprobe_opcode_t *) regs->blink;
++	ri->fp = NULL;
+ 
+ 	/* Replace the return addr with trampoline addr */
+ 	regs->blink = (unsigned long)&kretprobe_trampoline;
+@@ -396,58 +397,8 @@ void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+ static int __kprobes trampoline_probe_handler(struct kprobe *p,
+ 					      struct pt_regs *regs)
+ {
+-	struct kretprobe_instance *ri = NULL;
+-	struct hlist_head *head, empty_rp;
+-	struct hlist_node *tmp;
+-	unsigned long flags, orig_ret_address = 0;
+-	unsigned long trampoline_address = (unsigned long)&kretprobe_trampoline;
+-
+-	INIT_HLIST_HEAD(&empty_rp);
+-	kretprobe_hash_lock(current, &head, &flags);
+-
+-	/*
+-	 * It is possible to have multiple instances associated with a given
+-	 * task either because an multiple functions in the call path
+-	 * have a return probe installed on them, and/or more than one return
+-	 * return probe was registered for a target function.
+-	 *
+-	 * We can handle this because:
+-	 *     - instances are always inserted at the head of the list
+-	 *     - when multiple return probes are registered for the same
+-	 *       function, the first instance's ret_addr will point to the
+-	 *       real return address, and all the rest will point to
+-	 *       kretprobe_trampoline
+-	 */
+-	hlist_for_each_entry_safe(ri, tmp, head, hlist) {
+-		if (ri->task != current)
+-			/* another task is sharing our hash bucket */
+-			continue;
+-
+-		if (ri->rp && ri->rp->handler)
+-			ri->rp->handler(ri, regs);
+-
+-		orig_ret_address = (unsigned long)ri->ret_addr;
+-		recycle_rp_inst(ri, &empty_rp);
+-
+-		if (orig_ret_address != trampoline_address) {
+-			/*
+-			 * This is the real return address. Any other
+-			 * instances associated with this task are for
+-			 * other calls deeper on the call stack
+-			 */
+-			break;
+-		}
+-	}
+-
+-	kretprobe_assert(ri, orig_ret_address, trampoline_address);
+-	regs->ret = orig_ret_address;
+-
+-	kretprobe_hash_unlock(current, &flags);
+-
+-	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+-		hlist_del(&ri->hlist);
+-		kfree(ri);
+-	}
++	regs->ret = __kretprobe_trampoline_handler(regs,
++				(unsigned long)&kretprobe_trampoline, NULL);
+ 
+ 	/* By returning a non zero value, we are telling the kprobe handler
+ 	 * that we don't want the post_handler to run
 
-Applied to linux-kbuild.
-
-
-
-> ---
->
->  Makefile                 |  5 ++++-
->  scripts/kconfig/Makefile | 16 ++++++++--------
->  2 files changed, 12 insertions(+), 9 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 9cac6fde3479..0693314d51c3 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -708,8 +708,11 @@ $(KCONFIG_CONFIG):
->  # This exploits the 'multi-target pattern rule' trick.
->  # The syncconfig should be executed only once to make all the targets.
->  # (Note: use the grouped target '&:' when we bump to GNU Make 4.3)
-> +quiet_cmd_syncconfig = SYNC    $@
-> +      cmd_syncconfig = $(MAKE) -f $(srctree)/Makefile syncconfig
-> +
->  %/config/auto.conf %/config/auto.conf.cmd %/generated/autoconf.h: $(KCONFIG_CONFIG)
-> -       $(Q)$(MAKE) -f $(srctree)/Makefile syncconfig
-> +       +$(call cmd,syncconfig)
->  else # !may-sync-config
->  # External modules and some install targets need include/generated/autoconf.h
->  # and include/config/auto.conf but do not care if they are up-to-date.
-> diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-> index 52b59bf9efe4..e46df0a2d4f9 100644
-> --- a/scripts/kconfig/Makefile
-> +++ b/scripts/kconfig/Makefile
-> @@ -20,19 +20,19 @@ endif
->  unexport CONFIG_
->
->  xconfig: $(obj)/qconf
-> -       $< $(silent) $(Kconfig)
-> +       $(Q)$< $(silent) $(Kconfig)
->
->  gconfig: $(obj)/gconf
-> -       $< $(silent) $(Kconfig)
-> +       $(Q)$< $(silent) $(Kconfig)
->
->  menuconfig: $(obj)/mconf
-> -       $< $(silent) $(Kconfig)
-> +       $(Q)$< $(silent) $(Kconfig)
->
->  config: $(obj)/conf
-> -       $< $(silent) --oldaskconfig $(Kconfig)
-> +       $(Q)$< $(silent) --oldaskconfig $(Kconfig)
->
->  nconfig: $(obj)/nconf
-> -       $< $(silent) $(Kconfig)
-> +       $(Q)$< $(silent) $(Kconfig)
->
->  build_menuconfig: $(obj)/mconf
->
-> @@ -68,12 +68,12 @@ simple-targets := oldconfig allnoconfig allyesconfig allmodconfig \
->  PHONY += $(simple-targets)
->
->  $(simple-targets): $(obj)/conf
-> -       $< $(silent) --$@ $(Kconfig)
-> +       $(Q)$< $(silent) --$@ $(Kconfig)
->
->  PHONY += savedefconfig defconfig
->
->  savedefconfig: $(obj)/conf
-> -       $< $(silent) --$@=defconfig $(Kconfig)
-> +       $(Q)$< $(silent) --$@=defconfig $(Kconfig)
->
->  defconfig: $(obj)/conf
->  ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG)),)
-> @@ -111,7 +111,7 @@ tinyconfig:
->  # CHECK: -o cache_dir=<path> working?
->  PHONY += testconfig
->  testconfig: $(obj)/conf
-> -       $(PYTHON3) -B -m pytest $(srctree)/$(src)/tests \
-> +       $(Q)$(PYTHON3) -B -m pytest $(srctree)/$(src)/tests \
->         -o cache_dir=$(abspath $(obj)/tests/.cache) \
->         $(if $(findstring 1,$(KBUILD_VERBOSE)),--capture=no)
->  clean-files += tests/.cache
-> --
-> 2.25.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
