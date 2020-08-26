@@ -2,167 +2,91 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB46C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B4BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9832080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:15:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="SaHBFhxs"
+	by mail.kernel.org (Postfix) with ESMTP id 589FF20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 18:17:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598465845;
+	bh=fotpd/goB8x161LaxWE7cPWJ2+c6Vmm0EGcW3JpQGWI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iNQ+VRc6FOTdMMNY4nD3DiLaly9DBnbMcEyEEeoeVmjQ6JegyIMuxPtxQZtS/N+dF
+	 Ou2/vQp3046Acmv472+bAMG2sqbJI2ZFzTFBamOZP2SxoZXErhC2QGoD4bgvkQRBPy
+	 M0lTqGoSZpWf6ljag0MqhpnXRHb1eJe/8lsPAimk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgHZSO6 (ORCPT
+        id S1726825AbgHZSRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 14:14:58 -0400
-Received: from mail-co1nam11on2056.outbound.protection.outlook.com ([40.107.220.56]:41184
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726845AbgHZSOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 14:14:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lPbxvr3SLWPQZrnWepK6/LHPwDlfKTrft3+xEPRvFXCU8BD/WHUo4mtJmN6POpEK3DiNOwePvO6KDQySFY3iPDquLEd7EiLKiutbH8UQdQw2lTaa8Qt9tQLs8dUMPILAf87i9qBUFnjm/pXKxRXmq9xl2/1Hn7tiK+vEfKHehRx80L8n6AVghRsN40rKd3cFxssighWStnsK9OazQjkmWLaEigTGKRNTZPnzSIESljhsJX5SYA5HVIyzqqh5AVLWW6HmtiGeqqdSPlzANtj0nKmEBNkSRdu4bK0EKcH8p7cccAk0Q5soAJmeB4dDO/v0oTCLRCMxbwh1R26qK+t7aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BVILtDz/JeMcC9222j4m8DBYBN1Z2uVfJ5OOvYUEhfA=;
- b=KKrowVlC+mZI4IdpT3+It8OkZp0JKFf734TE6V8GfcCRXsuTyo+P+p0214yC6cNEadq1o2LwTqWdQXWiSwkWdxPTcoHhRCwHDbT3amZd96KNTUdUjW+llYJfuTBkC5JL1TsnZ6jfgnKntweQ3GXCz2tQbgjAGZSCaH5mivqcRZTtpOvR2OBdc5AdwagiDxPIh7Qw5NWnpXRweL4hh6itBoCrZe/KXlEWsNr4ZWRN0hmCkBsz2cmuOFumENrF0+IplHLggJ07zI4iAifMjCarKLD14MfoyhJsHcfjX6d+pc5DcfUAAa4RTUqA9YdUk1T9GK0lAPa2O8x4juHXNc3Yqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BVILtDz/JeMcC9222j4m8DBYBN1Z2uVfJ5OOvYUEhfA=;
- b=SaHBFhxshGcV5LsL6hNwCAM2LVULgdW4HT61bQwBE+R2R81crGSFwQdTl7ZkMjl3Zbe5ypwKXUGDqG3roxzzZwHvSEUUaK9EdnCYLTOTPusxQdtwgyS8s23bNzRTZNbLs8/l1CGquPyB2PYatkpW926Zo+erjh7JWrTVne9/fjQ=
-Received: from DM6PR11CA0009.namprd11.prod.outlook.com (2603:10b6:5:190::22)
- by DM6PR02MB5436.namprd02.prod.outlook.com (2603:10b6:5:7d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Wed, 26 Aug
- 2020 18:14:47 +0000
-Received: from CY1NAM02FT035.eop-nam02.prod.protection.outlook.com
- (2603:10b6:5:190:cafe::bc) by DM6PR11CA0009.outlook.office365.com
- (2603:10b6:5:190::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
- Transport; Wed, 26 Aug 2020 18:14:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT035.mail.protection.outlook.com (10.152.75.186) with Microsoft SMTP
- Server id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 18:14:46
- +0000
-Received: from [149.199.38.66] (port=50203 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <anand.ashok.dumbre@xilinx.com>)
-        id 1kAzw7-0000G1-Bb; Wed, 26 Aug 2020 11:14:15 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by smtp.xilinx.com with smtp (Exim 4.63)
-        (envelope-from <anand.ashok.dumbre@xilinx.com>)
-        id 1kAzwc-0000P0-Eb; Wed, 26 Aug 2020 11:14:46 -0700
-Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07QIEgOK028983;
-        Wed, 26 Aug 2020 11:14:42 -0700
-Received: from [172.19.2.102] (helo=xsjanandash50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <anand.ashok.dumbre@xilinx.com>)
-        id 1kAzwY-0000OR-L5; Wed, 26 Aug 2020 11:14:42 -0700
-From:   Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, michal.simek@xilinx.com, git@xilinx.com,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     anandash@xilinx.com,
-        Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
-Subject: [PATCH v2] iio: core: Fix IIO_VAL_FRACTIONAL calculation for negative values
-Date:   Wed, 26 Aug 2020 11:14:36 -0700
-Message-Id: <1598465676-28912-1-git-send-email-anand.ashok.dumbre@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: ad05ed34-96a7-491d-07ce-08d849ebea29
-X-MS-TrafficTypeDiagnostic: DM6PR02MB5436:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB543640FAB8EBC3504DA42A3CA9540@DM6PR02MB5436.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:597;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: InDum2mdLljtHonlv6N+sgGGnXzJ2iIhGSSHzWOPILRY2kQDxR9j4H1scnSJ9flfyFDDE99CFe9xgbEF04S0dsVnyCXvX9stmz8baPhqXkWATTUWKQQH4zOwlwwgwDl0slD4di2epC8uQzgiNHZbX5ZkqBBvWrkFYN5J0HwKB5x3t+3ndAQLeWb84slw7LiguEUATs8NoOVcxHwLTxPOXFHgXkbVm6FlyLqCHAbZUflketch0th+yb1czcN2qizIKIenhuaecdziLjXMloirC2w+14HgKu7OHoDNMG82XanUSgjKmLE/+w8KTG6SDKNxwGD/66iHutlzTiq/QdM4qMFMdDkK65zoslF31w0OJ8QsOgcgva91bMjZBX35d5qKjIl10k5pfYT0FXm4qlWIyQ==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(396003)(39860400002)(136003)(346002)(376002)(46966005)(356005)(36756003)(2616005)(2906002)(6666004)(336012)(82310400002)(426003)(186003)(107886003)(478600001)(81166007)(9786002)(70206006)(83380400001)(8676002)(82740400003)(8936002)(70586007)(4326008)(47076004)(26005)(5660300002)(316002)(7696005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 18:14:46.7524
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad05ed34-96a7-491d-07ce-08d849ebea29
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT035.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5436
+        Wed, 26 Aug 2020 14:17:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726241AbgHZSRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 14:17:17 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 706AD20737;
+        Wed, 26 Aug 2020 18:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598465836;
+        bh=fotpd/goB8x161LaxWE7cPWJ2+c6Vmm0EGcW3JpQGWI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FXyal6QV6uvVCxpGkD1cCsgr5aDrmD/lJTMEAIEk3a1ohHIy+UF+l3CkanBnm4daS
+         Q9Cae6ndODk+P0bz2Y2uHyi1dR9NyJmyT0vT0IeYOD6cazmgJmusUO4Y74Ffg6V7oN
+         pf+Rjhb2if6DCmsxK17r2Dp6DNUg6bQTjC3ZN1Bc=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 01/24] Input: bcm-keypad - Simplify with dev_err_probe()
+Date:   Wed, 26 Aug 2020 20:16:43 +0200
+Message-Id: <20200826181706.11098-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes IIO_VAL_FRACTIONAL for case when the result is negative and
-exponent is 0.
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and also it prints the error value.
 
-example: if the result is -0.75, tmp0 will be 0 and tmp1 = 75
-This causes the output to lose sign because of %d in snprintf
-which works for tmp0 <= -1.
-
-Signed-off-by: Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
-changes since v1:
-	Changed -%d to -0 to make the fix clearer.
-	Removed the email footer.
-	Updated the commit description with an example
---
- drivers/iio/industrialio-core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/input/keyboard/bcm-keypad.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index cdcd16f1..a239fa2 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -592,6 +592,7 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
- {
- 	unsigned long long tmp;
- 	int tmp0, tmp1;
-+	s64 tmp2;
- 	bool scale_db = false;
- 
- 	switch (type) {
-@@ -614,10 +615,13 @@ static ssize_t __iio_format_value(char *buf, size_t len, unsigned int type,
- 		else
- 			return scnprintf(buf, len, "%d.%09u", vals[0], vals[1]);
- 	case IIO_VAL_FRACTIONAL:
--		tmp = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
-+		tmp2 = div_s64((s64)vals[0] * 1000000000LL, vals[1]);
- 		tmp1 = vals[1];
- 		tmp0 = (int)div_s64_rem(tmp, 1000000000, &tmp1);
--		return scnprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
-+		if ((tmp2 < 0) && (tmp0 == 0))
-+			return snprintf(buf, len, "-0.%09u", abs(tmp1));
-+		else
-+			return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
- 	case IIO_VAL_FRACTIONAL_LOG2:
- 		tmp = shift_right((s64)vals[0] * 1000000000LL, vals[1]);
- 		tmp0 = (int)div_s64_rem(tmp, 1000000000LL, &tmp1);
+diff --git a/drivers/input/keyboard/bcm-keypad.c b/drivers/input/keyboard/bcm-keypad.c
+index 2b771c3a5578..1bf71e7c9e0d 100644
+--- a/drivers/input/keyboard/bcm-keypad.c
++++ b/drivers/input/keyboard/bcm-keypad.c
+@@ -379,11 +379,9 @@ static int bcm_kp_probe(struct platform_device *pdev)
+ 	kp->clk = devm_clk_get(&pdev->dev, "peri_clk");
+ 	if (IS_ERR(kp->clk)) {
+ 		error = PTR_ERR(kp->clk);
+-		if (error != -ENOENT) {
+-			if (error != -EPROBE_DEFER)
+-				dev_err(&pdev->dev, "Failed to get clock\n");
+-			return error;
+-		}
++		if (error != -ENOENT)
++			return dev_err_probe(&pdev->dev, error, "Failed to get clock\n");
++
+ 		dev_dbg(&pdev->dev,
+ 			"No clock specified. Assuming it's enabled\n");
+ 		kp->clk = NULL;
 -- 
-2.7.4
+2.17.1
 
