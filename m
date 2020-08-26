@@ -2,136 +2,135 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFDBC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F829C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49DD62074A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F52520639
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 02:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbgHZCON (ORCPT
+        id S1726752AbgHZCQb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 22:14:13 -0400
-Received: from smtp.h3c.com ([60.191.123.56]:31932 "EHLO h3cspam01-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726611AbgHZCOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 22:14:12 -0400
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
-        by h3cspam01-ex.h3c.com with ESMTPS id 07Q2Ddmm051523
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 10:13:39 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from localhost.localdomain (10.99.212.201) by
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 26 Aug 2020 10:13:40 +0800
-From:   Xianting Tian <tian.xianting@h3c.com>
-To:     <axboe@kernel.dk>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Xianting Tian <tian.xianting@h3c.com>
-Subject: [PATCH] [v2] blk-mq: use BLK_MQ_NO_TAG for no tag
-Date:   Wed, 26 Aug 2020 10:06:51 +0800
-Message-ID: <20200826020651.9856-1-tian.xianting@h3c.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 25 Aug 2020 22:16:31 -0400
+Received: from twspam01.aspeedtech.com ([211.20.114.71]:18964 "EHLO
+        twspam01.aspeedtech.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbgHZCQ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 22:16:27 -0400
+X-Greylist: delayed 1004 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Aug 2020 22:16:25 EDT
+Received: from twspam01.aspeedtech.com (localhost [127.0.0.2] (may be forged))
+        by twspam01.aspeedtech.com with ESMTP id 07Q1gVEQ015657;
+        Wed, 26 Aug 2020 09:42:31 +0800 (GMT-8)
+        (envelope-from ryan_chen@aspeedtech.com)
+Received: from mail.aspeedtech.com ([192.168.0.24])
+        by twspam01.aspeedtech.com with ESMTP id 07Q1fxVs015567;
+        Wed, 26 Aug 2020 09:41:59 +0800 (GMT-8)
+        (envelope-from ryan_chen@aspeedtech.com)
+Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server (TLS) id 15.0.620.29; Wed, 26 Aug
+ 2020 09:59:11 +0800
+Received: from TWMBX02.aspeed.com ([fe80::997d:c0a7:f01f:e1a7]) by
+ TWMBX02.aspeed.com ([fe80::997d:c0a7:f01f:e1a7%12]) with mapi id
+ 15.00.0620.020; Wed, 26 Aug 2020 09:59:11 +0800
+From:   Ryan Chen <ryan_chen@aspeedtech.com>
+To:     Tao Ren <rentao.bupt@gmail.com>,
+        Eddie James <eajames@linux.ibm.com>
+CC:     Joel Stanley <joel@jms.id.au>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Subject: RE: [PATCH 3/5] i2c: aspeed: Mask IRQ status to relevant bits
+Thread-Topic: [PATCH 3/5] i2c: aspeed: Mask IRQ status to relevant bits
+Thread-Index: AQHWdwzk/wcXUhvRB0iNVkduNVuxEqlH4GIAgADco4CAAATnAIAA6Fog
+Date:   Wed, 26 Aug 2020 01:59:11 +0000
+Message-ID: <f84a5ad1064142b78b3fc5eeb4659627@TWMBX02.aspeed.com>
+References: <20200820161152.22751-1-eajames@linux.ibm.com>
+ <20200820161152.22751-4-eajames@linux.ibm.com>
+ <CACPK8XdG1+3eQPQ71fZYZdHwcn8WNLQKF=5iKrOvGhLwispSQA@mail.gmail.com>
+ <8fc365dd-8a89-9e5c-ed70-093ef2bf7265@linux.ibm.com>
+ <20200825200523.GA22083@taoren-ubuntu-R90MNF91>
+In-Reply-To: <20200825200523.GA22083@taoren-ubuntu-R90MNF91>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [192.168.2.87]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.99.212.201]
-X-ClientProxiedBy: BJSMTP02-EX.srv.huawei-3com.com (10.63.20.133) To
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
 X-DNSRBL: 
-X-MAIL: h3cspam01-ex.h3c.com 07Q2Ddmm051523
+X-MAIL: twspam01.aspeedtech.com 07Q1fxVs015567
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace various magic -1 constants for tags with BLK_MQ_NO_TAG.
-And move the definition of BLK_MQ_NO_TAG from 'block/blk-mq-tag.h'
-to 'include/linux/blk-mq.h'
-
-Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
----
- block/blk-core.c       | 4 ++--
- block/blk-mq-sched.c   | 2 +-
- block/blk-mq-tag.h     | 6 ------
- include/linux/blk-mq.h | 8 +++++++-
- 4 files changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c
-index d9d632639..c7eaf7504 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -116,8 +116,8 @@ void blk_rq_init(struct request_queue *q, struct request *rq)
- 	rq->__sector = (sector_t) -1;
- 	INIT_HLIST_NODE(&rq->hash);
- 	RB_CLEAR_NODE(&rq->rb_node);
--	rq->tag = -1;
--	rq->internal_tag = -1;
-+	rq->tag = BLK_MQ_NO_TAG;
-+	rq->internal_tag = BLK_MQ_NO_TAG;
- 	rq->start_time_ns = ktime_get_ns();
- 	rq->part = NULL;
- 	refcount_set(&rq->ref, 1);
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-index a19cdf159..439481f59 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -522,7 +522,7 @@ void blk_mq_sched_insert_request(struct request *rq, bool at_head,
- 		goto run;
- 	}
- 
--	WARN_ON(e && (rq->tag != -1));
-+	WARN_ON(e && (rq->tag != BLK_MQ_NO_TAG));
- 
- 	if (blk_mq_sched_bypass_insert(hctx, !!e, rq)) {
- 		/*
-diff --git a/block/blk-mq-tag.h b/block/blk-mq-tag.h
-index b1acac518..8fc48aa72 100644
---- a/block/blk-mq-tag.h
-+++ b/block/blk-mq-tag.h
-@@ -45,12 +45,6 @@ static inline struct sbq_wait_state *bt_wait_ptr(struct sbitmap_queue *bt,
- 	return sbq_wait_ptr(bt, &hctx->wait_index);
- }
- 
--enum {
--	BLK_MQ_NO_TAG		= -1U,
--	BLK_MQ_TAG_MIN		= 1,
--	BLK_MQ_TAG_MAX		= BLK_MQ_NO_TAG - 1,
--};
--
- extern bool __blk_mq_tag_busy(struct blk_mq_hw_ctx *);
- extern void __blk_mq_tag_idle(struct blk_mq_hw_ctx *);
- 
-diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-index 9d2d5ad36..2499d8aae 100644
---- a/include/linux/blk-mq.h
-+++ b/include/linux/blk-mq.h
-@@ -209,6 +209,12 @@ enum hctx_type {
- 	HCTX_MAX_TYPES,
- };
- 
-+enum {
-+	BLK_MQ_NO_TAG		= -1U,
-+	BLK_MQ_TAG_MIN		= 1,
-+	BLK_MQ_TAG_MAX		= BLK_MQ_NO_TAG - 1,
-+};
-+
- /**
-  * struct blk_mq_tag_set - tag set that can be shared between request queues
-  * @map:	   One or more ctx -> hctx mappings. One map exists for each
-@@ -569,7 +575,7 @@ static inline void *blk_mq_rq_to_pdu(struct request *rq)
- static inline blk_qc_t request_to_qc_t(struct blk_mq_hw_ctx *hctx,
- 		struct request *rq)
- {
--	if (rq->tag != -1)
-+	if (rq->tag != BLK_MQ_NO_TAG)
- 		return rq->tag | (hctx->queue_num << BLK_QC_T_SHIFT);
- 
- 	return rq->internal_tag | (hctx->queue_num << BLK_QC_T_SHIFT) |
--- 
-2.17.1
-
+> -----Original Message-----
+> From: Tao Ren [mailto:rentao.bupt@gmail.com]
+> Sent: Wednesday, August 26, 2020 4:05 AM
+> To: Eddie James <eajames@linux.ibm.com>
+> Cc: Joel Stanley <joel@jms.id.au>; devicetree <devicetree@vger.kernel.org>;
+> linux-aspeed <linux-aspeed@lists.ozlabs.org>; dmitry.torokhov@gmail.com;
+> Brendan Higgins <brendanhiggins@google.com>; Linux Kernel Mailing List
+> <linux-kernel@vger.kernel.org>; Rob Herring <robh+dt@kernel.org>;
+> linux-i2c@vger.kernel.org; linux-input@vger.kernel.org; Ryan Chen
+> <ryan_chen@aspeedtech.com>
+> Subject: Re: [PATCH 3/5] i2c: aspeed: Mask IRQ status to relevant bits
+> 
+> On Tue, Aug 25, 2020 at 02:47:51PM -0500, Eddie James wrote:
+> >
+> > On 8/25/20 1:38 AM, Joel Stanley wrote:
+> > > On Thu, 20 Aug 2020 at 16:12, Eddie James <eajames@linux.ibm.com>
+> wrote:
+> > > > Mask the IRQ status to only the bits that the driver checks. This
+> > > > prevents excessive driver warnings when operating in slave mode
+> > > > when additional bits are set that the driver doesn't handle.
+> > > >
+> > > > Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> > > > ---
+> > > >   drivers/i2c/busses/i2c-aspeed.c | 1 +
+> > > >   1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/drivers/i2c/busses/i2c-aspeed.c
+> > > > b/drivers/i2c/busses/i2c-aspeed.c index 31268074c422..abf40f2af8b4
+> > > > 100644
+> > > > --- a/drivers/i2c/busses/i2c-aspeed.c
+> > > > +++ b/drivers/i2c/busses/i2c-aspeed.c
+> > > > @@ -604,6 +604,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq,
+> void *dev_id)
+> > > >          writel(irq_received & ~ASPEED_I2CD_INTR_RX_DONE,
+> > > >                 bus->base + ASPEED_I2C_INTR_STS_REG);
+> > > >          readl(bus->base + ASPEED_I2C_INTR_STS_REG);
+> > > > +       irq_received &= 0xf000ffff;
+> > > >          irq_remaining = irq_received;
+> > > This would defeat the check for irq_remaining. I don't think we want to do
+> this.
+> > >
+> > > Can you explain why these bits are being set in slave mode?
+> >
+> >
+> > No, I don't have any documentation for the bits that are masked off
+> > here, so I don't know why they would get set.
+> >
+> > The check for irq_remaining is still useful for detecting that the
+> > driver state machine might be out of sync with what the master is doing.
+> 
+> I have a similar patch in my local tree, and the reason being: AST2600 I2C
+> Controller may set I2CD10[25:24] to report Current Slave Parking Status
+> (defined in new register I2CS24) even though the new register mode is off. The
+> 2 bits can be ignored in legacy mode, and Ryan from ASPEED could confirm it.
+Yes, in AST2600 i2cd10[25:24] will be the same with new mode register i2cs24[25:24]
+Thanks Tao.
+> 
+> 
+> Cheers,
+> 
+> Tao
