@@ -2,133 +2,115 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D813FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BD4C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1E3207CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="caRsXu9q"
+	by mail.kernel.org (Postfix) with ESMTP id A32D820737
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 21:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598477391;
+	bh=M5xEKSXpVHecJggJ/7jEgp0eOy6bqawKlh1mdER1dPI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jCb2uIcZqvfOv8gde46HPaoWoZcOmmUm2jxfPNGTsBQw18FIPnbVXyZ1ZNCvTRKGH
+	 eU4bsxYjda73abo7AP+ARx/f/Z+4x8CJQXxHDPAJQTYP3BTsl5WLYdx9ivhSd/Etds
+	 0isRjQD27UbvqZB9Bxk/amHNjZSI63HfVitHZUhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726952AbgHZV25 (ORCPT
+        id S1726967AbgHZV3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 17:28:57 -0400
-Received: from mail-mw2nam10on2073.outbound.protection.outlook.com ([40.107.94.73]:12128
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726753AbgHZV2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 17:28:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FDFp8UKYWIhbFgr1s6qZWfaFfpVFV5uZ+s94rIyQJvHOHdcx1El0MZqU4nlt9yY4I4iZLAIeXzAIev6ByCYgQC+qQ2RCmYzN7TnqX9d0oxC3WoQLSyAnQWs4fPfnaoWaEs5W+eiXNS2hoYPVmMv5l2imonIJPLIGnjGuEC56ZIfFVOMQ4sC8LH4tTvsfL/Nxrbr39D0CC5tXPGcZ0YEZv2XQidAldM1AIMTvTYyOg0bknSzRbtiC9FINWliqMvbu+TstseYSNyRNfVWsDJy+8P11xHAxDt3OCCMA70MotTkXZhf85TpTWEF+LOGALPP7Ywt+yH993uAm3ievMrA63A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DRyCNOMO5xHMNKfrmHEw80y023nX5DL2JTW4T8i3S+0=;
- b=ASsO05+DI1bmKhIMZKdY7TmeUEcgU+AcplVD09IU1YulOJLaHF91bmzKYVba3GmsRJ+8eXNm3j74UpevAf47oJLO49w4Nmtv49os81z0hxbTVRWe2boapiLaTqHK4ukem6kjkV0gTZEplnfIvhc5G1TPwmo4UZQU23XbkR+o2RqtloKZEr8tP3wNBJC2G+DGWf2KARbnTVQDC2mlfEvzup2wJtA3RvqhI/92yI8mWpNCWhzB6hAR8kG+UNP3Yo5D8YTnsHPEZ8eXXoCbkWeutnByEMr1ktmqvJ+ZPahNuIkUc+PX1nSbiGW7Ow63dEYkAE3CWa7HYVjgYhSLR9o9sQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DRyCNOMO5xHMNKfrmHEw80y023nX5DL2JTW4T8i3S+0=;
- b=caRsXu9qPUdXXo682/Kwbok1ihRExHJyin/wDfgLe2A4zyr5Uvtop/hSdE+9RpX57I6aezQrVPHaBhBnl8DGnlMizFEuA22XdXGJKNy63rsiVByGUzP8IXUSgBs7FjcC/YX1kk5zytJFzDTeGkw++Cxq3rvd2mmrqIWBxe8memU=
-Authentication-Results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none header.from=amd.com;
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com (2603:10b6:802:26::19)
- by SN1PR12MB2461.namprd12.prod.outlook.com (2603:10b6:802:27::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Wed, 26 Aug
- 2020 21:28:49 +0000
-Received: from SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::ccd9:728:9577:200d]) by SN1PR12MB2560.namprd12.prod.outlook.com
- ([fe80::ccd9:728:9577:200d%4]) with mapi id 15.20.3305.026; Wed, 26 Aug 2020
- 21:28:49 +0000
-Subject: Re: [PATCH v5 04/12] KVM: SVM: Modify intercept_exceptions to generic
- intercepts
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        kvm list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <159846887637.18873.14677728679411578606.stgit@bmoger-ubuntu>
- <159846925426.18873.12673817778834207178.stgit@bmoger-ubuntu>
- <CALMp9eSHVS+HmbYUMdRgt9gPQaWUGBHt_owDenPOz4+KiDti5Q@mail.gmail.com>
-From:   Babu Moger <babu.moger@amd.com>
-Message-ID: <f7916109-6590-756b-dafc-7976e42fc44d@amd.com>
-Date:   Wed, 26 Aug 2020 16:28:48 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <CALMp9eSHVS+HmbYUMdRgt9gPQaWUGBHt_owDenPOz4+KiDti5Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0801CA0013.namprd08.prod.outlook.com
- (2603:10b6:803:29::23) To SN1PR12MB2560.namprd12.prod.outlook.com
- (2603:10b6:802:26::19)
+        Wed, 26 Aug 2020 17:29:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47030 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726753AbgHZV3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 17:29:47 -0400
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 553202087D;
+        Wed, 26 Aug 2020 21:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598477387;
+        bh=M5xEKSXpVHecJggJ/7jEgp0eOy6bqawKlh1mdER1dPI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LzSG/Qk5a7WHKiWMn5Aie6eF3iIzNZ2Z16IWtEjn8XheIoyozAa5Wr9w7uXB2mb8k
+         zHIPktW2cWMSBpItG9L30fRv6EL6nq/ixJmE6ksFv6ljGb3QpVka71a5KHi+WwV0Bp
+         odTTB66Cn0nbD3qg9MYavogJg5f8w/NXotDnUybg=
+Received: by mail-ot1-f52.google.com with SMTP id 5so2721709otp.12;
+        Wed, 26 Aug 2020 14:29:47 -0700 (PDT)
+X-Gm-Message-State: AOAM533nPRQ7ovw2sGYlPPXoTf5Kz9I9RYzsaRLHIDpSmjNSXQhBX8wO
+        NvtozEIls4NUMAja9fUgDobif7BO33AmJJCT2Q==
+X-Google-Smtp-Source: ABdhPJzKDROM+sVn9p1+uBWIsSAzu4iTPQHq6XS0P/baAB/RdWr+zWp8c0Q/Clsw7CgWdmERsCd2ozKRfUZcCCkoyOU=
+X-Received: by 2002:a9d:32e5:: with SMTP id u92mr10408148otb.107.1598477386677;
+ Wed, 26 Aug 2020 14:29:46 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by SN4PR0801CA0013.namprd08.prod.outlook.com (2603:10b6:803:29::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 26 Aug 2020 21:28:49 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e6a96a01-aee3-432c-0dc8-08d84a0705eb
-X-MS-TrafficTypeDiagnostic: SN1PR12MB2461:
-X-Microsoft-Antispam-PRVS: <SN1PR12MB24619A0B736622F941905DC495540@SN1PR12MB2461.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SNXEfrQF5sMTITSNCUbNODRxtq+OdSbDOLVjDQ/Khwf89XiyGX6TFAvTaBBV4R1w0zcs3ec+M1PClVQhAB3K03Yebzp14Cc8LVcRuJLF10bu7HwI7DiWyYZh3TC8ttHrTPKx6yJEAgIHmTmNrtL55oMP0jF14j5R1ehaw5FnUs1yneh/bAjzNZpcW9MmHsIU7zmOvuXMFPPnLxeCz7sq7y3ZWaodXKl3JqfsSgcT/Kk+ay4gX3QhzW7ytyCEa3sVUzPKRNwLx25BvzrhHV4KlsvMUa0L0OhujMlVymb0vgitb3IP5n7QPvyatBuqjcK/FtYmmFRS6ZHQD+GQ/fuGim5gkn0eDH8H45IwG+ctyR5NVrvbP2o8Sa/ZbVwj7/r75MFXGIxsVvUbWNXlbRUVwQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN1PR12MB2560.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(366004)(376002)(39860400002)(346002)(6916009)(2906002)(8676002)(316002)(4326008)(5660300002)(4744005)(31686004)(53546011)(66476007)(8936002)(2616005)(956004)(44832011)(31696002)(66556008)(66946007)(36756003)(6486002)(26005)(478600001)(7416002)(52116002)(186003)(54906003)(16576012)(86362001)(41533002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: P/B2MPWXWEonu1bzmN4Gw9aCJqypvRun0sMTDPbD9W1uV6+yzpca+m6oa+iANCMaUSQQCHY1izQIuxv/XzCKprVfMnds3zkHPSnxj627R4mOofd+n8WdGoeG7SQb8XBajMLswx9ZexlrNI9PB5+APMpnbgGtMch4I4HYsNXJyq6pcKIT60xe28bGcC0MeU6o3bh8nlOc8eWC16SehgNYqHf2UgshX9FIp4ks1ztMdB4K9lvWU5zNrpfF5erDZNe3u4LChdaovmHuabfgbKqYu2wPkpIVk7D8/8Gr+sWb97u3DuTvF2s5p70mlav597fAxnHox5RlhagbmYtUQtvWE2fRdBfh1Udkz0dqhOx03xniRR62+HxLlyYI3rr4QGDTcGLVCeJvfDUSZVYBF9u2hR+CK/4QVMnSEYmgti54QuCFfofT6VyCQ8scXQVoSYVu/CjCGxpBsGSkYwjF1p9nhQUADjX4hQQFBfcF/PpwSxNX87ENGTVvLGmL/9gHNqynJU8C/pziVaADAT3nfc7XFbiz7xKERUjT1aIyWQ9tMtDmalzv11E/XfXW++1YyRcGHzaB0tvZMEON42ByW9r6rhkEJaAPMpSMIhzYiRNfkHEJ0f72btG/RO7I5G4qdJMJ7//3h1whcTC0LEKzkth9qQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6a96a01-aee3-432c-0dc8-08d84a0705eb
-X-MS-Exchange-CrossTenant-AuthSource: SN1PR12MB2560.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2020 21:28:49.8581
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ImzICXi6bqTmrZjFoSn46MLToMsyv+E1q1a8UcC+Z2BEj3CWTc5QI2w0qeP7iYhY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2461
+References: <20200826183805.19369-1-andre.przywara@arm.com>
+ <20200826183805.19369-4-andre.przywara@arm.com> <c401554a-36ce-7e05-5ef0-5c05a2ca2868@gmail.com>
+ <44992125-7eaa-f35b-3344-16ae0d48f646@arm.com>
+In-Reply-To: <44992125-7eaa-f35b-3344-16ae0d48f646@arm.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 26 Aug 2020 15:29:35 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+Ch8_WF1VOK2RsxsnyyGTcZDYD4CqNW5sm9=20TBb_jQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+Ch8_WF1VOK2RsxsnyyGTcZDYD4CqNW5sm9=20TBb_jQ@mail.gmail.com>
+Subject: Re: [PATCH 3/6] ARM: dts: broadcom: Fix SP804 node
+To:     =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 26, 2020 at 12:54 PM Andr=C3=A9 Przywara <andre.przywara@arm.co=
+m> wrote:
+>
+> On 26/08/2020 19:42, Florian Fainelli wrote:
+>
+> Hi,
+>
+> > On 8/26/20 11:38 AM, Andre Przywara wrote:
+> >> The DT binding for SP804 requires to have an "arm,primecell" compatibl=
+e
+> >> string.
+> >> Add this string so that the Linux primecell bus driver picks the devic=
+e
+> >> up and activates the clock.
+> >>
+> >> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> >
+> > The commit subject should be:
+> >
+> > ARM: dts: NSP: Fix SP804 compatible node
+> >
+> > and we should probably have a Fixes tag that is:
+> >
+> > Fixes: a0efb0d28b77 ("ARM: dts: NSP: Add SP804 Support to DT")
+> >
+> > Could you please re-submit with those things corrected? Thanks
+>
+> Sure, will include that in a v2.
+>
+> Out of curiosity, do you have the hardware and can check the impact that
+> has?
+> Not sure we actually create the device without the primecell compatible?
 
+My first thought was no, but since the timer isn't using the driver
+model (i.e. amba bus), it doesn't need it.
 
-On 8/26/20 3:55 PM, Jim Mattson wrote:
-> On Wed, Aug 26, 2020 at 12:14 PM Babu Moger <babu.moger@amd.com> wrote:
->>
->> Modify intercept_exceptions to generic intercepts in vmcb_control_area. Use
->> the generic vmcb_set_intercept, vmcb_clr_intercept and vmcb_is_intercept to
->> set/clear/test the intercept_exceptions bits.
->>
->> Signed-off-by: Babu Moger <babu.moger@amd.com>
->> Reviewed-by: Jim Mattson <jmattson@google.com>
->> ---
-> 
->> @@ -835,7 +832,7 @@ static bool nested_exit_on_exception(struct vcpu_svm *svm)
->>  {
->>         unsigned int nr = svm->vcpu.arch.exception.nr;
->>
->> -       return (svm->nested.ctl.intercept_exceptions & (1 << nr));
->> +       return (svm->nested.ctl.intercepts[EXCEPTION_VECTOR] & (1 << nr));
-> Nit: BIT(nr) rather than (1 << nr).
+So I think without it, we'd create a platform device instead, but then
+there's some logic to prevent that IIRC.
 
-Sure. will change it. thanks
-
+Rob
