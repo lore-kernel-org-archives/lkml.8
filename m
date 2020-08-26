@@ -2,107 +2,148 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A09FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEEBC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1FB2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42A162083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598474510;
-	bh=YAxwMHz+Yv/1iH9rzNa2SizES/G0MGq8G2wczS8SfRY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XZpdlMSWrZ0VTPxz/xqcNdCuR+WHdiVTmKW0FJSK+yg1UNeXWmJh+bbAQ4VsCjHh2
-	 QUaUgmrxduBfLipni/lHgDUi3gPFds9k3k8mQufo62d/tmZr2EZbdYlxiyG4zKVEge
-	 TvbieGNyQqTMM4MuZxiHGqsJc/e8YvcVZLGATewA=
+	s=default; t=1598474558;
+	bh=jlRC0LblFWGAlwCR/La2tMi2HZWcZ4kco3I34s3mivA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=d1lskS6+3+EcPcjrDHR6y3PRWw1L4zZ8jlYKX1MQLyKIzijQdQJo9nf84qzXez4A6
+	 rb2vNkyfmRHZfYapPqfbT2xrQSbFpFnldJZKtMdhJxWWlahhL74wQDTZbsvfMK8FHO
+	 KjF9TYekxRCpZ/d4xL/evMX/UW3sltv/AF8mb7Jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgHZUlt (ORCPT
+        id S1726971AbgHZUmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51086 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 16:42:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbgHZUlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:41:46 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        id S1726609AbgHZUmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 16:42:36 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F4612078A;
-        Wed, 26 Aug 2020 20:41:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 854AB2078A;
+        Wed, 26 Aug 2020 20:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598474506;
-        bh=YAxwMHz+Yv/1iH9rzNa2SizES/G0MGq8G2wczS8SfRY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1+9IpBVDBeL8GmjeezHfBI6XIijChUbaRSofxymmg/ymA1og/wGjwlqZI2TCZhm22
-         QgTbEayVVlr5a3/omqs4kTsYwQdXcbGDlFy/GkD2buceko9lzvcMDRfKRdr3+lPjJU
-         +7H+iRxNEwV+nqiHrhikWQfAKrAroHoPAE1d6RtA=
-Date:   Wed, 26 Aug 2020 21:41:09 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        tanveer <tanveer.alam@puresoftware.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
-Message-ID: <20200826204109.GT4965@sirena.org.uk>
-References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
- <20200822183342.6sdhp6yq6i7yvdia@skbuf>
- <CAHp75VeNXy1jWNWMuZc0bfXruKc3=0H4ezwpE8jbj6GLYk5QBA@mail.gmail.com>
- <CAHp75VetYbnOHv3LQhq4Gvs1CFe8LnZPzFAVoNmBi5DyAmZ9Jg@mail.gmail.com>
- <20200826195649.g6k574y6ofzbagnm@skbuf>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5tINJiUS2/Dn5Rhr"
-Content-Disposition: inline
-In-Reply-To: <20200826195649.g6k574y6ofzbagnm@skbuf>
-X-Cookie: Should I do my BOBBIE VINTON medley?
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1598474555;
+        bh=jlRC0LblFWGAlwCR/La2tMi2HZWcZ4kco3I34s3mivA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ONcdkIPjBp+d8E94IWKMDTXhW0goXo+jli8WynQR80HgaHZTxy+aJ+29IBRPAMzJX
+         CACSlXbAkc1nlVFMlvnC7iid0ew9kRNZ6UBtvkSyOfAV84NSGrqfoD6ddEmqnB4Akg
+         kyJ4kasENj6QUPmznJkuUHtqHt4tUwh/wBfiXdC0=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kB2Fd-006yJW-U0; Wed, 26 Aug 2020 21:42:34 +0100
+Date:   Wed, 26 Aug 2020 21:42:31 +0100
+Message-ID: <875z952l6w.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 23/46] irqdomain/msi: Provide DOMAIN_BUS_VMD_MSI
+In-Reply-To: <20200826112332.954409970@linutronix.de>
+References: <20200826111628.794979401@linutronix.de>
+        <20200826112332.954409970@linutronix.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org, haiyangz@microsoft.com, jonathan.derrick@intel.com, baolu.lu@linux.intel.com, wei.liu@kernel.org, kys@microsoft.com, sthemmin@microsoft.com, steve.wahl@hpe.com, sivanich@hpe.com, rja@hpe.com, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, konrad.wilk@oracle.com, xen-devel@lists.xenproject.org, jgross@suse.com, boris.ostrovsky@oracle.com, sstabellini@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, megha.dey@intel.com, jgg@mellanox.com, dave.jiang@intel.com, alex.williamson@redhat.com, jacob.jun.pan@intel.com, baolu.lu@intel.com, kevin.tian@intel.com, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 26 Aug 2020 12:16:51 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> PCI devices behind a VMD bus are not subject to interrupt remapping, but
+> the irq domain for VMD MSI cannot be distinguished from a regular PCI/MSI
+> irq domain.
+> 
+> Add a new domain bus token and allow it in the bus token check in
+> msi_check_reservation_mode() to keep the functionality the same once VMD
+> uses this token.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> 
+> ---
+>  include/linux/irqdomain.h |    1 +
+>  kernel/irq/msi.c          |    7 ++++++-
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> --- a/include/linux/irqdomain.h
+> +++ b/include/linux/irqdomain.h
+> @@ -84,6 +84,7 @@ enum irq_domain_bus_token {
+>  	DOMAIN_BUS_FSL_MC_MSI,
+>  	DOMAIN_BUS_TI_SCI_INTA_MSI,
+>  	DOMAIN_BUS_WAKEUP,
+> +	DOMAIN_BUS_VMD_MSI,
+>  };
+>  
+>  /**
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -370,8 +370,13 @@ static bool msi_check_reservation_mode(s
+>  {
+>  	struct msi_desc *desc;
+>  
+> -	if (domain->bus_token != DOMAIN_BUS_PCI_MSI)
+> +	switch(domain->bus_token) {
+> +	case DOMAIN_BUS_PCI_MSI:
+> +	case DOMAIN_BUS_VMD_MSI:
+> +		break;
+> +	default:
+>  		return false;
+> +	}
+>  
+>  	if (!(info->flags & MSI_FLAG_MUST_REACTIVATE))
+>  		return false;
 
---5tINJiUS2/Dn5Rhr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-On Wed, Aug 26, 2020 at 10:56:49PM +0300, Vladimir Oltean wrote:
-> On Wed, Aug 26, 2020 at 10:36:15PM +0300, Andy Shevchenko wrote:
+	M.
 
-> > FIFO size can be read from the property
-
-> My personal preference is for the driver to hold the expert information
-> about the hardware parameters, and not the device tree. Today you need
-> to know only about this set of parameters, tomorrow you need something
-> new, but you also need to work with old DT blobs... It's a mess.
-
-I strongly agree, it is much better to just know what the hardware is
-and set any properties based off that so we don't need to update
-firmwares to take advantage of additional features or fix quirks that
-are discovered.
-
---5tINJiUS2/Dn5Rhr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9GyOQACgkQJNaLcl1U
-h9C58Af3XowqgGlgNLSZufMTCUU9dHIGYQVCVp9Dj0U96sTqwpESXAZibjojNU/4
-2nRQYpJfC7tJqGa33QerNMP24IeVw9cpBKP6w0IULR/dO48nkpOpoz8g6ZwSMtdK
-zfLJUzgVbahD9rsT5Riz6pkrAEpEGfx1ml4duVTL4WKr4JHxqld/hFE5ohESl7Rl
-oVJwWLjl8tY9Whl7FUKzngPLRCLU0O2JATB9GrufpNQdeBYWV+a1GutdrJRfg59N
-A8G+Z+T/HVmzvJyNER7/TQuD4BWDiDniTt1KriE9Cy/dr8HMa8sXIMZwEiyeoJfj
-9Yd3WhL73AIgyOaN9Ob6DokBdhKr
-=gGjw
------END PGP SIGNATURE-----
-
---5tINJiUS2/Dn5Rhr--
+-- 
+Without deviation from the norm, progress is not possible.
