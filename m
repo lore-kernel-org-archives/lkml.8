@@ -2,174 +2,769 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E848C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C55C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D387E206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:15:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lJOMEX6U"
+	by mail.kernel.org (Postfix) with ESMTP id 35045206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgHZJPQ (ORCPT
+        id S1727986AbgHZJRk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:15:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1518 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727924AbgHZJPP (ORCPT
+        Wed, 26 Aug 2020 05:17:40 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:57377 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbgHZJRk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:15:15 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07Q929xl137857;
-        Wed, 26 Aug 2020 05:14:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=vA8Tx3iVI4lzD+KxacYxVdJLgZdZWXwDkLHluN4iPX4=;
- b=lJOMEX6Ul4lTwBWfPuro4JteOf7VVAEuNGExwnyWhL1McPc/A50U3+nyNMXWg+RJGuJa
- pvU/13JFYuNdyb27BbhnyQ8A4YoQ6f7h9PV5Ovmei4gC6RBINUW9jqRvf5Lt02xGxjpl
- c7Zd3CpooqbiVX8e2p5iElF0BJQK3q2Y7aamTO5lJlhZMJuCsaL8xrcrTx1RCg1tAtVb
- 77l+OD6wv6eWuE7ATzCXiF7njMHFy/TVSXRi3XySjVjFHPBNKyGJGakTFunczw8dPZU5
- f56G7tZXy/q+W6b0eteW7zN8nyHBycVtacisyh0UFtcw3fgXRdocyg1S9p9HXbmXoPAJ zw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335mkb8kv5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 05:14:52 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07Q93XuC143601;
-        Wed, 26 Aug 2020 05:14:52 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 335mkb8kpk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 05:14:51 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07Q9Driw006959;
-        Wed, 26 Aug 2020 09:14:37 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04fra.de.ibm.com with ESMTP id 332ujjtp19-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Aug 2020 09:14:37 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07Q9EZVV62128472
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Aug 2020 09:14:35 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1414BAE053;
-        Wed, 26 Aug 2020 09:14:35 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9A56BAE045;
-        Wed, 26 Aug 2020 09:14:33 +0000 (GMT)
-Received: from [9.85.74.150] (unknown [9.85.74.150])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Aug 2020 09:14:33 +0000 (GMT)
-Subject: Re: [PATCH] Revert "powerpc/powernv/idle: Replace CPU feature check
- with PVR check"
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        npiggin@gmail.com, mikey@neuling.org, ego@linux.vnet.ibm.com,
-        svaidy@linux.ibm.com, linux-kernel@vger.kernel.org,
-        pratik.r.sampat@gmail.com
-References: <20200826082918.89306-1-psampat@linux.ibm.com>
- <1fb7fcef-a39d-d36e-35d5-021a5c9ea82c@csgroup.eu>
-From:   Pratik Sampat <psampat@linux.ibm.com>
-Message-ID: <170e1919-bc45-6b99-dc4d-713418c98be1@linux.ibm.com>
-Date:   Wed, 26 Aug 2020 14:44:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Wed, 26 Aug 2020 05:17:40 -0400
+X-Originating-IP: 90.89.180.255
+Received: from lhopital-XPS-13-9360 (lfbn-tou-1-1372-bdcst.w90-89.abo.wanadoo.fr [90.89.180.255])
+        (Authenticated sender: kevin.lhopital@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 1261FC0008;
+        Wed, 26 Aug 2020 09:17:28 +0000 (UTC)
+Date:   Wed, 26 Aug 2020 11:17:28 +0200
+From:   =?UTF-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     linux-media@vger.kernel.org, mchehab@kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org,
+        yong.deng@magewell.com, p.zabel@pengutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH 5/7] media: sunxi: sun6i-csi: Add support of MIPI CSI-2
+ for A83T
+Message-ID: <20200826111728.21d52c34@lhopital-XPS-13-9360>
+In-Reply-To: <20200825143704.qkg2re5bxm2cufnd@gilmour.lan>
+References: <20200821145935.20346-1-kevin.lhopital@bootlin.com>
+        <20200821145935.20346-6-kevin.lhopital@bootlin.com>
+        <20200825143704.qkg2re5bxm2cufnd@gilmour.lan>
+Organization: bootlin
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1fb7fcef-a39d-d36e-35d5-021a5c9ea82c@csgroup.eu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-26_03:2020-08-25,2020-08-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 clxscore=1011 priorityscore=1501 malwarescore=0 phishscore=0
- adultscore=0 suspectscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008260068
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
+Le Tue, 25 Aug 2020 16:37:04 +0200,
+Maxime Ripard <maxime@cerno.tech> a écrit :
 
-On 26/08/20 2:07 pm, Christophe Leroy wrote:
->
->
-> Le 26/08/2020 à 10:29, Pratik Rajesh Sampat a écrit :
->> Cpuidle stop state implementation has minor optimizations for P10
->> where hardware preserves more SPR registers compared to P9.
->> The current P9 driver works for P10, although does few extra
->> save-restores. P9 driver can provide the required power management
->> features like SMT thread folding and core level power savings
->> on a P10 platform.
->>
->> Until the P10 stop driver is available, revert the commit which
->> allows for only P9 systems to utilize cpuidle and blocks all
->> idle stop states for P10.
->> Cpu idle states are enabled and tested on the P10 platform
->> with this fix.
->>
->> This reverts commit 8747bf36f312356f8a295a0c39ff092d65ce75ae.
->>
->> Fixes: 8747bf36f312 ("powerpc/powernv/idle: Replace CPU feature check 
->> with PVR check")
->> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
->> ---
->>   @mpe: This revert would resolve a staging issue wherein the P10 stop
->>   driver is not yet ready while cpuidle stop states need not be blocked
->>   on 5.9 for Power10 systems which could cause SMT folding related
->>   performance issues.
->>
->>   The P10 stop driver is in the works here:
->> https://lists.ozlabs.org/pipermail/linuxppc-dev/2020-August/216773.html
->>
->>   arch/powerpc/platforms/powernv/idle.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/powerpc/platforms/powernv/idle.c 
->> b/arch/powerpc/platforms/powernv/idle.c
->> index 77513a80cef9..345ab062b21a 100644
->> --- a/arch/powerpc/platforms/powernv/idle.c
->> +++ b/arch/powerpc/platforms/powernv/idle.c
->> @@ -1223,7 +1223,7 @@ static void __init pnv_probe_idle_states(void)
->>           return;
->>       }
->>   -    if (pvr_version_is(PVR_POWER9))
->> +    if (cpu_has_feature(CPU_FTR_ARCH_300))
->
-> Why not something like:
->
->     if (pvr_version_is(PVR_POWER9) || pvr_version_is(PVR_POWER10))
->         pnv_power9_idle_init(); 
+> Hi,
+> 
+> On Fri, Aug 21, 2020 at 04:59:33PM +0200, Kévin L'hôpital wrote:
+> > This patch add the support only for the Allwinner A83T MIPI CSI2
+> > 
+> > Currently, the driver is not supported the other Allwinner V3's
+> > MIPI CSI2
+> > 
+> > It has been tested with the ov8865 image sensor.
+> > 
+> > Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>  
+> 
+> Explaining how it's different from the v3s would help
+> 
+> > ---
+> >  .../media/platform/sunxi/sun6i-csi/Makefile   |   2 +-
+> >  .../platform/sunxi/sun6i-csi/sun6i_csi.c      |  82 ++++--
+> >  .../sunxi/sun6i-csi/sun8i_a83t_dphy.c         |  20 ++
+> >  .../sunxi/sun6i-csi/sun8i_a83t_dphy.h         |  16 ++
+> >  .../sunxi/sun6i-csi/sun8i_a83t_dphy_reg.h     |  15 ++
+> >  .../sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.c    | 249
+> > ++++++++++++++++++ .../sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.h    |
+> > 16 ++ .../sun6i-csi/sun8i_a83t_mipi_csi2_reg.h      |  42 +++
+> >  8 files changed, 425 insertions(+), 17 deletions(-)
+> >  create mode 100644
+> > drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy.c create
+> > mode 100644
+> > drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy.h create
+> > mode 100644
+> > drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy_reg.h create
+> > mode 100644
+> > drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.c
+> > create mode 100644
+> > drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.h
+> > create mode 100644
+> > drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2_reg.h
+> > 
+> > diff --git a/drivers/media/platform/sunxi/sun6i-csi/Makefile
+> > b/drivers/media/platform/sunxi/sun6i-csi/Makefile index
+> > e7e315347804..0f3849790463 100644 ---
+> > a/drivers/media/platform/sunxi/sun6i-csi/Makefile +++
+> > b/drivers/media/platform/sunxi/sun6i-csi/Makefile @@ -1,4 +1,4 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> > -sun6i-csi-y += sun6i_video.o sun6i_csi.o
+> > +sun6i-csi-y += sun6i_video.o sun6i_csi.o sun8i_a83t_mipi_csi2.o
+> > sun8i_a83t_dphy.o 
+> >  obj-$(CONFIG_VIDEO_SUN6I_CSI) += sun6i-csi.o
+> > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c index
+> > 680fa31f380a..37aec0b57a46 100644 ---
+> > a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c +++
+> > b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c @@ -26,6 +26,7
+> > @@ 
+> >  #include "sun6i_csi.h"
+> >  #include "sun6i_csi_reg.h"
+> > +#include "sun8i_a83t_mipi_csi2.h"
+> >  
+> >  #define MODULE_NAME	"sun6i-csi"
+> >  
+> > @@ -40,6 +41,18 @@ bool sun6i_csi_is_format_supported(struct
+> > sun6i_csi *csi, {
+> >  	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
+> >  
+> > +	if (csi->v4l2_ep.bus_type == V4L2_MBUS_CSI2_DPHY) {
+> > +		if (!sdev->clk_mipi) {
+> > +			dev_err(sdev->dev, "Use MIPI-CSI2 device
+> > with no MIPI clock\n");
+> > +			return false;
+> > +		}
+> > +		if (!sdev->clk_misc) {
+> > +			dev_err(sdev->dev, "Use MIPI-CSI2 device
+> > with no misc clock\n");
+> > +			return false;
+> > +		}
+> > +		return true;
+> > +	}
+> > +  
+> 
+> I'm not sure we need to check for that everywhere, just doing so in
+> the fwnode parsing function sohuld be enough.
+> 
 
-In order to use PVR_POWER10 I would need to define it under
-arch/powerpc/include/asm/reg.h, which is not present in 5.9 yet.
+All right, I will do it in the fwnode function.
 
-However, if it okay with @mpe I could split out Nick's P10 stop driver
-(https://lists.ozlabs.org/pipermail/linuxppc-dev/2020-August/216773.html)
-into two parts:
-1. This could include minimal code to introduce the P10 PVR and the
-stop wrappers for it. Although this patch internally still calls into
-the P9 path. This should gracefully fix the issue.
-2. Then later in this patch we could introduce the p10 callback
-methods as they are in Nick's series.
+> >  	/*
+> >  	 * Some video receivers have the ability to be compatible
+> > with
+> >  	 * 8bit and 16bit bus width.
+> > @@ -160,10 +173,14 @@ int sun6i_csi_set_power(struct sun6i_csi
+> > *csi, bool enable) regmap_update_bits(regmap, CSI_EN_REG,
+> > CSI_EN_CSI_EN, 0); 
+> >  		clk_disable_unprepare(sdev->clk_ram);
+> > +
+> >  		if (of_device_is_compatible(dev->of_node,
+> >  					    "allwinner,sun50i-a64-csi"))
+> >  			clk_rate_exclusive_put(sdev->clk_mod);
+> >  		clk_disable_unprepare(sdev->clk_mod);
+> > +		if (csi->v4l2_ep.bus_type == V4L2_MBUS_CSI2_DPHY)
+> > +			sun6i_mipi_csi_clk_disable(csi);
+> > +
+> >  		reset_control_assert(sdev->rstc_bus);
+> >  		return 0;
+> >  	}
+> > @@ -189,10 +206,18 @@ int sun6i_csi_set_power(struct sun6i_csi
+> > *csi, bool enable) goto clk_ram_disable;
+> >  	}
+> >  
+> > +	if (csi->v4l2_ep.bus_type == V4L2_MBUS_CSI2_DPHY) {
+> > +		ret = sun6i_mipi_csi_clk_enable(csi);
+> > +		if (ret)
+> > +			goto reset_control_assert;
+> > +	}
+> > +
+> >  	regmap_update_bits(regmap, CSI_EN_REG, CSI_EN_CSI_EN,
+> > CSI_EN_CSI_EN); 
+> >  	return 0;
+> >  
+> > +reset_control_assert:
+> > +	reset_control_assert(sdev->rstc_bus);
+> >  clk_ram_disable:
+> >  	clk_disable_unprepare(sdev->clk_ram);
+> >  clk_mod_disable:
+> > @@ -421,27 +446,33 @@ static void sun6i_csi_setup_bus(struct
+> > sun6i_csi_dev *sdev) if (flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
+> >  			cfg |= CSI_IF_CFG_CLK_POL_FALLING_EDGE;
+> >  		break;
+> > +	case V4L2_MBUS_CSI2_DPHY:
+> > +		cfg |= CSI_IF_CFG_MIPI_IF_MIPI;
+> > +		sun6i_mipi_csi_setup_bus(csi);
+> > +		break;
+> >  	default:
+> >  		dev_warn(sdev->dev, "Unsupported bus type: %d\n",
+> >  			 endpoint->bus_type);
+> >  		break;
+> >  	}
+> >  
+> > -	switch (bus_width) {
+> > -	case 8:
+> > -		cfg |= CSI_IF_CFG_IF_DATA_WIDTH_8BIT;
+> > -		break;
+> > -	case 10:
+> > -		cfg |= CSI_IF_CFG_IF_DATA_WIDTH_10BIT;
+> > -		break;
+> > -	case 12:
+> > -		cfg |= CSI_IF_CFG_IF_DATA_WIDTH_12BIT;
+> > -		break;
+> > -	case 16: /* No need to configure DATA_WIDTH for 16bit */
+> > -		break;
+> > -	default:
+> > -		dev_warn(sdev->dev, "Unsupported bus width: %u\n",
+> > bus_width);
+> > -		break;
+> > +	if (endpoint->bus_type != V4L2_MBUS_CSI2_DPHY) {
+> > +		switch (bus_width) {
+> > +		case 8:
+> > +			cfg |= CSI_IF_CFG_IF_DATA_WIDTH_8BIT;
+> > +			break;
+> > +		case 10:
+> > +			cfg |= CSI_IF_CFG_IF_DATA_WIDTH_10BIT;
+> > +			break;
+> > +		case 12:
+> > +			cfg |= CSI_IF_CFG_IF_DATA_WIDTH_12BIT;
+> > +			break;
+> > +		case 16: /* No need to configure DATA_WIDTH for
+> > 16bit */
+> > +			break;
+> > +		default:
+> > +			dev_warn(sdev->dev, "Unsupported bus
+> > width: %u\n", bus_width);
+> > +			break;
+> > +		}
+> >  	}  
+> 
+> I'm not sure why we need to do some setup in both cases, and some only
+> in the MIPI-CSI case here, can you clarify that a bit?
 
----
-Thanks
-Pratik
+Yes I will add a comment to explain it.
+> 
+> >  
+> >  	regmap_write(sdev->regmap, CSI_IF_CFG_REG, cfg);
+> > @@ -593,6 +624,9 @@ void sun6i_csi_set_stream(struct sun6i_csi
+> > *csi, bool enable) struct regmap *regmap = sdev->regmap;
+> >  
+> >  	if (!enable) {
+> > +		if (csi->v4l2_ep.bus_type == V4L2_MBUS_CSI2_DPHY)
+> > +			sun6i_mipi_csi_set_stream(csi, 0);
+> > +
+> >  		regmap_update_bits(regmap, CSI_CAP_REG,
+> > CSI_CAP_CH0_VCAP_ON, 0); regmap_write(regmap, CSI_CH_INT_EN_REG, 0);
+> >  		return;
+> > @@ -609,6 +643,9 @@ void sun6i_csi_set_stream(struct sun6i_csi
+> > *csi, bool enable) 
+> >  	regmap_update_bits(regmap, CSI_CAP_REG,
+> > CSI_CAP_CH0_VCAP_ON, CSI_CAP_CH0_VCAP_ON);
+> > +
+> > +	if (csi->v4l2_ep.bus_type == V4L2_MBUS_CSI2_DPHY)
+> > +		sun6i_mipi_csi_set_stream(csi, 1);
+> >  }
+> >  
+> >  /*
+> > -----------------------------------------------------------------------------
+> > @@ -692,6 +729,7 @@ static int sun6i_csi_fwnode_parse(struct device
+> > *dev, } 
+> >  	switch (vep->bus_type) {
+> > +	case V4L2_MBUS_CSI2_DPHY:
+> >  	case V4L2_MBUS_PARALLEL:
+> >  	case V4L2_MBUS_BT656:
+> >  		csi->v4l2_ep = *vep;
+> > @@ -812,7 +850,7 @@ static const struct regmap_config
+> > sun6i_csi_regmap_config = { .reg_bits       = 32,
+> >  	.reg_stride     = 4,
+> >  	.val_bits       = 32,
+> > -	.max_register	= 0x9c,
+> > +	.max_register	= 0x2000,
+> >  };
+> >  
+> >  static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
+> > @@ -847,6 +885,18 @@ static int sun6i_csi_resource_request(struct
+> > sun6i_csi_dev *sdev, return PTR_ERR(sdev->clk_ram);
+> >  	}
+> >  
+> > +	sdev->clk_mipi = devm_clk_get(&pdev->dev, "mipi");
+> > +	if (IS_ERR(sdev->clk_mipi)) {
+> > +		sdev->clk_mipi = NULL;
+> > +		dev_warn(&pdev->dev, "Unable to acquire mipi
+> > clock. No mipi support\n");
+> > +	}
+> > +
+> > +	sdev->clk_misc = devm_clk_get(&pdev->dev, "misc");
+> > +	if (IS_ERR(sdev->clk_misc)) {
+> > +		sdev->clk_misc = NULL;
+> > +		dev_warn(&pdev->dev, "Unable to acquire misc
+> > clock. No mipi support\n");
+> > +	}
+> > +  
+> 
+> This will raise an error on platforms that use that driver for CSI but
+> don't have MIPI-CSI (like the H3 IIRC?), this isn't really ok.
+> 
+> I guess we could have a per-soc flag where you'd say if MIPI-CSI is
+> supported and only try to get the clock on the relevant SoCs.
+> 
+> Also, you're changing the DT binding, the documentation should be
+> updated.
+> 
 
->
->>           pnv_power9_idle_init();
->>         for (i = 0; i < nr_pnv_idle_states; i++)
->>
->
-> Christophe
+Yes you are right, I will add this.
 
+> >  	sdev->rstc_bus = devm_reset_control_get_shared(&pdev->dev,
+> > NULL); if (IS_ERR(sdev->rstc_bus)) {
+> >  		dev_err(&pdev->dev, "Cannot get reset
+> > controller\n"); diff --git
+> > a/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy.c
+> > b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy.c new file
+> > mode 100644 index 000000000000..3f5e4395aaa5 --- /dev/null
+> > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy.c
+> > @@ -0,0 +1,20 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * sun6i_dphy.c
+> > + * Copyright Kévin L'hôpital (C) 2020
+> > + */
+> > +
+> > +#include "sun8i_a83t_dphy.h"
+> > +#include "sun8i_a83t_dphy_reg.h"
+> > +
+> > +void sun6i_dphy_first_init(struct sun6i_csi_dev *sdev)
+> > +{
+> > +	regmap_write(sdev->regmap, DPHY_CTRL_REG, 0xb8df698e);
+> > +}
+> > +
+> > +void sun6i_dphy_second_init(struct sun6i_csi_dev *sdev)
+> > +{
+> > +	regmap_write(sdev->regmap, DPHY_CTRL_REG, 0x80008000);
+> > +	regmap_write(sdev->regmap, DPHY_ANA0_REG, 0xa0200000);
+> > +}  
+> 
+> Some documentation/comment on what that first init and second init is,
+> and what those magic values are doing would be great here.
+> 
+
+Yes I will add some comments.
+
+> > diff --git
+> > a/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy.h
+> > b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy.h new file
+> > mode 100644 index 000000000000..f776ed098cb3 --- /dev/null
+> > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy.h
+> > @@ -0,0 +1,16 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * sun6i_dphy.h
+> > + * Copyright Kévin L'hôpital (C) 2020
+> > + */
+> > +
+> > +#ifndef __SUN8I_A83T_DPHY_H__
+> > +#define __SUN8I_A83T_DPHY_H__
+> > +
+> > +#include <linux/regmap.h>
+> > +#include "sun6i_csi.h"
+> > +
+> > +void sun6i_dphy_first_init(struct sun6i_csi_dev *sdev);
+> > +void sun6i_dphy_second_init(struct sun6i_csi_dev *sdev);
+> > +
+> > +#endif /* __SUN8I_A83T_DPHY_H__ */
+> > diff --git
+> > a/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy_reg.h
+> > b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy_reg.h new
+> > file mode 100644 index 000000000000..c88824e4ec2e --- /dev/null
+> > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_dphy_reg.h
+> > @@ -0,0 +1,15 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Allwinner A83t DPHY register description
+> > + * Copyright Kévin L'hôpital (C) 2020
+> > + */
+> > +
+> > +#ifndef __SUN8I_A83T_DPHY_REG_H__
+> > +#define __SUN8I_A83T_DPHY_REG_H__
+> > +
+> > +
+> > +#define DPHY_OFFSET			0x1000
+> > +#define DPHY_CTRL_REG			(DPHY_OFFSET + 0x010)
+> > +#define DPHY_ANA0_REG			(DPHY_OFFSET + 0x030)
+> > +
+> > +#endif /* __SUN8I_A83T_DPHY_REG_H__ */  
+> 
+> Ideally this should be a D-PHY driver under drivers/phy
+> 
+> > diff --git
+> > a/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.c
+> > b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.c new
+> > file mode 100644 index 000000000000..3f117e8d447f --- /dev/null
+> > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.c
+> > @@ -0,0 +1,249 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Allwinner A83t MIPI Camera Sensor Interface driver
+> > + * Copyright Kévin L'hôpital (C) 2020
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include "sun8i_a83t_mipi_csi2.h"
+> > +#include "sun8i_a83t_mipi_csi2_reg.h"
+> > +#include "sun8i_a83t_dphy.h"
+> > +#include <linux/delay.h>
+> > +
+> > +#define IS_FLAG(x, y) (((x) & (y)) == y)
+> > +
+> > +enum mipi_csi2_pkt_fmt {
+> > +	MIPI_FS           = 0X00,
+> > +	MIPI_FE           = 0X01,
+> > +	MIPI_LS           = 0X02,
+> > +	MIPI_LE           = 0X03,
+> > +	MIPI_SDAT0          = 0X08,
+> > +	MIPI_SDAT1          = 0X09,
+> > +	MIPI_SDAT2          = 0X0A,
+> > +	MIPI_SDAT3          = 0X0B,
+> > +	MIPI_SDAT4          = 0X0C,
+> > +	MIPI_SDAT5          = 0X0D,
+> > +	MIPI_SDAT6          = 0X0E,
+> > +	MIPI_SDAT7          = 0X0F,
+> > +	MIPI_BLK            = 0X11,
+> > +	MIPI_EMBD         = 0X12,
+> > +	MIPI_YUV420       = 0X18,
+> > +	MIPI_YUV420_10    = 0X19,
+> > +	MIPI_YUV420_CSP   = 0X1C,
+> > +	MIPI_YUV420_CSP_10 =  0X1D,
+> > +	MIPI_YUV422       = 0X1E,
+> > +	MIPI_YUV422_10    = 0X1F,
+> > +	MIPI_RGB565       = 0X22,
+> > +	MIPI_RGB888       = 0X24,
+> > +	MIPI_RAW8         = 0X2A,
+> > +	MIPI_RAW10          = 0X2B,
+> > +	MIPI_RAW12          = 0X2C,
+> > +	MIPI_USR_DAT0     = 0X30,
+> > +	MIPI_USR_DAT1     = 0X31,
+> > +	MIPI_USR_DAT2     = 0X32,
+> > +	MIPI_USR_DAT3     = 0X33,
+> > +	MIPI_USR_DAT4     = 0X34,
+> > +	MIPI_USR_DAT5     = 0X35,
+> > +	MIPI_USR_DAT6     = 0X36,
+> > +	MIPI_USR_DAT7     = 0X37,
+> > +};
+> > +
+> > +static inline struct sun6i_csi_dev *sun6i_csi_to_dev(struct
+> > sun6i_csi *csi) +{
+> > +	return container_of(csi, struct sun6i_csi_dev, csi);
+> > +}
+> > +
+> > +static enum mipi_csi2_pkt_fmt get_pkt_fmt(u16 bus_pix_code)
+> > +{
+> > +	switch (bus_pix_code) {
+> > +	case MEDIA_BUS_FMT_RGB565_1X16:
+> > +		return MIPI_RGB565;
+> > +	case MEDIA_BUS_FMT_UYVY8_2X8:
+> > +	case MEDIA_BUS_FMT_UYVY8_1X16:
+> > +		return MIPI_YUV422;
+> > +	case MEDIA_BUS_FMT_UYVY10_2X10:
+> > +		return MIPI_YUV422_10;
+> > +	case MEDIA_BUS_FMT_RGB888_1X24:
+> > +		return MIPI_RGB888;
+> > +	case MEDIA_BUS_FMT_SBGGR8_1X8:
+> > +	case MEDIA_BUS_FMT_SGBRG8_1X8:
+> > +	case MEDIA_BUS_FMT_SGRBG8_1X8:
+> > +	case MEDIA_BUS_FMT_SRGGB8_1X8:
+> > +		return MIPI_RAW8;
+> > +	case MEDIA_BUS_FMT_SBGGR10_1X10:
+> > +	case MEDIA_BUS_FMT_SGBRG10_1X10:
+> > +	case MEDIA_BUS_FMT_SGRBG10_1X10:
+> > +	case MEDIA_BUS_FMT_SRGGB10_1X10:
+> > +		return MIPI_RAW10;
+> > +	case MEDIA_BUS_FMT_SBGGR12_1X12:
+> > +	case MEDIA_BUS_FMT_SGBRG12_1X12:
+> > +	case MEDIA_BUS_FMT_SGRBG12_1X12:
+> > +	case MEDIA_BUS_FMT_SRGGB12_1X12:
+> > +		return MIPI_RAW12;
+> > +	default:
+> > +		return MIPI_RAW8;
+> > +	}
+> > +}
+> > +
+> > +  
+> 
+> There's an extra new line here
+> 
+> > +void sun6i_mipi_csi_set_stream(struct sun6i_csi *csi, bool enable)
+> > +{
+> > +	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
+> > +
+> > +	if (enable)
+> > +		regmap_write_bits(sdev->regmap, MIPI_CSI2_CFG_REG,
+> > +				  MIPI_CSI2_CFG_REG_SYNC_EN,
+> > +				  MIPI_CSI2_CFG_REG_SYNC_EN);
+> > +	else
+> > +		regmap_write_bits(sdev->regmap, MIPI_CSI2_CFG_REG,
+> > +				  MIPI_CSI2_CFG_REG_SYNC_EN, 0);  
+> 
+> Do you really need regmap_write_bits here, or is regmap_update_bits
+> enough?
+
+Yes I could use regmap_update_bits.
+> 
+> > +
+> > +}
+> > +
+> > +void sun6i_mipi_csi_init(struct sun6i_csi_dev *sdev)
+> > +{
+> > +	regmap_write(sdev->regmap, MIPI_CSI2_CTRL_REG, 0xb8c39bec);
+> > +	regmap_write(sdev->regmap, MIPI_CSI2_RX_PKT_NUM_REG,
+> > 0xb8d257f8);
+> > +	sun6i_dphy_first_init(sdev);
+> > +	regmap_write(sdev->regmap, MIPI_CSI2_RSVD1_REG,
+> > +		     HW_LOCK_REGISTER_VALUE_1);
+> > +	regmap_write(sdev->regmap, MIPI_CSI2_RSVD2_REG,
+> > +		     HW_LOCK_REGISTER_VALUE_2);
+> > +	regmap_write(sdev->regmap, MIPI_CSI2_RX_PKT_NUM_REG, 0);
+> > +	regmap_write(sdev->regmap, MIPI_CSI2_VCDT0_REG, 0);
+> > +	regmap_write(sdev->regmap, MIPI_CSI2_CFG_REG, 0xb8c64f24);
+> > +	sun6i_dphy_second_init(sdev);
+> > +	regmap_write(sdev->regmap, MIPI_CSI2_CTRL_REG, 0x80000000);
+> > +	regmap_write(sdev->regmap, MIPI_CSI2_CFG_REG,
+> > 0x12200000);  
+> 
+> Again, some defines / comments would be great here.
+> 
+> > +}
+> > +
+> > +void sun6i_mipi_csi_setup_bus(struct sun6i_csi *csi)
+> > +{
+> > +	struct v4l2_fwnode_endpoint *endpoint = &csi->v4l2_ep;
+> > +	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
+> > +	int lane_num = endpoint->bus.mipi_csi2.num_data_lanes;
+> > +	int flags = endpoint->bus.mipi_csi2.flags;
+> > +	int total_rx_ch = 0;
+> > +	int vc[4];
+> > +	int ch;
+> > +
+> > +	sun6i_mipi_csi_init(sdev);
+> > +
+> > +	if (IS_FLAG(flags, V4L2_MBUS_CSI2_CHANNEL_0)) {
+> > +		vc[total_rx_ch] = 0;
+> > +		total_rx_ch++;
+> > +	}
+> > +
+> > +	if (IS_FLAG(flags, V4L2_MBUS_CSI2_CHANNEL_1)) {
+> > +		vc[total_rx_ch] = 1;
+> > +		total_rx_ch++;
+> > +	}
+> > +
+> > +	if (IS_FLAG(flags, V4L2_MBUS_CSI2_CHANNEL_2)) {
+> > +		vc[total_rx_ch] = 2;
+> > +		total_rx_ch++;
+> > +	}
+> > +
+> > +	if (IS_FLAG(flags, V4L2_MBUS_CSI2_CHANNEL_3)) {
+> > +		vc[total_rx_ch] = 3;
+> > +		total_rx_ch++;
+> > +	}
+> > +  
+> 
+> Is it supposed to handle multiple virtual channels at once? If so, how
+> do you get the results of each virtual channel?
+> 
+
+Yes you are rigth, implement just one virtual channel makes more sens.
+
+> > +	if (!total_rx_ch) {
+> > +		dev_dbg(sdev->dev,
+> > +			 "No receive channel assigned, using
+> > channel 0.\n");
+> > +		vc[total_rx_ch] = 0;
+> > +		total_rx_ch++;
+> > +	}
+> > +	/* Set lane. */
+> > +	regmap_write_bits(sdev->regmap, MIPI_CSI2_CFG_REG,
+> > +			  MIPI_CSI2_CFG_REG_N_LANE_MASK, (lane_num
+> > - 1) <<
+> > +			  MIPI_CSI2_CFG_REG_N_LANE_SHIFT);
+> > +	/* Set total channels. */
+> > +	regmap_write_bits(sdev->regmap, MIPI_CSI2_CFG_REG,
+> > +			  MIPI_CSI2_CFG_REG_N_CHANNEL_MASK,
+> > (total_rx_ch - 1) <<
+> > +			  MIPI_CSI2_CFG_REG_N_CHANNEL_SHIFT);
+> > +
+> > +	for (ch = 0; ch < total_rx_ch; ch++) {
+> > +		switch (ch) {
+> > +		case 0:
+> > +			regmap_write_bits(sdev->regmap,
+> > MIPI_CSI2_VCDT0_REG,
+> > +
+> > MIPI_CSI2_VCDT0_REG_CH0_DT_MASK,
+> > +
+> > get_pkt_fmt(csi->config.code));
+> > +			regmap_write_bits(sdev->regmap,
+> > MIPI_CSI2_VCDT0_REG,
+> > +
+> > MIPI_CSI2_VCDT0_REG_CH0_VC_MASK,
+> > +					  vc[ch] <<
+> > MIPI_CSI2_VCDT0_REG_CH0_VC_SHIFT);
+> > +			break;
+> > +		case 1:
+> > +			regmap_write_bits(sdev->regmap,
+> > MIPI_CSI2_VCDT0_REG,
+> > +
+> > MIPI_CSI2_VCDT0_REG_CH1_DT_MASK,
+> > +
+> > get_pkt_fmt(csi->config.code)
+> > +					  <<
+> > +
+> > MIPI_CSI2_VCDT0_REG_CH1_DT_SHIFT);
+> > +			regmap_write_bits(sdev->regmap,
+> > MIPI_CSI2_VCDT0_REG,
+> > +
+> > MIPI_CSI2_VCDT0_REG_CH1_VC_MASK,
+> > +					  vc[ch] <<
+> > MIPI_CSI2_VCDT0_REG_CH1_VC_SHIFT);
+> > +			break;
+> > +		case 2:
+> > +			regmap_write_bits(sdev->regmap,
+> > MIPI_CSI2_VCDT0_REG,
+> > +
+> > MIPI_CSI2_VCDT0_REG_CH2_DT_MASK,
+> > +
+> > get_pkt_fmt(csi->config.code)
+> > +					  <<
+> > +
+> > MIPI_CSI2_VCDT0_REG_CH2_DT_SHIFT);
+> > +			regmap_write_bits(sdev->regmap,
+> > MIPI_CSI2_VCDT0_REG,
+> > +
+> > MIPI_CSI2_VCDT0_REG_CH2_VC_MASK,
+> > +					  vc[ch] <<
+> > MIPI_CSI2_VCDT0_REG_CH2_VC_SHIFT);
+> > +			break;
+> > +		case 3:
+> > +			regmap_write_bits(sdev->regmap,
+> > MIPI_CSI2_VCDT0_REG,
+> > +
+> > MIPI_CSI2_VCDT0_REG_CH3_DT_MASK,
+> > +
+> > get_pkt_fmt(csi->config.code)
+> > +					  <<
+> > +
+> > MIPI_CSI2_VCDT0_REG_CH3_DT_SHIFT);
+> > +			regmap_write_bits(sdev->regmap,
+> > MIPI_CSI2_VCDT0_REG,
+> > +
+> > MIPI_CSI2_VCDT0_REG_CH3_VC_MASK,
+> > +					  vc[ch] <<
+> > MIPI_CSI2_VCDT0_REG_CH3_VC_SHIFT);
+> > +			break;
+> > +		default:
+> > +			regmap_write(sdev->regmap,
+> > MIPI_CSI2_VCDT0_REG,
+> > +				     MIPI_CSI2_VCDT0_REG_DEFAULT);
+> > +			break;
+> > +		}
+> > +	}
+> > +	mdelay(10);  
+> 
+> Why do you need an mdelay here?
+
+yes a msleep could be more correct here.
+
+> 
+> > +
+> > +}
+> > +
+> > +int sun6i_mipi_csi_clk_enable(struct sun6i_csi *csi)
+> > +{
+> > +	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
+> > +	int ret;
+> > +
+> > +	ret = clk_prepare_enable(sdev->clk_mipi);
+> > +	if (ret) {
+> > +		dev_err(sdev->dev, "Enable clk_mipi clk err %d\n",
+> > ret);
+> > +		return ret;
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(sdev->clk_misc);
+> > +	if (ret) {
+> > +		dev_err(sdev->dev, "Enable clk_misc clk err %d\n",
+> > ret);
+> > +		goto clk_mipi_disable;
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +clk_mipi_disable:
+> > +	clk_disable_unprepare(sdev->clk_mipi);
+> > +	return ret;
+> > +}
+> > +
+> > +void sun6i_mipi_csi_clk_disable(struct sun6i_csi *csi)
+> > +{
+> > +	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
+> > +
+> > +	clk_disable_unprepare(sdev->clk_misc);
+> > +	clk_disable_unprepare(sdev->clk_mipi);
+> > +}
+> > +
+> > +
+> > diff --git
+> > a/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.h
+> > b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.h new
+> > file mode 100644 index 000000000000..a94c69ccee39 --- /dev/null
+> > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2.h
+> > @@ -0,0 +1,16 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright Kévin L'hôpital (C) 2020
+> > + */
+> > +
+> > +#ifndef __SUN8I_A83T_MIPI_CSI2_H__
+> > +#define __SUN8I_A83T_MIPI_CSI2_H__
+> > +#include <linux/regmap.h>
+> > +#include "sun6i_csi.h"
+> > +
+> > +void sun6i_mipi_csi_set_stream(struct sun6i_csi *csi, bool enable);
+> > +void sun6i_mipi_csi_setup_bus(struct sun6i_csi *csi);
+> > +int sun6i_mipi_csi_clk_enable(struct sun6i_csi *csi);
+> > +void sun6i_mipi_csi_clk_disable(struct sun6i_csi *csi);
+> > +
+> > +#endif /* __SUN8I_A83T_MIPI_CSI2_H__ */
+> > diff --git
+> > a/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2_reg.h
+> > b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2_reg.h
+> > new file mode 100644 index 000000000000..4d6fde3e50ef --- /dev/null
+> > +++
+> > b/drivers/media/platform/sunxi/sun6i-csi/sun8i_a83t_mipi_csi2_reg.h
+> > @@ -0,0 +1,42 @@ +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Allwinner A83t MIPI CSI register description
+> > + * Copyright Kévin L'hôpital (C) 2020
+> > + */
+> > +
+> > +#ifndef __SUN8I_A83T_MIPI_CSI2_REG_H__
+> > +#define __SUN8I_A83T_MIPI_CSI2_REG_H__
+> > +
+> > +
+> > +#define MIPI_CSI2_OFFSET			0x1000
+> > +#define MIPI_CSI2_CTRL_REG
+> > (MIPI_CSI2_OFFSET + 0x004) +#define
+> > MIPI_CSI2_RX_PKT_NUM_REG		(MIPI_CSI2_OFFSET + 0x008)
+> > +#define MIPI_CSI2_RSVD1_REG
+> > (MIPI_CSI2_OFFSET + 0x018) +#define
+> > HW_LOCK_REGISTER_VALUE_1		0xb8c8a30c +#define
+> > MIPI_CSI2_RSVD2_REG			(MIPI_CSI2_OFFSET +
+> > 0x01c) +#define HW_LOCK_REGISTER_VALUE_2		0xb8df8ad7  
+> 
+> We should have defines for those, or at least where they are coming
+> from
+> 
+> > +#define MIPI_CSI2_CFG_REG			(MIPI_CSI2_OFFSET
+> > + 0x100) +#define MIPI_CSI2_CFG_REG_SYNC_EN		BIT(31)
+> > +#define MIPI_CSI2_CFG_REG_N_LANE_SHIFT		4
+> > +#define MIPI_CSI2_CFG_REG_N_LANE_MASK		0x30  
+> 
+> GENMASK would be great here (and everywhere below too)
+> 
+> Maxime
+
+Thank you very much for the review.
+Kévin
+
+-- 
+Kevin L'Hopital, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
