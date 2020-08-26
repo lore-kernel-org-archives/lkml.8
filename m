@@ -2,162 +2,85 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19AB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 497EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB1B420707
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:54:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oFXSr8rr"
+	by mail.kernel.org (Postfix) with ESMTP id 26E5D20707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbgHZLy5 (ORCPT
+        id S1729282AbgHZLzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:54:57 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:34666 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728992AbgHZLyd (ORCPT
+        Wed, 26 Aug 2020 07:55:04 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:41029 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729195AbgHZLye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:54:33 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07QBsHd2011740;
-        Wed, 26 Aug 2020 06:54:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598442857;
-        bh=7JbYWbrP9n+hcQ/zh3iXK/TqWpH2A4yaS5facefQiAo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=oFXSr8rr31TE3eJ9f/HW9iGEl6X0XzJiaN+N6kQ4kgMn8V6Vh1mUkjaohMHgZ5jzq
-         ZDpQYhNO9r4PCUDdM4Hw8ip8M6NfP8wV8sa0IPHJjSUM6qyC27ECzPlhhgY9w+xC6S
-         oS8CUiZHoSxLWmueCL/rIBNbarRG2d2nEqr0n/HQ=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07QBsHTg028820
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 26 Aug 2020 06:54:17 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 26
- Aug 2020 06:54:17 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 26 Aug 2020 06:54:17 -0500
-Received: from [10.250.68.181] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07QBsG6i079719;
-        Wed, 26 Aug 2020 06:54:16 -0500
-Subject: Re: [PATCH 2/2] dt-bindings: leds: Add bindings for MT6360 LED
-To:     Gene Chen <gene.chen.richtek@gmail.com>,
-        <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <matthias.bgg@gmail.com>
-CC:     <linux-leds@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <gene_chen@richtek.com>,
-        <Wilma.Wu@mediatek.com>, <shufan_lee@richtek.com>,
-        <cy_huang@richtek.com>, <benjamin.chao@mediatek.com>
-References: <1598441840-15226-1-git-send-email-gene.chen.richtek@gmail.com>
- <1598441840-15226-3-git-send-email-gene.chen.richtek@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <06b19a38-6850-01b1-7a43-b61aec4079b8@ti.com>
-Date:   Wed, 26 Aug 2020 06:54:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 26 Aug 2020 07:54:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R431e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U6vV5Ro_1598442870;
+Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0U6vV5Ro_1598442870)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 26 Aug 2020 19:54:31 +0800
+Reply-To: xlpang@linux.alibaba.com
+Subject: Re: [PATCH] mm: memcg: Fix memcg reclaim soft lockup
+From:   Xunlei Pang <xlpang@linux.alibaba.com>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <1598426822-93737-1-git-send-email-xlpang@linux.alibaba.com>
+ <20200826081102.GM22869@dhcp22.suse.cz>
+ <99efed0e-050a-e313-46ab-8fe6228839d5@linux.alibaba.com>
+ <20200826110015.GO22869@dhcp22.suse.cz>
+ <5b22890d-190f-be1d-3be8-995765dbb957@linux.alibaba.com>
+Message-ID: <0cf41b39-f039-7e53-ea80-9d5d0c784e73@linux.alibaba.com>
+Date:   Wed, 26 Aug 2020 19:54:30 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <1598441840-15226-3-git-send-email-gene.chen.richtek@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <5b22890d-190f-be1d-3be8-995765dbb957@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gene
+On 2020/8/26 下午7:45, xunlei wrote:
+> On 2020/8/26 下午7:00, Michal Hocko wrote:
+>> On Wed 26-08-20 18:41:18, xunlei wrote:
+>>> On 2020/8/26 下午4:11, Michal Hocko wrote:
+>>>> On Wed 26-08-20 15:27:02, Xunlei Pang wrote:
+>>>>> We've met softlockup with "CONFIG_PREEMPT_NONE=y", when
+>>>>> the target memcg doesn't have any reclaimable memory.
+>>>>
+>>>> Do you have any scenario when this happens or is this some sort of a
+>>>> test case?
+>>>
+>>> It can happen on tiny guest scenarios.
+>>
+>> OK, you made me more curious. If this is a tiny guest and this is a hard
+>> limit reclaim path then we should trigger an oom killer which should
+>> kill the offender and that in turn bail out from the try_charge lopp
+>> (see should_force_charge). So how come this repeats enough in your setup
+>> that it causes soft lockups?
+>>
+> 
+>     oom_status = mem_cgroup_oom(mem_over_limit, gfp_mask,
+>                get_order(nr_pages * PAGE_SIZE));
+>     switch (oom_status) {
+>     case OOM_SUCCESS:
+>         nr_retries = MAX_RECLAIM_RETRIES;
 
-On 8/26/20 6:37 AM, Gene Chen wrote:
-> From: Gene Chen <gene_chen@richtek.com>
->
-> Add bindings document for LED support on MT6360 PMIC
+Actually we can add "cond_resched()" here, but I think it's better to
+have one at the memcg reclaim path to avoid other unexpected issues.
 
-Usually bindings are 1/x in the patchset.
-
-And you should cc Rob Herring and the Device tree mail list other wise 
-the maintainer will not apply this patch without their ACKs
-
-
-> Signed-off-by: Gene Chen <gene_chen@richtek.com>
-> ---
->   .../devicetree/bindings/leds/leds-mt6360.yaml      | 50 ++++++++++++++++++++++
->   1 file changed, 50 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-mt6360.yaml
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-mt6360.yaml b/Documentation/devicetree/bindings/leds/leds-mt6360.yaml
-> new file mode 100644
-> index 0000000..4598be5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-mt6360.yaml
-> @@ -0,0 +1,50 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-mt6360.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LED driver for MT6360 PMIC from MediaTek Integrated.
-> +
-> +maintainers:
-> +  - Gene Chen <gene_chen@richtek.com>
-> +
-> +description: |
-> +  This module is part of the MT6360 MFD device. For more details
-> +  see Documentation/devicetree/bindings/mfd/mt6360.yaml.
-
-I think you need to include this yaml using allof tag
-
-
-> +
-> +  The LED controller is represented as a sub-node of the PMIC node on
-> +  the device tree.
-> +
-> +  This device has six current sinks.
-> +
-> +properties:
-> +  compatible:
-> +    const: mediatek,mt6360-led
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^led@[0-5]$":
-> +    type: object
-> +    description: |
-> +      Properties for a single LED.
-> +
-> +    properties:
-> +      reg:
-> +        description:
-> +          Index of the LED.
-> +        minimum: 0
-> +        maximum: 5
-> +
-> +required:
-> +  - compatible
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +additionalProperties: false
-> +
-Need a new line
-
-
-And an example
-
-> +...
+>         goto retry;
+> 
+> It retries here endlessly, because oom reaper has no cpu to schedule.
+> 
