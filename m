@@ -7,119 +7,108 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF74CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85893C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 835DE2078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B1022076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:39:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c9V3n4Za"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TSW8FAv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgHZTgd (ORCPT
+        id S1726873AbgHZTjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:36:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50534 "EHLO
+        Wed, 26 Aug 2020 15:39:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbgHZTgc (ORCPT
+        with ESMTP id S1726723AbgHZTja (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:36:32 -0400
+        Wed, 26 Aug 2020 15:39:30 -0400
 Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA77C061574;
-        Wed, 26 Aug 2020 12:36:32 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d19so1598619pgl.10;
-        Wed, 26 Aug 2020 12:36:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F3F7C061574;
+        Wed, 26 Aug 2020 12:39:29 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 67so1596721pgd.12;
+        Wed, 26 Aug 2020 12:39:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Ud+hAaCROu/aZycapYYqslpUeLOacrK4Jlp2cPqS/jE=;
-        b=c9V3n4Za3diymB1HJ/nHHbAioxKv/9zo9tCkVT/oQcbSru/Yw6OCX9+Qu2MqbyXDql
-         9m0Epe1MTL4CI1PrIVngo8l6MTB6ktjDfI58STfLWMzrupjA3mYFY1VrlyNIwo48Q723
-         USUQ1jr1h8Ls6YKgalt9DWl/jtJRS+v9CKR5c2IJ3MhrWgtaLVAFeZWkGU2xTDXv+xy7
-         nqqkEN5ghOCY3S+tIzIqoqCWAu+Hpp2YWl114WL1V9V8ULCx39F8EB6WTulBNVi2S4I5
-         Ssahm90pvklWFsrsXuUp8pgcvTano+vRWNKkTguTMfyRt/3m1H6g47bTU8enWmbkyovU
-         PBnw==
+        bh=KNh2UHfnDBJFZuAAjB1x/gVjNQEjX4IXhaifVx9KMYg=;
+        b=TSW8FAv5rXY2kU49T1lixs2iC6a5wGtqn+JLeRWQnrL88T61RzK8iC0aEwrE+8jcC9
+         JVyeOATatAxsC/mk8XtrZo+Ltq94TFXQr9HWBTRDxgS4O/yFnt/IhEyCKwLOw14HGm3x
+         o3Os+Sb2U+cWnaCZw08sBy7x3ZegldIYKH/colQOn/CBcx4W52nrVbXwJw8MpllGxV6g
+         6GhQg+1H/ljxgSlH6KG647Zn354P8mW/tv9FsXMt7udRju+M7D2m0jlTGslmVaJ9lYY2
+         LWSsfKkpjyKhLbD3Kqik3FRX3kYHr4TZ7xr6Acu8ozIg3Oi1b2lapRPpmETQ0NuE+qvM
+         TCDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Ud+hAaCROu/aZycapYYqslpUeLOacrK4Jlp2cPqS/jE=;
-        b=ZxKDF2pn145MNdMgyMlBBnTryH+HrKLZ1y06RPphXmSaGH2CqrnQeQYQyGk5qPgdjZ
-         CJT7YROimkWnp38SWP7S29QUtcWPLhJAKfJfskkpE5/Y5dslYDyjAxmlU+bkjSZriM/s
-         qCEeeu7KWPa3DFHSz1BFL7JU0T2pTulf2zZFAdB937LEXLmi4GWZjZ5Kvbyv1R5TaUse
-         qNGB3CYQeG2+u4YRQS+g/8Ep4tKVCItAS2rEVeObwivHD3/qaXILOq2xTuNxx49s4yCg
-         ADNn5KYCAJdXmPSwv43m8a74vrarfP2ug2eelOJx2XhBY3Bgah1XtsKUvFDWe3Xbi1Cz
-         m4Bw==
-X-Gm-Message-State: AOAM530x8y5sz/GwZatDDCnVBHaFqfJuK2I9C0dQha6d40MTugPj1UYJ
-        ZyNUD1vlCR9hvyt+K3M5AYRBSB7QimrMdQ83yF4=
-X-Google-Smtp-Source: ABdhPJxsfrZpkr3NGOF+AsJzLuIpdTtILYu1EiJCQNu0puqEGa0gdWgkCHt09Wf3So2Kzcdcvf6wIAx0fQQ4PpHyy3s=
-X-Received: by 2002:a17:902:b194:: with SMTP id s20mr13417765plr.321.1598470591807;
- Wed, 26 Aug 2020 12:36:31 -0700 (PDT)
+        bh=KNh2UHfnDBJFZuAAjB1x/gVjNQEjX4IXhaifVx9KMYg=;
+        b=G7pU+Db4eznmA8o0q45/0dgFksTFr7XskR2WSWuVygc2V0ktSMSMbaQaAc9vpan75+
+         NtHm+j9raCc43NvSlX6pkjh3hId5wYEa5sMdlp/pYCDJqGv6cytNHwScUYo8NFcbRiVz
+         ozN9X0s32k4bpWaFdDlKn1qNnXY4sHBa2IQb4TFBRT7vTa+mZ5eYv0gQITcc1C5LIoWO
+         MSlwDXGwa1mFUgZQAyL1yoOXx6Dy+C75A8kCKvEhOEP6RgwgyU188VXkAdT3w8xHgbnb
+         Zzg/kMBpKcjTYpNO0ZB2ALFC91eAEmHy0JLHnQSYAca8UjfkJOFk/AC/icm7NXu1Bm/0
+         VjLQ==
+X-Gm-Message-State: AOAM531EVdARk3coJ/K/1l2d09AvwFgOMYkb+YYne8YTM/2BabN0Nz93
+        yk2Ynna4Qe3mZwXmupUJo26BNw3eHlKfCYfvBZ2FkfXT3HtQOQ==
+X-Google-Smtp-Source: ABdhPJxm+In/cfwz2NLclXgp6idb7afrGQefaHzvk2v/h8ucZ5p69QJhMblL7RdtJDBUgTDQIdlSbFFCUzNXBTdMk8w=
+X-Received: by 2002:a63:f24a:: with SMTP id d10mr11737030pgk.4.1598470769163;
+ Wed, 26 Aug 2020 12:39:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200821131029.11440-1-kuldip.dwivedi@puresoftware.com>
- <20200822183342.6sdhp6yq6i7yvdia@skbuf> <CAHp75VeNXy1jWNWMuZc0bfXruKc3=0H4ezwpE8jbj6GLYk5QBA@mail.gmail.com>
-In-Reply-To: <CAHp75VeNXy1jWNWMuZc0bfXruKc3=0H4ezwpE8jbj6GLYk5QBA@mail.gmail.com>
+References: <20200826181706.11098-1-krzk@kernel.org> <20200826181706.11098-2-krzk@kernel.org>
+ <20200826191334.GX1891694@smile.fi.intel.com> <20200826192256.GA14739@kozik-lap>
+In-Reply-To: <20200826192256.GA14739@kozik-lap>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 26 Aug 2020 22:36:15 +0300
-Message-ID: <CAHp75VetYbnOHv3LQhq4Gvs1CFe8LnZPzFAVoNmBi5DyAmZ9Jg@mail.gmail.com>
-Subject: Re: [PATCH] spi: spi-fsl-dspi: Add ACPI support
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     kuldip dwivedi <kuldip.dwivedi@puresoftware.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
+Date:   Wed, 26 Aug 2020 22:39:12 +0300
+Message-ID: <CAHp75VcrUKN5S1HUdfzijx8xNEaA75jRAV893Khzm83i47cqgA@mail.gmail.com>
+Subject: Re: [PATCH 02/24] Input: gpio_keys - Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qiang Zhao <qiang.zhao@nxp.com>,
-        Pankaj Bansal <pankaj.bansal@nxp.com>,
-        Varun Sethi <V.Sethi@nxp.com>,
-        tanveer <tanveer.alam@puresoftware.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+        Platform Driver <platform-driver-x86@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 10:34 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sat, Aug 22, 2020 at 9:37 PM Vladimir Oltean <olteanv@gmail.com> wrote:
-> > On Fri, Aug 21, 2020 at 06:40:29PM +0530, kuldip dwivedi wrote:
+On Wed, Aug 26, 2020 at 10:23 PM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Wed, Aug 26, 2020 at 10:13:34PM +0300, Andy Shevchenko wrote:
+> > On Wed, Aug 26, 2020 at 08:16:44PM +0200, Krzysztof Kozlowski wrote:
+> > > Common pattern of handling deferred probe can be simplified with
+> > > dev_err_probe().  Less code and also it prints the error value.
+> >
+> > > --- a/drivers/input/keyboard/gpio_keys.c
+> > > +++ b/drivers/input/keyboard/gpio_keys.c
+> > > @@ -505,10 +505,7 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+> > >                              */
+> > >                             bdata->gpiod = NULL;
+> >
+> > gpiod_get_optional()?
+> > Do not see much context though (but please double check your series for these
+> > kind of things).
 >
-> > Just noticed this now.
-> > So for device tree, spi-fsl-dspi supports the following compatibles:
-> >
-> > fsl,vf610-dspi
-> > fsl,ls1021a-v1.0-dspi
-> > fsl,ls1012a-dspi
-> > fsl,ls1028a-dspi
-> > fsl,ls1043a-dspi
-> > fsl,ls1046a-dspi
-> > fsl,ls2080a-dspi
-> > fsl,ls2085a-dspi
-> > fsl,lx2160a-dspi
-> >
-> > Depending on the compatible string, the driver knows whether to use DMA
-> > or XSPI mode, and what the FIFO size is.
-
-FIFO size can be read from the property (or better if you can derive
-it directly from HW, like DesignWare does).
-DMA is just defined by FixedDMA resources (your platform with DMA
-provides them, otherwise no such resources).
-
-> > Now, of course not all of the above SoCs are going to support ACPI, but
-> > it is reasonable to expect that more than one will. And in that case,
-> > the driver should still be able to know on what SoC it's running,
-> > because for example LS1043A doesn't support DMA, and LS2085A doesn't
-> > support XSPI.
-> >
-> > How is this dealt with in ACPI?
+> It would fit except it is devm_fwnode_gpiod_get() which does not have
+> optional yet.
 >
-> Theoretically you may declare your HID in the same / similar way as
-> PRP0001 and use same compatible strings and all other DT properties
-> (when they make sense and not duplicate ACPI functionality).
-> But better if ACPI people can tell you (I Cc'ed Rafael and ACPI
-> mailing list) if it is gonna work.
+> I can add it although the scope of the patch grows from simple
+> defer-path-simplification.
 
+No need. My comment only about existing API per individual cases. SO,
+here it's fine then.
+
+> Thanks for the feedback.
+
+You're welcome!
 
 -- 
 With Best Regards,
