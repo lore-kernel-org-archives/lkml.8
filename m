@@ -6,51 +6,55 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C95C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F38C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94A8E208E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86DB2208E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 13:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598450065;
-	bh=6hMvIJ8osdpkQug3lEUCfY7S1UBQAFg4kG8aCuCcMuM=;
-	h=Date:From:To:To:To:To:Cc:Cc:Subject:In-Reply-To:References:
-	 List-ID:From;
-	b=jT3kx+AiVblrFsL5Av0J52w3q93rmcpdRyGt0ukSS/ojnOpSXpu0ektBUwDEidTBf
-	 v68ywbikpVnNeQuOitqQOGELsZtOxUS0YJvJdWc5WdgTY7s+kk3rt2C2y2gkE3rqcs
-	 PU2YxO5xhr+UKjzJvecWtBG4CY+EE7xSeX76XtNc=
+	s=default; t=1598450073;
+	bh=n/6d2UUED3wg06etiyVMGNSdggwuojSvWn37LraJKfE=;
+	h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+	 References:List-ID:From;
+	b=L8GdTLHQSHmHy2UvyAycYuS34oMT/IRDDHGTlwMg1kSoZlTnZ+CqhTDmL77Mxb/SK
+	 Z/ZU/4+7jTYrWyryK385WG8c0b1Qo2RssrJ7Jz4yCQlsgbt7yjJMi9SmLCy7o3H+oH
+	 Xehjpn+biO3zf3+5aFYzm7ceihB/rROfiANNojLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbgHZNyV (ORCPT
+        id S1730549AbgHZNya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 09:54:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60914 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 09:54:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730416AbgHZNyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 09:54:02 -0400
+        id S1730527AbgHZNyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 09:54:17 -0400
 Received: from localhost (unknown [70.37.104.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC5922B4E;
-        Wed, 26 Aug 2020 13:54:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A6BF22BED;
+        Wed, 26 Aug 2020 13:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598450041;
-        bh=6hMvIJ8osdpkQug3lEUCfY7S1UBQAFg4kG8aCuCcMuM=;
-        h=Date:From:To:To:To:To:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=fuqnZoraOWtz4BwojOcLOWWFKM9crDAYqq78jkBMojR3WEe092yq39cmmqbkpufuK
-         W9YocmByKUNUYoW8Eq0anpLR9HuKJKu54ZUBBzJ2sCN7UwRrFXc5sduS8qlNyG0mXe
-         dHElgG8lHTPMx65MlClpyVjS+FdNjWDxXuCW2QPo=
-Date:   Wed, 26 Aug 2020 13:54:01 +0000
+        s=default; t=1598450056;
+        bh=n/6d2UUED3wg06etiyVMGNSdggwuojSvWn37LraJKfE=;
+        h=Date:From:To:To:To:Cc:Cc:Cc:Cc:Cc:Cc:Subject:In-Reply-To:
+         References:From;
+        b=ArXWnIy1bud6x43tADjM1MznKdIVoDXwbTghf0/b73J5Npko9ZJqt6dvTztkks41v
+         9uxhICBnfFhVEOLnCwzkShBPoIilrqV4b+xaEwTkqYZJbi5TTddiJLQzsUYuHroQvQ
+         Oxr2Pm0jyW8571vxkdfSBJbvspO4dmSbcJKdf/ag=
+Date:   Wed, 26 Aug 2020 13:54:16 +0000
 From:   Sasha Levin <sashal@kernel.org>
 To:     Sasha Levin <sashal@kernel.org>
-To:     Andrei Botila <andrei.botila@oss.nxp.com>
-To:     Andrei Botila <andrei.botila@nxp.com>
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Will Deacon <will@kernel.org>
+To:     kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>
+Cc:     <stable@vger.kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     James Morse <james.morse@arm.com>
 Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH 5/9] crypto: caam/qi - add support for more XTS key lengths
-In-Reply-To: <20200806114127.8650-6-andrei.botila@oss.nxp.com>
-References: <20200806114127.8650-6-andrei.botila@oss.nxp.com>
-Message-Id: <20200826135401.ABC5922B4E@mail.kernel.org>
+Subject: Re: [PATCH 1/2] KVM: Pass MMU notifier range flags to kvm_unmap_hva_range()
+In-Reply-To: <20200811102725.7121-2-will@kernel.org>
+References: <20200811102725.7121-2-will@kernel.org>
+Message-Id: <20200826135416.9A6BF22BED@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,64 +64,78 @@ Hi
 
 [This is an automated email]
 
-This commit has been processed because it contains a "Fixes:" tag
-fixing commit: b189817cf789 ("crypto: caam/qi - add ablkcipher and authenc algorithms").
+This commit has been processed because it contains a -stable tag.
+The stable tag indicates that it's relevant for the following trees: all
 
-The bot has tested the following trees: v5.8.2, v5.7.16, v5.4.59, v4.19.140, v4.14.193.
+The bot has tested the following trees: v5.8.2, v5.7.16, v5.4.59, v4.19.140, v4.14.193, v4.9.232, v4.4.232.
 
-v5.8.2: Failed to apply! Possible dependencies:
-    1108da08e2c1 ("crypto: caam/qi - add fallback for XTS with more than 8B IV")
-    a85211f36f3d ("crypto: qat - fallback for xts with 192 bit keys")
-    b185a68710e0 ("crypto: qat - validate xts key")
-    b8aa7dc5c753 ("crypto: drivers - set the flag CRYPTO_ALG_ALLOCATES_MEMORY")
-
-v5.7.16: Failed to apply! Possible dependencies:
-    1108da08e2c1 ("crypto: caam/qi - add fallback for XTS with more than 8B IV")
-    a85211f36f3d ("crypto: qat - fallback for xts with 192 bit keys")
-    b185a68710e0 ("crypto: qat - validate xts key")
-    b8aa7dc5c753 ("crypto: drivers - set the flag CRYPTO_ALG_ALLOCATES_MEMORY")
-
-v5.4.59: Failed to apply! Possible dependencies:
-    1108da08e2c1 ("crypto: caam/qi - add fallback for XTS with more than 8B IV")
-    64db5e7439fb ("crypto: sparc/aes - convert to skcipher API")
-    66d7fb94e4ff ("crypto: blake2s - generic C library implementation and selftest")
-    674f368a952c ("crypto: remove CRYPTO_TFM_RES_BAD_KEY_LEN")
-    746b2e024c67 ("crypto: lib - tidy up lib/crypto Kconfig and Makefile")
-    7988fb2c03c8 ("crypto: s390/aes - convert to skcipher API")
-    7f725f41f627 ("crypto: powerpc - convert SPE AES algorithms to skcipher API")
-    7f9b0880925f ("crypto: blake2s - implement generic shash driver")
-    91d689337fe8 ("crypto: blake2b - add blake2b generic implementation")
-    b4d0c0aad57a ("crypto: arm - use Kconfig based compiler checks for crypto opcodes")
-    b95bba5d0114 ("crypto: skcipher - rename the crypto_blkcipher module and kconfig option")
-    d00c06398154 ("crypto: s390/paes - convert to skcipher API")
-    da6a66853a38 ("crypto: caam - silence .setkey in case of bad key length")
-    ed0356eda153 ("crypto: blake2s - x86_64 SIMD implementation")
-
+v5.8.2: Build OK!
+v5.7.16: Build OK!
+v5.4.59: Build OK!
 v4.19.140: Failed to apply! Possible dependencies:
-    0a5dff9882e5 ("crypto: arm/ghash - provide a synchronous version")
-    1108da08e2c1 ("crypto: caam/qi - add fallback for XTS with more than 8B IV")
-    1ca1b917940c ("crypto: chacha20-generic - refactor to allow varying number of rounds")
-    5ca7badb1f62 ("crypto: caam/jr - ablkcipher -> skcipher conversion")
-    674f368a952c ("crypto: remove CRYPTO_TFM_RES_BAD_KEY_LEN")
-    8a5a79d5556b ("crypto: x86/chacha20 - Add a 4-block AVX2 variant")
-    99680c5e9182 ("crypto: arm - convert to use crypto_simd_usable()")
-    9b17608f15b9 ("crypto: x86/chacha20 - Use larger block functions more aggressively")
-    9dbe3072c6b1 ("crypto: caam/qi - ablkcipher -> skcipher conversion")
-    a5dd97f86211 ("crypto: x86/chacha20 - Add a 2-block AVX2 variant")
-    aec48adce85d ("crypto: caam/qi - remove ablkcipher IV generation")
-    c3b734dd325d ("crypto: x86/chacha20 - Support partial lengths in 8-block AVX2 variant")
-    cf5448b5c3d8 ("crypto: caam/jr - remove ablkcipher IV generation")
-    da6a66853a38 ("crypto: caam - silence .setkey in case of bad key length")
-    db8e15a24957 ("crypto: x86/chacha20 - Support partial lengths in 4-block SSSE3 variant")
-    e4e72063d3c0 ("crypto: x86/chacha20 - Support partial lengths in 1-block SSSE3 variant")
+    18fc7bf8e041 ("arm64: KVM: Allow for direct call of HYP functions when using VHE")
+    208243c752a7 ("KVM: arm64: Move hyp-init.S to nVHE")
+    25357de01b95 ("KVM: arm64: Clean up kvm makefiles")
+    33e45234987e ("arm64: initialize and switch ptrauth kernel keys")
+    396244692232 ("arm64: preempt: Provide our own implementation of asm/preempt.h")
+    3f58bf634555 ("KVM: arm/arm64: Share common code in user_mem_abort()")
+    6396b852e46e ("KVM: arm/arm64: Re-factor setting the Stage 2 entry to exec on fault")
+    748c0e312fce ("KVM: Make kvm_set_spte_hva() return int")
+    750319756256 ("arm64: add basic pointer authentication support")
+    7621712918ad ("KVM: arm64: Add build rules for separate VHE/nVHE object files")
+    7aa8d1464165 ("arm/arm64: KVM: Introduce kvm_call_hyp_ret()")
+    86d0dd34eaff ("arm64: cpufeature: add feature for CRC32 instructions")
+    90776dd1c427 ("arm64/efi: Move variable assignments after SECTIONS")
+    95b861a4a6d9 ("arm64: arch_timer: Add workaround for ARM erratum 1188873")
+    a0e50aa3f4a8 ("KVM: arm64: Factor out stage 2 page table data from struct kvm")
+    b877e9849d41 ("KVM: arm64: Build hyp-entry.S separately for VHE/nVHE")
+    bd4fb6d270bc ("arm64: Add support for SB barrier and patch in over DSB; ISB sequences")
+    be1298425665 ("arm64: install user ptrauth keys at kernel exit time")
+    d82755b2e781 ("KVM: arm64: Kill off CONFIG_KVM_ARM_HOST")
+    f50b6f6ae131 ("KVM: arm64: Handle calls to prefixed hyp functions")
+    f56063c51f9f ("arm64: add image head flag definitions")
+    f8df73388ee2 ("KVM: arm/arm64: Introduce helpers to manipulate page table entries")
 
 v4.14.193: Failed to apply! Possible dependencies:
-    1108da08e2c1 ("crypto: caam/qi - add fallback for XTS with more than 8B IV")
-    5ca7badb1f62 ("crypto: caam/jr - ablkcipher -> skcipher conversion")
-    662f70ede597 ("crypto: caam - remove needless ablkcipher key copy")
-    7e0880b9fbbe ("crypto: caam - add Derived Key Protocol (DKP) support")
-    9dbe3072c6b1 ("crypto: caam/qi - ablkcipher -> skcipher conversion")
-    cf5448b5c3d8 ("crypto: caam/jr - remove ablkcipher IV generation")
+    0db9dd8a0fbd ("KVM: arm/arm64: Stop using the kernel's {pmd,pud,pgd}_populate helpers")
+    17ab9d57deba ("KVM: arm/arm64: Drop vcpu parameter from guest cache maintenance operartions")
+    3f58bf634555 ("KVM: arm/arm64: Share common code in user_mem_abort()")
+    6396b852e46e ("KVM: arm/arm64: Re-factor setting the Stage 2 entry to exec on fault")
+    694556d54f35 ("KVM: arm/arm64: Clean dcache to PoC when changing PTE due to CoW")
+    748c0e312fce ("KVM: Make kvm_set_spte_hva() return int")
+    88dc25e8ea7c ("KVM: arm/arm64: Consolidate page-table accessors")
+    91c703e0382a ("arm: KVM: Add optimized PIPT icache flushing")
+    a15f693935a9 ("KVM: arm/arm64: Split dcache/icache flushing")
+    a9c0e12ebee5 ("KVM: arm/arm64: Only clean the dcache on translation fault")
+    d0e22b4ac3ba ("KVM: arm/arm64: Limit icache invalidation to prefetch aborts")
+    f8df73388ee2 ("KVM: arm/arm64: Introduce helpers to manipulate page table entries")
+
+v4.9.232: Failed to apply! Possible dependencies:
+    1534b3964901 ("KVM: MIPS/MMU: Simplify ASID restoration")
+    1581ff3dbf69 ("KVM: MIPS/MMU: Move preempt/ASID handling to implementation")
+    1880afd6057f ("KVM: MIPS/T&E: Add lockless GVA access helpers")
+    411740f5422a ("KVM: MIPS/MMU: Implement KVM_CAP_SYNC_MMU")
+    748c0e312fce ("KVM: Make kvm_set_spte_hva() return int")
+    91cdee5710d5 ("KVM: MIPS/T&E: Restore host asid on return to host")
+    a2c046e40ff1 ("KVM: MIPS: Add vcpu_run() & vcpu_reenter() callbacks")
+    a31b50d741bd ("KVM: MIPS/MMU: Invalidate GVA PTs on ASID changes")
+    a60b8438bdba ("KVM: MIPS: Convert get/set_regs -> vcpu_load/put")
+    a7ebb2e410f8 ("KVM: MIPS/T&E: active_mm = init_mm in guest context")
+    aba8592950f1 ("KVM: MIPS/MMU: Invalidate stale GVA PTEs on TLBW")
+    c550d53934d8 ("KVM: MIPS: Remove duplicated ASIDs from vcpu")
+
+v4.4.232: Failed to apply! Possible dependencies:
+    16d100db245a ("MIPS: Move Cause.ExcCode trap codes to mipsregs.h")
+    1880afd6057f ("KVM: MIPS/T&E: Add lockless GVA access helpers")
+    19d194c62b25 ("MIPS: KVM: Simplify TLB_* macros")
+    411740f5422a ("KVM: MIPS/MMU: Implement KVM_CAP_SYNC_MMU")
+    748c0e312fce ("KVM: Make kvm_set_spte_hva() return int")
+    8cffd1974851 ("MIPS: KVM: Convert code to kernel sized types")
+    9fbfb06a4065 ("MIPS: KVM: Arrayify struct kvm_mips_tlb::tlb_lo*")
+    ba049e93aef7 ("kvm: rename pfn_t to kvm_pfn_t")
+    bdb7ed8608f8 ("MIPS: KVM: Convert headers to kernel sized types")
+    ca64c2beecd4 ("MIPS: KVM: Abstract guest ASID mask")
+    caa1faa7aba6 ("MIPS: KVM: Trivial whitespace and style fixes")
 
 
 NOTE: The patch will not be queued to stable trees until it is upstream.
