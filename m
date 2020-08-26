@@ -6,85 +6,135 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D93CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0954520825
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 544A02074A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 16:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598458871;
-	bh=ebWQh3nk8D4zG1syvCLitTt388shKB71c0Otl//ugiw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=f4BqgP2GYHOvpTkt/zOQvEEcSf5Fyg9Qv+vkS9X8pxD+PsiV+bDuyMaoo8Iz2q4hw
-	 qQrXbcNeLTDhcBEgwJwEvqeo8fBAWAYGEm9eF965L39PgtRVSk4Lg1UENdndV5nJZq
-	 Os2s0si5OpfI8dg1TUVZM0FkXTIMT+Atsow8aNSg=
+	s=default; t=1598458896;
+	bh=dDLOLCFwJwFMFInKs5uNLmhAwr7cRYvAHsvcordLT6c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dM+ewunw7TMwm/zOPeVoG6DGU9h8FLjnIxtjvOFz1w+FSNqSDyWCZrPyj0xLMKZxk
+	 u0MSy//o+GTPe33+rKndIaO6oMEzed8zdZRC94W3OJMcJk+cvtWPNb1i9U+wt61/hT
+	 xjdSCyZxXGuLKtWNv6+NvYZWPXhqw0tzJCvthjt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgHZQVJ (ORCPT
+        id S1727980AbgHZQVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 12:21:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726971AbgHZQVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 12:21:06 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 169DF214F1;
-        Wed, 26 Aug 2020 16:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598458865;
-        bh=ebWQh3nk8D4zG1syvCLitTt388shKB71c0Otl//ugiw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yGu5Q+kQSKFQr3D2q9p/nApUJtOTWpsSyz3viYF2MAAYVGxjQ4bli5amwCn5mFqyG
-         e8g5Qi36QC8yHasloS/dMD6HuHvN3n+kL3dYpx97hnfzCccSQ9+zutGq1UtHSZp4/o
-         NMoGWAnNHFqIFID7MIj+FXmU+1c8CzIHasu90ZHw=
-Date:   Wed, 26 Aug 2020 21:51:01 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Shuming Fan <shumingf@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH 4/4] ASoC: rt715: Fix return check for
- devm_regmap_init_sdw()
-Message-ID: <20200826162101.GE2639@vkoul-mobl>
-References: <20200826122811.3223663-1-vkoul@kernel.org>
- <20200826122811.3223663-4-vkoul@kernel.org>
- <e71ba625-ec1e-1adf-9e4c-b65a91562d9c@linux.intel.com>
+        Wed, 26 Aug 2020 12:21:35 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37158 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726763AbgHZQVd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 12:21:33 -0400
+Received: by mail-ot1-f67.google.com with SMTP id k2so1969378ots.4;
+        Wed, 26 Aug 2020 09:21:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TbB4aAw95Mh9bTjzGZ253tT1XzFun2QcNkXJEK0ggWg=;
+        b=TaMSxtDHu6+IMgGuxqja9s78djX3PfTEaXekszqf/cmbrIauFeYw7Z6vcnPpwFyNJE
+         OuGsLMy3d4ESyy6lbLw+x3POs5vHVYExoyuE3ABsMbCg62K6VxPdPNkRpHhkn1j+g1wQ
+         pfaCmTqfYqg9BK4gg749DZ8v5SFbXKeOoB0P66S7Df2wPDeOKi6UPSpNCiq8mC0wFjbT
+         JUlihPO9lUeAa7IffbLk6ZELt+ZhqAEV6/z2nRiUy345ryuhEfjWg2HGUiO8QYVUlGd1
+         R3CXLjB8sojRm0VHWW6C/sqpJyJl9CDgd9Mcpa8pnQP6EtGiMqH/FVu84LUSMQspXP6X
+         soug==
+X-Gm-Message-State: AOAM533MImgTt87U4qdfCF0hU2u6N6uTIYW9s7BReRSyOrGPsjmXWpyM
+        1Gne/mf08meigrgv0iVWoAbbZGWhXZeviVOs2Vc=
+X-Google-Smtp-Source: ABdhPJwE43X2zK+eq5dh7BAAc3PBhxtcts0J2cCUcuOavhPyEeuub5fqGAborirceeCJK+/EhO9LdA1Fq+GEOhci2IA=
+X-Received: by 2002:a05:6830:1242:: with SMTP id s2mr9921888otp.167.1598458892069;
+ Wed, 26 Aug 2020 09:21:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e71ba625-ec1e-1adf-9e4c-b65a91562d9c@linux.intel.com>
+References: <20200826120421.44356-1-guilhem@barpilot.io> <CAJZ5v0i8XUF39Vv=EM4TgyXgK6zHniZW3tGYFPweO3kg+BrxOQ@mail.gmail.com>
+ <CAGX5Wg2OOgY6d1RH514Kh9D6b+siga+jzH7qubcmE+ukq+6KKA@mail.gmail.com>
+ <d0ca671465e6ce72c6c4d5178440ebc1e4814da8.camel@gmail.com>
+ <e82c121057c4496238d3de7f7c919b7039d23b7c.camel@gmail.com>
+ <CAGX5Wg0LrzPwf=2pGrQHAbFMVkOoYDxOoFa+ZmLBYshPvZQUXg@mail.gmail.com>
+ <8fa7622dacc03f2fbd67e810f53389e3ede544e8.camel@intel.com>
+ <CAGX5Wg0=K5AaTut5KH3R3+oasM5MM7PaJ9Z_L56xSNckMbWC9g@mail.gmail.com> <CAJZ5v0j4FXH26rZCjM9Csd56skPVbRpM7iFcKYAFMmLFX54+bg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0j4FXH26rZCjM9Csd56skPVbRpM7iFcKYAFMmLFX54+bg@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 26 Aug 2020 18:21:21 +0200
+Message-ID: <CAJZ5v0jkgVn88H9K0n0SX_xLPCgMYXXSVHXLLYaWvynGOMLf=g@mail.gmail.com>
+Subject: Re: [PATCH] intel_idle: Add ICL support
+To:     Guilhem Lettron <guilhem@barpilot.io>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-08-20, 10:09, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 8/26/20 7:28 AM, Vinod Koul wrote:
-> > devm_regmap_init_sdw() returns a valid pointer on success or ERR_PTR on
-> > failure which should be checked with IS_ERR. Also use PTR_ERR for
-> > returning error codes.
-> 
-> Do you mind changing these two additional codecs that were missed in this
-> series? Thanks!
-> 
-> rt700-sdw.c:	sdw_regmap = devm_regmap_init_sdw(slave, &rt700_sdw_regmap);
-> rt700-sdw.c-	if (!sdw_regmap)
-> rt700-sdw.c-		return -EINVAL;
+On Wed, Aug 26, 2020 at 6:02 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Wed, Aug 26, 2020 at 4:04 PM Guilhem Lettron <guilhem@barpilot.io> wrote:
+> >
+> > On Wed, 26 Aug 2020 at 15:41, Zhang Rui <rui.zhang@intel.com> wrote:
+> > >
+> > >
+> > > This is really hard to read.
+> > > can you please attach the two turbostat output as attachments?
+> >
+> > of course :)
+>
+> Thanks!
+>
+> A couple of things happen here AFAICS.
+>
+> First, your processor seems to be unable to enter package C-states
+> below PC3, so probably there is a device (most likely a PCI one)
+> preventing it from doing that in the system.  If all goes well, it
+> should be able to get to at least PC8 without suspending the whole
+> system.  That needs to be dealt with in the first place before we can
+> draw meaningful conclusions regarding which set of C-states to expose
+> and whether or not the one exposed via ACPI is sufficient.
+>
+> To that end, I would try to upgrade the graphics firmware and see if
+> you can get some nonzero PC8 residency then.
+>
+> Second, ACPI exposes C1, C7s and C10 only and so you don't get any
+> CPU-C6 residency without the patch, but instead you get more CPU-C7
+> residency and more CPU-C1 residency.  It is hard to say which is
+> better in principle, but if you look at what is asked for by the
+> governor, it turns out that deep C-states (C8-C10) are requested
+> around 54% of the time with the patch, whereas without it the ACPI_C3
+> state (corresponding to C10) is requested approximately 24% of the
+> time, which is much less often.  That appears to translate to the
+> difference in PC2 residency (~30% with the patch vs ~17% without it).
+>
+> Note, however, that (with the patch) C10 itself is asked for around
+> 11% of the time which in turn is much less than the ~24% for the
+> corresponding ACPI_C3 (without the patch).
+>
+> Overall, it looks like exposing C8 is beneficial from the energy usage
+> perspective, because (in the future, when the "blocking" device is
+> taken care of and the system can enter PC8 and deeper package
+> C-states) it may allow PC8 to be entered more often in principle, even
+> though it may reduce the amount of time spent in PC10 too (PC10 may be
+> generally difficult to enter, though).  [Here I'm assuming that the
+> processor enters PC3 or PC2 instead of PC8 or deeper which cannot be
+> entered due to some resource dependency.]
+>
+> OTOH exposing C1E doesn't seem to make much of a difference and
+> exposing C6 only causes it to be asked for instead of C7s, so exposing
+> the latter alone should be sufficient in theory.
 
-Yes missed this one
-> 
-> --
-> rt711-sdw.c:	sdw_regmap = devm_regmap_init_sdw(slave, &rt711_sdw_regmap);
-> rt711-sdw.c-	if (!sdw_regmap)
-> rt711-sdw.c-		return -EINVAL;
+I need to correct myself here.
 
-And somehow patch series is messed, I have two 2/4 but no 3/4 which
-patches rt711-sdw.c, will send v2 with these fixed
+With the patch C7s is exposed with the target residency of C8 which is
+why it is almost never selected by the governor and that's why C6 is
+kind of "instead" of it.
 
--- 
-~Vinod
+So it looks like it might be beneficial to expose C8 (instead of C7s)
+and C6 with the target residency significantly less than that of C8.
+
+> So IMO the set of C-states exposed by ACPI looks almost enough, but
+> the jury is out until you can make the system be able to enter at
+> least PC8.
