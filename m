@@ -2,181 +2,147 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-21.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78221C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF90C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53180214F1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:13:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76B1F20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:14:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZqQGx8lC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hP5Co7OB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgHZPNw (ORCPT
+        id S1727066AbgHZPOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37252 "EHLO
+        Wed, 26 Aug 2020 11:14:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728018AbgHZPNd (ORCPT
+        with ESMTP id S1726802AbgHZPO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:13:33 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48AD4C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 08:13:32 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id v15so1171300pgh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 08:13:32 -0700 (PDT)
+        Wed, 26 Aug 2020 11:14:28 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDF9EC061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 08:14:27 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id o12so2126129qki.13
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 08:14:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CmlsOBKmXTTcSfq5zGubBNNUb0gupInXkPP8EnZ3d+A=;
-        b=ZqQGx8lCIpp9MgN3WVINar6Fy8irHzrpJRsjxGoHQTeWbqHYD6il/g9q7DvpK/dmQm
-         0qW7aVa3Tr+PGt5edZDuPZxHNjlNPlIhusw3juLIWAAlHZXHD4KNjNATv1u3ZoCJvNEC
-         S2smx23jdqkXqQh3IP6NS4LTsP6Gm53DxBdKk=
+        d=google.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CBaRv42XjbovsMHbgZPMzIWdl59pk9+rR0JFaPmgCaw=;
+        b=hP5Co7OB44xOCPdlOVmWc++vpyjcyspFrY5iez03x+SeT+/ahiaGixxVlOG5tiz8gs
+         rS92JKUSg2BJht01sSFLZhXuGu3FXC3dwJBg0E58tEZAqNxxBGR951PTsfIRsLGNQvJT
+         +6qXnXmO7/C8DjsZqL8FcfkVaG+weJWQEvTYhUvHP28N5y3pNe+XVpRcBJZXGb3bxvci
+         Qudnjm75Sy4JL3VwDe0paLq0jo8nhcpI1AymuYgyeo2fuqFR2dqj2BHbvbpf9hLxrNYY
+         r80L6cOPR1F2p5N6vUTvtGG3s+1wVpIT8wWuiWiOpG3HYnlKOivEfzAwYJurdZBrsj+O
+         UDbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CmlsOBKmXTTcSfq5zGubBNNUb0gupInXkPP8EnZ3d+A=;
-        b=ePiAgismGyzUO85LdXNyRrFzDxLWadlnrVxkuTTqkJU7VnYVuaERhO8+2HbjbIAA2e
-         KCqZdeFKlBGiJiEQZ74F9AIMP5nsxD2/vW+9vrC2XezgbkckVDXo/3W0kX0OwBwIxaxJ
-         iQHsw7VSMu28W7vujRKLUDd8Ouql/hqLQEJi/xqiHwa6ZEwv0yIedS5GvnmYktd4LYkw
-         abziuhsV/i0g9TYV9dlRGoAM9xgL8a7qCqemaXu4oN0t7pO2vJ7ZtGojnf43K+Z4g3mp
-         Mh19vCMl6fBOXjN6nLO7+FzSWftWELgwL4viYKbC69VUond09ZFlfNvYNVs5OzMiZyfE
-         Ke6g==
-X-Gm-Message-State: AOAM530ze0olzuZiGJFIMzSjmt0eo1kb9U6H3JaW+Mn0TI1dRPi6C7gE
-        FgTc+LWTsR8msRQNwueTvBZlAA==
-X-Google-Smtp-Source: ABdhPJz9xFq7qO/RuT9QubtB+V2mx2933Vq5WDSuN5fCly0WI0GYA2lIh7xhcXijBK2JnQjkWRm3gA==
-X-Received: by 2002:a63:f909:: with SMTP id h9mr10562477pgi.250.1598454811989;
-        Wed, 26 Aug 2020 08:13:31 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d127sm3380122pfc.175.2020.08.26.08.13.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 08:13:30 -0700 (PDT)
-Date:   Wed, 26 Aug 2020 08:13:29 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Allen Pais <allen.cryptic@gmail.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-atm-general@lists.sourceforge.net, manohar.vanga@gmail.com,
-        airlied@linux.ie, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, sre@kernel.org,
-        anton.ivanov@cambridgegreys.com, devel@driverdev.osuosl.org,
-        linux-s390@vger.kernel.org, linux1394-devel@lists.sourceforge.net,
-        maximlevitsky@gmail.com, richard@nod.at, deller@gmx.de,
-        jassisinghbrar@gmail.com, linux-spi@vger.kernel.org,
-        3chas3@gmail.com, intel-gfx@lists.freedesktop.org,
-        Jakub Kicinski <kuba@kernel.org>, mporter@kernel.crashing.org,
-        jdike@addtoit.com, oakad@yahoo.com, s.hauer@pengutronix.de,
-        linux-input@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-block@vger.kernel.org, broonie@kernel.org,
-        openipmi-developer@lists.sourceforge.net, mitch@sfgoth.com,
-        linux-arm-kernel@lists.infradead.org, Jens Axboe <axboe@kernel.dk>,
-        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
-        martyn@welchs.me.uk, dmitry.torokhov@gmail.com,
-        linux-mmc@vger.kernel.org, Allen <allen.lkml@gmail.com>,
-        linux-kernel@vger.kernel.org, alex.bou9@gmail.com,
-        stefanr@s5r6.in-berlin.de, Daniel Vetter <daniel@ffwll.ch>,
-        linux-ntb@googlegroups.com,
-        Romain Perier <romain.perier@gmail.com>, shawnguo@kernel.org,
-        David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] block: convert tasklets to use new tasklet_setup() API
-Message-ID: <202008260811.1CE425B5C2@keescook>
-References: <161b75f1-4e88-dcdf-42e8-b22504d7525c@kernel.dk>
- <202008171246.80287CDCA@keescook>
- <df645c06-c30b-eafa-4d23-826b84f2ff48@kernel.dk>
- <1597780833.3978.3.camel@HansenPartnership.com>
- <f3312928-430c-25f3-7112-76f2754df080@kernel.dk>
- <1597849185.3875.7.camel@HansenPartnership.com>
- <CAOMdWSJRR0BhjJK1FxD7UKxNd5sk4ycmEX6TYtJjRNR6UFAj6Q@mail.gmail.com>
- <1597873172.4030.2.camel@HansenPartnership.com>
- <CAEogwTCH8qqjAnSpT0GDn+NuAps8dNbfcPVQ9h8kfOWNbzrD0w@mail.gmail.com>
- <20200826095528.GX1793@kadam>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CBaRv42XjbovsMHbgZPMzIWdl59pk9+rR0JFaPmgCaw=;
+        b=QeYmMA1dB0RCUouRfcXGnTSkua/DO2Oa4YJpxrCrreXjWIBJEwkZQdr24CKzahDtts
+         73n2INKb4k+AcNkoOFb4EbfJ8Agi8iCVaX+IEdNtJ9w9WDcKO9+RBQtax4nyG1F1rpx4
+         UlUs0997RsPg4GEt/6Z7kqpXsam8IuB+KOeSPGge7XSihs0YqO4C5FYxG7mCUeNLhmDH
+         EtpuSXXmrrz9CqefU1UsW6XlEcUfBQEgdDRd6JrlQqZK4oWUyR4Q26vOxfyPKW9tWou5
+         +TIantgfwgzcfHd7J2Oxl23c5Cvrw9Zd2EeoKyLca2mgOwX8ThgP142X1QuJPP/AcKyn
+         6p7A==
+X-Gm-Message-State: AOAM531xguQamO/kDnOVI7Q4vYaiPNmmUJdrr7QFCmltMT66+qs8Ykvk
+        zoZJ5EARN6qHDx+uk3iDL5fP3w==
+X-Google-Smtp-Source: ABdhPJyoOggiUgxQk2/nZj0Xq/VBAsxFYjmba+73kL2mhzFlfKlao06SU2mgnWNQx81J9mJXYtwBqw==
+X-Received: by 2002:ae9:e80c:: with SMTP id a12mr7492262qkg.306.1598454866808;
+        Wed, 26 Aug 2020 08:14:26 -0700 (PDT)
+Received: from [192.168.0.105] (d-65-175-178-104.nh.cpe.atlanticbb.net. [65.175.178.104])
+        by smtp.gmail.com with ESMTPSA id t1sm1876216qkt.119.2020.08.26.08.14.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Aug 2020 08:14:26 -0700 (PDT)
+Subject: Re: [RFC v2] perf/core: Fixes hung issue on perf stat command during
+ cpu hotplug
+To:     Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org,
+        peterz@infradead.org
+Cc:     jolsa@redhat.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        daniel@iogearbox.net, srikar@linux.vnet.ibm.com
+References: <20200826145411.489169-1-kjain@linux.ibm.com>
+From:   Barret Rhoden <brho@google.com>
+Message-ID: <19fac9f1-4662-b695-3bf3-60ddd7133594@google.com>
+Date:   Wed, 26 Aug 2020 11:14:25 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826095528.GX1793@kadam>
+In-Reply-To: <20200826145411.489169-1-kjain@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:55:28PM +0300, Dan Carpenter wrote:
-> On Wed, Aug 26, 2020 at 07:21:35AM +0530, Allen Pais wrote:
-> > On Thu, Aug 20, 2020 at 3:09 AM James Bottomley
-> > <James.Bottomley@hansenpartnership.com> wrote:
-> > >
-> > > On Wed, 2020-08-19 at 21:54 +0530, Allen wrote:
-> > > > > [...]
-> > > > > > > Since both threads seem to have petered out, let me suggest in
-> > > > > > > kernel.h:
-> > > > > > >
-> > > > > > > #define cast_out(ptr, container, member) \
-> > > > > > >     container_of(ptr, typeof(*container), member)
-> > > > > > >
-> > > > > > > It does what you want, the argument order is the same as
-> > > > > > > container_of with the only difference being you name the
-> > > > > > > containing structure instead of having to specify its type.
-> > > > > >
-> > > > > > Not to incessantly bike shed on the naming, but I don't like
-> > > > > > cast_out, it's not very descriptive. And it has connotations of
-> > > > > > getting rid of something, which isn't really true.
-> > > > >
-> > > > > Um, I thought it was exactly descriptive: you're casting to the
-> > > > > outer container.  I thought about following the C++ dynamic casting
-> > > > > style, so out_cast(), but that seemed a bit pejorative.  What about
-> > > > > outer_cast()?
-> > > > >
-> > > > > > FWIW, I like the from_ part of the original naming, as it has
-> > > > > > some clues as to what is being done here. Why not just
-> > > > > > from_container()? That should immediately tell people what it
-> > > > > > does without having to look up the implementation, even before
-> > > > > > this becomes a part of the accepted coding norm.
-> > > > >
-> > > > > I'm not opposed to container_from() but it seems a little less
-> > > > > descriptive than outer_cast() but I don't really care.  I always
-> > > > > have to look up container_of() when I'm using it so this would just
-> > > > > be another macro of that type ...
-> > > > >
-> > > >
-> > > >  So far we have a few which have been suggested as replacement
-> > > > for from_tasklet()
-> > > >
-> > > > - out_cast() or outer_cast()
-> > > > - from_member().
-> > > > - container_from() or from_container()
-> > > >
-> > > > from_container() sounds fine, would trimming it a bit work? like
-> > > > from_cont().
-> > >
-> > > I'm fine with container_from().  It's the same form as container_of()
-> > > and I think we need urgent agreement to not stall everything else so
-> > > the most innocuous name is likely to get the widest acceptance.
-> > 
-> > Kees,
-> > 
-> >   Will you be  sending the newly proposed API to Linus? I have V2
-> > which uses container_from()
-> > ready to be sent out.
-> 
-> I liked that James swapped the first two arguments so that it matches
-> container_of().  Plus it's nice that when you have:
-> 
-> 	struct whatever *foo = container_from(ptr, foo, member);
-> 
-> Then it means that "ptr == &foo->member".
+Hi -
 
-I'm a bit stalled right now -- the merge window was keeping me busy, and
-this week is the Linux Plumbers Conference. This is on my list, but I
-haven't gotten back around to it. If you want, feel free to send the
-container_from() patch; you might be able to unblock this faster than me
-right now. :)
+On 8/26/20 10:54 AM, Kajol Jain wrote:
+> Commit 2ed6edd33a21 ("perf: Add cond_resched() to task_function_call()")
+> added assignment of ret value as -EAGAIN in case function
+> call to 'smp_call_function_single' fails.
+> For non-zero ret value, it did
+> 'ret = !ret ? data.ret : -EAGAIN;', which always
+> assign -EAGAIN to ret and make second if condition useless.
+> 
+> In scenarios like when executing a perf stat with --per-thread option, and
+> if any of the monitoring cpu goes offline, the 'smp_call_function_single'
+> function could return -ENXIO, and with the above check,
+> task_function_call hung and increases CPU
+> usage (because of repeated 'smp_call_function_single()')
+> 
+> Recration scenario:
+> 	# perf stat -a --per-thread && (offline a CPU )
+> 
+> Patch here removes the tertiary condition added as part of that
+> commit and added a check for NULL and -EAGAIN.
+> 
+> Fixes: 2ed6edd33a21("perf: Add cond_resched() to task_function_call()")
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> Reported-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+> ---
+>   kernel/events/core.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> Changelog:
+> - Remove addition of else in the first patch for
+>    if(ret != -EAGAIN) condition.
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 856d98c36f56..fe104fee097a 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -115,8 +115,8 @@ task_function_call(struct task_struct *p, remote_function_f func, void *info)
+>   	for (;;) {
+>   		ret = smp_call_function_single(task_cpu(p), remote_function,
+>   					       &data, 1);
+> -		ret = !ret ? data.ret : -EAGAIN;
+> -
+> +		if(!ret)
+                   ^
+Minor nit, you need a space after the if.
 
--Kees
+Also, the comment for the function says it returns @func's return val or 
+-ESRCH.  You could also add -ENXIO to that.
 
--- 
-Kees Cook
+Thanks for the fix.
+
+Reviewed-by: Barret Rhoden <brho@google.com>
+
+> +			ret = data.ret;
+>   		if (ret != -EAGAIN)
+>   			break;
+>   
+> 
+
