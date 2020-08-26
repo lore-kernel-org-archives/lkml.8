@@ -2,99 +2,103 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3520BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:17:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D34852078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0B5207F7
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 19:17:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598469441;
+	bh=XTgW+tIJmaecdn2qfXIrRjOrub7hJlaxv5kPObiSC5k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=B+JsVMRNinZR4/8jUPBi1UlA1oxiXO6G4Qf7MUs2XY85X87OSJVSJ0fbbKQJ/UxOx
+	 H18zPuut7FMyjl6Pkz40Y79017bZPshnHe3hf3M3oCCcNCBDTZYyfJlcbCZzUSUBu4
+	 5Qul2O5dqP8NkABKbtUawnQLHesb3IxBZdugbXBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbgHZTQy (ORCPT
+        id S1727776AbgHZTRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 15:16:54 -0400
-Received: from mga17.intel.com ([192.55.52.151]:59655 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbgHZTQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 15:16:51 -0400
-IronPort-SDR: jV610tOjzDFkO8psRDOY+eELy9UGQKPX72YM+gEQlTRXV1i0o3YRU3+dgV5DWmXImtuHFBy4Eh
- JiC2ubW82ciQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9725"; a="136439034"
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="136439034"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 12:16:46 -0700
-IronPort-SDR: khhe3B+e8qedoDCRPAjkMZI22badvpjZ4qjDoEltARDM6ebHLHFA9u0/yLEfPMus2TO0dNwauZ
- J2OBEGiH7nuA==
-X-IronPort-AV: E=Sophos;i="5.76,356,1592895600"; 
-   d="scan'208";a="336921169"
-Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Aug 2020 12:16:46 -0700
-Date:   Wed, 26 Aug 2020 12:16:45 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Andrew Cooper <andrew.cooper3@citrix.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Pu Wen <puwen@hygon.cn>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Dirk Hohndel <dirkhh@vmware.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        "H. Peter Anvin" <hpa@linux.intel.com>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Gordon Tetlow <gordon@tetlows.org>,
-        David Kaplan <David.Kaplan@amd.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: TDX #VE in SYSCALL gap (was: [RFD] x86: Curing the exception and
- syscall trainwreck in hardware)
-Message-ID: <20200826191644.GC21065@sjchrist-ice>
-References: <875z98jkof.fsf@nanos.tec.linutronix.de>
- <3babf003-6854-e50a-34ca-c87ce4169c77@citrix.com>
- <20200825043959.GF15046@sjchrist-ice>
- <CALCETrUP1T2k3UzZMsXMfAD83xbYEG+nAv3a-LeBjNW+=ijJAg@mail.gmail.com>
- <20200825171903.GA20660@sjchrist-ice>
- <CALCETrWy2x-RByfknjjKxRbE0LBPk2Ugj1d58xYHb91ogbfnvA@mail.gmail.com>
+        Wed, 26 Aug 2020 15:17:19 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41635 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbgHZTRP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 15:17:15 -0400
+Received: by mail-ed1-f68.google.com with SMTP id c8so2737913edn.8;
+        Wed, 26 Aug 2020 12:17:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8xGqYRG8ajCrh4u0eYU/fQCzra6d0D+pOOx7R79TMK0=;
+        b=LWI7uyd2XbwmfWGIjp1icTngzDGk5eGORHVfPlgpgDbCa3STYxhv+C7FE0ehEm65TZ
+         eHNb3N66avShzv1GJU0XyddvV6XAovXttfJlBEt0eSGGvoonv6osFqWK7SsvS7Eq5gkI
+         nq15w+uQHx3p6VJs5i97cmbnEbRhBHANhG/ikAioy+kX9WXROR/gpm4LIhoLgim6sGjK
+         eeEMoLdMj9lyWKG/TbrlEwYU50MRNNcPFnHtPlEhlbyONjtaE/U5ihjML8H/DsoR02Ff
+         1UBrNjMNYIy+eODjQppFcFbW2wHUkI+goGV0+P7aKvnNbkc4IkGBTAK7129UOznFc9/9
+         31Sw==
+X-Gm-Message-State: AOAM532cwLkdi+rn8cihtJFq6lE3PT5QZh1hr8bsiS0XhmVlKUMlT6oF
+        nmgNx+VtZTteGXQH7y3TIVo=
+X-Google-Smtp-Source: ABdhPJyQDj5GAFJqp19VI5XGmXKh+NP7EjEyumm45r/4D70WWFdTs7PKal7GGssl9pz9tBPBd/x9qA==
+X-Received: by 2002:a05:6402:2031:: with SMTP id ay17mr15889987edb.46.1598469432489;
+        Wed, 26 Aug 2020 12:17:12 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id r9sm2722466edq.44.2020.08.26.12.17.10
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 26 Aug 2020 12:17:11 -0700 (PDT)
+Date:   Wed, 26 Aug 2020 21:17:08 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bastien Nocera <hadess@hadess.net>,
+        Sangwon Jee <jeesw@melfas.com>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH 01/24] Input: bcm-keypad - Simplify with dev_err_probe()
+Message-ID: <20200826191708.GA13466@kozik-lap>
+References: <20200826181706.11098-1-krzk@kernel.org>
+ <20200826191217.GW1891694@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CALCETrWy2x-RByfknjjKxRbE0LBPk2Ugj1d58xYHb91ogbfnvA@mail.gmail.com>
+In-Reply-To: <20200826191217.GW1891694@smile.fi.intel.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 10:28:53AM -0700, Andy Lutomirski wrote:
-> On Tue, Aug 25, 2020 at 10:19 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> > One thought would be to have the TDX module (thing that runs in SEAM and
-> > sits between the VMM and the guest) provide a TDCALL (hypercall from guest
-> > to TDX module) to the guest that would allow the guest to specify a very
-> > limited number of GPAs that must never generate a #VE, e.g. go straight to
-> > guest shutdown if a disallowed GPA would go pending.  That seems doable
-> > from a TDX perspective without incurring noticeable overhead (assuming the
-> > list of GPAs is very small) and should be easy to to support in the guest,
-> > e.g. make a TDCALL/hypercall or two during boot to protect the SYSCALL
-> > page and its scratch data.
+On Wed, Aug 26, 2020 at 10:12:17PM +0300, Andy Shevchenko wrote:
+> On Wed, Aug 26, 2020 at 08:16:43PM +0200, Krzysztof Kozlowski wrote:
+> > Common pattern of handling deferred probe can be simplified with
+> > dev_err_probe().  Less code and also it prints the error value.
 > 
-> I guess you could do that, but this is getting gross.  The x86
-> architecture has really gone off the rails here.
+> > +++ b/drivers/input/keyboard/bcm-keypad.c
+> > @@ -379,11 +379,9 @@ static int bcm_kp_probe(struct platform_device *pdev)
+> >  	kp->clk = devm_clk_get(&pdev->dev, "peri_clk");
+> >  	if (IS_ERR(kp->clk)) {
+> >  		error = PTR_ERR(kp->clk);
+> > -		if (error != -ENOENT) {
+> > -			if (error != -EPROBE_DEFER)
+> > -				dev_err(&pdev->dev, "Failed to get clock\n");
+> > -			return error;
+> > -		}
+> > +		if (error != -ENOENT)
+> > +			return dev_err_probe(&pdev->dev, error, "Failed to get clock\n");
+> > +
+> >  		dev_dbg(&pdev->dev,
+> >  			"No clock specified. Assuming it's enabled\n");
+> 
+> Shouldn't be this rather switch to devm_clk_get_optional() + dev_err_probe?
 
-Does it suck less than using an IST?  Honest question.
+Indeed, it could be simplified even more. I'll send v2.
 
-I will add my voice to the "fix SYSCALL" train, but the odds of that getting
-a proper fix in time to intercept TDX are not good.  On the other hand,
-"fixing" the SYSCALL issue in the TDX module is much more feasible, but only
-if we see real value in such an approach as opposed to just using an IST.  I
-personally like the idea of a TDX module solution as I think it would be
-simpler for the kernel to implement/support, and would mean we wouldn't need
-to roll back IST usage for #VE if the heavens should part and bestow upon us
-a sane SYSCALL.
+Best regards,
+Krzysztof
