@@ -2,87 +2,97 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B57C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56557C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D79C206E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4B9206E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 01:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHZBqC (ORCPT
+        id S1726763AbgHZBsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 25 Aug 2020 21:46:02 -0400
-Received: from mga03.intel.com ([134.134.136.65]:48706 "EHLO mga03.intel.com"
+        Tue, 25 Aug 2020 21:48:18 -0400
+Received: from mga03.intel.com ([134.134.136.65]:48778 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726599AbgHZBqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 25 Aug 2020 21:46:01 -0400
-IronPort-SDR: I+KjmFhqnqChobdF0J/4eLyiKgLlO/4Mt9vIrIJYoFZzDTWi4z6vpIGI8IR1EwCFDxeQpjTHib
- RIYUMTbut+Zw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="156211434"
+        id S1726611AbgHZBsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 25 Aug 2020 21:48:16 -0400
+IronPort-SDR: mBzo4wOnsFQOX075RgTvXVhRj6HiFu3/UWWI4+lCOPVV8m8d7mAjMkxPJo0HQC/M5tmont0S7v
+ zpUjm76WoeXQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9724"; a="156211600"
 X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="156211434"
+   d="scan'208";a="156211600"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 18:46:01 -0700
-IronPort-SDR: bywuvKU1786MClS10ZZLwShMJM+68apVAuEAph5z9aduHixWIjk4bwKZsdL4ObFh2DQWOYYOyQ
- YKQBgTLOQg2Q==
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2020 18:48:14 -0700
+IronPort-SDR: VxTgRoIG+wPYtPsh0xn3ZNHD+gcvoapHV7aOE6er18cHM75TLhQakQ90OMr8W7mjwlBKpXmoSd
+ mbDEZIs92FOw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,354,1592895600"; 
-   d="scan'208";a="336692138"
-Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
-  by FMSMGA003.fm.intel.com with ESMTP; 25 Aug 2020 18:45:59 -0700
-Date:   Wed, 26 Aug 2020 09:45:58 +0800
-From:   Feng Tang <feng.tang@intel.com>
-To:     "Luck, Tony" <tony.luck@intel.com>
-Cc:     Borislav Petkov <bp@suse.de>,
-        "Chen, Rong A" <rong.a.chen@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "lkp@lists.01.org" <lkp@lists.01.org>,
-        Mel Gorman <mgorman@suse.com>
-Subject: Re: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
- -14.1% regression
-Message-ID: <20200826014558.GC83850@shbuild999.sh.intel.com>
-References: <20200425130136.GA28245@zn.tnic>
- <20200818082943.GA65567@shbuild999.sh.intel.com>
- <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
- <20200819020437.GA2605@shbuild999.sh.intel.com>
- <20200821020259.GA90000@shbuild999.sh.intel.com>
- <20200824151425.GF4794@zn.tnic>
- <20200824153300.GA56944@shbuild999.sh.intel.com>
- <20200824161238.GI4794@zn.tnic>
- <20200825062305.GA83850@shbuild999.sh.intel.com>
- <b704f3c6298f46abbc59105ec0d52d14@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b704f3c6298f46abbc59105ec0d52d14@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+   d="scan'208";a="500074678"
+Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
+  by fmsmga005.fm.intel.com with ESMTP; 25 Aug 2020 18:48:13 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     pbonzini@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com
+Cc:     Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH] selftests: kvm: Fix assert failure in single-step test
+Date:   Wed, 26 Aug 2020 09:55:24 +0800
+Message-Id: <20200826015524.13251-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 12:44:37AM +0800, Luck, Tony wrote:
-> > These 2 variables are accessed in 2 hot call stacks (for this 288 CPU
-> > Xeon Phi platform):
-> 
-> This might be the key element of "weirdness" for this system. It
-> has 288 CPUs ... cache alignment problems are often not too bad
-> on "small" systems. The as you scale up to bigger machines you
-> suddenly hit some critical point and performance drops dramatically.
-> 
-> It's good that you are picking up tips on how to bisect these and diagnose
-> the underlying problem. Number of cores is going to keep increasing, so
-> we will keep finding new issues like this.
+This is a follow-up patch to fix an issue left in commit:
+98b0bf02738004829d7e26d6cb47b2e469aaba86
+selftests: kvm: Use a shorter encoding to clear RAX
 
-Yes, now we have one more bullet for shooting this kind of strange
-performance changes :)
+With the change in the commit, we also need to modify "xor" instruction
+length from 3 to 2 in array ss_size accordingly to pass below check:
 
-Thanks,
-Feng
+for (i = 0; i < (sizeof(ss_size) / sizeof(ss_size[0])); i++) {
+        target_rip += ss_size[i];
+        CLEAR_DEBUG();
+        debug.control = KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_SINGLESTEP;
+        debug.arch.debugreg[7] = 0x00000400;
+        APPLY_DEBUG();
+        vcpu_run(vm, VCPU_ID);
+        TEST_ASSERT(run->exit_reason == KVM_EXIT_DEBUG &&
+                    run->debug.arch.exception == DB_VECTOR &&
+                    run->debug.arch.pc == target_rip &&
+                    run->debug.arch.dr6 == target_dr6,
+                    "SINGLE_STEP[%d]: exit %d exception %d rip 0x%llx "
+                    "(should be 0x%llx) dr6 0x%llx (should be 0x%llx)",
+                    i, run->exit_reason, run->debug.arch.exception,
+                    run->debug.arch.pc, target_rip, run->debug.arch.dr6,
+                    target_dr6);
+}
 
-> -Tony
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+---
+ tools/testing/selftests/kvm/x86_64/debug_regs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/kvm/x86_64/debug_regs.c b/tools/testing/selftests/kvm/x86_64/debug_regs.c
+index b8d14f9db5f9..2fc6b3af81a1 100644
+--- a/tools/testing/selftests/kvm/x86_64/debug_regs.c
++++ b/tools/testing/selftests/kvm/x86_64/debug_regs.c
+@@ -73,7 +73,7 @@ int main(void)
+ 	int i;
+ 	/* Instruction lengths starting at ss_start */
+ 	int ss_size[4] = {
+-		3,		/* xor */
++		2,		/* xor */
+ 		2,		/* cpuid */
+ 		5,		/* mov */
+ 		2,		/* rdmsr */
+-- 
+2.17.2
+
