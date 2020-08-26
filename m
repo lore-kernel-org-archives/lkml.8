@@ -2,206 +2,109 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5849C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D048221741
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:53:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ivH/yedo"
+	by mail.kernel.org (Postfix) with ESMTP id 81A542078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:53:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598453637;
+	bh=v/Zb3PmGpo5l2DvxNKoEoZ/zVbV6OtENUtPofNroKvs=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WNCdRBAtwgqWwJE1Z2y03hQO2W9vDTFQT4bINZ/QZRvvpC0zBPa7S4HT3XRu788K4
+	 ekVoQrZOGdjf+m0Weu+At7MNEZLhsW92sW5SC6U3MZGis92a3FR8sVjVJUUsRGVM81
+	 84DP2jTl95W5DlYSvuC3bC2gubK7uvdgrZYjvJHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgHZOxr (ORCPT
+        id S1727053AbgHZOxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:53:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbgHZOxc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:53:32 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACAEBC061756;
-        Wed, 26 Aug 2020 07:53:32 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id bh1so1007011plb.12;
-        Wed, 26 Aug 2020 07:53:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iI/2kk53gpQ9Rn/t0izdpZaGmK63P9KDTKwfGTyE5K8=;
-        b=ivH/yedoVnRQZaiOBDE/q7i/+LlZQz4//Ac22EjXgDSh5z78UsF2b3rYcAwUTE0VWw
-         O3akOdfpfDZPuTGaKWobUg/CtUCnIsUjZftQct3FOb1jPRlUQiNj8Fv+ayC2WGX+PO8a
-         /9s+V/UtihMnFt2SYw1P9GmmaSFbh6cIMV4SiwgDzxT77fX3hxPs3DulQ2yS3Lax/rmT
-         UUjOnKVv80yVYX48yH/r8Tek/OFxlP6Uka0D+brPaZFXo+5qiKdS6/iqg/yaUG6Lirw7
-         +rj1zbW6R6r+NiEzsswvBgZahXYbQKL5Bcp2cARCgQbVcP55dthWgJ0T/81aUNEM+sK1
-         +MlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iI/2kk53gpQ9Rn/t0izdpZaGmK63P9KDTKwfGTyE5K8=;
-        b=irwP0BoUJ78VwKPHzpKmVvj2TYqDtrTvlPVO/OLau83wxqrsLtl9Gt6W4EtlcAWFv2
-         1zc8+hlsfLGBmA6UEsCA+nyInh9k+qravco3qo077CdL+DTPaWmds+g6F1Njho9E+t3X
-         HKhJjZaSX5DOxqPcNRY2lQNbhHcnyiIdd7z1SbRsLroqtcP+scjnyPVVp4s5RH2ODi/N
-         Ll9HKc4j2D79yX5vYSXCrxltn5DgEVGrughERFXiqIm4U9eBfvLm8lCbKwvFwlVsqRVl
-         Mvei3x59oPro8Es0QdPhArVq2uDNqPIWdRHCbcOicqSDpRNQrnvT0uNzqMB50sww4ncg
-         kyeg==
-X-Gm-Message-State: AOAM531TuibKJSP2herhaKYXNVE8YfvwdWauCrIg7zsaHA09TCR9Fbb3
-        fPF1a0gjhWlI5i1GdfHgC9EOzslIgF0=
-X-Google-Smtp-Source: ABdhPJwc2cHai12HbnvF2E57CKh2UaXXeM4qGHmYIx+dAfw9+5a/wogaP6zNkYnmdj+Nj5MlwPj4Xg==
-X-Received: by 2002:a17:902:a617:: with SMTP id u23mr11640565plq.188.1598453611955;
-        Wed, 26 Aug 2020 07:53:31 -0700 (PDT)
-Received: from bobo.ozlabs.ibm.com (61-68-212-105.tpgi.com.au. [61.68.212.105])
-        by smtp.gmail.com with ESMTPSA id r7sm3327140pfl.186.2020.08.26.07.53.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Aug 2020 07:53:31 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linux-arch@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: [PATCH v2 09/23] m68k: use asm-generic/mmu_context.h for no-op implementations
-Date:   Thu, 27 Aug 2020 00:52:35 +1000
-Message-Id: <20200826145249.745432-10-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200826145249.745432-1-npiggin@gmail.com>
-References: <20200826145249.745432-1-npiggin@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 26 Aug 2020 10:53:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41056 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727840AbgHZOxg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:53:36 -0400
+Received: from localhost.localdomain (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06B9A2177B;
+        Wed, 26 Aug 2020 14:53:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598453615;
+        bh=v/Zb3PmGpo5l2DvxNKoEoZ/zVbV6OtENUtPofNroKvs=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=G1yTKeODAnBmqu0tCCEEeOyfX9WSgWuaRVB3SQP1H4qDRVlOSt+hpoRkjYlGCBeok
+         gmAK8tht/DTIU8dviczhNyYxIUUm3LiA3INTKD5WTXuyCsmJyzN0tD+pJ8COzkkiWo
+         7i/+1mvilt2zqVD/ofW0B8ni0jFzO+qcRjHUi2ro=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Peter Rosin <peda@axentia.se>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Beniamin Bia <beniamin.bia@analog.com>,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: [PATCH 16/16] iio: magnetometer: ak8974: Simplify with dev_err_probe()
+Date:   Wed, 26 Aug 2020 16:51:53 +0200
+Message-Id: <20200826145153.10444-16-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200826145153.10444-1-krzk@kernel.org>
+References: <20200826145153.10444-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-m68k@lists.linux-m68k.org
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
- arch/m68k/include/asm/mmu_context.h | 47 +++++------------------------
- 1 file changed, 8 insertions(+), 39 deletions(-)
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and also it prints the error value.
 
-diff --git a/arch/m68k/include/asm/mmu_context.h b/arch/m68k/include/asm/mmu_context.h
-index 993fd7e37069..012e92204c1b 100644
---- a/arch/m68k/include/asm/mmu_context.h
-+++ b/arch/m68k/include/asm/mmu_context.h
-@@ -5,10 +5,6 @@
- #include <asm-generic/mm_hooks.h>
- #include <linux/mm_types.h>
- 
--static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
--{
--}
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ drivers/iio/magnetometer/ak8974.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/iio/magnetometer/ak8974.c b/drivers/iio/magnetometer/ak8974.c
+index cbb44e401c0a..fa6a8e1a815c 100644
+--- a/drivers/iio/magnetometer/ak8974.c
++++ b/drivers/iio/magnetometer/ak8974.c
+@@ -843,15 +843,9 @@ static int ak8974_probe(struct i2c_client *i2c,
+ 	ret = devm_regulator_bulk_get(&i2c->dev,
+ 				      ARRAY_SIZE(ak8974->regs),
+ 				      ak8974->regs);
+-	if (ret < 0) {
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(&i2c->dev, "cannot get regulators: %d\n", ret);
+-		else
+-			dev_dbg(&i2c->dev,
+-				"regulators unavailable, deferring probe\n");
 -
- #ifdef CONFIG_MMU
+-		return ret;
+-	}
++	if (ret < 0)
++		return dev_err_probe(&i2c->dev, ret,
++				     "cannot get regulators\n");
  
- #if defined(CONFIG_COLDFIRE)
-@@ -58,6 +54,7 @@ static inline void get_mmu_context(struct mm_struct *mm)
- /*
-  * We're finished using the context for an address space.
-  */
-+#define destroy_context destroy_context
- static inline void destroy_context(struct mm_struct *mm)
- {
- 	if (mm->context != NO_CONTEXT) {
-@@ -79,19 +76,6 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
- 	set_context(tsk->mm->context, next->pgd);
- }
- 
--/*
-- * After we have set current->mm to a new value, this activates
-- * the context for the new mm so we see the new mappings.
-- */
--static inline void activate_mm(struct mm_struct *active_mm,
--	struct mm_struct *mm)
--{
--	get_mmu_context(mm);
--	set_context(mm->context, mm->pgd);
--}
--
--#define deactivate_mm(tsk, mm) do { } while (0)
--
- #define prepare_arch_switch(next) load_ksp_mmu(next)
- 
- static inline void load_ksp_mmu(struct task_struct *task)
-@@ -176,6 +160,7 @@ extern unsigned long get_free_context(struct mm_struct *mm);
- extern void clear_context(unsigned long context);
- 
- /* set the context for a new task to unmapped */
-+#define init_new_context init_new_context
- static inline int init_new_context(struct task_struct *tsk,
- 				   struct mm_struct *mm)
- {
-@@ -210,8 +195,7 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
- 	activate_context(tsk->mm);
- }
- 
--#define deactivate_mm(tsk, mm)	do { } while (0)
--
-+#define activate_mm activate_mm
- static inline void activate_mm(struct mm_struct *prev_mm,
- 			       struct mm_struct *next_mm)
- {
-@@ -224,6 +208,7 @@ static inline void activate_mm(struct mm_struct *prev_mm,
- #include <asm/page.h>
- #include <asm/cacheflush.h>
- 
-+#define init_new_context init_new_context
- static inline int init_new_context(struct task_struct *tsk,
- 				   struct mm_struct *mm)
- {
-@@ -231,8 +216,6 @@ static inline int init_new_context(struct task_struct *tsk,
- 	return 0;
- }
- 
--#define destroy_context(mm)		do { } while(0)
--
- static inline void switch_mm_0230(struct mm_struct *mm)
- {
- 	unsigned long crp[2] = {
-@@ -300,8 +283,7 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next, str
- 	}
- }
- 
--#define deactivate_mm(tsk,mm)	do { } while (0)
--
-+#define activate_mm activate_mm
- static inline void activate_mm(struct mm_struct *prev_mm,
- 			       struct mm_struct *next_mm)
- {
-@@ -315,24 +297,11 @@ static inline void activate_mm(struct mm_struct *prev_mm,
- 
- #endif
- 
--#else /* !CONFIG_MMU */
-+#include <asm-generic/mmu_context.h>
- 
--static inline int init_new_context(struct task_struct *tsk, struct mm_struct *mm)
--{
--	return 0;
--}
--
--
--static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next, struct task_struct *tsk)
--{
--}
--
--#define destroy_context(mm)	do { } while (0)
--#define deactivate_mm(tsk,mm)	do { } while (0)
-+#else /* !CONFIG_MMU */
- 
--static inline void activate_mm(struct mm_struct *prev_mm, struct mm_struct *next_mm)
--{
--}
-+#include <asm-generic/nommu_context.h>
- 
- #endif /* CONFIG_MMU */
- #endif /* __M68K_MMU_CONTEXT_H */
+ 	ret = regulator_bulk_enable(ARRAY_SIZE(ak8974->regs), ak8974->regs);
+ 	if (ret < 0) {
 -- 
-2.23.0
+2.17.1
 
