@@ -2,207 +2,104 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E06C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26482C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B72352078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC1992078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 15:30:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="mb9DX2PD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RaQnXZB2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbgHZPaX (ORCPT
+        id S1728012AbgHZPaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 11:30:23 -0400
-Received: from grey-smtp-cloud9.xs4all.net ([194.109.24.44]:56933 "EHLO
-        grey-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726874AbgHZPaU (ORCPT
+        Wed, 26 Aug 2020 11:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39998 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbgHZPav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 11:30:20 -0400
-X-Greylist: delayed 432 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Aug 2020 11:30:18 EDT
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id AxGRkkRmJuuXOAxGSkEYdq; Wed, 26 Aug 2020 17:23:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1598455385; bh=trldSuk5qoiwVr84MQPYlc7WezHhEKq+3G3EIoKlsW4=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=mb9DX2PDKBhnc9UkSLHtuSDLcn6+A2IClGrzLNwofSoiBuior11OkCJwhgUhy8D3V
-         TT7OgiVV/22wnzYq6Si/64C49NKjlv1dsheT1HVcy9KgotM6sosmAxZOHRgejUUhAa
-         TFtfHYSrOG8V19FTIsw0bJ8oomgidsmfhvGsy2+tIhODba/JBE217vmte6FkALn2os
-         Rp8HImHWAbs6mutMbsGPMwsQ+P5uR7vTkSpvaL6GxdzNi1S9MBnhZV028O+QadGExo
-         jXTB5XfF917dDZgNkQI1vz2LedeLY/z4GAACCrtqEZFIBZo1oFde+luH8v7wYQ4Ig5
-         dilPJnUk1n0ig==
-Subject: Re: [PATCH 2/2] media: v4l2-mem2mem: simplify poll logic a bit
-To:     Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        Alexandre Courbot <gnurou@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200825145556.637323-1-gnurou@gmail.com>
- <20200825145556.637323-3-gnurou@gmail.com>
- <CAAEAJfD1kUJODa+-STV6Q+=9qWH8v2=KZzAA4ppgfbQxstO+Mg@mail.gmail.com>
- <CAAVeFuJgBqN7KYhNi=mMNxy6wHTZOn5E1=pHP3q=n8X++b5pmg@mail.gmail.com>
- <CAAEAJfCfjzGDOhD2WHYny-wVwL19qc_VA9c3uVNiHxpYdEHsLQ@mail.gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <3dd23b1e-debd-bd50-e8a1-25837d2fd01e@xs4all.nl>
-Date:   Wed, 26 Aug 2020 17:23:03 +0200
+        Wed, 26 Aug 2020 11:30:51 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F08BCC061756;
+        Wed, 26 Aug 2020 08:30:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=xlfXHnuuH2gInBuzkBHVhLFG54fPY1/qexAoARTTtw4=; b=RaQnXZB20d4JOEFetCvG5MTO5c
+        m6j1A2coIXyNV4KKTq3oTb8hkh9riRf+BmXobcnLKbvwdpC/wA/mc4Yi4CMHhXjjKfx2O1vRA+kYt
+        NOu7FaDqiOl1OMZZPrsNQqb9AJf+Glllx9hjPwHnYZki+JcM9MVqtULJK8GIVpF/xyr/JaxPczdrp
+        2m0LnJ6mtqKdDS74P929XjsyCn0JKWATMoTJdR6qk1tnnrPe+rBebTU5adIMFEya7FvRVOiDA5KnR
+        rzlWZ/o9XTQwZCWxpEDUt9OZpt4s2sXniVTLUMjthgf6jHQ8DpeeMERpsrEm7xz+I0ZAoQlfVsNTz
+        4d4DeJTA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kAxNs-0004uD-AB; Wed, 26 Aug 2020 15:30:44 +0000
+Subject: Re: [PATCH 1/2] leds: mt6360: Add LED driver for MT6360
+To:     Gene Chen <gene.chen.richtek@gmail.com>,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, matthias.bgg@gmail.com
+Cc:     dmurphy@ti.com, linux-leds@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com,
+        benjamin.chao@mediatek.com
+References: <1598441840-15226-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1598441840-15226-2-git-send-email-gene.chen.richtek@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f35bf9c1-6397-3369-954d-fe05d77438cd@infradead.org>
+Date:   Wed, 26 Aug 2020 08:30:37 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <CAAEAJfCfjzGDOhD2WHYny-wVwL19qc_VA9c3uVNiHxpYdEHsLQ@mail.gmail.com>
+In-Reply-To: <1598441840-15226-2-git-send-email-gene.chen.richtek@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJRD2YFZD851Cya/ZVCglVkkKzP9XY+Am1EoxtVTE82JN0l6JGs8Wa9DTygHmsIuI2eMSu2aqeYm9kV1UIY15Pkdw0qtD8uqpLN7RgZcs9uZTwvDZl4k
- LDYKr2QRy2JD1wDFrus+PahAoQ2RfKNl7yk2oktQ/rFkeWqta2jS3gtrergF2RlatO9lKR4dStq+5g0K2eigSIHlx/1J05jIXAYfsDbqrfYzuvfmVyDbV+3W
- ud2gDP2wopXnyCdpAVjRcPEU+vKIUgJAgOjh/FQoJmAJpr8gwJDViMY+k5s5vGqxKc1adetvIFAhGoYJifEviufEQ7nVyN2QQ+5jsgpvm/X4oWF9h/sAqwe3
- 2TayL524LPuy07ZoO9izXzhZD6E6sUyRGYy/q/4fKZQbHiBeIOVPOymQP96TkOQ7FvKyLoCSDQPGyKMbyY7cuVLRZRYnA73wTmbxbJuUFX7BihP0WdFtP1bN
- Ea/6E3f1PknqcqCK
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/08/2020 16:32, Ezequiel Garcia wrote:
-> On Wed, 26 Aug 2020 at 08:19, Alexandre Courbot <gnurou@gmail.com> wrote:
->>
->> Hi Ezequiel, thanks for the review!
->>
->> On Wed, Aug 26, 2020 at 1:15 PM Ezequiel Garcia
->> <ezequiel@vanguardiasur.com.ar> wrote:
->>>
->>> Hi Alexandre,
->>>
->>> On Tue, 25 Aug 2020 at 11:56, Alexandre Courbot <gnurou@gmail.com> wrote:
->>>>
->>>> Factorize redundant checks into a single code block, remove the early
->>>> return, and declare variables in their innermost block. Hopefully this
->>>> makes this code a little bit easier to follow.
->>>>
->>>
->>> This _definitely_ makes the poll handling more readable.
->>>
->>> Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
->>>
->>> See below a nitpick.
->>>
->>>> Signed-off-by: Alexandre Courbot <gnurou@gmail.com>
->>>> ---
->>>>  drivers/media/v4l2-core/v4l2-mem2mem.c | 35 +++++++++++---------------
->>>>  1 file changed, 15 insertions(+), 20 deletions(-)
->>>>
->>>> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
->>>> index 0d0192119af20..aeac9707123d0 100644
->>>> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
->>>> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
->>>> @@ -841,7 +841,6 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
->>>>                                        struct poll_table_struct *wait)
->>>>  {
->>>>         struct vb2_queue *src_q, *dst_q;
->>>> -       struct vb2_buffer *src_vb = NULL, *dst_vb = NULL;
->>>>         __poll_t rc = 0;
->>>>         unsigned long flags;
->>>>
->>>> @@ -863,33 +862,29 @@ static __poll_t v4l2_m2m_poll_for_data(struct file *file,
->>>>                 return EPOLLERR;
->>>>
->>>>         spin_lock_irqsave(&src_q->done_lock, flags);
->>>> -       if (!list_empty(&src_q->done_list))
->>>> -               src_vb = list_first_entry(&src_q->done_list, struct vb2_buffer,
->>>> -                                               done_entry);
->>>> -       if (src_vb && (src_vb->state == VB2_BUF_STATE_DONE
->>>> -                       || src_vb->state == VB2_BUF_STATE_ERROR))
->>>> -               rc |= EPOLLOUT | EPOLLWRNORM;
->>>> +       if (!list_empty(&src_q->done_list)) {
->>>> +               struct vb2_buffer *src_vb = list_first_entry(
->>>> +                       &src_q->done_list, struct vb2_buffer, done_entry);
->>>> +               if (src_vb->state == VB2_BUF_STATE_DONE ||
->>>> +                   src_vb->state == VB2_BUF_STATE_ERROR)
->>>> +                       rc |= EPOLLOUT | EPOLLWRNORM;
->>>> +       }
->>>>         spin_unlock_irqrestore(&src_q->done_lock, flags);
->>>>
->>>>         spin_lock_irqsave(&dst_q->done_lock, flags);
->>>> -       if (list_empty(&dst_q->done_list)) {
->>>> +       if (!list_empty(&dst_q->done_list)) {
->>>> +               struct vb2_buffer *dst_vb = list_first_entry(
->>>> +                       &dst_q->done_list, struct vb2_buffer, done_entry);
->>>> +               if (dst_vb->state == VB2_BUF_STATE_DONE ||
->>>> +                   dst_vb->state == VB2_BUF_STATE_ERROR)
->>>> +                       rc |= EPOLLIN | EPOLLRDNORM;
->>>> +       } else if (dst_q->last_buffer_dequeued) {
->>>>                 /*
->>>>                  * If the last buffer was dequeued from the capture queue,
->>>>                  * return immediately. DQBUF will return -EPIPE.
->>>>                  */
->>>
->>> The part about "returning immediately" doesn't make
->>> much sense now. Could we rephrase this, keeping the -EPIPE
->>> comment?
->>
->> I understood this sentence as referring to the system call and not
->> just this function, but maybe we can rephrase this as "... make
->> user-space wake up immediately"?
->>
-> 
-> But is this really about user-space wakeup? I am under the impression
-> that past poll_wait on both queues, we are already about to return
-> (and wakeup).
-> 
-> The way I see it, the original commit intention was to skip any
-> done_list handling, returning immediately on the last buffer condition.
-> 
-> How about just
-> 
-> """
-> If the last buffer was dequeued from the capture queue,
-> signal userspace. DQBUF will return -EPIPE.
+On 8/26/20 4:37 AM, Gene Chen wrote:
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 1c181df..ce95ead 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -271,6 +271,17 @@ config LEDS_MT6323
+>  	  This option enables support for on-chip LED drivers found on
+>  	  Mediatek MT6323 PMIC.
+>  
+> +config LEDS_MT6360
+> +	tristate "LED Support for Mediatek MT6360 PMIC"
+> +	depends on LEDS_CLASS_FLASH && OF
+> +	depends on V4L2_FLASH_LED_CLASS || !V4L2_FLASH_LED_CLASS
+> +	depends on MFD_MT6360
+> +	help
+> +	  This option enables support for dual Flash LED drivers found on
+> +	  Mediatek MT6360 PMIC.
+> +	  Support Torch and Strobe mode independently current source.
 
-I'd write 'DQBUF(CAPTURE)' here to emphasize that only the capture
-queue will return -EPIPE when you try to dequeue from it.
+	  Supports                      independently of current source.
 
-Also note that the original text was a copy-and-paste from vb2_core_poll().
-The phrase 'return immediately' makes sense in that context since that
-poll code deals with a single queue. In this case you have two queues,
-and 'return immediately' no longer applies (in fact, that effectively is
-the bug that being fixed here!).
+I'm guessing on that ending; I wasn't sure what was intended, but it doesn't
+make sense as posted.
 
-Regards,
 
-	Hans
+> +	  Include Low-VF and short protection.
 
-> """
-> 
-> ?
-> 
->>>
->>> Thanks,
->>> Ezequiel
->>>
->>>> -               if (dst_q->last_buffer_dequeued) {
->>>> -                       spin_unlock_irqrestore(&dst_q->done_lock, flags);
->>>> -                       rc |= EPOLLIN | EPOLLRDNORM;
->>>> -                       return rc;
->>>> -               }
->>>> -       }
->>>> -
->>>> -       if (!list_empty(&dst_q->done_list))
->>>> -               dst_vb = list_first_entry(&dst_q->done_list, struct vb2_buffer,
->>>> -                                               done_entry);
->>>> -       if (dst_vb && (dst_vb->state == VB2_BUF_STATE_DONE
->>>> -                       || dst_vb->state == VB2_BUF_STATE_ERROR))
->>>>                 rc |= EPOLLIN | EPOLLRDNORM;
->>>> +       }
->>>>         spin_unlock_irqrestore(&dst_q->done_lock, flags);
->>>>
->>>>         return rc;
->>>> --
->>>> 2.28.0
->>>>
+	  Includes
 
+> +
+>  config LEDS_S3C24XX
+>  	tristate "LED Support for Samsung S3C24XX GPIO LEDs"
+>  	depends on LEDS_CLASS
+
+
+thanks.
+-- 
+~Randy
