@@ -2,162 +2,232 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC1FC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43908C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4532071E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1922B2071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 06:38:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vTGLn1x/"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LmlY53Tr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgHZGih (ORCPT
+        id S1727943AbgHZGio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 02:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbgHZGiP (ORCPT
+        Wed, 26 Aug 2020 02:38:44 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37683 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbgHZGfc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 02:38:15 -0400
-Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EE6FC061574
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 23:38:14 -0700 (PDT)
-Received: by mail-vs1-xe42.google.com with SMTP id p186so370620vsa.10
-        for <linux-kernel@vger.kernel.org>; Tue, 25 Aug 2020 23:38:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hDQRRI78D3Sk/YTewL1Qk0xdUUz1zPK2EJmRrgeUM0s=;
-        b=vTGLn1x/zJIY52K4Di+3Teh/ssAgCH5yCwousRZq+WecxuiBZEquiPQ9UNFYv6go+3
-         cxi9hrbf2PwEWTBq9ymWzvNM9qStJcOI/VzzqoFk3NpF4g3qH7J2F19ht/JJlu3ryxSN
-         QQLSDGi9S/5vRxqgCcBcSrmgspZbBbXmmZfE8YjUe415ruvrb1/taSGkJjYKYCnCwmBy
-         W7N5w2m83JU88vI4Y8ZBW1sRBlpZoDDr1BQl/dAiLyjyZNPvRccfwRVDjiW5oBZL5gCY
-         PIaopB27colyHJy/KItN20mbxURukeTX37yvpDdatb1doKoHcDElNQX5XjOOpgJiSKl9
-         pByg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hDQRRI78D3Sk/YTewL1Qk0xdUUz1zPK2EJmRrgeUM0s=;
-        b=Pf8I293H6eJAIvOqgvThR4ZEwXwu1He8kMnspSFVCnlkXaTkBa+P9HhHE5F1qnz30v
-         MK1cFiiheGL6nQHGKretLN7N42UOgzY2egE9LBKopzfGbcqN9VABWwNWel8yJawmOFh4
-         X3Sy6tvYmnp6si2XMuVxLxBkC9VJUzZZ7i7Csm5ae36+Vz9k7liIpnKzobRhuYvhghZa
-         u2hmF0k/LblfGm1nnaaDZd00eR/vS5DnzrdTl6HCtR9SPCz8z1r00cA84dEfcRuDxdS/
-         X6UkqCJ4e8BQVTd6chtOp1u/pnR838+YcEiyGxGKJHHfkZvJEkgIo2ruVzcXXGy1n5fB
-         5JPg==
-X-Gm-Message-State: AOAM531UoF9qP59+LBpe8n+8SDenBmUy/7W8fxiCQw3ljLbacwvyG4SD
-        XmFV9JKNKxmvX3e1sJeQG1nsm2jRfWBefGcClSGHXA==
-X-Google-Smtp-Source: ABdhPJxskoXtY/RFvHibrA9E3iOGod97S56DxYjdnW850ds8AvXYJR6KR4cZHsxljH82T1HmX9SZMy0I8dsWlSV6bzI=
-X-Received: by 2002:a67:fb43:: with SMTP id e3mr7397682vsr.91.1598423892321;
- Tue, 25 Aug 2020 23:38:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200819104057.318230-1-ulf.hansson@linaro.org>
- <20200819104057.318230-4-ulf.hansson@linaro.org> <20200825161602.GE12523@codeaurora.org>
-In-Reply-To: <20200825161602.GE12523@codeaurora.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 26 Aug 2020 08:37:35 +0200
-Message-ID: <CAPDyKFrMUf4y5kVjr=dW-wf2kqBwcGePf=55U1Ck8O6tp-OuqQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] PM / Domains: Add support for PM domain on/off
- notifiers for genpd
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 26 Aug 2020 02:35:32 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200826063531euoutp011787a813aadbe0c44951e438becdf244~uveooCQqb1716517165euoutp01X
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 06:35:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200826063531euoutp011787a813aadbe0c44951e438becdf244~uveooCQqb1716517165euoutp01X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598423731;
+        bh=MLTIzGLHmLuIJnHj+Adg9SKUDC11YSwmiKdLszq3iCE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LmlY53TrhhEU6wgotGvoi9XdweyrzfAkQA3zqJy0xytbiHOUFNIskPzidXwUb5MMV
+         90smQ2A2bmaqSa0TbJTDofqLakkzfMSU0UDIF88vw0TZcL7DFyZLXHz3vM47YnpL+n
+         x/wTLZOEau9qZb9mokrM1P8ANLszrLHql0DfeejY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200826063530eucas1p1b4a9291b5c881c397f252329d5e86a01~uveoPjGh71803218032eucas1p1B;
+        Wed, 26 Aug 2020 06:35:30 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 6B.23.06456.2B2064F5; Wed, 26
+        Aug 2020 07:35:30 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200826063530eucas1p16acb847d7da0ea734bef507688a76c5a~uvenzwsyP1480714807eucas1p1M;
+        Wed, 26 Aug 2020 06:35:30 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200826063530eusmtrp1775c98cf9c19b8c950c08415962ada98~uvenzKLTE1091110911eusmtrp1H;
+        Wed, 26 Aug 2020 06:35:30 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-b4-5f4602b2558b
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id E3.C0.06314.2B2064F5; Wed, 26
+        Aug 2020 07:35:30 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200826063529eusmtip241d433663647e436868c4b94ea5d1e8b~uvenOKK330091500915eusmtip2E;
+        Wed, 26 Aug 2020 06:35:29 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        etnaviv@lists.freedesktop.org
+Subject: [PATCH v9 05/32] drm: etnaviv: fix common struct sg_table related
+ issues
+Date:   Wed, 26 Aug 2020 08:32:49 +0200
+Message-Id: <20200826063316.23486-6-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200826063316.23486-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSWUwTURSGc2c604ItGQuRE0QwVVFI2OLCBLRRgmZMfHB5IJgoVpkASoG0
+        gKJBGwkiUPYHCVFSC8ougpU1KhChLFoNoEJAAQERTUFkCyIgZQDfvnPO/9//3pMrwMXPCRtB
+        cGgEqwiVhUhIc15l8/w75wrsmL/bG60DnWxoxejyrDKCXq5Mx+mumQmSrs3q49OFxU0YrXnl
+        RQ886MHo6a5BjK4Y+kjQnbX3Sbr09Wc+3fBrmDgsYkpyShDzYlbDY6pmBwimP0mPMc/ybjG9
+        S0M4k9mdj5i6HhXJpC66MSm6IsRMVdid3HTW/GAAGxIcxSpcpRfMgxYLSrHwuR3XJuua+CqU
+        YpeIzARA7YOUhT5kYjFVgGBEfSoRma/wNILcfDXOFVMIJpNH8HXHp5aBtUE+gped4+SGZSyt
+        mzSpSModEo2Jq2xFxSFoSRaaGKf6MVgYu2xiS+oMGBo0mIl51C7oN84SJhZRh6DgWyafS7OH
+        4qf1q8lmlBT0SamrYUA18qHtp5bkRD6Q220kOLaEH3rdmtkW2jPVPM4Qi2DQUMrnCjWCzttZ
+        iFN5QZ/hz8pJgpXrOUJZrSvXPgJ5H+KRqQ2UBXQbN3MPsICMyns41xbB3TtiTu0A2fonG7EN
+        7zvWtsXAnKp3bVvpCGq+lKE0ZJ/9P0yDUBGyZiOV8kBW6R7KXnVRyuTKyNBAl0th8gq08pna
+        l/S/q9FMx8VGRAmQRCjSkEf9xYQsShktb0QgwCVWIu+37efFogBZ9HVWEeaviAxhlY1oq4An
+        sRbt1Y6dE1OBsgj2CsuGs4r1KSYws1EhFDtRPe+Z6uvr7CiN01FCdfUksH7awlF+6/DNhzfG
+        E9jj+d/HXUt19fqZ+PIDGqOfEM3aFM40O+k9HlnmkI9P2BM1qt5YW38PW7nFFpu6ZWnAtirv
+        GDd69HSRRYaXVbl2tIHP7nSrCjR4tlHagP17pit1uxO2+6in/n6NipHwlEEydydcoZT9A826
+        B45IAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOIsWRmVeSWpSXmKPExsVy+t/xe7qbmNziDc4v5rHoPXeSyWLjjPWs
+        Fv+3TWS2uPL1PZvFrhl32C1Wrj7KZLFgv7XFg7k3mSy+XHnIZLHp8TVWi8u75rBZrD1yl93i
+        4IcnrA68HmvmrWH02PttAYvH9m8PWD3udx9n8ti8pN7j9r/HzB6Tbyxn9Nh9s4HNo/+vgUff
+        llWMHp83yQVwR+nZFOWXlqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJal
+        FunbJehl/F2xlqngu3LFx91H2RsY++S6GDk5JARMJK6feMDcxcjFISSwlFHiw+ZF7BAJGYmT
+        0xpYIWxhiT/Xutggij4xSix8thcswSZgKNH1FiIhItDJKDGt+yNYN7PAcyaJly36ILawQKDE
+        nEnH2EBsFgFViftvv4E18wrYSqx4Nhlqm7zE6g0HmEFsTgE7iePd/WD1QkA1p9fOYJ7AyLeA
+        kWEVo0hqaXFuem6xoV5xYm5xaV66XnJ+7iZGYKRsO/Zz8w7GSxuDDzEKcDAq8fAuYHONF2JN
+        LCuuzD3EKMHBrCTC63T2dJwQb0piZVVqUX58UWlOavEhRlOgoyYyS4km5wOjOK8k3tDU0NzC
+        0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA6PQep5KsVNbJ58LXVxgW70sNdr1
+        v9ad2gPNuz9KtMiv3Rkp8/KO1faD4rcNyh490WHYytUolLtLcPcaq9aQzavXfpQ/eev6hV9z
+        pR/dWbPjwJz3O6McfJ4+mnX6aMwO5nRL04ucquLLJetCLr45sIQ9eq6XzrvHa0ou2MfXnrar
+        S5oi7JnW6hynxFKckWioxVxUnAgAwZS1haoCAAA=
+X-CMS-MailID: 20200826063530eucas1p16acb847d7da0ea734bef507688a76c5a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200826063530eucas1p16acb847d7da0ea734bef507688a76c5a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200826063530eucas1p16acb847d7da0ea734bef507688a76c5a
+References: <20200826063316.23486-1-m.szyprowski@samsung.com>
+        <CGME20200826063530eucas1p16acb847d7da0ea734bef507688a76c5a@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 at 18:16, Lina Iyer <ilina@codeaurora.org> wrote:
->
-> On Wed, Aug 19 2020 at 04:41 -0600, Ulf Hansson wrote:
-> >A device may have specific HW constraints that must be obeyed to, before
-> >its corresponding PM domain (genpd) can be powered off - and vice verse at
-> >power on. These constraints can't be managed through the regular runtime PM
-> >based deployment for a device, because the access pattern for it, isn't
-> >always request based. In other words, using the runtime PM callbacks to
-> >deal with the constraints doesn't work for these cases.
-> >
-> >For these reasons, let's instead add a PM domain power on/off notification
-> >mechanism to genpd. To add/remove a notifier for a device, the device must
-> >already have been attached to the genpd, which also means that it needs to
-> >be a part of the PM domain topology.
-> >
-> >To add/remove a notifier, let's introduce two genpd specific functions:
-> > - dev_pm_genpd_add|remove_notifier()
-> >
-> >Note that, to further clarify when genpd power on/off notifiers may be
-> >used, one can compare with the existing CPU_CLUSTER_PM_ENTER|EXIT
-> >notifiers. In the long run, the genpd power on/off notifiers should be able
-> >to replace them, but that requires additional genpd based platform support
-> >for the current users.
-> >
-> >Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> >---
-> > drivers/base/power/domain.c | 130 ++++++++++++++++++++++++++++++++++--
-> > include/linux/pm_domain.h   |  15 +++++
-> > 2 files changed, 141 insertions(+), 4 deletions(-)
-> >
-> >diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> >index 4b787e1ff188..9cb85a5e8342 100644
-> >--- a/drivers/base/power/domain.c
-> >+++ b/drivers/base/power/domain.c
-> >@@ -545,13 +545,21 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
-> >       if (!genpd->gov)
-> >               genpd->state_idx = 0;
-> >
-> >+      /* Notify consumers that we are about to power off. */
-> >+      ret = raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_OFF,
-> >+                                    NULL);
-> >+      if (ret)
-> >+              return ret;
-> >+
-> >       /* Don't power off, if a child domain is waiting to power on. */
-> >-      if (atomic_read(&genpd->sd_count) > 0)
-> >-              return -EBUSY;
-> >+      if (atomic_read(&genpd->sd_count) > 0) {
-> >+              ret = -EBUSY;
-> >+              goto busy;
-> >+      }
-> >
-> >       ret = _genpd_power_off(genpd, true);
-> >       if (ret)
-> >-              return ret;
-> >+              goto busy;
-> >
-> >       genpd->status = GENPD_STATE_OFF;
-> >       genpd_update_accounting(genpd);
-> >@@ -564,6 +572,9 @@ static int genpd_power_off(struct generic_pm_domain *genpd, bool one_dev_on,
-> >       }
-> >
-> >       return 0;
-> >+busy:
-> >+      raw_notifier_call_chain(&genpd->power_notifiers, GENPD_STATE_ON, NULL);
-> It would be helpful to abstract these notification related calls into
-> functions of their own. So, for CPU PM domains, it would help to add
-> RCU_NONIDLE() around the notifiers, allowing the callbacks to add trace
-> functions.
+The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+returns the number of the created entries in the DMA address space.
+However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+dma_unmap_sg must be called with the original number of the entries
+passed to the dma_map_sg().
 
-Thanks for the suggestion! It makes perfect sense to me - and would
-also be consistent with how CPU PM notifiers are managed,
+struct sg_table is a common structure used for describing a non-contiguous
+memory buffer, used commonly in the DRM and graphics subsystems. It
+consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+and DMA mapped pages (nents entry).
 
-[,,,]
+It turned out that it was a common mistake to misuse nents and orig_nents
+entries, calling DMA-mapping functions with a wrong number of entries or
+ignoring the number of mapped entries returned by the dma_map_sg()
+function.
 
-Kind regards
-Uffe
+To avoid such issues, lets use a common dma-mapping wrappers operating
+directly on the struct sg_table objects and use scatterlist page
+iterators where possible. This, almost always, hides references to the
+nents and orig_nents entries, making the code robust, easier to follow
+and copy/paste safe.
+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ drivers/gpu/drm/etnaviv/etnaviv_gem.c | 12 +++++-------
+ drivers/gpu/drm/etnaviv/etnaviv_mmu.c | 13 +++----------
+ 2 files changed, 8 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+index f06e19e7be04..eaf1949bc2e4 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
+@@ -27,7 +27,7 @@ static void etnaviv_gem_scatter_map(struct etnaviv_gem_object *etnaviv_obj)
+ 	 * because display controller, GPU, etc. are not coherent.
+ 	 */
+ 	if (etnaviv_obj->flags & ETNA_BO_CACHE_MASK)
+-		dma_map_sg(dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
++		dma_map_sgtable(dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
+ }
+ 
+ static void etnaviv_gem_scatterlist_unmap(struct etnaviv_gem_object *etnaviv_obj)
+@@ -51,7 +51,7 @@ static void etnaviv_gem_scatterlist_unmap(struct etnaviv_gem_object *etnaviv_obj
+ 	 * discard those writes.
+ 	 */
+ 	if (etnaviv_obj->flags & ETNA_BO_CACHE_MASK)
+-		dma_unmap_sg(dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
++		dma_unmap_sgtable(dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
+ }
+ 
+ /* called with etnaviv_obj->lock held */
+@@ -404,9 +404,8 @@ int etnaviv_gem_cpu_prep(struct drm_gem_object *obj, u32 op,
+ 	}
+ 
+ 	if (etnaviv_obj->flags & ETNA_BO_CACHED) {
+-		dma_sync_sg_for_cpu(dev->dev, etnaviv_obj->sgt->sgl,
+-				    etnaviv_obj->sgt->nents,
+-				    etnaviv_op_to_dma_dir(op));
++		dma_sync_sgtable_for_cpu(dev->dev, etnaviv_obj->sgt,
++					 etnaviv_op_to_dma_dir(op));
+ 		etnaviv_obj->last_cpu_prep_op = op;
+ 	}
+ 
+@@ -421,8 +420,7 @@ int etnaviv_gem_cpu_fini(struct drm_gem_object *obj)
+ 	if (etnaviv_obj->flags & ETNA_BO_CACHED) {
+ 		/* fini without a prep is almost certainly a userspace error */
+ 		WARN_ON(etnaviv_obj->last_cpu_prep_op == 0);
+-		dma_sync_sg_for_device(dev->dev, etnaviv_obj->sgt->sgl,
+-			etnaviv_obj->sgt->nents,
++		dma_sync_sgtable_for_device(dev->dev, etnaviv_obj->sgt,
+ 			etnaviv_op_to_dma_dir(etnaviv_obj->last_cpu_prep_op));
+ 		etnaviv_obj->last_cpu_prep_op = 0;
+ 	}
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
+index 3607d348c298..13b100553a0b 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_mmu.c
+@@ -79,7 +79,7 @@ static int etnaviv_iommu_map(struct etnaviv_iommu_context *context, u32 iova,
+ 	if (!context || !sgt)
+ 		return -EINVAL;
+ 
+-	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
++	for_each_sgtable_dma_sg(sgt, sg, i) {
+ 		u32 pa = sg_dma_address(sg) - sg->offset;
+ 		size_t bytes = sg_dma_len(sg) + sg->offset;
+ 
+@@ -95,14 +95,7 @@ static int etnaviv_iommu_map(struct etnaviv_iommu_context *context, u32 iova,
+ 	return 0;
+ 
+ fail:
+-	da = iova;
+-
+-	for_each_sg(sgt->sgl, sg, i, j) {
+-		size_t bytes = sg_dma_len(sg) + sg->offset;
+-
+-		etnaviv_context_unmap(context, da, bytes);
+-		da += bytes;
+-	}
++	etnaviv_context_unmap(context, iova, da - iova);
+ 	return ret;
+ }
+ 
+@@ -113,7 +106,7 @@ static void etnaviv_iommu_unmap(struct etnaviv_iommu_context *context, u32 iova,
+ 	unsigned int da = iova;
+ 	int i;
+ 
+-	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
++	for_each_sgtable_dma_sg(sgt, sg, i) {
+ 		size_t bytes = sg_dma_len(sg) + sg->offset;
+ 
+ 		etnaviv_context_unmap(context, da, bytes);
+-- 
+2.17.1
+
