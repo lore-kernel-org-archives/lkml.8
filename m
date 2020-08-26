@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA50C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C92EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E0AE221E2
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2832078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 14:55:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598453742;
-	bh=9szlv9ZLbjunuES/WDg3stvsnLb6CAlrLlpLvophpUM=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bQmM/CxZEjKmJTFjVvrgDXXWV5Vpg2Ylg+k/K3AbLNbkok+tFP2XOJru88JzaSPFm
-	 6EvoWtY9klz6GHs6G38uxSGXcT7Jnoowmyv4+wAuUVN5Zh8OtEV6o4nppU45j3v+VA
-	 ZBz3L8y+BWBnQ6b1GHRj7NxvHEMZl4Q4rZBf2pMQ=
+	s=default; t=1598453746;
+	bh=gKXl1ZpEahM5GZKiwmsRUCIU4Nv7/kn9yq6EaD8r/ZE=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=GAM2I0zz/Fdd9Dlc5h8wLdkHWEUBveF9fwTOio2/7R1wT07BIAaY4oV+qGBE9FtMy
+	 vI3xRTatUBljSHRvQEHADKX7YyvIcSs89R3S836uoSG+lbQ0i3Z6vrfCpHInghw5PV
+	 0IDOfvnR57bIUYSZqk6r2c/LTOZ3qXJIpRZGtb9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgHZOzl (ORCPT
+        id S1728446AbgHZOzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 10:55:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43944 "EHLO mail.kernel.org"
+        Wed, 26 Aug 2020 10:55:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727056AbgHZOz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 10:55:29 -0400
+        id S1728067AbgHZOzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 10:55:20 -0400
 Received: from localhost.localdomain (unknown [194.230.155.216])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE47722B49;
-        Wed, 26 Aug 2020 14:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B19042078D;
+        Wed, 26 Aug 2020 14:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598453723;
-        bh=9szlv9ZLbjunuES/WDg3stvsnLb6CAlrLlpLvophpUM=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=E48zCAbaF/pKMDmaXf1RUXxlIYnpyLjWhrRM4YcHj3wGKvInb9E54Ii0UdjTNHHGP
-         892YaAzdlR5CLq2zZEnGtHcufwCqEygAYzpYYOgNqrRINfw2KKQdEe+aGJmBlB73cb
-         F+qSUA96Rp2FdQ4pVAKXHZ2NSqwE5y71lhZCF6QA=
+        s=default; t=1598453720;
+        bh=gKXl1ZpEahM5GZKiwmsRUCIU4Nv7/kn9yq6EaD8r/ZE=;
+        h=From:To:Subject:Date:From;
+        b=lIfxfGLDBfMoYSTveYiYmFbSWIsSxZ8pBQL3LWFzyvx07QmeyNC17vzRAxNqaSRU2
+         +ATK1jiqGX80Y4Rb3VaDpi2G/mKlfpGG6Z1i3U3a40vmgYfcmiQ7FzRKsx2Qdu3BLl
+         HSUrxnrA5W18ecBfhV5sk956SKO5QbqDk+qgDLlo=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Inki Dae <inki.dae@samsung.com>,
         Joonyoung Shim <jy0922.shim@samsung.com>,
@@ -50,12 +50,10 @@ To:     Inki Dae <inki.dae@samsung.com>,
         dri-devel@lists.freedesktop.org,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm/exynos: hdmi: Simplify with dev_err_probe()
-Date:   Wed, 26 Aug 2020 16:55:13 +0200
-Message-Id: <20200826145513.10657-2-krzk@kernel.org>
+Subject: [PATCH 1/2] drm/exynos: dsi: Simplify with dev_err_probe()
+Date:   Wed, 26 Aug 2020 16:55:12 +0200
+Message-Id: <20200826145513.10657-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200826145513.10657-1-krzk@kernel.org>
-References: <20200826145513.10657-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,27 +64,27 @@ dev_err_probe().  Less code and also it prints the error value.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_hdmi.c | 7 ++-----
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c | 7 ++-----
  1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
-index c5ba32fca5f3..dc01c188c0e0 100644
---- a/drivers/gpu/drm/exynos/exynos_hdmi.c
-+++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
-@@ -1797,11 +1797,8 @@ static int hdmi_resources_init(struct hdmi_context *hdata)
- 		hdata->regul_bulk[i].supply = supply[i];
- 
- 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(supply), hdata->regul_bulk);
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+index 1a1a2853a842..5b9666fc7af1 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+@@ -1760,11 +1760,8 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+ 	dsi->supplies[1].supply = "vddio";
+ 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(dsi->supplies),
+ 				      dsi->supplies);
 -	if (ret) {
 -		if (ret != -EPROBE_DEFER)
--			DRM_DEV_ERROR(dev, "failed to get regulators\n");
+-			dev_info(dev, "failed to get regulators: %d\n", ret);
 -		return ret;
 -	}
 +	if (ret)
 +		return dev_err_probe(dev, ret, "failed to get regulators\n");
  
- 	hdata->reg_hdmi_en = devm_regulator_get_optional(dev, "hdmi-en");
- 
+ 	dsi->clks = devm_kcalloc(dev,
+ 			dsi->driver_data->num_clks, sizeof(*dsi->clks),
 -- 
 2.17.1
 
