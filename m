@@ -2,187 +2,104 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 170D7C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A433C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5CC72067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D4822067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:53:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Zk8JZqFx"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gry5Gqjf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T18EHlog"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgHZJxF (ORCPT
+        id S1728366AbgHZJxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:53:05 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:19561 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728041AbgHZJxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:53:03 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598435582; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Ev2LMeIqc88r/l6TuJddWcgSSo6NoXnUMGqZE8WEPUg=; b=Zk8JZqFxMjw7QLOgH+/DqJAngJ7SuWU4KoULIreyJd3Au08lvmcFNi2FPzKYcRxwgEixKRpA
- nF87OnRqsyk1GflpBTdgHld8DfYtfo6dvdEfBiOfC7Wq/gOMlaNdSr85ISzChpECKMeS1cIa
- l1HlKwZF7Hbje2PYnLyCplenRWc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f4630fdca327a6430dc8269 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 26 Aug 2020 09:53:01
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BABF2C433A0; Wed, 26 Aug 2020 09:53:00 +0000 (UTC)
-Received: from [192.168.29.129] (unknown [49.36.73.208])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BFE8AC433C6;
-        Wed, 26 Aug 2020 09:52:54 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BFE8AC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v5 3/6] genirq/PM: Introduce
- IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND flag
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>, bjorn.andersson@linaro.org,
-        evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        mka@chromium.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
- <1598113021-4149-4-git-send-email-mkshah@codeaurora.org>
- <159835036999.334488.14725849347753031927@swboyd.mtv.corp.google.com>
- <874koqxv6t.fsf@nanos.tec.linutronix.de>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <8763521f-b121-877a-1d59-5f969dd75e51@codeaurora.org>
-Date:   Wed, 26 Aug 2020 15:22:51 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 26 Aug 2020 05:53:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728015AbgHZJxS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 05:53:18 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500C5C061574;
+        Wed, 26 Aug 2020 02:53:17 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598435595;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mv4TqayOvYT1PZy4IB6XdyAxCqLJFuyrG/iBXdVvDGo=;
+        b=gry5Gqjf5XbHVcJKaDXMPK4boPx5u/IEBob5D9Wn36xeFWifKRFQGrLYl80/EuQiMfzysE
+        R0d4KWtrjVjHsKfDbzzjWDT5squtWA8CAJmXu6ssTTvFAl1Dp0Qb/5Gseu91lYmL0/YUjO
+        NbsGg1x1qsfcwMmq40s6f8QzME/wE8mMh0jkO28671y+OSXzdMJAa+d/pRnJ+IIBJUer6F
+        myfzP6CTQbmP/AgP0sGex0XapaKloSSKztkVFL6Agugb80R0gctiC6HeZ9PqzrabjLNIkQ
+        pAIkMvt8UaWwzx1EMmCW7rVmlO3SHuNH8U5WRqRwrLaG8IAQqyASWZnve1tyYQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598435595;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mv4TqayOvYT1PZy4IB6XdyAxCqLJFuyrG/iBXdVvDGo=;
+        b=T18EHlogGsekmXEOkS3bdJRDQU5OgZArZ4psx/80SWGB5Jkvh72YqFLOhYbYkZrSz/1STi
+        ppR6UR793IwPtlAg==
+To:     Boqun Feng <boqun.feng@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Joerg Roedel <joro@8bytes.org>, linux-hyperv@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch RFC 10/38] x86/ioapic: Consolidate IOAPIC allocation
+In-Reply-To: <20200826084019.GA6174@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200821002424.119492231@linutronix.de> <20200821002946.297823391@linutronix.de> <20200826084019.GA6174@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+Date:   Wed, 26 Aug 2020 11:53:15 +0200
+Message-ID: <871rjtwx6c.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <874koqxv6t.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 8/26/2020 3:08 AM, Thomas Gleixner wrote:
-> On Tue, Aug 25 2020 at 03:12, Stephen Boyd wrote:
->> Quoting Maulik Shah (2020-08-22 09:16:58)
->>> diff --git a/kernel/irq/pm.c b/kernel/irq/pm.c
->>> index c6c7e18..2cc800b 100644
->>> --- a/kernel/irq/pm.c
->>> +++ b/kernel/irq/pm.c
->>> @@ -69,12 +69,17 @@ void irq_pm_remove_action(struct irq_desc *desc, struct irqaction *action)
->>>   
->>>   static bool suspend_device_irq(struct irq_desc *desc)
->>>   {
->>> +       unsigned long chipflags = irq_desc_get_chip(desc)->flags;
->>> +
->>>          if (!desc->action || irq_desc_is_chained(desc) ||
->>>              desc->no_suspend_depth)
->>>                  return false;
->>>   
->>>          if (irqd_is_wakeup_set(&desc->irq_data)) {
->>>                  irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
->>> +
->>> +               if (chipflags & IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)
->>> +                       irq_enable(desc);
->> Where is the corresponding change to resume_irq()? Don't we need to
->> disable an irq if it was disabled on suspend and forcibly enabled here?
-I should have added comment explaining why i did not added.
-I thought of having corresponding change to resume_irq() but i did not 
-kept intentionally since i didn't
-observe any issue in my testing.
-
-Actually the drivers which called (disable_irq() + enable_irq_wake()), 
-are invoking enable_irq()
-in the resume path everytime. With the driver's call to enable_irq() 
-things are restoring back already.
-
-If above is not true in some corner case, then the IRQ handler of driver 
-won't get invoked, in such case,
-why even to wake up with such IRQs in the first place, right?
-
-However If we don't want to rely on the drivers doing things correctly, 
-state can be restored in resume_irq()
-I explored this, During suspend,
-
-1. Some IRQs are unmasked/enabled + marked for wakeup
-2. Some IRQs are masked/disabled + marked for wakeup
-
-So have to track and restore only IRQs in category (2).
-With current patch we don't have way to track IRQ is in (1) or (2).
-It may be done with the new IRQD flag saying like 
-IRQD_IRQ_ENABLED_ON_SUSPEND
-
-During suspend,
-First check if the IRQ was in disabled/masked state to invoke 
-irq_enable() only for category (2) and set the new flag.
-
-     if (irqd_irq_disabled(&desc->irq_data) && (chipflags & 
-IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)) {
-         irq_enable(desc);
-         irq_state_set_enabled_on_suspend(desc); => this will set new 
-IRQD_IRQ_ENABLED_ON_SUSPEND
-     }
-
-During resume,
-Simply calling irq_disable(desc); don't work in resume_irq(), since by 
-default this API tries to lazily disable at HW, which won't quite 
-restore the state,
-So instead of adding below
-
-     if (irqd_irq_disabled(&desc->irq_data) && (chipflags & 
-IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND)
-     && (irqd_is_enabled_on_suspend(desc)))
-     {
-         irq_disable(desc);
-         irq_state_clear_enabled_on_suspend(desc); => clear flag
-     }
-
-we can replicate the irq_disable() with removal of lazy part, something 
-like,
-
-     if (irqd_irq_disabled(&desc->irq_data) && (chipflags & 
-IRQCHIP_ENABLE_WAKEUP_ON_SUSPEND) &&
-     (irqd_is_enabled_on_suspend(desc))) { ==> The new flag used to 
-determine if IRQ was enabled during suspend path, then only restore.
-         irq_state_set_disabled(desc);
-         if (desc->irq_data.chip->irq_disable) {
-desc->irq_data.chip->irq_disable(&desc->irq_data);
-             irq_state_set_masked(desc);
-         } else {
-         mask_irq(desc);
-     }
-     irq_state_clear_enabled_on_suspend(desc);
-}
-
-which is matching exactly reverse of what is done in suspend entry.
-Let me know if above is good i can include this in v6.
-
-Thanks,
-Maulik
-
-> That part was below the POC code I provided in the fine print:
+On Wed, Aug 26 2020 at 16:40, Boqun Feng wrote:
+> I hit a compiler error while I was trying to compile this patchset:
 >
->   "plus the counterpart in the resume path. This also ensures that state is
->    consistent."
->
-> Who reads the fine print? :)
+> arch/x86/kernel/devicetree.c: In function =E2=80=98dt_irqdomain_alloc=E2=
+=80=99:
+> arch/x86/kernel/devicetree.c:232:6: error: =E2=80=98struct irq_alloc_info=
+=E2=80=99 has no member named =E2=80=98ioapic_id=E2=80=99; did you mean =E2=
+=80=98ioapic=E2=80=99?
+>   232 |  tmp.ioapic_id =3D mpc_ioapic_id(mp_irqdomain_ioapic_idx(domain));
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Yeah, noticed myself already and 0day complained as well :)
 
