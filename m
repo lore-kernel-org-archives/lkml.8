@@ -6,96 +6,130 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6369DC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B44BCC433E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACAD206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CD52071E
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 07:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbgHZHN2 convert rfc822-to-8bit (ORCPT
+        id S1726798AbgHZHPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 03:13:28 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36715 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726240AbgHZHN1 (ORCPT
+        Wed, 26 Aug 2020 03:15:00 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:37389 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726698AbgHZHO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 03:13:27 -0400
-Received: by mail-oi1-f195.google.com with SMTP id b9so695859oiy.3;
-        Wed, 26 Aug 2020 00:13:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FGHPb84Jx11W3vIf+ODKn/oBh3C6uj3q4u2snyewUTw=;
-        b=TPRbD82xxEC79PMccp+ZMzJ5MVIGmAwTuXCY1UUHzFpOD1E3s2Wch/5XWinv0bYWXF
-         s8yCbd9DMBQW+xOr6/wXdUeDPttAPu8gSqKvXc78Oz6/8//8H1qazrRolufojI3siDPy
-         6n5NP+43t1fV20nj4OpaPbJkf8NX938MnMM925QrVXiVbGJnfIU80GpixayLF7x6uk/R
-         mk9gGftC5RpehgtfUc5OaqmDEB2YGEr6vecq9qEyWnKj5CkQWETVnjO3fBLqOpqIoZPe
-         rYFmUOKbUReXyM7O30WTfBJdkj5tGqYCqRkdEsDusL1xBpl3ViG9ZgYwrLppk4fi3A2m
-         J7nA==
-X-Gm-Message-State: AOAM531/WUMwliqa8O3BASt/i04yccXlsgCfKQFhG7SpxuKaZ7fhd/sq
-        AN4sXy0OBecMWlfTZN4hW7vLb09xl0qOdKdZfys88k8F89I=
-X-Google-Smtp-Source: ABdhPJzJ6a5NBDzJtEvfkg5F2sVcb5PuRWQN4ld2RSTCZ8WlCraVfILM0VjbwiytxZr10m9hx+KCyWNT6QSx2+Z7PCM=
-X-Received: by 2002:aca:3402:: with SMTP id b2mr648406oia.153.1598426006201;
- Wed, 26 Aug 2020 00:13:26 -0700 (PDT)
+        Wed, 26 Aug 2020 03:14:59 -0400
+Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mk0a0-1kvBwf1TTs-00kRea; Wed, 26 Aug 2020 09:14:57 +0200
+Received: by mail-qt1-f179.google.com with SMTP id 92so718948qtb.6;
+        Wed, 26 Aug 2020 00:14:56 -0700 (PDT)
+X-Gm-Message-State: AOAM532NZ91CydDDFgF41edtRYot+cE0wnTAgd3Y3/XaQn75w/CnIHtT
+        twhhN+OsckwUc6veJjV+2eqjMFd0Yt9uKLRZqQ8=
+X-Google-Smtp-Source: ABdhPJwLuGjkmlnft754xbUklzGWtHhgTglHwx7onxQfpdw4FEOyMnyaABTTrq89Agj1YnTZDmfbHPSjkpJNT1I0q7s=
+X-Received: by 2002:ac8:688e:: with SMTP id m14mr12988809qtq.7.1598426095918;
+ Wed, 26 Aug 2020 00:14:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <CGME20200825170322eucas1p2c6619aa3e02d2762e07da99640a2451c@eucas1p2.samsung.com>
- <20200825170311.24886-1-l.stelmach@samsung.com> <20200825180134.GN2403519@lunn.ch>
-In-Reply-To: <20200825180134.GN2403519@lunn.ch>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 26 Aug 2020 09:13:14 +0200
-Message-ID: <CAMuHMdWNdMEnSnLRkUkRmLop4E-tnBirjfMw06e_40Ss-V-JyQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter Driver
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     =?UTF-8?Q?=C5=81ukasz_Stelmach?= <l.stelmach@samsung.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
+References: <1598287583-71762-1-git-send-email-mikelley@microsoft.com>
+ <1598287583-71762-6-git-send-email-mikelley@microsoft.com>
+ <CAK8P3a1hDBVembCd+6=ENUWYFz=72JBTFMrKYZ2aFd+_Q04F+g@mail.gmail.com> <MW2PR2101MB105201EF9EB186AA9BF31A74D7570@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB105201EF9EB186AA9BF31A74D7570@MW2PR2101MB1052.namprd21.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 26 Aug 2020 09:14:39 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0bCf7Fe5Ex=AHUM49UuvNk0KEpXJ3jgWmULa2eDOWBKA@mail.gmail.com>
+Message-ID: <CAK8P3a0bCf7Fe5Ex=AHUM49UuvNk0KEpXJ3jgWmULa2eDOWBKA@mail.gmail.com>
+Subject: Re: [PATCH v7 05/10] arm64: hyperv: Add interrupt handlers for VMbus
+ and stimer
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Mark.Rutland@arm.com" <Mark.Rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
+        gregkh <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:CfQNSp9K2Sdd2RppPCh70mApHLnySRUQtQTPs+NNnr5FwrxVCng
+ AGs3F+IWIItB3FT7rCqPXYb5XyGGoFDhSK+bnnEr60dbVKDCRHARjKlBpi9MGbX9vXdpJbU
+ azeTOu7yxAaAs+27q0YE9uN75kTAtAWNeCuEW0hI9gtCn99zyIo1UbdlbrW44jnbuGDBVXK
+ MznMJZzDDYN2Qs5DfuJng==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xO0XMxW3dlA=:vjc8OvsMhX2drfQa3Dri8w
+ oq47fIAjowurvD4ZZkt++2rnBezU79/Rzrl2CPXjVZ3RvhKchD4luPVKF0RsuCsaVJ6LQva0q
+ FMy/z3NyQyst0i9tHN/MfHjMpU9mf1VBQTa7RmkhfUXTQpMuo1uP7j7itn3rCJE7ixmqjoSBy
+ SNAGr8zxtJBQoorgvrwsjYaX0FVytV6ZQBlETXDbi3+qvQKDg+gYXlulRd9niBZ+pn5rlRgG0
+ wLjz8LpwEjE1UqKkJX8X9sVaHsSURyNOe78N+KO7fwZjTY/o9UJSzHMZlYovb/eNEBE5LveLp
+ +/n+C8IrI4FUR9Da86VkJSRKqTXynBnI1Rd6nLJ6Y6iJjbSFL3FssDtesh8y3osxThKWsiESz
+ O5NpdHIhQx8YrMovHWylmbB/Iizpaj51h+RTcmYFNFcO4dwZ97+oRTTAKx80+kTPqMtueaqqa
+ a4joAYmuzbQ9/0ZTfbEHecvdeXYS0Qs7k/ejk9em39qknATRFaEK4wfFvRoHUYVEpHby/p/Eq
+ zNnYZ7z1KGc2Ti9bJCG6UFLhwQa0VvtYi4A/1qkwDECB3MjvpGKjmSwSbHztJVYnIk9sNQxXm
+ Kzw5m5i40W0U8wwsHJUm3a1Q20GNdof1knYfMX77zXRJ4GMtaC2dUSnhaEFej7+YLdOrsEDK0
+ +AbCRXHPoN/phSj6191B5V+/jUIxsXPmeD5SyMl4/l17XfjJYWw9KGZglpFmqTdf6JsDD4v1x
+ YF9JL2OX7YX0nrJCDXmpF7mJVdihvVHe6fVmAFhTAJCbAO/ew/KCOtQ8Rh1vF5vmTzrxNfOyR
+ 5OIftf6uZV5xVzlzAgOG5KJ5w8zn9McySso6Gi1tWQSTXJyaykpM+Gie0fGL2fKLPQ1HlJC
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 8:02 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> On Tue, Aug 25, 2020 at 07:03:09PM +0200, Łukasz Stelmach wrote:
-> > +     if (netif_msg_pktdata(ax_local)) {
-> > +             int loop;
-> > +             netdev_info(ndev, "TX packet len %d, total len %d, seq %d\n",
-> > +                             pkt_len, tx_skb->len, seq_num);
-> > +
-> > +             netdev_info(ndev, "  Dump SPI Header:\n    ");
-> > +             for (loop = 0; loop < 4; loop++)
-> > +                     netdev_info(ndev, "%02x ", *(tx_skb->data + loop));
-> > +
-> > +             netdev_info(ndev, "\n");
+On Wed, Aug 26, 2020 at 12:04 AM Michael Kelley <mikelley@microsoft.com> wrote:
+> From: Arnd Bergmann <arnd@arndb.de> Sent: Monday, August 24, 2020 11:54 AM
+
+> >
+> > I'm not sure what the correct solution should be, but what I'd try to
+> > do here is to move every function that just considers the platform
+> > rather than the architecture somewhere into drivers/hv where it
+> > can be linked into the same modules as the existing files when
+> > building for arm64, while trying to keep architecture specific code
+> > in the header file where it can be included from those modules.
 >
-> This no longer works as far as i remember. Lines are terminate by
-> default even if they don't have a \n.
+> OK.  The concept of separating platform from architecture makes
+> sense to me.  The original separation of the Hyper-V code into
+> architecture independent portions and x86-specific portions could
+> use some tweaking now that we're dealing with n=2 architectures.  With
+> that tweaking, I can reduce the amount of Hyper-V code under arch/x86
+> and under arch/arm64.
 >
-> Please you should not be using netdev_info(). netdev_dbg() please.
+> On the flip side, the Hyper-V implementation on x86 and ARM64 has
+> differences that are semi-related to the architecture.  For example, on
+> x86 Hyper-V uses synthetic MSRs for a lot of guest-hypervisor setup, while
+> hypercalls are required on ARM64.  So I'm assuming those differences
+> will end up in code under arch/x86 and arch/arm64.
 
-We have a nice helper for this: print_hex_dump_debug().
+Yes, that absolutely makes sense.
 
-Gr{oetje,eeting}s,
+> Arguably, I could introduce a level of indirection (such as
+> CONFIG_HYPERV_USE_MSRS vs.
+> CONFIG_HYPERV_USE_HYPERCALLS) to distinguish the two behaviors.
+> The selection would be tied to the architecture, and then code in
+> drivers/hv can #ifdef the two cases.  But I wonder if getting code out of
+> arch/x86 and arch/arm64 is worth that additional messiness.
 
-                        Geert
+No, I think that would take it a little too far, and conflicts with the
+generic rule that code under drivers/* should be written to be portable
+even if can only run on a particular target platform.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> Looking at the Xen code in drivers/xen, it looks like a lot of the Xen functionality
+> is implemented in hypercalls that can be consistent across architectures,
+> though I was a bit surprised to see a dozen or so instances of #ifdef CONFIG_X86.
+> Xen also #ifdefs on PV vs. PVHVM, which may handle some architecture
+> differences implicitly.  But I'm assuming that doing #ifdef <architecture>
+> in the Hyper-V code in order to reduce code under arch/x86 or arch/arm64
+> is not the right way to go.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+In general that is true, adding a lot of #ifdefs makes code less readable and
+harder to test. OTOH there are cases where a single #ifdef can be useful when
+it avoids adding a larger amount of complexity elsewhere. Many subsystems
+try to restrict the #ifdef checks to header files while keeping the
+drivers/* code
+free of them.
+
+       Arnd
