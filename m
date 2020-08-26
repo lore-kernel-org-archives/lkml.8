@@ -2,115 +2,125 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C19A7C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E512C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 998EC2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3922820707
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 11:55:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="AqplO3LA"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ufg/BlL2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgHZLz3 (ORCPT
+        id S1729283AbgHZLzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 07:55:29 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:28788 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729257AbgHZLy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 07:54:56 -0400
-IronPort-SDR: TCTGQqSM6U2eUG0vN3E4uLKkZ/RHJrfnxwUULU+78Ly/T+D+lLyCSDAVXSPGGngia1g/k/R54C
- cUsehoxl7cNFVVxXUVtcUyYbF+Lr2xkzyHcrYM31i/WOTsFDhUOzQJVi/3c+fMCsGmNtliMIL7
- IeVXh8TTwa46wogakfz6n1QlymYM4SHiWhQI40OIDLnsXCFEp4F8FQjwO1jRAoAkj1sJgYFWFu
- T1sn1NHDY0NOSueqaVHYPPdG8ADapUQcvHTvBqotrRPdYrQ+zl7/jJWlHsUHYHYstStDH+en0l
- NZ4=
-X-IronPort-AV: E=Sophos;i="5.76,355,1592863200"; 
-   d="scan'208";a="13607573"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 26 Aug 2020 13:54:52 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Wed, 26 Aug 2020 13:54:52 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Wed, 26 Aug 2020 13:54:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1598442892; x=1629978892;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LEac3+lPiHdi3A0mBo7CX9cFFLpaHAmhqAriPCujtbw=;
-  b=AqplO3LAVCmLHIaLDyUgxUjzgw4PYgiuJ8/dIMEa7KYMtZSCbRMIBvkA
-   nHISGe7k60LvDuCXWdCk83NLnEO14MQG2wUr2YEhrONhBR6ZFQcin/62+
-   F7gQIGKlS0UeYAuapXMTf86oJDQlUFcurl7WtxACbQk+zawsEtEkr69bk
-   IXBtOEyjQF9qpdy8xr/QavWmI74btJxpspt6cQYBcNxpn5V3eUWcldtv7
-   /sWd1ynSvhnTJrXz84N4EDgyQXuB7YyfGPG6LTnb1lCx5rlD2nac8JlvT
-   hfURa9vvHkTZvUTcuzrR3CP5z6czYIA1groV5hVGpc+JcQyF7x8DYt0y7
-   Q==;
-IronPort-SDR: 4xhFUCdKlo3ZxFLsTtj5eQUiLZp8k2rahrb2IW+OUpjy7Z43NFAZ6tV1bIdFqZ+aI6qhJpR3MB
- Ptkw/2x/5JAJuMmqb1Qc4uay0qGoX+Cp6aRW/rbfaeu8R82k66FUfuzjTQeU7Uit45rlfLcK/L
- VL3E//RGe8M3QiP+1tzKkPH8x6dWv25U7Nljh8LVCRvTREZosaOZah8g275igim4uVJjfMZjvT
- BGltejxzyrsiedrSYXyj8EMY9v0Lg0I9H7e2npr0afm3B31giz+nkiWPrvUbqUSUCKPBB/CCIL
- Sgo=
-X-IronPort-AV: E=Sophos;i="5.76,355,1592863200"; 
-   d="scan'208";a="13607572"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 26 Aug 2020 13:54:52 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 93C48280065;
-        Wed, 26 Aug 2020 13:54:52 +0200 (CEST)
-Message-ID: <aa0b7ad149a7bd4e681e4ebee12ffaaab2803832.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: (EXT) Re: (EXT) Re: (EXT) Re: [PATCH 2/2] ARM: dts:
- imx6qdl: tqma6: minor fixes
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Wed, 26 Aug 2020 13:54:50 +0200
-In-Reply-To: <CAOMZO5ADeXEHWiG7Xja1W1GnahV08ZEYSkNsrOzautn2mROCNA@mail.gmail.com>
-References: <20200824091013.20640-1-matthias.schiffer@ew.tq-group.com>
-         <20200824091013.20640-2-matthias.schiffer@ew.tq-group.com>
-         <CAOMZO5DSX1pf3xxo=CGvgPmHcjMJoWFx74grVJBckSmjtF-RGg@mail.gmail.com>
-         <4b7d57738ce8e2130c4740a0f3f973fbaf60a7cf.camel@ew.tq-group.com>
-         <CAOMZO5DYrkEb_G+EYAGrc+qjSsbjRdeBUU3tJUfkU6tjgNm_7g@mail.gmail.com>
-         <7a59492e46f34d213b83f7182c7db73954c5a9c7.camel@ew.tq-group.com>
-         <CAOMZO5CP=wtJ5ZScyb0NrRMW0FR0FAGVKRFq9JpFcAoZppn_bA@mail.gmail.com>
-         <53f5f17735fc2f0ca061a321969bbb131e55efff.camel@ew.tq-group.com>
-         <CAOMZO5ADeXEHWiG7Xja1W1GnahV08ZEYSkNsrOzautn2mROCNA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+        Wed, 26 Aug 2020 07:55:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23922 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729184AbgHZLzj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 26 Aug 2020 07:55:39 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07QBXJ7x021628;
+        Wed, 26 Aug 2020 07:55:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : date : in-reply-to : references : content-type : mime-version
+ : content-transfer-encoding; s=pp1;
+ bh=dHqlfOWSxjq+gaqjLFymI8135q9+O5+SFhB0cL1SeAg=;
+ b=Ufg/BlL2bIQ4Z8Vs2bqLdfnFjNZRXOHuBIuvqOuxdB/L4XCegNlA+4KQuAat81knZc6v
+ Xri75XdYAgIZTq5jBONqlcU2BPV8cggLx/F4OaG8lX12H6aNLaWrieeAGknTuGTiW43Z
+ VWWJGAsOk0FVBryUHK649HimsSX/qkKY5SUMgwMz48t3EJzYSrwP5YDIBkr2qEgqMDwn
+ lJ7WN1lEpnCyMHYzwh1c1ZbQ40k11fDV7Pj7RvIJrqZTJ+3w/KFj+8jAUS0EMi0hWRo8
+ GkzT2UEap8iufCWz2cWHLZ0T3Ix5Tt5KoAXJ5RQ4Rf7187Rx8/tlebLr77O8A2tnNPDf rw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 335pfn9gn4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 07:55:20 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07QBYHm3025194;
+        Wed, 26 Aug 2020 07:55:19 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 335pfn9gm4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 07:55:19 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07QBr8Ul003672;
+        Wed, 26 Aug 2020 11:55:17 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma03fra.de.ibm.com with ESMTP id 332utq2rkv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 26 Aug 2020 11:55:16 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07QBtENT26476832
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Aug 2020 11:55:14 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7A07352057;
+        Wed, 26 Aug 2020 11:55:14 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.28.3])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id A618A52050;
+        Wed, 26 Aug 2020 11:55:11 +0000 (GMT)
+Message-ID: <6f63a0cf1349281ef2c407d95abedfba1f90345a.camel@linux.ibm.com>
+Subject: Re: [PATCH 0/3] integrity: Load certs from EFI MOK config table
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Lenny Szubowicz <lszubowi@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        linux-security-module@vger.kernel.org, ardb@kernel.org,
+        jmorris@namei.org, serge@hallyn.com, keescook@chromium.org,
+        bp@alien8.de, pjones@redhat.com, dhowells@redhat.com,
+        prarit@redhat.com
+Date:   Wed, 26 Aug 2020 07:55:10 -0400
+In-Reply-To: <20200826034455.28707-1-lszubowi@redhat.com>
+References: <20200826034455.28707-1-lszubowi@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-26_08:2020-08-26,2020-08-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ impostorscore=0 mlxlogscore=999 lowpriorityscore=0 priorityscore=1501
+ mlxscore=0 malwarescore=0 adultscore=0 bulkscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008260094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-26 at 07:59 -0300, Fabio Estevam wrote:
-> Hi Matthias,
-> 
-> On Wed, Aug 26, 2020 at 7:32 AM Matthias Schiffer
-> <matthias.schiffer@ew.tq-group.com> wrote:
-> 
-> > But the previous platform data that was removed in 8cdcd8aeee281
-> > ("spi:
-> > imx/fsl-lpspi: Convert to GPIO descriptors") set different values
-> > for
-> > different boards. So maybe some DTS should be using num-cs?
-> 
-> Could you provide an example of an imx dts that should use num-cs?
+Hi Lenny,
 
-I'm not sure, does anything break when num_chipselect is set too high?
+On Tue, 2020-08-25 at 23:44 -0400, Lenny Szubowicz wrote:
+> Because of system-specific EFI firmware limitations,
+> EFI volatile variables may not be capable of holding the
+> required contents of the Machine Owner Key (MOK) certificate
+> store. Therefore, an EFI boot loader may pass the MOK certs
+> via a EFI configuration table created specifically for this
+> purpose to avoid this firmware limitation.
+> 
+> An EFI configuration table is a simpler and more robust mechanism
+> compared to EFI variables and is well suited for one-way passage
+> of static information from a pre-OS environment to the kernel.
+> 
+> This patch set does not remove the support for loading certs
+> from the EFI MOK variables into the platform key ring.
+> However, if both the EFI MOK config table and corresponding
+> EFI MOK variables are present, the MOK table is used as the
+> source of MOK certs.
+> 
+> The contents of the individual named MOK config table entries are
+> made available to user space via read-only sysfs binary files under:
+> 
+> 	/sys/firmware/efi/mok-variables/
 
-Before 8cdcd8aeee281, num_chipselect was set to 3 for spi0 and to 1 for
-spi1 in arch/arm/mach-imx/mach-mx31lite.c. My understanding is that it
-would make sense to add this as num-cs to
-arch/arm/boot/dts/imx31-lite.dts.
+Please include a security section in this cover letter with a
+comparison of the MoK variables and the EFI configuration table
+security (eg. same mechanism?).  Has mokutil been updated?  If so,
+please provide a link.
 
+Mimi
 
