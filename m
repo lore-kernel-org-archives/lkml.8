@@ -2,143 +2,68 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72E1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE56C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 389E12075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA191206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 09:12:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgHZJJb (ORCPT
+        id S1727963AbgHZJMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 05:09:31 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:38375 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727122AbgHZJJa (ORCPT
+        Wed, 26 Aug 2020 05:12:50 -0400
+Received: from smtprelay0204.hostedemail.com ([216.40.44.204]:49552 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727906AbgHZJMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 05:09:30 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01358;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0U6v-68g_1598432963;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6v-68g_1598432963)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 26 Aug 2020 17:09:24 +0800
-Subject: Re: [PATCH v18 27/32] mm/swap.c: optimizing __pagevec_lru_add
- lru_lock
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, willy@infradead.org,
-        hannes@cmpxchg.org, lkp@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        shakeelb@google.com, iamjoonsoo.kim@lge.com,
-        richard.weiyang@gmail.com, kirill@shutemov.name,
-        alexander.duyck@gmail.com, rong.a.chen@intel.com, mhocko@suse.com,
-        vdavydov.dev@gmail.com, shy828301@gmail.com
-References: <1598273705-69124-1-git-send-email-alex.shi@linux.alibaba.com>
- <1598273705-69124-28-git-send-email-alex.shi@linux.alibaba.com>
-Message-ID: <57cea811-13bd-c026-01dc-69bd9eafa014@linux.alibaba.com>
-Date:   Wed, 26 Aug 2020 17:07:53 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Wed, 26 Aug 2020 05:12:48 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 5F9B0180A68C8;
+        Wed, 26 Aug 2020 09:12:47 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: field82_4a0e14027063
+X-Filterd-Recvd-Size: 1581
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf13.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 26 Aug 2020 09:12:45 +0000 (UTC)
+Message-ID: <8570915f668159f93ba2eb845a3bbc05f8ee3a99.camel@perches.com>
+Subject: Re: [PATCH 17/19] z2ram: reindent
+From:   Joe Perches <joe@perches.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+Date:   Wed, 26 Aug 2020 02:12:43 -0700
+In-Reply-To: <20200826062446.31860-18-hch@lst.de>
+References: <20200826062446.31860-1-hch@lst.de>
+         <20200826062446.31860-18-hch@lst.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <1598273705-69124-28-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=gbk
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch need update since a bug found.
+On Wed, 2020-08-26 at 08:24 +0200, Christoph Hellwig wrote:
+> reindent the driver using Lident as the code style was far away from
+> normal Linux code.
 
-From 547d95205e666c7c5a81c44b7b1f8e1b6c7b1749 Mon Sep 17 00:00:00 2001
-From: Alex Shi <alex.shi@linux.alibaba.com>
-Date: Sat, 1 Aug 2020 22:49:31 +0800
-Subject: [PATCH] mm/swap.c: optimizing __pagevec_lru_add lru_lock
+Why?  Does anyone use this anymore?
 
-The current relock logical will change lru_lock when if found a new
-lruvec, so if 2 memcgs are reading file or alloc page equally, they
-could hold the lru_lock alternately.
+ ** z2ram - Amiga pseudo-driver to access 16bit-RAM in ZorroII space
+ **         as a block device, to be used as a RAM disk or swap space
+ ** Copyright (C) 1994 by Ingo Wilken (Ingo.Wilken@informatik.uni-oldenburg.de)
 
-This patch will record the needed lru_lock and only hold them once in
-above scenario. That could reduce the lock contention.
 
-Suggested-by: Konstantin Khlebnikov <koct9i@gmail.com>
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- mm/swap.c | 42 +++++++++++++++++++++++++++++++++++-------
- 1 file changed, 35 insertions(+), 7 deletions(-)
-
-diff --git a/mm/swap.c b/mm/swap.c
-index 2ac78e8fab71..dba3f0aba2a0 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -958,24 +958,52 @@ static void __pagevec_lru_add_fn(struct page *page, struct lruvec *lruvec)
- 	trace_mm_lru_insertion(page, lru);
- }
- 
-+struct add_lruvecs {
-+	struct list_head lists[PAGEVEC_SIZE];
-+	struct lruvec *vecs[PAGEVEC_SIZE];
-+};
-+
- /*
-  * Add the passed pages to the LRU, then drop the caller's refcount
-  * on them.  Reinitialises the caller's pagevec.
-  */
- void __pagevec_lru_add(struct pagevec *pvec)
- {
--	int i;
-+	int i, j, total;
- 	struct lruvec *lruvec = NULL;
- 	unsigned long flags = 0;
-+	struct page *page;
-+	struct add_lruvecs lruvecs;
-+
-+	for (i = total = 0; i < pagevec_count(pvec); i++) {
-+		page = pvec->pages[i];
-+		lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
-+		lruvecs.vecs[i] = NULL;
-+
-+		/* Try to find a same lruvec */
-+		for (j = 0; j < total; j++)
-+			if (lruvec == lruvecs.vecs[j])
-+				break;
-+		/* A new lruvec */
-+		if (j == total) {
-+			INIT_LIST_HEAD(&lruvecs.lists[total]);
-+			lruvecs.vecs[total] = lruvec;
-+			total++;
-+		}
- 
--	for (i = 0; i < pagevec_count(pvec); i++) {
--		struct page *page = pvec->pages[i];
-+		list_add(&page->lru, &lruvecs.lists[j]);
-+	}
- 
--		lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
--		__pagevec_lru_add_fn(page, lruvec);
-+	for (i = 0; i < total; i++) {
-+		spin_lock_irqsave(&lruvecs.vecs[i]->lru_lock, flags);
-+		while (!list_empty(&lruvecs.lists[i])) {
-+			page = lru_to_page(&lruvecs.lists[i]);
-+			list_del(&page->lru);
-+			__pagevec_lru_add_fn(page, lruvecs.vecs[i]);
-+		}
-+		spin_unlock_irqrestore(&lruvecs.vecs[i]->lru_lock, flags);
- 	}
--	if (lruvec)
--		unlock_page_lruvec_irqrestore(lruvec, flags);
-+
- 	release_pages(pvec->pages, pvec->nr);
- 	pagevec_reinit(pvec);
- }
--- 
-1.8.3.1
 
