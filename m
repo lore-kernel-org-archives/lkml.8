@@ -2,198 +2,194 @@ Return-Path: <SRS0=kGB5=CE=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F081BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B113C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B98732076C
-	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44E0C2076C
+	for <linux-kernel@archiver.kernel.org>; Wed, 26 Aug 2020 20:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jf1otqlj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cfxuptz1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aPXbrPtD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726904AbgHZUVx (ORCPT
+        id S1726938AbgHZUYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 26 Aug 2020 16:21:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57508 "EHLO
+        Wed, 26 Aug 2020 16:24:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbgHZUVs (ORCPT
+        with ESMTP id S1726739AbgHZUX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 26 Aug 2020 16:21:48 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34BE5C061574;
-        Wed, 26 Aug 2020 13:21:47 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598473304;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4Gx2C3ZUcKyZNb4xGzlZpmhk1STR769KFOAc3dj+CHM=;
-        b=jf1otqlj4EWIHhczPrAZqfb1pfsbG9Uka55qqs7Evh3UX8kO+R/QLpKIL2Aq295LgbrCjV
-        Hng3bxzADPluLhtSHaIEFN+io28sJE960ACYJI1CAzEpIh1K5myB/MBr4pg68i0FvqScjJ
-        3mYV5/cTKTroAr2dvC517qctXN1Uv2mEs92jDrx+U/tI93NPtPe5iSqQSvrfHiQByyl6sf
-        gdqwxpS/lzA2zo2jtTSHvlUGISfiBZRXPCoWkfOrHa4c0ZwvfePMoCqXXWlXnDgrc+Xz5W
-        JVceU1RjPJVaF1jArqvPBzEuNNOsKNog35QTvry+egZ2ifuR1kVxq6oq+YDTlg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598473304;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4Gx2C3ZUcKyZNb4xGzlZpmhk1STR769KFOAc3dj+CHM=;
-        b=cfxuptz1Bb2FJUAzBJutTGUCmnDt5kbGxLSpXhRrYrmbYw5kKdVhMa7kfVsgmgx2fyMeAu
-        THII0DICWYk/tjDA==
-To:     Alexander Graf <graf@amazon.com>, X86 ML <x86@kernel.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        "Peter Zijlstra \(Intel\)" <peterz@infradead.org>,
-        Avi Kivity <avi@scylladb.com>,
-        "Herrenschmidt\, Benjamin" <benh@amazon.com>, robketr@amazon.de,
-        amos@scylladb.com, Brian Gerst <brgerst@gmail.com>,
-        stable@vger.kernel.org, Alex bykov <alex.bykov@scylladb.com>
-Subject: x86/irq: Unbreak interrupt affinity setting
-In-Reply-To: <873649utm4.fsf@nanos.tec.linutronix.de>
-References: <20200826115357.3049-1-graf@amazon.com> <87k0xlv5w5.fsf@nanos.tec.linutronix.de> <fd87a87d-7d8a-9959-6c81-f49003a43c21@amazon.com> <87blixuuny.fsf@nanos.tec.linutronix.de> <873649utm4.fsf@nanos.tec.linutronix.de>
-Date:   Wed, 26 Aug 2020 22:21:44 +0200
-Message-ID: <87wo1ltaxz.fsf@nanos.tec.linutronix.de>
+        Wed, 26 Aug 2020 16:23:59 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C658C061574
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:23:59 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f26so3847665ljc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 26 Aug 2020 13:23:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vcpNf393ZHztBuMptBRkTJAw3OEg7shY12GozUNXJLY=;
+        b=aPXbrPtDX0slok8AaCw10OiyWHR9ecuUvIICS3JJsRN4f+hy2j/O86QjfMglSNTJT4
+         kEWXYBxNbfO7Bqyd0JiTBDNKGQ5x66nZW4X1BLrmzxMb7kMBQPPQEs2I/sQ3wViwWO62
+         ELeNCzjPthniBbI07LyDeYB/ERz6metmq/HepHgv9NiIOZGIoF7ITeTSrvXQ3mp+Z0J0
+         QyBWo094u7v0Wg8ntvi2dFh+vRAE3KjYGeXXcV9y2zqREuAtVJ08olPm72P1kJ9gJaU2
+         WiwnOwogBTzhIfb0sxpaCbyPYTTDv0WgWoR4jxarbcN2Sv3aysMfW8YxLnE7mgV3NZ1N
+         eQAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vcpNf393ZHztBuMptBRkTJAw3OEg7shY12GozUNXJLY=;
+        b=nAlTWXbVlXqJL2dMxqhmeQ85KP9B/gkXnnzOQryO5U+3PKF3unrTik+rmVA3hfJ/XJ
+         8rkZ8SHcRDb8TUKsfyw71eNdzYxd1EdF9qR6NlBPrWKypSO5kTacwkopT+O2E4drp84/
+         l0ECpoR/6+Zoq+/9UKum4wVJ9s2p1JjoyUSCBlsZ3Vmzrx1EZp0TrBiXheKIePBdTBdr
+         bV465qdQUODESJYcv/BY0e9fGwCYkNJw1Cm6CTWSQm+q7e8zRFTpfqx1TMkCY3ivvAVQ
+         DnC52m9ODp53NycpE5vORnC7S53MZnRd1tkA36kqS7+NGtj6k2mkXC9ZqwBjHSk696oL
+         9Esw==
+X-Gm-Message-State: AOAM530UR0uqGBcjRIepMUqRg3PSnB/z3HkLQJL12OBRZStwceA5Y8AK
+        K1Tb107jGtWOTlLuS7d1Wgsux1WuHy3cVw==
+X-Google-Smtp-Source: ABdhPJxQjep7vpmpxjmYJA545N97/jQ0anRZvgoU2X0pG3NY9tZQrmDZexIWZlYNHBHuWixYrX4muw==
+X-Received: by 2002:a2e:9f4e:: with SMTP id v14mr8503473ljk.72.1598473435416;
+        Wed, 26 Aug 2020 13:23:55 -0700 (PDT)
+Received: from localhost.localdomain (c-92d7225c.014-348-6c756e10.bbcust.telenor.se. [92.34.215.146])
+        by smtp.gmail.com with ESMTPSA id j6sm722576lja.23.2020.08.26.13.23.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2020 13:23:54 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     lee.jones@linaro.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2] mfd: dm355evm_msp: Convert LEDs to GPIO descriptor table
+Date:   Wed, 26 Aug 2020 22:21:49 +0200
+Message-Id: <20200826202149.174815-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several people reported that 5.8 broke the interrupt affinity setting
-mechanism.
+This converts the DaVinci DM355EVM LEDs to use GPIO
+descriptor look-ups.
 
-The consolidation of the entry code reused the regular exception entry code
-for device interrupts and changed the way how the vector number is conveyed
-from ptregs->orig_ax to a function argument.
-
-The low level entry uses the hardware error code slot to push the vector
-number onto the stack which is retrieved from there into a function
-argument and the slot on stack is set to -1.
-
-The reason for setting it to -1 is that the error code slot is at the
-position where pt_regs::orig_ax is. A positive value in pt_regs::orig_ax
-indicates that the entry came via a syscall. If it's not set to a negative
-value then a signal delivery on return to userspace would try to restart a
-syscall. But there are other places which rely on pt_regs::orig_ax being a
-valid indicator for syscall entry.
-
-But setting pt_regs::orig_ax to -1 has a nasty side effect vs. the
-interrupt affinity setting mechanism, which was overlooked when this change
-was made.
-
-Moving interrupts on x86 happens in several steps. A new vector on a
-different CPU is allocated and the relevant interrupt source is
-reprogrammed to that. But that's racy and there might be an interrupt
-already in flight to the old vector. So the old vector is preserved until
-the first interrupt arrives on the new vector and the new target CPU. Once
-that happens the old vector is cleaned up, but this cleanup still depends
-on the vector number being stored in pt_regs::orig_ax, which is now -1.
-
-That -1 makes the check for cleanup: pt_regs::orig_ax == new_vector
-always false. As a consequence the interrupt is moved once, but then it
-cannot be moved anymore because the cleanup of the old vector never
-happens.
-
-There would be several ways to convey the vector information to that place
-in the guts of the interrupt handling, but on deeper inspection it turned
-out that this check is pointless and a leftover from the old affinity model
-of X86 which supported multi-CPU affinities. Under this model it was
-possible that an interrupt had an old and a new vector on the same CPU, so
-the vector match was required.
-
-Under the new model the effective affinity of an interrupt is always a
-single CPU from the requested affinity mask. If the affinity mask changes
-then either the interrupt stays on the CPU and on the same vector when that
-CPU is still in the new affinity mask or it is moved to a different CPU, but
-it is never moved to a different vector on the same CPU.
-
-Ergo the cleanup check for the matching vector number is not required and
-can be removed which makes the dependency on pt_regs:orig_ax go away.
-
-The remaining check for new_cpu == smp_processsor_id() is completely
-sufficient. If it matches then the interrupt was successfully migrated and
-the cleanup can proceed.
-
-For paranoia sake add a warning into the vector assignment code to
-validate that the assumption of never moving to a different vector on
-the same CPU holds.
-
-Reported-by: Alex bykov <alex.bykov@scylladb.com>
-Reported-by: Avi Kivity <avi@scylladb.com>
-Reported-by: Alexander Graf <graf@amazon.com>
-Fixes: 633260fa143 ("x86/irq: Convey vector as argument and not in ptregs")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
+Cc: Sekhar Nori <nsekhar@ti.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/x86/kernel/apic/vector.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ChangeLog v1->v2:
+- Moved out all the tables and device definition to the top
+  of the file to not have static locals inside the function.
+---
+ drivers/mfd/dm355evm_msp.c | 76 +++++++++++++++++++++++++-------------
+ 1 file changed, 50 insertions(+), 26 deletions(-)
 
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -161,6 +161,7 @@ static void apic_update_vector(struct ir
- 		apicd->move_in_progress = true;
- 		apicd->prev_vector = apicd->vector;
- 		apicd->prev_cpu = apicd->cpu;
-+		WARN_ON_ONCE(apicd->cpu == newcpu);
- 	} else {
- 		irq_matrix_free(vector_matrix, apicd->cpu, apicd->vector,
- 				managed);
-@@ -909,7 +910,7 @@ void send_cleanup_vector(struct irq_cfg
- 		__send_cleanup_vector(apicd);
- }
+diff --git a/drivers/mfd/dm355evm_msp.c b/drivers/mfd/dm355evm_msp.c
+index 151c36ce7343..54fb6cbd2aa0 100644
+--- a/drivers/mfd/dm355evm_msp.c
++++ b/drivers/mfd/dm355evm_msp.c
+@@ -12,6 +12,7 @@
+ #include <linux/module.h>
+ #include <linux/err.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/machine.h>
+ #include <linux/leds.h>
+ #include <linux/i2c.h>
+ #include <linux/mfd/dm355evm_msp.h>
+@@ -116,6 +117,54 @@ static const u8 msp_gpios[] = {
+ 	MSP_GPIO(4, SDMMC), MSP_GPIO(3, SDMMC),	/* mmc1 WP, nCD */
+ };
  
--static void __irq_complete_move(struct irq_cfg *cfg, unsigned vector)
-+void irq_complete_move(struct irq_cfg *cfg)
- {
- 	struct apic_chip_data *apicd;
++static struct gpio_led evm_leds[] = {
++	{ .name = "dm355evm::ds14",
++	  .default_trigger = "heartbeat", },
++	{ .name = "dm355evm::ds15",
++	  .default_trigger = "mmc0", },
++	{ .name = "dm355evm::ds16",
++	  /* could also be a CE-ATA drive */
++	  .default_trigger = "mmc1", },
++	{ .name = "dm355evm::ds17",
++	  .default_trigger = "nand-disk", },
++	{ .name = "dm355evm::ds18", },
++	{ .name = "dm355evm::ds19", },
++	{ .name = "dm355evm::ds20", },
++	{ .name = "dm355evm::ds21", },
++};
++
++static struct gpio_led_platform_data evm_led_data = {
++	.num_leds	= ARRAY_SIZE(evm_leds),
++	.leds		= evm_leds,
++};
++
++static struct gpiod_lookup_table evm_leds_gpio_table = {
++	.dev_id = "leds-gpio",
++	.table = {
++		/*
++		 * These GPIOs are on the dm355evm_msp
++		 * GPIO chip at index 0..7
++		 */
++		GPIO_LOOKUP_IDX("dm355evm_msp", 0, NULL,
++				0, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("dm355evm_msp", 1, NULL,
++				1, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("dm355evm_msp", 2, NULL,
++				2, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("dm355evm_msp", 3, NULL,
++				3, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("dm355evm_msp", 4, NULL,
++				4, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("dm355evm_msp", 5, NULL,
++				5, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("dm355evm_msp", 6, NULL,
++				6, GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP_IDX("dm355evm_msp", 7, NULL,
++				7, GPIO_ACTIVE_LOW),
++		{ },
++	},
++};
++
+ #define MSP_GPIO_REG(offset)	(msp_gpios[(offset)] >> 3)
+ #define MSP_GPIO_MASK(offset)	BIT(msp_gpios[(offset)] & 0x07)
  
-@@ -917,15 +918,16 @@ static void __irq_complete_move(struct i
- 	if (likely(!apicd->move_in_progress))
- 		return;
+@@ -260,32 +309,7 @@ static int add_children(struct i2c_client *client)
  
--	if (vector == apicd->vector && apicd->cpu == smp_processor_id())
-+	/*
-+	 * If the interrupt arrived on the new target CPU, cleanup the
-+	 * vector on the old target CPU. A vector check is not required
-+	 * because an interrupt can never move from one vector to another
-+	 * on the same CPU.
-+	 */
-+	if (apicd->cpu == smp_processor_id())
- 		__send_cleanup_vector(apicd);
- }
- 
--void irq_complete_move(struct irq_cfg *cfg)
--{
--	__irq_complete_move(cfg, ~get_irq_regs()->orig_ax);
--}
+ 	/* LED output */
+ 	if (msp_has_leds()) {
+-#define GPIO_LED(l)	.name = l, .active_low = true
+-		static struct gpio_led evm_leds[] = {
+-			{ GPIO_LED("dm355evm::ds14"),
+-				.default_trigger = "heartbeat", },
+-			{ GPIO_LED("dm355evm::ds15"),
+-				.default_trigger = "mmc0", },
+-			{ GPIO_LED("dm355evm::ds16"),
+-				/* could also be a CE-ATA drive */
+-				.default_trigger = "mmc1", },
+-			{ GPIO_LED("dm355evm::ds17"),
+-				.default_trigger = "nand-disk", },
+-			{ GPIO_LED("dm355evm::ds18"), },
+-			{ GPIO_LED("dm355evm::ds19"), },
+-			{ GPIO_LED("dm355evm::ds20"), },
+-			{ GPIO_LED("dm355evm::ds21"), },
+-		};
+-#undef GPIO_LED
 -
- /*
-  * Called from fixup_irqs() with @desc->lock held and interrupts disabled.
-  */
+-		struct gpio_led_platform_data evm_led_data = {
+-			.num_leds	= ARRAY_SIZE(evm_leds),
+-			.leds		= evm_leds,
+-		};
+-
+-		for (i = 0; i < ARRAY_SIZE(evm_leds); i++)
+-			evm_leds[i].gpio = i + dm355evm_msp_gpio.base;
+-
++		gpiod_add_lookup_table(&evm_leds_gpio_table);
+ 		/* NOTE:  these are the only fully programmable LEDs
+ 		 * on the board, since GPIO-61/ds22 (and many signals
+ 		 * going to DC7) must be used for AEMIF address lines
+-- 
+2.26.2
+
